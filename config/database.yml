@@ -9,7 +9,7 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: pulldown_ui_development
+  database: pulldown_pipeline_development
   pool: 5
   username: root
   password:
@@ -22,17 +22,7 @@ test: &test
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: pulldown_ui_test
-  pool: 5
-  username: root
-  password:
-  socket: /tmp/mysql.sock
-
-production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: pulldown_ui_production
+  database: pulldown_pipeline_test
   pool: 5
   username: root
   password:
