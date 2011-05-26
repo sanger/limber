@@ -1,14 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>PulldownUi</title>
-  <%= stylesheet_link_tag :all %>
+  <title>Sequencescape - Pulldown Pipeline</title>
+  <%= stylesheet_link_tag 'screen.css', :media => 'screen, projection' %>
+  <%= stylesheet_link_tag 'print.css', :media => 'print' %>
+  <!--[if IE]><%= stylesheet_link_tag 'ie.css', :media => 'screen, projection' %><![endif]-->
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
+  <header id="page-header">
+    <div id="header-top">
+      <div id="logo-container">
+        <img id="logo" src="/images/sequencescape_logo_new.png"/>
+        <div>Sequencescape</div>
+      </div> <!-- End of logo-container -->
+      <div id="quick-links">
+          <a href="http://intweb/Software/launch">Wellcome Trust Sanger Institute</a>
+      </div>
+      <div id="user-links">Welcome Frank &bull; Logout</div>
+    </div> <!-- End of header-top -->
+    
+    <div id="header-middle">
+      &nbsp;
+    </div> <!-- End of header-middle -->
+      
+    
+    <nav id="main-menu">
+      <ul>
+        <li><a href="#">Studies</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Pipelines</a></li>
+        <li><a href="#">Batches</a></li>
+        <li><a href="#">Reception</a></li>
+        <li><a href="#">Lab View</a></li>
+        <li><a href="#">Lab Search</a></li>
+      </ul>
+    </nav>
+  </header> <!-- End of page_header -->
+    
+  <section id="main-content">
+    <%= yield %>
+  </section>      
+    
+  <footer id="page-footer">
+    <a href="mailto:admin@test.com">Feedback</a>
+    · Sequencescape LOCAL [development] · A tool from
+    <a href="http://intweb/Software/launch">Sequencing Informatics</a>
+  </footer>
 </body>
 </html>
+
+
