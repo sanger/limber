@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.7'
+gem 'rails', '~>3.0.7'
 gem 'mysql2', '~>0.2.7'
-
+gem "compass", ">= 0.11.1"
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
