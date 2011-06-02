@@ -5,6 +5,8 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/gradient";
 
+@import "jquery-ui-1.8.11.custom.scss";
+
 $font-size: 14px;
 
 body {
@@ -37,10 +39,6 @@ h6 {
   font-size: 1em;
   font-weight: bold; }
   
-a {
-  @include hover-link;
-  @include link-colors(#fff, #ff0);
-}
 
 #page-header {
   @include box-shadow(#C3CEDA, 1px, 1px, 2px);
@@ -54,6 +52,11 @@ a {
   @include border-top-left-radius(5px);
   @include border-top-right-radius(5px);
   height: 18px;
+  
+  a {
+    @include hover-link;
+    @include link-colors(#fff, #ff0);
+  }
    
   #logo-container {
     float:left;
