@@ -22,6 +22,12 @@ module Sequencescape
       }
      )
    end
+   
+   def update_attribute!(params)
+    params.each do |k,v|
+      send("#{k}=", v)
+    end
+   end
 
    def size
      96
@@ -46,7 +52,7 @@ module Sequencescape
 
  # Pre-generate all of the plates so that they are maintained (particularly the state)
  ASSETS = Hash[
-   {
+   { # Barcode                                  UUID
      'StockPlate'                        => [ 'WGSFragmentationPlate' ],
      'QCPlate'                           => [ ],
      'WGSFragmentationPlate'             => [ 'WGSFragmentationPurificationPlate' ],
