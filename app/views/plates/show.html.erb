@@ -1,0 +1,42 @@
+<h1>Plate: <i><%= @plate.barcode %></i></h1>
+<%# Change State Options %>
+<div class="tabs">
+  <ul>
+    <li><a href="#plate-state">State</a></li>
+    <li><a href="#plate-summary">Summary</a></li>
+    <li><a href="#plate-printing">Printing</a></li>
+  </ul>
+  
+  <article id="plate-summary">
+    <h2>Summary</h2>
+    <p><%= @plate.summary %></p>
+  </article>
+  
+  <article id="plate-state">
+    <h2>Plate State</h2>
+    <% semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
+        <%= f.input :state, :label => 'Current State', :collection => @plate.states %>
+      <%= f.commit_button 'Change State' %>
+    <% end %>
+    <hr/>
+    
+    <%# Render partial based on plate_purpose %>
+  </article>
+  
+  <article id="plate-printing">
+    <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "print-button"} %>
+
+    <hr/>
+    <% semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
+      <% f.inputs :name => 'Print Label' do %>
+        <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers %>
+      <% end %>
+      <%= f.commit_button 'Print Label' %>
+    <% end %>
+  </article>
+  
+</div>
+
+<hr/>
+
+
