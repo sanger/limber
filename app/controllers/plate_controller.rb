@@ -1,3 +1,0 @@
-class PlateController < ApplicationController
-  
-end
