@@ -6,37 +6,67 @@
     <li><a href="#plate-summary">Summary</a></li>
     <li><a href="#plate-printing">Printing</a></li>
   </ul>
-  
+
   <article id="plate-summary">
     <h2>Summary</h2>
     <p><%= @plate.summary %></p>
   </article>
-  
+
   <article id="plate-state">
     <h2>Plate State</h2>
-    <% semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
-        <%= f.input :state, :label => 'Current State', :collection => @plate.states %>
-      <%= f.commit_button 'Change State' %>
-    <% end %>
-    <hr/>
+    <%= semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
+      <%= f.inputs :name => 'Set State' do %>
+        <%= f.input :state, :label => 'Current State', :collection => @plate.states,:as => :select, :input_html => { :include_blank => false } %>
+        <%= f.commit_button 'Change State' %>
+        
+      <% end %>
+    <%- end %>
     
-    <%# Render partial based on plate_purpose %>
+    <%- if @plate.state == "passed" -%>
+    <hr/>
+      <%- if @plate.next_child_purpose.blank? -%>
+        <%= semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
+          <%= f.inputs :name => 'Create Child Plate' do %>
+            <%= f.input :next_child_purpose, :label => 'Child Type', :collection => @plate.child_plate_purposes %>
+            <%= f.commit_button 'Next' %>
+          <% end %>
+        <% end %>
+      <%- else -%>
+        <%# Ugly back button.... :( %>
+        <%= semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
+          <%= f.inputs do %>
+            <%= f.input :next_child_purpose, :value => nil, :as => :hidden %>
+            <%= f.commit_button 'Back' %>
+          <% end %>
+        <% end %>
+
+        <%# Render partial based on plate_purpose %>
+        <%= semantic_form_for(@plate, :url => plate_path, :html => {:method => :post}) do |f| %>
+          <%= f.inputs :name => 'WGS Fragmentation Plate' do %>
+            <%= f.commit_button 'Create Plate' %>
+          <% end %>
+        <% end %>
+        
+      <%- end -%>
+      
+    <%- end -%>
+
   </article>
-  
+
   <article id="plate-printing">
     <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "print-button"} %>
 
     <hr/>
-    <% semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
-      <% f.inputs :name => 'Print Label' do %>
-        <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers %>
+    <%= semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
+      <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
+          It looks like an previous bug so I really should open a ticket...
+      %>
+      <%= f.inputs :name => 'Print Barcode Labels' do %>
+        <%= f.input :printer, :label => 'Barcode Printer', :input_html => { :prompt => "Please select a printer..." }, :collection => @printers %>
+        <%= f.commit_button 'Print Label' %>
       <% end %>
-      <%= f.commit_button 'Print Label' %>
     <% end %>
   </article>
-  
+
 </div>
-
-<hr/>
-
 

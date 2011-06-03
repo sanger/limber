@@ -2,8 +2,8 @@ require 'ostruct'
 
 module Sequencescape
   class BarcodeLabel < OpenStruct
+    extend ActiveModel::Naming
     include ActiveModel::Validations
-    include ActiveModel::Naming
   end
   
  class Plate < OpenStruct
@@ -15,6 +15,8 @@ module Sequencescape
       :barcode              => name, 
       :state                => 'pending', 
       :child_plate_purposes => child_plate_purposes,
+      
+      # TODO Move :states out into the client app
       :states => {
         'Pending' => 'pending', 
         'Passed'  => 'passed', 
@@ -22,11 +24,9 @@ module Sequencescape
       }
      )
    end
-   
-   def update_attribute!(params)
-    params.each do |k,v|
-      send("#{k}=", v)
-    end
+
+   def update_attributes!(params)
+    params.each { |k,v| send("#{k}=", v) }
    end
 
    def size

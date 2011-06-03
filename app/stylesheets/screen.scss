@@ -39,6 +39,13 @@ h6 {
   font-size: 1em;
   font-weight: bold; }
   
+.submit {
+  @extend .ui-button;
+  @extend .ui-widget ;
+  @extend .ui-state-default ;
+  @extend .ui-corner-all ;
+  @extend .ui-button-text-only;
+}
 
 #page-header {
   @include box-shadow(#C3CEDA, 1px, 1px, 2px);

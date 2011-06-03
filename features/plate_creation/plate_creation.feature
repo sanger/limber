@@ -9,6 +9,14 @@ Feature: Plate creation
       And I enter a valid Source Plate barcode
     Then I am presented with a screen allowing me to create a destination plate
   
+  Scenario: Finding a plate page by page
+    Given I am on the homepage
+    When I enter a valid user barcode
+      And I press "Find User"
+    Then I am on the plate search page
+  
+  
+  
   
   
 
