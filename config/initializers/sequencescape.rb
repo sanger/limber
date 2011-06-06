@@ -5,24 +5,31 @@ module Sequencescape
     extend ActiveModel::Naming
     include ActiveModel::Validations
   end
-  
+
  class Plate < OpenStruct
-   include ActiveModel::Naming
+   extend ActiveModel::Naming
    include ActiveModel::Validations
-   
+
    def initialize(name, child_plate_purposes)
      super(
-      :barcode              => name, 
-      :state                => 'pending', 
+      :barcode              => name,
+      :name                 => name,
+      :state                => 'pending',
       :child_plate_purposes => child_plate_purposes,
-      
+
       # TODO Move :states out into the client app
-      :states => {
-        'Pending' => 'pending', 
-        'Passed'  => 'passed', 
-        'Failed'  => 'failed'
+      :states      => {
+        'Pending'  => 'pending',
+        'Started'  => 'started',
+        'Passed'   => 'passed',
+        'Canceled' => 'canceled',
+        'Failed'   => 'failed'
       }
      )
+   end
+
+   def self.find(uuid)
+    self.new(uuid, Sequencescape::ASSETS[uuid])
    end
 
    def update_attributes!(params)
@@ -32,7 +39,7 @@ module Sequencescape
    def size
      96
    end
-   
+
    def summary
     "Some information about the plate that has just been created and the plate that it was made from."
    end
@@ -45,6 +52,12 @@ module Sequencescape
  end
 
  class PlatePurpose < OpenStruct
+   extend ActiveModel::Naming
+   include ActiveModel::Validations
+
+   def self.find(uuid)
+    self.new(uuid)
+   end
    def initialize(name)
      super(:name => name)
    end
@@ -53,15 +66,15 @@ module Sequencescape
  # Pre-generate all of the plates so that they are maintained (particularly the state)
  ASSETS = Hash[
    { # Barcode                                  UUID
-     'StockPlate'                        => [ 'WGSFragmentationPlate' ],
-     'QCPlate'                           => [ ],
-     'WGSFragmentationPlate'             => [ 'WGSFragmentationPurificationPlate' ],
-     'WGSFragmentationPurificationPlate' => [ 'WGSLibraryPreparationPlate', 'QCPlate' ],
-     'WGSLibraryPreparationPlate'        => [ 'WGSLibraryPlate', 'QCPlate' ],
-     'WGSLibraryPlate'                   => [ 'WGSLibraryPCRPlate' ],
-     'WGSLibraryPCRPlate'                => [ 'WGSAmplifiedLibraryPlate' ],
-     'WGSAmplifiedLibraryPlate'          => [ 'WGSPooledAmplifiedLibraryPlate' ],
-     'WGSPooledAmplifiedLibraryPlate'    => [ ]
+     'StockPlate'                        => [ 'WgsFragmentationPlate' ],
+     'QcPlate'                           => [ ],
+     'WgsFragmentationPlate'             => [ 'WgsFragmentationPurificationPlate' ],
+     'WgsFragmentationPurificationPlate' => [ 'WgsLibraryPreparationPlate', 'QcPlate' ],
+     'WgsLibraryPreparationPlate'        => [ 'WgsLibraryPlate', 'QcPlate' ],
+     'WgsLibraryPlate'                   => [ 'WgsLibraryPcrPlate' ],
+     'WgsLibraryPcrPlate'                => [ 'WgsAmplifiedLibraryPlate' ],
+     'WgsAmplifiedLibraryPlate'          => [ 'WgsPooledAmplifiedLibraryPlate' ],
+     'WgsPooledAmplifiedLibraryPlate'    => [ ]
    }.map do |barcode, child_plate_purposes|
      [ barcode, Plate.new(barcode, child_plate_purposes.map(&PlatePurpose.method(:new))) ]
    end + [
@@ -115,6 +128,14 @@ module Sequencescape
 
    def plate_creation
      PlateCreation
+   end
+
+   def plate
+    Plate
+   end
+
+   def plate_purpose
+    PlatePurpose
    end
 
    class TagLayoutTemplate
