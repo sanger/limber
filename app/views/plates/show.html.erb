@@ -2,14 +2,15 @@
 <%# Change State Options %>
 <div class="tabs">
   <ul>
-    <li><a href="#plate-state">State</a></li>
     <li><a href="#plate-summary">Summary</a></li>
     <li><a href="#plate-printing">Printing</a></li>
+    <li><a href="#plate-state">State</a></li>
   </ul>
 
   <article id="plate-summary">
     <h2>Summary</h2>
     <p><%= @plate.summary %></p>
+    <p><%= @plate.notes %></p>
   </article>
 
   <article id="plate-state">
@@ -17,11 +18,14 @@
     <%= semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
       <%= f.inputs :name => 'Set State' do %>
         <%= f.input :state, :label => 'Current State', :collection => @plate.states,:as => :select, :input_html => { :include_blank => false } %>
+        <%= f.input :user %>
+        <%= f.input :notes, :as => :text %>
         <%= f.commit_button 'Change State' %>
 
       <% end %>
     <%- end %>
 
+    <%# Move this to the new method of creation controller %>
     <%- if @plate.state == "passed" && @plate.child_plate_purposes.size > 0 -%>
     <hr/>
 

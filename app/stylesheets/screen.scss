@@ -39,7 +39,7 @@ h6 {
   font-size: 1em;
   font-weight: bold; }
   
-.submit {
+.submit, .create  {
   @extend .ui-button;
   @extend .ui-widget ;
   @extend .ui-state-default ;
@@ -177,8 +177,8 @@ h6 {
   border: 3px ridge rgba(11,35,75,0.2);
   vertical-align: middle;
   text-align:     center;
-  width: 900px;
-  height: 600px;
+/*  width: 700px;*/
+/*  height: 400px;*/
   background:     #00416F;
   padding:        3px;
   color:          #fff;
@@ -196,8 +196,8 @@ h6 {
   vertical-align: middle;
   text-align:     center;
   padding:0;
-  width:65px;
-  height: 15px;
+/*  width:65px;*/
+/*  height: 15px;*/
 }
 
 #plate th.first-col {
@@ -205,8 +205,9 @@ h6 {
 }
 
 #plate .well {
-  height:60px;
-  padding: 6px;
+  height:30px;
+  width:30px;
+  padding: 3px;
   text-align:     center;
   border: 3px ridge rgba(5,19,40,0.1);
   @include radial-gradient(color-stops(#002F51,#003A62), top left);
@@ -214,10 +215,11 @@ h6 {
 }
 
 .aliquot {
+  display: none;
   @include border-radius(30px);
-  height:40px;
-  width:60px;
-  padding: 20px 0 0 0;
+  height:20px;
+  width:30px;
+  padding: 10px 0 0 0;
   vertical-align: middle;
   text-align:     center;
   color:#fff;

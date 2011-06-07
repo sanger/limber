@@ -10,8 +10,7 @@ module Forms
     
     PARTIAL = 'new'
     
-    # TODO :plate_id should be :plate_uuid but needs the route fixed
-    ATTRIBUTES = [:api, :plate_purpose_uuid, :plate_uuid]
+    ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :notes, :user]
 
     attr_accessor *ATTRIBUTES
     attr_reader :plate_creation
@@ -22,7 +21,7 @@ module Forms
       end
     end
 
-    validates_presence_of *ATTRIBUTES
+    # validates_presence_of *ATTRIBUTES
     
     def child
       plate_creation.try(:child) || :child_not_created
@@ -33,7 +32,7 @@ module Forms
     end
     
     def parent
-      @parent ||= api.plate.find(plate_uuid)
+      @parent ||= api.plate.find(parent_uuid)
     end
 
     def save
@@ -65,10 +64,8 @@ module Forms
   
   class QcPlate < CreationForm; end
   
-  class WgsLibraryPlate < CreationForm; end
-  
-  class WgsLibraryPcrPlate < CreationForm; end
-  
+  class WgsLibraryPreparationPlate < CreationForm; end
+
   class WgsAmplifiedLibraryPlate < CreationForm; end
   
   class WgsPooledAmplifiedLibraryPlate < CreationForm; end

@@ -137,12 +137,18 @@ module Sequencescape
    def plate_purpose
     PlatePurpose
    end
-
+   
    class TagLayoutTemplate
      class TagLayout
-
      end
-
+     
+     def self.all
+       {
+         '1 to 8(columns) - Standard Illumina 10mer' => '1_TO_8_STANDARD_ILLUMINA_10MER',
+         'Daft Punk is playing in my house, in my house...' => 'blah_blah_blah'
+       }
+     end
+     
      def self.find(uuid)
        case uuid
        when '1 to 8 (columns)' then TagLayoutTemplate.new
@@ -162,13 +168,24 @@ module Sequencescape
    end
 
    class TransferTemplate
+     def self.all
+       {
+         'Whole Plate' => 'Plate-to-plate',
+         '1 only'      => '1_only',
+         '1 to 2'      => '1_to_2',
+         '1 to 3'      => '1_to_3',
+         '1 to 4'      => '1_to_4',
+         '1 to 6'      => '1_to_6'
+       }
+     end
+     
      def self.find(uuid)
        case uuid
-       when '1 only'         then TransferTemplate.new
-       when '1 to 2'         then TransferTemplate.new
-       when '1 to 3'         then TransferTemplate.new
-       when '1 to 4'         then TransferTemplate.new
-       when '1 to 6'         then TransferTemplate.new
+       when '1_only'         then TransferTemplate.new
+       when '1_to_2'         then TransferTemplate.new
+       when '1_to_3'         then TransferTemplate.new
+       when '1_to_4'         then TransferTemplate.new
+       when '1_to_6'         then TransferTemplate.new
        when 'Plate-to-plate' then TransferTemplate.new
        end
      end

@@ -1,9 +1,9 @@
-<h2>Create Child Plate: <%= @plate_purpose.name %></h2>
+<h2>Create Child Plate: <%=@creation_form.parent.name %></h2>
 
-<%= semantic_form_for(@creation_form, :as => :plate, :url => plate_children_path(@parent_plate), :html => {:method => :post}) do |f| %>
+<%= semantic_form_for(@creation_form, :as => :plate, :url => plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
   <%= f.inputs do %>
-    <%= f.input :plate_purpose_uuid, :as => :hidden, :value => @plate_purpose.name %>
-    <%= f.input :plate_uuid, :as => :hidden, :value => @parent_plate.name %>
+    <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.parent.name %>
+    <%= f.input :plate_uuid, :as => :hidden, :value => @creation_form.parent.name %>
   <% end %>
   <%= f.buttons do %>
     
