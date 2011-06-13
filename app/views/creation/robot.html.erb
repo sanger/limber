@@ -1,0 +1,41 @@
+<h2>Create Child Plate: <%=@creation_form.parent.name %></h2>
+
+<%= semantic_form_for(@creation_form, :as => :plate, :url => plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.parent.name %>
+    <%= f.input :plate_uuid, :as => :hidden, :value => @creation_form.parent.name %>
+    <%= f.input :transfer_template_uuid, :label => "Transfer Template", :as => :select, :collection => @creation_form.transfer_template_uuids %>
+  <% end %>
+  <%= f.buttons do %>
+    
+    <%= f.commit_button 'Create Plate' %>
+  <% end %>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+  var transfers = {
+    '1_only': '.col-1',
+    '1_to_2': '.col-1,.col-2',
+    '1_to_3': '.col-1,.col-2,.col-3',
+    '1_to_4': '.col-1,.col-2,.col-3,.col-4',
+    '1_to_6': '.col-1,.col-2,.col-3,.col-4,.col-5,.col-6',
+    'Plate-to-plate': '.aliquot'
+  }
+
+  $(function(){
+      var transfer_selector =  $('#plate_transfer_template_uuid');
+      
+      function template_display(){
+      $('.aliquot').hide();
+      $(transfers[transfer_selector.val()]).addClass('green').show(); 
+    }
+      
+    transfer_selector.change(template_display);
+    template_display();
+    
+  })
+</script>
+
+<%= render :partial => 'plate' %>
+
+

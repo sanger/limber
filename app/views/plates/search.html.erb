@@ -1,0 +1,15 @@
+<h1>Search for Plates</h1>
+
+<%= form_tag plate_search_path, :method => 'get' do %>
+  <table border="0" cellspacing="5" cellpadding="0" class="form">
+    <tr>
+      <th><%= label_tag :user_id, "User ID" %></th>
+      <td><%= text_field_tag :user_id, params[:user_id] %></td>
+      </tr>
+    <tr>
+      <th><%= label_tag :plate_barcode, "Plate Barcode" %></th>
+      <td><%= text_field_tag :plate_barcode, params[:plate_barcode] %></td>
+    </tr>
+  </table>
+    <%= submit_tag "Search", :name => nil, :class => "submit" %>
+<% end %>

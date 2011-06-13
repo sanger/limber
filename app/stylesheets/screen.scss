@@ -1,0 +1,345 @@
+// Compass Utils
+@import "compass/css3/box-shadow";
+@import "compass/utilities/lists/horizontal-list";
+@import "compass/utilities/links";
+@import "compass/css3/border-radius";
+@import "compass/css3/gradient";
+
+@import "jquery-ui-1.8.11.custom.scss";
+
+$font-size: 14px;
+
+body {
+  background:  #E3EEFC;
+  font-family: 'Lucida Grande',helvetica,arial,sans-serif;
+  line-height: 1.5;
+  font-size:   100% * $font-size / 16px;
+}
+
+h1 {
+  font-size: 3em;
+  line-height: 1;
+  margin-bottom: 0.50em; }
+h2 {
+  font-size: 2em;
+  margin-bottom: 0.75em; }
+h3 {
+  font-size: 1.5em;
+  line-height: 1;
+  margin-bottom: 1.00em; }
+h4 {
+  font-size: 1.2em;
+  line-height: 1.25;
+  margin-bottom: 1.25em; }
+h5 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 1.50em; }
+h6 {
+  font-size: 1em;
+  font-weight: bold; }
+  
+.submit, .create  {
+  @extend .ui-button;
+  @extend .ui-widget ;
+  @extend .ui-state-default ;
+  @extend .ui-corner-all ;
+  @extend .ui-button-text-only;
+}
+
+#page-header {
+  @include box-shadow(#C3CEDA, 1px, 1px, 2px);
+  @include border-radius;
+}
+
+#header-top {
+  @include linear-gradient(color-stops(#31353D,#212429));
+  padding: 5px 9px 0;
+  color: #EFEFEF;
+  @include border-top-left-radius(5px);
+  @include border-top-right-radius(5px);
+  height: 18px;
+  
+  a {
+    @include hover-link;
+    @include link-colors(#fff, #ff0);
+  }
+   
+  #logo-container {
+    float:left;
+    text-transform: uppercase;
+    #logo { 
+      @include box-shadow(rgba(100,100,100,0.1), 1px, 1px, 1px);
+    }
+  }
+
+  #quick-links {
+    @include horizontal-list;
+    padding: 0 0 0 9px;
+    float:left;
+    a {
+      @include hover-link;
+      @include link-colors(#fff, #ff0);
+    }
+  }
+  
+  #user-links {
+    float: right;
+    text-align: right;
+  }
+  
+}
+
+#header-middle {
+  height: 36px;
+  padding: 0 18px;
+  @include linear-gradient(color-stops(#004578,#0085BC));
+  color: #fff;
+  
+  #search {
+    float: right;
+    clear:left;
+    ul { 
+      text-align: right;
+      @include horizontal-list;
+    }
+  }
+}
+
+  #main-menu {
+  @include border-bottom-left-radius(5px);
+  @include border-bottom-right-radius(5px);
+  padding: 2px 0;
+  font-weight:700;
+  @include linear-gradient(color-stops(#AED9F4, #A3D4F4));
+    ul {
+      @include horizontal-list;
+
+      li { 
+        text-align: center;
+        text-transform: uppercase;
+      }
+      a {
+        padding: 0 9px;
+        color: #31353D;
+        text-decoration: none;
+      }
+      a:hover {
+        color: #fff;
+        background: #0085BC;
+        @include border-radius(5px);
+      }
+    }  
+  }
+
+#main-content {
+  margin-top: 18px;
+  padding: 9px 18px;
+  @include border-radius;
+  background: #fff;
+  @include box-shadow(#BFBFBF, 1px, 1px, 3px)
+}
+
+#page-menu {
+  @include border-radius;
+
+  ul.page-menu-entry {
+    @include border-radius;
+    @include no-bullets;
+    border: 1px solid #AAD4F4;
+    margin: 0;
+    padding: 0;
+    background: #D2E2F7;
+  }
+}
+
+
+#page-footer {
+  padding: 3px 0px 0px 10px;
+  line-height: 17px;
+  padding-bottom: 20px;
+  color: #666;
+}
+
+#page-footer a {
+  @include link-colors(#000,#880000);
+}
+
+#plate-control {
+  margin: 18px 0;
+}
+
+#plate {
+  @include box-shadow(#000, 2px, 2px, 5px);
+  @include border-radius(15px);
+  @include border-top-left-radius(0);
+  /* Use transparency for the background color or FF ridge will look bad... */
+  border: 3px ridge rgba(11,35,75,0.2);
+  vertical-align: middle;
+  text-align:     center;
+/*  width: 700px;*/
+/*  height: 400px;*/
+  background:     #00416F;
+  padding:        3px;
+  color:          #fff;
+}
+
+#plate tr {
+/*  padding: 6px;*/
+}
+
+#plate th {
+  padding: 0;
+}
+
+#plate th {
+  vertical-align: middle;
+  text-align:     center;
+  padding:0;
+/*  width:65px;*/
+/*  height: 15px;*/
+}
+
+#plate th.first-col {
+  width: 15px;
+}
+
+#plate .well {
+  height:30px;
+  width:30px;
+  padding: 3px;
+  text-align:     center;
+  border: 3px ridge rgba(5,19,40,0.1);
+  @include radial-gradient(color-stops(#002F51,#003A62), top left);
+  @include border-radius(15px);
+}
+
+.aliquot {
+  display: none;
+  @include border-radius(30px);
+  height:20px;
+  width:30px;
+  padding: 10px 0 0 0;
+  vertical-align: middle;
+  text-align:     center;
+  color:#fff;
+  @include box-shadow(#00192B, 3px, 3px, 10px);
+}
+
+.aliquot:hover {
+  color: #FFD600;
+  @include box-shadow(#00192B, 0px, 0px, 1px);
+}
+
+#plate .green {
+  /*Moss green....*/
+  background: #196D18;
+  @include radial-gradient(color-stops(#00B10E, #002802), top left);
+}
+
+#plate .red {
+  background:#D10000;
+  @include radial-gradient(color-stops(#D30000,#480000), top left);
+}
+
+#plate .yellow {
+  background:#FFFE8D;
+  color: #282828;
+}
+
+#plate .orange {
+  background:#FF7300;
+  @include radial-gradient(color-stops(#FF9443,#5B1B00), top left);
+}
+
+#plate .unknown-value {
+  background: #1D86AD;
+  @include radial-gradient(color-stops(#289AC7, #083442), top left);
+}
+
+.tooltip {
+  display:none;
+  background:transparent url(/images/black_arrow.png);
+  font-size:12px;
+  height:70px;
+  width:160px;
+  padding:25px;
+  color:#fff; 
+}
+
+.tooltip.bottom {
+  background:url(/images/black_arrow_bottom.png);
+  padding-top:40px;
+  height:65px;
+}
+
+.tooltip.bottom {
+  background:url(/images/black_arrow_bottom.png);
+}
+
+/* the overlayed element */
+.aliquot-details {
+  
+  /* must be initially hidden */
+  display:none;
+  
+  /* place overlay on top of other elements */
+  z-index:10000;
+  
+  /* styling */
+  background-color:#3F3F3F;
+  @include linear-gradient(color-stops(#353535,#0F0F0F));
+  
+  width:600px;  
+  min-height:400px;
+  border:3px solid #fff;
+  @include border-radius(5px);
+  /* CSS3 styling for latest browsers */
+  -moz-box-shadow:1px 1px 9px #000;
+/*  -webkit-box-shadow: 0 0 90px #000;  */
+}
+
+/* close button positioned on upper right corner */
+.aliquot-details .close {
+  /*Replace image with jquery-ui image*/
+  background-image: url(/images/close.png);
+  position:         absolute;
+  right:            -15px;
+  top:              -15px;
+  cursor:           pointer;
+  height:           35px;
+  width:            35px;
+}
+
+div.aliquot-details h3 {
+  color:     #55D8FF;
+  font-size: 15px;
+}
+
+.aliquot-details img {
+  position: absolute;
+  left:     15px;
+  top:      65px;
+}
+
+
+/* styling for elements inside overlay */
+.details {
+  position:   absolute;
+  top:        15px;
+  right:      15px;
+  font-size:  11px;
+  color:      #fff;
+  width:      400px;
+  text-align: left;
+}
+
+.image h3 {
+  margin:30px 10px 10px 35px;
+}
+
+table.form {
+  text-align: left;
+  width:  400px;
+  margin: 0 0 36px 0;
+}
