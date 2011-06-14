@@ -22,5 +22,10 @@ PulldownPipeline::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+  
+  config.api_connection_options               = ActiveSupport::OrderedOptions.new
+  config.api_connection_options.url           = 'http://psd1i.internal.sanger.ac.uk:6711/api/1/'
+  config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
+  
 end
 
