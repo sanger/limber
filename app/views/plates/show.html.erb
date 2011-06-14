@@ -1,20 +1,44 @@
-<h1>Plate: <i><%= @plate.barcode %></i></h1>
-<%# Change State Options %>
-<div id="plate-tabs" class="tabs">
-  <ul>
-    <li><a href="#plate-summary">Summary</a></li>
-    <li><a href="#plate-printing">Printing</a></li>
-    <li><a href="#plate-state">State</a></li>
-  </ul>
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+  <title>Page Title</title>
+  <link rel="stylesheet"  href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+  <link rel="stylesheet" href="../_assets/css/jqm-docs.css"/>
+  <%= stylesheet_link_tag "formtastic", "screen", %>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+  <script type="text/javascript" src="docs/docs.js"></script>
+<body>
 
-  <article id="plate-summary">
-    <h2>Summary</h2>
-    <p><%= @plate.summary %></p>
-    <p><%= @plate.notes %></p>
-  </article>
+<!-- Start of first page -->
+<div data-role="page" id="summary">
 
-  <article id="plate-state">
-    <h2>Plate State</h2>
+  <div data-role="header">
+    <h1>Plate Summary: <%= @plate.barcode %></h1>
+    <%= link_to "Search", root_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <p><%= @plate.summary %><%= @plate.notes %></p>
+    
+    <%= render :partial => "creation/plate",  %>
+  </div><!-- /content -->
+
+
+  <%= render :partial => 'plate_footer' %>
+</div><!-- /page -->
+
+
+<!-- Start of second page -->
+<div data-role="page" id="state">
+
+  <div data-role="header">
+    <h1>Plate State</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
     <%= semantic_form_for(@plate, :url => plate_path(@plate.barcode), :html => {:method => :put}) do |f| %>
       <%= f.inputs :name => 'Set State' do %>
         <%= f.input :state, :label => 'Current State', :collection => @plate.states,:as => :select, :input_html => { :include_blank => false } %>
@@ -38,26 +62,42 @@
           </p>
             <%= submit_tag "Next", :name => nil, :class => "submit" %>
         <% end %>
-      
+
 
     <%- end -%>
+    
+  </div><!-- /content -->
 
-  </article>
+  <%= render :partial => 'plate_footer' %>
+</div><!-- /page -->
 
-  <article id="plate-printing">
+
+<!-- Start of second page -->
+<div data-role="page" id="printing">
+
+  <div data-role="header">
+    <h1>Printing</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
     <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %>
 
-    <hr/>
+    <br/>
     <%= semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
       <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
           It looks like an previous bug so I really should open a ticket...
       %>
-      <%= f.inputs :name => 'Print Barcode Labels' do %>
+      <%= f.inputs do %>
         <%= f.input :printer, :label => 'Barcode Printer', :input_html => { :prompt => "Please select a printer..." }, :collection => @printers %>
         <%= f.commit_button 'Print Label' %>
       <% end %>
     <% end %>
-  </article>
+  </div><!-- /content -->
+  
+  
+  <%= render :partial => 'plate_footer' %>
+</div><!-- /page -->
 
-</div>
+</body>
+</html>
 

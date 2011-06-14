@@ -5,14 +5,14 @@ class PlatesController < ApplicationController
   
   def search
     redirect_to plate_path(:id => params[:plate_barcode]) unless params[:plate_barcode].blank?
-
+    
   end
 
   def show
     @plate = api.search.find(Settings.asset_from_barcode).first(:barcode => params[:id])
     
     respond_to do |format|
-      format.html
+      format.html { render :show, :layout => false }
     end
   end
 
@@ -22,7 +22,7 @@ class PlatesController < ApplicationController
     @plate.update_attributes!(params[:sequencescape_plate])
     
     respond_to do |format|
-      format.html { render :show}
+      format.html { render :show }
     end
   end
 
