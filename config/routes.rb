@@ -1,7 +1,7 @@
 PulldownPipeline::Application.routes.draw do
 
   
-  match '/plates/search' => 'plates#search', :as => :plate_search
+  match '/' => 'plates#search', :as => :plate_search
   resources :plates do
     resources :children, :controller => :creation
   end
