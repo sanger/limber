@@ -3,11 +3,6 @@ class PlatesController < ApplicationController
   
   before_filter :get_printers_and_lables, :on => [ :show, :update ]
   
-  def search
-    redirect_to plate_path(:id => params[:plate_barcode]) unless params[:plate_barcode].blank?
-    
-  end
-
   def show
     @plate = api.search.find(Settings.asset_from_barcode).first(:barcode => params[:id])
     

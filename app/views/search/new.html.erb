@@ -2,13 +2,12 @@
 
   <header data-role="header" data-theme="b">
     <h1>Sequencescape - Pulldown Pipeline</h1>
-    <%= link_to "Search", root_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "a"  %>
   </header><!-- /header -->
 
   <section data-role="content"> 
     <h1>Search for Plates</h1>
 
-    <%= form_tag plate_search_path, :method => 'post' do %>
+    <%= form_tag search_path, :method => 'post' do %>
         <%= label_tag :user_id, "User ID" %>
         <%= text_field_tag :user_id, params[:user_id] %>
         <%= label_tag :plate_barcode, "Plate Barcode" %>

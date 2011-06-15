@@ -3,7 +3,7 @@
 
   <div data-role="header">
     <h1>Plate Summary: <%= @plate.barcode %></h1>
-    <%= link_to "Search", root_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
+    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
   <div data-role="content">
@@ -22,6 +22,7 @@
 
   <div data-role="header">
     <h1>Plate State</h1>
+    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
   <div data-role="content">
@@ -63,6 +64,7 @@
 
   <div data-role="header">
     <h1>Printing</h1>
+    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
   <div data-role="content">

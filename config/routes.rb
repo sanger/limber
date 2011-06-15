@@ -1,14 +1,15 @@
 PulldownPipeline::Application.routes.draw do
 
   
-  match '/' => 'plates#search', :as => :plate_search
+  match '/search' => 'search#new', :as => :search
+  
   resources :plates do
     resources :children, :controller => :creation
   end
   
   resources :barcode_labels
   
-  root :to => "plates#search"
+  root :to => "search#new"
   
 
 end
