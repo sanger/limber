@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>Sequencescape - Pulldown Pipeline</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
     <%= stylesheet_link_tag "formtastic", "screen", %>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
@@ -9,23 +11,7 @@
     <%= csrf_meta_tag %>
 </head>
 <body>
-  <script type="text/javascript" charset="utf-8">
-    $(document).bind('mobileinit',function(){
-        $.mobile.selectmenu.prototype.options.nativeMenu = false;
-      });
-  </script>
-  <div data-role="page">
-
-    <header data-role="header" data-theme="b">
-      <h1>Sequencescape - Pulldown Pipeline</h1>
-      <%= link_to "Search", root_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "a"  %>
-    </header><!-- /header -->
-
-    <section data-role="content"> 
-      <%= yield %>
-    </section><!-- /content -->
-
-    <%= yield :footer %>
+  <%= yield %>
 </body>
 </html>
 

@@ -12,7 +12,7 @@ class PlatesController < ApplicationController
     @plate = api.search.find(Settings.asset_from_barcode).first(:barcode => params[:id])
     
     respond_to do |format|
-      format.html { render :show, :layout => false }
+      format.html { render :show }
     end
   end
 
