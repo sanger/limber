@@ -14,6 +14,7 @@ module Forms
 
     validates_presence_of *ATTRIBUTES
     def transfer_template_uuids
+      # This should be able to use the transfer-to-uuids list in Form.
       @transfer_template_uuids ||= api.transfer_template.all
     end
 
