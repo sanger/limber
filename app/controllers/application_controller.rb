@@ -1,12 +1,8 @@
 class ApplicationController < ActionController::Base
-  before_filter :assign_api
-  attr_accessor :api
+  include Sequencescape::Api::Rails::ApplicationController
+  delegate :api_connection_options, :to => 'PulldownPipeline::Application.config'
+  
   
   protect_from_forgery
-  
-  def assign_api
-   self.api ||= ::Sequencescape::Api.new
-  end
-  private :assign_api
   
 end
