@@ -8,7 +8,7 @@ class PlatesController < ApplicationController
     'Failed'   => 'failed'
   }
 
-  before_filter :get_printers_and_lables, :on => [ :show, :update ]
+ before_filter :get_printers_and_lables, :on => [ :show, :update ]
 
   def search
     if params[:plate_barcode].blank?
@@ -22,6 +22,7 @@ class PlatesController < ApplicationController
 
   def show
     # Should the look up be done inside the plate form object?
+    debugger
     @plate = api.plate.find(params[:id])
 
     @plate_form = Forms::PlateForm.new(
