@@ -145,6 +145,8 @@ module Forms
   # }
 
   def self.lookup_form(uuid)
-    FormLookUp.find(uuid)
+    FormLookUp.lookup(uuid)
+    
+    
   end
 end
