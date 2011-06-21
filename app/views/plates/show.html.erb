@@ -2,7 +2,7 @@
 <div data-role="page" id="summary">
 
   <div data-role="header">
-    <h1>Plate Summary: <%= @plate.barcode %></h1>
+    <h1><%= @plate.plate_purpose.name.titleize %> Summary: <%= @plate.barcode %></h1>
     <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
@@ -26,7 +26,7 @@
   </div><!-- /header -->
 
   <div data-role="content">
-    <%= semantic_form_for(@plate, :url => plate_path(@plate.uuid), :html => {:method => :put}) do |f| %>
+    <%= semantic_form_for(@plate, :url => plate_path(@plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
       <%= f.inputs :name => 'Set State' do %>
         <%= f.input :state, :label => 'Current State', :collection => @plate_states, :as => :select, :input_html => { :include_blank => false } %>
         <%= f.commit_button 'Change State' %>

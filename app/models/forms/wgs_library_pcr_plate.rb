@@ -1,7 +1,7 @@
 module Forms
   class WgsLibraryPcrPlate < CreationForm
     PARTIAL    = 'tagging'
-    ATTRIBUTES = [:api, :plate_purpose_uuid, :plate_uuid, :tag_layout_template_uuid]
+    ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
 
     attr_accessor *ATTRIBUTES
     attr_reader :plate_creation
@@ -18,18 +18,9 @@ module Forms
     end
 
     def create_objects!
-      # api.tag_layout_template.find()
-      # Find and create stuff...
-
-      @plate_creation = api.plate_creation.create!(
-        :parent              => parent,
-        :child_plate_purpose => child_plate_purpose
-        # :user_uuid           => user_uuid
-      )
-
-
-    rescue
-      false
+      create_plate! do |plate|
+        api.tag_layout_template.find(tag_layout_template_uuid).create!(:plate => plate.uuid)
+      end
     end
     private :create_objects!
   end

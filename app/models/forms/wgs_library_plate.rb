@@ -1,7 +1,7 @@
 module Forms
   class WgsLibraryPlate < CreationForm
     PARTIAL    = 'robot'
-    ATTRIBUTES = [:api, :plate_purpose_uuid, :plate_uuid, :transfer_template_uuid]
+    ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :transfer_template_uuid]
 
     attr_accessor *ATTRIBUTES
     attr_reader :plate_creation
@@ -19,20 +19,7 @@ module Forms
     end
 
     def create_objects!
-      @plate_creation = api.plate_creation.create!(
-        :parent              => parent,
-        :child_plate_purpose => child_plate_purpose
-        # :user_uuid           => user_uuid
-      )
-
-      api.transfer_template.find(transfer_template_uuid).create!(
-        :source      => parent.id,
-        :destination => @plate_creation.child
-        # :user => :user_id
-      )
-    rescue
-
-      false
+      create_plate!(transfer_template_uuid)
     end
     private :create_objects!
   end

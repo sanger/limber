@@ -1,15 +1,16 @@
 module Forms
 
   TRANSFERS = {
-    "Transfer columns 1-1"                             => "218ac2b6-95d6-11e0-821d-005056a80079",
-    "Transfer columns 1-2"                             => "218c0ce8-95d6-11e0-821d-005056a80079",
-    "Transfer columns 1-3"                             => "218d7dbc-95d6-11e0-821d-005056a80079",
-    "Transfer columns 1-4"                             => "218f50c4-95d6-11e0-821d-005056a80079",
-    "Transfer columns 1-6"                             => "21918024-95d6-11e0-821d-005056a80079",
-    "Transfer columns 1-12"                            => "21aa842a-95d6-11e0-821d-005056a80079",
-    "Pool wells based on submission"                   => "21aba828-95d6-11e0-821d-005056a80079",
-    "Transfer wells to MX library tubes by submission" => "21aca7c8-95d6-11e0-821d-005056a80079"
+    "Transfer columns 1-1"                             => "00ab41b2-9b2e-11e0-9da5-005056a80079",
+    "Transfer columns 1-2"                             => "00affe78-9b2e-11e0-9da5-005056a80079",
+    "Transfer columns 1-3"                             => "00b252f4-9b2e-11e0-9da5-005056a80079",
+    "Transfer columns 1-4"                             => "00b5e45a-9b2e-11e0-9da5-005056a80079",
+    "Transfer columns 1-6"                             => "00c243e4-9b2e-11e0-9da5-005056a80079",
+    "Transfer columns 1-12"                            => "00e6d4de-9b2e-11e0-9da5-005056a80079",
+    "Pool wells based on submission"                   => "00e80976-9b2e-11e0-9da5-005056a80079",
+    "Transfer wells to MX library tubes by submission" => "00e95920-9b2e-11e0-9da5-005056a80079"
   }
+  
 
   class PlateForm
     extend ActiveModel::Naming
@@ -69,11 +70,11 @@ module Forms
     end
 
     def child_plate_purpose
-      # @child_plate_purpose ||= api.plate_purpose.find(plate_purpose_uuid)
+      @child_plate_purpose ||= api.plate_purpose.find(plate_purpose_uuid)
     end
 
     def parent
-      # @parent ||= api.plate.find(parent_uuid)
+      @parent ||= api.plate.find(parent_uuid)
     end
 
     def save
@@ -82,27 +83,32 @@ module Forms
       create_objects!
     end
 
-    def create_objects!
+    def default_transfer_template_uuid
+      TRANSFERS['Transfer columns 1-12']
+    end
+    private :default_transfer_template_uuid
+
+    def create_plate!(transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
-        :parent              => @parent_uuid,
-        :child_plate_purpose => @plate_purpose_uuid
+        :parent              => parent_uuid,
+        :child_plate_purpose => plate_purpose_uuid
         # :user_uuid           => user_uuid
       )
 
-      transfer_template = api.transfer_template.find(TRANSFERS["Transfer columns 1-12"])
-
-      transfer_template.create!(
-        :source      => @parent_uuid,
+      api.transfer_template.find(transfer_template_uuid).create!(
+        :source      => parent_uuid,
         :destination => @plate_creation.child.uuid
+        # :user => :user_id
       )
 
-
-      # Return true if everything worked...
+      yield(@plate_creation.child) if block_given?
       true
-    rescue
+    rescue => e
       false
     end
-    private :create_objects!
+    private :create_plate!
+
+    alias_method(:create_objects!, :create_plate!)
   end
 
   # FORM_UUIDS = {
@@ -146,7 +152,5 @@ module Forms
 
   def self.lookup_form(uuid)
     FormLookUp.lookup(uuid)
-    
-    
   end
 end

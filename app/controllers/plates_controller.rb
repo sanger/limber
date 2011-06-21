@@ -39,12 +39,13 @@ class PlatesController < ApplicationController
 
     # @plate_form.save!
 
-      api.state_change.create!(
-        :target       => @plate.uuid,
-        :target_state => params[:plate][:state]
-      )
+    api.state_change.create!(
+      :target       => @plate.uuid,
+      :target_state => params[:plate][:state]
+    )
 
 
+    # Refresh the plate...
     @plate = api.plate.find(params[:id])
 
     respond_to do |format|
