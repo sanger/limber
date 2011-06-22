@@ -1,7 +1,7 @@
 <div data-role="page" id="printing">
 
   <div data-role="header">
-    <h1><%= @plate.plate_purpose.name.titleize %>: <%= @plate.barcode['ean13'] %>- Printing</h1>
+    <h1><%= @plate_presenter.plate.plate_purpose.name.titleize %>: <%= @plate_presenter.plate.barcode['ean13'] %>- Printing</h1>
     <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 

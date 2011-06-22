@@ -14,7 +14,7 @@ class PlatesController < ApplicationController
     # Should the look up be done inside the plate form object?
     @plate = api.plate.find(params[:id])
 
-    @plate_form = Forms::PlateForm.new(
+    @plate_presenter = Presenters.lookup_presenter(@plate).new(
       :api   => api,
       :plate => @plate
     )
@@ -31,25 +31,13 @@ class PlatesController < ApplicationController
     @plate_states = PLATE_STATES
     @plate        = api.plate.find(params[:id])
 
-    # @plate_form = Forms::PlateForm.new(
-      # :api   => api,
-      # :plate => @plate,
-      # :state => params[:plate][:state]
-    # )
-
-    # @plate_form.save!
-
     api.state_change.create!(
       :target       => @plate.uuid,
       :target_state => params[:plate][:state]
     )
 
-
-    # Refresh the plate...
-    @plate = api.plate.find(params[:id])
-
     respond_to do |format|
-      format.html { render :show }
+      format.html { redirect_to :action => :show, :id => params[:id] }
     end
   end
 
