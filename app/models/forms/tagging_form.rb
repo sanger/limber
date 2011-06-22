@@ -1,5 +1,5 @@
 module Forms
-  class WgsLibraryPcrPlate < CreationForm
+  class TaggingForm < CreationForm
     PARTIAL    = 'tagging'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
 

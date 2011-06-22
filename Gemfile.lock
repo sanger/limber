@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/mattdenner/sequencescape-client-api.git
-  revision: afed7042a8ca8624a03c4a3bf607476ddd7754ea
+  revision: a02fa540dfc18a3aeaf1e3a8635c1c627dbd113c
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)

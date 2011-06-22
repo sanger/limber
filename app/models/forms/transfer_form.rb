@@ -1,5 +1,5 @@
 module Forms
-  class WgsLibraryPlate < CreationForm
+  class TransferForm < CreationForm
     PARTIAL    = 'robot'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :transfer_template_uuid]
 
@@ -15,7 +15,7 @@ module Forms
     validates_presence_of *ATTRIBUTES
     def transfer_template_uuids
       # This should be able to use the transfer-to-uuids list in Form.
-      @transfer_template_uuids ||= api.transfer_template.all
+      @transfer_template_uuids ||= (api.transfer_template.all.select { |template| template.name.match(/columns/) }.reverse)
     end
 
     def create_objects!
