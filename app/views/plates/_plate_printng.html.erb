@@ -1,0 +1,25 @@
+<div data-role="page" id="printing">
+
+  <div data-role="header">
+    <h1><%= @plate.plate_purpose.name.titleize %>: <%= @plate.barcode['ean13'] %>- Printing</h1>
+    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %>
+
+    <br/>
+    <%= semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
+      <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
+          It looks like an previous bug so I really should open a ticket...
+      %>
+      <%= f.inputs do %>
+        <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers, :prompt => "Please select a printer..." %>
+        <%= f.commit_button 'Print Label' %>
+      <% end %>
+    <% end %>
+  </div><!-- /content -->
+  
+  
+  <%= render :partial => 'plate_footer' %>
+</div><!-- /page -->
