@@ -61,13 +61,13 @@ body {
   width:30px;
   padding: 3px;
   text-align:     center;
-  border: 1px ridge rgba(5,19,40,0.2);
-  @include radial-gradient(color-stops(#002946,#00406B), top left);
+  border: 1px ridge rgba(5,19,40,0.1);
+  @include radial-gradient(color-stops(#002A46,#003353), top left);
   @include border-radius(7px);
 }
 
 .aliquot {
-  display: none;
+  /* display: none; */
   @include border-radius(30px);
   height:20px;
   width:30px;
@@ -75,7 +75,7 @@ body {
   vertical-align: middle;
   text-align:     center;
   color:#fff;
-  @include box-shadow(#00192B, 3px, 3px, 10px);
+  @include box-shadow(#00192B, 6px, 6px, 10px);
 }
 
 .aliquot:hover {

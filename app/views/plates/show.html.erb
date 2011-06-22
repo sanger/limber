@@ -2,7 +2,7 @@
 <div data-role="page" id="summary">
 
   <div data-role="header">
-    <h1><%= @plate.plate_purpose.name.titleize %> Summary: <%= @plate.barcode %></h1>
+    <h1><%= @plate.plate_purpose.name.titleize %>: <%= @plate.barcode['ean13'] %> - Summary</h1>
     <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
@@ -21,14 +21,18 @@
 <div data-role="page" id="state">
 
   <div data-role="header">
-    <h1>Plate State</h1>
+    <h1><%= @plate.plate_purpose.name.titleize %>: <%= @plate.barcode['ean13'] %> - State</h1>
     <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
   <div data-role="content">
     <%= semantic_form_for(@plate, :url => plate_path(@plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
       <%= f.inputs :name => 'Set State' do %>
-        <%= f.input :state, :label => 'Current State', :collection => @plate_states, :as => :select, :input_html => { :include_blank => false } %>
+        <%= f.input :state, :label => 'Current State', 
+          :collection => @plate_states,
+          :as => :radio, 
+          :include_blank => false
+         %>
         <%= f.commit_button 'Change State' %>
 
       <% end %>
@@ -59,7 +63,7 @@
 <div data-role="page" id="printing">
 
   <div data-role="header">
-    <h1>Printing</h1>
+    <h1><%= @plate.plate_purpose.name.titleize %>: <%= @plate.barcode['ean13'] %>- Printing</h1>
     <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
   </div><!-- /header -->
 
@@ -72,7 +76,7 @@
           It looks like an previous bug so I really should open a ticket...
       %>
       <%= f.inputs do %>
-        <%= f.input :printer, :label => 'Barcode Printer', :input_html => { :prompt => "Please select a printer..." }, :collection => @printers %>
+        <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers, :prompt => "Please select a printer..." %>
         <%= f.commit_button 'Print Label' %>
       <% end %>
     <% end %>
