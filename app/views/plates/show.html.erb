@@ -7,12 +7,13 @@
   </div><!-- /header -->
 
   <div data-role="content">
+    <h2>Plate Status - <%= @plate_presenter.plate.state.titleize %></h2>
     <%= render :partial => "plate", :locals => {:plate_presenter => @plate_presenter}  %>
+    <p><%= @plate_presenter.plate.uuid %></p>
   </div><!-- /content -->
 
 
   <%= render :partial => 'plate_footer' %>
-  <p><%= @plate_presenter.plate.uuid %></p>
 </div><!-- /page -->
 
 
