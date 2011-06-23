@@ -1,5 +1,5 @@
 module Forms
-  class AutoPoolingPlate < CreationForm
+  class AutoPoolingForm < CreationForm
     write_inheritable_attribute :page, 'robot'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :transfer_template_uuid]
 

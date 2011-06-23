@@ -1,13 +1,4 @@
 class PlatesController < ApplicationController
-
-  PLATE_STATES = {
-    'Pending'  => 'pending',
-    'Started'  => 'started',
-    'Passed'   => 'passed',
-    'Canceled' => 'canceled',
-    'Failed'   => 'failed'
-  }
-
   before_filter :get_printers_and_lables, :on => [ :show, :update ]
 
   def show
@@ -20,16 +11,12 @@ class PlatesController < ApplicationController
     )
     # debugger
 
-    # TODO move into sub-class of plate
-    @plate_states = PLATE_STATES
-
     respond_to do |format|
       format.html { render @plate_presenter.page }
     end
   end
 
   def update
-    @plate_states = PLATE_STATES
     @plate        = api.plate.find(params[:id])
 
     api.state_change.create!(
