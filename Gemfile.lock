@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/mattdenner/sequencescape-client-api.git
-  revision: a02fa540dfc18a3aeaf1e3a8635c1c627dbd113c
+  revision: ca81973eb0fc0c04e588a9881e8a7dde0b8f2008
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)
@@ -69,10 +69,12 @@ GEM
       cucumber (~> 1.0.0)
       nokogiri (>= 1.4.4)
       rack-test (>= 0.5.7)
+    daemons (1.1.4)
     database_cleaner (0.6.7)
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    eventmachine (0.12.10)
     ffi (1.0.9)
     formtastic (1.2.4)
       actionpack (>= 2.3.7)
@@ -138,6 +140,10 @@ GEM
       json_pure
       rubyzip
     term-ansicolor (1.0.5)
+    thin (1.2.11)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
@@ -164,4 +170,5 @@ DEPENDENCIES
   rake (~> 0.8.7)
   ruby-debug19
   sequencescape-client-api!
+  thin
   unicorn
