@@ -9,11 +9,12 @@ class PlatesController < ApplicationController
   }
 
   before_filter :get_printers_and_lables, :on => [ :show, :update ]
-  
+
   def show
     # Should the look up be done inside the plate form object?
     @plate = api.plate.find(params[:id])
 
+    debugger
     @plate_presenter = Presenters.lookup_presenter(@plate).new(
       :api   => api,
       :plate => @plate
@@ -23,7 +24,7 @@ class PlatesController < ApplicationController
     @plate_states = PLATE_STATES
 
     respond_to do |format|
-      format.html { render :show }
+      format.html { render @plate_presenter.page }
     end
   end
 

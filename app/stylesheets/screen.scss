@@ -17,11 +17,11 @@ body {
 
 
 
-#plate-control {
+.plate-control {
   margin: 18px 0;
 }
 
-#plate {
+.plate {
   @include box-shadow(#000, 2px, 2px, 5px);
   @include border-radius(15px);
   @include border-top-left-radius(0);
@@ -36,15 +36,15 @@ body {
   color:          #fff;
 }
 
-#plate tr {
+.plate tr {
 /*  padding: 6px;*/
 }
 
-#plate th {
+.plate th {
   padding: 0;
 }
 
-#plate th {
+.plate th {
   vertical-align: middle;
   text-align:     center;
   padding:0;
@@ -52,11 +52,11 @@ body {
 /*  height: 15px;*/
 }
 
-#plate th.first-col {
+.plate th.first-col {
   width: 15px;
 }
 
-#plate .well {
+.plate .well {
   height:30px;
   width:30px;
   padding: 3px;
@@ -83,28 +83,28 @@ body {
   @include box-shadow(#00192B, 0px, 0px, 1px);
 }
 
-#plate .green {
+.plate .green {
   /*Moss green....*/
   background: #196D18;
   @include radial-gradient(color-stops(#00B10E, #002802), top left);
 }
 
-#plate .red {
+.plate .red {
   background:#D10000;
   @include radial-gradient(color-stops(#D30000,#480000), top left);
 }
 
-#plate .yellow {
+.plate .yellow {
   background:#FFFE8D;
   color: #282828;
 }
 
-#plate .orange {
+.plate .orange {
   background:#FF7300;
   @include radial-gradient(color-stops(#FF9443,#5B1B00), top left);
 }
 
-#plate .unknown-value {
+.plate .unknown-value {
   background: #1D86AD;
   @include radial-gradient(color-stops(#289AC7, #083442), top left);
 }

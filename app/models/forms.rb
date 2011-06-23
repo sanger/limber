@@ -21,12 +21,15 @@ module Forms
       false
     end
 
-    PARTIAL = 'new'
-
+    PAGE       = 'new'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid]
 
     attr_accessor *ATTRIBUTES
     attr_reader :plate_creation
+
+    def page
+      self.class.const_get(:PAGE)
+    end
 
     def initialize(attributes = {})
       ATTRIBUTES.each do |attribute|

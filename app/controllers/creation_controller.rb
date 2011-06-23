@@ -9,7 +9,7 @@ class CreationController < ApplicationController
 
     respond_to do |format|
       # TODO Sort this look up out!
-      format.html { render @creation_form.class.const_get(:PARTIAL) }
+      format.html { render @creation_form.page }
     end
   end
 

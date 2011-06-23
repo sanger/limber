@@ -1,6 +1,6 @@
 module Forms
   class TransferForm < CreationForm
-    PARTIAL    = 'robot'
+    PAGE       = 'robot'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :transfer_template_uuid]
 
     attr_accessor *ATTRIBUTES
