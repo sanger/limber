@@ -1,6 +1,6 @@
 module Presenters
   class PooledPresenter < PlatePresenter
-    PAGE = 'pooled_plate'
+    write_inheritable_attribute :page, 'pooled_plate'
 
   end
 end

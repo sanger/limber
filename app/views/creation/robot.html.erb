@@ -1,6 +1,6 @@
 <div data-role="page">
   <div data-role="header">
-    <h2>Create Child Plate for Plate: <%= @creation_form.parent.barcode['ean13'] %></h2>
+    <h2>Create Child Plate for Plate: <%= @creation_form.parent.barcode.ean13 %></h2>
   </div>
   <div data-role="content">
 <%= semantic_form_for(@creation_form, :as => :plate, :url => plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
@@ -41,6 +41,7 @@ $(function(){
  });
 </script>
 
+<h2>Destination Plate</h2>
 <%= render :partial => 'plate' %>
   </div>
 </div>

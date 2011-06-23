@@ -1,6 +1,6 @@
 module Forms
   class TaggingForm < CreationForm
-    PAGE       = 'tagging'
+    write_inheritable_attribute :page, 'tagging'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
 
     attr_accessor *ATTRIBUTES

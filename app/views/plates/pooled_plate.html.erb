@@ -7,12 +7,18 @@
   </div><!-- /header -->
 
   <div data-role="content">
-    <%= render :partial => "plate", :locals => {:plate_presenter => @plate_presenter}  %>
+    
+    <h2>Source Plate</h2>
+    <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @plate_presenter} %>
+    <br/>
+    <h2>Pooled Plate</h2>
+    <%= render :partial => "plate", :locals => {:plate_presenter => @plate_presenter} %>
+    <br/>
+    <p><%= @plate_presenter.plate.uuid %></p>
   </div><!-- /content -->
 
 
   <%= render :partial => 'plate_footer' %>
-  <p><%= @plate_presenter.plate.uuid %></p>
 </div><!-- /page -->
 
 
@@ -29,6 +35,7 @@
       <%= f.inputs :name => 'Set State' do %>
         <%= f.input :state, :label => 'Current State', 
           :collection => @plate_states,
+          :as => :radio, 
           :include_blank => false
          %>
         <%= f.commit_button 'Change State' %>
@@ -36,6 +43,7 @@
       <% end %>
     <%- end %>
 
+    <%# Move this to the new method of creation controller %>
     <%- if @plate_presenter.plate.state == "passed" -%>
     <hr/>
       <%= form_tag new_plate_child_path(@plate_presenter.plate.uuid), :method => 'get' do %>
@@ -57,3 +65,4 @@
 
 
 <%= render :partial => 'plate_printng' %>
+

@@ -10,9 +10,9 @@ module Forms
     "Pool wells based on submission"                   => "00e80976-9b2e-11e0-9da5-005056a80079",
     "Transfer wells to MX library tubes by submission" => "00e95920-9b2e-11e0-9da5-005056a80079"
   }
-  
 
- 
+
+
  class CreationForm
     extend ActiveModel::Naming
     include ActiveModel::Validations
@@ -21,15 +21,12 @@ module Forms
       false
     end
 
-    PAGE       = 'new'
+    class_inheritable_reader :page
+    write_inheritable_attribute :page, 'new'
     ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid]
 
     attr_accessor *ATTRIBUTES
     attr_reader :plate_creation
-
-    def page
-      self.class.const_get(:PAGE)
-    end
 
     def initialize(attributes = {})
       ATTRIBUTES.each do |attribute|

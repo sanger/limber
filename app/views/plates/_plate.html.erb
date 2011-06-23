@@ -1,0 +1,39 @@
+<% aliquot_colour = case plate_presenter.plate.state
+                    when "passed" then "green"
+                    when "started" then "orange"
+                    when "failed" then "red"
+                    when "canceled" then "red"
+                    else "blue"
+                    end
+ -%>
+<table class="plate-view">
+  <thead>
+    <tr>
+      <th class="first-col">&nbsp;</th>
+        <% (1..12).each do |column_number| %>
+          <th><%= column_number %></th>
+        <% end %>
+      </tr>
+  </thead>
+
+<tbody>
+    <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
+      <tr>
+        <th class="first-col"><%= row_label %></th>
+        <% row_wells.each_with_index do |well, index| %>
+          <td>
+            <div id="<%= "well_#{well.location}" %>" class="well">
+              <% if well.aliquots.size > 0 -%>
+                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= aliquot_colour %>" rel="#details_A1">&nbsp;</div>
+              <% else -%>
+                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1" style="display: none;" rel="#details_A1">&nbsp;</div>
+              <% end -%>
+            </div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+
+
+</tbody></table>
+

@@ -4,14 +4,12 @@ module Presenters
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    PAGE       = "show"
+    class_inheritable_reader :page
+    write_inheritable_attribute :page, 'show'
+
     ATTRIBUTES = [:api, :plate]
 
     attr_accessor *ATTRIBUTES
-
-    def page
-      self.class.const_get(:PAGE)
-    end
 
     def initialize(attributes = {})
       ATTRIBUTES.each do |attribute|
@@ -25,6 +23,12 @@ module Presenters
     end
 
     def save!
+    end
+
+    def wells_by_row
+      @plate.wells.inject(Hash.new {|h,k| h[k]=[]}) do |h,well|
+        h[well.location.sub(/\d+/,'')] << well; h
+      end
     end
   end
 
