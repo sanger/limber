@@ -9,9 +9,23 @@
     <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %>
 
     <br/>
-    <%= semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
+    <%= semantic_form_for(@plate_presenter.plate.barcode, :url => barcode_labels_path, :as => :label, :html => {:method => :post}) do |f| %>
+      <%# Hide the details of what is in the label to be printed %>
       <%= f.inputs do %>
-        <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers, :prompt => "Please select a printer..." %>
+        <%= f.input :plate_uuid, :as => :hidden, :value => @plate_presenter.plate.uuid %>
+        <%= f.input :prefix, :as => :hidden %>
+        <%= f.input :number, :as => :hidden %>
+        <%= f.input :study,  :as => :hidden, :value => @plate_presenter.plate.plate_purpose.name %>
+      <% end %>
+
+      <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
+          It looks like an previous bug so I really should open a ticket...
+      %>
+      <%= f.inputs do %>
+        <p>
+          <%= label_tag :printer, 'Barcode printer' %>
+          <%= select_tag :printer, options_from_collection_for_select(@printers, :uuid, :name) %>
+        </p>
         <%= f.commit_button 'Print Label' %>
       <% end %>
     <% end %>

@@ -1,5 +1,5 @@
 class PlatesController < ApplicationController
-  before_filter :get_printers_and_lables, :on => [ :show, :update ]
+  before_filter :get_printers, :on => [ :show, :update ]
 
   def show
     # Should the look up be done inside the plate_presenter  object?
@@ -32,10 +32,8 @@ class PlatesController < ApplicationController
 
   # Private Stuff...
 
-  def get_printers_and_lables
-    # This needs to be done properly through the barcode printing API...
-    @barcode_label = BarcodeLabel.new({:printer => :BARCODE_PRINTER_NOT_SET})
-    @printers      = { "H104_bd" => :h104_bd, "G206_bc" => :g206_bc }
+  def get_printers
+    @printers = api.barcode_printer.all
   end
-  private :get_printers_and_lables
+  private :get_printers
 end

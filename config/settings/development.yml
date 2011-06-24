@@ -1,2 +1,5 @@
 asset_from_barcode: 0098e738-9b2e-11e0-9da5-005056a80079
 user_from_barcode:  find user by barcode
+
+barcode:
+  url: 'http://psd-dev.internal.sanger.ac.uk:3090/rest/wsdl/barcodeservice?stringtype=xsd'
