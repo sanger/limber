@@ -1,5 +1,5 @@
 module Presenters
-   class PlatePresenter
+  class PlatePresenter
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Validations
@@ -35,9 +35,8 @@ module Presenters
     end
   end
 
-
-  def self.lookup_presenter(plate)
-    PresenterLookUp.lookup(plate.plate_purpose.uuid)
+  def self.lookup_for(plate)
+    $stderr.puts plate.plate_purpose.uuid
+    Settings.plate_purposes[plate.plate_purpose.uuid][:presenter_class].constantize
   end
-
 end

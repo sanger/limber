@@ -1,7 +1,7 @@
 class CreationController < ApplicationController
   # Exists in PlateCreationController
   def form_lookup(form_attributes = params)
-    Forms.lookup_form(form_attributes[:plate_purpose_uuid])
+    Settings.plate_purposes[form_attributes[:plate_purpose_uuid]][:form_class].constantize
   end
 
   def redirection_path(form)
