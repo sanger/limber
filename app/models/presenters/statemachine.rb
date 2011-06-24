@@ -19,7 +19,7 @@ module Presenters::Statemachine
           transition :started => :failed
         end
         event :cancel do
-          transition :started => :cancelled
+          transition [ :pending, :started, :passed, :failed ] => :cancelled
         end
       end
     end
@@ -73,6 +73,7 @@ module Presenters::Statemachine
   def control_state_change(&block)
     valid_next_states = state_transitions.map(&:to)
     yield([ state ] + valid_next_states) unless valid_next_states.empty?
+    nil
   end
 
   #--
