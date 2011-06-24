@@ -29,8 +29,6 @@ body {
   border: 1px ridge rgba(11,35,75,0.5);
   vertical-align: middle;
   text-align:     center;
-/*  width: 700px;*/
-/*  height: 400px;*/
   background:     #003557;
   padding:        3px;
   color:          #fff;
@@ -67,12 +65,10 @@ body {
 }
 
 .aliquot {
-  /* display: none; */
   @include border-radius(30px);
-  height:20px;
   width:30px;
-  padding: 10px 0 0 0;
-  /* vertical-align: middle; */
+  height:24px;
+  padding: 6px 0 0 0;
   text-align:     center;
   color:#fff;
   @include box-shadow(#00192B, 6px, 6px, 10px);

@@ -1,4 +1,6 @@
 <% tag_colour = well.aliquots.first.tag.name.downcase.sub(/\s/, "-") -%>
 
-<div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= tag_colour %>" rel="#details_A1">&nbsp;</div>
+<div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= tag_colour %>" rel="#details_A1">
+  <%= well.aliquots.first.tag.identifier %>
+</div>
 
