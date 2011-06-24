@@ -23,13 +23,23 @@ module Forms
 
     class_inheritable_reader :page
     write_inheritable_attribute :page, 'new'
-    ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid]
+    
+    class_inheritable_reader :attributes
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
 
-    attr_accessor *ATTRIBUTES
+    def method_missing(name, *args, &block)
+      name_without_assignment = name.to_s.sub(/=$/, '').to_sym
+      return super unless attributes.include?(name_without_assignment)
+
+      instance_variable_name = :"@#{name_without_assignment}"
+      return instance_variable_get(instance_variable_name) if name_without_assignment == name.to_sym
+      instance_variable_set(instance_variable_name, args.first)
+    end
+
     attr_reader :plate_creation
 
     def initialize(attributes = {})
-      ATTRIBUTES.each do |attribute|
+      self.attributes.each do |attribute|
         send("#{attribute}=", attributes[attribute])
       end
     end

@@ -20,7 +20,9 @@ end
   "WGS library plate"                  => "TransferForm",
   "WGS library PCR plate"              => "TaggingForm",
   "WGS pooled amplified library plate" => "AutoPoolingForm",
+  "SC library plate"                   => "TransferForm",
   "SC hybridisation plate"             => "BaitingForm",
+  "ISC library plate"                  => "TransferForm",
   "ISC hybridisation plate"            => "BaitingForm"
 }.each do |plate_purpose, form_class|
   FormLookUp.find_by_plate_purpose_name(plate_purpose).update_attributes(

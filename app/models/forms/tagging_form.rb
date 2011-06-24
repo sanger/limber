@@ -1,18 +1,11 @@
 module Forms
   class TaggingForm < CreationForm
     write_inheritable_attribute :page, 'tagging'
-    ATTRIBUTES = [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
 
-    attr_accessor *ATTRIBUTES
-    attr_reader :plate_creation
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
+    
+    validates_presence_of *self.attributes
 
-    def initialize(attributes = {})
-      ATTRIBUTES.each do |attribute|
-        send("#{attribute}=", attributes[attribute])
-      end
-    end
-
-    validates_presence_of *ATTRIBUTES
     def tag_layout_template_uuids
       @tag_layout_template_uuids ||= api.tag_layout_template.all
     end
