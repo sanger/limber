@@ -22,9 +22,6 @@ group :development, :test do
     gem 'database_cleaner'
     gem 'launchy'
     gem 'ruby-debug19', :require => 'ruby-debug'
-    # Use unicorn as the web server
-    gem 'unicorn'
-
 end
 
 group :deployment do
