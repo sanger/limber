@@ -1,0 +1,10 @@
+<% aliquot_colour = case plate_presenter.plate.state
+                    when "passed" then "green"
+                    when "started" then "orange"
+                    when "failed" then "red"
+                    when "canceled" then "red"
+                    else "blue"
+                    end
+                    -%>
+
+<div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= aliquot_colour %>" rel="#details_A1">&nbsp;</div>

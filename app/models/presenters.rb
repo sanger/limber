@@ -7,6 +7,9 @@ module Presenters
     class_inheritable_reader :page
     write_inheritable_attribute :page, 'show'
 
+    class_inheritable_reader :aliquot_partial
+    write_inheritable_attribute :aliquot_partial, 'aliquot'
+
     ATTRIBUTES = [:api, :plate]
 
     attr_accessor *ATTRIBUTES

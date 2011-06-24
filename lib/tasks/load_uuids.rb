@@ -32,6 +32,7 @@ end
   "WGS pooled amplified library plate" => "PooledPresenter",
   "SC pooled captured library plate"   => "PooledPresenter",
   "ISC pooled amplified library plate" => "PooledPresenter",
+  "WGS library PCR plate"              => "TaggedPresenter"
 }.each do |plate_purpose, presenter_class|
   PresenterLookUp.find_by_plate_purpose_name(plate_purpose).update_attributes(
     :presenter_class => presenter_class

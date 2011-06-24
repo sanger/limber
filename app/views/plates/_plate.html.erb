@@ -1,11 +1,4 @@
-<% aliquot_colour = case plate_presenter.plate.state
-                    when "passed" then "green"
-                    when "started" then "orange"
-                    when "failed" then "red"
-                    when "canceled" then "red"
-                    else "blue"
-                    end
- -%>
+
 <table class="plate-view">
   <thead>
     <tr>
@@ -24,9 +17,8 @@
           <td>
             <div id="<%= "well_#{well.location}" %>" class="well">
               <% if well.aliquots.size > 0 -%>
-                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= aliquot_colour %>" rel="#details_A1">&nbsp;</div>
+                <%= render :partial => plate_presenter.aliquot_partial, :locals => {:plate_presenter => plate_presenter, :well => well} %>
               <% else -%>
-                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1" style="display: none;" rel="#details_A1">&nbsp;</div>
               <% end -%>
             </div>
           </td>

@@ -10,9 +10,6 @@
 
     <br/>
     <%= semantic_form_for(@barcode_label, :url => barcode_label_path(@barcode_label), :html => {:method => :put}) do |f| %>
-      <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
-          It looks like an previous bug so I really should open a ticket...
-      %>
       <%= f.inputs do %>
         <%= f.input :printer, :label => 'Barcode Printer', :collection => @printers, :prompt => "Please select a printer..." %>
         <%= f.commit_button 'Print Label' %>
