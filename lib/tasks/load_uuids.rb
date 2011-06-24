@@ -19,7 +19,9 @@ end
 {
   "WGS library plate"                  => "TransferForm",
   "WGS library PCR plate"              => "TaggingForm",
-  "WGS pooled amplified library plate" => "AutoPoolingForm"
+  "WGS pooled amplified library plate" => "AutoPoolingForm",
+  "SC hybridisation plate"             => "BaitingForm",
+  "ISC hybridisation plate"            => "BaitingForm"
 }.each do |plate_purpose, form_class|
   FormLookUp.find_by_plate_purpose_name(plate_purpose).update_attributes(
     :form_class => form_class
@@ -32,7 +34,9 @@ end
   "WGS pooled amplified library plate" => "PooledPresenter",
   "SC pooled captured library plate"   => "PooledPresenter",
   "ISC pooled amplified library plate" => "PooledPresenter",
-  "WGS library PCR plate"              => "TaggedPresenter"
+  "WGS library PCR plate"              => "TaggedPresenter",
+  "SC hybridisation plate"             => "BaitedPresenter",
+  "ISC hybridisation plate"            => "BaitedPresenter"
 }.each do |plate_purpose, presenter_class|
   PresenterLookUp.find_by_plate_purpose_name(plate_purpose).update_attributes(
     :presenter_class => presenter_class
