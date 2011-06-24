@@ -31,27 +31,26 @@
   </div><!-- /header -->
 
   <div data-role="content">
-    <%= semantic_form_for(@plate_presenter.plate, :url => plate_path(@plate_presenter.plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
-      <%= f.inputs :name => 'Set State' do %>
-        <%= f.input :state, :label => 'Current State', 
-          :collection => @plate_states,
-          :as => :radio, 
-          :include_blank => false
-         %>
-        <%= f.commit_button 'Change State' %>
+    <% @plate_presenter.control_state_change do |states| %>
+      <%= semantic_form_for(@plate_presenter.plate, :url => plate_path(@plate_presenter.plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
+        <%= f.inputs :name => 'Set State' do %>
+          <%= f.input :state, :label => 'Current State', 
+            :collection => states.map { |s| [ s.titleize, s ] },
+            :include_blank => false
+           %>
+          <%= f.commit_button 'Change State' %>
 
-      <% end %>
-    <%- end %>
+        <% end %>
+      <%- end %>
+      <hr/>
+    <% end %>
 
     <%# Move this to the new method of creation controller %>
-    <%- if @plate_presenter.plate.state == "passed" -%>
-    <hr/>
+    <% @plate_presenter.control_tube_preview do %>
       <%= form_tag new_plate_tube_path(@plate_presenter.plate.uuid), :method => 'get' do %>
           <%= submit_tag "Preview Tubes", :name => nil, :class => "submit" %>
       <% end %>
-
     <%- end -%>
-    
   </div><!-- /content -->
 
   <%= render :partial => 'plate_footer' %>

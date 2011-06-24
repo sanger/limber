@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110622164452) do
+ActiveRecord::Schema.define(:version => 20110623191136) do
 
   create_table "form_look_ups", :force => true do |t|
     t.string   "uuid",                                           :null => false
@@ -21,9 +21,9 @@ ActiveRecord::Schema.define(:version => 20110622164452) do
   end
 
   create_table "presenter_look_ups", :force => true do |t|
-    t.string   "uuid",                                             :null => false
-    t.string   "plate_purpose_name",                               :null => false
-    t.string   "presenter_class",    :default => "PlatePresenter"
+    t.string   "uuid",                                                :null => false
+    t.string   "plate_purpose_name",                                  :null => false
+    t.string   "presenter_class",    :default => "StandardPresenter"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
