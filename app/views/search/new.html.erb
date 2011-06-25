@@ -1,19 +1,22 @@
-<div data-role="page">
-
-  <header data-role="header" data-theme="b">
+<%= page(:search) do %>
+  <%= header do %>
     <h1>Sequencescape - Pulldown Pipeline</h1>
-  </header><!-- /header -->
+  <% end %>
 
-  <section data-role="content"> 
+  <% content do %>
     <h1>Search for Plates</h1>
 
     <%= form_tag search_path, :method => 'post' do %>
+      <p>
         <%= label_tag :user_id, "User ID" %>
         <%= text_field_tag :user_id, params[:user_id] %>
+      </p>
+      <p>
         <%= label_tag :plate_barcode, "Plate Barcode" %>
         <%= text_field_tag :plate_barcode, params[:plate_barcode] %>
-        <%= submit_tag "Search", :name => nil, :class => "submit" %>
-    <% end %>
-  </section><!-- /content -->
+      </p>
 
-</div>
+      <%= submit_tag "Search", :name => nil, :class => "submit" %>
+    <% end %>
+  <% end %>
+<% end %>

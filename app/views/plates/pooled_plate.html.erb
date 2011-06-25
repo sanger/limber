@@ -1,61 +1,82 @@
-<!-- Start of first page -->
-<div data-role="page" id="summary">
+<%= page(:summary) do %>
+  <%= header do %>
+    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - Summary</h1>
+  <% end %>
 
-  <div data-role="header">
-    <h1><%= @plate_presenter.plate.plate_purpose.name.titleize %>: <%= @plate_presenter.plate.barcode.ean13 %> - Summary</h1>
-    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
-  </div><!-- /header -->
+  <%= content do %>
+    <%= @presenter.control_source_view do %>
+      <h2>Source Plate</h2>
+      <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @presenter} %>
+      <br/>
+    <% end %>
 
-  <div data-role="content">
-    
-    <h2>Source Plate</h2>
-    <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @plate_presenter} %>
-    <br/>
     <h2>Pooled Plate</h2>
-    <%= render :partial => "plate", :locals => {:plate_presenter => @plate_presenter} %>
-    <br/>
-    <p><%= @plate_presenter.plate.uuid %></p>
-  </div><!-- /content -->
+    <%= render :partial => "plate", :locals => {:plate_presenter => @presenter} %>
 
+    <% @presenter.control_tube_view do %>
+      <h2>Tubes</h2>
+      <% @presenter.plate.tubes.each do |tube| %>
+        <p><%= tube.barcode.ean13 %></p>
+      <% end %>
+    <% end %>
+  <% end %>
 
-  <%= render :partial => 'plate_footer' %>
-</div><!-- /page -->
+  <%= footer %>
+<% end %>
 
+<%= page(:state) do %>
+  <%= header do %>
+    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - State</h1>
+  <% end %>
 
-<!-- Start of second page -->
-<div data-role="page" id="state">
+  <%= content do %>
+    <% @presenter.control_state_change do |states| %>
+      <%= section do %>
+        <%= semantic_form_for(@presenter.plate, :url => pulldown_plate_path(@presenter.plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
+          <%= f.inputs :name => 'Set State' do %>
+            <p>
+              <%= label_tag :state, "Current State" %>
+              <%= select_tag :state, options_for_select(states.map { |s| [ s.titleize, s ] }) %>
+            </p>
+            <%= f.commit_button 'Change State' %>
 
-  <div data-role="header">
-    <h1><%= @plate_presenter.plate.plate_purpose.name.titleize %>: <%= @plate_presenter.plate.barcode.ean13 %> - State</h1>
-    <%= link_to "Search", search_path, :'data-direction' => "reverse", :'data-icon' => "search", :'data-theme' => "b"  %>
-  </div><!-- /header -->
-
-  <div data-role="content">
-    <% @plate_presenter.control_state_change do |states| %>
-      <%= semantic_form_for(@plate_presenter.plate, :url => plate_path(@plate_presenter.plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
-        <%= f.inputs :name => 'Set State' do %>
-          <%= f.input :state, :label => 'Current State', 
-            :collection => states.map { |s| [ s.titleize, s ] },
-            :include_blank => false
-           %>
-          <%= f.commit_button 'Change State' %>
-
+          <% end %>
         <% end %>
-      <%- end %>
-      <hr/>
+      <% end %>
     <% end %>
 
     <%# Move this to the new method of creation controller %>
-    <% @plate_presenter.control_tube_preview do %>
-      <%= form_tag new_plate_tube_path(@plate_presenter.plate.uuid), :method => 'get' do %>
+    <% @presenter.control_tube_preview do %>
+      <% section do %>
+        <%= form_tag new_pulldown_plate_tube_path(@presenter.plate.uuid), :method => 'get' do %>
           <%= submit_tag "Preview Tubes", :name => nil, :class => "submit" %>
+        <% end %>
       <% end %>
     <%- end -%>
-  </div><!-- /content -->
+  <% end %>
 
-  <%= render :partial => 'plate_footer' %>
-</div><!-- /page -->
+  <%= footer %>
+<% end %>
 
+<%= page(:printing) do %>
+  <%= header do %>
+    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - Print</h1>
+  <% end %>
 
-<%= render :partial => 'plate_printng' %>
+  <%= content do %>
+    <%= render(:partial => 'plate_printing') %>
 
+    <% @presenter.control_tube_view do %>
+      <%= section do %>
+        <h2>Print tube labels</h2>
+        <%= multiple_barcodes_printing_form(
+              @presenter.plate.tubes.map(&:barcode),
+              :redirection_url => pulldown_plate_path(@presenter.plate),
+              :text            => 'MX Library tube'
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= footer %>
+<% end %>

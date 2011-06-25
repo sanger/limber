@@ -1,17 +1,23 @@
 module Forms
- class CreationForm
-    extend ActiveModel::Naming
-    include ActiveModel::Validations
+  module Form
+    def self.included(base)
+      base.class_eval do
+        extend ActiveModel::Naming
+        include ActiveModel::Conversion
+        include ActiveModel::Validations
 
-    def persisted?
-      false
+        class_inheritable_reader :page
+        write_inheritable_attribute :page, 'new'
+
+        class_inheritable_reader :attributes
+      end
     end
 
-    class_inheritable_reader :page
-    write_inheritable_attribute :page, 'new'
-    
-    class_inheritable_reader :attributes
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
+    def initialize(attributes = {})
+      self.attributes.each do |attribute|
+        send("#{attribute}=", attributes[attribute])
+      end
+    end
 
     def method_missing(name, *args, &block)
       name_without_assignment = name.to_s.sub(/=$/, '').to_sym
@@ -21,14 +27,19 @@ module Forms
       return instance_variable_get(instance_variable_name) if name_without_assignment == name.to_sym
       instance_variable_set(instance_variable_name, args.first)
     end
+    protected :method_missing
+
+    def persisted?
+      false
+    end
+  end
+
+  class CreationForm
+    include Form
+
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
 
     attr_reader :plate_creation
-
-    def initialize(attributes = {})
-      self.attributes.each do |attribute|
-        send("#{attribute}=", attributes[attribute])
-      end
-    end
 
     # validates_presence_of *ATTRIBUTES
 

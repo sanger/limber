@@ -1,23 +1,22 @@
-
 <table class="plate-view">
   <thead>
     <tr>
       <th class="first-col">&nbsp;</th>
-        <% (1..12).each do |column_number| %>
-          <th><%= column_number %></th>
-        <% end %>
-      </tr>
+      <% (1..12).each do |column_number| %>
+        <th><%= column_number %></th>
+      <% end %>
+    </tr>
   </thead>
 
-<tbody>
+  <tbody>
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% row_wells.each_with_index do |well, index| %>
           <td>
             <div id="<%= "well_#{well.location}" %>" class="well">
-              <% if well.aliquots.size > 0 -%>
-                <%= render :partial => plate_presenter.aliquot_partial, :locals => {:plate_presenter => plate_presenter, :well => well} %>
+              <% unless well.aliquots.empty? -%>
+                <%= render :partial => plate_presenter.aliquot_partial, :locals => { :lab_ware => plate_presenter.plate, :id => well.location, :container => well } %>
               <% else -%>
               <% end -%>
             </div>
@@ -25,7 +24,18 @@
         <% end %>
       </tr>
     <% end %>
+  </tbody>
+</table>
 
+<ul id="information">
+  <li><span class="label">Barcode</span>             <%= useful_barcode(plate_presenter.plate.barcode) %></li>
+  <li><span class="label">Number of wells</span>     <%= plate_presenter.plate.wells.select { |w| not w.aliquots.empty? }.size %></li>
+  <li><span class="label">Plate type</span>          <%= plate_presenter.plate.plate_purpose.name %></li>
+  <li><span class="label">Current plate state</span> <%= plate_presenter.plate.state %></li>
+<% if plate_presenter.plate.iteration.present? %>
+  <li><span class="label">Iteration</span>           <%= plate_presenter.plate.iteration %></li>
+<% end %>
 
-</tbody></table>
-
+  <li><span class="label">Stock plate barcode</span> XXXXXXXXXX</li>
+  <li><span class="label">Created on</span>          XX-XXXX-XXXX (by XXXXX)</li>
+</ul>

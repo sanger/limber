@@ -6,8 +6,8 @@ class SearchController < ApplicationController
     if params[:plate_barcode].blank?
       render :new
     else
-      @plate = api.search.find(Settings.searches['Find asset by barcode']).first(:barcode => params[:plate_barcode])
-      redirect_to plate_path(:id => @plate.uuid)
+      redirect_to api.search.find(Settings.searches['Find asset by barcode']).first(:barcode => params[:plate_barcode])
+      #redirect_to plate_path(:id => @plate.uuid)
       # render :show, :id => @plate.uuid
     end
   end

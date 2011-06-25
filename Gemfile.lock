@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/mattdenner/sequencescape-client-api.git
-  revision: 9f01b7b92faacb5aef0e57d6769aa69fffa0a2cd
+  revision: 0a3aff153e854ee70e90139db8d6551af3c0a006
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)
@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: http://github.com/sanger/sanger_barcode.git
-  revision: a55243fa9f09fa20dff1d2e7ade40ba50ec4a0bc
+  revision: 2ad466032ff7c3c803697fffd6c9ae42b4dbca34
   branch: ruby-1.9
   specs:
     sanger_barcode (0.0.1)
@@ -72,11 +72,10 @@ GEM
       gherkin (~> 2.4.1)
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.5)
-    cucumber-rails (1.0.0)
+    cucumber-rails (1.0.2)
       capybara (>= 1.0.0)
       cucumber (~> 1.0.0)
-      nokogiri (>= 1.4.4)
-      rack-test (>= 0.5.7)
+      nokogiri (>= 1.4.6)
     daemons (1.1.4)
     diff-lcs (1.1.2)
     erubis (2.6.6)

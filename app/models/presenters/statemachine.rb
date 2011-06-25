@@ -13,10 +13,10 @@ module Presenters::Statemachine
           transition :pending => :started
         end
         event :pass do
-          transition :started => :passed
+          transition [ :pending, :started ] => :passed
         end
         event :fail do
-          transition :started => :failed
+          transition [ :pending, :started ] => :failed
         end
         event :cancel do
           transition [ :pending, :started, :passed, :failed ] => :cancelled

@@ -1,15 +1,20 @@
 PulldownPipeline::Application.routes.draw do
-
-
   match '/search' => 'search#new', :as => :search
 
-  resources :plates do
-    resources :children, :controller => :creation
-    resources :tubes
+  resources :pulldown_plates, :controller => :plates do
+    resources :children, :controller => :plate_creation
+    resources :tubes,    :controller => :tube_creation
   end
 
+  resources :pulldown_multiplexed_library_tubes, :controller => :tubes do
 
-  resources :barcode_labels
+  end
+
+  # Printing can do individual or multiple labels
+  scope 'print', :controller => :barcode_labels, :via => :post do
+    match 'individual', :action => 'individual', :as => :print_individual_label
+    match 'multiple',   :action => 'multiple',   :as => :print_multiple_labels
+  end
 
   root :to => "search#new"
 end

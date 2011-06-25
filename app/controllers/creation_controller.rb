@@ -1,21 +1,10 @@
 class CreationController < ApplicationController
-  # Exists in PlateCreationController
-  def form_lookup(form_attributes = params)
-    Settings.plate_purposes[form_attributes[:plate_purpose_uuid]][:form_class].constantize
-  end
-
-  def redirection_path(form)
-    plate_path(form.child.uuid)
-  end
-
-  # Everything below here remains in this controller
-
   def create_form(form_attributes)
     form_lookup(form_attributes).new(form_attributes.merge(:api => api))
   end
 
   def new
-    @creation_form = create_form(params.merge(:parent_uuid => params[:plate_id]))
+    @creation_form = create_form(params.merge(:parent_uuid => params[:pulldown_plate_id]))
 
     respond_to do |format|
       # TODO Sort this look up out!

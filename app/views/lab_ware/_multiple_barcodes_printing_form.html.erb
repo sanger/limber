@@ -1,0 +1,25 @@
+<%= semantic_form_for(nil, :url => print_multiple_labels_path, :as => :labels, :html => {:method => :post}) do |f| %>
+  <%# Hide the details of what is in the label to be printed %>
+  <%= f.inputs do %>
+    <%= hidden_field_tag(:redirect_to, redirection_url) %>
+
+    <% barcodes.each_with_index do |barcode, index| %>
+      <%= f.fields_for(index.to_s.to_sym, barcode) do |barcode_form| %>
+        <%= barcode_form.hidden_field(:prefix) %>
+        <%= barcode_form.hidden_field(:number) %>
+        <%= barcode_form.hidden_field(:study, :value => text) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
+    It looks like an previous bug so I really should open a ticket...
+  %>
+  <%= f.inputs do %>
+    <p>
+    <%= label_tag :printer, 'Barcode printer' %>
+    <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcodes), :uuid, :name) %>
+    </p>
+    <%= f.commit_button 'Print Labels' %>
+  <% end %>
+<% end %>
