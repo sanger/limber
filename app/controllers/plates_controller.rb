@@ -5,7 +5,7 @@ class PlatesController < ApplicationController
     # Should the look up be done inside the plate_presenter  object?
     @plate = api.plate.find(params[:id])
 
-    @plate_presenter = Presenters.lookup_presenter(@plate).new(
+    @plate_presenter = Presenters.lookup_for(@plate).new(
       :api   => api,
       :plate => @plate
     )

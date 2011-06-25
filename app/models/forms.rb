@@ -1,18 +1,4 @@
 module Forms
-
-  TRANSFERS = {
-    "Transfer columns 1-1"                             => "00ab41b2-9b2e-11e0-9da5-005056a80079",
-    "Transfer columns 1-2"                             => "00affe78-9b2e-11e0-9da5-005056a80079",
-    "Transfer columns 1-3"                             => "00b252f4-9b2e-11e0-9da5-005056a80079",
-    "Transfer columns 1-4"                             => "00b5e45a-9b2e-11e0-9da5-005056a80079",
-    "Transfer columns 1-6"                             => "00c243e4-9b2e-11e0-9da5-005056a80079",
-    "Transfer columns 1-12"                            => "00e6d4de-9b2e-11e0-9da5-005056a80079",
-    "Pool wells based on submission"                   => "00e80976-9b2e-11e0-9da5-005056a80079",
-    "Transfer wells to MX library tubes by submission" => "00e95920-9b2e-11e0-9da5-005056a80079"
-  }
-
-
-
  class CreationForm
     extend ActiveModel::Naming
     include ActiveModel::Validations
@@ -65,7 +51,7 @@ module Forms
     end
 
     def default_transfer_template_uuid
-      TRANSFERS['Transfer columns 1-12']
+      Settings.transfer_templates['Transfer columns 1-12']
     end
     private :default_transfer_template_uuid
 
@@ -91,9 +77,4 @@ module Forms
 
     alias_method(:create_objects!, :create_plate!)
   end
-
-  def self.lookup_form(uuid)
-    FormLookUp.lookup(uuid)
-  end
-
 end

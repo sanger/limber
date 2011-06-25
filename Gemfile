@@ -2,7 +2,6 @@ source 'http://rubygems.org'
 
 gem 'compass', '>= 0.11.1'
 gem 'formtastic', '~>1.2.3'
-gem 'mysql2', '~>0.2.7'
 gem 'rails', '~>3.0.7'
 gem 'rake', '~>0.8.7'
 gem 'state_machine', '~>1.0.1'
@@ -22,7 +21,6 @@ gem 'sanger_barcode',
 group :development, :test do
     gem 'capybara'
     gem 'cucumber-rails'
-    gem 'database_cleaner'
     gem 'launchy'
     gem 'ruby-debug19', :require => 'ruby-debug'
 end
