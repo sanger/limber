@@ -17,20 +17,7 @@
   <% end %>
 
   <%= content do %>
-    <%= @presenter.control_state_change do |states| %>
-      <%= section do %>
-        <%= semantic_form_for(@presenter.plate, :url => pulldown_plate_path(@presenter.plate.uuid), :as => :plate, :html => {:method => :put}) do |f| %>
-          <%= f.inputs :name => 'Set State' do %>
-            <p>
-              <%= label_tag :state, "Current State" %>
-              <%= select_tag :state, options_for_select(states.map { |s| [ s.titleize, s ] }) %>
-            </p>
-            <%= f.commit_button 'Change State' %>
-
-          <% end %>
-        <% end %>
-      <% end %>
-    <% end %>
+    <%= state_change_form(@presenter) %>
 
     <%= @presenter.control_child_plate_creation do |child_plate_purposes| %>
       <% section do %>

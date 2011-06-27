@@ -25,8 +25,26 @@ module Presenters
       end
     end
 
+    def lab_ware
+      self.plate
+    end
+
+    def lab_ware_form_details(view)
+      { :url => view.pulldown_plate_path(self.plate), :as  => :plate }
+    end
+
+    class UnknownPlateType < StandardError
+      attr_reader :plate
+
+      def initialize(plate)
+        super("Unknown plate type #{plate.plate_purpose.name.inspect}")
+        @plate = plate
+      end
+    end
+
     def self.lookup_for(plate)
-      Settings.plate_purposes[plate.plate_purpose.uuid][:presenter_class].constantize
+      plate_details = Settings.plate_purposes[plate.plate_purpose.uuid] or raise UnknownPlateType, plate
+      plate_details[:presenter_class].constantize
     end
   end
 end
