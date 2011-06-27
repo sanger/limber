@@ -16,7 +16,7 @@
     <% @presenter.control_tube_view do %>
       <h2>Tubes</h2>
       <% @presenter.plate.tubes.each do |tube| %>
-        <p><%= tube.barcode.ean13 %></p>
+        <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => tube } %>
       <% end %>
     <% end %>
   <% end %>

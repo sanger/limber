@@ -5,18 +5,7 @@
 
   <%= content do %>
     <h2>Tube Status - <%= @presenter.tube.state.titleize %></h1>
-    <div class="tube-view">
-      <% unless @presenter.tube.aliquots.empty? -%>
-        <%= render :partial => 'lab_ware/aliquot', :locals => { :lab_ware => @presenter.tube, :id => 'tube' } %>
-      <% end -%>
-    </div>
-
-    <ul id="information">
-      <li><span class="label">Barcode</span>             <%= useful_barcode(@presenter.tube.barcode) %></li>
-      <li><span class="label">Current state</span>       <%= @presenter.tube.state %></li>
-      <li><span class="label">Stock plate barcode</span> XXXXXXXXXX</li>
-      <li><span class="label">Created on</span>          XX-XXXX-XXXX (by XXXXX)</li>
-    </ul>
+    <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
   <% end %>
 
   <%= footer %>
