@@ -207,3 +207,7 @@ table.form {
     }
   }
 }
+
+/* Reasons are initially hidden and shown based on a selection */
+.reason      { display: none;  }
+.reason.show { display: block; }

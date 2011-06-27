@@ -21,7 +21,8 @@ class LabWareController < ApplicationController
   def update
     api.state_change.create!(
       :target       => @lab_ware.uuid,
-      :target_state => params[:state]
+      :target_state => params[:state],
+      :reason       => params[:reason]
     )
 
     respond_to do |format|
