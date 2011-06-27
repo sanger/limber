@@ -4,6 +4,10 @@ module Forms
     class_inheritable_reader :aliquot_partial
     write_inheritable_attribute :aliquot_partial, "plates/baited_aliquot"
 
+    def plate
+      self.parent
+    end
+
     def bait_library_layout_preview
       @bait_library_layout_preview ||= api.bait_library_layout.preview!(:plate => parent_uuid).layout
     end
@@ -14,17 +18,18 @@ module Forms
       end
     end
 
+    def baits
+      Hash[wells.map { |w| [w.bait, w] }].values
+    end
+
     def wells
-      wells = bait_library_layout_preview.sort.map do |well|
+      bait_library_layout_preview.sort.map do |well|
         Hashie::Mash.new(
           :location => well[0],
           :bait     => well[1],
           :aliquots => [:an_aliquot]
         )
       end
-
-      wells
-
     end
 
     def wells_by_row
