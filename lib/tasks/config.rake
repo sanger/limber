@@ -38,7 +38,7 @@ namespace :config do
         # SC plates
         presenters["SC stock plate"].merge!(                                                             :presenter_class => "Presenters::StockPlatePresenter")
         presenters["SC library plate"].merge!(                  :form_class => "Forms::TransferForm")
-        presenters["SC library PCR plate"].merge!(             :form_class => "Forms::TaggingForm",     :presenter_class => "Presenters::TaggedPresenter")
+        presenters["SC captured library PCR plate"].merge!(     :form_class => "Forms::TaggingForm",     :presenter_class => "Presenters::TaggedPresenter")
         presenters["SC hybridisation plate"].merge!(            :form_class => "Forms::BaitingForm",     :presenter_class => "Presenters::BaitedPresenter")
         presenters["SC pooled captured library plate"].merge!(  :form_class => "Forms::AutoPoolingForm", :presenter_class => "Presenters::PooledPresenter")
 
@@ -53,7 +53,7 @@ namespace :config do
       puts "Preparing plate purpose forms and presenters ..."
 
       api.plate_purpose.all.each do |plate_purpose|
-        next unless plate_purpose.name =~ /^(WGS|SC|ISC)\s/       # Ignore unnecessary plates
+        next unless plate_purpose.name == 'Pulldown QC plate' or plate_purpose.name =~ /^(WGS|SC|ISC)\s/ # Ignore unnecessary plates
         plate_purposes[plate_purpose.uuid] = name_to_details[plate_purpose.name].dup.merge(
           :name => plate_purpose.name
         )

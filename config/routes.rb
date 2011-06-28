@@ -4,7 +4,9 @@ PulldownPipeline::Application.routes.draw do
   resources :pulldown_plates, :controller => :plates do
     resources :children, :controller => :plate_creation
     resources :tubes,    :controller => :tube_creation
+
   end
+  post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
   resources :pulldown_multiplexed_library_tubes, :controller => :tubes do
 

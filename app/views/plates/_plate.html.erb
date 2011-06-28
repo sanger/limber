@@ -16,7 +16,7 @@
           <td>
             <div id="<%= "well_#{well.location}" %>" class="well">
               <% unless well.aliquots.empty? -%>
-                <%= render :partial => plate_presenter.aliquot_partial, :locals => { :lab_ware => plate_presenter.plate, :id => well.location, :container => well } %>
+                <%= render :partial => plate_presenter.aliquot_partial, :locals => { :presenter => plate_presenter, :lab_ware => plate_presenter.plate, :id => well.location, :container => well } %>
               <% else -%>
               <% end -%>
             </div>

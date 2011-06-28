@@ -1,4 +1,8 @@
 module PageHelper
+  def flash_messages
+    render(:partial => 'lab_ware/flash_messages') unless flash.empty?
+  end
+
   def container(data_role, options = {}, &block)
     content_tag(:div, options.merge('data-role' => data_role), &block)
   end

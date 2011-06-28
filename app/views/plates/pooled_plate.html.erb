@@ -2,6 +2,8 @@
   <%= header(@presenter, 'Summary') %>
 
   <%= content do %>
+    <%= flash_messages %>
+
     <%= @presenter.control_source_view do %>
       <h2>Source Plate</h2>
       <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @presenter} %>

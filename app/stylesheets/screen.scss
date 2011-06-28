@@ -93,6 +93,9 @@ body {
   .blue          { background: #2A70B1; @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
   .orange        { background: #FF7300; @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
   .unknown-value { background: #1D86AD; @include radial-gradient(color-stops(#289AC7, #083442), top left); }
+
+  .good          { background: #196D18; @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .failed        { background: #D10000; @include radial-gradient(color-stops(#D30000, #480000), top left); }
 }
 
 .plate-view, .tube-view {

@@ -1,10 +1,27 @@
 module Forms
   module Form
+    module CustomPage
+      # We need to do something special at this point in order to create the plate.
+      def render(controller)
+        controller.render(self.page)
+      end
+    end
+
+    module NoCustomPage
+      # By default forms need no special processing to they actually do the creation and then
+      # redirect.  If you have a special form to display include Forms::Form::CustomPage
+      def render(controller)
+        raise StandardError, "Not saving #{self.class} form...." unless save
+        controller.redirect_to_form_destination(self)
+      end
+    end
+
     def self.included(base)
       base.class_eval do
         extend ActiveModel::Naming
         include ActiveModel::Conversion
         include ActiveModel::Validations
+        include NoCustomPage
 
         class_inheritable_reader :page
         write_inheritable_attribute :page, 'new'

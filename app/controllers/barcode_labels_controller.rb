@@ -35,6 +35,6 @@ class BarcodeLabelsController < ApplicationController
   # Handles printing multiple labels
   def multiple
     print(params[:labels].map(&method(:create_label)))
-    redirect_to(params[:redirect_to], :notice => "Barcodes printed to #{@printer.try(:name)}")
+    redirect_to(params[:redirect_to], :notice => "#{params[:labels].size} barcodes printed to #{@printer.try(:name)}")
   end
 end

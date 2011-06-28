@@ -1,9 +1,10 @@
 module Forms
   class TaggingForm < CreationForm
-    write_inheritable_attribute :page, 'tagging'
+    include Forms::Form::CustomPage
 
+    write_inheritable_attribute :page, 'tagging'
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
-    
+
     validates_presence_of *self.attributes
 
     def tag_layout_template_uuids

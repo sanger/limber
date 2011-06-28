@@ -2,6 +2,8 @@
   <%= header(@presenter, 'Summary') %>
 
   <%= content do %>
+    <%= flash_messages %>
+
     <h2>Plate Status - <%= @presenter.plate.state.titleize %></h2>
     <%= render :partial => "plate", :locals => {:plate_presenter => @presenter}  %>
     <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
@@ -37,6 +39,32 @@
 
   <%= content do %>
     <%= render(:partial => 'plate_printing') %>
+  <% end %>
+
+  <%= footer %>
+<% end %>
+
+<%= page(:failing) do %>
+  <%= header(@presenter, 'Fail wells') %>
+
+  <%= content do %>
+    <%= form_for(:plate, :url => fail_wells_path(@presenter.plate), :html => { :method => 'post' }) do |form| %>
+      <%= form.fields_for(:wells) do |well_form| %>
+        <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, @presenter) } %>
+
+        <script language="javascript" charset="utf-8">
+          (function($, undefined) {
+            $('#failing .plate-view').delegate('.aliquot', 'click', function() {
+              failing = $(this).toggleClass('good failed').hasClass('failed');
+              $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+            });
+          })($);
+        </script>
+      <% end %>
+
+      <br/>
+      <%= form.submit('Fail wells') %>
+    <% end %>
   <% end %>
 
   <%= footer %>
