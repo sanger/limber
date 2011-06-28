@@ -45,7 +45,7 @@ namespace :config do
         presenters["ISC stock plate"].merge!(                                                            :presenter_class => "Presenters::StockPlatePresenter")
         presenters["ISC library plate"].merge!(                 :form_class => "Forms::TransferForm")
         presenters["ISC hybridisation plate"].merge!(           :form_class => "Forms::BaitingForm",     :presenter_class => "Presenters::BaitedPresenter")
-        presenters["ISC pooled amplified library plate"].merge!(:form_class => "Forms:AutoPoolingForm",  :presenter_class => "Presenters::PooledPresenter")
+        presenters["ISC pooled amplified library plate"].merge!(:form_class => "Forms::AutoPoolingForm", :presenter_class => "Presenters::PooledPresenter")
       end
 
       puts "Preparing plate purpose forms and presenters ..."

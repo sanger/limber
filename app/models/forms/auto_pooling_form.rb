@@ -1,13 +1,12 @@
 module Forms
   class AutoPoolingForm < CreationForm
-    write_inheritable_attribute :page, 'robot'
+    write_inheritable_attribute :page, 'auto_pooling'
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :transfer_template_uuid]
-    
 
     def transfer_template_uuids
-      # TODO this should do a look up on the pooling by submission uuid
-      # locally and the a direct find
-      @transfer_template_uuids ||= api.transfer_template.all.select { |transfer| transfer.name.match(/Pool/) }
+      [
+        [ 'Pool wells based on submission', Settings.transfer_templates['Pool wells based on submission'] ]
+      ]
     end
 
     def create_objects!
