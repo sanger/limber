@@ -10,10 +10,10 @@ module PageHelper
     @_content_for[:header] = ''
   end
 
-  def header(&block)
-    content_for(:header, &block)
+  def header(presenter = nil, title = nil, &block)
+    content_for(:header, &block) if block_given?
     container(:header, 'data-theme' => 'b') do
-      render(:partial => 'lab_ware/header')
+      render(:partial => 'lab_ware/header', :locals => { :presenter => presenter, :title => title })
     end
   end
 

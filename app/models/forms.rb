@@ -54,6 +54,7 @@ module Forms
     def parent
       @parent ||= api.plate.find(parent_uuid)
     end
+    alias_method(:plate, :parent)
 
     def save
       return false unless valid?

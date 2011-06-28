@@ -1,7 +1,5 @@
 <%= page(:creation) do %>
-  <%= header do %>
-    <h1>Create Child Plate</h1>
-  <% end %>
+  <%= header(@creation_form, 'Create child plate') %>
 
   <% content do %>
     <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent.uuid), :html => {:method => :post}) do |f| %>

@@ -1,7 +1,5 @@
 <%= page(:creation) do %>
-  <%= header do %>
-    <h2>Create Child Plate for Plate: <%= @creation_form.parent.barcode.ean13 %></h2>
-  <% end %>
+  <%= header(@creation_form, 'Choose columns to transfer') %>
 
   <% content do %>
     <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>

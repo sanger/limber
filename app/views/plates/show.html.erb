@@ -1,7 +1,5 @@
 <%= page(:summary) do %>
-  <%= header do %>
-    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - Summary</h1>
-  <% end %>
+  <%= header(@presenter, 'Summary') %>
 
   <%= content do %>
     <h2>Plate Status - <%= @presenter.plate.state.titleize %></h2>
@@ -13,9 +11,7 @@
 <% end %>
 
 <%= page(:state) do %>
-  <%= header do %>
-    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - State</h1>
-  <% end %>
+  <%= header(@presenter, 'State') %>
 
   <%= content do %>
     <%= state_change_form(@presenter) %>
@@ -37,9 +33,7 @@
 <% end %>
 
 <%= page(:printing) do %>
-  <%= header do %>
-    <h1><%= @presenter.plate.plate_purpose.name.titleize %>: <%= @presenter.plate.barcode.ean13 %> - Print</h1>
-  <% end %>
+  <%= header(@presenter, 'Print') %>
 
   <%= content do %>
     <%= render(:partial => 'plate_printing') %>

@@ -4,6 +4,7 @@
 @import "compass/utilities/links";
 @import "compass/css3/border-radius";
 @import "compass/css3/gradient";
+@import "colours";
 
 
 $font-size: 14px;
@@ -83,15 +84,6 @@ body {
   color: #FFD600;
   @include box-shadow(#00192B, 0px, 0px, 1px);
 }
-
-.tag-1 { @include radial-gradient(color-stops(#C9891C, #422A00), top left); }
-.tag-2 { @include radial-gradient(color-stops(#C80C13, #420030), top left); }
-.tag-3 { @include radial-gradient(color-stops(#83C81F, #284200), top left); }
-.tag-4 { @include radial-gradient(color-stops(#671FC8, #1E0042), top left); }
-.tag-5 { @include radial-gradient(color-stops(#1AC9B9, #00423C), top left); }
-.tag-6 { @include radial-gradient(color-stops(#0D77CA, #002642), top left); }
-.tag-7 { @include radial-gradient(color-stops(#C71875, #420023), top left); }
-.tag-8 { @include radial-gradient(color-stops(#C93D1B, #420E00), top left); }
 
 
 @mixin labware-view {
