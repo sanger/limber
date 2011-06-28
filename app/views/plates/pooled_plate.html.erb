@@ -8,13 +8,17 @@
       <h2>Source Plate</h2>
       <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @presenter} %>
       <br/>
+
+      <h2>Pooled Plate</h2>
+      <%= render :partial => "plate", :locals => {:plate_presenter => @presenter} %>
+      <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
     <% end %>
 
-    <h2>Pooled Plate</h2>
-    <%= render :partial => "plate", :locals => {:plate_presenter => @presenter} %>
-    <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
-
     <% @presenter.control_tube_view do %>
+      <h2>Pooled Plate</h2>
+      <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @presenter} %>
+      <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
+
       <h2>Tubes</h2>
       <% @presenter.plate.tubes.each do |tube| %>
         <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => tube } %>

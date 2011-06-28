@@ -3,20 +3,20 @@
   <thead>
     <tr>
       <th class="first-col">&nbsp;</th>
-        <% (1..12).each do |column_number| %>
-          <th><%= column_number %></th>
-        <% end %>
-      </tr>
+      <% (1..12).each do |column_number| %>
+        <th><%= column_number %></th>
+      <% end %>
+    </tr>
   </thead>
 
-<tbody>
+  <tbody>
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% row_wells.each_with_index do |well, index| %>
           <td>
             <div id="<%= "well_#{well.location}" %>" class="well">
-              <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 green" rel="#details_A1">
+              <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= pooling_colour(transfers[well.location]) %>" rel="#details_A1">
                 <%= transfers[well.location] %>
               </div>
             </div>
@@ -24,6 +24,5 @@
         <% end %>
       </tr>
     <% end %>
-
-
-</tbody></table>
+  </tbody>
+</table>

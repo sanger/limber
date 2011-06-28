@@ -5,11 +5,16 @@ module LabWareHelper
 
   STANDARD_COLOURS = [ 'green', 'red', 'yellow', 'blue', 'orange' ]
 
-  def bait_colour(lab_ware)
-    @colours                   ||= STANDARD_COLOURS.dup
-    @bait_libraries_to_colours ||= Hash.new { |h,k| h[k] = @colours.rotate!.first }
-    @bait_libraries_to_colours[lab_ware.bait]
+  def self.cycling_colours(name, &block)
+    define_method(:"#{name}_colour") do |lab_ware|
+      @colours  ||= Hash.new { |h,k| h[k] = STANDARD_COLOURS.dup }
+      @rotating ||= Hash.new { |h,k| h[k] = @colours[name].rotate!.first }
+      @rotating[block.call(lab_ware)]
+    end
   end
+
+  cycling_colours(:bait) { |lab_ware| lab_ware.bait }
+  cycling_colours(:pooling) { |lab_ware| lab_ware }
 
   def aliquot_colour(lab_ware)
     case lab_ware.state
