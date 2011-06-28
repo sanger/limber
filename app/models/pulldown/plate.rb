@@ -12,8 +12,14 @@ class Pulldown::Plate < Sequencescape::Plate
   end
   private :passed?
 
+  FINAL_POOLING_PLATE_PURPOSES = [
+    'WGS pooled amplified library plate',
+    'SC pooled captured library plate',
+    'ISC pooled captured library plate'
+  ]
+
   def is_a_final_pooling_plate?
-    plate_purpose.name == 'WGS pooled amplified library plate'
+    FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
 end

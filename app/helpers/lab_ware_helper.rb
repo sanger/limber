@@ -3,10 +3,10 @@ module LabWareHelper
     render :partial => 'lab_ware/state_change', :locals => { :presenter => presenter }
   end
 
-  STANDARD_COLOURS = [ 'green', 'red', 'yello', 'blue', 'orange' ]
+  STANDARD_COLOURS = [ 'green', 'red', 'yellow', 'blue', 'orange' ]
 
   def bait_colour(lab_ware)
-    @colours                     = STANDARD_COLOURS.dup
+    @colours                   ||= STANDARD_COLOURS.dup
     @bait_libraries_to_colours ||= Hash.new { |h,k| h[k] = @colours.rotate!.first }
     @bait_libraries_to_colours[lab_ware.bait]
   end
