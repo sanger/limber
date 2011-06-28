@@ -12,8 +12,7 @@ gem 'sequencescape-client-api',
   :branch  => 'pulldown_pipeline_thoughts',
   :require => 'sequencescape'
 gem 'sanger_barcode',
-  :git     => 'http://github.com/sanger/sanger_barcode.git',
-  :branch  => 'ruby-1.9'
+  :git     => 'http://github.com/sanger/sanger_barcode.git'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
