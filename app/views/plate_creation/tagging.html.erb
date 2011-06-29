@@ -21,6 +21,6 @@
         $('tr::nth-child(7),tr:nth-child(8),tr:nth-child(9)').find('.aliquot').addClass('green').css('display','block');
       });
     </script>
-    <%= render :partial => 'plate' %>
+    <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
   <% end %>
 <% end %>

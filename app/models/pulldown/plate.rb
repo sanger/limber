@@ -7,14 +7,12 @@ class Pulldown::Plate < Sequencescape::Plate
     coerce_to(Pulldown::PooledPlate)
   end
 
-  def passed?
-    state == 'passed'
-  end
-  private :passed?
-
   FINAL_POOLING_PLATE_PURPOSES = [
     'WGS pooled amplified library plate',
     'SC pooled captured library plate',
+
+    # ISC does two stages of pooling
+    'ISC pooled amplified library plate',
     'ISC pooled captured library plate'
   ]
 

@@ -13,16 +13,15 @@ module Presenters
 
   class PlatePresenter
     include Presenter
+    include PlateWalking
 
     write_inheritable_attribute :attributes, [ :api, :plate ]
 
     class_inheritable_reader :aliquot_partial
     write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
 
-    def wells_by_row
-      @plate.wells.inject(Hash.new {|h,k| h[k]=[]}) do |h,well|
-        h[well.location.sub(/\d+/,'')] << well; h
-      end
+    def plate_to_walk
+      self.plate
     end
 
     def lab_ware

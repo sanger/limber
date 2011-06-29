@@ -26,6 +26,9 @@ module Forms
         class_inheritable_reader :page
         write_inheritable_attribute :page, 'new'
 
+        class_inheritable_reader :aliquot_partial
+        write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
+
         class_inheritable_reader :attributes
       end
     end
@@ -53,10 +56,15 @@ module Forms
 
   class CreationForm
     include Form
+    include PlateWalking
 
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
 
     attr_reader :plate_creation
+
+    def plate_to_walk
+      self.parent
+    end
 
     # validates_presence_of *ATTRIBUTES
 

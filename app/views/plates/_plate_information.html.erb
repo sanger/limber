@@ -1,6 +1,6 @@
 <ul id="information">
   <li><span class="label">Barcode</span>             <%= useful_barcode(plate.barcode) %></li>
-  <li><span class="label">Number of wells</span>     <%= plate.wells.select { |w| not w.aliquots.empty? }.size %></li>
+  <li><span class="label">Number of wells</span>     <span class="full"><%= plate.wells.select { |w| not w.aliquots.empty? }.size %></span> / <span class="total"><%= plate.size %></span></li>
   <li><span class="label">Plate type</span>          <%= plate.plate_purpose.name %></li>
   <li><span class="label">Current plate state</span> <%= plate.state %></li>
 <% if plate.iteration.present? %>
@@ -8,5 +8,5 @@
 <% end %>
 
   <li><span class="label">Stock plate barcode</span> XXXXXXXXXX</li>
-  <li><span class="label">Created on</span>          XX-XXXX-XXXX (by XXXXX)</li>
+  <li><span class="label">Created on</span>          <%= plate.created_at.to_formatted_s(:date_created) %>
 </ul>

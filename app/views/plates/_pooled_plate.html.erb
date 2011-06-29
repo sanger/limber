@@ -1,4 +1,3 @@
-<% transfers = plate_presenter.plate.creation_transfer.transfers -%>
 <table class="plate-view">
   <thead>
     <tr>
@@ -10,15 +9,18 @@
   </thead>
 
   <tbody>
+    <% transfers = plate_presenter.plate.creation_transfer.transfers -%>
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% row_wells.each_with_index do |well, index| %>
-          <td>
+          <td class="col-all <%= "col-#{index+1}" %>">
             <div id="<%= "well_#{well.location}" %>" class="well">
-              <div id="<%= "aliquot_#{well.location}" %>" class="aliquot col-1 <%= pooling_colour(transfers[well.location]) %>" rel="#details_A1">
-                <%= transfers[well.location] %>
-              </div>
+              <% unless transfers[well.location].nil? -%>
+                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot <%= pooling_colour(well, transfers[well.location]) %>" rel="<%= "#details_#{well.location}" %>">
+                  <%= transfers[well.location] %>
+                </div>
+              <% end %>
             </div>
           </td>
         <% end %>
