@@ -3,6 +3,7 @@ module Presenters::Statemachine
     def control_child_plate_creation(&block)
       # Does nothing because you can't!
     end
+    alias_method(:control_additional_creation, :control_child_plate_creation)
   end
 
   # State transitions are common across all of the statemachines.
@@ -40,19 +41,29 @@ module Presenters::Statemachine
 
           # Yields to the block if there are child plates that can be created from the current one.
           # It passes the valid child plate purposes to the block.
-          def control_child_plate_creation(&block)
-            child_plate_purposes = child_plate_purposes_for_started
-            yield(child_plate_purposes) unless child_plate_purposes.empty?
+          def control_additional_creation(&block)
+            yield unless child_plate_purposes.empty?
             nil
+          end
+
+          # Returns the child plate purposes that can be created in the started state.  Typically
+          # this should be empty, unless QC plates can be created from the current plate.
+          def child_plate_purposes
+            plate.plate_purpose.children.reject { |p| p.name != 'Pulldown QC plate' }
           end
         end
         state :passed do
           # Yields to the block if there are child plates that can be created from the current one.
           # It passes the valid child plate purposes to the block.
-          def control_child_plate_creation(&block)
-            child_plate_purposes = child_plate_purposes_for_passed
-            yield(child_plate_purposes) unless child_plate_purposes.empty?
+          def control_additional_creation(&block)
+            yield unless child_plate_purposes.empty?
             nil
+          end
+
+          # Returns the child plate purposes that can be created in the passed state.  Typically
+          # this is only one, but it specifically excludes QC plates.
+          def child_plate_purposes
+            plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
           end
         end
         state :failed do
@@ -76,23 +87,16 @@ module Presenters::Statemachine
     nil
   end
 
+  # Does nothing
+  def control_additional_printing(&block)
+
+  end
+
   #--
   # We ignore the assignment of the state because that is the statemachine getting in before
   # the plate has been loaded.
   #++
   def state=(value) #:nodoc:
     # Ignore this!
-  end
-
-  # Returns the child plate purposes that can be created in the passed state.  Typically
-  # this is only one, but it specifically excludes QC plates.
-  def child_plate_purposes_for_passed
-    plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
-  end
-
-  # Returns the child plate purposes that can be created in the started state.  Typically
-  # this should be empty, unless QC plates can be created from the current plate.
-  def child_plate_purposes_for_started
-    plate.plate_purpose.children.reject { |p| p.name != 'Pulldown QC plate' }
   end
 end

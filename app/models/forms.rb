@@ -11,7 +11,7 @@ module Forms
       # By default forms need no special processing to they actually do the creation and then
       # redirect.  If you have a special form to display include Forms::Form::CustomPage
       def render(controller)
-        raise StandardError, "Not saving #{self.class} form...." unless save
+        raise StandardError, "Not saving #{self.class} form...." unless save!
         controller.redirect_to_form_destination(self)
       end
     end
@@ -60,6 +60,9 @@ module Forms
 
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
 
+    class_inheritable_reader :transfer_template_uuid
+    write_inheritable_attribute :transfer_template_uuid, Settings.transfer_templates['Transfer columns 1-12']
+
     attr_reader :plate_creation
 
     def plate_to_walk
@@ -81,18 +84,13 @@ module Forms
     end
     alias_method(:plate, :parent)
 
-    def save
-      return false unless valid?
+    def save!
+      raise StandardError, 'Invalid data' unless valid?
 
       create_objects!
     end
 
-    def default_transfer_template_uuid
-      Settings.transfer_templates['Transfer columns 1-12']
-    end
-    private :default_transfer_template_uuid
-
-    def create_plate!(transfer_template_uuid = default_transfer_template_uuid, &block)
+    def create_plate!(&block)
       @plate_creation = api.plate_creation.create!(
         :parent              => parent_uuid,
         :child_plate_purpose => plate_purpose_uuid
@@ -107,8 +105,6 @@ module Forms
 
       yield(@plate_creation.child) if block_given?
       true
-    rescue => e
-      false
     end
     private :create_plate!
 

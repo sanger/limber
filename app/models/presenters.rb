@@ -20,6 +20,14 @@ module Presenters
     class_inheritable_reader :aliquot_partial
     write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
 
+    class_inheritable_reader :summary_partial
+    write_inheritable_attribute :summary_partial, 'lab_ware/plates/standard_summary'
+
+    class_inheritable_reader :additional_creation_partial
+    write_inheritable_attribute :additional_creation_partial, 'lab_ware/plates/child_plate_creation'
+
+    class_inheritable_reader :printing_partial
+
     def plate_to_walk
       self.plate
     end

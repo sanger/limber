@@ -1,0 +1,7 @@
+<h2>Source Plate</h2>
+<%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter} %>
+<br/>
+
+<h2>Pooled Plate</h2>
+<%= render :partial => "plate", :locals => {:plate_presenter => presenter} %>
+<%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>

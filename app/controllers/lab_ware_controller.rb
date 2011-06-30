@@ -11,6 +11,10 @@ class LabWareController < ApplicationController
   end
   private :get_printers
 
+  def state_changer_for(labware)
+    StateChangers.lookup_for(labware).new(api, labware)
+  end
+
   def show
     @presenter = presenter_for(@lab_ware)
     respond_to do |format|
@@ -19,11 +23,7 @@ class LabWareController < ApplicationController
   end
 
   def update
-    api.state_change.create!(
-      :target       => @lab_ware.uuid,
-      :target_state => params[:state],
-      :reason       => params[:reason]
-    )
+    state_changer_for(@lab_ware).move_to!(params[:state], params[:reason])
 
     respond_to do |format|
       format.html { redirect_to :action => :show, :id => @lab_ware.uuid }
