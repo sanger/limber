@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/mattdenner/sequencescape-client-api.git
-  revision: 6c7e1a10cb3c4d1f7dc5ce2ef293003a69737a29
+  revision: c982ca3f28f1983c06ce1ff9dbce174b12859bb9
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)
@@ -107,7 +107,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
-    nokogiri (1.4.6)
+    nokogiri (1.5.0)
     nori (1.0.1)
     polyglot (0.3.1)
     rack (1.2.3)

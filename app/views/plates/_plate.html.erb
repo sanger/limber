@@ -12,10 +12,11 @@
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
-        <% row_wells.each_with_index do |well, index| %>
+        <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
           <td class="col-all <%= "col-#{index+1}" %>">
-            <div id="<%= "well_#{well.location}" %>" class="well">
-              <% unless well.aliquots.empty? -%>
+            <% location = well.try(:location) || "Z1" %>
+            <div id="<%= "well_#{location}" %>" class="well">
+              <% unless well.try(:aliquots).blank? -%>
                 <%= render :partial => plate_presenter.aliquot_partial, :locals => { :presenter => plate_presenter, :lab_ware => plate_presenter.plate, :id => well.location, :container => well } %>
               <% end -%>
             </div>

@@ -25,9 +25,13 @@ class Pulldown::PooledPlate < Sequencescape::Plate
     not source_transfers.empty?
   end
 
+  # Well locations ordered by columns.
+  WELLS_IN_COLUMN_MAJOR_ORDER = (1..12).inject([]) { |a,c| a.concat(('A'..'H').map { |r| "#{r}#{c}" }) ; a }
+
   # Returns the tubes that an instance of this plate has been transferred into.
   def tubes
     return [] unless has_transfers_to_tubes?
-    source_transfers.first.transfers.values
+    transfers = source_transfers.first.transfers
+    WELLS_IN_COLUMN_MAJOR_ORDER.map(&transfers.method(:[])).compact
   end
 end

@@ -90,14 +90,14 @@ module Forms
       create_objects!
     end
 
-    def create_plate!(&block)
+    def create_plate!(selected_transfer_template_uuid = transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
         :parent              => parent_uuid,
         :child_plate_purpose => plate_purpose_uuid
         # :user_uuid           => user_uuid
       )
 
-      api.transfer_template.find(transfer_template_uuid).create!(
+      api.transfer_template.find(selected_transfer_template_uuid).create!(
         :source      => parent_uuid,
         :destination => @plate_creation.child.uuid
         # :user => :user_id

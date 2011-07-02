@@ -6,7 +6,8 @@
 <% if plate.iteration.present? %>
   <li><span class="label">Iteration</span>           <%= plate.iteration %></li>
 <% end %>
-
-  <li><span class="label">Stock plate barcode</span> XXXXXXXXXX</li>
+<% if plate.stock_plate.present? %>
+  <li><span class="label">Stock plate barcode</span> <%= useful_barcode(plate.stock_plate.barcode) %></li>
+<% end %>
   <li><span class="label">Created on</span>          <%= plate.created_at.to_formatted_s(:date_created) %>
 </ul>
