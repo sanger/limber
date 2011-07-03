@@ -1,10 +1,12 @@
 PulldownPipeline::Application.routes.draw do
-  match '/search' => 'search#new', :as => :search
+  scope 'search', :controller => :search do
+    match '/', :action => 'new',    :via => :get,  :as => :search
+    match '/', :action => 'create', :via => :post, :as => :perform_search
+  end
 
   resources :pulldown_plates, :controller => :plates do
     resources :children, :controller => :plate_creation
     resources :tubes,    :controller => :tube_creation
-
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 

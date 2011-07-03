@@ -212,3 +212,12 @@ table.form {
 .reason.show { display: block; }
 
 #key .tube-view { display: inline-block; }
+
+.barcode {
+  font-family: 'Courier new', courier, fixed;
+  text-align: right;
+}
+#ongoing_plates {
+  td, th { padding: 2px 4px; }
+  .passed { font-weight: bold; }   // Stock plates are the only ones that appear with a 'passed' state in this list
+}

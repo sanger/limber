@@ -26,7 +26,7 @@ class LabWareController < ApplicationController
     state_changer_for(@lab_ware).move_to!(params[:state], params[:reason])
 
     respond_to do |format|
-      format.html { redirect_to :action => :show, :id => @lab_ware.uuid }
+      format.html { redirect_to(@lab_ware, :notice => "State has been changed to #{params[:state]}") }
     end
   end
 end

@@ -60,8 +60,8 @@ module Forms
 
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
 
-    class_inheritable_reader :transfer_template_uuid
-    write_inheritable_attribute :transfer_template_uuid, Settings.transfer_templates['Transfer columns 1-12']
+    class_inheritable_reader :default_transfer_template_uuid
+    write_inheritable_attribute :default_transfer_template_uuid, Settings.transfer_templates['Transfer columns 1-12']
 
     attr_reader :plate_creation
 
@@ -90,7 +90,7 @@ module Forms
       create_objects!
     end
 
-    def create_plate!(selected_transfer_template_uuid = transfer_template_uuid, &block)
+    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
         :parent              => parent_uuid,
         :child_plate_purpose => plate_purpose_uuid

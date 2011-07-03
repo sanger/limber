@@ -8,8 +8,7 @@ module Forms
     validates_presence_of *self.attributes
 
     def transfer_template_uuids
-      # This should be able to use the transfer-to-uuids list in Form.
-      @transfer_template_uuids ||= (api.transfer_template.all.select { |template| template.name.match(/columns/) }.reverse)
+      Settings.transfer_templates.select { |name, _| name =~ /columns \d+-\d+/ }.to_a.reverse
     end
 
     def create_objects!

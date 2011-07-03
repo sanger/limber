@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/mattdenner/sequencescape-client-api.git
-  revision: c982ca3f28f1983c06ce1ff9dbce174b12859bb9
+  revision: 9f2b2a8e9f27368479ab6875aeeee97fbce21a8e
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)
@@ -60,7 +60,7 @@ GEM
       ffi (~> 1.0.6)
     chunky_png (1.2.0)
     columnize (0.3.3)
-    compass (0.11.3)
+    compass (0.11.4)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
       sass (~> 3.1)
@@ -142,7 +142,7 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
-    sass (3.1.3)
+    sass (3.1.4)
     savon (0.9.3)
       builder (>= 2.1.2)
       gyoku (>= 0.4.0)
