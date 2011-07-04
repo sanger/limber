@@ -1,0 +1,45 @@
+<%= page(:summary) do %>
+  <%= header do %>
+    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Summary</h1>
+  <% end %>
+
+  <%= content do %>
+    <h2>Tube Status - <%= @presenter.tube.state.titleize %></h1>
+    <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
+  <% end %>
+
+  <%= footer %>
+<% end %>
+
+<%= page(:state) do %>
+  <% header do %>
+    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - State</h1>
+  <% end %>
+
+  <%= content do %>
+    <%= state_change_form(@presenter) %>
+  <% end %>
+
+  <%= footer %>
+<% end %>
+
+<%= page(:printing) do %>
+  <%= header do %>
+    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Printing</h1>
+  <% end %>
+
+  <%= content do %>
+    <%= section do %>
+      <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %><br/>
+    <% end %>
+    <%= section do %>
+      <%= individual_barcode_printing_form(
+            @presenter.tube.barcode,
+            :redirection_url => pulldown_multiplexed_library_tube_path(@presenter.tube),
+            :text            => 'MX Library tube'
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= footer %>
+<% end %>

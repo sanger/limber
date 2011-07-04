@@ -1,0 +1,40 @@
+<%= page(:creation) do %>
+  <%= header(@creation_form, 'Choose columns to transfer') %>
+
+  <% content do %>
+    <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
+        <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+        <%= f.input :transfer_template_uuid, :label => "Transfer Template", :as => :select, :collection => @creation_form.transfer_template_uuids, :include_blank => false %>
+      <% end %>
+      <%= f.buttons do %>
+        <%= f.commit_button 'Create Plate' %>
+      <% end %>
+    <% end %>
+
+    <script type="text/javascript" charset="utf-8">
+      $(function(){
+        var transfers = {
+           'Transfer columns 1-1':  '.col-1',
+           'Transfer columns 1-2':  '.col-1,.col-2',
+           'Transfer columns 1-3':  '.col-1,.col-2,.col-3',
+           'Transfer columns 1-4':  '.col-1,.col-2,.col-3,.col-4',
+           'Transfer columns 1-6':  '.col-1,.col-2,.col-3,.col-4,.col-5,.col-6',
+           'Transfer columns 1-12': '.col-all'
+        };
+
+        function template_display(){
+          $('.aliquot').hide();
+          $(transfers[$('#plate_transfer_template_uuid option:selected').text()]).find('.aliquot').show();
+        }
+
+        template_display();
+        $('#plate_transfer_template_uuid').change(template_display);
+      });
+    </script>
+
+    <h2>Destination Plate</h2>
+    <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
+  <% end %>
+<% end %>

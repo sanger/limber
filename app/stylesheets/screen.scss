@@ -4,6 +4,7 @@
 @import "compass/utilities/links";
 @import "compass/css3/border-radius";
 @import "compass/css3/gradient";
+@import "colours";
 
 
 $font-size: 14px;
@@ -13,6 +14,11 @@ body {
   font-family: 'Lucida Grande',helvetica,arial,sans-serif;
   line-height: 1.5;
   font-size:   100% * $font-size / 16px;
+}
+
+/* Ensure that sections of the page are separated by lines */
+.section + .section {
+  border-top: 2px solid #B3B3B3;
 }
 
 
@@ -54,7 +60,7 @@ body {
   width: 15px;
 }
 
-.plate-view .well {
+.plate-view .well, .tube-view {
   height:30px;
   width:30px;
   padding: 3px;
@@ -79,68 +85,25 @@ body {
   @include box-shadow(#00192B, 0px, 0px, 1px);
 }
 
-.tag-1 {
-  @include radial-gradient(color-stops(#C9891C, #422A00), top left);
+
+@mixin labware-view {
+  .green         { background: #196D18; @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .red           { background: #D10000; @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .yellow        { background: #E4C900; @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
+  .blue          { background: #2A70B1; @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
+  .orange        { background: #FF7300; @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
+  .unknown-value { background: #1D86AD; @include radial-gradient(color-stops(#289AC7, #083442), top left); }
+
+  .good          { background: #196D18; @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .failed        { background: #D10000; @include radial-gradient(color-stops(#D30000, #480000), top left); }
 }
 
-.tag-2 {
-  @include radial-gradient(color-stops(#C80C13, #420030), top left);
+.plate-view, .tube-view {
+  @include labware-view
 }
 
-.tag-3 {
-  @include radial-gradient(color-stops(#83C81F, #284200), top left);
-}
-
-.tag-4 {
-  @include radial-gradient(color-stops(#671FC8, #1E0042), top left);
-}
-
-.tag-5 {
-  @include radial-gradient(color-stops(#1AC9B9, #00423C), top left);
-}
-
-.tag-6 {
-  @include radial-gradient(color-stops(#0D77CA, #002642), top left);
-}
-
-.tag-7 {
-  @include radial-gradient(color-stops(#C71875, #420023), top left);
-}
-
-.tag-8 {
-  @include radial-gradient(color-stops(#C93D1B, #420E00), top left);
-}
-
-
-
-.plate-view .green {
-  background: #196D18;
-  @include radial-gradient(color-stops(#00B10E, #002802), top left);
-}
-
-.plate-view .red {
-  background:#D10000;
-  @include radial-gradient(color-stops(#D30000,#480000), top left);
-}
-
-.plate-view .yellow {
-  background:#E4C900;
-  @include radial-gradient(color-stops(#FFF33F,#5C5500), top left);
-}
-
-.plate-view .blue {
-  background:#2A70B1;
-  @include radial-gradient(color-stops(#4889C4,#0A385C), top left);
-}
-
-.plate-view .orange {
-  background:#FF7300;
-  @include radial-gradient(color-stops(#FF9443,#5B1B00), top left);
-}
-
-.plate-view .unknown-value {
-  background: #1D86AD;
-  @include radial-gradient(color-stops(#289AC7, #083442), top left);
+#information {
+  .total { font-weight: bold; }
 }
 
 .tooltip {
@@ -228,4 +191,33 @@ table.form {
   text-align: left;
   width:  400px;
   margin: 0 0 36px 0;
+}
+
+#information {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  .label {
+    font-weight: bold;
+
+    &:after {
+      content: ':';
+    }
+  }
+}
+
+/* Reasons are initially hidden and shown based on a selection */
+.reason      { display: none;  }
+.reason.show { display: block; }
+
+#key .tube-view { display: inline-block; }
+
+.barcode {
+  font-family: 'Courier new', courier, fixed;
+  text-align: right;
+}
+#ongoing_plates {
+  td, th { padding: 2px 4px; }
+  .passed { font-weight: bold; }   // Stock plates are the only ones that appear with a 'passed' state in this list
 }

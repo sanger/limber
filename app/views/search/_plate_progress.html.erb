@@ -1,0 +1,17 @@
+<table id="ongoing_plates" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <th>Barcode</th>
+    <th>Created</th>
+    <th>Type</th>
+    <th>State</th>
+  </tr>
+
+  <% plates.each do |plate| %>
+    <tr class="<%= plate.state %>">
+      <td class="barcode"><%= link_to(useful_barcode(plate.barcode), plate, :rel => 'external') %></td>
+      <td><%= plate.created_at.to_formatted_s(:date_created) %></td>
+      <td><%= plate.plate_purpose.name %></td>
+      <td><%= plate.state %></td>
+    </tr>
+  <% end %>
+</table>

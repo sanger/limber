@@ -1,39 +1,29 @@
-class PlatesController < ApplicationController
-  before_filter :get_printers, :on => [ :show, :update ]
+class PlatesController < LabWareController
+  def locate_lab_ware_identified_by(id)
+    api.plate.find(id).coerce
+  end
 
-  def show
-    # Should the look up be done inside the plate_presenter  object?
-    @plate = api.plate.find(params[:id])
-
-    @plate_presenter = Presenters.lookup_for(@plate).new(
+  def presenter_for(plate)
+    Presenters::PlatePresenter.lookup_for(plate).new(
       :api   => api,
-      :plate => @plate
+      :plate => plate
     )
-    # debugger
+  end
 
-    respond_to do |format|
-      format.html { render @plate_presenter.page }
+  before_filter :locate_lab_ware, :on => :fail_wells
+
+  def fail_wells
+    wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)
+    if wells_to_fail.empty?
+      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'No wells were selected to fail')
+    else
+      api.state_change.create!(
+        :target       => @lab_ware.uuid,
+        :contents     => wells_to_fail,
+        :target_state => 'failed',
+        :reason       => 'Unspecified'
+      )
+      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'Selected wells have been failed')
     end
   end
-
-  def update
-    @plate        = api.plate.find(params[:id])
-
-    api.state_change.create!(
-      :target       => @plate.uuid,
-      :target_state => params[:plate][:state]
-    )
-
-    respond_to do |format|
-      format.html { redirect_to :action => :show, :id => params[:id] }
-    end
-  end
-
-
-  # Private Stuff...
-
-  def get_printers
-    @printers = api.barcode_printer.all
-  end
-  private :get_printers
 end

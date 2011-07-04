@@ -1,0 +1,21 @@
+<% unless presenter.plate.passed? %>
+  <p>Due to a limitation of the current system you can only fail wells <strong>after</strong> passing the plate.</p>
+<% else %>
+  <%= form_for(:plate, :url => fail_wells_path(presenter.plate), :html => { :method => 'post' }) do |form| %>
+    <%= form.fields_for(:wells) do |well_form| %>
+      <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, presenter) } %>
+
+      <script language="javascript" charset="utf-8">
+        (function($, undefined) {
+          $('#failing .plate-view').delegate('.aliquot', 'click', function() {
+            failing = $(this).toggleClass('good failed').hasClass('failed');
+            $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+          });
+        })($);
+      </script>
+    <% end %>
+
+    <br/>
+    <%= form.submit('Fail wells') %>
+  <% end %>
+<% end %>

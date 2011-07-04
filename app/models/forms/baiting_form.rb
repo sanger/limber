@@ -1,8 +1,14 @@
 module Forms
   class BaitingForm < CreationForm
+    include Forms::Form::CustomPage
+
     write_inheritable_attribute :page, "baiting"
     class_inheritable_reader :aliquot_partial
     write_inheritable_attribute :aliquot_partial, "plates/baited_aliquot"
+
+    def plate
+      self.parent
+    end
 
     def bait_library_layout_preview
       @bait_library_layout_preview ||= api.bait_library_layout.preview!(:plate => parent_uuid).layout
@@ -14,29 +20,31 @@ module Forms
       end
     end
 
+    def baits
+      Hash[wells.map { |w| [w.bait, w] if w.bait.present? }.compact].values
+    end
+
     def wells
-      wells = bait_library_layout_preview.sort.map do |well|
-        Hashie::Mash.new(
-          :location => well[0],
-          :bait     => well[1],
-          :aliquots => [:an_aliquot]
+      ('A'..'H').inject([]) do |a,r|
+        a.concat(
+          (1..12).map do |c|
+            location = "#{r}#{c}"
+            bait     = bait_library_layout_preview[location]
+            aliquot  = bait # Fudge, will be nil if no bait
+
+            Hashie::Mash.new(
+              :location => location,
+              :bait     => bait,
+              :aliquots => [aliquot].compact
+            )
+          end
         )
+        a
       end
-
-      wells
-
     end
 
     def wells_by_row
-      @wells_by_row ||= wells.inject(Hash.new {|h,k| h[k]=[]}) do |h,well|
-        h[well.location.sub(/\d+/,'')] << well; h
-      end.sort
-
-      @wells_by_row.each do |row|
-        row.last.sort! { |a,b| a.location.sub(/\D+/,'').to_i <=> b.location.sub(/\D+/,'').to_i }
-      end
-
-      @wells_by_row
+      PlateWalking::Walker.new(wells)
     end
   end
 end

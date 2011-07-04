@@ -1,37 +1,41 @@
 class CreationController < ApplicationController
-  # Exists in PlateCreationController
-  def form_lookup(form_attributes = params)
-    Settings.plate_purposes[form_attributes[:plate_purpose_uuid]][:form_class].constantize
-  end
+  class_inheritable_reader :creation_message
+  write_inheritable_attribute :creation_message, 'Your lab ware has been created'
 
-  def redirection_path(form)
-    plate_path(form.child.uuid)
+  def redirect_to_form_destination(form)
+    redirect_to(redirection_path(form), :notice => creation_message)
   end
-
-  # Everything below here remains in this controller
 
   def create_form(form_attributes)
     form_lookup(form_attributes).new(form_attributes.merge(:api => api))
   end
 
   def new
-    @creation_form = create_form(params.merge(:parent_uuid => params[:plate_id]))
+    @creation_form = create_form(params.merge(:parent_uuid => params[:pulldown_plate_id]))
 
     respond_to do |format|
-      # TODO Sort this look up out!
-      format.html { render @creation_form.page }
+      format.html { @creation_form.render(self) }
     end
   end
 
   def create
     @creation_form = create_form(params[:plate])
 
-    if @creation_form.save
-      respond_to do |format|
-        format.html { redirect_to redirection_path(@creation_form) }
+    @creation_form.save!
+    respond_to do |format|
+      format.html { redirect_to_form_destination(@creation_form) }
+    end
+  rescue => exception
+    Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
+    exception.backtrace.map(&Rails.logger.method(:error))
+
+    respond_to do |format|
+      format.html do
+        redirect_to(
+          pulldown_plate_path(@creation_form.parent),
+          :notice => "Cannot create the plate: #{exception.message}"
+        )
       end
-    else
-      raise "Not saving #{@creation_form.class} form...."
     end
   end
 end

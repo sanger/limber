@@ -8,12 +8,11 @@ gem 'state_machine', '~>1.0.1'
 gem 'hashie', '~>1.0.0'
 
 gem 'sequencescape-client-api',
-  :git     => 'http://github.com/mattdenner/sequencescape-client-api.git',
+  :git     => 'git+ssh://git@github.com/mattdenner/sequencescape-client-api.git',
   :branch  => 'pulldown_pipeline_thoughts',
   :require => 'sequencescape'
 gem 'sanger_barcode',
-  :git     => 'http://github.com/sanger/sanger_barcode.git',
-  :branch  => 'ruby-1.9'
+  :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
