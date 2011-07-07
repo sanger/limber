@@ -2,7 +2,7 @@ class SearchController < ApplicationController
   before_filter :collect_all_ongoing_plates,  :only => :new
 
   def new
-
+    session[:user_uuid] = nil
   end
   
   # TODO Move search to a separate controller
