@@ -16,9 +16,14 @@ module PageHelper
 
   def header(presenter = nil, title = nil, &block)
     content_for(:header, &block) if block_given?
-    grouping(:header, 'data-theme' => 'b') do
+    grouping(:header, 'data-theme' => data_theme) do
       render(:partial => 'lab_ware/header', :locals => { :presenter => presenter, :title => title })
     end
+  end
+
+  # If the user is logged in then use the nice blue theme...
+  def data_theme
+    current_user_uuid.present? ? 'b' : 'a'
   end
 
   def content(&block)
