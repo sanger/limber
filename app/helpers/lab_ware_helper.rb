@@ -15,9 +15,10 @@ module LabWareHelper
     end
   end
 
-  cycling_colours(:bait)    { |lab_ware, _|          lab_ware.bait }
-  cycling_colours(:tag)     { |lab_ware, _|          lab_ware.aliquots.first.tag.identifier }
-  cycling_colours(:pooling) { |lab_ware,destination| destination }
+  cycling_colours(:bait)    { |lab_ware, _|            lab_ware.bait }
+  cycling_colours(:tag)     { |lab_ware, _|            lab_ware.aliquots.first.tag.identifier }
+  cycling_colours(:pooling) { |lab_ware, destination|  destination }
+  cycling_colours(:custom_pooling) { |destination| destination }
 
   def aliquot_colour(lab_ware)
     case lab_ware.state
