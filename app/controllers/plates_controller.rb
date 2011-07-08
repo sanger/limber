@@ -18,6 +18,7 @@ class PlatesController < LabWareController
       redirect_to(pulldown_plate_path(@lab_ware), :notice => 'No wells were selected to fail')
     else
       api.state_change.create!(
+        :user         => current_user_uuid,
         :target       => @lab_ware.uuid,
         :contents     => wells_to_fail,
         :target_state => 'failed',

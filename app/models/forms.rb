@@ -58,7 +58,7 @@ module Forms
     include Form
     include PlateWalking
 
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid]
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :user_uuid]
 
     class_inheritable_reader :default_transfer_template_uuid
     write_inheritable_attribute :default_transfer_template_uuid, Settings.transfer_templates['Transfer columns 1-12']
@@ -69,7 +69,7 @@ module Forms
       self.parent
     end
 
-    # validates_presence_of *ATTRIBUTES
+    validates_presence_of attributes
 
     def child
       plate_creation.try(:child) || :child_not_created
@@ -93,14 +93,14 @@ module Forms
     def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
         :parent              => parent_uuid,
-        :child_plate_purpose => plate_purpose_uuid
-        # :user_uuid           => user_uuid
+        :child_plate_purpose => plate_purpose_uuid,
+        :user                => user_uuid
       )
 
       api.transfer_template.find(selected_transfer_template_uuid).create!(
         :source      => parent_uuid,
-        :destination => @plate_creation.child.uuid
-        # :user => :user_id
+        :destination => @plate_creation.child.uuid,
+        :user        => user_uuid
       )
 
       yield(@plate_creation.child) if block_given?

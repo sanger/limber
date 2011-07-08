@@ -1,5 +1,7 @@
 <div id="flash">
   <% flash.each do |name, message| %>
-    <div class="#{name} ui-body ui-body-e"><%= message %></div>
+    <% Array(message).each do |m| %>
+    <div class="#{name} ui-body ui-body-e"><%= m %></div>
+  <% end %>
   <% end %>
 </div>

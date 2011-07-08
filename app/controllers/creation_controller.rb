@@ -7,7 +7,12 @@ class CreationController < ApplicationController
   end
 
   def create_form(form_attributes)
-    form_lookup(form_attributes).new(form_attributes.merge(:api => api))
+    form_lookup(form_attributes).new(
+      form_attributes.merge(
+        :api       => api,
+        :user_uuid => current_user_uuid
+      )
+    )
   end
 
   def new
@@ -15,6 +20,18 @@ class CreationController < ApplicationController
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
+    end
+  rescue Sequencescape::Api::ResourceInvalid => exception
+    Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
+    exception.backtrace.map(&Rails.logger.method(:error))
+
+    respond_to do |format|
+      format.html do
+        redirect_to(
+          pulldown_plate_path(@creation_form.parent),
+          :notice =>[  "Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages ]
+        )
+      end
     end
   end
 

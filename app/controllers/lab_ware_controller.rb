@@ -12,7 +12,7 @@ class LabWareController < ApplicationController
   private :get_printers
 
   def state_changer_for(labware)
-    StateChangers.lookup_for(labware).new(api, labware)
+    StateChangers.lookup_for(labware).new(api, labware, current_user_uuid)
   end
 
   def show
