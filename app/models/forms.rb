@@ -100,7 +100,7 @@ module Forms
       api.transfer_template.find(selected_transfer_template_uuid).create!(
         :source      => parent_uuid,
         :destination => @plate_creation.child.uuid,
-        :user_uuid   => user_uuid
+        :user        => user_uuid
       )
 
       yield(@plate_creation.child) if block_given?
