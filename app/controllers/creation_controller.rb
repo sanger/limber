@@ -7,7 +7,12 @@ class CreationController < ApplicationController
   end
 
   def create_form(form_attributes)
-    form_lookup(form_attributes).new(form_attributes.merge(:api => api))
+    form_lookup(form_attributes).new(
+      form_attributes.merge(
+        :api       => api,
+        :user_uuid => current_user_uuid
+      )
+    )
   end
 
   def new

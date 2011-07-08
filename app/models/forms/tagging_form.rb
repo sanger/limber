@@ -3,7 +3,7 @@ module Forms
     include Forms::Form::CustomPage
 
     write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid]
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid]
 
     validates_presence_of *self.attributes
 
@@ -13,7 +13,10 @@ module Forms
 
     def create_objects!
       create_plate! do |plate|
-        api.tag_layout_template.find(tag_layout_template_uuid).create!(:plate => plate.uuid)
+        api.tag_layout_template.find(tag_layout_template_uuid).create!(
+          :plate => plate.uuid,
+          :user  => user_uuid
+        )
       end
     end
     private :create_objects!
