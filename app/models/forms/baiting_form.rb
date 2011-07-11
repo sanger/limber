@@ -11,7 +11,10 @@ module Forms
     end
 
     def bait_library_layout_preview
-      @bait_library_layout_preview ||= api.bait_library_layout.preview!(:plate => parent_uuid).layout
+      @bait_library_layout_preview ||= api.bait_library_layout.preview!(
+        :plate => parent_uuid,
+        :user => user_uuid
+      ).layout
     end
 
     def create_objects!
