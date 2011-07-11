@@ -19,6 +19,7 @@ class LabWareController < ApplicationController
     @presenter = presenter_for(@lab_ware)
     respond_to do |format|
       format.html { render @presenter.page }
+      format.csv
     end
   end
 

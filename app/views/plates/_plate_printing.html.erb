@@ -1,5 +1,5 @@
 <% section do %>
-  <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %><br/>
+  <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %><br/>
 <% end %>
 <%= section do %>
   <h2>Print plate label</h2>

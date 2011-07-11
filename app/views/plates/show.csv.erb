@@ -1,0 +1,5 @@
+<%- headers = [ "Source Well", "Destination Well" ] -%>
+<%= CSV.generate_line headers %>
+<% @presenter.transfers.each do |source_well, destination_well| -%>
+  <%= CSV.generate_line [source_well, destination_well] %>
+<% end -%>
