@@ -1,5 +1,7 @@
 <%= page(:summary) do %>
-  <%= header(@presenter, 'Summary') %>
+  <%= header(@presenter, 'Summary') do %>
+    <%= link_to('Admin', edit_admin_plate_path(@presenter.plate.uuid), :id => @presenter.plate.uuid, :'data-theme' => 'c', :'data-icon' => 'gear') %>
+  <% end -%>
 
   <%= content do %>
     <%= flash_messages %>
