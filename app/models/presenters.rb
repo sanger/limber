@@ -36,9 +36,27 @@ module Presenters
       self.plate
     end
 
+    def control_worksheet_printing(&block)
+      yield
+      nil
+    end
+
     def lab_ware_form_details(view)
       { :url => view.pulldown_plate_path(self.plate), :as  => :plate }
     end
+
+    def transfers
+      transfers = self.plate.creation_transfer.transfers
+      transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
+    end
+
+    # Split a location string into an array containing the row letter
+    # and the column number (as a integer) so that they can be sorted.
+    def split_location(location_string)
+      match = location_string.match(/^([A-H])(\d+)/)
+      [match[1], match[2].to_i]
+    end
+    private :split_location
 
     class UnknownPlateType < StandardError
       attr_reader :plate
