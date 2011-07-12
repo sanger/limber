@@ -36,6 +36,11 @@ module Presenters
       self.plate
     end
 
+    def control_worksheet_printing(&block)
+      yield
+      nil
+    end
+
     def lab_ware_form_details(view)
       { :url => view.pulldown_plate_path(self.plate), :as  => :plate }
     end
