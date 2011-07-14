@@ -28,4 +28,9 @@ module LabWareHelper
       else "blue"
     end
   end
+
+  def admin_page?
+    controller.controller_path.start_with? "admin"
+  end
+
 end

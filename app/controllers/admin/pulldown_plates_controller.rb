@@ -4,6 +4,13 @@ class Admin::PulldownPlatesController < PlatesController
   # unless it's part of an edit.
   undef :show, :fail_wells
 
+  # Called by the update method inherited from LabWareController
+  # the same as in LabWareController but uses params[:user_id] instead
+  # of current_user_id
+  def state_changer_for(labware)
+    StateChangers.lookup_for(labware).new(api, labware, find_user_by_swipecard(params[:user_id]))
+  end
+
   def edit
     @presenter = Presenters::AdminPresenter.new(
       :api => api,
@@ -17,10 +24,6 @@ class Admin::PulldownPlatesController < PlatesController
         format.html
       end
     end
-  end
-
-  def update
-    # carry out any state changes...
   end
 
 end
