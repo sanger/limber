@@ -1,6 +1,6 @@
 <%= page(:summary) do %>
   <%= header(@presenter, 'Summary') do %>
-    <%= link_to('Admin', edit_admin_plate_path(@presenter.plate.uuid), :id => @presenter.plate.uuid, :'data-theme' => 'c', :'data-icon' => 'gear') %>
+    <%= link_to('Admin', edit_admin_plate_path(@presenter.plate.uuid), :id => @presenter.plate.uuid, :'data-theme' => 'c', :'data-icon' => 'gear', :rel => "external") %>
   <% end -%>
 
   <%= content do %>

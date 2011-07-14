@@ -92,6 +92,10 @@ module Presenters::Statemachine
 
   end
 
+  def all_plate_states
+    self.class.state_machines[:state].states.map(&:value)
+  end
+
   #--
   # We ignore the assignment of the state because that is the statemachine getting in before
   # the plate has been loaded.
