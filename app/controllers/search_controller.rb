@@ -5,8 +5,6 @@ class SearchController < ApplicationController
     session[:user_uuid] = nil
   end
   
-  # TODO Move search to a separate controller
-  # whilst you're at it add a search object with error handling too... :)
   def create
     raise "You have not supplied a plate barcode" if params[:plate_barcode].blank?
 
@@ -15,13 +13,21 @@ class SearchController < ApplicationController
     respond_to do |format|
       format.html { redirect_to api.search.find(Settings.searches['Find asset by barcode']).first(:barcode => params[:plate_barcode]) }
     end
+
+
   rescue Sequencescape::Api::ResourceNotFound => exception
+    @ongoing       = []
+    flash[:notice] = 'Could not find the plate with the specified barcode'
+
     respond_to do |format|
-      format.html { redirect_to(search_path, :notice => 'Could not find the plate with the specified barcode') }
+      format.html { render :new }
     end
   rescue => exception
+    @ongoing       = []
+    flash[:notice] = exception.message
+
     respond_to do |format|
-      format.html { redirect_to(search_path, :notice => exception.message) }
+      format.html { render :new }
     end
   end
 
