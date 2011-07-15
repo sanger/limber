@@ -14,12 +14,13 @@
   <%= header(@presenter, 'State') %>
 
   <%= content do %>
-    <%= state_change_form(@presenter) %>
     <%= @presenter.control_additional_creation do %>
       <% section do %>
         <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
       <% end %>
+      <hr/>
     <% end %>
+    <%= state_change_form(@presenter) %>
   <% end %>
 
   <%= footer %>

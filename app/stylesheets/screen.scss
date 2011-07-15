@@ -16,12 +16,6 @@ body {
   font-size:   100% * $font-size / 16px;
 }
 
-/* Ensure that sections of the page are separated by lines */
-.section + .section {
-  border-top: 2px solid #B3B3B3;
-}
-
-
 .plate-view-control {
   margin: 18px 0;
 }
