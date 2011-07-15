@@ -8,7 +8,7 @@
 
   <% plates.each do |plate| %>
     <tr class="<%= plate.state %>">
-      <td class="barcode"><%= link_to(useful_barcode(plate.barcode), plate, :rel => 'external') %></td>
+      <td class="barcode"><%= link_to(useful_barcode(plate.barcode), plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate_link") %></td>
       <td><%= plate.created_at.to_formatted_s(:date_created) %></td>
       <td><%= plate.plate_purpose.name %></td>
       <td><%= plate.state %></td>
