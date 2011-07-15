@@ -37,6 +37,8 @@ module PageHelper
   end
 
   def section(options = {}, &block)
-    content_tag(:div, options.merge(:class => 'section'), &block)
+    # add section to the section's CSS class attribute
+    options[:class] = [ options[:class], 'section' ].compact.join(" ")
+    content_tag(:div, options, &block)
   end
 end
