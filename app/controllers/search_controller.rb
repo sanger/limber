@@ -33,6 +33,7 @@ class SearchController < ApplicationController
   def find_user
     session[:user_uuid] = nil
     return if params[:user_id].blank?
-    session[:user_uuid] = api.search.find(Settings.searches["Find user by swipecard code"]).first(:swipecard_code => params[:user_id]).uuid
+    session[:user_uuid] = find_user_by_swipecard(params[:user_id])
   end
+
 end

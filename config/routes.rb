@@ -10,6 +10,10 @@ PulldownPipeline::Application.routes.draw do
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
+  namespace "admin" do
+    resources :pulldown_plates, :only => [:update, :edit], :as => :plates
+  end
+
   resources :pulldown_multiplexed_library_tubes, :controller => :tubes do
 
   end

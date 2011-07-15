@@ -9,4 +9,8 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :current_user_uuid
+
+  def find_user_by_swipecard(card_id)
+    api.search.find(Settings.searches["Find user by swipecard code"]).first(:swipecard_code => card_id).uuid
+  end
 end
