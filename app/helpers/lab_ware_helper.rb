@@ -33,4 +33,17 @@ module LabWareHelper
     controller.controller_path.start_with? "admin"
   end
 
+  def admin_link(presenter)
+    return nil if presenter.class == Presenters::StockPlatePresenter
+
+    @admin_link ||= link_to(
+      'Admin',
+      edit_admin_plate_path(presenter.plate.uuid),
+      :id           => presenter.plate.uuid,
+      :'data-theme' => 'c',
+      :'data-icon'  => 'gear',
+      :rel          => "external"
+    )
+  end
+
 end
