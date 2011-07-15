@@ -14,9 +14,11 @@ module PageHelper
     @_content_for[:header] = ''
   end
 
-  def header(presenter = nil, title = nil, &block)
+  def header(presenter = nil, title = nil, options = {}, &block)
+    theme = options[:'data-theme'] || data_theme
+
     content_for(:header, &block) if block_given?
-    grouping(:header, 'data-theme' => data_theme) do
+    grouping(:header, 'data-theme' => theme) do
       render(:partial => 'lab_ware/header', :locals => { :presenter => presenter, :title => title })
     end
   end

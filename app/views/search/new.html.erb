@@ -48,6 +48,7 @@
     // Users should start the page by scanning in...
     $('#user_id').focus();
 
+    // Trap the carriage return sent by the swipecard reader
     $("#user_id").bind("keydown", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
