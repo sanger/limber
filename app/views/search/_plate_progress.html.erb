@@ -1,13 +1,15 @@
 <h2>Ongoing plates</h2>
-<ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-inset="true">
+<ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
   <li data-role="list-divider">All Plates</li>
 
   <% plates.each do |plate| -%>
     <li>
-      <h2><%= link_to(useful_barcode(plate.barcode), plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate_link") %></h2>
-        Created: <%= plate.created_at.to_formatted_s(:date_created) %>
-        Type: <%= plate.plate_purpose.name %>
-        State: <%= plate.state %></p>
+      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate_link ui-link-inherit") do %>
+        <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode).html_safe %></h2>
+        <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
+        <p>Created: <%= plate.created_at.to_formatted_s(:date_created) %>
+        Type: <%= plate.plate_purpose.name %></p>
+      <% end -%>
     </li>
   <% end -%>
 </ul>

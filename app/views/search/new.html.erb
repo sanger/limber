@@ -1,14 +1,13 @@
 <%= page(:search) do %>
   <div data-role="header">
     <h1>Sequencescape - Pulldown Pipeline</h1>
+    <%= link_to "All Plates", all_outstanding_plates_path %>
   </div>
 
   <%= content do %>
     <%= flash_messages %>
 
-      <h1>Search for Plates</h1>
-    <div class="grid-a">
-      <div class="ui-block-a">
+      <h1>Search for Plate</h1>
         <%= section do %>
           <%= form_tag perform_search_path, :id => "plate-search-form", :method => 'post' do %>
             <p>
@@ -36,9 +35,7 @@
             <%= render(:partial => 'plate_progress', :locals => { :plates => @ongoing }) %>
           <% end %>
         <% end %>
-      </div>
 
-    </div>
   <% end %>
 <% end %>
 

@@ -14,6 +14,6 @@ module BarcodeLabelsHelper
   end
 
   def useful_barcode(barcode)
-    "#{barcode.prefix}#{barcode.number} (#{barcode.ean13})"
+    "#{barcode.prefix}#{barcode.number} <em>#{barcode.ean13}</em>"
   end
 end
