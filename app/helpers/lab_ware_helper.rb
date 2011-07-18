@@ -46,4 +46,10 @@ module LabWareHelper
     )
   end
 
+  def plates_by_state(plates)
+    plates.inject(Hash.new {|h,k| h[k]=[]}) do |h,plate|
+      h[plate.state] << plate; h
+    end
+  end
+
 end
