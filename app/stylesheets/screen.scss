@@ -16,12 +16,6 @@ body {
   font-size:   100% * $font-size / 16px;
 }
 
-/* Ensure that sections of the page are separated by lines */
-.section + .section {
-  border-top: 2px solid #B3B3B3;
-}
-
-
 .plate-view-control {
   margin: 18px 0;
 }
@@ -213,10 +207,6 @@ table.form {
 #key .tube-view { display: inline-block; }
 
 .barcode {
-  font-family: 'Courier new', courier, fixed;
-  text-align: right;
+  font-family: 'Monaco', 'Courier new', courier, fixed;
 }
-#ongoing_plates {
-  td, th { padding: 2px 4px; }
-  .passed { font-weight: bold; }   // Stock plates are the only ones that appear with a 'passed' state in this list
-}
+

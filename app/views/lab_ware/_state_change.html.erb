@@ -3,15 +3,19 @@
     Use the formtastic helpers not the rails helpers.
 %>
 
-<h2> Current State: <%= presenter.lab_ware.state.titleize %> </h2>
-
 <% presenter.control_state_change do |states| %>
-  <%= section do %>
-    <%= semantic_form_for(presenter.lab_ware, presenter.lab_ware_form_details(self).merge(:html => {:method => :put})) do |f| %>
+  <h2> Current State: <%= presenter.lab_ware.state.titleize %> </h2>
+  <%= section :class => 'ui-body-c' do %>
+    <%= semantic_form_for(
+          presenter.lab_ware,
+          presenter.lab_ware_form_details(self).merge(:html => {:method => :put}),
+          :as => :plate
+        ) do |f|
+    %>
       <%= f.inputs do %>
         <% if admin_page? -%>
-          <%= label_tag :user_id, "User ID" %>
-          <%= text_field_tag :user_id, :class => "ui-input-text" %>
+          <%= label_tag :user_id, "User Swipecard" %>
+          <%= text_field_tag :user_id, "", :class => "ui-input-text" %>
         <% end -%>
         <p>
           <%= label_tag :state, "New State" %>

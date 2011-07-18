@@ -14,12 +14,15 @@
   <%= header(@presenter, 'State') %>
 
   <%= content do %>
-    <%= state_change_form(@presenter) %>
     <%= @presenter.control_additional_creation do %>
-      <% section do %>
+      <h2>Create Child Plate</h2>
+      <% section :class => 'ui-body-d' do %>
         <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
       <% end %>
+      <br/>
+      <br/>
     <% end %>
+    <%= state_change_form(@presenter) %>
   <% end %>
 
   <%= footer %>
