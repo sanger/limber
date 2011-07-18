@@ -7,8 +7,8 @@ module Forms
 
     validates_presence_of *self.attributes
 
-    def tag_layout_template_uuids
-      @tag_layout_template_uuids ||= api.tag_layout_template.all
+    def tag_layout_templates
+      @tag_layout_templates ||= api.tag_layout_template.all
     end
 
     def create_objects!
