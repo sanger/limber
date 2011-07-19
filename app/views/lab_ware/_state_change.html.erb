@@ -8,9 +8,10 @@
   <%= section :class => 'ui-body-c' do %>
     <%= semantic_form_for(
           presenter.lab_ware,
-          presenter.lab_ware_form_details(self).merge(:html => {:method => :put}),
-          :as => :plate
-        ) do |f|
+          presenter.lab_ware_form_details(self).merge(
+            :html => { :method => :put },
+            :as => :plate
+          )) do |f|
     %>
       <%= f.inputs do %>
         <% if admin_page? -%>
