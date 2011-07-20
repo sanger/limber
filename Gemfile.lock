@@ -1,6 +1,6 @@
 GIT
   remote: git+ssh://git@github.com/mattdenner/sequencescape-client-api.git
-  revision: 795f11d364b0f59adb3297df253a40cc8f024459
+  revision: f935433c54cccfce32a4b0170a69ff46eebd588d
   branch: pulldown_pipeline_thoughts
   specs:
     sequencescape-client-api (0.0.1)
@@ -56,7 +56,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 0.2.0)
       xpath (~> 0.1.4)
-    childprocess (0.1.9)
+    childprocess (0.2.0)
       ffi (~> 1.0.6)
     chunky_png (1.2.0)
     columnize (0.3.4)
