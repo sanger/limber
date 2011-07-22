@@ -2,6 +2,9 @@ class CreationController < ApplicationController
   class_inheritable_reader :creation_message
   write_inheritable_attribute :creation_message, 'Your lab ware has been created'
 
+
+  before_filter :check_for_current_user
+
   def redirect_to_form_destination(form)
     redirect_to(redirection_path(form), :notice => creation_message)
   end
@@ -54,5 +57,9 @@ class CreationController < ApplicationController
         )
       end
     end
+  end
+
+  def check_for_current_user
+    redirect_to search_path unless current_user_uuid.present?
   end
 end

@@ -1,7 +1,7 @@
 @mixin shade-aliquot($base_colour) {
   $dark_colour:  darken($base_colour, 60);
-  background: $base_colour;
   @include radial-gradient(color-stops($base_colour,$dark_colour), top left); 
+  /* background-image: -webkit-gradient(radial, 0% 0%, 0, 0% 0%, 100, $base_colour, $dark_colour); */
 }
 
 
@@ -19,7 +19,7 @@
 .colour-7   { @include shade-aliquot(#FAE7B5); }
 .colour-8   { @include shade-aliquot(#9F8170); }
 .colour-9   { @include shade-aliquot(#FD7C6E); }
-.colour-10  { @include shade-aliquot(#000000); }
+.colour-10  { @include shade-aliquot(#ababab); }
 .colour-11  { @include shade-aliquot(#ACE5EE); }
 .colour-12  { @include shade-aliquot(#1F75FE); }
 .colour-13  { @include shade-aliquot(#A2A2D0); }

@@ -16,9 +16,10 @@
   <%= content do %>
     <%= @presenter.control_additional_creation do %>
       <h2>Create Child Plate</h2>
-      <% section :class => 'ui-body-d' do %>
+     <ul data-role="listview" data-inset="true">
         <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
-      <% end %>
+     </ul>
+
       <br/>
       <br/>
     <% end %>

@@ -80,15 +80,15 @@ body {
 
 
 @mixin labware-view {
-  .green         { background: #196D18; @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .red           { background: #D10000; @include radial-gradient(color-stops(#D30000, #480000), top left); }
-  .yellow        { background: #E4C900; @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
-  .blue          { background: #2A70B1; @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
-  .orange        { background: #FF7300; @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
-  .unknown-value { background: #1D86AD; @include radial-gradient(color-stops(#289AC7, #083442), top left); }
+  .green         { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .red           { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .yellow        { @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
+  .blue          { @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
+  .orange        { @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
+  .unknown-value { @include radial-gradient(color-stops(#289AC7, #083442), top left); }
 
-  .good          { background: #196D18; @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .failed        { background: #D10000; @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .good          { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .failed        { @include radial-gradient(color-stops(#D30000, #480000), top left); }
 }
 
 .plate-view, .tube-view {
@@ -129,7 +129,6 @@ body {
   z-index:10000;
   
   /* styling */
-  background-color:#3F3F3F;
   @include linear-gradient(color-stops(#353535,#0F0F0F));
   
   width:600px;  
@@ -138,7 +137,7 @@ body {
   @include border-radius(5px);
   /* CSS3 styling for latest browsers */
   -moz-box-shadow:1px 1px 9px #000;
-/*  -webkit-box-shadow: 0 0 90px #000;  */
+  -webkit-box-shadow: 1px 1px 9px #000; 
 }
 
 /* close button positioned on upper right corner */
