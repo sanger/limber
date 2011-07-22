@@ -25,7 +25,13 @@
 
       $('.aliquot').each(function(index){
         var tag_id = tags[index];
-        $(this).text(tag_id).removeClass().addClass('aliquot colour-' + ( tag_id % 96 + 1) );
+
+        $(this).
+          hide().
+          text(tag_id).
+          removeClass().
+          addClass('aliquot colour-' + ( tag_id % 96 + 1) ).
+          fadeIn();
       });
     }
 
