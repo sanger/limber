@@ -45,11 +45,20 @@
     // Users should start the page by scanning in...
     $('#user_id').focus();
 
+
+    $('#user_id').change(function(){
+      if ($(this).val()) {
+        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
+      } else {
+        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
+      }
+    });
+
     // Trap the carriage return sent by the swipecard reader
     $("#user_id").bind("keydown", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
-      $("#plate_barcode").focus();
+        $("#plate_barcode").focus();
         return false;
       }
     });
