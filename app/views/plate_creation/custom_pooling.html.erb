@@ -1,12 +1,12 @@
 <%= page(:'custom-pooling') do %>
   <%= header(@creation_form, 'Custom pooling') %>
 
-  <%- content do -%>
+  <%= content do %>
     <h2>Custom Pooling Source Plate</h2>
     <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @creation_form} %>
 
     <h2>Destination Plate</h2>
-    <%#= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form} %>
-  <%- end -%>
-<%- end -%>
+    <%= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form} %>
+  <% end %>
+<% end %>
 

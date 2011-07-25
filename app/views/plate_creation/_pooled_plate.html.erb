@@ -13,7 +13,7 @@
 
 
       <%= f.fields_for(:transfers, plate_presenter.transfers ) do |fields| %>
-      <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
+      <% plate_presenter.source_wells_by_row.each do |row_label, row_wells| %>
         <tr>
           <th class="first-col"><%= row_label %></th>
           <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
