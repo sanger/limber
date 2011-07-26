@@ -1,4 +1,3 @@
-<%= form_for(plate_presenter, :url => pulldown_plate_children_path(@creation_form.parent), :as => :plate, :html => {:method => :put}) do |f| %>
   <table class="plate-view">
     <thead>
       <tr>
@@ -12,29 +11,25 @@
     <tbody>
 
 
-      <%= f.fields_for(:transfers, plate_presenter.transfers ) do |fields| %>
+      <%= form.fields_for(:transfers, plate_presenter.transfers ) do |fields| %>
       <% plate_presenter.source_wells_by_row.each do |row_label, row_wells| %>
         <tr>
           <th class="first-col"><%= row_label %></th>
           <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
             <td class="col-all <%= "col-#{index+1}" %>">
               <% location = well.try(:location) || "Z1" %>
-              <div id="<%= "well_#{location}" %>" class="well">
+              <div id="<%= "source_well_#{location}" %>" class="well source_well">
                 <% unless well.try(:aliquots).blank? -%>
-                  <div id="<%= "aliquot_#{well.location}" %>" class="aliquot <%= custom_pooling_colour( plate_presenter.transfers[well.location]) %>" rel="<%= "#details_#{well.location}" %>">
-
-                    <%= plate_presenter.transfers[well.location] %>
-                  </div>
+                  <div id="<%= "source_aliquot_#{well.location}" %>" class="aliquot source_aliquot <%= custom_pooling_colour( plate_presenter.transfers[well.location]) %>" rel="<%= "#details_#{well.location}" %>"><%= plate_presenter.transfers[well.location] %></div>
                     <%= fields.hidden_field well.location %>
-
-                <% end -%>
+                <% end %>
               </div>
             </td>
           <% end %>
         </tr>
       <% end %>
-      <% end -%>
+      <% end %>
     </tbody>
   </table>
-<% end %>
+
 

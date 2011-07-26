@@ -55,7 +55,7 @@ module Forms
     end
 
     def wells_by_row
-      rows = Hash[ ('A'..'H').map {|row| [row, []]} ]
+      rows = Hash[('A'..'H').map { |row| [ row, [] ] }]
 
       transfers.values.uniq!.each do |location|
         rows[location.sub(/\d+/,'')] << CustomPoolingForm::Well.new(location)

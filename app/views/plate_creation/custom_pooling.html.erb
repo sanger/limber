@@ -3,10 +3,43 @@
 
   <%= content do %>
     <h2>Custom Pooling Source Plate</h2>
-    <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @creation_form} %>
+    <%= semantic_form_for(@creation_form, :url => pulldown_plate_children_path(@creation_form.parent), :as => :plate, :html => {:method => :put}) do |form| %>
+      <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @creation_form, :form => form} %>
 
-    <h2>Destination Plate</h2>
-    <%= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form} %>
+      <h2>Destination Plate</h2>
+      <%= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form, :id => "destination_plate"} %>
+      <%= form.submit "Create New Plate" %>
+    <% end %>
   <% end %>
 <% end %>
 
+<script type="text/javascript">
+  var sourceWell = null;
+  var destinationWell = null;
+
+  function showSourceAliquots() { 
+    destinationWell = null;
+    $('.source_aliquot').show();
+  }
+
+  function setPoolingValue(sourceWell, destinationWell){
+    sourceWell.find('.aliquot').text(destinationWell.find('.aliquot').text());
+  }
+
+  $('.source_well').click(function(){
+     sourceWell    = $(this);
+     sourceAliquot = sourceWell.find('.aliquot');
+
+     // Dim other source wells...
+     $('.source_aliquot').not(sourceAliquot).fadeOut();
+
+     // highlight the destination plate...
+
+     // hide wells used by other submissions
+
+     $('#destination_plate').find('.well').click(function(){
+       setPoolingValue(sourceWell, $(this))
+       showSourceAliquots();
+     });
+  });
+</script>
