@@ -3,7 +3,7 @@ class CreationController < ApplicationController
   write_inheritable_attribute :creation_message, 'Your lab ware has been created'
 
 
-  before_filter :check_for_current_user
+  before_filter :check_for_current_user!
 
   def redirect_to_form_destination(form)
     redirect_to(redirection_path(form), :notice => creation_message)
@@ -32,7 +32,7 @@ class CreationController < ApplicationController
       format.html do
         redirect_to(
           pulldown_plate_path(@creation_form.parent),
-          :notice =>[  "Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages ]
+          :alert =>[  "Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages ]
         )
       end
     end
@@ -53,13 +53,17 @@ class CreationController < ApplicationController
       format.html do
         redirect_to(
           pulldown_plate_path(@creation_form.parent),
-          :notice => "Cannot create the plate: #{exception.message}"
+          :alert => "Cannot create the plate: #{exception.message}"
         )
       end
     end
   end
 
-  def check_for_current_user
-    redirect_to search_path unless current_user_uuid.present?
+  def check_for_current_user!
+    redirect_to(
+      search_path,
+      :alert => "Please login before creating plates."
+    ) unless current_user_uuid.present?
   end
+  private :check_for_current_user!
 end
