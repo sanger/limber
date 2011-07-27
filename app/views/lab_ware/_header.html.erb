@@ -1,0 +1,6 @@
+<% if presenter.present? and title.present? %>
+  <h1><%= presenter.plate.plate_purpose.name %>: <%= presenter.plate.barcode.ean13 %> - <%= title %></h1>
+<% end %>
+<%= link_to('Search', search_path, :'data-direction' => 'reverse', :'data-icon' => 'search') %>
+<%= yield(:header) %>
+<%= admin_link(presenter) %>

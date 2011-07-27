@@ -1,0 +1,15 @@
+<%= section do %>
+  <h2>Print plate label</h2>
+  <%= individual_barcode_printing_form(
+        @presenter.plate.barcode,
+        :redirection_url => pulldown_plate_path(@presenter.plate),
+        :text            => @presenter.plate.plate_purpose.name
+  ) %>
+<% end %>
+
+<% @presenter.control_worksheet_printing do -%>
+  <% section do -%>
+    <br/>
+    <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %>
+  <% end -%>
+<% end -%>

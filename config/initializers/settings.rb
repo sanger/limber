@@ -1,54 +1,31 @@
 class Settings
-  include Singleton
-  
   class << self
     def respond_to?(method, include_private = false)
       super or self.instance.respond_to?(method, include_private)
     end
-    
-  protected
-    
+
     def method_missing(method, *args, &block)
-      return super unless self.instance.respond_to?(method)
       self.instance.send(method, *args, &block)
     end
-    
-  end
-  
-  def initialize
-    filename    = File.join(File.dirname(__FILE__), *%W[.. settings #{RAILS_ENV}.yml])
-    @settings   = YAML.load(eval(ERB.new(File.read(filename)).src, nil, filename))
-  end
-  
-  def respond_to?(method, include_private = false)
-    super or is_settings_query_method?(method) or @settings.key?(setting_key_for(method))
-  end
-  
-protected
-  
-  def method_missing(method, *args, &block)
-    setting_key    = setting_key_for(method)
-    setting_exists = @settings.key?(setting_key)
+    protected :method_missing
 
-    if is_settings_query_method?(method)
-      setting_exists
-    elsif setting_exists
-      @settings[ setting_key ]
-    else
-      super
+    def configuration_filename
+      File.join(File.dirname(__FILE__), *%W[.. settings #{Rails.env}.yml])
+    end
+    private :configuration_filename
+
+    def instance
+      return @instance if @instance.present?
+
+      @instance = Hashie::Mash.new(YAML.load(eval(ERB.new(File.read(configuration_filename)).src, nil, configuration_filename)))
+    rescue => exception
+      star_length = [ 96, 12+configuration_filename.length ].max
+      $stderr.puts('*'*star_length)
+      $stderr.puts "WARNING! No #{configuration_filename}"
+      $stderr.puts "You need to run 'rake config:generate' and can ignore this message if that's what you are doing!"
+      $stderr.puts('*'*star_length)
     end
   end
-
-private
-
-  def is_settings_query_method?(method)
-    method.to_s =~ /\?$/
-  end
-
-  def setting_key_for(method)
-    method.to_s.match(/^([^\?]+)\??$/)[ 1 ]
-  end
-  
 end
 
 Settings.instance

@@ -1,0 +1,12 @@
+<div class="tube">
+  <div class="tube-view">
+    <% unless tube.aliquots.empty? -%>
+      <div id="<%= "aliquot_#{tube.uuid}" %>" class="aliquot <%= pooling_colour(tube, tube.uuid) %>">&nbsp;</div>
+    <% end -%>
+  </div>
+
+  <ul id="information">
+    <li><span class="label">Barcode</span>       <%= useful_barcode(tube.barcode) %></li>
+    <li><span class="label">Current state</span> <%= tube.state %></li>
+  </ul>
+</div>

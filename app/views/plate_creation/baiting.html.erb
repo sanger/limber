@@ -1,0 +1,34 @@
+<%= page(:creation) do %>
+  <%= header(@creation_form, 'Bait library layout') %>
+
+  <% content do %>
+    <h2>Baited Plate Preview</h2>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <%= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form}  %>
+
+        <br/>
+        <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+          <%= f.inputs do %>
+            <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
+            <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+          <% end %>
+          <%= f.buttons do %>
+            <%= f.commit_button 'Create Plate' %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <ul id="key" class="ui-block-b">
+        <%- @creation_form.baits.each do |bait| -%>
+          <li class="ui-bar">
+            <div class="tube-view">
+              <div class="aliquot <%= bait_colour(bait) %>">&nbsp;</div>
+            </div>
+            <%= bait.bait %>
+          </li>
+        <%- end -%>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

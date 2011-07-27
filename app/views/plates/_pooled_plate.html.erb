@@ -1,0 +1,29 @@
+<table class="plate-view">
+  <thead>
+    <tr>
+      <th class="first-col">&nbsp;</th>
+      <% (1..12).each do |column_number| %>
+        <th><%= column_number %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% walker.each do |row_label, row_wells| %>
+      <tr>
+        <th class="first-col"><%= row_label %></th>
+        <% row_wells.each_with_index do |well, index| %>
+          <td class="col-all <%= "col-#{index+1}" %>">
+            <div id="<%= "well_#{well.location}" %>" class="well">
+              <% unless transfers[well.location].nil? -%>
+                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot <%= pooling_colour(well, transfers[well.location]) %>" rel="<%= "#details_#{well.location}" %>">
+                  <%= transfers[well.location] %>
+                </div>
+              <% end %>
+            </div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

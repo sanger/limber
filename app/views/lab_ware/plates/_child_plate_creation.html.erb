@@ -1,0 +1,10 @@
+<%= form_tag new_pulldown_plate_child_path(presenter.plate.uuid), :method => 'get' do %>
+  <li>
+    <%= label_tag :plate_purpose_uuid, "Child Type" %>
+    <%= select_tag :plate_purpose_uuid, options_from_collection_for_select(presenter.child_plate_purposes, :uuid, :name) %>
+  </li>
+  <li>
+  <%= submit_tag "Next", :name => nil, :class => "submit", :'data-icon' => "arrow-r", :'data-iconpos' =>"right"%>
+    <br/>
+  </li>
+<% end %>

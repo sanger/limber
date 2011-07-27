@@ -4,8 +4,8 @@
 @import "compass/utilities/links";
 @import "compass/css3/border-radius";
 @import "compass/css3/gradient";
+@import "colours";
 
-@import "jquery-ui-1.8.11.custom.scss";
 
 $font-size: 14px;
 
@@ -16,183 +16,32 @@ body {
   font-size:   100% * $font-size / 16px;
 }
 
-h1 {
-  font-size: 3em;
-  line-height: 1;
-  margin-bottom: 0.50em; }
-h2 {
-  font-size: 2em;
-  margin-bottom: 0.75em; }
-h3 {
-  font-size: 1.5em;
-  line-height: 1;
-  margin-bottom: 1.00em; }
-h4 {
-  font-size: 1.2em;
-  line-height: 1.25;
-  margin-bottom: 1.25em; }
-h5 {
-  font-size: 1em;
-  font-weight: bold;
-  margin-bottom: 1.50em; }
-h6 {
-  font-size: 1em;
-  font-weight: bold; }
-  
-.submit, .create  {
-  @extend .ui-button;
-  @extend .ui-widget ;
-  @extend .ui-state-default ;
-  @extend .ui-corner-all ;
-  @extend .ui-button-text-only;
-}
-
-#page-header {
-  @include box-shadow(#C3CEDA, 1px, 1px, 2px);
-  @include border-radius;
-}
-
-#header-top {
-  @include linear-gradient(color-stops(#31353D,#212429));
-  padding: 5px 9px 0;
-  color: #EFEFEF;
-  @include border-top-left-radius(5px);
-  @include border-top-right-radius(5px);
-  height: 18px;
-  
-  a {
-    @include hover-link;
-    @include link-colors(#fff, #ff0);
-  }
-   
-  #logo-container {
-    float:left;
-    text-transform: uppercase;
-    #logo { 
-      @include box-shadow(rgba(100,100,100,0.1), 1px, 1px, 1px);
-    }
-  }
-
-  #quick-links {
-    @include horizontal-list;
-    padding: 0 0 0 9px;
-    float:left;
-    a {
-      @include hover-link;
-      @include link-colors(#fff, #ff0);
-    }
-  }
-  
-  #user-links {
-    float: right;
-    text-align: right;
-  }
-  
-}
-
-#header-middle {
-  height: 36px;
-  padding: 0 18px;
-  @include linear-gradient(color-stops(#004578,#0085BC));
-  color: #fff;
-  
-  #search {
-    float: right;
-    clear:left;
-    ul { 
-      text-align: right;
-      @include horizontal-list;
-    }
-  }
-}
-
-  #main-menu {
-  @include border-bottom-left-radius(5px);
-  @include border-bottom-right-radius(5px);
-  padding: 2px 0;
-  font-weight:700;
-  @include linear-gradient(color-stops(#AED9F4, #A3D4F4));
-    ul {
-      @include horizontal-list;
-
-      li { 
-        text-align: center;
-        text-transform: uppercase;
-      }
-      a {
-        padding: 0 9px;
-        color: #31353D;
-        text-decoration: none;
-      }
-      a:hover {
-        color: #fff;
-        background: #0085BC;
-        @include border-radius(5px);
-      }
-    }  
-  }
-
-#main-content {
-  margin-top: 18px;
-  padding: 9px 18px;
-  @include border-radius;
-  background: #fff;
-  @include box-shadow(#BFBFBF, 1px, 1px, 3px)
-}
-
-#page-menu {
-  @include border-radius;
-
-  ul.page-menu-entry {
-    @include border-radius;
-    @include no-bullets;
-    border: 1px solid #AAD4F4;
-    margin: 0;
-    padding: 0;
-    background: #D2E2F7;
-  }
-}
-
-
-#page-footer {
-  padding: 3px 0px 0px 10px;
-  line-height: 17px;
-  padding-bottom: 20px;
-  color: #666;
-}
-
-#page-footer a {
-  @include link-colors(#000,#880000);
-}
-
-#plate-control {
+.plate-view-control {
   margin: 18px 0;
 }
 
-#plate {
+.plate-view {
   @include box-shadow(#000, 2px, 2px, 5px);
   @include border-radius(15px);
   @include border-top-left-radius(0);
   /* Use transparency for the background color or FF ridge will look bad... */
-  border: 3px ridge rgba(11,35,75,0.2);
+  border: 1px ridge rgba(11,35,75,0.5);
   vertical-align: middle;
   text-align:     center;
-/*  width: 700px;*/
-/*  height: 400px;*/
-  background:     #00416F;
+  background:     #003557;
   padding:        3px;
   color:          #fff;
 }
 
-#plate tr {
+.plate-view tr {
 /*  padding: 6px;*/
 }
 
-#plate th {
+.plate-view th {
   padding: 0;
 }
 
-#plate th {
+.plate-view th {
   vertical-align: middle;
   text-align:     center;
   padding:0;
@@ -200,30 +49,28 @@ h6 {
 /*  height: 15px;*/
 }
 
-#plate th.first-col {
+.plate-view th.first-col {
   width: 15px;
 }
 
-#plate .well {
+.plate-view .well, .tube-view {
   height:30px;
   width:30px;
   padding: 3px;
   text-align:     center;
-  border: 3px ridge rgba(5,19,40,0.1);
-  @include radial-gradient(color-stops(#002F51,#003A62), top left);
-  @include border-radius(15px);
+  border: 1px ridge rgba(5,19,40,0.1);
+  @include radial-gradient(color-stops(#002A46,#003353), top left);
+  @include border-radius(7px);
 }
 
 .aliquot {
-  display: none;
   @include border-radius(30px);
-  height:20px;
   width:30px;
-  padding: 10px 0 0 0;
-  vertical-align: middle;
+  height:24px;
+  padding: 6px 0 0 0;
   text-align:     center;
   color:#fff;
-  @include box-shadow(#00192B, 3px, 3px, 10px);
+  @include box-shadow(#00192B, 6px, 6px, 10px);
 }
 
 .aliquot:hover {
@@ -231,30 +78,25 @@ h6 {
   @include box-shadow(#00192B, 0px, 0px, 1px);
 }
 
-#plate .green {
-  /*Moss green....*/
-  background: #196D18;
-  @include radial-gradient(color-stops(#00B10E, #002802), top left);
+
+@mixin labware-view {
+  .green         { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .red           { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .yellow        { @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
+  .blue          { @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
+  .orange        { @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
+  .unknown-value { @include radial-gradient(color-stops(#289AC7, #083442), top left); }
+
+  .good          { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .failed        { @include radial-gradient(color-stops(#D30000, #480000), top left); }
 }
 
-#plate .red {
-  background:#D10000;
-  @include radial-gradient(color-stops(#D30000,#480000), top left);
+.plate-view, .tube-view {
+  @include labware-view
 }
 
-#plate .yellow {
-  background:#FFFE8D;
-  color: #282828;
-}
-
-#plate .orange {
-  background:#FF7300;
-  @include radial-gradient(color-stops(#FF9443,#5B1B00), top left);
-}
-
-#plate .unknown-value {
-  background: #1D86AD;
-  @include radial-gradient(color-stops(#289AC7, #083442), top left);
+#information {
+  .total { font-weight: bold; }
 }
 
 .tooltip {
@@ -287,7 +129,6 @@ h6 {
   z-index:10000;
   
   /* styling */
-  background-color:#3F3F3F;
   @include linear-gradient(color-stops(#353535,#0F0F0F));
   
   width:600px;  
@@ -296,7 +137,7 @@ h6 {
   @include border-radius(5px);
   /* CSS3 styling for latest browsers */
   -moz-box-shadow:1px 1px 9px #000;
-/*  -webkit-box-shadow: 0 0 90px #000;  */
+  -webkit-box-shadow: 1px 1px 9px #000; 
 }
 
 /* close button positioned on upper right corner */
@@ -343,3 +184,28 @@ table.form {
   width:  400px;
   margin: 0 0 36px 0;
 }
+
+#information {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  .label {
+    font-weight: bold;
+
+    &:after {
+      content: ':';
+    }
+  }
+}
+
+/* Reasons are initially hidden and shown based on a selection */
+.reason      { display: none;  }
+.reason.show { display: block; }
+
+#key .tube-view { display: inline-block; }
+
+.barcode {
+  font-family: 'Monaco', 'Courier new', courier, fixed;
+}
+

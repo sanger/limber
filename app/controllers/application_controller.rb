@@ -1,12 +1,16 @@
 class ApplicationController < ActionController::Base
-  before_filter :assign_api
-  attr_accessor :api
-  
+  include Sequencescape::Api::Rails::ApplicationController
+  delegate :api_connection_options, :to => 'PulldownPipeline::Application.config'
+
   protect_from_forgery
   
-  def assign_api
-   self.api ||= ::Sequencescape::Api.new
+  def current_user_uuid
+    session[:user_uuid]
   end
-  private :assign_api
-  
+
+  helper_method :current_user_uuid
+
+  def find_user_by_swipecard(card_id)
+    api.search.find(Settings.searches["Find user by swipecard code"]).first(:swipecard_code => card_id).uuid
+  end
 end
