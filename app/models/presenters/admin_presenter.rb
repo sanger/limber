@@ -2,7 +2,7 @@ module Presenters
   class AdminPresenter < PlatePresenter
     include Presenters::Statemachine
 
-    write_inheritable_attribute :attributes, [ :api, :user_id, :plate ]
+    write_inheritable_attribute :attributes, [ :api, :card_id, :plate ]
 
     def lab_ware_form_details(view)
       { :url => view.admin_plate_path(self.plate), :as  => :plate }
