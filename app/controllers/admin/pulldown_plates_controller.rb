@@ -5,10 +5,10 @@ class Admin::PulldownPlatesController < PlatesController
   undef :show, :fail_wells
 
   # Called by the update method inherited from LabWareController
-  # the same as in LabWareController but uses params[:user_id] instead
+  # the same as in LabWareController but uses params[:card_id] instead
   # of current_user_id
   def state_changer_for(labware)
-    StateChangers.lookup_for(labware).new(api, labware, find_user_by_swipecard(params[:user_id]))
+    StateChangers.lookup_for(labware).new(api, labware, find_user_by_swipecard(params[:card_id]))
   end
 
   def edit
@@ -23,6 +23,17 @@ class Admin::PulldownPlatesController < PlatesController
       respond_to do |format|
         format.html
       end
+    end
+
+  end
+
+  def update
+    super
+  rescue => exception
+    flash[:alert] = exception.message
+
+    respond_to do |format|
+      format.html { redirect_to edit_admin_plate_path(params[:id]) }
     end
   end
 
