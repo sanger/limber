@@ -14,7 +14,7 @@ class SearchController < ApplicationController
   def create
     raise "You have not supplied a plate barcode" if params[:plate_barcode].blank?
 
-    set_user_by_swipecard!(params[:user_id]) if params[:user_id].present?
+    set_user_by_swipecard!(params[:card_id]) if params[:card_id].present?
 
     respond_to do |format|
       format.html { redirect_to find_plate(params[:plate_barcode]) }

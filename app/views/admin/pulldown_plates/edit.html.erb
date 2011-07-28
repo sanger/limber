@@ -11,14 +11,14 @@
 <script type="text/javascript">
   $(function(){
     $('#plate_edit').submit(function() {
-        if ($('#user_id').val().length == 0) {
+        if ($('#card_id').val().length == 0) {
           alert("Please scan your swipecard...");
           return false;
         }
     });
 
     // Trap the carriage return sent by the swipecard reader
-    $("#user_id").bind("keydown", function(e) {
+    $("#card_id").bind("keydown", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
         return false;
