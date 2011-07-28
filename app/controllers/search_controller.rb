@@ -10,14 +10,14 @@ class SearchController < ApplicationController
     render :new
   end
 
-  
+
   def create
     raise "You have not supplied a plate barcode" if params[:plate_barcode].blank?
 
     find_user
-    
+
     respond_to do |format|
-      format.html { redirect_to api.search.find(Settings.searches['Find asset by barcode']).first(:barcode => params[:plate_barcode]) }
+      format.html { redirect_to api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => params[:plate_barcode]) }
     end
 
 
