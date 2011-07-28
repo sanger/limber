@@ -24,6 +24,17 @@ class Admin::PulldownPlatesController < PlatesController
         format.html
       end
     end
+
+  end
+
+  def update
+    super
+  rescue => exception
+    flash[:alert] = exception.message
+
+    respond_to do |format|
+      format.html { redirect_to edit_admin_plate_path(params[:id]) }
+    end
   end
 
 end
