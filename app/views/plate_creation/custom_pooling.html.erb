@@ -144,9 +144,21 @@
      }
    }
 
+  // This function ensures that the hidden form values always start with the
+  // expected values even if someone reloads the page (otherwise the form will
+  // retain the previous values but page won't show them).
+  function initialiseTransferFormValues(){
+    $('.source_well').each(function(){
+      var dest = $(this).find('.aliquot').attr('data-destination-well');
+      $(this).find('input').val(dest);
+    });
+  }
+
   $(function(){
 
       initialisePoolValues();
+
+      initialiseTransferFormValues();
 
       //Change click to toggle so that operation can be aborted...
     $('.source_well').click(function(){
