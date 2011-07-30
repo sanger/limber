@@ -15,9 +15,9 @@ module LabWareHelper
     end
   end
 
-  cycling_colours(:bait)    { |lab_ware, _|          lab_ware.bait }
-  cycling_colours(:tag)     { |lab_ware, _|          lab_ware.aliquots.first.tag.identifier }
-  cycling_colours(:pooling) { |lab_ware,destination| destination }
+  cycling_colours(:bait)    { |lab_ware, _|            lab_ware.bait }
+  cycling_colours(:tag)     { |lab_ware, _|            lab_ware.aliquots.first.tag.identifier }
+  cycling_colours(:pooling) { |lab_ware, destination|  destination }
 
   def aliquot_colour(lab_ware)
     case lab_ware.state
@@ -46,9 +46,23 @@ module LabWareHelper
     )
   end
 
+  def colours_by_location
+    return @location_colours if @location_colours.present?
+
+    @location_colours = {}
+
+    ('A'..'H').each_with_index do |row,row_index|
+      (1..12).each_with_index do |col,col_index|
+        @location_colours[row + col.to_s] = "colour-#{(col_index * 12) + row_index + 1}"
+      end
+    end
+
+    @location_colours
+  end
+
   def plates_by_state(plates)
-    plates.inject(Hash.new {|h,k| h[k]=[]}) do |h,plate|
-      h[plate.state] << plate; h
+    plates.each_with_object(Hash.new {|h,k| h[k]=[]}) do |plate, plates_by_state|
+      plates_by_state[plate.state] << plate
     end
   end
 

@@ -1,0 +1,187 @@
+<%= page(:'custom-pooling') do %>
+  <%= header(@creation_form, 'Custom pooling') %>
+
+  <%= content do %>
+    <h2>Source Plate</h2>
+    <%= semantic_form_for(
+      @creation_form,
+      :url => pulldown_plate_children_path(@creation_form.parent),
+      :as => :plate,
+      :html => {:method => :post}) do |form|
+    %>
+
+      <%= form.inputs do %>
+        <%= form.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
+        <%= form.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+      <% end %>
+      <%= render :partial => "pooled_plate", :locals => {:plate_presenter => @creation_form, :form => form} %>
+
+      <h2>Destination Plate</h2>
+      <%= render :partial => "plates/plate", :locals => {:plate_presenter => @creation_form, :id => "destination_plate"} %>
+      <br/>
+      <%= form.submit "Create New Plate" %>
+    <% end %>
+  <% end %>
+<% end %>
+
+
+<script type="text/javascript">
+  $.extend({
+    createElement: function(elementName){
+      return $(document.createElement(elementName));
+    }
+  });
+
+  var sourceWell        = null;
+  var destinationWell   = null;
+  var coloursByLocation = <%= colours_by_location.to_json.html_safe %>;
+
+  function showSourceAliquots(){
+    destinationWell = null;
+    undimAliquots();
+  }
+
+  function undimAliquots(){
+    $('.well, .aliquot').css('opacity', '1.0');
+  }
+
+  function dim(){
+    $(this).css('opacity', '0.2');
+  }
+
+  function setPoolingValue(sourceWell, destinationWell){
+    var destination        = getLocation(destinationWell);
+    var oldDestination     = getLocation(sourceWell);
+    var oldDestinationWell = $('#destination_plate .well[data-location    = ' + oldDestination + ']');
+
+    sourceWell.find('.aliquot').
+      text(destination).
+      removeClass().
+      addClass('aliquot source_aliquot ' + coloursByLocation[destination]).
+      attr('data-destination-well', destination);
+
+    sourceWell.find('input').val(destination);
+
+    addAliquot(destinationWell);
+
+    resetAliquotCounts();
+
+    $('#destination_plate .well[data-aliquot-count=0]').children().remove();
+
+    setupHighLightTransfers();
+  }
+
+  function resetAliquotCounts(){
+    var poolingDestinations = $('.source_well .aliquot').map(function(_, el){
+      return $(el).attr('data-destination-well');
+    });
+
+    poolingDestinations = _.uniq(poolingDestinations);
+
+    // Reset data-aliquot-count to 0 for all the destination wells
+    $('#destination_plate .well').attr('data-aliquot-count', 0);
+
+    _.each(poolingDestinations, function(wellLocation){
+        var aliquotCount = $('.source_aliquot[data-destination-well=' + wellLocation + ']').length;
+
+        $('#destination_plate .well[data-location='+ wellLocation + ']').attr('data-aliquot-count', aliquotCount);
+    });
+
+  }
+
+  function newAliquot(destinationWell){
+    var location = getLocation(destinationWell);
+    var aliquot  = $.createElement('div');
+
+    aliquot.
+      attr('id', 'aliquot_' + location).
+      addClass('aliquot').
+      addClass(coloursByLocation[location]).
+      text(location);
+
+    return aliquot;
+  }
+
+  function addAliquot(destinationWell){
+    if (destinationWell.html().trim() == '') {
+      destinationWell.append(newAliquot(destinationWell));
+    }
+  }
+
+  function getLocation(el){
+    return $(el).attr('id').match(/^.*_([A-H]\d+)$/)[1];
+  }
+
+  function aliquotsByDestination(el){
+    return $('.source_aliquot').not(':contains(' + getLocation(el) +')')
+  }
+
+  function setupHighLightTransfers(){
+    $('#destination_plate .aliquot').toggle(
+        function(){
+          $('#destination_plate .aliquot').not(this).each(dim);
+          aliquotsByDestination(this).each(dim);
+        },
+        undimAliquots
+      );
+  }
+
+  function poolingHandler(){
+    setPoolingValue(sourceWell, $(this));
+    showSourceAliquots();
+    $('#destination_plate .well').unbind();
+  }
+
+   function initialisePoolValues(){
+     var destination_pools = $('.source_aliquot').map(function(){
+       return  [ $(this).text().trim(), $(this).data('pool') ]
+     });
+
+     destination_pools = _.uniq(destination_pools);
+
+     for (i=0;i<destination_pools.length; i = i + 2){
+       $('#destination_plate .well[data-location=' + destination_pools[i] + ']').attr('data-pool', destination_pools[i+1]);
+     }
+   }
+
+  // This function ensures that the hidden form values always start with the
+  // expected values even if someone reloads the page (otherwise the form will
+  // retain the previous values but page won't show them).
+  function initialiseTransferFormValues(){
+    $('.source_well').each(function(){
+      var dest = $(this).find('.aliquot').attr('data-destination-well');
+      $(this).find('input').val(dest);
+    });
+  }
+
+  $(function(){
+
+      initialisePoolValues();
+
+      initialiseTransferFormValues();
+
+      //Change click to toggle so that operation can be aborted...
+    $('.source_well').click(function(){
+       sourceWell    = $(this);
+       sourceAliquot = sourceWell.find('.aliquot');
+       sourcePool    = sourceAliquot.data('pool');
+
+       // Dim other source wells...
+       $('.source_aliquot').not(sourceAliquot).each(dim);
+
+       // Remove highlighting behaviour from aliquots on destination plate
+       $('#destination_plate .aliquot').unbind();
+
+       // dim wells used by other submissions...
+       $('#destination_plate .well').not('[data-pool=""]').not('[data-pool=' + sourcePool + ']').each(dim);
+
+       // Add the handler to unused wells or wells used by this submission...
+       $('#destination_plate .well').filter('[data-pool=' + sourcePool +'],[data-pool=""]').click(poolingHandler);
+    });
+
+    resetAliquotCounts();
+    setupHighLightTransfers();
+
+  });
+
+</script>
