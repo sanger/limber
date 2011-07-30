@@ -8,6 +8,8 @@ module Forms
     write_inheritable_attribute :default_transfer_template_uuid,
       Settings.transfer_templates['Pool wells based on submission']
 
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :user_uuid, :transfers]
+
     class TransferHelper
       def initialize(transfers)
         @transfers = transfers
@@ -34,6 +36,22 @@ module Forms
       end
     end
 
+    def pools_by_well
+      return @pools_by_well if @pools_by_well.present?
+
+      @pools_by_well = {}
+
+      plate.pools.each do |pool_id, wells|
+        wells.each { |location| @pools_by_well[location] = pool_id }
+      end
+
+      @pools_by_well
+    end
+
+    def pool(location)
+      pools_by_well[location]
+    end
+
     def transfer_preview
       @transfer_preview ||= TransferHelper.new(
         api.transfer_template.find(
@@ -47,7 +65,7 @@ module Forms
     end
 
     def transfers
-      transfer_preview
+      @transfers || transfer_preview
     end
 
     def source_wells_by_row
@@ -65,10 +83,25 @@ module Forms
     end
 
 
-    def create_plate!
-      # TODO cary out the transfer...
-      debugger
+    def create_objects!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
+      @plate_creation = api.plate_creation.create!(
+        :parent              => parent_uuid,
+        :child_plate_purpose => plate_purpose_uuid,
+        :user                => user_uuid
+      )
+
+
+      api.transfer_template.find(Settings.transfer_templates['Custom pooling']).create!(
+        :source      => parent_uuid,
+        :destination => @plate_creation.child.uuid,
+        :user        => user_uuid,
+        :transfers   => transfers
+      )
+
+      yield(@plate_creation.child) if block_given?
+      true
     end
+    private :create_objects!
   end
 end
 

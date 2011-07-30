@@ -1,4 +1,4 @@
-  <table class="plate-view">
+  <table id="source-plate" class="plate-view">
     <thead>
       <tr>
         <th class="first-col">&nbsp;</th>
@@ -17,11 +17,21 @@
           <th class="first-col"><%= row_label %></th>
           <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
             <td class="col-all <%= "col-#{index+1}" %>">
-              <% location = well.try(:location) || "Z1" %>
+              <% location = "#{row_label}#{index + 1}" %>
               <div id="<%= "source_well_#{location}" %>" class="well source_well">
                 <% unless well.try(:aliquots).blank? -%>
-                  <div id="<%= "source_aliquot_#{well.location}" %>" class="aliquot source_aliquot <%= custom_pooling_colour( plate_presenter.transfers[well.location]) %>" rel="<%= "#details_#{well.location}" %>"><%= plate_presenter.transfers[well.location] %></div>
-                    <%= fields.hidden_field well.location %>
+                  <% destination_well = plate_presenter.transfers[well.location] -%>
+
+                  <div 
+                    id="<%= "source_aliquot_#{well.location}" %>" 
+                    class="aliquot source_aliquot <%= colours_by_location[destination_well] %>" 
+                    rel="<%= "#details_#{well.location}" %>"
+                    data-pool="<%= plate_presenter.pool(well.location) %>"
+                    data-destination-well=<%= destination_well %>
+                    >
+                      <%= destination_well %>
+                  </div>
+                  <%= fields.hidden_field well.location, :value => destination_well %>
                 <% end %>
               </div>
             </td>
