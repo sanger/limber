@@ -21,16 +21,14 @@
 
 
     function update_layout() {
-      var tags = tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()];
+      var tags = $(tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
 
-      $('.aliquot').each(function(index){
-        var tag_id = tags[index];
-
-        $(this).
+      tags.each(function(index) {
+        $('#aliquot_'+this[0]).
           hide().
-          text(tag_id).
+          text(this[1][1]).
           removeClass().
-          addClass('aliquot colour-' + ( tag_id % 96 + 1) ).
+          addClass('aliquot colour-'+this[1][0]).
           fadeIn();
       });
     }

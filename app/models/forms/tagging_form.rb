@@ -27,17 +27,35 @@ module Forms
       Array.new(96) { |i| tags[(i % tags.size)] }
     end
 
-    def tags_by_column(tags)
-      first_96_tags(tags).each_slice(8).to_a
-    end
-
     def tag_ids(layout)
       layout.tag_group.tags.keys.map!(&:to_i).sort
     end
 
-    def tags_by_row(layout)
-      tags_by_column(tag_ids(layout)).transpose.flatten
+    def structured_well_locations(&block)
+      Hash.new.tap do |ordered_wells|
+        ('A'..'H').each do |row|
+          (1..12).each do |column|
+            ordered_wells["#{row}#{column}"] = nil
+          end
+        end
+        yield(ordered_wells)
+        ordered_wells.delete_if { |_,v| v.nil? }
+      end
     end
+    private :structured_well_locations
+
+    def tags_by_row(layout)
+      structured_well_locations do |ordered_wells|
+        tags, tag_index = first_96_tags(tag_ids(layout)), 0
+        plate.ordered_pools.each_with_index.map do |pool, index|
+          pool.each do |location|
+            ordered_wells[location] = [index+1, tags[(tag_index % tags.size)]]
+            tag_index = tag_index+1
+          end
+        end
+      end.to_a
+    end
+    private :tags_by_row
 
     def create_objects!
       create_plate! do |plate|
