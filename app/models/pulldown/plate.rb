@@ -20,4 +20,14 @@ class Pulldown::Plate < Sequencescape::Plate
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
+
+  def ordered_pools
+    x = Hash.new { |h,k| h[k] = [] }
+    self.wells.each { |well| x[pool_for_well(well)] << well.location }
+    x.values
+  end
+
+  def pool_for_well(well)
+    self.pools.detect { |pool_id, wells| wells.include?(well.location) }
+  end
 end
