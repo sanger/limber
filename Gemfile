@@ -8,8 +8,8 @@ gem 'state_machine', '~>1.0.1'
 gem 'hashie', '~>1.0.0'
 
 gem 'sequencescape-client-api',
-  :git     => 'git+ssh://git@github.com/mattdenner/sequencescape-client-api.git',
-  :branch  => 'pulldown_pipeline_thoughts',
+  :git     => 'git+ssh://git@github.com/sanger/sequencescape-client-api.git',
+  :branch  => 'master',
   :require => 'sequencescape'
 gem 'sanger_barcode',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'

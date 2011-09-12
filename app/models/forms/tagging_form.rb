@@ -7,17 +7,30 @@ module Forms
 
     validates_presence_of *self.attributes
 
-    def tag_layout_templates
-      return @tag_layout_template if @tag_layout_template.present?
+    def generate_layouts_and_groups
       maximum_pool_size = plate.pools.map(&:last).map!(&:size).max
 
       @tag_layout_templates = api.tag_layout_template.all.select do |template|
-         template.tag_group.tags.size >= maximum_pool_size
+        template.tag_group.tags.size >= maximum_pool_size
       end
+
+      @tag_groups = Hash[
+        tag_layout_templates.map do |layout|
+          catch(:unacceptable_tag_layout) { [ layout.name, tags_by_row(layout) ] }
+        end.compact
+      ]
+      @tag_layout_templates.delete_if { |template| not @tag_groups.key?(template.name) }
+    end
+    private :generate_layouts_and_groups
+
+    def tag_layout_templates
+      generate_layouts_and_groups unless @tag_layout_templates.present?
+      @tag_layout_templates
     end
 
     def tag_groups
-      Hash[ tag_layout_templates.map { |layout| [ layout.name, tags_by_row(layout) ] } ]
+      generate_layouts_and_groups unless @tag_groups.present?
+      @tag_groups
     end
 
     # Creates a 96 element array of tags from the tag array passed in.
@@ -44,13 +57,53 @@ module Forms
     end
     private :structured_well_locations
 
+    def group_wells_of_plate_in_columns
+      well_to_pool = {}
+      plate.pools.each do |pool_id, wells|
+        wells.each { |well| well_to_pool[well] = pool_id }
+      end
+
+      (1..12).map do |column|
+        [].tap do |wells|
+          ('A'..'H').each { |row| wells.push([ "#{row}#{column}", well_to_pool["#{row}#{column}"] ]) }
+        end
+      end
+    end
+    private :group_wells_of_plate_in_columns
+
+    def group_wells_of_plate_in_rows
+      well_to_pool = {}
+      plate.pools.each do |pool_id, wells|
+        wells.each { |well| well_to_pool[well] = pool_id }
+      end
+
+      ('A'..'H').map do |row|
+        [].tap do |wells|
+          (1..12).each { |column| wells.push([ "#{row}#{column}", well_to_pool["#{row}#{column}"] ]) }
+        end
+      end
+    end
+    private :group_wells_of_plate_in_rows
+
     def tags_by_row(layout)
-      structured_well_locations do |ordered_wells|
-        tags, tag_index = first_96_tags(tag_ids(layout)), 0
-        plate.ordered_pools.each_with_index.map do |pool, index|
-          pool.each do |location|
-            ordered_wells[location] = [index+1, tags[(tag_index % tags.size)]]
-            tag_index = tag_index+1
+      structured_well_locations do |tagged_wells|
+        tags, groups = tag_ids(layout), send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
+        pools = groups.map { |pool| pool.map(&:last) }.flatten.uniq
+        groups.each_with_index do |current_group, group|
+          if group > 0
+            prior_group = groups[group-1]
+
+            current_group.each_with_index do |(well,pool_id), index|
+              break if prior_group.size <= index
+              next if prior_group[index].last != pool_id
+              current_group.push([ well, pool_id ])
+              current_group[index] = [nil, pool_id]
+            end
+          end
+
+          current_group.each_with_index do |(well, pool_id), index|
+            throw :unacceptable_tag_layout if tags.size <= index
+            tagged_wells[well] = [ pools.index(pool_id)+1, tags[index] ] unless well.nil?
           end
         end
       end.to_a
