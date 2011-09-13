@@ -1,4 +1,6 @@
 class Pulldown::PooledPlate < Sequencescape::Plate
+  include Pulldown::PooledWells
+
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
   class Transfer < ::Sequencescape::Transfer
