@@ -1,6 +1,6 @@
 class PlatesController < LabWareController
   def locate_lab_ware_identified_by(id)
-    api.plate.find(id).coerce
+    api.plate.find(id).coerce.tap { |plate| plate.after_load }
   end
 
   def presenter_for(plate)
