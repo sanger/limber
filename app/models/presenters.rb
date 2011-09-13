@@ -54,7 +54,7 @@ module Presenters
     # and the column number (as a integer) so that they can be sorted.
     def split_location(location_string)
       match = location_string.match(/^([A-H])(\d+)/)
-      [match[1], match[2].to_i]
+      [ match[2].to_i, match[1] ]  # Order by column first
     end
     private :split_location
 
