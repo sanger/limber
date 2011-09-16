@@ -31,13 +31,9 @@
       </div>
 
       <div class="ui-block-b">
-        <h2>Tag Pallet</h2>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <ul id="tag-pallet" data-role="listview" data-inset="true" data-filter="true">
-    </ul>
+        <h2>Tag Replacement Pallet</h2>
+        <br/>
+        <ul id="tag-pallet" data-role="listview" data-inset="true" data-filter="true"></ul>
       </div>
     </div>
     <%- end -%>
@@ -60,10 +56,10 @@
   SCAPE.tags_by_name = <%= @creation_form.tags_by_name.to_json.html_safe %>;
 
   SCAPE.update_layout = function () {
+    $('#tag-pallet').hide().html("");
     var tags              = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
     var current_tag_group = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
 
-    $('#tag-pallet').hide().html("");
 
     current_tag_group.each(function(index) {
         $('#tag-pallet').append(SCAPE.tagPalletTemplate({tag_id: this}));
