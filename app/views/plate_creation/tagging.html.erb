@@ -1,8 +1,9 @@
 <script type="text/template" id="tag-pallet-template">
-  <li>
+  <li class="ui-li ui-li-static ui-body-c">
     <div class="aliquot colour-99 pallet-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
     <input id="plate_substitutions_<%%= tag_id %>" name="plate[substitutions][<%%= tag_id %>]" type="text" >
   </li>
+
 </script>
 
 <%= page(:creation) do -%>
@@ -33,7 +34,9 @@
       <div class="ui-block-b">
         <h2>Tag Replacement Pallet</h2>
         <br/>
-        <ul id="tag-pallet" data-role="listview" data-inset="true" data-filter="true"></ul>
+        <div id="replacement-tags">
+          <ul id="tag-pallet" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
       </div>
     </div>
     <%- end -%>
@@ -56,15 +59,22 @@
   SCAPE.tags_by_name = <%= @creation_form.tags_by_name.to_json.html_safe %>;
 
   SCAPE.update_layout = function () {
-    $('#tag-pallet').hide().html("");
-    var tags              = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
-    var current_tag_group = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
+    $('#tag-pallet').empty().hide();
+    var tags            = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
+    var currentTagGroup = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
+    var listItems       = "";
 
 
-    current_tag_group.each(function(index) {
-        $('#tag-pallet').append(SCAPE.tagPalletTemplate({tag_id: this}));
+    currentTagGroup.each(function(index) {
+      listItems += SCAPE.tagPalletTemplate({tag_id: this});
+
     });
-    $('ul').listview('refresh').fadeIn();
+
+    $('#tag-pallet').append(listItems);
+    $('#tag-pallet li:first').addClass('ui-li ui-li-static ui-body-c ui-corner-top');
+    $('#tag-pallet li:last').addClass('ui-li ui-li-static ui-body-c ui-corner-bottom');
+    $('#tag-pallet').fadeIn();
+    SCAPE.dim.apply($('#replacement-tags'));
 
     tags.each(function(index) {
         $('#aliquot_'+this[0])
