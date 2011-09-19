@@ -1,43 +1,105 @@
+<script type="text/template" id="tag-pallet-template">
+  <li class="ui-li ui-li-static ui-body-c">
+    <div class="aliquot colour-99 pallet-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
+    <input id="plate_substitutions_<%%= tag_id %>" name="plate[substitutions][<%%= tag_id %>]" type="text" >
+  </li>
+
+</script>
+
 <%= page(:creation) do -%>
   <%= header(@creation_form, 'Choose tag layout') %>
 
   <%= content do %>
     <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <h2> Tag Template </h2>
       <%= f.inputs do %>
         <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
-        <%= f.input :tag_layout_template_uuid, :label => "Tag Template", :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
+        <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
       <%- end -%>
+        <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
+    <br/>
       <%= f.buttons do %>
-        <%= f.commit_button 'Create Plate' %>
+        <%= f.commit_button 'Create Plate',
+              :button_html => {
+                :"data-theme" => "b",
+                :"data-icon"  => "plus"
+              }
+        %>
       <%- end -%>
+      </div>
+
+      <div class="ui-block-b">
+        <h2>Tag Replacement Pallet</h2>
+        <br/>
+        <div id="replacement-tags">
+          <ul id="tag-pallet" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
+      </div>
+    </div>
     <%- end -%>
 
 <script type="text/javascript" charset="utf-8">
+(function($, _, undefined){
+
+  window.SCAPE = {};
+
+  SCAPE.tagPalletTemplate = _.template($('#tag-pallet-template').html());
+
+  SCAPE.dim = function() { $(this).css('opacity', '0.2'); };
+
+  SCAPE.highLightTags = function() {
+    var tagId = $(this).text();
+    $('.aliquot .tag-' + tagId).hide();
+  };
+
+  SCAPE.tag_layouts  = <%= @creation_form.tag_groups.to_json.html_safe %>;
+  SCAPE.tags_by_name = <%= @creation_form.tags_by_name.to_json.html_safe %>;
+
+  SCAPE.update_layout = function () {
+    $('#tag-pallet').empty().hide();
+    var tags            = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
+    var currentTagGroup = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
+    var listItems       = "";
+
+
+    currentTagGroup.each(function(index) {
+      listItems += SCAPE.tagPalletTemplate({tag_id: this});
+
+    });
+
+    $('#tag-pallet').append(listItems);
+    $('#tag-pallet li:first').addClass('ui-li ui-li-static ui-body-c ui-corner-top');
+    $('#tag-pallet li:last').addClass('ui-li ui-li-static ui-body-c ui-corner-bottom');
+    $('#tag-pallet').fadeIn();
+    SCAPE.dim.apply($('#replacement-tags'));
+
+    tags.each(function(index) {
+        $('#aliquot_'+this[0])
+        .hide()
+        .text(this[1][1])
+        .removeClass()
+        .addClass('aliquot colour-'+this[1][0])
+        .fadeIn();
+
+        $('#well_'+this[0]+' input').val(this[1][1]);
+
+    });
+  };
+
   $(function(){
     $('.aliquot').removeClass('green orange red');
 
-    var tag_layouts = <%= @creation_form.tag_groups.to_json.html_safe %>
+    SCAPE.update_layout();
+    $('#plate_tag_layout_template_uuid').change(SCAPE.update_layout);
 
-
-    function update_layout() {
-      var tags = $(tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
-
-      tags.each(function(index) {
-        $('#aliquot_'+this[0]).
-          hide().
-          text(this[1][1]).
-          removeClass().
-          addClass('aliquot colour-'+this[1][0]).
-          fadeIn();
-      });
-    }
-
-    update_layout();
-    $('#plate_tag_layout_template_uuid').change(update_layout);
+    $('.pallet-tag').click(SCAPE.highLightTags);
 
   });
+})(jQuery, _);
 </script>
-    <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
   <%- end -%>
 <%- end -%>
+

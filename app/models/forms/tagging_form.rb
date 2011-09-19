@@ -3,9 +3,13 @@ module Forms
     include Forms::Form::CustomPage
 
     write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid]
+    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions]
 
     validates_presence_of *self.attributes
+
+    def substitutions
+      @substitutions ||= {}
+    end
 
     def generate_layouts_and_groups
       maximum_pool_size = plate.pools.map(&:last).map!(&:size).max
@@ -32,6 +36,16 @@ module Forms
       generate_layouts_and_groups unless @tag_groups.present?
       @tag_groups
     end
+
+    def tags_by_name
+      @tags_by_name ||=
+        Hash[
+          tag_layout_templates.map do |layout|
+            catch(:unacceptable_tag_layout) { [ layout.name, layout.tag_group.tags.keys.map(&:to_i).sort ] }
+          end
+        ]
+    end
+
 
     # Creates a 96 element array of tags from the tag array passed in.
     # If the input is longer than 96 it takes the first 96 if shorter
@@ -114,7 +128,8 @@ module Forms
       create_plate! do |plate|
         api.tag_layout_template.find(tag_layout_template_uuid).create!(
           :plate => plate.uuid,
-          :user  => user_uuid
+          :user  => user_uuid,
+          :substitutions => substitutions.reject! { |_,new_tag| new_tag.blank? }
         )
       end
     end
