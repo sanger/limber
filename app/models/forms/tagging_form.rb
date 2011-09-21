@@ -129,7 +129,7 @@ module Forms
         api.tag_layout_template.find(tag_layout_template_uuid).create!(
           :plate => plate.uuid,
           :user  => user_uuid,
-          :substitutions => substitutions.reject! { |_,new_tag| new_tag.blank? }
+          :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
         )
       end
     end
