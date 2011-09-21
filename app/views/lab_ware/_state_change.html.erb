@@ -21,7 +21,7 @@
           </li>
         <% end -%>
         <li>
-          <%= label_tag :state, "New State" %>
+          <%= label_tag :state, "Change state to:" %>
           <%= select_tag :state, options_for_select(states.map { |s| [ s.titleize, s ] }, states.first) %>
         </li>
         <li id="cancelled" class="reason">
