@@ -83,7 +83,21 @@ body {
 .aliquot:hover {
   color: #FFD600;
   cursor: pointer;
-  @include box-shadow(#00192B, 0px, 0px, 1px);
+  @include box-shadow(gray, 0, 3px, 12px);
+}
+
+.substitute-tag {
+  @extend .aliquot;
+  @extend .colour-97;
+}
+
+.available-tag {
+  @extend .aliquot;
+  @extend .colour-96;
+}
+
+.selected-aliquot {
+  border: 2px solid yellow;
 }
 
 
