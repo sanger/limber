@@ -1,14 +1,14 @@
 <script type="text/template" id="tag-pallet-template">
   <li class="ui-li ui-li-static ui-body-c">
-    <div class="substitute-tag pallet-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
+    <div class="available-tag pallet-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
   </li>
 
 </script>
 
 <script type="text/template" id="substitution-tag-template">
-  <li class="ui-li ui-li-static ui-body-c">
-    <div class="substitute-tag pallet-tag"><%%= original_tag_id %></div>&nbsp;&nbsp; replaced with Tag <%%= replacement_tag_id %><div class="substitute-tag pallet-tag"><%%= replacement_tag_id %></div>
-  <input id="plate-substitutions-<%%= tag_id %>" name="plate[substitutions][<%%= tag_id %>]" type="text" >
+  <li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">
+    <div class="substitute-tag pallet-tag"><%%= original_tag_id %></div>&nbsp;&nbsp;Tag <%%= original_tag_id %> replaced with Tag <%%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag pallet-tag"><%%= replacement_tag_id %></div>
+  <input id="plate-substitutions-<%%= original_tag_id %>" name="plate[substitutions][<%%= original_tag_id %>]" type="hidden" value="<%%= replacement_tag_id %>" />
   </li>
 </script>
 
@@ -38,19 +38,19 @@
 
       <div class="ui-block-b">
         <h2>Tag Replacement Pallet</h2>
-        <br/>
-        <p id="instructions">
-          Tags can be substituted by selecting from the plate and choosing an unused replacement tag.
-        </p>
-        <div id="substitutions" style="display:none;">
+        <div id="substitutions" style="">
           <ul data-theme"d" data-role="listview" data-inset="true">
             
           </ul>
         </div>
+        <br/>
+        <p id="instructions">
+          To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
+        </p>
         <div id="replacement-tags" style="display:none">
           <ul id="tag-pallet" 
             data-theme="d" 
-            data-role="listview" 
+            data-role="listview"
             data-filter-placeholder="Filter tags..." 
             data-inset="true" 
             data-filter="true">
@@ -60,110 +60,12 @@
     </div>
     <%- end -%>
 
+
 <script type="text/javascript" charset="utf-8">
-(function($, _, undefined){
-
- window.SCAPE = {
- 
-  tag_layouts       : <%= @creation_form.tag_groups.to_json.html_safe %>,
-  tags_by_name      : <%= @creation_form.tags_by_name.to_json.html_safe %>,
-  tagPalletTemplate : _.template($('#tag-pallet-template').html()),
-  dim               : function() { $(this).fadeTo('fast', 0.2); },
-
-  updateTagPallet : function(tags) {
-    var tagPallet = $('#tag-pallet');
-
-    tagPallet.empty();
-
-    var currentTagGroup   = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
-    var currentlyUsedTags = tags.map(function(){ return this[1][1] });
-    var unusedTags        = _.difference(currentTagGroup, currentlyUsedTags);
-    var listItems         = unusedTags.reduce(
-      function(memo, tagId) { return memo += SCAPE.tagPalletTemplate({tag_id: tagId}); }, 
-      '<li data-role="list-divider" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Replacement Tags</li>'
-    );
-
-    tagPallet.append(listItems);
-    $('#tag-pallet li:last').addClass('ui-li ui-li-static ui-body-c ui-corner-bottom');
-
-  },
-
-  tagSubstitutionHandler : function() {
-    var sourceAliquot = $(this);
-    var originalTag   = sourceAliquot.text();
-
-    // Dim other tags...
-    $('.aliquot').not('.tag-'+originalTag).each(SCAPE.dim);
-
-    // Show the tag pallet...
-    $('#instructions').fadeOut(function(){
-      $('#replacement-tags').fadeIn('slow');
-    });
-
-
-    function palletTagHandler() {
-      var newTag = $(this).text();
-
-      // Find all the aliquots with the original tag
-      // swap their tag classes and text
-      $('.aliquot.tag-'+originalTag)
-        .hide()
-        .removeClass('tag-'+originalTag)
-        .addClass('tag-'+newTag)
-        .text(newTag)
-        .css('border', "2px solid yellow")
-        .fadeIn('slow');
-
-      $("plate-substitutions-"+originalTag).val(newTag);
-
-      SCAPE.resetHandler();
-    };
-    //Add behaviour to the substitute-tags
-    $('.substitute-tag').click(palletTagHandler);
-
-  },
-
-
-  update_layout : function () {
-    var tags = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
-    var substituteTags = tags;
-
-    tags.each(function(index) {
-        $('#aliquot_'+this[0])
-        .hide()
-        .text(this[1][1])
-        .removeClass()
-        .addClass('aliquot colour-'+this[1][0])
-        .addClass('tag-'+this[1][1])
-        .fadeIn();
-
-        $('#well_'+this[0]+' input').val(this[1][1]);
-    });
-
-    SCAPE.updateTagPallet(tags);
-    SCAPE.resetHandler();
-  },
-    
-  resetHandler : function() {
-    $('.aliquot').css('opacity', 1);
-    $('#replacement-tags').fadeOut(function(){
-      $('#instructions').fadeIn();
-    });
-  }
- 
- };
-
-
-  $(function(){
-    $('.aliquot').removeClass('green orange red');
-
-    SCAPE.update_layout();
-    $('#plate_tag_layout_template_uuid').change(SCAPE.update_layout);
-    $('.aliquot').toggle(SCAPE.tagSubstitutionHandler, SCAPE.resetHandler);
-
-  });
-})(jQuery, _);
+     window.tag_layouts   = <%= @creation_form.tag_groups.to_json.html_safe %>;
+     window.tags_by_name  = <%= @creation_form.tags_by_name.to_json.html_safe %>;
 </script>
+<%= javascript_include_tag 'tagging' %>
   <%- end -%>
 <%- end -%>
 
