@@ -1,10 +1,10 @@
 <div data-role="navbar">
   <ul>
-    <li><a href="summary"  data-transition="none" data-icon="info">Summary</a></li>
-    <li><a href="printing" data-transition="none" data-icon="grid">Printing</a></li>
+    <li><a href="#"  rel="summary" data-transition="none" data-icon="info">Summary</a></li>
+    <li><a href="#" rel="printing" data-transition="none" data-icon="grid">Printing</a></li>
     <% if current_user_uuid.present? -%>
-      <li><a href="state"    data-transition="none" data-icon="gear">State</a></li>
-      <li><a href="failing"  data-transition="none" data-icon="delete">Fail Wells</a></li>
+      <li><a href="#" rel="State" data-transition="none" data-icon="gear">State</a></li>
+      <li><a href="#" rel="failing" data-transition="none" data-icon="delete">Fail Wells</a></li>
     <% end -%>
   </ul>
 </div>

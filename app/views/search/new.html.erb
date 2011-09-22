@@ -1,4 +1,4 @@
-<%= page(:search) do %>
+<%= page(:'search-page') do %>
   <div data-role="header">
     <h1>Sequencescape - Pulldown Pipeline</h1>
     <%= link_to "Show All Plates", all_outstanding_plates_path, :rel => 'external' %>
@@ -38,39 +38,3 @@
 
   <% end %>
 <% end %>
-
-
-<script type="text/javascript">
-  $(function(){
-    // Users should start the page by scanning in...
-    $('#card_id').focus();
-
-
-    $('#card_id').change(function(){
-      if ($(this).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
-      }
-    });
-
-    // Trap the carriage return sent by the swipecard reader
-    $("#card_id").bind("keydown", function(e) {
-      var code=e.charCode || e.keyCode;
-      if (code==13) {
-        $("#plate_barcode").focus();
-        return false;
-      }
-    });
-
-    // Fill in the plate barcode with the plate links barcode
-    $(".plate_link").click(function() {
-      $('#plate_barcode').val($(this).attr('id').substr(6));
-      $('#plate-search-form').submit();
-      return false;
-    });
-
-
-  });
-</script>
-
