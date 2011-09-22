@@ -12,7 +12,7 @@
   </li>
 </script>
 
-<%= page(:creation) do -%>
+<%= page(:'tag-creation-page') do -%>
   <%= header(@creation_form, 'Choose tag layout') %>
 
   <%= content do %>
@@ -65,7 +65,6 @@
      window.tag_layouts   = <%= @creation_form.tag_groups.to_json.html_safe %>;
      window.tags_by_name  = <%= @creation_form.tags_by_name.to_json.html_safe %>;
 </script>
-<%= javascript_include_tag 'tagging' %>
   <%- end -%>
 <%- end -%>
 
