@@ -10,12 +10,12 @@ class Pulldown::Plate < Sequencescape::Plate
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [
-    'WGS pooled amplified library plate',
-    'SC pooled captured library plate',
+    'WGS lib pool',
+    'SC cap lib pool',
 
     # ISC does two stages of pooling
-    'ISC pooled amplified library plate',
-    'ISC pooled captured library plate'
+    'ISC lib pool',
+    'ISC cap lib pool'
   ]
 
   def is_a_final_pooling_plate?

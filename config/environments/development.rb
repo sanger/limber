@@ -25,8 +25,9 @@ PulldownPipeline::Application.configure do
 
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Pulldown'
-  config.api_connection_options.url           = 'http://psd1i.internal.sanger.ac.uk:6712/api/1/'
-  config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
+  config.api_connection_options.url           = 'http://localhost:3000/api/1/'
+  # config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
+  config.api_connection_options.authorisation = 'development'
 
 end
 
