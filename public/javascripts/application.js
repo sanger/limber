@@ -1,7 +1,12 @@
-$('#search-page').live('pagecreate', function(event){
+// Setup the SCAPE namespace
+if (window.SCAPE === undefined) {
+  window.SCAPE = {};
+}
+
+
+$('#search-page').live('pageinit', function(event){
   // Users should start the page by scanning in...
   $('#card_id').focus();
-
 
   $('#card_id').change(function(){
     if ($(this).val()) {
@@ -30,10 +35,9 @@ $('#search-page').live('pagecreate', function(event){
 });
 
 
-$('#plate-show-page').live('pagecreate', function(event) {
-  window.SCAPE = {};
+$('#plate-show-page').live('pageinit', function(event) {
 
-  SCAPE.footerLinkHandler = function(){
+  SCAPE.linkHandler = function(){
     var viewBlock = $(this).attr('data-view-class');
     var targetBlock = $(this).attr('rel');
 
@@ -44,12 +48,12 @@ $('#plate-show-page').live('pagecreate', function(event) {
   };
 
   $(function(){
-    $('.navbar-link').click(SCAPE.footerLinkHandler);
+    $('.navbar-link').click(SCAPE.linkHandler);
   });
 });
 
 
-$('#admin-page').live('pagecreate',function(event) {
+$('#admin-page').live('pageinit',function(event) {
 
   $('#plate_edit').submit(function() {
     if ($('#card_id').val().length === 0) {
@@ -67,7 +71,7 @@ $('#admin-page').live('pagecreate',function(event) {
   });
 });
 
-$('#creation-page').live('pagecreate',function(event) {
+$('#creation-page').live('pageinit',function(event) {
   var transfers = {
     'Transfer columns 1-1':  '.col-1',
     'Transfer columns 1-2':  '.col-1,.col-2',
@@ -87,12 +91,25 @@ $('#creation-page').live('pagecreate',function(event) {
 });
 
 
-$('#tag-creation-page').live('pagecreate', function(){
+$('#tag-creation-page').live('pageinit', function(){
 
-  window.SCAPE = {
+  //temporarily used until page ready event sorted... :(
+  SCAPE.tag_pallet_template =
+  '<li class="ui-li ui-li-static ui-body-c">'+
+    '<div class="available-tag pallet-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
+  '</li>';
 
-    tagPalletTemplate     : _.template($('#tag-pallet-template').html()),
-    substitutionTemplate  : _.template($('#substitution-tag-template').html()),
+  //temporarily used until page ready event sorted... :(
+  SCAPE.substitution_tag_template =
+'<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
+    '<div class="substitute-tag pallet-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag pallet-tag"><%= replacement_tag_id %></div>'+
+  '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
+  '</li>';
+
+  $.extend(window.SCAPE, {
+
+    tagPalletTemplate     : _.template(SCAPE.tag_pallet_template),
+    substitutionTemplate  : _.template(SCAPE.substitution_tag_template),
     dim              : function() { $(this).fadeTo('fast', 0.2); },
 
     updateTagPallet  : function() {
@@ -153,10 +170,9 @@ $('#tag-creation-page').live('pagecreate', function(){
 
     update_layout : function () {
       var tags = $(window.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
-      var substituteTags = tags;
 
       tags.each(function(index) {
-        $('#aliquot_'+this[0]).
+        $('#tagging-plate #aliquot_'+this[0]).
           hide().text(this[1][1]).
           removeClass().
           addClass('aliquot colour-'+this[1][0]).
@@ -170,7 +186,7 @@ $('#tag-creation-page').live('pagecreate', function(){
 
     resetSubstitutions : function() {
       $('#substitutions ul').empty();
-      $('.aliquot').removeClass('selected-aliquot');
+      $('#tagging-plate .aliquot').removeClass('selected-aliquot');
     },
 
     resetHandler : function() {
@@ -181,14 +197,14 @@ $('#tag-creation-page').live('pagecreate', function(){
       });
     }
 
-  };
+  });
 
 
-  $('.aliquot').removeClass('green orange red');
+  $('#tagging-plate .aliquot').removeClass('green orange red');
 
   SCAPE.update_layout();
   $('#plate_tag_layout_template_uuid').change(SCAPE.update_layout);
-  $('.aliquot').toggle(SCAPE.tagSubstitutionHandler, SCAPE.resetHandler);
+  $('#tagging-plate .aliquot').toggle(SCAPE.tagSubstitutionHandler, SCAPE.resetHandler);
 
 });
 

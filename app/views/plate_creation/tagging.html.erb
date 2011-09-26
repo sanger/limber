@@ -24,7 +24,7 @@
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
         <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
       <%- end -%>
-        <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
+      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
     <br/>
       <%= f.buttons do %>
         <%= f.commit_button 'Create Plate',
