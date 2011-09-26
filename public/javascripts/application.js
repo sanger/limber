@@ -8,7 +8,7 @@ $('#search-page').live('pageinit', function(event){
   // Users should start the page by scanning in...
   $('#card_id').focus();
 
-  $('#card_id').change(function(){
+  $('#card_id').live('blur', function(){
     if ($(this).val()) {
       $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
     } else {
@@ -17,7 +17,7 @@ $('#search-page').live('pageinit', function(event){
   });
 
   // Trap the carriage return sent by the swipecard reader
-  $("#card_id").bind("keydown", function(e) {
+  $("#card_id").live("keydown", function(e) {
     var code=e.charCode || e.keyCode;
     if (code==13) {
       $("#plate_barcode").focus();
@@ -48,7 +48,7 @@ $('#plate-show-page').live('pageinit', function(event) {
   };
 
   $(function(){
-    $('.navbar-link').click(SCAPE.linkHandler);
+    $('.navbar-link').live('click', SCAPE.linkHandler);
   });
 });
 
