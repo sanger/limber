@@ -2,7 +2,7 @@
   <%= header(@presenter, 'Summary') do %>
     <div data-role="navbar">
       <ul>
-        <li><a href="#" class="navbar-link" data-view-class="left-side" rel="plate-summary" data-transition="none" data-icon="info">Summary</a></li>
+        <li><a href="#" class="navbar-link ui-btn-active" data-view-class="left-side" rel="plate-summary" data-transition="none" data-icon="info">Summary</a></li>
         <% if current_user_uuid.present? -%>
           <li><a href="#" class="navbar-link" data-view-class="left-side" rel="well-failing" data-transition="none" data-icon="delete">Fail Wells</a></li>
           <li><a href="#" class="navbar-link" rel="plate-creation" data-view-class="right-side" data-transition="none" data-icon="add">Create Child Plate</a></li>
