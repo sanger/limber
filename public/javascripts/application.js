@@ -1,8 +1,39 @@
-// Setup the SCAPE namespace
+// Set up the SCAPE namespace
 if (window.SCAPE === undefined) {
   window.SCAPE = {};
 }
 
+//temporarily used until page ready event sorted... :(
+//This is a copy of the template held in the tagging page.
+SCAPE.tag_pallet_template =
+  '<li class="ui-li ui-li-static ui-body-c">'+
+  '<div class="available-tag pallet-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
+  '</li>';
+
+//temporarily used until page ready event sorted... :(
+//This is a copy of the template held in the tagging page.
+SCAPE.substitution_tag_template =
+  '<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
+  '<div class="substitute-tag pallet-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag pallet-tag"><%= replacement_tag_id %></div>'+
+  '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
+  '</li>';
+
+
+SCAPE.tabViews = {
+  'summary-button'        : ['plate-summary', 'plate-printing' ],
+  'plate-creation-button' : ['plate-summary', 'plate-creation'],
+  'plate-QC-button'       : ['plate-summary', 'plate-creation'],
+  'plate-state-button'    : ['plate-summary', 'plate-state'],
+  'well-failing-button'   : ['well-failing']
+};
+
+
+SCAPE.tabStates = {
+  pending   : [ 'summary-button', 'plate-state-button' ],
+  started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
+  passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
+  cancelled : [ 'summary-button' ]
+};
 
 $('#search-page').live('pageinit', function(event){
   // Users should start the page by scanning in...
@@ -35,21 +66,34 @@ $('#search-page').live('pageinit', function(event){
 });
 
 
-$('#plate-show-page').live('pageinit', function(event) {
+$('#plate-show-page').live('pagecreate', function(event) {
+
+  var tabsForState = '#'+SCAPE.tabStates[SCAPE.plate.state].join(', #');
+
+  $('#navbar li').not(tabsForState).remove();
+
+  $('#'+SCAPE.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
 
   SCAPE.linkHandler = function(){
-    var viewBlock = $(this).attr('data-view-class');
-    var targetBlock = $(this).attr('rel');
+    var targetTab = $(this).attr('rel');
+    var targetIds = '#'+SCAPE.tabViews[targetTab].join(', #');
 
-    $('.'+viewBlock).filter(':visible').fadeOut('fast',function(){
-      $('#'+targetBlock).fadeIn('fast');
-    });
-
+    $('.scape-ui-block').
+      not(targetIds).
+      filter(':visible').
+      fadeOut( function(){ $(targetIds).fadeIn(); } );
   };
 
-  $(function(){
-    $('.navbar-link').live('click', SCAPE.linkHandler);
-  });
+  $('.navbar-link').live('click', SCAPE.linkHandler);
+});
+
+$('#plate-show-page').live('pageinit', function(event){
+  var targetTab = SCAPE.tabStates[SCAPE.plate.state][0];
+
+  var targetIds = '#'+SCAPE.tabViews[targetTab].join(', #');
+
+  $(targetIds).not(':visible').fadeIn('slow');
+
 });
 
 
@@ -92,19 +136,6 @@ $('#creation-page').live('pageinit',function(event) {
 
 
 $('#tag-creation-page').live('pageinit', function(){
-
-  //temporarily used until page ready event sorted... :(
-  SCAPE.tag_pallet_template =
-  '<li class="ui-li ui-li-static ui-body-c">'+
-    '<div class="available-tag pallet-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
-  '</li>';
-
-  //temporarily used until page ready event sorted... :(
-  SCAPE.substitution_tag_template =
-'<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
-    '<div class="substitute-tag pallet-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag pallet-tag"><%= replacement_tag_id %></div>'+
-  '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
-  '</li>';
 
   $.extend(window.SCAPE, {
 

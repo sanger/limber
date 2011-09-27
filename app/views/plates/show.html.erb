@@ -1,30 +1,39 @@
 <%= page(:'plate-show-page') do %>
+  
+<script type="text/javascript">
+  SCAPE.plate = {
+    'state' : '<%= @presenter.plate.state %>'
+  };
+</script>
+
+
+
   <%= header(@presenter, 'Summary') do %>
     <div data-role="navbar">
-      <ul>
-        <li><a href="#" class="navbar-link ui-btn-active" data-view-class="left-side" rel="plate-summary" data-transition="none" data-icon="info">Summary</a></li>
+      <ul id="navbar">
+        <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li><a href="#" class="navbar-link" data-view-class="left-side" rel="well-failing" data-transition="none" data-icon="delete">Fail Wells</a></li>
-          <li><a href="#" class="navbar-link" rel="plate-creation" data-view-class="right-side" data-transition="none" data-icon="add">Create Child Plate</a></li>
-          <li><a href="#" class="navbar-link" rel="plate-state" data-view-class="right-side" data-transition="none" data-icon="gear">State</a></li>
+          <li id="plate-creation-button"><a href="#" class="navbar-link" rel="plate-creation-button" data-icon="add">Create Child Plate</a></li>
+          <li id="plate-QC-button"><a href="#" class="navbar-link" rel="plate-QC-button" data-icon="add">Create QC Plate</a></li>
+          <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
+          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Move to Next State</a></li>
         <% end -%>
-        <li><a href="#" class="navbar-link" rel="plate-printing" data-view-class="right-side" data-transition="none" data-icon="grid">Printing</a></li>
       </ul>
     </div>
   <% end -%>
 
   <%= content do %>
     <%= flash_messages %>
+    <h1>Plate State - <%= @presenter.plate.state.titleize %></h1>
     <div class="ui-grid-a">
       <div class="ui-block-a">
-        <div id="plate-summary" class="left-side">
-          <h2>Plate Status - <%= @presenter.plate.state.titleize %></h2>
+        <div id="plate-summary" class="scape-ui-block">
           <%= render :partial => "plate", :locals => {:plate_presenter => @presenter}  %>
           <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
           <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
         </div>
 
-        <div id="well-failing" class="left-side" style="display:none;">
+        <div id="well-failing" class="scape-ui-block" style="display:none;">
           <h2>Fail Wells</h2>
           <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) %>
         </div>
@@ -32,7 +41,7 @@
 
 
       <div class="ui-block-b">
-        <div id="plate-printing"  class="right-side" style="display:none;">
+        <div id="plate-printing"  class="scape-ui-block" style="display:none;">
           <%= render(:partial => 'plate_printing') %>
           <%= @presenter.control_additional_printing do %>
             <% section do %>
@@ -43,16 +52,14 @@
           <% end %>
         </div>
 
-        <div id="plate-creation" class="right-side" style="display:none;">
+        <div id="plate-creation" class="scape-ui-block" style="display:none;">
           <%= @presenter.control_additional_creation do %>
-            <h2>Create Child Plate</h2>
-            <ul data-role="listview" data-inset="true">
+          <h2>Create Child Plate</h2>
               <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
-            </ul>
           <% end %>
         </div>
 
-        <div id="plate-state" class="right-side">
+        <div id="plate-state" class="scape-ui-block" style="display:none;">
           <%= state_change_form(@presenter) %>
         </div>
       </div>
