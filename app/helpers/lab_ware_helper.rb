@@ -40,7 +40,7 @@ module LabWareHelper
       'Admin',
       edit_admin_plate_path(presenter.plate.uuid),
       :id           => presenter.plate.uuid,
-      :'data-theme' => 'c',
+      :'data-transition' => 'pop',
       :'data-icon'  => 'gear',
       :rel          => "external"
     )
