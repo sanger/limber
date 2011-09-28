@@ -77,10 +77,25 @@ $('#plate-show-page').live('pageinit', function(event){
   $('#'+SCAPE.plate.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
   $(targetIds).not(':visible').fadeIn('slow');
 
+  // Well Failing...
   $('#well-failing .plate-view').delegate('.aliquot', 'click', function() {
     failing = $(this).toggleClass('good failed').hasClass('failed');
     $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
   });
+
+  // State changes reasions...
+  SCAPE.displayReason = function() {
+    $('#state').live('change', function(){
+      $('#state-changer').slideUp('slow',function(){
+        $('.reason').hide().find('select').attr('disabled', 'disabled');
+        $('#'+$('#state option:selected').val()).show().find('select:disabled').removeAttr('disabled');
+        $('#state-changer').slideDown('slow');
+      });
+    });
+  };
+
+  SCAPE.displayReason();
+  $('#state').live('click',SCAPE.displayReason);
 });
 
 

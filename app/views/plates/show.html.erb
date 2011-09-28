@@ -54,10 +54,10 @@ SCAPE.plate.tabStates = {
   <%= content do %>
     <%= flash_messages %>
     <h1>Plate State - <%= @presenter.plate.state.titleize %></h1>
+    <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <div id="plate-summary" class="scape-ui-block">
-          <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
 
