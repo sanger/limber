@@ -15,6 +15,11 @@
       <%= label_tag :printer, 'Barcode printer' %>
       <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name) %>
     </p>
-    <%= f.commit_button 'Print Label' %>
+    <%= f.commit_button 'Print Label', 
+      :button_html => {
+        :'data-theme' => 'b',
+        :'data-icon' => 'grid'
+      }
+    %>
   <% end %>
 <% end %>

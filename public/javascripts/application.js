@@ -18,6 +18,18 @@ SCAPE.substitution_tag_template =
   '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
   '</li>';
 
+SCAPE.displayReason = function() {
+  if($('.reason:visible').length === 0) {
+    $('#'+$('#state option:selected').val()).slideDown().find('select:disabled').removeAttr('disabled');
+  } 
+  else {
+    $('.reason').not('#'+$('#state option:selected').val()).slideUp(function(){
+      $('#'+$('#state option:selected').val()).slideDown().find('select:disabled').removeAttr('disabled');
+    });
+  }
+
+};
+
 
 $('#search-page').live('pageinit', function(event){
   // Users should start the page by scanning in...
@@ -83,19 +95,9 @@ $('#plate-show-page').live('pageinit', function(event){
     $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
   });
 
-  // State changes reasions...
-  SCAPE.displayReason = function() {
-    $('#state').live('change', function(){
-      $('#state-changer').slideUp('slow',function(){
-        $('.reason').hide().find('select').attr('disabled', 'disabled');
-        $('#'+$('#state option:selected').val()).show().find('select:disabled').removeAttr('disabled');
-        $('#state-changer').slideDown('slow');
-      });
-    });
-  };
-
+  // State changes reasons...
   SCAPE.displayReason();
-  $('#state').live('click',SCAPE.displayReason);
+  $('#state').live('change', SCAPE.displayReason);
 });
 
 
@@ -109,12 +111,15 @@ $('#admin-page').live('pageinit',function(event) {
   });
 
   // Trap the carriage return sent by the swipecard reader
-  $("#card_id").bind("keydown", function(e) {
+  $("#card_id").live("keydown", function(e) {
     var code=e.charCode || e.keyCode;
     if (code==13) {
       return false;
     }
   });
+
+  SCAPE.displayReason();
+  $('#state').live('click',SCAPE.displayReason);
 });
 
 $('#creation-page').live('pageinit',function(event) {
