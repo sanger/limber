@@ -1,22 +1,51 @@
 <%= page(:'plate-show-page') do %>
-  
 <script type="text/javascript">
   SCAPE.plate = {
-    'state' : '<%= @presenter.plate.state %>'
+    'state' : '<%= @presenter.plate.state %>',
+
+    tabViews:  {
+      'summary-button'        : ['plate-summary', 'plate-printing' ]
+    },
+
+    tabStates : {
+      pending   : ['summary-button'],
+      started   : ['summary-button'],
+      passed    : ['summary-button'],
+      cancelled : ['summary-button']
+    }
+
   };
+
+<% if current_user_uuid.present? -%>
+ SCAPE.plate.tabViews = {
+      'summary-button'        : ['plate-summary', 'plate-printing' ],
+      'plate-creation-button' : ['plate-summary', 'plate-creation'],
+      'plate-QC-button'       : ['plate-summary', 'plate-creation'],
+      'plate-state-button'    : ['plate-summary', 'plate-state'],
+      'well-failing-button'   : ['well-failing']
+    };
+
+SCAPE.plate.tabStates = {
+      pending   : [ 'summary-button', 'plate-state-button' ],
+      started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
+      passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
+      cancelled : [ 'summary-button' ]
+};
+
+<% end -%>
 </script>
 
 
 
-  <%= header(@presenter, 'Summary') do %>
+  <%= header(@presenter, 'Plate view') do %>
     <div data-role="navbar">
       <ul id="navbar">
         <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
           <li id="plate-creation-button"><a href="#" class="navbar-link" rel="plate-creation-button" data-icon="add">Create Child Plate</a></li>
           <li id="plate-QC-button"><a href="#" class="navbar-link" rel="plate-QC-button" data-icon="add">Create QC Plate</a></li>
+          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Change Plate State</a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
-          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Move to Next State</a></li>
         <% end -%>
       </ul>
     </div>

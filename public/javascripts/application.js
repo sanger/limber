@@ -19,22 +19,6 @@ SCAPE.substitution_tag_template =
   '</li>';
 
 
-SCAPE.tabViews = {
-  'summary-button'        : ['plate-summary', 'plate-printing' ],
-  'plate-creation-button' : ['plate-summary', 'plate-creation'],
-  'plate-QC-button'       : ['plate-summary', 'plate-creation'],
-  'plate-state-button'    : ['plate-summary', 'plate-state'],
-  'well-failing-button'   : ['well-failing']
-};
-
-
-SCAPE.tabStates = {
-  pending   : [ 'summary-button', 'plate-state-button' ],
-  started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
-  passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
-  cancelled : [ 'summary-button' ]
-};
-
 $('#search-page').live('pageinit', function(event){
   // Users should start the page by scanning in...
   $('#card_id').focus();
@@ -68,15 +52,14 @@ $('#search-page').live('pageinit', function(event){
 
 $('#plate-show-page').live('pagecreate', function(event) {
 
-  var tabsForState = '#'+SCAPE.tabStates[SCAPE.plate.state].join(', #');
+  var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
 
   $('#navbar li').not(tabsForState).remove();
 
-  $('#'+SCAPE.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
 
   SCAPE.linkHandler = function(){
     var targetTab = $(this).attr('rel');
-    var targetIds = '#'+SCAPE.tabViews[targetTab].join(', #');
+    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
 
     $('.scape-ui-block').
       not(targetIds).
@@ -88,12 +71,11 @@ $('#plate-show-page').live('pagecreate', function(event) {
 });
 
 $('#plate-show-page').live('pageinit', function(event){
-  var targetTab = SCAPE.tabStates[SCAPE.plate.state][0];
+  var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
+  var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
 
-  var targetIds = '#'+SCAPE.tabViews[targetTab].join(', #');
-
+  $('#'+SCAPE.plate.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
   $(targetIds).not(':visible').fadeIn('slow');
-
 });
 
 
