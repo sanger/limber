@@ -57,9 +57,8 @@ SCAPE.plate.tabStates = {
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <div id="plate-summary" class="scape-ui-block">
-          <%= render :partial => "plate", :locals => {:plate_presenter => @presenter}  %>
           <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
-          <%= render :partial => 'plate_information', :locals => { :plate => @presenter.plate } %>
+          <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
