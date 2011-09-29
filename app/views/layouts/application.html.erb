@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Sequencescape - Pulldown Pipeline</title>
+  <head>
+    <title>Sequencescape - Pulldown Pipeline</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
     <%= stylesheet_link_tag "formtastic", "screen", %>
+
     <%= javascript_include_tag 'underscore' %>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-    <script type="text/javascript">
-      $(document).bind("mobileinit", function() {
-        $.extend( $.mobile, {
-          ajaxFormsEnabled: false
-        });
-      });
-    </script>
-    <script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
     <%= javascript_include_tag 'application' %>
     <%= csrf_meta_tag %>
-</head>
-<body>
-  <%= yield %>
-</body>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
 </html>
 
 

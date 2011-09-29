@@ -12,7 +12,7 @@
   </li>
 </script>
 
-<%= page(:creation) do -%>
+<%= page(:'tag-creation-page') do -%>
   <%= header(@creation_form, 'Choose tag layout') %>
 
   <%= content do %>
@@ -24,7 +24,7 @@
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
         <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
       <%- end -%>
-        <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form } %>
+      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
     <br/>
       <%= f.buttons do %>
         <%= f.commit_button 'Create Plate',
@@ -65,7 +65,6 @@
      window.tag_layouts   = <%= @creation_form.tag_groups.to_json.html_safe %>;
      window.tags_by_name  = <%= @creation_form.tags_by_name.to_json.html_safe %>;
 </script>
-<%= javascript_include_tag 'tagging' %>
   <%- end -%>
 <%- end -%>
 

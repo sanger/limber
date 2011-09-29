@@ -12,7 +12,7 @@
             :as => :plate
           )) do |f|
     %>
-   <ul data-role="listview" data-inset="true">
+   <ul id="state-changer" data-role="listview" data-inset="true">
       <%= f.inputs do %>
         <% if admin_page? -%>
           <li>
@@ -21,30 +21,19 @@
           </li>
         <% end -%>
         <li>
-          <%= label_tag :state, "New State" %>
+          <%= label_tag :state, "Change state to:" %>
           <%= select_tag :state, options_for_select(states.map { |s| [ s.titleize, s ] }, states.first) %>
         </li>
-        <li id="cancelled" class="reason">
-          <%= label_tag :reason, 'Reason for cancelling' %>
+        <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'cancelled'%>>
+          <%= label_tag :reason, 'Reason for cancellation:' %>
           <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), :disabled => true) %>
         </li>
-        <li id="failed" class="reason">
-          <%= label_tag :reason, 'Reason for failure' %>
+        <li id="failed" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'failed'%>>
+          <%= label_tag :reason, 'Reason for failure:' %>
           <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), :disabled => true) %>
         </li>
-        <%= f.commit_button 'Change State' %>
+        <%= f.commit_button 'Change State', :button_html => {:'data-theme' => 'b', :'data-icon' => 'gear'} %>
 
-        <script type="text/javascript" charset="utf-8">
-          (function($, undefined) {
-            displayReason = function() {
-              $('.reason').removeClass('show').find('select').attr('disabled', 'disabled');
-              $('#' + $('#state option:selected').attr('value')).addClass('show').find('select:disabled').removeAttr('disabled');
-            };
-
-            displayReason();
-            $('#state').change(displayReason);
-          })($);
-        </script>
       <% end %>
 
     </ul> 

@@ -7,9 +7,3 @@
   ) %>
 <% end %>
 
-<%= @presenter.control_worksheet_printing do %>
-  <%= section do %>
-    <br/>
-    <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %>
-  <% end %>
-<% end %>
