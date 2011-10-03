@@ -1,7 +1,9 @@
 @mixin shade-aliquot($base_colour) {
   $dark_colour:  darken($base_colour, 60);
   @include radial-gradient(color-stops($base_colour,$dark_colour), top left); 
-  /* background-image: -webkit-gradient(radial, 0% 0%, 0, 0% 0%, 100, $base_colour, $dark_colour); */
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 -1px 1px darken($base_colour,50);
 }
 
 

@@ -9,7 +9,7 @@
           <%= f.inputs do %>
             <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
             <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
-            <%= f.input :transfer_template_uuid, :label => "Transfer Template", :as => :select, :collection => @creation_form.transfer_template_uuids, :include_blank => false %>
+            <%= f.input :transfer_template_uuid, :label => false, :as => :select, :collection => @creation_form.transfer_template_uuids, :include_blank => false %>
           <% end %>
           <%= f.buttons do %>
             <%= f.commit_button 'Create Plate',

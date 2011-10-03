@@ -1,4 +1,4 @@
-// Compass Utils
+/// Compass Utils
 @import "compass/css3/box-shadow";
 @import "compass/utilities/lists/horizontal-list";
 @import "compass/utilities/links";
@@ -24,13 +24,13 @@ body {
   @include box-shadow(#000, 0, 2px, 6px);
   @include border-radius(15px);
   @include border-top-left-radius(0);
-  margin: 5px;
+  margin: 0px;
   /* Use transparency for the background color or FF ridge will look bad... */
   border: 1px ridge rgba(11,35,75,0.5);
   vertical-align: middle;
   text-align:     center;
   background:     #003557;
-  padding:        3px;
+  padding:        0px;
   color:          #fff;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -51,8 +51,7 @@ body {
   vertical-align: middle;
   text-align:     center;
   padding:0;
-/*  width:65px;*/
-/*  height: 15px;*/
+  text-shadow: 0 -1px 1px darken(#003557,50);
 }
 
 .plate-view th.first-col {
@@ -60,8 +59,8 @@ body {
 }
 
 .plate-view .well, .tube-view {
-  height:30px;
-  width:30px;
+  height:27px;
+  width:27px;
   padding: 3px;
   text-align:     center;
   border: 1px ridge rgba(5,19,40,0.1);
@@ -70,10 +69,10 @@ body {
 }
 
 .aliquot {
-  @include border-radius(30px);
-  width:30px;
-  height:24px;
-  padding: 6px 0 0 0;
+  @include border-radius(27px);
+  width:27px;
+  height:23px;
+  padding: 4px 0 0 0;
   text-align: center;
   color:#fff;
   @include box-shadow(#00192B, 0, 3px, 8px);
@@ -83,7 +82,7 @@ body {
 .aliquot:hover {
   color: #FFD600;
   cursor: pointer;
-  @include box-shadow(gray, 0, 3px, 12px);
+  @include box-shadow(rgba(95,95,95,0.5), 0, 0px, 12px);
 }
 
 .substitute-tag {
@@ -219,6 +218,14 @@ table.form {
       content: ':';
     }
   }
+}
+
+.instructions {
+  background: #F2F2F2;
+  // @include border-radius(14px);
+  border: 1px solid #D1D1D1;
+  padding: 0 14px 14px 14px;
+  // @extend .ui-shadow;
 }
 
 #key .tube-view { display: inline-block; }
