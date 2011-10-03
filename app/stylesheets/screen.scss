@@ -24,7 +24,7 @@ body {
   @include box-shadow(#000, 0, 2px, 6px);
   @include border-radius(15px);
   @include border-top-left-radius(0);
-  margin: 0px;
+  margin: 5px;
   /* Use transparency for the background color or FF ridge will look bad... */
   border: 1px ridge rgba(11,35,75,0.5);
   vertical-align: middle;
@@ -101,15 +101,16 @@ body {
 
 
 @mixin labware-view {
-  .green         { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .red           { @include radial-gradient(color-stops(#D30000, #480000), top left); }
-  .yellow        { @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
-  .blue          { @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
-  .orange        { @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
-  .unknown-value { @include radial-gradient(color-stops(#289AC7, #083442), top left); }
+  .green             { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .red               { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .yellow            { @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
+  .blue              { @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
+  .orange            { @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
+  .unknown-value     { @include radial-gradient(color-stops(#289AC7, #083442), top left); }
 
-  .good          { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .failed        { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .good              { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
+  .failed            { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .permanent-failure { @include radial-gradient(color-stops(#D30000, #480000), top left); }
 }
 
 .plate-view, .tube-view {

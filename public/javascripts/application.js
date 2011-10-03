@@ -90,10 +90,28 @@ $('#plate-show-page').live('pageinit', function(event){
   $(targetIds).not(':visible').fadeIn();
 
   // Well Failing...
-  $('#well-failing .plate-view').delegate('.aliquot', 'click', function() {
-    failing = $(this).toggleClass('good failed').hasClass('failed');
-    $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-  });
+  // $('#well-failing .plate-view').not('.permanent-failure').delegate('.aliquot', 'click', function() {
+  //   failing = $(this).toggleClass('good failed').hasClass('failed');
+  //   $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+  // });
+
+  $('#well-failing .plate-view .aliquot').
+    not('.permanent-failure').
+    toggle(
+      function(){
+        $(this).fadeOut('fast', function(){
+          var failing = $(this).toggleClass('good failed').fadeIn('fast').hasClass('failed');
+          $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+        });
+      },
+
+      function() {
+        $(this).fadeOut('fast', function(){
+          var failing = $(this).toggleClass('failed good').fadeIn('fast').hasClass('failed');
+          $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+        });
+      }
+  );
 
   // State changes reasons...
   SCAPE.displayReason();
@@ -133,11 +151,12 @@ $('#creation-page').live('pageinit',function(event) {
   };
 
   function template_display(){
-    $('.aliquot').hide();
-    $(transfers[$('#plate_transfer_template_uuid option:selected').text()]).find('.aliquot').show();
+    var selectedColumns = transfers[$('#plate_transfer_template_uuid option:selected').text()];
+    var aliquots = $('#transfer-plate .aliquot');
+    aliquots.not(selectedColumns).fadeOut('fast');
+    aliquots.filter(selectedColumns).fadeIn('fast');
   }
 
-  template_display();
   $('#plate_transfer_template_uuid').change(template_display);
 });
 

@@ -29,6 +29,11 @@ module LabWareHelper
     end
   end
 
+  def permanent_state(container)
+    return "permanent-failure" if container.state == "failed"
+    "good"
+  end
+
   def admin_page?
     controller.controller_path.start_with? "admin"
   end
@@ -58,6 +63,12 @@ module LabWareHelper
     end
 
     @location_colours
+  end
+
+  def column(well)
+    column = well.location.match( /^[A-H](\d[0-2]?)$/ ).try(:[], 1) or return
+
+    "col-#{column}"
   end
 
   def plates_by_state(plates)

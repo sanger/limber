@@ -13,7 +13,7 @@
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
-          <td class="col-all <%= "col-#{index + 1}" %>">
+          <td class="col-all <%= column(well) %>">
             <% location = "#{row_label}#{index + 1}" %>
             <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
             <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
