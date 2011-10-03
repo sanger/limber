@@ -20,11 +20,11 @@ SCAPE.substitution_tag_template =
 
 SCAPE.displayReason = function() {
   if($('.reason:visible').length === 0) {
-    $('#'+$('#state option:selected').val()).slideDown().find('select:disabled').removeAttr('disabled');
+    $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
   } 
   else {
-    $('.reason').not('#'+$('#state option:selected').val()).slideUp(function(){
-      $('#'+$('#state option:selected').val()).slideDown().find('select:disabled').removeAttr('disabled');
+    $('.reason').not('#'+$('#state option:selected').val()).slideUp('slow', function(){
+      $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
     });
   }
 
@@ -67,6 +67,7 @@ $('#plate-show-page').live('pagecreate', function(event) {
   var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
 
   $('#navbar li').not(tabsForState).remove();
+  $('#'+SCAPE.plate.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
 
 
   SCAPE.linkHandler = function(){
@@ -86,8 +87,7 @@ $('#plate-show-page').live('pageinit', function(event){
   var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
   var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
 
-  $('#'+SCAPE.plate.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
-  $(targetIds).not(':visible').fadeIn('slow');
+  $(targetIds).not(':visible').fadeIn();
 
   // Well Failing...
   $('#well-failing .plate-view').delegate('.aliquot', 'click', function() {
