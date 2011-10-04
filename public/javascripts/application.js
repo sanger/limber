@@ -89,25 +89,19 @@ $('#plate-show-page').live('pageinit', function(event){
 
   $(targetIds).not(':visible').fadeIn();
 
-  // Well Failing...
-  // $('#well-failing .plate-view').not('.permanent-failure').delegate('.aliquot', 'click', function() {
-  //   failing = $(this).toggleClass('good failed').hasClass('failed');
-  //   $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-  // });
-
   $('#well-failing .plate-view .aliquot').
     not('.permanent-failure').
     toggle(
       function(){
-        $(this).fadeOut('fast', function(){
-          var failing = $(this).toggleClass('good failed').fadeIn('fast').hasClass('failed');
+        $(this).hide('fast', function(){
+          var failing = $(this).toggleClass('good failed').show().hasClass('failed');
           $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
         });
       },
 
       function() {
-        $(this).fadeOut('fast', function(){
-          var failing = $(this).toggleClass('failed good').fadeIn('fast').hasClass('failed');
+        $(this).hide('fast', function(){
+          var failing = $(this).toggleClass('failed good').show().hasClass('failed');
           $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
         });
       }
@@ -153,8 +147,8 @@ $('#creation-page').live('pageinit',function(event) {
   function template_display(){
     var selectedColumns = transfers[$('#plate_transfer_template_uuid option:selected').text()];
     var aliquots = $('#transfer-plate .aliquot');
-    aliquots.not(selectedColumns).fadeOut('fast');
-    aliquots.filter(selectedColumns).fadeIn('fast');
+    aliquots.not(selectedColumns).hide('slow');
+    aliquots.filter(selectedColumns).show('slow');
   }
 
   $('#plate_transfer_template_uuid').change(template_display);
@@ -211,7 +205,7 @@ $('#tag-creation-page').live('pageinit', function(){
           addClass('tag-'+newTag).
           text(newTag).
           addClass('selected-aliquot').
-          fadeIn('slow');
+          show('fast');
 
         // Add the substitution as a hidden field and li
         $('#substitutions ul').append(SCAPE.substitutionTemplate({original_tag_id: originalTag, replacement_tag_id: newTag}));
@@ -230,11 +224,11 @@ $('#tag-creation-page').live('pageinit', function(){
 
       tags.each(function(index) {
         $('#tagging-plate #aliquot_'+this[0]).
-          hide().text(this[1][1]).
+          hide('slow').text(this[1][1]).
           removeClass().
           addClass('aliquot colour-'+this[1][0]).
           addClass('tag-'+this[1][1]).
-          fadeIn();
+          show('slow');
       });
 
       SCAPE.resetHandler();
