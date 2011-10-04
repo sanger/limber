@@ -110,7 +110,12 @@ body {
 
   .good              { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
   .failed            { @include radial-gradient(color-stops(#D30000, #480000), top left); }
-  .permanent-failure { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .permanent-failure { 
+    @include radial-gradient(color-stops(#D30000, #480000), top left);
+    border: 1px gray solid;
+    opacity: 0.3;
+    
+   }
 }
 
 .plate-view, .tube-view {
