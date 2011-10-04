@@ -1,13 +1,13 @@
-<script type="text/template" id="tag-pallet-template">
+<script type="text/template" id="tag-palette-template">
   <li class="ui-li ui-li-static ui-body-c">
-    <div class="available-tag pallet-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
+    <div class="available-tag palette-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
   </li>
 
 </script>
 
 <script type="text/template" id="substitution-tag-template">
   <li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">
-    <div class="substitute-tag pallet-tag"><%%= original_tag_id %></div>&nbsp;&nbsp;Tag <%%= original_tag_id %> replaced with Tag <%%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag pallet-tag"><%%= replacement_tag_id %></div>
+    <div class="substitute-tag palette-tag"><%%= original_tag_id %></div>&nbsp;&nbsp;Tag <%%= original_tag_id %> replaced with Tag <%%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%%= replacement_tag_id %></div>
   <input id="plate-substitutions-<%%= original_tag_id %>" name="plate[substitutions][<%%= original_tag_id %>]" type="hidden" value="<%%= replacement_tag_id %>" />
   </li>
 </script>
@@ -37,7 +37,7 @@
       </div>
 
       <div class="ui-block-b">
-        <h2>Tag Replacement Pallet</h2>
+        <h2>Tag Replacement palette</h2>
         <div id="substitutions" style="">
           <ul data-theme"d" data-role="listview" data-inset="true">
             
@@ -49,13 +49,13 @@
           <ol>
             <li>Carefully check the index and pool layout against your worksheet.</li>
             <li>Select the correct tag set.</li>
-            <li>Substitute tags as necessary using the Tag Replacement Pallet.</li>
+            <li>Substitute tags as necessary using the Tag Replacement palette.</li>
           </ol>
 
           To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
         </div>
         <div id="replacement-tags" style="display:none">
-          <ul id="tag-pallet" 
+          <ul id="tag-palette" 
             data-theme="d" 
             data-role="listview"
             data-filter-placeholder="Filter tags..." 
