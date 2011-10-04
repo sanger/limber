@@ -5,7 +5,7 @@ module Forms
     write_inheritable_attribute :page, 'tagging'
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions]
 
-    validates_presence_of *self.attributes
+    validates_presence_of *(self.attributes - [:substitutions])
 
     def substitutions
       @substitutions ||= {}
