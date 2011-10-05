@@ -1,6 +1,9 @@
+@import "compass/css3/images";
+
 @mixin shade-aliquot($base_colour) {
   $dark_colour:  darken($base_colour, 60);
-  @include radial-gradient(color-stops($base_colour,$dark_colour), top left); 
+  // @include radial-gradient(color-stops($base_colour,$dark_colour), top left); 
+  @include background(radial-gradient(top left,$base_colour,$dark_colour));
   font-weight: bold;
   color: #fff;
   text-shadow: 0 -1px 1px darken($base_colour,50);

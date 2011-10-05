@@ -1,9 +1,9 @@
 /// Compass Utils
 @import "compass/css3/box-shadow";
-@import "compass/utilities/lists/horizontal-list";
-@import "compass/utilities/links";
+@import "compass/typography/lists/horizontal-list";
+@import "compass/typography/links";
 @import "compass/css3/border-radius";
-@import "compass/css3/gradient";
+@import "compass/css3/images";
 @import "colours";
 
 
@@ -21,7 +21,7 @@ body {
 }
 
 .plate-view {
-  @include box-shadow(#000, 0, 2px, 6px);
+  @include box-shadow(#000 0 2px 6px);
   @include border-radius(15px);
   @include border-top-left-radius(0);
   margin: 5px;
@@ -64,7 +64,7 @@ body {
   padding: 3px;
   text-align:     center;
   border: 1px ridge rgba(5,19,40,0.1);
-  @include radial-gradient(color-stops(#002A46,#003353), top left);
+  @include background(radial-gradient(top left, #002A46, #003353));
   @include border-radius(7px);
 }
 
@@ -75,14 +75,14 @@ body {
   padding: 4px 0 0 0;
   text-align: center;
   color:#fff;
-  @include box-shadow(#00192B, 0, 3px, 8px);
+  @include box-shadow(#00192B 0 3px 8px);
   display: inline-block;
 }
 
 .aliquot:hover {
   color: #FFD600;
   cursor: pointer;
-  @include box-shadow(rgba(95,95,95,0.5), 0, 0px, 12px);
+  @include box-shadow(rgba(95,95,95,0.5) 0 0px 12px);
 }
 
 .substitute-tag {
@@ -101,17 +101,16 @@ body {
 
 
 @mixin labware-view {
-  .green             { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .red               { @include radial-gradient(color-stops(#D30000, #480000), top left); }
-  .yellow            { @include radial-gradient(color-stops(#FFF33F, #5C5500), top left); }
-  .blue              { @include radial-gradient(color-stops(#4889C4, #0A385C), top left); }
-  .orange            { @include radial-gradient(color-stops(#FF9443, #5B1B00), top left); }
-  .unknown-value     { @include radial-gradient(color-stops(#289AC7, #083442), top left); }
-
-  .good              { @include radial-gradient(color-stops(#00B10E, #002802), top left); }
-  .failed            { @include radial-gradient(color-stops(#D30000, #480000), top left); }
+  .green             { @include background(radial-gradient(top left, #00B10E, #002802)); }
+  .red               { @include background(radial-gradient(top left, #D30000, #480000)); }
+  .yellow            { @include background(radial-gradient(top left, #FFF33F, #5C5500)); }
+  .blue              { @include background(radial-gradient(top left, #4889C4, #0A385C)); }
+  .orange            { @include background(radial-gradient(top left, #FF9443, #5B1B00)); }
+  .unknown-value     { @include background(radial-gradient(top left, #289AC7, #083442)); }
+  .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
+  .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 
-    @include radial-gradient(color-stops(#D30000, #480000), top left);
+    @include background(radial-gradient(top left, #D30000, #480000));
     border: 1px gray solid;
     opacity: 0.3;
     
@@ -156,7 +155,7 @@ body {
   z-index:10000;
   
   /* styling */
-  @include linear-gradient(color-stops(#353535,#0F0F0F));
+  @include background(linear-gradient(#353535,#0F0F0F));
   
   width:600px;  
   min-height:400px;
