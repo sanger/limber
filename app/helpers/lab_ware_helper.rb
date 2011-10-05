@@ -66,7 +66,8 @@ module LabWareHelper
   end
 
   def column(well)
-    column = well.location.match( /^[A-H](\d[0-2]?)$/ ).try(:[], 1) or return
+    location = well.try(:location) or return
+    column = location.match( /^[A-H](\d[0-2]?)$/ ).try(:[], 1) or return
 
     "col-#{column}"
   end
