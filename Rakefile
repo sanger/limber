@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-PulldownUi::Application.load_tasks
+PulldownPipeline::Application.load_tasks

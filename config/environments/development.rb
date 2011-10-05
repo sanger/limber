@@ -1,4 +1,4 @@
-PulldownUi::Application.configure do
+PulldownPipeline::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -22,5 +22,12 @@ PulldownUi::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  config.api_connection_options               = ActiveSupport::OrderedOptions.new
+  config.api_connection_options.namespace     = 'Pulldown'
+  config.api_connection_options.url           = 'http://localhost:3000/api/1/'
+  # config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
+  config.api_connection_options.authorisation = 'development'
+
 end
 

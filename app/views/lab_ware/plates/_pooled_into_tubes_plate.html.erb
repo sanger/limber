@@ -1,0 +1,21 @@
+<%= @presenter.control_source_view do %>
+  <h2>Source Plate</h2>
+  <%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter, :walker => presenter.walk_source, :transfers => presenter.plate.creation_transfer.transfers} %>
+  <br/>
+
+  <h2>Pooled Plate</h2>
+  <% transfers = Hash[presenter.plate.creation_transfer.transfers.map { |_, location| [ location, location ] }] %>
+  <%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter, :walker => presenter.walk_destination, :transfers => transfers} %>
+  <%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+<% end %>
+
+<% @presenter.control_tube_view do %>
+  <h2>Pooled Plate</h2>
+  <%= render :partial => "pooling_into_tubes_plate", :locals => {:plate_presenter => presenter} %>
+  <%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+
+  <h2>Tubes</h2>
+  <% presenter.plate.tubes.each do |tube| %>
+    <%= render :partial => 'lab_ware/pooled_tube.html.erb', :locals => { :tube => tube } %>
+  <% end %>
+<% end %>

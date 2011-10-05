@@ -1,0 +1,5 @@
+<%= CSV.generate_line ["Sample", "Source Well", "Destination Well", "Source Volume" ], :row_sep => "" %>
+<% @presenter.transfers.each_with_index do |transfer, index| -%>
+  <% source_well, destination_well = transfer -%>
+  <%= CSV.generate_line [(index + 1), source_well, destination_well, nil], :row_sep => "" %>
+<% end -%>

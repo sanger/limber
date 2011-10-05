@@ -1,0 +1,11 @@
+<%= form_tag new_pulldown_plate_child_path(presenter.plate.uuid), :method => 'get' do %>
+  <%= hidden_field_tag :plate_purpose_uuid, presenter.child_plate_purposes.first.uuid %>
+  <%= submit_tag "Create #{presenter.child_plate_purposes.first.name} plate", 
+    :name           => nil,
+    :class          => "submit",
+    :'data-icon'    => "arrow-r",
+    :'data-iconpos' => "right",
+    :'data-theme'   => "b"
+  %>
+<% end %>
+

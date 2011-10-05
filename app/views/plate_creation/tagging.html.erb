@@ -1,0 +1,77 @@
+<script type="text/template" id="tag-palette-template">
+  <li class="ui-li ui-li-static ui-body-c">
+    <div class="available-tag palette-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
+  </li>
+
+</script>
+
+<script type="text/template" id="substitution-tag-template">
+  <li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">
+    <div class="substitute-tag palette-tag"><%%= original_tag_id %></div>&nbsp;&nbsp;Tag <%%= original_tag_id %> replaced with Tag <%%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%%= replacement_tag_id %></div>
+  <input id="plate-substitutions-<%%= original_tag_id %>" name="plate[substitutions][<%%= original_tag_id %>]" type="hidden" value="<%%= replacement_tag_id %>" />
+  </li>
+</script>
+
+<%= page(:'tag-creation-page') do -%>
+  <%= header(@creation_form, 'Choose tag layout') %>
+
+  <%= content do %>
+    <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+      <%= f.inputs do %>
+        <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
+        <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+        <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
+      <%- end -%>
+      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
+    <br/>
+      <%= f.buttons do %>
+        <%= f.commit_button 'Create Plate',
+              :button_html => {
+                :"data-theme" => "b",
+                :"data-icon"  => "plus"
+              }
+        %>
+      <%- end -%>
+      </div>
+
+      <div class="ui-block-b">
+        <h2>Tag Replacement palette</h2>
+        <div id="substitutions" style="">
+          <ul data-theme"d" data-role="listview" data-inset="true">
+            
+          </ul>
+        </div>
+        <br/>
+        <div id="instructions" class="instructions">
+          <h2>Instructions</h2>
+          <ol>
+            <li>Carefully check the index and pool layout against your worksheet.</li>
+            <li>Select the correct tag set.</li>
+            <li>Substitute tags as necessary using the Tag Replacement palette.</li>
+          </ol>
+
+          To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
+        </div>
+        <div id="replacement-tags" style="display:none">
+          <ul id="tag-palette" 
+            data-theme="d" 
+            data-role="listview"
+            data-filter-placeholder="Filter tags..." 
+            data-inset="true" 
+            data-filter="true">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <%- end -%>
+
+
+<script type="text/javascript" charset="utf-8">
+     window.tag_layouts   = <%= @creation_form.tag_groups.to_json.html_safe %>;
+     window.tags_by_name  = <%= @creation_form.tags_by_name.to_json.html_safe %>;
+</script>
+  <%- end -%>
+<%- end -%>
+

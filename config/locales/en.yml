@@ -2,4 +2,235 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  WGS stock DNA:
+    passed:
+      state_text: "WGS: Shearing Stock Plate DNA"
+      instruction_summary: "WGS: Shearing Stock Plate DNA."
+      instructions: >
+        <li>  Prepare to transfer the contents of the stock DNA plate to a Covaris Plate (‘WGS COVARIS’).</li>
+        <li>  Click on create ‘WGS COVARIS’ plate.
+  WGS Covaris:
+    pending:
+      state_text: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing awaiting transfer"
+      instruction_summary: "Stock DNA will be transferred to a fresh Covaris plate to generate the ‘WGS COVARIS’ plate."
+      instructions: >
+        <li>Print ‘WGS COVARIS’ label and place on a fresh Covaris Plate (‘WGS COVARIS’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing in progress"
+      instruction_summary: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing is in progress."
+      instructions: >
+        SOP: “WGS: Shearing Stock Plate DNA” - when the shearing protocol is complete
+        <br/>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "DNA  → ‘WGS COVARIS’ and DNA shearing is complete"
+      instruction_summary: "DNA  → ‘WGS COVARIS’ and DNA shearing is complete"
+      instructions: >
+        <li>Prepare to transfer the POST-COV DNA from the ‘WGS COVARIS’ plate to the ‘WGS POST-COV’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS POST-COV plate’ button.</li>
+
+  WGS post-Cov:
+    pending:
+      state_text: "POST-COV DNA in the ‘WGS COVARIS awaiting transfer"
+      instruction_summary: "POST-COV DNA in the ‘WGS COVARIS’ plate will be transferred to a fresh Eppendorf plate to generate the ‘WGS POST-COV’ plate."
+      instructions: >
+        SOP: “WGS: Shearing Stock Plate DNA”
+        <br/>
+        <li>Print ‘WGS POST-COV‘ label and place on a fresh Eppendorf Plate (‘WGS POST-COV’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "WGS COVARIS’  → ‘WGS POST-COV’ plate is in progress"
+      instruction_summary: "WGS COVARIS’  → ‘WGS POST-COV’ plate is in progress."
+      instructions: >
+        SOP: “WGS: Shearing Stock Plate DNA”
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab.</li>
+        <li>Click on ‘Create Pulldown QC plate’ button.</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘WGS COVARIS’  → ‘WGS POST-COV’ is complete"
+      instruction_summary: "‘WGS COVARIS’  → ‘WGS POST-COV’ is complete."
+      instructions: >
+        <li>Prepare to purify and transfer the contents of the ‘WGS POST-COV’ plate into the ‘WGS POST-COV-XP’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS POST-COV-XP plate’ button.</li>
+
+  WGS post-Cov-XP:
+    pending:
+      state_text: "POST-COV DNA in the ‘WGS POST-COV’ plate awaiting purification"
+      instruction_summary: "POST-COV DNA in the ‘WGS POST-COV’ plate will be purified and transferred to a fresh Eppendorf plate to generate the ‘WGS POST-COV-XP’ plate."
+      instructions: >
+        SOP: “WGS: Purification of POST-COV DNA”
+        <li>Print ‘WGS POST-COV-XP‘ label and place on a fresh Eppendorf Plate (‘WGS POST-COV-XP’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘WGS POST-COV’  → ‘WGS POST-COV-XP’ is in progress"
+      instruction_summary: "‘WGS POST-COV’  → ‘WGS POST-COV-XP’ is in progress"
+      instructions: >
+        SOP: “WGS: Purification of POST-COV DNA”
+
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab.</li>
+        <li>Click on ‘Create Pulldown QC plate’ button.</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘WGS POST-COV DNA’  → ‘WGS POST-COV-XP’ plate complete"
+      instruction_summary: "‘WGS POST-COV DNA’  → ‘WGS POST-COV-XP’ plate is complete."
+      instructions: >
+        <li>Prepare to library prep the ‘WGS POST-COV-XP’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS LIB plate’ button.</li>
+
+
+  WGS lib:
+    pending:
+      state_text: "Purified DNA in ‘WGS POST-COV-XP’ plate awaiting library preparation to generate ‘WGS LIB’ plate."
+      instruction_summary: "Purified DNA in the ‘WGS POST-COV-XP’ plate will be subjected to library preparation to generate the ‘WGS LIB’ plate."
+      instructions: >
+        <li>Print ‘WGS LIB’ label and place on a fresh Eppendorf plate (‘WGS LIB’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "WGS POST-COV-XP’  → ‘WGS LIBRARY’ is in progress"
+      instruction_summary: "WGS POST-COV-XP’  → ‘WGS LIBRARY’ is in progress"
+      instructions: >
+        SOP: “WGS: Purification of POST-COV DNA”
+
+        When the contents of the ‘WGS POST-COV-XP’ plate have completed library preparation and the ‘WGS LIB’ plate has been generated:
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘WGS POST-COV-XP’ → ‘WGS LIBRARY’ is complete"
+      instruction_summary: "‘WGS POST-COV-XP’  → ‘WGS LIBRARY’ is complete."
+      instructions: >
+        <li>Prepare to PCR amplify the ‘WGS LIBRARY’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS LIB PCR plate’ button.</li>
+
+  WGS lib PCR:
+    pending:
+      state_text: "‘WGS LIBRARY’ plate awaiting transfer to ‘WGS LIBRARY PCR’ plate"
+      instruction_summary: "Adapter-ligated libraries in the ‘WGS LIBRARY’ plate will be transferred to a fresh Eppendorf plate for PCR to generate the ‘WGS LIBRARY PCR’ plate"
+      instructions: >
+        SOP: “WGS: PCR amplification of adapter-ligated libraries”
+        <br/>
+
+        <li>Print ‘WGS LIBRARY PCR’ label and place on a fresh Eppendorf plate (‘WGS LIB PCR’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘WGS LIBRARY’ → ‘WGS LIBRARY PCR’ is in progress"
+      instruction_summary: "‘WGS LIBRARY’ → ‘WGS LIBRARY PCR’ is in progress"
+      instructions: >
+        <li>Prepare to purify the ‘WGS LIB PCR’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS LIB PCR-XP plate’. button</li>
+
+    passed:
+      state_text: "‘WGS LIB’  → ‘WGS LIB PCR’ plate complete"
+      instruction_summary: "‘WGS LIB’ → ‘WGS LIB PCR’ plate is complete"
+      instructions: >
+        <li>Prepare to purify the ‘WGS LIB PCR’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS LIB PCR-XP plate’ button.</li>
+
+  WGS lib PCR-XP:
+    pending:
+      state_text: "‘WGS LIB PCR’ plate awaiting purification and transfer to ‘WGS LIB PCR-XP’ plate"
+      instruction_summary: "Amplified libraries in the ‘WGS LIB PCR’ plate will be purified and transferred to a fresh Eppendorf plate to generate the ‘WGS LIB PCR-XP’ plate."
+      instructions: >
+        SOP: “WGS: Purification of amplified libraries”
+
+        <li>Print ‘WGS LIB PCR-XP’ label and place on a fresh Eppendorf plate (‘WGS LIB PCR-XP’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘WGS LIBRARY PCR’  → ‘WGS LIBRARY PCR-XP’ is in progress"
+      instruction_summary: "‘WGS LIBRARY PCR’  → ‘WGS LIBRARY PCR-XP’ is in progress"
+      instructions: >
+        SOP: “WGS: Purification of amplified libraries”
+
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab</li>
+        <li>Click on ‘Create Pulldown QC plate’ button</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Download Worksheet</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button</li>
+
+    passed:
+      state_text: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
+      instruction_summary: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
+      instructions: >
+        <li>Prepare to pool the ‘WGS LIB PCR-XP’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create WGS LIB POOL plate’ button.</li>
+
+
+  WGS lib pool:
+    pending:
+      state_text: "‘WGS LIB PCR-XP’ libraries awaiting transfer to a fresh ‘WGS LIB POOL’ plate."
+      instruction_summary: "Amplified and purified libraries in the ‘WGS LIB PCR-XP’ will be transferred to a fresh Eppendorf plate to generate the ‘WGS LIB POOL’ plate."
+      instructions: >
+        SOP: “WGS: Pooling of amplified libraries”
+
+        <li>Carefully check the index and pool layouts (source and destination) against your worksheet.</li>
+        <li>Print ‘WGS LIB POOL’ barcode and place on a fresh Eppendorf plate (‘WGS LIB POOL’).</li>
+        <li>Download the worksheet .csv file and save as ‘“STOCK PLATE ID”_WGS LIB POOL.csv’ e.g. ‘503656_WGS_LIB_POOL’.</li>
+        <li>Enter QC values for pooling volumes and re-save the file.</li>
+        <li>Run SOP using the worksheet .csv file.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘WGS LIB PCR-XP’ → ‘WGS LIB POOL’ is in progress"
+      instruction_summary: "‘WGS LIB PCR-XP’ → ‘WGS LIB POOL’ is in progress"
+      instructions: >
+        SOP: “WGS: Pooling of amplified libraries”
+
+        When the contents of the ‘WGS LIBRARY PCR-XP’ plate have been transferred to the ‘WGS POOLED LIBRARY’ plate:
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+
+    passed:
+      state_text: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
+      instruction_summary: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
+      instructions:
+        <li>Prepare to transfer the ‘WGS POOLED LIBRARY’.</li>
+        <li>Click on ‘State’ below and create the ‘WGS LIBRARYPCR-XP’ plate.</li>

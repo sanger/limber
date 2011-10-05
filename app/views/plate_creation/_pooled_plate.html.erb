@@ -1,0 +1,45 @@
+  <table id="source-plate" class="plate-view">
+    <thead>
+      <tr>
+        <th class="first-col">&nbsp;</th>
+        <% (1..12).each do |column_number| %>
+          <th><%= column_number %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+
+
+      <%= form.fields_for(:transfers, plate_presenter.transfers ) do |fields| %>
+      <% plate_presenter.source_wells_by_row.each do |row_label, row_wells| %>
+        <tr>
+          <th class="first-col"><%= row_label %></th>
+          <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
+            <td class="col-all <%= "col-#{index+1}" %>">
+              <% location = "#{row_label}#{index + 1}" %>
+              <div id="<%= "source_well_#{location}" %>" class="well source_well">
+                <% unless well.try(:aliquots).blank? -%>
+                  <% destination_well = plate_presenter.transfers[well.location] -%>
+
+                  <div 
+                    id="<%= "source_aliquot_#{well.location}" %>" 
+                    class="aliquot source_aliquot <%= colours_by_location[destination_well] %>" 
+                    rel="<%= "#details_#{well.location}" %>"
+                    data-pool="<%= plate_presenter.pool(well.location) %>"
+                    data-destination-well=<%= destination_well %>
+                    >
+                      <%= destination_well %>
+                  </div>
+                  <%= fields.hidden_field well.location, :value => destination_well %>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+

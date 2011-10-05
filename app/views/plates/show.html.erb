@@ -1,0 +1,110 @@
+<%= page(:'plate-show-page') do %>
+<script type="text/javascript">
+  SCAPE.plate = {
+    'state' : '<%= @presenter.plate.state %>',
+
+    tabViews:  {
+      'summary-button'        : ['plate-summary', 'plate-printing' ]
+    },
+
+    tabStates : {
+      pending   : ['summary-button'],
+      started   : ['summary-button'],
+      passed    : ['summary-button'],
+      cancelled : ['summary-button']
+    }
+
+  };
+
+<% if current_user_uuid.present? -%>
+ SCAPE.plate.tabViews = {
+      'summary-button'        : ['plate-summary', 'plate-printing' ],
+      'plate-creation-button' : ['plate-summary', 'plate-creation'],
+      'plate-QC-button'       : ['plate-summary', 'plate-creation'],
+      'plate-state-button'    : ['plate-summary', 'plate-state'],
+      'well-failing-button'   : ['well-failing']
+    };
+
+SCAPE.plate.tabStates = {
+      pending   : [ 'summary-button', 'plate-state-button' ],
+      started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
+      passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
+      cancelled : [ 'summary-button' ],
+      failed    : [ 'summary-button' ]
+};
+
+<% end -%>
+</script>
+
+
+
+  <%= header(@presenter, 'Plate view') do %>
+    <div data-role="navbar">
+      <ul id="navbar">
+        <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
+        <% if current_user_uuid.present? -%>
+          <li id="plate-creation-button"><a href="#" class="navbar-link" rel="plate-creation-button" data-icon="add">Create Child Plate</a></li>
+          <li id="plate-QC-button"><a href="#" class="navbar-link" rel="plate-QC-button" data-icon="add">Create QC Plate</a></li>
+          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Change Plate State</a></li>
+          <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
+        <% end -%>
+      </ul>
+    </div>
+  <% end -%>
+
+  <%= content do %>
+    <%= flash_messages %>
+    <% plate_type_and_state = "#{@presenter.plate.plate_purpose.name}.#{@presenter.plate.state.downcase}" -%>
+    <h1><%= t("#{plate_type_and_state}.state_text") %></h1>
+        <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <div id="plate-summary" class="scape-ui-block">
+          <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
+        </div>
+
+        <div id="well-failing" class="scape-ui-block" style="display:none;">
+          <h2>Fail Wells</h2>
+          <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) %>
+        </div>
+      </div>
+
+
+      <div class="ui-block-b">
+        <h2>Instructions</h2>
+        <div class="instructions ui-corner-all ui-shadow">
+          <h3><%= t("#{plate_type_and_state}.instruction_summary") %></h3>
+          <ol>
+            <%= t("#{plate_type_and_state}.instructions").html_safe %>
+          </ol>
+        </div>
+
+        <div id="plate-printing"  class="scape-ui-block" style="display:none;">
+          <%= render(:partial => 'plate_printing') %>
+          <%= @presenter.control_additional_printing do %>
+            <% section do %>
+              <%= render(:partial => @presenter.printing_partial, :locals => { :presenter => @presenter }) %>
+              <%= @presenter.control_worksheet_printing do %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div id="plate-creation" class="scape-ui-block" style="display:none;">
+          <%= @presenter.control_additional_creation do %>
+          <h2>Create Child Plate</h2>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+          <% end %>
+        </div>
+
+        <div id="plate-state" class="scape-ui-block" style="display:none;">
+          <%= state_change_form(@presenter) %>
+        </div>
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% end %>
+

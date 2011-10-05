@@ -1,0 +1,29 @@
+<table <%= "id='#{id ||= "plate"}'" %>class="plate-view">
+  <thead>
+    <tr>
+      <th class="first-col">&nbsp;</th>
+      <% (1..12).each do |column_number| %>
+        <th><%= column_number %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
+      <tr>
+        <th class="first-col"><%= row_label %></th>
+        <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
+          <td class="col-all <%= column(well) %>">
+            <% location = "#{row_label}#{index + 1}" %>
+            <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
+            <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
+              <% if well.try(:aliquots).present? -%>
+                <%= render :partial => plate_presenter.aliquot_partial, :locals => { :presenter => plate_presenter, :lab_ware => plate_presenter.plate, :id => well.location, :container => well } %>
+              <% end -%>
+            </div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

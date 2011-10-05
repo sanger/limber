@@ -1,0 +1,9 @@
+<%= section do %>
+  <h2>Print plate label</h2>
+  <%= individual_barcode_printing_form(
+        @presenter.plate.barcode,
+        :redirection_url => pulldown_plate_path(@presenter.plate),
+        :text            => @presenter.plate.plate_purpose.name
+  ) %>
+<% end %>
+
