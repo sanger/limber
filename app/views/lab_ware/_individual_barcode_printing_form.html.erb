@@ -1,25 +1,17 @@
-<%= semantic_form_for(barcode, :url => print_individual_label_path, :as => :label, :html => {:method => :post}) do |f| %>
+<%= form_for(barcode, :url => print_individual_label_path, :as => :label, :html => {:method => :post}) do |f| %>
   <%# Hide the details of what is in the label to be printed %>
-  <%= f.inputs do %>
+  <ul data-role="listview" data-inset="true">
     <%= hidden_field_tag(:redirect_to, redirection_url) %>
-    <%= f.input :prefix,      :as => :hidden %>
-    <%= f.input :number,      :as => :hidden %>
-    <%= f.input :study,       :as => :hidden, :value => text %>
-  <% end %>
+    <%= hidden_field_tag :prefix %>
+    <%= hidden_field_tag :number %>
+    <%= hidden_field_tag :study, :value => text %>
 
-  <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
-    It looks like an previous bug so I really should open a ticket...
-  %>
-  <%= f.inputs do %>
-    <p>
+    <li data-role="listdivider">
       <%= label_tag :printer, 'Barcode printer' %>
       <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name) %>
-    </p>
-    <%= f.commit_button 'Print Label', 
-      :button_html => {
-        :'data-theme' => 'b',
-        :'data-icon' => 'grid'
-      }
-    %>
-  <% end %>
+    </li>
+    <li>
+      <%= f.submit 'Print Label', :'data-theme' => 'b', :'data-icon' => 'grid' %>
+    </li>
+  </ul>
 <% end %>
