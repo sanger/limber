@@ -1,39 +1,11 @@
 <%= page(:'plate-show-page') do %>
 <script type="text/javascript">
   SCAPE.plate = {
-    'state' : '<%= @presenter.plate.state %>',
-
-    tabViews:  {
-      'summary-button'        : ['plate-summary', 'plate-printing' ]
-    },
-
-    tabStates : {
-      pending   : ['summary-button'],
-      started   : ['summary-button'],
-      passed    : ['summary-button'],
-      cancelled : ['summary-button']
-    }
-
+    'state'    : '<%= @presenter.plate.state %>',
+    'tabViews' : <%= @presenter.tab_views.to_json.html_safe %>,
+    'tabStates' : <%= get_tab_states(@presenter) %>
   };
 
-<% if current_user_uuid.present? -%>
- SCAPE.plate.tabViews = {
-      'summary-button'        : ['plate-summary', 'plate-printing' ],
-      'plate-creation-button' : ['plate-summary', 'plate-creation'],
-      'plate-QC-button'       : ['plate-summary', 'plate-creation'],
-      'plate-state-button'    : ['plate-summary', 'plate-state'],
-      'well-failing-button'   : ['well-failing']
-    };
-
-SCAPE.plate.tabStates = {
-      pending   : [ 'summary-button', 'plate-state-button' ],
-      started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
-      passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
-      cancelled : [ 'summary-button' ],
-      failed    : [ 'summary-button' ]
-};
-
-<% end -%>
 </script>
 
 
