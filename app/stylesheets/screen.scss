@@ -226,11 +226,9 @@ table.form {
 }
 
 .instructions {
-  background: #F2F2F2;
-  // @include border-radius(14px);
-  border: 1px solid #D1D1D1;
-  padding: 0 14px 14px 14px;
-  // @extend .ui-shadow;
+  @include border-radius(4px);
+  border: 1px solid #F7C942;
+  background: #FAEB9E;
 }
 
 #key .tube-view { display: inline-block; }

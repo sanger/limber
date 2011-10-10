@@ -72,6 +72,11 @@ module LabWareHelper
     "col-#{column}"
   end
 
+  def get_tab_states(presenter)
+    return presenter.authenticated_tab_states.to_json.html_safe if current_user_uuid.present?
+    presenter.tab_states.to_json.html_safe
+  end
+
   def plates_by_state(plates)
     plates.each_with_object(Hash.new {|h,k| h[k]=[]}) do |plate, plates_by_state|
       plates_by_state[plate.state] << plate

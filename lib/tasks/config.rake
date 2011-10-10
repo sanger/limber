@@ -36,9 +36,13 @@ namespace :config do
         }
       end.tap do |presenters|
         # WGS plates
-        presenters["WGS stock DNA"].merge!(                                                              :presenter_class => "Presenters::StockPlatePresenter")
+        presenters["WGS stock DNA"].merge!(   :presenter_class => "Presenters::StockPlatePresenter")
+        presenters["WGS post-Cov"].merge!(    :presenter_class => "Presenters::QcCapablePlatePresenter")
+        presenters["WGS post-Cov-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
+
         presenters["WGS lib"].merge!(                 :form_class => "Forms::TransferForm")
         presenters["WGS lib PCR"].merge!(             :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
+        presenters["WGS lib PCR-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
         presenters["WGS lib pool"].merge!(:form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
 
         # SC plates

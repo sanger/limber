@@ -1,39 +1,10 @@
 <%= page(:'plate-show-page') do %>
 <script type="text/javascript">
   SCAPE.plate = {
-    'state' : '<%= @presenter.plate.state %>',
-
-    tabViews:  {
-      'summary-button'        : ['plate-summary', 'plate-printing' ]
-    },
-
-    tabStates : {
-      pending   : ['summary-button'],
-      started   : ['summary-button'],
-      passed    : ['summary-button'],
-      cancelled : ['summary-button']
-    }
-
+    'state'     : '<%= @presenter.plate.state %>',
+    'tabViews'  : <%= @presenter.tab_views.to_json.html_safe %>,
+    'tabStates' : <%= get_tab_states(@presenter) %>
   };
-
-<% if current_user_uuid.present? -%>
- SCAPE.plate.tabViews = {
-      'summary-button'        : ['plate-summary', 'plate-printing' ],
-      'plate-creation-button' : ['plate-summary', 'plate-creation'],
-      'plate-QC-button'       : ['plate-summary', 'plate-creation'],
-      'plate-state-button'    : ['plate-summary', 'plate-state'],
-      'well-failing-button'   : ['well-failing']
-    };
-
-SCAPE.plate.tabStates = {
-      pending   : [ 'summary-button', 'plate-state-button' ],
-      started   : [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
-      passed    : [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
-      cancelled : [ 'summary-button' ],
-      failed    : [ 'summary-button' ]
-};
-
-<% end -%>
 </script>
 
 
@@ -56,12 +27,12 @@ SCAPE.plate.tabStates = {
     <%= flash_messages %>
     <% plate_type_and_state = "#{@presenter.plate.plate_purpose.name}.#{@presenter.plate.state.downcase}" -%>
     <h1><%= t("#{plate_type_and_state}.state_text") %></h1>
-        <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <div id="plate-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
+          <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
           <h2>Fail Wells</h2>
@@ -71,8 +42,7 @@ SCAPE.plate.tabStates = {
 
 
       <div class="ui-block-b">
-        <h2>Instructions</h2>
-        <div class="instructions ui-corner-all ui-shadow">
+        <div class="instructions ui-body">
           <h3><%= t("#{plate_type_and_state}.instruction_summary") %></h3>
           <ol>
             <%= t("#{plate_type_and_state}.instructions").html_safe %>

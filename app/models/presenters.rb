@@ -17,16 +17,42 @@ module Presenters
 
     write_inheritable_attribute :attributes, [ :api, :plate ]
 
-    class_inheritable_reader :aliquot_partial
+    class_inheritable_reader    :aliquot_partial
     write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
 
-    class_inheritable_reader :summary_partial
+    class_inheritable_reader    :summary_partial
     write_inheritable_attribute :summary_partial, 'lab_ware/plates/standard_summary'
 
-    class_inheritable_reader :additional_creation_partial
+    class_inheritable_reader    :additional_creation_partial
     write_inheritable_attribute :additional_creation_partial, 'lab_ware/plates/child_plate_creation'
 
     class_inheritable_reader :printing_partial
+
+    class_inheritable_reader    :tab_views
+    write_inheritable_attribute :tab_views, {
+      'summary-button'        => ['plate-summary', 'plate-printing' ],
+      'plate-creation-button' => [ 'plate-summary', 'plate-creation' ],
+      'plate-QC-button'       => [ 'plate-summary', 'plate-creation' ],
+      'plate-state-button'    => [ 'plate-summary', 'plate-state' ],
+      'well-failing-button'   => [ 'well-failing' ]
+    }
+
+    class_inheritable_reader    :tab_states
+    write_inheritable_attribute :tab_states, {
+      :pending    =>  ['summary-button'],
+      :started    =>  ['summary-button'],
+      :passed     =>  ['summary-button'],
+      :cancelled  =>  ['summary-button']
+    }
+
+    class_inheritable_reader    :authenticated_tab_states
+    write_inheritable_attribute :authenticated_tab_states, {
+        :pending    =>  [ 'summary-button', 'plate-state-button' ],
+        :started    =>  [ 'summary-button', 'plate-state-button' ],
+        :passed     =>  [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
+        :cancelled  =>  [ 'summary-button' ],
+        :failed     =>  [ 'summary-button' ]
+    }
 
     def plate_to_walk
       self.plate

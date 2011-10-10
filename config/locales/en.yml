@@ -3,15 +3,22 @@
 
 en:
   WGS stock DNA:
+    pending:
+      state_text: "WGS: Shearing Stock Plate DNA - not ready"
+      instruction_summary: "This DNA plate is not yet ready for processing."
+      instructions: ""
+
     passed:
       state_text: "WGS: Shearing Stock Plate DNA"
       instruction_summary: "WGS: Shearing Stock Plate DNA."
       instructions: >
         <li>  Prepare to transfer the contents of the stock DNA plate to a Covaris Plate (‘WGS COVARIS’).</li>
         <li>  Click on create ‘WGS COVARIS’ plate.
+
+
   WGS Covaris:
     pending:
-      state_text: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing awaiting transfer"
+      state_text: "Stock DNA → ‘WGS COVARIS’ and DNA shearing awaiting transfer"
       instruction_summary: "Stock DNA will be transferred to a fresh Covaris plate to generate the ‘WGS COVARIS’ plate."
       instructions: >
         <li>Print ‘WGS COVARIS’ label and place on a fresh Covaris Plate (‘WGS COVARIS’).</li>
@@ -20,7 +27,7 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing in progress"
+      state_text: "Stock DNA → ‘WGS COVARIS’ and DNA shearing in progress"
       instruction_summary: "Stock DNA  → ‘WGS COVARIS’ and DNA shearing is in progress."
       instructions: >
         SOP: “WGS: Shearing Stock Plate DNA” - when the shearing protocol is complete
@@ -30,11 +37,12 @@ en:
 
     passed:
       state_text: "DNA  → ‘WGS COVARIS’ and DNA shearing is complete"
-      instruction_summary: "DNA  → ‘WGS COVARIS’ and DNA shearing is complete"
+      instruction_summary: "DNA → ‘WGS COVARIS’ and DNA shearing is complete"
       instructions: >
         <li>Prepare to transfer the POST-COV DNA from the ‘WGS COVARIS’ plate to the ‘WGS POST-COV’ plate.</li>
         <li>Click on the ‘Create Child Plate’ tab.</li>
         <li>Click on ‘Create WGS POST-COV plate’ button.</li>
+
 
   WGS post-Cov:
     pending:
@@ -49,8 +57,8 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "WGS COVARIS’  → ‘WGS POST-COV’ plate is in progress"
-      instruction_summary: "WGS COVARIS’  → ‘WGS POST-COV’ plate is in progress."
+      state_text: "WGS COVARIS’ → ‘WGS POST-COV’ plate is in progress"
+      instruction_summary: "WGS COVARIS’ → ‘WGS POST-COV’ plate is in progress."
       instructions: >
         SOP: “WGS: Shearing Stock Plate DNA”
         <h3>QC Required</h3>
@@ -71,6 +79,7 @@ en:
         <li>Click on the ‘Create Child Plate’ tab.</li>
         <li>Click on ‘Create WGS POST-COV-XP plate’ button.</li>
 
+
   WGS post-Cov-XP:
     pending:
       state_text: "POST-COV DNA in the ‘WGS POST-COV’ plate awaiting purification"
@@ -83,7 +92,7 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "‘WGS POST-COV’  → ‘WGS POST-COV-XP’ is in progress"
+      state_text: "‘WGS POST-COV’ → ‘WGS POST-COV-XP’ is in progress"
       instruction_summary: "‘WGS POST-COV’  → ‘WGS POST-COV-XP’ is in progress"
       instructions: >
         SOP: “WGS: Purification of POST-COV DNA”
@@ -99,12 +108,13 @@ en:
         <li>Select ‘Passed’ and click ‘Change State’ button.</li>
 
     passed:
-      state_text: "‘WGS POST-COV DNA’  → ‘WGS POST-COV-XP’ plate complete"
-      instruction_summary: "‘WGS POST-COV DNA’  → ‘WGS POST-COV-XP’ plate is complete."
+      state_text: "‘WGS POST-COV DNA’ → ‘WGS POST-COV-XP’ plate complete"
+      instruction_summary: "‘WGS POST-COV DNA’ → ‘WGS POST-COV-XP’ plate is complete."
       instructions: >
         <li>Prepare to library prep the ‘WGS POST-COV-XP’ plate.</li>
         <li>Click on the ‘Create Child Plate’ tab.</li>
         <li>Click on ‘Create WGS LIB plate’ button.</li>
+
 
 
   WGS lib:
@@ -118,7 +128,7 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "WGS POST-COV-XP’  → ‘WGS LIBRARY’ is in progress"
+      state_text: "WGS POST-COV-XP’ → ‘WGS LIBRARY’ is in progress"
       instruction_summary: "WGS POST-COV-XP’  → ‘WGS LIBRARY’ is in progress"
       instructions: >
         SOP: “WGS: Purification of POST-COV DNA”
@@ -134,6 +144,7 @@ en:
         <li>Prepare to PCR amplify the ‘WGS LIBRARY’ plate.</li>
         <li>Click on the ‘Create Child Plate’ tab.</li>
         <li>Click on ‘Create WGS LIB PCR plate’ button.</li>
+
 
   WGS lib PCR:
     pending:
