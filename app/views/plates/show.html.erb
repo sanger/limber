@@ -1,11 +1,10 @@
 <%= page(:'plate-show-page') do %>
 <script type="text/javascript">
   SCAPE.plate = {
-    'state'    : '<%= @presenter.plate.state %>',
-    'tabViews' : <%= @presenter.tab_views.to_json.html_safe %>,
+    'state'     : '<%= @presenter.plate.state %>',
+    'tabViews'  : <%= @presenter.tab_views.to_json.html_safe %>,
     'tabStates' : <%= get_tab_states(@presenter) %>
   };
-
 </script>
 
 
