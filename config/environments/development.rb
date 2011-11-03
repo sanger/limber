@@ -29,5 +29,10 @@ PulldownPipeline::Application.configure do
   # config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
   config.api_connection_options.authorisation = 'development'
 
+
+  # Email settings...
+  config.admin_email          = "admin@test.com"
+  config.exception_recipients = "exceptions@test.com"
+
 end
 
