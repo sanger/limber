@@ -80,6 +80,8 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     eventmachine (0.12.10)
+    exception_notification (2.5.2)
+      actionmailer (>= 3.0.4)
     ffi (1.0.9)
     formtastic (1.2.4)
       actionpack (>= 2.3.7)
@@ -175,6 +177,7 @@ DEPENDENCIES
   capybara
   compass (>= 0.11.1)
   cucumber-rails
+  exception_notification
   formtastic (~> 1.2.3)
   hashie (~> 1.0.0)
   launchy
