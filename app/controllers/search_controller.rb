@@ -2,6 +2,11 @@ class SearchController < ApplicationController
   before_filter :clear_current_user
 
   def new
+    begin
+    raise "You're a loudmouth baby! You better shut it up!"
+    rescue => exception
+      ExceptionNotifier::Notifier.exception_notification(request.env, exception).deliver
+    end
     collect_all_ongoing_plates
   end
 

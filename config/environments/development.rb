@@ -31,8 +31,18 @@ PulldownPipeline::Application.configure do
 
 
   # Email settings...
-  config.admin_email          = "admin@test.com"
-  config.exception_recipients = "exceptions@test.com"
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => "mail.sanger.ac.uk",
+    :port    => 25,
+    :domain  => "EVO18720.internal.sanger.ac.uk"
+  }
+
+  config.admin_email          = "sd9@sanger.ac.uk"
+  config.exception_recipients = "sd9@sanger.ac.uk"
 
 end
 
