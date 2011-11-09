@@ -1,3 +1,5 @@
+ActionMailer::Base.delivery_method = :sendmail
+
 config = PulldownPipeline::Application.config
 
 config.after_initialize do
