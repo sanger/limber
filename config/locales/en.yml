@@ -163,9 +163,12 @@ en:
       state_text: "‘WGS LIBRARY’ → ‘WGS LIBRARY PCR’ is in progress"
       instruction_summary: "‘WGS LIBRARY’ → ‘WGS LIBRARY PCR’ is in progress"
       instructions: >
-        <li>Prepare to purify the ‘WGS LIB PCR’ plate.</li>
-        <li>Click on the ‘Create Child Plate’ tab.</li>
-        <li>Click on ‘Create WGS LIB PCR-XP plate’. button</li>
+        SOP: “WGS: PCR amplification of adapter-ligated libraries”
+        <br/>
+        <br/>
+        When the contents of the ‘WGS LIB’ plate have been transferred to the ‘WGS LIB PCR’ plate and completed PCR amplification:
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
 
     passed:
       state_text: "‘WGS LIB’  → ‘WGS LIB PCR’ plate complete"
@@ -243,5 +246,376 @@ en:
       state_text: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
       instruction_summary: "‘WGS LIBRARY PCR’ → ‘WGS LIBRARY PCR-XP’ plate is complete"
       instructions:
-        <li>Prepare to transfer the ‘WGS POOLED LIBRARY’.</li>
-        <li>Click on ‘State’ below and create the ‘WGS LIBRARYPCR-XP’ plate.</li>
+        <li>Prepare to transfer the ‘WGS POOED LIBRARY’ to tubes.</li>
+        <li>Print labels and apply to tubes.</li>
+
+  SC stock DNA:
+    pending:
+      state_text: "SC: Shearing Stock Plate DNA - not ready"
+      instruction_summary: "This DNA plate is not yet ready for processing."
+      instructions: ""
+    
+    passed:
+      state_text: "SC: Shearing Stock Plate DNA"
+      instruction_summary: "SC: Shearing Stock Plate DNA."
+      instructions: >
+        <li>  Prepare to transfer the contents of the stock DNA plate to a Covaris Plate (‘SC COVARIS’).</li>
+        <li>  Click on create ‘SC COVARIS’ plate.
+
+  SC Covaris:
+    pending:
+      state_text: "Stock DNA → ‘SC COVARIS’ and DNA shearing awaiting transfer"
+      instruction_summary: "Stock DNA will be transferred to a fresh Covaris plate to generate the ‘SC COVARIS’ plate."
+      instructions: >
+        <li>Print ‘SC COVARIS’ label and place on a fresh Covaris Plate (‘SC COVARIS’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Stock DNA → ‘SC COVARIS’ and DNA shearing in progress"
+      instruction_summary: "Stock DNA  → ‘SC COVARIS’ and DNA shearing is in progress."
+      instructions: >
+        SOP: “SC: Shearing Stock Plate DNA” - when the shearing protocol is complete
+        <br/>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "DNA  → ‘SC COVARIS’ and DNA shearing is complete"
+      instruction_summary: "DNA → ‘SC COVARIS’ and DNA shearing is complete"
+      instructions: >
+        <li>Prepare to transfer the POST-COV DNA from the ‘SC COVARIS’ plate to the ‘SC POST-COV’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC POST-COV plate’ button.</li>
+
+
+  SC post-Cov:
+    pending:
+      state_text: "POST-COV DNA in the ‘SC COVARIS awaiting transfer"
+      instruction_summary: "POST-COV DNA in the ‘SC COVARIS’ plate will be transferred to a fresh Eppendorf plate to generate the ‘SC POST-COV’ plate."
+      instructions: >
+        SOP: “SC: Shearing Stock Plate DNA”
+        <br/>
+        <li>Print ‘SC POST-COV‘ label and place on a fresh Eppendorf Plate (‘SC POST-COV’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "SC COVARIS’ → ‘SC POST-COV’ plate is in progress"
+      instruction_summary: "SC COVARIS’ → ‘SC POST-COV’ plate is in progress."
+      instructions: >
+        SOP: “SC: Shearing Stock Plate DNA”
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab.</li>
+        <li>Click on ‘Create Pulldown QC plate’ button.</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC COVARIS’  → ‘SC POST-COV’ is complete"
+      instruction_summary: "‘SC COVARIS’  → ‘SC POST-COV’ is complete."
+      instructions: >
+        <li>Prepare to purify and transfer the contents of the ‘SC POST-COV’ plate into the ‘SC POST-COV-XP’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC POST-COV-XP plate’ button.</li>
+
+
+  SC post-Cov-XP:
+    pending:
+      state_text: "POST-COV DNA in the ‘SC POST-COV’ plate awaiting purification"
+      instruction_summary: "POST-COV DNA in the ‘SC POST-COV’ plate will be purified and transferred to a fresh Eppendorf plate to generate the ‘SC POST-COV-XP’ plate."
+      instructions: >
+        SOP: “SC: Purification of POST-COV DNA”
+        <li>Print ‘SC POST-COV-XP‘ label and place on a fresh Eppendorf Plate (‘SC POST-COV-XP’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC POST-COV’ → ‘SC POST-COV-XP’ is in progress"
+      instruction_summary: "‘SC POST-COV’  → ‘SC POST-COV-XP’ is in progress"
+      instructions: >
+        SOP: “SC: Purification of POST-COV DNA”
+
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab.</li>
+        <li>Click on ‘Create Pulldown QC plate’ button.</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC POST-COV DNA’ → ‘SC POST-COV-XP’ plate complete"
+      instruction_summary: "‘SC POST-COV DNA’ → ‘SC POST-COV-XP’ plate is complete."
+      instructions: >
+        <li>Prepare to library prep the ‘SC POST-COV-XP’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC LIB plate’ button.</li>
+
+
+
+  SC lib:
+    pending:
+      state_text: "Purified DNA in ‘SC POST-COV-XP’ plate awaiting library preparation to generate ‘SC LIB’ plate."
+      instruction_summary: "Purified DNA in the ‘SC POST-COV-XP’ plate will be subjected to library preparation to generate the ‘SC LIB’ plate."
+      instructions: >
+        <li>Print ‘SC LIB’ label and place on a fresh Eppendorf plate (‘SC LIB’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "SC POST-COV-XP’ → ‘SC LIBRARY’ is in progress"
+      instruction_summary: "SC POST-COV-XP’  → ‘SC LIBRARY’ is in progress"
+      instructions: >
+        SOP: “SC: Library Preparation”<br/>
+
+        When the contents of the ‘SC POST-COV-XP’ plate have completed library preparation and the ‘SC LIB’ plate has been generated:
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC POST-COV-XP’ → ‘SC LIBRARY’ is complete"
+      instruction_summary: "‘SC POST-COV-XP’  → ‘SC LIBRARY’ is complete."
+      instructions: >
+        <li>Prepare to PCR amplify the ‘SC LIBRARY’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC LIB PCR plate’ button.</li>
+
+
+  SC lib PCR:
+    pending:
+      state_text: "‘SC LIBRARY’ plate awaiting transfer to ‘SC LIBRARY PCR’ plate"
+      instruction_summary: "Adapter-ligated libraries in the ‘SC LIBRARY’ plate will be transferred to a fresh Eppendorf plate for PCR to generate the ‘SC LIBRARY PCR’ plate"
+      instructions: >
+        SOP: “SC: PCR amplification of adapter-ligated libraries”
+        <br/>
+
+        <li>Print ‘SC LIBRARY PCR’ label and place on a fresh Eppendorf plate (‘SC LIB PCR’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC LIBRARY’ → ‘SC LIBRARY PCR’ is in progress"
+      instruction_summary: "‘SC LIBRARY’ → ‘SC LIBRARY PCR’ is in progress"
+      instructions: >
+        SOP: “SC: PCR amplification of adapter-ligated libraries”
+        <br/>
+        <br/>
+        When the contents of the ‘SC LIB’ plate have been transferred to the ‘SC LIB PCR’ plate and completed PCR amplification 
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC LIB’  → ‘SC LIB PCR’ plate complete"
+      instruction_summary: "‘SC LIB’ → ‘SC LIB PCR’ plate is complete"
+      instructions: >
+        <li>Prepare to purify the ‘SC LIB PCR’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC LIB PCR-XP plate’ button.</li>
+
+  SC lib PCR-XP:
+    pending:
+      state_text: "‘SC LIB PCR’ plate awaiting purification and transfer to ‘SC LIB PCR-XP’ plate"
+      instruction_summary: "Amplified libraries in the ‘SC LIB PCR’ plate will be purified and transferred to a fresh Eppendorf plate to generate the ‘SC LIB PCR-XP’ plate."
+      instructions: >
+        SOP: “SC: Purification of amplified libraries”
+
+        <li>Print ‘SC LIB PCR-XP’ label and place on a fresh Eppendorf plate (‘SC LIB PCR-XP’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC LIBRARY PCR’  → ‘SC LIBRARY PCR-XP’ is in progress"
+      instruction_summary: "‘SC LIBRARY PCR’  → ‘SC LIBRARY PCR-XP’ is in progress"
+      instructions: >
+        SOP: “SC: Purification of amplified libraries”
+
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab</li>
+        <li>Click on ‘Create Pulldown QC plate’ button</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Download Worksheet</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button</li>
+
+    passed:
+      state_text: "‘SC LIBRARY PCR’ → ‘SC LIBRARY PCR-XP’ plate is complete"
+      instruction_summary: "‘SC LIBRARY PCR’ → ‘SC LIBRARY PCR-XP’ plate is complete"
+      instructions: >
+        <li>Prepare to hybridise ‘SC LIB PCR-XP plate’</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC HYB plate’ button.</li>
+
+  SC hyb:
+    pending:
+      state_text: "‘SC LIB PCR-XP’ plate awaiting purification and transfer to ‘SC HYB’ plate"
+      instruction_summary: "Amplified and purified libraries in the ‘SC LIB PCR-XP’ will be transferred to a fresh Eppendorf plate to generate the ‘SC HYB’ plate."
+      instructions: >
+        The ‘SC HYB’ plate will be incubated with baits.
+        <br/>
+        <br/>
+        <li>Print ‘SC HYB’ barcode and place on a fresh Eppendorf plate (‘SC HYB’).</li>
+        <li>Right click on the Download Worksheet link and save as ‘“STOCK PLATE ID”_SC HYB.csv’ e.g. ‘503656_SC HYB.csv’.</li>
+        <li>Enter QC values for pooling volumes and re-save the file.</li>
+        <li>Run SOP using the .csv file.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC LIBRARY PCR-XP’ → ‘SC HYB’ is in progress"
+      instruction_summary: "‘SC LIBRARY PCR-XP’  → ‘SC HYB’ is in progress"
+      instructions: >
+        When the contents of the ‘SC LIB PCR-XP’ plate have been transferred to the ‘SC HYB’  plate.
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+
+    passed:
+      state_text: "‘SC LIBRARY PCR-XP’ → ‘SC HYB’ is complete"
+      instruction_summary: "‘SC LIBRARY PCR-XP’  → ‘SC HYB’ is complete"
+      instructions: >
+        <li>Prepare to generate the ‘SC CAP LIB’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC CAP LIB plate’ button.</li>
+
+  SC cap lib:
+    pending:
+      state_text: "‘SC HYB’ awaiting capture and wash to generate ‘SC CAP LIB’"
+      instruction_summary: "The ‘SC HYB’ plate will have completed overnight hybridisation.  The ‘SC HYB’ plate will be subjected to post-hyb processing (Capture & Wash) to generate the ‘SC CAP LIB’ plate."
+      instructions: >
+        <li>Print ‘SC CAP LIB’ barcode and place on a fresh Eppendorf plate (‘SC CAP LIB)</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC HYB’ → ‘SC CAP LIB’ is in progress"
+      instruction_summary: "SOP: “SC: Post-HYB processing: Capture & Wash”"
+      instructions: >
+        When the contents of the ‘SC HYB’ have been processed to the ‘SC CAP LIB’ plate
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC HYB’ → ‘SC CAP LIB’ is in complete"
+      instruction_summary: "‘SC HYB’ → ‘SC CAP LIB’ is in complete"
+      instructions: >
+        <li>Prepare to generate the SC CAP LIB PCR plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC CAP LIB PCR plate’ button.</li>
+
+  SC cap lib PCR:
+    pending:
+      state_text: "‘SC CAP LIB’ plate awaiting transfer to ‘SC CAP LIB PCR’ plate"
+      instruction_summary: "Captured libraries in the ‘SC CAP LIB’ plate will be transferred to a fresh Eppendorf plate for PCR to generate the ‘SC CAP LIB PCR’ plate"
+      instructions: >
+        SOP: “SC: PCR amplification of captured libraries”
+        <br/>
+
+        <li>Print ‘SC CAP LIB PCR’ label and place on a fresh Eppendorf plate (‘SC CAP LIB PCR’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC CAP LIB’ → ‘SC CAPLIB PCR’ is in progress"
+      instruction_summary: "‘SC CAP LIB’ → ‘SC CAPLIB PCR’ is in progress"
+      instructions: >
+        SOP: “SC: PCR amplification of captured libraries”
+        <br/>
+        <br/>
+        When the contents of the ‘SC CAP LIB’ plate have been transferred to the ‘SC CAP LIB PCR’ plate and completed PCR amplification 
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘SC CAP LIB’ → ‘SC CAP LIB PCR’ plate complete"
+      instruction_summary: "‘SC CAP LIB’ → ‘SC CAP LIB PCR’ plate complete"
+      instructions: >
+        <li>Prepare to purify the ‘SC CAP LIB PCR’ plate.</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC CAP LIB PCR-XP plate’ button.</li>
+
+  SC cap lib PCR-XP:
+    pending:
+      state_text: "‘SC CAP LIB PCR’ plate awaiting purification and transfer to ‘SC CAP LIB PCR-XP’ plate"
+      instruction_summary: "Capture and amplified libraries in the ‘SC CAP LIB PCR’ plate will be purified and transferred to a fresh Eppendorf plate to generate the ‘SC CAP LIB PCR-XP’ plate."
+      instructions: >
+        SOP: “SC: Purification of captured and amplified libraries”
+
+        <li>Print ‘SC CAP LIB PCR-XP’ label and place on a fresh Eppendorf plate (‘SC CAP LIB PCR-XP’).</li>
+        <li>Run SOP.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC CAP LIB PCR’ → ‘SC CAP LIB PCR-XP’ is in progress"
+      instruction_summary: "‘SC CAP LIB PCR’ → ‘SC CAP LIB PCR-XP’ is in progress"
+      instructions: >
+        SOP: “SC: Purification of captured and amplified libraries”
+
+        <h3>QC Required</h3>
+        <li>Click on ‘Create QC Plate’ tab</li>
+        <li>Click on ‘Create Pulldown QC plate’ button</li>
+        </ol>
+
+        <ol>
+        <h3>QC Complete</h3>
+        <li>Click on the ‘Change Plate State’ tab</li>
+        <li>Download Worksheet</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button</li>
+
+    passed:
+      state_text: "‘SC CAP LIB PCR’ → ‘SC CAP LIB PCR-XP’ plate is complete"
+      instruction_summary: "‘SC CAP LIB PCR’ → ‘SC CAP LIB PCR-XP’ plate is complete"
+      instructions: >
+        <li>Prepare to pool the ‘SC CAP LIB PCR-XP plate’</li>
+        <li>Click on the ‘Create Child Plate’ tab.</li>
+        <li>Click on ‘Create SC CAP LIB POOL plate’ button.</li>
+
+  SC cap lib pool:
+    pending:
+      state_text: "‘SC CAP LIB PCR-XP’ libraries awaiting transfer to a fresh ‘SC CAP LIB POOL’ plate."
+      instruction_summary: "Amplified and purified libraries in the ‘SC CAP LIB PCR-XP’ will be transferred to a fresh Eppendorf plate to generate the ‘SC CAP LIB POOL’ plate."
+      instructions: >
+        SOP: “SC: Pooling of captured and amplified libraries”
+
+        <li>Carefully check the index and pool layouts (source and destination) against your worksheet.</li>
+        <li>Print ‘SC CAP LIB POOL’ barcode and place on a fresh Eppendorf plate (‘SC CAP LIB POOL’).</li>
+        <li>Download the worksheet .csv file and save as ‘“STOCK PLATE ID”_SC_CAP_LIB_POOL.csv’ e.g. ‘503656_SC_CAP_LIB_POOL’.</li>
+        <li>Enter QC values for pooling volumes and re-save the file.</li>
+        <li>Run SOP using the worksheet .csv file.</li>
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "‘SC CAP LIB PCR-XP’ → ‘SC CAP LIB POOL’ is in progress"
+      instruction_summary: "‘SC CAP LIB PCR-XP’ → ‘SC CAP LIB POOL’ is in progress"
+      instructions: >
+        SOP: “SC: Pooling of captured and amplified libraries”
+        <br/>
+        When the contents of the ‘SC CAP LIB PCR-XP’ plate have been transferred to the ‘SC CAP LIB POOL’ plate:
+        <li>Click on the ‘Change Plate State’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+
+    passed:
+      state_text: "‘SC CAP LIB PCR-XP’ → ‘SC CAP LIB POOL’ plate is complete"
+      instruction_summary: "‘SC CAP LIB PCR-XP’ → ‘SC CAP LIB POOL’ plate is complete"
+      instructions:
+        <li>Prepare to transfer the ‘SC CAP POOLED LIBRARY’ to tubes.</li>
+        <li>Print labels and apply to tubes.</li>
