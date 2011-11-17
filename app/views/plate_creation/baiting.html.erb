@@ -14,12 +14,16 @@
             <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
           <% end %>
           <%= f.buttons do %>
-            <%= f.commit_button 'Create Plate' %>
+            <%= f.commit_button 'Create Plate', :'data-theme' => 'b' %>
           <% end %>
         <% end %>
       </div>
 
       <ul id="key" class="ui-block-b">
+        <ul>
+          <li>Carefully check the bait layout against your worksheet.</li>
+          <li>Click on 'Create plate' button.</li>
+        </ul>
         <%- @creation_form.baits.each do |bait| -%>
           <li class="ui-bar">
             <div class="tube-view">
