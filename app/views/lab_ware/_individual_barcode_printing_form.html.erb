@@ -2,9 +2,9 @@
   <%# Hide the details of what is in the label to be printed %>
   <ul data-role="listview" data-inset="true">
     <%= hidden_field_tag(:redirect_to, redirection_url) %>
-    <%= hidden_field_tag :prefix %>
-    <%= hidden_field_tag :number %>
-    <%= hidden_field_tag :study, :value => text %>
+    <%= f.hidden_field :prefix %>
+    <%= f.hidden_field :number %>
+    <%= f.hidden_field :study, :value => text %>
 
     <li data-role="listdivider">
       <%= label_tag :printer, 'Barcode printer' %>
