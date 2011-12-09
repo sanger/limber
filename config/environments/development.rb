@@ -26,23 +26,18 @@ PulldownPipeline::Application.configure do
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Pulldown'
   config.api_connection_options.url           = 'http://localhost:3000/api/1/'
-  # config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
   config.api_connection_options.authorisation = 'development'
 
 
   # Email settings...
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_deliveries = true
+  config.action_mailer.perform_deliveries = false
 
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    :address => "mail.sanger.ac.uk",
-    :port    => 25,
-    :domain  => "EVO18720.internal.sanger.ac.uk"
-  }
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.smtp_settings = { }
 
-  config.admin_email          = "sd9@sanger.ac.uk"
-  config.exception_recipients = "sd9@sanger.ac.uk"
+  config.admin_email          = "nnnnnnnnnnnnnnnn"
+  config.exception_recipients = "nnnnnnnnnnnnnnnn"
 
 end
 
