@@ -79,8 +79,10 @@ module Forms
         wells.each { |well| well_to_pool[well] = pool_id }
       end
 
+      # We assume that if a well is unpooled then it is in the same pool as the previous pool.
+      prior_pool = nil
       callback = lambda do |row, column|
-        pool = well_to_pool["#{row}#{column}"] or next
+        prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) or next
         [ "#{row}#{column}", pool ]
       end
       yield(callback)
