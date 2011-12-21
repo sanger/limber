@@ -3,7 +3,7 @@
   <%= individual_barcode_printing_form(
         @presenter.plate.barcode,
         :redirection_url => pulldown_plate_path(@presenter.plate),
-        :text            => "#{@presenter.plate.plate_purpose.name} #{@presenter.plate.stock_plate.barcode.number}"
+        :text            => "#{@presenter.plate.plate_purpose.name} #{@presenter.plate.stock_plate.try(:barcode).try(:number)}"
   ) %>
 <% end %>
 
