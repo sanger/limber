@@ -23,6 +23,7 @@ module Forms
           catch(:unacceptable_tag_layout) { [ layout.name, tags_by_row(layout) ] }
         end.compact
       ]
+
       @tag_layout_templates.delete_if { |template| not @tag_groups.key?(template.name) }
     end
     private :generate_layouts_and_groups
@@ -83,7 +84,8 @@ module Forms
       prior_pool = nil
       callback = lambda do |row, column|
         prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) or next
-        [ "#{row}#{column}", pool ]
+        emptiness = well_to_pool["#{row}#{column}"].nil?
+        [ "#{row}#{column}", pool, emptiness ]  # Triplet: [ A1, pool_id, emptiness ]
       end
       yield(callback)
     end
@@ -113,27 +115,33 @@ module Forms
 
     def tags_by_row(layout)
       structured_well_locations do |tagged_wells|
-        tags, groups = tag_ids(layout), send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
-        pools = groups.map { |pool| pool.map { |w| w.try(:last) } }.flatten.compact.uniq
-        groups.each_with_index do |current_group, group|
-          if group > 0
-            prior_group = groups[group-1]
+        tags   = tag_ids(layout)
+        groups = send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
+        pools  = groups.map { |pool| pool.map { |w| w.try(:[], 1) } }.flatten.compact.uniq
 
-            current_group.each_with_index do |(well,pool_id), index|
+        groups.each_with_index do |current_group, group_index|
+          if group_index > 0
+            prior_group = groups[group_index - 1]
+
+            current_group.each_with_index do |(well,pool_id,emptiness), index|
               break if prior_group.size <= index
-              pool_id ||= (index.zero? ? prior_group.last : current_group[index-1]).last
-              next if prior_group[index].last != pool_id
-              current_group.push([ well, pool_id ])
-              current_group[index] = [nil, pool_id]
+              pool_id ||= (index.zero? ? prior_group.last : current_group[index-1])[1]
+              next if prior_group[index][1] != pool_id
+
+              current_group.push([ well, pool_id, emptiness ])
+              current_group[index] = [nil, pool_id, true]
             end
           end
 
-          current_group.each_with_index do |(well, pool_id), index|
+          next if current_group.map(&:last).compact.uniq == [ true ] # Are all of the wells "empty"?
+
+          current_group.each_with_index do |(well, pool_id, _), index|
             throw :unacceptable_tag_layout if tags.size <= index
             tagged_wells[well] = [ pools.index(pool_id)+1, tags[index] ] unless well.nil?
           end
         end
       end.to_a
+
     end
     private :tags_by_row
 
