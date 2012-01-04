@@ -23,6 +23,7 @@ module Forms
           catch(:unacceptable_tag_layout) { [ layout.name, tags_by_row(layout) ] }
         end.compact
       ]
+
       @tag_layout_templates.delete_if { |template| not @tag_groups.key?(template.name) }
     end
     private :generate_layouts_and_groups
@@ -71,29 +72,42 @@ module Forms
     end
     private :structured_well_locations
 
-    def group_wells_of_plate_in_columns
+    # This returns an array of well location to pool pairs.  The 'walker' is responsible for actually doing the walking
+    # of the wells that are acceptable, and it calls back with the location of the well being processed.
+    def group_wells(&walker)
       well_to_pool = {}
       plate.pools.each do |pool_id, wells|
         wells.each { |well| well_to_pool[well] = pool_id }
       end
 
-      (1..12).map do |column|
-        [].tap do |wells|
-          ('A'..'H').each { |row| wells.push([ "#{row}#{column}", well_to_pool["#{row}#{column}"] ]) }
+      # We assume that if a well is unpooled then it is in the same pool as the previous pool.
+      prior_pool = nil
+      callback = lambda do |row, column|
+        prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) or next
+        emptiness = well_to_pool["#{row}#{column}"].nil?
+        [ "#{row}#{column}", pool, emptiness ]  # Triplet: [ A1, pool_id, emptiness ]
+      end
+      yield(callback)
+    end
+    private :group_wells
+
+    def group_wells_of_plate_in_columns
+      group_wells do |well_location_pool_pair|
+        (1..12).map do |column|
+          ('A'..'H').map do |row|
+            well_location_pool_pair.call(row, column)
+          end
         end
       end
     end
     private :group_wells_of_plate_in_columns
 
     def group_wells_of_plate_in_rows
-      well_to_pool = {}
-      plate.pools.each do |pool_id, wells|
-        wells.each { |well| well_to_pool[well] = pool_id }
-      end
-
-      ('A'..'H').map do |row|
-        [].tap do |wells|
-          (1..12).each { |column| wells.push([ "#{row}#{column}", well_to_pool["#{row}#{column}"] ]) }
+      group_wells do |well_location_pool_pair|
+        ('A'..'H').map do |row|
+          (1..12).map do |column|
+            well_location_pool_pair.call(row, column)
+          end
         end
       end
     end
@@ -101,26 +115,33 @@ module Forms
 
     def tags_by_row(layout)
       structured_well_locations do |tagged_wells|
-        tags, groups = tag_ids(layout), send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
-        pools = groups.map { |pool| pool.map(&:last) }.flatten.uniq
-        groups.each_with_index do |current_group, group|
-          if group > 0
-            prior_group = groups[group-1]
+        tags   = tag_ids(layout)
+        groups = send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
+        pools  = groups.map { |pool| pool.map { |w| w.try(:[], 1) } }.flatten.compact.uniq
 
-            current_group.each_with_index do |(well,pool_id), index|
+        groups.each_with_index do |current_group, group_index|
+          if group_index > 0
+            prior_group = groups[group_index - 1]
+
+            current_group.each_with_index do |(well,pool_id,emptiness), index|
               break if prior_group.size <= index
-              next if prior_group[index].last != pool_id
-              current_group.push([ well, pool_id ])
-              current_group[index] = [nil, pool_id]
+              pool_id ||= (index.zero? ? prior_group.last : current_group[index-1])[1]
+              next if prior_group[index][1] != pool_id
+
+              current_group.push([ well, pool_id, emptiness ])
+              current_group[index] = [nil, pool_id, true]
             end
           end
 
-          current_group.each_with_index do |(well, pool_id), index|
+          next if current_group.map(&:last).compact.uniq == [ true ] # Are all of the wells "empty"?
+
+          current_group.each_with_index do |(well, pool_id, _), index|
             throw :unacceptable_tag_layout if tags.size <= index
             tagged_wells[well] = [ pools.index(pool_id)+1, tags[index] ] unless well.nil?
           end
         end
       end.to_a
+
     end
     private :tags_by_row
 
