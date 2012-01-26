@@ -31,26 +31,21 @@ module Forms
     end
 
     def wells
-      ('A'..'H').inject([]) do |a,r|
-        a.concat(
-          (1..12).map do |c|
-            location = "#{r}#{c}"
-            bait     = bait_library_layout_preview[location]
-            aliquot  = bait # Fudge, will be nil if no bait
+      plate.locations_in_rows.map do |location|
+        location = "#{r}#{c}"
+        bait     = bait_library_layout_preview[location]
+        aliquot  = bait # Fudge, will be nil if no bait
 
-            Hashie::Mash.new(
-              :location => location,
-              :bait     => bait,
-              :aliquots => [aliquot].compact
-            )
-          end
+        Hashie::Mash.new(
+          :location => location,
+          :bait     => bait,
+          :aliquots => [aliquot].compact
         )
-        a
       end
     end
 
     def wells_by_row
-      PlateWalking::Walker.new(wells)
+      PlateWalking::Walker.new(plate, wells)
     end
   end
 end

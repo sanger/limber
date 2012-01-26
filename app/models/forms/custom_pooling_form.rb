@@ -69,7 +69,7 @@ module Forms
     end
 
     def source_wells_by_row
-      PlateWalking::Walker.new(plate.wells)
+      PlateWalking::Walker.new(plate, plate.wells)
     end
 
     def wells_by_row
