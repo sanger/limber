@@ -8,8 +8,12 @@
       <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate_link ui-link-inherit") do %>
         <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
         <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
-        <p>Created: <%= plate.created_at.to_formatted_s(:date_created) %>
-        Type: <%= plate.plate_purpose.name %></p>
+        <% if plate.stock_plate.present? %><p>Stock plate: <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
+        <p>
+          <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
+          Created: <%= plate.created_at.to_formatted_s(:date_created) %>
+          Type: <%= plate.plate_purpose.name %>
+        </p>
       <% end -%>
       </li>
     <% end -%>
