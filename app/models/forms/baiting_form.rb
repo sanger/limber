@@ -32,7 +32,6 @@ module Forms
 
     def wells
       plate.locations_in_rows.map do |location|
-        location = "#{r}#{c}"
         bait     = bait_library_layout_preview[location]
         aliquot  = bait # Fudge, will be nil if no bait
 
