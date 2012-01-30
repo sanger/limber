@@ -11,7 +11,8 @@ module Pulldown::TagLayoutTemplate::WalkWellsInPools
         current_group.each_with_index do |(well,pool_id,emptiness), index|
           break if prior_group.size <= index
           pool_id ||= (index.zero? ? prior_group.last : current_group[index-1])[1]
-          next if prior_group[index][1] != pool_id
+          prior_pool_id = prior_group[index][1]
+          next if (prior_pool_id != pool_id) or prior_pool_id.nil?
 
           current_group.push([ well, pool_id, emptiness ])
           current_group[index] = [nil, pool_id, true]

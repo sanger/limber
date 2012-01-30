@@ -18,9 +18,10 @@ class Pulldown::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
     # We assume that if a well is unpooled then it is in the same pool as the previous pool.
     prior_pool = nil
     callback = lambda do |row, column|
-      prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) or next
+      prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) #or next
       emptiness = well_to_pool["#{row}#{column}"].nil?
-      [ "#{row}#{column}", pool, emptiness ]  # Triplet: [ A1, pool_id, emptiness ]
+      well = pool.nil? ? nil : "#{row}#{column}"
+      [ well, pool, emptiness ]  # Triplet: [ A1, pool_id, emptiness ]
     end
     yield(callback)
   end
