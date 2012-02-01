@@ -75,8 +75,12 @@ module Forms
     def wells_by_row
       rows = Hash[('A'..'H').map { |row| [ row, [] ] }]
 
-      transfers.values.uniq!.each do |location|
-        rows[location.sub(/\d+/,'')] << CustomPoolingForm::Well.new(location)
+      transfers.values.uniq!.map do |location|
+        [PlateWalking::Walker::Location.new(location), CustomPoolingForm::Well.new(location)]
+      end.group_by do |location, _|
+        location.row
+      end.map do |row, location_and_well_pairs|
+        rows[row] = location_and_well_pairs.sort { |(a,_),(b,_)| a.column <=> b.column }.map(&:last)
       end
 
       rows
