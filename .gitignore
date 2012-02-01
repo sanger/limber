@@ -4,3 +4,4 @@ log/*.log
 tmp/
 public/stylesheets/*.css
 .DS_Store
+.sass-cache/
