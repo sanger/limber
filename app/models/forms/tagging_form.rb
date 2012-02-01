@@ -14,7 +14,7 @@ module Forms
     def generate_layouts_and_groups
       maximum_pool_size = plate.pools.map(&:last).map!(&:size).max
 
-      @tag_layout_templates = api.tag_layout_template.all.select do |template|
+      @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select do |template|
         template.tag_group.tags.size >= maximum_pool_size
       end
 
@@ -47,16 +47,11 @@ module Forms
         ]
     end
 
-
     # Creates a 96 element array of tags from the tag array passed in.
     # If the input is longer than 96 it takes the first 96 if shorter
     # it loops the elements to make up the 96.
     def first_96_tags(tags)
       Array.new(96) { |i| tags[(i % tags.size)] }
-    end
-
-    def tag_ids(layout)
-      layout.tag_group.tags.keys.map!(&:to_i).sort
     end
 
     def structured_well_locations(&block)
@@ -72,76 +67,8 @@ module Forms
     end
     private :structured_well_locations
 
-    # This returns an array of well location to pool pairs.  The 'walker' is responsible for actually doing the walking
-    # of the wells that are acceptable, and it calls back with the location of the well being processed.
-    def group_wells(&walker)
-      well_to_pool = {}
-      plate.pools.each do |pool_id, wells|
-        wells.each { |well| well_to_pool[well] = pool_id }
-      end
-
-      # We assume that if a well is unpooled then it is in the same pool as the previous pool.
-      prior_pool = nil
-      callback = lambda do |row, column|
-        prior_pool = pool = (well_to_pool["#{row}#{column}"] || prior_pool) or next
-        emptiness = well_to_pool["#{row}#{column}"].nil?
-        [ "#{row}#{column}", pool, emptiness ]  # Triplet: [ A1, pool_id, emptiness ]
-      end
-      yield(callback)
-    end
-    private :group_wells
-
-    def group_wells_of_plate_in_columns
-      group_wells do |well_location_pool_pair|
-        (1..12).map do |column|
-          ('A'..'H').map do |row|
-            well_location_pool_pair.call(row, column)
-          end
-        end
-      end
-    end
-    private :group_wells_of_plate_in_columns
-
-    def group_wells_of_plate_in_rows
-      group_wells do |well_location_pool_pair|
-        ('A'..'H').map do |row|
-          (1..12).map do |column|
-            well_location_pool_pair.call(row, column)
-          end
-        end
-      end
-    end
-    private :group_wells_of_plate_in_rows
-
     def tags_by_row(layout)
-      structured_well_locations do |tagged_wells|
-        tags   = tag_ids(layout)
-        groups = send(:"group_wells_of_plate_in_#{layout.direction.pluralize}")
-        pools  = groups.map { |pool| pool.map { |w| w.try(:[], 1) } }.flatten.compact.uniq
-
-        groups.each_with_index do |current_group, group_index|
-          if group_index > 0
-            prior_group = groups[group_index - 1]
-
-            current_group.each_with_index do |(well,pool_id,emptiness), index|
-              break if prior_group.size <= index
-              pool_id ||= (index.zero? ? prior_group.last : current_group[index-1])[1]
-              next if prior_group[index][1] != pool_id
-
-              current_group.push([ well, pool_id, emptiness ])
-              current_group[index] = [nil, pool_id, true]
-            end
-          end
-
-          next if current_group.map(&:last).compact.uniq == [ true ] # Are all of the wells "empty"?
-
-          current_group.each_with_index do |(well, pool_id, _), index|
-            throw :unacceptable_tag_layout if tags.size <= index
-            tagged_wells[well] = [ pools.index(pool_id)+1, tags[index] ] unless well.nil?
-          end
-        end
-      end.to_a
-
+      structured_well_locations { |tagged_wells| layout.generate_tag_layout(plate, tagged_wells) }.to_a
     end
     private :tags_by_row
 

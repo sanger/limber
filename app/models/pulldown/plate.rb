@@ -1,5 +1,6 @@
 class Pulldown::Plate < Sequencescape::Plate
   include Pulldown::PooledWells
+  include Pulldown::CommonPlateBehaviour
 
   # Returns a plate instance that has been coerced into the appropriate class if necessary.  Typically
   # this is only done at the end of the pipelines when extra functionality is required when dealing
