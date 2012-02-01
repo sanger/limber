@@ -137,9 +137,7 @@
     // Trap the carriage return sent by the swipecard reader
     $("#card_id").live("keydown", function(e) {
       var code=e.charCode || e.keyCode;
-      if (code==13) {
-        return false;
-      }
+      if (code==13) return false;
     });
 
     SCAPE.displayReason();
