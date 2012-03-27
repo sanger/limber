@@ -43,9 +43,9 @@
       </div>
     </div>
   <% end %>
+
+
+  <script type="text/javascript">
+    var coloursByLocation = <%= colours_by_location.to_json.html_safe %>;
+  </script>
 <% end %>
-
-
-<script type="text/javascript">
-  var coloursByLocation = <%= colours_by_location.to_json.html_safe %>;
-</script>
