@@ -32,4 +32,7 @@ PulldownPipeline::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.admin_email          = "nnnnnnnnnnnnnnnn"
+  config.exception_recipients = "nnnnnnnnnnnnnnnn"
 end
