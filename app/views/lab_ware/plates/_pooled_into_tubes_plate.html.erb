@@ -16,6 +16,6 @@
 
   <h2>Tubes</h2>
   <% presenter.plate.tubes.each do |tube| %>
-    <%= render :partial => 'lab_ware/pooled_tube.html.erb', :locals => { :tube => tube } %>
+    <%= render :partial => 'lab_ware/pooled_tube.html.erb', :locals => {:tube => tube, :source => presenter.plate.source_of(tube) } %>
   <% end %>
 <% end %>

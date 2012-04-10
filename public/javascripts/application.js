@@ -33,6 +33,8 @@
 
   };
 
+  SCAPE.dim = function() { $(this).fadeTo('fast', 0.2); };
+
   // Extend jQuery...
   $.extend({
     createElement: function(elementName){
@@ -171,7 +173,6 @@
 
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
       substitutionTemplate  : _.template(SCAPE.substitution_tag_template),
-      dim              : function() { $(this).fadeTo('fast', 0.2); },
 
       updateTagpalette  : function() {
         var tagpalette = $('#tag-palette');
@@ -235,7 +236,6 @@
         tags.each(function(index) {
           $('#tagging-plate #aliquot_'+this[0]).
             hide('slow').text(this[1][1]).
-            removeClass().
             addClass('aliquot colour-'+this[1][0]).
             addClass('tag-'+this[1][1]).
             show('slow');
@@ -270,30 +270,20 @@
   });
 
   $('#custom-pooling-page').live('pageinit',function(event) {
-    var sourceWell        = null;
-    var destinationWell   = null;
+    var sourceWell        = undefined;
+    var destinationWell   = undefined;
 
-    function showSourceAliquots(){
-      destinationWell = null;
-      undimAliquots();
-    }
-
-    function undimAliquots(){
+     var undimAliquots = function(){
       $('.well, .aliquot').css('opacity', '1.0');
-    }
+    };
 
-    function dim(){
-      $(this).css('opacity', '0.2');
-    }
-
-    function setPoolingValue(sourceWell, destinationWell){
+    var setPoolingValue = function(sourceWell, destinationWell) {
       var destination        = getLocation(destinationWell);
       var oldDestination     = getLocation(sourceWell);
       var oldDestinationWell = $('#destination_plate .well[data-location    = ' + oldDestination + ']');
 
       sourceWell.find('.aliquot').
         text(destination).
-        removeClass().
         addClass('aliquot source_aliquot ' + coloursByLocation[destination]).
         attr('data-destination-well', destination);
 
@@ -305,8 +295,8 @@
 
       $('#destination_plate .well[data-aliquot-count=0]').children().remove();
 
-      setupHighLightTransfers();
-    }
+      // setupHighLightTransfers();
+    };
 
     function resetAliquotCounts(){
       var poolingDestinations = $('.source_well .aliquot').map(function(_, el){
@@ -350,21 +340,22 @@
     }
 
     function aliquotsByDestination(el){
-      return $('.source_aliquot').not(':contains(' + getLocation(el) +')');
+      return $('.source_aliquot').not(':contains('+ getLocation(el) +')');
     }
 
-    function setupHighLightTransfers(){
-      $('#destination_plate .aliquot').toggle(
-        function(){
-        $('#destination_plate .aliquot').not(this).each(dim);
-        aliquotsByDestination(this).each(dim);
-      }, undimAliquots);
-    }
+    // function setupHighLightTransfers(){
+    //   $('#destination_plate .aliquot').toggle(
+    //     function(){
+    //     $('#destination_plate .aliquot').not(this).each(SCAPE.dim);
+    //     aliquotsByDestination(this).each(SCAPE.dim);
+    //   }, undimAliquots);
+    // }
 
     function poolingHandler(){
       setPoolingValue(sourceWell, $(this));
-      showSourceAliquots();
+      destinationWell = undefined;
       $('#destination_plate .well').unbind();
+      undimAliquots();
     }
 
     function initialisePoolValues(){
@@ -395,26 +386,33 @@
     initialiseTransferFormValues();
 
     //Change click to toggle so that operation can be aborted...
-    $('.source_well').click(function(){
-      sourceWell    = $(this);
-      var sourceAliquot = sourceWell.find('.aliquot');
-      var sourcePool    = sourceAliquot.data('pool');
+    $('.source_well').toggle(
+      function(){
+        sourceWell    = $(this);
+        var sourceAliquot = sourceWell.find('.aliquot');
+        var sourcePool    = sourceAliquot.data('pool');
 
-      // Dim other source wells...
-      $('.source_aliquot').not(sourceAliquot).each(dim);
+        // Dim other source wells...
+        $('.source_aliquot').not(sourceAliquot).each(SCAPE.dim);
 
-      // Remove highlighting behaviour from aliquots on destination plate
-      $('#destination_plate .aliquot').unbind();
+        // Remove highlighting behaviour from aliquots on destination plate
+        $('#destination_plate .aliquot').unbind();
 
-      // dim wells used by other submissions...
-      $('#destination_plate .well').not('[data-pool=""]').not('[data-pool=' + sourcePool + ']').each(dim);
+        // dim wells used by other submissions...
+        $('#destination_plate .well').not('[data-pool=""]').not('[data-pool=' + sourcePool + ']').each(SCAPE.dim);
 
-      // Add the handler to unused wells or wells used by this submission...
-      $('#destination_plate .well').filter('[data-pool=' + sourcePool +'],[data-pool=""]').click(poolingHandler);
-    });
+        // Add the handler to unused wells or wells used by this submission...
+        $('#destination_plate .well').filter('[data-pool=' + sourcePool +'],[data-pool=""]').click(poolingHandler);
+      },
+
+      function() {
+        $('#destination_plate .well').unbind();
+        undimAliquots();
+      }
+    );
 
     resetAliquotCounts();
-    setupHighLightTransfers();
+    // setupHighLightTransfers();
   });
 })(window, jQuery);
 

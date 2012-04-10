@@ -37,4 +37,9 @@ class Pulldown::PooledPlate < Sequencescape::Plate
     transfers = source_transfers.first.transfers
     WELLS_IN_COLUMN_MAJOR_ORDER.map(&transfers.method(:[])).compact
   end
+
+  def source_of(tube)
+    self.source_transfers.first.transfers.key(tube)
+  end
+
 end
