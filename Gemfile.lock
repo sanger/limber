@@ -1,4 +1,10 @@
 GIT
+  remote: git+ssh://git@github.com/sanger/psd_logger.git
+  revision: e16d106be39ea096f95787a927b8ce24ec522bde
+  specs:
+    psd_logger (0.1.5)
+
+GIT
   remote: git+ssh://git@github.com/sanger/sanger_barcode.git
   revision: e5701fdcf759500c482163cd10c0878d24906c89
   specs:
@@ -181,6 +187,7 @@ DEPENDENCIES
   formtastic (~> 1.2.3)
   hashie (~> 1.0.0)
   launchy
+  psd_logger!
   rails (~> 3.0.7)
   rake (~> 0.9.2)
   ruby-debug19
