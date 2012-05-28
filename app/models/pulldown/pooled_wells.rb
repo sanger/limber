@@ -1,4 +1,4 @@
-module Pulldown::PooledWells
+module IlluminaB::PooledWells
   def after_load
     wells_to_pools = {}
     self.pools.each do |pool_id,wells|

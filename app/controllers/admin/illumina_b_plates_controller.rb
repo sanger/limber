@@ -1,4 +1,4 @@
-class Admin::PulldownPlatesController < PlatesController
+class Admin::IlluminaBPlatesController < PlatesController
 
   # This controller shouldn't be used for "showing" labware directly
   # unless it's part of an edit.

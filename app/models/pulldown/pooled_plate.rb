@@ -1,6 +1,6 @@
-class Pulldown::PooledPlate < Sequencescape::Plate
-  include Pulldown::PooledWells
-  include Pulldown::CommonPlateBehaviour
+class IlluminaB::PooledPlate < Sequencescape::Plate
+  include IlluminaB::PooledWells
+  include IlluminaB::CommonPlateBehaviour
 
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
@@ -12,7 +12,7 @@ class Pulldown::PooledPlate < Sequencescape::Plate
       send(
         :transfers_without_tube_mapping=, Hash[
           transfers.map do |well, tube_json|
-            [ well, ::Pulldown::MultiplexedLibraryTube.new(api, tube_json, false) ]
+            [ well, ::IlluminaB::MultiplexedLibraryTube.new(api, tube_json, false) ]
           end
         ]
       )

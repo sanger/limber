@@ -1,4 +1,4 @@
-module Pulldown::CommonPlateBehaviour
+module IlluminaB::CommonPlateBehaviour
   def rows
     case self.size
     when 96  then ('A'..'H')

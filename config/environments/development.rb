@@ -1,4 +1,4 @@
-PulldownPipeline::Application.configure do
+IlluminaBPipeline::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -24,7 +24,7 @@ PulldownPipeline::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
-  config.api_connection_options.namespace     = 'Pulldown'
+  config.api_connection_options.namespace     = 'IlluminaB'
   config.api_connection_options.url           = 'http://localhost:3000/api/1/'
   config.api_connection_options.authorisation = 'development'
 

@@ -1,3 +1,3 @@
-class Pulldown::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
+class IlluminaB::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
 
 end

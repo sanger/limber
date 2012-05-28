@@ -33,7 +33,7 @@ class SearchController < ApplicationController
   def collect_all_outstanding_plates
     plate_search = api.search.find(Settings.searches['Find pulldown plates'])
     @ongoing = plate_search.all(
-      Pulldown::Plate,
+      IlluminaB::Plate,
       :state => [ 'pending', 'started', 'passed', 'cancelled', 'failed' ]
     )
   end
@@ -41,7 +41,7 @@ class SearchController < ApplicationController
 
   def collect_all_ongoing_plates
     plate_search = api.search.find(Settings.searches['Find pulldown plates'])
-    @ongoing = plate_search.all(Pulldown::Plate, :state => [ 'pending', 'started', 'passed' ])
+    @ongoing = plate_search.all(IlluminaB::Plate, :state => [ 'pending', 'started', 'passed' ])
   end
   private :collect_all_ongoing_plates
 

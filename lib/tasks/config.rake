@@ -1,7 +1,7 @@
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
   task :generate => :environment do
-    api = Sequencescape::Api.new(PulldownPipeline::Application.config.api_connection_options)
+    api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
 
     # Build the configuration file based on the server we are connected to.
     configuration = {}
@@ -35,36 +35,18 @@ namespace :config do
           :state_changer_class => 'StateChangers::DefaultStateChanger'
         }
       end.tap do |presenters|
-        # WGS plates
-        presenters["WGS stock DNA"].merge!(   :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["WGS post-Cov"].merge!(    :presenter_class => "Presenters::QcCapablePlatePresenter")
-        presenters["WGS post-Cov-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
+        # Illumina-B plates
+        presenters['ILB_STD_INPUT'].merge!(:presenter_class => 'Presenters::StockPlatePresenter')
 
-        presenters["WGS lib"].merge!(                 :form_class => "Forms::TransferForm")
-        presenters["WGS lib PCR"].merge!(             :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["WGS lib PCR-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
-        presenters["WGS lib pool"].merge!(:form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
 
-        # SC plates
-        presenters["SC stock DNA"].merge!(                                                               :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["SC lib"].merge!(                  :form_class => "Forms::TransferForm")
-        presenters["SC cap lib PCR"].merge!(     :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["SC hyb"].merge!(            :form_class => "Forms::BaitingForm",       :presenter_class => "Presenters::BaitedPresenter")
-        presenters["SC cap lib pool"].merge!(  :form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
-
-        # ISC plates
-        presenters["ISC stock DNA"].merge!(                                                              :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["ISC lib"].merge!(                 :form_class => "Forms::TransferForm")
-        presenters["ISC lib PCR"].merge!(             :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["ISC lib pool"].merge!(:form_class => "Forms::CustomPoolingForm", :presenter_class => "Presenters::CustomPooledPresenter")
-        presenters["ISC hyb"].merge!(           :form_class => "Forms::BaitingForm",       :presenter_class => "Presenters::BaitedPresenter")
-        presenters["ISC cap lib pool"].merge!( :form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
       end
 
       puts "Preparing plate purpose forms, presenters, and state changers ..."
 
       api.plate_purpose.all.each do |plate_purpose|
-        next unless plate_purpose.name == 'Pulldown QC plate' or plate_purpose.name =~ /^(WGS|SC|ISC)\s/ # Ignore unnecessary plates
+        # next unless plate_purpose.name == 'Pulldown QC plate' or plate_purpose.name =~ /^(WGS|SC|ISC)\s/ # Ignore unnecessary plates
+        next unless ['ILB_STD_INPUT', 'ILB_STD_PCRXP'].incude?(plate_purpose.name)
+
         plate_purposes[plate_purpose.uuid] = name_to_details[plate_purpose.name].dup.merge(
           :name => plate_purpose.name
         )

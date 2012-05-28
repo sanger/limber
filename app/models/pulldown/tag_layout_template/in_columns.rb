@@ -1,4 +1,4 @@
-module Pulldown::TagLayoutTemplate::InColumns
+module IlluminaB::TagLayoutTemplate::InColumns
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
       (1..12).map do |column|

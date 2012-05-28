@@ -1,4 +1,4 @@
-module Pulldown::TagLayoutTemplate::WalkWellsInPools
+module IlluminaB::TagLayoutTemplate::WalkWellsInPools
   def generate_tag_layout(plate, tagged_wells)
     tags   = tag_ids
     groups = group_wells_of_plate(plate)

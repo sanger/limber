@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-PulldownPipeline::Application.load_tasks
+IlluminaBPipeline::Application.load_tasks

@@ -1,4 +1,4 @@
-module Pulldown::TagLayoutTemplate::InInverseColumns
+module IlluminaB::TagLayoutTemplate::InInverseColumns
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
       (1..12).to_a.reverse.map do |column|
