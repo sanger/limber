@@ -20,7 +20,7 @@ gem 'sanger_barcode',
 # and rake tasks are available in development mode:
 group :development, :test do
     gem 'capybara'
-    gem 'cucumber-rails'
+    gem 'cucumber-rails', :require => false
     gem 'launchy'
     gem 'ruby-debug19', :require => 'ruby-debug'
 end
