@@ -5,17 +5,17 @@ IlluminaBPipeline::Application.routes.draw do
     match '/all_outstanding_plates', :action => :all_outstanding_plates
   end
 
-  resources :pulldown_plates, :controller => :plates do
+  resources :illumina_b_plates, :controller => :plates do
     resources :children, :controller => :plate_creation
     resources :tubes,    :controller => :tube_creation
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
   namespace "admin" do
-    resources :pulldown_plates, :only => [:update, :edit], :as => :plates
+    resources :illumina_b_plates, :only => [:update, :edit], :as => :plates
   end
 
-  resources :pulldown_multiplexed_library_tubes, :controller => :tubes do
+  resources :illumina_b_multiplexed_library_tubes, :controller => :tubes do
 
   end
 

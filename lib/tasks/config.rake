@@ -44,7 +44,11 @@ namespace :config do
       puts "Preparing plate purpose forms, presenters, and state changers ..."
 
       api.plate_purpose.all.each do |plate_purpose|
-        next unless ['ILB_STD_INPUT', 'ILB_STD_PCRXP'].incude?(plate_purpose.name)
+        next unless [
+          'ILB_STD_INPUT',
+          'ILB_STD_COVARIS',
+          'ILB_STD_PCRXP'
+        ].include?(plate_purpose.name)
 
         plate_purposes[plate_purpose.uuid] = name_to_details[plate_purpose.name].dup.merge(
           :name => plate_purpose.name
