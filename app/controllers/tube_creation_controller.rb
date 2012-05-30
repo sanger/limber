@@ -4,6 +4,6 @@ class TubeCreationController < CreationController
   end
 
   def redirection_path(form)
-    pulldown_plate_path(form.parent.uuid)
+    illumina_b_plate_path(form.parent.uuid)
   end
 end

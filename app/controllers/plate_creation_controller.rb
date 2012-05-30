@@ -6,6 +6,6 @@ class PlateCreationController < CreationController
   end
 
   def redirection_path(form)
-    pulldown_plate_path(form.child.uuid)
+    illumina_b_plate_path(form.child.uuid)
   end
 end

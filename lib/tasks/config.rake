@@ -36,7 +36,9 @@ namespace :config do
         }
       end.tap do |presenters|
         # Illumina-B plates
-        presenters['ILB_STD_INPUT'].merge!(:presenter_class => 'Presenters::StockPlatePresenter')
+        presenters['ILB_STD_INPUT'].merge!(
+          :presenter_class => 'Presenters::StockPlatePresenter'
+        )
 
 
       end

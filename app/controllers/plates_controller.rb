@@ -15,7 +15,7 @@ class PlatesController < LabWareController
   def fail_wells
     wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)
     if wells_to_fail.empty?
-      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'No wells were selected to fail')
+      redirect_to(illumina_b_plate_path(@lab_ware), :notice => 'No wells were selected to fail')
     else
       api.state_change.create!(
         :user         => current_user_uuid,
@@ -24,7 +24,7 @@ class PlatesController < LabWareController
         :target_state => 'failed',
         :reason       => 'Unspecified'
       )
-      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'Selected wells have been failed')
+      redirect_to(illumina_b_plate_path(@lab_ware), :notice => 'Selected wells have been failed')
     end
   end
 end

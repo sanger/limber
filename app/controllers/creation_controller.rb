@@ -31,7 +31,7 @@ class CreationController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to(
-          pulldown_plate_path(@creation_form.parent),
+          illumina_b_plate_path(@creation_form.parent),
           :alert =>[  "Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages ]
         )
       end
@@ -52,7 +52,7 @@ class CreationController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to(
-          pulldown_plate_path(@creation_form.parent),
+          illumina_b_plate_path(@creation_form.parent),
           :alert => "Cannot create the plate: #{exception.message}"
         )
       end
