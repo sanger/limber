@@ -2,6 +2,7 @@
   <div data-role="header">
     <h1>Sequencescape - Illumina-B Pipeline</h1>
     <%= link_to "Show All Plates", all_outstanding_plates_path, :rel => 'external' %>
+    <%= link_to "Show Stock Plates", all_stock_plates_path, :rel => 'external' %>
   </div>
 
   <%= content do %>
@@ -20,13 +21,21 @@
             </p>
 
             <%= submit_tag "Show Plate",
-              :name           => nil,
+              :name           => 'show_plate',
               :'data-theme'   => "b",
               :class          => "submit",
               :'data-inline'  => "true",
               :'data-icon'    => "arrow-r",
               :'data-iconpos' => "right"
             %>
+            <%= submit_tag "Show My Plates",
+                :name           => 'show_my_plates',
+                :'data-theme'   => "b",
+                :class          => "submit",
+                :'data-inline'  => "true",
+                :'data-icon'    => "search",
+                :'data-iconpos' => "right"
+              %>
           <% end %>
         <% end %>
 
