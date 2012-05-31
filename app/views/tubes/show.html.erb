@@ -35,7 +35,7 @@
     <%= section do %>
       <%= individual_barcode_printing_form(
             @presenter.tube.barcode,
-            :redirection_url => pulldown_multiplexed_library_tube_path(@presenter.tube),
+            :redirection_url => illumina_b_multiplexed_library_tube_path(@presenter.tube),
             :text            => 'MX Library tube'
       ) %>
     <% end %>

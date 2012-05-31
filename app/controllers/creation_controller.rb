@@ -19,7 +19,7 @@ class CreationController < ApplicationController
   end
 
   def new
-    @creation_form = create_form(params.merge(:parent_uuid => params[:pulldown_plate_id]))
+    @creation_form = create_form(params.merge(:parent_uuid => params[:illumina_b_plate_id]))
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
