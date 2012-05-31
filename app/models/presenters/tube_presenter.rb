@@ -48,7 +48,7 @@ module Presenters
     end
 
     def lab_ware_form_details(view)
-      { :url => view.pulldown_multiplexed_library_tube_path(self.tube), :as  => :tube }
+      { :url => view.illumina_b_multiplexed_library_tube_path(self.tube), :as  => :tube }
     end
   end
 end
