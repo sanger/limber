@@ -1,3 +1,15 @@
+<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">
+     	<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />
+     	<label for="radio-choice-1">Summary</label>
+
+     	<input type="radio" name="radio-choice-1" id="radio-choice-2" value="pools-view"  />
+     	<label for="radio-choice-2">Pools</label>
+
+     	<input type="radio" name="radio-choice-1" id="radio-choice-3" value="samples-view"  />
+     	<label for="radio-choice-3">Samples</label>
+
+</fieldset>
+
 <table <%= "id='#{id ||= "plate"}'" %>class="plate-view">
   <thead>
     <tr>
@@ -27,3 +39,25 @@
     <% end %>
   </tbody>
 </table>
+
+<div><br/><br/></div>
+<ul id="pools-information" class="information" style="display:none;" data-role="listview" data-inset="true">
+  <% @new_pools.each do |pool_id, pool| -%>
+    <li data-role="list-divider">Pool <%= pool_id %></li>
+  <li>
+    <%= pool[:wells].join(', ') %>
+    <br/>
+
+    <h3>Insert Size:</h3>
+    From: <%= pool[:insert_size][:from] %> - To: <%= pool[:insert_size][:to] %>
+    <br/>
+  </li>
+
+  <% end -%>
+</ul>
+
+<ul id="samples-information" style="display:none;">
+  Samples
+</ul>
+
+<div><br/><br/></div>
