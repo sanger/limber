@@ -1,3 +1,5 @@
-<h2>Plate Status - <%= presenter.plate.state.titleize %></h2>
-<%= render :partial => "plate", :locals => {:plate_presenter => presenter}  %>
-<%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+<div id="plate-summary-div">
+  <h2>Plate Status - <%= presenter.plate.state.titleize %></h2>
+  <%= render :partial => "plate", :locals => {:plate_presenter => presenter}  %>
+  <%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+</div>

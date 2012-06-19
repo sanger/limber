@@ -31,6 +31,14 @@
     '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
     '</li>',
 
+  controlTemplate: '<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />' +
+  '<label for="radio-choice-1">Summary</label>' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-2" value="pools-view"  />' +
+  '<label for="radio-choice-2">Pools</label>' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-3" value="samples-view"  />' +
+  '<label for="radio-choice-3">Samples</label> </fieldset>',
+
   displayReason: function() {
     if($('.reason:visible').length === 0) {
       $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
@@ -43,7 +51,10 @@
 
   },
 
-  dim: function() { $(this).fadeTo('fast', 0.2); },
+  dim: function() { 
+    $(this).fadeTo('fast', 0.2);
+    return this;
+  },
 
   PlateViewModel: function(plate, plateElement) {
     // Using the 'that' pattern...
@@ -108,9 +119,10 @@
     };
   },
 
-  illuminaBPlateView: function(plate, control) {
+  illuminaBPlateView: function(plate) {
     var plateElement = $(this);
-    control = $(control);
+    plateElement.before(SCAPE.controlTemplate);
+    var control = $('#plate-view-control');
 
     var viewModel = new SCAPE.PlateViewModel(plate, plateElement);
 
@@ -124,7 +136,8 @@
 
   // Extend jQuery prototype...
   $.extend($.fn, {
-    illuminaBPlateView: SCAPE.illuminaBPlateView
+    illuminaBPlateView: SCAPE.illuminaBPlateView,
+    dim:                SCAPE.dim
   });
 
 
@@ -180,6 +193,10 @@
     };
 
     $('.navbar-link').live('click', SCAPE.linkHandler);
+
+    // Set up the plate element as an illuminaBPlate...
+    $('#plate').illuminaBPlateView(SCAPE.plate);
+
   });
 
   $('#plate-show-page').live('pageinit', function(event){
@@ -205,9 +222,6 @@
       });
     }
     );
-
-    // Set up the plate element as an illuminaBPlate...
-    $('#plate').illuminaBPlateView(SCAPE.plate, '#plate-view-control');
 
     // State changes reasons...
     SCAPE.displayReason();
@@ -263,7 +277,7 @@
         var originalTag   = sourceAliquot.text();
 
         // Dim other tags...
-        $('.aliquot').not('.tag-'+originalTag).each(SCAPE.dim);
+        $('.aliquot').not('.tag-'+originalTag).dim();
 
         SCAPE.updateTagpalette();
 

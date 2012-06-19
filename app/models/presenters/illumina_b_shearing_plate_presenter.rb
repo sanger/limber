@@ -32,9 +32,6 @@ module Presenters
       end
     end
 
-    # The current state of the plate is delegated to the plate
-    delegate :state, :to => :plate
-
     write_inheritable_attribute :authenticated_tab_states, {
       :pending    =>  [ 'summary-button', 'plate-state-button' ],
       :started    =>  [ 'plate-creation-button', 'summary-button', 'plate-state-button' ],

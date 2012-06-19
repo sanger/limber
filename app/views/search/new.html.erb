@@ -1,8 +1,13 @@
 <%= page(:'search-page') do %>
   <div data-role="header">
     <h1>Sequencescape - Illumina-B Pipeline</h1>
-    <%= link_to "Show All Plates", all_outstanding_plates_path, :rel => 'external' %>
-    <%= link_to "Show Stock Plates", all_stock_plates_path, :rel => 'external' %>
+<div data-role="navbar">
+	<ul>
+    <li><a href="<%= search_path %>"  >Search</a></li>
+    <li><a href="<%= all_stock_plates_path %>" >All Stock Plates</a></li>
+    <li><a href="<%= all_outstanding_plates_path %>" >All Plates</a></li>
+	</ul>
+</div>
   </div>
 
   <%= content do %>
