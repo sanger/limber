@@ -41,7 +41,7 @@ namespace :config do
         )
 
         presenters['ILB_STD_SH'].merge!(
-          :presenter_class => 'Presenters::IlluminaBShearingPlatePresenter'
+          :presenter_class => 'Presenters::IlluminaBShearedPlatePresenter'
         )
 
         presenters['ILB_STD_PCRXP'].merge!(
