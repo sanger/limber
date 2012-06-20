@@ -9,7 +9,7 @@
   </thead>
 
   <tbody>
-    <% transfers = plate_presenter.plate.source_transfers.first.transfers -%>
+    <% transfers = plate_presenter.plate.well_to_tube_transfers -%>
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
