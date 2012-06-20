@@ -1,7 +1,4 @@
 class IlluminaB::Plate < Sequencescape::Plate
-  include IlluminaB::PooledWells
-  include IlluminaB::CommonPlateBehaviour
-
   # Returns a plate instance that has been coerced into the appropriate class if necessary.  Typically
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
@@ -18,14 +15,4 @@ class IlluminaB::Plate < Sequencescape::Plate
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
-
-  def ordered_pools
-    x = Hash.new { |h,k| h[k] = [] }
-    self.wells.each { |well| x[pool_for_well(well)] << well.location }
-    x.values
-  end
-
-  def pool_for_well(well)
-    self.pools.detect { |pool_id, wells| wells.include?(well.location) }
-  end
 end

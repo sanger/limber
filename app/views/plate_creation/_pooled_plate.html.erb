@@ -26,7 +26,7 @@
                     id="<%= "source_aliquot_#{well.location}" %>" 
                     class="aliquot source_aliquot <%= colours_by_location[destination_well] %>" 
                     rel="<%= "#details_#{well.location}" %>"
-                    data-pool="<%= plate_presenter.pool(well.location) %>"
+                    data-pool="<%= well.pool_id %>"
                     data-destination-well=<%= destination_well %>
                     >
                       <%= destination_well %>

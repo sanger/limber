@@ -37,15 +37,7 @@ module Forms
     end
 
     def pools_by_well
-      return @pools_by_well if @pools_by_well.present?
-
-      @pools_by_well = {}
-
-      plate.pools.each do |pool_id, wells|
-        wells.each { |location| @pools_by_well[location] = pool_id }
-      end
-
-      @pools_by_well
+      @pools_by_well ||= Hash[plate.wells.each { |well| [well.location, well.pool_id] }]
     end
 
     def pool(location)

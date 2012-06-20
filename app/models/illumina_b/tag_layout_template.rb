@@ -10,10 +10,7 @@ class IlluminaB::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
   # This returns an array of well location to pool pairs.  The 'walker' is responsible for actually doing the walking
   # of the wells that are acceptable, and it calls back with the location of the well being processed.
   def group_wells(plate, &walker)
-    well_to_pool = {}
-    plate.pools.each do |pool_id, wells|
-      wells.each { |well| well_to_pool[well] = pool_id }
-    end
+    well_to_pool = Hash[plate.wells.map { |well| [well.location, well.pool_id] }]
 
     # We assume that if a well is unpooled then it is in the same pool as the previous pool.
     prior_pool = nil
