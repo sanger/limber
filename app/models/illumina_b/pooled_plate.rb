@@ -17,26 +17,36 @@ class IlluminaB::PooledPlate < Sequencescape::Plate
     alias_method_chain(:transfers=, :tube_mapping)
   end
 
-  has_many :source_transfers, :class_name => 'PooledPlate::Transfer'
+  has_many :transfers_to_tubes, :class_name => 'PooledPlate::Transfer'
+
+  def well_to_tube_transfers
+    transfers_to_tubes.first.transfers
+  end
 
   # We know that if there are any transfers with this plate as a source then they are into
   # tubes.
   def has_transfers_to_tubes?
-    not source_transfers.empty?
+    not well_to_tube_transfers.empty?
   end
 
-  # Well locations ordered by columns.
-  WELLS_IN_COLUMN_MAJOR_ORDER = (1..12).inject([]) { |a,c| a.concat(('A'..'H').map { |r| "#{r}#{c}" }) ; a }
+  # Well locations ordered by rows.
+  WELLS_IN_ROW_MAJOR_ORDER = ('A'..'H').inject([]) { |a,r| a.concat((1..12).map { |c| "#{r}#{c}" }) ; a }
 
   # Returns the tubes that an instance of this plate has been transferred into.
   def tubes
     return [] unless has_transfers_to_tubes?
-    transfers = source_transfers.first.transfers
-    WELLS_IN_COLUMN_MAJOR_ORDER.map(&transfers.method(:[])).compact
+    WELLS_IN_ROW_MAJOR_ORDER.map(&well_to_tube_transfers.method(:[])).compact.uniq
   end
 
-  def source_of(tube)
-    self.source_transfers.first.transfers.key(tube)
+  def tubes_and_sources
+    return [] unless has_transfers_to_tubes?
+    WELLS_IN_ROW_MAJOR_ORDER.map do |l|
+      [l, well_to_tube_transfers[l]]
+    end.group_by do |_, t|
+      t.uuid
+    end.map do |_, well_tube_pairs|
+      [well_tube_pairs.first.last, well_tube_pairs.map(&:first)]
+    end
   end
 
 end
