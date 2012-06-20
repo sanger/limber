@@ -2,4 +2,4 @@
   id="aliquot_<%= id %>" 
   class="aliquot <%= container.location %> <%= aliquot_colour(container) %> <%= column(container) %> col-all"
   rel="<%= "details_#{id}" %>"
-  data-pool="<%= container.respond_to?(:pool) ? container.pool : '' %>">&nbsp;</div>
+  data-pool="<%= container.respond_to?(:pool) ? container.pool_id : '' %>">&nbsp;</div>
