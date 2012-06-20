@@ -31,13 +31,13 @@
     '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
     '</li>',
 
-  controlTemplate: '<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">' +
-  '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />' +
-  '<label for="radio-choice-1">Summary</label>' +
-  '<input type="radio" name="radio-choice-1" id="radio-choice-2" value="pools-view"  />' +
-  '<label for="radio-choice-2">Pools</label>' +
-  '<input type="radio" name="radio-choice-1" id="radio-choice-3" value="samples-view"  />' +
-  '<label for="radio-choice-3">Samples</label> </fieldset>',
+  controlTemplate:  '<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">' +
+                    '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />' +
+                    '<label for="radio-choice-1">Summary</label>' +
+                    '<input type="radio" name="radio-choice-1" id="radio-choice-2" value="pools-view"  />' +
+                    '<label for="radio-choice-2">Pools</label>' +
+                    '<input type="radio" name="radio-choice-1" id="radio-choice-3" value="samples-view"  />' +
+                    '<label for="radio-choice-3">Samples</label> </fieldset>',
 
   displayReason: function() {
     if($('.reason:visible').length === 0) {
@@ -58,61 +58,58 @@
 
   PlateViewModel: function(plate, plateElement) {
     // Using the 'that' pattern...
-    // ...'thisInstance' refers to the object created by this constructor.
+    // ...'that' refers to the object created by this constructor.
     // ...'this' used in any of the functions will be set at runtime.
-    var thisInstance          = this;
-    thisInstance.plateElement = plateElement;
-    thisInstance.plate        = plate;
+    var that          = this;
+    that.plateElement = plateElement;
+    that.plate        = plate;
 
 
-    // Returns a string name of all the aliquots in a particular pool.
-    // thisInstance.aliquotsInPool = function(pool_id) {
-    //   return thisInstance.plate.pools[pool_id].wells.map(function(well) { return '.aliquot.'+well; }).join(',');
-    // };
-
-    thisInstance.changeWellColour = function(fromClass, toClass) {
-      $('.aliquot.'+fromClass).toggleClass(fromClass +' '+ toClass);
+    that.statusColour = function() {
+      that.plateElement.find('.aliquot').
+        addClass(that.plate.state);
     };
 
-    thisInstance.colourPools = function() {
-      thisInstance.plateElement.find('.aliquot').
-        removeClass('red green blue yellow').
+    that.colourPools = function() {
+      that.plateElement.find('.aliquot').
+        removeClass(that.plate.state).
         each(function(index){
           var pool = $(this).data('pool');
           $(this).addClass('colour-'+pool);
         });
     };
 
-    thisInstance['summary-view'] = function(){
+    that['summary-view'] = function(){
       $('#summary-information').fadeIn('fast');
-      thisInstance.changeWellColour('colour-6','green');
+
+      that.statusColour();
     };
 
-    thisInstance['pools-view'] = function(){
+    that['pools-view'] = function(){
       $('#pools-information').fadeIn('fast');
 
-      // thisInstance.changeWellColour('green','colour-6');
-      thisInstance.colourPools();
+      that.colourPools();
     };
 
-    thisInstance['samples-view'] = function(){
+    that['samples-view'] = function(){
       $('#samples-information').fadeIn('fast');
-      thisInstance.changeWellColour('colour-6','green');
+
+      that.statusColour();
     };
 
 
-    thisInstance.viewChangeHandler = function(event){
+    that.viewChangeHandler = function(event){
       var viewName = $(this).val();
 
       $('#plate-summary-div ul:visible').fadeOut('fast', function(){
-        thisInstance[viewName]();
+        that[viewName]();
       });
     };
 
-    thisInstance.highLightPoolHandler = function(event) {
+    that.highLightPoolHandler = function(event) {
       var pool = $(this).data('pool');
 
-      thisInstance.plateElement.
+      that.plateElement.
         find('.aliquot[data-pool='+pool+']').
         removeClass('red green blue yellow').
         addClass('selected-aliquot');

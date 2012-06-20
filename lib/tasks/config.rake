@@ -40,12 +40,19 @@ namespace :config do
           :presenter_class => 'Presenters::StockPlatePresenter'
         )
 
-        presenters['ILB_STD_SH'].merge!(
-          :presenter_class => 'Presenters::IlluminaBShearedPlatePresenter'
+
+        presenters['ILB_STD_PREPCR'].merge!(
+          :presenter_class     => 'Presenters::PrePcrPlatePresenter'
+        )
+
+        presenters['ILB_STD_PCR'].merge!(
+          :form_class          => 'Forms::TaggingForm',
+          :presenter_class     => 'Presenters::TaggedPresenter'
         )
 
         presenters['ILB_STD_PCRXP'].merge!(
-          :presenter_class => 'Presenters::FinalPooledPresenter'
+          :presenter_class     => 'Presenters::FinalPooledPresenter',
+          :state_changer_class => 'StateChangers::AutoPoolingStateChanger'
         )
 
 

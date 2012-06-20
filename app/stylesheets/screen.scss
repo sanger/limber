@@ -111,6 +111,9 @@ body {
   .blue              { @include background(radial-gradient(top left, #4889C4, #0A385C)); }
   .orange            { @include background(radial-gradient(top left, #FF9443, #5B1B00)); }
   .unknown-value     { @include background(radial-gradient(top left, #289AC7, #083442)); }
+  .pending           { @extend .blue;                                                    }
+  .started           { @extend .yellow;                                                  }
+  .passed            { @extend .green;                                                   }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 

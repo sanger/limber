@@ -45,20 +45,20 @@ class SearchController < ApplicationController
 
   def collect_all_user_plates
     set_user_by_swipecard!(params[:card_id]) if params[:card_id].present?
-    plate_search = api.search.find(Settings.searches['Find illumina-b plates for user'])
+    plate_search = api.search.find(Settings.searches['Find Illumina-B plates for user'])
     @ongoing = plate_search.all(IlluminaB::Plate, :state => [ 'pending', 'started', 'passed' ], :user_uuid => current_user_uuid)
   end
   private :collect_all_user_plates
 
   def collect_all_stock_plates
     set_user_by_swipecard!(params[:card_id]) if params[:card_id].present?
-    plate_search = api.search.find(Settings.searches['Find illumina-b stock plates'])
+    plate_search = api.search.find(Settings.searches['Find Illumina-B stock plates'])
     @ongoing = plate_search.all(IlluminaB::Plate, :state => [ 'pending', 'started', 'passed' ], :user_uuid => current_user_uuid)
   end
   private :collect_all_stock_plates
 
   def collect_all_outstanding_plates
-    plate_search = api.search.find(Settings.searches['Find illumina-b plates'])
+    plate_search = api.search.find(Settings.searches['Find Illumina-B plates'])
     @ongoing = plate_search.all(
       IlluminaB::Plate,
       :state => [ 'pending', 'started', 'passed', 'cancelled', 'failed' ]
@@ -67,7 +67,7 @@ class SearchController < ApplicationController
   private :collect_all_outstanding_plates
 
   def collect_all_ongoing_plates
-    plate_search = api.search.find(Settings.searches['Find illumina-b plates'])
+    plate_search = api.search.find(Settings.searches['Find Illumina-B plates'])
     @ongoing = plate_search.all(IlluminaB::Plate, :state => [ 'pending', 'started', 'passed' ])
   end
   private :collect_all_ongoing_plates
