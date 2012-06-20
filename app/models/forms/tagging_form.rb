@@ -7,12 +7,17 @@ module Forms
 
     validates_presence_of *(self.attributes - [:substitutions])
 
+    def initialize(*args, &block)
+      super
+      plate.populate_wells_with_pool
+    end
+
     def substitutions
       @substitutions ||= {}
     end
 
     def generate_layouts_and_groups
-      maximum_pool_size = plate.pools.map(&:last).map!(&:size).max
+      maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
 
       @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select do |template|
         template.tag_group.tags.size >= maximum_pool_size

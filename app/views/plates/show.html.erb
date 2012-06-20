@@ -1,14 +1,5 @@
 <%= page(:'plate-show-page') do %>
-  <% @new_pools = @presenter.plate.pools.each_with_object({}) do |(id, wells), new_pools|
-    new_pools[id] = {
-      :wells       => wells,
-      :insert_size => {
-        :from => 150,
-        :to   => 350
-      }
-    }
-  end
-   -%>
+  <% @new_pools = @presenter.plate.pools -%>
 
 <script type="text/javascript">
   SCAPE.plate = {

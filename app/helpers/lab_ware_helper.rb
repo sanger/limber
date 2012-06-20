@@ -16,7 +16,7 @@ module LabWareHelper
   end
 
   cycling_colours(:bait)    { |lab_ware, _|            lab_ware.bait }
-  cycling_colours(:tag)     { |lab_ware, _|            lab_ware.pool }
+  cycling_colours(:tag)     { |lab_ware, _|            lab_ware.pool_id }
   cycling_colours(:pooling) { |lab_ware, destination|  destination }
 
   def aliquot_colour(lab_ware)

@@ -34,11 +34,11 @@
   <% (@new_pools || []).each do |pool_id, pool| -%>
     <li data-role="list-divider">Pool <%= pool_id %></li>
   <li>
-    <%= pool[:wells].join(', ') %>
+    <%= pool['wells'].join(', ') %>
     <br/>
 
     <h3>Insert Size:</h3>
-    From: <%= pool[:insert_size][:from] %> - To: <%= pool[:insert_size][:to] %>
+    From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
     <br/>
   </li>
 

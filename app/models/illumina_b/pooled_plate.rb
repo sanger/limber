@@ -1,7 +1,4 @@
 class IlluminaB::PooledPlate < Sequencescape::Plate
-  include IlluminaB::PooledWells
-  include IlluminaB::CommonPlateBehaviour
-
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
   class Transfer < ::Sequencescape::Transfer

@@ -1,5 +1,5 @@
 module Presenters
-  class IlluminaBShearingPlatePresenter < PlatePresenter
+  class IlluminaBShearedPlatePresenter < PlatePresenter
     include Presenters::Statemachine
     state_machine :state, :initial => :pending do
       Statemachine::StateTransitions.inject(self)
