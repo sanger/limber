@@ -1,3 +1,4 @@
+
 <table <%= "id='#{id ||= "plate"}'" %>class="plate-view">
   <thead>
     <tr>
@@ -27,3 +28,25 @@
     <% end %>
   </tbody>
 </table>
+
+<div><br/><br/></div>
+<ul id="pools-information" class="information" style="display:none;" data-role="listview" data-inset="true">
+  <% (@new_pools || []).each do |pool_id, pool| -%>
+    <li data-role="list-divider">Pool <%= pool_id %></li>
+  <li>
+    <%= pool[:wells].join(', ') %>
+    <br/>
+
+    <h3>Insert Size:</h3>
+    From: <%= pool[:insert_size][:from] %> - To: <%= pool[:insert_size][:to] %>
+    <br/>
+  </li>
+
+  <% end -%>
+</ul>
+
+<ul id="samples-information" style="display:none;">
+  Samples
+</ul>
+
+<div><br/><br/></div>

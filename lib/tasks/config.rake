@@ -40,6 +40,14 @@ namespace :config do
           :presenter_class => 'Presenters::StockPlatePresenter'
         )
 
+        presenters['ILB_STD_SH'].merge!(
+          :presenter_class => 'Presenters::IlluminaBShearedPlatePresenter'
+        )
+
+        presenters['ILB_STD_PCRXP'].merge!(
+          :presenter_class => 'Presenters::FinalPooledPresenter'
+        )
+
 
       end
 
@@ -49,6 +57,9 @@ namespace :config do
         next unless [
           'ILB_STD_INPUT',
           'ILB_STD_COVARIS',
+          'ILB_STD_SH',
+          'ILB_STD_PCR',
+          'ILB_STD_PREPCR',
           'ILB_STD_PCRXP'
         ].include?(plate_purpose.name)
 

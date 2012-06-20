@@ -11,12 +11,7 @@ class IlluminaB::Plate < Sequencescape::Plate
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [
-    'WGS lib pool',
-    'SC cap lib pool',
-
-    # ISC does two stages of pooling
-    'ISC lib pool',
-    'ISC cap lib pool'
+    'ILB_STD_PCRXP'
   ]
 
   def is_a_final_pooling_plate?

@@ -75,14 +75,17 @@ body {
   padding: 4px 0 0 0;
   text-align: center;
   color:#fff;
-  @include box-shadow(#00192B 0 3px 8px);
   display: inline-block;
 }
 
 .aliquot:hover {
   color: #FFD600;
   cursor: pointer;
-  @include box-shadow(rgba(95,95,95,0.5) 0 0px 12px);
+  @include box-shadow(#00192B 0 3px 8px);
+}
+
+.aliquot.dimmed-pool {
+  opacity: 0.2;
 }
 
 .substitute-tag {
@@ -97,6 +100,7 @@ body {
 
 .selected-aliquot {
   border: 2px solid yellow;
+  @include box-shadow(#00192B 0 3px 8px);
 }
 
 
@@ -121,7 +125,7 @@ body {
   @include labware-view
 }
 
-#information {
+.information {
   .total { font-weight: bold; }
 }
 
@@ -211,7 +215,7 @@ table.form {
   margin: 0 0 36px 0;
 }
 
-#information {
+.information {
   list-style: none;
   margin-left: 0;
   padding-left: 0;

@@ -1,27 +1,45 @@
 (function(window, $, undefined){
   "use strict";
 
+  // Ensure that Object.create is availible...
+  // if (typeof Object.create !== "function") {
+  //   Object.create = function(o) {
+  //     function F() {}
+  //     F.prototype = o;
+  //     return new F();
+  //   };
+  // }
+
   // Set up the SCAPE namespace
   if (window.SCAPE === undefined) {
     window.SCAPE = {};
   }
 
+  $.extend(SCAPE, {
   //temporarily used until page ready event sorted... :(
   //This is a copy of the template held in the tagging page.
-  SCAPE.tag_palette_template =
+  tag_palette_template:
     '<li class="ui-li ui-li-static ui-body-c">'+
     '<div class="available-tag palette-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
-    '</li>';
+    '</li>',
 
   //temporarily used until page ready event sorted... :(
   //This is a copy of the template held in the tagging page.
-  SCAPE.substitution_tag_template =
+  substitution_tag_template:
     '<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
     '<div class="substitute-tag palette-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%= replacement_tag_id %></div>'+
     '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
-    '</li>';
+    '</li>',
 
-  SCAPE.displayReason = function() {
+  controlTemplate: '<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />' +
+  '<label for="radio-choice-1">Summary</label>' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-2" value="pools-view"  />' +
+  '<label for="radio-choice-2">Pools</label>' +
+  '<input type="radio" name="radio-choice-1" id="radio-choice-3" value="samples-view"  />' +
+  '<label for="radio-choice-3">Samples</label> </fieldset>',
+
+  displayReason: function() {
     if($('.reason:visible').length === 0) {
       $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
     } 
@@ -31,15 +49,95 @@
       });
     }
 
-  };
+  },
 
-  SCAPE.dim = function() { $(this).fadeTo('fast', 0.2); };
+  dim: function() { 
+    $(this).fadeTo('fast', 0.2);
+    return this;
+  },
 
-  // Extend jQuery...
-  $.extend({
-    createElement: function(elementName){
-      return $(document.createElement(elementName));
-    }
+  PlateViewModel: function(plate, plateElement) {
+    // Using the 'that' pattern...
+    // ...'thisInstance' refers to the object created by this constructor.
+    // ...'this' used in any of the functions will be set at runtime.
+    var thisInstance          = this;
+    thisInstance.plateElement = plateElement;
+    thisInstance.plate        = plate;
+
+
+    // Returns a string name of all the aliquots in a particular pool.
+    // thisInstance.aliquotsInPool = function(pool_id) {
+    //   return thisInstance.plate.pools[pool_id].wells.map(function(well) { return '.aliquot.'+well; }).join(',');
+    // };
+
+    thisInstance.changeWellColour = function(fromClass, toClass) {
+      $('.aliquot.'+fromClass).toggleClass(fromClass +' '+ toClass);
+    };
+
+    thisInstance.colourPools = function() {
+      thisInstance.plateElement.find('.aliquot').
+        removeClass('red green blue yellow').
+        each(function(index){
+          var pool = $(this).data('pool');
+          $(this).addClass('colour-'+pool);
+        });
+    };
+
+    thisInstance['summary-view'] = function(){
+      $('#summary-information').fadeIn('fast');
+      thisInstance.changeWellColour('colour-6','green');
+    };
+
+    thisInstance['pools-view'] = function(){
+      $('#pools-information').fadeIn('fast');
+
+      // thisInstance.changeWellColour('green','colour-6');
+      thisInstance.colourPools();
+    };
+
+    thisInstance['samples-view'] = function(){
+      $('#samples-information').fadeIn('fast');
+      thisInstance.changeWellColour('colour-6','green');
+    };
+
+
+    thisInstance.viewChangeHandler = function(event){
+      var viewName = $(this).val();
+
+      $('#plate-summary-div ul:visible').fadeOut('fast', function(){
+        thisInstance[viewName]();
+      });
+    };
+
+    thisInstance.highLightPoolHandler = function(event) {
+      var pool = $(this).data('pool');
+
+      thisInstance.plateElement.
+        find('.aliquot[data-pool='+pool+']').
+        removeClass('red green blue yellow').
+        addClass('selected-aliquot');
+    };
+  },
+
+  illuminaBPlateView: function(plate) {
+    var plateElement = $(this);
+    plateElement.before(SCAPE.controlTemplate);
+    var control = $('#plate-view-control');
+
+    var viewModel = new SCAPE.PlateViewModel(plate, plateElement);
+
+    control.delegate('input:radio', 'change', viewModel.viewChangeHandler);
+
+    plateElement.delegate('.aliquot', 'click', viewModel.highLightPoolHandler );
+    return this;
+  }
+
+  });
+
+  // Extend jQuery prototype...
+  $.extend($.fn, {
+    illuminaBPlateView: SCAPE.illuminaBPlateView,
+    dim:                SCAPE.dim
   });
 
 
@@ -95,6 +193,10 @@
     };
 
     $('.navbar-link').live('click', SCAPE.linkHandler);
+
+    // Set up the plate element as an illuminaBPlate...
+    $('#plate').illuminaBPlateView(SCAPE.plate);
+
   });
 
   $('#plate-show-page').live('pageinit', function(event){
@@ -175,7 +277,7 @@
         var originalTag   = sourceAliquot.text();
 
         // Dim other tags...
-        $('.aliquot').not('.tag-'+originalTag).each(SCAPE.dim);
+        $('.aliquot').not('.tag-'+originalTag).dim();
 
         SCAPE.updateTagpalette();
 

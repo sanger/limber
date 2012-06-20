@@ -49,7 +49,7 @@ module Presenters::Statemachine
           # Returns the child plate purposes that can be created in the started state.  Typically
           # this should be empty, unless QC plates can be created from the current plate.
           def child_plate_purposes
-            plate.plate_purpose.children.reject { |p| p.name != 'Pulldown QC plate' }
+            plate.plate_purpose.children.reject { |p| not ['ILB_STD_PCR', 'ILB_STD_PREPCR'].include?(p.name) }
           end
         end
         state :passed do
@@ -63,7 +63,8 @@ module Presenters::Statemachine
           # Returns the child plate purposes that can be created in the passed state.  Typically
           # this is only one, but it specifically excludes QC plates.
           def child_plate_purposes
-            plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
+            # plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
+            plate.plate_purpose.children
           end
         end
         state :failed do
