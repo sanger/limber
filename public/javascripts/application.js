@@ -123,9 +123,9 @@
 
     var viewModel = new SCAPE.PlateViewModel(plate, plateElement);
 
-    control.delegate('input:radio', 'change', viewModel.viewChangeHandler);
+    control.on('change', 'input:radio', viewModel.viewChangeHandler);
 
-    plateElement.delegate('.aliquot', 'click', viewModel.highLightPoolHandler );
+    plateElement.on('click', '.aliquot', viewModel.highLightPoolHandler );
     return this;
   }
 
@@ -140,20 +140,9 @@
 
   // ########################################################################
   // # Page events....
-  $('#search-page').live('pageinit', function(event){
-    // Users should start the page by scanning in...
-    $('#card_id').focus();
-
-    $('#card_id').live('blur', function(){
-      if ($(this).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
-      }
-    });
-
+  $(document).on('pageinit', function(){
     // Trap the carriage return sent by the swipecard reader
-    $("#card_id").live("keydown", function(e) {
+    $(document).on("keydown", "#card_id", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
         $("#plate_barcode").focus();
@@ -161,8 +150,22 @@
       }
     });
 
+  });
+
+  $(document).on('pageinit', '#search-page', function(event){
+    // Users should start the page by scanning in...
+    $('#card_id').focus();
+
+    $(document).on('blur', '#card_id', function(){
+      if ($(this).val()) {
+        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
+      } else {
+        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
+      }
+    });
+
     // Fill in the plate barcode with the plate links barcode
-    $(".plate_link").click(function() {
+    $(document).on('click', ".plate_link", function() {
       $('#plate_barcode').val($(this).attr('id').substr(6));
       $('#plate-search-form').submit();
       return false;
@@ -171,7 +174,7 @@
   });
 
 
-  $('#plate-show-page').live('pagecreate', function(event) {
+  $(document).on('pagecreate', '#plate-show-page', function(event) {
 
     var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
 
@@ -189,14 +192,11 @@
         fadeOut( function(){ $(targetIds).fadeIn(); } );
     };
 
-    $('.navbar-link').live('click', SCAPE.linkHandler);
+    $(document).on('click', '.navbar-link', SCAPE.linkHandler);
 
     // Set up the plate element as an illuminaBPlate...
     $('#plate').illuminaBPlateView(SCAPE.plate);
 
-  });
-
-  $('#plate-show-page').live('pageinit', function(event){
     var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
     var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
 
@@ -222,11 +222,11 @@
 
     // State changes reasons...
     SCAPE.displayReason();
-    $('#state').live('change', SCAPE.displayReason);
+    $(document).on('change','#state', SCAPE.displayReason);
   });
 
 
-  $('#admin-page').live('pageinit',function(event) {
+  $(document).on('pageinit', '#admin-page', function(event) {
 
     $('#plate_edit').submit(function() {
       if ($('#card_id').val().length === 0) {
@@ -235,18 +235,13 @@
       }
     });
 
-    // Trap the carriage return sent by the swipecard reader
-    $("#card_id").live("keydown", function(e) {
-      var code=e.charCode || e.keyCode;
-      if (code==13) return false;
-    });
-
+    // State changes reasons...
     SCAPE.displayReason();
-    $('#state').live('click',SCAPE.displayReason);
+    $(document).on('change','#state', SCAPE.displayReason);
   });
 
 
-  $('#tag-creation-page').live('pageinit', function(){
+  $(document).on('pagecreate', '#tag-creation-page', function(){
 
     $.extend(window.SCAPE, {
 
