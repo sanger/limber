@@ -43,7 +43,9 @@ class IlluminaB::PooledPlate < Sequencescape::Plate
     WELLS_IN_ROW_MAJOR_ORDER.map do |l|
       [l, well_to_tube_transfers[l]]
     end.group_by do |_, t|
-      t.uuid
+      t && t.uuid
+    end.reject do |uuid, _|
+      uuid.nil?
     end.map do |_, well_tube_pairs|
       [well_tube_pairs.first.last, well_tube_pairs.map(&:first)]
     end

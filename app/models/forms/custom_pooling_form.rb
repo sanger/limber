@@ -37,7 +37,7 @@ module Forms
     end
 
     def pools_by_well
-      @pools_by_well ||= Hash[plate.wells.each { |well| [well.location, well.pool_id] }]
+      @pools_by_well ||= Hash[plate.wells.map { |well| [well.location, well.pool_id] }]
     end
 
     def pool(location)
@@ -67,7 +67,7 @@ module Forms
     def wells_by_row
       rows = Hash[('A'..'H').map { |row| [ row, [] ] }]
 
-      transfers.values.uniq!.map do |location|
+      transfers.values.uniq.map do |location|
         [PlateWalking::Walker::Location.new(location), CustomPoolingForm::Well.new(location)]
       end.group_by do |location, _|
         location.row
