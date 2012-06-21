@@ -51,6 +51,9 @@
 
   },
 
+  // Not used yet...
+  //wellsInRowMajorOrder: {"F8":68,"E2":50,"B7":19,"H10":94,"G8":80,"C7":31,"A4":4,"H8":92,"G10":82,"F10":70,"F5":65,"D7":43,"B4":16,"G5":77,"E7":55,"E10":58,"C4":28,"A1":1,"H5":89,"D10":46,"F2":62,"A9":9,"D4":40,"B1":13,"G2":74,"E4":52,"C10":34,"C1":25,"B9":21,"H12":96,"H2":86,"B10":22,"A10":10,"C9":33,"A6":6,"D1":37,"G12":84,"F12":72,"F7":67,"E1":49,"D9":45,"B6":18,"G7":79,"E9":57,"E12":60,"C6":30,"A3":3,"H7":91,"D12":48,"F4":64,"D6":42,"B3":15,"G4":76,"E6":54,"C12":36,"C3":27,"H4":88,"B12":24,"A12":12,"F1":61,"A8":8,"D3":39,"G1":73,"F9":69,"E3":51,"B8":20,"H11":95,"H1":85,"G9":81,"C8":32,"A5":5,"H9":93,"G11":83,"F11":71,"F6":66,"D8":44,"B5":17,"G6":78,"E8":56,"E11":59,"C5":29,"A2":2,"H6":90,"D11":47,"F3":63,"D5":41,"B2":14,"G3":75,"E5":53,"C11":35,"C2":26,"H3":87,"B11":23,"A11":11,"A7":7,"D2":38},
+
   dim: function() { 
     $(this).fadeTo('fast', 0.2);
     return this;
@@ -71,12 +74,22 @@
     };
 
     that.colourPools = function() {
+      var poolsArray = _.toArray(that.plate.pools);
+
+      poolsArray = _.sortBy(poolsArray, function(pool){
+        return pool.wells[0];
+      });
+
       that.plateElement.find('.aliquot').
-        removeClass(that.plate.state).
-        each(function(index){
-          var pool = $(this).data('pool');
-          $(this).addClass('colour-'+pool);
-        });
+        removeClass(that.plate.state);
+
+      for (var i=0; i < poolsArray.length; i++){
+        var poolId = poolsArray[i].id;
+
+        that.plateElement.find('.aliquot[data-pool='+poolId+']').
+          addClass('colour-'+(i+1));
+      }
+
     };
 
     that['summary-view'] = function(){
