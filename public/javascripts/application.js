@@ -1,19 +1,50 @@
-(function(window, $, undefined){
+(function($, exports, undefined){
   "use strict";
 
-  // Ensure that Object.create is availible...
-  // if (typeof Object.create !== "function") {
-  //   Object.create = function(o) {
-  //     function F() {}
-  //     F.prototype = o;
-  //     return new F();
-  //   };
-  // }
+  var Events = {
+    on: function(){
+      if (!this.o) this.o = $({});
+
+      this.o.on.apply(this.o, arguments);
+    },
+
+    trigger: function(){
+      if (!this.o) this.o = $({});
+
+      this.o.trigger.apply(this.o, arguments);
+    }
+  };
+
+  var StateMachine = function(){};
+
+  StateMachine.fn = StateMachine.prototype;
+
+  $.extend(StateMachine.fn, Events);
+
+  StateMachine.fn.add = function(controller){
+    this.on("change", function(e, current){
+      if (controller == current)
+        controller.activate();
+      else
+        controller.deactivate();
+    });
+
+    controller.active = $.proxy(function(){
+      this.trigger("change", controller);
+    }, this);
+  };
+
+  exports.StateMachine = StateMachine;
+})(jQuery,window);
+
+(function($, exports, undefined){
+  "use strict";
 
   // Set up the SCAPE namespace
-  if (window.SCAPE === undefined) {
-    window.SCAPE = {};
+  if (exports.SCAPE === undefined) {
+    exports.SCAPE = {};
   }
+
 
   $.extend(SCAPE, {
   //temporarily used until page ready event sorted... :(
@@ -59,13 +90,22 @@
     return this;
   },
 
-  PlateViewModel: function(plate, plateElement) {
+  failWellToggleHandler:  function(event){
+    $(event.currentTarget).hide('fast', function(){
+      var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
+      $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+    });
+  },
+  
+
+  PlateViewModel: function(plate, plateElement, control) {
     // Using the 'that' pattern...
     // ...'that' refers to the object created by this constructor.
     // ...'this' used in any of the functions will be set at runtime.
     var that          = this;
-    that.plateElement = plateElement;
     that.plate        = plate;
+    that.plateElement = plateElement;
+    that.control      = control;
 
 
     that.statusColour = function() {
@@ -80,9 +120,7 @@
         return pool.wells[0];
       });
 
-      that.plateElement.find('.aliquot').
-        removeClass(that.plate.state);
-
+     
       for (var i=0; i < poolsArray.length; i++){
         var poolId = poolsArray[i].id;
 
@@ -92,51 +130,96 @@
 
     };
 
-    that['summary-view'] = function(){
-      $('#summary-information').fadeIn('fast');
-
-      that.statusColour();
+    that.clearAliquotSelection = function(){
+      that.plateElement.
+        find('.aliquot').
+        removeClass('selected-aliquot').
+        css('opacity',1);
     };
 
-    that['pools-view'] = function(){
-      $('#pools-information').fadeIn('fast');
+    that['summary-view'] = {
+      activate: function(){
+          $('#summary-information').fadeIn('fast');
+          that.statusColour();
 
-      that.colourPools();
+      },
+
+      deactivate: function(){
+        $('#summary-information').fadeOut('fast');
+      }
     };
 
-    that['samples-view'] = function(){
-      $('#samples-information').fadeIn('fast');
+    that['pools-view'] = {
+      activate: function(){
+        $('#pools-information').fadeIn('fast');
 
-      that.statusColour();
+        that.plateElement.find('.aliquot').
+          removeClass(that.plate.state);
+
+        that.colourPools();
+      },
+
+      deactivate: function(){
+        $('#pools-information').fadeOut('fast');
+      }
     };
 
+    that['samples-view'] = {
+      activate: function(){
+          $('#samples-information').fadeIn('fast');
+          that.statusColour();
+      },
 
-    that.viewChangeHandler = function(event){
-      var viewName = $(this).val();
+      deactivate: function(){
+        $('#samples-information').fadeOut('fast');
+      }
 
-      $('#plate-summary-div ul:visible').fadeOut('fast', function(){
-        that[viewName]();
-      });
     };
+
 
     that.highLightPoolHandler = function(event) {
-      var pool = $(this).data('pool');
+      var pool = $(event.currentTarget).data('pool');
+
+      that.control.find('input:radio[name=radio-choice-1]:eq(1)').
+        click();
+
+      that.control.find('input:radio').checkboxradio("refresh");
+
+      that.plateElement.
+        find('.aliquot[data-pool!='+pool+']').
+        removeClass('selected-aliquot').dim();
 
       that.plateElement.
         find('.aliquot[data-pool='+pool+']').
-        removeClass('red green blue yellow').
-        addClass('selected-aliquot');
+        toggleClass('selected-aliquot').
+        css('opacity',1);
     };
+
+
+    that.sm = new StateMachine;
+    that.sm.add(that['summary-view']);
+    that.sm.add(that['pools-view']);
+    that.sm.add(that['samples-view']);
+
+    that['summary-view'].active();
   },
+
 
   illuminaBPlateView: function(plate) {
     var plateElement = $(this);
     plateElement.before(SCAPE.controlTemplate);
     var control = $('#plate-view-control');
 
-    var viewModel = new SCAPE.PlateViewModel(plate, plateElement);
+    var viewModel = new SCAPE.PlateViewModel(plate, plateElement, control);
 
-    control.on('change', 'input:radio', viewModel.viewChangeHandler);
+
+
+    control.on('change', 'input:radio', function(event){
+      var viewName = $(event.currentTarget).val();
+
+      // viewModel.sm.trigger('change', viewModel[viewName]);
+      viewModel[viewName].active();
+    });
 
     plateElement.on('click', '.aliquot', viewModel.highLightPoolHandler );
     return this;
@@ -187,6 +270,9 @@
   });
 
 
+
+
+
   $(document).on('pagecreate', '#plate-show-page', function(event) {
 
     var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
@@ -205,37 +291,23 @@
         fadeOut( function(){ $(targetIds).fadeIn(); } );
     };
 
-    $(document).on('click', '.navbar-link', SCAPE.linkHandler);
+    var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
+    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
+    $(targetIds).not(':visible').fadeIn();
+
+
+
+    $('#plate-show-page').on('click', '.navbar-link', SCAPE.linkHandler);
 
     // Set up the plate element as an illuminaBPlate...
     $('#plate').illuminaBPlateView(SCAPE.plate);
 
-    var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
-    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
 
-    $(targetIds).not(':visible').fadeIn();
-
-    $('#well-failing .plate-view .aliquot').
-      not('.permanent-failure').
-      toggle(
-        function(){
-      $(this).hide('fast', function(){
-        var failing = $(this).toggleClass('good failed').show().hasClass('failed');
-        $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-      });
-    },
-
-    function() {
-      $(this).hide('fast', function(){
-        var failing = $(this).toggleClass('failed good').show().hasClass('failed');
-        $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-      });
-    }
-    );
+    $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
 
     // State changes reasons...
     SCAPE.displayReason();
-    $(document).on('change','#state', SCAPE.displayReason);
+    $('#plate-show-page').on('change','#state', SCAPE.displayReason);
   });
 
 
@@ -250,13 +322,13 @@
 
     // State changes reasons...
     SCAPE.displayReason();
-    $(document).on('change','#state', SCAPE.displayReason);
+    $('#admin-page').on('change','#state', SCAPE.displayReason);
   });
 
 
   $(document).on('pagecreate', '#tag-creation-page', function(){
 
-    $.extend(window.SCAPE, {
+    $.extend(SCAPE, {
 
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
       substitutionTemplate  : _.template(SCAPE.substitution_tag_template),
@@ -266,7 +338,7 @@
 
         tagpalette.empty();
 
-        var currentTagGroup   = $(window.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
+        var currentTagGroup   = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
         var currentlyUsedTags = $('.aliquot').map(function(){ return parseInt($(this).text(), 10); });
         var unusedTags        = _.difference(currentTagGroup, currentlyUsedTags);
         var listItems         = unusedTags.reduce(
@@ -283,6 +355,7 @@
 
         // Dim other tags...
         $('.aliquot').not('.tag-'+originalTag).dim();
+        sourceAliquot.addClass('selected-aliquot');
 
         SCAPE.updateTagpalette();
 
@@ -318,14 +391,14 @@
 
 
       update_layout : function () {
-        var tags = $(window.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
+        var tags = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
 
         tags.each(function(index) {
           $('#tagging-plate #aliquot_'+this[0]).
-            hide('slow').text(this[1][1]).
+            hide('fast').text(this[1][1]).
             addClass('aliquot colour-'+this[1][0]).
             addClass('tag-'+this[1][1]).
-            show('slow');
+            show('fast');
         });
 
         SCAPE.resetHandler();
@@ -338,7 +411,7 @@
       },
 
       resetHandler : function() {
-        $('.aliquot').css('opacity', 1);
+        $('.aliquot').css('opacity', 1).removeClass('selected-aliquot');
         $('.available-tags').unbind();
         $('#replacement-tags').fadeOut(function(){
           $('#instructions').fadeIn();
@@ -356,5 +429,5 @@
 
   });
 
-})(window, jQuery);
+})(jQuery, window);
 
