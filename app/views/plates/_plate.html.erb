@@ -32,8 +32,8 @@
 <div><br/><br/></div>
 <ul id="pools-information" class="information" style="display:none;" data-role="listview" data-inset="true">
   <% plate_presenter.plate.pools.each do |pool_id, pool| -%>
-    <li data-role="list-divider"><%= pool['wells'].join(', ') %></li>
-  <li>
+    <li data-role="list-divider" data-pool="<%= pool_id %>"><%= pool['wells'].join(', ') %></li>
+  <li data-pool="<%= pool_id %>">
     <h3>Insert Size:</h3>
     From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
     <br/>

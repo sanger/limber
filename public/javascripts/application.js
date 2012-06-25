@@ -157,10 +157,24 @@
           removeClass(that.plate.state);
 
         that.colourPools();
+
+        that.control.find('input:radio[name=radio-choice-1]:eq(1)').
+          attr('checked',true);
+
+        that.control.find('input:radio').checkboxradio("refresh");
       },
 
       deactivate: function(){
-        $('#pools-information').fadeOut('fast');
+        $('#pools-information').fadeOut('fast', function(){
+          $('#pools-information li').
+            css('opacity',1);
+        });
+
+        that.plateElement.
+          find('.aliquot').
+          removeClass('selected-aliquot').
+          css('opacity',1);
+
       }
     };
 
@@ -174,25 +188,6 @@
         $('#samples-information').fadeOut('fast');
       }
 
-    };
-
-
-    that.highLightPoolHandler = function(event) {
-      var pool = $(event.currentTarget).data('pool');
-
-      that.control.find('input:radio[name=radio-choice-1]:eq(1)').
-        click();
-
-      that.control.find('input:radio').checkboxradio("refresh");
-
-      that.plateElement.
-        find('.aliquot[data-pool!='+pool+']').
-        removeClass('selected-aliquot').dim();
-
-      that.plateElement.
-        find('.aliquot[data-pool='+pool+']').
-        toggleClass('selected-aliquot').
-        css('opacity',1);
     };
 
 
@@ -216,12 +211,31 @@
 
     control.on('change', 'input:radio', function(event){
       var viewName = $(event.currentTarget).val();
-
-      // viewModel.sm.trigger('change', viewModel[viewName]);
       viewModel[viewName].active();
     });
 
-    plateElement.on('click', '.aliquot', viewModel.highLightPoolHandler );
+    plateElement.on('click', '.aliquot', function(event) {
+      var pool = $(event.currentTarget).data('pool');
+
+      viewModel['pools-view'].active();
+
+      plateElement.
+        find('.aliquot[data-pool!='+pool+']').
+        removeClass('selected-aliquot').dim();
+
+      plateElement.
+        find('.aliquot[data-pool='+pool+']').
+        addClass('selected-aliquot').
+        css('opacity',1);
+
+        $('#pools-information li[data-pool!='+pool+']').fadeOut('fast', function(){
+          $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
+        });
+
+
+    });
+
+    // ...we will never break the chain...
     return this;
   }
 
