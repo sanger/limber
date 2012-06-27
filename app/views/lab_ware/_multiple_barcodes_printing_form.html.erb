@@ -10,12 +10,11 @@
       <% end %>
     <% end %>
 
-  <%# There's a bug here somewhere in formtastic which means it's ignoring :input_options :(
-    It looks like an previous bug so I really should open a ticket...
-  %>
   <ul data-role="listview" data-inset="true">
-    <li data-role="listdivider">
-      <%= label_tag :printer, 'Barcode printer' %>
+    <li data-role="list-divider">
+      <%= label_tag :printer, 'Barcode Printer:' %>
+    </li>
+    <li>
       <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcodes), :uuid, :name) %>
     </li>
     <li><%= f.submit 'Print Labels', :class => 'print-button', :'data-theme' => 'b', :'data-icon' => 'grid' %></li>

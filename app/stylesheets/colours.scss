@@ -7,6 +7,9 @@
   font-weight: bold;
   color: #fff;
   text-shadow: 0 -1px 1px darken($base_colour,50);
+  -moz-transition:    all 0.3s ease-in-out 0s;
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  transition:         all 0.3s ease-in-out 0s;
 }
 
 

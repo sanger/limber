@@ -1,32 +1,32 @@
 <%= page(:summary) do %>
   <%= header do %>
     <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Summary</h1>
-  <% end %>
+  <% end -%>
 
   <%= content do %>
     <h2>Tube Status - <%= @presenter.tube.state.titleize %></h1>
     <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
-  <% end %>
+  <% end -%>
 
   <%= footer %>
-<% end %>
+<% end -%>
 
 <%= page(:state) do %>
   <% header do %>
     <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - State</h1>
-  <% end %>
+  <% end -%>
 
   <%= content do %>
     <%= state_change_form(@presenter) %>
-  <% end %>
+  <% end -%>
 
   <%= footer %>
-<% end %>
+<% end -%>
 
 <%= page(:printing) do %>
   <%= header do %>
     <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Printing</h1>
-  <% end %>
+  <% end -%>
 
   <%= content do %>
     <%= section do %>
@@ -38,8 +38,8 @@
             :redirection_url => illumina_b_multiplexed_library_tube_path(@presenter.tube),
             :text            => 'MX Library tube'
       ) %>
-    <% end %>
-  <% end %>
+    <% end -%>
+  <% end -%>
 
   <%= footer %>
-<% end %>
+<% end -%>

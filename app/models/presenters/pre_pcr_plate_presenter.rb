@@ -48,7 +48,7 @@ module Presenters
     end
 
     write_inheritable_attribute :authenticated_tab_states, {
-      :pending    =>  [ 'plate-creation-button', 'summary-button' ],
+      :pending    =>  [ 'summary-button', 'plate-creation-button' ],
       :started    =>  [ 'plate-creation-button', 'summary-button', 'well-failing-button' ],
       :passed     =>  [ 'summary-button', 'well-failing-button' ],
       :cancelled  =>  [ 'summary-button' ],
