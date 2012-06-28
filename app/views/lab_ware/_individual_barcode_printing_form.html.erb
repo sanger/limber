@@ -6,8 +6,10 @@
     <%= f.hidden_field :number %>
     <%= f.hidden_field :study, :value => text %>
 
-    <li data-role="listdivider">
-      <%= label_tag :printer, 'Barcode printer' %>
+    <li data-role="list-divider">
+      <%= label_tag :printer, 'Barcode Printer:' %>
+    </li>
+    <li >
       <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name) %>
     </li>
     <li>

@@ -1,12 +1,11 @@
 <%= page(:'plate-show-page') do %>
-  <% @new_pools = @presenter.plate.pools -%>
-
 <script type="text/javascript">
   SCAPE.plate = {
     'state':     '<%= @presenter.plate.state %>',
     'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
     'tabStates': <%= get_tab_states(@presenter) %>,
-    'pools':     <%= @new_pools.to_json.html_safe %>
+    'pools':     <%= @presenter.plate.pools.to_json.html_safe %>,
+    'uuid':     '<%= @presenter.plate.uuid %>'
   };
 </script>
 
@@ -35,7 +34,7 @@
         <div id="plate-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
-          <%= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
+          <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
           <h2>Fail Wells</h2>

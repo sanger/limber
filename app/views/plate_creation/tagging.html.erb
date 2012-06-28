@@ -1,17 +1,3 @@
-<script type="text/template" id="tag-palette-template">
-  <li class="ui-li ui-li-static ui-body-c">
-    <div class="available-tag palette-tag"><%%= tag_id %></div>&nbsp;&nbsp;Tag <%%= tag_id %>
-  </li>
-
-</script>
-
-<script type="text/template" id="substitution-tag-template">
-  <li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">
-    <div class="substitute-tag palette-tag"><%%= original_tag_id %></div>&nbsp;&nbsp;Tag <%%= original_tag_id %> replaced with Tag <%%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%%= replacement_tag_id %></div>
-  <input id="plate-substitutions-<%%= original_tag_id %>" name="plate[substitutions][<%%= original_tag_id %>]" type="hidden" value="<%%= replacement_tag_id %>" />
-  </li>
-</script>
-
 <%= page(:'tag-creation-page') do -%>
   <%= header(@creation_form, 'Choose tag layout') %>
 
@@ -22,18 +8,15 @@
       <%= f.inputs do %>
         <%= f.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
         <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
       <%- end -%>
-      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
     <br/>
-      <%= f.buttons do %>
-        <%= f.commit_button 'Create Plate',
-              :button_html => {
-                :"data-theme" => "b",
-                :"data-icon"  => "plus"
-              }
+        <%= f.submit 'Create Plate',
+          :"data-theme"   => "b",
+          :"data-icon"    => "plus",
+          :'data-iconpos' => "right"
         %>
-      <%- end -%>
       </div>
 
       <div class="ui-block-b">
@@ -69,8 +52,12 @@
 
 
 <script type="text/javascript" charset="utf-8">
-     window.tag_layouts   = <%= @creation_form.tag_groups.to_json.html_safe %>;
-     window.tags_by_name  = <%= @creation_form.tags_by_name.to_json.html_safe %>;
+  (function(exports, $, undefined){
+     $.extend(SCAPE, {
+      tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
+      tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
+     });
+   })(window,jQuery);
 </script>
   <%- end -%>
 <%- end -%>

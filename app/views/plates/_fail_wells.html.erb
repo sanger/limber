@@ -3,7 +3,7 @@
 <% else %>
   <%= form_for(:plate, :url => fail_wells_path(presenter.plate), :html => { :method => 'post' }) do |form| %>
     <%= form.fields_for(:wells) do |well_form| %>
-      <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, presenter) } %>
+      <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, presenter), :id => 'well-failures' } %>
     <% end %>
 
     <br/>

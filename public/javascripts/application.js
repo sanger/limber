@@ -1,19 +1,50 @@
-(function(window, $, undefined){
+(function($, exports, undefined){
   "use strict";
 
-  // Ensure that Object.create is availible...
-  // if (typeof Object.create !== "function") {
-  //   Object.create = function(o) {
-  //     function F() {}
-  //     F.prototype = o;
-  //     return new F();
-  //   };
-  // }
+  var Events = {
+    on: function(){
+      if (!this.o) this.o = $({});
+
+      this.o.on.apply(this.o, arguments);
+    },
+
+    trigger: function(){
+      if (!this.o) this.o = $({});
+
+      this.o.trigger.apply(this.o, arguments);
+    }
+  };
+
+  var StateMachine = function(){};
+
+  StateMachine.fn = StateMachine.prototype;
+
+  $.extend(StateMachine.fn, Events);
+
+  StateMachine.fn.add = function(controller){
+    this.on("change", function(e, current){
+      if (controller == current)
+        controller.activate();
+      else
+        controller.deactivate();
+    });
+
+    controller.active = $.proxy(function(){
+      this.trigger("change", controller);
+    }, this);
+  };
+
+  exports.StateMachine = StateMachine;
+})(jQuery,window);
+
+(function($, exports, undefined){
+  "use strict";
 
   // Set up the SCAPE namespace
-  if (window.SCAPE === undefined) {
-    window.SCAPE = {};
+  if (exports.SCAPE === undefined) {
+    exports.SCAPE = {};
   }
+
 
   $.extend(SCAPE, {
   //temporarily used until page ready event sorted... :(
@@ -51,18 +82,30 @@
 
   },
 
+  // Not used yet...
+  //wellsInRowMajorOrder: {"F8":68,"E2":50,"B7":19,"H10":94,"G8":80,"C7":31,"A4":4,"H8":92,"G10":82,"F10":70,"F5":65,"D7":43,"B4":16,"G5":77,"E7":55,"E10":58,"C4":28,"A1":1,"H5":89,"D10":46,"F2":62,"A9":9,"D4":40,"B1":13,"G2":74,"E4":52,"C10":34,"C1":25,"B9":21,"H12":96,"H2":86,"B10":22,"A10":10,"C9":33,"A6":6,"D1":37,"G12":84,"F12":72,"F7":67,"E1":49,"D9":45,"B6":18,"G7":79,"E9":57,"E12":60,"C6":30,"A3":3,"H7":91,"D12":48,"F4":64,"D6":42,"B3":15,"G4":76,"E6":54,"C12":36,"C3":27,"H4":88,"B12":24,"A12":12,"F1":61,"A8":8,"D3":39,"G1":73,"F9":69,"E3":51,"B8":20,"H11":95,"H1":85,"G9":81,"C8":32,"A5":5,"H9":93,"G11":83,"F11":71,"F6":66,"D8":44,"B5":17,"G6":78,"E8":56,"E11":59,"C5":29,"A2":2,"H6":90,"D11":47,"F3":63,"D5":41,"B2":14,"G3":75,"E5":53,"C11":35,"C2":26,"H3":87,"B11":23,"A11":11,"A7":7,"D2":38},
+
   dim: function() { 
     $(this).fadeTo('fast', 0.2);
     return this;
   },
 
-  PlateViewModel: function(plate, plateElement) {
+  failWellToggleHandler:  function(event){
+    $(event.currentTarget).hide('fast', function(){
+      var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
+      $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+    });
+  },
+  
+
+  PlateViewModel: function(plate, plateElement, control) {
     // Using the 'that' pattern...
     // ...'that' refers to the object created by this constructor.
     // ...'this' used in any of the functions will be set at runtime.
     var that          = this;
-    that.plateElement = plateElement;
     that.plate        = plate;
+    that.plateElement = plateElement;
+    that.control      = control;
 
 
     that.statusColour = function() {
@@ -70,62 +113,130 @@
         addClass(that.plate.state);
     };
 
-    that.colourPools = function() {
-      that.plateElement.find('.aliquot').
-        removeClass(that.plate.state).
-        each(function(index){
-          var pool = $(this).data('pool');
-          $(this).addClass('colour-'+pool);
-        });
-    };
+    that.poolsArray = function(){
+      var poolsArray = _.toArray(that.plate.pools);
 
-    that['summary-view'] = function(){
-      $('#summary-information').fadeIn('fast');
-
-      that.statusColour();
-    };
-
-    that['pools-view'] = function(){
-      $('#pools-information').fadeIn('fast');
-
-      that.colourPools();
-    };
-
-    that['samples-view'] = function(){
-      $('#samples-information').fadeIn('fast');
-
-      that.statusColour();
-    };
-
-
-    that.viewChangeHandler = function(event){
-      var viewName = $(this).val();
-
-      $('#plate-summary-div ul:visible').fadeOut('fast', function(){
-        that[viewName]();
+      poolsArray = _.sortBy(poolsArray, function(pool){
+        return pool.wells[0];
       });
+
+      return poolsArray;
+    }();
+
+    that.colourPools = function() {
+      for (var i=0; i < that.poolsArray.length; i++){
+        var poolId = that.poolsArray[i].id;
+
+        that.plateElement.find('.aliquot[data-pool='+poolId+']').
+          addClass('colour-'+(i+1));
+      }
+
     };
 
-    that.highLightPoolHandler = function(event) {
-      var pool = $(this).data('pool');
-
+    that.clearAliquotSelection = function(){
       that.plateElement.
-        find('.aliquot[data-pool='+pool+']').
-        removeClass('red green blue yellow').
-        addClass('selected-aliquot');
+        find('.aliquot').
+        removeClass('selected-aliquot dimmed');
     };
+
+    that['summary-view'] = {
+      activate: function(){
+          $('#summary-information').fadeIn('fast');
+          that.statusColour();
+
+      },
+
+      deactivate: function(){
+        $('#summary-information').fadeOut('fast');
+      }
+    };
+
+    that['pools-view'] = {
+      activate: function(){
+        $('#pools-information').fadeIn('fast');
+
+        that.plateElement.find('.aliquot').
+          removeClass(that.plate.state);
+
+        that.colourPools();
+
+        that.control.find('input:radio[name=radio-choice-1]:eq(1)').
+          attr('checked',true);
+
+        that.control.find('input:radio').checkboxradio("refresh");
+      },
+
+      deactivate: function(){
+        $('#pools-information').fadeOut('fast', function(){
+          $('#pools-information li').
+            removeClass('dimmed');
+        });
+
+        that.plateElement.
+          find('.aliquot').
+          removeClass('selected-aliquot dimmed');
+
+      }
+    };
+
+    that['samples-view'] = {
+      activate: function(){
+          $('#samples-information').fadeIn('fast');
+          that.statusColour();
+      },
+
+      deactivate: function(){
+        $('#samples-information').fadeOut('fast');
+      }
+
+    };
+
+
+    that.sm = new StateMachine;
+    that.sm.add(that['summary-view']);
+    that.sm.add(that['pools-view']);
+    that.sm.add(that['samples-view']);
+
+    that['summary-view'].active();
   },
+
 
   illuminaBPlateView: function(plate) {
     var plateElement = $(this);
     plateElement.before(SCAPE.controlTemplate);
     var control = $('#plate-view-control');
 
-    var viewModel = new SCAPE.PlateViewModel(plate, plateElement);
+    var viewModel = new SCAPE.PlateViewModel(plate, plateElement, control);
 
-    control.delegate('input:radio', 'change', viewModel.viewChangeHandler);
 
-    plateElement.delegate('.aliquot', 'click', viewModel.highLightPoolHandler );
+
+    control.on('change', 'input:radio', function(event){
+      var viewName = $(event.currentTarget).val();
+      viewModel[viewName].active();
+    });
+
+    plateElement.on('click', '.aliquot', function(event) {
+      var pool = $(event.currentTarget).data('pool');
+
+      viewModel['pools-view'].active();
+
+      plateElement.
+        find('.aliquot[data-pool!='+pool+']').
+        removeClass('selected-aliquot').addClass('dimmed');
+
+      plateElement.
+        find('.aliquot[data-pool='+pool+']').
+        addClass('selected-aliquot').
+        removeClass('dimmed');
+
+        $('#pools-information li[data-pool!='+pool+']').fadeOut('fast', function(){
+          $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
+        });
+
+
+    });
+
+    // ...we will never break the chain...
     return this;
   }
 
@@ -140,20 +251,9 @@
 
   // ########################################################################
   // # Page events....
-  $('#search-page').live('pageinit', function(event){
-    // Users should start the page by scanning in...
-    $('#card_id').focus();
-
-    $('#card_id').live('blur', function(){
-      if ($(this).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
-      }
-    });
-
+  $(document).on('pageinit', function(){
     // Trap the carriage return sent by the swipecard reader
-    $("#card_id").live("keydown", function(e) {
+    $(document).on("keydown", "#card_id", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
         $("#plate_barcode").focus();
@@ -161,8 +261,22 @@
       }
     });
 
+  });
+
+  $(document).on('pageinit', '#search-page', function(event){
+    // Users should start the page by scanning in...
+    $('#card_id').focus();
+
+    $(document).on('blur', '#card_id', function(){
+      if ($(this).val()) {
+        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
+      } else {
+        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
+      }
+    });
+
     // Fill in the plate barcode with the plate links barcode
-    $(".plate_link").click(function() {
+    $(document).on('click', ".plate_link", function() {
       $('#plate_barcode').val($(this).attr('id').substr(6));
       $('#plate-search-form').submit();
       return false;
@@ -171,7 +285,10 @@
   });
 
 
-  $('#plate-show-page').live('pagecreate', function(event) {
+
+
+
+  $(document).on('pagecreate', '#plate-show-page', function(event) {
 
     var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
 
@@ -189,44 +306,27 @@
         fadeOut( function(){ $(targetIds).fadeIn(); } );
     };
 
-    $('.navbar-link').live('click', SCAPE.linkHandler);
+    var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
+    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
+    $(targetIds).not(':visible').fadeIn();
+
+
+
+    $('#plate-show-page').on('click', '.navbar-link', SCAPE.linkHandler);
 
     // Set up the plate element as an illuminaBPlate...
     $('#plate').illuminaBPlateView(SCAPE.plate);
 
-  });
 
-  $('#plate-show-page').live('pageinit', function(event){
-    var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
-    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
-
-    $(targetIds).not(':visible').fadeIn();
-
-    $('#well-failing .plate-view .aliquot').
-      not('.permanent-failure').
-      toggle(
-        function(){
-      $(this).hide('fast', function(){
-        var failing = $(this).toggleClass('good failed').show().hasClass('failed');
-        $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-      });
-    },
-
-    function() {
-      $(this).hide('fast', function(){
-        var failing = $(this).toggleClass('failed good').show().hasClass('failed');
-        $(this).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-      });
-    }
-    );
+    $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
 
     // State changes reasons...
     SCAPE.displayReason();
-    $('#state').live('change', SCAPE.displayReason);
+    $('#plate-show-page').on('change','#state', SCAPE.displayReason);
   });
 
 
-  $('#admin-page').live('pageinit',function(event) {
+  $(document).on('pageinit', '#admin-page', function(event) {
 
     $('#plate_edit').submit(function() {
       if ($('#card_id').val().length === 0) {
@@ -235,20 +335,15 @@
       }
     });
 
-    // Trap the carriage return sent by the swipecard reader
-    $("#card_id").live("keydown", function(e) {
-      var code=e.charCode || e.keyCode;
-      if (code==13) return false;
-    });
-
+    // State changes reasons...
     SCAPE.displayReason();
-    $('#state').live('click',SCAPE.displayReason);
+    $('#admin-page').on('change','#state', SCAPE.displayReason);
   });
 
 
-  $('#tag-creation-page').live('pageinit', function(){
+  $(document).on('pagecreate', '#tag-creation-page', function(){
 
-    $.extend(window.SCAPE, {
+    $.extend(SCAPE, {
 
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
       substitutionTemplate  : _.template(SCAPE.substitution_tag_template),
@@ -258,7 +353,7 @@
 
         tagpalette.empty();
 
-        var currentTagGroup   = $(window.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
+        var currentTagGroup   = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
         var currentlyUsedTags = $('.aliquot').map(function(){ return parseInt($(this).text(), 10); });
         var unusedTags        = _.difference(currentTagGroup, currentlyUsedTags);
         var listItems         = unusedTags.reduce(
@@ -274,7 +369,8 @@
         var originalTag   = sourceAliquot.text();
 
         // Dim other tags...
-        $('.aliquot').not('.tag-'+originalTag).dim();
+        $('.aliquot').not('.tag-'+originalTag).addClass('dimmed');
+        sourceAliquot.addClass('selected-aliquot');
 
         SCAPE.updateTagpalette();
 
@@ -310,14 +406,14 @@
 
 
       update_layout : function () {
-        var tags = $(window.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
+        var tags = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
 
         tags.each(function(index) {
           $('#tagging-plate #aliquot_'+this[0]).
-            hide('slow').text(this[1][1]).
+            hide('fast').text(this[1][1]).
             addClass('aliquot colour-'+this[1][0]).
             addClass('tag-'+this[1][1]).
-            show('slow');
+            show('fast');
         });
 
         SCAPE.resetHandler();
@@ -330,7 +426,7 @@
       },
 
       resetHandler : function() {
-        $('.aliquot').css('opacity', 1);
+        $('.aliquot').removeClass('selected-aliquot dimmed');
         $('.available-tags').unbind();
         $('#replacement-tags').fadeOut(function(){
           $('#instructions').fadeIn();
@@ -348,5 +444,5 @@
 
   });
 
-})(window, jQuery);
+})(jQuery, window);
 

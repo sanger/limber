@@ -76,16 +76,25 @@ body {
   text-align: center;
   color:#fff;
   display: inline-block;
+  @include box-shadow(#00192B 0 1px 1px);
 }
 
 .aliquot:hover {
   color: #FFD600;
   cursor: pointer;
-  @include box-shadow(#00192B 0 3px 8px);
+  @extend .selected-aliquot;
 }
 
-.aliquot.dimmed-pool {
+.dimmed {
+  -moz-transition:    all 0.2s ease-in-out 0s;
+  -webkit-transition: all 0.2s ease-in-out 0s;
+  transition:         all 0.2s ease-in-out 0s;
   opacity: 0.2;
+}
+
+.large-insert-size {
+  color: red;
+  font-style: italic;
 }
 
 .substitute-tag {
@@ -99,8 +108,18 @@ body {
 }
 
 .selected-aliquot {
-  border: 2px solid yellow;
-  @include box-shadow(#00192B 0 3px 8px);
+  border: 3px solid rgba(250, 235, 158, 1);
+  @include box-shadow(#00060A 0 8px 8px);
+  position: relative;
+  top: -6px;
+  left: -5px;
+  width: 32px;
+  height: 26px;
+  padding: 6px 0 0 0;
+  @include border-radius(32px);
+  -moz-transition:    all 0.1s ease-in-out 0s;
+  -webkit-transition: all 0.1s ease-in-out 0s;
+  transition:         all 0.1s ease-in-out 0s;
 }
 
 

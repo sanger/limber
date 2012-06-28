@@ -7,7 +7,15 @@
 
     <%= stylesheet_link_tag "jquery-mobile", "formtastic", "screen" %>
   
-    <%= javascript_include_tag 'jquery', 'underscore', 'jquery.mobile', 'application' %>
+    <%= javascript_include_tag 'jquery', 'underscore' %>
+    <script type="text/javascript" charset="utf-8">
+      $(document).on("mobileinit", function(){
+        $.extend(  $.mobile , {
+            ajaxEnabled: false
+        });
+      });
+    </script>
+    <%= javascript_include_tag 'jquery.mobile', 'application' %>
     <%= csrf_meta_tag %>
   </head>
   <body>

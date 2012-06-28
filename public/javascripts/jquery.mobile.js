@@ -1,1 +1,1 @@
-lib/jquery.mobile-1.0rc1.min.js
+lib/jquery.mobile-1.1.0.min.js

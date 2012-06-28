@@ -1,5 +1,5 @@
 <div 
-  id="aliquot_<%= id %>" 
-  class="aliquot <%= container.location %> <%= lab_ware.state %> <%= column(container) %> col-all"
+  id="aliquot_<%= id %>"
+  class="aliquot <%= container.location %> <%= container.state %> <%= column(container) %> col-all"
   rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool) ? container.pool_id : '' %>">&nbsp;</div>

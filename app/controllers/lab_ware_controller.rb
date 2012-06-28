@@ -27,7 +27,7 @@ class LabWareController < ApplicationController
     state_changer_for(@lab_ware).move_to!(params[:state], params[:reason])
 
     respond_to do |format|
-      format.html { redirect_to(search_path, :notice => "State has been changed to #{params[:state]}") }
+      format.html { redirect_to(search_path, :notice => "State for plate #{@lab_ware.barcode.ean13} has been changed to #{params[:state]}") }
     end
   end
 end
