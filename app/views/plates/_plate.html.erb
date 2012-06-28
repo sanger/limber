@@ -32,10 +32,12 @@
 <div><br/><br/></div>
 <ul id="pools-information" class="information" style="display:none;" data-role="listview" data-inset="true">
   <% plate_presenter.plate.pools.each do |pool_id, pool| -%>
-    <li data-role="list-divider" data-pool="<%= pool_id %>"><%= pool['wells'].join(', ') %></li>
+    <li data-role="list-divider" data-pool="<%= pool_id %>"><span class="well-list"><%= pool['wells'].join(', ') %></span></li>
   <li data-pool="<%= pool_id %>">
-    <h3>Insert Size:</h3>
-    From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
+      <h3>Insert Size:</h3>
+    <span class="insert-size <%= insert_size_class(pool) %>">
+      From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
+    </span>
     <br/>
     <h3>Library Type name:</h3><%= pool['library_type']['name'] %>
   </li>
@@ -46,7 +48,7 @@
 <ul id="samples-information" data-role="listview" data-inset="true" style="display:none;">
   <li data-role="list-divider" >Plate Samples</li>
   <% plate_presenter.plate.wells.each do |well| -%>
-    <li data-theme="e">Well located at: <%= well.location %></li>
+    <li data-theme="e">Well: <%= well.location %></li>
     <% well.aliquots.each do |aliquot| -%>
       <li><%= aliquot.sample.sanger.name %></li>
     <% end -%>

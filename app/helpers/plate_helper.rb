@@ -25,4 +25,8 @@ module PlateHelper
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
   end
+
+  def insert_size_class(pool)
+    (pool['insert_size']['from'] > Settings.large_insert_limit) ? 'large-insert-size' : ''
+  end
 end

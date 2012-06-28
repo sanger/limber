@@ -85,8 +85,16 @@ body {
   @extend .selected-aliquot;
 }
 
-.aliquot.dimmed-pool {
+.dimmed {
+  -moz-transition:    all 0.2s ease-in-out 0s;
+  -webkit-transition: all 0.2s ease-in-out 0s;
+  transition:         all 0.2s ease-in-out 0s;
   opacity: 0.2;
+}
+
+.large-insert-size {
+  color: red;
+  font-style: italic;
 }
 
 .substitute-tag {

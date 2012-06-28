@@ -113,16 +113,19 @@
         addClass(that.plate.state);
     };
 
-    that.colourPools = function() {
+    that.poolsArray = function(){
       var poolsArray = _.toArray(that.plate.pools);
 
       poolsArray = _.sortBy(poolsArray, function(pool){
         return pool.wells[0];
       });
 
-     
-      for (var i=0; i < poolsArray.length; i++){
-        var poolId = poolsArray[i].id;
+      return poolsArray;
+    }();
+
+    that.colourPools = function() {
+      for (var i=0; i < that.poolsArray.length; i++){
+        var poolId = that.poolsArray[i].id;
 
         that.plateElement.find('.aliquot[data-pool='+poolId+']').
           addClass('colour-'+(i+1));
@@ -133,8 +136,7 @@
     that.clearAliquotSelection = function(){
       that.plateElement.
         find('.aliquot').
-        removeClass('selected-aliquot').
-        css('opacity',1);
+        removeClass('selected-aliquot dimmed');
     };
 
     that['summary-view'] = {
@@ -167,13 +169,12 @@
       deactivate: function(){
         $('#pools-information').fadeOut('fast', function(){
           $('#pools-information li').
-            css('opacity',1);
+            removeClass('dimmed');
         });
 
         that.plateElement.
           find('.aliquot').
-          removeClass('selected-aliquot').
-          css('opacity',1);
+          removeClass('selected-aliquot dimmed');
 
       }
     };
@@ -221,12 +222,12 @@
 
       plateElement.
         find('.aliquot[data-pool!='+pool+']').
-        removeClass('selected-aliquot').dim();
+        removeClass('selected-aliquot').addClass('dimmed');
 
       plateElement.
         find('.aliquot[data-pool='+pool+']').
         addClass('selected-aliquot').
-        css('opacity',1);
+        removeClass('dimmed');
 
         $('#pools-information li[data-pool!='+pool+']').fadeOut('fast', function(){
           $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
@@ -368,7 +369,7 @@
         var originalTag   = sourceAliquot.text();
 
         // Dim other tags...
-        $('.aliquot').not('.tag-'+originalTag).dim();
+        $('.aliquot').not('.tag-'+originalTag).addClass('dimmed');
         sourceAliquot.addClass('selected-aliquot');
 
         SCAPE.updateTagpalette();
@@ -425,7 +426,7 @@
       },
 
       resetHandler : function() {
-        $('.aliquot').css('opacity', 1).removeClass('selected-aliquot');
+        $('.aliquot').removeClass('selected-aliquot dimmed');
         $('.available-tags').unbind();
         $('#replacement-tags').fadeOut(function(){
           $('#instructions').fadeIn();

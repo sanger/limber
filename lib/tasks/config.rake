@@ -6,6 +6,8 @@ namespace :config do
     # Build the configuration file based on the server we are connected to.
     configuration = {}
 
+    configuration[:'large_insert_limit'] = 250
+
     configuration[:searches] = {}.tap do |searches|
       puts "Preparing searches ..."
 
