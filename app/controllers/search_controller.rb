@@ -34,7 +34,7 @@ class SearchController < ApplicationController
   end
 
   def create_or_find
-    params[:show_my_plates] ? my_plates : create
+    params['show-my-plates'] == 'true' ? my_plates : create
   end
 
   def create

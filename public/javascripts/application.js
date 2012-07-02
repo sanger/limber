@@ -269,6 +269,7 @@
       if (code==13) {
         // Check that the value is 13 characters long like a barcode
         if ($(event.currentTarget).val().length === 13) {
+          $(event.currentTarget).closest('form').find('.show-my-plates').val(false);
           $(event.currentTarget).closest('.plate-search-form').submit();
         }
       }
@@ -285,9 +286,11 @@
       }
     });
 
+
     // Fill in the plate barcode with the plate links barcode
-    $(document).on('click', ".plate-link", function() {
-      $('.plate-barcode').val($(this).attr('id').substr(6));
+    $(document).on('click', ".plate-link", function(event) {
+      $('.plate-barcode').val($(event.currentTarget).attr('id').substr(6));
+      $('.show-my-plates').val(false);
       $('.plate-search-form').submit();
       return false;
     });
