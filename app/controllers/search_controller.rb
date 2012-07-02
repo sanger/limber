@@ -19,6 +19,8 @@ class SearchController < ApplicationController
      :state     => [ 'pending', 'started', 'passed' ],
      :user_uuid => current_user_uuid
     )
+
+    render :my_plates
   end
 
   def stock_plates

@@ -1,7 +1,7 @@
 <%= content do %>
   <%= flash_messages %>
 
-    <h1>Search for Plate</h1>
+    <h1><%= search_title %></h1>
       <%= section do %>
         <%= form_tag perform_search_path, :class => "plate-search-form", :method => 'post' do %>
           <%= label_tag :card_id do %>
@@ -14,12 +14,11 @@
         <% end %>
       <% end %>
 
+      <h2><%= search_status(search_results) %></h2>
       <% unless search_results.empty? %>
         <%= section do %>
           <%= render(:partial => 'plate_progress', :locals => { :plates => search_results }) %>
         <% end %>
-      <% else -%>
-        <h2><i>No new stock plates found.</i></h2>
       <% end %>
 
 <% end %>

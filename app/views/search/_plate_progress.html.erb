@@ -1,4 +1,3 @@
-<h2>Ongoing plates</h2>
 <ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
 
   <% plates_by_state(plates).each do |state, sorted_plates| -%>
@@ -17,5 +16,11 @@
       <% end -%>
       </li>
     <% end -%>
+  <% end -%>
+
+  <% if plates.empty? -%>
+    <li>
+      <h2><i><%= no_results_msg ||= 'No plates found.' %></i></h2>
+    </li>
   <% end -%>
 </ul>

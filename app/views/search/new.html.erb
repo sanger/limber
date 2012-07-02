@@ -4,7 +4,7 @@
 <div data-role="navbar">
 	<ul>
     <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
-    <li><a href="<%= all_stock_plates_path %>" >New Stock Plates</a></li>
+    <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
     <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
 	</ul>
 </div>
@@ -13,7 +13,7 @@
   <%= content do %>
     <%= flash_messages %>
 
-      <h1>Search for Plate</h1>
+      <h1>Search for plate by barcode</h1>
         <%= section do %>
           <%= form_tag perform_search_path, :class => "plate-search-form", :method => 'post' do %>
             <p>
@@ -35,6 +35,14 @@
               <%= label_tag :plate_barcode, "Plate Barcode:" %>
               <%= text_field_tag :plate_barcode, params[:plate_barcode], :class => 'plate-id' %>
             </p>
+            <%= submit_tag "Find Plate",
+                :name           => 'find_plate',
+                :'data-theme'   => "b",
+                :class          => "submit",
+                :'data-inline'  => "true",
+                :'data-icon'    => "search",
+                :'data-iconpos' => "right"
+              %>
           <% end %>
         <% end %>
 
