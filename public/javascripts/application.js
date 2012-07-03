@@ -253,40 +253,53 @@
   // # Page events....
   $(document).on('pageinit', function(){
     // Trap the carriage return sent by the swipecard reader
-    $(document).on("keydown", "#card_id", function(e) {
+    $(document).on("keydown", "input.card-id", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
         $("#plate_barcode").focus();
         return false;
       }
+
     });
 
-  });
-
-  $(document).on('pageinit', '#search-page', function(event){
-    // Users should start the page by scanning in...
-    $('#card_id').focus();
-
-    $(document).on('blur', '#card_id', function(){
-      if ($(this).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
+    // Trap the carriage return sent by barcode scanner
+    $(document).on("keydown", ".plate-barcode", function(event) {
+      var code=event.charCode || event.keyCode;
+      // Check for carrage return (key code 13)
+      if (code==13) {
+        // Check that the value is 13 characters long like a barcode
+        if ($(event.currentTarget).val().length === 13) {
+          $(event.currentTarget).closest('form').find('.show-my-plates').val(false);
+          $(event.currentTarget).closest('.plate-search-form').submit();
+        }
       }
     });
 
+    // Change the colour of the title bar to show a user id
+    $(document).on('blur', 'input.card-id', function(event){
+      if ($(event.currentTarget).val()) {
+        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
+        $('.show-my-plates-button').button('enable');
+      } else {
+        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
+        $('.show-my-plates-button').button('disable');
+      }
+    });
+
+
     // Fill in the plate barcode with the plate links barcode
-    $(document).on('click', ".plate_link", function() {
-      $('#plate_barcode').val($(this).attr('id').substr(6));
-      $('#plate-search-form').submit();
+    $(document).on('click', ".plate-link", function(event) {
+      $('.plate-barcode').val($(event.currentTarget).attr('id').substr(6));
+      $('.show-my-plates').val(false);
+      $('.plate-search-form').submit();
       return false;
     });
 
   });
 
-
-
-
+  $(document).bind('pageshow', function() {
+    $($('.ui-page-active form :input:visible')[0]).focus();
+  });
 
   $(document).on('pagecreate', '#plate-show-page', function(event) {
 

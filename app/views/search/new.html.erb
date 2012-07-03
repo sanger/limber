@@ -3,9 +3,9 @@
     <h1>Sequencescape - Illumina-B Pipeline</h1>
 <div data-role="navbar">
 	<ul>
-    <li><a href="<%= search_path %>"  >Search</a></li>
-    <li><a href="<%= all_stock_plates_path %>" >All Stock Plates</a></li>
-    <li><a href="<%= all_outstanding_plates_path %>" >All Plates</a></li>
+    <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
+    <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
+    <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
 	</ul>
 </div>
   </div>
@@ -13,40 +13,29 @@
   <%= content do %>
     <%= flash_messages %>
 
-      <h1>Search for Plate</h1>
+      <h1>Search for plate by barcode</h1>
         <%= section do %>
-          <%= form_tag perform_search_path, :id => "plate-search-form", :method => 'post' do %>
+          <%= form_tag perform_search_path, :class => 'plate-search-form', :'data-ajax' => 'false', :method => 'post' do %>
             <p>
-            <%= label_tag :card_id, "User Swipecard" %>
-            <%= text_field_tag :card_id, params[:card_id] %>
-            </p>
-            <p>
-            <%= label_tag :plate_barcode, "Plate Barcode" %>
-            <%= text_field_tag :plate_barcode, params[:plate_barcode] %>
+              <%= label_tag :card_id, 'User Swipecard:' %>
+              <%= text_field_tag :card_id, params[:card_id], :class => 'card-id' %>
             </p>
 
-            <%= submit_tag "Show Plate",
-              :name           => 'show_plate',
-              :'data-theme'   => "b",
-              :class          => "submit",
-              :'data-inline'  => "true",
-              :'data-icon'    => "arrow-r",
-              :'data-iconpos' => "right"
-            %>
-            <%= submit_tag "Show My Plates",
-                :name           => 'show_my_plates',
-                :'data-theme'   => "b",
-                :class          => "submit",
-                :'data-inline'  => "true",
-                :'data-icon'    => "search",
-                :'data-iconpos' => "right"
+            <%= hidden_field_tag :'show-my-plates', true, :class => 'show-my-plates' %>
+
+            <%= submit_tag 'Show My Plates',
+                :'data-theme'   => 'b',
+                :class          => 'submit show-my-plates-button',
+                :disabled       => 'disabled',
+                :'data-inline'  => 'true',
+                :'data-icon'    => 'search',
+                :'data-iconpos' => 'right'
               %>
-          <% end %>
-        <% end %>
 
-        <% unless @ongoing.empty? %>
-          <%= section do %>
-            <%= render(:partial => 'plate_progress', :locals => { :plates => @ongoing }) %>
+            <p>
+              <%= label_tag :plate_barcode, 'Plate Barcode:' %>
+              <%= text_field_tag :plate_barcode, params[:plate_barcode], :class => 'plate-barcode' %>
+            </p>
           <% end %>
         <% end %>
 

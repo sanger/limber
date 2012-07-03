@@ -1,0 +1,38 @@
+<%= page(:'my-plates') do %>
+  <div data-role="header">
+    <h1>Sequencescape - Illumina-B Pipeline</h1>
+    <div data-role="navbar">
+      <ul>
+        <li><a href="<%= search_path %>" >Search</a></li>
+        <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
+        <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
+        <li><a href="#" class="ui-btn-active" >My Plates</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <%= content do %>
+    <%= flash_messages %>
+
+      <h1><%= @current_user.login %>'s ongoing plates</h1>
+        <%= section do %>
+          <%= form_tag perform_search_path, :class => "plate-search-form", :method => 'post' do %>
+            <%= hidden_field_tag :card_id, params[:card_id], :class => 'card-id' %>
+
+            <%= hidden_field_tag :plate_barcode, params[:plate_barcode], :class => 'plate-barcode' %>
+
+          <% end %>
+        <% end %>
+
+        <%= section do %>
+          <%= render(
+            :partial => 'plate_progress',
+            :locals  => {
+              :plates         => @search_results,
+              :no_results_msg => 'You current have no ongoing plates.'
+            })
+          %>
+        <% end %>
+
+  <% end %>
+<% end %>

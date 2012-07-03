@@ -2,8 +2,8 @@ IlluminaBPipeline::Application.routes.draw do
   scope 'search', :controller => :search do
     match '/',                       :action => 'new',    :via => :get,  :as => :search
     match '/',                       :action => 'create_or_find', :via => :post, :as => :perform_search
-    match '/all_outstanding_plates', :action => :all_outstanding_plates
-    match '/all_stock_plates', :action => :all_stock_plates
+    match '/ongoing_plates', :action => :ongoing_plates
+    match '/all_stock_plates', :action => :stock_plates
   end
 
   resources :illumina_b_plates, :controller => :plates do
