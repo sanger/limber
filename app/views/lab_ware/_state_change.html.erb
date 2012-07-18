@@ -20,6 +20,7 @@
         <% end -%>
         <li>
           <%= label_tag :state, "Change state to:" %>
+          
           <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
         </li>
         <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'cancelled'%>>

@@ -10,6 +10,12 @@ module Presenters::Statemachine
   module StateTransitions #:nodoc:
     def self.inject(base)
       base.instance_eval do
+
+        event :take_default_path do
+          transition :pending => :started
+          transition :started => :passed
+        end
+
         event :start do
           transition :pending => :started
         end
@@ -36,22 +42,11 @@ module Presenters::Statemachine
         state :pending do
           include StateDoesNotAllowChildCreation
         end
+
         state :started do
           include StateDoesNotAllowChildCreation
-
-          # Yields to the block if there are child plates that can be created from the current one.
-          # It passes the valid child plate purposes to the block.
-          def control_additional_creation(&block)
-            yield unless child_plate_purposes.empty?
-            nil
-          end
-
-          # Returns the child plate purposes that can be created in the started state.  Typically
-          # this should be empty, unless QC plates can be created from the current plate.
-          def child_plate_purposes
-            plate.plate_purpose.children.reject { |p| not ['ILB_STD_PCR', 'ILB_STD_PREPCR'].include?(p.name) }
-          end
         end
+
         state :passed do
           # Yields to the block if there are child plates that can be created from the current one.
           # It passes the valid child plate purposes to the block.
@@ -83,9 +78,22 @@ module Presenters::Statemachine
   # Yields to the block if there is the possibility of controlling the state change, passing
   # the valid next states, along with the current one too.
   def control_state_change(&block)
-    yield(state_transitions) if state_transitions.present?
+    # Look for a default transition
+    default_transition = state_transitions.detect {|t| t.event == :take_default_path }
+
+    if default_transition.present?
+      # This ugly thing should yield the default transition first followed by
+      # any other transitions to states that aren't the default...
+      yield( [default_transition] + state_transitions.reject {|t| t.to == default_transition.to } )
+    elsif state_transitions.present?
+      # ...if there's no default transition but there are still other transitions
+      # present then yield those.
+      yield(state_transitions)
+    end
+
     nil
   end
+
 
   # Does nothing
   def control_additional_printing(&block)

@@ -131,6 +131,7 @@ body {
   .pending           { @extend .blue;                                                    }
   .started           { @extend .yellow;                                                  }
   .passed            { @extend .green;                                                   }
+  .qc_complete       { @include background(radial-gradient(top left, #3BB08F, darken(#00B10E, 50))); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 
