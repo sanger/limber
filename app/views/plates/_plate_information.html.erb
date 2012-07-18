@@ -1,6 +1,5 @@
 <ul id="summary-information" class="information" style="display:none;">
   <li><span class="label">Barcode</span>             <span class="barcode"><%= useful_barcode(plate.barcode) %></span></li>
-  <li><span class="label">UUID</span>             <span class="barcode"><%= plate.uuid %></span></li>
   <li><span class="label">Number of wells</span>     <span class="full"><%= plate.wells.select { |w| not w.aliquots.empty? }.size %></span> / <span class="total"><%= plate.size %></span></li>
   <li><span class="label">Plate type</span>          <%= plate.plate_purpose.name %></li>
   <li><span class="label">Current plate state</span> <%= plate.state %></li>
