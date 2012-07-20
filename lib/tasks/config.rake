@@ -81,6 +81,31 @@ namespace :config do
       end
     end
 
+    puts "Preparing Tube purpose forms, presenters, and state changers ..."
+
+    configuration[:tube_purposes] = {}.tap do |tube_purposes|
+      name_to_details = Hash.new do |h,k|
+        h[k] = {
+          :form_class          => 'Forms::TubeCreationForm',
+          :presenter_class     => 'Presenters::TubePresenter',
+          :state_changer_class => 'StateChangers::DefaultStateChanger'
+        }
+      end.tap do |presenters|
+      end
+
+      api.tube_purpose.all.each do |tube_purpose|
+        next unless [
+          'ILB_STD_STOCK',
+          'ILB_STD_MX'
+        ].include?(tube_purpose.name)
+
+        tube_purposes[tube_purpose.uuid] = name_to_details[tube_purpose.name].dup.merge(
+          :name => tube_purpose.name
+        )
+      end
+    end
+
+
     # Write out the current environment configuration file
     File.open(File.join(Rails.root, %w{config settings}, "#{Rails.env}.yml"), 'w') do |file|
       file.puts(configuration.to_yaml)
