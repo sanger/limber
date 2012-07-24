@@ -52,7 +52,7 @@ namespace :config do
 
         presenters['ILB_STD_PCR'].merge!(
           :form_class          => 'Forms::TaggingForm',
-          :presenter_class     => 'Presenters::TaggedPresenter'
+          :presenter_class     => 'Presenters::PcrPresenter'
         )
 
         presenters['ILB_STD_PCRXP'].merge!(

@@ -6,6 +6,44 @@ module Presenters::Statemachine
     alias_method(:control_additional_creation, :control_child_plate_creation)
   end
 
+  # These are shared base methods to be used in all presenter state_machines
+  module Shared
+    #--
+    # We ignore the assignment of the state because that is the statemachine getting in before
+    # the plate has been loaded.
+    #++
+    def state=(value) #:nodoc:
+      # Ignore this!
+    end
+
+    # Yields to the block if there is the possibility of controlling the state change, passing
+    # the valid next states, along with the current one too.
+    def control_state_change(&block)
+      # Look for a default transition
+      default_transition = state_transitions.detect {|t| t.event == :take_default_path }
+
+      if default_transition.present?
+        # This ugly thing should yield the default transition first followed by
+        # any other transitions to states that aren't the default...
+        yield( [default_transition] + state_transitions.reject {|t| t.to == default_transition.to } )
+      elsif state_transitions.present?
+        # ...if there's no default transition but there are still other transitions
+        # present then yield those.
+        yield(state_transitions)
+      end
+
+      nil
+    end
+
+    # Does nothing
+    def control_additional_printing(&block)
+    end
+
+    def all_plate_states
+      self.class.state_machines[:state].states.map(&:value)
+    end
+  end
+
   # State transitions are common across all of the statemachines.
   module StateTransitions #:nodoc:
     def self.inject(base)
@@ -34,6 +72,8 @@ module Presenters::Statemachine
 
   def self.included(base)
     base.class_eval do
+      include Shared
+
       # The state machine for plates which has knock-on effects on the plates that can be created
       state_machine :state, :initial => :pending do
         StateTransitions.inject(self)
@@ -75,40 +115,5 @@ module Presenters::Statemachine
     end
   end
 
-  # Yields to the block if there is the possibility of controlling the state change, passing
-  # the valid next states, along with the current one too.
-  def control_state_change(&block)
-    # Look for a default transition
-    default_transition = state_transitions.detect {|t| t.event == :take_default_path }
 
-    if default_transition.present?
-      # This ugly thing should yield the default transition first followed by
-      # any other transitions to states that aren't the default...
-      yield( [default_transition] + state_transitions.reject {|t| t.to == default_transition.to } )
-    elsif state_transitions.present?
-      # ...if there's no default transition but there are still other transitions
-      # present then yield those.
-      yield(state_transitions)
-    end
-
-    nil
-  end
-
-
-  # Does nothing
-  def control_additional_printing(&block)
-
-  end
-
-  def all_plate_states
-    self.class.state_machines[:state].states.map(&:value)
-  end
-
-  #--
-  # We ignore the assignment of the state because that is the statemachine getting in before
-  # the plate has been loaded.
-  #++
-  def state=(value) #:nodoc:
-    # Ignore this!
-  end
 end
