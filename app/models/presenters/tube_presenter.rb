@@ -28,8 +28,7 @@ module Presenters
     # Yields to the block if there is the possibility of controlling the state change, passing
     # the valid next states, along with the current one too.
     def control_state_change(&block)
-      valid_next_states = state_transitions.map(&:to)
-      yield(valid_next_states) unless valid_next_states.empty?
+      yield(state_transitions) if state_transitions.present?
       nil
     end
 

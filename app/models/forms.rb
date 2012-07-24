@@ -75,8 +75,8 @@ module Forms
       plate_creation.try(:child) || :child_not_created
     end
 
-    def child_plate_purpose
-      @child_plate_purpose ||= api.plate_purpose.find(plate_purpose_uuid)
+    def child_purpose
+      @child_purpose ||= api.plate_purpose.find(plate_purpose_uuid)
     end
 
     def parent
@@ -93,7 +93,7 @@ module Forms
     def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
         :parent              => parent_uuid,
-        :child_plate_purpose => plate_purpose_uuid,
+        :child_purpose => plate_purpose_uuid,
         :user                => user_uuid
       )
 

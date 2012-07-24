@@ -2,7 +2,7 @@
     The form should use attriutes on the presenter class not the lab_ware directly. 
 %>
 
-<% presenter.control_state_change do |states| %>
+<% presenter.control_state_change do |transitions| %>
     <%= form_for(
           presenter.lab_ware,
           presenter.lab_ware_form_details(self).merge(
@@ -20,7 +20,8 @@
         <% end -%>
         <li>
           <%= label_tag :state, "Change state to:" %>
-          <%= select_tag :state, options_for_select(states.map { |s| [ s.titleize, s ] }, states.first) %>
+          
+          <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
         </li>
         <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'cancelled'%>>
           <%= label_tag :reason, 'Reason for cancellation:' %>

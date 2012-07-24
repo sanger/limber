@@ -130,7 +130,10 @@ body {
   .unknown-value     { @include background(radial-gradient(top left, #289AC7, #083442)); }
   .pending           { @extend .blue;                                                    }
   .started           { @extend .yellow;                                                  }
+  .started_fx        { @extend .yellow;                                                  }
+  .started_mj        { @extend .orange;                                                  }
   .passed            { @extend .green;                                                   }
+  .qc_complete       { @include background(radial-gradient(top left, #3BB08F, darken(#00B10E, 50))); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 

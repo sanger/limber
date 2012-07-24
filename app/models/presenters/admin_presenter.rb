@@ -15,6 +15,7 @@ module Presenters
     # Yields any block passed to it, so that we can changed from
     # any state to any state....
     def control_state_change(&block)
+      raise "NOT IN USE!"
       yield(all_plate_states - [lab_ware.state])
       nil
     end
