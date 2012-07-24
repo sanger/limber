@@ -8,13 +8,13 @@ module Presenters
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation(&block)
-          yield unless child_plate_purposes.empty?
+          yield unless child_purposes.empty?
           nil
         end
 
         # Returns the child plate purposes that can be created in the passed state.  Typically
         # this is only one, but it specifically excludes QC plates.
-        def child_plate_purposes
+        def child_purposes
           # plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
           plate.plate_purpose.children
         end
@@ -24,13 +24,13 @@ module Presenters
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation(&block)
-          yield unless child_plate_purposes.empty?
+          yield unless child_purposes.empty?
           nil
         end
 
         # Returns the child plate purposes that can be created in the passed state.  Typically
         # this is only one, but it specifically excludes QC plates.
-        def child_plate_purposes
+        def child_purposes
           # plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
           plate.plate_purpose.children
         end
