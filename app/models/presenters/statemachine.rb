@@ -42,6 +42,10 @@ module Presenters::Statemachine
     def all_plate_states
       self.class.state_machines[:state].states.map(&:value)
     end
+
+    # The current state of the plate is delegated to the plate
+    delegate :state, :to => :plate
+
   end
 
   # State transitions are common across all of the statemachines.
@@ -110,8 +114,6 @@ module Presenters::Statemachine
         end
       end
 
-      # The current state of the plate is delegated to the plate
-      delegate :state, :to => :plate
     end
   end
 
