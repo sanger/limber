@@ -56,7 +56,7 @@ namespace :config do
         )
 
         presenters['ILB_STD_PCRXP'].merge!(
-          :presenter_class     => 'Presenters::FinalPooledPresenter',
+          :presenter_class     => 'Presenters::PcrXpPresenter',
           :state_changer_class => 'StateChangers::AutoPoolingStateChanger'
         )
 
