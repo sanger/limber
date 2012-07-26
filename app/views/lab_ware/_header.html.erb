@@ -1,6 +1,12 @@
 <% if presenter.present? and title.present? %>
   <h1><%= presenter.plate.plate_purpose.name %>: <%= presenter.plate.barcode.ean13 %> - <%= title %></h1>
 <% end %>
-<%= link_to('Search', root_path, :'data-direction' => "reverse", :rel => 'external', :'data-icon' => 'search') %>
+<%= link_to 'Back to Inbox',
+  root_path,
+  :'data-direction' => "reverse",
+  :rel              => 'external',
+  :'data-icon'      => 'search',
+  :'data-theme'     => 'a'
+%>
 <%= yield(:header) %>
-<%= admin_link(presenter) %>
+<%#= admin_link(presenter) %>

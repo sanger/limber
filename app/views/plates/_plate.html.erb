@@ -45,7 +45,7 @@
   <% end -%>
 </ul>
 
-<ul id="samples-information" data-role="listview" data-inset="true" style="display:none;">
+<ul id="samples-information" class="information" data-role="listview" data-inset="true" style="display:none;">
   <li data-role="list-divider" >Plate Samples</li>
   <% plate_presenter.plate.wells.each do |well| -%>
     <li data-theme="e">Well: <%= well.location %></li>

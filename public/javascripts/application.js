@@ -147,7 +147,7 @@
       },
 
       deactivate: function(){
-        $('#summary-information').fadeOut('fast');
+        $('#summary-information').hide();
       }
     };
 
@@ -171,15 +171,15 @@
       },
 
       deactivate: function(){
-        $('#pools-information').fadeOut('fast', function(){
+        $('#pools-information').hide(function(){
           $('#pools-information li').
             removeClass('dimmed');
+
+					that.plateElement.
+						find('.aliquot').
+						removeClass('selected-aliquot dimmed');
+
         });
-
-        that.plateElement.
-          find('.aliquot').
-          removeClass('selected-aliquot dimmed');
-
       }
     };
 
@@ -190,7 +190,7 @@
       },
 
       deactivate: function(){
-        $('#samples-information').fadeOut('fast');
+        $('#samples-information').hide();
       }
 
     };
