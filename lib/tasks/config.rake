@@ -1,5 +1,17 @@
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
+
+  PLATE_PURPOSES = [ 
+    'ILB_STD_INPUT',
+    'ILB_STD_COVARIS',
+    'ILB_STD_SH',
+    'ILB_STD_PCR',
+    'ILB_STD_PREPCR',
+    'ILB_STD_PCRXP'
+  ]
+
+  TUBE_PURPOSES = [ 'ILB_STD_STOCK', 'ILB_STD_MX' ]
+
   task :generate => :environment do
     api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
 
@@ -47,33 +59,25 @@ namespace :config do
         )
 
         presenters['ILB_STD_PREPCR'].merge!(
-          :presenter_class     => 'Presenters::PrePcrPlatePresenter'
+          :presenter_class => 'Presenters::PrePcrPlatePresenter'
         )
 
         presenters['ILB_STD_PCR'].merge!(
-          :form_class          => 'Forms::TaggingForm',
-          :presenter_class     => 'Presenters::PcrPresenter'
+          :form_class      => 'Forms::TaggingForm',
+          :presenter_class => 'Presenters::PcrPresenter'
         )
 
         presenters['ILB_STD_PCRXP'].merge!(
           :presenter_class     => 'Presenters::PcrXpPresenter',
-          :state_changer_class => 'StateChangers::AutoPoolingStateChanger'
+          :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
         )
-
 
       end
 
       puts "Preparing plate purpose forms, presenters, and state changers ..."
 
       api.plate_purpose.all.each do |plate_purpose|
-        next unless [
-          'ILB_STD_INPUT',
-          'ILB_STD_COVARIS',
-          'ILB_STD_SH',
-          'ILB_STD_PCR',
-          'ILB_STD_PREPCR',
-          'ILB_STD_PCRXP'
-        ].include?(plate_purpose.name)
+        next unless PLATE_PURPOSES.include?(plate_purpose.name)
 
         plate_purposes[plate_purpose.uuid] = name_to_details[plate_purpose.name].dup.merge(
           :name => plate_purpose.name
@@ -82,6 +86,15 @@ namespace :config do
     end
 
     puts "Preparing Tube purpose forms, presenters, and state changers ..."
+
+    # First cache the purpose names to uuid
+    configuration[:tube_purpose_uuids] = {}.tap do |tube_purpose_uuids|
+      api.tube_purpose.all.each do |tube_purpose|
+        next unless TUBE_PURPOSES.include?(tube_purpose.name)
+
+        tube_purpose_uuids[tube_purpose.name] = tube_purpose.uuid
+      end
+    end
 
     configuration[:tube_purposes] = {}.tap do |tube_purposes|
       name_to_details = Hash.new do |h,k|
@@ -94,17 +107,13 @@ namespace :config do
       end
 
       api.tube_purpose.all.each do |tube_purpose|
-        next unless [
-          'ILB_STD_STOCK',
-          'ILB_STD_MX'
-        ].include?(tube_purpose.name)
+        next unless TUBE_PURPOSES.include?(tube_purpose.name)
 
         tube_purposes[tube_purpose.uuid] = name_to_details[tube_purpose.name].dup.merge(
           :name => tube_purpose.name
         )
       end
     end
-
 
     # Write out the current environment configuration file
     File.open(File.join(Rails.root, %w{config settings}, "#{Rails.env}.yml"), 'w') do |file|
