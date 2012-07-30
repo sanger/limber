@@ -10,6 +10,8 @@
             :as => :plate
           )) do |f|
     %>
+    <%= hidden_field_tag :plate_purpose_uuid, presenter.plate.plate_purpose.uuid %>
+    <%= hidden_field_tag :plate_ean13_barcode, presenter.plate.barcode.ean13 %>
    <ul id="state-changer" data-role="listview" data-inset="true">
      <li data-role="list-divider"><h2>Current State: <i><%= presenter.lab_ware.state.titleize %></i> </h2></li>
         <% if admin_page? -%>

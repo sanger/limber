@@ -34,29 +34,37 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     state :pending do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :started do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :passed do
+      include StateDoesNotAllowTubePreviewing
+    end
+
+    state :qc_complete do
       def control_tube_preview(&block)
         yield unless plate.has_transfers_to_tubes?
         nil
       end
 
+      # Don't yield in :qc_complete state
       def control_source_view(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
       end
 
+      # Yield tube view in :qc_complete state
       def control_tube_view(&block)
-        yield if plate.has_transfers_to_tubes?
+        yield
         nil
       end
       alias_method(:control_additional_printing, :control_tube_view)
     end
+
     state :failed do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :cancelled do
       include StateDoesNotAllowTubePreviewing
     end
