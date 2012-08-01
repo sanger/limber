@@ -46,8 +46,16 @@ module Presenters
       self.tube
     end
 
+    # Purpose returns the plate or tube purpose of the labware.
+    # Currently this needs to be specialised for tube or plate but in future
+    # both should use #purpose and we'll be able to share the same method for
+    # all presenters.
+    def purpose
+      lab_ware.purpose
+    end
+
     def lab_ware_form_details(view)
-      { :url => view.illumina_b_multiplexed_library_tube_path(self.tube), :as  => :tube }
+      { :url => view.illumina_b_tube_path(self.tube), :as  => :tube }
     end
   end
 end
