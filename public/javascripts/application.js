@@ -306,16 +306,23 @@
   });
 
   $(document).on('pagecreate', '#plate-show-page', function(event) {
+    // Set up the plate element as an illuminaBPlate...
+    $('#plate').illuminaBPlateView(SCAPE.labware);
+    $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
+  });
 
-    var tabsForState = '#'+SCAPE.plate.tabStates[SCAPE.plate.state].join(', #');
 
-    $('#navbar li').not(tabsForState).remove();
-    $('#'+SCAPE.plate.tabStates[SCAPE.plate.state][0]).find('a').addClass('ui-btn-active');
+  $(document).on('pagecreate', '.show-page', function(event) {
+
+    var tabsForState = '#'+SCAPE.labware.tabStates[SCAPE.labware.state].join(', #');
+
+    $('#navbar li').not(tabsForState).addClass('ui-disabled');
+    $('#'+SCAPE.labware.tabStates[SCAPE.labware.state][0]).find('a').addClass('ui-btn-active');
 
 
     SCAPE.linkHandler = function(){
       var targetTab = $(this).attr('rel');
-      var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
+      var targetIds = '#'+SCAPE.labware.tabViews[targetTab].join(', #');
 
       $('.scape-ui-block').
         not(targetIds).
@@ -323,26 +330,18 @@
         fadeOut( function(){ $(targetIds).fadeIn(); } );
     };
 
-    var targetTab = SCAPE.plate.tabStates[SCAPE.plate.state][0];
-    var targetIds = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
+    var targetTab = SCAPE.labware.tabStates[SCAPE.labware.state][0];
+    var targetIds = '#'+SCAPE.labware.tabViews[targetTab].join(', #');
     $(targetIds).not(':visible').fadeIn();
 
 
 
-    $('#plate-show-page').on('click', '.navbar-link', SCAPE.linkHandler);
-
-    // Set up the plate element as an illuminaBPlate...
-    $('#plate').illuminaBPlateView(SCAPE.plate);
-
-
-    $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
+    $('.show-page').on('click', '.navbar-link', SCAPE.linkHandler);
 
     // State changes reasons...
     SCAPE.displayReason();
-    $('#plate-show-page').on('change','#state', SCAPE.displayReason);
+    $('.show-page').on('change','#state', SCAPE.displayReason);
   });
-
-
   $(document).on('pageinit', '#admin-page', function(event) {
 
     $('#plate_edit').submit(function() {

@@ -8,8 +8,8 @@ module PageHelper
   end
   private :grouping
 
-  def page(id, &block)
-    grouping(:page, :id => id, &block)
+  def page(id, css_class=nil, &block)
+    grouping(:page, :id => id, :class => css_class, &block)
   ensure
     @_content_for[:header] = ''
   end

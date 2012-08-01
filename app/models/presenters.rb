@@ -30,26 +30,26 @@ module Presenters
 
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
-      'summary-button'        => ['labware-summary', 'plate-printing' ],
+      'summary-button'          => [ 'labware-summary', 'plate-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'plate-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'plate-creation' ],
-      'labware-state-button'    => [ 'labware-summary', 'plate-state' ],
-      'well-failing-button'   => [ 'well-failing' ]
+      'labware-state-button'    => [ 'labware-summary', 'plate-state'    ],
+      'well-failing-button'     => [ 'well-failing' ]
     }
 
     class_inheritable_reader    :tab_states
-    write_inheritable_attribute :tab_states, {
-      :pending    =>  ['summary-button'],
-      :started    =>  ['summary-button'],
-      :passed     =>  ['summary-button'],
-      :qc_complete => ['summary-button'],
-      :cancelled  =>  ['summary-button']
-    }
+    write_inheritable_attribute :tab_states, [
+      :pending,
+      :started,
+      :passed,
+      :qc_complete,
+      :cancelled
+    ].each_with_object({}) {|k,h| h[k] = ['summary-button']}
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending    =>  [ 'summary-button', 'labware-state-button' ],
-        :started    =>  [ 'labware-state-button', 'summary-button' ],
+        :pending    =>  [ 'summary-button', 'labware-state-button'                           ],
+        :started    =>  [ 'labware-state-button', 'summary-button'                           ],
         :passed     =>  [ 'labware-creation-button','summary-button', 'labware-state-button' ],
         :cancelled  =>  [ 'summary-button' ],
         :failed     =>  [ 'summary-button' ]

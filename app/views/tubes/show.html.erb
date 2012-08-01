@@ -1,52 +1,55 @@
-<%= page(:'tube-show-page') do %>
+<%= page(:'tube-show-page', :'show-page') do %>
+  <script type="text/javascript">
+    SCAPE.labware = {
+      'state':     '<%= @presenter.labware.state %>',
+      'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
+      'tabStates': <%= get_tab_states(@presenter) %>,
+      'uuid':     '<%= @presenter.labware.uuid %>'
+    };
+  </script>
+
   <%= header(@presenter, 'Tube view') do %>
     <div data-role="navbar">
       <ul id="navbar">
         <li id="summary-button">
-          <a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a>
+        <a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a>
         </li>
         <% if current_user_uuid.present? -%>
-          <li id="labware-creation-button">
-            <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Plate</a>
-          </li>
-          <li id="labware-QC-button">
-            <a href="#" class="navbar-link" rel="labware-QC-button" data-icon="add">Create QC Plate</a>
-          </li>
           <li id="labware-state-button">
-            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Change Plate State</a>
+            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Change Tube State</a>
           </li>
-          <li id="well-failing-button">
-            <a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a>
+          <li id="labware-creation-button">
+            <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Tube</a>
           </li>
         <% end %>
       </ul>
     </div>
-  <% end #of header %>
+    <% end #of header %>
 
 
-  <%= content do %>
-    <%= flash_messages %>
-    <h1>Tube Status - <%= @presenter.tube.state.titleize %></h1>
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
-        <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
-      </div>
-
-      <div class="ui-block-b">
-        <div id="tube-printing" class="scape-ui-block" style="display:none;">
-          <%= individual_barcode_printing_form(
-            @presenter.tube.barcode,
-            :redirection_url => illumina_b_tube_path(@presenter.tube),
-            :text            => 'MX Library tube'
-          ) %>
+    <%= content do %>
+      <%= flash_messages %>
+      <h1>Tube Status - <%= @presenter.tube.state.titleize %></h1>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <%= render :partial => 'labware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
         </div>
 
-        <div id="tube-state" class="scape-ui-block" style="display:none;">
-          <%= state_change_form(@presenter) %>
+        <div class="ui-block-b">
+          <div id="tube-printing" class="scape-ui-block" style="display:none;">
+            <%= individual_barcode_printing_form(
+              @presenter.tube.barcode,
+              :redirection_url => illumina_b_tube_path(@presenter.tube),
+              :text            => 'MX Library tube'
+            ) %>
+          </div>
+
+          <div id="tube-state" class="scape-ui-block" style="display:none;">
+            <%= state_change_form(@presenter) %>
+          </div>
         </div>
       </div>
-    </div>
 
-  <% end #of content %>
+      <% end #of content %>
 
-<% end #of page %>
+      <% end #of page %>

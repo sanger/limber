@@ -2,6 +2,31 @@ module Presenters
   class TubePresenter
     include Presenter
 
+    class_inheritable_reader    :tab_views
+    write_inheritable_attribute :tab_views, {
+      'summary-button'          => [ 'labware-summary', 'tube-printing' ],
+      'labware-creation-button' => [ 'labware-summary', 'tube-creation' ],
+      'labware-QC-button'       => [ 'labware-summary', 'tube-creation' ],
+      'labware-state-button'    => [ 'labware-summary', 'tube-state' ]
+    }
+
+    class_inheritable_reader    :tab_states
+    write_inheritable_attribute :tab_states, [
+      :pending,
+      :started,
+      :passed,
+      :qc_complete,
+      :cancelled
+    ].each_with_object({}) {|k,h| h[k] = ['summary-button']}
+
+    class_inheritable_reader    :authenticated_tab_states
+    write_inheritable_attribute :authenticated_tab_states, {
+        :pending    =>  [ 'summary-button', 'labware-state-button' ],
+        :started    =>  [ 'labware-state-button', 'summary-button' ],
+        :passed     =>  [ 'labware-creation-button','summary-button', 'labware-state-button' ],
+        :cancelled  =>  [ 'summary-button' ],
+        :failed     =>  [ 'summary-button' ]
+    }
     state_machine :state, :initial => :pending do
       Statemachine::StateTransitions.inject(self)
 
@@ -34,7 +59,7 @@ module Presenters
 
     #--
     # We ignore the assignment of the state because that is the statemachine getting in before
-    # the plate has been loaded.
+    # the tube has been loaded.
     #++
     def state=(value) #:nodoc:
       # Ignore this!
