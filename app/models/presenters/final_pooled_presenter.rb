@@ -3,9 +3,9 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :printing_partial, 'lab_ware/plates/tube_printing'
 
   write_inheritable_attribute :authenticated_tab_states, {
-    :pending    =>  [ 'summary-button', 'plate-state-button' ],
-    :started    =>  [ 'summary-button', 'plate-state-button' ],
-    :passed     =>  [ 'summary-button', 'plate-state-button' ],
+    :pending    =>  [ 'summary-button', 'labware-state-button' ],
+    :started    =>  [ 'summary-button', 'labware-state-button' ],
+    :passed     =>  [ 'summary-button', 'labware-state-button' ],
     :cancelled  =>  [ 'summary-button' ],
     :failed     =>  [ 'summary-button' ]
   }

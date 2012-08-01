@@ -5,10 +5,10 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :printing_partial, 'lab_ware/plates/tube_printing'
 
   write_inheritable_attribute :authenticated_tab_states, {
-    :pending     => [ 'summary-button', 'plate-state-button' ],
-    :started     => [ 'plate-state-button', 'summary-button' ],
-    :passed      => [ 'plate-state-button', 'summary-button', 'well-failing-button' ],
-    :qc_complete => [ 'plate-creation-button','summary-button' ],
+    :pending     => [ 'summary-button', 'labware-state-button' ],
+    :started     => [ 'labware-state-button', 'summary-button' ],
+    :passed      => [ 'labware-state-button', 'summary-button', 'well-failing-button' ],
+    :qc_complete => [ 'summary-button' ],
     :cancelled   => [ 'summary-button' ],
     :failed      => [ 'summary-button' ]
   }
@@ -27,6 +27,10 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
       # Does nothing because you have no tubes
     end
     alias_method(:control_additional_printing, :control_tube_view)
+
+    def transfers
+      # Does nothing because you have no tubes
+    end
   end
 
   state_machine :tube_state, :initial => :pending, :namespace => 'tube' do
@@ -59,6 +63,11 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
         nil
       end
       alias_method(:control_additional_printing, :control_tube_view)
+
+
+      def transfers
+        plate.well_to_tube_transfers
+      end
     end
 
     state :failed do

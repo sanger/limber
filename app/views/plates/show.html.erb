@@ -16,9 +16,9 @@
       <ul id="navbar">
         <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li id="plate-creation-button"><a href="#" class="navbar-link" rel="plate-creation-button" data-icon="add">Create Child Plate</a></li>
-          <li id="plate-QC-button"><a href="#" class="navbar-link" rel="plate-QC-button" data-icon="add">Create QC Plate</a></li>
-          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Change Plate State</a></li>
+          <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Plate</a></li>
+          <li id="labware-QC-button"><a href="#" class="navbar-link" rel="labware-QC-button" data-icon="add">Create QC Plate</a></li>
+          <li id="labware-state-button"><a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Change Plate State</a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
         <% end -%>
       </ul>
@@ -38,7 +38,7 @@
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
           <h2>Fail Wells</h2>
-          <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) %>
+          <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) if well_failing_applicable?(@presenter) %>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
         <div id="plate-printing"  class="scape-ui-block" style="display:none;">
           <%= render(:partial => 'plate_printing') %>
           <%= @presenter.control_additional_printing do %>
-            <% section do %>
+            <%= section do %>
               <%= render(:partial => @presenter.printing_partial, :locals => { :presenter => @presenter }) %>
               <%= @presenter.control_worksheet_printing do %>
               <% end %>

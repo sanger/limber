@@ -31,9 +31,9 @@ module Presenters
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
       'summary-button'        => ['plate-summary', 'plate-printing' ],
-      'plate-creation-button' => [ 'plate-summary', 'plate-creation' ],
-      'plate-QC-button'       => [ 'plate-summary', 'plate-creation' ],
-      'plate-state-button'    => [ 'plate-summary', 'plate-state' ],
+      'labware-creation-button' => [ 'plate-summary', 'plate-creation' ],
+      'labware-QC-button'       => [ 'plate-summary', 'plate-creation' ],
+      'labware-state-button'    => [ 'plate-summary', 'plate-state' ],
       'well-failing-button'   => [ 'well-failing' ]
     }
 
@@ -42,14 +42,15 @@ module Presenters
       :pending    =>  ['summary-button'],
       :started    =>  ['summary-button'],
       :passed     =>  ['summary-button'],
+      :qc_complete => ['summary-button'],
       :cancelled  =>  ['summary-button']
     }
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending    =>  [ 'summary-button', 'plate-state-button' ],
-        :started    =>  [ 'plate-state-button', 'summary-button' ],
-        :passed     =>  [ 'plate-creation-button','summary-button', 'plate-state-button' ],
+        :pending    =>  [ 'summary-button', 'labware-state-button' ],
+        :started    =>  [ 'labware-state-button', 'summary-button' ],
+        :passed     =>  [ 'labware-creation-button','summary-button', 'labware-state-button' ],
         :cancelled  =>  [ 'summary-button' ],
         :failed     =>  [ 'summary-button' ]
     }
@@ -60,6 +61,15 @@ module Presenters
 
     def lab_ware
       self.plate
+    end
+
+
+    # Purpose returns the plate or tube purpose of the labware.
+    # Currently this needs to be specialised for tube or plate but in future
+    # both should use #purpose and we'll be able to share the same method for
+    # all presenters.
+    def purpose
+      lab_ware.plate_purpose
     end
 
     def control_worksheet_printing(&block)

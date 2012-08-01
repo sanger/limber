@@ -16,7 +16,7 @@ IlluminaBPipeline::Application.routes.draw do
     resources :illumina_b_plates, :only => [:update, :edit], :as => :plates
   end
 
-  resources :illumina_b_multiplexed_library_tubes, :controller => :tubes do
+  resources :illumina_b_tubes, :controller => :tubes do
 
   end
 

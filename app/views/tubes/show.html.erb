@@ -1,45 +1,52 @@
-<%= page(:summary) do %>
-  <%= header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Summary</h1>
-  <% end -%>
+<%= page(:'tube-show-page') do %>
+  <%= header(@presenter, 'Tube view') do %>
+    <div data-role="navbar">
+      <ul id="navbar">
+        <li id="summary-button">
+          <a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a>
+        </li>
+        <% if current_user_uuid.present? -%>
+          <li id="labware-creation-button">
+            <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Plate</a>
+          </li>
+          <li id="labware-QC-button">
+            <a href="#" class="navbar-link" rel="labware-QC-button" data-icon="add">Create QC Plate</a>
+          </li>
+          <li id="labware-state-button">
+            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Change Plate State</a>
+          </li>
+          <li id="well-failing-button">
+            <a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end #of header %>
+
 
   <%= content do %>
-    <h2>Tube Status - <%= @presenter.tube.state.titleize %></h1>
-    <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
-  <% end -%>
+    <%= flash_messages %>
+    <h1>Tube Status - <%= @presenter.tube.state.titleize %></h1>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
+      </div>
 
-  <%= footer %>
-<% end -%>
-
-<%= page(:state) do %>
-  <% header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - State</h1>
-  <% end -%>
-
-  <%= content do %>
-    <%= state_change_form(@presenter) %>
-  <% end -%>
-
-  <%= footer %>
-<% end -%>
-
-<%= page(:printing) do %>
-  <%= header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Printing</h1>
-  <% end -%>
-
-  <%= content do %>
-    <%= section do %>
-      <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %><br/>
-    <% end %>
-    <%= section do %>
-      <%= individual_barcode_printing_form(
+      <div class="ui-block-b">
+        <div id="tube-printing" class="scape-ui-block" style="display:none;">
+          <%= individual_barcode_printing_form(
             @presenter.tube.barcode,
-            :redirection_url => illumina_b_multiplexed_library_tube_path(@presenter.tube),
+            :redirection_url => illumina_b_tube_path(@presenter.tube),
             :text            => 'MX Library tube'
-      ) %>
-    <% end -%>
-  <% end -%>
+          ) %>
+        </div>
 
-  <%= footer %>
-<% end -%>
+        <div id="tube-state" class="scape-ui-block" style="display:none;">
+          <%= state_change_form(@presenter) %>
+        </div>
+      </div>
+    </div>
+
+  <% end #of content %>
+
+<% end #of page %>

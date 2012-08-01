@@ -1,6 +1,15 @@
 module Presenters
   class PrePcrPlatePresenter < PlatePresenter
     include Presenters::Statemachine
+
+    write_inheritable_attribute :authenticated_tab_states, {
+      :pending    =>  [ 'summary-button', 'labware-creation-button' ],
+      :started    =>  [ 'labware-creation-button', 'summary-button', 'well-failing-button' ],
+      :passed     =>  [ 'summary-button', 'well-failing-button', 'labware-creation-button'],
+      :cancelled  =>  [ 'summary-button' ],
+      :failed     =>  [ 'summary-button' ]
+    }
+
     state_machine :state, :initial => :pending do
       Statemachine::StateTransitions.inject(self)
 
@@ -41,13 +50,6 @@ module Presenters
       end
     end
 
-    write_inheritable_attribute :authenticated_tab_states, {
-      :pending    =>  [ 'summary-button', 'plate-creation-button' ],
-      :started    =>  [ 'plate-creation-button', 'summary-button', 'well-failing-button' ],
-      :passed     =>  [ 'summary-button', 'well-failing-button' ],
-      :cancelled  =>  [ 'summary-button' ],
-      :failed     =>  [ 'summary-button' ]
-    }
 
   end
 end

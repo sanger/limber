@@ -5,10 +5,10 @@ module Presenters
     write_inheritable_attribute :aliquot_partial, 'tagged_aliquot'
 
     write_inheritable_attribute :authenticated_tab_states, {
-      :pending    => [ 'summary-button', 'plate-state-button' ],
-      :started_fx => [ 'plate-state-button', 'summary-button' ],
-      :started_mj => [ 'plate-state-button', 'summary-button' ],
-      :passed     => [ 'plate-creation-button','summary-button', 'plate-state-button' ],
+      :pending    => [ 'summary-button', 'labware-state-button' ],
+      :started_fx => [ 'labware-state-button', 'summary-button' ],
+      :started_mj => [ 'labware-state-button', 'summary-button' ],
+      :passed     => [ 'labware-creation-button','summary-button', 'labware-state-button' ],
       :cancelled  => [ 'summary-button' ],
       :failed     => [ 'summary-button' ]
     }

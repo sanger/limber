@@ -29,4 +29,8 @@ module PlateHelper
   def insert_size_class(pool)
     (pool['insert_size']['from'] > Settings.large_insert_limit) ? 'large-insert-size' : ''
   end
+
+  def well_failing_applicable?(presenter)
+    presenter.authenticated_tab_states[presenter.state.to_sym].include?('well-failing-button')
+  end
 end
