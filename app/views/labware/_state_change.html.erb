@@ -1,19 +1,19 @@
 <%# TODO This form code breaks the semantic presenter model pattern.
-    The form should use attriutes on the presenter class not the lab_ware directly. 
+    The form should use attriutes on the presenter class not the labware directly. 
 %>
 
 <% presenter.control_state_change do |transitions| %>
     <%= form_for(
-          presenter.lab_ware,
-          presenter.lab_ware_form_details(self).merge(
+          presenter.labware,
+          presenter.labware_form_details(self).merge(
             :html => { :method => :put },
             :as => :plate
           )) do |f|
     %>
     <%= hidden_field_tag :plate_purpose_uuid, presenter.purpose.uuid %>
-    <%= hidden_field_tag :plate_ean13_barcode, presenter.lab_ware.barcode.ean13 %>
+    <%= hidden_field_tag :plate_ean13_barcode, presenter.labware.barcode.ean13 %>
    <ul id="state-changer" data-role="listview" data-inset="true">
-     <li data-role="list-divider"><h2>Current State: <i><%= presenter.lab_ware.state.titleize %></i> </h2></li>
+     <li data-role="list-divider"><h2>Current State: <i><%= presenter.labware.state.titleize %></i> </h2></li>
         <% if admin_page? -%>
           <li>
           <%= label_tag :card_id, "User Swipecard" %>
@@ -25,11 +25,11 @@
           
           <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
         </li>
-        <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'cancelled'%>>
+        <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.labware.state != 'cancelled'%>>
           <%= label_tag :reason, 'Reason for cancellation:' %>
           <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), :disabled => true) %>
         </li>
-        <li id="failed" class="reason" <%= 'style=display:none;' if presenter.lab_ware.state != 'failed'%>>
+        <li id="failed" class="reason" <%= 'style=display:none;' if presenter.labware.state != 'failed'%>>
           <%= label_tag :reason, 'Reason for failure:' %>
           <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), :disabled => true) %>
         </li>

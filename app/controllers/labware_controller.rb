@@ -1,11 +1,11 @@
-class LabWareController < ApplicationController
-  before_filter :locate_lab_ware, :only => [ :show ]
+class LabwareController < ApplicationController
+  before_filter :locate_labware, :only => [ :show ]
   before_filter :get_printers, :only => [ :show ]
 
-  def locate_lab_ware
-     @lab_ware = locate_lab_ware_identified_by(params[:id])
+  def locate_labware
+     @labware = locate_labware_identified_by(params[:id])
   end
-  private :locate_lab_ware
+  private :locate_labware
 
   def get_printers
     @printers = api.barcode_printer.all
@@ -17,7 +17,7 @@ class LabWareController < ApplicationController
   end
 
   def show
-    @presenter = presenter_for(@lab_ware)
+    @presenter = presenter_for(@labware)
     respond_to do |format|
       format.html { render @presenter.page }
       format.csv

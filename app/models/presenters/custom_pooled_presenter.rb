@@ -1,6 +1,6 @@
 class Presenters::CustomPooledPresenter < Presenters::PooledPresenter
-  write_inheritable_attribute :summary_partial, 'lab_ware/plates/custom_pooled_plate'
-  write_inheritable_attribute :printing_partial, 'lab_ware/plates/tube_printing'
+  write_inheritable_attribute :summary_partial, 'labware/plates/custom_pooled_plate'
+  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
   state_machine :pooled_state, :initial => :pending, :namespace => 'pooled' do
     Presenters::Statemachine::StateTransitions.inject(self)

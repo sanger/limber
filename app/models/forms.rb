@@ -27,7 +27,7 @@ module Forms
         write_inheritable_attribute :page, 'new'
 
         class_inheritable_reader :aliquot_partial
-        write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
+        write_inheritable_attribute :aliquot_partial, 'labware/aliquot'
 
         class_inheritable_reader :attributes
       end
@@ -83,6 +83,18 @@ module Forms
       @parent ||= api.plate.find(parent_uuid)
     end
     alias_method(:plate, :parent)
+
+    def labware
+      self.plate
+    end
+
+    # Purpose returns the plate or tube purpose of the labware.
+    # Currently this needs to be specialised for tube or plate but in future
+    # both should use #purpose and we'll be able to share the same method for
+    # all presenters.
+    def purpose
+      labware.plate_purpose
+    end
 
     def save!
       raise StandardError, 'Invalid data' unless valid?

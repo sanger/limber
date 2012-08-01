@@ -4,7 +4,7 @@ module Presenters
 
     write_inheritable_attribute :attributes, [ :api, :card_id, :plate ]
 
-    def lab_ware_form_details(view)
+    def labware_form_details(view)
       { :url => view.admin_plate_path(self.plate), :as  => :plate }
     end
 
@@ -16,7 +16,7 @@ module Presenters
     # any state to any state....
     def control_state_change(&block)
       raise "NOT IN USE!"
-      yield(all_plate_states - [lab_ware.state])
+      yield(all_plate_states - [labware.state])
       nil
     end
   end

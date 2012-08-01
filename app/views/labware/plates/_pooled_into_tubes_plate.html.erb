@@ -10,6 +10,6 @@
 
   <h2>Tubes</h2>
   <% presenter.plate.tubes_and_sources.each do |tube, sources| %>
-    <%= render :partial => 'lab_ware/pooled_tube.html.erb', :locals => {:tube => tube, :source => sources } %>
+    <%= render :partial => 'labware/pooled_tube.html.erb', :locals => {:tube => tube, :source => sources } %>
   <% end %>
 <% end %>

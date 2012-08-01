@@ -42,7 +42,7 @@ module Presenters
 
     write_inheritable_attribute :attributes, [ :api, :tube ]
 
-    def lab_ware
+    def labware
       self.tube
     end
 
@@ -51,10 +51,10 @@ module Presenters
     # both should use #purpose and we'll be able to share the same method for
     # all presenters.
     def purpose
-      lab_ware.purpose
+      labware.purpose
     end
 
-    def lab_ware_form_details(view)
+    def labware_form_details(view)
       { :url => view.illumina_b_tube_path(self.tube), :as  => :tube }
     end
   end

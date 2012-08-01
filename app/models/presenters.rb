@@ -18,22 +18,22 @@ module Presenters
     write_inheritable_attribute :attributes, [ :api, :plate ]
 
     class_inheritable_reader    :aliquot_partial
-    write_inheritable_attribute :aliquot_partial, 'lab_ware/aliquot'
+    write_inheritable_attribute :aliquot_partial, 'labware/aliquot'
 
     class_inheritable_reader    :summary_partial
-    write_inheritable_attribute :summary_partial, 'lab_ware/plates/standard_summary'
+    write_inheritable_attribute :summary_partial, 'labware/plates/standard_summary'
 
     class_inheritable_reader    :additional_creation_partial
-    write_inheritable_attribute :additional_creation_partial, 'lab_ware/plates/child_plate_creation'
+    write_inheritable_attribute :additional_creation_partial, 'labware/plates/child_plate_creation'
 
     class_inheritable_reader :printing_partial
 
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
-      'summary-button'        => ['plate-summary', 'plate-printing' ],
-      'labware-creation-button' => [ 'plate-summary', 'plate-creation' ],
-      'labware-QC-button'       => [ 'plate-summary', 'plate-creation' ],
-      'labware-state-button'    => [ 'plate-summary', 'plate-state' ],
+      'summary-button'        => ['labware-summary', 'plate-printing' ],
+      'labware-creation-button' => [ 'labware-summary', 'plate-creation' ],
+      'labware-QC-button'       => [ 'labware-summary', 'plate-creation' ],
+      'labware-state-button'    => [ 'labware-summary', 'plate-state' ],
       'well-failing-button'   => [ 'well-failing' ]
     }
 
@@ -59,7 +59,7 @@ module Presenters
       self.plate
     end
 
-    def lab_ware
+    def labware
       self.plate
     end
 
@@ -69,7 +69,7 @@ module Presenters
     # both should use #purpose and we'll be able to share the same method for
     # all presenters.
     def purpose
-      lab_ware.plate_purpose
+      labware.plate_purpose
     end
 
     def control_worksheet_printing(&block)
@@ -77,7 +77,7 @@ module Presenters
       nil
     end
 
-    def lab_ware_form_details(view)
+    def labware_form_details(view)
       { :url => view.illumina_b_plate_path(self.plate), :as  => :plate }
     end
 

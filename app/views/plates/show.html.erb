@@ -14,10 +14,9 @@
   <%= header(@presenter, 'Plate view') do %>
     <div data-role="navbar">
       <ul id="navbar">
-        <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
+        <li id="labware-summary-button"><a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
           <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Plate</a></li>
-          <li id="labware-QC-button"><a href="#" class="navbar-link" rel="labware-QC-button" data-icon="add">Create QC Plate</a></li>
           <li id="labware-state-button"><a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Change Plate State</a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
         <% end -%>
@@ -31,7 +30,7 @@
     <h1><%= t("#{plate_type_and_state}.state_text") %></h1>
     <div class="ui-grid-a">
       <div class="ui-block-a">
-        <div id="plate-summary" class="scape-ui-block">
+        <div id="labware-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
           <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>

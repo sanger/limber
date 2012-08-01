@@ -1,6 +1,6 @@
-class PlatesController < LabWareController
+class PlatesController < LabwareController
 
-  def locate_lab_ware_identified_by(id)
+  def locate_labware_identified_by(id)
     api.plate.find(id).coerce.tap { |plate| plate.populate_wells_with_pool }
   end
 
