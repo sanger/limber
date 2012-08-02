@@ -32,7 +32,7 @@
       <h1>Tube Status - <%= @presenter.tube.state.titleize %></h1>
       <div class="ui-grid-a">
         <div class="ui-block-a">
-          <%= render :partial => 'labware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
+          <%= render :partial => 'labware/tube', :locals => { :tube => @presenter.tube } %>
         </div>
 
         <div class="ui-block-b">

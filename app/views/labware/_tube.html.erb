@@ -1,12 +1,7 @@
 <div class="tube">
-  <div class="tube-view">
-    <% unless tube.aliquots.empty? -%>
-      <%= render :partial => 'labware/aliquot', :locals => { :labware => tube, :id => 'tube', :container => tube } %>
-    <% end -%>
-  </div>
-
+<object class="tube" data="/images/tube.svg" type="image/svg+xml"></object>
   <ul id="information">
-    <li><span class="label">Barcode</span>       <%= useful_barcode(tube.barcode) %></li>
-    <li><span class="label">Current state</span> <%= tube.state %></li>
+    <li><span class="label">Tube Barcode</span>       <%= useful_barcode(tube.barcode) %></li>
+    <li><span class="label">From Stock Plate</span> <%#= useful_barcode(tube.stock_plate.barcode) %></li>
   </ul>
 </div>
