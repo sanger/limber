@@ -2,7 +2,7 @@ class PlateCreationController < CreationController
   write_inheritable_attribute :creation_message, 'New empty plate added to system.'
 
   def form_lookup(form_attributes = params)
-    Settings.plate_purposes[form_attributes[:plate_purpose_uuid]][:form_class].constantize
+    Settings.purposes[form_attributes[:purpose_uuid]][:form_class].constantize
   end
 
   def redirection_path(form)

@@ -3,12 +3,12 @@ module Presenters
     include Presenters::Statemachine::QcCompletable
 
     write_inheritable_attribute :authenticated_tab_states, {
-      :pending     => [ 'summary-button', 'labware-state-button' ],
-      :started     => [ 'labware-state-button', 'summary-button' ],
-      :passed      => [ 'labware-state-button', 'summary-button', 'well-failing-button' ],
-      :qc_complete => [ 'labware-creation-button','summary-button' ],
-      :cancelled   => [ 'summary-button' ],
-      :failed      => [ 'summary-button' ]
+      :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+      :started     => [ 'labware-state-button', 'labware-summary-button' ],
+      :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button' ],
+      :qc_complete => [ 'labware-creation-button','labware-summary-button' ],
+      :cancelled   => [ 'labware-summary-button' ],
+      :failed      => [ 'labware-summary-button' ]
     }
 
   end

@@ -12,8 +12,8 @@ class LabwareController < ApplicationController
   end
   private :get_printers
 
-  def state_changer_for(plate_purpose_uuid, labware_uuid)
-    StateChangers.lookup_for(plate_purpose_uuid).new(api, labware_uuid, current_user_uuid)
+  def state_changer_for(purpose_uuid, labware_uuid)
+    StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
   end
 
   def show
@@ -25,13 +25,13 @@ class LabwareController < ApplicationController
   end
 
   def update
-    state_changer_for(params[:plate_purpose_uuid], params[:id]).move_to!(params[:state], params[:reason])
+    state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason])
 
     respond_to do |format|
       format.html { 
         redirect_to(
           search_path,
-          :notice => "State for plate #{params[:plate_ean13_barcode]} has been changed to #{params[:state]}"
+          :notice => "State for plate #{params[:ean13_barcode]} has been changed to #{params[:state]}"
         )
       }
     end

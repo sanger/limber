@@ -15,6 +15,9 @@ module Presenters
     include Presenter
     include PlateWalking
 
+    class_inheritable_reader :labware_class
+    write_inheritable_attribute :labware_class, :plate
+
     write_inheritable_attribute :attributes, [ :api, :plate ]
 
     class_inheritable_reader    :aliquot_partial
@@ -30,7 +33,7 @@ module Presenters
 
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
-      'summary-button'          => [ 'labware-summary', 'plate-printing' ],
+      'labware-summary-button'          => [ 'labware-summary', 'plate-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'plate-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'plate-creation' ],
       'labware-state-button'    => [ 'labware-summary', 'plate-state'    ],
@@ -44,15 +47,15 @@ module Presenters
       :passed,
       :qc_complete,
       :cancelled
-    ].each_with_object({}) {|k,h| h[k] = ['summary-button']}
+    ].each_with_object({}) {|k,h| h[k] = ['labware-summary-button']}
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending    =>  [ 'summary-button', 'labware-state-button'                           ],
-        :started    =>  [ 'labware-state-button', 'summary-button'                           ],
-        :passed     =>  [ 'labware-creation-button','summary-button', 'labware-state-button' ],
-        :cancelled  =>  [ 'summary-button' ],
-        :failed     =>  [ 'summary-button' ]
+        :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],
+        :started    =>  [ 'labware-state-button', 'labware-summary-button'                           ],
+        :passed     =>  [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :cancelled  =>  [ 'labware-summary-button' ],
+        :failed     =>  [ 'labware-summary-button' ]
     }
 
     def plate_to_walk
@@ -104,7 +107,7 @@ module Presenters
     end
 
     def self.lookup_for(plate)
-      plate_details = Settings.plate_purposes[plate.plate_purpose.uuid] or raise UnknownPlateType, plate
+      plate_details = Settings.purposes[plate.plate_purpose.uuid] or raise UnknownPlateType, plate
       plate_details[:presenter_class].constantize
     end
   end

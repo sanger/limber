@@ -19,8 +19,8 @@ module StateChangers
     end
   end
 
-  def self.lookup_for(plate_purpose_uuid)
-    plate_details = Settings.plate_purposes[plate_purpose_uuid] or raise UnknownPlateType, plate
-    plate_details[:state_changer_class].constantize
+  def self.lookup_for(purpose_uuid)
+    details = Settings.purposes[purpose_uuid] or raise "Unknown purpose UUID: #{purpose_uuid}"
+    details[:state_changer_class].constantize
   end
 end

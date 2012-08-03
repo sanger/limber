@@ -8,7 +8,7 @@ class StateChangers::PlateToTubeStateChanger < StateChangers::DefaultStateChange
     child_stock_tubes = api.tube_creation.create!(
       :user          => user_uuid,
       :parent        => labware_uuid,
-      :child_purpose => Settings.tube_purpose_uuids['ILB_STD_STOCK']
+      :child_purpose => Settings.purpose_uuids.fetch('ILB_STD_STOCK')
     ).children
 
     plate_to_tube_template.create!(

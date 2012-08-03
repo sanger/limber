@@ -1,10 +1,14 @@
 module Presenters
   class TubePresenter
     include Presenter
+    include Statemachine::Shared
+
+    class_inheritable_reader :labware_class
+    write_inheritable_attribute :labware_class, :tube
 
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
-      'summary-button'          => [ 'labware-summary', 'tube-printing' ],
+      'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'tube-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'tube-creation' ],
       'labware-state-button'    => [ 'labware-summary', 'tube-state' ]
@@ -17,55 +21,77 @@ module Presenters
       :passed,
       :qc_complete,
       :cancelled
-    ].each_with_object({}) {|k,h| h[k] = ['summary-button']}
+    ].each_with_object({}) {|k,h| h[k] = ['labware-summary-button']}
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending    =>  [ 'summary-button', 'labware-state-button' ],
-        :started    =>  [ 'labware-state-button', 'summary-button' ],
-        :passed     =>  [ 'labware-creation-button','summary-button', 'labware-state-button' ],
-        :cancelled  =>  [ 'summary-button' ],
-        :failed     =>  [ 'summary-button' ]
+        :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
+        :started    =>  [ 'labware-state-button', 'labware-summary-button' ],
+        :passed     =>  [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :cancelled  =>  [ 'labware-summary-button' ],
+        :failed     =>  [ 'labware-summary-button' ]
     }
+
+    write_inheritable_attribute :attributes, [ :api, :tube ]
+
     state_machine :state, :initial => :pending do
-      Statemachine::StateTransitions.inject(self)
+      event :start do
+        transition :pending => :started
+      end
+
+      event :take_default_path do
+        transition :pending => :started
+        transition :started => :passed
+        transition :passed  => :qc_complete
+      end
+
+      event :pass do
+        transition [ :pending, :started ] => :passed
+      end
+
+      event :qc_complete do
+        transition :passed => :qc_complete
+      end
+
+      event :fail do
+        transition [ :passed ] => :failed
+      end
+
+      event :cancel do
+        transition [ :pending, :started, :passed, :failed ] => :cancelled
+      end
 
       state :pending do
-
+        include Statemachine::StateDoesNotAllowChildCreation
       end
+
       state :started do
-
+        include Statemachine::StateDoesNotAllowChildCreation
       end
+
       state :passed do
-
+        include Statemachine::StateDoesNotAllowChildCreation
       end
-      state :failed do
 
-      end
-      state :cancelled do
+      state :qc_complete, :human_name => 'QC Complete' do
+        # Yields to the block if there are child plates that can be created from the current one.
+        # It passes the valid child plate purposes to the block.
+        def control_additional_creation(&block)
+          yield unless child_purposes.empty?
+          nil
+        end
 
+        # Returns the child plate purposes that can be created in the qc_complete state.
+        def child_purposes
+          plate.plate_purpose.children
+        end
       end
+
     end
 
     # The state is delegated to the tube
     delegate :state, :to => :tube
 
-    # Yields to the block if there is the possibility of controlling the state change, passing
-    # the valid next states, along with the current one too.
-    def control_state_change(&block)
-      yield(state_transitions) if state_transitions.present?
-      nil
-    end
-
-    #--
-    # We ignore the assignment of the state because that is the statemachine getting in before
-    # the tube has been loaded.
-    #++
-    def state=(value) #:nodoc:
-      # Ignore this!
-    end
-
-    write_inheritable_attribute :attributes, [ :api, :tube ]
 
     def labware
       self.tube
@@ -80,7 +106,7 @@ module Presenters
     end
 
     def labware_form_details(view)
-      { :url => view.illumina_b_tube_path(self.tube), :as  => :tube }
+      { :url => view.illumina_b_tube_path(self.tube), :as => :tube }
     end
   end
 end
