@@ -42,6 +42,10 @@ module Presenters::Statemachine
     def all_plate_states
       self.class.state_machines[:state].states.map(&:value)
     end
+
+    # The current state of the plate is delegated to the plate
+    delegate :state, :to => :labware
+
   end
 
   # State transitions are common across all of the statemachines.
@@ -91,15 +95,14 @@ module Presenters::Statemachine
           # Yields to the block if there are child plates that can be created from the current one.
           # It passes the valid child plate purposes to the block.
           def control_additional_creation(&block)
-            yield unless child_plate_purposes.empty?
+            yield unless child_purposes.empty?
             nil
           end
 
           # Returns the child plate purposes that can be created in the passed state.  Typically
           # this is only one, but it specifically excludes QC plates.
-          def child_plate_purposes
-            # plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
-            plate.plate_purpose.children
+          def child_purposes
+            labware.plate_purpose.children
           end
         end
         state :failed do
@@ -110,8 +113,6 @@ module Presenters::Statemachine
         end
       end
 
-      # The current state of the plate is delegated to the plate
-      delegate :state, :to => :plate
     end
   end
 

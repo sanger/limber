@@ -8,7 +8,13 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plates
-    plates_with_status('pending', 'started', 'passed')
+    plate_search = api.search.find(Settings.searches['Find Illumina-B plates'])
+
+    @search_results = plate_search.all(
+      IlluminaB::Plate,
+      :state => [ 'pending', 'started', 'passed' ]
+ 
+    )
   end
 
   def my_plates
@@ -53,16 +59,6 @@ class SearchController < ApplicationController
       format.html { render :new }
     end
   end
-
-  def plates_with_status(*statuses)
-    plate_search = api.search.find(Settings.searches['Find Illumina-B plates'])
-
-    @search_results = plate_search.all(
-      IlluminaB::Plate,
-      :state => statuses
-    )
-  end
-  private :plates_with_status
 
   def clear_current_user!
     session[:user_uuid] = nil

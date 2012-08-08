@@ -1,6 +1,6 @@
 module PageHelper
   def flash_messages
-    render(:partial => 'lab_ware/flash_messages') unless flash.empty?
+    render(:partial => 'labware/flash_messages') unless flash.empty?
   end
 
   def grouping(data_role, options = {}, &block)
@@ -8,8 +8,8 @@ module PageHelper
   end
   private :grouping
 
-  def page(id, &block)
-    grouping(:page, :id => id, &block)
+  def page(id, css_class=nil, &block)
+    grouping(:page, :id => id, :class => css_class, &block)
   ensure
     @_content_for[:header] = ''
   end
@@ -19,7 +19,7 @@ module PageHelper
 
     content_for(:header, &block) if block_given?
     grouping(:header, 'data-theme' => theme) do
-      render(:partial => 'lab_ware/header', :locals => { :presenter => presenter, :title => title })
+      render(:partial => 'labware/header', :locals => { :presenter => presenter, :title => title })
     end
   end
 
@@ -34,7 +34,7 @@ module PageHelper
 
   def footer(&block)
     grouping(:footer, 'data-position' => 'fixed') do
-      render(:partial => 'lab_ware/footer')
+      render(:partial => 'labware/footer')
     end
   end
 

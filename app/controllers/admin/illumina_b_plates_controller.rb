@@ -4,8 +4,8 @@ class Admin::IlluminaBPlatesController < PlatesController
   # unless it's part of an edit.
   undef :show, :fail_wells
 
-  # Called by the update method inherited from LabWareController
-  # the same as in LabWareController but uses params[:card_id] instead
+  # Called by the update method inherited from LabwareController
+  # the same as in LabwareController but uses params[:card_id] instead
   # of current_user_id
   def state_changer_for(labware)
     StateChangers.lookup_for(labware).new(api, labware, find_user_by_swipecard(params[:card_id]))
@@ -14,7 +14,7 @@ class Admin::IlluminaBPlatesController < PlatesController
   def edit
     @presenter = Presenters::AdminPresenter.new(
       :api => api,
-      :plate => @lab_ware
+      :plate => @labware
     )
 
     if @presenter.stock_plate?

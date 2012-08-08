@@ -1,5 +1,6 @@
-<%= form_tag new_illumina_b_plate_child_path(presenter.plate.uuid), :method => 'get' do %>
-  <%= hidden_field_tag :plate_purpose_uuid, presenter.child_purposes.first.uuid %>
+<%# TODO Dry thit up with child_tube_creation.html.erb %>
+<%= form_tag new_illumina_b_plate_child_path(presenter.labware.uuid), :method => 'get' do %>
+  <%= hidden_field_tag :purpose_uuid, presenter.child_purposes.first.uuid %>
   <%= submit_tag "Create #{presenter.child_purposes.first.name} plate", 
     :name           => nil,
     :class          => "submit",

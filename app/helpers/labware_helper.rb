@@ -1,6 +1,6 @@
-module LabWareHelper
+module LabwareHelper
   def state_change_form(presenter)
-    render :partial => 'lab_ware/state_change', :locals => { :presenter => presenter }
+    render :partial => 'labware/state_change', :locals => { :presenter => presenter }
   end
 
   STANDARD_COLOURS = (1..96).map { |i| "colour-#{i}" }
@@ -15,12 +15,12 @@ module LabWareHelper
     end
   end
 
-  cycling_colours(:bait)    { |lab_ware, _|            lab_ware.bait }
-  cycling_colours(:tag)     { |lab_ware, _|            lab_ware.pool_id }
-  cycling_colours(:pooling) { |lab_ware, destination|  destination }
+  cycling_colours(:bait)    { |labware, _|            labware.bait }
+  cycling_colours(:tag)     { |labware, _|            labware.pool_id }
+  cycling_colours(:pooling) { |labware, destination|  destination }
 
-  def aliquot_colour(lab_ware)
-    case lab_ware.state
+  def aliquot_colour(labware)
+    case labware.state
       when "passed"   then "green"
       when "started"  then "orange"
       when "failed"   then "red"
@@ -43,8 +43,8 @@ module LabWareHelper
 
     @admin_link ||= link_to(
       'Admin',
-      edit_admin_plate_path(presenter.plate.uuid),
-      :id           => presenter.plate.uuid,
+      edit_admin_plate_path(presenter.labware.uuid),
+      :id           => presenter.labware.uuid,
       :'data-transition' => 'pop',
       :'data-icon'  => 'gear',
       :rel          => "external"
@@ -83,4 +83,7 @@ module LabWareHelper
     end
   end
 
+    def labware_type_and_state 
+      "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
+    end
 end

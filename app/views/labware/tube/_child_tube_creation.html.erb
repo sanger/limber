@@ -1,0 +1,11 @@
+<%# TODO Dry thit up with child_plate_creation.html.erb %>
+<%= form_tag new_sequencescape_tube_child_path(presenter.labware.uuid), :method => 'get' do %>
+  <%= hidden_field_tag :purpose_uuid, presenter.child_purposes.first.uuid %>
+  <%= submit_tag "Create #{presenter.child_purposes.first.name} plate", 
+    :name           => nil,
+    :class          => "submit",
+    :'data-icon'    => "arrow-r",
+    :'data-iconpos' => "right",
+    :'data-theme'   => "b"
+  %>
+<% end %>

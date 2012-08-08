@@ -1,13 +1,16 @@
-class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
+class Presenters::PcrXpPresenter < Presenters::PooledPresenter
+  include Presenters::Statemachine::QcCompletable
+
   write_inheritable_attribute :summary_partial, 'labware/plates/pooled_into_tubes_plate'
   write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
   write_inheritable_attribute :authenticated_tab_states, {
-    :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
-    :started    =>  [ 'labware-summary-button', 'labware-state-button' ],
-    :passed     =>  [ 'labware-summary-button', 'labware-state-button' ],
-    :cancelled  =>  [ 'labware-summary-button' ],
-    :failed     =>  [ 'labware-summary-button' ]
+    :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+    :started     => [ 'labware-state-button', 'labware-summary-button' ],
+    :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button' ],
+    :qc_complete => [ 'labware-summary-button' ],
+    :cancelled   => [ 'labware-summary-button' ],
+    :failed      => [ 'labware-summary-button' ]
   }
 
   module StateDoesNotAllowTubePreviewing
@@ -24,39 +27,55 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
       # Does nothing because you have no tubes
     end
     alias_method(:control_additional_printing, :control_tube_view)
+
+    def transfers
+      # Does nothing because you have no tubes
+    end
   end
 
   state_machine :tube_state, :initial => :pending, :namespace => 'tube' do
-    Presenters::Statemachine::StateTransitions.inject(self)
 
     state :pending do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :started do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :passed do
+      include StateDoesNotAllowTubePreviewing
+    end
+
+    state :qc_complete do
+      # Don't yield in :qc_complete state
       def control_source_view(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
       end
 
+      # Yield tube view in :qc_complete state
       def control_tube_view(&block)
-        yield if plate.has_transfers_to_tubes?
+        yield
         nil
       end
       alias_method(:control_additional_printing, :control_tube_view)
+
+
+      def transfers
+        labware.well_to_tube_transfers
+      end
     end
+
     state :failed do
       include StateDoesNotAllowTubePreviewing
     end
+
     state :cancelled do
       include StateDoesNotAllowTubePreviewing
     end
   end
 
   def tube_state
-    plate.state
+    labware.state
   end
 
   def tube_state=(state)

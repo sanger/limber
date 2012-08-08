@@ -3,8 +3,8 @@ class IlluminaB::Plate < Sequencescape::Plate
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
   def coerce
-    return self unless passed? and is_a_final_pooling_plate?
-    coerce_to(IlluminaB::PooledPlate)
+    return self unless qc_complete? and is_a_final_pooling_plate?
+    coerce_to(IlluminaB::PcrXpPlate)
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [

@@ -1,10 +1,10 @@
 module BarcodeLabelsHelper
   def individual_barcode_printing_form(barcode, locals)
-    render(:partial => 'lab_ware/individual_barcode_printing_form', :locals => locals.merge(:barcode => barcode))
+    render(:partial => 'labware/individual_barcode_printing_form', :locals => locals.merge(:barcode => barcode))
   end
 
   def multiple_barcodes_printing_form(barcodes, locals)
-    render(:partial => 'lab_ware/multiple_barcodes_printing_form', :locals => locals.merge(:barcodes => barcodes))
+    render(:partial => 'labware/multiple_barcodes_printing_form', :locals => locals.merge(:barcodes => barcodes))
   end
 
   # Returns a list of printers applicable to the specified barcode.

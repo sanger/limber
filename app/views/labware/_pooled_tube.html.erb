@@ -6,7 +6,7 @@
   </div>
 
   <ul id="information">
-    <li><span class="label">Barcode</span>       <%= useful_barcode(tube.barcode) %></li>
+    <li><span class="label">Barcode</span>       <%= link_to(useful_barcode(tube.barcode), illumina_b_tube_path(tube.uuid)) %></li>
     <li><span class="label">Current state</span> <%= tube.state %></li>
     <li><span class="label">Source wells</span>  <%= source.join(', ') %></li>
   </ul>

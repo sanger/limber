@@ -43,5 +43,7 @@ module IlluminaBPipeline
 
     config.filter_parameters += [:password]
 
+    # Allow state_machine to override methods like Object#fail in models
+    StateMachine::Machine.ignore_method_conflicts = true
   end
 end
