@@ -9,6 +9,7 @@ module Presenters
 
     def save!
     end
+
   end
 
   class PlatePresenter
@@ -18,7 +19,7 @@ module Presenters
     class_inheritable_reader :labware_class
     write_inheritable_attribute :labware_class, :plate
 
-    write_inheritable_attribute :attributes, [ :api, :plate ]
+    write_inheritable_attribute :attributes, [ :api, :labware ]
 
     class_inheritable_reader    :aliquot_partial
     write_inheritable_attribute :aliquot_partial, 'labware/aliquot'
@@ -59,13 +60,8 @@ module Presenters
     }
 
     def plate_to_walk
-      self.plate
+      self.labware
     end
-
-    def labware
-      self.plate
-    end
-
 
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
@@ -81,11 +77,11 @@ module Presenters
     end
 
     def labware_form_details(view)
-      { :url => view.illumina_b_plate_path(self.plate), :as  => :plate }
+      { :url => view.illumina_b_plate_path(self.labware), :as  => :plate }
     end
 
     def transfers
-      transfers = self.plate.creation_transfer.transfers
+      transfers = self.labware.creation_transfer.transfers
       transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
     end
 
@@ -106,9 +102,9 @@ module Presenters
       end
     end
 
-    def self.lookup_for(plate)
-      plate_details = Settings.purposes[plate.plate_purpose.uuid] or raise UnknownPlateType, plate
-      plate_details[:presenter_class].constantize
+    def self.lookup_for(labware)
+      presentation_classes = Settings.purposes[labware.plate_purpose.uuid] or raise UnknownPlateType, labware
+      presentation_classes[:presenter_class].constantize
     end
   end
 end

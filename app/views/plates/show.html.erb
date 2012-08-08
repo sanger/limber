@@ -1,11 +1,11 @@
 <%= page(:'plate-show-page', :'show-page') do %>
 <script type="text/javascript">
   SCAPE.labware = {
-    'state':     '<%= @presenter.plate.state %>',
+    'state':     '<%= @presenter.labware.state %>',
     'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
     'tabStates': <%= get_tab_states(@presenter) %>,
-    'pools':     <%= @presenter.plate.pools.to_json.html_safe %>,
-    'uuid':     '<%= @presenter.plate.uuid %>'
+    'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
+    'uuid':     '<%= @presenter.labware.uuid %>'
   };
 </script>
 
@@ -26,14 +26,13 @@
 
   <%= content do %>
     <%= flash_messages %>
-    <% plate_type_and_state = "#{@presenter.plate.plate_purpose.name}.#{@presenter.plate.state.downcase}" -%>
-    <h1><%= t("#{plate_type_and_state}.state_text") %></h1>
+    <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <div id="labware-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
-          <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
+          <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.labware.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
           <h2>Fail Wells</h2>
@@ -44,9 +43,9 @@
 
       <div class="ui-block-b">
         <div class="instructions ui-body">
-          <h3><%= t("#{plate_type_and_state}.instruction_summary") %></h3>
+          <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
           <ol>
-            <%= t("#{plate_type_and_state}.instructions").html_safe %>
+            <%= t("#{labware_type_and_state}.instructions").html_safe %>
           </ol>
         </div>
 

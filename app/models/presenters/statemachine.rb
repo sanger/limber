@@ -44,7 +44,7 @@ module Presenters::Statemachine
     end
 
     # The current state of the plate is delegated to the plate
-    delegate :state, :to => :plate
+    delegate :state, :to => :labware
 
   end
 
@@ -102,8 +102,7 @@ module Presenters::Statemachine
           # Returns the child plate purposes that can be created in the passed state.  Typically
           # this is only one, but it specifically excludes QC plates.
           def child_purposes
-            # plate.plate_purpose.children.reject { |p| p.name == 'Pulldown QC plate' }
-            plate.plate_purpose.children
+            labware.plate_purpose.children
           end
         end
         state :failed do

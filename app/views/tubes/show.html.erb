@@ -29,17 +29,26 @@
 
     <%= content do %>
       <%= flash_messages %>
-      <h1>Tube Status - <%= @presenter.tube.state.titleize %></h1>
+      <h1>Tube Status - <%= @presenter.labware.state.titleize %></h1>
       <div class="ui-grid-a">
         <div class="ui-block-a">
-          <%= render :partial => 'labware/tube', :locals => { :tube => @presenter.tube } %>
+          <div id="labware-summary" class="scape-ui-block">
+            <%= render :partial => 'labware/tube', :locals => { :tube => @presenter.labware } %>
+          </div>
         </div>
 
         <div class="ui-block-b">
+          <div class="instructions ui-body">
+            <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
+            <ol>
+              <%= t("#{labware_type_and_state}.instructions").html_safe %>
+            </ol>
+          </div>
+
           <div id="tube-printing" class="scape-ui-block" style="display:none;">
             <%= individual_barcode_printing_form(
-              @presenter.tube.barcode,
-              :redirection_url => illumina_b_tube_path(@presenter.tube),
+              @presenter.labware.barcode,
+              :redirection_url => illumina_b_tube_path(@presenter.labware),
               :text            => 'MX Library tube'
             ) %>
           </div>
@@ -47,9 +56,18 @@
           <div id="tube-state" class="scape-ui-block" style="display:none;">
             <%= state_change_form(@presenter) %>
           </div>
+
+
+          <div id="tube-creation" class="scape-ui-block" style="display:none;">
+            <%= @presenter.control_additional_creation do %>
+              <h2>Create Child Tube</h2>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+            <% end %>
+          </div>
+
         </div>
+
       </div>
 
-      <% end #of content %>
-
-      <% end #of page %>
+    <% end #of content %>
+<% end #of page %>

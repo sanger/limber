@@ -48,11 +48,6 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     end
 
     state :qc_complete do
-      def control_tube_preview(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
-      end
-
       # Don't yield in :qc_complete state
       def control_source_view(&block)
       end
@@ -66,7 +61,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
 
 
       def transfers
-        plate.well_to_tube_transfers
+        labware.well_to_tube_transfers
       end
     end
 
@@ -80,7 +75,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   end
 
   def tube_state
-    plate.state
+    labware.state
   end
 
   def tube_state=(state)

@@ -140,7 +140,7 @@ body {
   .started_fx        { @extend .yellow;                                                  }
   .started_mj        { @extend .orange;                                                  }
   .passed            { @extend .green;                                                   }
-  .qc_complete       { @include background(radial-gradient(top left, #006609, #002802)); }
+  .qc_complete       { @include background(radial-gradient(top left, #bbbbbb, #111111)); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 

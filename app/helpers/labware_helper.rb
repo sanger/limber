@@ -43,8 +43,8 @@ module LabwareHelper
 
     @admin_link ||= link_to(
       'Admin',
-      edit_admin_plate_path(presenter.plate.uuid),
-      :id           => presenter.plate.uuid,
+      edit_admin_plate_path(presenter.labware.uuid),
+      :id           => presenter.labware.uuid,
       :'data-transition' => 'pop',
       :'data-icon'  => 'gear',
       :rel          => "external"
@@ -83,4 +83,7 @@ module LabwareHelper
     end
   end
 
+    def labware_type_and_state 
+      "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
+    end
 end

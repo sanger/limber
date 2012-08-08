@@ -86,7 +86,7 @@ namespace :config do
 
           presenters['ILB_STD_MX'].merge!(
             :form_class          => 'Forms::TubeCreationForm',
-            :presenter_class     => 'Presenters::TubePresenter',
+            :presenter_class     => 'Presenters::FinalTubePresenter',
             :state_changer_class => 'StateChangers::DefaultStateChanger'
           )
 

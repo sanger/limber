@@ -20,7 +20,7 @@ module Presenters
         end
 
         def child_purposes
-          plate.plate_purpose.children
+          labware.plate_purpose.children
         end
       end
 
@@ -38,7 +38,7 @@ module Presenters
 
         # Returns the child plate purposes that can be created in the passed state.
         def child_purposes
-          plate.plate_purpose.children
+          labware.plate_purpose.children
         end
       end
 

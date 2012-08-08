@@ -6,6 +6,11 @@ module Presenters
     class_inheritable_reader :labware_class
     write_inheritable_attribute :labware_class, :tube
 
+    write_inheritable_attribute :attributes, [ :api, :labware ]
+
+    class_inheritable_reader    :additional_creation_partial
+    write_inheritable_attribute :additional_creation_partial, 'labware/tube/child_tube_creation'
+
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
       'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
@@ -25,14 +30,14 @@ module Presenters
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
-        :started    =>  [ 'labware-state-button', 'labware-summary-button' ],
-        :passed     =>  [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
-        :cancelled  =>  [ 'labware-summary-button' ],
-        :failed     =>  [ 'labware-summary-button' ]
+        :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+        :started     => [ 'labware-state-button', 'labware-summary-button' ],
+        # :passed      => [ 'labware-state-button', 'labware-summary-button' ],
+        :passed => [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :qc_complete => [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :cancelled   => [ 'labware-summary-button' ],
+        :failed      => [ 'labware-summary-button' ]
     }
-
-    write_inheritable_attribute :attributes, [ :api, :tube ]
 
     state_machine :state, :initial => :pending do
       event :start do
@@ -70,7 +75,21 @@ module Presenters
       end
 
       state :passed do
-        include Statemachine::StateDoesNotAllowChildCreation
+        # SHOULDN'T BE MAKING PLATES FROM PASSED BUT STATE CHANGE IS NOT WORKING PROPERLY.
+        #
+        # include Statemachine::StateDoesNotAllowChildCreation
+
+        # Yields to the block if there are child plates that can be created from the current one.
+        # It passes the valid child plate purposes to the block.
+        def control_additional_creation(&block)
+          yield unless child_purposes.empty?
+          nil
+        end
+
+        # Returns the child plate purposes that can be created in the qc_complete state.
+        def child_purposes
+          purpose.children
+        end
       end
 
       state :qc_complete, :human_name => 'QC Complete' do
@@ -83,19 +102,15 @@ module Presenters
 
         # Returns the child plate purposes that can be created in the qc_complete state.
         def child_purposes
-          plate.plate_purpose.children
+          purpose.children
         end
       end
 
     end
 
     # The state is delegated to the tube
-    delegate :state, :to => :tube
+    delegate :state, :to => :labware
 
-
-    def labware
-      self.tube
-    end
 
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
@@ -106,7 +121,21 @@ module Presenters
     end
 
     def labware_form_details(view)
-      { :url => view.illumina_b_tube_path(self.tube), :as => :tube }
+      { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
+    end
+
+    class UnknownTubeType < StandardError
+      attr_reader :tube
+
+      def initialize(plate)
+        super("Unknown plate type #{tube.purpose.name.inspect}")
+        @tube = tube
+      end
+    end
+
+    def self.lookup_for(labware)
+      presentation_classes = Settings.purposes[labware.purpose.uuid] or raise UnknownPlateType, labware
+      presentation_classes[:presenter_class].constantize
     end
   end
 end

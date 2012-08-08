@@ -36,11 +36,6 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
       include StateDoesNotAllowTubePreviewing
     end
     state :passed do
-      def control_tube_preview(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
-      end
-
       def control_source_view(&block)
         yield unless plate.has_transfers_to_tubes?
         nil

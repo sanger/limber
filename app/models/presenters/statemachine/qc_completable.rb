@@ -38,7 +38,7 @@ module Presenters
 
               # Returns the child plate purposes that can be created in the qc_complete state.
               def child_purposes
-                plate.plate_purpose.children
+                labware.plate_purpose.children
               end
             end
 

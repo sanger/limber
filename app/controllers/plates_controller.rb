@@ -4,13 +4,6 @@ class PlatesController < LabwareController
     api.plate.find(id).coerce.tap { |plate| plate.populate_wells_with_pool }
   end
 
-  def presenter_for(plate)
-    Presenters::PlatePresenter.lookup_for(plate).new(
-      :api   => api,
-      :plate => plate
-    )
-  end
-
   def fail_wells
     wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)
 
@@ -27,4 +20,12 @@ class PlatesController < LabwareController
       redirect_to(illumina_b_plate_path(params[:id]), :notice => 'Selected wells have been failed')
     end
   end
+
+  def presenter_for(labware)
+    Presenters::PlatePresenter.lookup_for(labware).new(
+      :api     => api,
+      :labware => labware
+    )
+  end
+
 end

@@ -20,7 +20,6 @@ class IlluminaB::PcrXpPlate < Sequencescape::Plate
   has_many :transfers_to_tubes, :class_name => 'PcrXpPlate::Transfer'
 
   def well_to_tube_transfers
-
     @transfers ||= transfers_to_tubes.first.transfers
   end
 
@@ -31,18 +30,18 @@ class IlluminaB::PcrXpPlate < Sequencescape::Plate
   end
 
   # Well locations ordered by rows.
-  WELLS_IN_ROW_MAJOR_ORDER = ('A'..'H').inject([]) { |a,r| a.concat((1..12).map { |c| "#{r}#{c}" }) ; a }
+  WELLS_IN_ROW_MAJOR_ORDER = ('A'..'H').each_with_object([]) { |r,a| a.concat((1..12).map { |c| "#{r}#{c}" }) }
 
   # Returns the tubes that an instance of this plate has been transferred into.
   def tubes
     @tubes ||= case has_transfers_to_tubes?
-               when false then []
-               when true  then 
-                 WELLS_IN_ROW_MAJOR_ORDER.
-                   map(&well_to_tube_transfers.method(:[])).
-                   compact.
-                   uniq
-               end
+       when false then []
+       when true  then 
+         WELLS_IN_ROW_MAJOR_ORDER.
+           map(&well_to_tube_transfers.method(:[])).
+           compact.
+           uniq
+       end
   end
 
   def tubes_and_sources
