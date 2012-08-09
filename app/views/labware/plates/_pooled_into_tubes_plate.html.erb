@@ -1,15 +1,15 @@
 <%= @presenter.control_source_view do %>
   <%= render :partial => "plate", :locals => {:plate_presenter => presenter}  %>
-  <%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+  <%= render :partial => 'plate_information', :locals => { :plate => presenter.labware } %>
 <% end %>
 
 <% @presenter.control_tube_view do %>
   <h2>Pooled Plate</h2>
   <%= render :partial => "pooling_into_tubes_plate", :locals => {:plate_presenter => presenter} %>
-  <%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>
+  <%= render :partial => 'plate_information', :locals => { :plate => presenter.labware } %>
 
   <h2>Tubes</h2>
-  <% presenter.plate.tubes_and_sources.each do |tube, sources| %>
-    <%= render :partial => 'labware/pooled_tube.html.erb', :locals => {:tube => tube, :source => sources } %>
-  <% end %>
+   <% presenter.labware.tubes_and_sources.each do |tube, sources| %>
+     <%= render :partial => 'labware/pooled_tube.html.erb', :locals => {:tube => tube, :source => sources } %>
+   <% end %>
 <% end %>

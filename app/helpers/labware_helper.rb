@@ -83,7 +83,11 @@ module LabwareHelper
     end
   end
 
-    def labware_type_and_state 
-      "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
-    end
+  def well_state_value(container)
+    container.state == 'failed' ? 'permanent-failure' : container.state
+  end
+
+  def labware_type_and_state 
+    "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
+  end
 end

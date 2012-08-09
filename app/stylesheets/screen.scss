@@ -16,6 +16,10 @@ body {
   font-size:   100% * $font-size / 16px;
 }
 
+#flash {
+  text-align: center;
+}
+
 .plate-view-control {
   margin: 18px 0;
 }
@@ -134,7 +138,7 @@ body {
     border: 2px dotted gray;
     position: relative;
     left: -2px;
-    top: -1px;
+    top: -2px;
   }
   .started           { @extend .yellow;                                                  }
   .started_fx        { @extend .yellow;                                                  }

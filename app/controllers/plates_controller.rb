@@ -1,8 +1,11 @@
 class PlatesController < LabwareController
-
-  def locate_labware_identified_by(id)
-    api.plate.find(id).coerce.tap { |plate| plate.populate_wells_with_pool }
+  module LabwareWrangler
+    def locate_labware_identified_by(id)
+      api.plate.find(id).coerce.tap { |plate| plate.populate_wells_with_pool }
+    end
   end
+
+  include PlatesController::LabwareWrangler
 
   def fail_wells
     wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)

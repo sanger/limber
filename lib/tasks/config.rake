@@ -61,7 +61,8 @@ namespace :config do
           )
 
           presenters['ILB_STD_SH'].merge!(
-            :presenter_class => 'Presenters::QcCompletablePresenter'
+            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
           )
 
           presenters['ILB_STD_PREPCR'].merge!(
