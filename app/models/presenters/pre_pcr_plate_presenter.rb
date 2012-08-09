@@ -4,8 +4,8 @@ module Presenters
 
     write_inheritable_attribute :authenticated_tab_states, {
       :pending    =>  [ 'labware-summary-button', 'labware-creation-button' ],
-      :started    =>  [ 'labware-creation-button', 'labware-summary-button', 'well-failing-button' ],
-      :passed     =>  [ 'labware-summary-button', 'well-failing-button', 'labware-creation-button'],
+      :started    =>  [ 'labware-summary-button' ],
+      :passed     =>  [ 'labware-creation-button', 'well-failing-button', 'labware-summary-button' ],
       :cancelled  =>  [ 'labware-summary-button' ],
       :failed     =>  [ 'labware-summary-button' ]
     }

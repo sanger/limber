@@ -272,8 +272,8 @@
       }
     };
 
-    $(document).on("keyup", ".plate-barcode", myPlateButtonObserver );
-    $(document).on("keyup", ".card-id", myPlateButtonObserver );
+    $(document).on("keyup", ".plate-barcode", myPlateButtonObserver);
+    $(document).on("keyup", ".card-id", myPlateButtonObserver);
 
     // Trap the carriage return sent by barcode scanner
     $(document).on("keydown", ".plate-barcode", function(event) {
@@ -304,6 +304,18 @@
       $('.show-my-plates').val(false);
       $('.plate-search-form').submit();
       return false;
+    });
+
+
+    // Disable submit buttons after first click...
+    $(document).on('submit', 'form', function(event){
+      $(event.currentTarget).find(':submit').
+        button('disable').
+        prev('.ui-btn-inner').
+        find('.ui-btn-text').
+        text('Working...');
+
+      return true;
     });
 
   });

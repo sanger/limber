@@ -6,6 +6,7 @@ namespace :config do
     'ILB_STD_COVARIS',
     'ILB_STD_SH',
     'ILB_STD_PCR',
+    'ILB_STD_PCRR',
     'ILB_STD_PREPCR',
     'ILB_STD_PCRXP'
   ]
@@ -70,6 +71,11 @@ namespace :config do
           )
 
           presenters['ILB_STD_PCR'].merge!(
+            :form_class      => 'Forms::TaggingForm',
+            :presenter_class => 'Presenters::PcrPresenter'
+          )
+
+          presenters['ILB_STD_PCRR'].merge!(
             :form_class      => 'Forms::TaggingForm',
             :presenter_class => 'Presenters::PcrPresenter'
           )
