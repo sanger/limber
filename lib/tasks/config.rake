@@ -93,7 +93,7 @@ namespace :config do
 
         end
 
-        purpose_details_by_uuid = lambda { |labware_purposes,purpose|
+        purpose_details_by_uuid = lambda { |labware_purposes, purpose|
           labware_purposes[purpose.uuid] = name_to_details[purpose.name].dup.merge(
             :name => purpose.name
           )

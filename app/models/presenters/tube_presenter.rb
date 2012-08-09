@@ -82,13 +82,12 @@ module Presenters
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation(&block)
-          yield unless child_purposes.empty?
+          yield unless default_child_purpose.nil?
           nil
         end
 
-        # Returns the child plate purposes that can be created in the qc_complete state.
-        def child_purposes
-          purpose.children
+        def default_child_purpose
+          purpose.children.first
         end
       end
 
@@ -96,13 +95,13 @@ module Presenters
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation(&block)
-          yield unless child_purposes.empty?
+          yield unless default_child_purpose.nil?
           nil
         end
 
         # Returns the child plate purposes that can be created in the qc_complete state.
-        def child_purposes
-          purpose.children
+        def default_child_purpose
+          purpose.children.first
         end
       end
 

@@ -95,14 +95,14 @@ module Presenters::Statemachine
           # Yields to the block if there are child plates that can be created from the current one.
           # It passes the valid child plate purposes to the block.
           def control_additional_creation(&block)
-            yield unless child_purposes.empty?
+            yield unless default_child_purpose.nil?
             nil
           end
 
           # Returns the child plate purposes that can be created in the passed state.  Typically
           # this is only one, but it specifically excludes QC plates.
-          def child_purposes
-            labware.plate_purpose.children
+          def default_child_purpose
+            labware.plate_purpose.children.first
           end
         end
         state :failed do
