@@ -12,7 +12,7 @@ class SearchController < ApplicationController
 
     @search_results = plate_search.all(
       IlluminaB::Plate,
-      :state => [ 'pending', 'started', 'passed' ]
+      :state => [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete' ]
  
     )
   end
@@ -22,7 +22,7 @@ class SearchController < ApplicationController
 
     @search_results = plate_search.all(
       IlluminaB::Plate,
-     :state     => [ 'pending', 'started', 'passed' ],
+     :state     => [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete' ],
      :user_uuid => current_user_uuid
     )
 
@@ -44,7 +44,7 @@ class SearchController < ApplicationController
   end
 
   def create
-    raise "You have not supplied a plate barcode" if params[:plate_barcode].blank?
+    raise "You have not supplied a labware barcode" if params[:plate_barcode].blank?
 
     respond_to do |format|
       format.html { redirect_to find_plate(params[:plate_barcode]) }

@@ -2,7 +2,7 @@ module Forms
   class TubesForm < CreationForm
 
     def create_objects!
-      api.transfer_template.find(
+      transfer_return = api.transfer_template.find(
         Settings.transfer_templates["Transfer from tube to tube by submission"]
       ).create!(
         :user   => user_uuid,
@@ -12,5 +12,8 @@ module Forms
     rescue => e
       false
     end
+
+
   end
+
 end

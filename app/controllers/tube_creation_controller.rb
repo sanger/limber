@@ -4,7 +4,7 @@ class TubeCreationController < CreationController
   end
 
   def redirection_path(form)
-    illumina_b_plate_path(form.parent.uuid)
+    illumina_b_tube_path(form.child.uuid)
   end
 
 
@@ -16,7 +16,7 @@ class TubeCreationController < CreationController
     end
 
   rescue Sequencescape::Api::ResourceInvalid => exception
-    Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
+    Rails.logger.error("Cannot create child tube from #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
     respond_to do |format|

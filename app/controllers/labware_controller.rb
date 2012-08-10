@@ -31,7 +31,7 @@ class LabwareController < ApplicationController
       format.html { 
         redirect_to(
           search_path,
-          :notice => "State for plate #{params[:labware_ean13_barcode]} has been changed to #{params[:state]}"
+          :notice => "Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}"
         )
       }
     end

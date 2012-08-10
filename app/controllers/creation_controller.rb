@@ -1,12 +1,15 @@
 class CreationController < ApplicationController
   class_inheritable_reader :creation_message
-  write_inheritable_attribute :creation_message, 'Your lab ware has been created'
+  write_inheritable_attribute :creation_message, 'Your new empty labware has been added to the system.'
 
 
   before_filter :check_for_current_user!
 
   def redirect_to_form_destination(form)
-    redirect_to(redirection_path(form), :notice => creation_message)
+    redirect_to(
+      redirection_path(form),
+      :notice => "New empty labware added to the system."
+    )
   end
 
   def create_form(form_attributes)

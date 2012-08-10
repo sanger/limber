@@ -1,7 +1,6 @@
 module StateChangers
   class DefaultStateChanger
-    attr_reader :labware_uuid
-    attr_reader :api
+    attr_reader :labware_uuid, :labware, :api
     private :api
     attr_reader :user_uuid
 
@@ -10,13 +9,16 @@ module StateChangers
     end
 
     def move_to!(state, reason = nil)
-      api.state_change.create!(
+      state_details = {
         :target       => labware_uuid,
         :user         => user_uuid,
         :target_state => state,
         :reason       => reason
-      )
+      }
+
+      api.state_change.create!(state_details)
     end
+
   end
 
   def self.lookup_for(purpose_uuid)
