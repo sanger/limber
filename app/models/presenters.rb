@@ -41,14 +41,8 @@ module Presenters
       'well-failing-button'     => [ 'well-failing' ]
     }
 
+    # This is now generated dynamically by the LabwareHelper
     class_inheritable_reader    :tab_states
-    write_inheritable_attribute :tab_states, [
-      :pending,
-      :started,
-      :passed,
-      :qc_complete,
-      :cancelled
-    ].each_with_object({}) {|k,h| h[k] = ['labware-summary-button']}
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
