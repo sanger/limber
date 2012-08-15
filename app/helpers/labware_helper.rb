@@ -73,9 +73,17 @@ module LabwareHelper
   end
 
   def get_tab_states(presenter)
-    return presenter.authenticated_tab_states.to_json.html_safe if current_user_uuid.present?
-    presenter.tab_states.to_json.html_safe
+    tab_states_or_summary(presenter).to_json.html_safe
   end
+
+  # Returns either the tab_states for a logged in user or the labware summary
+  # for the current state.
+  def tab_states_or_summary(presenter)
+    return presenter.authenticated_tab_states if current_user_uuid.present?
+
+    {}.tap { |h| h[presenter.labware.state] = ['labware-summary-button'] }
+  end
+  private :tab_states_or_summary
 
   def plates_by_state(plates)
     plates.each_with_object(Hash.new {|h,k| h[k]=[]}) do |plate, plates_by_state|
