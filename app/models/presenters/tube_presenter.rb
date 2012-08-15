@@ -20,20 +20,12 @@ module Presenters
     }
 
     class_inheritable_reader    :tab_states
-    write_inheritable_attribute :tab_states, [
-      :pending,
-      :started,
-      :passed,
-      :qc_complete,
-      :cancelled
-    ].each_with_object({}) {|k,h| h[k] = ['labware-summary-button']}
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
         :started     => [ 'labware-state-button', 'labware-summary-button' ],
-        # :passed      => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed => [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :passed      => [ 'labware-state-button', 'labware-summary-button' ],
         :qc_complete => [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
         :cancelled   => [ 'labware-summary-button' ],
         :failed      => [ 'labware-summary-button' ]
@@ -63,7 +55,7 @@ module Presenters
       end
 
       event :cancel do
-        transition [ :pending, :started, :passed, :failed ] => :cancelled
+        transition [ :pending, :started, :passed, :failed, :qc_complete ] => :cancelled
       end
 
       state :pending do
@@ -75,20 +67,7 @@ module Presenters
       end
 
       state :passed do
-        # SHOULDN'T BE MAKING PLATES FROM PASSED BUT STATE CHANGE IS NOT WORKING PROPERLY.
-        #
-        # include Statemachine::StateDoesNotAllowChildCreation
-
-        # Yields to the block if there are child plates that can be created from the current one.
-        # It passes the valid child plate purposes to the block.
-        def control_additional_creation(&block)
-          yield unless default_child_purpose.nil?
-          nil
-        end
-
-        def default_child_purpose
-          purpose.children.first
-        end
+        include Statemachine::StateDoesNotAllowChildCreation
       end
 
       state :qc_complete, :human_name => 'QC Complete' do
