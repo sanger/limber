@@ -20,7 +20,7 @@
                 <% tube_uuid = plate_presenter.transfers[well.location].uuid %>
                 <div 
                   id="<%= "aliquot_#{well.location}" %>"
-                  class="aliquot <%= pooling_colour(well, tube_uuid) %>"
+                  class="aliquot <%= well.state == 'failed' ? 'permanent-failure' : pooling_colour(well, tube_uuid) %>"
                   rel="<%= "#details_#{well.location}" %>">
                   &nbsp;
                 </div>
