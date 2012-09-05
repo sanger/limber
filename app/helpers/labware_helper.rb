@@ -19,6 +19,13 @@ module LabwareHelper
   cycling_colours(:tag)     { |labware, _|            labware.pool_id }
   cycling_colours(:pooling) { |labware, destination|  destination }
 
+  def pool_colour_for_well(presenter, well)
+    return 'permanent-failure' if well.state == 'failed'
+
+    tube_uuid = presenter.transfers[well.location].uuid
+    pooling_colour(well, tube_uuid)
+  end
+
   def aliquot_colour(labware)
     case labware.state
       when "passed"   then "green"
