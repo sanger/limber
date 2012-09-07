@@ -16,7 +16,7 @@
         </li>
         <% if current_user_uuid.present? -%>
           <li id="labware-state-button">
-            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move to next state</a>
+            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move tube to next state</a>
           </li>
           <li id="labware-creation-button">
             <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Tube</a>
@@ -29,7 +29,8 @@
 
     <%= content do %>
       <%= flash_messages %>
-      <h1>Tube Status - <%= @presenter.labware.state.titleize %></h1>
+      <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
+      <h2>Tube Status - <%= @presenter.labware.state.titleize %></h2>
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div id="labware-summary" class="scape-ui-block">
