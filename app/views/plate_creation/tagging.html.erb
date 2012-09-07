@@ -1,5 +1,5 @@
 <%= page(:'tag-creation-page') do -%>
-  <%= header(@creation_form, 'Choose tag layout') %>
+  <%= header(@creation_form, '→ ILB_STD_PCR - Choose tag layout') %>
 
   <%= content do %>
     <%= semantic_form_for(@creation_form, :as => :plate, :url => illumina_b_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
@@ -36,6 +36,8 @@
           </ol>
 
           To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
+
+          <h3>Once you are certain that the tag layout is correct, click ‘Create Plate’.</h3>
         </div>
         <div id="replacement-tags" style="display:none">
           <ul id="tag-palette" 

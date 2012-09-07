@@ -38,7 +38,7 @@ module Presenters
       'labware-creation-button' => [ 'labware-summary', 'plate-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'plate-creation' ],
       'labware-state-button'    => [ 'labware-summary', 'plate-state'    ],
-      'well-failing-button'     => [ 'well-failing' ]
+      'well-failing-button'     => [ 'well-failing', 'well-failing-instructions' ]
     }
 
     # This is now generated dynamically by the LabwareHelper
