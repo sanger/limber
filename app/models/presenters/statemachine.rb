@@ -64,11 +64,9 @@ module Presenters::Statemachine
         event :pass do
           transition [ :pending, :started ] => :passed
         end
-        event :fail do
-          transition [ :pending, :started ] => :failed
-        end
+
         event :cancel do
-          transition [ :pending, :started, :passed, :failed ] => :cancelled
+          transition [ :pending, :started ] => :cancelled
         end
       end
     end
@@ -105,9 +103,7 @@ module Presenters::Statemachine
             labware.plate_purpose.children.first
           end
         end
-        state :failed do
-          include StateDoesNotAllowChildCreation
-        end
+
         state :cancelled do
           include StateDoesNotAllowChildCreation
         end

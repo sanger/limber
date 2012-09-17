@@ -44,20 +44,12 @@ module Presenters
               end
             end
 
-            state :failed do
-              include Statemachine::StateDoesNotAllowChildCreation
-            end
-
             state :cancelled do
               include Statemachine::StateDoesNotAllowChildCreation
             end
 
-            event :fail do
-              transition [ :passed ] => :failed
-            end
-
             event :cancel do
-              transition [ :pending, :started_fx, :started_mj, :passed, :failed ] => :cancelled
+              transition [ :pending, :started_fx, :started_mj ] => :cancelled
             end
           end
 
