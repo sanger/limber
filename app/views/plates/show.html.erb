@@ -51,7 +51,8 @@
             </ol>
           </div>
 
-          <%= render(:partial => 'plate_printing') %>
+          <%= render(:partial => 'plate_printing') if @presenter.allow_plate_label_printing? %>
+
           <%= @presenter.control_additional_printing do %>
             <%= section do %>
               <%= render(:partial => @presenter.printing_partial, :locals => { :presenter => @presenter }) %>
