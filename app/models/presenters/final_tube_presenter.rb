@@ -24,10 +24,13 @@ module Presenters
     write_inheritable_attribute :authenticated_tab_states, {
         :pending   => [ 'labware-summary-button', 'labware-state-button' ],
         :started   => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed    => [ 'labware-summary-button', 'labware-state-button' ],
+        :passed    => [ 'labware-summary-button' ],
         :cancelled => [ 'labware-summary-button' ],
         :failed    => [ 'labware-summary-button' ]
     }
+
+    class_inheritable_reader    :label_text
+    write_inheritable_attribute :label_text, 'MX Library tube - (S)'
 
     state_machine :state, :initial => :pending do
       event :start do
@@ -43,12 +46,8 @@ module Presenters
         transition [ :pending, :started ] => :passed
       end
 
-      event :fail do
-        transition [ :passed ] => :failed
-      end
-
       event :cancel do
-        transition [ :pending, :started, :passed, :failed ] => :cancelled
+        transition [ :pending, :started ] => :cancelled
       end
 
       state :pending do
@@ -67,6 +66,8 @@ module Presenters
 
     # The state is delegated to the tube
     delegate :state, :to => :labware
+
+
 
 
     # Purpose returns the plate or tube purpose of the labware.

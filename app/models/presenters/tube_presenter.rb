@@ -26,10 +26,13 @@ module Presenters
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
         :started     => [ 'labware-state-button', 'labware-summary-button' ],
         :passed      => [ 'labware-state-button', 'labware-summary-button' ],
-        :qc_complete => [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :qc_complete => [ 'labware-creation-button','labware-summary-button' ],
         :cancelled   => [ 'labware-summary-button' ],
         :failed      => [ 'labware-summary-button' ]
     }
+
+    class_inheritable_reader    :label_text
+    write_inheritable_attribute :label_text, 'MX Stock tube - (P)(S)'
 
     state_machine :state, :initial => :pending do
       event :start do
@@ -55,7 +58,7 @@ module Presenters
       end
 
       event :cancel do
-        transition [ :pending, :started, :passed, :failed, :qc_complete ] => :cancelled
+        transition [ :pending, :started ] => :cancelled
       end
 
       state :pending do
