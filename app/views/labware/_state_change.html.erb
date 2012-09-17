@@ -27,13 +27,13 @@
           
           <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
         </li>
-        <li id="cancelled" class="reason" <%= 'style=display:none;' if presenter.labware.state != 'cancelled'%>>
+        <li id="cancelled" class="reason" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>
           <%= label_tag :reason, 'Reason for cancellation:' %>
-          <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), :disabled => true) %>
+          <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), disable_cancelled_by_state(transitions)) %>
         </li>
-        <li id="failed" class="reason" <%= 'style=display:none;' if presenter.labware.state != 'failed'%>>
+        <li id="failed" class="reason" <%= 'style=display:none;' unless show_state?('failed', presenter, transitions)%>>
           <%= label_tag :reason, 'Reason for failure:' %>
-          <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), :disabled => true) %>
+          <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions)) %>
         </li>
         <li>
           <%= f.submit 'Change State', :'data-theme' => 'b', :'data-icon' => 'gear' %>

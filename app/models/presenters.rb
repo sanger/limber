@@ -48,7 +48,7 @@ module Presenters
     write_inheritable_attribute :authenticated_tab_states, {
         :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],
         :started    =>  [ 'labware-state-button', 'labware-summary-button'                           ],
-        :passed     =>  [ 'labware-creation-button','labware-summary-button', 'labware-state-button' ],
+        :passed     =>  [ 'labware-creation-button','labware-summary-button' ],
         :cancelled  =>  [ 'labware-summary-button' ],
         :failed     =>  [ 'labware-summary-button' ]
     }
@@ -64,6 +64,8 @@ module Presenters
     def purpose
       labware.plate_purpose
     end
+
+    def allow_plate_label_printing?; true end
 
     def control_worksheet_printing(&block)
       yield

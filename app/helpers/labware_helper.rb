@@ -19,6 +19,20 @@ module LabwareHelper
   cycling_colours(:tag)     { |labware, _|            labware.pool_id }
   cycling_colours(:pooling) { |labware, destination|  destination }
 
+  def show_state?(state, presenter, transitions)
+    [presenter.labware.state, transitions.first.to].include?(state)
+  end
+
+  def self.disable_based_on_state(state_name)
+    define_method(:"disable_#{state_name}_by_state") do |transitions|
+      return {:disabled => true} unless transitions.first.to == state_name.to_s
+      {}
+    end
+  end
+
+  disable_based_on_state(:cancelled)
+  disable_based_on_state(:failed)
+
   def pool_colour_for_well(presenter, well)
     return 'permanent-failure' if well.state == 'failed'
 

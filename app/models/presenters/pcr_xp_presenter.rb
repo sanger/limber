@@ -48,6 +48,8 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     end
 
     state :qc_complete do
+      def allow_plate_label_printing?; false end
+
       # Don't yield in :qc_complete state
       def control_source_view(&block)
       end

@@ -72,11 +72,11 @@
 
   displayReason: function() {
     if($('.reason:visible').length === 0) {
-      $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
+      $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
     } 
     else {
       $('.reason').not('#'+$('#state option:selected').val()).slideUp('slow', function(){
-        $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').removeAttr('disabled');
+        $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
       });
     }
 
@@ -358,9 +358,10 @@
     $('.show-page').on('click', '.navbar-link', SCAPE.linkHandler);
 
     // State changes reasons...
-    SCAPE.displayReason();
+    // SCAPE.displayReason();
     $('.show-page').on('change','#state', SCAPE.displayReason);
   });
+
   $(document).on('pageinit', '#admin-page', function(event) {
 
     $('#plate_edit').submit(function() {
