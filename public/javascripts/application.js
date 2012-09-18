@@ -258,7 +258,7 @@
     $(document).on("keydown", "input.card-id", function(e) {
       var code=e.charCode || e.keyCode;
       if (code==13) {
-        $("#plate_barcode").focus();
+        $('input[data-type="search"], .plate-barcode').last().focus();
         return false;
       }
 
