@@ -30,7 +30,7 @@ module Presenters
     }
 
     class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, 'MX Library tube - (S)'
+    write_inheritable_attribute :label_text, 'MX Lib (S)'
 
     state_machine :state, :initial => :pending do
       event :start do

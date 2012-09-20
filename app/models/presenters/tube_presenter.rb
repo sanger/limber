@@ -32,7 +32,7 @@ module Presenters
     }
 
     class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, 'MX Stock tube - (P)(S)'
+    write_inheritable_attribute :label_text, 'MX Stk (P)(S)'
 
     state_machine :state, :initial => :pending do
       event :start do
