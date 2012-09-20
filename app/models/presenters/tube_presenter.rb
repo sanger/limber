@@ -31,8 +31,9 @@ module Presenters
         :failed      => [ 'labware-summary-button' ]
     }
 
+    LABEL_TEXT = 'MX Stk (P)(S)'
     class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, 'MX Stk (P)(S)'
+    write_inheritable_attribute :label_text, LABEL_TEXT
 
     state_machine :state, :initial => :pending do
       event :start do
