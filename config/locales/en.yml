@@ -230,7 +230,7 @@ en:
       instructions: >
         <p>Create a child tube to continue working on this pool.</p>
         <li>Select the ‘Create child tube’ tab.</li>
-        <li>Click on ‘Add an empty ILB_STD_PCRXP tube’.</li>
+        <li>Click on ‘Add an empty ILB_STD_MX tube’.</li>
 
 
   ILB_STD_MX:
