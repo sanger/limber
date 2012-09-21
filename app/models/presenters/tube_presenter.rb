@@ -31,7 +31,7 @@ module Presenters
         :failed      => [ 'labware-summary-button' ]
     }
 
-    LABEL_TEXT = 'MX Stk (P)(S)'
+    LABEL_TEXT = 'ILB Stock'
     class_inheritable_reader    :label_text
     write_inheritable_attribute :label_text, LABEL_TEXT
 
