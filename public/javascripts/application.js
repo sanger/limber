@@ -288,6 +288,10 @@
       }
     });
 
+    if ($('input.card-id').val()) {
+      $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
+    }
+
     // Change the colour of the title bar to show a user id
     $(document).on('blur', 'input.card-id', function(event){
       if ($(event.currentTarget).val()) {
