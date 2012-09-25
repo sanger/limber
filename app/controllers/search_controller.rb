@@ -41,6 +41,15 @@ class SearchController < ApplicationController
 
   def create_or_find
     params['show-my-plates'] == 'true' ? my_plates : create
+
+  rescue => exception
+    @search_results = []
+    flash[:error]   = exception.message
+
+    # rendering new without re-searching for the ongoing plates...
+    respond_to do |format|
+      format.html { render :new }
+    end
   end
 
   def create
@@ -48,15 +57,6 @@ class SearchController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to find_plate(params[:plate_barcode]) }
-    end
-
-  rescue => exception
-    @search_results = []
-    flash[:alert]   = exception.message
-
-    # rendering new without re-searching for the ongoing plates...
-    respond_to do |format|
-      format.html { render :new }
     end
   end
 
@@ -67,13 +67,16 @@ class SearchController < ApplicationController
 
   def check_for_login!
     set_user_by_swipecard!(params[:card_id]) if params[:card_id].present?
+  rescue Sequencescape::Api::ResourceNotFound => exception
+    flash[:error] = exception.message
+    redirect_to :search
   end
   private :check_for_login!
 
   def find_plate(barcode)
     api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Could not find the plate with the specified barcode'
+    raise exception, 'Sorry, could not find labware with the specified barcode.'
   end
 
 end
