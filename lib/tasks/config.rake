@@ -8,7 +8,8 @@ namespace :config do
     'ILB_STD_PCR',
     'ILB_STD_PCRR',
     'ILB_STD_PREPCR',
-    'ILB_STD_PCRXP'
+    'ILB_STD_PCRXP',
+    'ILB_STD_PCRRXP'
   ]
 
   TUBE_PURPOSES = [
@@ -81,6 +82,11 @@ namespace :config do
           )
 
           presenters['ILB_STD_PCRXP'].merge!(
+            :presenter_class     => 'Presenters::PcrXpPresenter',
+            :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
+          )
+
+          presenters['ILB_STD_PCRRXP'].merge!(
             :presenter_class     => 'Presenters::PcrXpPresenter',
             :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
           )
