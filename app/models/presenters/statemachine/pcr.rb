@@ -49,7 +49,7 @@ module Presenters
             end
 
             event :cancel do
-              transition [ :pending, :started_fx, :started_mj ] => :cancelled
+              transition [ :pending, :started_fx, :started_mj, :passed ] => :cancelled
             end
           end
 

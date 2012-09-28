@@ -47,7 +47,7 @@ module Presenters
             end
 
             event :cancel do
-              transition [ :pending, :started  ] => :cancelled
+              transition [ :pending, :started, :passed, :qc_complete ] => :cancelled
             end
           end
         end

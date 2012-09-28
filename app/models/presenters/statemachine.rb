@@ -66,7 +66,7 @@ module Presenters::Statemachine
         end
 
         event :cancel do
-          transition [ :pending, :started ] => :cancelled
+          transition [ :pending, :started, :passed ] => :cancelled
         end
       end
     end

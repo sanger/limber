@@ -75,8 +75,8 @@ body {
 .aliquot {
   @include border-radius(27px);
   width:27px;
-  height:23px;
-  padding: 4px 0 0 0;
+  height:22px;
+  padding: 5px 0 0 0;
   text-align: center;
   color:#fff;
   display: inline-block;
@@ -147,6 +147,7 @@ body {
   .qc_complete       { @include background(radial-gradient(top left, #bbbbbb, #111111)); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
+  .cancelled         { @include background(radial-gradient(top left, #D30000, #480000)); }
   .permanent-failure { 
     @include background(radial-gradient(top left, #D30000, #480000));
     border: 1px gray solid;
