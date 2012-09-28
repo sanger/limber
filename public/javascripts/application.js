@@ -231,9 +231,13 @@
         addClass('selected-aliquot').
         removeClass('dimmed');
 
-        $('#pools-information li[data-pool!='+pool+']').fadeOut('fast', function(){
-          $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
+        $('#pools-information li[data-pool!='+pool+']').
+          fadeOut('fast').
+          promise().
+          done(function(){
+            $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
         });
+
 
 
     });
@@ -350,7 +354,9 @@
       $('.scape-ui-block').
         not(targetIds).
         filter(':visible').
-        fadeOut( function(){ $(targetIds).fadeIn(); } );
+        fadeOut().
+        promise().
+        done( function(){ $(targetIds).fadeIn(); } );
     };
 
     var targetTab = SCAPE.labware.tabStates[SCAPE.labware.state][0];
@@ -415,7 +421,10 @@
         SCAPE.updateTagpalette();
 
         // Show the tag palette...
-        $('#instructions').fadeOut(function(){
+        $('#instructions').
+          fadeOut().
+          promise().
+          done(function(){
           $('#replacement-tags').fadeIn();
         });
 
@@ -468,7 +477,10 @@
       resetHandler : function() {
         $('.aliquot').removeClass('selected-aliquot dimmed');
         $('.available-tags').unbind();
-        $('#replacement-tags').fadeOut(function(){
+        $('#replacement-tags').
+          fadeOut().
+          promise().
+          done(function(){
           $('#instructions').fadeIn();
         });
       }

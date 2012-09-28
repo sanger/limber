@@ -8,7 +8,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     :pending     => [ 'labware-summary-button', 'labware-state-button' ],
     :started     => [ 'labware-state-button', 'labware-summary-button' ],
     :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button' ],
-    :qc_complete => [ 'labware-summary-button' ],
+    :qc_complete => [ 'labware-summary-button', 'labware-state-button' ],
     :cancelled   => [ 'labware-summary-button' ],
     :failed      => [ 'labware-summary-button' ]
   }

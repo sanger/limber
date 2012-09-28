@@ -42,6 +42,11 @@ en:
         <li>Select the ‘Create next plate’ tab.</li>
         <li>Click on ‘Add an empty ILB_STD_SH plate’.</li>
 
+    cancelled:
+      state_text: "Covaris plate cancelled"
+      instruction_summary: "Covaris plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
 
   ILB_STD_SH:
     pending:
@@ -79,6 +84,16 @@ en:
         <li>Select the ‘Create next plate’ tab.</li>
         <li>Click on ‘Add an empty ILB_STD_PREPCR plate’.</li>
 
+    cancelled:
+      state_text: "Sheared plate cancelled"
+      instruction_summary: "Sheared plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+    failed:
+      state_text: "Sheared plate, Input plate and Library have been failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team"
+      instructions:
 
   ILB_STD_PREPCR:
     pending:
@@ -105,6 +120,12 @@ en:
         <p>You can create a PCR repeat (‘ILB_STD_PCRR’) plate.</p>
         <li>Select the ‘Create next plate’ tab.</li>
         <li>Click on ‘Add an empty ILB_STD_PCRR plate’.</li>
+
+    cancelled:
+      state_text: "Pre-PCR plate cancelled"
+      instruction_summary: "Pre-PCR plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
 
 
 
@@ -150,6 +171,14 @@ en:
         <li>Select the ‘Create next plate’ tab.</li>
         <li>Click on ‘Add an empty ILB_STD_PCRXP plate’.</li>
 
+    cancelled:
+      state_text: "PCR plate cancelled"
+      instruction_summary: "PCR plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
   ILB_STD_PCRXP:
     pending:
       state_text: "Preparing empty PCR-XP plate for MC NXp"
@@ -194,6 +223,77 @@ en:
         <li>Follow the link to display the tube.</li>
         <p><em>Clicking the tube links will show the tube in a new tab.</em></p>
 
+    failed:
+      state_text: "PCR-XP plate, Input plate and Library have been failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team"
+      instructions:
+
+    cancelled:
+      state_text: "PCR-XP plate cancelled"
+      instruction_summary: "PCR-XP plate has been cancelled please return to Pre-PCR plate to continue"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+  ILB_STD_PCRRXP:
+    pending:
+      state_text: "Preparing empty PCR-XP repeat plate for MC NXp"
+      instruction_summary: "Label empty plate"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the ‘cleaned PCR’ plate</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>Once the PCR clean-up program on the MC NXp is running, change the ‘Current State’ to ‘started’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "PCR clean-up on the MC NXp in progress"
+      instruction_summary: "When PCR clean-up on the MC NXp finishes"
+      instructions: >
+        <p>Once the PCR clean-up program on the MC NXp has finished, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "PCR clean-up on the MC NXp complete"
+      instruction_summary: "Plate awaiting QC"
+      instructions: >
+        <p>Once the post-PCR Agilent and qPCR have been performed and the plate has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete’.</p>
+        <p><em>If there are any QC issues, seek advice from a senior member of the T180 library prep team.</em></p>
+        <p>Changing the PCR-XP state to QC Complete will add empty stock tubes to the LIMS.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘QC Complete’ and click ‘Change State’ button.</li>
+
+    qc_complete:
+      state_text: "QC Complete PCR-XP repeat plate and target pool tubes"
+      instruction_summary: "Follow tube links to continue working on these samples."
+      instructions: >
+        <p>All stock MX pool labels can be printed at this point.</p>
+
+        <p>Print 2 labels for each tube.</p>
+        <li>Place one on the appropriate tube ready for pooling</li>
+        <li>Keep the other in your records for reference.</li>
+
+        <p>When you are ready to transfer a pool to it's tube:-</p>
+        <li>Follow the link to display the tube.</li>
+        <p><em>Clicking the tube links will show the tube in a new tab.</em></p>
+
+    failed:
+      state_text: "PCR-XP repeat plate, Input plate and Library failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team."
+      instructions: >
+
+
+    cancelled:
+      state_text: "PCR-XP repeate plate cancelled"
+      instruction_summary: "This plate has been cancelled please return to Pre-PCR plate to continue"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
   ILB_STD_STOCK:
     pending:
       state_text: "Empty ILB_STD_STOCK tube awaiting transfer of pool"
@@ -232,6 +332,14 @@ en:
         <li>Select the ‘Create child tube’ tab.</li>
         <li>Click on ‘Add an empty ILB_STD_MX tube’.</li>
 
+    cancelled:
+      state_text: "ILB_STD_STOCK tube cancelled"
+      instruction_summary: "This tube has been cancelled please."
+      instructions: >
+        <p>This tube has been cancelled.</p>
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
 
   ILB_STD_MX:
     pending:
@@ -253,7 +361,6 @@ en:
         <p>Once you have finished making up the working dilutions for Clustering, change the ‘Current State’ to ‘passed’.</p>
         <li>Select the ‘Move tube to next state’ tab.</li>
         <li>Select ‘Passed’ and click ‘Change State’ button.</li>
-
 
     passed:
       state_text: "Working dilution complete. ILB_STD_MX tube ready for clustering"

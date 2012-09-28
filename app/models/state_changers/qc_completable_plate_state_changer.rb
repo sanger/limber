@@ -21,6 +21,7 @@ module StateChangers
 
       case state
       when 'qc_complete' then filtered_state_change!(state_details)
+      when 'cancelled'   then filtered_state_change!(state_details)
       else passive_state_change!(state_details)
       end
     end
