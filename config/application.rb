@@ -9,7 +9,7 @@ require 'csv'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
-module PulldownPipeline
+module IlluminaBPipeline
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -43,5 +43,7 @@ module PulldownPipeline
 
     config.filter_parameters += [:password]
 
+    # Allow state_machine to override methods like Object#fail in models
+    StateMachine::Machine.ignore_method_conflicts = true
   end
 end

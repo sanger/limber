@@ -1,0 +1,6 @@
+<h2>Print tube labels</h2>
+<%= multiple_barcodes_printing_form(
+      presenter.labware.tubes.map(&:barcode),
+      :redirection_url => illumina_b_plate_path(presenter.labware),
+      :text            => presenter.label_text
+) %>

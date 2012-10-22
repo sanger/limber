@@ -1,0 +1,25 @@
+<%= content do %>
+  <%= flash_messages %>
+
+    <h1><%= search_title %></h1>
+      <%= section do %>
+        <%= form_tag perform_search_path, :class => "plate-search-form", :method => 'post' do %>
+          <%= label_tag :card_id do %>
+            User Swipecard:
+            <%= text_field_tag :card_id, params[:card_id], :class => 'card-id' %>
+          <% end -%>
+
+          <%= hidden_field_tag :'show-my-plates', false, :class => 'show-my-plates' %>
+          <%= hidden_field_tag :plate_barcode, params[:plate_barcode], :class => 'plate-barcode' %>
+
+        <% end %>
+      <% end %>
+
+      <h2><%= search_status(search_results) %></h2>
+      <% unless search_results.empty? %>
+        <%= section do %>
+          <%= render(:partial => 'plate_progress', :locals => { :plates => search_results }) %>
+        <% end %>
+      <% end %>
+
+<% end %>

@@ -1,0 +1,43 @@
+<%# TODO This form code breaks the semantic presenter model pattern.
+    The form should use attriutes on the presenter class not the labware directly. 
+%>
+
+<% presenter.control_state_change do |transitions| %>
+    <%= form_for(
+          presenter.labware,
+          presenter.labware_form_details(self).merge(
+            :html => { :method => :put },
+            :as => :plate
+          )) do |f|
+    %>
+
+    <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
+    <%= hidden_field_tag :labware_ean13_barcode, presenter.labware.barcode.ean13 %>
+
+   <ul id="state-changer" data-role="listview" data-inset="true">
+     <li data-role="list-divider"><h2>Current State: <i><%= presenter.labware.state.titleize %></i> </h2></li>
+        <% if admin_page? -%>
+          <li>
+          <%= label_tag :card_id, "User Swipecard" %>
+          <%= text_field_tag :card_id, "", :class => "ui-input-text", :'data-mini' => "true" %>
+          </li>
+        <% end -%>
+        <li>
+          <%= label_tag :state, "Change state to:" %>
+          
+          <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
+        </li>
+        <li id="cancelled" class="reason" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>
+          <%= label_tag :reason, 'Reason for cancellation:' %>
+          <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), disable_cancelled_by_state(transitions)) %>
+        </li>
+        <li id="failed" class="reason" <%= 'style=display:none;' unless show_state?('failed', presenter, transitions)%>>
+          <%= label_tag :reason, 'Reason for failure:' %>
+          <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions)) %>
+        </li>
+        <li>
+          <%= f.submit 'Change State', :'data-theme' => 'b', :'data-icon' => 'gear' %>
+        </li>
+    </ul>
+    <% end %>
+<% end %>

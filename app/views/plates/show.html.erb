@@ -1,9 +1,11 @@
-<%= page(:'plate-show-page') do %>
+<%= page(:'plate-show-page', :'show-page') do %>
 <script type="text/javascript">
-  SCAPE.plate = {
-    'state'     : '<%= @presenter.plate.state %>',
-    'tabViews'  : <%= @presenter.tab_views.to_json.html_safe %>,
-    'tabStates' : <%= get_tab_states(@presenter) %>
+  SCAPE.labware = {
+    'state':     '<%= @presenter.labware.state %>',
+    'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
+    'tabStates': <%= get_tab_states(@presenter) %>,
+    'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
+    'uuid':     '<%= @presenter.labware.uuid %>'
   };
 </script>
 
@@ -12,12 +14,11 @@
   <%= header(@presenter, 'Plate view') do %>
     <div data-role="navbar">
       <ul id="navbar">
-        <li id="summary-button"><a href="#" class="navbar-link" rel="summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
+        <li id="labware-summary-button"><a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li id="plate-creation-button"><a href="#" class="navbar-link" rel="plate-creation-button" data-icon="add">Create Child Plate</a></li>
-          <li id="plate-QC-button"><a href="#" class="navbar-link" rel="plate-QC-button" data-icon="add">Create QC Plate</a></li>
-          <li id="plate-state-button"><a href="#" class="navbar-link" rel="plate-state-button" data-icon="gear">Change Plate State</a></li>
+          <li id="labware-state-button"><a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move plate to next state</a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
+          <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create next plate</a></li>
         <% end -%>
       </ul>
     </div>
@@ -25,34 +26,35 @@
 
   <%= content do %>
     <%= flash_messages %>
-    <% plate_type_and_state = "#{@presenter.plate.plate_purpose.name}.#{@presenter.plate.state.downcase}" -%>
-    <h1><%= t("#{plate_type_and_state}.state_text") %></h1>
+    <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
     <div class="ui-grid-a">
       <div class="ui-block-a">
-        <div id="plate-summary" class="scape-ui-block">
+        <div id="labware-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
-          <%= link_to "Download Worksheet CSV", "#{pulldown_plate_path(@presenter.plate.uuid)}.csv", :rel => "external" %>
+          <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.labware.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
+
           <h2>Fail Wells</h2>
-          <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) %>
+          <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) if well_failing_applicable?(@presenter) %>
         </div>
       </div>
 
 
       <div class="ui-block-b">
-        <div class="instructions ui-body">
-          <h3><%= t("#{plate_type_and_state}.instruction_summary") %></h3>
-          <ol>
-            <%= t("#{plate_type_and_state}.instructions").html_safe %>
-          </ol>
-        </div>
-
         <div id="plate-printing"  class="scape-ui-block" style="display:none;">
-          <%= render(:partial => 'plate_printing') %>
+          <div class="instructions ui-body">
+            <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
+            <ol>
+              <%= t("#{labware_type_and_state}.instructions").html_safe %>
+            </ol>
+          </div>
+
+          <%= render(:partial => 'plate_printing') if @presenter.allow_plate_label_printing? %>
+
           <%= @presenter.control_additional_printing do %>
-            <% section do %>
+            <%= section do %>
               <%= render(:partial => @presenter.printing_partial, :locals => { :presenter => @presenter }) %>
               <%= @presenter.control_worksheet_printing do %>
               <% end %>
@@ -61,14 +63,44 @@
         </div>
 
         <div id="plate-creation" class="scape-ui-block" style="display:none;">
+          <div class="instructions ui-body">
+            <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
+            <ol>
+              <%= t("#{labware_type_and_state}.instructions").html_safe %>
+            </ol>
+          </div>
+
           <%= @presenter.control_additional_creation do %>
-          <h2>Create Child Plate</h2>
-              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+            <h2>Create Child Plate</h2>
+            <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
           <% end %>
         </div>
 
         <div id="plate-state" class="scape-ui-block" style="display:none;">
+          <div class="instructions ui-body">
+            <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
+            <ol>
+              <%= t("#{labware_type_and_state}.instructions").html_safe %>
+            </ol>
+          </div>
+
           <%= state_change_form(@presenter) %>
+        </div>
+
+        <div id="well-failing-instructions" class="scape-ui-block" style="display:none;">
+          <div class="instructions ui-body">
+            <h3>Well failing</h3>
+            <p>
+            Highlight the wells that have failed and are to be omitted from the pool(s). Once you are happy with your selection, click ‘Fail wells’.
+            </p>
+            <p>
+            N.B. <strong>DO NOT fail wells unless there are no other options</strong> – failed wells cannot be added back in later (should a subsequent re-PCR work, for example).
+            </p>
+
+            <p>
+            <em>If in doubt, seek advice from a senior member of the T180 library prep team</em>
+            </p>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,13 @@
+<div class="tube">
+  <div class="tube-view">
+    <% unless tube.aliquots.empty? -%>
+      <div id="<%= "aliquot_#{tube.uuid}" %>" class="aliquot <%= pooling_colour(tube, tube.uuid) %>">&nbsp;</div>
+    <% end -%>
+  </div>
+
+  <ul id="information">
+    <li><span class="label">Barcode</span>       <%= link_to(useful_barcode(tube.barcode), illumina_b_tube_path(tube.uuid), :target => '_blank') %></li>
+    <li><span class="label">Current state</span> <%= tube.state %></li>
+    <li><span class="label">Source wells</span>  <%= source.join(', ') %></li>
+  </ul>
+</div>

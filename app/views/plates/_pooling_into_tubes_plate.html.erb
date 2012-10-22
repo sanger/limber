@@ -8,18 +8,22 @@
     </tr>
   </thead>
 
-  <tbody>
-    <% transfers = plate_presenter.plate.source_transfers.first.transfers -%>
     <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
-        <% row_wells.each_with_index do |well, index| %>
-          <td class="col-all <%= "col-#{index+1}" %>">
-            <div id="<%= "well_#{well.location}" %>" class="well">
-              <% unless transfers[well.location].nil? -%>
-                <% tube_uuid = transfers[well.location].uuid %>
-                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot <%= pooling_colour(well, tube_uuid) %>" rel="<%= "#details_#{well.location}" %>">&nbsp;</div>
-              <% end %>
+        <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
+          <td class="col-all <%= column(well) %>">
+            <% location = "#{row_label}#{index + 1}" %>
+            <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
+            <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
+              <% if well.try(:aliquots).present? -%>
+                <div 
+                  id="<%= "aliquot_#{well.location}" %>"
+                  class="aliquot <%= pool_colour_for_well(plate_presenter, well) %>"
+                  rel="<%= "#details_#{well.location}" %>">
+                  &nbsp;
+                </div>
+              <% end -%>
             </div>
           </td>
         <% end %>

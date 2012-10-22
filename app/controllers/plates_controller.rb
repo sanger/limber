@@ -1,30 +1,34 @@
-class PlatesController < LabWareController
-  def locate_lab_ware_identified_by(id)
-    api.plate.find(id).coerce.tap { |plate| plate.after_load }
+class PlatesController < LabwareController
+  module LabwareWrangler
+    def locate_labware_identified_by(id)
+      api.plate.find(id).coerce.tap { |plate| plate.populate_wells_with_pool }
+    end
   end
 
-  def presenter_for(plate)
-    Presenters::PlatePresenter.lookup_for(plate).new(
-      :api   => api,
-      :plate => plate
-    )
-  end
-
-  before_filter :locate_lab_ware, :on => :fail_wells
+  include PlatesController::LabwareWrangler
 
   def fail_wells
     wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)
+
     if wells_to_fail.empty?
-      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'No wells were selected to fail')
+      redirect_to(illumina_b_plate_path(params[:id]), :notice => 'No wells were selected to fail')
     else
       api.state_change.create!(
         :user         => current_user_uuid,
-        :target       => @lab_ware.uuid,
+        :target       => params[:id],
         :contents     => wells_to_fail,
         :target_state => 'failed',
-        :reason       => 'Unspecified'
+        :reason       => 'Individual Well Failure'
       )
-      redirect_to(pulldown_plate_path(@lab_ware), :notice => 'Selected wells have been failed')
+      redirect_to(illumina_b_plate_path(params[:id]), :notice => 'Selected wells have been failed')
     end
   end
+
+  def presenter_for(labware)
+    Presenters::PlatePresenter.lookup_for(labware).new(
+      :api     => api,
+      :labware => labware
+    )
+  end
+
 end

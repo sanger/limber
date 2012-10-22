@@ -1,79 +1,141 @@
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
+
+  PLATE_PURPOSES = [ 
+    'ILB_STD_INPUT',
+    'ILB_STD_COVARIS',
+    'ILB_STD_SH',
+    'ILB_STD_PCR',
+    'ILB_STD_PCRR',
+    'ILB_STD_PREPCR',
+    'ILB_STD_PCRXP',
+    'ILB_STD_PCRRXP'
+  ]
+
+  TUBE_PURPOSES = [
+    'ILB_STD_STOCK',
+    'ILB_STD_MX'
+  ]
+
   task :generate => :environment do
-    api = Sequencescape::Api.new(PulldownPipeline::Application.config.api_connection_options)
+    api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
+
+    plate_purposes = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
+    tube_purposes  = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
 
     # Build the configuration file based on the server we are connected to.
-    configuration = {}
+    CONFIG = {}.tap do |configuration|
 
-    configuration[:searches] = {}.tap do |searches|
-      puts "Preparing searches ..."
+      configuration[:'large_insert_limit'] = 250
 
-      api.search.all.each do |search|
-        searches[search.name] = search.uuid
+      configuration[:searches] = {}.tap do |searches|
+        puts "Preparing searches ..."
+
+        api.search.all.each do |search|
+          searches[search.name] = search.uuid
+        end
       end
+
+      configuration[:transfer_templates] = {}.tap do |transfer_templates|
+        puts "Preparing transfer templates ..."
+
+        api.transfer_template.all.each do |transfer_template|
+          transfer_templates[transfer_template.name] = transfer_template.uuid
+        end
+      end
+
+      configuration[:purposes] = {}.tap do |labware_purposes|
+        # Setup a hash that will enable us to lookup the form, presenter, and state changing classes
+        # based on the name of the plate purpose.  We can then use that to generate the information for
+        # the mapping from UUID.
+        #
+        # The inner block is laid out so that the class names align, not so it's readable!
+        name_to_details = Hash.new do |h,k|
+          h[k] = {
+            :form_class          => 'Forms::CreationForm',
+            :presenter_class     => 'Presenters::StandardPresenter',
+            :state_changer_class => 'StateChangers::DefaultStateChanger'
+          }
+        end.tap do |presenters|
+          # Illumina-B plates
+          presenters['ILB_STD_INPUT'].merge!(
+            :presenter_class => 'Presenters::StockPlatePresenter'
+          )
+
+          presenters['ILB_STD_SH'].merge!(
+            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
+          )
+
+          presenters['ILB_STD_PREPCR'].merge!(
+            :presenter_class => 'Presenters::PrePcrPlatePresenter'
+          )
+
+          presenters['ILB_STD_PCR'].merge!(
+            :form_class      => 'Forms::TaggingForm',
+            :presenter_class => 'Presenters::PcrPresenter'
+          )
+
+          presenters['ILB_STD_PCRR'].merge!(
+            :form_class      => 'Forms::TaggingForm',
+            :presenter_class => 'Presenters::PcrPresenter'
+          )
+
+          presenters['ILB_STD_PCRXP'].merge!(
+            :presenter_class     => 'Presenters::PcrXpPresenter',
+            :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
+          )
+
+          presenters['ILB_STD_PCRRXP'].merge!(
+            :presenter_class     => 'Presenters::PcrXpPresenter',
+            :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
+          )
+
+          presenters['ILB_STD_STOCK'].merge!(
+            :form_class          => 'Forms::TubeCreationForm',
+            :presenter_class     => 'Presenters::TubePresenter',
+            :state_changer_class => 'StateChangers::DefaultStateChanger'
+          )
+
+          presenters['ILB_STD_MX'].merge!(
+            :form_class          => 'Forms::TubeCreationForm',
+            :presenter_class     => 'Presenters::FinalTubePresenter',
+            :state_changer_class => 'StateChangers::DefaultStateChanger'
+          )
+
+        end
+
+        purpose_details_by_uuid = lambda { |labware_purposes, purpose|
+          labware_purposes[purpose.uuid] = name_to_details[purpose.name].dup.merge(
+            :name => purpose.name
+          )
+        }.curry.(labware_purposes)
+
+        puts "Preparing plate purpose forms, presenters, and state changers ..."
+        plate_purposes.each(&purpose_details_by_uuid)
+
+        puts "Preparing Tube purpose forms, presenters, and state changers ..."
+        tube_purposes.each(&purpose_details_by_uuid)
+      end
+
+
+
+      configuration[:purpose_uuids] = {}.tap do |purpose_uuids|
+
+        store_purpose_uuids = lambda { |purpose_uuids, purpose|
+          purpose_uuids[purpose.name] = purpose.uuid
+        }.curry.(purpose_uuids)
+
+        tube_purposes.each(&store_purpose_uuids)
+        plate_purposes.each(&store_purpose_uuids)
+      end
+
     end
 
-    configuration[:transfer_templates] = {}.tap do |transfer_templates|
-      puts "Preparing transfer templates ..."
-
-      api.transfer_template.all.each do |transfer_template|
-        transfer_templates[transfer_template.name] = transfer_template.uuid
-      end
-    end
-
-    configuration[:plate_purposes] = {}.tap do |plate_purposes|
-      # Setup a hash that will enable us to lookup the form, presenter, and state changing classes
-      # based on the name of the plate purpose.  We can then use that to generate the information for
-      # the mapping from UUID.
-      #
-      # The inner block is laid out so that the class names align, not so it's readable!
-      name_to_details = Hash.new do |h,k|
-        h[k] = {
-          :form_class          => 'Forms::CreationForm',
-          :presenter_class     => 'Presenters::StandardPresenter',
-          :state_changer_class => 'StateChangers::DefaultStateChanger'
-        }
-      end.tap do |presenters|
-        # WGS plates
-        presenters["WGS stock DNA"].merge!(   :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["WGS post-Cov"].merge!(    :presenter_class => "Presenters::QcCapablePlatePresenter")
-        presenters["WGS post-Cov-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
-
-        presenters["WGS lib"].merge!(                 :form_class => "Forms::TransferForm")
-        presenters["WGS lib PCR"].merge!(             :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["WGS lib PCR-XP"].merge!( :presenter_class => "Presenters::QcCapablePlatePresenter")
-        presenters["WGS lib pool"].merge!(:form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
-
-        # SC plates
-        presenters["SC stock DNA"].merge!(                                                               :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["SC lib"].merge!(                  :form_class => "Forms::TransferForm")
-        presenters["SC cap lib PCR"].merge!(     :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["SC hyb"].merge!(            :form_class => "Forms::BaitingForm",       :presenter_class => "Presenters::BaitedPresenter")
-        presenters["SC cap lib pool"].merge!(  :form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
-
-        # ISC plates
-        presenters["ISC stock DNA"].merge!(                                                              :presenter_class => "Presenters::StockPlatePresenter")
-        presenters["ISC lib"].merge!(                 :form_class => "Forms::TransferForm")
-        presenters["ISC lib PCR"].merge!(             :form_class => "Forms::TaggingForm",       :presenter_class => "Presenters::TaggedPresenter")
-        presenters["ISC lib pool"].merge!(:form_class => "Forms::CustomPoolingForm", :presenter_class => "Presenters::CustomPooledPresenter")
-        presenters["ISC hyb"].merge!(           :form_class => "Forms::BaitingForm",       :presenter_class => "Presenters::BaitedPresenter")
-        presenters["ISC cap lib pool"].merge!( :form_class => "Forms::AutoPoolingForm",   :presenter_class => "Presenters::FinalPooledPresenter",  :state_changer_class => 'StateChangers::AutoPoolingStateChanger')
-      end
-
-      puts "Preparing plate purpose forms, presenters, and state changers ..."
-
-      api.plate_purpose.all.each do |plate_purpose|
-        next unless plate_purpose.name == 'Pulldown QC plate' or plate_purpose.name =~ /^(WGS|SC|ISC)\s/ # Ignore unnecessary plates
-        plate_purposes[plate_purpose.uuid] = name_to_details[plate_purpose.name].dup.merge(
-          :name => plate_purpose.name
-        )
-      end
-    end
 
     # Write out the current environment configuration file
     File.open(File.join(Rails.root, %w{config settings}, "#{Rails.env}.yml"), 'w') do |file|
-      file.puts(configuration.to_yaml)
+      file.puts(CONFIG.to_yaml)
     end
   end
 

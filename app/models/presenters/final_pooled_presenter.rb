@@ -1,13 +1,13 @@
 class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
-  write_inheritable_attribute :summary_partial, 'lab_ware/plates/pooled_into_tubes_plate'
-  write_inheritable_attribute :printing_partial, 'lab_ware/plates/tube_printing'
+  write_inheritable_attribute :summary_partial, 'labware/plates/pooled_into_tubes_plate'
+  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
   write_inheritable_attribute :authenticated_tab_states, {
-    :pending    =>  [ 'summary-button', 'plate-state-button' ],
-    :started    =>  [ 'plate-QC-button', 'summary-button', 'plate-state-button' ],
-    :passed     =>  [ 'summary-button', 'plate-state-button' ],
-    :cancelled  =>  [ 'summary-button' ],
-    :failed     =>  [ 'summary-button' ]
+    :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :started    =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :passed     =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :cancelled  =>  [ 'labware-summary-button' ],
+    :failed     =>  [ 'labware-summary-button' ]
   }
 
   module StateDoesNotAllowTubePreviewing
@@ -36,11 +36,6 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
       include StateDoesNotAllowTubePreviewing
     end
     state :passed do
-      def control_tube_preview(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
-      end
-
       def control_source_view(&block)
         yield unless plate.has_transfers_to_tubes?
         nil

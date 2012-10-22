@@ -7,6 +7,9 @@
   font-weight: bold;
   color: #fff;
   text-shadow: 0 -1px 1px darken($base_colour,50);
+  -moz-transition:    all 0.3s ease-in-out 0s;
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  transition:         all 0.3s ease-in-out 0s;
 }
 
 
@@ -15,10 +18,10 @@
  * Honestly, couldn't come up with a better set of colours and ones with greater names.  All credit
  * to them!
  */
-.colour-1   { @include shade-aliquot(#EFDECD); }
-.colour-2   { @include shade-aliquot(#CD9575); }
+.colour-1   { @include shade-aliquot(#EA7E5D); }
+.colour-2   { @include shade-aliquot(#78DBE2); }
 .colour-3   { @include shade-aliquot(#FDD9B5); }
-.colour-4   { @include shade-aliquot(#78DBE2); }
+.colour-4   { @include shade-aliquot(#CD9575); }
 .colour-5   { @include shade-aliquot(#87A96B); }
 .colour-6   { @include shade-aliquot(#FFA474); }
 .colour-7   { @include shade-aliquot(#FAE7B5); }
@@ -35,7 +38,7 @@
 .colour-18  { @include shade-aliquot(#CB4154); }
 .colour-19  { @include shade-aliquot(#B4674D); }
 .colour-20  { @include shade-aliquot(#FF7F49); }
-.colour-21  { @include shade-aliquot(#EA7E5D); }
+.colour-21  { @include shade-aliquot(#EFDECD); }
 .colour-22  { @include shade-aliquot(#B0B7C6); }
 .colour-23  { @include shade-aliquot(#FFFF99); }
 .colour-24  { @include shade-aliquot(#1CD3A2); }

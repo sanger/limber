@@ -7,13 +7,13 @@
         <h2>Source Plate</h2>
         <%= semantic_form_for(
           @creation_form,
-          :url => pulldown_plate_children_path(@creation_form.parent),
+          :url => illumina_b_plate_children_path(@creation_form.parent),
           :as => :plate,
           :html => {:method => :post}) do |form|
         %>
 
             <%= form.inputs do %>
-              <%= form.input :plate_purpose_uuid, :as => :hidden, :value =>@creation_form.plate_purpose_uuid %>
+              <%= form.input :purpose_uuid, :as => :hidden, :value =>@creation_form.purpose_uuid %>
               <%= form.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
             <% end %>
 

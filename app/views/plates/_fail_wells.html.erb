@@ -1,13 +1,13 @@
-<% unless presenter.plate.passed? %>
+<% unless presenter.labware.passed? %>
   <p>Due to a limitation of the current system you can only fail wells <strong>after</strong> passing the plate.</p>
 <% else %>
-  <%= form_for(:plate, :url => fail_wells_path(presenter.plate), :html => { :method => 'post' }) do |form| %>
+  <%= form_for(:plate, :url => fail_wells_path(presenter.labware), :html => { :method => 'post' }) do |form| %>
     <%= form.fields_for(:wells) do |well_form| %>
-      <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, presenter) } %>
+      <%= render :partial => 'plate', :locals => { :plate_presenter => fail_wells_presenter_from(well_form, presenter), :id => 'well-failures' } %>
     <% end %>
 
     <br/>
-    <p>NB. Once the "Fail Wells" button has been pressed failures can't be undo but further failed wells can be added.</p>
+    <p>NB. Once the "Fail Wells" button has been pressed failures can't be undone but further failed wells can be added.</p>
     <%= form.submit('Fail wells', :'data-icon' => 'delete', :'data-theme' => 'a') %>
   <% end %>
 <% end %>

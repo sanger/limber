@@ -1,22 +1,29 @@
-PulldownPipeline::Application.routes.draw do
+IlluminaBPipeline::Application.routes.draw do
   scope 'search', :controller => :search do
-    match '/',                       :action => 'new',    :via => :get,  :as => :search
-    match '/',                       :action => 'create', :via => :post, :as => :perform_search
-    match '/all_outstanding_plates', :action => :all_outstanding_plates
+    match '/',                 :action => 'new',            :via => :get,  :as => :search
+    match '/',                 :action => 'create_or_find', :via => :post, :as => :perform_search
+    match '/ongoing_plates',   :action => :ongoing_plates
+    match '/all_stock_plates', :action => :stock_plates
   end
 
-  resources :pulldown_plates, :controller => :plates do
+  resources :illumina_b_plates, :controller => :plates do
     resources :children, :controller => :plate_creation
     resources :tubes,    :controller => :tube_creation
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
   namespace "admin" do
-    resources :pulldown_plates, :only => [:update, :edit], :as => :plates
+    resources :illumina_b_plates, :only => [:update, :edit], :as => :plates
   end
 
-  resources :pulldown_multiplexed_library_tubes, :controller => :tubes do
+  resources :illumina_b_multiplexed_library_tube, :controller => :tubes
 
+  # This is a hack untill I get tube coercion working
+  resources :illumina_b_tube, :controller => :tubes
+
+  # This is a hack untill I get tube coercion working
+  resources :sequencescape_tubes, :controller => :tubes do
+    resources :children, :controller => :tube_creation
   end
 
   # Printing can do individual or multiple labels

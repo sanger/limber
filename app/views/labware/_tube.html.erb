@@ -1,0 +1,7 @@
+<div class="tube">
+  <img src="/images/<%= "#{tube.state}_tube.png" %>" />
+  <ul id="information">
+    <li><span class="label">Tube Barcode</span>       <%= useful_barcode(tube.barcode) %></li>
+    <li><span class="label">From Stock Plate</span> <%= useful_barcode(tube.stock_plate.barcode) %></li>
+  </ul>
+</div>

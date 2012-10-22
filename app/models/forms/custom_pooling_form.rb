@@ -8,7 +8,7 @@ module Forms
     write_inheritable_attribute :default_transfer_template_uuid,
       Settings.transfer_templates['Pool wells based on submission']
 
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :user_uuid, :transfers]
+    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers]
 
     class TransferHelper
       def initialize(transfers)
@@ -37,15 +37,7 @@ module Forms
     end
 
     def pools_by_well
-      return @pools_by_well if @pools_by_well.present?
-
-      @pools_by_well = {}
-
-      plate.pools.each do |pool_id, wells|
-        wells.each { |location| @pools_by_well[location] = pool_id }
-      end
-
-      @pools_by_well
+      @pools_by_well ||= Hash[plate.wells.map { |well| [well.location, well.pool_id] }]
     end
 
     def pool(location)
@@ -75,7 +67,7 @@ module Forms
     def wells_by_row
       rows = Hash[('A'..'H').map { |row| [ row, [] ] }]
 
-      transfers.values.uniq!.map do |location|
+      transfers.values.uniq.map do |location|
         [PlateWalking::Walker::Location.new(location), CustomPoolingForm::Well.new(location)]
       end.group_by do |location, _|
         location.row
@@ -89,9 +81,9 @@ module Forms
 
     def create_objects!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.plate_creation.create!(
-        :parent              => parent_uuid,
-        :child_plate_purpose => plate_purpose_uuid,
-        :user                => user_uuid
+        :parent        => parent_uuid,
+        :child_purpose => purpose_uuid,
+        :user          => user_uuid
       )
 
 

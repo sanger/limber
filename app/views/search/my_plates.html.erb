@@ -1,0 +1,54 @@
+<%= page(:'my-plates') do %>
+  <div data-role="header">
+    <h1>Sequencescape - Illumina-B Pipeline</h1>
+    <div data-role="navbar">
+      <ul>
+        <li><a href="<%= search_path %>" >Search</a></li>
+        <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
+        <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
+        <li><a href="#" class="ui-btn-active" >My Plates</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <%= content do %>
+    <%= flash_messages %>
+
+      <h1><%= @current_user.login %>'s ongoing plates</h1>
+        <%= section do %>
+          <%= form_tag perform_search_path, :class => "plate-search-form", :method => 'post' do %>
+            <%= hidden_field_tag :card_id, params[:card_id], :class => 'card-id', :value => @current_user.uuid %>
+          <% end %>
+        <% end %>
+
+        <%= section do %>
+          <ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
+
+            <% plates_by_state(@search_results).each do |state, sorted_plates| -%>
+              <li data-role="list-divider"><%= state.titleize %></li>
+              <% sorted_plates.each do |plate| -%>
+                <li>
+                <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "ui-link-inherit") do %>
+                  <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
+                  <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
+                  <% if plate.stock_plate.present? %><p>Input plate: <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
+                  <p>
+                  <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
+                  Created: <%= plate.created_at.to_formatted_s(:date_created) %>
+                  Type: <%= plate.plate_purpose.name %>
+                  </p>
+                <% end -%>
+                </li>
+              <% end -%>
+            <% end -%>
+
+            <% if @search_results.empty? -%>
+              <li>
+              <h2><i>You currently have no ongoing plates.</i></h2>
+              </li>
+            <% end -%>
+          </ul>
+        <% end %>
+
+  <% end %>
+<% end %>

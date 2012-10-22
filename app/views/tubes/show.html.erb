@@ -1,45 +1,74 @@
-<%= page(:summary) do %>
-  <%= header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Summary</h1>
-  <% end %>
+<%= page(:'tube-show-page', :'show-page') do %>
+  <script type="text/javascript">
+    SCAPE.labware = {
+      'state':     '<%= @presenter.labware.state %>',
+      'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
+      'tabStates': <%= get_tab_states(@presenter) %>,
+      'uuid':     '<%= @presenter.labware.uuid %>'
+    };
+  </script>
 
-  <%= content do %>
-    <h2>Tube Status - <%= @presenter.tube.state.titleize %></h1>
-    <%= render :partial => 'lab_ware/tube.html.erb', :locals => { :tube => @presenter.tube } %>
-  <% end %>
+  <%= header(@presenter, 'Tube view') do %>
+    <div data-role="navbar">
+      <ul id="navbar">
+        <li id="labware-summary-button">
+        <a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a>
+        </li>
+        <% if current_user_uuid.present? -%>
+          <li id="labware-state-button">
+            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move tube to next state</a>
+          </li>
+          <li id="labware-creation-button">
+            <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Tube</a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <% end #of header %>
 
-  <%= footer %>
-<% end %>
 
-<%= page(:state) do %>
-  <% header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - State</h1>
-  <% end %>
+    <%= content do %>
+      <%= flash_messages %>
+      <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
+      <h2>Tube Status - <%= @presenter.labware.state.titleize %></h2>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <div id="labware-summary" class="scape-ui-block">
+            <%= render :partial => 'labware/tube', :locals => { :tube => @presenter.labware } %>
+          </div>
+        </div>
 
-  <%= content do %>
-    <%= state_change_form(@presenter) %>
-  <% end %>
+        <div class="ui-block-b">
+          <div class="instructions ui-body">
+            <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
+            <ol>
+              <%= t("#{labware_type_and_state}.instructions").html_safe %>
+            </ol>
+          </div>
 
-  <%= footer %>
-<% end %>
+          <div id="tube-printing" class="scape-ui-block" style="display:none;">
+            <%= individual_barcode_printing_form(
+              @presenter.labware.barcode,
+              :redirection_url => illumina_b_tube_path(@presenter.labware),
+              :text            => @presenter.label_text
+            ) %>
+          </div>
 
-<%= page(:printing) do %>
-  <%= header do %>
-    <h1>Tube: <%= @presenter.tube.barcode.ean13 %> - Printing</h1>
-  <% end %>
+          <div id="tube-state" class="scape-ui-block" style="display:none;">
+            <%= state_change_form(@presenter) %>
+          </div>
 
-  <%= content do %>
-    <%= section do %>
-      <%= link_to "Download Worksheet" %> - <%= button_to "Print Worksheet", {}, {:class => "submit"} %><br/>
-    <% end %>
-    <%= section do %>
-      <%= individual_barcode_printing_form(
-            @presenter.tube.barcode,
-            :redirection_url => pulldown_multiplexed_library_tube_path(@presenter.tube),
-            :text            => 'MX Library tube'
-      ) %>
-    <% end %>
-  <% end %>
 
-  <%= footer %>
-<% end %>
+          <div id="tube-creation" class="scape-ui-block" style="display:none;">
+            <%= @presenter.control_additional_creation do %>
+              <h2>Create Child Tube</h2>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+            <% end %>
+          </div>
+
+        </div>
+
+      </div>
+
+    <% end #of content %>
+<% end #of page %>

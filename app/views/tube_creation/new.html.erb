@@ -4,7 +4,7 @@
   <% end %>
 
   <%= content do %>
-    <%= semantic_form_for(@creation_form, :as => :plate, :url => pulldown_plate_tubes_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+    <%= semantic_form_for(@creation_form, :as => :plate, :url => illumina_b_plate_tubes_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
       <%= f.inputs do %>
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
       <% end %>

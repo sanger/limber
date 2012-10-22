@@ -1,6 +1,0 @@
-<h2>Print tube labels</h2>
-<%= multiple_barcodes_printing_form(
-      presenter.plate.tubes.map(&:barcode),
-      :redirection_url => pulldown_plate_path(presenter.plate),
-      :text            => 'MX Library tube'
-) %>

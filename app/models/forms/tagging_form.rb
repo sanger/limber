@@ -3,20 +3,26 @@ module Forms
     include Forms::Form::CustomPage
 
     write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions]
+    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions]
 
     validates_presence_of *(self.attributes - [:substitutions])
+
+    def initialize(*args, &block)
+      super
+      plate.populate_wells_with_pool
+    end
 
     def substitutions
       @substitutions ||= {}
     end
 
     def generate_layouts_and_groups
-      maximum_pool_size = plate.pools.map(&:last).map!(&:size).max
+      maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
 
-      @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select do |template|
-        template.tag_group.tags.size >= maximum_pool_size
-      end
+      # [sd9] Magic symbol (Illumina B) alert, sorry...
+      @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select { |template|
+        (template.tag_group.tags.size >= maximum_pool_size) && (template.name =~ /Illumina B/)
+      }
 
       @tag_groups = Hash[
         tag_layout_templates.map do |layout|
