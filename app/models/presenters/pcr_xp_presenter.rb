@@ -84,6 +84,10 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     labware.state
   end
 
+  def default_tube_printer_uuid
+    Settings.purposes[default_child_purpose.uuid].default_printer_uuid
+  end
+
   def tube_state=(state)
     # Ignore this
   end
