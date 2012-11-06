@@ -10,6 +10,10 @@ module Presenters
     def save!
     end
 
+    def default_printer_uuid
+      @default_printer_uuid ||= Settings.purposes[purpose.uuid].default_printer_uuid
+    end
+
   end
 
   class PlatePresenter
