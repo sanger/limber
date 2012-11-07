@@ -21,6 +21,6 @@ class ApplicationController < ActionController::Base
 
     user_search.first(:swipecard_code => card_id)
   rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Sorry, that swipecard could not be found. Please try again or contact your administator.'
+    raise exception, 'Sorry, that swipecard could not be found. Please try again or contact your administrator.'
   end
 end
