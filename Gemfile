@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'compass', '>= 0.11.1'
 gem 'formtastic', '~>1.2.3'
-gem 'rails', '~>3.0.7'
+gem 'rails', '~>3.0.19'
 gem 'rake', '~>0.9.2'
 gem 'state_machine', '~>1.0.1'
 gem 'hashie', '~>1.0.0'
