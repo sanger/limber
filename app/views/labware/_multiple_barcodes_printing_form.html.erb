@@ -15,7 +15,7 @@
       <%= label_tag :printer, 'Barcode Printer:' %>
     </li>
     <li>
-      <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcodes), :uuid, :name) %>
+    <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcodes), :uuid, :name, @presenter.default_tube_printer_uuid) %>
     </li>
     <li><%= f.submit 'Print Labels', :class => 'print-button', :'data-theme' => 'b', :'data-icon' => 'grid' %></li>
   </ul>

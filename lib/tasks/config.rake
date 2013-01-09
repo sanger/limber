@@ -20,8 +20,15 @@ namespace :config do
   task :generate => :environment do
     api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
 
-    plate_purposes = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
-    tube_purposes  = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
+    plate_purposes   = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
+    tube_purposes    = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
+
+    barcode_printer_uuid = lambda do |printers|
+      ->(printer_name){
+        printers.detect { |prt| prt.name == printer_name}.try(:uuid) or
+        raise "Printer #{printer_name}: not found!"
+      }
+    end.(api.barcode_printer.all)
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = {}.tap do |configuration|
@@ -52,9 +59,10 @@ namespace :config do
         # The inner block is laid out so that the class names align, not so it's readable!
         name_to_details = Hash.new do |h,k|
           h[k] = {
-            :form_class          => 'Forms::CreationForm',
-            :presenter_class     => 'Presenters::StandardPresenter',
-            :state_changer_class => 'StateChangers::DefaultStateChanger'
+            :form_class           => 'Forms::CreationForm',
+            :presenter_class      => 'Presenters::StandardPresenter',
+            :state_changer_class  => 'StateChangers::DefaultStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g312bc2')
           }
         end.tap do |presenters|
           # Illumina-B plates
@@ -63,7 +71,7 @@ namespace :config do
           )
 
           presenters['ILB_STD_SH'].merge!(
-            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :presenter_class     => 'Presenters::QcCompletablePresenter',
             :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
           )
 
@@ -77,30 +85,35 @@ namespace :config do
           )
 
           presenters['ILB_STD_PCRR'].merge!(
-            :form_class      => 'Forms::TaggingForm',
-            :presenter_class => 'Presenters::PcrPresenter'
+            :form_class           => 'Forms::TaggingForm',
+            :presenter_class      => 'Presenters::PcrPresenter',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
           presenters['ILB_STD_PCRXP'].merge!(
-            :presenter_class     => 'Presenters::PcrXpPresenter',
-            :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
+            :presenter_class      => 'Presenters::PcrXpPresenter',
+            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
           presenters['ILB_STD_PCRRXP'].merge!(
-            :presenter_class     => 'Presenters::PcrXpPresenter',
-            :state_changer_class => 'StateChangers::PlateToTubeStateChanger'
+            :presenter_class      => 'Presenters::PcrXpPresenter',
+            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
           presenters['ILB_STD_STOCK'].merge!(
-            :form_class          => 'Forms::TubeCreationForm',
-            :presenter_class     => 'Presenters::TubePresenter',
-            :state_changer_class => 'StateChangers::DefaultStateChanger'
+            :form_class           => 'Forms::TubeCreationForm',
+            :presenter_class      => 'Presenters::TubePresenter',
+            :state_changer_class  => 'StateChangers::DefaultStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['ILB_STD_MX'].merge!(
-            :form_class          => 'Forms::TubeCreationForm',
-            :presenter_class     => 'Presenters::FinalTubePresenter',
-            :state_changer_class => 'StateChangers::DefaultStateChanger'
+            :form_class           => 'Forms::TubeCreationForm',
+            :presenter_class      => 'Presenters::FinalTubePresenter',
+            :state_changer_class  => 'StateChangers::DefaultStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
         end
