@@ -381,10 +381,10 @@ en:
         <li>Click on ‘Add an empty Covaris plate’.</li>
 
 
-  Covaris:
+  Shear:
     pending:
-      state_text: "Input DNA → ‘Covaris’ - DNA shearing awaiting transfer"
-      instruction_summary: "Input DNA will be transferred to a fresh Covaris plate to generate the ‘Covaris’ plate."
+      state_text: "Input DNA → ‘Shear’ - DNA shearing awaiting transfer"
+      instruction_summary: "Input DNA will be transferred to a fresh Covaris plate to generate the ‘Shear’ plate."
       instructions: >
         <li>Print 2 labels – place one on the Covaris plate and keep the other in your records for reference.</li>
         <p>
@@ -394,7 +394,7 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "Input DNA → ‘Covaris’ and DNA shearing in progress"
+      state_text: "Input DNA → ‘Shear’ and DNA shearing in progress"
       instruction_summary: Once the Covaris plate has been sheared, change the ‘Current State’ to ‘passed’.
       instructions: >
         <li>Select the ‘Move plate to next state’ tab.</li>
@@ -426,7 +426,7 @@ en:
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
-      state_text: "Covaris’ → ‘Post Shear’ transfer in progress"
+      state_text: "Shear’ → ‘Post Shear’ transfer in progress"
       instruction_summary: "Transfer in Progress"
       instructions: >
         <p>Once the sheared samples have been transferred from the Covaris plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘passed’.</p>
@@ -434,7 +434,7 @@ en:
         <li>Select ‘Passed’ and click ‘Change State’ button.</li>
 
     passed:
-      state_text: "‘Covaris’ → ‘Post Shear’ transfer complete - awaiting QC..."
+      state_text: "‘Shear’ → ‘Post Shear’ transfer complete - awaiting QC..."
       instruction_summary: "Plate awaiting QC"
       instructions: >
         <p>Once the post-shearing Agilent has been performed and the plate has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete.</p>

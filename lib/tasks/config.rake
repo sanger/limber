@@ -12,7 +12,7 @@ namespace :config do
     'ILB_STD_PCRRXP',
 
     'Cherrypicked',
-    'Covaris',
+    'Shear',
     'Post Shear',
     'AL Libs',
     'Lib PCR',
@@ -26,6 +26,7 @@ namespace :config do
     'ILB_STD_MX',
 
     'Lib Pool',
+    'Lib Pool Pippin',
     'Lib Pool Norm',
     'Lib Pool Conc',
     'Lib Pool SS',
@@ -119,14 +120,14 @@ namespace :config do
           )
 
           presenters['ILB_STD_STOCK'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
-            :presenter_class      => 'Presenters::TubePresenter',
+            :form_class           => 'Forms::TubesForm',
+            :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['ILB_STD_MX'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
+            :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
@@ -159,53 +160,60 @@ namespace :config do
 
           presenters['Lib PCR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
-            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
+            :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
           presenters['Lib PCRR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
-            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
+            :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
           presenters['Lib Pool'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
-            :presenter_class      => 'Presenters::TubePresenter',
+            :form_class           => 'Forms::TubesForm',
+            :presenter_class      => 'Presenters::QCTubePresenter',
+            :state_changer_class  => 'StateChangers::DefaultStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1')
+          )
+
+          presenters['Lib Pool Pippin'].merge!(
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['Lib Pool Conc'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
-            :presenter_class      => 'Presenters::TubePresenter',
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['Lib Pool SS'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
-            :presenter_class      => 'Presenters::TubePresenter',
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['Lib Pool SS-XP'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
-            :presenter_class      => 'Presenters::TubePresenter',
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['Lib Pool Norm'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
+            :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
           presenters['Lib Pool SS-XP-Norm'].merge!(
-            :form_class           => 'Forms::TubeCreationForm',
+            :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
