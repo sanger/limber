@@ -1,0 +1,48 @@
+<%= page(:'robot-verification') do %>
+
+  <%= header do %>
+    <h1>Perform Transfers</h1>
+  <% end %>
+<!--   <div data-role="header">
+    <h1>Sequencescape - Illumina-B Pipeline</h1>
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#verification" class="ui-btn-active">Verification</a></li>
+        <li><a href="#availiable" >Availiable Plates</a></li>
+      </ul>
+    </div>
+  </div> -->
+
+  <%= content do %>
+    <%= flash_messages %>
+    <h2><%= t("robots.#{robot.name}.title_text") %></h2>
+    <div class="ui-grid-a">
+      <%= form_for :robot, :url => "#{robot_path(robot.name)}/start" do |form| %>
+        <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
+
+        <div class="ui-block-b">
+          <div id="robot-verification" class="scape-ui-block" >
+            <div class="instructions ui-body">
+              <h3><%= t("robots.#{robot.name}.instruction_summary") %></h3>
+              <ol>
+                <%= t("robots.#{robot.name}.instructions").html_safe %>
+              </ol>
+            </div>
+
+            <h2>Start Robot</h2>
+              <%= submit_tag "Start the #{robot.name}",
+                :name           => nil,
+                :class          => "submit",
+                :id             => 'start-robot',
+                :'data-icon'    => "arrow-r",
+                :'data-iconpos' => "right",
+                :'data-theme'   => "b",
+                :disabled       => true
+              %>
+          </div>
+        </div>
+
+      <% end # of form%>
+    </div>
+  <% end %>
+<% end %>

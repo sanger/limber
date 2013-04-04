@@ -73,7 +73,7 @@
   displayReason: function() {
     if($('.reason:visible').length === 0) {
       $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
-    } 
+    }
     else {
       $('.reason').not('#'+$('#state option:selected').val()).slideUp('slow', function(){
         $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
@@ -83,7 +83,7 @@
   },
 
 
-  dim: function() { 
+  dim: function() {
     $(this).fadeTo('fast', 0.2);
     return this;
   },
@@ -94,7 +94,7 @@
       $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
     });
   },
-  
+
 
   PlateViewModel: function(plate, plateElement, control) {
     // Using the 'that' pattern...
@@ -498,3 +498,95 @@
 
 })(jQuery, window);
 
+(function($, exports, undefined){
+  "use strict";
+
+  // Our robot controller
+
+  $(document).on('pageinit', function(){
+
+    $(document).on('change','.bed', function() {
+      // When we scan in a plate
+      if (this.value === "") { };
+      $(this).addClass('waiting')
+      SCAPE.retrievePlate(this);
+    });
+
+    $.extend(SCAPE, {
+      checkBeds : function() {
+        var beds, good = 0;
+        console.log('Checking')
+        beds = $('.bed')
+        for (var i=0; i < beds.length; i+=1) {
+          if (beds[i].isBad()) {
+            SCAPE.disableActivity();
+            return false;
+          } else if (beds[i].isGood()) {
+            good += 1;
+          }
+        };
+        if (good >= 1) {
+          SCAPE.enableActivity();
+          return true
+        } else {
+          SCAPE.disableActivity();
+          return false;
+        }
+      },
+      enableActivity : function() { $('#start-robot').button('enable'); },
+      disableActivity : function() { $('#start-robot').button('disable'); }
+    });
+
+    $('.bed').each(function(){
+      $.extend(this, {
+        checkPlate : function(data,status) {
+          if (this.parentBed() === null || data.plate.parent_plate_barcode===this.parentBed().value) {
+            this.goodPlate();
+          } else {
+            this.badPlate();
+          }
+        },
+        parentBed : function() {
+          if (this.dataset.parent==="") {
+            return null;
+          } else {
+            return $('#bed\\['+this.dataset.parent+'\\]')[0];
+          };
+        },
+        badPlate : function() {
+          $(this).removeClass('good-plate waiting');
+          $(this).addClass('bad-plate');
+          SCAPE.disableActivity();
+        },
+        goodPlate : function() {
+          $(this).removeClass('bad-plate waiting');
+          $(this).addClass('good-plate');
+          SCAPE.checkBeds();
+        },
+        ajax: { abort : function(){} },
+        isGood : function() {
+          return $(this).hasClass('good-plate');
+        },
+        isUnused : function() {
+          return this.value === "" && (this.parentBed() === null || this.parentBed().isUnused());
+        },
+        isBad : function() {
+          return !(this.isGood()||this.isUnused());
+        }
+      });
+    });
+  });
+
+  $.extend(SCAPE, {
+    retrievePlate : function(bed) {
+      console.log(bed.ajax);
+      //ed.ajax.abort(); // Kill any existing requests
+      bed.ajax = $.ajax({
+        dataType: "json",
+        url: '/search/retrieve_parent',
+        data: 'barcode='+bed.value,
+        success: function(data,status) { bed.checkPlate(data,status) }
+      }).fail(function() { bed.badPlate() });
+    }
+  })
+})(jQuery,window);

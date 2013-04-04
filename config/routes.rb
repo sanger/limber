@@ -4,6 +4,12 @@ IlluminaBPipeline::Application.routes.draw do
     match '/',                 :action => 'create_or_find', :via => :post, :as => :perform_search
     match '/ongoing_plates',   :action => :ongoing_plates
     match '/all_stock_plates', :action => :stock_plates
+    match '/retrieve_parent',  :action => :retrieve_parent
+  end
+
+  # Robots help us batch work up by function, rather than plate
+  resources :robots, :controller => :robots do
+    post 'start', :on => :member
   end
 
   resources :illumina_b_plates, :controller => :plates do

@@ -79,4 +79,17 @@ class SearchController < ApplicationController
     raise exception, 'Sorry, could not find labware with the specified barcode.'
   end
 
+  def retrieve_parent
+    begin
+      parent_plate = api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(:barcode => params['barcode'])
+      respond_to do |format|
+        format.json { render :json => { :plate => { :parent_plate_barcode => parent_plate.barcode.ean13 }}}
+      end
+    rescue Sequencescape::Api::ResourceNotFound => exception
+      respond_to do |format|
+        format.json { render :json => {'general' => exception.message }, :status => 404}
+      end
+    end
+  end
+
 end
