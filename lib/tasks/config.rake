@@ -1,6 +1,8 @@
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
+  require "#{Rails.root}/config/robots.rb"
+
   PLATE_PURPOSES = [
     'ILB_STD_INPUT',
     'ILB_STD_COVARIS',
@@ -149,7 +151,7 @@ namespace :config do
 
           presenters['Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
-            :presenter_class => 'Presenters::PcrPresenter'
+            :presenter_class => 'Presenters::PcrRobotPresenter'
           )
 
           presenters['Lib PCRR'].merge!(
@@ -247,6 +249,8 @@ namespace :config do
         tube_purposes.each(&store_purpose_uuids)
         plate_purposes.each(&store_purpose_uuids)
       end
+
+      configuration[:robots] = ROBOT_CONFIG
 
     end
 

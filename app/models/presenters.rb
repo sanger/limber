@@ -48,6 +48,8 @@ module Presenters
     # This is now generated dynamically by the LabwareHelper
     class_inheritable_reader    :tab_states
 
+    class_inheritable_reader :robot_name
+
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],

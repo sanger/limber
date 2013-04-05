@@ -11,13 +11,27 @@ class RobotsController < ApplicationController
   end
 
   def start
-    robot.perform_transfer(params['bed'])
+    begin
+      robot.perform_transfer(params['bed'])
+      respond_to do |format|
+        format.html {
+          redirect_to search_path,
+          :notice => "Robot #{robot.name} has been started."
+        }
+      end
+    rescue Robots::Robot::Bed::BedError => exception
+      # Our beds complained, nothing has happened.
+      respond_to do |format|
+        format.html { redirect_to robot_path(robot.name), :notice=> "#{exception.message} No plates have been started." }
+      end
+    end
   end
 
   def find_robot
     @robot = Robots::Robot.find(
       :name=>params[:id],
-      :api=>api
+      :api=>api,
+      :user_uuid => current_user_uuid
     )
   end
   private :find_robot

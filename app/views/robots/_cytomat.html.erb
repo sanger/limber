@@ -1,6 +1,6 @@
 <div class="ui-block-a">
   <ul class="robot cytomat">
-    <% robot.beds.sort.each do |bed_id, bed| %>
+    <% robot.beds.each do |bed_id, bed| %>
       <li class='bed-item' id="bed_<%= bed_id %>_list">
         <label for="bed[<%= bed_id %>]"><%= bed_id %></label>
         <input id="bed[<%= bed_id %>]" name="bed[<%= bed_id %>]" placeholder="<%= bed.label %>" class="bed" data-parent="<%= bed.parent %>">
