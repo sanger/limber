@@ -7,8 +7,8 @@
   <%= content do %>
     <%= flash_messages %>
     <h2><%= t("robots.#{robot.name}.title_text") %></h2>
-    <div class="ui-grid-a">
-      <%= form_for :robot, :url => "#{robot_path(robot.name)}/start" do |form| %>
+    <%= form_for :robot, :url => "#{robot_path(robot.name)}/start" do |form| %>
+      <div class="ui-grid-a">
         <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
 
         <div class="ui-block-b">
@@ -32,8 +32,7 @@
               %>
           </div>
         </div>
-
-      <% end # of form%>
-    </div>
+      </div>
+    <% end # of form%>
   <% end %>
 <% end %>

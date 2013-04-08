@@ -507,15 +507,13 @@
 
     $(document).on('change','.bed', function() {
       // When we scan in a plate
-      if (this.value === "") { };
-      $(this).addClass('waiting')
+      if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); };
       SCAPE.retrievePlate(this);
     });
 
     $.extend(SCAPE, {
       checkBeds : function() {
         var beds, good = 0;
-        console.log('Checking')
         beds = $('.bed')
         for (var i=0; i < beds.length; i+=1) {
           if (beds[i].isBad()) {
@@ -553,14 +551,25 @@
             return $('#bed\\['+this.dataset.parent+'\\]')[0];
           };
         },
+        waitPlate : function() {
+          $(this).closest('.bed-container').removeClass('good-plate bad-plate scan-plate');
+          $(this).closest('.bed-container').addClass('wait-plate');
+          SCAPE.disableActivity();
+        },
+        scanPlate : function() {
+          $(this).closest('.bed-container').removeClass('good-plate wait-plate bad-plate');
+          $(this).closest('.bed-container').addClass('scan-plate');
+          SCAPE.disableActivity();
+          SCAPE.checkBeds();
+        },
         badPlate : function() {
-          $(this).removeClass('good-plate waiting');
-          $(this).addClass('bad-plate');
+          $(this).closest('.bed-container').removeClass('good-plate wait-plate scan-plate');
+          $(this).closest('.bed-container').addClass('bad-plate');
           SCAPE.disableActivity();
         },
         goodPlate : function() {
-          $(this).removeClass('bad-plate waiting');
-          $(this).addClass('good-plate');
+          $(this).closest('.bed-container').removeClass('bad-plate wait-plate scan-plate');
+          $(this).closest('.bed-container').addClass('good-plate');
           SCAPE.checkBeds();
         },
         ajax: { abort : function(){} },
@@ -580,7 +589,6 @@
   $.extend(SCAPE, {
     retrievePlate : function(bed) {
       console.log(bed.ajax);
-      //ed.ajax.abort(); // Kill any existing requests
       bed.ajax = $.ajax({
         dataType: "json",
         url: '/search/retrieve_parent',
