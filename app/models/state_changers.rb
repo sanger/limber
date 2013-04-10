@@ -1,4 +1,7 @@
 module StateChangers
+
+  class StateChangeError < StandardError ; end
+
   class DefaultStateChanger
     attr_reader :labware_uuid, :labware, :api
     private :api

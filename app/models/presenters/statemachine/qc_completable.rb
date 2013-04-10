@@ -1,6 +1,18 @@
 module Presenters
   module Statemachine
     module QcCompletable
+
+      module QcCreatableStep
+        def control_additional_creation(&block)
+          yield unless default_child_purpose.nil?
+          nil
+        end
+
+        def default_child_purpose
+          labware.plate_purpose.children.detect {|purpose| Settings.qc_purposes.include?(purpose.name) }
+        end
+      end
+
       def self.included(base)
         base.class_eval do
           include Presenters::Statemachine::Shared
@@ -24,6 +36,10 @@ module Presenters
               transition :passed => :qc_complete
             end
 
+            state :pending do
+              include QcCreatableStep
+            end
+
             state :passed do
               include StateDoesNotAllowChildCreation
             end
@@ -38,7 +54,7 @@ module Presenters
 
               # Returns the child plate purposes that can be created in the qc_complete state.
               def default_child_purpose
-                labware.plate_purpose.children.first
+                labware.plate_purpose.children.reject {|purpose| Settings.qc_purposes.include?(purpose.name) }.first
               end
             end
 

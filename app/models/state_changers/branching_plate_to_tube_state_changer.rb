@@ -1,7 +1,13 @@
 class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcCompletablePlateStateChanger
+
   def move_to!(state, reason)
+    raise StateChangers::StateChangeError, "QC plate must be created first!" if state == 'qc_complete' && !qc_created?
     super
     create_stock_tubes! if state == 'qc_complete'
+  end
+
+  def qc_created?
+    labware.source_transfers.count >= 1
   end
 
   def create_stock_tubes!
