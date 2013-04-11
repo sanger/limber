@@ -29,9 +29,6 @@ module Presenters
         :failed    => [ 'labware-summary-button' ]
     }
 
-    class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, 'ILB Pool'
-
     state_machine :state, :initial => :pending do
       event :start do
         transition :pending => :started

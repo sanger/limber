@@ -50,8 +50,10 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     state :qc_complete do
       def allow_plate_label_printing?; false end
 
-      def label_text
-       Presenters::TubePresenter::LABEL_TEXT
+      def tube_label_text
+        labware.tubes.map do |tube|
+          tube.label_text
+        end
       end
 
       # Don't yield in :qc_complete state
