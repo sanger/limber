@@ -507,8 +507,10 @@
 
     $(document).on('change','.bed', function() {
       // When we scan in a plate
-      if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); };
-      SCAPE.retrievePlate(this);
+      if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); SCAPE.retrievePlate(this); };
+      $.each(this.childBeds,function(){
+        $(this).change();
+      });
     });
 
     $.extend(SCAPE, {
@@ -536,19 +538,15 @@
     });
 
     $('.bed').each(function(){
+
+      this.childBeds = [];
+
       $.extend(this, {
         checkPlate : function(data,status) {
-          if (this.parentBed() === null || data.plate.parent_plate_barcode===this.parentBed().value) {
+          if (this.parentBed === null || data.plate.parent_plate_barcode===this.parentBed.value) {
             this.goodPlate();
           } else {
             this.badPlate();
-          }
-        },
-        parentBed : function() {
-          if (this.dataset.parent==="") {
-            return null;
-          } else {
-            return $('#bed\\['+this.dataset.parent+'\\]')[0];
           };
         },
         waitPlate : function() {
@@ -574,15 +572,29 @@
         },
         ajax: { abort : function(){} },
         isGood : function() {
-          return $(this).hasClass('good-plate');
+          return $(this).closest('.bed-container').hasClass('good-plate');
         },
         isUnused : function() {
-          return this.value === "" && (this.parentBed() === null || this.parentBed().isUnused());
+          return this.value === "" && (this.parentBed === null || this.parentBed.isUnused());
         },
         isBad : function() {
           return !(this.isGood()||this.isUnused());
+        },
+        addChild : function(child) {
+          this.childBeds.push(child);
         }
       });
+    });
+
+    $('.bed').each(function(){
+      // We need to do this in a seperate loop to ensure our child
+      // handlers are in place.
+      if (this.dataset.parent==="") {
+        this.parentBed = null;
+      } else {
+        this.parentBed = $('#bed\\['+this.dataset.parent+'\\]')[0];
+        this.parentBed.addChild(this);
+      }
     });
   });
 
@@ -594,7 +606,7 @@
         url: '/search/retrieve_parent',
         data: 'barcode='+bed.value,
         success: function(data,status) { bed.checkPlate(data,status) }
-      }).fail(function() { bed.badPlate() });
+      }).fail(function(data,status) { if (status!=='abort') {bed.badPlate();} });
     }
   })
 })(jQuery,window);
