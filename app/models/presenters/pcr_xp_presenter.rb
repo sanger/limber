@@ -58,11 +58,13 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
 
       # Don't yield in :qc_complete state
       def control_source_view(&block)
+        yield unless labware.has_transfers_to_tubes?
+        nil
       end
 
       # Yield tube view in :qc_complete state
       def control_tube_view(&block)
-        yield
+        yield if labware.has_transfers_to_tubes?
         nil
       end
       alias_method(:control_additional_printing, :control_tube_view)
