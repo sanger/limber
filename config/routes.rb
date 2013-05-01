@@ -1,10 +1,12 @@
 IlluminaBPipeline::Application.routes.draw do
   scope 'search', :controller => :search do
-    match '/',                 :action => 'new',            :via => :get,  :as => :search
-    match '/',                 :action => 'create_or_find', :via => :post, :as => :perform_search
-    match '/ongoing_plates',   :action => :ongoing_plates
-    match '/all_stock_plates', :action => :stock_plates
-    match '/retrieve_parent',  :action => :retrieve_parent
+    match '/',                            :action => 'new',            :via => :get,  :as => :search
+    match '/',                            :action => 'create_or_find', :via => :post, :as => :perform_search
+    match '/ongoing_illumina_b_plates',   :action => :ongoing_plates
+    match '/all_illumina_b_stock_plates', :action => :stock_plates
+    match '/ongoing_illumina_a_plates',   :action => :ongoing_plates_illumina_a
+    match '/all_illumina_a_stock_plates', :action => :stock_plates_illumina_a
+    match '/retrieve_parent',             :action => :retrieve_parent
   end
 
   # Robots help us batch work up by function, rather than plate
