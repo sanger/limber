@@ -13,7 +13,7 @@ module Presenters
       :failed     => [ 'labware-summary-button' ]
     }
 
-    write_inheritable_attribute :robot_name, 'fx'
+    write_inheritable_attribute :robot_name, 'fx-add-tags'
 
   end
 end

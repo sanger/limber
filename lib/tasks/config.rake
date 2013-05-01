@@ -146,7 +146,7 @@ namespace :config do
           )
 
           presenters['AL Libs'].merge!(
-            :presenter_class => 'Presenters::PrePcrPlatePresenter'
+            :presenter_class => 'Presenters::AlLibsPlatePresenter'
           )
 
           presenters['Lib PCR'].merge!(

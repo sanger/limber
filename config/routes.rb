@@ -12,6 +12,7 @@ IlluminaBPipeline::Application.routes.draw do
   # Robots help us batch work up by function, rather than plate
   resources :robots, :controller => :robots do
     post 'start', :on => :member
+    post 'verify', :on => :member
   end
 
   resources :illumina_b_plates, :controller => :plates do

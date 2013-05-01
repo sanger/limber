@@ -25,8 +25,8 @@ module Robots
         case
         when plate.nil? # The bed is empty or untested
           return true
-        when plate.state != state # The plate is in the wrong state
-          raise BedError, "Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{state}."
+        when !states.include?(plate.state) # The plate is in the wrong state
+          raise BedError, "Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}."
         when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
           raise BedError, "Plate #{plate.barcode.ean13} is not a #{purpose}."
         else
@@ -64,6 +64,14 @@ module Robots
         bed.valid?
       end
       beds.each(&:transition)
+    end
+
+    def verify(bed_contents)
+      bed_contents.each do |bed_id,plate_barcode|
+        beds[bed_id].load(plate_barcode)
+        bed_contents[bed_id] = beds[bed_id].valid?
+      end
+      {:beds=>bed_contents,:valid=>bed_contents.all?{|_,v| v}}
     end
 
   end
