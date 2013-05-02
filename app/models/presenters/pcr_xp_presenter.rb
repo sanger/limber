@@ -7,7 +7,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :authenticated_tab_states, {
     :pending     => [ 'labware-summary-button', 'labware-state-button' ],
     :started     => [ 'labware-state-button', 'labware-summary-button' ],
-    :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button' ],
+    :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button', 'labware-creation-button' ],
     :qc_complete => [ 'labware-summary-button', 'labware-state-button' ],
     :cancelled   => [ 'labware-summary-button' ],
     :failed      => [ 'labware-summary-button' ]
@@ -44,7 +44,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     end
 
     state :passed do
-      include StateDoesNotAllowTubePreviewing
+      include QcCreatableStep
     end
 
     state :qc_complete do

@@ -23,6 +23,12 @@ namespace :config do
     'Lib PCRR-XP'
   ]
 
+  QC_PLATE_PURPOSES = [
+    'Post Shear QC',
+    'Lib PCR-XP QC',
+    'Lib PCRR-XP QC'
+  ]
+
   TUBE_PURPOSES = [
     'ILB_STD_STOCK',
     'ILB_STD_MX',
@@ -39,8 +45,9 @@ namespace :config do
   task :generate => :environment do
     api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
 
-    plate_purposes   = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
-    tube_purposes    = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
+    plate_purposes    = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
+    qc_plate_purposes = api.plate_purpose.all.select { |pp| QC_PLATE_PURPOSES.include?(pp.name) }
+    tube_purposes     = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
 
     barcode_printer_uuid = lambda do |printers|
       ->(printer_name){
@@ -141,8 +148,12 @@ namespace :config do
           )
 
           presenters['Post Shear'].merge!(
-            :presenter_class     => 'Presenters::QcCompletablePresenter',
+            :presenter_class     => 'Presenters::QcBranchCompletablePresenter',
             :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
+          )
+
+          presenters['Post Shear QC'].merge!(
+            :presenter_class     => 'Presenters::QcPlatePresenter'
           )
 
           presenters['AL Libs'].merge!(
@@ -166,10 +177,20 @@ namespace :config do
             :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
 
+
+          presenters['Lib PCR-XP QC'].merge!(
+            :presenter_class     => 'Presenters::QcPlatePresenter'
+          )
+
+
           presenters['Lib PCRR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2')
+          )
+
+          presenters['Lib PCRR-XP QC'].merge!(
+            :presenter_class     => 'Presenters::QcPlatePresenter'
           )
 
           presenters['Lib Pool'].merge!(
@@ -221,8 +242,6 @@ namespace :config do
             :default_printer_uuid => barcode_printer_uuid.('g311bc1')
           )
 
-
-
         end
 
         purpose_details_by_uuid = lambda { |labware_purposes, purpose|
@@ -233,6 +252,8 @@ namespace :config do
 
         puts "Preparing plate purpose forms, presenters, and state changers ..."
         plate_purposes.each(&purpose_details_by_uuid)
+        puts "Preparing QC plate purpose forms, presenters, and state changers ..."
+        qc_plate_purposes.each(&purpose_details_by_uuid)
 
         puts "Preparing Tube purpose forms, presenters, and state changers ..."
         tube_purposes.each(&purpose_details_by_uuid)
@@ -248,9 +269,11 @@ namespace :config do
 
         tube_purposes.each(&store_purpose_uuids)
         plate_purposes.each(&store_purpose_uuids)
+        qc_plate_purposes.each(&store_purpose_uuids)
       end
 
       configuration[:robots] = ROBOT_CONFIG
+      configuration[:qc_purposes] =   QC_PLATE_PURPOSES
 
     end
 

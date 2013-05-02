@@ -35,15 +35,23 @@ class LabwareController < ApplicationController
   end
 
   def update
-    state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason])
+    begin
+      state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason])
 
-    respond_to do |format|
-      format.html { 
-        redirect_to(
-          search_path,
-          :notice => "Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}"
-        )
-      }
+      respond_to do |format|
+        format.html {
+          redirect_to(
+            search_path,
+            :notice => "Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}"
+          )
+        }
+      end
+
+    rescue StateChangers::StateChangeError => exception
+      respond_to do |format|
+        format.html { redirect_to(search_path, :alert=> exception.message) }
+        format.csv
+      end
     end
   end
 
