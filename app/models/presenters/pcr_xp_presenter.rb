@@ -50,17 +50,21 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     state :qc_complete do
       def allow_plate_label_printing?; false end
 
-      def label_text
-       Presenters::TubePresenter::LABEL_TEXT
+      def tube_label_text
+        labware.tubes.map do |tube|
+          tube.label_text
+        end
       end
 
       # Don't yield in :qc_complete state
       def control_source_view(&block)
+        yield unless labware.has_transfers_to_tubes?
+        nil
       end
 
       # Yield tube view in :qc_complete state
       def control_tube_view(&block)
-        yield
+        yield if labware.has_transfers_to_tubes?
         nil
       end
       alias_method(:control_additional_printing, :control_tube_view)

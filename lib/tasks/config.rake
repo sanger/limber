@@ -232,14 +232,16 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1')
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
+            :from_purpose         => 'Lib Pool'
           )
 
           presenters['Lib Pool SS-XP-Norm'].merge!(
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1')
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
+            :from_purpose         => 'Lib Pool Pippin'
           )
 
         end

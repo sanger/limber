@@ -73,6 +73,10 @@ module Presenters
 
     def allow_plate_label_printing?; true end
 
+    def label_text
+      labware.label_text
+    end
+
     def control_worksheet_printing(&block)
       yield
       nil

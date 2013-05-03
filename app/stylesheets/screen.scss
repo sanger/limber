@@ -315,3 +315,23 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   font-family: 'Monaco', 'Courier new', courier, fixed;
 }
 
+.robot {
+  list-style-type: none;
+}
+
+div.wait-plate a.bed-status-scan, div.wait-plate a.bed-status-good, div.wait-plate  a.bed-status-bad {
+  display: none !important;
+}
+div.bad-plate a.bed-status-good, div.bad-plate a.bed-status-wait, div.bad-plate a.bed-status-scan {
+  display: none !important;
+}
+div.good-plate a.bed-status-bad, div.good-plate a.bed-status-wait, div.good-plate a.bed-status-scan {
+  display: none !important;
+}
+div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plate a.bed-status-wait {
+  display: none !important;
+}
+
+.ui-field-contain label.bed-label {
+  width: 3em;
+}

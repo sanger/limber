@@ -1,5 +1,7 @@
 module Presenters
+
   class TubePresenter
+
     include Presenter
     include Statemachine::Shared
 
@@ -22,8 +24,10 @@ module Presenters
     class_inheritable_reader    :tab_states
 
     LABEL_TEXT = 'ILB Stock'
-    class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, LABEL_TEXT
+
+    def label_text
+      labware.label_text || LABEL_TEXT
+    end
 
     # The state is delegated to the tube
     delegate :state, :to => :labware
@@ -43,14 +47,14 @@ module Presenters
     class UnknownTubeType < StandardError
       attr_reader :tube
 
-      def initialize(plate)
+      def initialize(tube)
         super("Unknown plate type #{tube.purpose.name.inspect}")
         @tube = tube
       end
     end
 
     def self.lookup_for(labware)
-      presentation_classes = Settings.purposes[labware.purpose.uuid] or raise UnknownPlateType, labware
+      presentation_classes = Settings.purposes[labware.purpose.uuid] or raise UnknownTubeType, labware
       presentation_classes[:presenter_class].constantize
     end
   end

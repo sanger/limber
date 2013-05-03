@@ -3,7 +3,7 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
   def move_to!(state, reason)
     raise StateChangers::StateChangeError, "QC plate must be created first!" if state == 'qc_complete' && !qc_created?
     super
-    create_stock_tubes! if state == 'qc_complete'
+    create_stock_tubes! if state == 'qc_complete' && tubes_required?
   end
 
   def qc_created?
@@ -41,12 +41,15 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
   private :pool_purposes
 
   def purpose_for(pool)
-    {
-      'Lib Pool Norm' => Settings.purpose_uuids['Lib Pool'],
-      'Lib Pool SS-XP-Norm' => Settings.purpose_uuids['Lib Pool Pippin'],
-    }.fetch(Settings.purposes[pool["target_tube_purpose"]].name)
+    Settings.purpose_uuids[
+      Settings.purposes[pool["target_tube_purpose"]].from_purpose
+    ]
   end
   private :purpose_for
+
+  def tubes_required?
+    Settings.purposes[labware.pools.values.first].try(:from_purpose).present?
+  end
 
   def pool_targets(child_tubes)
     targets = child_tubes.to_a
