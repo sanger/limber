@@ -505,6 +505,13 @@
 
   $(document).on('pageinit','#robot-verification-cytomat', function(){
 
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
+
+
     $(document).on('change','.bed', function() {
       // When we scan in a plate
       if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); SCAPE.retrievePlate(this); };
@@ -512,7 +519,6 @@
         $(this).change();
       });
     });
-
     $.extend(SCAPE, {
       checkBeds : function() {
         var beds, good = 0;
@@ -600,7 +606,6 @@
 
   $.extend(SCAPE, {
     retrievePlate : function(bed) {
-      console.log(bed.ajax);
       bed.ajax = $.ajax({
         dataType: "json",
         url: '/search/retrieve_parent',
@@ -613,6 +618,12 @@
   ////////////////////////////////////////////////////////////////////
   // Bed Robot Page
   $(document).on('pageinit','#robot-verification-bed',function(event) {
+
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
 
     SCAPE.robot_beds = {};
 
@@ -641,6 +652,7 @@
           )
         );
       SCAPE.robot_beds[bed] = plate;
+      $('#start-robot').button('disable');
       $('.bedv').append(new_li).listview('refresh');
     }
 
@@ -648,6 +660,52 @@
       SCAPE.robot_beds[$(this).data('bed')] = undefined;
       $(this).detach();
       $('.bedv').listview('refresh');
+    }
+
+    var checkResponse = function(response) {
+      SCAPE.testy=response;
+      if ($('.bedv').children().length===0) {
+        // We don't have any content
+        $.mobile.hidePageLoadingMsg();
+      } else if (response.valid) {
+        pass();
+      } else {
+        flagBeds(response.beds);
+        fail();
+      }
+
+    }
+
+    var flagBeds = function(beds) {
+      var bad_beds = [];
+      $.each(beds, function(bed_id) {
+        if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
+      });
+      message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
+    }
+
+    var message = function(message,status) {
+      $('#validation_report').empty().append(
+        $(document.createElement('div')).
+          addClass('report').
+          addClass(status).
+          text(message)
+        );
+    }
+
+    var wait = function() {
+      $.mobile.showPageLoadingMsg();
+    }
+
+    var pass = function() {
+      $.mobile.hidePageLoadingMsg();
+      message('No problems detected!','valid');
+      $('#start-robot').button('enable');
+    }
+
+    var fail = function() {
+      $.mobile.hidePageLoadingMsg();
+      $('#start-robot').button('disable');
     }
 
     $('#plate_scan').on('change', function(){
@@ -661,14 +719,14 @@
     });
 
     $('#validate_layout').on('click',function(){
-      console.log(SCAPE.robot_beds);
+      wait();
       var ajax = $.ajax({
           dataType: "json",
           url: window.location.pathname+'/verify',
           type: 'POST',
           data: {"beds" : SCAPE.robot_beds },
-          success: function(data,status) { console.log(data) }
-        }).fail(function(data,status) { console.log(data); });
+          success: function(data,status) { checkResponse(data); }
+        }).fail(function(data,status) { message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','invalid'); fail(); });
     })
   });
 

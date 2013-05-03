@@ -5,10 +5,10 @@
     <%= semantic_form_for(@creation_form, :as => :plate, :url => illumina_b_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
     <div class="ui-grid-a">
       <div class="ui-block-a">
+      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
       <%= f.inputs do %>
         <%= f.input :purpose_uuid, :as => :hidden, :value =>@creation_form.purpose_uuid %>
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
-        <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
         <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
       <%- end -%>
     <br/>
@@ -23,7 +23,7 @@
         <h2>Tag Replacement palette</h2>
         <div id="substitutions" style="">
           <ul data-theme"d" data-role="listview" data-inset="true">
-            
+
           </ul>
         </div>
         <br/>
@@ -40,11 +40,11 @@
           <h3>Once you are certain that the tag layout is correct, click ‘Create Plate’.</h3>
         </div>
         <div id="replacement-tags" style="display:none">
-          <ul id="tag-palette" 
-            data-theme="d" 
+          <ul id="tag-palette"
+            data-theme="d"
             data-role="listview"
-            data-filter-placeholder="Filter tags..." 
-            data-inset="true" 
+            data-filter-placeholder="Filter tags..."
+            data-inset="true"
             data-filter="true">
           </ul>
         </div>

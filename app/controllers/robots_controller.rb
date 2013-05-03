@@ -27,6 +27,12 @@ class RobotsController < ApplicationController
     end
   end
 
+  def verify
+    respond_to do |format|
+      format.json { render( :json=> @robot.verify(params[:beds]||{}) ) }
+    end
+  end
+
   def find_robot
     @robot = Robots::Robot.find(
       :name=>params[:id],
