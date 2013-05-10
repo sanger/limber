@@ -5,13 +5,15 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
   write_inheritable_attribute :authenticated_tab_states, {
-    :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+    :pending     => [ 'labware-summary-button', 'robot-verification-button' ],
     :started     => [ 'labware-state-button', 'labware-summary-button' ],
     :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button', 'labware-creation-button' ],
     :qc_complete => [ 'labware-summary-button', 'labware-state-button' ],
     :cancelled   => [ 'labware-summary-button' ],
     :failed      => [ 'labware-summary-button' ]
   }
+
+  write_inheritable_attribute :robot_name, 'nx-96'
 
   module StateDoesNotAllowTubePreviewing
     def control_tube_preview(&block)

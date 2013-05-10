@@ -26,7 +26,7 @@ module Presenters
     LABEL_TEXT = 'ILB Stock'
 
     def label_text
-      labware.label_text || LABEL_TEXT
+      "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
     end
 
     # The state is delegated to the tube

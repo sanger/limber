@@ -48,7 +48,7 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
   private :purpose_for
 
   def tubes_required?
-    Settings.purposes[labware.pools.values.first].try(:from_purpose).present?
+    Settings.purposes[labware.pools.values.first["target_tube_purpose"]].try(:from_purpose).present?
   end
 
   def pool_targets(child_tubes)
