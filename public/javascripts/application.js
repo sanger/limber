@@ -681,16 +681,7 @@
       $.each(beds, function(bed_id) {
         if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
       });
-      message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
-    }
-
-    var message = function(message,status) {
-      $('#validation_report').empty().append(
-        $(document.createElement('div')).
-          addClass('report').
-          addClass(status).
-          text(message)
-        );
+      SCAPE.message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
     }
 
     var wait = function() {
@@ -699,7 +690,7 @@
 
     var pass = function() {
       $.mobile.hidePageLoadingMsg();
-      message('No problems detected!','valid');
+      SCAPE.message('No problems detected!','valid');
       $('#start-robot').button('enable');
     }
 
@@ -726,8 +717,22 @@
           type: 'POST',
           data: {"beds" : SCAPE.robot_beds },
           success: function(data,status) { checkResponse(data); }
-        }).fail(function(data,status) { message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','invalid'); fail(); });
+        }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','invalid'); fail(); });
     })
   });
+
+})(jQuery,window);
+
+(function($, exports, undefined){
+  "use strict";
+
+   SCAPE.message = function(message,status) {
+      $('#validation_report').empty().append(
+        $(document.createElement('div')).
+          addClass('report').
+          addClass(status).
+          text(message)
+        );
+    }
 
 })(jQuery,window);
