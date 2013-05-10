@@ -21,8 +21,11 @@
 <div data-role="popup" id="popupRobot" data-theme="b">
   <ul data-role="listview" data-inset="true" style="min-width:210px;">
       <li data-role="divider" data-theme="b">Choose a robot</li>
-      <% Settings.robots.each do |id,robot| %>
-        <li><a href="<%= robot_path(robot.name) %>" ><%= robot.name.titleize %> Robot</a></li>
+      <% Settings.robots.each do |location,robots| %>
+        <li data-role="divider" data-theme="b"><%= location %></li>
+        <% robots.each do |id,robot| %>
+          <li><a href="<%= robot_path(id) %>/<%= location %>" ><%= robot.name.titleize %> Robot</a></li>
+        <% end %>
       <% end %>
   </ul>
 </div>

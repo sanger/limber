@@ -35,8 +35,9 @@ class RobotsController < ApplicationController
 
   def find_robot
     @robot = Robots::Robot.find(
-      :name=>params[:id],
-      :api=>api,
+      :id        =>params[:id],
+      :location  =>params[:location],
+      :api       =>api,
       :user_uuid => current_user_uuid
     )
   end

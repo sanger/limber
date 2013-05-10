@@ -77,6 +77,10 @@ module Presenters
       labware.label_text
     end
 
+    def location
+      Settings.locations[labware.location]
+    end
+
     def control_worksheet_printing(&block)
       yield
       nil

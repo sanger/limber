@@ -274,8 +274,9 @@ namespace :config do
         qc_plate_purposes.each(&store_purpose_uuids)
       end
 
-      configuration[:robots] = ROBOT_CONFIG
-      configuration[:qc_purposes] =   QC_PLATE_PURPOSES
+      configuration[:robots]      = ROBOT_CONFIG
+      configuration[:locations]   = LOCATION_PIPELINES
+      configuration[:qc_purposes] = QC_PLATE_PURPOSES
 
     end
 

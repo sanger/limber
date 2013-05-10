@@ -18,7 +18,7 @@ module Robots
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
-        StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,"Robot #{name} started")
+        StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,"Robot #{robot.name} started")
       end
 
       def valid?
@@ -54,13 +54,15 @@ module Robots
     end
 
     def self.find(options)
-      robot_settings = Settings.robots[options[:name]]
+      robot_settings = Settings.robots[options[:location]]
+      raise ActionController::RoutingError.new("Location #{options[:location]} Not Found") if robot_settings.nil?
+      robot_settings = robot_settings[options[:id]]
       raise ActionController::RoutingError.new("Robot #{options[:name]} Not Found") if robot_settings.nil?
       Robot.new(robot_settings.merge(options))
     end
 
     class_inheritable_reader :attributes
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name]
+    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :id, :location]
 
     def beds=(new_beds)
       beds = ActiveSupport::OrderedHash.new(InvalidBed.new)
