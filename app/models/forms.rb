@@ -97,7 +97,7 @@ module Forms
     end
 
     def label_text
-      labware.label_text
+      "#{labware.label.prefix} #{labware.label.text}"
     end
 
     def save!

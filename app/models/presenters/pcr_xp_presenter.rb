@@ -52,7 +52,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
 
       def tube_label_text
         labware.tubes.map do |tube|
-          tube.label_text
+          "#{tube.label.prefix} #{tube.label.text}"
         end
       end
 

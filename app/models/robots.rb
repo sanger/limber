@@ -82,15 +82,21 @@ module Robots
     end
 
     def verify(bed_contents)
-      verified = Hash[bed_contents.map do |bed_id,plate_barcode|
+      valid_plates = Hash[bed_contents.map do |bed_id,plate_barcode|
         beds[bed_id].load(plate_barcode)
         [bed_id, beds[bed_id].valid?]
-      end].merge(
-        Hash[parents_and_position do |parent,position|
-          beds[position].plate.try(:uuid) == parent.try(:uuid)
-        end]
-      )
+      end]
+      valid_parents = Hash[parents_and_position do |parent,position|
+        beds[position].plate.try(:uuid) == parent.try(:uuid)
+      end]
+      verified = valid_plates.merge(valid_parents) {|k,v1,v2| v1 && v2 }
+      bed_contents.keys.each {|k| verified[k] = false } unless plates_compatible?
       {:beds=>verified,:valid=>verified.all?{|_,v| v}}
+    end
+
+    def plates_compatible?
+      puts beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil? }.compact.uniq
+      beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil?}.compact.uniq.count == 1
     end
 
     def parents_and_position
