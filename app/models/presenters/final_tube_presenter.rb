@@ -11,6 +11,8 @@ module Presenters
     class_inheritable_reader    :additional_creation_partial
     write_inheritable_attribute :additional_creation_partial, nil
 
+    write_inheritable_attribute :has_qc_data?, true
+
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
       'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
@@ -75,8 +77,16 @@ module Presenters
       labware.purpose
     end
 
+    def label_text
+      "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
+    end
+
     def labware_form_details(view)
       { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
+    end
+
+    def qc_owner
+      labware
     end
   end
 end

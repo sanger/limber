@@ -32,11 +32,15 @@ IlluminaBPipeline::Application.routes.draw do
   end
 
   # This is a hack untill I get tube coercion working
-  resources :illumina_b_tube, :controller => :tubes
+  resources :illumina_b_tube, :controller => :tubes do
+    resources :qc_files, :controller => :qc_files
+  end
+
 
   # This is a hack untill I get tube coercion working
   resources :sequencescape_tubes, :controller => :tubes do
     resources :children, :controller => :tube_creation
+    resources :qc_files, :controller => :qc_files
   end
 
   # Printing can do individual or multiple labels
