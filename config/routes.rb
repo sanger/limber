@@ -19,6 +19,7 @@ IlluminaBPipeline::Application.routes.draw do
   resources :illumina_b_plates, :controller => :plates do
     resources :children, :controller => :plate_creation
     resources :tubes,    :controller => :tube_creation
+    resources :qc_files, :controller => :qc_files
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
@@ -26,7 +27,9 @@ IlluminaBPipeline::Application.routes.draw do
     resources :illumina_b_plates, :only => [:update, :edit], :as => :plates
   end
 
-  resources :illumina_b_multiplexed_library_tube, :controller => :tubes
+  resources :illumina_b_multiplexed_library_tube, :controller => :tubes do
+    resources :qc_files, :controller => :qc_files
+  end
 
   # This is a hack untill I get tube coercion working
   resources :illumina_b_tube, :controller => :tubes

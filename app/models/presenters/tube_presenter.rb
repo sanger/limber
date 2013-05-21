@@ -2,6 +2,10 @@ module Presenters
 
   class TubePresenter
 
+    def qc_owner
+      labware
+    end
+
     include Presenter
     include Statemachine::Shared
 

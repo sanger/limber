@@ -4,6 +4,9 @@ module Presenters
       base.class_eval do
         include Forms::Form
         write_inheritable_attribute :page, 'show'
+
+        class_inheritable_reader :has_qc_data?
+        write_inheritable_attribute :has_qc_data?, false
       end
     end
 
@@ -93,6 +96,10 @@ module Presenters
     def transfers
       transfers = self.labware.creation_transfer.transfers
       transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
+    end
+
+    def qc_owner
+      labware
     end
 
     # Split a location string into an array containing the row letter

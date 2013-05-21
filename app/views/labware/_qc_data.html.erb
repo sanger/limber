@@ -1,0 +1,19 @@
+<%= section do %>
+  <h2>QC Data</h2>
+  <ul class="qc_data" data-role="listview" data-inset="true">
+      <li data-role="list-divider">Attatched Files</li>
+    <% @presenter.qc_owner.qc_files.each do |qc_file| %>
+      <li>
+        <a href="<%= @presenter.qc_owner.uuid %>/qc_files/<%= qc_file.uuid %>"><h3><%= qc_file.filename %></h3>
+        <p>Created at:<%= qc_file.created_at %></p></a>
+      </li>
+    <% end %>
+      <li data-role="list-divider">Add New Qc Files</li>
+      <li>
+        <form id="qc_file_form" method="post" enctype="multipart/form-data" action="<%= @presenter.qc_owner.uuid %>/qc_files">
+          <input type="file" id="qc_file" name="qc_file"/>
+          <input type="submit" value="Upload" />
+        </form>
+      </li>
+  </ul>
+<% end %>

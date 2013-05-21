@@ -11,6 +11,8 @@ module Presenters
         :failed      => [ 'labware-summary-button' ]
     }
 
+    write_inheritable_attribute :has_qc_data?, true
+
     state_machine :state, :initial => :pending do
       event :start do
         transition :pending => :started
