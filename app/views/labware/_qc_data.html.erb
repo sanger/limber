@@ -10,10 +10,10 @@
     <% end %>
       <li data-role="list-divider">Add New Qc Files</li>
       <li>
-        <form id="qc_file_form" method="post" enctype="multipart/form-data" action="<%= @presenter.qc_owner.uuid %>/qc_files">
+        <%= form_tag(illumina_b_plate_qc_files_path(@presenter.qc_owner.uuid),:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
           <input type="file" id="qc_file" name="qc_file"/>
           <input type="submit" value="Upload" />
-        </form>
+        <% end %>
       </li>
   </ul>
 <% end %>
