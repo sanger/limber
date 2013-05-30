@@ -7,7 +7,7 @@ module Robots
 
       class BedError < StandardError; end
       # Our robot has beds/rack-spaces
-      attr_reader :plate
+      attr_reader :plate, :error_message
 
       class_inheritable_reader :attributes
       write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
@@ -21,14 +21,21 @@ module Robots
         StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,"Robot #{robot.name} started")
       end
 
+      def error(message)
+        @error_message = "Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}."
+        false
+      end
+      private :error
+
+
       def valid?
         case
         when plate.nil? # The bed is empty or untested
           return true
         when !states.include?(plate.state) # The plate is in the wrong state
-          raise BedError, "Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}."
+          error("Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}.")
         when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
-          raise BedError, "Plate #{plate.barcode.ean13} is not a #{purpose}."
+          error("Plate #{plate.barcode.ean13} is not a #{purpose}.")
         else
           true
         end
@@ -76,7 +83,7 @@ module Robots
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
         bed.load(bed_settings[id]) if bed.has_transition?
-        bed.valid?
+        bed.valid? or raise BedError, bed.error_message
       end
       beds.values.each(&:transition)
     end
