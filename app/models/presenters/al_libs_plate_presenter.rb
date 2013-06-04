@@ -3,7 +3,7 @@ module Presenters
     include Presenters::Statemachine
 
     write_inheritable_attribute :authenticated_tab_states, {
-      :pending     => [ 'labware-summary-button', 'labware-creation-button', 'robot-verification-button' ],
+      :pending     => [ 'labware-summary-button', 'robot-verification-button' ],
       :started     => [ 'labware-summary-button', 'labware-creation-button', 'robot-verification-button' ],
       :passed      => [ 'labware-summary-button', 'labware-creation-button', 'well-failing-button' ],
       :fx_transfer => [ 'labware-summary-button' ],
@@ -19,14 +19,7 @@ module Presenters
       Statemachine::StateTransitions.inject(self)
 
       state :pending do
-        def control_additional_creation(&block)
-          yield unless default_child_purpose.nil?
-          nil
-        end
-
-        def default_child_purpose
-          labware.plate_purpose.children.first
-        end
+        include StateDoesNotAllowChildCreation
       end
 
       state :started do
