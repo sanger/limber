@@ -111,17 +111,24 @@
         addClass(that.plate.state);
     };
 
+    that.well_index_by_row = function(well){
+      var row, col
+      row = well.charCodeAt(0)-65;
+      col = parseInt("A12".slice(1));
+      return (row*12)+col
+    };
+
     that.poolsArray = function(){
       var poolsArray = _.toArray(that.plate.pools);
-
       poolsArray = _.sortBy(poolsArray, function(pool){
-        return pool.wells[0];
+        return that.well_index_by_row(pool.wells[0]);
       });
 
       return poolsArray;
     }();
 
     that.colourPools = function() {
+
       for (var i=0; i < that.poolsArray.length; i++){
         var poolId = that.poolsArray[i].id;
 
