@@ -143,6 +143,7 @@ body {
   .started           { @extend .yellow;                                                  }
   .started_fx        { @extend .yellow;                                                  }
   .started_mj        { @extend .orange;                                                  }
+  .fx_transfer       { @extend .orange;                                                  }
   .passed            { @extend .green;                                                   }
   .qc_complete       { @include background(radial-gradient(top left, #bbbbbb, #111111)); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
