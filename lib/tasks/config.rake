@@ -112,6 +112,7 @@ namespace :config do
 
           presenters['ILB_STD_PCRR'].merge!(
             :form_class           => 'Forms::TaggingForm',
+            :tag_layout_templates => ["Illumina B vertical tagging","Illumina B tagging"],
             :presenter_class      => 'Presenters::PcrPresenter',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2')
           )
@@ -162,6 +163,7 @@ namespace :config do
 
           presenters['Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
+            :tag_layout_templates => ["Illumina pipeline tagging"],
             :presenter_class => 'Presenters::PcrRobotPresenter'
           )
 
