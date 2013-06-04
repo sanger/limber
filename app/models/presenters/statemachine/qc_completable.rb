@@ -41,6 +41,7 @@ module Presenters
             end
 
             state :passed do
+              def has_qc_data?; true; end
               include StateDoesNotAllowChildCreation
             end
 
@@ -56,6 +57,8 @@ module Presenters
               def default_child_purpose
                 labware.plate_purpose.children.reject {|purpose| Settings.qc_purposes.include?(purpose.name) }.first
               end
+
+              def has_qc_data?; true; end
             end
 
             event :fail do

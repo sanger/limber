@@ -5,8 +5,7 @@ module Presenters
         include Forms::Form
         write_inheritable_attribute :page, 'show'
 
-        class_inheritable_reader :has_qc_data?
-        write_inheritable_attribute :has_qc_data?, false
+        def has_qc_data?; false; end
       end
     end
 

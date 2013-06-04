@@ -14,7 +14,6 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   }
 
   write_inheritable_attribute :robot_name, 'nx-96'
-  write_inheritable_attribute :has_qc_data?, true
 
   module StateDoesNotAllowTubePreviewing
     def control_tube_preview(&block)
@@ -47,10 +46,12 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     end
 
     state :passed do
+      def has_qc_data?; true; end
       include QcCreatableStep
     end
 
     state :qc_complete do
+      def has_qc_data?; true; end
       def allow_plate_label_printing?; false end
 
       def tube_label_text

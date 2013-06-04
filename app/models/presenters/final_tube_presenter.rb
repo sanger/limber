@@ -11,8 +11,6 @@ module Presenters
     class_inheritable_reader    :additional_creation_partial
     write_inheritable_attribute :additional_creation_partial, nil
 
-    write_inheritable_attribute :has_qc_data?, true
-
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
       'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
@@ -58,6 +56,7 @@ module Presenters
       end
 
       state :passed do
+        def has_qc_data?; true; end
         include Statemachine::StateDoesNotAllowChildCreation
       end
 

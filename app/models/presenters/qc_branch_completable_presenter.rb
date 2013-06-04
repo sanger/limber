@@ -11,7 +11,5 @@ module Presenters
       :failed      => [ 'labware-summary-button' ]
     }
 
-    write_inheritable_attribute :has_qc_data?, true
-
   end
 end

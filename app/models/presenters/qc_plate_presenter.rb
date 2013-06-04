@@ -9,7 +9,7 @@ module Presenters
       :passed      => [ 'labware-summary-button' ],
     }
 
-    write_inheritable_attribute :has_qc_data?, true
+    def has_qc_data?; labware.passed?; end
 
     def control_additional_creation(&block)
       nil
