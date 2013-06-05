@@ -23,12 +23,10 @@ module Presenters
       end
 
       event :pass do
-        def has_qc_data?; true; end
         transition [ :pending, :started ] => :passed
       end
 
       event :qc_complete do
-        def has_qc_data?; true; end
         transition :passed => :qc_complete
       end
 
@@ -49,12 +47,15 @@ module Presenters
       end
 
       state :passed do
+        def has_qc_data?; true; end
         include Statemachine::StateDoesNotAllowChildCreation
       end
 
       state :qc_complete, :human_name => 'QC Complete' do
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
+        def has_qc_data?; true; end
+
         def control_additional_creation(&block)
           yield unless default_child_purpose.nil?
           nil

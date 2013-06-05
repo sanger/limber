@@ -22,11 +22,12 @@ module Presenters
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending   => [ 'labware-summary-button', 'labware-state-button' ],
-        :started   => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed    => [ 'labware-summary-button' ],
-        :cancelled => [ 'labware-summary-button' ],
-        :failed    => [ 'labware-summary-button' ]
+        :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+        :started     => [ 'labware-state-button', 'labware-summary-button' ],
+        :passed      => [ 'labware-state-button', 'labware-summary-button' ],
+        :qc_complete => [ 'labware-summary-button' ],
+        :cancelled   => [ 'labware-summary-button' ],
+        :failed      => [ 'labware-summary-button' ]
     }
 
     state_machine :state, :initial => :pending do
@@ -58,6 +59,15 @@ module Presenters
       state :passed do
         def has_qc_data?; true; end
         include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :qc_complete, :human_name => 'QC Complete' do
+        def has_qc_data?; true; end
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      event :qc_complete do
+        transition :passed => :qc_complete
       end
 
     end
