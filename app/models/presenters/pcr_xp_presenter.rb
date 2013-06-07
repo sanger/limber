@@ -93,7 +93,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   end
 
   def default_tube_printer_uuid
-    Settings.purposes[default_child_purpose.uuid].default_printer_uuid
+    Settings.printers[location][Settings.purposes[default_child_purpose.uuid].default_printer_type]
   end
 
   def tube_state=(state)

@@ -13,7 +13,15 @@ module Presenters
     end
 
     def default_printer_uuid
-      @default_printer_uuid ||= Settings.purposes[purpose.uuid].default_printer_uuid
+      @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+    end
+
+    def default_label_count
+      @default_label_count ||= Settings.printers['default_count']
+    end
+
+    def printer_limit
+      @printer_limit ||= Settings.printers['limit']
     end
 
   end
