@@ -24,6 +24,10 @@ module Presenters
       @printer_limit ||= Settings.printers['limit']
     end
 
+    def location
+      Settings.locations[labware.location]
+    end
+
   end
 
   class PlatePresenter
@@ -85,10 +89,6 @@ module Presenters
 
     def label_text
       "#{labware.label.prefix} #{labware.label.text}"
-    end
-
-    def location
-      Settings.locations[labware.location]
     end
 
     def control_worksheet_printing(&block)
