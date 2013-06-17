@@ -24,10 +24,6 @@ module Presenters
       @printer_limit ||= Settings.printers['limit']
     end
 
-    def location
-      Settings.locations[labware.location]
-    end
-
   end
 
   class PlatePresenter
@@ -75,6 +71,11 @@ module Presenters
 
     def plate_to_walk
       self.labware
+    end
+
+
+    def location
+      Settings.locations[labware.location]
     end
 
     # Purpose returns the plate or tube purpose of the labware.

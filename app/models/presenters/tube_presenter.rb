@@ -36,6 +36,12 @@ module Presenters
     # The state is delegated to the tube
     delegate :state, :to => :labware
 
+
+    def location
+      # TODO: Consider adding location to tube api as well
+      :illumina_b
+    end
+
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
