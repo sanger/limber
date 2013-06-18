@@ -114,7 +114,7 @@
     that.well_index_by_row = function(well){
       var row, col
       row = well.charCodeAt(0)-65;
-      col = parseInt("A12".slice(1));
+      col = parseInt(well.slice(1));
       return (row*12)+col
     };
 
