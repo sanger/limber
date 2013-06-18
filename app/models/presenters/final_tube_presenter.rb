@@ -3,6 +3,11 @@ module Presenters
     include Presenter
     include Statemachine::Shared
 
+    def location
+      # TODO: Consider adding location to tube api as well
+      :illumina_b
+    end
+
     class_inheritable_reader :labware_class
     write_inheritable_attribute :labware_class, :tube
 
