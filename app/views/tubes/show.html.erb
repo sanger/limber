@@ -46,7 +46,10 @@
             </ol>
           </div>
 
+
           <div id="tube-printing" class="scape-ui-block" style="display:none;">
+            <%= render(:partial => 'labware/qc_data') if @presenter.has_qc_data? %>
+
             <%= individual_barcode_printing_form(
               @presenter.labware.barcode,
               :redirection_url => illumina_b_tube_path(@presenter.labware),

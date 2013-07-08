@@ -4,6 +4,8 @@ module Presenters
       base.class_eval do
         include Forms::Form
         write_inheritable_attribute :page, 'show'
+
+        def has_qc_data?; false; end
       end
     end
 
@@ -11,7 +13,15 @@ module Presenters
     end
 
     def default_printer_uuid
-      @default_printer_uuid ||= Settings.purposes[purpose.uuid].default_printer_uuid
+      @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+    end
+
+    def default_label_count
+      @default_label_count ||= Settings.printers['default_count']
+    end
+
+    def printer_limit
+      @printer_limit ||= Settings.printers['limit']
     end
 
   end
@@ -48,6 +58,8 @@ module Presenters
     # This is now generated dynamically by the LabwareHelper
     class_inheritable_reader    :tab_states
 
+    class_inheritable_reader :robot_name
+
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],
@@ -61,6 +73,11 @@ module Presenters
       self.labware
     end
 
+
+    def location
+      Settings.locations[labware.location]
+    end
+
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
@@ -70,6 +87,10 @@ module Presenters
     end
 
     def allow_plate_label_printing?; true end
+
+    def label_text
+      "#{labware.label.prefix} #{labware.label.text}"
+    end
 
     def control_worksheet_printing(&block)
       yield
@@ -83,6 +104,10 @@ module Presenters
     def transfers
       transfers = self.labware.creation_transfer.transfers
       transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
+    end
+
+    def qc_owner
+      labware
     end
 
     # Split a location string into an array containing the row letter

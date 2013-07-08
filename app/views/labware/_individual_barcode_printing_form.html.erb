@@ -10,7 +10,10 @@
       <%= label_tag :printer, 'Barcode Printer:' %>
     </li>
     <li >
-      <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name, @presenter.default_printer_uuid) %>
+      <fieldset data-role="controlgroup" data-type="horizontal" class="print_selector">
+        <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name, @presenter.default_printer_uuid) %>
+        <%= select_tag :number,  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count) %>
+      </fieldset>
     </li>
     <li>
       <%= f.submit 'Print Label', :class => 'print-button', :'data-theme' => 'b', :'data-icon' => 'grid' %>

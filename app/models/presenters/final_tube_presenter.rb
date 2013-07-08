@@ -3,6 +3,11 @@ module Presenters
     include Presenter
     include Statemachine::Shared
 
+    def location
+      # TODO: Consider adding location to tube api as well
+      :illumina_b
+    end
+
     class_inheritable_reader :labware_class
     write_inheritable_attribute :labware_class, :tube
 
@@ -22,15 +27,13 @@ module Presenters
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
-        :pending   => [ 'labware-summary-button', 'labware-state-button' ],
-        :started   => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed    => [ 'labware-summary-button' ],
-        :cancelled => [ 'labware-summary-button' ],
-        :failed    => [ 'labware-summary-button' ]
+        :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+        :started     => [ 'labware-state-button', 'labware-summary-button' ],
+        :passed      => [ 'labware-state-button', 'labware-summary-button' ],
+        :qc_complete => [ 'labware-summary-button' ],
+        :cancelled   => [ 'labware-summary-button' ],
+        :failed      => [ 'labware-summary-button' ]
     }
-
-    class_inheritable_reader    :label_text
-    write_inheritable_attribute :label_text, 'ILB Pool'
 
     state_machine :state, :initial => :pending do
       event :start do
@@ -59,7 +62,17 @@ module Presenters
       end
 
       state :passed do
+        def has_qc_data?; true; end
         include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :qc_complete, :human_name => 'QC Complete' do
+        def has_qc_data?; true; end
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      event :qc_complete do
+        transition :passed => :qc_complete
       end
 
     end
@@ -78,8 +91,16 @@ module Presenters
       labware.purpose
     end
 
+    def label_text
+      "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
+    end
+
     def labware_form_details(view)
       { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
+    end
+
+    def qc_owner
+      labware
     end
   end
 end

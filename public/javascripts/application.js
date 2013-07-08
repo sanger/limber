@@ -73,7 +73,7 @@
   displayReason: function() {
     if($('.reason:visible').length === 0) {
       $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
-    } 
+    }
     else {
       $('.reason').not('#'+$('#state option:selected').val()).slideUp('slow', function(){
         $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
@@ -83,7 +83,7 @@
   },
 
 
-  dim: function() { 
+  dim: function() {
     $(this).fadeTo('fast', 0.2);
     return this;
   },
@@ -94,7 +94,7 @@
       $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
     });
   },
-  
+
 
   PlateViewModel: function(plate, plateElement, control) {
     // Using the 'that' pattern...
@@ -111,17 +111,24 @@
         addClass(that.plate.state);
     };
 
+    that.well_index_by_row = function(well){
+      var row, col
+      row = well.charCodeAt(0)-65;
+      col = parseInt(well.slice(1));
+      return (row*12)+col
+    };
+
     that.poolsArray = function(){
       var poolsArray = _.toArray(that.plate.pools);
-
       poolsArray = _.sortBy(poolsArray, function(pool){
-        return pool.wells[0];
+        return that.well_index_by_row(pool.wells[0]);
       });
 
       return poolsArray;
     }();
 
     that.colourPools = function() {
+
       for (var i=0; i < that.poolsArray.length; i++){
         var poolId = that.poolsArray[i].id;
 
@@ -498,3 +505,241 @@
 
 })(jQuery, window);
 
+(function($, exports, undefined){
+  "use strict";
+
+  // Our robot controller
+
+  $(document).on('pageinit','#robot-verification-cytomat', function(){
+
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
+
+
+    $(document).on('change','.bed', function() {
+      // When we scan in a plate
+      if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); SCAPE.retrievePlate(this); };
+      $.each(this.childBeds,function(){
+        $(this).change();
+      });
+    });
+    $.extend(SCAPE, {
+      checkBeds : function() {
+        var beds, good = 0;
+        beds = $('.bed')
+        for (var i=0; i < beds.length; i+=1) {
+          if (beds[i].isBad()) {
+            SCAPE.disableActivity();
+            return false;
+          } else if (beds[i].isGood()) {
+            good += 1;
+          }
+        };
+        if (good >= 1) {
+          SCAPE.enableActivity();
+          return true
+        } else {
+          SCAPE.disableActivity();
+          return false;
+        }
+      },
+      enableActivity : function() { $('#start-robot').button('enable'); },
+      disableActivity : function() { $('#start-robot').button('disable'); }
+    });
+
+    $('.bed').each(function(){
+
+      this.childBeds = [];
+
+      $.extend(this, {
+        checkPlate : function(data,status) {
+          if (this.parentBed === null || data.plate.parent_plate_barcode===this.parentBed.value) {
+            this.goodPlate();
+          } else {
+            this.badPlate();
+          };
+        },
+        waitPlate : function() {
+          $(this).closest('.bed-container').removeClass('good-plate bad-plate scan-plate');
+          $(this).closest('.bed-container').addClass('wait-plate');
+          SCAPE.disableActivity();
+        },
+        scanPlate : function() {
+          $(this).closest('.bed-container').removeClass('good-plate wait-plate bad-plate');
+          $(this).closest('.bed-container').addClass('scan-plate');
+          SCAPE.disableActivity();
+          SCAPE.checkBeds();
+        },
+        badPlate : function() {
+          $(this).closest('.bed-container').removeClass('good-plate wait-plate scan-plate');
+          $(this).closest('.bed-container').addClass('bad-plate');
+          SCAPE.disableActivity();
+        },
+        goodPlate : function() {
+          $(this).closest('.bed-container').removeClass('bad-plate wait-plate scan-plate');
+          $(this).closest('.bed-container').addClass('good-plate');
+          SCAPE.checkBeds();
+        },
+        ajax: { abort : function(){} },
+        isGood : function() {
+          return $(this).closest('.bed-container').hasClass('good-plate');
+        },
+        isUnused : function() {
+          return this.value === "" && (this.parentBed === null || this.parentBed.isUnused());
+        },
+        isBad : function() {
+          return !(this.isGood()||this.isUnused());
+        },
+        addChild : function(child) {
+          this.childBeds.push(child);
+        }
+      });
+    });
+
+    $('.bed').each(function(){
+      // We need to do this in a seperate loop to ensure our child
+      // handlers are in place.
+      if (this.dataset.parent==="") {
+        this.parentBed = null;
+      } else {
+        this.parentBed = $('#bed\\['+this.dataset.parent+'\\]')[0];
+        this.parentBed.addChild(this);
+      }
+    });
+  });
+
+  $.extend(SCAPE, {
+    retrievePlate : function(bed) {
+      bed.ajax = $.ajax({
+        dataType: "json",
+        url: '/search/retrieve_parent',
+        data: 'barcode='+bed.value,
+        success: function(data,status) { bed.checkPlate(data,status) }
+      }).fail(function(data,status) { if (status!=='abort') {bed.badPlate();} });
+    }
+  })
+
+  ////////////////////////////////////////////////////////////////////
+  // Bed Robot Page
+  $(document).on('pageinit','#robot-verification-bed',function(event) {
+
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
+
+    SCAPE.robot_beds = {};
+
+    var newScanned = function(bed,plate){
+      var new_li;
+      $('#whole\\['+bed+'\\]').detach();
+      new_li = $(document.createElement('li')).
+        attr('id','whole['+bed+']').
+        attr('data-icon','delete').
+        data('bed',bed).
+        on('click', removeEntry).
+        append(
+          $(document.createElement('a')).
+          attr('href','#').append(
+            $(document.createElement('h3')).
+            attr('class',"ui-li-heading").
+            text('Bed: '+bed)
+          ).append(
+            $(document.createElement('p')).
+            attr('class','ui-li-desc').
+            text('Plate: '+plate)
+          ).append(
+            $(document.createElement('input')).
+            attr('type','hidden').attr('id','bed['+bed+']').attr('name','bed['+bed+']').
+            val(plate)
+          )
+        );
+      SCAPE.robot_beds[bed] = plate;
+      $('#start-robot').button('disable');
+      $('.bedv').append(new_li).listview('refresh');
+    }
+
+    var removeEntry = function() {
+      SCAPE.robot_beds[$(this).data('bed')] = undefined;
+      $(this).detach();
+      $('.bedv').listview('refresh');
+    }
+
+    var checkResponse = function(response) {
+      SCAPE.testy=response;
+      if ($('.bedv').children().length===0) {
+        // We don't have any content
+        $.mobile.hidePageLoadingMsg();
+      } else if (response.valid) {
+        pass();
+      } else {
+        flagBeds(response.beds);
+        fail();
+      }
+
+    }
+
+    var flagBeds = function(beds) {
+      var bad_beds = [];
+      $.each(beds, function(bed_id) {
+        if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
+      });
+      SCAPE.message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
+    }
+
+    var wait = function() {
+      $.mobile.showPageLoadingMsg();
+    }
+
+    var pass = function() {
+      $.mobile.hidePageLoadingMsg();
+      SCAPE.message('No problems detected!','valid');
+      $('#start-robot').button('enable');
+    }
+
+    var fail = function() {
+      $.mobile.hidePageLoadingMsg();
+      $('#start-robot').button('disable');
+    }
+
+    $('#plate_scan').on('change', function(){
+      var plate_barcode, bed_barcode;
+      plate_barcode = this.value
+      bed_barcode = $('#bed_scan').val();
+      this.value = "";
+      $('#bed_scan').val("");
+      $('#bed_scan').focus();
+      newScanned(bed_barcode,plate_barcode);
+    });
+
+    $('#validate_layout').on('click',function(){
+      wait();
+      var ajax = $.ajax({
+          dataType: "json",
+          url: window.location.pathname+'/verify',
+          type: 'POST',
+          data: {"beds" : SCAPE.robot_beds },
+          success: function(data,status) { checkResponse(data); }
+        }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','invalid'); fail(); });
+    })
+  });
+
+})(jQuery,window);
+
+(function($, exports, undefined){
+  "use strict";
+
+   SCAPE.message = function(message,status) {
+      $('#validation_report').empty().append(
+        $(document.createElement('div')).
+          addClass('report').
+          addClass(status).
+          text(message)
+        );
+    }
+
+})(jQuery,window);

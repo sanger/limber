@@ -367,3 +367,368 @@ en:
       instruction_summary: "Store tube in correct freezer."
       instructions: ""
 
+  Cherrypicked:
+    pending:
+      state_text: "WGS: Shearing Input Plate DNA - not ready"
+      instruction_summary: "This DNA plate is not yet ready for processing."
+      instructions: ""
+
+    passed:
+      state_text: "WGS: Shearing Stock Plate DNA"
+      instruction_summary: Create a child plate to begin work on these samples.
+      instructions: >
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty Covaris plate’.</li>
+
+
+  Shear:
+    pending:
+      state_text: "Input DNA → ‘Shear’ - DNA shearing awaiting transfer"
+      instruction_summary: "Input DNA will be transferred to a fresh Covaris plate to generate the ‘Shear’ plate."
+      instructions: >
+        <li>Print 2 labels – place one on the Covaris plate and keep the other in your records for reference.</li>
+        <p>
+        When you are ready, to start adding the samples to the Covaris plate, change the ‘Current State’ to ‘started’.
+        </p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Input DNA → ‘Shear’ and DNA shearing in progress"
+      instruction_summary: Once the Covaris plate has been sheared, change the ‘Current State’ to ‘passed’.
+      instructions: >
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "DNA shearing is complete"
+      instruction_summary: "Create a child plate to continue working on these samples."
+      instructions: >
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty Post Shear plate’.</li>
+
+    cancelled:
+      state_text: "Covaris plate cancelled"
+      instruction_summary: "Covaris plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+  Post Shear:
+    pending:
+      state_text: "DNA in the ‘Covaris awaiting transfer to empty plate"
+      instruction_summary: "Transfer of sheared samples to 96-well semi-skirted ‘sheared’ plate"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the 96-well semi-skirted ‘sheared’ plate that goes on to the FX</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>When you are ready, to transfer the sheared samples from the Covaris plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘started’</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Shear’ → ‘Post Shear’ transfer in progress"
+      instruction_summary: "Transfer in Progress"
+      instructions: >
+        <p>Once the sheared samples have been transferred from the Covaris plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "‘Shear’ → ‘Post Shear’ transfer complete - awaiting QC..."
+      instruction_summary: "Plate awaiting QC"
+      instructions: >
+        <p>Once the post-shearing Agilent has been performed and the plate has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete.</p>
+        <p><em>If there are any QC issues, seek advice from a senior member of the T180 library prep team.</em></p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘QC Complete’ and click ‘Change State’ button.</li>
+
+    qc_complete:
+      state_text: "‘Post Shear’ QC Complete"
+      instruction_summary: "Create a child plate to continue working on these samples."
+      instructions: >
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty AL Libs plate’.</li>
+
+    cancelled:
+      state_text: "Sheared plate cancelled"
+      instruction_summary: "Sheared plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+    failed:
+      state_text: "Sheared plate, Input plate and Library have been failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team"
+      instructions:
+
+  AL Libs:
+    pending:
+      state_text: "Label empty Pre-PCR plate"
+      instruction_summary: "Add Pre-PCR plate to FX"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the 96-well fully-skirted pre-PCR plate that goes on to the FX.</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>When you are ready, add an empty child ‘Lib PCR’ plate.</p>
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty Lib PCR plate’.</li>
+
+    started:
+      state_text: "FX in progress..."
+      instruction_summary: "FX robot running"
+      instructions: >
+        The state of this AL Libs is controlled by the PCR plate also on the FX.
+
+    passed:
+      state_text: "FX program complete"
+      instruction_summary: "FX program complete"
+      instructions: >
+        <p>You can create a PCR repeat (‘ILB_STD_PCRR’) plate.</p>
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty ILB_STD_PCRR plate’.</li>
+
+    cancelled:
+      state_text: "Pre-PCR plate cancelled"
+      instruction_summary: "Pre-PCR plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+
+  Lib PCR:
+    pending:
+      state_text: "Preparing for ‘Lib PCR’ plate for FX"
+      instruction_summary: "Add ‘1-96 Tags’ plate to FX to become a new PCR plate"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the ‘1-96 Tags’ plate which will become your PCR plate on the FX.</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>Once the program on the FX is running, change the PCR plate's state to ‘Started FX’.  </p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started FX’ and click ‘Change State’ button.</li>
+        <p><em>This will automatically change the state of the pre-PCR plate to ‘Started’.</em></p>
+
+    started_fx:
+      state_text: "FX in progress"
+      instruction_summary: "Moving from FX to MJ"
+      instructions: >
+        <p>Once the program has finished running on the FX:-</p>
+        <li>Clear the robot deck and empty the Cytomat as usual.</li>
+        <li>Store the pre-PCR plate(s) in the appropriate freezer.</li>
+        <li>Transfer the PCR plate to the MJ.</li>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started MJ’ and click ‘Change State’ button.</li>
+        <p><em>This will automatically change the state of the pre-PCR plate to ‘Passed’.</em></p>
+
+    started_mj:
+      state_text: "MJ in progress"
+      instruction_summary: "Once the MJ has finished..."
+      instructions: >
+        <p>Once the program on the MJ has finished:-</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "MJ finished"
+      instruction_summary: "Create a child plate to continue working on these samples."
+      instructions: >
+        <p>When you are ready, add an empty child ‘Lib PCR-XP’ plate.</p>
+        <li>Select the ‘Create next plate’ tab.</li>
+        <li>Click on ‘Add an empty Lib PCR-XP plate’.</li>
+
+    cancelled:
+      state_text: "PCR plate cancelled"
+      instruction_summary: "PCR plate cancelled"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+  Lib PCR-XP:
+    pending:
+      state_text: "Preparing empty PCR-XP plate for MC NXp"
+      instruction_summary: "Label empty plate"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the ‘cleaned PCR’ plate</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>Once the PCR clean-up program on the MC NXp is running, change the ‘Current State’ to ‘started’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "PCR clean-up on the MC NXp in progress"
+      instruction_summary: "When PCR clean-up on the MC NXp finishes"
+      instructions: >
+        <p>Once the PCR clean-up program on the MC NXp has finished, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "PCR clean-up on the MC NXp complete"
+      instruction_summary: "Plate awaiting QC"
+      instructions: >
+        <p>Once the post-PCR Agilent and qPCR have been performed and the plate has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete’.</p>
+        <p><em>If there are any QC issues, seek advice from a senior member of the T180 library prep team.</em></p>
+        <p>Changing the PCR-XP state to QC Complete will add empty stock tubes to the LIMS.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘QC Complete’ and click ‘Change State’ button.</li>
+
+    qc_complete:
+      state_text: "QC Complete PCR-XP plate and target pool tubes"
+      instruction_summary: "Follow tube links to continue working on these samples."
+      instructions: >
+        <p>All stock MX pool labels can be printed at this point.</p>
+
+        <p>Print 2 labels for each tube.</p>
+        <li>Place one on the appropriate tube ready for pooling</li>
+        <li>Keep the other in your records for reference.</li>
+
+        <p>When you are ready to transfer a pool to it's tube:-</p>
+        <li>Follow the link to display the tube.</li>
+        <p><em>Clicking the tube links will show the tube in a new tab.</em></p>
+
+    failed:
+      state_text: "PCR-XP plate, Input plate and Library have been failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team"
+      instructions:
+
+    cancelled:
+      state_text: "PCR-XP plate cancelled"
+      instruction_summary: "PCR-XP plate has been cancelled please return to Pre-PCR plate to continue"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+  Lib PCRR-XP:
+    pending:
+      state_text: "Preparing empty PCR-XP repeat plate for MC NXp"
+      instruction_summary: "Label empty plate"
+      instructions: >
+        <p>Print 2 labels</p>
+        <li>Place one on the ‘cleaned PCR’ plate</li>
+        <li>Keep the other in your records for reference.</li>
+        <p>Once the PCR clean-up program on the MC NXp is running, change the ‘Current State’ to ‘started’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "PCR clean-up on the MC NXp in progress"
+      instruction_summary: "When PCR clean-up on the MC NXp finishes"
+      instructions: >
+        <p>Once the PCR clean-up program on the MC NXp has finished, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "PCR clean-up on the MC NXp complete"
+      instruction_summary: "Plate awaiting QC"
+      instructions: >
+        <p>Once the post-PCR Agilent and qPCR have been performed and the plate has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete’.</p>
+        <p><em>If there are any QC issues, seek advice from a senior member of the T180 library prep team.</em></p>
+        <p>Changing the PCR-XP state to QC Complete will add empty stock tubes to the LIMS.</p>
+        <li>Select the ‘Move plate to next state’ tab.</li>
+        <li>Select ‘QC Complete’ and click ‘Change State’ button.</li>
+
+    qc_complete:
+      state_text: "QC Complete PCR-XP repeat plate and target pool tubes"
+      instruction_summary: "Follow tube links to continue working on these samples."
+      instructions: >
+        <p>All stock MX pool labels can be printed at this point.</p>
+
+        <p>Print 2 labels for each tube.</p>
+        <li>Place one on the appropriate tube ready for pooling</li>
+        <li>Keep the other in your records for reference.</li>
+
+        <p>When you are ready to transfer a pool to it's tube:-</p>
+        <li>Follow the link to display the tube.</li>
+        <p><em>Clicking the tube links will show the tube in a new tab.</em></p>
+
+    failed:
+      state_text: "PCR-XP repeat plate, Input plate and Library failed."
+      instruction_summary: "Please seek advice from a senior member of the T180 Library Prep team."
+      instructions: >
+
+
+    cancelled:
+      state_text: "PCR-XP repeate plate cancelled"
+      instruction_summary: "This plate has been cancelled please return to Pre-PCR plate to continue"
+      instructions: >
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+  Lib Pool:
+    pending:
+      state_text: "Empty Lib Pool tube awaiting transfer of pool"
+      instruction_summary: "Preparing for Span8 NXp program"
+      instructions: >
+        <p>If you have not already printed the stock MX pool labels, print 2 labels for the tube.</p>
+        <li>Place one on the tube.</li>
+        <li>Keep the other in your records for reference.</li>
+
+        <p>Once the pooling program on the Span8 NXp is running, change the ‘Current State’ to ‘started’.</p>
+        <li>Select the ‘Move tube to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Span8 NXp in progress using Lib Pool tube..."
+      instruction_summary: "When Span8 NXp finishes"
+      instructions: >
+        <p>Once the pooling program on the Span8 NXp has finished, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move tube to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "Span8 NXp complete - tube awaiting Agilent and qPCR"
+      instruction_summary: "Tube awaiting QC"
+      instructions: >
+        <p>Once the post-pooling Agilent and qPCR have been performed and the pool has been deemed fit to continue, change the ‘Current State’ to ‘QC Complete’.</p>
+        <p><em>If there are any QC issues, seek advice from a senior member of the T180 library prep team.</em></p>
+        <li>Select the ‘Move tube to next state’ tab.</li>
+        <li>Select ‘QC Complete’ and click ‘Change State’ button.</li>
+
+    qc_complete:
+      state_text: "Agilent and qPCR complete for this Lib Pool tube"
+      instruction_summary: "Awaiting transfer to Lib Pool Norm tube"
+      instructions: >
+        <p>Create a child tube to continue working on this pool.</p>
+        <li>Select the ‘Create child tube’ tab.</li>
+        <li>Click on ‘Add an empty Lib Pool Norm tube’.</li>
+
+    cancelled:
+      state_text: "Lib Pool tube cancelled"
+      instruction_summary: "This tube has been cancelled please."
+      instructions: >
+        <p>This tube has been cancelled.</p>
+        <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
+
+
+
+  Lib Pool Norm:
+    pending:
+      state_text: "Empty Lib Pool Norm tube"
+      instruction_summary: "Awaiting for working dilution for clustering"
+      instructions: >
+        <p>Print 2 labels for the tube.</p>
+        <li>Place one on the tube.</li>
+        <li>Keep the other in your records for reference.</li>
+
+        <p>Once you are ready to begin making up the working dilutions for Clustering, change the ‘Current State’ to ‘started’.</p>
+        <li>Select the ‘Move tube to next state’ tab.</li>
+        <li>Select ‘Started’ and click ‘Change State’ button.</li>
+
+    started:
+      state_text: "Working Dilution in progress"
+      instruction_summary: "When working dilution is complete"
+      instructions: >
+        <p>Once you have finished making up the working dilutions for Clustering, change the ‘Current State’ to ‘passed’.</p>
+        <li>Select the ‘Move tube to next state’ tab.</li>
+        <li>Select ‘Passed’ and click ‘Change State’ button.</li>
+
+    passed:
+      state_text: "Working dilution complete. Lib Pool Norm tube ready for clustering"
+      instruction_summary: "Store tube in correct freezer."
+      instructions: ""
+

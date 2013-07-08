@@ -1,8 +1,6 @@
 <div class="tube">
   <div class="tube-view">
-    <% unless tube.aliquots.empty? -%>
-      <div id="<%= "aliquot_#{tube.uuid}" %>" class="aliquot <%= pooling_colour(tube, tube.uuid) %>">&nbsp;</div>
-    <% end -%>
+    <div id="<%= "aliquot_#{tube.uuid}" %>" class="aliquot <%= pooling_colour(tube, tube.uuid) %>">&nbsp;</div>
   </div>
 
   <ul id="information">

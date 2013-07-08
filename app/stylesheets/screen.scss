@@ -132,7 +132,7 @@ body {
   .blue              { @include background(radial-gradient(top left, #4889C4, #0A385C)); }
   .orange            { @include background(radial-gradient(top left, #FF9443, #5B1B00)); }
   .unknown-value     { @include background(radial-gradient(top left, #289AC7, #083442)); }
-  .pending           { 
+  .pending           {
     @include box-shadow(none);
     background:none;
     border: 2px dotted gray;
@@ -143,16 +143,17 @@ body {
   .started           { @extend .yellow;                                                  }
   .started_fx        { @extend .yellow;                                                  }
   .started_mj        { @extend .orange;                                                  }
+  .fx_transfer       { @extend .orange;                                                  }
   .passed            { @extend .green;                                                   }
   .qc_complete       { @include background(radial-gradient(top left, #bbbbbb, #111111)); }
   .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
   .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
   .cancelled         { @include background(radial-gradient(top left, #D30000, #480000)); }
-  .permanent-failure { 
+  .permanent-failure {
     @include background(radial-gradient(top left, #D30000, #480000));
     border: 1px gray solid;
     opacity: 0.3;
-    
+
    }
 }
 
@@ -171,7 +172,7 @@ body {
   height:70px;
   width:160px;
   padding:25px;
-  color:#fff; 
+  color:#fff;
 }
 
 .tooltip.bottom {
@@ -186,23 +187,23 @@ body {
 
 /* the overlayed element */
 .aliquot-details {
-  
+
   /* must be initially hidden */
   display:none;
-  
+
   /* place overlay on top of other elements */
   z-index:10000;
-  
+
   /* styling */
   @include background(linear-gradient(#353535,#0F0F0F));
-  
-  width:600px;  
+
+  width:600px;
   min-height:400px;
   border:3px solid #fff;
   @include border-radius(5px);
   /* CSS3 styling for latest browsers */
   -moz-box-shadow:1px 1px 9px #000;
-  -webkit-box-shadow: 1px 1px 9px #000; 
+  -webkit-box-shadow: 1px 1px 9px #000;
 }
 
 /* close button positioned on upper right corner */
@@ -264,11 +265,49 @@ table.form {
   }
 }
 
+div.wait-plate a.bed-status-scan, div.wait-plate a.bed-status-good, div.wait-plate  a.bed-status-bad {
+  display: none !important;
+}
+div.bad-plate a.bed-status-good, div.bad-plate a.bed-status-wait, div.bad-plate a.bed-status-scan {
+  display: none !important;
+}
+div.good-plate a.bed-status-bad, div.good-plate a.bed-status-wait, div.good-plate a.bed-status-scan {
+  display: none !important;
+}
+div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plate a.bed-status-wait {
+  display: none !important;
+}
+
+.ui-field-contain label.bed-label {
+  width: 4em;
+}
+.robot {
+  list-style-type: none;
+}
+
+.bad_bed h3, .bad_bed p {
+  color: red;
+  font-style: italic;
+}
+
 .instructions {
   @include border-radius(4px);
   border: 1px solid #F7C942;
   background: #FAEB9E;
   padding: 0 10px;
+}
+
+#validation_report div {
+  @include border-radius(4px);
+  padding: 10px;
+}
+#validation_report .invalid {
+  border: 1px solid #FF7A7A;
+  background: #FFE6E6;
+}
+#validation_report .valid {
+  border: 1px solid #61D457;
+  background: #C9FFC4;
 }
 
 #key .tube-view { display: inline-block; }
@@ -277,3 +316,27 @@ table.form {
   font-family: 'Monaco', 'Courier new', courier, fixed;
 }
 
+.robot {
+  list-style-type: none;
+}
+
+div.wait-plate a.bed-status-scan, div.wait-plate a.bed-status-good, div.wait-plate  a.bed-status-bad {
+  display: none !important;
+}
+div.bad-plate a.bed-status-good, div.bad-plate a.bed-status-wait, div.bad-plate a.bed-status-scan {
+  display: none !important;
+}
+div.good-plate a.bed-status-bad, div.good-plate a.bed-status-wait, div.good-plate a.bed-status-scan {
+  display: none !important;
+}
+div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plate a.bed-status-wait {
+  display: none !important;
+}
+
+.ui-field-contain label.bed-label {
+  width: 3em;
+}
+
+.print_selector .ui-controlgroup-controls {width:100%;}
+.print_selector .ui-controlgroup-controls .ui-select:first-child {width:80%;}
+.print_selector .ui-controlgroup-controls .ui-select {width:20%;}
