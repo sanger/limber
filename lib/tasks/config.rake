@@ -136,14 +136,14 @@ namespace :config do
           )
 
           presenters['ILB_STD_PCRXP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpPresenter',
+            :presenter_class      => 'Presenters::PcrXpOldPresenter',
             :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
           presenters['ILB_STD_PCRRXP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpPresenter',
+            :presenter_class      => 'Presenters::PcrXpOldPresenter',
             :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_a
