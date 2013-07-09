@@ -123,7 +123,8 @@ namespace :config do
 
           presenters['ILB_STD_PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
-            :presenter_class => 'Presenters::PcrPresenter'
+            :presenter_class => 'Presenters::PcrPresenter',
+            :tag_layout_templates => ["Illumina B vertical tagging","Illumina B tagging"]
           )
 
           presenters['ILB_STD_PCRR'].merge!(
