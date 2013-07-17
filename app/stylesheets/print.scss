@@ -58,25 +58,6 @@ h1 {
 #labware-summary-div > div{
  display:none;
 }
-#samples-information {
- border: solid 1px black;
- padding: 0;
-}
-#samples-information li{
- padding: 0 0.25em;
-}
-#samples-information .ui-li-divider{
-  border-bottom: solid 1px black;
-}
-#samples-information .ui-btn-up-e{
-  font-weight: bolder;
-  float: left;
-  clear: left;
-}
-#samples-information .ui-btn-up-c{
-  float:left;
-}
-
 #pools-information .ui-li-divider {
  border: solid 1px black;
  margin: 0.5em 0 0 0;
@@ -102,7 +83,7 @@ h1 {
 }
 
 /* Hide all the interactive stuff */
-button, .instructions, .ui-btn, .ui-navbar, #navbar, .ui-block-b, #plate-view-control, .ui-loader, #labware-summary h2 {
+button, .instructions, .ui-btn, .ui-navbar, #navbar, .ui-block-b, #plate-view-control, .ui-loader, #labware-summary h2, #samples-information {
   display: none !important;
 }
 
