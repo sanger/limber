@@ -384,18 +384,18 @@ en:
   Shear:
     pending:
       state_text: "Input DNA → ‘Shear’ - DNA shearing awaiting transfer"
-      instruction_summary: "Input DNA will be transferred to a fresh Covaris plate to generate the ‘Shear’ plate."
+      instruction_summary: "Input DNA will be transferred to a fresh Shear plate to generate the ‘Shear’ plate."
       instructions: >
-        <li>Print 2 labels – place one on the Covaris plate and keep the other in your records for reference.</li>
+        <li>Print 2 labels – place one on the Shear plate and keep the other in your records for reference.</li>
         <p>
-        When you are ready, to start adding the samples to the Covaris plate, change the ‘Current State’ to ‘started’.
+        When you are ready, to start adding the samples to the Shear plate, change the ‘Current State’ to ‘started’.
         </p>
         <li>Select the ‘Move plate to next state’ tab.</li>
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
     started:
       state_text: "Input DNA → ‘Shear’ and DNA shearing in progress"
-      instruction_summary: Once the Covaris plate has been sheared, change the ‘Current State’ to ‘passed’.
+      instruction_summary: Once the Shear plate has been sheared, change the ‘Current State’ to ‘passed’.
       instructions: >
         <li>Select the ‘Move plate to next state’ tab.</li>
         <li>Select ‘Passed’ and click ‘Change State’ button.</li>
@@ -408,20 +408,20 @@ en:
         <li>Click on ‘Add an empty Post Shear plate’.</li>
 
     cancelled:
-      state_text: "Covaris plate cancelled"
-      instruction_summary: "Covaris plate cancelled"
+      state_text: "Shear plate cancelled"
+      instruction_summary: "Shear plate cancelled"
       instructions: >
         <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
 
   Post Shear:
     pending:
-      state_text: "DNA in the ‘Covaris awaiting transfer to empty plate"
+      state_text: "DNA in the ‘Shear awaiting transfer to empty plate"
       instruction_summary: "Transfer of sheared samples to 96-well semi-skirted ‘sheared’ plate"
       instructions: >
         <p>Print 2 labels</p>
         <li>Place one on the 96-well semi-skirted ‘sheared’ plate that goes on to the FX</li>
         <li>Keep the other in your records for reference.</li>
-        <p>When you are ready, to transfer the sheared samples from the Covaris plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘started’</p>
+        <p>When you are ready, to transfer the sheared samples from the Shear plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘started’</p>
         <li>Select the ‘Move plate to next state’ tab.</li>
         <li>Select ‘Started’ and click ‘Change State’ button.</li>
 
@@ -429,7 +429,7 @@ en:
       state_text: "Shear’ → ‘Post Shear’ transfer in progress"
       instruction_summary: "Transfer in Progress"
       instructions: >
-        <p>Once the sheared samples have been transferred from the Covaris plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘passed’.</p>
+        <p>Once the sheared samples have been transferred from the Shear plate to the 96-well semi-skirted ‘sheared’ plate, change the ‘Current State’ to ‘passed’.</p>
         <li>Select the ‘Move plate to next state’ tab.</li>
         <li>Select ‘Passed’ and click ‘Change State’ button.</li>
 

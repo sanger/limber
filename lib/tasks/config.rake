@@ -16,6 +16,7 @@ namespace :config do
     'Cherrypicked',
     'Shear',
     'Post Shear',
+    'Post Shear XP',
     'AL Libs',
     'Lib PCR',
     'Lib PCRR',
@@ -172,7 +173,15 @@ namespace :config do
 
           presenters['Post Shear'].merge!(
             :presenter_class     => 'Presenters::QcBranchCompletablePresenter',
-            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
+            :locations_children  => {
+              'illumina_a' => 'Post Shear XP',
+              'illumina_b' => 'AL Libs'
+            }
+          )
+
+          presenters['Post Shear XP'].merge!(
+            :presenter_class     => 'Presenters::StandardPresenter'
           )
 
           presenters['Post Shear QC'].merge!(
