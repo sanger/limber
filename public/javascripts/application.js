@@ -148,6 +148,7 @@
       activate: function(){
           $('#summary-information').fadeIn('fast');
           that.statusColour();
+          that.colourPools();
 
       },
 
