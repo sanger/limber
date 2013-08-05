@@ -3,10 +3,11 @@
   <head>
     <title>Sequencescape - Illumina-B Pipeline</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <%= stylesheet_link_tag "jquery-mobile", "formtastic", "screen" %>
-  
+    <%= stylesheet_link_tag "print", :media=>'print' %>
+
     <%= javascript_include_tag 'jquery', 'underscore' %>
     <script type="text/javascript" charset="utf-8">
       $(document).on("mobileinit", function(){

@@ -1,3 +1,96 @@
 /* Welcome to Compass. Use this file to define print styles.
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> */
+
+
+/// Compass Utils
+@import "compass/css3/border-radius";
+@import "print-colours";
+
+h1 {
+  font-size:larger;
+  display: inline;
+  font-family: sans-serif;
+}
+.plate-view {
+  border: 1px solid black;
+  float:left;
+  clear:left;
+  margin: 5mm 0;
+  @include border-radius(15px);
+  @include border-top-left-radius(0);
+}
+.well {
+  width:5mm;
+  height:5mm;
+  padding:0;
+  margin:0;
+  border:1px solid black;
+  @include border-radius(5mm);
+}
+
+.aliquot {
+  @include border-radius(50%);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Tell chrome to render backgrounds. This isn't actually
+   * required, as we also use a drop-shadow to force Mozilla
+   * browsers to also colour prints. But it adds a layer of
+   * robustness if webkit/blink goes the way of IE and stops
+   * rendering drop-shadows on printouts */
+  -webkit-print-color-adjust: exact;
+}
+#pools-information, #samples-information {
+  width:40%;
+  float:right;
+  clear:right;
+}
+#summary-information {
+  float:left;
+  margin:3mm;
+  padding:0;
+}
+#labware-summary-div {
+  position: relative;
+}
+#labware-summary-div > div{
+ display:none;
+}
+#pools-information .ui-li-divider {
+ border: solid 1px black;
+ margin: 0.5em 0 0 0;
+ padding: 0.25em;
+}
+#pools-information .ui-li-static {
+ border: solid 1px black;
+ border-top: none;
+ margin: 0;
+ padding: 0.25em;
+}
+#pools-information H3 {
+  display: inline;
+  font-size: 12pt;
+  padding-right:0.5em;
+}
+#pools-information P {
+  font-size:12pt;
+}
+
+#pools-information, #samples-information, #summary-information {
+  display: inline !important;
+}
+
+/* Hide all the interactive stuff */
+button, .instructions, .ui-btn, .ui-navbar, #navbar, .ui-block-b, #plate-view-control, .ui-loader, #labware-summary h2, #samples-information {
+  display: none !important;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: serif;
+}
