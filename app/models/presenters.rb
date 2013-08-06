@@ -58,8 +58,6 @@ module Presenters
     # This is now generated dynamically by the LabwareHelper
     class_inheritable_reader    :tab_states
 
-    class_inheritable_reader :robot_name
-
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],
@@ -68,6 +66,27 @@ module Presenters
         :cancelled  =>  [ 'labware-summary-button' ],
         :failed     =>  [ 'labware-summary-button' ]
     }
+
+    class_inheritable_reader    :robot_controlled_states
+    write_inheritable_attribute :robot_controlled_states, {
+    }
+
+    def robot_name
+      robot_controlled_states[labware.state.to_sym]
+    end
+
+    def robot_exists?
+      Settings.robots[location][robot_name].present?
+    end
+
+    def statechange_link(view)
+      robot_exists? ? "#{view.robot_path(robot_name)}/#{location}" : '#'
+    end
+
+    def statechange_label
+      robot_exists? ? "Bed verification" : 'Move plate to next state'
+    end
+
 
     def plate_to_walk
       self.labware

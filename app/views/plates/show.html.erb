@@ -16,8 +16,7 @@
       <ul id="navbar">
         <li id="labware-summary-button"><a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li id="robot-verification-button"><a href="<%= @presenter.robot_name.present? ? "#{robot_path(@presenter.robot_name)}/#{@presenter.location}" : '#' %>" class="navbar-link" rel="robot-verification-button" data-icon="gear">Robot Verification</a></li>
-          <li id="labware-state-button"><a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move plate to next state</a></li>
+          <li id="labware-state-button"><a href="<%= @presenter.statechange_link(self) %>" class="navbar-link" rel="labware-state-button" data-icon="gear"><%= @presenter.statechange_label %></a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
           <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create next plate</a></li>
         <% end -%>

@@ -3,17 +3,18 @@ module Presenters
     include Presenters::Statemachine
 
     write_inheritable_attribute :authenticated_tab_states, {
-      :pending     => [ 'labware-summary-button', 'robot-verification-button' ],
-      :started     => [ 'labware-summary-button', 'labware-creation-button', 'robot-verification-button' ],
+      :pending     => [ 'labware-summary-button', 'labware-state-button' ],
+      :started     => [ 'labware-summary-button', 'labware-creation-button', 'labware-state-button' ],
       :passed      => [ 'labware-summary-button', 'labware-creation-button', 'well-failing-button' ],
       :fx_transfer => [ 'labware-summary-button' ],
       :cancelled   => [ 'labware-summary-button' ],
       :failed      => [ 'labware-summary-button' ]
     }
 
-    def robot_name
-      labware.state == 'pending' ? 'fx' : 'fx-add-tags'
-    end
+    write_inheritable_attribute :robot_controlled_states, {
+      :pending => 'fx',
+      :started => 'fx-add-tags'
+    }
 
     state_machine :state, :initial => :pending do
       Statemachine::StateTransitions.inject(self)
