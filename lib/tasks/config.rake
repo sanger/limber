@@ -171,6 +171,10 @@ namespace :config do
             :presenter_class => 'Presenters::StockPlatePresenter'
           )
 
+          presenters['Shear'].merge!(
+            :presenter_class => 'Presenters::ShearPlatePresenter'
+          )
+
           presenters['Post Shear'].merge!(
             :presenter_class     => 'Presenters::QcBranchCompletablePresenter',
             :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
@@ -181,11 +185,11 @@ namespace :config do
           )
 
           presenters['Post Shear XP'].merge!(
-            :presenter_class     => 'Presenters::StandardPresenter'
+            :presenter_class     => 'Presenters::PostShearXpPresenter'
           )
 
           presenters['Post Shear QC'].merge!(
-            :presenter_class     => 'Presenters::QcPlatePresenter'
+            :presenter_class     => 'Presenters::PostShearQcPlatePresenter'
           )
 
           presenters['AL Libs'].merge!(
@@ -214,7 +218,7 @@ namespace :config do
 
 
           presenters['Lib PCR-XP QC'].merge!(
-            :presenter_class     => 'Presenters::QcPlatePresenter',
+            :presenter_class     => 'Presenters::LibPcrXpQcPlatePresenter',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
@@ -228,7 +232,7 @@ namespace :config do
           )
 
           presenters['Lib PCRR-XP QC'].merge!(
-            :presenter_class     => 'Presenters::QcPlatePresenter',
+            :presenter_class     => 'Presenters::LibPcrXpQcPlatePresenter',
             :default_printer_type => :plate_b
           )
 
