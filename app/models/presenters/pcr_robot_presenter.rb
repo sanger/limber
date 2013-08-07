@@ -8,7 +8,7 @@ module Presenters
       :pending    => [ 'labware-summary-button', 'labware-state-button'],
       :started_fx => [ 'labware-summary-button', 'labware-state-button'],
       :started_mj => [ 'labware-summary-button', 'labware-state-button'],
-      :passed     => [ 'labware-summary-button', 'labware-state-button' 'labware-creation-button',  ],
+      :passed     => [ 'labware-summary-button', 'labware-state-button', 'labware-creation-button'  ],
       :cancelled  => [ 'labware-summary-button' ],
       :failed     => [ 'labware-summary-button' ]
     }
