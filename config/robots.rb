@@ -82,8 +82,8 @@ ROBOT_CONFIG = {
       :name => 'Illumina A Bravo Lib-PCR XP to Lib-PCR XP QC',
       :layout => 'bed',
       :beds => {
-        BED[1] => {:order=>1, :purpose => 'Lib-PCR XP',    :states => ['passed'],  :label => 'Post Shear Plate'},
-        BED[9] => {:order=>2, :purpose => 'Lib-PCR XP QC', :states => ['pending'], :label => 'Post Shear XP Plate', :parent =>BED[1], :target_state => 'started'},
+        BED[1] => {:order=>1, :purpose => 'Lib PCR-XP',    :states => ['passed'],  :label => 'Post Shear Plate'},
+        BED[9] => {:order=>2, :purpose => 'Lib PCR-XP QC', :states => ['pending'], :label => 'Post Shear XP Plate', :parent =>BED[1], :target_state => 'started'},
       }
     },
     'fx' => {
