@@ -297,6 +297,14 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   padding: 0 10px;
 }
 
+.interface {
+  @include border-radius(4px);
+  border: 1px solid #AAAAAA;
+  background: #DDDDDD;
+  padding: 10px;
+  margin: 0 10px;
+}
+
 #validation_report div {
   @include border-radius(4px);
   padding: 10px;

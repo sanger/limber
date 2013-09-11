@@ -18,7 +18,7 @@ module Presenters
 
     class_inheritable_reader    :tab_views
     write_inheritable_attribute :tab_views, {
-      'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
+      'labware-summary-button'  => [ 'labware-summary', 'tube-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'tube-creation' ],
       'labware-state-button'    => [ 'labware-summary', 'tube-state' ]
     }
@@ -28,8 +28,8 @@ module Presenters
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
-        :started     => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed      => [ 'labware-state-button', 'labware-summary-button' ],
+        :started     => [ 'labware-summary-button', 'labware-state-button' ],
+        :passed      => [ 'labware-summary-button', 'labware-state-button' ],
         :qc_complete => [ 'labware-summary-button' ],
         :cancelled   => [ 'labware-summary-button' ],
         :failed      => [ 'labware-summary-button' ]

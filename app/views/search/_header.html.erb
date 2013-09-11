@@ -4,7 +4,6 @@
     <ul>
       <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
       <li><a href="#popupInbox" data-rel="popup" data-inline="true" data-transition="flip">Inboxes</a></li>
-      <li><a href="#popupRobot" data-rel="popup" data-inline="true" data-transition="flip">Robots</a></li>
     </ul>
   </div>
 </div>
@@ -16,16 +15,5 @@
       <li data-role="divider" data-theme="b">Illumina-B</li>
       <li><a href="<%= all_illumina_b_stock_plates_path %>" >New Input Plates</a></li>
       <li><a href="<%= ongoing_illumina_b_plates_path %>" >All Ongoing Plates</a></li>
-  </ul>
-</div>
-<div data-role="popup" id="popupRobot" data-theme="b">
-  <ul data-role="listview" data-inset="true" style="min-width:210px;">
-      <li data-role="divider" data-theme="b">Choose a robot</li>
-      <% Settings.robots.each do |location,robots| %>
-        <li data-role="divider" data-theme="b"><%= location %></li>
-        <% robots.each do |id,robot| %>
-          <li><a href="<%= robot_path(id) %>/<%= location %>" ><%= robot.name.titleize %> Robot</a></li>
-        <% end %>
-      <% end %>
   </ul>
 </div>
