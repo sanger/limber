@@ -9,4 +9,7 @@ class Presenters::PcrXpOldPresenter < Presenters::PcrXpPresenter
     :failed      => [ 'labware-summary-button' ]
   }
 
+  write_inheritable_attribute :robot_controlled_states, {
+  }
+
 end
