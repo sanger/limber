@@ -4,9 +4,9 @@ module Presenters
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
-        :started     => [ 'labware-state-button', 'labware-summary-button' ],
-        :passed      => [ 'labware-state-button', 'labware-summary-button' ],
-        :qc_complete => [ 'labware-creation-button','labware-summary-button' ],
+        :started     => [ 'labware-summary-button', 'labware-state-button' ],
+        :passed      => [ 'labware-summary-button', 'labware-state-button' ],
+        :qc_complete => [ 'labware-summary-button', 'labware-creation-button' ],
         :cancelled   => [ 'labware-summary-button' ],
         :failed      => [ 'labware-summary-button' ]
     }
@@ -57,7 +57,12 @@ module Presenters
         def has_qc_data?; true; end
 
         def control_additional_creation(&block)
-          yield unless default_child_purpose.nil?
+          yield unless default_child_purpose.nil? || labware.requests.size > 0
+          nil
+        end
+
+        def control_child_links(&block)
+          yield if labware.requests.size > 0
           nil
         end
 
