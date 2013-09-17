@@ -7,7 +7,7 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
   end
 
   def qc_created?
-    labware.source_transfers.count >= 1
+    labware.source_transfers.size >= 1
   end
 
   def create_stock_tubes!
