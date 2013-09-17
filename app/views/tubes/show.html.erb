@@ -67,6 +67,10 @@
               <h2>Create Child Tube</h2>
               <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
             <% end %>
+            <%= @presenter.control_child_links do %>
+              <h2>Link to created tubes</h2>
+              <a href="<%= illumina_b_tube_path(@presenter.labware.requests.first.target_asset.uuid)%>">Multiplexed Library Tube</a>
+            <% end %>
           </div>
 
         </div>

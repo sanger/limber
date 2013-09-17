@@ -33,6 +33,10 @@ module Presenters
       "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
     end
 
+    def control_child_links(&block)
+      # Mostly, no.
+    end
+
     # The state is delegated to the tube
     delegate :state, :to => :labware
 

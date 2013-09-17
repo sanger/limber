@@ -61,6 +61,11 @@ module Presenters
           nil
         end
 
+        def control_child_links(&block)
+          yield if labware.requests.size > 0
+          nil
+        end
+
         # Returns the child plate purposes that can be created in the qc_complete state.
         def default_child_purpose
           purpose.children.first
