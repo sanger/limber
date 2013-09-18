@@ -76,6 +76,10 @@ module Presenters
       end
 
     end
+    
+    def control_child_links
+      # Do nothing
+    end
 
     # The state is delegated to the tube
     delegate :state, :to => :labware
