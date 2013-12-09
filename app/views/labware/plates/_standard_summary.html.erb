@@ -1,5 +1,5 @@
 <div id="labware-summary-div">
-  <h2>Plate Status - <%= presenter.labware.state.titleize %></h2>
+  <h2>Plate Status - <%= presenter.labware.state.titleize %> <%= image_tag("icon_#{presenter.labware.priority}_flag.png", :size=>"16x16") %></h2>
   <%= render :partial => "plate", :locals => {:plate_presenter => presenter}  %>
   <%= render :partial => 'plate_information', :locals => { :plate => presenter.labware } %>
 </div>

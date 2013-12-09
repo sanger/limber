@@ -5,6 +5,9 @@
     <% sorted_plates.each do |plate| -%>
       <li>
       <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit") do %>
+        <% if plate.priority > 0 %>
+           <img src='/images/icon_<%= plate.priority %>_flag.png' class='ui-li-icon'/>
+        <% end %>
         <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
         <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
         <% if plate.stock_plate.present? %><p>Input plate: <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
