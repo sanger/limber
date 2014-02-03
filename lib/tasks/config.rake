@@ -180,7 +180,7 @@ namespace :config do
             :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
             :locations_children  => {
               'illumina_a' => 'Post Shear XP',
-              'illumina_b' => 'AL Libs'
+              'illumina_b' => 'Post Shear XP'
             }
           )
 
