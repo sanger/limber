@@ -1,6 +1,6 @@
 GIT
   remote: git+ssh://git@github.com/JamesGlover/sequencescape-client-api.git
-  revision: afb2c0a12d8880045f4c7f6d632c1f447e6e7665
+  revision: 36a1b31288997594fa1fa9c5cdfe2437e84f48b7
   branch: tag_qc_r23
   specs:
     sequencescape-client-api (0.2.2)
@@ -101,7 +101,7 @@ GEM
     hashie (1.0.0)
     httpi (0.9.5)
       rack
-    i18n (0.5.0)
+    i18n (0.5.3)
     json (1.6.0)
     json_pure (1.6.0)
     launchy (2.0.5)
