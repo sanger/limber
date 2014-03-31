@@ -3,9 +3,11 @@ module Forms
     include Forms::Form::CustomPage
 
     write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions]
+    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions, :tag_plate_uuid, :tag_plate_barcode]
 
     validates_presence_of *(self.attributes - [:substitutions])
+
+    attr_reader :plate_conversion
 
     def initialize(*args, &block)
       super
@@ -20,12 +22,12 @@ module Forms
       maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
 
       @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select { |template|
-        (template.tag_group.tags.size >= maximum_pool_size) && (Settings.purposes[purpose_uuid].tag_layout_templates.include?(template.name) )
-      }.sort_by! {|template| Settings.purposes[purpose_uuid].tag_layout_templates.index(template.name) }
+        template.tag_group.tags.size >= maximum_pool_size
+      }
 
       @tag_groups = Hash[
         tag_layout_templates.map do |layout|
-          catch(:unacceptable_tag_layout) { [ layout.name, tags_by_row(layout) ] }
+          catch(:unacceptable_tag_layout) { [ layout.uuid, tags_by_row(layout) ] }
         end.compact
       ]
 
@@ -76,6 +78,37 @@ module Forms
       structured_well_locations { |tagged_wells| layout.generate_tag_layout(plate, tagged_wells) }.to_a
     end
     private :tags_by_row
+
+    def child
+      plate_conversion.try(:target) || :child_not_created
+    end
+
+    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
+
+      api.state_change.create!(
+        :user => user_uuid,
+        :target => tag_plate_uuid,
+        :reason => 'Used in Library creation',
+        :target_state => 'exhausted'
+      )
+
+      # Convert plate instead of creating it
+      @plate_conversion = api.plate_conversion.create!(
+        :target => tag_plate_uuid,
+        :purpose => purpose_uuid,
+        :user => user_uuid,
+        :parent => parent_uuid
+      )
+
+      api.transfer_template.find(selected_transfer_template_uuid).create!(
+        :source      => parent_uuid,
+        :destination => tag_plate_uuid,
+        :user        => user_uuid
+      )
+
+      yield(@plate_conversion.target) if block_given?
+      true
+    end
 
     def create_objects!
       create_plate! do |plate|

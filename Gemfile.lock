@@ -1,4 +1,15 @@
 GIT
+  remote: git+ssh://git@github.com/JamesGlover/sequencescape-client-api.git
+  revision: afb2c0a12d8880045f4c7f6d632c1f447e6e7665
+  branch: tag_qc_r23
+  specs:
+    sequencescape-client-api (0.2.2)
+      activemodel (~> 3.0.0)
+      activesupport (~> 3.0.0)
+      i18n
+      yajl-ruby (~> 1.1.0)
+
+GIT
   remote: git+ssh://git@github.com/sanger/psd_logger.git
   revision: dd2d634114df75b1d8535715c169a7fc99521389
   specs:
@@ -10,17 +21,6 @@ GIT
   specs:
     sanger_barcode (0.0.1)
       savon (= 0.9.2)
-
-GIT
-  remote: git+ssh://git@github.com/sanger/sequencescape-client-api.git
-  revision: eb3bad1642ac4186fc3b3fc283526fd1af894fa9
-  branch: production
-  specs:
-    sequencescape-client-api (0.2.2)
-      activemodel (~> 3.0.0)
-      activesupport (~> 3.0.0)
-      i18n
-      yajl-ruby (~> 1.1.0)
 
 GEM
   remote: http://rubygems.org/
