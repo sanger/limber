@@ -471,6 +471,7 @@
         $('#plate_tag_layout_template_uuid').val(qcable.template_uuid);
       },
       validPlate: function(qcable) {
+        this.errors = '';
         if (qcable.state !== 'available') { this.errors += ' Plate is not available.' };
         if (qcable.type  !== 'IDT Tags') { this.errors += ' Plate is not a suitable tag plate.' };
         if (SCAPE.tag_layouts[qcable.template_uuid] === undefined) { this.errors += ' Unknown tag template.'}
