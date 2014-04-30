@@ -27,18 +27,18 @@ class LabwareController < ApplicationController
   private :state_changer_for
 
   def show
-    begin
-      @presenter = presenter_for(@labware)
+    @presenter = presenter_for(@labware)
+    @presenter.suitable_labware do
       respond_to do |format|
         format.html { render @presenter.page }
         format.csv
       end
-    rescue Presenters::PlatePresenter::UnknownPlateType => exception
-      redirect_to(
-        search_path,
-        :notice => "#{exception.message}. Perhaps you are using the wrong pipeline application?"
-      )
+      return true
     end
+    redirect_to(
+      search_path,
+      :notice => @presenter.errors
+    )
   end
 
   def update
