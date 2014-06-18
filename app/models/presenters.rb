@@ -1,4 +1,7 @@
 module Presenters
+
+  class LocationError < StandardError; end
+
   module Presenter
     def self.included(base)
       base.class_eval do
@@ -22,6 +25,14 @@ module Presenters
 
     def printer_limit
       @printer_limit ||= Settings.printers['limit']
+    end
+
+    def suitable_labware
+      yield
+    end
+
+    def errors
+      nil
     end
 
   end
@@ -92,9 +103,16 @@ module Presenters
       self.labware
     end
 
-
     def location
-      Settings.locations[labware.location]
+      Settings.locations[labware.location]||:unknown
+    end
+
+    def suitable_labware
+      yield unless location == :unknown
+    end
+
+    def errors
+      location == :unknown ? "Plate has not been scanned into an appropriate freezer" : nil
     end
 
     # Purpose returns the plate or tube purpose of the labware.
@@ -140,14 +158,19 @@ module Presenters
     class UnknownPlateType < StandardError
       attr_reader :plate
 
-      def initialize(plate)
-        super("Unknown plate type #{plate.plate_purpose.name.inspect}")
-        @plate = plate
+      def errors
+        "Unknown plate type #{plate.plate_purpose.name.inspect}. Perhaps you are using the wrong pipeline application?"
+      end
+
+      def suitable_labware; false; end
+
+      def initialize(opts)
+        @plate = opts[:labware]
       end
     end
 
     def self.lookup_for(labware)
-      presentation_classes = Settings.purposes[labware.plate_purpose.uuid] or raise UnknownPlateType, labware
+      presentation_classes = Settings.purposes[labware.plate_purpose.uuid] or return UnknownPlateType
       presentation_classes[:presenter_class].constantize
     end
   end

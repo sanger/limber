@@ -1,5 +1,8 @@
 class SearchController < ApplicationController
-  before_filter :clear_current_user!
+
+  class InputError < StandardError; end
+
+  before_filter :clear_current_user!, :except => [:tag_plates]
 
   before_filter :check_for_login!, :only => [:create_or_find, :stock_plates ]
 
@@ -49,6 +52,18 @@ class SearchController < ApplicationController
     )
   end
 
+  def tag_plates
+    raise InputError, "You have not supplied a barcode" if params[:tag_plate_barcode].blank?
+    raise InputError, "#{params[:tag_plate_barcode]} is not a valid barcode" unless /^[0-9]{13}$/===params[:tag_plate_barcode]
+    respond_to do |format|
+      format.json {
+          redirect_to find_qcable(params[:tag_plate_barcode])
+      }
+    end
+  rescue Sequencescape::Api::ResourceNotFound, InputError => exception
+    render :json => {'error' => exception.message }
+  end
+
   def create_or_find
     params['show-my-plates'] == 'true' ? my_plates : create
 
@@ -87,6 +102,12 @@ class SearchController < ApplicationController
     api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
     raise exception, 'Sorry, could not find labware with the specified barcode.'
+  end
+
+  def find_qcable(barcode)
+    api.search.find(Settings.searches['Find qcable by barcode']).first(:barcode => barcode)
+  rescue Sequencescape::Api::ResourceNotFound => exception
+    raise exception, 'Sorry, could not find qcable with the specified barcode.'
   end
 
   def retrieve_parent
