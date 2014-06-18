@@ -1,14 +1,6 @@
 <%= page(:'search-page') do %>
-  <div data-role="header">
-    <h1>Sequencescape - Illumina-B Pipeline</h1>
-    <div data-role="navbar">
-      <ul>
-        <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
-        <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
-        <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
-      </ul>
-    </div>
-  </div>
+
+  <%= render :partial => 'header' %>
 
   <%= content do %>
     <%= flash_messages %>

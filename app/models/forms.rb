@@ -96,6 +96,10 @@ module Forms
       labware.plate_purpose
     end
 
+    def label_text
+      "#{labware.label.prefix} #{labware.label.text}"
+    end
+
     def save!
       raise StandardError, 'Invalid data' unless valid?
 

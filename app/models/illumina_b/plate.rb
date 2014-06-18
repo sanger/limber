@@ -8,7 +8,10 @@ class IlluminaB::Plate < Sequencescape::Plate
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [
-    'ILB_STD_PCRXP'
+    'ILB_STD_PCRXP',
+    'ILB_STD_PCRRXP',
+    'Lib PCR-XP',
+    'Lib PCRR-XP'
   ]
 
   def is_a_final_pooling_plate?

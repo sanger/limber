@@ -1,0 +1,38 @@
+<%= page(:"robot-verification-#{robot.layout}") do %>
+
+  <%= header do %>
+    <h1>Validate Plate Beds</h1>
+  <% end %>
+
+  <%= content do %>
+    <%= flash_messages %>
+    <h2><%= robot.name %></h2>
+    <%= form_for :robot, :url => "#{robot_path(robot.id)}/#{robot.location}/start" do |form| %>
+      <div class="ui-grid-a">
+        <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
+
+        <div class="ui-block-b">
+          <div id="robot-verification" class="scape-ui-block" >
+            <div class="instructions ui-body">
+              <h3><%= t("robots.#{robot.id}.instruction_summary") %></h3>
+              <ol>
+                <%= t("robots.#{robot.id}.instructions").html_safe %>
+              </ol>
+            </div>
+
+            <h2>Start Robot</h2>
+              <%= submit_tag "Start the #{robot.name}",
+                :name           => nil,
+                :class          => "submit",
+                :id             => 'start-robot',
+                :'data-icon'    => "arrow-r",
+                :'data-iconpos' => "right",
+                :'data-theme'   => "b",
+                :disabled       => true
+              %>
+          </div>
+        </div>
+      </div>
+    <% end # of form%>
+  <% end %>
+<% end %>

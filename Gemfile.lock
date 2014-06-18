@@ -1,8 +1,8 @@
 GIT
   remote: git+ssh://git@github.com/sanger/psd_logger.git
-  revision: e16d106be39ea096f95787a927b8ce24ec522bde
+  revision: dd2d634114df75b1d8535715c169a7fc99521389
   specs:
-    psd_logger (0.1.5)
+    psd_logger (0.1.6)
 
 GIT
   remote: git+ssh://git@github.com/sanger/sanger_barcode.git
@@ -13,10 +13,10 @@ GIT
 
 GIT
   remote: git+ssh://git@github.com/sanger/sequencescape-client-api.git
-  revision: 751a068e777b1ffddae870ad837a4b192565939b
-  branch: master
+  revision: eb3bad1642ac4186fc3b3fc283526fd1af894fa9
+  branch: production
   specs:
-    sequencescape-client-api (0.0.1)
+    sequencescape-client-api (0.2.2)
       activemodel (~> 3.0.0)
       activesupport (~> 3.0.0)
       i18n
@@ -193,6 +193,6 @@ DEPENDENCIES
   rake (~> 0.9.2)
   ruby-debug19
   sanger_barcode!
-  sequencescape-client-api!
+  sequencescape-client-api (>= 0.2.2)!
   state_machine (~> 1.0.1)
   thin

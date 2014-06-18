@@ -1,0 +1,16 @@
+<div class="ui-block-a">
+  <ul class="robot cytomat">
+    <% robot.beds.each do |bed_id, bed| %>
+      <li class='bed-item' id="bed_<%= bed_id %>_list">
+        <div data-role="fieldcontain" class="bed-container scan-plate">
+          <label for="bed[<%= bed_id %>]" class="bed-label"><%= bed_id %></label>
+          <input id="bed[<%= bed_id %>]" name="bed[<%= bed_id %>]" placeholder="<%= bed.label %>" class="bed" data-parent="<%= bed.parent %>" tabindex="1"/>
+          <a href="#" data-role="button" data-icon="edit" data-iconpos="notext" data-theme="d" data-inline="true" class="bed-status-scan" tabindex="3">Scan</a>
+          <a href="#" data-role="button" data-icon="gear" data-iconpos="notext" data-theme="d" data-inline="true" class="bed-status-wait" tabindex="3">Wait</a>
+          <a href="#" data-role="button" data-icon="check" data-iconpos="notext" data-theme="b" data-inline="true" class="bed-status-good" tabindex="3">Good</a>
+          <a href="#" data-role="button" data-icon="alert" data-iconpos="notext" data-theme="a" data-inline="true" class="bed-status-bad" tabindex="3">Bad</a>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

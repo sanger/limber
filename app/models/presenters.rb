@@ -4,6 +4,8 @@ module Presenters
       base.class_eval do
         include Forms::Form
         write_inheritable_attribute :page, 'show'
+
+        def has_qc_data?; false; end
       end
     end
 
@@ -11,7 +13,15 @@ module Presenters
     end
 
     def default_printer_uuid
-      @default_printer_uuid ||= Settings.purposes[purpose.uuid].default_printer_uuid
+      @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+    end
+
+    def default_label_count
+      @default_label_count ||= Settings.printers['default_count']
+    end
+
+    def printer_limit
+      @printer_limit ||= Settings.printers['limit']
     end
 
   end
@@ -57,8 +67,34 @@ module Presenters
         :failed     =>  [ 'labware-summary-button' ]
     }
 
+    class_inheritable_reader    :robot_controlled_states
+    write_inheritable_attribute :robot_controlled_states, {
+    }
+
+    def robot_name
+      robot_controlled_states[labware.state.to_sym]
+    end
+
+    def robot_exists?
+      Settings.robots[location][robot_name].present?
+    end
+
+    def statechange_link(view)
+      robot_exists? ? "#{view.robot_path(robot_name)}/#{location}" : '#'
+    end
+
+    def statechange_label
+      robot_exists? ? "Bed verification" : 'Move plate to next state'
+    end
+
+
     def plate_to_walk
       self.labware
+    end
+
+
+    def location
+      Settings.locations[labware.location]
     end
 
     # Purpose returns the plate or tube purpose of the labware.
@@ -70,6 +106,10 @@ module Presenters
     end
 
     def allow_plate_label_printing?; true end
+
+    def label_text
+      "#{labware.label.prefix} #{labware.label.text}"
+    end
 
     def control_worksheet_printing(&block)
       yield
@@ -83,6 +123,10 @@ module Presenters
     def transfers
       transfers = self.labware.creation_transfer.transfers
       transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
+    end
+
+    def qc_owner
+      labware
     end
 
     # Split a location string into an array containing the row letter

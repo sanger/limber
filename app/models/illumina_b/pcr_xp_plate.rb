@@ -26,7 +26,7 @@ class IlluminaB::PcrXpPlate < Sequencescape::Plate
   # We know that if there are any transfers with this plate as a source then they are into
   # tubes.
   def has_transfers_to_tubes?
-    not well_to_tube_transfers.empty?
+    not transfers_to_tubes.empty?
   end
 
   # Well locations ordered by rows.
@@ -36,7 +36,7 @@ class IlluminaB::PcrXpPlate < Sequencescape::Plate
   def tubes
     @tubes ||= case has_transfers_to_tubes?
        when false then []
-       when true  then 
+       when true  then
          WELLS_IN_ROW_MAJOR_ORDER.
            map(&well_to_tube_transfers.method(:[])).
            compact.

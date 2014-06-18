@@ -10,7 +10,7 @@ module LabwareHelper
     define_method(:"#{name}_colour") do |*args|
       return 'failed' if FAILED_STATES.include?(args.first)  # First argument is always the well
       @colours  ||= Hash.new { |h,k| h[k] = STANDARD_COLOURS.dup }
-      @rotating ||= Hash.new { |h,k| h[k] = @colours[name].rotate!.first }
+      @rotating ||= Hash.new { |h,k| h[k] = @colours[name].rotate!.last } # Go for last as it was first before the rotate
       @rotating[block.call(*args)]
     end
   end
@@ -116,7 +116,7 @@ module LabwareHelper
     container.state == 'failed' ? 'permanent-failure' : container.state
   end
 
-  def labware_type_and_state 
+  def labware_type_and_state
     "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
   end
 end

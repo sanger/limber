@@ -2,9 +2,12 @@ class BarcodeLabelsController < ApplicationController
   before_filter :initialize_printer_and_barcode_service
   def initialize_printer_and_barcode_service
     raise StandardError, "No printer specified!" if params[:printer].blank?
+    raise StandardError, "No copies specified!" if params[:number].blank? || params[:number].to_i <= 0
+    raise StandardError, "Can only request up to #{Settings.printers.limit} copies!" if params[:number].to_i > Settings.printers.limit
 
     @printer = api.barcode_printer.find(params[:printer])
     @service = Sanger::Barcode::Printing::Service.new(@printer.service.url)
+    @copies = params[:number].to_i
   end
   private :initialize_printer_and_barcode_service
 
@@ -16,7 +19,7 @@ class BarcodeLabelsController < ApplicationController
 
   # Does the actual printing of the labels passed
   def print(labels)
-    @service.print_labels(Array(labels), @printer.name, @printer.type.layout)
+    @service.print_labels(Array(labels)*@copies, @printer.name, @printer.type.layout)
   end
   private :print
 

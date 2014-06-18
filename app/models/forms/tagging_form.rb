@@ -19,10 +19,9 @@ module Forms
     def generate_layouts_and_groups
       maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
 
-      # [sd9] Magic symbol (Illumina B) alert, sorry...
       @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select { |template|
-        (template.tag_group.tags.size >= maximum_pool_size) && (template.name =~ /Illumina B/)
-      }
+        (template.tag_group.tags.size >= maximum_pool_size) && (Settings.purposes[purpose_uuid].tag_layout_templates.include?(template.name) )
+      }.sort_by! {|template| Settings.purposes[purpose_uuid].tag_layout_templates.index(template.name) }
 
       @tag_groups = Hash[
         tag_layout_templates.map do |layout|
