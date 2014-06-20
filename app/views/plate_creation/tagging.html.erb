@@ -9,13 +9,31 @@
       <%= f.inputs do %>
         <%= f.input :purpose_uuid, :as => :hidden, :value =>@creation_form.purpose_uuid %>
         <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
-        <%= f.input :tag_layout_template_uuid, :label => false, :as => :select, :collection => @creation_form.tag_layout_templates, :include_blank => false %>
+        <div data-role="fieldcontain">
+        <%= f.input :tag_plate_barcode %>
+        </div>
+        <%= f.input :qcable_uuid, :as => :hidden, :value => nil %>
+        <%= f.input :tag_plate_uuid, :as => :hidden, :value => nil %>
+        <%= f.input :tag_layout_template_uuid, :label => false, :as => :hidden, :required=> true %>
       <%- end -%>
     <br/>
+    <div id="tag-plate-info" class="interface ui-body">
+      <div id='validation_report'></div>
+      <h2>Tag Plate Information</h2>
+      <dl>
+        <dt>Lot Number</dt>
+        <dd class="lot-number"></dd>
+        <dt>Template</dt>
+        <dd class="template"></dd>
+        <dt>State</dt>
+        <dd class="state"></dd>
+      </dl>
+    </div>
         <%= f.submit 'Create Plate',
           :"data-theme"   => "b",
           :"data-icon"    => "plus",
-          :'data-iconpos' => "right"
+          :'data-iconpos' => "right",
+          :disabled => 'disabled'
         %>
       </div>
 

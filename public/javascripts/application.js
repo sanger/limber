@@ -395,7 +395,93 @@
   });
 
 
+
+/* TAG CREATION */
   $(document).on('pagecreate', '#tag-creation-page', function(){
+
+    var plateLookup;
+
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
+
+    plateLookup = function(barcodeBox) {
+      var plate_lookup;
+      plate_lookup = this;
+      this.inputBox = barcodeBox;
+      this.inputBox.on('change',function(){
+        plate_lookup.resetStatus();
+        plate_lookup.requestPlate(this.value);
+      })
+    };
+
+    plateLookup.prototype = {
+      resetStatus: function() {
+        $('#plate_submit').button('disable');
+        $('#tag-plate-info dd').text('');
+        $('#plate_qcable_uuid').val(null);
+        $('#plate_tag_plate_uuid').val(null);
+        $('#plate_tag_layout_template_uuid').val(null);
+      },
+      requestPlate: function(barcode) {
+        $.ajax({
+          type: 'POST',
+          dataType: "json",
+          url: '/search/tag_plates',
+          data: 'tag_plate_barcode='+this.inputBox.val()
+      }).then(this.success(),this.error());
+      },
+      success: function() {
+        var plate_lookup = this;
+        return function(response) {
+          if (response.error) {
+            SCAPE.message(response.error,'invalid')
+          } else if (response.qcable) {
+            plate_lookup.plateFound(response.qcable)
+          } else {
+            console.log(response);
+            SCAPE.message('An unexpected response was received. Please contact support.','invalid');
+          }
+        };
+      },
+      error: function() {
+        var plate_lookup = this;
+        return function() {
+          SCAPE.message('The tag plate could not be found. There may be network issues, or problems with Sequencescape.','invalid')
+        };
+      },
+      plateFound: function(qcable) {
+        this.populateData(qcable);
+        if (this.validPlate(qcable)) {
+          SCAPE.message('The tag plate is suitable.'+this.errors,'valid');
+          SCAPE.update_layout(qcable.template_uuid);
+          $('#plate_submit').button('enable')
+        } else {
+          SCAPE.message('The tag plate is not suitable.'+this.errors,'invalid')
+        }
+      },
+      populateData: function(qcable) {
+        $('#tag-plate-info dd.lot-number').text(qcable.lot_number);
+        $('#tag-plate-info dd.template').text(qcable.tag_layout);
+        $('#tag-plate-info dd.state').text(qcable.state);
+        $('#plate_qcable_uuid').val(qcable.uuid);
+        $('#plate_tag_plate_uuid').val(qcable.asset_uuid);
+        $('#plate_tag_layout_template_uuid').val(qcable.template_uuid);
+      },
+      validPlate: function(qcable) {
+        this.errors = '';
+        if (qcable.state !== 'available') { this.errors += ' Plate is not available.' };
+        if (qcable.type  !== 'IDT Tags') { this.errors += ' Plate is not a suitable tag plate.' };
+        if (SCAPE.tag_layouts[qcable.template_uuid] === undefined) { this.errors += ' Unknown tag template.'}
+        console.log(this.errors);
+        return this.errors === '';
+      },
+      errors: ''
+    };
+
+    new plateLookup($('#plate_tag_plate_barcode'));
 
     $.extend(SCAPE, {
 
@@ -462,8 +548,8 @@
       },
 
 
-      update_layout : function () {
-        var tags = $(SCAPE.tag_layouts[$('#plate_tag_layout_template_uuid option:selected').text()]);
+      update_layout : function (template) {
+        var tags = $(SCAPE.tag_layouts[template||$('#plate_tag_layout_template_uuid').val()]);
 
         tags.each(function(index) {
           $('#tagging-plate #aliquot_'+this[0]).

@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git+ssh://git@github.com/sanger/sequencescape-client-api.git
-  revision: eb3bad1642ac4186fc3b3fc283526fd1af894fa9
+  revision: 1ec5b6586fe45e0c6f9f6bb1ace61b5a7394c475
   branch: production
   specs:
     sequencescape-client-api (0.2.2)
@@ -101,7 +101,7 @@ GEM
     hashie (1.0.0)
     httpi (0.9.5)
       rack
-    i18n (0.5.0)
+    i18n (0.5.3)
     json (1.6.0)
     json_pure (1.6.0)
     launchy (2.0.5)
