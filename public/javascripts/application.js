@@ -483,6 +483,9 @@
 
     new plateLookup($('#plate_tag_plate_barcode'));
 
+    /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
+    $('form#plate_new').on('submit',function(){ return !$('input#plate_submit')[0].disabled } )
+
     $.extend(SCAPE, {
 
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
