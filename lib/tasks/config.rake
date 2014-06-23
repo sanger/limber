@@ -176,8 +176,7 @@ namespace :config do
           )
 
           presenters['Post Shear'].merge!(
-            :presenter_class     => 'Presenters::QcBranchCompletablePresenter',
-            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
+            :presenter_class     => 'Presenters::PostShearPlatePresenter',
             :locations_children  => {
               'illumina_a' => 'Post Shear XP',
               'illumina_b' => 'Post Shear XP'
@@ -188,9 +187,9 @@ namespace :config do
             :presenter_class     => 'Presenters::PostShearXpPresenter'
           )
 
-          presenters['Post Shear QC'].merge!(
-            :presenter_class     => 'Presenters::PostShearQcPlatePresenter'
-          )
+          # presenters['Post Shear QC'].merge!(
+          #   :presenter_class     => 'Presenters::PostShearQcPlatePresenter'
+          # )
 
           presenters['AL Libs'].merge!(
             :presenter_class => 'Presenters::AlLibsPlatePresenter'
