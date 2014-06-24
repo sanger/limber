@@ -767,18 +767,18 @@
       } else if (response.valid) {
         pass();
       } else {
-        flagBeds(response.beds);
+        flagBeds(response.beds,response.message);
         fail();
       }
 
     }
 
-    var flagBeds = function(beds) {
+    var flagBeds = function(beds,message) {
       var bad_beds = [];
       $.each(beds, function(bed_id) {
         if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
       });
-      SCAPE.message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
+      SCAPE.message('There were problems: '+message,'invalid');
     }
 
     var wait = function() {

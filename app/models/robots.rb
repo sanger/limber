@@ -22,7 +22,7 @@ module Robots
       end
 
       def error(message)
-        @error_message = "Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}."
+        @error_message = message
         false
       end
       private :error
@@ -31,18 +31,23 @@ module Robots
       def valid?
         case
         when plate.nil? # The bed is empty or untested
-          return true
+          return @barcode.nil? || error("Could not find a plate with the barcode #{@barcode}.")
         when !states.include?(plate.state) # The plate is in the wrong state
-          error("Plate #{plate.barcode.ean13} is #{plate.state} when it should be #{states.join(', ')}.")
+          error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is #{plate.state} when it should be #{states.join(', ')}.")
         when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
-          error("Plate #{plate.barcode.ean13} is not a #{purpose}.")
+          error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is not a #{purpose}.")
         else
           true
         end
       end
 
       def load(barcode)
-        @plate = api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode) unless barcode.nil?
+        @barcode = barcode
+        begin
+          @plate = api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode) unless barcode.nil?
+        rescue Sequencescape::Api::ResourceNotFound
+          @plate = nil
+        end
       end
 
       def parent_plate
@@ -50,10 +55,22 @@ module Robots
         api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(:barcode => plate.barcode.ean13)
       end
 
+      def formatted_message
+        "#{label} - #{error_message}"
+      end
+
     end
 
     class InvalidBed
+      def initialize(barcode)
+        @barcode = barcode
+      end
       def load(_)
+      end
+      def formatted_message
+        match = /[0-9]{13}/.match(@barcode)
+        match ? "Bed with barcode #{@barcode} is not expected to contain a tracked plate." :
+                "#{@barcode} does not appear to be a valid barcode."
       end
       def valid?
         false
@@ -72,7 +89,7 @@ module Robots
     write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :id, :location]
 
     def beds=(new_beds)
-      beds = ActiveSupport::OrderedHash.new(InvalidBed.new)
+      beds = ActiveSupport::OrderedHash.new {|beds,barcode| InvalidBed.new(barcode) }
       new_beds.sort_by {|id,bed| bed.order }.each do |id,bed|
         beds[id] = Bed.new(bed.merge({:api=>api, :user_uuid=>user_uuid, :robot=>self }))
       end
@@ -88,21 +105,40 @@ module Robots
       beds.values.each(&:transition)
     end
 
+    def error_messages
+      @error_messages||=[]
+    end
+
+    def error(bed, message)
+      error_messages << "#{bed.label}: #{message}"
+      false
+    end
+
+    def bed_error(bed)
+      error_messages << bed.formatted_message
+      false
+    end
+
+    def formatted_message
+      error_messages.join(' ')
+    end
+
     def verify(bed_contents)
       valid_plates = Hash[bed_contents.map do |bed_id,plate_barcode|
         beds[bed_id].load(plate_barcode)
-        [bed_id, beds[bed_id].valid?]
+        [bed_id, beds[bed_id].valid?||bed_error(beds[bed_id])]
       end]
       valid_parents = Hash[parents_and_position do |parent,position|
-        beds[position].plate.try(:uuid) == parent.try(:uuid)
+        beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
+          "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
+          "Could not match plate with expected child.")
       end]
       verified = valid_plates.merge(valid_parents) {|k,v1,v2| v1 && v2 }
       bed_contents.keys.each {|k| verified[k] = false } unless plates_compatible?
-      {:beds=>verified,:valid=>verified.all?{|_,v| v}}
+      {:beds=>verified,:valid=>verified.all?{|_,v| v},:message=>formatted_message}
     end
 
     def plates_compatible?
-      puts beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil? }.compact.uniq
       beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil?}.compact.uniq.count == 1
     end
 
