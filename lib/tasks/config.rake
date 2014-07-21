@@ -81,11 +81,11 @@ namespace :config do
       configuration[:printers] = {}.tap do |printers|
         printers['illumina_a'] = {
           :plate_a=>barcode_printer_uuid.('g316bc'),
-          :plate_b=>barcode_printer_uuid.('g317bc'),
-          :tube=>barcode_printer_uuid.('g314bc')
+          :plate_b=>barcode_printer_uuid.('g311bc2'),
+          :tube=>barcode_printer_uuid.('g311bc1')
         }
         printers['illumina_b'] = {
-          :plate_a=>barcode_printer_uuid.('g312bc2'),
+          :plate_a=>barcode_printer_uuid.('g316bc'),
           :plate_b=>barcode_printer_uuid.('g311bc2'),
           :tube=>barcode_printer_uuid.('g311bc1')
         }
