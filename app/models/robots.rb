@@ -134,12 +134,19 @@ module Robots
           "Could not match plate with expected child.")
       end]
       verified = valid_plates.merge(valid_parents) {|k,v1,v2| v1 && v2 }
-      bed_contents.keys.each {|k| verified[k] = false } unless plates_compatible?
+      unless plates_compatible?
+        bed_contents.keys.each {|k| verified[k] = false }
+        error_messages << "#{bed_prefixes.to_sentence} can not be processed together."
+      end
       {:beds=>verified,:valid=>verified.all?{|_,v| v},:message=>formatted_message}
     end
 
     def plates_compatible?
-      beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil?}.compact.uniq.count == 1
+      bed_prefixes.count <= 1
+    end
+
+    def bed_prefixes
+      beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil?}.compact.uniq
     end
 
     def parents_and_position
