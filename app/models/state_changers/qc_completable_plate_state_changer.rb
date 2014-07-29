@@ -11,12 +11,13 @@ module StateChangers
 
     end
 
-    def move_to!(state, reason = nil)
+    def move_to!(state, reason = nil, customer_accepts_responsibility = false)
       state_details = {
         :target       => labware_uuid,
         :user         => user_uuid,
         :target_state => state,
-        :reason       => reason
+        :reason       => reason,
+        :customer_accepts_responsibility => customer_accepts_responsibility
       }
 
       case state

@@ -1,6 +1,6 @@
 class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcCompletablePlateStateChanger
 
-  def move_to!(state, reason)
+  def move_to!(state, reason, customer_accepts_responsibility = false)
     raise StateChangers::StateChangeError, "QC plate must be created first!" if state == 'qc_complete' && !qc_created?
     super
     create_stock_tubes! if state == 'qc_complete' && tubes_required?

@@ -18,7 +18,8 @@ class PlatesController < LabwareController
         :target       => params[:id],
         :contents     => wells_to_fail,
         :target_state => 'failed',
-        :reason       => 'Individual Well Failure'
+        :reason       => 'Individual Well Failure',
+        :customer_accepts_responsibility => params[:customer_accepts_responsibility]
       )
       redirect_to(illumina_b_plate_path(params[:id]), :notice => 'Selected wells have been failed')
     end

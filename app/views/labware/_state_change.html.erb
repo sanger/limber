@@ -1,5 +1,5 @@
 <%# TODO This form code breaks the semantic presenter model pattern.
-    The form should use attriutes on the presenter class not the labware directly. 
+    The form should use attriutes on the presenter class not the labware directly.
 %>
 
 <% presenter.control_state_change do |transitions| %>
@@ -24,7 +24,7 @@
         <% end -%>
         <li>
           <%= label_tag :state, "Change state to:" %>
-          
+
           <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to) %>
         </li>
         <li id="cancelled" class="reason" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>
@@ -34,6 +34,8 @@
         <li id="failed" class="reason" <%= 'style=display:none;' unless show_state?('failed', presenter, transitions)%>>
           <%= label_tag :reason, 'Reason for failure:' %>
           <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions)) %>
+          <%= label_tag :customer_accepts_responsibility, 'Still charge customer:' %>
+          <%= check_box_tag :customer_accepts_responsibility, true, false %>
         </li>
         <li>
           <%= f.submit 'Change State', :'data-theme' => 'b', :'data-icon' => 'gear' %>
