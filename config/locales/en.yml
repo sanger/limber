@@ -369,12 +369,12 @@ en:
 
   Cherrypicked:
     pending:
-      state_text: "WGS: Shearing Input Plate DNA - not ready"
+      state_text: "Cherrypicked: Shearing Input Plate DNA - not ready"
       instruction_summary: "This DNA plate is not yet ready for processing."
       instructions: ""
 
     passed:
-      state_text: "WGS: Shearing Stock Plate DNA"
+      state_text: "Cherrypicked: Shearing Stock Plate DNA"
       instruction_summary: Create a child plate to begin work on these samples.
       instructions: >
         <li>Select the ‘Create next plate’ tab.</li>
