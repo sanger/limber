@@ -7,7 +7,7 @@
     <% end %>
 
     <br/>
-    <p>NB. Once the "Fail Wells" button has been pressed failures can't be undo but further failed wells can be added. The 'Still charge customer' option will only affect the wells selected for failure at the same time. Previously and subsequently failed wells will retain their original options.</p>
+    <p>NB. Once the "Fail Wells" button has been pressed failures can't be undone but further failed wells can be added. The 'Still charge customer' option will only affect the wells selected for failure at the same time. Previously and subsequently failed wells will retain their original options.</p>
     <%= label_tag :customer_accepts_responsibility, 'Still charge customer:' %>
     <%= check_box_tag :customer_accepts_responsibility, true, false %>
     <%= form.submit('Fail wells', :'data-icon' => 'delete', :'data-theme' => 'a') %>
