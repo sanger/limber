@@ -25,8 +25,12 @@ class BarcodeLabelsController < ApplicationController
 
   # Handles printing a single label
   def individual
-    print(create_label(params[:label]))
-    redirect_to(params[:redirect_to], :notice => "Barcode printed to #{@printer.name}")
+    begin
+      print(create_label(params[:label]))
+      redirect_to(params[:redirect_to], :notice => "Barcode printed to #{@printer.name}")
+    rescue BarcodeException
+      redirect_to(params[:redirect_to], :alert => "There was a problem with the printer. Select another and try again.")
+    end
   end
 
   before_filter :convert_labels_to_array, :only => :multiple
@@ -37,7 +41,11 @@ class BarcodeLabelsController < ApplicationController
 
   # Handles printing multiple labels
   def multiple
-    print(params[:labels].map(&method(:create_label)))
-    redirect_to(params[:redirect_to], :notice => "#{params[:labels].size} barcodes printed to #{@printer.try(:name)}")
+    begin
+      print(params[:labels].map(&method(:create_label)))
+      redirect_to(params[:redirect_to], :notice => "#{params[:labels].size} barcodes printed to #{@printer.try(:name)}")
+    rescue BarcodeException
+      redirect_to(params[:redirect_to], :alert => "There was a problem with the printer. Select another and try again.")
+    end
   end
 end
