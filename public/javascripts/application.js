@@ -40,6 +40,8 @@
 (function($, exports, undefined){
   "use strict";
 
+  var ENTER_KEYCODE = 13, TAB_KEYCODE = 9;
+  
   // Set up the SCAPE namespace
   if (exports.SCAPE === undefined) {
     exports.SCAPE = {};
@@ -269,7 +271,7 @@
     // Trap the carriage return sent by the swipecard reader
     $(document).on("keydown", "input.card-id", function(e) {
       var code=e.charCode || e.keyCode;
-      if (code==13) {
+      if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
         $('input[data-type="search"], .plate-barcode').last().focus();
         return false;
       }
@@ -290,8 +292,8 @@
     // Trap the carriage return sent by barcode scanner
     $(document).on("keydown", ".plate-barcode", function(event) {
       var code=event.charCode || event.keyCode;
-      // Check for carrage return (key code 13)
-      if (code==13) {
+      // Check for carrage return (key code ENTER_KEYCODE)
+      if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
         // Check that the value is 13 characters long like a barcode
         if ($(event.currentTarget).val().length === 13) {
           $(event.currentTarget).closest('form').find('.show-my-plates').val(false);
