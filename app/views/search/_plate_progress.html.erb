@@ -1,10 +1,9 @@
 <ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
-
   <% plates_by_state(plates).each do |state, sorted_plates| -%>
     <li data-role="list-divider"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
       <li>
-      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit") do %>
+      <%= link_to(plate_path(plate), {:id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit"}) do %>
         <% if plate.priority > 0 %>
            <img src='/images/icon_<%= plate.priority %>_flag.png' class='ui-li-icon'/>
         <% end %>
@@ -15,6 +14,7 @@
           <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
           Created: <%= plate.created_at.to_formatted_s(:date_created) %>
           Type: <%= plate.plate_purpose.name %>
+          Library Type: <%= plate.library_type_name %>
         </p>
       <% end -%>
       </li>

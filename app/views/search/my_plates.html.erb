@@ -28,7 +28,7 @@
               <li data-role="list-divider"><%= state.titleize %></li>
               <% sorted_plates.each do |plate| -%>
                 <li>
-                <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "ui-link-inherit") do %>
+                <%= link_to(plate_path(plate), :id => "plate_#{plate.barcode.ean13}", :class => "ui-link-inherit") do %>
                   <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
                   <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
                   <% if plate.stock_plate.present? %><p>Input plate: <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
@@ -36,6 +36,7 @@
                   <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
                   Created: <%= plate.created_at.to_formatted_s(:date_created) %>
                   Type: <%= plate.plate_purpose.name %>
+                  Library Type: <%= plate.library_type_name %>
                   </p>
                 <% end -%>
                 </li>
