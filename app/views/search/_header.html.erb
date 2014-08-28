@@ -1,5 +1,5 @@
 <div data-role="header">
-  <h1>Sequencescape - Illumina Pipelines</h1>
+  <h1>Sequencescape - Illumina A and B Pipelines</h1>
   <div data-role="navbar">
     <ul>
       <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
@@ -9,11 +9,8 @@
 </div>
   <div data-role="popup" id="popupInbox" data-theme="b">
   <ul data-role="listview" data-inset="true" style="min-width:210px;">
-      <li data-role="divider" data-theme="b">Illumina-A</li>
-      <li><a href="<%= all_illumina_a_stock_plates_path %>" >New Input Plates</a></li>
-      <li><a href="<%= ongoing_illumina_a_plates_path %>" >All Ongoing Plates</a></li>
-      <li data-role="divider" data-theme="b">Illumina-B</li>
-      <li><a href="<%= all_illumina_b_stock_plates_path %>" >New Input Plates</a></li>
-      <li><a href="<%= ongoing_illumina_b_plates_path %>" >All Ongoing Plates</a></li>
+      <li data-role="divider" data-theme="b">Illumina A and B</li>
+      <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
+      <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
   </ul>
 </div>
