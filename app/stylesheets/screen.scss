@@ -345,6 +345,11 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   width: 3em;
 }
 
+.ui-li-desc span.field-description {
+    margin-left: 0.5em;
+}
+
+
 .print_selector .ui-controlgroup-controls {width:100%;}
 .print_selector .ui-controlgroup-controls .ui-select:first-child {width:80%;}
 .print_selector .ui-controlgroup-controls .ui-select {width:20%;}
