@@ -3,7 +3,7 @@
     <li data-role="list-divider"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
       <li>
-      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit") do %>
+      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit #{plate.role}") do %>
         <% if plate.priority > 0 %>
            <img src='/images/icon_<%= plate.priority %>_flag.png' class='ui-li-icon'/>
         <% end %>
@@ -15,6 +15,8 @@
           <span class="field-description">Created:</span> <%= plate.created_at.to_formatted_s(:date_created) %>
           <span class="field-description">Type:</span> <%= plate.plate_purpose.name %>
           <span class="field-description">Library Type:</span> <%= plate.library_type_name %>
+          <span class="field-description">Number of Pools:</span> <%= plate.number_of_pools %>
+          <span class="field-description"> Shearing Size:</span> <%= plate.shearing_size %>
         </p>
       <% end -%>
       </li>
