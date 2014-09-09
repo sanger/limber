@@ -1,5 +1,5 @@
 class StateChangers::AutoPoolingStateChanger < StateChangers::DefaultStateChanger
-  def move_to!(state, reason)
+  def move_to!(state, reason, customer_accepts_responsibility = false)
     super
     change_tube_states_to_passed! if state == 'passed'
   end

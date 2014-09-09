@@ -1,5 +1,5 @@
 class StateChangers::PlateToTubeStateChanger < StateChangers::QcCompletablePlateStateChanger
-  def move_to!(state, reason)
+  def move_to!(state, reason, customer_accepts_responsibility = false)
     super
     create_stock_tubes! if state == 'qc_complete'
   end
