@@ -132,6 +132,7 @@ ROBOT_CONFIG = {
 }
 
 LOCATION_PIPELINES = {
-  'Library creation freezer' =>'illumina_b',
-  'Pulldown freezer'         =>'illumina_a'
+  'Library creation freezer'                 =>'illumina_b',
+  'Pulldown freezer'                         =>'illumina_a',
+  'Illumina high throughput freezer'         =>'illumina_b'
 }
