@@ -18,4 +18,9 @@ class IlluminaB::Plate < Sequencescape::Plate
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
+  
+  def library_type_name
+    uuid = pools.keys.first
+    uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']
+  end
 end

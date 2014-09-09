@@ -1,5 +1,4 @@
 <ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
-
   <% plates_by_state(plates).each do |state, sorted_plates| -%>
     <li data-role="list-divider"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
@@ -10,11 +9,12 @@
         <% end %>
         <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
         <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
-        <% if plate.stock_plate.present? %><p>Input plate: <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
+        <% if plate.stock_plate.present? %><p><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
         <p>
           <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
-          Created: <%= plate.created_at.to_formatted_s(:date_created) %>
-          Type: <%= plate.plate_purpose.name %>
+          <span class="field-description">Created:</span> <%= plate.created_at.to_formatted_s(:date_created) %>
+          <span class="field-description">Type:</span> <%= plate.plate_purpose.name %>
+          <span class="field-description">Library Type:</span> <%= plate.library_type_name %>
         </p>
       <% end -%>
       </li>
