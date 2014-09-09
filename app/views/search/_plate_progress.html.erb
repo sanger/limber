@@ -3,7 +3,7 @@
     <li data-role="list-divider"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
       <li>
-      <%= link_to(plate_path(plate), {:id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit"}) do %>
+      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit") do %>
         <% if plate.priority > 0 %>
            <img src='/images/icon_<%= plate.priority %>_flag.png' class='ui-li-icon'/>
         <% end %>

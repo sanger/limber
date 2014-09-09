@@ -6,6 +6,8 @@ IlluminaBPipeline::Application.routes.draw do
     match '/all_illumina_b_stock_plates', :action => :stock_plates
     match '/ongoing_illumina_a_plates',   :action => :ongoing_plates_illumina_a
     match '/all_illumina_a_stock_plates', :action => :stock_plates_illumina_a
+    match '/all_stock_plates', :action => :stock_plates_illumina_a
+    match '/ongoing_plates',   :action => :ongoing_plates_illumina_a
     match '/tag_plates',                  :action => :tag_plates, :via => :post, :as => :tag_plates_search
     match '/retrieve_parent',             :action => :retrieve_parent
   end
