@@ -12,7 +12,7 @@ gem 'sequencescape-client-api', '>= 0.2.3',
   :git     => 'git+ssh://git@github.com/sanger/sequencescape-client-api.git',
   :branch  => 'production',
   :require => 'sequencescape'
-gem 'sanger_barcode',
+gem 'sanger_barcode', '>= 0.2.0',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
 
 # Bundle gems for the local environment. Make sure to

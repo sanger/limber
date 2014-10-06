@@ -13,6 +13,7 @@ class BarcodeLabelsController < ApplicationController
 
   # Creates a label
   def create_label(details)
+    details[:type] = "custom-labels"
     Sanger::Barcode::Printing::Label.new(details)
   end
   private :create_label
@@ -28,7 +29,7 @@ class BarcodeLabelsController < ApplicationController
     begin
       print(create_label(params[:label]))
       redirect_to(params[:redirect_to], :notice => "Barcode printed to #{@printer.name}")
-    rescue BarcodeException
+    rescue Sanger::Barcode::Printing::BarcodeException
       redirect_to(params[:redirect_to], :alert => "There was a problem with the printer. Select another and try again.")
     end
   end
@@ -44,7 +45,7 @@ class BarcodeLabelsController < ApplicationController
     begin
       print(params[:labels].map(&method(:create_label)))
       redirect_to(params[:redirect_to], :notice => "#{params[:labels].size} barcodes printed to #{@printer.try(:name)}")
-    rescue BarcodeException
+    rescue Sanger::Barcode::Printing::BarcodeException
       redirect_to(params[:redirect_to], :alert => "There was a problem with the printer. Select another and try again.")
     end
   end
