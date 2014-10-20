@@ -36,7 +36,7 @@ module Presenters
     end
 
     def label_type
-      ""
+      yield nil
     end
 
   end
@@ -87,7 +87,7 @@ module Presenters
     }
 
     def label_type
-      "custom-labels"
+      yield "custom-labels"
     end
 
     def robot_name

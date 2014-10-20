@@ -13,7 +13,6 @@ class BarcodeLabelsController < ApplicationController
 
   # Creates a label
   def create_label(details)
-    details[:type] = params[:labeltemplatetype]
     Sanger::Barcode::Printing::Label.new(details)
   end
   private :create_label
