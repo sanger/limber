@@ -35,6 +35,10 @@ module Presenters
       nil
     end
 
+    def label_type
+      yield nil
+    end
+
   end
 
   class PlatePresenter
@@ -81,6 +85,10 @@ module Presenters
     class_inheritable_reader    :robot_controlled_states
     write_inheritable_attribute :robot_controlled_states, {
     }
+
+    def label_type
+      yield "custom-labels"
+    end
 
     def robot_name
       robot_controlled_states[labware.state.to_sym]
