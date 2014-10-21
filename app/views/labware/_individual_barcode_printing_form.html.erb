@@ -4,7 +4,7 @@
     <%= hidden_field_tag(:redirect_to, redirection_url) %>
 
     <% @presenter.label_type do |type| %>
-      <%= hidden_field_tag :type, type %>
+      <%= f.hidden_field :type, type %>
     <% end %>
     
     <%= f.hidden_field :prefix %>
