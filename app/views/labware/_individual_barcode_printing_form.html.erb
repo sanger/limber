@@ -2,6 +2,11 @@
   <%# Hide the details of what is in the label to be printed %>
   <ul data-role="listview" data-inset="true">
     <%= hidden_field_tag(:redirect_to, redirection_url) %>
+
+    <% @presenter.label_type do |type| %>
+      <%= f.hidden_field :type, :value => type %>
+    <% end %>
+    
     <%= f.hidden_field :prefix %>
     <%= f.hidden_field :number %>
     <%= f.hidden_field :study, :value => text %>
