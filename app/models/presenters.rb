@@ -36,7 +36,7 @@ module Presenters
     end
 
     def label_type
-      yield nil
+      nil
     end
 
   end
