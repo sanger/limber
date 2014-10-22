@@ -4,9 +4,6 @@
 
     <% barcodes.each_with_index do |barcode, index| %>
       <%= f.fields_for(index.to_s.to_sym, barcode) do |barcode_form| %>
-        <% @presenter.label_type do |type| %>
-          <%= barcode_form.hidden_field :type, :value => type %>
-        <% end %>
         <%= barcode_form.hidden_field(:prefix) %>
         <%= barcode_form.hidden_field(:number) %>
         <%= barcode_form.hidden_field(:study, :value => text[index]) %>
