@@ -29,7 +29,7 @@ class RobotsController < ApplicationController
 
   def verify
     respond_to do |format|
-      format.json { render( :json=> @robot.verify(params[:beds]||{}) ) }
+      format.json { render( :json=> @robot.verify(stripped_beds) ) }
     end
   end
 
@@ -43,4 +43,8 @@ class RobotsController < ApplicationController
   end
   private :find_robot
 
+  def stripped_beds
+    Hash[(params[:beds]||{}).map {|k,v| [k.strip,v.strip]}]
+  end
+  private :stripped_beds
 end
