@@ -485,6 +485,9 @@
 
     new plateLookup($('#plate_tag_plate_barcode'));
 
+    /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
+    $('form#plate_new').on('submit',function(){ return !$('input#plate_submit')[0].disabled } )
+
     $.extend(SCAPE, {
 
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
@@ -766,18 +769,18 @@
       } else if (response.valid) {
         pass();
       } else {
-        flagBeds(response.beds);
+        flagBeds(response.beds,response.message);
         fail();
       }
 
     }
 
-    var flagBeds = function(beds) {
+    var flagBeds = function(beds,message) {
       var bad_beds = [];
       $.each(beds, function(bed_id) {
         if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
       });
-      SCAPE.message('Problem with bed(s): '+bad_beds.join(', '),'invalid');
+      SCAPE.message('There were problems: '+message,'invalid');
     }
 
     var wait = function() {
