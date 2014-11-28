@@ -66,7 +66,8 @@ body {
   height:27px;
   width:27px;
   padding: 3px;
-  text-align:     center;
+  text-align: center;
+  overflow: hidden;
   border: 1px ridge rgba(5,19,40,0.1);
   @include background(radial-gradient(top left, #002A46, #003353));
   @include border-radius(7px);
