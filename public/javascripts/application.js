@@ -1260,6 +1260,21 @@
       SCAPE.renderDestinationPools();
 
       $('.aliquot').fadeIn('slow');
+
+      $('.well').each(function(){
+
+        if ($(this).children().length < 2) { return; }
+
+        this.pos = 0;
+
+        this.slide = function() {
+          var scrollTo
+          this.pos = (this.pos + 1) % $(this).children().length;
+          scrollTo = $(this).children()[this.pos].offsetTop-5;
+          $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
+        };
+        this.slide();
+      })
     };
 
     SCAPE.poolingSM = new SCAPE.StateMachine('.ui-content', {
