@@ -79,6 +79,20 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
       def transfers
         labware.well_to_tube_transfers
       end
+
+      def authenticated_tab_states
+        @tab_states ||= self.class.authenticated_tab_states.tap do |states|
+          states[:qc_complete] << 'labware-creation-button' if creation_required?
+        end
+      end
+
+      def creation_required?
+        not labware.has_transfers_to_tubes?
+      end
+
+      def default_child_purpose
+        labware.plate_purpose.children.detect {|purpose| Settings.request_types[labware.pools.values.first['request_type']].first==purpose.name }
+      end
     end
 
     state :failed do
