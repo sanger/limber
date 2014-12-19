@@ -21,7 +21,11 @@ namespace :config do
     'Lib PCR',
     'Lib PCRR',
     'Lib PCR-XP',
-    'Lib PCRR-XP'
+    'Lib PCRR-XP',
+
+    'Lib Norm',
+    'Lib Norm 2',
+    'Lib Norm 2 Pool'
   ]
 
   QC_PLATE_PURPOSES = [
@@ -326,6 +330,10 @@ namespace :config do
       configuration[:robots]      = ROBOT_CONFIG
       configuration[:locations]   = LOCATION_PIPELINES
       configuration[:qc_purposes] = QC_PLATE_PURPOSES
+
+      configuration[:request_types] = {}.tap do |request_types|
+        request_types['illumina_htp_library_creation']    = ['Lib Norm',false]
+      end
 
     end
 
