@@ -1,6 +1,6 @@
 class LabwareController < ApplicationController
-  before_filter :locate_labware, :only => [ :show ]
-  before_filter :get_printers, :only   => [ :show ]
+  before_filter :locate_labware, :only => [ :show, :update ]
+  before_filter :get_printers, :only   => [ :show, :update ]
   before_filter :check_for_current_user!, :only => [ :update ]
 
   def locate_labware
@@ -27,18 +27,28 @@ class LabwareController < ApplicationController
   private :state_changer_for
 
   def show
-    @presenter = presenter_for(@labware)
-    @presenter.suitable_labware do
+    begin
+      @presenter = presenter_for(@labware)
       respond_to do |format|
-        format.html { render @presenter.page }
-        format.csv
+        format.html {
+          render @presenter.page
+          response.headers["Vary"]="Accept"
+        }
+        format.csv {
+          render @presenter.csv
+          response.headers['Content-Disposition']="inline; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+          response.headers["Vary"]="Accept"
+        }
+        format.json {
+          response.headers["Vary"]="Accept"
+        }
       end
-      return true
+    rescue Presenters::PlatePresenter::UnknownPlateType => exception
+      redirect_to(
+        search_path,
+        :notice => "#{exception.message}. Perhaps you are using the wrong pipeline application?"
+      )
     end
-    redirect_to(
-      search_path,
-      :notice => @presenter.errors
-    )
   end
 
   def update

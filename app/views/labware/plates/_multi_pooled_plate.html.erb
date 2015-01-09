@@ -1,0 +1,13 @@
+<h2>Source Plates</h2>
+<% presenter.plate.creation_transfers.each_with_index do |transfer,i| %>
+  <h3><%= "#{@presenter.bed_prefix}#{i+1}: #{transfer.source.stock_plate.barcode.prefix}#{transfer.source.stock_plate.barcode.number} (#{transfer.source.barcode.prefix}#{transfer.source.barcode.number})" %></h3>
+  <%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter, :walker => presenter.walk_source, :transfers => transfer.transfers} %>
+<% end %>
+<br/>
+
+<h2>Pooled Plate <%= image_tag("icon_#{presenter.plate.priority}_flag.png", :size=>"16x16") %></h2>
+
+<% all_transfers = presenter.plate.creation_transfers.inject([]) {|memo,tf| memo.concat(tf.transfers.map { |_, location| [ location, location ] }) } %>
+<% transfers = Hash[all_transfers] %>
+<%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter, :walker => presenter.walk_destination, :transfers => transfers} %>
+<%= render :partial => 'plate_information', :locals => { :plate => presenter.plate } %>

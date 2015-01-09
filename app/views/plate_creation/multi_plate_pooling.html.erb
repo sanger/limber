@@ -1,0 +1,141 @@
+<%= page(:'multi-plate-pooling-page') do %>
+  <div data-role="header" data-theme="b">
+    <h1>Multi Plate Pre-Cap pooling</h1>
+    <div data-role="navbar" data-iconpos="right">
+      <ul>
+        <li><a href="#" data-theme="a" class="navbar-link ui-btn-active" rel="add-plates">Add plates</a></li>
+<!--         <li><a href="#" data-theme="a" class="navbar-link" rel="edit-pool" >Edit Pre-cap pool</a></li> -->
+        <li id="summary_tab" class="ui-disabled"><a href="#" data-theme="a" data-icon="add" class="navbar-link" rel="pooling-summary">Pooling Summary</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <%= content do %>
+        <%= form_for(
+          @creation_form,
+          :url  => pulldown_plate_children_path(@creation_form.parent),
+          :as   => :plate,
+          :html => { :method => :post }) do |form|
+        %>
+
+        <%= form.hidden_field :parent_uuid,        :value => @creation_form.parent_uuid %>
+        <%= form.hidden_field :plate_purpose_uuid, :value => @creation_form.plate_purpose_uuid %>
+
+    <div class="ui-grid-a">
+      <div id="source-block" class="ui-block-a">
+
+        <div id="add-plates-block" class="scape-ui-block">
+          <% (0...8).each do |i| %>
+            <div data-role="fieldcontain" class="plate-container scan-plate">
+              <label for="plate[<%= i %>]" class="plate-label" >Plate <%= i+1 %></label>
+              <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="plate-box" tabindex="1" data-position=<%=i %> />
+              <a href="#" data-role="button" data-icon="edit" data-iconpos="notext" data-theme="d" data-inline="true" class="bed-status-scan" tabindex="3">Scan</a>
+              <a href="#" data-role="button" data-icon="gear" data-iconpos="notext" data-theme="d" data-inline="true" class="bed-status-wait" tabindex="3">Wait</a>
+              <a href="#" data-role="button" data-icon="check" data-iconpos="notext" data-theme="b" data-inline="true" class="bed-status-good" tabindex="3">Good</a>
+              <a href="#" data-role="button" data-icon="alert" data-iconpos="notext" data-theme="a" data-inline="true" class="bed-status-bad" tabindex="3">Bad</a>
+            </div>
+         <% end %>
+        </div>
+
+        <div id="edit-pool-instruction-block" class="scape-ui-block" style="display:none;">
+          <div class="instructions ui-blody">
+            <h3>Individual Library Plex levels</h3>
+            <p>This tab allows you to change plex level on a library by library basis.</p>
+            <br/>
+            <ol>
+              <li>First, select an aliquot from the sequencing pool you wish to change.</li>
+              <li>Then, use the "Individual Plex level" controls to set a plex level for the Library.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div id="create-plate-block" class="scape-ui-block" style="display:none;">
+          <div class="instructions ui-blody">
+            <h1>Layout Summary</h1>
+          </div>
+
+          <br/>
+          <div id="validation_report"></div>
+          <%= form.submit 'Make Pre-Cap pool Plate',
+            :class        => 'create-button',
+            :'data-theme' => 'b',
+            :'data-icon'  => 'plus'
+          %>
+        </div>
+      </div>
+
+      <div class="ui-block-b">
+        <div id="add-plates-instructions-block" class="scape-ui-block" >
+          <div class="instructions ui-blody">
+            <h3>Add Lib PCR-XP Plates</h3>
+            <p>Scan in up to 8 PCR-XP plates for pre-capture pooling.</p>
+            <p>All scanned plates must be Lib-PCR XP plates that are QC passed.</p>
+          </div>
+        </div>
+        <div id="input-plate-block" class="scape-ui-block" style="display:none;">
+          <h3>Source Plates</h3>
+          <% (0...8).each do |plate_id| %>
+            <%= render :partial => "plates/empty_plate", :locals => {:css_class => "source-plate plate-id-#{plate_id}"} %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+
+        <div id="edit-pool-block" class="scape-ui-block" style="display:none;">
+          <div data-role="fieldcontain">
+            <label for="per-pool-plex-level">Individual Plex level:</label>
+            <input type="range"
+            name="per-pool-plex-level" id="per-pool-plex-level"
+            data-highlight="true" value=""
+            min="1" max="96"
+            disabled="disabled" />
+          </div>
+        </div>
+
+        <div id="pooling-summary-block" class="scape-ui-block" style="display:none;">
+          <ul id="pooling-summary" data-role="listview" data-inset="true"></ul>
+        </div>
+
+      </div>
+
+      <div class="ui-block-b">
+        <div id="output-plate-block" class="scape-ui-block" style="display:none;">
+          <h3>Target Plate</h3>
+          <%= render :partial => "plates/empty_plate", :locals => {:plate_presenter => @creation_form, :css_class => "destination-plate"} %>
+        </div>
+      </div>
+
+    </div>
+    <% end %>
+  <% end %>
+
+
+<script type="text/javascript">
+  (function(window, $, undefined){
+    "use strict";
+
+    // Set up the SCAPE namespace
+    if (window.SCAPE === undefined) {
+      window.SCAPE = {};
+    }
+
+    // Extend SCAPE as it could have already been defined in the view.
+    // Sequencing Pool ordering relys on Ruby 1.9 hashes being ordered
+    $.extend(SCAPE, {
+      coloursByLocation: <%= colours_by_location.to_json.html_safe %>,
+      plates: new Array(8),
+      plate: {
+        tabViews: <%= @creation_form.tab_views.to_json.html_safe %>
+      },
+      sourceState: "qc_complete",
+      sourcePurpose: "Lib PCR-XP"
+    });
+
+  })(window, $);
+</script>
+<% end %>

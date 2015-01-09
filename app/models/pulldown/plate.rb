@@ -1,18 +1,13 @@
-class IlluminaB::Plate < Sequencescape::Plate
+class Pulldown::Plate < Sequencescape::Plate
   # Returns a plate instance that has been coerced into the appropriate class if necessary.  Typically
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
   def coerce
-    return self unless qc_complete? and is_a_final_pooling_plate?
-    coerce_to(IlluminaB::PcrXpPlate)
+    return self unless passed? and is_a_final_pooling_plate?
+    coerce_to(Pulldown::PooledPlate)
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [
-    'ILB_STD_PCRXP',
-    'ILB_STD_PCRRXP',
-    'Lib PCR-XP',
-    'Lib PCRR-XP',
-    ## From pulldown
     'WGS lib pool',
     'SC cap lib pool',
 
@@ -28,23 +23,4 @@ class IlluminaB::Plate < Sequencescape::Plate
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
-
-  def library_type_name
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']
-  end
-
-  def number_of_pools
-    pools.keys.count
-  end
-
-  def role
-    label.prefix
-  end
-
-  def shearing_size
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]["insert_size"].to_a.join(' ')
-  end
-
 end

@@ -1,0 +1,9 @@
+{
+  "plate":{
+    "barcode": "<%= "#{@presenter.plate.barcode.prefix}#{@presenter.plate.barcode.number}" %>",
+    "uuid": "<%= @presenter.plate.uuid %>",
+    "state": "<%= @presenter.plate.state %>",
+    "purpose": "<%= @presenter.plate.plate_purpose.name %>",
+    "preCapGroups": <%= sorted_pre_cap_group_json %>
+  }
+}

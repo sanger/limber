@@ -32,6 +32,10 @@
         <div id="labware-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
+        <% @presenter.csv_file_links.each do |link| %>
+          <%= link_to("Download Worksheet CSV #{link.first}", link.last, :rel => "external") %>
+        <% end %>
+
           <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.labware.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">

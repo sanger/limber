@@ -1,0 +1,10 @@
+<%= page(:'admin-page') do %>
+  <%= header(@presenter, 'Administer Plate', :'data-theme' => 'e') %>
+
+  <%= content do %>
+    <%= flash_messages %>
+    <%= state_change_form(@presenter) %>
+  <% end %>
+
+<% end %>
+
