@@ -297,6 +297,9 @@ namespace :config do
             :from_purpose         => 'Lib Pool Pippin'
           )
 
+          presenters['Lib Norm 2 Pool'].merge!(
+            :form_class           => 'Forms::PoolingRowToColumn'
+          )
         end
 
         purpose_details_by_uuid = lambda { |labware_purposes, purpose|
