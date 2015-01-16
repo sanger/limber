@@ -90,7 +90,7 @@ class SearchController < ApplicationController
   end
 
   def clear_current_user!
-    session[:user_uuid] = nil
+    session[:user_uuid] = nil unless request.accepts.include?('application/json')
   end
   private :clear_current_user!
 
