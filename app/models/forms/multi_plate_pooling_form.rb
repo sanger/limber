@@ -10,25 +10,15 @@ module Forms
 
     write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
 
-    write_inheritable_attribute :tab_views, {
-      'add-plates' => [
-        'add-plates-instructions-block','add-plates-block'
-      ],
-
-      # 'edit-pool' => [
-      #   'edit-pool-instruction-block', 'input-plate-block',
-      #               'edit-pool-block', 'output-plate-block'
-      # ],
-
-      'pooling-summary' => [
-        'pooling-summary-block', 'input-plate-block',
-           'create-plate-block', 'output-plate-block'
-      ]
-    }
-
+    def tab_views
+      {
+        'add-plates' => ['add-plates-instructions-block','add-plates-block'],
+        'pooling-summary' => ['pooling-summary-block', 'input-plate-block',
+             'create-plate-block', 'output-plate-block']
+      }
+    end
 
     def create_objects!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
-
       @plate_creation = api.pooled_plate_creation.create!(
         :parents       => transfers.keys,
         :child_purpose => plate_purpose_uuid,
