@@ -8,7 +8,7 @@ module Forms
     write_inheritable_attribute :default_transfer_template_uuid,
       Settings.transfer_templates['Pool wells based on submission']
 
-    write_inheritable_attribute :attributes, [:api, :plate_purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
+    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
 
     def tab_views
       {
@@ -21,7 +21,7 @@ module Forms
     def create_objects!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
       @plate_creation = api.pooled_plate_creation.create!(
         :parents       => transfers.keys,
-        :child_purpose => plate_purpose_uuid,
+        :child_purpose => purpose_uuid,
         :user          => user_uuid
       )
 
