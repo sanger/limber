@@ -305,7 +305,6 @@ namespace :config do
           )
 
           # ISCH plates
-          presenters["Lib PCR-XP"].merge!( :presenter_class => "Presenters::LibPcrXpPresenter", :selected_child_purpose => "ISCH lib pool")
           presenters["ISCH lib pool"].merge!(:form_class => "Forms::MultiPlatePoolingForm", :presenter_class => "Presenters::MultiPlatePooledPresenter", :default_printer_type => :plate_b)
           presenters["ISCH hyb"].merge!(           :form_class => "Forms::BaitingForm",       :presenter_class => 'Presenters::StandardRobotPresenter', :robot=>'nx8-pre-hyb-pool', :default_printer_type => :plate_b)
           presenters['ISCH cap lib'].merge!( :presenter_class => 'Presenters::StandardRobotPresenter', :robot=>'bravo-cap-wash', :default_printer_type => :plate_b)
@@ -347,6 +346,7 @@ namespace :config do
 
       configuration[:request_types] = {}.tap do |request_types|
         request_types['illumina_htp_library_creation']    = ['Lib Norm',false]
+        request_types['illumina_a_isc'] = ['ISCH lib pool', false]
       end
 
     end
