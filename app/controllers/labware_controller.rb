@@ -29,20 +29,28 @@ class LabwareController < ApplicationController
   def show
     begin
       @presenter = presenter_for(@labware)
-      respond_to do |format|
-        format.html {
-          render @presenter.page
-          response.headers["Vary"]="Accept"
-        }
-        format.csv {
-          render @presenter.csv
-          response.headers['Content-Disposition']="inline; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
-          response.headers["Vary"]="Accept"
-        }
-        format.json {
-          response.headers["Vary"]="Accept"
-        }
+      @presenter.suitable_labware do
+        respond_to do |format|
+          format.html {
+            render @presenter.page
+            response.headers["Vary"]="Accept"
+          }
+          format.csv {
+            render @presenter.csv
+            response.headers['Content-Disposition']="inline; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+            response.headers["Vary"]="Accept"
+          }
+          format.json {
+            response.headers["Vary"]="Accept"
+          }
+        end
+        return
       end
+      redirect_to(
+        search_path,
+        :notice => @presenter.errors
+      )
+      return
     rescue Presenters::PlatePresenter::UnknownPlateType => exception
       redirect_to(
         search_path,

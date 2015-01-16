@@ -71,7 +71,7 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
   def csv_file_links
     links = []
     (self.plate.creation_transfers.count/4.0).ceil.times do |i|
-      links << [i+1,"#{Rails.application.routes.url_helpers.pulldown_plate_path(plate.uuid)}.csv?offset=#{i}"]
+      links << [i+1,"#{Rails.application.routes.url_helpers.illumina_b_plate_path(plate.uuid)}.csv?offset=#{i}"]
     end
     links
   end

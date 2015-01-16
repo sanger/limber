@@ -1,9 +1,9 @@
 {
   "plate":{
-    "barcode": "<%= "#{@presenter.plate.barcode.prefix}#{@presenter.plate.barcode.number}" %>",
-    "uuid": "<%= @presenter.plate.uuid %>",
-    "state": "<%= @presenter.plate.state %>",
-    "purpose": "<%= @presenter.plate.plate_purpose.name %>",
+    "barcode": "<%= "#{@presenter.labware.barcode.prefix}#{@presenter.labware.barcode.number}" %>",
+    "uuid": "<%= @presenter.labware.uuid %>",
+    "state": "<%= @presenter.labware.state %>",
+    "purpose": "<%= @presenter.labware.plate_purpose.name %>",
     "preCapGroups": <%= sorted_pre_cap_group_json %>
   }
 }

@@ -102,6 +102,10 @@ module Presenters
 
     def robot_exists?
       (!robot_name.nil?) && Settings.robots[location][robot_name].present?
+      #[location, robot_name].reduce(Settings.robots) do |memo, value|
+      #  val = memo[value]
+      #  val.nil? ? {} : val
+      #end.present?
     end
 
     def statechange_link(view)
