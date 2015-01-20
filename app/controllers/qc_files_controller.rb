@@ -18,11 +18,13 @@ class QcFilesController < ApplicationController
   before_filter :find_assets
 
   def find_assets
-    ['plate','tube','multiplexed_library_tube'].each do |klass|
-      next if params["illumina_b_#{klass}_id"].nil?
-      @asset_path = send(:"illumina_b_#{klass}_path", params["illumina_b_#{klass}_id"])
-      @asset      = api.send(:"#{klass}").find(params["illumina_b_#{klass}_id"])
-      return true
+    ['illumina_b', 'pulldown'].each do |app_name|
+      ['plate','tube','multiplexed_library_tube'].each do |klass|
+        next if params["#{app_name}_#{klass}_id"].nil?
+        @asset_path = send(:"#{app_name}_#{klass}_path", params["#{app_name}_#{klass}_id"])
+        @asset      = api.send(:"#{klass}").find(params["#{app_name}_#{klass}_id"])
+        return true
+      end
     end
     if params['sequencescape_tube_id']
       @asset_path = sequencescape_tube_path(params['sequencescape_tube_id'])
