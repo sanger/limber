@@ -1,49 +1,69 @@
 class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
-  write_inheritable_attribute :summary_partial, 'lab_ware/plates/multi_pooled_plate'
-  write_inheritable_attribute :printing_partial, 'lab_ware/plates/tube_printing'
+  write_inheritable_attribute :summary_partial, 'labware/plates/multi_pooled_plate'
+  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
   write_inheritable_attribute :csv, 'show_pooled'
 
+
+
+include Presenters::Statemachine
   state_machine :state, :initial => :pending do
-    Presenters::Statemachine::StateTransitions.inject(self)
+  #   Presenters::Statemachine::StateTransitions.inject(self)
+     state :pending do
+       include Presenters::Statemachine::StateDoesNotAllowChildCreation
+     end
+     state :started do
+       include Presenters::Statemachine::StateDoesNotAllowChildCreation
+     end
 
-    state :pending do
-      include StateDoesNotAllowChildCreation
-    end
-    state :started do
-      include StateDoesNotAllowChildCreation
-    end
+     state :nx_in_progress do
+       include Presenters::Statemachine::StateDoesNotAllowChildCreation
+     end
 
-    state :nx_in_progress do
-      include StateDoesNotAllowChildCreation
-    end
+     event :pass do
+       transition [ :nx_in_progress ] => :passed
+     end
 
-    event :pass do
-      transition [ :nx_in_progress ] => :passed
-    end
+     state :failed do
 
-    state :failed do
+     end
+     state :cancelled do
 
-    end
-    state :cancelled do
+     end
+   end
+    def has_qc_data?; labware.passed?; end
 
-    end
+  def control_additional_creation(&block)
+    yield unless default_child_purpose.nil?
+    nil
   end
 
-  write_inheritable_attribute :authenticated_tab_states, {
-    :pending        =>  [ 'summary-button', 'robot-verification-button' ],
-    :started        =>  [ 'summary-button', 'robot-verification-button' ],
-    :nx_in_progress =>  [ 'summary-button', 'plate-state-button' ],
-    :passed         =>  [ 'plate-creation-button','summary-button', 'well-failing-button', 'plate-state-button' ],
-    :cancelled      =>  [ 'summary-button' ],
-    :failed         =>  [ 'summary-button' ]
-  }
+  def default_child_purpose
+    labware.plate_purpose.children.first
+  end
 
-  write_inheritable_attribute :robot_name, 'nx8-pre-cap-pool'
-  write_inheritable_attribute :bed_prefix, 'PCRXP'
+
+  def authenticated_tab_states
+   {
+    :pending        =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :started        =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :nx_in_progress =>  [ 'labware-summary-button', 'labware-state-button' ],
+    :passed         =>  [ 'labware-creation-button','labware-summary-button', 'labware-well-failing-button', 'labware-state-button' ],
+    :cancelled      =>  [ 'labware-summary-button' ],
+    :failed         =>  [ 'labware-summary-button' ]
+    }
+  end
+
+  #write_inheritable_attribute :robot_name, 'nx8-pre-cap-pool'
+  write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-pre-cap-pool' }
+  #write_inheritable_attribute :bed_prefix, 'PCRXP'
+
+  def bed_prefix
+    'PCRXP'
+  end
 
   def transfers
-    self.plate.creation_transfers.map do |ct|
+    self.labware.creation_transfers.map do |ct|
       source_ean = ct.source.barcode.ean13
       source_barcode = "#{ct.source.barcode.prefix}#{ct.source.barcode.number}"
       source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
@@ -70,7 +90,7 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
 
   def csv_file_links
     links = []
-    (self.plate.creation_transfers.count/4.0).ceil.times do |i|
+    (self.labware.creation_transfers.count/4.0).ceil.times do |i|
       links << [i+1,"#{Rails.application.routes.url_helpers.illumina_b_plate_path(plate.uuid)}.csv?offset=#{i}"]
     end
     links

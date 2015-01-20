@@ -52,7 +52,9 @@ namespace :config do
     'Lib Pool Conc',
     'Lib Pool SS',
     'Lib Pool SS-XP',
-    'Lib Pool SS-XP-Norm'
+    'Lib Pool SS-XP-Norm',
+
+    'Standard MX'
   ]
 
   task :generate => :environment do
@@ -302,6 +304,14 @@ namespace :config do
             :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube,
             :from_purpose         => 'Lib Pool Pippin'
+          )
+
+          presenters['Standard MX'].merge!(
+            :form_class           => 'Forms::TubesForm',
+            :presenter_class      => 'Presenters::FinalTubePresenter',
+            :state_changer_class  => 'StateChangers::DefaultStateChanger',
+            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
+            :default_printer_type => :tube
           )
 
           # ISCH plates

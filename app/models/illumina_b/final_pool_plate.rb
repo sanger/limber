@@ -1,15 +1,15 @@
-class Pulldown::PooledPlate < Sequencescape::Plate
+class IlluminaB::FinalPoolPlate < Sequencescape::Plate
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
   class Transfer < ::Sequencescape::Transfer
-    belongs_to :source, :class_name => 'PooledPlate', :disposition => :inline
+    belongs_to :source, :class_name => 'FinalPoolPlate', :disposition => :inline
     attribute_reader :transfers
 
     def transfers_with_tube_mapping=(transfers)
       send(
         :transfers_without_tube_mapping=, Hash[
           transfers.map do |well, tube_json|
-            [ well, ::Pulldown::MultiplexedLibraryTube.new(api, tube_json, false) ]
+            [ well, ::IlluminaB::StockLibraryTube.new(api, tube_json, false) ]
           end
         ]
       )
@@ -17,16 +17,16 @@ class Pulldown::PooledPlate < Sequencescape::Plate
     alias_method_chain(:transfers=, :tube_mapping)
   end
 
-  has_many :transfers_to_tubes, :class_name => 'PooledPlate::Transfer'
+  has_many :transfers_to_tubes, :class_name => 'FinalPoolPlate::Transfer'
 
   def well_to_tube_transfers
-    transfers_to_tubes.first.transfers
+    @transfers ||= transfers_to_tubes.first.transfers
   end
 
   # We know that if there are any transfers with this plate as a source then they are into
   # tubes.
   def has_transfers_to_tubes?
-    not well_to_tube_transfers.empty?
+    not transfers_to_tubes.empty?
   end
 
   # Well locations ordered by columns.

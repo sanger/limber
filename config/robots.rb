@@ -14,7 +14,13 @@ CAR = {
 
 
 ROBOT_CONFIG = {
+
+  ### Illumina b
+
+
+  'illumina_b' => {
   ### From pulldown
+
   'nx8-pre-cap-pool' => {
     :name   => 'NX8 Lib PCR-XP to ISCH Lib Pool',
     :layout => 'bed',
@@ -99,10 +105,6 @@ ROBOT_CONFIG = {
     }
   },
 
-  ### Illumina b
-
-
-  'illumina_b' => {
     'cherrypick-to-shear' => {
       :name => 'Illumina A nx-96 Cherrypick to Shear',
       :layout => 'bed',

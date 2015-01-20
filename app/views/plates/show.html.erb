@@ -10,7 +10,6 @@
 </script>
 
 
-
   <%= header(@presenter, 'Plate view') do %>
     <div data-role="navbar">
       <ul id="navbar">
@@ -23,7 +22,6 @@
       </ul>
     </div>
   <% end -%>
-
   <%= content do %>
     <%= flash_messages %>
     <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
@@ -44,7 +42,6 @@
           <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) if well_failing_applicable?(@presenter) %>
         </div>
       </div>
-
 
       <div class="ui-block-b">
         <div id="plate-printing"  class="scape-ui-block" style="display:none;">

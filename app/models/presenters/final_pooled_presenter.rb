@@ -53,6 +53,11 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
     state :cancelled do
       include StateDoesNotAllowTubePreviewing
     end
+
+    state :qc_complete do
+       include StateDoesNotAllowTubePreviewing
+    end
+
   end
 
   def tube_state

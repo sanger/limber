@@ -14,7 +14,7 @@ class Admin::PulldownPlatesController < PlatesController
   def edit
     @presenter = Presenters::AdminPresenter.new(
       :api => api,
-      :plate => @lab_ware
+      :plate => @labware
     )
 
     if @presenter.stock_plate?
