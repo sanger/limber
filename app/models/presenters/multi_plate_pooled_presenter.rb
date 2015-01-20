@@ -8,7 +8,7 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
 
 include Presenters::Statemachine
   state_machine :state, :initial => :pending do
-  #   Presenters::Statemachine::StateTransitions.inject(self)
+     Presenters::Statemachine::StateTransitions.inject(self)
      state :pending do
        include Presenters::Statemachine::StateDoesNotAllowChildCreation
      end
@@ -54,9 +54,7 @@ include Presenters::Statemachine
     }
   end
 
-  #write_inheritable_attribute :robot_name, 'nx8-pre-cap-pool'
   write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-pre-cap-pool' }
-  #write_inheritable_attribute :bed_prefix, 'PCRXP'
 
   def bed_prefix
     'PCRXP'

@@ -15,10 +15,6 @@ module Presenters
       }
     end
 
-    #def robot_name
-    #  Settings.purposes[plate.plate_purpose.uuid][:robot]
-    #end
-
     def plate
       self.labware
     end
