@@ -8,6 +8,9 @@ module Presenters
         include Forms::Form
         write_inheritable_attribute :page, 'show'
 
+        class_inheritable_reader :csv
+        write_inheritable_attribute :csv, 'show'
+
         def has_qc_data?; false; end
       end
     end
@@ -16,7 +19,10 @@ module Presenters
     end
 
     def default_printer_uuid
-      @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+      unless location == :unknown
+        @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+      end
+      @default_printer_uuid
     end
 
     def default_label_count
@@ -95,7 +101,7 @@ module Presenters
     end
 
     def robot_exists?
-      Settings.robots[location][robot_name].present?
+      (!robot_name.nil?) && Settings.robots[location][robot_name].present?
     end
 
     def statechange_link(view)
@@ -181,5 +187,14 @@ module Presenters
       presentation_classes = Settings.purposes[labware.plate_purpose.uuid] or return UnknownPlateType
       presentation_classes[:presenter_class].constantize
     end
+
+    def csv_file_links
+      [["","#{Rails.application.routes.url_helpers.illumina_b_plate_path(labware.uuid)}.csv"]]
+    end
+
+    def filename
+      false
+    end
+
   end
 end

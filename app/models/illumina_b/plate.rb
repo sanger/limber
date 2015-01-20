@@ -3,21 +3,36 @@ class IlluminaB::Plate < Sequencescape::Plate
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
   def coerce
-    return self unless qc_complete? and is_a_final_pooling_plate?
-    coerce_to(IlluminaB::PcrXpPlate)
+    return self unless tubes_created? and is_a_final_pooling_plate?
+    coerce_to(IlluminaB::FinalPoolPlate)
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [
     'ILB_STD_PCRXP',
     'ILB_STD_PCRRXP',
     'Lib PCR-XP',
-    'Lib PCRR-XP'
+    'Lib PCRR-XP',
+    'ISCH lib pool',
+    'ISCH cap lib pool'
+  ]
+
+  TUBES_ON_PASS = [
+
+    'ISCH cap lib pool'
   ]
 
   def is_a_final_pooling_plate?
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
   end
   private :is_a_final_pooling_plate?
+
+  def tubes_created?
+    qc_complete? || (passed? && tubes_on_pass?)
+  end
+
+  def tubes_on_pass?
+    TUBES_ON_PASS.include?(plate_purpose.name)
+  end
 
   def library_type_name
     uuid = pools.keys.first
