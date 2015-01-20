@@ -1,0 +1,24 @@
+<%= CSV.generate_line ["PLATE", "Bed", "Bait Type", "SAMPLE WELL", "BA_1", "BA_2", "Ratio", "Average", "Vol of DNA for pool", "Total Vol of DNA", "Buffer Vol", "Destination Tube", "Destination Tube Rack", "EB Source", "EB Well", "pool ID", "Total volume", "BA_Sub"], :row_sep => "" %>
+<% @presenter.transfers.each_with_index do |transfer, index| -%>
+  <% position = index + 2 -%>
+  <% source_well, destination_well = transfer -%>
+  <% value = ["#{@presenter.lab_ware.barcode.number}",
+    "#{@presenter.lab_ware.label.text}",
+    "presenter.lab_ware.wells.first.aliquots.first.bait_library",
+    "#{source_well}",
+    nil,
+    nil,
+    "=E#{position}/F#{position}",
+    "\"=AVERAGEIF(E#{position}:E#{position},\"\">0\"\")\"",
+    "=(170*6.2)/(2*H#{position})",
+    @presenter.last_in_pool?(source_well) ? "=SUM(I#{position+1 - @presenter.pool(source_well).length}:I#{position})" : "",
+    @presenter.last_in_pool?(source_well) ? "=170-J#{position}" : "",
+    @presenter.location_of_pool_destination_from(source_well),
+    "Pooled_Libraries 1-24",
+    "Elution Buffer",
+    1,
+    @presenter.last_in_pool?(source_well) ? @presenter.pool_number(source_well) : "",
+    @presenter.last_in_pool?(source_well) ? "=J#{position}+K#{position}" : ""
+    ].join(",") -%>
+  <%= value.html_safe %>
+<% end %>

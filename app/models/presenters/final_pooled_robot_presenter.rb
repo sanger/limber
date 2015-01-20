@@ -11,6 +11,7 @@ class Presenters::FinalPooledRobotPresenter < Presenters::FinalPooledPresenter
   def has_qc_data?; true; end
 
   write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-post-cap-lib-pool' }
+  write_inheritable_attribute :csv, 'show_pooled_alternative'
 
   def tube_label_text
     labware.tubes.map do |tube|
