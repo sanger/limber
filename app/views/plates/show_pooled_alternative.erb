@@ -1,0 +1,27 @@
+<%= CSV.generate_line ["PLATE", "Bed", "Bait Type", "SAMPLE WELL", "BA_1", "BA_2", "Ratio", "Average", "Vol of DNA for pool", "Total Vol of DNA", "Buffer Vol", "Destination Tube", "Destination Tube Rack", "EB Source", "EB Well", "pool ID", "Total volume", "BA_Sub"], :row_sep => "" %>
+<% @presenter.transfers.each_with_index do |transfer, index| -%>
+  <% position = index + 2 -%>
+  <% source_well, destination_well = transfer -%>
+  <% last_in_pool = @presenter.last_in_pool?(source_well) -%>
+  <% value = [
+    @presenter.labware.stock_plate.barcode.number,                                                  # PLATE
+    @presenter.labware.label.text,                                                                  # Bed
+    @presenter.labware.wells.first.aliquots.first.bait_library,                                     # Bait Type
+    "#{source_well}",                                                                               # Sample Well
+    nil,                                                                                            # BA1
+    nil,                                                                                            # BA2
+    "=E#{position}/F#{position}",                                                                   # Ratio
+    "\"=AVERAGEIF(E#{position}:E#{position},\"\">0\"\")\"",                                         # Average
+    "=(170*6.2)/(2*H#{position})",                                                                  # Vol of DNA for pool
+    last_in_pool ? "=SUM(I#{position+1 - @presenter.pool(source_well).length}:I#{position})" : "",  # Total Vol of DNA
+    last_in_pool ? "=170-J#{position}" : "",                                                        # Buffer vol
+    @presenter.location_of_pool_destination_from(source_well),                                      # Destination Tube
+    "Pooled_Libraries 1-24",                                                                        # Destination Tube Rack
+    "Elution Buffer",                                                                               # EB Source
+    1,                                                                                              # EB Well
+    last_in_pool ? @presenter.pool_number(source_well) : "",                                        # pool ID
+    last_in_pool ? "=J#{position}+K#{position}" : ""                                                # Total volume
+    #BA_Sub
+    ].join(",") -%>
+  <%= value.html_safe %>
+<% end %>
