@@ -152,55 +152,6 @@ module Presenters
       { :url => view.illumina_b_plate_path(self.labware), :as  => :plate }
     end
 
-    def pool_destination_location(location_string)
-      self.plate.creation_transfer.transfers[location_string]
-    end
-
-    def sorted_pools
-      self.plate.creation_transfer.transfers.to_a.map do |t|
-        [t[1], location_to_tube_number(t[1])]
-      end.sort do |l1, l2|
-        l1[1] <=> l2[1]
-      end.map {|l| l[0]}.uniq
-    end
-
-    def pool_number(location_string)
-      sorted_pools.index(pool_destination_location(location_string))+1
-    end
-
-    def pool(location_string)
-      pooled_to = pool_destination_location(location_string)
-      transfers.select {|t| t[1]==pooled_to}.map{|t| t[0]}.sort do |loc1, loc2|
-        if (loc1[0] != loc2[0])
-          loc1[0] <=> loc2[0]
-        else
-          loc1[1] <=> loc2[1]
-        end
-      end
-    end
-
-    def num_rows(size)
-      {
-        96 => [ 12, 8 ],
-        384 => [ 24, 16 ]
-      }[size][1]
-    end
-
-    def location_to_tube_number(location_string)
-      letter = location_string[0].ord
-      number = location_string[1..location_string.length].to_i
-      num_letter = (letter - "A".ord) + 1
-      num_letter + (num_rows(self.lab_ware.size) * (number - 1))
-    end
-
-    def location_of_pool_destination_from(location_string)
-      location_to_tube_number(pool_destination_location(location_string))
-    end
-
-    def last_in_pool?(location_string)
-      pool(location_string).last == location_string
-    end
-
     def transfers
       transfers = self.labware.creation_transfer.transfers
       transfers.sort {|a,b| split_location(a.first) <=> split_location(b.first) }
@@ -212,8 +163,8 @@ module Presenters
 
     # Split a location string into an array containing the row letter
     # and the column number (as a integer) so that they can be sorted.
-    def split_location(location_string)
-      match = location_string.match(/^([A-H])(\d+)/)
+    def split_location(location)
+      match = location.match(/^([A-H])(\d+)/)
       [ match[2].to_i, match[1] ]  # Order by column first
     end
     private :split_location
