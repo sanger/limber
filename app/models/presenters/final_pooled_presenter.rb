@@ -80,11 +80,11 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
     end.join("")
   end
 
-  Barcode = Struct.new(:prefix,:number,:suffix,:study)
+  Barcode = Struct.new(:prefix,:number,:suffix,:study,:type)
 
   def get_tube_barcodes
     plate.tubes.map do |tube|
-      Barcode.new(tube.barcode.prefix,tube.barcode.number,nil,prioritized_name(tube.name, 10))
+      Barcode.new(tube.barcode.prefix,tube.barcode.number,nil,prioritized_name(tube.name, 10),tube.barcode.type)
     end
   end
 
