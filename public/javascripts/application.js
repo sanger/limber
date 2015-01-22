@@ -470,23 +470,6 @@
     $(document).on('click','.navbar-link', SCAPE.linkCallbacks.fire);
   });
 
-
-  $(document).on('pageinit', '#admin-page', function(event) {
-
-    $('#plate_edit').submit(function() {
-      if ($('#card_id').val().length === 0) {
-        alert("Please scan your swipecard...");
-        return false;
-      }
-    });
-
-    // State changes reasons...
-    SCAPE.displayReason();
-    $('#admin-page').on('change','#state', SCAPE.displayReason);
-  });
-
-
-
 /* TAG CREATION */
   $(document).on('pagecreate', '#tag-creation-page', function(){
 

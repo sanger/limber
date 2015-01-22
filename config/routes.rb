@@ -24,10 +24,6 @@ IlluminaBPipeline::Application.routes.draw do
   end
   post '/fail_wells/:id', :controller => :plates, :action => 'fail_wells', :as => :fail_wells
 
-  namespace "admin" do
-    resources :illumina_b_plates, :only => [:update, :edit], :as => :plates
-  end
-
   resources :illumina_b_multiplexed_library_tube, :controller => :tubes do
     resources :qc_files, :controller => :qc_files
   end
