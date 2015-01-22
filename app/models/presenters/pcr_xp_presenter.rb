@@ -13,10 +13,6 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     :failed      => [ 'labware-summary-button' ]
   }
 
-  write_inheritable_attribute :robot_controlled_states, {
-    :pending => 'nx-96'
-  }
-
   module StateDoesNotAllowTubePreviewing
     def control_tube_preview(&block)
       # Does nothing because you are not allowed to!

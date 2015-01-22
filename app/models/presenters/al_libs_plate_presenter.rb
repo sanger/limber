@@ -11,11 +11,6 @@ module Presenters
       :failed      => [ 'labware-summary-button' ]
     }
 
-    write_inheritable_attribute :robot_controlled_states, {
-      :pending => 'fx',
-      :started => 'fx-add-tags'
-    }
-
     state_machine :state, :initial => :pending do
       Statemachine::StateTransitions.inject(self)
 
