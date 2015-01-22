@@ -36,13 +36,17 @@ module Presenters
               transition :passed => :qc_complete
             end
 
+            state :started do
+              include StateDoesNotAllowChildCreation
+            end
+
             state :pending do
-              include QcCreatableStep
+              include StateDoesNotAllowChildCreation
             end
 
             state :passed do
               def has_qc_data?; true; end
-              include StateDoesNotAllowChildCreation
+              include QcCreatableStep
             end
 
             state :qc_complete, :human_name => 'QC Complete' do

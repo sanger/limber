@@ -39,7 +39,8 @@ namespace :config do
   QC_PLATE_PURPOSES = [
     'Post Shear QC',
     'Lib PCR-XP QC',
-    'Lib PCRR-XP QC'
+    'Lib PCRR-XP QC',
+    'Lib Norm QC'
   ]
 
   TUBE_PURPOSES = [
@@ -314,6 +315,19 @@ namespace :config do
             :from_purpose         => 'Lib Pool Pippin'
           )
 
+          presenters['Lib Norm'].merge!(
+            :presenter_class => 'Presenters::QcCompletablePresenter'
+          )
+
+          presenters['Lib Norm QC'].merge!(
+            :presenter_class     => 'Presenters::QcPlatePresenter',
+            :default_printer_type => :plate_b
+          )
+
+          presenters['Lib Norm 2'].merge!(
+
+          )
+
           presenters['Lib Norm 2 Pool'].merge!(
             :form_class           => 'Forms::PoolingRowToColumn'
           )
@@ -369,6 +383,7 @@ namespace :config do
             :default_printer_type => :plate_b,
             :robot_controlled_states => { :pending => 'nx8-post-cap-lib-pool' }
           )
+
         end
 
         purpose_details_by_uuid = lambda { |labware_purposes, purpose|
