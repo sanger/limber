@@ -1,5 +1,5 @@
 module Presenters
-  class StandardRobotPresenter < StandardPresenter
+  class FailablePresenter < StandardPresenter
 
     write_inheritable_attribute :authenticated_tab_states, {
       :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
@@ -8,16 +8,6 @@ module Presenters
       :cancelled  =>  [ 'labware-summary-button' ],
       :failed     =>  [ 'labware-summary-button' ]
     }
-
-    def robot_controlled_states
-      {
-      :pending => Settings.purposes[self.plate.plate_purpose.uuid][:robot]
-      }
-    end
-
-    def plate
-      self.labware
-    end
 
   end
 end

@@ -1,11 +1,7 @@
 module Presenters
   class PostShearPlatePresenter < StandardPresenter
 
-    write_inheritable_attribute :robot_controlled_states, {
-      :pending => 'shear-post-shear'
-    }
-
-        # Returns the child plate purposes that can be created in the qc_complete state.
+    # Returns the child plate purposes that can be created in the qc_complete state.
     def default_child_purpose
       labware.plate_purpose.children.detect do |purpose|
         not_qc?(purpose) && suitable_child?(purpose)

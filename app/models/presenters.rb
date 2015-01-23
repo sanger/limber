@@ -18,9 +18,13 @@ module Presenters
     def save!
     end
 
+    def purpose_config
+      Settings.purposes[purpose.uuid]
+    end
+
     def default_printer_uuid
       unless location == :unknown
-        @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+        @default_printer_uuid ||= Settings.printers[location][purpose_config.default_printer_type]
       end
       @default_printer_uuid
     end
@@ -88,9 +92,9 @@ module Presenters
         :failed     =>  [ 'labware-summary-button' ]
     }
 
-    class_inheritable_reader    :robot_controlled_states
-    write_inheritable_attribute :robot_controlled_states, {
-    }
+    def robot_controlled_states
+      purpose_config.robot_controlled_states || {}
+    end
 
     def label_type
       yield "custom-labels"
@@ -158,6 +162,10 @@ module Presenters
     end
 
     def qc_owner
+      labware
+    end
+
+    def plate
       labware
     end
 
