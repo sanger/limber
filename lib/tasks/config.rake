@@ -316,7 +316,8 @@ namespace :config do
           )
 
           presenters['Lib Norm'].merge!(
-            :presenter_class => 'Presenters::QcCompletablePresenter'
+            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :robot_controlled_states => { :pending => 'pcr-xp-lib-norm' }
           )
 
           presenters['Lib Norm QC'].merge!(
@@ -325,10 +326,12 @@ namespace :config do
           )
 
           presenters['Lib Norm 2'].merge!(
-
+            :robot_controlled_states => { :pending => 'lib-norm-lib-norm-2' }
           )
 
           presenters['Lib Norm 2 Pool'].merge!(
+            :presenter_class     => 'Presenters::EndPlatePresenter',
+            :robot_controlled_states => { :pending => 'lib-norm-2-lib-norm-2-pool' },
             :form_class           => 'Forms::PoolingRowToColumn'
           )
 
