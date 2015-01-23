@@ -62,7 +62,7 @@ module LabwareHelper
 
     ('A'..'H').each_with_index do |row,row_index|
       (1..12).each_with_index do |col,col_index|
-        @location_colours[row + col.to_s] = "colour-#{(col_index * 12) + row_index + 1}"
+        @location_colours[row + col.to_s] = "colour-#{(col_index * 8) + row_index + 1}"
       end
     end
 
