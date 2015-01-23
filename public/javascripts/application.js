@@ -77,6 +77,17 @@
     '<div class="substitute-tag palette-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%= replacement_tag_id %></div>'+
     '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
     '</li>',
+  animateWell: function() {
+    if ($(this).children().length < 2) { return; }
+    this.pos = 0;
+    this.slide = function() {
+      var scrollTo;
+      this.pos = (this.pos + 1) % $(this).children().length;
+      scrollTo = $(this).children()[this.pos].offsetTop-5;
+      $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
+    };
+    this.slide();
+  },
 
   controlTemplate:  '<fieldset id="plate-view-control" data-role="controlgroup" data-type="horizontal">' +
                     '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="summary-view" checked="checked" />' +
@@ -462,6 +473,7 @@
     // State changes reasons...
     // SCAPE.displayReason();
     $('.show-page').on('change','#state', SCAPE.displayReason);
+    $('.well').each(SCAPE.animateWell);
   });
 
   $(document).on('pageinit', function(){
@@ -625,7 +637,7 @@
       },
 
 
-      update_layout : function (template) {
+      update_layout: function (template) {
         var tags = $(SCAPE.tag_layouts[template||$('#plate_tag_layout_template_uuid').val()]);
 
         tags.each(function(index) {
@@ -1204,6 +1216,7 @@
     SCAPE.renderSourceWells = function(){
       var capPoolOffset = 0;
       var seqPoolOffset = 0;
+      var map = {};
       for (var plateIndex = 0; plateIndex < SCAPE.plates.length; plateIndex += 1) {
         if (SCAPE.plates[plateIndex]===undefined) {
           $('.plate-id-'+plateIndex).hide();
@@ -1215,7 +1228,6 @@
           $('#well-transfers-'+plateIndex).detach();
 
           var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-'+plateIndex);
-
           capPoolOffset += walkPreCapPools(preCapPools,function(preCapPool, poolNumber, seqPoolID, seqPoolIndex){
             var newInput, well;
 
@@ -1243,6 +1255,21 @@
       SCAPE.renderDestinationPools();
 
       $('.aliquot').fadeIn('slow');
+
+      $('.well').each(function(){
+
+        if ($(this).children().length < 2) { return; }
+
+        this.pos = 0;
+
+        this.slide = function() {
+          var scrollTo
+          this.pos = (this.pos + 1) % $(this).children().length;
+          scrollTo = $(this).children()[this.pos].offsetTop-5;
+          $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
+        };
+        this.slide();
+      })
     };
 
     SCAPE.poolingSM = new SCAPE.StateMachine('.ui-content', {
