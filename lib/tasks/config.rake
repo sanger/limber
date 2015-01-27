@@ -354,6 +354,7 @@ namespace :config do
           presenters["ISCH hyb"].merge!(
             :form_class => "Forms::BaitingForm",
             :presenter_class => 'Presenters::FailablePresenter',
+            :robot_controlled_states => { :pending => 'nx8-pre-hyb-pool'},
             :robot=>'nx8-pre-hyb-pool',
             :default_printer_type => :plate_b
           )
@@ -381,7 +382,7 @@ namespace :config do
 
           presenters["ISCH cap lib pool"].merge!(
             :form_class => "Forms::AutoPoolingForm",
-            :presenter_class => "Presenters::FinalPooledRobotPresenter",
+            :presenter_class => "Presenters::FinalPooledPresenter",
             :state_changer_class => 'StateChangers::AutoPoolingStateChanger',
             :default_printer_type => :plate_b,
             :robot_controlled_states => { :pending => 'nx8-post-cap-lib-pool' }

@@ -16,9 +16,11 @@
           <td class="col-all <%= "col-#{index+1}" %>">
             <div id="<%= "well_#{well.location}" %>" class="well">
               <% unless transfers[well.location].nil? -%>
-                <div id="<%= "aliquot_#{well.location}" %>" class="aliquot <%= colours_by_location[transfers[well.location]] %>" rel="<%= "#details_#{well.location}" %>">
-                  <%= transfers[well.location] %>
+                <% Array(transfers[well.location]).each do |location| -%>
+                <div id="<%= "aliquot_#{location}" %>" class="aliquot <%= colours_by_location[location] %>" rel="<%= "#details_#{location}" %>">
+                  <%= location %>
                 </div>
+                <% end %>
               <% end %>
             </div>
           </td>

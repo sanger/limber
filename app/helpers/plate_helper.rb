@@ -48,7 +48,7 @@ module PlateHelper
     sorted_group_array = current_plate.pre_cap_groups.map do |group_id,group|
       [group_id,group].tap do
         group['failures']  = group['wells'] & failed_wells
-        group['all_wells'] = group['wells'].sort_by(&Pulldown::PooledPlate::WELLS_IN_COLUMN_MAJOR_ORDER.method(:find_index))
+        group['all_wells'] = group['wells'].sort_by(&IlluminaB::FinalPoolPlate::WELLS_IN_COLUMN_MAJOR_ORDER.method(:find_index))
         group['wells']     = group['all_wells'] - group['failures']
       end
     end.sort_by do |(_,group)|

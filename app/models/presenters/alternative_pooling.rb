@@ -42,6 +42,10 @@ module Presenters::AlternativePooling
     pool(source_location).last == source_location
   end
 
+  def bait_library_for(location)
+    well_baits[location]
+  end
+
   private
 
   def pool_hash
@@ -56,5 +60,9 @@ module Presenters::AlternativePooling
 
   def source_wells_for(destination_well)
     transfer_hash.select {|source,destination| destination == destination_well}.keys
+  end
+
+  def well_baits
+    @well_baits ||= Hash[labware.pools.values.map {|pool| [pool['wells'].first,pool['bait_library']['name']]}]
   end
 end

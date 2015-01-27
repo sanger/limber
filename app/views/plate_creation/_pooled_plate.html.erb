@@ -22,9 +22,9 @@
                 <% unless well.try(:aliquots).blank? -%>
                   <% destination_well = plate_presenter.transfers[well.location] -%>
 
-                  <div 
-                    id="<%= "source_aliquot_#{well.location}" %>" 
-                    class="aliquot source_aliquot <%= colours_by_location[destination_well] %>" 
+                  <div
+                    id="<%= "source_aliquot_#{well.location}" %>"
+                    class="aliquot source_aliquot <%= colours_by_location[destination_well] %>"
                     rel="<%= "#details_#{well.location}" %>"
                     data-pool="<%= well.pool_id %>"
                     data-destination-well=<%= destination_well %>

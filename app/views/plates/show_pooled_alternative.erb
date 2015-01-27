@@ -5,9 +5,9 @@
   <% last_in_pool = @presenter.last_in_pool?(source_well) -%>
   <% value = [
     @presenter.labware.stock_plate.barcode.number,                                                  # PLATE
-    @presenter.labware.label.text,                                                                  # Bed
-    @presenter.labware.wells.first.aliquots.first.bait_library,                                     # Bait Type
-    "#{source_well}",                                                                               # Sample Well
+    "Post Capture XP",                                                                              # Bed
+    @presenter.bait_library_for(destination_well),                                                  # Bait Type
+    source_well,                                                                                    # Sample Well
     nil,                                                                                            # BA1
     nil,                                                                                            # BA2
     "=E#{position}/F#{position}",                                                                   # Ratio
