@@ -116,6 +116,10 @@ module Presenters
       robot_exists? ? "Bed verification" : 'Move plate to next state'
     end
 
+    def if_statechange_active(content)
+      robot_exists? ? "" : content
+    end
+
 
     def plate_to_walk
       self.labware

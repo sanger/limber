@@ -1004,14 +1004,12 @@
 
       'poolingSummary': {
         enter: function(){
-          debugger;
           plateSummaryHandler();
           renderPoolingSummary(SCAPE.plate.preCapPools);
           $('.create-button').button('enable');
         },
 
         leave: function(){
-          debugger;
           $('#pooling-summary').empty();
           $('.create-button').button('disable');
         }
