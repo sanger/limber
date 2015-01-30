@@ -20,7 +20,7 @@ module Presenters
         end
 
         def default_child_purpose
-          labware.plate_purpose.children.first
+          labware.plate_purpose.children.first # ILB_STC_PCR
         end
       end
 
@@ -38,7 +38,7 @@ module Presenters
 
         # Returns the child plate purposes that can be created in the passed state.
         def default_child_purpose
-          labware.plate_purpose.children.last
+          labware.plate_purpose.children.last # ILB_STC_PCRR
         end
       end
 
