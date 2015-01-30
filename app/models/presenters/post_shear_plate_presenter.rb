@@ -8,6 +8,10 @@ module Presenters
       end
     end
 
+    def valid_purposes
+      yield default_child_purpose
+    end
+
     def suitable_child?(purpose)
       Settings.purposes[labware.plate_purpose.uuid].locations_children.nil? ||
       Settings.purposes[labware.plate_purpose.uuid].locations_children[location] == purpose.name

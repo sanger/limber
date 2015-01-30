@@ -19,6 +19,10 @@ module Presenters
           nil
         end
 
+        def valid_purposes
+          yield default_child_purpose
+        end
+
         def default_child_purpose
           labware.plate_purpose.children.first # ILB_STC_PCR
         end
@@ -34,6 +38,10 @@ module Presenters
         def control_additional_creation(&block)
           yield unless default_child_purpose.nil?
           nil
+        end
+
+        def valid_purposes
+          yield default_child_purpose
         end
 
         # Returns the child plate purposes that can be created in the passed state.

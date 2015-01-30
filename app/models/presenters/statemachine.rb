@@ -20,6 +20,11 @@ module Presenters::Statemachine
     def default_child_purpose
       labware.plate_purpose.children.detect?(:not_qc?)
     end
+
+    # Yields the valid purpose.
+    def valid_purposes
+      yield default_child_purpose
+    end
   end
 
   # These are shared base methods to be used in all presenter state_machines

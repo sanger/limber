@@ -8,6 +8,10 @@ module Presenters
           nil
         end
 
+        def valid_purposes
+          yield default_child_purpose
+        end
+
         def default_child_purpose
           purpose.children.detect(&:is_qc?)
         end

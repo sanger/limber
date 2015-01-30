@@ -66,6 +66,11 @@ module Presenters
           nil
         end
 
+        # Yields the valid purpose.
+        def valid_purposes
+          yield default_child_purpose
+        end
+
         # Returns the child plate purposes that can be created in the qc_complete state.
         def default_child_purpose
           purpose.children.first

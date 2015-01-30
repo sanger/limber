@@ -348,7 +348,10 @@ namespace :config do
             :form_class => "Forms::MultiPlatePoolingForm",
             :presenter_class => "Presenters::MultiPlatePooledPresenter",
             :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'nx8-pre-cap-pool' }
+            :robot_controlled_states => {
+              :pending => 'nx8-pre-cap-pool',
+              :started => 'nx8-pre-cap-pool'
+            }
           )
 
           presenters["ISCH hyb"].merge!(
@@ -423,7 +426,8 @@ namespace :config do
 
       configuration[:request_types] = {}.tap do |request_types|
         request_types['illumina_htp_library_creation']    = ['Lib Norm',false]
-        request_types['illumina_a_isc'] = ['ISCH lib pool', false]
+        request_types['illumina_a_isc']                   = ['ISCH lib pool', false]
+        request_types['illumina_a_re_isc']                = ['ISCH lib pool', false]
       end
 
     end

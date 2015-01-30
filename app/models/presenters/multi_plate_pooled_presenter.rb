@@ -21,9 +21,12 @@ include Presenters::Statemachine
     end
 
     event :pass do
-      def has_qc_data?; true; end
-      include Presenters::Statemachine::StateAllowsChildCreation
       transition [ :nx_in_progress ] => :passed
+    end
+
+    state :passed do
+      include Presenters::Statemachine::StateAllowsChildCreation
+      def has_qc_data?; true; end
     end
 
     state :failed do
@@ -44,8 +47,6 @@ include Presenters::Statemachine
     :failed         =>  [ 'labware-summary-button' ]
     }
   end
-
-  write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-pre-cap-pool' }
 
   def bed_prefix
     'PCRXP'
