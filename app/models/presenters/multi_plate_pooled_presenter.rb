@@ -8,40 +8,31 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
 
 include Presenters::Statemachine
   state_machine :state, :initial => :pending do
-     Presenters::Statemachine::StateTransitions.inject(self)
-     state :pending do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
-     state :started do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
+    Presenters::Statemachine::StateTransitions.inject(self)
+    state :pending do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
+    state :started do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
 
-     state :nx_in_progress do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
+    state :nx_in_progress do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
 
-     event :pass do
-       transition [ :nx_in_progress ] => :passed
-     end
+    event :pass do
+      def has_qc_data?; true; end
+      include Presenters::Statemachine::StateAllowsChildCreation
+      transition [ :nx_in_progress ] => :passed
+    end
 
-     state :failed do
-
-     end
-     state :cancelled do
-
-     end
-   end
-    def has_qc_data?; labware.passed?; end
-
-  def control_additional_creation(&block)
-    yield unless default_child_purpose.nil?
-    nil
+    state :failed do
+      def has_qc_data?; true; end
+    end
+    state :cancelled do
+      def has_qc_data?; true; end
+    end
   end
-
-  def default_child_purpose
-    labware.plate_purpose.children.first
-  end
-
 
   def authenticated_tab_states
    {

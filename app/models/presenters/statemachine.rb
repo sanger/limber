@@ -6,6 +6,22 @@ module Presenters::Statemachine
     alias_method(:control_additional_creation, :control_child_plate_creation)
   end
 
+  module StateAllowsChildCreation
+    # Yields to the block if there are child plates that can be created from the current one.
+    # It passes the valid child plate purposes to the block.
+    def control_child_plate_creation(&block)
+      yield unless default_child_purpose.nil?
+      nil
+    end
+    alias_method(:control_additional_creation, :control_child_plate_creation)
+
+    # Returns the child plate purposes that can be created in the passed state.  Typically
+    # this is only one, but it specifically excludes QC plates.
+    def default_child_purpose
+      labware.plate_purpose.children.detect?(:not_qc?)
+    end
+  end
+
   # These are shared base methods to be used in all presenter state_machines
   module Shared
     #--
@@ -90,18 +106,7 @@ module Presenters::Statemachine
         end
 
         state :passed do
-          # Yields to the block if there are child plates that can be created from the current one.
-          # It passes the valid child plate purposes to the block.
-          def control_additional_creation(&block)
-            yield unless default_child_purpose.nil?
-            nil
-          end
-
-          # Returns the child plate purposes that can be created in the passed state.  Typically
-          # this is only one, but it specifically excludes QC plates.
-          def default_child_purpose
-            labware.plate_purpose.children.first
-          end
+          include StateAllowsChildCreation
         end
 
         state :cancelled do
