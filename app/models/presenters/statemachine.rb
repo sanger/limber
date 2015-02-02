@@ -18,7 +18,7 @@ module Presenters::Statemachine
     # Returns the child plate purposes that can be created in the passed state.  Typically
     # this is only one, but it specifically excludes QC plates.
     def default_child_purpose
-      labware.plate_purpose.children.detect?(:not_qc?)
+      labware.plate_purpose.children.detect(:not_qc?)
     end
 
     # Yields the valid purpose.
