@@ -31,7 +31,7 @@ module Presenters
             end
 
             state :passed do
-              include StateMachine::StateAllowsChildCreation
+              include Statemachine::StateAllowsChildCreation
             end
 
             state :cancelled do
