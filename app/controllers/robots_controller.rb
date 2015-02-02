@@ -45,7 +45,7 @@ class RobotsController < ApplicationController
   private :find_robot
 
   def stripped_beds
-    Hash[(params[:beds]||{}).map {|k,v| [k.strip,v.strip]}]
+    Hash[(params[:beds]||params[:bed]||{}).map {|k,v| [k.strip,v.strip]}]
   end
   private :stripped_beds
 
