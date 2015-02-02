@@ -15,7 +15,7 @@
       <ul id="navbar">
         <li id="labware-summary-button"><a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li id="labware-state-button"><a href="<%= @presenter.statechange_link(self) %>" class="navbar-link" rel="labware-state-button" data-icon="gear"><%= @presenter.statechange_label %></a></li>
+          <li id="labware-state-button"><a href="<%= @presenter.statechange_link(self) %>" <%= @presenter.if_statechange_active("class='navbar-link'").html_safe %> rel="labware-state-button" data-icon="gear"><%= @presenter.statechange_label %></a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
           <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create next plate</a></li>
         <% end -%>
@@ -75,7 +75,9 @@
 
           <%= @presenter.control_additional_creation do %>
             <h2>Create Child Plate</h2>
-            <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+            <% @presenter.valid_purposes do |purpose| %>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
+            <% end %>
           <% end %>
         </div>
 

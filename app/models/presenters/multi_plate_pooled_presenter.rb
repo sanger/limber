@@ -8,40 +8,34 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
 
 include Presenters::Statemachine
   state_machine :state, :initial => :pending do
-     Presenters::Statemachine::StateTransitions.inject(self)
-     state :pending do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
-     state :started do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
+    Presenters::Statemachine::StateTransitions.inject(self)
+    state :pending do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
+    state :started do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
 
-     state :nx_in_progress do
-       include Presenters::Statemachine::StateDoesNotAllowChildCreation
-     end
+    state :nx_in_progress do
+      include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    end
 
-     event :pass do
-       transition [ :nx_in_progress ] => :passed
-     end
+    event :pass do
+      transition [ :nx_in_progress ] => :passed
+    end
 
-     state :failed do
+    state :passed do
+      include Presenters::Statemachine::StateAllowsChildCreation
+      def has_qc_data?; true; end
+    end
 
-     end
-     state :cancelled do
-
-     end
-   end
-    def has_qc_data?; labware.passed?; end
-
-  def control_additional_creation(&block)
-    yield unless default_child_purpose.nil?
-    nil
+    state :failed do
+      def has_qc_data?; true; end
+    end
+    state :cancelled do
+      def has_qc_data?; true; end
+    end
   end
-
-  def default_child_purpose
-    labware.plate_purpose.children.first
-  end
-
 
   def authenticated_tab_states
    {
@@ -53,8 +47,6 @@ include Presenters::Statemachine
     :failed         =>  [ 'labware-summary-button' ]
     }
   end
-
-  write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-pre-cap-pool' }
 
   def bed_prefix
     'PCRXP'

@@ -4,14 +4,13 @@ module Presenters
     # Returns the child plate purposes that can be created in the qc_complete state.
     def default_child_purpose
       labware.plate_purpose.children.detect do |purpose|
-        not_qc?(purpose) && suitable_child?(purpose)
+        purpose.not_qc? && suitable_child?(purpose)
       end
     end
 
-    def not_qc?(purpose)
-      !Settings.qc_purposes.include?(purpose.name)
+    def valid_purposes
+      yield default_child_purpose
     end
-    private :not_qc?
 
     def suitable_child?(purpose)
       Settings.purposes[labware.plate_purpose.uuid].locations_children.nil? ||

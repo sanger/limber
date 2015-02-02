@@ -86,9 +86,22 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
         not labware.has_transfers_to_tubes?
       end
 
+      def valid_purposes
+        labware.plate_purpose.children.each do |purpose|
+          yield purpose if valid_purpose_names.include?(purpose.name)
+        end
+      end
+
+      def valid_purpose_names
+        @vpn||=labware.pools.values.map do |pool_details|
+          Settings.request_types[pool_details['request_type']].first
+        end
+      end
+
       def default_child_purpose
         labware.plate_purpose.children.detect {|purpose| Settings.request_types[labware.pools.values.first['request_type']].first==purpose.name }
       end
+
     end
 
     state :failed do

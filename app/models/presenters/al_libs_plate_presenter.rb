@@ -24,7 +24,12 @@ module Presenters
           nil
         end
 
+        def valid_purposes
+          yield default_child_purpose
+        end
+
         def default_child_purpose
+          # Lib PCR
           labware.plate_purpose.children.first
         end
       end
@@ -41,8 +46,13 @@ module Presenters
           nil
         end
 
+        def valid_purposes
+          yield default_child_purpose
+        end
+
         # Returns the child plate purposes that can be created in the passed state.
         def default_child_purpose
+          # Lib PCRR
           labware.plate_purpose.children.last
         end
       end
