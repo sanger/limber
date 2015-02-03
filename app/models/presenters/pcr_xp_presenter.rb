@@ -94,12 +94,14 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
 
       def valid_purpose_names
         @vpn||=labware.pools.values.map do |pool_details|
-          Settings.request_types[pool_details['request_type']].first
+          Settings.request_types.fetch(pool_details.fetch('request_type'),[]).first
         end
       end
 
       def default_child_purpose
-        labware.plate_purpose.children.detect {|purpose| Settings.request_types[labware.pools.values.first['request_type']].first==purpose.name }
+        labware.plate_purpose.children.detect do |purpose|
+          valid_purpose_names.first == purpose.name
+        end
       end
 
     end
@@ -118,7 +120,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   end
 
   def default_tube_printer_uuid
-    Settings.printers[location][Settings.purposes[default_child_purpose.uuid].default_printer_type]
+    Settings.printers.fetch(location).fetch('tube')
   end
 
   def tube_state=(state)

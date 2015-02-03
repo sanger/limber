@@ -91,4 +91,8 @@ include Presenters::Statemachine
     "#{plate.stock_plate.barcode.prefix}#{plate.stock_plate.barcode.number}_#{offset.to_i+1}.csv"
   end
 
+  def target_plate_transfers
+    Hash[labware.creation_transfers.map {|tf| tf.transfers.values }.flatten.uniq.map {|v| [v,v] }]
+  end
+
 end

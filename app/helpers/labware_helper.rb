@@ -35,8 +35,7 @@ module LabwareHelper
 
   def pool_colour_for_well(presenter, well)
     return 'permanent-failure' if well.state == 'failed'
-
-    tube_uuid = presenter.plate.wells.select{|w| w.location == presenter.transfers.select {|p| p[0]==well.location}.first[1] }.first.uuid
+    tube_uuid = presenter.transfers[well.location].uuid
     pooling_colour(well, tube_uuid)
   end
 
