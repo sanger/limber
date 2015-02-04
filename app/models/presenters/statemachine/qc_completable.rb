@@ -9,7 +9,8 @@ module Presenters
         end
 
         def valid_purposes
-          yield default_child_purpose
+          yield default_child_purpose unless default_child_purpose.nil?
+          nil
         end
 
         def default_child_purpose

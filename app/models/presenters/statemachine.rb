@@ -21,9 +21,9 @@ module Presenters::Statemachine
       labware.plate_purpose.children.detect(&:not_qc?)
     end
 
-    # Yields the valid purpose.
     def valid_purposes
-      yield default_child_purpose
+      yield default_child_purpose unless default_child_purpose.nil?
+      nil
     end
   end
 

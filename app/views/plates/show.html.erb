@@ -75,8 +75,8 @@
 
           <%= @presenter.control_additional_creation do -%>
             <h2>Create Child Plate</h2>
-            <%= @presenter.valid_purposes do |purpose| -%>
-              <% render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
+            <% @presenter.valid_purposes do |purpose| %>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
             <% end %>
           <% end %>
         </div>
