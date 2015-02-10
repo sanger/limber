@@ -2,11 +2,11 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :summary_partial, 'labware/plates/multi_pooled_plate'
   write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
-  write_inheritable_attribute :csv, 'show_pooled'
+  include ExtendedCsv
 
+  alias_method :transfers, :transfers_for_csv
 
-
-include Presenters::Statemachine
+  include Presenters::Statemachine
   state_machine :state, :initial => :pending do
     Presenters::Statemachine::StateTransitions.inject(self)
     state :pending do
@@ -46,36 +46,6 @@ include Presenters::Statemachine
     :cancelled      =>  [ 'labware-summary-button' ],
     :failed         =>  [ 'labware-summary-button' ]
     }
-  end
-
-  def bed_prefix
-    'PCRXP'
-  end
-
-  def transfers
-    self.labware.creation_transfers.map do |ct|
-      source_ean = ct.source.barcode.ean13
-      source_barcode = "#{ct.source.barcode.prefix}#{ct.source.barcode.number}"
-      source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
-      destination_ean = ct.destination.barcode.ean13
-      destination_barcode = "#{ct.destination.barcode.prefix}#{ct.destination.barcode.number}"
-      transfers = ct.transfers.reverse_merge(all_wells).sort {|a,b| split_location(a.first) <=> split_location(b.first) }
-      {
-        :source_ean          => source_ean,
-        :source_barcode      => source_barcode,
-        :source_stock        => source_stock,
-        :destination_ean     => destination_ean,
-        :destination_barcode => destination_barcode,
-        :transfers           => transfers
-      }
-    end
-  end
-
-  def all_wells
-    return @all_wells unless @all_wells.nil?
-    @all_wells = {}
-    ('A'..'H').each {|r| (1..12).each{|c| @all_wells["#{r}#{c}"]="H12"}}
-    @all_wells
   end
 
   def csv_file_links
