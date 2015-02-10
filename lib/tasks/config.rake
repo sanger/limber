@@ -356,7 +356,7 @@ namespace :config do
 
           presenters["ISCH hyb"].merge!(
             :form_class => "Forms::BaitingForm",
-            :presenter_class => 'Presenters::FailablePresenter',
+            :presenter_class => 'Presenters::FullFailablePresenter',
             :robot_controlled_states => { :pending => 'nx8-pre-hyb-pool'},
             :robot=>'nx8-pre-hyb-pool',
             :default_printer_type => :plate_b
