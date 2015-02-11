@@ -4,7 +4,7 @@
 module Presenters
   class FullFailablePresenter < FailablePresenter
 
-    include ExtendedCsv
+    include Presenters::ExtendedCsv
 
   end
 end

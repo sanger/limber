@@ -5,7 +5,7 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
   write_inheritable_attribute :summary_partial, 'labware/plates/multi_pooled_plate'
   write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
 
-  include ExtendedCsv
+  include Presenters::ExtendedCsv
 
   alias_method :transfers, :transfers_for_csv
 
