@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
 IlluminaBPipeline::Application.routes.draw do
   scope 'search', :controller => :search do
     match '/',                            :action => 'new',            :via => :get,  :as => :search

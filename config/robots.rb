@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2013,2014,2015 Genome Research Ltd.
 BED = ['580000000793', '580000001806', '580000002810', '580000003824', '580000004838', '580000005842', '580000006856', '580000007860', '580000008874', '580000009659', '580000010815', '580000011829', '580000012833']
 CAR = {
   :c13 => '580000013847',
