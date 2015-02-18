@@ -58,7 +58,8 @@ namespace :config do
     'Lib Pool SS-XP',
     'Lib Pool SS-XP-Norm',
 
-    'Standard MX'
+    'Standard MX',
+    'Cap Lib Pool Norm'
   ]
 
   task :generate => :environment do
