@@ -16,12 +16,6 @@
 
    <ul id="state-changer" data-role="listview" data-inset="true">
      <li data-role="list-divider"><h2>Current State: <i><%= presenter.labware.state.titleize %></i> </h2></li>
-        <% if admin_page? -%>
-          <li>
-          <%= label_tag :card_id, "User Swipecard" %>
-          <%= text_field_tag :card_id, "", :class => "ui-input-text", :'data-mini' => "true" %>
-          </li>
-        <% end -%>
         <li>
           <%= label_tag :state, "Change state to:" %>
 

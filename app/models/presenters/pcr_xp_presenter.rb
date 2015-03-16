@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
 class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   include Presenters::Statemachine::QcCompletable
 
@@ -11,10 +14,6 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
     :qc_complete => [ 'labware-summary-button', 'labware-state-button' ],
     :cancelled   => [ 'labware-summary-button' ],
     :failed      => [ 'labware-summary-button' ]
-  }
-
-  write_inheritable_attribute :robot_controlled_states, {
-    :pending => 'nx-96'
   }
 
   module StateDoesNotAllowTubePreviewing
@@ -79,6 +78,35 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
       def transfers
         labware.well_to_tube_transfers
       end
+
+      def authenticated_tab_states
+        @tab_states ||= self.class.authenticated_tab_states.tap do |states|
+          states[:qc_complete] << 'labware-creation-button' if creation_required?
+        end
+      end
+
+      def creation_required?
+        not labware.has_transfers_to_tubes?
+      end
+
+      def valid_purposes
+        labware.plate_purpose.children.each do |purpose|
+          yield purpose if valid_purpose_names.include?(purpose.name)
+        end
+      end
+
+      def valid_purpose_names
+        @vpn||=labware.pools.values.map do |pool_details|
+          Settings.request_types.fetch(pool_details.fetch('request_type'),[]).first
+        end
+      end
+
+      def default_child_purpose
+        labware.plate_purpose.children.detect do |purpose|
+          valid_purpose_names.first == purpose.name
+        end
+      end
+
     end
 
     state :failed do
@@ -95,7 +123,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   end
 
   def default_tube_printer_uuid
-    Settings.printers[location][Settings.purposes[default_child_purpose.uuid].default_printer_type]
+    Settings.printers.fetch(location).fetch('tube')
   end
 
   def tube_state=(state)

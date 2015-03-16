@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2013,2014,2015 Genome Research Ltd.
 module Robots
   class Robot
     include Forms::Form
@@ -68,9 +71,9 @@ module Robots
       def load(_)
       end
       def formatted_message
-        match = /[0-9]{13}/.match(@barcode)
+        match = /[0-9]{12,13}/.match(@barcode)
         match ? "Bed with barcode #{@barcode} is not expected to contain a tracked plate." :
-                "#{@barcode} does not appear to be a valid barcode."
+                "#{@barcode} does not appear to be a valid bed barcode."
       end
       def valid?
         false
