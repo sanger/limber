@@ -326,7 +326,8 @@ namespace :config do
 
           presenters['Lib Norm QC'].merge!(
             :presenter_class     => 'Presenters::QcPlatePresenter',
-            :default_printer_type => :plate_b
+            :default_printer_type => :plate_b,
+            :robot_controlled_states => { :pending => 'lib-norm-lib-norm-qc' }
           )
 
           presenters['Lib Norm 2'].merge!(
