@@ -79,7 +79,7 @@ module Presenters
       end
 
     end
-    
+
     def control_child_links
       # Do nothing
     end
@@ -108,6 +108,10 @@ module Presenters
 
     def qc_owner
       labware
+    end
+
+    def name_for_label
+      prioritized_name(labware.name, 10)
     end
   end
 end

@@ -43,6 +43,9 @@ module Presenters
     # The state is delegated to the tube
     delegate :state, :to => :labware
 
+    def name_for_label
+      prioritized_name(labware.name, 10)
+    end
 
     def location
       # TODO: Consider adding location to tube api as well
