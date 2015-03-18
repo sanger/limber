@@ -49,6 +49,7 @@ module Presenters
     end
 
     def label_type
+      yield "custom-labels"
       nil
     end
 
@@ -114,10 +115,6 @@ module Presenters
 
     def robot_controlled_states
       purpose_config.robot_controlled_states || {}
-    end
-
-    def label_type
-      yield "custom-labels"
     end
 
     def robot_name
