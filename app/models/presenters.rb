@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
 module Presenters
 
   class LocationError < StandardError; end
@@ -8,6 +11,9 @@ module Presenters
         include Forms::Form
         write_inheritable_attribute :page, 'show'
 
+        class_inheritable_reader :csv
+        write_inheritable_attribute :csv, 'show'
+
         def has_qc_data?; false; end
       end
     end
@@ -15,8 +21,15 @@ module Presenters
     def save!
     end
 
+    def purpose_config
+      Settings.purposes[purpose.uuid]
+    end
+
     def default_printer_uuid
-      @default_printer_uuid ||= Settings.printers[location][Settings.purposes[purpose.uuid].default_printer_type]
+      unless location == :unknown
+        @default_printer_uuid ||= Settings.printers[location][purpose_config.default_printer_type]
+      end
+      @default_printer_uuid
     end
 
     def default_label_count
@@ -82,9 +95,9 @@ module Presenters
         :failed     =>  [ 'labware-summary-button' ]
     }
 
-    class_inheritable_reader    :robot_controlled_states
-    write_inheritable_attribute :robot_controlled_states, {
-    }
+    def robot_controlled_states
+      purpose_config.robot_controlled_states || {}
+    end
 
     def label_type
       yield "custom-labels"
@@ -95,7 +108,7 @@ module Presenters
     end
 
     def robot_exists?
-      Settings.robots[location][robot_name].present?
+      (!robot_name.nil?) && Settings.robots[location][robot_name].present?
     end
 
     def statechange_link(view)
@@ -104,6 +117,10 @@ module Presenters
 
     def statechange_label
       robot_exists? ? "Bed verification" : 'Move plate to next state'
+    end
+
+    def if_statechange_active(content)
+      robot_exists? ? "" : content
     end
 
 
@@ -155,10 +172,14 @@ module Presenters
       labware
     end
 
+    def plate
+      labware
+    end
+
     # Split a location string into an array containing the row letter
     # and the column number (as a integer) so that they can be sorted.
-    def split_location(location_string)
-      match = location_string.match(/^([A-H])(\d+)/)
+    def split_location(location)
+      match = location.match(/^([A-H])(\d+)/)
       [ match[2].to_i, match[1] ]  # Order by column first
     end
     private :split_location
@@ -181,5 +202,14 @@ module Presenters
       presentation_classes = Settings.purposes[labware.plate_purpose.uuid] or return UnknownPlateType
       presentation_classes[:presenter_class].constantize
     end
+
+    def csv_file_links
+      [["","#{Rails.application.routes.url_helpers.illumina_b_plate_path(labware.uuid)}.csv"]]
+    end
+
+    def filename
+      false
+    end
+
   end
 end

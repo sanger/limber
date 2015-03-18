@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2012,2013,2015 Genome Research Ltd.
 module Presenters
   module Statemachine
     module QcCompletable
@@ -8,8 +11,13 @@ module Presenters
           nil
         end
 
+        def valid_purposes
+          yield default_child_purpose unless default_child_purpose.nil?
+          nil
+        end
+
         def default_child_purpose
-          labware.plate_purpose.children.detect {|purpose| Settings.qc_purposes.include?(purpose.name) }
+          purpose.children.detect(&:is_qc?)
         end
       end
 
@@ -36,13 +44,17 @@ module Presenters
               transition :passed => :qc_complete
             end
 
+            state :started do
+              include StateDoesNotAllowChildCreation
+            end
+
             state :pending do
-              include QcCreatableStep
+              include StateDoesNotAllowChildCreation
             end
 
             state :passed do
               def has_qc_data?; true; end
-              include StateDoesNotAllowChildCreation
+              include QcCreatableStep
             end
 
             state :qc_complete, :human_name => 'QC Complete' do
@@ -55,21 +67,8 @@ module Presenters
 
               # Returns the child plate purposes that can be created in the qc_complete state.
               def default_child_purpose
-                labware.plate_purpose.children.detect do |purpose|
-                  not_qc?(purpose) && suitable_child?(purpose)
-                end
+                labware.plate_purpose.children.detect(&:not_qc?)
               end
-
-              def not_qc?(purpose)
-                !Settings.qc_purposes.include?(purpose.name)
-              end
-              private :not_qc?
-
-              def suitable_child?(purpose)
-                Settings.purposes[labware.plate_purpose.uuid].locations_children.nil? ||
-                Settings.purposes[labware.plate_purpose.uuid].locations_children[location] == purpose.name
-              end
-              private :suitable_child?
 
               def has_qc_data?; true; end
             end

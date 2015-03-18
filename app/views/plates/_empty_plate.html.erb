@@ -1,0 +1,24 @@
+<table  class="plate-view <%= css_class %>">
+  <thead>
+    <tr>
+      <th class="first-col">&nbsp;</th>
+      <% (1..12).each do |column_number| %>
+        <th><%= column_number %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% ('A'..'H').each do |row_label| %>
+      <tr>
+        <th class="first-col"><%= row_label %></th>
+        <% (1..12).each do | index| %>
+          <td class="col-all <%= "col-#{index}" %>">
+            <div class="well <%= "col-#{index}" %> <%= "#{row_label}#{index}" %>" data-location="<%= "#{row_label}#{index}"%>">
+            </div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

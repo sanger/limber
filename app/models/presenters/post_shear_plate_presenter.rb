@@ -1,21 +1,20 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2014,2015 Genome Research Ltd.
 module Presenters
   class PostShearPlatePresenter < StandardPresenter
 
-    write_inheritable_attribute :robot_controlled_states, {
-      :pending => 'shear-post-shear'
-    }
-
-        # Returns the child plate purposes that can be created in the qc_complete state.
+    # Returns the child plate purposes that can be created in the qc_complete state.
     def default_child_purpose
       labware.plate_purpose.children.detect do |purpose|
-        not_qc?(purpose) && suitable_child?(purpose)
+        purpose.not_qc? && suitable_child?(purpose)
       end
     end
 
-    def not_qc?(purpose)
-      !Settings.qc_purposes.include?(purpose.name)
+    def valid_purposes
+      yield default_child_purpose unless default_child_purpose.nil?
+      nil
     end
-    private :not_qc?
 
     def suitable_child?(purpose)
       Settings.purposes[labware.plate_purpose.uuid].locations_children.nil? ||

@@ -10,20 +10,18 @@
 </script>
 
 
-
   <%= header(@presenter, 'Plate view') do %>
     <div data-role="navbar">
       <ul id="navbar">
         <li id="labware-summary-button"><a href="#" class="navbar-link" rel="labware-summary-button" data-transition="none" data-icon="info">Summary and Printing</a></li>
         <% if current_user_uuid.present? -%>
-          <li id="labware-state-button"><a href="<%= @presenter.statechange_link(self) %>" class="navbar-link" rel="labware-state-button" data-icon="gear"><%= @presenter.statechange_label %></a></li>
+          <li id="labware-state-button"><a href="<%= @presenter.statechange_link(self) %>" <%= @presenter.if_statechange_active("class='navbar-link'").html_safe %> rel="labware-state-button" data-icon="gear"><%= @presenter.statechange_label %></a></li>
           <li id="well-failing-button"><a href="#" class="navbar-link" rel="well-failing-button" data-icon="delete">Fail Wells</a></li>
           <li id="labware-creation-button"><a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create next plate</a></li>
         <% end -%>
       </ul>
     </div>
   <% end -%>
-
   <%= content do %>
     <%= flash_messages %>
     <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
@@ -32,6 +30,10 @@
         <div id="labware-summary" class="scape-ui-block">
           <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
         </div>
+        <% @presenter.csv_file_links.each do |link| %>
+          <%= link_to("Download Worksheet CSV #{link.first}", link.last, :rel => "external") %>
+        <% end %>
+
           <%#= link_to "Download Worksheet CSV", "#{illumina_b_plate_path(@presenter.labware.uuid)}.csv", :rel => "external" %>
 
         <div id="well-failing" class="scape-ui-block" style="display:none;">
@@ -40,7 +42,6 @@
           <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) if well_failing_applicable?(@presenter) %>
         </div>
       </div>
-
 
       <div class="ui-block-b">
         <div id="plate-printing"  class="scape-ui-block" style="display:none;">
@@ -72,9 +73,11 @@
             </ol>
           </div>
 
-          <%= @presenter.control_additional_creation do %>
+          <%= @presenter.control_additional_creation do -%>
             <h2>Create Child Plate</h2>
-            <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+            <% @presenter.valid_purposes do |purpose| %>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
+            <% end %>
           <% end %>
         </div>
 

@@ -1,9 +1,33 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2011,2012,2015 Genome Research Ltd.
 module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
     def control_child_plate_creation(&block)
       # Does nothing because you can't!
     end
     alias_method(:control_additional_creation, :control_child_plate_creation)
+  end
+
+  module StateAllowsChildCreation
+    # Yields to the block if there are child plates that can be created from the current one.
+    # It passes the valid child plate purposes to the block.
+    def control_child_plate_creation(&block)
+      yield unless default_child_purpose.nil?
+      nil
+    end
+    alias_method(:control_additional_creation, :control_child_plate_creation)
+
+    # Returns the child plate purposes that can be created in the passed state.  Typically
+    # this is only one, but it specifically excludes QC plates.
+    def default_child_purpose
+      labware.plate_purpose.children.detect(&:not_qc?)
+    end
+
+    def valid_purposes
+      yield default_child_purpose unless default_child_purpose.nil?
+      nil
+    end
   end
 
   # These are shared base methods to be used in all presenter state_machines
@@ -90,18 +114,7 @@ module Presenters::Statemachine
         end
 
         state :passed do
-          # Yields to the block if there are child plates that can be created from the current one.
-          # It passes the valid child plate purposes to the block.
-          def control_additional_creation(&block)
-            yield unless default_child_purpose.nil?
-            nil
-          end
-
-          # Returns the child plate purposes that can be created in the passed state.  Typically
-          # this is only one, but it specifically excludes QC plates.
-          def default_child_purpose
-            labware.plate_purpose.children.first
-          end
+          include StateAllowsChildCreation
         end
 
         state :cancelled do

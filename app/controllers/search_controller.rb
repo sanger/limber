@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
 class SearchController < ApplicationController
 
   class InputError < StandardError; end
@@ -10,13 +13,15 @@ class SearchController < ApplicationController
     @search_results = []
   end
 
+  ## REVIEW: It needs to set the correct ongoing_plate_searching parameter
   def ongoing_plates(search='Find Illumina-B plates')
     plate_search = api.search.find(Settings.searches[search])
+    states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
 
     @search_results = plate_search.all(
       IlluminaB::Plate,
-      :state => [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete' ]
-
+      :state => states,
+     :user_uuid => current_user_uuid
     )
   end
 
@@ -30,12 +35,13 @@ class SearchController < ApplicationController
     render :stock_plates
   end
 
-  def my_plates
-    plate_search    = api.search.find(Settings.searches['Find Illumina-B plates for user'])
+  def my_plates(search = 'Find Illumina-B plates for user')
+    plate_search    = api.search.find(Settings.searches[search])
+    states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
 
     @search_results = plate_search.all(
       IlluminaB::Plate,
-     :state     => [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete' ],
+     :state     => states,
      :user_uuid => current_user_uuid
     )
 
@@ -44,10 +50,11 @@ class SearchController < ApplicationController
 
   def stock_plates(search='Find Illumina-B stock plates')
     plate_search    = api.search.find(Settings.searches[search])
+    states = ['pending', 'started', 'passed', 'qc_complete']
 
     @search_results = plate_search.all(
       IlluminaB::Plate,
-      :state     => [ 'pending', 'started', 'passed' ],
+      :state     => states,
       :user_uuid => current_user_uuid
     )
   end
@@ -86,7 +93,7 @@ class SearchController < ApplicationController
   end
 
   def clear_current_user!
-    session[:user_uuid] = nil
+    session[:user_uuid] = nil unless request.accepts.include?('application/json')
   end
   private :clear_current_user!
 

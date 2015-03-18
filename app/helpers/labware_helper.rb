@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2012,2013,2015 Genome Research Ltd.
 module LabwareHelper
   def state_change_form(presenter)
     render :partial => 'labware/state_change', :locals => { :presenter => presenter }
@@ -35,7 +38,6 @@ module LabwareHelper
 
   def pool_colour_for_well(presenter, well)
     return 'permanent-failure' if well.state == 'failed'
-
     tube_uuid = presenter.transfers[well.location].uuid
     pooling_colour(well, tube_uuid)
   end
@@ -55,23 +57,6 @@ module LabwareHelper
     "good"
   end
 
-  def admin_page?
-    controller.controller_path.start_with? "admin"
-  end
-
-  def admin_link(presenter)
-    return nil if presenter.class == Presenters::StockPlatePresenter
-
-    @admin_link ||= link_to(
-      'Admin',
-      edit_admin_plate_path(presenter.labware.uuid),
-      :id           => presenter.labware.uuid,
-      :'data-transition' => 'pop',
-      :'data-icon'  => 'gear',
-      :rel          => "external"
-    )
-  end
-
   def colours_by_location
     return @location_colours if @location_colours.present?
 
@@ -79,7 +64,7 @@ module LabwareHelper
 
     ('A'..'H').each_with_index do |row,row_index|
       (1..12).each_with_index do |col,col_index|
-        @location_colours[row + col.to_s] = "colour-#{(col_index * 12) + row_index + 1}"
+        @location_colours[row + col.to_s] = "colour-#{(col_index * 8) + row_index + 1}"
       end
     end
 

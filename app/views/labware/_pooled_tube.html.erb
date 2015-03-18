@@ -4,6 +4,7 @@
   </div>
 
   <ul id="information">
+    <li><span class="label">Pool name</span> <%= tube.name %></li>
     <li><span class="label">Barcode</span>       <%= link_to(useful_barcode(tube.barcode), illumina_b_tube_path(tube.uuid), :target => '_blank') %></li>
     <li><span class="label">Current state</span> <%= tube.state %></li>
     <li><span class="label">Source wells</span>  <%= source.join(', ') %></li>

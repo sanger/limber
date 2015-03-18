@@ -1,3 +1,6 @@
+#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+#Copyright (C) 2012,2015 Genome Research Ltd.
 module Presenters
   module Statemachine
     module Pcr
@@ -31,17 +34,7 @@ module Presenters
             end
 
             state :passed do
-              # Yields to the block if there are child plates that can be created from the current one.
-              # It passes the valid child plate purposes to the block.
-              def control_additional_creation(&block)
-                yield unless default_child_purpose.nil?
-                nil
-              end
-
-              # Returns the child plate purposes that can be created in the qc_complete state.
-              def default_child_purpose
-                labware.plate_purpose.children.first
-              end
+              include Statemachine::StateAllowsChildCreation
             end
 
             state :cancelled do

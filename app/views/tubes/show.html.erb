@@ -65,7 +65,7 @@
           <div id="tube-creation" class="scape-ui-block" style="display:none;">
             <%= @presenter.control_additional_creation do %>
               <h2>Create Child Tube</h2>
-              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter }) %>
+              <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => @presenter.default_child_purpose }) %>
             <% end %>
             <%= @presenter.control_child_links do %>
               <h2>Link to created tubes</h2>

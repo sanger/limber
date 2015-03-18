@@ -13,10 +13,10 @@ GIT
 
 GIT
   remote: git+ssh://git@github.com/sanger/sequencescape-client-api.git
-  revision: a3f0ae4936e9a477a1c542677cd9563b12fdca47
+  revision: a70c28b7b29f5fd10b79e0a3acd333da922871d4
   branch: production
   specs:
-    sequencescape-client-api (0.2.3)
+    sequencescape-client-api (0.2.5)
       activemodel (~> 3.0.0)
       activesupport (~> 3.0.0)
       i18n
@@ -193,6 +193,6 @@ DEPENDENCIES
   rake (~> 0.9.2)
   ruby-debug19
   sanger_barcode (>= 0.2.0)!
-  sequencescape-client-api (>= 0.2.3)!
+  sequencescape-client-api (>= 0.2.5)!
   state_machine (~> 1.0.1)
   thin
