@@ -102,6 +102,10 @@ module Presenters
       "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
     end
 
+    def label_name
+      "#{labware.barcode.prefix} #{labware.barcode.number}"
+    end
+
     def labware_form_details(view)
       { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
     end
@@ -110,8 +114,8 @@ module Presenters
       labware
     end
 
-    def name_for_label
-      prioritized_name(labware.name, 10)
+    def label_description
+      "#{prioritized_name(labware.name, 10)} #{label_text}"
     end
   end
 end

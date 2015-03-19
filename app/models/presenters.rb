@@ -137,6 +137,9 @@ module Presenters
       robot_exists? ? "" : content
     end
 
+    def label_name
+      "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}"
+    end
 
     def plate_to_walk
       self.labware

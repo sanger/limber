@@ -36,6 +36,10 @@ module Presenters
       "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
     end
 
+    def label_name
+      "#{labware.barcode.prefix} #{labware.barcode.number}"
+    end
+
     def control_child_links(&block)
       # Mostly, no.
     end
@@ -43,8 +47,8 @@ module Presenters
     # The state is delegated to the tube
     delegate :state, :to => :labware
 
-    def name_for_label
-      prioritized_name(labware.name, 10)
+    def label_description
+      "#{prioritized_name(labware.name, 10)} #{label_text}"
     end
 
     def location

@@ -8,6 +8,7 @@
         <%= barcode_form.hidden_field(:number) %>
         <%= barcode_form.hidden_field(:label_name) %>
         <%= barcode_form.hidden_field(:label_description) %>
+        <%= barcode_form.hidden_field(:type, :value=>barcode.label_type) %>
       <% end %>
     <% end %>
 
