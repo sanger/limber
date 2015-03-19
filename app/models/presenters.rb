@@ -49,6 +49,7 @@ module Presenters
     end
 
     def label_type
+      yield "custom-labels"
       nil
     end
 
@@ -116,10 +117,6 @@ module Presenters
       purpose_config.robot_controlled_states || {}
     end
 
-    def label_type
-      yield "custom-labels"
-    end
-
     def robot_name
       robot_controlled_states[labware.state.to_sym]
     end
@@ -140,6 +137,9 @@ module Presenters
       robot_exists? ? "" : content
     end
 
+    def label_name
+      "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}"
+    end
 
     def plate_to_walk
       self.labware

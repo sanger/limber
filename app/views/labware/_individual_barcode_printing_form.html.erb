@@ -9,8 +9,8 @@
 
     <%= f.hidden_field :prefix %>
     <%= f.hidden_field :number %>
-    <%= f.hidden_field :suffix, :value => text %>
-    <%= f.hidden_field(:study,  :value => prioritized_name ) %>
+    <%= f.hidden_field :label_name,        :value => label_name        %>
+    <%= f.hidden_field :label_description, :value => label_description %>
 
     <li data-role="list-divider">
       <%= label_tag :printer, 'Barcode Printer:' %>
