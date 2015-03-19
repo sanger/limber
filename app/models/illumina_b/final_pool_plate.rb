@@ -37,8 +37,7 @@ class IlluminaB::FinalPoolPlate < Sequencescape::Plate
 
   # Returns the tubes that an instance of this plate has been transferred into.
   def tubes
-    return [] unless has_transfers_to_tubes?
-    WELLS_IN_COLUMN_MAJOR_ORDER.map(&well_to_tube_transfers.method(:[])).compact
+    well_to_tube_transfers.values.uniq
   end
 
   def tubes_and_sources
