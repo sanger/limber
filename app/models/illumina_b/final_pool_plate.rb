@@ -36,8 +36,10 @@ class IlluminaB::FinalPoolPlate < Sequencescape::Plate
   WELLS_IN_COLUMN_MAJOR_ORDER = (1..12).inject([]) { |a,c| a.concat(('A'..'H').map { |r| "#{r}#{c}" }) ; a }
 
   # Returns the tubes that an instance of this plate has been transferred into.
+  # This ensures that tubes are sorted in column major order
   def tubes
-    well_to_tube_transfers.values.uniq
+    return [] unless has_transfers_to_tubes?
+    WELLS_IN_COLUMN_MAJOR_ORDER.map(&well_to_tube_transfers.method(:[])).compact.uniq
   end
 
   def tubes_and_sources
