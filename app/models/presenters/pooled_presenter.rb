@@ -18,7 +18,7 @@ module Presenters
 
     Barcode = Struct.new(:prefix,:number,:label_name,:label_description,:type,:label_type)
 
-    def get_tube_barcodes
+    def tube_barcodes
       plate.tubes.map do |tube|
         Barcode.new(
           tube.barcode.prefix,
