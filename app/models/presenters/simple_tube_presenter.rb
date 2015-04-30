@@ -45,6 +45,10 @@ module Presenters
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
+
+        def default_child_purpose
+         purpose.children.first
+        end
       end
 
     end

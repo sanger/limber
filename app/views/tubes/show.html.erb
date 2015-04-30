@@ -52,8 +52,9 @@
 
             <%= individual_barcode_printing_form(
               @presenter.labware.barcode,
-              :redirection_url => illumina_b_tube_path(@presenter.labware),
-              :text            => @presenter.label_text
+              :redirection_url    => illumina_b_tube_path(@presenter.labware),
+              :label_name         => @presenter.label_name,
+              :label_description  => @presenter.label_description
             ) %>
           </div>
 

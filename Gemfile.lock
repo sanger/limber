@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git+ssh://git@github.com/sanger/sanger_barcode.git
-  revision: 606f067322ea95ae5f71169ef8b5609d2de0000b
+  revision: 11fb6cc077475d4a0ba6f8225fd5bdab60d5dc88
   specs:
-    sanger_barcode (0.2.0)
+    sanger_barcode (0.2.1)
       savon (= 0.9.2)
 
 GIT
@@ -96,10 +96,10 @@ GEM
     fssm (0.2.7)
     gherkin (2.4.18)
       json (>= 1.4.6)
-    gyoku (1.2.2)
+    gyoku (1.2.3)
       builder (>= 2.1.2)
     hashie (1.0.0)
-    httpi (2.2.7)
+    httpi (2.3.0)
       rack
     i18n (0.5.3)
     json (1.6.0)
@@ -114,10 +114,12 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.19)
-    nokogiri (1.5.0)
+    mini_portile (0.6.2)
+    nokogiri (1.6.6.2)
+      mini_portile (~> 0.6.0)
     nori (2.4.0)
     polyglot (0.3.3)
-    rack (1.2.6)
+    rack (1.2.8)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
@@ -192,7 +194,7 @@ DEPENDENCIES
   rails (~> 3.0.19)
   rake (~> 0.9.2)
   ruby-debug19
-  sanger_barcode (>= 0.2.0)!
+  sanger_barcode (>= 0.2.1)!
   sequencescape-client-api (>= 0.2.5)!
   state_machine (~> 1.0.1)
   thin

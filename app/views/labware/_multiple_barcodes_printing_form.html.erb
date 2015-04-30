@@ -6,8 +6,9 @@
       <%= f.fields_for(index.to_s.to_sym, barcode) do |barcode_form| %>
         <%= barcode_form.hidden_field(:prefix) %>
         <%= barcode_form.hidden_field(:number) %>
-        <%= barcode_form.hidden_field(:suffix, :value => text[index]) %>
-        <%= barcode_form.hidden_field(:study) %>
+        <%= barcode_form.hidden_field(:label_name) %>
+        <%= barcode_form.hidden_field(:label_description) %>
+        <%= barcode_form.hidden_field(:type, :value=>barcode.label_type) %>
       <% end %>
     <% end %>
 

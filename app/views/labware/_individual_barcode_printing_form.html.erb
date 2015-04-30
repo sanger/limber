@@ -6,10 +6,11 @@
     <% @presenter.label_type do |type| %>
       <%= f.hidden_field :type, :value => type %>
     <% end %>
-    
+
     <%= f.hidden_field :prefix %>
     <%= f.hidden_field :number %>
-    <%= f.hidden_field :study, :value => text %>
+    <%= f.hidden_field :label_name,        :value => label_name        %>
+    <%= f.hidden_field :label_description, :value => label_description %>
 
     <li data-role="list-divider">
       <%= label_tag :printer, 'Barcode Printer:' %>
