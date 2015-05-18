@@ -354,8 +354,24 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   border-left: red 10px solid;
 }
 
-.ILB {
-  border-left: blue 10px double;
+.PWGS {
+  border-left: green 10px solid;
+}
+
+.ISC {
+  border-left: yellow 10px solid;
+}
+
+.ReISC {
+  border-left: yellow 10px dashed;
+}
+
+.HSqX {
+  border-left: blue 10px solid;
+}
+
+.MWGS {
+  border-left: orange 10px solid;
 }
 
 .print_selector .ui-controlgroup-controls {width:100%;}
