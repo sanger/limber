@@ -10,6 +10,7 @@ module Presenters
       @asset_uuid = qcable.asset.uuid
       @state = qcable.state
       @type = qcable.lot.lot_type_name
+      @qcable_type = qcable.lot.lot_type.qcable_name
       @template_uuid = qcable.lot.template.uuid
       @lot_number = qcable.lot.lot_number
     end

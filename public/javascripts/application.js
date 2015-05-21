@@ -118,7 +118,20 @@
     return this;
   },
 
-    WELLS_IN_COLUMN_MAJOR_ORDER: ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4", "A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5", "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7", "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8", "A9", "B9", "C9", "D9", "E9", "F9", "G9", "H9", "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10", "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11", "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"],
+    WELLS_IN_COLUMN_MAJOR_ORDER: [
+      "A1",  "B1",  "C1",  "D1",  "E1",  "F1",  "G1",  "H1",
+      "A2",  "B2",  "C2",  "D2",  "E2",  "F2",  "G2",  "H2",
+      "A3",  "B3",  "C3",  "D3",  "E3",  "F3",  "G3",  "H3",
+      "A4",  "B4",  "C4",  "D4",  "E4",  "F4",  "G4",  "H4",
+      "A5",  "B5",  "C5",  "D5",  "E5",  "F5",  "G5",  "H5",
+      "A6",  "B6",  "C6",  "D6",  "E6",  "F6",  "G6",  "H6",
+      "A7",  "B7",  "C7",  "D7",  "E7",  "F7",  "G7",  "H7",
+      "A8",  "B8",  "C8",  "D8",  "E8",  "F8",  "G8",  "H8",
+      "A9",  "B9",  "C9",  "D9",  "E9",  "F9",  "G9",  "H9",
+      "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10",
+      "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11",
+      "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"
+    ],
 
 
     linkCallbacks: $.Callbacks(),
@@ -488,7 +501,7 @@
 /* TAG CREATION */
   $(document).on('pagecreate', '#tag-creation-page', function(){
 
-    var plateLookup;
+    var qcLookup;
 
     $.ajaxSetup({
       beforeSend: function(xhr) {
@@ -496,81 +509,143 @@
       }
     });
 
-    plateLookup = function(barcodeBox) {
-      var plate_lookup;
-      plate_lookup = this;
+    qcLookup = function(barcodeBox,collector) {
+      if (barcodeBox.length == 0) { return false; }
+      var qc_lookup = this;
       this.inputBox = barcodeBox;
+      this.infoPanelId = $('#'+barcodeBox.data('info-panel'));
+      this.qcableType  = barcodeBox.data('qcable-type');
+      this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
       this.inputBox.on('change',function(){
-        plate_lookup.resetStatus();
-        plate_lookup.requestPlate(this.value);
-      })
+        qc_lookup.resetStatus();
+        qc_lookup.requestPlate(this.value);
+      });
+      this.monitor = collector.register();
     };
 
-    plateLookup.prototype = {
+    qcLookup.prototype = {
       resetStatus: function() {
-        $('#plate_submit').button('disable');
-        $('#tag-plate-info dd').text('');
-        $('#plate_qcable_uuid').val(null);
-        $('#plate_tag_plate_uuid').val(null);
-        $('#plate_tag_layout_template_uuid').val(null);
+        this.monitor.fail();
+        this.infoPanelId.find('dd').text('');
+        this.infoPanelId.find('input').val(null);
       },
       requestPlate: function(barcode) {
         $.ajax({
           type: 'POST',
           dataType: "json",
-          url: '/search/tag_plates',
-          data: 'tag_plate_barcode='+this.inputBox.val()
+          url: '/search/qcables',
+          data: 'qcable_barcode='+this.inputBox.val()
       }).then(this.success(),this.error());
       },
       success: function() {
-        var plate_lookup = this;
+        var qc_lookup = this;
         return function(response) {
           if (response.error) {
-            SCAPE.message(response.error,'invalid')
+            qc_lookup.message(response.error,'invalid')
           } else if (response.qcable) {
-            plate_lookup.plateFound(response.qcable)
+            qc_lookup.plateFound(response.qcable)
           } else {
             console.log(response);
-            SCAPE.message('An unexpected response was received. Please contact support.','invalid');
+            qc_lookup.message('An unexpected response was received. Please contact support.','invalid');
           }
         };
       },
       error: function() {
-        var plate_lookup = this;
+        var qc_lookup = this;
         return function() {
-          SCAPE.message('The tag plate could not be found. There may be network issues, or problems with Sequencescape.','invalid')
+          qc_lookup.message('The barcode could not be found. There may be network issues, or problems with Sequencescape.','invalid')
         };
       },
       plateFound: function(qcable) {
         this.populateData(qcable);
         if (this.validPlate(qcable)) {
-          SCAPE.message('The tag plate is suitable.'+this.errors,'valid');
-          SCAPE.update_layout(qcable.template_uuid);
-          $('#plate_submit').button('enable')
+          this.message('The ' + qcable.qcable_type + ' is suitable.'+this.errors,'valid');
+          SCAPE.update_layout();
+          this.monitor.pass();
         } else {
-          SCAPE.message('The tag plate is not suitable.'+this.errors,'invalid')
+          this.message(' The ' + qcable.qcable_type + ' is not suitable.'+this.errors,'invalid')
         }
       },
       populateData: function(qcable) {
-        $('#tag-plate-info dd.lot-number').text(qcable.lot_number);
-        $('#tag-plate-info dd.template').text(qcable.tag_layout);
-        $('#tag-plate-info dd.state').text(qcable.state);
-        $('#plate_qcable_uuid').val(qcable.uuid);
-        $('#plate_tag_plate_uuid').val(qcable.asset_uuid);
-        $('#plate_tag_layout_template_uuid').val(qcable.template_uuid);
+        this.infoPanelId.find('dd.lot-number').text(qcable.lot_number);
+        this.infoPanelId.find('dd.template').text(qcable.tag_layout);
+        this.infoPanelId.find('dd.state').text(qcable.state);
+        this.infoPanelId.find('.asset_uuid').val(qcable.asset_uuid);
+        this.infoPanelId.find('.template_uuid').val(qcable.template_uuid);
       },
       validPlate: function(qcable) {
         this.errors = '';
-        if (qcable.state !== 'available') { this.errors += ' Plate is not available.' };
-        if (qcable.type  !== 'IDT Tags') { this.errors += ' Plate is not a suitable tag plate.' };
-        if (SCAPE.tag_layouts[qcable.template_uuid] === undefined) { this.errors += ' Unknown tag template.'}
-        console.log(this.errors);
+
+        if (qcable.state !== 'available') { this.errors += ' The scanned item is not available.' };
+        if (qcable.type  !== this.qcableType ) { this.errors += ' The scanned item is not a(n) ' + qcable.type + '.' };
+        this.validateTemplate(qcable);
         return this.errors === '';
+      },
+      validateTemplate: function(qcable) {
+        if (this.approvedTypes[qcable.template_uuid] === undefined) { this.errors += ' It does not contain suitable tags.'}
+      },
+      message: function(message,status) {
+      this.infoPanelId.find('.qc_validation_report').empty().append(
+        $(document.createElement('div')).
+          addClass('report').
+          addClass(status).
+          text(message)
+        );
       },
       errors: ''
     };
 
-    new plateLookup($('#plate_tag_plate_barcode'));
+    // A status collector can have monitors registered. It will trigger
+    // its onSuccess event when all monitors are true, and its onRevert
+    // event if any are false.
+    var statusCollector = function(onSuccess,onRevert) {
+      // Fires when all guards are true
+      this.onSuccess =  onSuccess;
+      // Fires if a guard is invalidated
+      this.onRevert  = onRevert;
+      this.monitors  = [];
+    };
+
+    // Monitors are registered to a collector. When the change state they
+    // trigger the collector to check the state of all its monitors.
+    var monitor = function(state,collector) {
+      this.valid     = state||false;
+      this.collector = collector;
+    }
+
+    monitor.prototype = {
+      pass: function () {
+        this.valid = true;
+        this.collector.collate();
+      },
+      fail: function () {
+        this.valid = false;
+        this.collector.collate();
+      }
+    }
+
+    statusCollector.prototype = {
+      register: function (status) {
+        var new_monitor = new monitor(status,this);
+        this.monitors.push(new_monitor)
+        return new_monitor;
+      },
+      collate: function () {
+        var all_true = true;
+        for (var i =0; i < this.monitors.length; i+=1) {
+          all_true = all_true && this.monitors[i].valid
+        }
+        if (all_true) { this.onSuccess(); } else { this.onRevert(); };
+      }
+    }
+
+    var qcCollector = new statusCollector(
+      function () {$('#plate_submit').button('enable')  },
+      function () {$('#plate_submit').button('disable') }
+    );
+
+    new qcLookup($('#plate_tag_plate_barcode'),qcCollector);
+    new qcLookup($('#plate_index_tag_tube_barcode'),qcCollector);
 
     /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
     $('form#plate_new').on('submit',function(){ return !$('input#plate_submit')[0].disabled } )
@@ -580,68 +655,9 @@
       tagpaletteTemplate     : _.template(SCAPE.tag_palette_template),
       substitutionTemplate  : _.template(SCAPE.substitution_tag_template),
 
-      updateTagpalette  : function() {
-        var tagpalette = $('#tag-palette');
+      update_layout: function () {
 
-        tagpalette.empty();
-
-        var currentTagGroup   = $(SCAPE.tags_by_name[$('#plate_tag_layout_template_uuid option:selected').text()]);
-        var currentlyUsedTags = $('.aliquot').map(function(){ return parseInt($(this).text(), 10); });
-        var unusedTags        = _.difference(currentTagGroup, currentlyUsedTags);
-        var listItems         = unusedTags.reduce(
-          function(memo, tagId) { return memo + SCAPE.tagpaletteTemplate({tag_id: tagId}); }, '<li data-role="list-divider" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Replacement Tags</li>');
-
-          tagpalette.append(listItems);
-          $('#tag-palette li:last').addClass('ui-li ui-li-static ui-body-c ui-corner-bottom');
-
-      },
-
-      tagSubstitutionHandler : function() {
-        var sourceAliquot = $(this);
-        var originalTag   = sourceAliquot.text();
-
-        // Dim other tags...
-        $('.aliquot').not('.tag-'+originalTag).addClass('dimmed');
-        sourceAliquot.addClass('selected-aliquot');
-
-        SCAPE.updateTagpalette();
-
-        // Show the tag palette...
-        $('#instructions').
-          fadeOut().
-          promise().
-          done(function(){
-          $('#replacement-tags').fadeIn();
-        });
-
-
-        function paletteTagHandler() {
-          var newTag = $(this).text();
-
-          // Find all the aliquots using the original tag
-          // swap their tag classes and text
-          $('.aliquot.tag-'+originalTag).
-            hide().
-            removeClass('tag-'+originalTag).
-            addClass('tag-'+newTag).
-            text(newTag).
-            addClass('selected-aliquot').
-            show('fast');
-
-          // Add the substitution as a hidden field and li
-          $('#substitutions ul').append(SCAPE.substitutionTemplate({original_tag_id: originalTag, replacement_tag_id: newTag}));
-          $('#substitutions ul').listview('refresh');
-
-          SCAPE.resetHandler();
-        }
-        // Remove old behaviour and add the new to available-tags
-        $('.available-tag').unbind().click(paletteTagHandler);
-
-      },
-
-
-      update_layout: function (template) {
-        var tags = $(SCAPE.tag_layouts[template||$('#plate_tag_layout_template_uuid').val()]);
+        var tags = $(SCAPE.tag_layouts[$('#plate_tag_plate_template_uuid').val()]);
 
         tags.each(function(index) {
           $('#tagging-plate #aliquot_'+this[0]).
@@ -651,34 +667,14 @@
             show('fast');
         });
 
-        SCAPE.resetHandler();
-        SCAPE.resetSubstitutions();
-      },
-
-      resetSubstitutions : function() {
-        $('#substitutions ul').empty();
-        $('#tagging-plate .aliquot').removeClass('selected-aliquot');
-      },
-
-      resetHandler : function() {
-        $('.aliquot').removeClass('selected-aliquot dimmed');
-        $('.available-tags').unbind();
-        $('#replacement-tags').
-          fadeOut().
-          promise().
-          done(function(){
-          $('#instructions').fadeIn();
-        });
       }
-
     });
 
 
     $('#tagging-plate .aliquot').removeClass('green orange red');
 
     SCAPE.update_layout();
-    $('#plate_tag_layout_template_uuid').change(SCAPE.update_layout);
-    $('#tagging-plate .aliquot').toggle(SCAPE.tagSubstitutionHandler, SCAPE.resetHandler);
+    $('#plate_tag_plate_template_uuid').change(SCAPE.update_layout);
 
   });
 

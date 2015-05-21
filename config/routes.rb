@@ -7,7 +7,7 @@ IlluminaBPipeline::Application.routes.draw do
     match '/',                            :action => 'create_or_find', :via => :post, :as => :perform_search
     match '/all_stock_plates', :action => :stock_plates_illumina_a
     match '/ongoing_plates',   :action => :ongoing_plates_illumina_a
-    match '/tag_plates',                  :action => :tag_plates, :via => :post, :as => :tag_plates_search
+    match '/qcables',                     :action => :qcables, :via => :post, :as => :qcables_search
     match '/retrieve_parent',             :action => :retrieve_parent
   end
 

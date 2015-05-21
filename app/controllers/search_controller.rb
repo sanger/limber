@@ -5,7 +5,7 @@ class SearchController < ApplicationController
 
   class InputError < StandardError; end
 
-  before_filter :clear_current_user!, :except => [:tag_plates]
+  before_filter :clear_current_user!, :except => [:qcables]
 
   before_filter :check_for_login!, :only => [:create_or_find, :stock_plates ]
 
@@ -59,12 +59,13 @@ class SearchController < ApplicationController
     )
   end
 
-  def tag_plates
-    raise InputError, "You have not supplied a barcode" if params[:tag_plate_barcode].blank?
-    raise InputError, "#{params[:tag_plate_barcode]} is not a valid barcode" unless /^[0-9]{13}$/===params[:tag_plate_barcode]
+  def qcables
+    raise InputError, "You have not supplied a barcode" if params[:qcable_barcode].blank?
+    pruned_barcode = params[:qcable_barcode].strip
+    raise InputError, "#{params[:qcable_barcode]} is not a valid barcode" unless /^[0-9]{13}$/===pruned_barcode
     respond_to do |format|
       format.json {
-          redirect_to find_qcable(params[:tag_plate_barcode])
+          redirect_to find_qcable(pruned_barcode)
       }
     end
   rescue Sequencescape::Api::ResourceNotFound, InputError => exception

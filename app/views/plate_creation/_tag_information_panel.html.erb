@@ -1,0 +1,19 @@
+<div id="<%= panel_type.downcase.gsub(' ','-') %>-info" class="interface ui-body">
+  <div class='qc_validation_report'></div>
+  <h2><%= panel_type.titleize %> Information</h2>
+  <dl>
+    <dt>Lot Number</dt>
+    <dd class="lot-number"></dd>
+    <dt>Template</dt>
+    <dd class="template"></dd>
+    <dt>State</dt>
+    <dd class="state"></dd>
+  </dl>
+  <ul class="qcable_property">
+  <%= form.semantic_fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
+    <%= qcable.input :asset_uuid,    :label => false, :as => :hidden, :required=> true, :input_html => {:class => 'asset_uuid'} %>
+    <%= qcable.input :template_uuid, :label => false, :as => :hidden, :required=> true, :input_html => {:class => 'template_uuid'} %>
+  <% end %>
+  </ul>
+</div>
+
