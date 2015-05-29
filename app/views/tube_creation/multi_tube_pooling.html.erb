@@ -1,0 +1,60 @@
+<%= page(:'multi-tube-pooling-page') do %>
+  <div data-role="header" data-theme="b">
+    <h1>Multi Tube pooling</h1>
+    <div data-role="navbar" data-iconpos="right">
+      <ul>
+        <li><a href="#" data-theme="a" class="navbar-link ui-btn-active" rel="add-plates">Add Tubes</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <%= content do %>
+
+    <div class="ui-grid-a">
+
+      <div id="source-block" class="ui-block-a">
+        <%= form_for(
+          @creation_form,
+          :url  => sequencescape_tube_children_path(@creation_form.parent),
+          :as   => :tube,
+          :html => { :method => :post }) do |form|
+        %>
+          <div>
+            <div class="tube-scanner scape-ui-block interface">
+              <label for="tube_scan" class="tube-label">Scan tube:</label>
+              <input id="tube_scan" name="tube_scan" placeholder="Tube barcode" class="tube" tabindex="1"/>
+            </div>
+            <h2>Tubes</h3>
+            <ul id="scanned_tube_list" class="robot tubev" data-role="listview" data-inset="true">
+            </ul>
+          </div>
+
+          <div>
+          <%= form.hidden_field :purpose_uuid, :value => @creation_form.purpose_uuid %>
+          <%= form.submit "Make Tube",
+              :class        => 'create-button',
+              :'data-theme' => 'b',
+              :'data-icon'  => 'plus',
+              :tab_index    => 2
+            %>
+          </div>
+
+        <% end %>
+      </div>
+
+
+      <div class="ui-block-b">
+        <div id="add-tubes-instructions-block" class="scape-ui-block" >
+          <div class="instructions ui-blody">
+            <h3>Add Lib Pool Tubes</h3>
+            <p>Scan in all the tubes in the same submission</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% end %>

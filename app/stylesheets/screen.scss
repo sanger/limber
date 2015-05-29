@@ -319,17 +319,25 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   background: #C9FFC4;
 }
 
-.qc_validation_report div {
+div.tube_validation_report {
+  font-weight: initial;
+}
+
+div.tube_validation_report, .qc_validation_report div {
   @include border-radius(4px);
   padding: 10px;
 }
-.qc_validation_report .invalid {
+.bad-tube div.tube_validation_report, .qc_validation_report .invalid {
   border: 1px solid #FF7A7A;
   background: #FFE6E6;
 }
-.qc_validation_report .valid {
+.good-tube div.tube_validation_report, .qc_validation_report .valid {
   border: 1px solid #61D457;
   background: #C9FFC4;
+}
+.wait-tube div.tube_validation_report {
+  border: 1px solid #FFFF7A;
+  background: #FFFFE6;
 }
 
 #key .tube-view { display: inline-block; }

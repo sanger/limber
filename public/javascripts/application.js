@@ -498,7 +498,50 @@
     $(document).on('click','.navbar-link', SCAPE.linkCallbacks.fire);
   });
 
-/* TAG CREATION */
+  // A status collector can have monitors registered. It will trigger
+  // its onSuccess event when all monitors are true, and its onRevert
+  // event if any are false.
+  var statusCollector = function(onSuccess,onRevert) {
+    // Fires when all guards are true
+    this.onSuccess =  onSuccess;
+    // Fires if a guard is invalidated
+    this.onRevert  = onRevert;
+    this.monitors  = [];
+  };
+
+  // Monitors are registered to a collector. When the change state they
+  // trigger the collector to check the state of all its monitors.
+  var monitor = function(state,collector) {
+    this.valid     = state||false;
+    this.collector = collector;
+  }
+
+  monitor.prototype = {
+    pass: function () {
+      this.valid = true;
+      this.collector.collate();
+    },
+    fail: function () {
+      this.valid = false;
+      this.collector.collate();
+    }
+  }
+
+  statusCollector.prototype = {
+    register: function (status) {
+      var new_monitor = new monitor(status,this);
+      this.monitors.push(new_monitor)
+      return new_monitor;
+    },
+    collate: function () {
+      for (var i =0; i < this.monitors.length; i+=1) {
+        if (!this.monitors[i].valid) { return this.onRevert(); }
+      }
+      return this.onSuccess();
+    }
+  }
+
+  // TAG CREATION
   $(document).on('pagecreate', '#tag-creation-page', function(){
 
     var qcLookup;
@@ -595,50 +638,6 @@
       errors: ''
     };
 
-    // A status collector can have monitors registered. It will trigger
-    // its onSuccess event when all monitors are true, and its onRevert
-    // event if any are false.
-    var statusCollector = function(onSuccess,onRevert) {
-      // Fires when all guards are true
-      this.onSuccess =  onSuccess;
-      // Fires if a guard is invalidated
-      this.onRevert  = onRevert;
-      this.monitors  = [];
-    };
-
-    // Monitors are registered to a collector. When the change state they
-    // trigger the collector to check the state of all its monitors.
-    var monitor = function(state,collector) {
-      this.valid     = state||false;
-      this.collector = collector;
-    }
-
-    monitor.prototype = {
-      pass: function () {
-        this.valid = true;
-        this.collector.collate();
-      },
-      fail: function () {
-        this.valid = false;
-        this.collector.collate();
-      }
-    }
-
-    statusCollector.prototype = {
-      register: function (status) {
-        var new_monitor = new monitor(status,this);
-        this.monitors.push(new_monitor)
-        return new_monitor;
-      },
-      collate: function () {
-        var all_true = true;
-        for (var i =0; i < this.monitors.length; i+=1) {
-          all_true = all_true && this.monitors[i].valid
-        }
-        if (all_true) { this.onSuccess(); } else { this.onRevert(); };
-      }
-    }
-
     var qcCollector = new statusCollector(
       function () {$('#plate_submit').button('enable')  },
       function () {$('#plate_submit').button('disable') }
@@ -675,6 +674,136 @@
 
     SCAPE.update_layout();
     $('#plate_tag_plate_template_uuid').change(SCAPE.update_layout);
+
+  });
+
+  ////////////////////////////////////////////////////////////////////
+  // Tube Pooling page
+  $(document).on('pageinit','#multi-tube-pooling-page',function(event) {
+
+    var newScanned, tubeCollector
+
+    $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+    });
+
+    newScanned = function(tube_barcode,collector){
+      // Return immediately if the box is empty
+      var stripped;
+      stripped = tube_barcode.replace(/\s*/g,'')
+      if (stripped === '') {
+        return;
+      } else {
+        this.tubeBarcode = stripped;
+        this.monitor = collector.register();
+        $('#create-tube').button('disable');
+        this.destroyExisting();
+        this.addToList();
+        this.validate();
+      };
+    }
+
+    newScanned.prototype = {
+      addToList: function() {
+        $('#scanned_tube_list').append(this.newElement()).listview('refresh');
+      },
+      newElement: function() {
+        var scanned = this;
+        this.listElement =  $(document.createElement('li')).
+          attr('id','listElement['+this.tubeBarcode+']').
+          attr('class','wait-tube').
+          attr('data-icon','delete').
+          data('bed',this.tubeBarcode).
+          on('click', function() { scanned.removeEntry(); }).
+          append(
+            $(document.createElement('a')).
+            attr('href','#').append(
+              $(document.createElement('h3')).
+              attr('class',"ui-li-heading").
+              text('Tube: '+this.tubeBarcode)
+            ).append(
+              $(document.createElement('div')).
+              attr('class',"tube_validation_report").
+              text('Waiting...')
+            ).append(
+              $(document.createElement('input')).
+              attr('type','hidden').attr('id','tube[parents]['+this.tubeBarcode+']').attr('name','tube[parents]['+this.tubeBarcode+']').
+              val(0)
+            )
+          );
+          return this.listElement;
+      },
+      destroyExisting: function() {
+        $('#listElement\\['+this.tubeBarcode+'\\]').detach();
+      },
+      validate: function() {
+        if (!this.barcodeRex.test(this.tubeBarcode)) { return this.barcodeError(); };
+        return this.valid();
+      },
+      valid: function() {
+        this.setState('good');
+        this.monitor.pass();
+        this.setMessage('This tube looks good.')
+        return true;
+      },
+      barcodeError: function() {
+        this.setError("This barcode doesn't look quite right. Barcodes should be 13 digits long.");
+        return false;
+      },
+      setError: function(message) {
+        this.setState('bad');
+        this.monitor.fail();
+        this.setMessage(message)
+      },
+      setMessage: function(message) {
+        this.listElement.find('.tube_validation_report').text(message)
+      },
+      setState: function(state) {
+        for (var i = 0; i < this.states.length; i += 1) {
+          if (state === this.states[i]) {
+            this.listElement.addClass(this.states[i]+'-tube');
+          } else {
+            this.listElement.removeClass(this.states[i]+'-tube');
+          }
+        }
+      },
+      removeEntry: function() {
+        this.listElement.detach();
+        // This may look odd, but when we remove the tube we effectively no longer need to
+        // worry about it, so can pass it.
+        this.monitor.pass();
+        $('#scanned_tube_list').listview('refresh');
+      },
+      states: ['good','wait','bad'],
+      barcodeRex: /^[0-9]{13}$/  // Matches stings of 13 numbers only.
+    }
+
+    tubeCollector = new statusCollector(
+      function () {
+        if ($('#scanned_tube_list').children().length > 0) {
+          $('#tube_submit').button('enable');
+        } else {
+          $('#tube_submit').button('disable');
+        }
+      },
+      function () { $('#tube_submit').button('disable'); }
+    );
+
+    $('#tube_submit').button('disable');
+
+    $('#tube_scan').on("keydown", function(e) {
+      var code=e.charCode || e.keyCode;
+      if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
+        e.preventDefault();
+        new newScanned(this.value,tubeCollector);
+        this.value = "";
+        $(this).focus();
+        return false;
+      }
+
+    });
 
   });
 
@@ -1310,7 +1439,6 @@
   });
 
 
-
   ////////////////////////////////////////////////////////////////////
   // Bed Robot Page
   $(document).on('pageinit','#robot-verification-bed',function(event) {
@@ -1359,7 +1487,6 @@
     }
 
     var checkResponse = function(response) {
-      SCAPE.testy=response;
       if ($('.bedv').children().length===0) {
         // We don't have any content
         $.mobile.hidePageLoadingMsg();
@@ -1417,8 +1544,10 @@
     })
   });
 
+
 })(jQuery,window);
 
+// Global SCAPE.message method
 (function($, exports, undefined){
   "use strict";
 
