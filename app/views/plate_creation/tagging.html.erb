@@ -9,9 +9,9 @@
       <%= f.inputs do %>
         <%= f.input :purpose_uuid, :as => :hidden %>
         <%= f.input :parent_uuid, :as => :hidden %>
-        <% @creation_form.index_tag_field do -%>
+        <% @creation_form.tag_2_field do -%>
           <div data-role="fieldcontain">
-            <%= f.input :index_tag_tube_barcode, :input_html => {'data-info-panel'=>'index-tag-tube-info', 'data-qcable-type'=>'Index Tag Tubes', 'data-approved-list'=>'index_tags'} %>
+            <%= f.input :tag_2_tube_barcode, :input_html => {'data-info-panel'=>'tag-2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag_2s'} %>
           </div>
         <% end -%>
         <div data-role="fieldcontain">
@@ -19,8 +19,8 @@
         </div>
       <%- end -%>
       <br/>
-      <% @creation_form.index_tag_field do -%>
-        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'index tag tube', :form=>f} %>
+      <% @creation_form.tag_2_field do -%>
+        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag 2 tube', :form=>f} %>
       <% end %>
       <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
       <%= f.submit 'Create Plate',
@@ -37,7 +37,7 @@
         <div id="instructions" class="instructions ui-body">
           <h2>Instructions</h2>
           <ol>
-            <li>Scan an index tag tube into 'Index tag tube barcode'.</li>
+            <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
             <li>Scan a target tag plate into 'Tag plate barcode'.</li>
             <li>Confirm the details and ensure both are passed as valid.</li>
             <li>Click 'Create plate'</li>
@@ -55,7 +55,7 @@
   (function(exports, $, undefined){
      $.extend(SCAPE, {
       tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-      index_tags:  <%= @creation_form.index_tags.to_json.html_safe %>,
+      tag_2s:  <%= @creation_form.tag_2s.to_json.html_safe %>,
       tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
      });
    })(window,jQuery);

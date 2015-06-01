@@ -9,11 +9,11 @@ module Forms
     write_inheritable_attribute :attributes, [
       :api, :purpose_uuid, :parent_uuid, :user_uuid,
       :tag_plate_barcode, :tag_plate,
-      :index_tag_tube_barcode, :index_tag_tube
+      :tag_2_tube_barcode, :tag_2_tube
     ]
 
-    validates_presence_of *(self.attributes - [:index_tag_tube_barcode, :index_tag_tube])
-    validates_presence_of :index_tag_tube_barcode, :index_tag_tube, :if => :requires_index_tag?
+    validates_presence_of *(self.attributes - [:tag_2_tube_barcode, :tag_2_tube])
+    validates_presence_of :tag_2_tube_barcode, :tag_2_tube, :if => :requires_tag_2?
 
     def valid_qcable_information
       tag_plate.present? && tag_plate.valid?
@@ -28,9 +28,9 @@ module Forms
       @tag_plate = QcableObject.new(params[:asset_uuid],params[:template_uuid])
     end
 
-    def index_tag_tube=(params)
+    def tag_2_tube=(params)
       return nil if params.blank?
-      @index_tag_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+      @tag_2_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
     end
 
     def initialize(*args, &block)
@@ -59,10 +59,10 @@ module Forms
     end
     private :generate_layouts_and_groups
 
-    def available_index_tags
-      api.index_tag_layout_template.all.group_by(&:uuid)
+    def available_tag_2s
+      api.tag_2_layout_template.all.group_by(&:uuid)
     end
-    private :available_index_tags
+    private :available_tag_2s
 
     def tag_layout_templates
       generate_layouts_and_groups unless @tag_layout_templates.present?
@@ -74,8 +74,8 @@ module Forms
       @tag_groups
     end
 
-    def index_tags
-      @index_tags ||= available_index_tags
+    def tag_2s
+      @tag_2s ||= available_tag_2s
     end
 
     def tags_by_name
@@ -143,12 +143,12 @@ module Forms
       true
     end
 
-    def requires_index_tag?
+    def requires_tag_2?
       true
     end
 
-    def index_tag_field
-      yield if requires_index_tag?
+    def tag_2_field
+      yield if requires_tag_2?
       nil
     end
 
@@ -160,16 +160,16 @@ module Forms
           :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
         )
 
-        return true unless index_tag_tube_barcode.present?
+        return true unless tag_2_tube_barcode.present?
 
         api.state_change.create!(
           :user => user_uuid,
-          :target => index_tag_tube.asset_uuid,
+          :target => tag_2_tube.asset_uuid,
           :reason => 'Used in Library creation',
           :target_state => 'exhausted'
         )
 
-        api.index_tag_layout_template.find(index_tag_tube.template_uuid).create!(
+        api.tag_2_layout_template.find(tag_2_tube.template_uuid).create!(
           :plate => plate.uuid,
           :user  => user_uuid,
           :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
