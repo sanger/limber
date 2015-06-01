@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git://github.com/JamesGlover/sequencescape-client-api.git
-  revision: d34302dea0f5844c459e18721e859ffa4276b543
+  revision: 8a2234abf6f256fabeca76a5fc2bcec81bf6c6b3
   branch: dual_indexing_r32
   specs:
     sequencescape-client-api (0.2.6)
