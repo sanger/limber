@@ -644,7 +644,7 @@
     );
 
     new qcLookup($('#plate_tag_plate_barcode'),qcCollector);
-    new qcLookup($('#plate_tag_2_tube_barcode'),qcCollector);
+    new qcLookup($('#plate_tag2_tube_barcode'),qcCollector);
 
     /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
     $('form#plate_new').on('submit',function(){ return !$('input#plate_submit')[0].disabled } )

@@ -9,11 +9,11 @@ module Forms
     write_inheritable_attribute :attributes, [
       :api, :purpose_uuid, :parent_uuid, :user_uuid,
       :tag_plate_barcode, :tag_plate,
-      :tag_2_tube_barcode, :tag_2_tube
+      :tag2_tube_barcode, :tag2_tube
     ]
 
-    validates_presence_of *(self.attributes - [:tag_2_tube_barcode, :tag_2_tube])
-    validates_presence_of :tag_2_tube_barcode, :tag_2_tube, :if => :requires_tag_2?
+    validates_presence_of *(self.attributes - [:tag2_tube_barcode, :tag2_tube])
+    validates_presence_of :tag2_tube_barcode, :tag2_tube, :if => :requires_tag2?
 
     def valid_qcable_information
       tag_plate.present? && tag_plate.valid?
@@ -28,9 +28,9 @@ module Forms
       @tag_plate = QcableObject.new(params[:asset_uuid],params[:template_uuid])
     end
 
-    def tag_2_tube=(params)
+    def tag2_tube=(params)
       return nil if params.blank?
-      @tag_2_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+      @tag2_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
     end
 
     def initialize(*args, &block)
@@ -59,10 +59,10 @@ module Forms
     end
     private :generate_layouts_and_groups
 
-    def available_tag_2s
-      api.tag_2_layout_template.all.group_by(&:uuid)
+    def available_tag2s
+      api.tag2_layout_template.all.group_by(&:uuid)
     end
-    private :available_tag_2s
+    private :available_tag2s
 
     def tag_layout_templates
       generate_layouts_and_groups unless @tag_layout_templates.present?
@@ -74,8 +74,8 @@ module Forms
       @tag_groups
     end
 
-    def tag_2s
-      @tag_2s ||= available_tag_2s
+    def tag2s
+      @tag2s ||= available_tag2s
     end
 
     def tags_by_name
@@ -143,12 +143,12 @@ module Forms
       true
     end
 
-    def requires_tag_2?
+    def requires_tag2?
       true
     end
 
-    def tag_2_field
-      yield if requires_tag_2?
+    def tag2_field
+      yield if requires_tag2?
       nil
     end
 
@@ -160,16 +160,17 @@ module Forms
           :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
         )
 
-        return true unless tag_2_tube_barcode.present?
+        return true unless tag2_tube_barcode.present?
 
         api.state_change.create!(
           :user => user_uuid,
-          :target => tag_2_tube.asset_uuid,
+          :target => tag2_tube.asset_uuid,
           :reason => 'Used in Library creation',
           :target_state => 'exhausted'
         )
 
-        api.tag_2_layout_template.find(tag_2_tube.template_uuid).create!(
+        api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
+          :source => tag2_tube.asset_uuid,
           :plate => plate.uuid,
           :user  => user_uuid,
           :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }

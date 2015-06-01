@@ -9,9 +9,9 @@
       <%= f.inputs do %>
         <%= f.input :purpose_uuid, :as => :hidden %>
         <%= f.input :parent_uuid, :as => :hidden %>
-        <% @creation_form.tag_2_field do -%>
+        <% @creation_form.tag2_field do -%>
           <div data-role="fieldcontain">
-            <%= f.input :tag_2_tube_barcode, :input_html => {'data-info-panel'=>'tag-2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag_2s'} %>
+            <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag-2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s'} %>
           </div>
         <% end -%>
         <div data-role="fieldcontain">
@@ -19,7 +19,7 @@
         </div>
       <%- end -%>
       <br/>
-      <% @creation_form.tag_2_field do -%>
+      <% @creation_form.tag2_field do -%>
         <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag 2 tube', :form=>f} %>
       <% end %>
       <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
@@ -55,7 +55,7 @@
   (function(exports, $, undefined){
      $.extend(SCAPE, {
       tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-      tag_2s:  <%= @creation_form.tag_2s.to_json.html_safe %>,
+      tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>,
       tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
      });
    })(window,jQuery);
