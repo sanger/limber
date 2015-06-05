@@ -144,11 +144,11 @@ module Forms
     end
 
     def requires_tag2?
-      true
+      false
     end
 
     def tag2_field
-      yield if requires_tag2?
+      yield
       nil
     end
 
@@ -168,6 +168,7 @@ module Forms
           :reason => 'Used in Library creation',
           :target_state => 'exhausted'
         )
+
 
         api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
           :source => tag2_tube.asset_uuid,

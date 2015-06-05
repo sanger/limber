@@ -554,16 +554,18 @@
 
     qcLookup = function(barcodeBox,collector) {
       if (barcodeBox.length == 0) { return false; }
-      var qc_lookup = this;
+      var qc_lookup = this, status;
       this.inputBox = barcodeBox;
       this.infoPanelId = $('#'+barcodeBox.data('info-panel'));
       this.qcableType  = barcodeBox.data('qcable-type');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
+      this.required = this.inputBox.parents('.required').length > 0;
       this.inputBox.on('change',function(){
         qc_lookup.resetStatus();
         qc_lookup.requestPlate(this.value);
       });
-      this.monitor = collector.register();
+      status = this.required ? 'pass' : 'fail'
+      this.monitor = collector.register(status);
     };
 
     qcLookup.prototype = {
@@ -573,6 +575,7 @@
         this.infoPanelId.find('input').val(null);
       },
       requestPlate: function(barcode) {
+        if ( this.inputBox.val()==="" && !this.required ) { return this.monitor.pass();}
         $.ajax({
           type: 'POST',
           dataType: "json",
