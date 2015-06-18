@@ -4,6 +4,37 @@
 module Forms
   class TubesForm < CreationForm
 
+    class Sibling
+
+      READY_STATE = 'qc_complete'
+
+      attr_reader :name, :uuid, :state, :barcode
+
+      def initialize(options)
+        return missing_sibling unless options.respond_to?(:[])
+        @name = options['name']
+        @uuid = options['uuid']
+        @barcode = options['ean13_barcode']
+        @state = options['state']
+      end
+
+      def message
+        return 'This tube is ready for pooling, find it, and scan it in above' if state == READY_STATE
+        return 'Some requests still need to be progressed to appropriate tubes' if state == 'Not Present'
+        'Must be %s first' % READY_STATE
+      end
+
+      def ready?
+        state == READY_STATE
+      end
+
+      private
+      def missing_sibling
+        @name  = 'Other'
+        @state = 'Not Present'
+      end
+    end
+
     def render(controller)
       if no_pooling_required?
         super
@@ -15,15 +46,32 @@ module Forms
     attr_reader :all_tube_transfers
 
     def no_pooling_required?
-      false
+      tube.sibling_tubes.count == 1
+    end
+
+    def siblings
+      @siblings ||= tube.sibling_tubes.map {|s| Sibling.new(s) }
+    end
+
+    def each_sibling
+      siblings.each {|s| yield s }
+    end
+
+    def all_ready?
+      siblings.all?(&:ready?)
+    end
+
+    def barcode_to_uuid(barcode)
+      siblings.detect {|s| s.barcode == barcode }.uuid
     end
 
     write_inheritable_attribute :page, 'multi_tube_pooling'
     write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
 
-    validate :all_barcodes_found?, :if => :barcodes_provided?
+    validate :all_parents_and_only_parents?, :if => :barcodes_provided?
 
     def create_objects!
+      debugger
       success = []
       @all_tube_transfers = parents.map do |this_parent_uuid|
         transfer_template.create!(
@@ -51,10 +99,14 @@ module Forms
 
     def parents=(barcode_hash)
       return unless barcode_hash.respond_to?(:keys)
-      @expected_parents_count = barcode_hash.keys.count
-      results = api.search.find(Settings.searches['Find assets by barcode']).all(Sequencescape::Tube,:barcode => barcode_hash.keys)
-      @parents = results.map(&:uuid)
+      @barcodes = barcode_hash.select {|barcode,selected| selected == "1" }.keys
+      @parents = @barcodes.map {|barcode| barcode_to_uuid(barcode) }
     end
+
+    def parent
+      @parent ||= api.tube.find(parent_uuid)
+    end
+    alias_method(:tube, :parent)
 
     def parents
       @parents || [ parent_uuid ]
@@ -63,12 +115,19 @@ module Forms
     private
 
     def barcodes_provided?
-      @expected_parents_count.present?
+      @barcode_hash.present?
     end
 
-    def all_barcodes_found?
-      return true if @parents.count == @expected_parents_count
-      errors.add(:base,"Could only find #{@parents.count} of the #{@expected_parents_count} barcodes")
+    def all_parents_and_only_parents?
+      val_barcodes = @barcodes.dup
+      valid = true
+      siblings.each do |s|
+        next if val_barcodes.delete(s.barcode)
+        errors.add(:base,"Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+        valid = false
+      end
+      return valid if val_barcodes.empty?
+      errors.add(:base,"#{val_barcodes.join(', ')} barcodes are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
       false
     end
 

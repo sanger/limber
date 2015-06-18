@@ -60,9 +60,17 @@ module Forms
     private :generate_layouts_and_groups
 
     def available_tag2s
-      api.tag2_layout_template.all.group_by(&:uuid)
+      api.tag2_layout_template.all.reject do |template|
+        used_tag2s.include?(template.uuid)
+      end.group_by(&:uuid)
     end
     private :available_tag2s
+
+    def used_tag2s
+      @used_tag2s ||= plate.submission_pools.map {|pool| pool.used_tag2_layout_templates.map {|used| used["uuid"] } }.flatten.uniq
+    end
+    private :used_tag2s
+
 
     def tag_layout_templates
       generate_layouts_and_groups unless @tag_layout_templates.present?
@@ -76,6 +84,10 @@ module Forms
 
     def tag2s
       @tag2s ||= available_tag2s
+    end
+
+    def tag2_names
+      tag2s.values.flatten.map(&:name)
     end
 
     def tags_by_name
@@ -144,11 +156,11 @@ module Forms
     end
 
     def requires_tag2?
-      false
+      plate.submission_pools.detect {|pool| pool.plates_in_submission > 1 }.present?
     end
 
     def tag2_field
-      yield
+      yield if requires_tag2?
       nil
     end
 

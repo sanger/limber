@@ -11,6 +11,7 @@
         <%= f.input :parent_uuid, :as => :hidden %>
         <% @creation_form.tag2_field do -%>
           <div data-role="fieldcontain">
+            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
             <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s'} %>
           </div>
         <% end -%>
@@ -20,7 +21,7 @@
       <%- end -%>
       <br/>
       <% @creation_form.tag2_field do -%>
-        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f} %>
+        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f } %>
       <% end %>
       <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
       <%= f.submit 'Create Plate',
@@ -37,7 +38,9 @@
         <div id="instructions" class="instructions ui-body">
           <h2>Instructions</h2>
           <ol>
-            <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
+            <% @creation_form.tag2_field do -%>
+              <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
+            <% end %>
             <li>Scan a target tag plate into 'Tag plate barcode'.</li>
             <li>Confirm the details and ensure both are passed as valid.</li>
             <li>Click 'Create plate'</li>

@@ -564,8 +564,7 @@
         qc_lookup.resetStatus();
         qc_lookup.requestPlate(this.value);
       });
-      status = this.required ? 'pass' : 'fail'
-      this.monitor = collector.register(status);
+      this.monitor = collector.register(!this.required);
     };
 
     qcLookup.prototype = {
@@ -684,7 +683,7 @@
   // Tube Pooling page
   $(document).on('pageinit','#multi-tube-pooling-page',function(event) {
 
-    var newScanned, tubeCollector
+    var newScanned, tubeCollector, siblingTube, barcodeRegister = {}
 
     $.ajaxSetup({
       beforeSend: function(xhr) {
@@ -692,17 +691,46 @@
       }
     });
 
+    siblingTube = function(list_element,collector) {
+      this.listElement = $(list_element);
+      this.monitor = collector.register();
+      barcodeRegister[list_element.dataset.barcode] = this;
+    }
+
+    siblingTube.prototype = {
+      scanned: function() {
+        this.monitor.pass();
+        this.setState('good');
+        this.listElement.find('input').val('1');
+        this.setMessage('Scanned in and ready to go!');
+      },
+      setState: function(state) {
+        for (var i = 0; i < this.states.length; i += 1) {
+          if (state === this.states[i]) {
+            this.listElement.addClass(this.states[i]+'-tube');
+          } else {
+            this.listElement.removeClass(this.states[i]+'-tube');
+          }
+        }
+      },
+      setMessage: function(message) {
+        this.listElement.find('.tube_validation_report').text(message)
+      },
+      states: ['good','wait']
+    }
+
     newScanned = function(tube_barcode,collector){
       // Return immediately if the box is empty
       var stripped;
       stripped = tube_barcode.replace(/\s*/g,'')
       if (stripped === '') {
         return;
+      } else if (barcodeRegister[stripped]) {
+        barcodeRegister[stripped].scanned();
       } else {
         this.tubeBarcode = stripped;
         this.monitor = collector.register();
         $('#create-tube').button('disable');
-        this.destroyExisting();
         this.addToList();
         this.validate();
       };
@@ -733,22 +761,19 @@
             ).append(
               $(document.createElement('input')).
               attr('type','hidden').attr('id','tube[parents]['+this.tubeBarcode+']').attr('name','tube[parents]['+this.tubeBarcode+']').
-              val(0)
+              val(1)
             )
           );
           return this.listElement;
       },
-      destroyExisting: function() {
-        $('#listElement\\['+this.tubeBarcode+'\\]').detach();
-      },
       validate: function() {
         if (!this.barcodeRex.test(this.tubeBarcode)) { return this.barcodeError(); };
-        return this.valid();
+        return this.unrecognized();
       },
-      valid: function() {
-        this.setState('good');
-        this.monitor.pass();
-        this.setMessage('This tube looks good.')
+      unrecognized: function() {
+        this.setState('bad');
+        this.monitor.fail();
+        this.setMessage('This tube is not part of this pool!')
         return true;
       },
       barcodeError: function() {
@@ -793,6 +818,10 @@
       },
       function () { $('#tube_submit').button('disable'); }
     );
+
+    $('.sibling-tube').each(function(){
+      new siblingTube(this,tubeCollector);
+    })
 
     $('#tube_submit').button('disable');
 
