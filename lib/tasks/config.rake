@@ -321,6 +321,7 @@ namespace :config do
 
           presenters['Lib Norm'].merge!(
             :presenter_class => 'Presenters::QcCompletablePresenter',
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
             :robot_controlled_states => { :pending => 'pcr-xp-lib-norm' }
           )
 
