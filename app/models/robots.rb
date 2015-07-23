@@ -25,7 +25,8 @@ module Robots
       end
 
       def error(message)
-        @error_message = message
+        @error_message ||= ""
+        @error_message << message << " "
         false
       end
       private :error
@@ -35,10 +36,10 @@ module Robots
         case
         when plate.nil? # The bed is empty or untested
           return @barcode.nil? || error("Could not find a plate with the barcode #{@barcode}.")
+        when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
+          error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is a #{plate.plate_purpose.name} not a #{purpose} plate.")
         when !states.include?(plate.state) # The plate is in the wrong state
           error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is #{plate.state} when it should be #{states.join(', ')}.")
-        when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
-          error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is not a #{purpose}.")
         else
           true
         end
@@ -55,7 +56,12 @@ module Robots
 
       def parent_plate
         return nil if plate.nil?
-        api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(:barcode => plate.barcode.ean13)
+        begin
+          api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(:barcode => plate.barcode.ean13)
+        rescue Sequencescape::Api::ResourceNotFound
+          error("Plate #{plate.barcode.prefix}#{plate.barcode.number} doesn't seem to have a parent, and yet one was expected.")
+          nil
+        end
       end
 
       def formatted_message

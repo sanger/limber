@@ -104,7 +104,7 @@ module Forms
     end
 
     def save!
-      raise StandardError, 'Invalid data' unless valid?
+      raise StandardError, 'Invalid data; ' + self.errors.full_messages.join('; ') unless valid?
 
       create_objects!
     end

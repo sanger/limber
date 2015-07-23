@@ -34,7 +34,7 @@ class TubeCreationController < CreationController
   end
 
   def create
-    @creation_form = create_form(params[:tube])
+    @creation_form = create_form(params[:tube].reverse_merge(:parent_uuid => params[:sequencescape_tube_id]))
 
     @creation_form.save!
     respond_to do |format|
