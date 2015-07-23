@@ -7,64 +7,47 @@
       <div class="ui-block-a">
       <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
       <%= f.inputs do %>
-        <%= f.input :purpose_uuid, :as => :hidden, :value =>@creation_form.purpose_uuid %>
-        <%= f.input :parent_uuid, :as => :hidden, :value => @creation_form.parent_uuid %>
+        <%= f.input :purpose_uuid, :as => :hidden %>
+        <%= f.input :parent_uuid, :as => :hidden %>
+        <% @creation_form.tag2_field do -%>
+          <div data-role="fieldcontain">
+            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+            <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s'} %>
+          </div>
+        <% end -%>
         <div data-role="fieldcontain">
-        <%= f.input :tag_plate_barcode %>
+          <%= f.input :tag_plate_barcode, :input_html => {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts'} %>
         </div>
-        <%= f.input :qcable_uuid, :as => :hidden, :value => nil %>
-        <%= f.input :tag_plate_uuid, :as => :hidden, :value => nil %>
-        <%= f.input :tag_layout_template_uuid, :label => false, :as => :hidden, :required=> true %>
       <%- end -%>
-    <br/>
-    <div id="tag-plate-info" class="interface ui-body">
-      <div id='validation_report'></div>
-      <h2>Tag Plate Information</h2>
-      <dl>
-        <dt>Lot Number</dt>
-        <dd class="lot-number"></dd>
-        <dt>Template</dt>
-        <dd class="template"></dd>
-        <dt>State</dt>
-        <dd class="state"></dd>
-      </dl>
+      <br/>
+      <% @creation_form.tag2_field do -%>
+        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f } %>
+      <% end %>
+      <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
+      <%= f.submit 'Create Plate',
+        :"data-theme"   => "b",
+        :"data-icon"    => "plus",
+        :'data-iconpos' => "right",
+        :disabled => 'disabled'
+      %>
     </div>
-        <%= f.submit 'Create Plate',
-          :"data-theme"   => "b",
-          :"data-icon"    => "plus",
-          :'data-iconpos' => "right",
-          :disabled => 'disabled'
-        %>
-      </div>
 
       <div class="ui-block-b">
-        <h2>Tag Replacement palette</h2>
-        <div id="substitutions" style="">
-          <ul data-theme"d" data-role="listview" data-inset="true">
-
-          </ul>
-        </div>
+        <h2>Tag plate addition</h2>
         <br/>
         <div id="instructions" class="instructions ui-body">
           <h2>Instructions</h2>
           <ol>
-            <li>Carefully check the index and pool layout against your worksheet.</li>
-            <li>Select the correct tag set.</li>
-            <li>Substitute tags as necessary using the Tag Replacement palette.</li>
+            <% @creation_form.tag2_field do -%>
+              <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
+            <% end %>
+            <li>Scan a target tag plate into 'Tag plate barcode'.</li>
+            <li>Confirm the details and ensure both are passed as valid.</li>
+            <li>Click 'Create plate'</li>
+            <li>This will link up the tag plate.</li>
           </ol>
 
           To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
-
-          <h3>Once you are certain that the tag layout is correct, click ‘Create Plate’.</h3>
-        </div>
-        <div id="replacement-tags" style="display:none">
-          <ul id="tag-palette"
-            data-theme="d"
-            data-role="listview"
-            data-filter-placeholder="Filter tags..."
-            data-inset="true"
-            data-filter="true">
-          </ul>
         </div>
       </div>
     </div>
@@ -75,6 +58,7 @@
   (function(exports, $, undefined){
      $.extend(SCAPE, {
       tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
+      tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>,
       tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
      });
    })(window,jQuery);

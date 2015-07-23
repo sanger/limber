@@ -6,11 +6,32 @@ module Forms
     include Forms::Form::CustomPage
 
     write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :tag_layout_template_uuid, :user_uuid, :substitutions, :tag_plate_uuid, :tag_plate_barcode]
+    write_inheritable_attribute :attributes, [
+      :api, :purpose_uuid, :parent_uuid, :user_uuid,
+      :tag_plate_barcode, :tag_plate,
+      :tag2_tube_barcode, :tag2_tube
+    ]
 
-    validates_presence_of *(self.attributes - [:substitutions])
+    validates_presence_of *(self.attributes - [:tag2_tube_barcode, :tag2_tube])
+    validates_presence_of :tag2_tube_barcode, :tag2_tube, :if => :requires_tag2?
+
+    def valid_qcable_information
+      tag_plate.present? && tag_plate.valid?
+    end
 
     attr_reader :plate_conversion
+
+    QcableObject = Struct.new(:asset_uuid,:template_uuid)
+
+    def tag_plate=(params)
+      return nil if params.blank?
+      @tag_plate = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+    end
+
+    def tag2_tube=(params)
+      return nil if params.blank?
+      @tag2_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+    end
 
     def initialize(*args, &block)
       super
@@ -38,6 +59,19 @@ module Forms
     end
     private :generate_layouts_and_groups
 
+    def available_tag2s
+      api.tag2_layout_template.all.reject do |template|
+        used_tag2s.include?(template.uuid)
+      end.group_by(&:uuid)
+    end
+    private :available_tag2s
+
+    def used_tag2s
+      @used_tag2s ||= plate.submission_pools.map {|pool| pool.used_tag2_layout_templates.map {|used| used["uuid"] } }.flatten.uniq
+    end
+    private :used_tag2s
+
+
     def tag_layout_templates
       generate_layouts_and_groups unless @tag_layout_templates.present?
       @tag_layout_templates
@@ -46,6 +80,14 @@ module Forms
     def tag_groups
       generate_layouts_and_groups unless @tag_groups.present?
       @tag_groups
+    end
+
+    def tag2s
+      @tag2s ||= available_tag2s
+    end
+
+    def tag2_names
+      tag2s.values.flatten.map(&:name)
     end
 
     def tags_by_name
@@ -90,14 +132,14 @@ module Forms
 
       api.state_change.create!(
         :user => user_uuid,
-        :target => tag_plate_uuid,
+        :target => tag_plate.asset_uuid,
         :reason => 'Used in Library creation',
         :target_state => 'exhausted'
       )
 
       # Convert plate instead of creating it
       @plate_conversion = api.plate_conversion.create!(
-        :target => tag_plate_uuid,
+        :target => tag_plate.asset_uuid,
         :purpose => purpose_uuid,
         :user => user_uuid,
         :parent => parent_uuid
@@ -105,7 +147,7 @@ module Forms
 
       api.transfer_template.find(selected_transfer_template_uuid).create!(
         :source      => parent_uuid,
-        :destination => tag_plate_uuid,
+        :destination => tag_plate.asset_uuid,
         :user        => user_uuid
       )
 
@@ -113,9 +155,35 @@ module Forms
       true
     end
 
+    def requires_tag2?
+      plate.submission_pools.detect {|pool| pool.plates_in_submission > 1 }.present?
+    end
+
+    def tag2_field
+      yield if requires_tag2?
+      nil
+    end
+
     def create_objects!
       create_plate! do |plate|
-        api.tag_layout_template.find(tag_layout_template_uuid).create!(
+        api.tag_layout_template.find(tag_plate.template_uuid).create!(
+          :plate => plate.uuid,
+          :user  => user_uuid,
+          :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
+        )
+
+        return true unless tag2_tube_barcode.present?
+
+        api.state_change.create!(
+          :user => user_uuid,
+          :target => tag2_tube.asset_uuid,
+          :reason => 'Used in Library creation',
+          :target_state => 'exhausted'
+        )
+
+
+        api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
+          :source => tag2_tube.asset_uuid,
           :plate => plate.uuid,
           :user  => user_uuid,
           :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
