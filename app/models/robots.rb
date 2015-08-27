@@ -91,7 +91,8 @@ module Robots
       raise ActionController::RoutingError.new("Location #{options[:location]} Not Found") if robot_settings.nil?
       robot_settings = robot_settings[options[:id]]
       raise ActionController::RoutingError.new("Robot #{options[:name]} Not Found") if robot_settings.nil?
-      Robot.new(robot_settings.merge(options))
+      robot_class = (robot_settings[:class]||'Robots::Robot').constantize
+      robot_class.new(robot_settings.merge(options))
     end
 
     class_inheritable_reader :attributes
