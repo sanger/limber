@@ -87,11 +87,15 @@ module Robots
     end
 
     def self.find(options)
-      robot_settings = Settings.robots[options[:location]]
-      raise ActionController::RoutingError.new("Location #{options[:location]} Not Found") if robot_settings.nil?
-      robot_settings = robot_settings[options[:id]]
+      robot_settings = Settings.robots[options[:id]]
       raise ActionController::RoutingError.new("Robot #{options[:name]} Not Found") if robot_settings.nil?
       Robot.new(robot_settings.merge(options))
+    end
+
+    def self.each_robot
+      Settings.robots.each do |key,config|
+        yield key, config[:name]
+      end
     end
 
     class_inheritable_reader :attributes

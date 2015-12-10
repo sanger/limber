@@ -7,7 +7,7 @@
   <%= content do %>
     <%= flash_messages %>
     <h2><%= robot.name %></h2>
-    <%= form_for :robot, :url => "#{robot_path(robot.id)}/#{robot.location}/start" do |form| %>
+    <%= form_for :robot, :url => start_robot_path(robot.id) do |form| %>
       <div class="ui-grid-a">
         <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
 

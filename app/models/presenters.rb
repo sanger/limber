@@ -113,20 +113,27 @@ module Presenters
         :failed     =>  [ 'labware-summary-button' ]
     }
 
-    def robot_controlled_states
-      purpose_config.robot_controlled_states || {}
-    end
-
-    def robot_name
-      robot_controlled_states[labware.state.to_sym]
+    def each_robot
+      suitable_robots.each {|key,config| yield(key,config[:name]) }
     end
 
     def robot_exists?
-      (!robot_name.nil?) && Settings.robots[location][robot_name].present?
+      suitable_robots.present?
     end
 
     def statechange_link(view)
-      robot_exists? ? "#{view.robot_path(robot_name)}/#{location}" : '#'
+      case suitable_robots.count
+      when 0
+        '#'
+      when 1
+        view.robot_path(suitable_robots.keys.first)
+      else
+        '#popupRobots'
+      end
+    end
+
+    def statechange_attributes
+      multiple_robots? ? 'data-rel="popup" data-inline="true" data-transition="flip"'.html_safe : ''
     end
 
     def statechange_label
@@ -226,6 +233,22 @@ module Presenters
 
     def filename
       false
+    end
+
+    private
+
+    def suitable_robots
+      @suitable_robots ||= Settings.robots.select {|key,config| suitable_for_plate?(config) }
+    end
+
+    def suitable_for_plate?(config)
+      config.beds.detect do |bed,bed_config|
+        bed_config.purpose ==  plate.plate_purpose.name && bed_config.states.include?(labware.state)
+      end.present?
+    end
+
+    def multiple_robots?
+      suitable_robots.count > 1
     end
 
   end

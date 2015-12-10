@@ -7,7 +7,6 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
 
   write_inheritable_attribute :summary_partial, 'labware/plates/pooled_into_tubes_plate'
   write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
-  write_inheritable_attribute :robot_controlled_states, { :pending => 'nx8-post-cap-lib-pool' }
   write_inheritable_attribute :csv, 'show_pooled_alternative'
 
   write_inheritable_attribute :authenticated_tab_states, {
