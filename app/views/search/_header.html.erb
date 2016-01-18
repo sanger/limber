@@ -4,13 +4,22 @@
     <ul>
       <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
       <li><a href="#popupInbox" data-rel="popup" data-inline="true" data-transition="flip">Inboxes</a></li>
+      <!--<li><a href="#popupRobots" data-rel="popup" data-inline="true" data-transition="flip">Robots</a></li>-->
     </ul>
   </div>
 </div>
-  <div data-role="popup" id="popupInbox" data-theme="b">
+<div data-role="popup" id="popupInbox" data-theme="b">
   <ul data-role="listview" data-inset="true" style="min-width:210px;">
       <li data-role="divider" data-theme="b">Illumina A and B</li>
       <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
       <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
+  </ul>
+</div>
+<div data-role="popup" id="popupRobots" data-theme="b">
+  <ul data-role="listview" data-inset="true" style="min-width:210px;">
+      <li data-role="divider" data-theme="b">Robots</li>
+      <% each_robot do |robot_id,robot_name| %>
+        <li><a href="<%= robot_path(robot_id) %>" ><%= robot_name %></a></li>
+      <% end %>
   </ul>
 </div>

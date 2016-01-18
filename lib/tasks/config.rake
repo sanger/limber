@@ -190,8 +190,7 @@ namespace :config do
           )
 
           presenters['Shear'].merge!(
-            :presenter_class => 'Presenters::StandardPresenter',
-            :robot_controlled_states => { :pending => 'cherrypick-to-shear'}
+            :presenter_class => 'Presenters::StandardPresenter'
           )
 
           presenters['Post Shear'].merge!(
@@ -199,28 +198,21 @@ namespace :config do
             :locations_children  => {
               'illumina_a' => 'Post Shear XP',
               'illumina_b' => 'Post Shear XP'
-            },
-            :robot_controlled_states => { :pending => 'shear-post-shear' }
+            }
           )
 
           presenters['Post Shear XP'].merge!(
-            :presenter_class         => 'Presenters::StandardPresenter',
-            :robot_controlled_states => { :pending => 'post-shear-post-shear-xp' }
+            :presenter_class         => 'Presenters::StandardPresenter'
           )
 
           presenters['AL Libs'].merge!(
-            :presenter_class         => 'Presenters::AlLibsPlatePresenter',
-            :robot_controlled_states => {
-              :pending => 'fx',
-              :started => 'fx-add-tags'
-            }
+            :presenter_class         => 'Presenters::AlLibsPlatePresenter'
           )
 
           presenters['Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
             :tag_layout_templates => ["Illumina pipeline tagging"],
-            :presenter_class => 'Presenters::PcrPresenter',
-            :robot_controlled_states => { :pending => 'fx-add-tags'}
+            :presenter_class => 'Presenters::PcrPresenter'
           )
 
           presenters['Lib PCRR'].merge!(
@@ -234,16 +226,14 @@ namespace :config do
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'nx-96' }
+            :default_printer_type => :plate_b
           )
 
 
           presenters['Lib PCR-XP QC'].merge!(
             :presenter_class         => 'Presenters::QcPlatePresenter',
             :default_printer_uuid    => barcode_printer_uuid.('g311bc2'),
-            :default_printer_type    => :plate_b,
-            :robot_controlled_states => { :pending => 'lib-pcr-xp-lib-pcr-xp-qc' }
+            :default_printer_type    => :plate_b
           )
 
 
@@ -251,14 +241,12 @@ namespace :config do
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'nx-96' }
+            :default_printer_type => :plate_b
           )
 
           presenters['Lib PCRR-XP QC'].merge!(
             :presenter_class     => 'Presenters::QcPlatePresenter',
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'lib-pcr-xp-lib-pcr-xp-qc' }
+            :default_printer_type => :plate_b
           )
 
           presenters['Lib Pool'].merge!(
@@ -321,23 +309,18 @@ namespace :config do
 
           presenters['Lib Norm'].merge!(
             :presenter_class => 'Presenters::QcCompletablePresenter',
-            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
-            :robot_controlled_states => { :pending => 'pcr-xp-lib-norm' }
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
           )
 
           presenters['Lib Norm QC'].merge!(
             :presenter_class     => 'Presenters::QcPlatePresenter',
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'lib-norm-lib-norm-qc' }
+            :default_printer_type => :plate_b
           )
 
-          presenters['Lib Norm 2'].merge!(
-            :robot_controlled_states => { :pending => 'lib-norm-lib-norm-2' }
-          )
+          presenters['Lib Norm 2'].merge!({})
 
           presenters['Lib Norm 2 Pool'].merge!(
             :presenter_class     => 'Presenters::EndPlatePresenter',
-            :robot_controlled_states => { :pending => 'lib-norm-2-lib-norm-2-pool' },
             :form_class           => 'Forms::PoolingRowToColumn'
           )
 
@@ -353,38 +336,30 @@ namespace :config do
           presenters["ISCH lib pool"].merge!(
             :form_class => "Forms::MultiPlatePoolingForm",
             :presenter_class => "Presenters::MultiPlatePooledPresenter",
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => {
-              :pending => 'nx8-pre-cap-pool',
-              :started => 'nx8-pre-cap-pool'
-            }
+            :default_printer_type => :plate_b
           )
 
           presenters["ISCH hyb"].merge!(
             :form_class => "Forms::BaitingForm",
             :presenter_class => 'Presenters::FullFailablePresenter',
-            :robot_controlled_states => { :pending => 'nx8-pre-hyb-pool'},
             :robot=>'nx8-pre-hyb-pool',
             :default_printer_type => :plate_b
           )
 
           presenters['ISCH cap lib'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
-            :robot_controlled_states => { :pending => 'bravo-cap-wash' },
             :robot=>'bravo-cap-wash',
             :default_printer_type => :plate_b
           )
 
           presenters['ISCH cap lib PCR'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
-            :robot_controlled_states => { :pending => 'bravo-post-cap-pcr-setup' },
             :robot=>'bravo-post-cap-pcr-setup',
             :default_printer_type => :plate_b
           )
 
           presenters['ISCH cap lib PCR-XP'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
-            :robot_controlled_states => { :pending => 'bravo-post-cap-pcr-cleanup' },
             :robot=>'bravo-post-cap-pcr-cleanup',
             :default_printer_type => :plate_b
           )
@@ -393,8 +368,7 @@ namespace :config do
             :form_class => "Forms::AutoPoolingForm",
             :presenter_class => "Presenters::FinalPooledPresenter",
             :state_changer_class => 'StateChangers::AutoPoolingStateChanger',
-            :default_printer_type => :plate_b,
-            :robot_controlled_states => { :pending => 'nx8-post-cap-lib-pool' }
+            :default_printer_type => :plate_b
           )
 
         end

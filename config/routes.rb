@@ -13,9 +13,13 @@ IlluminaBPipeline::Application.routes.draw do
 
   # Robots help us batch work up by function, rather than plate
   resources :robots, :controller => :robots do
-    match '/:location',        :on => :member, :action => 'show'
-    match '/:location/start',  :on => :member, :action => 'start'
-    match '/:location/verify', :on => :member, :action => 'verify'
+    member do
+      post 'start'
+      post 'verify'
+    end
+    # match '/:location',        :on => :member, :action => 'show'
+    # match '/:location/start',  :on => :member, :action => 'start'
+    # match '/:location/verify', :on => :member, :action => 'verify'
   end
 
   resources :illumina_b_qcables, :controller => :tag_plates, :only=>[:show]
