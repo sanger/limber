@@ -26,7 +26,7 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
   end
 
   def default_tube_printer_uuid
-    Settings.printers[location][:tube]
+    Settings.printers[:tube]
   end
 
   module StateDoesNotAllowTubePreviewing

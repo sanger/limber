@@ -1,200 +1,234 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2013,2014,2015 Genome Research Ltd.
 BED = ['580000000793', '580000001806', '580000002810', '580000003824', '580000004838', '580000005842', '580000006856', '580000007860', '580000008874', '580000009659', '580000010815', '580000011829', '580000012833']
 CAR = {
   :c13 => '580000013847',
   :c23 => '580000023860',
-  :c43 => '580000043677'
+  :c43 => '580000043677',
+  :c45 => '580000045695'
 }
 
-ROBOT_CONFIG = {
+require './lib/robot_configuration'
 
-  'nx8-pre-cap-pool' => {
-    :name   => 'NX8 Lib PCR-XP to ISCH Lib Pool',
+ROBOT_CONFIG = RobotConfiguration::Register.configure do
+
+
+  # Simple robots and bravo robots both transfer a single 'passed' source plate to a single 'pending'
+  # destination plate. They start the target plate
+  # fast bravo robots transition straight to passed.
+  # Simple robots can transition straight to passed if their second argument is 'passed'
+
+  # Custom robots are configured manually
+
+  # Shared Pipeline
+  bravo_robot do
+    from 'Cherrypicked', bed(7)
+    to 'Shear', bed(9)
+  end
+
+  bravo_robot do
+    from 'Shear', bed(9)
+    to 'Post Shear', bed(7)
+  end
+
+  bravo_robot do
+    from 'Post Shear', bed(4)
+    to 'Post Shear XP', car('2,3')
+  end
+
+  custom_robot('nx-96-post-shear-to-post-shear-xp',{
+    :name => 'nx-96 Post-Shear => Post-Shear XP',
+    :layout => 'bed',
+    :beds => {
+       BED[1]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 1'},
+       BED[9]   => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
+       BED[2]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 2'},
+       BED[10]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
+       BED[3]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 3'},
+       BED[11]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
+       BED[4]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
+       BED[12]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
+    }
+  })
+
+  bravo_robot do
+    from 'Post Shear XP', bed(7)
+    to 'AL Libs', car('4,3')
+  end
+
+  bravo_robot do
+    from 'AL Libs', bed(4)
+    to 'Lib PCR', bed(6)
+  end
+
+  custom_robot('nx-96',{
+    :name => 'Lib PCR => Lib PCR XP',
     :layout => 'bed',
     :beds   => {
-      BED[2]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[5]},
-      BED[6]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[5]},
-      BED[3]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[5]},
-      BED[7]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[5]},
-      BED[5]  => {
+      BED[1]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 1'},
+      BED[9]   => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
+      BED[2]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 2'},
+      BED[10]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
+      BED[3]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 3'},
+      BED[11]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
+      BED[4]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 4'},
+      BED[12]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
+    }
+  })
+
+  simple_robot('nx-96') do
+    from 'Lib PCR-XP', bed(1)
+    to 'Lib PCR-XP QC', bed(9)
+  end
+
+  # ISCH Pipeline
+
+  custom_robot('nx-8-pre-cap-pool',{
+    :name   => 'nx-8 Lib PCR-XP => ISCH Lib Pool',
+    :layout => 'bed',
+    :beds   => {
+      BED[2]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
+      BED[5]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
+      BED[3]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
+      BED[6]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
+      BED[4]  => {
         :purpose => 'ISCH lib pool',
         :states => ['pending','started'],
-        :parents =>[BED[2],BED[6],BED[3],BED[7],BED[2],BED[6],BED[3],BED[7]],
+        :parents =>[BED[2],BED[5],BED[3],BED[6],BED[2],BED[5],BED[3],BED[6]],
         :target_state => 'nx_in_progress'
       }
     },
     :destination_bed => BED[5],
     :class => 'Robots::PoolingRobot'
-  },
-  'nx8-pre-hyb-pool' => {
-    :name   => 'NX8 ISCH Lib Pool to Hyb',
-    :layout => 'bed',
-    :beds   => {
-      BED[5]  => {:purpose => 'ISCH lib pool', :states => ['passed'], :child=>BED[6]},
-      BED[6]  => {
-        :purpose => 'ISCH hyb',
-        :states => ['pending'],
-        :parents =>[BED[5]],
-        :target_state => 'started'
-      }
-    }
-  },
-  'bravo-cap-wash' => {
-    :name   => 'Bravo ISCH hyb to ISCH cap lib',
-    :layout => 'bed',
-    :beds   => {
-      BED[4]  => {:purpose => 'ISCH hyb', :states => ['passed'], :child=>CAR[:c13]},
-      CAR[:c13]  => {
-        :purpose => 'ISCH cap lib',
-        :states => ['pending'],
-        :parents =>[BED[4]],
-        :target_state => 'started'
-      }
-    }
-  },
-  'bravo-post-cap-pcr-setup' => {
-    :name   => 'Bravo ISCH cap lib to ISCH cap lib PCR',
-    :layout => 'bed',
-    :beds   => {
-      BED[4]  => {:purpose => 'ISCH cap lib', :states => ['passed'], :child=>BED[5]},
-      BED[5]  => {
-        :purpose => 'ISCH cap lib PCR',
-        :states => ['pending'],
-        :parents =>[BED[4]],
-        :target_state => 'started'
-      }
-    }
-  },
-  'bravo-post-cap-pcr-cleanup' => {
-    :name   => 'Bravo ISCH cap lib PCR to ISCH cap lib PCR-XP',
-    :layout => 'bed',
-    :beds   => {
-      BED[4]  => {:purpose => 'ISCH cap lib PCR', :states => ['passed'], :child=>CAR[:c23]},
-      CAR[:c23]  => {
-        :purpose => 'ISCH cap lib PCR-XP',
-        :states => ['pending'],
-        :parents =>[BED[4]],
-        :target_state => 'started'
-      }
-    }
-  },
-  'nx8-post-cap-lib-pool' => {
-    :name   => 'NX8 ISCH cap lib PCR-XP to ISCH cap lib pool',
-    :layout => 'bed',
-    :beds   => {
-      BED[1]  => {:purpose => 'ISCH cap lib PCR-XP', :states => ['passed'], :child=>BED[9]},
-      BED[9]  => {
-        :purpose => 'ISCH cap lib pool',
-        :states => ['pending'],
-        :parents =>[BED[1]],
-        :target_state => 'started'
-      }
-    }
-  },
+  })
 
-  'cherrypick-to-shear' => {
-    :name => 'nx-96 Cherrypick to Shear',
+  simple_robot('nx-8') do
+    from 'ISCH lib pool', bed(2)
+    to 'ISCH hyb', bed(4)
+  end
+
+  bravo_robot do
+    from 'ISCH hyb', car('1,3')
+    to 'ISCH cap lib', bed(4)
+  end
+
+  bravo_robot do
+    from 'ISCH cap lib', bed(4)
+    to 'ISCH cap lib PCR', car('4,5')
+  end
+
+  simple_robot('nx-96') do
+    from 'ISCH cap lib PCR', bed(1)
+    to 'ISCH cap lib PCR-XP', bed(9)
+  end
+
+  simple_robot('nx-8') do
+    from 'ISCH cap lib PCR-XP', bed(1)
+    to 'ISCH cap lib pool', bed(2)
+  end
+
+  # PCR Free Pipeline
+
+  fast_bravo_robot do
+    from 'PF Cherrypicked', bed(7)
+    to 'PF Shear', bed(9)
+  end
+
+  fast_bravo_robot do
+    from 'PF Shear', bed(9)
+    to 'PF Post Shear', bed(7)
+  end
+
+  fast_bravo_robot do
+    from 'PF Post Shear', bed(4)
+    to 'PF Post Shear XP', car('2,3')
+  end
+
+  custom_robot('nx-96-pf-post-shear-to-pf-post-shear-xp',{
+    :name => 'nx-96 PF Post-Shear => PF Post-Shear XP',
     :layout => 'bed',
     :beds => {
-      BED[4]  => {:order=>1, :purpose => 'Cherrypicked', :states => ['passed'],      :label => 'Bed 4'},
-      BED[6]  => {:order=>2, :purpose => 'Shear',        :states => ['pending'],     :label => 'Bed 6', :parent =>BED[4], :target_state => 'started'}
+       BED[1]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 1'},
+       BED[9]   => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'passed'},
+       BED[2]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 2'},
+       BED[10]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'passed'},
+       BED[3]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 3'},
+       BED[11]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'passed'},
+       BED[4]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
+       BED[12]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'passed'}
     }
-  },
-  'shear-post-shear' => {
-    :name => 'Bravo Shear to Post-Shear',
+  })
+
+  custom_robot('bravo-pf-post-shear-xp-prep',{
+    :name => 'Bravo PF Post Shear XP Preparation',
     :layout => 'bed',
-    :beds => {
-      BED[4] => {:order=>1, :purpose => 'Shear',         :states => ['passed'],  :label => 'Bed 4'},
-      BED[6] => {:order=>2, :purpose => 'Post Shear',    :states => ['pending'], :label => 'Bed 6',    :parent =>BED[4], :target_state => 'started' }
+    :bed => {
+      BED[1] => {:purpose => 'PF Post Shear XP',    :states => ['pending'],  :label => 'Bed 1', :target_state => 'passed'}
     }
-  },
-  'post-shear-post-shear-xp' => {
-    :name => 'Bravo Post-Shear to Post-Shear XP',
+  })
+
+  custom_robot('bravo-pf-post-shear-xp-to-pf-lib-xp',{
+    :name => 'Bravo PF Post Shear XP to PF Lib XP',
     :layout => 'bed',
-    :beds => {
-      BED[4]    => {:order=>1, :purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
-      CAR[:c23] => {:order=>2, :purpose => 'Post Shear XP', :states => ['pending'], :label => 'Carousel 2,3', :parent =>BED[4], :target_state => 'started'}
+    :bed => {
+      BED[1] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Bed 1' },
+      BED[2] => {:purpose => 'PF AL Libs',       :states => ['pending'], :label => 'Bed 2', :target_state=>'passed' },
+      BED[3] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed' }
     }
-  },
-  'post-shear-post-shear-xp-nx' => {
-    :name => 'nx-96 Post-Shear to Post-Shear XP',
-    :layout => 'bed',
-    :beds => {
-       BED[1]   => {:order=>1, :purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 1'},
-       BED[9]   => {:order=>2, :purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
-       BED[2]   => {:order=>3, :purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 2'},
-       BED[10]  => {:order=>4, :purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
-       BED[3]   => {:order=>5, :purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 3'},
-       BED[11]  => {:order=>6, :purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
-       BED[4]   => {:order=>7, :purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
-       BED[12]  => {:order=>8, :purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
-    }
-  },
-  'lib-pcr-xp-lib-pcr-xp-qc' => {
-    :name => 'nx-96 Lib-PCR XP to Lib-PCR XP QC',
-    :layout => 'bed',
-    :beds => {
-      BED[1] => {:order=>1, :purpose => 'Lib PCR-XP',    :states => ['passed'],  :label => 'Bed 1'},
-      BED[9] => {:order=>2, :purpose => 'Lib PCR-XP QC', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'}
-    }
-  },
-  'fx' => {
-    :name => 'Bravo Post-Shear XP to Al Libs',
-    :layout => 'bed',
-    :beds   => {
-      BED[7]    => {:order=>1, :purpose => 'Post Shear XP', :states => ['passed'],  :label => 'Bed 7'},
-      CAR[:c43] => {:order=>2, :purpose => 'AL Libs',       :states => ['pending'], :label => 'Carousel 4,3', :parent =>BED[7], :target_state => 'started'}
-    }
-  },
-  'fx-add-tags' => {
-    :name => 'Bravo Transfer to tag plate',
-    :layout => 'bed',
-    :beds   => {
-      BED[4] => {:purpose => 'AL Libs', :states => ['started'], :label => 'Bed 4'},
-      BED[6] => {:purpose => 'Lib PCR', :states => ['pending'], :parent =>BED[4], :target_state => 'started_fx', :label => 'Bed 6'}
-    }
-  },
-  'nx-96' => {
-    :name => 'Lib PCR => Lib PCR XP',
-    :layout => 'bed',
-    :beds   => {
-      BED[1]   => {:order=>1, :purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 1'},
-      BED[9]   => {:order=>2, :purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
-      BED[2]   => {:order=>3, :purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 2'},
-      BED[10]  => {:order=>4, :purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
-      BED[3]   => {:order=>5, :purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 3'},
-      BED[11]  => {:order=>6, :purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
-      BED[4]   => {:order=>7, :purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 4'},
-      BED[12]  => {:order=>8, :purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
-    }
-  },
-  'pcr-xp-lib-norm' => {
-    :name => 'NX8 PCR-XP => Lib Norm',
-    :layout => 'bed',
-    :beds => {
-      BED[4] => {:order=>1, :purpose => 'Lib PCR-XP',  :states => ['qc_complete'],  :label => 'Bed 4'},
-      BED[5] => {:order=>2, :purpose => 'Lib Norm',    :states => ['pending'], :label => 'Bed 5', :parent =>BED[4], :target_state => 'started' }
-    }
-  },
-  'lib-norm-lib-norm-2' => {
-    :name => 'NX8 Lib Norm => Lib Norm 2',
-    :layout => 'bed',
-    :beds => {
-      BED[4] => {:order=>1, :purpose => 'Lib Norm',   :states => ['qc_complete'],  :label => 'Bed 4'},
-      BED[5] => {:order=>2, :purpose => 'Lib Norm 2', :states => ['pending'], :label => 'Bed 5', :parent =>BED[4], :target_state => 'started' }
-    }
-  },
-  'lib-norm-2-lib-norm-2-pool' => {
-    :name => 'NX8 Lib Norm 2 => Lib Norm 2 Pool',
-    :layout => 'bed',
-    :beds => {
-      BED[4] => {:order=>1, :purpose => 'Lib Norm 2',      :states => ['passed'],  :label => 'Bed 4'},
-      BED[5] => {:order=>2, :purpose => 'Lib Norm 2 Pool', :states => ['pending'], :label => 'Bed 5', :parent =>BED[4], :target_state => 'started' }
-    }
-  }
-}
+  })
+
+  fast_bravo_robot do
+    from 'PF Lib XP', bed(1)
+    to 'PF Lib XP2', bed(2)
+  end
+
+  fast_bravo_robot do
+    from 'PF Lib XP2', bed(1)
+    to 'PF EM Pool', bed(2)
+  end
+
+  fast_bravo_robot do
+    from 'PF EM Pool', bed(1)
+    to 'PF EM Pool D1', bed(2)
+  end
+
+  fast_bravo_robot do
+    from 'PF EM Pool D1', bed(1)
+    to 'PF EM Pool D2', bed(2)
+  end
+
+  fast_bravo_robot do
+    from 'PF EM Pool D2', bed(1)
+    to 'PF qPCR QC', bed(2)
+  end
+
+  fast_bravo_robot do
+    from 'PF EM Pool', bed(1), 'qc_complete'
+    to 'PF Lib Norm', bed(2)
+  end
+
+  # Strip Tube Pipeline (HiSeqX)
+
+  simple_robot('nx-8') do
+    from 'Lib PCR-XP', bed(4), 'qc_complete'
+    to 'Lib Norm', bed(5)
+  end
+
+  simple_robot('nx-8') do
+    from 'Lib Norm',  bed(4), 'qc_complete'
+    to 'Lib Norm 2', bed(5)
+  end
+
+  simple_robot('nx-8') do
+    from 'Lib Norm 2',  bed(4)
+    to 'Lib Norm 2 Pool', bed(5)
+  end
+
+  simple_robot('nx-96') do
+    from 'Lib Norm', bed(1)
+    to 'Lib Norm QC', bed(9)
+  end
+
+end
+
 
 LOCATION_PIPELINES = {
   'Library creation freezer'                 =>'illumina_b',

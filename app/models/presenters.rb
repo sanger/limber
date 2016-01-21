@@ -27,7 +27,7 @@ module Presenters
 
     def default_printer_uuid
       unless location == :unknown
-        @default_printer_uuid ||= Settings.printers[location][purpose_config.default_printer_type]
+        @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
       end
       @default_printer_uuid
     end

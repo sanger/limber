@@ -99,11 +99,11 @@ module Robots
     end
 
     class_inheritable_reader :attributes
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :id, :location]
+    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :id ]
 
     def beds=(new_beds)
       beds = ActiveSupport::OrderedHash.new {|beds,barcode| InvalidBed.new(barcode) }
-      new_beds.sort_by {|id,bed| bed.order }.each do |id,bed|
+      new_beds.each do |id,bed|
         beds[id] = Bed.new(bed.merge({:api=>api, :user_uuid=>user_uuid, :robot=>self }))
       end
       @beds = beds

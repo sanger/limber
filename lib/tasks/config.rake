@@ -36,14 +36,27 @@ namespace :config do
     'ISCH cap lib',
     'ISCH cap lib PCR',
     'ISCH cap lib PCR-XP',
-    'ISCH cap lib pool'
+    'ISCH cap lib pool',
+
+    'PF Cherrypicked',
+    'PF Shear',
+    'PF Post Shear',
+    'PF Post Shear XP',
+    'PF AL Libs',
+    'PF Lib XP',
+    'PF Lib XP2',
+    'PF EM Pool',
+    'PF Lib Norm'
+
   ]
 
   QC_PLATE_PURPOSES = [
     'Post Shear QC',
     'Lib PCR-XP QC',
     'Lib PCRR-XP QC',
-    'Lib Norm QC'
+    'Lib Norm QC',
+
+    'PF qPCR QC'
   ]
 
   TUBE_PURPOSES = [
@@ -59,7 +72,10 @@ namespace :config do
     'Lib Pool SS-XP-Norm',
 
     'Standard MX',
-    'Cap Lib Pool Norm'
+    'Cap Lib Pool Norm',
+
+    'PF MiSeq Stock',
+    'PF MiSeq QC'
   ]
 
   task :generate => :environment do
@@ -97,16 +113,9 @@ namespace :config do
       end
 
       configuration[:printers] = {}.tap do |printers|
-        printers['illumina_a'] = {
-          :plate_a=>barcode_printer_uuid.('g316bc'),
-          :plate_b=>barcode_printer_uuid.('g311bc2'),
-          :tube=>barcode_printer_uuid.('g311bc1')
-        }
-        printers['illumina_b'] = {
-          :plate_a=>barcode_printer_uuid.('g316bc'),
-          :plate_b=>barcode_printer_uuid.('g311bc2'),
-          :tube=>barcode_printer_uuid.('g311bc1')
-        }
+        printers[:plate_a] = barcode_printer_uuid.('g316bc')
+        printers[:plate_b] = barcode_printer_uuid.('g311bc2')
+        printers[:tube]    = barcode_printer_uuid.('g311bc1')
         printers['limit'] = 5
         printers['default_count'] = 2
       end
@@ -122,7 +131,6 @@ namespace :config do
             :form_class           => 'Forms::CreationForm',
             :presenter_class      => 'Presenters::StandardPresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g312bc2'),
             :default_printer_type => :plate_a
           }
         end.tap do |presenters|
@@ -150,21 +158,18 @@ namespace :config do
             :form_class           => 'Forms::TaggingForm',
             :tag_layout_templates => ["Illumina B vertical tagging","Illumina B tagging"],
             :presenter_class      => 'Presenters::PcrPresenter',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
           presenters['ILB_STD_PCRXP'].merge!(
             :presenter_class      => 'Presenters::PcrXpOldPresenter',
             :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
           presenters['ILB_STD_PCRRXP'].merge!(
             :presenter_class      => 'Presenters::PcrXpOldPresenter',
             :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_a
           )
 
@@ -172,7 +177,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -180,7 +184,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -218,21 +221,18 @@ namespace :config do
           presenters['Lib PCRR'].merge!(
             :form_class           => 'Forms::TaggingForm',
             :presenter_class      => 'Presenters::PcrPresenter',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
           presenters['Lib PCR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
 
           presenters['Lib PCR-XP QC'].merge!(
             :presenter_class         => 'Presenters::QcPlatePresenter',
-            :default_printer_uuid    => barcode_printer_uuid.('g311bc2'),
             :default_printer_type    => :plate_b
           )
 
@@ -240,7 +240,6 @@ namespace :config do
           presenters['Lib PCRR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc2'),
             :default_printer_type => :plate_b
           )
 
@@ -253,7 +252,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -261,7 +259,6 @@ namespace :config do
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -269,7 +266,6 @@ namespace :config do
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -277,7 +273,6 @@ namespace :config do
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -293,7 +288,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube,
             :from_purpose         => 'Lib Pool'
           )
@@ -302,7 +296,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube,
             :from_purpose         => 'Lib Pool Pippin'
           )
@@ -328,7 +321,6 @@ namespace :config do
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_uuid => barcode_printer_uuid.('g311bc1'),
             :default_printer_type => :tube
           )
 
@@ -370,6 +362,39 @@ namespace :config do
             :state_changer_class => 'StateChangers::AutoPoolingStateChanger',
             :default_printer_type => :plate_b
           )
+
+          presenters['PF Cherrypicked'].merge!({
+            :presenter_class => 'Presenters::StockPlatePresenter'
+          })
+
+          presenters['PF Shear'].merge!({})
+          presenters['PF Post Shear'].merge!({})
+          presenters['PF Post Shear XP'].merge!({
+
+          })
+          presenters['PF AL Libs'].merge!({
+            :form_class      => 'Forms::TaggingForm',
+            :tag_layout_templates => ["NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)"]
+          })
+          presenters['PF Lib XP'].merge!({
+
+          })
+          presenters['PF Lib XP2'].merge!({
+            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :default_printer_type => :plate_b
+          })
+          presenters['PF EM Pool'].merge!({
+            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :default_printer_type => :plate_b
+          })
+          presenters['PF Lib Norm'].merge!({
+            :default_printer_type => :plate_b
+          })
+
+          presenters['PF qPCR QC'].merge!({
+            :presenter_class         => 'Presenters::QcPlatePresenter',
+            :default_printer_type => :plate_b
+          })
 
         end
 

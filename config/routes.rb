@@ -17,9 +17,6 @@ IlluminaBPipeline::Application.routes.draw do
       post 'start'
       post 'verify'
     end
-    # match '/:location',        :on => :member, :action => 'show'
-    # match '/:location/start',  :on => :member, :action => 'start'
-    # match '/:location/verify', :on => :member, :action => 'verify'
   end
 
   resources :illumina_b_qcables, :controller => :tag_plates, :only=>[:show]

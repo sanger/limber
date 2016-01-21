@@ -26,7 +26,7 @@ class RobotsController < ApplicationController
     rescue Robots::Robot::Bed::BedError => exception
       # Our beds complained, nothing has happened.
       respond_to do |format|
-        format.html { redirect_to robot_path(:id=>robot.id,:location=>robot.location), :notice=> "#{exception.message} No plates have been started." }
+        format.html { redirect_to robot_path(:id=>robot.id), :notice=> "#{exception.message} No plates have been started." }
       end
     end
   end
@@ -40,7 +40,6 @@ class RobotsController < ApplicationController
   def find_robot
     @robot = Robots::Robot.find(
       :id        =>params[:id],
-      :location  =>params[:location],
       :api       =>api,
       :user_uuid => current_user_uuid
     )
