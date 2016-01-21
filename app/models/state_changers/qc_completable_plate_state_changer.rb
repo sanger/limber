@@ -47,13 +47,6 @@ module StateChangers
     def passive_state_change!(state_details)
       api.state_change.create!(state_details)
     end
-
-    private
-
-    def suitable_robots
-      @suitable_robots ||= labware.state == 'passed' ? [] : Settings.robots.select {|key,config| suitable_for_plate?(config) }
-    end
-
   end
 
   def self.lookup_for(purpose_uuid)

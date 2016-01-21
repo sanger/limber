@@ -14,5 +14,12 @@ module Presenters
       :failed      => [ 'labware-summary-button' ]
     }
 
+    private
+
+    def suitable_robots
+      @suitable_robots ||= labware.state == 'passed' ? [] : Settings.robots.select {|key,config| suitable_for_plate?(config) }
+    end
+
+
   end
 end
