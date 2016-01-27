@@ -89,7 +89,7 @@
           </div>
 
           <%= @presenter.control_additional_creation do -%>
-            <h2>Create Child Plate</h2>
+            <h2>Create Child <%= @presenter.default_child_purpose.asset_type.titleize %></h2>
             <% @presenter.valid_purposes do |purpose| %>
               <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
             <% end %>

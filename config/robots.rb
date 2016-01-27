@@ -39,13 +39,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :layout => 'bed',
     :beds => {
        BED[1]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 1'},
-       BED[9]   => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
+       BED[9]   => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'passed'},
        BED[2]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 2'},
-       BED[10]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
+       BED[10]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'passed'},
        BED[3]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 3'},
-       BED[11]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
+       BED[11]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'passed'},
        BED[4]   => {:purpose => 'Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
-       BED[12]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
+       BED[12]  => {:purpose => 'Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'passed'}
     }
   })
 
@@ -64,13 +64,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :layout => 'bed',
     :beds   => {
       BED[1]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 1'},
-      BED[9]   => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
+      BED[9]   => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'passed'},
       BED[2]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 2'},
-      BED[10]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
+      BED[10]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'passed'},
       BED[3]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 3'},
-      BED[11]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
+      BED[11]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'passed'},
       BED[4]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 4'},
-      BED[12]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
+      BED[12]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'passed'}
     }
   })
 
@@ -91,7 +91,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       BED[6]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
       BED[4]  => {
         :purpose => 'ISCH lib pool',
-        :states => ['pending','started'],
+        :states => ['pending','passed'],
         :parents =>[BED[2],BED[5],BED[3],BED[6],BED[2],BED[5],BED[3],BED[6]],
         :target_state => 'nx_in_progress'
       }
@@ -127,17 +127,17 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # PCR Free Pipeline
 
-  fast_bravo_robot do
+  bravo_robot do
     from 'PF Cherrypicked', bed(7)
     to 'PF Shear', bed(9)
   end
 
-  fast_bravo_robot do
+  bravo_robot do
     from 'PF Shear', bed(9)
     to 'PF Post Shear', bed(7)
   end
 
-  fast_bravo_robot do
+  bravo_robot('started') do
     from 'PF Post Shear', bed(4)
     to 'PF Post Shear XP', car('2,3')
   end
@@ -147,62 +147,57 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :layout => 'bed',
     :beds => {
        BED[1]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 1'},
-       BED[9]   => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'passed'},
+       BED[9]   => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'started'},
        BED[2]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 2'},
-       BED[10]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'passed'},
+       BED[10]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'started'},
        BED[3]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 3'},
-       BED[11]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'passed'},
+       BED[11]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'started'},
        BED[4]   => {:purpose => 'PF Post Shear',    :states => ['passed'],  :label => 'Bed 4'},
-       BED[12]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'passed'}
+       BED[12]  => {:purpose => 'PF Post Shear XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'started'}
     }
   })
 
   custom_robot('bravo-pf-post-shear-xp-prep',{
     :name => 'Bravo PF Post Shear XP Preparation',
     :layout => 'bed',
-    :bed => {
-      BED[1] => {:purpose => 'PF Post Shear XP',    :states => ['pending'],  :label => 'Bed 1', :target_state => 'passed'}
+    :beds => {
+      BED[5] => {:purpose => 'PF Post Shear XP',    :states => ['started'],  :label => 'Bed 1', :target_state => 'passed'}
     }
   })
 
   custom_robot('bravo-pf-post-shear-xp-to-pf-lib-xp',{
     :name => 'Bravo PF Post Shear XP to PF Lib XP',
     :layout => 'bed',
-    :bed => {
-      BED[1] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Bed 1' },
-      BED[2] => {:purpose => 'PF AL Libs',       :states => ['pending'], :label => 'Bed 2', :target_state=>'passed' },
-      BED[3] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed' }
+    :beds => {
+      CAR[:c13] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Bed 1' },
+      BED[6]    => {:purpose => 'PF Lib',           :states => ['pending'], :label => 'Bed 2', :target_state=>'passed' },
+      CAR[:c43] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed' }
     }
   })
 
-  fast_bravo_robot do
-    from 'PF Lib XP', bed(1)
-    to 'PF Lib XP2', bed(2)
+  bravo_robot do
+    from 'PF Lib XP', bed(4)
+    to 'PF Lib XP2', car('2,3')
   end
 
-  fast_bravo_robot do
-    from 'PF Lib XP2', bed(1)
-    to 'PF EM Pool', bed(2)
+  bravo_robot do
+    from 'PF Lib XP2', bed(4)
+    to 'PF MiSeq QC', bed(7)
   end
 
-  fast_bravo_robot do
-    from 'PF EM Pool', bed(1)
-    to 'PF EM Pool D1', bed(2)
+  bravo_robot do
+    from 'PF Lib XP2', bed(4), 'qc_complete'
+    to 'PF EM Pool', bed(7)
   end
 
-  fast_bravo_robot do
-    from 'PF EM Pool D1', bed(1)
-    to 'PF EM Pool D2', bed(2)
+  bravo_robot do
+    from 'PF EM Pool', bed(4)
+    to 'PF qPCR QC', bed(9)
   end
 
-  fast_bravo_robot do
-    from 'PF EM Pool D2', bed(1)
-    to 'PF qPCR QC', bed(2)
-  end
-
-  fast_bravo_robot do
-    from 'PF EM Pool', bed(1), 'qc_complete'
-    to 'PF Lib Norm', bed(2)
+  bravo_robot do
+    from 'PF EM Pool', bed(4), 'qc_complete'
+    to 'PF Lib Norm', bed(7)
   end
 
   # Strip Tube Pipeline (HiSeqX)

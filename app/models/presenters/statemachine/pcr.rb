@@ -11,14 +11,15 @@ module Presenters
           state_machine :state, :initial => :pending do
 
             event :take_default_path do
-              transition :pending    => :started_fx
+              transition :pending    => :passed
+              # These transitions are maintained for legacy support
               transition :started_fx => :started_mj
               transition :started_mj => :passed
             end
 
-            # event :pass do
-            #   transition [ :pending, :started_mj ] => :passed
-            # end
+            event :pass do
+              transition [ :pending, :started_mj ] => :passed
+            end
 
             # These are the states, which are really the only things we need ...
             state :pending do

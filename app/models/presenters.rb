@@ -51,8 +51,9 @@ module Presenters
 
     def prioritized_name(str, max_size)
       # Regular expression to match
-      match = str.match(/(DN)(\d+)([[:alpha:]])( )(\w+)(:)(\w+)/)
-
+      return 'Unnamed' if str.blank?
+      match = str.match(/([A-Z]{2})(\d+)([[:alpha:]])( )(\w+)(:)(\w+)/)
+      return str if match.nil?
       # Sets the priorities position matches in the regular expression to dump into the final string. They will be
       # performed with preference on the most right characters from the original match string
       priorities = [7,5,2,6,3,1,4]
@@ -66,11 +67,31 @@ module Presenters
       end.join("")
     end
 
+    def statechange_link(view)
+      '#'
+    end
+
+    def if_statechange_active(content)
+      content
+    end
+
+    def statechange_label
+      default_statechange_label
+    end
+
+    def default_statechange_label
+      "Move to next state"
+    end
+
+    def statechange_attributes
+    end
+
   end
 
   class PlatePresenter
     include Presenter
     include PlateWalking
+    include RobotControlled
 
     class_inheritable_reader :labware_class
     write_inheritable_attribute :labware_class, :plate
@@ -109,35 +130,16 @@ module Presenters
         :failed     =>  [ 'labware-summary-button' ]
     }
 
-    def each_robot
-      suitable_robots.each {|key,config| yield(key,config[:name]) }
-    end
-
-    def robot_exists?
-      suitable_robots.present?
-    end
-
-    def statechange_link(view)
-      case suitable_robots.count
-      when 0
-        '#'
-      when 1
-        view.robot_path(suitable_robots.keys.first)
-      else
-        '#popupRobots'
+    def additional_creation_partial
+      case default_child_purpose.asset_type
+      when 'plate'; 'labware/plates/child_plate_creation'
+      when 'tube'; 'labware/tube/child_tube_creation'
+      else nil
       end
     end
 
-    def statechange_attributes
-      multiple_robots? ? 'data-rel="popup" data-inline="true" data-transition="flip"'.html_safe : ''
-    end
-
-    def statechange_label
-      robot_exists? ? "Bed verification" : 'Move plate to next state'
-    end
-
-    def if_statechange_active(content)
-      robot_exists? ? "" : content
+    def default_statechange_label
+      "Move plate to next state"
     end
 
     def label_name
@@ -225,22 +227,6 @@ module Presenters
 
     def filename
       false
-    end
-
-    private
-
-    def suitable_robots
-      @suitable_robots ||= Settings.robots.select {|key,config| suitable_for_plate?(config) }
-    end
-
-    def suitable_for_plate?(config)
-      config.beds.detect do |bed,bed_config|
-        bed_config.purpose ==  plate.plate_purpose.name && bed_config.states.include?(labware.state)
-      end.present?
-    end
-
-    def multiple_robots?
-      suitable_robots.count > 1
     end
 
   end

@@ -44,6 +44,10 @@ module Presenters
       # Mostly, no.
     end
 
+    def default_statechange_label
+      "Move tube to next state"
+    end
+
     # The state is delegated to the tube
     delegate :state, :to => :labware
 

@@ -18,6 +18,13 @@
               <ol>
                 <%= t("robots.#{robot.id}.instructions").html_safe %>
               </ol>
+              <h3>Layout</h3>
+              <dl>
+                <% robot.beds.each do |barcode,config| %>
+                  <dt><%= config.label %></dt>
+                  <dd><%= config.purpose %></dd>
+                <% end %>
+              </dl>
             </div>
 
             <h2>Start Robot</h2>

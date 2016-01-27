@@ -42,7 +42,7 @@ namespace :config do
     'PF Shear',
     'PF Post Shear',
     'PF Post Shear XP',
-    'PF AL Libs',
+    'PF Lib',
     'PF Lib XP',
     'PF Lib XP2',
     'PF EM Pool',
@@ -78,11 +78,17 @@ namespace :config do
     'PF MiSeq QC'
   ]
 
+  QC_TUBE_PURPOSES = [
+    'PF MiSeq Stock'
+  ]
+
   task :generate => :environment do
     api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
 
-    plate_purposes    = api.plate_purpose.all.select { |pp| PLATE_PURPOSES.include?(pp.name) }
-    qc_plate_purposes = api.plate_purpose.all.select { |pp| QC_PLATE_PURPOSES.include?(pp.name) }
+    all_plate_purposes =  api.plate_purpose.all
+
+    plate_purposes    = all_plate_purposes.select { |pp| PLATE_PURPOSES.include?(pp.name) }
+    qc_plate_purposes = all_plate_purposes.select { |pp| QC_PLATE_PURPOSES.include?(pp.name) }
     tube_purposes     = api.tube_purpose.all.select  { |tp| TUBE_PURPOSES.include?(tp.name)  }
 
     barcode_printer_uuid = lambda do |printers|
@@ -369,9 +375,10 @@ namespace :config do
           presenters['PF Post Shear XP'].merge!({
 
           })
-          presenters['PF AL Libs'].merge!({
+          presenters['PF Lib'].merge!({
             :form_class      => 'Forms::TaggingForm',
-            :tag_layout_templates => ["NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)"]
+            :tag_layout_templates => ["NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)"],
+            :presenter_class => 'Presenters::PendingCreationPresenter'
           })
           presenters['PF Lib XP'].merge!({
 
@@ -379,6 +386,15 @@ namespace :config do
           presenters['PF Lib XP2'].merge!({
             :presenter_class => 'Presenters::QcCompletablePresenter',
             :default_printer_type => :plate_b
+          })
+
+          presenters['PF MiSeq Stock'].merge!({
+            :form_class           => 'Forms::PooledTubesForm',
+            :presenter_class      => 'Presenters::PendingCreationTubePresenter'
+          })
+          presenters['PF MiSeq QC'].merge!({
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::QCTubePresenter'
           })
           presenters['PF EM Pool'].merge!({
             :presenter_class => 'Presenters::QcCompletablePresenter',
@@ -395,19 +411,20 @@ namespace :config do
 
         end
 
-        purpose_details_by_uuid = lambda { |labware_purposes, purpose|
+        purpose_details_by_uuid = lambda { |labware_purposes, asset_type, purpose|
           labware_purposes[purpose.uuid] = name_to_details[purpose.name].dup.merge(
-            :name => purpose.name
+            :name => purpose.name,
+            :asset_type => asset_type
           )
         }.curry.(labware_purposes)
 
         puts "Preparing plate purpose forms, presenters, and state changers ..."
-        plate_purposes.each(&purpose_details_by_uuid)
+        plate_purposes.each(&purpose_details_by_uuid.curry.('plate'))
         puts "Preparing QC plate purpose forms, presenters, and state changers ..."
-        qc_plate_purposes.each(&purpose_details_by_uuid)
+        qc_plate_purposes.each(&purpose_details_by_uuid.curry.('qc_plate'))
 
         puts "Preparing Tube purpose forms, presenters, and state changers ..."
-        tube_purposes.each(&purpose_details_by_uuid)
+        tube_purposes.each(&purpose_details_by_uuid.curry.('tube'))
       end
 
 

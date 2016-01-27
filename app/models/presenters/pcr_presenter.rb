@@ -2,8 +2,7 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2012 Genome Research Ltd.
 module Presenters
-  class PcrPresenter < PlatePresenter
-    include Presenters::Statemachine::Pcr
+  class PcrPresenter < StandardPresenter
 
     write_inheritable_attribute :aliquot_partial, 'tagged_aliquot'
 

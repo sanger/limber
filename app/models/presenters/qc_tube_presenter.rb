@@ -3,6 +3,7 @@
 #Copyright (C) 2013,2015 Genome Research Ltd.
 module Presenters
   class QCTubePresenter < TubePresenter
+    include RobotControlled
 
     class_inheritable_reader    :authenticated_tab_states
     write_inheritable_attribute :authenticated_tab_states, {
