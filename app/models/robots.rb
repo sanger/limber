@@ -89,7 +89,8 @@ module Robots
     def self.find(options)
       robot_settings = Settings.robots[options[:id]]
       raise ActionController::RoutingError.new("Robot #{options[:name]} Not Found") if robot_settings.nil?
-      Robot.new(robot_settings.merge(options))
+      robot_class = (robot_settings[:class]||'Robots::Robot').constantize
+      robot_class.new(robot_settings.merge(options))
     end
 
     def self.each_robot
