@@ -229,9 +229,3 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
 end
 
-
-LOCATION_PIPELINES = {
-  'Library creation freezer'                 =>'illumina_b',
-  'Pulldown freezer'                         =>'illumina_a',
-  'Illumina high throughput freezer'         =>'illumina_b'
-}

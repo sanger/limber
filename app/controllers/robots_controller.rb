@@ -53,7 +53,7 @@ class RobotsController < ApplicationController
 
   def validate_beds
     return true if params['bed'].present?
-    redirect_to robot_path(:id=>robot.id,:location=>robot.location), :notice=> "We didn't receive any bed information"
+    redirect_to robot_path(:id=>robot.id), :notice=> "We didn't receive any bed information"
     false
   end
   private :validate_beds

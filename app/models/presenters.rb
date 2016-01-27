@@ -3,7 +3,6 @@
 #Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
 module Presenters
 
-  class LocationError < StandardError; end
 
   module Presenter
     def self.included(base)
@@ -26,10 +25,7 @@ module Presenters
     end
 
     def default_printer_uuid
-      unless location == :unknown
-        @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
-      end
-      @default_printer_uuid
+      @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
     end
 
     def default_label_count
@@ -152,16 +148,12 @@ module Presenters
       self.labware
     end
 
-    def location
-      Settings.locations[labware.location]||:unknown
-    end
-
     def suitable_labware
-      yield unless location == :unknown
+      yield
     end
 
     def errors
-      location == :unknown ? "Plate has not been scanned into an appropriate freezer" : nil
+      nil
     end
 
     # Purpose returns the plate or tube purpose of the labware.

@@ -198,10 +198,7 @@ namespace :config do
 
           presenters['Post Shear'].merge!(
             :presenter_class     => 'Presenters::PostShearPlatePresenter',
-            :locations_children  => {
-              'illumina_a' => 'Post Shear XP',
-              'illumina_b' => 'Post Shear XP'
-            }
+            :default_child  => 'Post Shear XP'
           )
 
           presenters['Post Shear XP'].merge!(
@@ -426,8 +423,7 @@ namespace :config do
       end
 
       configuration[:robots]      = ROBOT_CONFIG
-      configuration[:locations]   = LOCATION_PIPELINES
-      configuration[:qc_purposes] = QC_PLATE_PURPOSES
+      configuration[:qc_purposes] = QC_PLATE_PURPOSES + QC_TUBE_PURPOSES
 
       configuration[:request_types] = {}.tap do |request_types|
         request_types['illumina_htp_library_creation']    = ['Lib Norm',false]
