@@ -48,9 +48,16 @@ class RobotsController < ApplicationController
   private :find_robot
 
   def stripped_beds
-    Hash[(params[:beds]||params[:bed]||{}).map {|k,v| [k.strip,v.strip]}]
+    Hash[(params[:beds]||params[:bed]||{}).map {|k,v| [k.strip,stripped_plates(v)]}]
   end
   private :stripped_beds
+
+  def stripped_plates(plates)
+    return plates.strip if plates.respond_to?(:strip) # We have a string
+    return plates.map(&:strip) if plates.respond_to?(:map) # We have an array
+    plates # No idea, but lets be optimistic!
+  end
+  private :stripped_plates
 
   def validate_beds
     return true if params['bed'].present?
@@ -58,4 +65,5 @@ class RobotsController < ApplicationController
     false
   end
   private :validate_beds
+
 end

@@ -557,7 +557,7 @@
       var qc_lookup = this, status;
       this.inputBox = barcodeBox;
       this.infoPanelId = $('#'+barcodeBox.data('info-panel'));
-      this.qcableType  = barcodeBox.data('qcable-type');
+      // this.qcableType  = barcodeBox.data('qcable-type');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
       this.required = this.inputBox.parents('.required').length > 0;
       this.inputBox.on('change',function(){
@@ -622,7 +622,7 @@
         this.errors = '';
 
         if (qcable.state !== 'available') { this.errors += ' The scanned item is not available.' };
-        if (qcable.type  !== this.qcableType ) { this.errors += ' The scanned item is not a(n) ' + qcable.type + '.' };
+        // if (qcable.type  !== this.qcableType ) { this.errors += ' The scanned item is not a(n) ' + this.qcableType + '.' };
         this.validateTemplate(qcable);
         return this.errors === '';
       },
@@ -1483,13 +1483,16 @@
 
     SCAPE.robot_beds = {};
 
+    // var bed_index = 0;
+
     var newScanned = function(bed,plate){
       var new_li;
-      $('#whole\\['+bed+'\\]').detach();
+      // $('#whole\\['+bed+'\\]').detach();
       new_li = $(document.createElement('li')).
-        attr('id','whole['+bed+']').
+        // attr('id','whole['+bed+']['+( bed_index++) +']').
         attr('data-icon','delete').
-        data('bed',bed).
+        attr('data-bed',bed).
+        attr('data-labware',plate).
         on('click', removeEntry).
         append(
           $(document.createElement('a')).
@@ -1503,17 +1506,22 @@
             text('Plate: '+plate)
           ).append(
             $(document.createElement('input')).
-            attr('type','hidden').attr('id','bed['+bed+']').attr('name','bed['+bed+']').
+            attr('type','hidden').attr('id','bed['+bed+']').attr('name','bed['+bed+'][]').
             val(plate)
           )
         );
-      SCAPE.robot_beds[bed] = plate;
+      SCAPE.robot_beds[bed] = SCAPE.robot_beds[bed] || []
+      SCAPE.robot_beds[bed].push(plate);
       $('#start-robot').button('disable');
       $('.bedv').append(new_li).listview('refresh');
     }
 
     var removeEntry = function() {
-      SCAPE.robot_beds[$(this).data('bed')] = undefined;
+      var lw_index, bed_list;
+      bed_list = SCAPE.robot_beds[$(this).attr('data-bed')];
+      lw_index = bed_list.indexOf($(this).attr('data-labware'));
+      bed_list.splice(lw_index,1);
+      if (bed_list.length === 0) { SCAPE.robot_beds[$(this).attr('data-bed')] = undefined };
       $(this).detach();
       $('.bedv').listview('refresh');
     }

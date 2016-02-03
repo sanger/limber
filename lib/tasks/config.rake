@@ -56,7 +56,7 @@ namespace :config do
     'Lib PCRR-XP QC',
     'Lib Norm QC',
 
-    'PF qPCR QC'
+    'PF EM Pool QC'
   ]
 
   TUBE_PURPOSES = [
@@ -394,17 +394,19 @@ namespace :config do
           })
           presenters['PF MiSeq QC'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
-            :presenter_class      => 'Presenters::QCTubePresenter'
+            :presenter_class      => 'Presenters::QCTubePresenter',
+            :state_changer_class  => 'StateChangers::QcTubeStateChanger'
           })
           presenters['PF EM Pool'].merge!({
             :presenter_class => 'Presenters::QcCompletablePresenter',
+            :form_class           => 'Forms::PoolingRowToColumn',
             :default_printer_type => :plate_b
           })
           presenters['PF Lib Norm'].merge!({
             :default_printer_type => :plate_b
           })
 
-          presenters['PF qPCR QC'].merge!({
+          presenters['PF EM Pool QC'].merge!({
             :presenter_class         => 'Presenters::QcPlatePresenter',
             :default_printer_type => :plate_b
           })
@@ -421,7 +423,7 @@ namespace :config do
         puts "Preparing plate purpose forms, presenters, and state changers ..."
         plate_purposes.each(&purpose_details_by_uuid.curry.('plate'))
         puts "Preparing QC plate purpose forms, presenters, and state changers ..."
-        qc_plate_purposes.each(&purpose_details_by_uuid.curry.('qc_plate'))
+        qc_plate_purposes.each(&purpose_details_by_uuid.curry.('plate'))
 
         puts "Preparing Tube purpose forms, presenters, and state changers ..."
         tube_purposes.each(&purpose_details_by_uuid.curry.('tube'))
@@ -441,6 +443,20 @@ namespace :config do
 
       configuration[:robots]      = ROBOT_CONFIG
       configuration[:qc_purposes] = QC_PLATE_PURPOSES + QC_TUBE_PURPOSES
+
+      configuration[:submission_templates] = {}.tap do |submission_templates|
+        puts "Preparing submission templates..."
+        submission_templates['miseq']= api.order_template.all.detect {|ot| ot.name==IlluminaBPipeline::Application.config.qc_submission_name }.uuid
+      end
+
+      puts "Setting study..."
+      configuration[:study] = IlluminaBPipeline::Application.config.study_uuid||
+        puts("No study specified, using first study")||
+        api.study.first.uuid
+      puts "Setting project..."
+      configuration[:project] = IlluminaBPipeline::Application.config.project_uuid||
+        puts("No project specified, using first project")||
+        api.project.first.uuid
 
       configuration[:request_types] = {}.tap do |request_types|
         request_types['illumina_htp_library_creation']    = ['Lib Norm',false]

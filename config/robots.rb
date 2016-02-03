@@ -170,8 +170,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :layout => 'bed',
     :beds => {
       CAR[:c13] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Bed 1' },
-      BED[6]    => {:purpose => 'PF Lib',           :states => ['pending'], :label => 'Bed 2', :target_state=>'passed' },
-      CAR[:c43] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed' }
+      BED[6]    => {:purpose => 'PF Lib',           :states => ['pending'], :label => 'Bed 2', :target_state=>'passed', :parent => CAR[:c13] },
+      CAR[:c43] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed', :parent => BED[6] }
     }
   })
 
@@ -180,10 +180,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'PF Lib XP2', car('2,3')
   end
 
-  bravo_robot do
-    from 'PF Lib XP2', bed(4)
-    to 'PF MiSeq QC', bed(7)
-  end
+  custom_robot('pf-lib-xp2-to-pf-miseq-qc',{
+    :name => 'PF Lib XP2 to PF MiSeq QC',
+    :layout => 'bed',
+    :beds => {
+      BED[4] => {:purpose => 'PF Lib XP2',  :states => ['passed'],  :label => 'Bed 4' },
+      BED[7] => {:purpose => 'PF MiSeq QC', :secondary_purposes => ['PF MiSeq Stock'], :states => ['pending'], :label => 'Bed 7', :target_state=>'passed', :parent => BED[4] }
+    },
+    :class => 'Robots::SharedBedRobot'
+  })
 
   bravo_robot do
     from 'PF Lib XP2', bed(4), 'qc_complete'
@@ -192,7 +197,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   bravo_robot do
     from 'PF EM Pool', bed(4)
-    to 'PF qPCR QC', bed(9)
+    to 'PF EM Pool QC', bed(9)
   end
 
   bravo_robot do

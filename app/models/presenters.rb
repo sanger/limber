@@ -134,7 +134,7 @@ module Presenters
       case default_child_purpose.asset_type
       when 'plate'; 'labware/plates/child_plate_creation'
       when 'tube'; 'labware/tube/child_tube_creation'
-      else nil
+      else self.class.additional_creation_partial
       end
     end
 
