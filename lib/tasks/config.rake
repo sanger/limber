@@ -75,7 +75,8 @@ namespace :config do
     'Cap Lib Pool Norm',
 
     'PF MiSeq Stock',
-    'PF MiSeq QC'
+    'PF MiSeq QC',
+    'PF MiSeq QCR'
   ]
 
   QC_TUBE_PURPOSES = [
@@ -394,8 +395,13 @@ namespace :config do
           })
           presenters['PF MiSeq QC'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
-            :presenter_class      => 'Presenters::QCTubePresenter',
-            :state_changer_class  => 'StateChangers::QcTubeStateChanger'
+            :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
+            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger'
+          })
+          presenters['PF MiSeq QCR'].merge!({
+            :form_class           => 'Forms::IntermediateTubesForm',
+            :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
+            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger'
           })
           presenters['PF EM Pool'].merge!({
             :presenter_class => 'Presenters::QcCompletablePresenter',
