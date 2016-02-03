@@ -6,6 +6,7 @@ class RobotsController < ApplicationController
   attr_reader :robot
   before_filter :find_robot
   before_filter :validate_beds, :only => :start
+  before_filter :check_for_current_user!, :only => [ :start ]
 
   def show
     respond_to do |format|
