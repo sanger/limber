@@ -55,6 +55,14 @@ module Presenters
       "#{prioritized_name(labware.name, 10)} #{label_text}"
     end
 
+    def sample_count
+      labware.aliquots.count
+    end
+
+    def label_suffix
+      "P#{sample_count}"
+    end
+
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
