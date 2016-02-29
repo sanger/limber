@@ -37,3 +37,11 @@
     </ul>
     <% end %>
 <% end %>
+
+<% if presenter.robot_exists? %>
+  <ul data-role="listview" data-inset="true">
+  <% @presenter.each_robot do |robot_id,robot_name| %>
+    <li><a href="<%= robot_path(robot_id) %>" ><%= robot_name %></a></li>
+  <% end %>
+  </ul>
+<% end %>

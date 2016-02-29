@@ -86,6 +86,10 @@ module Presenters
     def statechange_attributes
     end
 
+    def robot_exists?
+      false
+    end
+
   end
 
   class PlatePresenter

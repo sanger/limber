@@ -161,7 +161,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :name => 'Bravo PF Post Shear XP Preparation',
     :layout => 'bed',
     :beds => {
-      BED[5] => {:purpose => 'PF Post Shear XP',    :states => ['started'],  :label => 'Bed 1', :target_state => 'passed'}
+      BED[5] => {:purpose => 'PF Post Shear XP',    :states => ['started'],  :label => 'Bed 5', :target_state => 'passed'}
     }
   })
 

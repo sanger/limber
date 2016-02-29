@@ -46,6 +46,8 @@ module Presenters::Statemachine
       # Look for a default transition
       default_transition = state_transitions.detect {|t| t.event == :take_default_path }
 
+      return nil if robot_exists?
+
       if default_transition.present?
         # This ugly thing should yield the default transition first followed by
         # any other transitions to states that aren't the default...
