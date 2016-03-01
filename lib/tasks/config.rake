@@ -385,7 +385,8 @@ namespace :config do
 
           })
           presenters['PF Lib XP2'].merge!({
-            :presenter_class => 'Presenters::QcCompletablePresenter',
+            :presenter_class      => 'Presenters::QcCompletablePresenter',
+            :state_changer_class  => 'StateChangers::QcCompletablePlateStateChanger',
             :default_printer_type => :plate_b
           })
 

@@ -169,9 +169,9 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :name => 'Bravo PF Post Shear XP to PF Lib XP',
     :layout => 'bed',
     :beds => {
-      CAR[:c13] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Bed 1' },
-      BED[6]    => {:purpose => 'PF Lib',           :states => ['pending'], :label => 'Bed 2', :target_state=>'passed', :parent => CAR[:c13] },
-      CAR[:c43] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Bed 3', :target_state=>'passed', :parent => BED[6] }
+      CAR[:c13] => {:purpose => 'PF Post Shear XP', :states => ['passed'],  :label => 'Carousel 1,3' },
+      BED[6]    => {:purpose => 'PF Lib',           :states => ['pending'], :label => 'Bed 6', :target_state=>'passed', :parent => CAR[:c13] },
+      CAR[:c43] => {:purpose => 'PF Lib XP',        :states => ['pending'], :label => 'Carousel 4,3', :target_state=>'passed', :parent => BED[6] }
     }
   })
 
