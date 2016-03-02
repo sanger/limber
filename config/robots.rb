@@ -91,9 +91,9 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       BED[6]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
       BED[4]  => {
         :purpose => 'ISCH lib pool',
-        :states => ['pending','passed'],
+        :states => ['pending','started'],
         :parents =>[BED[2],BED[5],BED[3],BED[6],BED[2],BED[5],BED[3],BED[6]],
-        :target_state => 'nx_in_progress'
+        :target_state => 'passed'
       }
     },
     :destination_bed => BED[5],
