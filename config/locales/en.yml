@@ -473,14 +473,14 @@ en:
         <li>Click on ‘Add an empty Lib PCR plate’.</li>
 
     started:
-      state_text: "FX in progress..."
-      instruction_summary: "FX robot running"
+      state_text: "Bravo in progress..."
+      instruction_summary: "Bravo robot running"
       instructions: >
         The state of this AL Libs is controlled by the PCR plate also on the FX.
 
     passed:
-      state_text: "FX program complete"
-      instruction_summary: "FX program complete"
+      state_text: "Bravo program complete"
+      instruction_summary: "Bravo program complete"
       instructions: >
         <p>You can create a PCR repeat (‘ILB_STD_PCRR’) plate.</p>
         <li>Select the ‘Create next plate’ tab.</li>
@@ -491,9 +491,6 @@ en:
       instruction_summary: "Pre-PCR plate cancelled"
       instructions: >
         <p>Please seek advice from a senior member of the T180 Library Prep team.</p>
-
-
-
 
   Lib PCR:
     pending:

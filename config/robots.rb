@@ -59,46 +59,48 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'Lib PCR', bed(6)
   end
 
-  custom_robot('nx-96',{
-    :name => 'Lib PCR => Lib PCR XP',
+
+  custom_robot("nx-96-lib-pcr-to-lib-pcr-xp",{
+    :name => "Lib PCR => Lib PCR XP",
     :layout => 'bed',
     :beds   => {
-      BED[1]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 1'},
-      BED[9]   => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 9', :parent =>BED[1], :target_state => 'passed'},
-      BED[2]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 2'},
-      BED[10]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 10', :parent =>BED[2], :target_state => 'passed'},
-      BED[3]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 3'},
-      BED[11]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 11', :parent =>BED[3], :target_state => 'passed'},
-      BED[4]   => {:purpose => 'Lib PCR',    :states => ['passed'],  :label => 'Bed 4'},
-      BED[12]  => {:purpose => 'Lib PCR-XP', :states => ['pending'], :label => 'Bed 12', :parent =>BED[4], :target_state => 'passed'}
+      BED[1]   => {:purpose => "Lib PCR",    :states => ["passed"],  :label => "Bed 1"},
+      BED[9]   => {:purpose => "Lib PCR-XP", :states => ["pending"], :label => "Bed 9", :parent =>BED[1], :target_state => "passed"},
+      BED[2]   => {:purpose => "Lib PCR",    :states => ["passed"],  :label => "Bed 2"},
+      BED[10]  => {:purpose => "Lib PCR-XP", :states => ["pending"], :label => "Bed 10", :parent =>BED[2], :target_state => "passed"},
+      BED[3]   => {:purpose => "Lib PCR",    :states => ["passed"],  :label => "Bed 3"},
+      BED[11]  => {:purpose => "Lib PCR-XP", :states => ["pending"], :label => "Bed 11", :parent =>BED[3], :target_state => "passed"},
+      BED[4]   => {:purpose => "Lib PCR",    :states => ["passed"],  :label => "Bed 4"},
+      BED[12]  => {:purpose => "Lib PCR-XP", :states => ["pending"], :label => "Bed 12", :parent =>BED[4], :target_state => "passed"}
     }
   })
 
-  simple_robot('nx-96') do
-    from 'Lib PCR-XP', bed(1)
-    to 'Lib PCR-XP QC', bed(9)
+  simple_robot("nx-96") do
+    from "Lib PCR-XP", bed(1)
+    to "Lib PCR-XP QC", bed(9)
   end
 
   # ISCH Pipeline
 
-  custom_robot('nx-8-pre-cap-pool',{
-    :name   => 'nx-8 Lib PCR-XP => ISCH Lib Pool',
-    :layout => 'bed',
+  custom_robot("nx-8-lib-pcr-xp-to-isch-lib-pool",{
+    :name   => "nx-8 Lib PCR-XP => ISCH Lib Pool",
+    :layout => "bed",
     :beds   => {
-      BED[2]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
-      BED[5]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
-      BED[3]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
-      BED[6]  => {:purpose => 'Lib PCR-XP', :states => ['qc_complete'], :child=>BED[4]},
+      BED[2]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
+      BED[5]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
+      BED[3]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
+      BED[6]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
       BED[4]  => {
-        :purpose => 'ISCH lib pool',
-        :states => ['pending','started'],
+        :purpose => "ISCH lib pool",
+        :states => ["pending","started"],
         :parents =>[BED[2],BED[5],BED[3],BED[6],BED[2],BED[5],BED[3],BED[6]],
-        :target_state => 'passed'
+        :target_state => "passed"
       }
     },
     :destination_bed => BED[5],
-    :class => 'Robots::PoolingRobot'
+    :class => "Robots::PoolingRobot"
   })
+
 
   simple_robot('nx-8') do
     from 'ISCH lib pool', bed(2)

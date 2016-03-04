@@ -7,8 +7,8 @@ module Presenters
 
     write_inheritable_attribute :authenticated_tab_states, {
       :pending     => [ 'labware-summary-button', 'labware-state-button' ],
-      :started     => [ 'labware-summary-button', 'labware-creation-button', 'labware-state-button' ],
-      :passed      => [ 'labware-summary-button', 'labware-creation-button', 'well-failing-button' ],
+      :started     => [ 'labware-summary-button', 'labware-state-button' ],
+      :passed      => [ 'labware-creation-button', 'labware-summary-button', 'well-failing-button' ],
       :fx_transfer => [ 'labware-summary-button' ],
       :cancelled   => [ 'labware-summary-button' ],
       :failed      => [ 'labware-summary-button' ]
@@ -22,20 +22,7 @@ module Presenters
       end
 
       state :started do
-        def control_additional_creation(&block)
-          yield unless default_child_purpose.nil?
-          nil
-        end
-
-        def valid_purposes
-          yield default_child_purpose unless default_child_purpose.nil?
-          nil
-        end
-
-        def default_child_purpose
-          # Lib PCR
-          labware.plate_purpose.children.first
-        end
+        include StateDoesNotAllowChildCreation
       end
 
       state :fx_transfer do
@@ -57,8 +44,8 @@ module Presenters
 
         # Returns the child plate purposes that can be created in the passed state.
         def default_child_purpose
-          # Lib PCRR
-          labware.plate_purpose.children.last
+          # Lib PCR
+          labware.plate_purpose.children.first
         end
       end
 
