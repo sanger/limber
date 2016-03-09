@@ -218,7 +218,7 @@ namespace :config do
 
           presenters['Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
-            :tag_layout_templates => ["Illumina pipeline tagging"],
+            :tag_layout_templates => ["Illumina pipeline tagging","Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)"],
             :presenter_class => 'Presenters::PcrPresenter'
           )
 
