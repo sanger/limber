@@ -36,7 +36,7 @@ module Robots
 
     end
 
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :destination_bed]
+    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :destination_bed,:id]
 
     def verify(bed_contents)
       begin
