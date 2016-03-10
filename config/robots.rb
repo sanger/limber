@@ -86,18 +86,19 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     :name   => "nx-8 Lib PCR-XP => ISCH Lib Pool",
     :layout => "bed",
     :beds   => {
-      BED[2]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
-      BED[5]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
-      BED[3]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
-      BED[6]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4]},
+      BED[2]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4], :label => 'Bed 2 (Source 1)'},
+      BED[5]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4], :label => 'Bed 5 (Source 2)'},
+      BED[3]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4], :label => 'Bed 3 (Source 3)'},
+      BED[6]  => {:purpose => "Lib PCR-XP", :states => ["qc_complete"], :child=>BED[4], :label => 'Bed 6 (Source 4)'},
       BED[4]  => {
         :purpose => "ISCH lib pool",
         :states => ["pending","started"],
         :parents =>[BED[2],BED[5],BED[3],BED[6],BED[2],BED[5],BED[3],BED[6]],
-        :target_state => "passed"
+        :target_state => "passed",
+        :label => 'Bed 4 (Destination)'
       }
     },
-    :destination_bed => BED[5],
+    :destination_bed => BED[4],
     :class => "Robots::PoolingRobot"
   })
 

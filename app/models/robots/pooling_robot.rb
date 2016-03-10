@@ -6,6 +6,9 @@ module Robots
   class PoolingRobot < Robot
 
     class Bed < Robot::Bed
+
+      write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose, :states, :label, :parents, :target_state, :robot]
+
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
         StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(next_state,"Robot #{robot.name} started")
@@ -39,19 +42,28 @@ module Robots
     write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :destination_bed,:id]
 
     def verify(bed_contents)
-      begin
-        destination_bed.load(bed_contents[destination_bed_id])
-        return {:beds=>{destination_bed_id => false}, :valid=>false} if destination_bed.plate.nil?
-        destination_bed.valid?
-      rescue Robots::Robot::Bed::BedError => exception
-        return {:beds=>{destination_bed_id => false}, :valid=>false}
+
+      valid_plates = Hash[bed_contents.map do |bed_id,plate_barcode|
+        beds[bed_id].load(plate_barcode)
+        [bed_id, beds[bed_id].valid?||bed_error(beds[bed_id])]
+      end]
+
+      if bed_contents[destination_bed_id].blank?
+        # We don't even have a destination barcode
+        valid_plates[destination_bed_id] = false
+        error(destination_bed,"No destination plate barcode provided")
+      elsif valid_plates[destination_bed_id]
+        # The destination bed is valid, so check its parents are correct
+        destination_bed.each_parent do |bed_barcode,expected_barcode|
+          scanned_barcode = bed_contents.fetch(bed_barcode,[]).first
+          valid_plates[bed_barcode] = scanned_barcode == expected_barcode
+          error(beds[bed_barcode],"Expected to contain #{expected_barcode} not #{scanned_barcode}") unless valid_plates[bed_barcode]
+        end
+      else
+        # We scanned something wrong onto our destination bed.
+        # No need to do anything more, we're already marked as invalid
       end
-      bed_contents[destination_bed_id] = true
-      destination_bed.each_parent do |bed_barcode,plate_barcode|
-        bed_contents[bed_barcode] = bed_contents[bed_barcode]==plate_barcode
-      end
-      bed_contents.each {|k,v| bed_contents[k] = false unless v==true}
-      {:beds=>bed_contents,:valid=>bed_contents.all?{|_,v| v==true}}
+      {:beds=>valid_plates,:valid=>error_messages.empty?,:message=>formatted_message}
     end
 
     def destination_bed
