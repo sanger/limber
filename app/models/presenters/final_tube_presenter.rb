@@ -101,6 +101,15 @@ module Presenters
       "#{labware.barcode.prefix} #{labware.barcode.number}"
     end
 
+    def sample_count
+      labware.aliquots.count
+    end
+
+    def label_suffix
+      "P#{sample_count}"
+    end
+
+
     def labware_form_details(view)
       { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
     end
