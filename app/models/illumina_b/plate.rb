@@ -41,7 +41,7 @@ class IlluminaB::Plate < Sequencescape::Plate
   end
 
   def tubes_on_create?
-    TUBES_ON_PASS.include?(plate_purpose.name)
+    TUBES_ON_CREATE.include?(plate_purpose.name)
   end
 
   def library_type_name
