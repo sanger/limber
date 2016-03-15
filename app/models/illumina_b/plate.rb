@@ -20,6 +20,9 @@ class IlluminaB::Plate < Sequencescape::Plate
   ]
 
   TUBES_ON_PASS = [
+  ]
+
+  TUBES_ON_CREATE = [
 
     'ISCH cap lib pool'
   ]
@@ -30,10 +33,14 @@ class IlluminaB::Plate < Sequencescape::Plate
   private :is_a_final_pooling_plate?
 
   def tubes_created?
-    qc_complete? || (passed? && tubes_on_pass?)
+    qc_complete? || (passed? && tubes_on_pass?) || tubes_on_create?
   end
 
   def tubes_on_pass?
+    TUBES_ON_PASS.include?(plate_purpose.name)
+  end
+
+  def tubes_on_create?
     TUBES_ON_PASS.include?(plate_purpose.name)
   end
 
