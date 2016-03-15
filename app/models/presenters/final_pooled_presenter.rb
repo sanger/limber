@@ -45,31 +45,34 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
     alias_method(:control_additional_printing, :control_tube_view)
   end
 
+  module PreviewTubeTransfers
+    def control_source_view(&block)
+      yield unless plate.has_transfers_to_tubes?
+      nil
+    end
+
+    def control_tube_view(&block)
+      yield if plate.has_transfers_to_tubes?
+      nil
+    end
+    alias_method(:control_additional_printing, :control_tube_view)
+
+    def transfers
+      labware.well_to_tube_transfers
+    end
+  end
+
   state_machine :tube_state, :initial => :pending, :namespace => 'tube' do
     Presenters::Statemachine::StateTransitions.inject(self)
 
     state :pending do
-      include StateDoesNotAllowTubePreviewing
+      include PreviewTubeTransfers
     end
     state :started do
-      include StateDoesNotAllowTubePreviewing
+      include PreviewTubeTransfers
     end
     state :passed do
-      def control_source_view(&block)
-        yield unless plate.has_transfers_to_tubes?
-        nil
-      end
-
-      def control_tube_view(&block)
-        yield if plate.has_transfers_to_tubes?
-        nil
-      end
-      alias_method(:control_additional_printing, :control_tube_view)
-
-      def transfers
-        labware.well_to_tube_transfers
-      end
-
+      include PreviewTubeTransfers
     end
     state :failed do
       include StateDoesNotAllowTubePreviewing
