@@ -65,11 +65,4 @@ class CreationController < ApplicationController
     end
   end
 
-  def check_for_current_user!
-    redirect_to(
-      search_path,
-      :alert => "Please login before creating plates."
-    ) unless current_user_uuid.present?
-  end
-  private :check_for_current_user!
 end

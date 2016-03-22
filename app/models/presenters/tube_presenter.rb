@@ -44,6 +44,10 @@ module Presenters
       # Mostly, no.
     end
 
+    def default_statechange_label
+      "Move tube to next state"
+    end
+
     # The state is delegated to the tube
     delegate :state, :to => :labware
 
@@ -51,9 +55,12 @@ module Presenters
       "#{prioritized_name(labware.name, 10)} #{label_text}"
     end
 
-    def location
-      # TODO: Consider adding location to tube api as well
-      :illumina_b
+    def sample_count
+      labware.aliquots.count
+    end
+
+    def label_suffix
+      "P#{sample_count}"
     end
 
     # Purpose returns the plate or tube purpose of the labware.

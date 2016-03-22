@@ -11,6 +11,9 @@
     <%= f.hidden_field :number %>
     <%= f.hidden_field :label_name,        :value => label_name        %>
     <%= f.hidden_field :label_description, :value => label_description %>
+    <% if label_suffix  %>
+      <%= f.hidden_field :suffix,            :value => label_suffix      %>
+    <% end %>
 
     <li data-role="list-divider">
       <%= label_tag :printer, 'Barcode Printer:' %>

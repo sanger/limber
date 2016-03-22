@@ -10,4 +10,8 @@ class IlluminaB::PlatePurpose < Sequencescape::PlatePurpose
   def not_qc?
     !is_qc?
   end
+
+  def asset_type
+    Settings.purposes[uuid].asset_type
+  end
 end

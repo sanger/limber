@@ -3,7 +3,7 @@
 #Copyright (C) 2012,2015 Genome Research Ltd.
 module Presenters
   module Statemachine
-    module Pcr
+    module PendingPlateCreation
       def self.included(base)
         base.class_eval do
           include Presenters::Statemachine::Shared
@@ -12,30 +12,15 @@ module Presenters
 
             event :take_default_path do
               transition :pending    => :passed
-              # These transitions are maintained for legacy support
-              transition :started_fx => :started_mj
-              transition :started_mj => :passed
-            end
-
-            event :pass do
-              transition [ :pending, :started_mj ] => :passed
             end
 
             # These are the states, which are really the only things we need ...
             state :pending do
-              include Statemachine::StateDoesNotAllowChildCreation
-            end
-
-            state :started_fx, :human_name => 'FX robot started' do
-              include Statemachine::StateDoesNotAllowChildCreation
-            end
-
-            state :started_mj, :human_name => 'MJ robot started' do
-              include Statemachine::StateDoesNotAllowChildCreation
+              include Statemachine::StateAllowsChildCreation
             end
 
             state :passed do
-              include Statemachine::StateAllowsChildCreation
+              include Statemachine::StateDoesNotAllowChildCreation
             end
 
             state :cancelled do
@@ -43,7 +28,7 @@ module Presenters
             end
 
             event :cancel do
-              transition [ :pending, :started_fx, :started_mj, :passed ] => :cancelled
+              transition [ :pending, :passed ] => :cancelled
             end
           end
 
