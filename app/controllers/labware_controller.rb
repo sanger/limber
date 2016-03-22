@@ -16,14 +16,6 @@ class LabwareController < ApplicationController
   end
   private :get_printers
 
-  def check_for_current_user!
-    redirect_to(
-      search_path,
-      :alert => "Please login to change the state of any labware."
-    ) unless current_user_uuid.present?
-  end
-  private :check_for_current_user!
-
   def state_changer_for(purpose_uuid, labware_uuid)
     StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
   end

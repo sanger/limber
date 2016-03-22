@@ -6,6 +6,7 @@ class RobotsController < ApplicationController
   attr_reader :robot
   before_filter :find_robot
   before_filter :validate_beds, :only => :start
+  before_filter :check_for_current_user!, :only => [ :start ]
 
   def show
     respond_to do |format|
@@ -26,7 +27,7 @@ class RobotsController < ApplicationController
     rescue Robots::Robot::Bed::BedError => exception
       # Our beds complained, nothing has happened.
       respond_to do |format|
-        format.html { redirect_to robot_path(:id=>robot.id,:location=>robot.location), :notice=> "#{exception.message} No plates have been started." }
+        format.html { redirect_to robot_path(:id=>robot.id), :notice=> "#{exception.message} No plates have been started." }
       end
     end
   end
@@ -40,7 +41,6 @@ class RobotsController < ApplicationController
   def find_robot
     @robot = Robots::Robot.find(
       :id        =>params[:id],
-      :location  =>params[:location],
       :api       =>api,
       :user_uuid => current_user_uuid
     )
@@ -48,14 +48,22 @@ class RobotsController < ApplicationController
   private :find_robot
 
   def stripped_beds
-    Hash[(params[:beds]||params[:bed]||{}).map {|k,v| [k.strip,v.strip]}]
+    Hash[(params[:beds]||params[:bed]||{}).map {|k,v| [k.strip,stripped_plates(v)]}]
   end
   private :stripped_beds
 
+  def stripped_plates(plates)
+    return plates.strip if plates.respond_to?(:strip) # We have a string
+    return plates.map(&:strip) if plates.respond_to?(:map) # We have an array
+    plates # No idea, but lets be optimistic!
+  end
+  private :stripped_plates
+
   def validate_beds
     return true if params['bed'].present?
-    redirect_to robot_path(:id=>robot.id,:location=>robot.location), :notice=> "We didn't receive any bed information"
+    redirect_to robot_path(:id=>robot.id), :notice=> "We didn't receive any bed information"
     false
   end
   private :validate_beds
+
 end

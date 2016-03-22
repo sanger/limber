@@ -17,8 +17,8 @@ module Presenters
     end
 
     def suitable_child?(purpose)
-      Settings.purposes[labware.plate_purpose.uuid].locations_children.nil? ||
-      Settings.purposes[labware.plate_purpose.uuid].locations_children[location] == purpose.name
+      Settings.purposes[labware.plate_purpose.uuid].default_child.nil? ||
+      Settings.purposes[labware.plate_purpose.uuid].default_child == purpose.name
     end
     private :suitable_child?
 

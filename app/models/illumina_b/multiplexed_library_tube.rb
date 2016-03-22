@@ -10,4 +10,6 @@ class IlluminaB::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
     'A1'
   end
 
+  alias_method :plate_purpose, :purpose
+
 end

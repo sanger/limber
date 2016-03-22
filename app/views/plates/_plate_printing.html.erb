@@ -4,7 +4,8 @@
         @presenter.labware.barcode,
         :redirection_url    => illumina_b_plate_path(@presenter.labware),
         :label_name         => @presenter.label_name,
-        :label_description  => @presenter.label_text
+        :label_description  => @presenter.label_text,
+        :label_suffix       => nil
   ) %>
 <% end %>
 

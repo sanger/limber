@@ -123,7 +123,7 @@ class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   end
 
   def default_tube_printer_uuid
-    Settings.printers.fetch(location).fetch('tube')
+    Settings.printers.fetch('tube')
   end
 
   def tube_state=(state)

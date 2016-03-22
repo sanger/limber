@@ -16,7 +16,9 @@
         </li>
         <% if current_user_uuid.present? -%>
           <li id="labware-state-button">
-            <a href="#" class="navbar-link" rel="labware-state-button" data-icon="gear">Move tube to next state</a>
+            <a href="<%= @presenter.statechange_link(self) %>" class="<%= @presenter.if_statechange_active('navbar-link') %>" rel="labware-state-button" data-icon="gear" <%= @presenter.statechange_attributes %>>
+              <%= @presenter.statechange_label %>
+            </a>
           </li>
           <li id="labware-creation-button">
             <a href="#" class="navbar-link" rel="labware-creation-button" data-icon="add">Create Child Tube</a>
@@ -54,7 +56,8 @@
               @presenter.labware.barcode,
               :redirection_url    => illumina_b_tube_path(@presenter.labware),
               :label_name         => @presenter.label_name,
-              :label_description  => @presenter.label_description
+              :label_description  => @presenter.label_description,
+              :label_suffix       => @presenter.label_suffix
             ) %>
           </div>
 

@@ -10,10 +10,6 @@ class StateChangers::AutoPoolingStateChanger < StateChangers::DefaultStateChange
   # Updates the plate so that it pools into the tubes and then updates their state to be passed,
   # as this is effectively what the lab technicians are doing.
   def change_tube_states_to_passed!
-    api.transfer_template.find(Settings.transfer_templates["Transfer wells to MX library tubes by submission"]).create!(
-      :source => labware_uuid,
-      :user   => user_uuid
-    )
 
     # Reload the plate so that we can use the tubes
     api.plate.find(labware_uuid).coerce.tubes.each do |tube|

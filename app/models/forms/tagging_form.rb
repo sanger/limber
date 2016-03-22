@@ -46,6 +46,7 @@ module Forms
       maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
 
       @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select { |template|
+        acceptable_template?(template) &&
         template.tag_group.tags.size >= maximum_pool_size
       }
 
@@ -58,6 +59,15 @@ module Forms
       @tag_layout_templates.delete_if { |template| not @tag_groups.key?(template.name) }
     end
     private :generate_layouts_and_groups
+
+    def acceptable_template?(template)
+      acceptable_templates.blank? ||
+      acceptable_templates.include?(template.name)
+    end
+
+    def acceptable_templates
+      Settings.purposes[purpose_uuid].fetch('tag_layout_templates',[])
+    end
 
     def available_tag2s
       api.tag2_layout_template.all.reject do |template|
@@ -73,12 +83,12 @@ module Forms
 
 
     def tag_layout_templates
-      generate_layouts_and_groups unless @tag_layout_templates.present?
+      generate_layouts_and_groups if @tag_layout_templates.nil?
       @tag_layout_templates
     end
 
     def tag_groups
-      generate_layouts_and_groups unless @tag_groups.present?
+      generate_layouts_and_groups if @tag_groups.nil?
       @tag_groups
     end
 
