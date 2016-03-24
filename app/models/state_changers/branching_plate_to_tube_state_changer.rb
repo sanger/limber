@@ -3,7 +3,10 @@
 #Copyright (C) 2013 Genome Research Ltd.
 class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcCompletablePlateStateChanger
 
+  EVENT_TYPE = 'lib_pcr_xp_created'
+
   def move_to!(state, reason, customer_accepts_responsibility = false)
+    generate_event! if state == 'passed'
     raise StateChangers::StateChangeError, "QC plate must be created first!" if state == 'qc_complete' && !qc_created?
     super
     create_stock_tubes! if state == 'qc_complete' && tubes_required?
@@ -68,5 +71,14 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
     targets.delete(tube)
   end
   private :allocate_tube!
+
+  def generate_event!
+    api.library_event.create!(
+      :seed => labware_uuid,
+      :user => user_uuid,
+      :event_type => EVENT_TYPE
+    )
+  end
+  private :generate_event!
 
 end

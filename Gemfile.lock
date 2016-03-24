@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: git://github.com/JamesGlover/sequencescape-client-api.git
-  revision: 352ef88784d4c005fe6aad67d6ab0889a5d0eb12
-  branch: dual_indexing_r32
+  revision: 26f86a30892f807fafc84c1ec1b5eb086907bfcb
+  branch: add_library_events
   specs:
     sequencescape-client-api (0.2.6)
       activemodel (~> 3.0.0)

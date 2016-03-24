@@ -11,7 +11,7 @@ gem 'exception_notification'
 gem 'sequencescape-client-api', '>= 0.2.5',
   # Should be switched back to sanger + production for deployment
   :github  => 'JamesGlover/sequencescape-client-api',
-  :branch  => 'dual_indexing_r32',
+  :branch  => 'add_library_events',
   :require => 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
