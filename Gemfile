@@ -8,10 +8,10 @@ gem 'state_machine', '~>1.0.1'
 gem 'hashie', '~>1.0.0'
 gem 'exception_notification'
 
-gem 'sequencescape-client-api', '>= 0.2.5',
+gem 'sequencescape-client-api', '>= 0.2.7',
   # Should be switched back to sanger + production for deployment
-  :github  => 'JamesGlover/sequencescape-client-api',
-  :branch  => 'dual_indexing_r32',
+  :github  => 'sanger/sequencescape-client-api',
+  :branch  => 'production',
   :require => 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
