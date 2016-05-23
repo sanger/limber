@@ -12,11 +12,11 @@ GIT
       savon (= 0.9.2)
 
 GIT
-  remote: git://github.com/JamesGlover/sequencescape-client-api.git
-  revision: 352ef88784d4c005fe6aad67d6ab0889a5d0eb12
-  branch: dual_indexing_r32
+  remote: git://github.com/sanger/sequencescape-client-api.git
+  revision: d280d90340dc03f7ef64ff55ee0e9960bee574ab
+  branch: production
   specs:
-    sequencescape-client-api (0.2.6)
+    sequencescape-client-api (0.2.7)
       activemodel (~> 3.0.0)
       activesupport (~> 3.0.0)
       i18n
@@ -195,7 +195,7 @@ DEPENDENCIES
   rake
   ruby-debug19
   sanger_barcode (>= 0.2.1)!
-  sequencescape-client-api (>= 0.2.5)!
+  sequencescape-client-api (>= 0.2.7)!
   state_machine (~> 1.0.1)
   thin
 
