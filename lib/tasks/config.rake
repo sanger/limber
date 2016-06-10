@@ -306,7 +306,8 @@ namespace :config do
 
           presenters['Lib Norm'].merge!(
             :presenter_class => 'Presenters::QcCompletablePresenter',
-            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
+            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
+            :default_printer_type => :plate_b
           )
 
           presenters['Lib Norm QC'].merge!(
@@ -314,11 +315,14 @@ namespace :config do
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib Norm 2'].merge!({})
+          presenters['Lib Norm 2'].merge!({
+            :default_printer_type => :plate_b
+          })
 
           presenters['Lib Norm 2 Pool'].merge!(
             :presenter_class     => 'Presenters::EndPlatePresenter',
-            :form_class           => 'Forms::PoolingRowToColumn'
+            :form_class           => 'Forms::PoolingRowToColumn',
+            :default_printer_type => :plate_b
           )
 
           presenters['Standard MX'].merge!(
@@ -392,12 +396,14 @@ namespace :config do
 
           presenters['PF MiSeq Stock'].merge!({
             :form_class           => 'Forms::PooledTubesForm',
-            :presenter_class      => 'Presenters::PendingCreationTubePresenter'
+            :presenter_class      => 'Presenters::PendingCreationTubePresenter',
+            :default_printer_type => :tube
           })
           presenters['PF MiSeq QC'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
-            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger'
+            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger',
+            :default_printer_type => :tube
           })
           presenters['PF MiSeq QCR'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
