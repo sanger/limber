@@ -396,12 +396,14 @@ namespace :config do
 
           presenters['PF MiSeq Stock'].merge!({
             :form_class           => 'Forms::PooledTubesForm',
-            :presenter_class      => 'Presenters::PendingCreationTubePresenter'
+            :presenter_class      => 'Presenters::PendingCreationTubePresenter',
+            :default_printer_type => :tube
           })
           presenters['PF MiSeq QC'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
-            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger'
+            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger',
+            :default_printer_type => :tube
           })
           presenters['PF MiSeq QCR'].merge!({
             :form_class           => 'Forms::IntermediateTubesForm',
