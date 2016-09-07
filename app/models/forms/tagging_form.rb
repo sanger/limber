@@ -195,8 +195,7 @@ module Forms
         api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
           :source => tag2_tube.asset_uuid,
           :plate => plate.uuid,
-          :user  => user_uuid,
-          :substitutions => substitutions.reject { |_,new_tag| new_tag.blank? }
+          :user  => user_uuid
         )
       end
     end
