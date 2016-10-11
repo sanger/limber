@@ -18,7 +18,7 @@ module StateChangers
           :study => Settings.study,
           :project => Settings.project,
           :assets => [labware_uuid],
-          :request_options => IlluminaBPipeline::Application.config.request_options,
+          :request_options => Limber::Application.config.request_options,
           :user => user_uuid
         )
 

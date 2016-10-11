@@ -84,7 +84,7 @@ namespace :config do
   ]
 
   task :generate => :environment do
-    api = Sequencescape::Api.new(IlluminaBPipeline::Application.config.api_connection_options)
+    api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
     all_plate_purposes =  api.plate_purpose.all
 
@@ -459,15 +459,15 @@ namespace :config do
 
       configuration[:submission_templates] = {}.tap do |submission_templates|
         puts "Preparing submission templates..."
-        submission_templates['miseq']= api.order_template.all.detect {|ot| ot.name==IlluminaBPipeline::Application.config.qc_submission_name }.uuid
+        submission_templates['miseq']= api.order_template.all.detect {|ot| ot.name==Limber::Application.config.qc_submission_name }.uuid
       end
 
       puts "Setting study..."
-      configuration[:study] = IlluminaBPipeline::Application.config.study_uuid||
+      configuration[:study] = Limber::Application.config.study_uuid||
         puts("No study specified, using first study")||
         api.study.first.uuid
       puts "Setting project..."
-      configuration[:project] = IlluminaBPipeline::Application.config.project_uuid||
+      configuration[:project] = Limber::Application.config.project_uuid||
         puts("No project specified, using first project")||
         api.project.first.uuid
 

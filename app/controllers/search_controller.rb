@@ -19,7 +19,7 @@ class SearchController < ApplicationController
     states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
 
     @search_results = plate_search.all(
-      IlluminaB::Plate,
+      Limber::Plate,
       :state => states,
      :user_uuid => current_user_uuid
     )
@@ -40,7 +40,7 @@ class SearchController < ApplicationController
     states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
 
     @search_results = plate_search.all(
-      IlluminaB::Plate,
+      Limber::Plate,
      :state     => states,
      :user_uuid => current_user_uuid
     )
@@ -53,7 +53,7 @@ class SearchController < ApplicationController
     states = ['pending', 'started', 'passed', 'qc_complete']
 
     @search_results = plate_search.all(
-      IlluminaB::Plate,
+      Limber::Plate,
       :state     => states,
       :user_uuid => current_user_uuid
     )

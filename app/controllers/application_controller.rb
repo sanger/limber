@@ -3,7 +3,7 @@
 #Copyright (C) 2011,2012 Genome Research Ltd.
 class ApplicationController < ActionController::Base
   include Sequencescape::Api::Rails::ApplicationController
-  delegate :api_connection_options, :to => 'IlluminaBPipeline::Application.config'
+  delegate :api_connection_options, :to => 'Limber::Application.config'
 
   protect_from_forgery
 

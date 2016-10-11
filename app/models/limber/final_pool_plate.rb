@@ -1,7 +1,7 @@
 #This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2015 Genome Research Ltd.
-class IlluminaB::FinalPoolPlate < Sequencescape::Plate
+class Limber::FinalPoolPlate < Sequencescape::Plate
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
   class Transfer < ::Sequencescape::Transfer
@@ -12,7 +12,7 @@ class IlluminaB::FinalPoolPlate < Sequencescape::Plate
       send(
         :transfers_without_tube_mapping=, Hash[
           transfers.map do |well, tube_json|
-            [ well, ::IlluminaB::StockLibraryTube.new(api, tube_json, false) ]
+            [ well, ::Limber::StockLibraryTube.new(api, tube_json, false) ]
           end
         ]
       )

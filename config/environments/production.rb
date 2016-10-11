@@ -1,7 +1,7 @@
 #This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2012 Genome Research Ltd.
-IlluminaBPipeline::Application.configure do
+Limber::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # The production environment is meant for finished, "live" apps.

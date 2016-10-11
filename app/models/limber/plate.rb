@@ -1,13 +1,13 @@
 #This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
-class IlluminaB::Plate < Sequencescape::Plate
+class Limber::Plate < Sequencescape::Plate
   # Returns a plate instance that has been coerced into the appropriate class if necessary.  Typically
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
   def coerce
     return self unless tubes_created? and is_a_final_pooling_plate?
-    coerce_to(IlluminaB::FinalPoolPlate)
+    coerce_to(Limber::FinalPoolPlate)
   end
 
   FINAL_POOLING_PLATE_PURPOSES = [

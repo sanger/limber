@@ -1,4 +1,4 @@
-Illumina-B Pipeline Application
+Limber Pipeline Application
 =============================
 
-This is a web-based front-end for an Illumina-Beckman sequencing pipeline based on the Sequencescape public JSON API.
+A flexible front end to plate bases pipelines in Sequencescape

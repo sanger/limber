@@ -1,7 +1,7 @@
 #This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2012 Genome Research Ltd.
-IlluminaBPipeline::Application.configure do
+Limber::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -27,7 +27,7 @@ IlluminaBPipeline::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
-  config.api_connection_options.namespace     = 'IlluminaB'
+  config.api_connection_options.namespace     = 'Limber'
   config.api_connection_options.url           = ENV.fetch('API_URL','http://localhost:3000/api/1/')
   config.api_connection_options.authorisation = 'development'
 

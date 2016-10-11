@@ -3,7 +3,7 @@
 #Copyright (C) 2016 Genome Research Ltd.
 
 # This class allows us to retrieve all assets in a single barcode lookup
-class IlluminaB::BarcodedAsset < Sequencescape::BarcodedAsset
+class Limber::BarcodedAsset < Sequencescape::BarcodedAsset
 
   # We might actually be able to do something better here.
   def parent

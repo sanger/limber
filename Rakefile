@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-IlluminaBPipeline::Application.load_tasks
+Limber::Application.load_tasks
