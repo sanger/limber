@@ -8,10 +8,10 @@ module Presenters
     def self.included(base)
       base.class_eval do
         include Forms::Form
-        write_inheritable_attribute :page, 'show'
+        self.page =  'show'
 
-        class_inheritable_reader :csv
-        write_inheritable_attribute :csv, 'show'
+        class_attribute :csv
+        self.csv =  'show'
 
         def has_qc_data?; false; end
       end
@@ -97,24 +97,24 @@ module Presenters
     include PlateWalking
     include RobotControlled
 
-    class_inheritable_reader :labware_class
-    write_inheritable_attribute :labware_class, :plate
+    class_attribute :labware_class
+    self.labware_class =  :plate
 
-    write_inheritable_attribute :attributes, [ :api, :labware ]
+    self.attributes =  [ :api, :labware ]
 
-    class_inheritable_reader    :aliquot_partial
-    write_inheritable_attribute :aliquot_partial, 'labware/aliquot'
+    class_attribute    :aliquot_partial
+    self.aliquot_partial =  'labware/aliquot'
 
-    class_inheritable_reader    :summary_partial
-    write_inheritable_attribute :summary_partial, 'labware/plates/standard_summary'
+    class_attribute    :summary_partial
+    self.summary_partial =  'labware/plates/standard_summary'
 
-    class_inheritable_reader    :additional_creation_partial
-    write_inheritable_attribute :additional_creation_partial, 'labware/plates/child_plate_creation'
+    class_attribute    :additional_creation_partial
+    self.additional_creation_partial =  'labware/plates/child_plate_creation'
 
-    class_inheritable_reader :printing_partial
+    class_attribute :printing_partial
 
-    class_inheritable_reader    :tab_views
-    write_inheritable_attribute :tab_views, {
+    class_attribute    :tab_views
+    self.tab_views =  {
       'labware-summary-button'  => [ 'labware-summary', 'plate-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'plate-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'plate-creation' ],
@@ -123,10 +123,10 @@ module Presenters
     }
 
     # This is now generated dynamically by the LabwareHelper
-    class_inheritable_reader    :tab_states
+    class_attribute    :tab_states
 
-    class_inheritable_reader    :authenticated_tab_states
-    write_inheritable_attribute :authenticated_tab_states, {
+    class_attribute    :authenticated_tab_states
+    self.authenticated_tab_states =  {
         :pending    =>  [ 'labware-summary-button', 'labware-state-button'                           ],
         :started    =>  [ 'labware-state-button', 'labware-summary-button'                           ],
         :passed     =>  [ 'labware-creation-button', 'labware-state-button', 'labware-summary-button' ],
@@ -182,7 +182,7 @@ module Presenters
     end
 
     def labware_form_details(view)
-      { :url => view.illumina_b_plate_path(self.labware), :as  => :plate }
+      { :url => view.limber_plate_path(self.labware), :as  => :plate }
     end
 
     def transfers
@@ -226,7 +226,7 @@ module Presenters
     end
 
     def csv_file_links
-      [["","#{Rails.application.routes.url_helpers.illumina_b_plate_path(labware.uuid)}.csv"]]
+      [["","#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
     end
 
     def filename

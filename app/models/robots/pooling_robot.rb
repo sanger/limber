@@ -7,7 +7,7 @@ module Robots
 
     class Bed < Robot::Bed
 
-      write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose, :states, :label, :parents, :target_state, :robot]
+      self.attributes =  [:api, :user_uuid, :purpose, :states, :label, :parents, :target_state, :robot]
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
@@ -39,7 +39,7 @@ module Robots
 
     end
 
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :destination_bed,:id]
+    self.attributes =  [:api, :user_uuid, :layout, :beds, :name, :destination_bed,:id]
 
     def verify(bed_contents)
 

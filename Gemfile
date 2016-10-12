@@ -1,17 +1,25 @@
 source 'http://rubygems.org'
 
-gem 'compass', '>= 0.11.1'
-gem 'formtastic', '~>1.2.3'
-gem 'rails', '~>3.0.19'
+gem 'formtastic'
+# Provides some css helpers
+# Deprecate!
+gem 'compass-rails'
+gem 'rails'
+gem 'sass-rails'
+gem 'uglifier'
+
+# See https://github.com/rails/execjs#readme for more supported runtimes
+gem 'therubyracer', :require => false
+
 gem 'rake'
 gem 'state_machine', '~>1.0.1'
 gem 'hashie', '~>1.0.0'
 gem 'exception_notification'
 
-gem 'sequencescape-client-api', '>= 0.2.7',
+gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
   :github  => 'sanger/sequencescape-client-api',
-  :branch  => 'production',
+  :branch  => 'rails_4',
   :require => 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
@@ -26,7 +34,8 @@ group :test do
 end
 group :development do
   gem 'pry'
-  gem 'rubocop'
+  gem 'rubocop', require: false
+  gem 'web-console'
 end
 
 group :deployment do

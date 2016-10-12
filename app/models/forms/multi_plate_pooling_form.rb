@@ -5,13 +5,10 @@ module Forms
   class MultiPlatePoolingForm < CreationForm
     include Forms::Form::CustomPage
 
-    write_inheritable_attribute :page, 'multi_plate_pooling'
-    write_inheritable_attribute :aliquot_partial, "custom_pooled_aliquot"
-
-    write_inheritable_attribute :default_transfer_template_uuid,
-      Settings.transfer_templates['Pool wells based on submission']
-
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
+    self.page =  'multi_plate_pooling'
+    self.aliquot_partial =  "custom_pooled_aliquot"
+    self.default_transfer_template_uuid = Settings.transfer_templates['Pool wells based on submission']
+    self.attributes =  [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
 
     def tab_views
       {

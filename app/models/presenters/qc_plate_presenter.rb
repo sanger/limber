@@ -7,7 +7,7 @@ module Presenters
    include Presenters::Statemachine
    include StateDoesNotAllowChildCreation
 
-    write_inheritable_attribute :authenticated_tab_states, {
+    self.authenticated_tab_states =  {
       :pending     => [ 'labware-summary-button', 'labware-state-button' ],
       :started     => [ 'labware-state-button', 'labware-summary-button' ],
       :passed      => [ 'labware-summary-button' ],

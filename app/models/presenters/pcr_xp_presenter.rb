@@ -4,10 +4,10 @@
 class Presenters::PcrXpPresenter < Presenters::PooledPresenter
   include Presenters::Statemachine::QcCompletable
 
-  write_inheritable_attribute :summary_partial, 'labware/plates/pooled_into_tubes_plate'
-  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
+  self.summary_partial =  'labware/plates/pooled_into_tubes_plate'
+  self.printing_partial =  'labware/plates/tube_printing'
 
-  write_inheritable_attribute :authenticated_tab_states, {
+  self.authenticated_tab_states =  {
     :pending     => [ 'labware-summary-button', 'labware-state-button' ],
     :started     => [ 'labware-state-button', 'labware-summary-button' ],
     :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button', 'labware-creation-button' ],

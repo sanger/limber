@@ -6,10 +6,10 @@ module Presenters::ExtendedCsv
   def self.included(base)
     base.class_eval do
 
-      class_inheritable_reader :bed_prefix
+      class_attribute :bed_prefix
 
-      write_inheritable_attribute :csv, 'show_extended'
-      write_inheritable_attribute :bed_prefix, 'PCRXP'
+      self.csv =  'show_extended'
+      self.bed_prefix =  'PCRXP'
     end
   end
 

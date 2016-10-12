@@ -65,8 +65,8 @@ module Forms
       siblings.detect {|s| s.barcode == barcode }.uuid
     end
 
-    write_inheritable_attribute :page, 'multi_tube_pooling'
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
+    self.page =  'multi_tube_pooling'
+    self.attributes =  [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
 
     validate :all_parents_and_only_parents?, :if => :barcodes_provided?
 

@@ -26,13 +26,13 @@ module Forms
         include ActiveModel::Validations
         include NoCustomPage
 
-        class_inheritable_reader :page
-        write_inheritable_attribute :page, 'new'
+        class_attribute :page
+        self.page = 'new'
 
-        class_inheritable_reader :aliquot_partial
-        write_inheritable_attribute :aliquot_partial, 'labware/aliquot'
+        class_attribute :aliquot_partial
+        self.aliquot_partial = 'labware/aliquot'
 
-        class_inheritable_reader :attributes
+        class_attribute :attributes
       end
     end
 
@@ -61,10 +61,10 @@ module Forms
     include Form
     include PlateWalking
 
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid]
+    self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid]
 
-    class_inheritable_reader :default_transfer_template_uuid
-    write_inheritable_attribute :default_transfer_template_uuid, Settings.transfer_templates['Transfer columns 1-12']
+    class_attribute :default_transfer_template_uuid
+    self.default_transfer_template_uuid = Settings.transfer_templates['Transfer columns 1-12']
 
     attr_reader :plate_creation
 

@@ -5,8 +5,8 @@ class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
   # Performs the coercion of this instance so that it behaves appropriately given the direction
   # and walking algorithm information.
   def coerce
-    extend("illumina_b/tag_layout_template/in_#{self.direction.gsub(/\s+/, '_')}s".camelize.constantize)
-    extend("illumina_b/tag_layout_template/walk_#{self.walking_by.gsub(/\s+/, '_')}".camelize.constantize)
+    extend("limber/tag_layout_template/in_#{self.direction.gsub(/\s+/, '_')}s".camelize.constantize)
+    extend("limber/tag_layout_template/walk_#{self.walking_by.gsub(/\s+/, '_')}".camelize.constantize)
     self
   end
 

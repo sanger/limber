@@ -2,8 +2,8 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2015 Genome Research Ltd.
 class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
-  write_inheritable_attribute :summary_partial, 'labware/plates/multi_pooled_plate'
-  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
+  self.summary_partial =  'labware/plates/multi_pooled_plate'
+  self.printing_partial =  'labware/plates/tube_printing'
 
   include Presenters::ExtendedCsv
 
@@ -54,7 +54,7 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
   def csv_file_links
     links = []
     (self.labware.creation_transfers.count/4.0).ceil.times do |i|
-      links << [i+1,"#{Rails.application.routes.url_helpers.illumina_b_plate_path(plate.uuid)}.csv?offset=#{i}"]
+      links << [i+1,"#{Rails.application.routes.url_helpers.limber_plate_path(plate.uuid)}.csv?offset=#{i}"]
     end
     links
   end

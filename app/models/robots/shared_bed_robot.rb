@@ -9,7 +9,7 @@ module Robots
 
       attr_reader :labware
 
-      write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot, :secondary_purposes]
+      self.attributes =  [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot, :secondary_purposes]
 
       def transition
         return if target_state.nil? || labware.empty? # We have nothing to do

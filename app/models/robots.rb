@@ -12,8 +12,8 @@ module Robots
       # Our robot has beds/rack-spaces
       attr_reader :plate, :error_messages
 
-      class_inheritable_reader :attributes
-      write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
+      class_attribute :attributes
+      self.attributes =  [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
 
       def initialize(*args)
         @error_messages = []
@@ -116,8 +116,8 @@ module Robots
       end
     end
 
-    class_inheritable_reader :attributes
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :layout, :beds, :name, :id ]
+    class_attribute :attributes
+    self.attributes =  [:api, :user_uuid, :layout, :beds, :name, :id ]
 
     def beds=(new_beds)
       beds = ActiveSupport::OrderedHash.new {|beds,barcode| InvalidBed.new(barcode) }

@@ -11,7 +11,7 @@
         ".bundle"
       ],
       "file_exclude_patterns":[
-        "illumina_b_pipeline.sublime-workspace"
+        "limber.sublime-workspace"
       ],
       "binary_file_patterns": [
         "*.jpg",

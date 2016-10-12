@@ -21,7 +21,7 @@ class QcFilesController < ApplicationController
   before_filter :find_assets
 
   def find_assets
-    ['illumina_b', 'pulldown'].each do |app_name|
+    ['limber', 'pulldown'].each do |app_name|
       ['plate','tube','multiplexed_library_tube'].each do |klass|
         next if params["#{app_name}_#{klass}_id"].nil?
         @asset_path = send(:"#{app_name}_#{klass}_path", params["#{app_name}_#{klass}_id"])

@@ -5,8 +5,8 @@ module Presenters
   class MiSeqQCTubePresenter < TubePresenter
     include RobotControlled
 
-    class_inheritable_reader    :authenticated_tab_states
-    write_inheritable_attribute :authenticated_tab_states, {
+    class_attribute    :authenticated_tab_states
+    self.authenticated_tab_states =  {
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
         :started     => [ 'labware-summary-button', 'labware-state-button' ],
         :passed      => [ 'labware-summary-button' ],

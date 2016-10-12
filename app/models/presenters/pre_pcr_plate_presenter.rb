@@ -5,7 +5,7 @@ module Presenters
   class PrePcrPlatePresenter < PlatePresenter
     include Presenters::Statemachine
 
-    write_inheritable_attribute :authenticated_tab_states, {
+    self.authenticated_tab_states =  {
       :pending    =>  [ 'labware-summary-button', 'labware-creation-button' ],
       :started    =>  [ 'labware-summary-button' ],
       :passed     =>  [ 'labware-creation-button', 'well-failing-button', 'labware-summary-button' ],

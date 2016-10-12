@@ -3,7 +3,7 @@
 #Copyright (C) 2013 Genome Research Ltd.
 class Presenters::PcrXpOldPresenter < Presenters::PcrXpPresenter
 
-  write_inheritable_attribute :authenticated_tab_states, {
+  self.authenticated_tab_states =  {
     :pending     => [ 'labware-summary-button', 'labware-state-button' ],
     :started     => [ 'labware-state-button', 'labware-summary-button' ],
     :passed      => [ 'labware-state-button', 'labware-summary-button', 'well-failing-button', 'labware-creation-button' ],

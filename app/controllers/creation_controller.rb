@@ -2,8 +2,8 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2012 Genome Research Ltd.
 class CreationController < ApplicationController
-  class_inheritable_reader :creation_message
-  write_inheritable_attribute :creation_message, 'Your new empty labware has been added to the system.'
+  class_attribute :creation_message
+  self.creation_message = 'Your new empty labware has been added to the system.'
 
 
   before_filter :check_for_current_user!
@@ -25,7 +25,7 @@ class CreationController < ApplicationController
   end
 
   def new
-    @creation_form = create_form(params.merge(:parent_uuid => params[:illumina_b_plate_id]))
+    @creation_form = create_form(params.merge(:parent_uuid => params[:limber_plate_id]))
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
@@ -37,7 +37,7 @@ class CreationController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to(
-          illumina_b_plate_path(@creation_form.parent),
+          limber_plate_path(@creation_form.parent),
           :alert =>[  "Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages ]
         )
       end
@@ -58,7 +58,7 @@ class CreationController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to(
-          illumina_b_plate_path(@creation_form.parent),
+          limber_plate_path(@creation_form.parent),
           :alert => "Cannot create the plate: #{exception.message}"
         )
       end

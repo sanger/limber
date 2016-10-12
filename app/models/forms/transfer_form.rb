@@ -5,8 +5,8 @@ module Forms
   class TransferForm < CreationForm
     include Forms::Form::CustomPage
 
-    write_inheritable_attribute :page, 'robot'
-    write_inheritable_attribute :attributes, [:api, :user_uuid, :purpose_uuid, :parent_uuid, :transfer_template_uuid]
+    self.page =  'robot'
+    self.attributes =  [:api, :user_uuid, :purpose_uuid, :parent_uuid, :transfer_template_uuid]
 
     validates_presence_of *self.attributes
 

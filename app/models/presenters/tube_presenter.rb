@@ -12,23 +12,23 @@ module Presenters
     include Presenter
     include Statemachine::Shared
 
-    class_inheritable_reader :labware_class
-    write_inheritable_attribute :labware_class, :tube
+    class_attribute :labware_class
+    self.labware_class =  :tube
 
-    write_inheritable_attribute :attributes, [ :api, :labware ]
+    self.attributes =  [ :api, :labware ]
 
-    class_inheritable_reader    :additional_creation_partial
-    write_inheritable_attribute :additional_creation_partial, 'labware/tube/child_tube_creation'
+    class_attribute :additional_creation_partial
+    self.additional_creation_partial =  'labware/tube/child_tube_creation'
 
-    class_inheritable_reader    :tab_views
-    write_inheritable_attribute :tab_views, {
+    class_attribute :tab_views
+    self.tab_views =  {
       'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
       'labware-creation-button' => [ 'labware-summary', 'tube-creation' ],
       'labware-QC-button'       => [ 'labware-summary', 'tube-creation' ],
       'labware-state-button'    => [ 'labware-summary', 'tube-state' ]
     }
 
-    class_inheritable_reader    :tab_states
+    class_attribute    :tab_states
 
     LABEL_TEXT = 'ILB Stock'
 
@@ -72,7 +72,7 @@ module Presenters
     end
 
     def labware_form_details(view)
-      { :url => view.illumina_b_tube_path(self.labware), :as => :tube }
+      { :url => view.limber_tube_path(self.labware), :as => :tube }
     end
 
     class UnknownTubeType < StandardError

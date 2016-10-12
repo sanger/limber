@@ -5,9 +5,9 @@ module Presenters
   class PendingCreationPresenter < PlatePresenter
     include Presenters::Statemachine::PendingPlateCreation
 
-    write_inheritable_attribute :aliquot_partial, 'tagged_aliquot'
+    self.aliquot_partial =  'tagged_aliquot'
 
-    write_inheritable_attribute :authenticated_tab_states, {
+    self.authenticated_tab_states =  {
       :pending    => [ 'labware-creation-button', 'labware-summary-button', 'labware-state-button' ],
       :passed     => [ 'labware-state-button', 'labware-summary-button' ],
       :cancelled  => [ 'labware-summary-button' ],

@@ -14,7 +14,7 @@
   <%= content do %>
         <%= form_for(
           @creation_form,
-          :url  => illumina_b_plate_children_path(@creation_form.parent),
+          :url  => limber_plate_children_path(@creation_form.parent),
           :as   => :plate,
           :html => { :method => :post }) do |form|
         %>

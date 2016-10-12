@@ -4,8 +4,8 @@
 module Presenters
   class SimpleTubePresenter < TubePresenter
 
-    class_inheritable_reader    :authenticated_tab_states
-    write_inheritable_attribute :authenticated_tab_states, {
+    class_attribute    :authenticated_tab_states
+    self.authenticated_tab_states =  {
         :pending     => [ 'labware-summary-button', 'labware-state-button' ],
         :started     => [ 'labware-state-button', 'labware-summary-button' ],
         :passed      => [ 'labware-creation-button', 'labware-summary-button' ],

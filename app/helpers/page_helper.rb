@@ -14,7 +14,7 @@ module PageHelper
   def page(id, css_class=nil, &block)
     grouping(:page, :id => id, :class => css_class, &block)
   ensure
-    @_content_for[:header] = ''
+    content_for :header, ''
   end
 
   def header(presenter = nil, title = nil, options = {}, &block)

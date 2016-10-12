@@ -5,8 +5,8 @@ module Forms
   class TaggingForm < CreationForm
     include Forms::Form::CustomPage
 
-    write_inheritable_attribute :page, 'tagging'
-    write_inheritable_attribute :attributes, [
+    self.page =  'tagging'
+    self.attributes =  [
       :api, :purpose_uuid, :parent_uuid, :user_uuid,
       :tag_plate_barcode, :tag_plate,
       :tag2_tube_barcode, :tag2_tube

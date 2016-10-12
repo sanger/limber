@@ -5,11 +5,11 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
   include Presenters::Statemachine
   include Presenters::AlternativePooling
 
-  write_inheritable_attribute :summary_partial, 'labware/plates/pooled_into_tubes_plate'
-  write_inheritable_attribute :printing_partial, 'labware/plates/tube_printing'
-  write_inheritable_attribute :csv, 'show_pooled_alternative'
+  self.summary_partial =  'labware/plates/pooled_into_tubes_plate'
+  self.printing_partial =  'labware/plates/tube_printing'
+  self.csv =  'show_pooled_alternative'
 
-  write_inheritable_attribute :authenticated_tab_states, {
+  self.authenticated_tab_states =  {
     :pending    =>  [ 'labware-summary-button', 'labware-state-button' ],
     :started    =>  [ 'labware-state-button',   'labware-summary-button' ],
     :passed     =>  [ 'labware-summary-button', 'labware-state-button'],

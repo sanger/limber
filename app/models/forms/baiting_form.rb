@@ -5,9 +5,9 @@ module Forms
   class BaitingForm < CreationForm
     include Forms::Form::CustomPage
 
-    write_inheritable_attribute :page, "baiting"
-    class_inheritable_reader :aliquot_partial
-    write_inheritable_attribute :aliquot_partial, "plates/baited_aliquot"
+    self.page =  "baiting"
+    class_attribute :aliquot_partial
+    self.aliquot_partial =  "plates/baited_aliquot"
 
     def plate
       self.parent

@@ -5,13 +5,12 @@ module Forms
   class CustomPoolingForm < CreationForm
     include Forms::Form::CustomPage
 
-    write_inheritable_attribute :page, 'custom_pooling'
-    write_inheritable_attribute :aliquot_partial, "custom_pooled_aliquot"
+    self.page =  'custom_pooling'
+    self.aliquot_partial =  "custom_pooled_aliquot"
 
-    write_inheritable_attribute :default_transfer_template_uuid,
-      Settings.transfer_templates['Pool wells based on submission']
+    self.default_transfer_template_uuid = Settings.transfer_templates['Pool wells based on submission']
 
-    write_inheritable_attribute :attributes, [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers]
+    self.attributes =  [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers]
 
     class TransferHelper
       def initialize(transfers)
