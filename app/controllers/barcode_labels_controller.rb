@@ -2,7 +2,7 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2013,2014,2015 Genome Research Ltd.
 class BarcodeLabelsController < ApplicationController
-  before_filter :initialize_printer_and_barcode_service
+  before_action :initialize_printer_and_barcode_service
   def initialize_printer_and_barcode_service
     raise StandardError, "No printer specified!" if params[:printer].blank?
     raise StandardError, "No copies specified!" if params[:number].blank? || params[:number].to_i <= 0
@@ -36,7 +36,7 @@ class BarcodeLabelsController < ApplicationController
     end
   end
 
-  before_filter :convert_labels_to_array, :only => :multiple
+  before_action :convert_labels_to_array, :only => :multiple
   def convert_labels_to_array
     params[:labels] = params.fetch(:labels, []).map { |_, v| v }
   end

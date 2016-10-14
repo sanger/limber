@@ -1,25 +1,9 @@
-<div data-role="header">
-  <h1>Sequencescape - Illumina A and B Pipelines</h1>
-  <div data-role="navbar">
-    <ul>
-      <li><a href="<%= search_path %>" class="ui-btn-active" >Search</a></li>
-      <li><a href="#popupInbox" data-rel="popup" data-inline="true" data-transition="flip">Inboxes</a></li>
-      <!--<li><a href="#popupRobots" data-rel="popup" data-inline="true" data-transition="flip">Robots</a></li>-->
+<div class="row">
+  <nav class="navbar navbar-dark bg-inverse">
+    <h1 class="navbar-brand limber-logo m-b-0">Limber</h1>
+    <ul class="nav navbar-nav">
+
     </ul>
-  </div>
-</div>
-<div data-role="popup" id="popupInbox" data-theme="b">
-  <ul data-role="listview" data-inset="true" style="min-width:210px;">
-      <li data-role="divider" data-theme="b">Illumina A and B</li>
-      <li><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
-      <li><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
-  </ul>
-</div>
-<div data-role="popup" id="popupRobots" data-theme="b">
-  <ul data-role="listview" data-inset="true" style="min-width:210px;">
-      <li data-role="divider" data-theme="b">Robots</li>
-      <% each_robot do |robot_id,robot_name| %>
-        <li><a href="<%= robot_path(robot_id) %>" ><%= robot_name %></a></li>
-      <% end %>
-  </ul>
+    <span class='pull-xs-right'>Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span></span>
+  </nav>
 </div>

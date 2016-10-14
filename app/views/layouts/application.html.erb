@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
   <head>
-    <title>Sequencescape - Illumina A and B Pipelines</title>
+    <title>Limber</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <%= stylesheet_link_tag "jquery-mobile", "formtastic", "screen" %>
-    <% custom_theme do |theme| %>
-      <%= stylesheet_link_tag "#{theme}.min" %>
-    <% end %>
+    <%= stylesheet_link_tag "formtastic", "application" %>
     <%= stylesheet_link_tag "print", :media=>'print' %>
 
-    <%= javascript_include_tag 'jquery', 'underscore' %>
+    <%= javascript_include_tag 'underscore' %>
     <script type="text/javascript" charset="utf-8">
       $(document).on("mobileinit", function(){
         $.extend(  $.mobile , {
@@ -22,8 +20,8 @@
     <%= javascript_include_tag 'jquery.mobile', 'application' %>
     <%= csrf_meta_tag %>
   </head>
-  <body class='<%= environment %> <%= non_production_class %>'>
-    <%= yield %>
+  <body class='<%= environment %> <%= non_production_class %> <%= logged_in_class %>'>
+      <%= yield %>
   </body>
 </html>
 

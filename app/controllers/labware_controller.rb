@@ -2,9 +2,9 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
 class LabwareController < ApplicationController
-  before_filter :locate_labware, :only => [ :show, :update ]
-  before_filter :get_printers, :only   => [ :show, :update ]
-  before_filter :check_for_current_user!, :only => [ :update ]
+  before_action :locate_labware, :only => [ :show, :update ]
+  before_action :get_printers, :only   => [ :show, :update ]
+  before_action :check_for_current_user!, :only => [ :update ]
 
   def locate_labware
      @labware = locate_labware_identified_by(params[:id])

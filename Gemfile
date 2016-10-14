@@ -1,15 +1,24 @@
 source 'http://rubygems.org'
 
 gem 'formtastic'
-# Provides some css helpers
-# Deprecate!
-gem 'compass-rails'
+
 gem 'rails'
 gem 'sass-rails'
 gem 'uglifier'
+gem 'coffee-rails'
+
+# Provides some css helpers
+# Deprecate!
+gem 'compass-rails'
+gem 'bootstrap'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', :require => false
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+# We use the sortable component of jquery ui
+gem 'jquery-ui-rails'
 
 gem 'rake'
 gem 'state_machine', '~>1.0.1'

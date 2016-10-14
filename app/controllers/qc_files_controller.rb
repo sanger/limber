@@ -18,7 +18,7 @@ class QcFilesController < ApplicationController
 
   private
 
-  before_filter :find_assets
+  before_action :find_assets
 
   def find_assets
     ['limber', 'pulldown'].each do |app_name|

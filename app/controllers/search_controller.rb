@@ -5,9 +5,9 @@ class SearchController < ApplicationController
 
   class InputError < StandardError; end
 
-  before_filter :clear_current_user!, :except => [:qcables]
+  before_action :clear_current_user!, :except => [:qcables]
 
-  before_filter :check_for_login!, :only => [:create_or_find, :stock_plates ]
+  before_action :check_for_login!, :only => [:create_or_find, :stock_plates ]
 
   def new
     @search_results = []
@@ -35,8 +35,8 @@ class SearchController < ApplicationController
     render :stock_plates
   end
 
-  def my_plates(search = 'Find Illumina-B plates for user')
-    plate_search    = api.search.find(Settings.searches[search])
+  def my_plates
+    plate_search    = api.search.find(Settings.searches['Find plates for user'])
     states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
 
     @search_results = plate_search.all(
@@ -94,17 +94,9 @@ class SearchController < ApplicationController
   end
 
   def clear_current_user!
-    session[:user_uuid] = nil unless request.accepts.include?('application/json')
+    # session[:user_uuid] = nil unless request.accepts.include?('application/json')
   end
   private :clear_current_user!
-
-  def check_for_login!
-    set_user_by_swipecard!(params[:card_id]) if params[:card_id].present?
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    flash[:error] = exception.message
-    redirect_to :search
-  end
-  private :check_for_login!
 
   def find_plate(barcode)
     api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode)

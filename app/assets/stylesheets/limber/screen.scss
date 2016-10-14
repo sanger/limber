@@ -6,23 +6,23 @@
 @import "compass/css3/images";
 @import "colours";
 
+/* New stuff */
+.limber-logo { font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter; }
 
-$font-size: 14px;
-
-body {
-  background:  #E3EEFC;
-  font-family: 'Lucida Grande',helvetica,arial,sans-serif;
-  line-height: 1.5;
-  font-size:   100% * $font-size / 16px;
+.logged_in {
+  .logged_out_only { display: none; }
 }
 
-#flash {
-  text-align: center;
+.logged_out {
+  .logged_in_only { display: none; }
 }
 
 .plate-view-control {
   margin: 18px 0;
 }
+
+// Bootstrap 4 doesn't seem to do this automatically
+.content-secondary, .content-main { padding-top: 20px; }
 
 .plate-view {
   @include box-shadow(#000 0 2px 6px);

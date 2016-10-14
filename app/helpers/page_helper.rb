@@ -2,17 +2,28 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2012 Genome Research Ltd.
 module PageHelper
+  FLASH_STYLES = {
+    alert:   'danger',
+    danger:  'danger',
+    notice:  'success',
+    success: 'success',
+    warning: 'warning',
+    info:    'info'
+  }.freeze
+  FLASH_STYLES.default = 'info'
+  FLASH_STYLES.freeze
+
   def flash_messages
     render(:partial => 'labware/flash_messages') unless flash.empty?
   end
 
   def grouping(data_role, options = {}, &block)
-    content_tag(:div, options.merge('data-role' => data_role), &block)
+    content_tag(:div, options, &block)
   end
   private :grouping
 
   def page(id, css_class=nil, &block)
-    grouping(:page, :id => id, :class => css_class, &block)
+    grouping(:page, :id => id, :class => "container-fluid #{css_class}", &block)
   ensure
     content_for :header, ''
   end
@@ -26,13 +37,18 @@ module PageHelper
     end
   end
 
-  # If the user is logged in then use the nice blue theme...
-  def data_theme
-    current_user_uuid.present? ? 'b' : 'a'
+  # Main body of the page, provides information about what you HAVE
+  def content(&block)
+    grouping(:content, class: 'col-sm-8 content-main', &block)
   end
 
-  def content(&block)
-    grouping(:content, &block)
+  # Provides information about what you can DO
+  def sidebar(&block)
+    grouping(:sidebar, class: 'col-sm-4 sidebar content-secondary', &block)
+  end
+
+  def card(&block)
+    content_tag(:div, class: 'card', &block)
   end
 
   def footer(&block)
@@ -45,5 +61,15 @@ module PageHelper
     # add section to the section's CSS class attribute
     options[:class] = [ options[:class], 'section' ].compact.join(" ")
     content_tag(:div, options, &block)
+  end
+
+  def jumbotron(jumbotron_id=nil, options={}, &block)
+    options[:class] ||= ''
+    options[:class] << ' jumbotron'
+    options[:id] = jumbotron_id
+    section(options, &block)
+  end
+
+  def flash_style(level)
   end
 end

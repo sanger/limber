@@ -6,7 +6,7 @@ class CreationController < ApplicationController
   self.creation_message = 'Your new empty labware has been added to the system.'
 
 
-  before_filter :check_for_current_user!
+  before_action :check_for_current_user!
 
   def redirect_to_form_destination(form)
     redirect_to(

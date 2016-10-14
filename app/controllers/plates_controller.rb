@@ -10,7 +10,7 @@ class PlatesController < LabwareController
 
   include PlatesController::LabwareWrangler
 
-  before_filter :check_for_current_user!, :only => [ :update, :fail_wells ]
+  before_action :check_for_current_user!, :only => [ :update, :fail_wells ]
 
   def fail_wells
     wells_to_fail = params[:plate][:wells].select { |_,v| v == '1' }.map(&:first)

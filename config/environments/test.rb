@@ -40,7 +40,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-
   # Legacy options
   config.admin_email          = "nnnnnnnnnnnnnnnn"
   config.exception_recipients = "nnnnnnnnnnnnnnnn"

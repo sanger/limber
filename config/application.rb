@@ -1,7 +1,7 @@
 require_relative 'boot'
 
 
-require "rails"
+require 'rails'
 # Only load what we need:
 # http://guides.rubyonrails.org/initialization.html#railties-lib-rails-all-rb
 [
@@ -15,7 +15,7 @@ require "rails"
   'sprockets/railtie'
 ].each do |railtie|
   begin
-    require "#{railtie}"
+    require railtie.to_s
   rescue LoadError
   end
 end

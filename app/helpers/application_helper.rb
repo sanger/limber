@@ -10,7 +10,7 @@ module ApplicationHelper
     rescue LoadError
         module Deployed
           VERSION_ID = 'LOCAL'
-          VERSION_STRING = "Illumina Pipeline App LOCAL [#{ENV['RACK_ENV']}]"
+          VERSION_STRING = "Limber LOCAL [#{ENV['RACK_ENV']}]"
         end
     end
 
