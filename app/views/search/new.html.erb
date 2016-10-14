@@ -1,54 +1,27 @@
 <%= page(:'search-page') do %>
-  <%= render :partial => 'header' %>
-  <%= flash_messages %>
-  <div class="post row">
-    <%= content do %>
-
-      <%= jumbotron(:login, class: 'logged_out_only') do %>
-        <h1>Limber up and log in...</h1>
-        <p>Touch your swipecard to the reader to log yourself in... Don't worry. The corniness is a symptom of the prototype stage!</p>
-        <%= form_tag sessions_path, :class => 'plate-search-form', :'data-ajax' => 'false', :method => 'post' do %>
-          <fieldset class="form-group">
-            <%= label_tag :user_swipecard, 'User Swipecard', class: 'col-form-label-lg' %>
-            <%= password_field_tag :user_swipecard, params[:user_swipecard], :class => 'plate-barcode form-control form-control-lg', placeholder: 'Touch your card to the reader...' %>
-          </fieldset>
-        <% end %>
-      <% end %>
-
-      <%= jumbotron(:plate_search, class: 'logged_in_only') do %>
-        <h1>Hello, <span class="user_name_placeholder"><%= user_name %></span>...</h1>
-        <p>Have a plate? Just scan in the barcode below. You can even type in its DN number!</p>
-        <%= form_tag perform_search_path, :class => 'plate-search-form', :'data-ajax' => 'false', :method => 'post' do %>
-          <fieldset class="form-group">
-            <%= label_tag :asset, 'Plate or Tube Barcode', class: 'col-form-label-lg' %>
-            <%= text_field_tag :asset, params[:asset], :class => 'plate-barcode form-control form-control-lg', placeholder: 'e.g. 1220012345855 or DN12345' %>
-          </fieldset>
-        <% end %>
+  <%= content do %>
+    <%= jumbotron(:login, class: 'logged_out_only') do %>
+      <h1>Limber up and log in...</h1>
+      <p>Touch your swipecard to the reader to log yourself in... Don't worry. The corniness is a symptom of the prototype stage!</p>
+      <%= form_tag sessions_path, :class => 'plate-search-form', :'data-ajax' => 'false', :method => 'post' do %>
+        <fieldset class="form-group">
+          <%= label_tag :user_swipecard, 'User Swipecard', class: 'col-form-label-lg' %>
+          <%= password_field_tag :user_swipecard, params[:user_swipecard], :class => 'plate-barcode form-control form-control-lg', placeholder: 'Touch your card to the reader...' %>
+        </fieldset>
       <% end %>
     <% end %>
 
-    <%= sidebar do %>
-      <%= card do %>
-        <div class="card-block">
-          <h4 class="card-title">Inboxes</h4>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class='list-group-item'><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
-          <li class='list-group-item'><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
-          <li class='list-group-item'><a href="<%= my_plates_path %>" >All Ongoing Plates</a></li>
-        </ul>
-      <% end %>
-
-      <%= card do %>
-        <div class="card-block">
-          <h4 class="card-title">Robots</h4>
-        </div>
-        <ul class="list-group list-group-flush">
-          <% each_robot do |robot_id,robot_name| %>
-            <li class='list-group-item'><a href="<%= robot_path(robot_id) %>" ><%= robot_name %></a></li>
-          <% end %>
-        </ul>
+    <%= jumbotron(:plate_search, class: 'logged_in_only') do %>
+      <h1>Hello, <span class="user_name_placeholder"><%= user_name %></span>...</h1>
+      <p>Have a plate? Just scan in the barcode below. You can even type in its DN number!</p>
+      <%= form_tag perform_search_path, :class => 'plate-search-form', :'data-ajax' => 'false', :method => 'post' do %>
+        <fieldset class="form-group">
+          <%= label_tag :asset, 'Plate or Tube Barcode', class: 'col-form-label-lg' %>
+          <%= text_field_tag :asset, params[:asset], :class => 'plate-barcode form-control form-control-lg', placeholder: 'e.g. 1220012345855 or DN12345' %>
+        </fieldset>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
+
+  <%= render partial: 'sidebar' %>
 <% end %>

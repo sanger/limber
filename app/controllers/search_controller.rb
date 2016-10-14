@@ -5,9 +5,7 @@ class SearchController < ApplicationController
 
   class InputError < StandardError; end
 
-  before_action :clear_current_user!, :except => [:qcables]
-
-  before_action :check_for_login!, :only => [:create_or_find, :stock_plates ]
+  before_action :check_for_login!, :only => [:create_or_find, :stock_plates, :my_plates ]
 
   def new
     @search_results = []
@@ -36,8 +34,8 @@ class SearchController < ApplicationController
   end
 
   def my_plates
-    plate_search    = api.search.find(Settings.searches['Find plates for user'])
-    states = [ 'pending', 'started', 'passed', 'started_fx', 'started_mj', 'qc_complete', 'nx_in_progress']
+    plate_search = api.search.find(Settings.searches['Find plates for user'])
+    states = [ 'pending', 'started', 'passed','qc_complete']
 
     @search_results = plate_search.all(
       Limber::Plate,
@@ -93,10 +91,6 @@ class SearchController < ApplicationController
     end
   end
 
-  def clear_current_user!
-    # session[:user_uuid] = nil unless request.accepts.include?('application/json')
-  end
-  private :clear_current_user!
 
   def find_plate(barcode)
     api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode)

@@ -8,6 +8,10 @@ module SessionHelper
     current_user_uuid.present? ? 'logged_in' : 'logged_out'
   end
 
+  def logged_in?
+    session[:user_uuid].present?
+  end
+
   # Returns the name of the logged in user.
   # Returns guest if no one is logged in.
   def user_name
@@ -16,5 +20,13 @@ module SessionHelper
 
   def current_user_uuid
     session[:user_uuid]
+  end
+
+  def check_for_login!
+    redirect_back alert: 'Sorry, you need to be swiped in for that.', fallback_location: :search
+  end
+
+  def session_switcher
+    link_to 'Log Out', logout_sessions_path, class: 'btn btn-danger' if logged_in?
   end
 end

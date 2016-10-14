@@ -1,7 +1,4 @@
 <%= page(:'stock-plates') do %>
-
-  <%= render :partial => 'header' %>
-
   <%= render :partial => 'search_results', :locals => {:search_title => 'New Input Plates', :search_results => @search_results} %>
-
+  <%= render :partial => 'sidebar' %>
 <% end %>

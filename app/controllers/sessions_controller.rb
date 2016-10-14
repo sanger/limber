@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
 
   def destroy
     reset_session
+    cookies[:user_name] = nil
     redirect_to :search, notice: 'Logged out'
   end
 
@@ -19,6 +20,9 @@ class SessionsController < ApplicationController
     @current_user = user_for_swipecard(card_id)
     session[:user_uuid] = @current_user.uuid
     session[:user_name] = @current_user.name
+    # Unlike the session cookie, this cookie is accessible
+    # through javascript.
+    cookies[:user_name]  = @current_user.name
   end
 
   def user_for_swipecard(card_id)

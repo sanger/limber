@@ -2,19 +2,20 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2011,2012 Genome Research Ltd.
 module PageHelper
+
   FLASH_STYLES = {
-    alert:   'danger',
-    danger:  'danger',
-    notice:  'success',
-    success: 'success',
-    warning: 'warning',
-    info:    'info'
+    'alert'   => 'danger',
+    'danger'  => 'danger',
+    'notice'  => 'success',
+    'success' => 'success',
+    'warning' => 'warning',
+    'info'    => 'info'
   }.freeze
-  FLASH_STYLES.default = 'info'
-  FLASH_STYLES.freeze
+  DEFAULT_FLASH_STYLE = 'info'
+
 
   def flash_messages
-    render(:partial => 'labware/flash_messages') unless flash.empty?
+    render(:partial => 'labware/flash_messages')
   end
 
   def grouping(data_role, options = {}, &block)
@@ -22,8 +23,14 @@ module PageHelper
   end
   private :grouping
 
+  # Renders the content in the block in the
+  # standard page template, including heading flash and sidebar
   def page(id, css_class=nil, &block)
-    grouping(:page, :id => id, :class => "container-fluid #{css_class}", &block)
+    grouping(:page, :id => id, :class => "container-fluid #{css_class}") do
+      concat render :partial => 'header'
+      concat flash_messages
+      concat content_tag(:div, class: 'row', &block)
+    end
   ensure
     content_for :header, ''
   end
@@ -71,5 +78,6 @@ module PageHelper
   end
 
   def flash_style(level)
+    FLASH_STYLES[level]||DEFAULT_FLASH_STYLE
   end
 end

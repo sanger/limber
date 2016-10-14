@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get  '/ongoing_plates',   action: :ongoing_plates_illumina_a
     post '/qcables',          action: :qcables,                   as: :qcables_search
     get  '/retrieve_parent',  action: :retrieve_parent
-    post '/my_plates',        action: :my_plates
+    get '/my_plates',        action: :my_plates
   end
 
   resource :sessions, only: [:create, :delete] do

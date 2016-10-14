@@ -4,6 +4,8 @@
 
 class ApplicationController < ActionController::Base
   include Sequencescape::Api::Rails::ApplicationController
+  include SessionHelper
+
   delegate :api_connection_options, :to => 'Limber::Application.config'
 
   protect_from_forgery
