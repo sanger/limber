@@ -7,76 +7,27 @@ namespace :config do
   require "#{Rails.root}/config/robots.rb"
 
   PLATE_PURPOSES = [
-    'ILB_STD_INPUT',
-    'ILB_STD_COVARIS',
-    'ILB_STD_SH',
-    'ILB_STD_PCR',
-    'ILB_STD_PCRR',
-    'ILB_STD_PREPCR',
-    'ILB_STD_PCRXP',
-    'ILB_STD_PCRRXP',
-
-    'Cherrypicked',
-    'Shear',
-    'Post Shear',
-    'Post Shear XP',
-    'AL Libs',
-    'Lib PCR',
-    'Lib PCRR',
-    'Lib PCR-XP',
-    'Lib PCRR-XP',
-
-    'Lib Norm',
-    'Lib Norm 2',
-    'Lib Norm 2 Pool',
-
-    ## Pulldown
-    'ISCH lib pool',
-    'ISCH hyb',
-    'ISCH cap lib',
-    'ISCH cap lib PCR',
-    'ISCH cap lib PCR-XP',
-    'ISCH cap lib pool',
-
-    'PF Cherrypicked',
-    'PF Shear',
-    'PF Post Shear',
-    'PF Post Shear XP',
-    'PF Lib',
-    'PF Lib XP',
-    'PF Lib XP2',
-    'PF EM Pool',
-    'PF Lib Norm'
-
+    'Limber Cherrypicked',
+    'Limber Shear',
+    'Limber Post Shear',
+    'Limber AL Libs',
+    'Limber Lib PCR',
+    'Limber Lib PCR-XP',
+    'Limber Lib Pool',
+    'Limber Hyb',
+    'Limber Cap Lib',
+    'Limber Cap Lib PCR',
+    'Limber Cap Lib PCR-XP',
+    'Limber Cap Lib Pool',
   ]
 
   QC_PLATE_PURPOSES = [
-    'Post Shear QC',
-    'Lib PCR-XP QC',
-    'Lib PCRR-XP QC',
-    'Lib Norm QC',
-
-    'PF EM Pool QC'
+    'Limber QC'
   ]
 
   TUBE_PURPOSES = [
-    'ILB_STD_STOCK',
-    'ILB_STD_MX',
-
-    'Lib Pool',
-    'Lib Pool Pippin',
-    'Lib Pool Norm',
-    'Lib Pool Conc',
-    'Lib Pool SS',
-    'Lib Pool SS-XP',
-    'Lib Pool SS-XP-Norm',
-
-    'Standard MX',
-    'Cap Lib Pool Norm',
-
-    'PF MiSeq Stock',
-    'PF MiSeq QC',
-    'PF MiSeq QCR'
+    'Limber Stock Tube',
+    'Limber MX Tube'
   ]
 
   QC_TUBE_PURPOSES = [
@@ -141,146 +92,87 @@ namespace :config do
             :default_printer_type => :plate_a
           }
         end.tap do |presenters|
-          # Illumina-B plates
-          presenters['ILB_STD_INPUT'].merge!(
-            :presenter_class => 'Presenters::StockPlatePresenter'
-          )
-
-          presenters['ILB_STD_SH'].merge!(
-            :presenter_class     => 'Presenters::QcCompletablePresenter',
-            :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger'
-          )
-
-          presenters['ILB_STD_PREPCR'].merge!(
-            :presenter_class => 'Presenters::PrePcrPlatePresenter'
-          )
-
-          presenters['ILB_STD_PCR'].merge!(
-            :form_class      => 'Forms::TaggingForm',
-            :presenter_class => 'Presenters::PcrPresenter',
-            :tag_layout_templates => ["Illumina B vertical tagging","Illumina B tagging"]
-          )
-
-          presenters['ILB_STD_PCRR'].merge!(
-            :form_class           => 'Forms::TaggingForm',
-            :tag_layout_templates => ["Illumina B vertical tagging","Illumina B tagging"],
-            :presenter_class      => 'Presenters::PcrPresenter',
-            :default_printer_type => :plate_b
-          )
-
-          presenters['ILB_STD_PCRXP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpOldPresenter',
-            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
-            :default_printer_type => :plate_b
-          )
-
-          presenters['ILB_STD_PCRRXP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpOldPresenter',
-            :state_changer_class  => 'StateChangers::PlateToTubeStateChanger',
-            :default_printer_type => :plate_a
-          )
-
-          presenters['ILB_STD_STOCK'].merge!(
-            :form_class           => 'Forms::TubesForm',
-            :presenter_class      => 'Presenters::QCTubePresenter',
-            :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_type => :tube
-          )
-
-          presenters['ILB_STD_MX'].merge!(
-            :form_class           => 'Forms::TubesForm',
-            :presenter_class      => 'Presenters::FinalTubePresenter',
-            :state_changer_class  => 'StateChangers::DefaultStateChanger',
-            :default_printer_type => :tube
-          )
-
           # New Illumina-B plates
-          presenters['Cherrypicked'].merge!(
+          presenters['Limber Cherrypicked'].merge!(
             :presenter_class => 'Presenters::StockPlatePresenter'
           )
 
-          presenters['Shear'].merge!(
+          presenters['Limber Shear'].merge!(
             :presenter_class => 'Presenters::StandardPresenter'
           )
 
-          presenters['Post Shear'].merge!(
+          presenters['Limber Post Shear'].merge!(
             :presenter_class     => 'Presenters::PostShearPlatePresenter',
             :default_child  => 'Post Shear XP'
           )
 
-          presenters['Post Shear XP'].merge!(
+          presenters['Limber Post Shear XP'].merge!(
             :presenter_class         => 'Presenters::StandardPresenter'
           )
 
-          presenters['AL Libs'].merge!(
+          presenters['Limber AL Libs'].merge!(
             :presenter_class         => 'Presenters::AlLibsPlatePresenter'
           )
 
-          presenters['Lib PCR'].merge!(
+          presenters['Limber Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
             :tag_layout_templates => ["Illumina pipeline tagging","Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)"],
             :presenter_class => 'Presenters::PcrPresenter'
           )
 
-          presenters['Lib PCRR'].merge!(
+          presenters['Limber Lib PCRR'].merge!(
             :form_class           => 'Forms::TaggingForm',
             :presenter_class      => 'Presenters::PcrPresenter',
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib PCR-XP'].merge!(
+          presenters['Limber Lib PCR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_type => :plate_b
           )
 
 
-          presenters['Lib PCR-XP QC'].merge!(
-            :presenter_class         => 'Presenters::QcPlatePresenter',
-            :default_printer_type    => :plate_b
-          )
-
-
-          presenters['Lib PCRR-XP'].merge!(
+          presenters['Limber Lib PCRR-XP'].merge!(
             :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib PCRR-XP QC'].merge!(
+          presenters['Limber Lib PCRR-XP QC'].merge!(
             :presenter_class     => 'Presenters::QcPlatePresenter',
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib Pool'].merge!(
+          presenters['Limber Lib Pool'].merge!(
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_type => :tube
           )
 
-          presenters['Lib Pool Pippin'].merge!(
+          presenters['Limber Lib Pool Pippin'].merge!(
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_type => :tube
           )
 
-          presenters['Lib Pool Conc'].merge!(
+          presenters['Limber Lib Pool Conc'].merge!(
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_type => :tube
           )
 
-          presenters['Lib Pool SS'].merge!(
+          presenters['Limber Lib Pool SS'].merge!(
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::SimpleTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
             :default_printer_type => :tube
           )
 
-          presenters['Lib Pool SS-XP'].merge!(
+          presenters['Limber Lib Pool SS-XP'].merge!(
             :form_class           => 'Forms::IntermediateTubesForm',
             :presenter_class      => 'Presenters::QCTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
@@ -288,7 +180,7 @@ namespace :config do
             :default_printer_type => :tube
           )
 
-          presenters['Lib Pool Norm'].merge!(
+          presenters['Limber Lib Pool Norm'].merge!(
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
@@ -296,7 +188,7 @@ namespace :config do
             :from_purpose         => 'Lib Pool'
           )
 
-          presenters['Lib Pool SS-XP-Norm'].merge!(
+          presenters['Limber Lib Pool SS-XP-Norm'].merge!(
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
@@ -304,28 +196,28 @@ namespace :config do
             :from_purpose         => 'Lib Pool Pippin'
           )
 
-          presenters['Lib Norm'].merge!(
+          presenters['Limber Lib Norm'].merge!(
             :presenter_class => 'Presenters::QcCompletablePresenter',
             :state_changer_class => 'StateChangers::QcCompletablePlateStateChanger',
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib Norm QC'].merge!(
+          presenters['Limber Lib Norm QC'].merge!(
             :presenter_class     => 'Presenters::QcPlatePresenter',
             :default_printer_type => :plate_b
           )
 
-          presenters['Lib Norm 2'].merge!({
+          presenters['Limber Lib Norm 2'].merge!({
             :default_printer_type => :plate_b
           })
 
-          presenters['Lib Norm 2 Pool'].merge!(
+          presenters['Limber Lib Norm 2 Pool'].merge!(
             :presenter_class     => 'Presenters::EndPlatePresenter',
             :form_class           => 'Forms::PoolingRowToColumn',
             :default_printer_type => :plate_b
           )
 
-          presenters['Standard MX'].merge!(
+          presenters['Limber Standard MX'].merge!(
             :form_class           => 'Forms::TubesForm',
             :presenter_class      => 'Presenters::FinalTubePresenter',
             :state_changer_class  => 'StateChangers::DefaultStateChanger',
@@ -333,96 +225,43 @@ namespace :config do
           )
 
           # ISCH plates
-          presenters["ISCH lib pool"].merge!(
+          presenters["Limber lib pool"].merge!(
             :form_class => "Forms::MultiPlatePoolingForm",
             :presenter_class => "Presenters::MultiPlatePooledPresenter",
             :default_printer_type => :plate_b
           )
 
-          presenters["ISCH hyb"].merge!(
+          presenters["Limber hyb"].merge!(
             :form_class => "Forms::BaitingForm",
             :presenter_class => 'Presenters::FullFailablePresenter',
             :robot=>'nx8-pre-hyb-pool',
             :default_printer_type => :plate_b
           )
 
-          presenters['ISCH cap lib'].merge!(
+          presenters['Limber cap lib'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
             :robot=>'bravo-cap-wash',
             :default_printer_type => :plate_b
           )
 
-          presenters['ISCH cap lib PCR'].merge!(
+          presenters['Limber cap lib PCR'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
             :robot=>'bravo-post-cap-pcr-setup',
             :default_printer_type => :plate_b
           )
 
-          presenters['ISCH cap lib PCR-XP'].merge!(
+          presenters['Limber cap lib PCR-XP'].merge!(
             :presenter_class => 'Presenters::FailablePresenter',
             :robot=>'bravo-post-cap-pcr-cleanup',
             :default_printer_type => :plate_b
           )
 
-          presenters["ISCH cap lib pool"].merge!(
+          presenters["Limber cap lib pool"].merge!(
             :form_class => "Forms::AutoPoolingForm",
             :presenter_class => "Presenters::FinalPooledPresenter",
             :state_changer_class => 'StateChangers::AutoPoolingStateChanger',
             :default_printer_type => :plate_b
           )
-
-          presenters['PF Cherrypicked'].merge!({
-            :presenter_class => 'Presenters::StockPlatePresenter'
-          })
-
-          presenters['PF Shear'].merge!({})
-          presenters['PF Post Shear'].merge!({})
-          presenters['PF Post Shear XP'].merge!({
-
-          })
-          presenters['PF Lib'].merge!({
-            :form_class      => 'Forms::TaggingForm',
-            :tag_layout_templates => ["NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)"],
-            :presenter_class => 'Presenters::PendingCreationPresenter'
-          })
-          presenters['PF Lib XP'].merge!({
-
-          })
-          presenters['PF Lib XP2'].merge!({
-            :presenter_class      => 'Presenters::QcCompletablePresenter',
-            :state_changer_class  => 'StateChangers::QcCompletablePlateStateChanger',
-            :default_printer_type => :plate_b
-          })
-
-          presenters['PF MiSeq Stock'].merge!({
-            :form_class           => 'Forms::PooledTubesForm',
-            :presenter_class      => 'Presenters::PendingCreationTubePresenter',
-            :default_printer_type => :tube
-          })
-          presenters['PF MiSeq QC'].merge!({
-            :form_class           => 'Forms::IntermediateTubesForm',
-            :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
-            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger',
-            :default_printer_type => :tube
-          })
-          presenters['PF MiSeq QCR'].merge!({
-            :form_class           => 'Forms::IntermediateTubesForm',
-            :presenter_class      => 'Presenters::MiSeqQCTubePresenter',
-            :state_changer_class  => 'StateChangers::MiSeqQcTubeStateChanger'
-          })
-          presenters['PF EM Pool'].merge!({
-            :presenter_class => 'Presenters::QcCompletablePresenter',
-            :form_class           => 'Forms::PoolingRowToColumn',
-            :default_printer_type => :plate_b
-          })
-          presenters['PF Lib Norm'].merge!({
-            :default_printer_type => :plate_b
-          })
-
-          presenters['PF EM Pool QC'].merge!({
-            :presenter_class         => 'Presenters::QcPlatePresenter',
-            :default_printer_type => :plate_b
-          })
 
         end
 

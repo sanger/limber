@@ -32,8 +32,8 @@ class PlatesController < LabwareController
 
   def presenter_for(labware)
     Presenters::PlatePresenter.lookup_for(labware).new(
-      :api     => api,
-      :labware => labware
+      api:     api,
+      labware: labware
     )
   end
 

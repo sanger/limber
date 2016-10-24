@@ -9,4 +9,12 @@ class ApplicationController < ActionController::Base
   delegate :api_connection_options, :to => 'Limber::Application.config'
 
   protect_from_forgery
+
+  def check_for_current_user!
+    redirect_to(
+      search_path,
+      alert: 'You must be logged in to do that. Performing actions in multiple tabs can log you out.'
+    ) unless current_user_uuid.present?
+  end
+
 end

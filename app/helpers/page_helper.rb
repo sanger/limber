@@ -13,6 +13,14 @@ module PageHelper
   }.freeze
   DEFAULT_FLASH_STYLE = 'info'
 
+  STATE_STYLES = {
+    'pending'     => 'default',
+    'started'     => 'info',
+    'passed'      => 'success',
+    'qc_complete' => 'primary',
+    'cancelled'   => 'danger'
+  }.freeze
+  DEFAULT_STATE_STYLE = 'default'
 
   def flash_messages
     render(:partial => 'labware/flash_messages')
@@ -46,16 +54,23 @@ module PageHelper
 
   # Main body of the page, provides information about what you HAVE
   def content(&block)
-    grouping(:content, class: 'col-sm-8 content-main', &block)
+    grouping(:content, class: 'col-sm-12 col-md-8 col-lg-7 col-xl-6 content-main', &block)
   end
 
   # Provides information about what you can DO
   def sidebar(&block)
-    grouping(:sidebar, class: 'col-sm-4 sidebar content-secondary', &block)
+    grouping(:sidebar, class: 'col-sm-12 col-md-4 col-lg-5 col-xl-6 sidebar content-secondary', &block)
   end
 
-  def card(&block)
-    content_tag(:div, class: 'card', &block)
+  def card(title: nil, without_block: false, &block)
+    content_tag(:div, class: 'card') do
+      concat content_tag(:h3, title, class: 'card-header') if title
+      if without_block
+        yield
+      else
+        concat content_tag(:div, class: 'card-block',&block)
+      end
+    end
   end
 
   def footer(&block)
@@ -79,5 +94,9 @@ module PageHelper
 
   def flash_style(level)
     FLASH_STYLES[level]||DEFAULT_FLASH_STYLE
+  end
+
+  def state_style(state)
+    STATE_STYLES[state]||DEFAULT_STATE_STYLE
   end
 end

@@ -5,7 +5,7 @@ class SearchController < ApplicationController
 
   class InputError < StandardError; end
 
-  before_action :check_for_login!, :only => [:create_or_find, :stock_plates, :my_plates ]
+  before_action :check_for_login!, :only => [:my_plates ]
 
   def new
     @search_results = []
@@ -70,9 +70,11 @@ class SearchController < ApplicationController
     render :json => {'error' => exception.message }
   end
 
-  def create_or_find
-    params['show-my-plates'] == 'true' ? my_plates : create
-
+  def create
+    raise "You have not supplied a labware barcode" if params[:plate_barcode].blank?
+    respond_to do |format|
+      format.html { redirect_to find_plate(params[:plate_barcode]) }
+    end
   rescue => exception
     @search_results = []
     flash[:error]   = exception.message
@@ -83,17 +85,14 @@ class SearchController < ApplicationController
     end
   end
 
-  def create
-    raise "You have not supplied a labware barcode" if params[:plate_barcode].blank?
-
-    respond_to do |format|
-      format.html { redirect_to find_plate(params[:plate_barcode]) }
-    end
-  end
-
-
   def find_plate(barcode)
-    api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => barcode)
+    machine_barcode =
+      if SangerBarcodeable::HumanBarcodeFormat.match(barcode)
+        SangerBarcodeable::SangerBarcode.from_human(barcode).machine_barcode
+      else
+        barcode
+      end
+    api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => machine_barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
     raise exception, 'Sorry, could not find labware with the specified barcode.'
   end

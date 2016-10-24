@@ -1,0 +1,23 @@
+<%= sidebar do %>
+  <%= card do %>
+    <div class="card-block">
+      <h4 class="card-title">Inboxes</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class='list-group-item'><a href="<%= all_stock_plates_path %>" >New Input Plates</a></li>
+      <li class='list-group-item'><a href="<%= ongoing_plates_path %>" >All Ongoing Plates</a></li>
+      <li class='list-group-item'><a href="<%= my_plates_path %>" >My Plates</a></li>
+    </ul>
+  <% end %>
+
+  <%= card do %>
+    <div class="card-block">
+      <h4 class="card-title">Robots</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+      <% each_robot do |robot_id,robot_name| %>
+        <li class='list-group-item'><a href="<%= robot_path(robot_id) %>" ><%= robot_name %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

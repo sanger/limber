@@ -23,6 +23,7 @@ module SessionHelper
   end
 
   def check_for_login!
+    return true if session[:user_uuid]
     redirect_back alert: 'Sorry, you need to be swiped in for that.', fallback_location: :search
   end
 

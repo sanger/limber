@@ -34,13 +34,9 @@ module Presenters
     }
 
     state_machine :state, :initial => :pending do
-      event :start do
-        transition :pending => :started
-      end
 
       event :take_default_path do
-        transition :pending => :started
-        transition :started => :passed
+        transition :pending => :passed
       end
 
       event :pass do

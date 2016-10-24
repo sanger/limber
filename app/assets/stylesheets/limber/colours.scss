@@ -1,18 +1,8 @@
 @import "compass/css3/images";
 
 @mixin shade-aliquot($base_colour) {
-  $dark_colour:  darken($base_colour, 60);
-  // @include radial-gradient(color-stops($base_colour,$dark_colour), top left); 
-  @include background(radial-gradient(top left,$base_colour,$dark_colour));
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 -1px 1px darken($base_colour,50);
-  -moz-transition:    all 0.3s ease-in-out 0s;
-  -webkit-transition: all 0.3s ease-in-out 0s;
-  transition:         all 0.3s ease-in-out 0s;
+  background-color: $base_colour;
 }
-
-
 /*
  * Pinched from the crayola wiki page: http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors
  * Honestly, couldn't come up with a better set of colours and ones with greater names.  All credit

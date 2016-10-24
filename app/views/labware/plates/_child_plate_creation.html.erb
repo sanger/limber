@@ -3,10 +3,7 @@
   <%= hidden_field_tag :purpose_uuid, purpose.uuid %>
   <%= submit_tag "Add an empty #{purpose.name} plate",
     :name           => nil,
-    :class          => "submit create-plate-button",
-    :'data-icon'    => "arrow-r",
-    :'data-iconpos' => "right",
-    :'data-theme'   => "b"
+    :class          => "submit create-plate-button btn btn-success btn-lg btn-block"
   %>
 <% end %>
 

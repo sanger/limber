@@ -1,0 +1,109 @@
+.plate-view {
+  background-color: $gray;
+  padding: 10px;
+  border-collapse: separate;
+  @include border-radius(15px);
+  @include border-top-left-radius(0);
+
+  th {
+    padding: 0;
+    vertical-align: middle;
+    text-align:     center;
+    padding:0;
+    color: $gray-lightest;
+  }
+
+  th.first-col {
+    width: 15px;
+  }
+
+  .well {
+    height:36px;
+    width:36px;
+    text-align: center;
+    overflow: hidden;
+    background: $gray-lighter;
+
+    .aliquot {
+      width:32px;
+      height:32px;
+      margin-top: 2px;
+      text-align: center;
+      color:#fff;
+      display: inline-block;
+      border: 2px $gray-dark solid;
+      @include border-radius(7px);
+    }
+
+    .aliquot:hover {
+      color: #FFD600;
+      cursor: pointer;
+      @extend .selected-aliquot;
+    }
+
+  }
+}
+
+// $brand-primary:             #0275d8;
+// $brand-success:             #5cb85c;
+// $brand-info:                #5bc0de;
+// $brand-warning:             #f0ad4e;
+// $brand-danger:              #d9534f;
+// $brand-inverse:             $gray-dark;
+// $gray-dark:                 #373a3c;
+// $gray:                      #55595c;
+// $gray-light:                #818a91;
+// $gray-lighter:              #eceeef;
+// $gray-lightest:             #f7f7f9;
+
+
+@mixin labware-view {
+  .green             { background-color: $brand-success; }
+  .red               { background-color: $brand-danger; }
+  .blue              { background-color: $brand-info; }
+  .orange            { background-color: $brand-warning; }
+  .unknown           { background-color: $gray; }
+  .pending           {
+    background:none;
+    border: 2px dotted gray;
+    position: relative;
+  }
+  .started           { background-color: $brand-info;    }
+  .passed            { background-color: $brand-success; }
+  .qc_complete       { background-color: $brand-primary; }
+  .good              { background-color: $brand-success; } // Used on well failure page
+  .failed            { background-color: $brand-danger;  }
+  .cancelled         { background-color: $brand-danger;  }
+  .permanent-failure { background-color: $brand-danger;  }
+}
+
+.tube-view {
+  height:27px;
+  width:27px;
+  padding: 3px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px ridge rgba(5,19,40,0.1);
+  background: $gray-lighter;
+  @include border-radius(7px);
+}
+.substitute-tag {
+  @extend .aliquot;
+  @extend .colour-97;
+}
+
+.available-tag {
+  @extend .aliquot;
+  @extend .colour-96;
+}
+
+.selected-aliquot {
+  border: 2px $gray-lightest solid;
+  position: relative;
+}
+
+
+.plate-view, .tube-view {
+  @include labware-view
+}
+

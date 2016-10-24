@@ -1,57 +1,60 @@
-
-<table id="<%= (id ||= "plate") %>" class="plate-view">
-  <thead>
-    <tr>
-      <th class="first-col">&nbsp;</th>
-      <% (1..12).each do |column_number| %>
+<div class="card-block bg-inverse">
+  <table id="<%= (id ||= "plate") %>" class="plate-view m-x-auto">
+    <thead>
+      <tr>
+        <th class="first-col">&nbsp;</th>
+        <% (1..12).each do |column_number| %>
         <th><%= column_number %></th>
-      <% end %>
-    </tr>
-  </thead>
+        <% end %>
+      </tr>
+    </thead>
 
-  <tbody>
-    <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
+    <tbody>
+      <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
-          <td class="col-all <%= column(well) %>">
-            <% location = "#{row_label}#{index + 1}" %>
-            <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
-            <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
-              <% if well.try(:aliquots).present? -%>
-                <%= render :partial => plate_presenter.aliquot_partial, :locals => { :presenter => plate_presenter, :labware => plate_presenter.labware, :id => well.location, :container => well } %>
-              <% end -%>
-            </div>
-          </td>
+        <td class="col-all <%= column(well) %>">
+          <% location = "#{row_label}#{index + 1}" %>
+          <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
+          <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
+            <% if well.try(:aliquots).present? -%>
+            <%= render :partial => plate_presenter.aliquot_partial, :locals => { :presenter => plate_presenter, :labware => plate_presenter.labware, :id => well.location, :container => well } %>
+            <% end -%>
+          </div>
+        </td>
         <% end %>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<div><br/><br/></div>
-<ul id="pools-information" class="information" style="display:none;" data-role="listview" data-inset="true">
-  <% plate_presenter.labware.pools.each do |pool_id, pool| -%>
-    <li data-role="list-divider" data-pool="<%= pool_id %>"><span class="well-list"><%= pool['wells'].join(', ') %></span></li>
-  <li data-pool="<%= pool_id %>">
-      <h3>Insert Size:</h3>
-    <span class="insert-size <%= insert_size_class(pool) %>">
-      From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
-    </span>
-    <br/>
-    <h3>Library Type name:</h3><%= pool['library_type']['name'] %>
-  </li>
+<div id="plate-view-control" class="card-header">
+  <ul class="nav nav-tabs card-header-tabs pull-xs-left" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" href="#summary_tab" data-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#pooling_tab" data-toggle="tab" role="tab" data-plate-view="pools-view">Pooling</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#samples_tab" data-toggle="tab" role="tab" data-plate-view="samples-view">Samples</a>
+    </li>
+  </ul>
+</div>
 
-  <% end -%>
-</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id='summary_tab' role="tabpanel">
+    <%= render partial: 'plate_information', locals: { plate: plate_presenter.labware   } %>
+  </div>
+  <div class="tab-pane"        id='pooling_tab' role="tabpanel">
+    <%= render partial: 'pooling_tab',       locals: { plate_presenter: plate_presenter } %>
+  </div>
+  <div class="tab-pane"        id='samples_tab' role="tabpanel">
+    <%= render partial: 'samples_tab',       locals: { plate_presenter: plate_presenter } %>
+  </div>
+</div>
 
-<ul id="samples-information" class="information" data-role="listview" data-inset="true" style="display:none;">
-  <li data-role="list-divider" >Plate Samples</li>
-  <% plate_presenter.labware.wells.each do |well| -%>
-    <li data-theme="e">Well: <%= well.location %></li>
-    <% well.aliquots.each do |aliquot| -%>
-      <li><%= aliquot.sample.sanger.name %></li>
-    <% end -%>
-  <% end -%>
-</ul>
+
 

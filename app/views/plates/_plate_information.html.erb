@@ -1,13 +1,13 @@
-<ul id="summary-information" class="information" style="display:none;">
-  <li><span class="label">Barcode</span>             <span class="barcode"><%= useful_barcode(plate.barcode) %></span></li>
-  <li><span class="label">Number of wells</span>     <span class="full"><%= plate.wells.select { |w| not w.aliquots.empty? }.size %></span> / <span class="total"><%= plate.size %></span></li>
-  <li><span class="label">Plate type</span>          <%= plate.plate_purpose.name %></li>
-  <li><span class="label">Current plate state</span> <%= plate.state %></li>
+<ul id="summary-information" class="list-group">
+  <div class="list-group-item"><dt class='col-xs-6'>Barcode</dt><dd>            <span class="barcode"><%= useful_barcode(plate.barcode) %></span></dd></div>
+  <div class="list-group-item"><dt class='col-xs-6'>Number of wells</dt><dd>    <span class="full"><%= plate.wells.select { |w| not w.aliquots.empty? }.size %></span>/ <span class="total"><%= plate.size %></span></dd></div>
+  <div class="list-group-item"><dt class='col-xs-6'>Plate type</dt><dd>         <%= plate.plate_purpose.name %></dd></div>
+  <div class="list-group-item"><dt class='col-xs-6'>Current plate state</dt><dd><%= plate.state %></dd></div>
 <% if plate.iteration.present? %>
-  <li><span class="label">Iteration</span>           <%= plate.iteration %></li>
+  <div class="list-group-item"><dt class='col-xs-6'>Iteration</dt><dd>          <%= plate.iteration %></dd></div>
 <% end %>
 <% if plate.stock_plate.present? %>
-  <li><span class="label">Input plate barcode</span> <span class="barcode"><%= useful_barcode(plate.stock_plate.barcode) %></span></li>
+  <div class="list-group-item"><dt class='col-xs-6'>Input plate barcode</dt><dd><span class="barcode"><%= useful_barcode(plate.stock_plate.barcode) %></span></dd></div>
 <% end %>
-  <li><span class="label">Created on</span>          <%= plate.created_at.to_formatted_s(:date_created) %>
+  <div class="list-group-item"><dt class='col-xs-6'>Created on</dt><dd>         <%= plate.created_at.to_formatted_s(:date_created) %></dd></div>
 </ul>

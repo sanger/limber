@@ -1,0 +1,17 @@
+<ul id="pools-information" data-role="listview" data-inset="true">
+  <% plate_presenter.labware.pools.each do |pool_id, pool| -%>
+    <li data-role="list-divider" data-pool="<%= pool_id %>">
+      <span class="well-list"><%= pool['wells'].join(', ') %></span>
+    </li>
+    <li data-pool="<%= pool_id %>">
+      <dl>
+      <dd>Insert Size</dd>
+      <dt class="insert-size <%= insert_size_class(pool) %>">
+        From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
+      </dt>
+      <dd>Library Type name</dd>
+      <dt><%= pool['library_type']['name'] %></dt>
+      </dl>
+    </li>
+  <% end -%>
+</ul>

@@ -1,23 +1,22 @@
-<ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true">
+<ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true" class="list-group">
   <% plates_by_state(plates).each do |state, sorted_plates| -%>
-    <li data-role="list-divider"><%= state.titleize %></li>
+    <li data-role="list-divider" class="list-group-item list-group-item-<%= state_style(state) %>"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
-      <li>
-      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "plate-link ui-link-inherit #{plate.role}") do %>
+      <li class="list-group-item list-group-item-action">
+      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "#{plate.role} list-group-item-action") do %>
         <% if plate.priority > 0 %>
-           <img src='/images/icon_<%= plate.priority %>_flag.png' class='ui-li-icon'/>
+           <%= image_tag("icon_#{plate.priority}_flag.png", size: "64x64", class: 'pull-sm-right') %>
         <% end %>
-        <h2 class="ui-li-heading barcode"><%= useful_barcode(plate.barcode) %></h2>
-        <p class="ui-li-aside ui-li-desc"><strong><%= plate.state.titleize %></strong></p>
-        <% if plate.stock_plate.present? %><p><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
-        <p>
-          <% if plate.iteration.present? %>Iteration: <%= plate.iteration %><% end %>
-          <span class="field-description">Created:</span> <%= plate.created_at.to_formatted_s(:date_created) %>
-          <span class="field-description">Type:</span> <%= plate.plate_purpose.name %>
-          <span class="field-description">Library Type:</span> <%= plate.library_type_name %>
-          <span class="field-description">Number of Pools:</span> <%= plate.number_of_pools %>
-          <span class="field-description"> Shearing Size:</span> <%= plate.shearing_size %>
-        </p>
+        <h3 class="barcode list-group-item-heading"><%= useful_barcode(plate.barcode) %> <span class="tag tag-<%= state_style(plate.state) %>"><%= plate.state.titleize %></span></h3>
+        <% if plate.stock_plate.present? %><p class="list-group-item-text"><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
+        <dl class="list-inline">
+          <% if plate.iteration.present? %><dt>Iteration</dt><dd class="list-inline-item"><%= plate.iteration %></dd><% end %>
+          <dt class="list-inline-item">Created</dt><dd class="list-inline-item"><%= plate.created_at.to_formatted_s(:date_created) %></dd>
+          <dt class="list-inline-item">Type</dt><dd class="list-inline-item"><%= plate.plate_purpose.name %></dd>
+          <dt class="list-inline-item">Library Type</dt><dd class="list-inline-item"><%= plate.library_type_name %></dd>
+          <dt class="list-inline-item">Number of Pools</dt><dd class="list-inline-item"><%= plate.number_of_pools %></dd>
+          <dt class="list-inline-item"> Shearing Size</dt><dd class="list-inline-item"><%= plate.shearing_size %></dd>
+        </dl>
       <% end -%>
       </li>
     <% end -%>

@@ -1,0 +1,9 @@
+<dl id="samples-information" class="row p-a-1"><!-- Padding all 1 (bootstrap) -->
+  <% plate_presenter.labware.wells.each do |well| -%>
+    <dt class="col-sm-1"><%= well.location %></dt>
+    <dd class="col-sm-11"><ul class="list-inline">
+    <% well.aliquots.each do |aliquot| -%>
+      <li class="list-inline-item"><%= aliquot.sample.sanger.name %></li>
+    <% end -%></ul></dd>
+  <% end -%>
+</dl>

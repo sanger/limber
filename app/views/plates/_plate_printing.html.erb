@@ -1,5 +1,4 @@
-<%= section do %>
-  <h2>Print plate label</h2>
+<%= card title: 'Print plate label' do %>
   <%= individual_barcode_printing_form(
         @presenter.labware.barcode,
         :redirection_url    => limber_plate_path(@presenter.labware),

@@ -4,7 +4,7 @@
 Rails.application.routes.draw do
   scope 'search', :controller => :search do
     get  '/',                 action: :new,                       as: :search
-    post '/',                 action: :create_or_find,            as: :perform_search
+    post '/',                 action: :create,            as: :perform_search
     get  '/all_stock_plates', action: :stock_plates_illumina_a
     get  '/ongoing_plates',   action: :ongoing_plates_illumina_a
     post '/qcables',          action: :qcables,                   as: :qcables_search

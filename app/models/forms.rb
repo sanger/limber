@@ -36,6 +36,7 @@ module Forms
       end
     end
 
+    # We should probablu use active model mosel, but need to clean up some forms
     def initialize(attributes = {})
       self.attributes.each do |attribute|
         send("#{attribute}=", attributes[attribute])

@@ -33,10 +33,4 @@ class SessionsController < ApplicationController
     raise exception, 'Sorry, that swipecard could not be found. Please try again or contact your administrator.'
   end
 
-  def check_for_current_user!
-    redirect_to(
-      search_path,
-      alert: 'You must be logged in to do that. Performing actions in multiple tabs can log you out.'
-    ) unless current_user_uuid.present?
-  end
 end

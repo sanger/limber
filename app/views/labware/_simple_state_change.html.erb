@@ -1,0 +1,18 @@
+<%# TODO This form code breaks the semantic presenter model pattern.
+    The form should use attriutes on the presenter class not the labware directly.
+%>
+
+<% presenter.default_state_change do |transition| %>
+  <%= form_for(
+        presenter.labware,
+        presenter.labware_form_details(self).merge(
+          :html => { :method => :put },
+          :as => :plate)
+      ) do |f|%>
+    <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
+    <%= hidden_field_tag :labware_ean13_barcode, presenter.labware.barcode.ean13 %>
+    <%= hidden_field_tag :state, transition.to %>
+    <%= hidden_field_tag :reason, 'Manual transfer' %>
+    <%= f.submit t(transition.to,scope:[:state_machine,:transitions]), class: 'btn btn-lg btn-block btn-warning' %>
+    <% end %>
+<% end %>

@@ -3,10 +3,17 @@
 #Copyright (C) 2011,2012,2015 Genome Research Ltd.
 module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
+
     def control_child_plate_creation(&block)
       # Does nothing because you can't!
     end
-    alias_method(:control_additional_creation, :control_child_plate_creation)
+    def control_additional_creation(&block)
+      # Does nothing because you can't!
+    end
+
+    def suggested_purposes
+    end
+
   end
 
   module StateAllowsChildCreation
@@ -16,8 +23,11 @@ module Presenters::Statemachine
       yield unless default_child_purpose.nil?
       nil
     end
-    alias_method(:control_additional_creation, :control_child_plate_creation)
 
+    def control_additional_creation(&block)
+      yield unless default_child_purpose.nil?
+      nil
+    end
     # Returns the child plate purposes that can be created in the passed state.  Typically
     # this is only one, but it specifically excludes QC plates.
     def default_child_purpose
@@ -26,7 +36,19 @@ module Presenters::Statemachine
 
     def valid_purposes
       yield default_child_purpose unless default_child_purpose.nil?
-      nil
+       nil
+    end
+
+    def suggested_purposes
+      labware.plate_purpose.children.each do |purpose|
+        yield purpose
+      end
+    end
+
+    def compatible_purposes
+      Settings.purposes.each do |uuid,hash|
+        yield uuid, hash['name']
+      end
     end
   end
 
@@ -40,14 +62,13 @@ module Presenters::Statemachine
       # Ignore this!
     end
 
+    def default_transition
+      state_transitions.detect {|t| t.event == :take_default_path }
+    end
+
     # Yields to the block if there is the possibility of controlling the state change, passing
     # the valid next states, along with the current one too.
     def control_state_change(&block)
-      # Look for a default transition
-      default_transition = state_transitions.detect {|t| t.event == :take_default_path }
-
-      return nil if robot_exists?
-
       if default_transition.present?
         # This ugly thing should yield the default transition first followed by
         # any other transitions to states that aren't the default...
@@ -57,8 +78,10 @@ module Presenters::Statemachine
         # present then yield those.
         yield(state_transitions)
       end
+    end
 
-      nil
+    def default_state_change(&block)
+      yield default_transition unless default_transition.nil?
     end
 
     # Does nothing
@@ -69,9 +92,9 @@ module Presenters::Statemachine
       self.class.state_machines[:state].states.map(&:value)
     end
 
-    # The current state of the plate is delegated to the plate
-    delegate :state, :to => :labware
-
+    def state
+      labware.try(:state)
+    end
   end
 
   # State transitions are common across all of the statemachines.
@@ -80,14 +103,10 @@ module Presenters::Statemachine
       base.instance_eval do
 
         event :take_default_path do
-          transition :pending => :started
-          transition :started => :passed
+          transition :pending => :passed
         end
 
-        event :start do
-          transition :pending => :started
-        end
-        event :pass do
+        event :transfer do
           transition [ :pending, :started ] => :passed
         end
 
@@ -116,7 +135,7 @@ module Presenters::Statemachine
         end
 
         state :passed do
-          include StateAllowsChildCreation
+         include StateAllowsChildCreation
         end
 
         state :cancelled do

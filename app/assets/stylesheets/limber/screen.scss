@@ -24,71 +24,7 @@
 // Bootstrap 4 doesn't seem to do this automatically
 .content-secondary, .content-main { padding-top: 20px; }
 
-.plate-view {
-  @include box-shadow(#000 0 2px 6px);
-  @include border-radius(15px);
-  @include border-top-left-radius(0);
-  margin: 5px;
-  /* Use transparency for the background color or FF ridge will look bad... */
-  border: 1px ridge rgba(11,35,75,0.5);
-  vertical-align: middle;
-  text-align:     center;
-  background:     #003557;
-  padding:        0px;
-  color:          #fff;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
 
-.plate-view tr {
-/*  padding: 6px;*/
-}
-
-.plate-view th {
-  padding: 0;
-}
-
-.plate-view th {
-  vertical-align: middle;
-  text-align:     center;
-  padding:0;
-  text-shadow: 0 -1px 1px darken(#003557,50);
-}
-
-.plate-view th.first-col {
-  width: 15px;
-}
-
-.plate-view .well, .tube-view {
-  height:27px;
-  width:27px;
-  padding: 3px;
-  text-align: center;
-  overflow: hidden;
-  border: 1px ridge rgba(5,19,40,0.1);
-  @include background(radial-gradient(top left, #002A46, #003353));
-  @include border-radius(7px);
-}
-
-.aliquot {
-  @include border-radius(27px);
-  width:27px;
-  height:22px;
-  padding: 5px 0 0 0;
-  text-align: center;
-  color:#fff;
-  display: inline-block;
-  @include box-shadow(#00192B 1px 1px 1px);
-}
-
-.aliquot:hover {
-  color: #FFD600;
-  cursor: pointer;
-  @extend .selected-aliquot;
-}
 
 .dimmed {
   -webkit-transition: all 0.2s ease-in-out 0s;
@@ -101,66 +37,7 @@
   font-style: italic;
 }
 
-.substitute-tag {
-  @extend .aliquot;
-  @extend .colour-97;
-}
 
-.available-tag {
-  @extend .aliquot;
-  @extend .colour-96;
-}
-
-.selected-aliquot {
-  border: 3px solid rgba(250, 235, 158, 1);
-  @include box-shadow(#00060A 0 8px 8px);
-  position: relative;
-  top: -6px;
-  left: -5px;
-  width: 32px;
-  height: 26px;
-  padding: 6px 0 0 0;
-  @include border-radius(32px);
-  -webkit-transition: all 0.1s ease-in-out 0s;
-  transition:         all 0.1s ease-in-out 0s;
-}
-
-
-@mixin labware-view {
-  .green             { @include background(radial-gradient(top left, #00B10E, #002802)); }
-  .red               { @include background(radial-gradient(top left, #D30000, #480000)); }
-  .yellow            { @include background(radial-gradient(top left, #EBDB00, #665E00)); }
-  .blue              { @include background(radial-gradient(top left, #4889C4, #0A385C)); }
-  .orange            { @include background(radial-gradient(top left, #FF9443, #5B1B00)); }
-  .unknown-value     { @include background(radial-gradient(top left, #289AC7, #083442)); }
-  .pending           {
-    @include box-shadow(none);
-    background:none;
-    border: 2px dotted gray;
-    position: relative;
-    left: -2px;
-    top: -2px;
-  }
-  .started           { @extend .yellow;                                                  }
-  .started_fx        { @extend .yellow;                                                  }
-  .started_mj        { @extend .orange;                                                  }
-  .fx_transfer       { @extend .orange;                                                  }
-  .passed            { @extend .green;                                                   }
-  .qc_complete       { @include background(radial-gradient(top left, #bbbbbb, #111111)); }
-  .good              { @include background(radial-gradient(top left, #00B10E, #002802)); }
-  .failed            { @include background(radial-gradient(top left, #D30000, #480000)); }
-  .cancelled         { @include background(radial-gradient(top left, #D30000, #480000)); }
-  .permanent-failure {
-    @include background(radial-gradient(top left, #D30000, #480000));
-    border: 1px gray solid;
-    opacity: 0.3;
-
-   }
-}
-
-.plate-view, .tube-view {
-  @include labware-view
-}
 
 .information {
   .total { font-weight: bold; }
@@ -289,13 +166,6 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 .bad_bed h3, .bad_bed p {
   color: red;
   font-style: italic;
-}
-
-.instructions {
-  @include border-radius(4px);
-  border: 1px solid #F7C942;
-  background: #FAEB9E;
-  padding: 0 10px;
 }
 
 .interface {
