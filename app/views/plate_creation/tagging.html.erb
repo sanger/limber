@@ -24,11 +24,7 @@
         <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f } %>
       <% end %>
       <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
-      <%= f.submit 'Create Plate',
-        :"data-theme"   => "b",
-        :"data-icon"    => "plus",
-        :'data-iconpos' => "right",
-        :disabled => 'disabled'
+      <%= f.submit 'Create Plate', :disabled => 'disabled'
       %>
     </div>
 

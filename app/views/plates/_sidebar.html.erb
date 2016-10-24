@@ -52,14 +52,11 @@
     </div>
 
     <% if well_failing_applicable?(@presenter) %>
-      <div id="well-failing">
-        <h2>Fail Wells</h2>
-        <%= render(:partial => 'fail_wells', :locals => { :presenter => @presenter }) %>
-      </div>
+      <button class='btn btn-lg btn-block btn-danger'>Fail Wells</button>
     <% end %>
 
 
-    <div id="plate-state" class="card">
+    <div id="plate-state">
       <%= state_change_form(@presenter) %>
     </div>
 

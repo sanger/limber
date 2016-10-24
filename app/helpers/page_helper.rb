@@ -44,11 +44,10 @@ module PageHelper
   end
 
   def header(presenter = nil, title = nil, options = {}, &block)
-    theme = options[:'data-theme'] || data_theme
 
     content_for(:header, &block) if block_given?
-    grouping(:header, 'data-theme' => theme) do
-      render(:partial => 'labware/header', :locals => { :presenter => presenter, :title => title })
+    grouping(:header) do
+      render(:partial => 'header', :locals => { :presenter => presenter, :title => title })
     end
   end
 

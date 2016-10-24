@@ -44,19 +44,6 @@
     this.slide();
   },
 
-  displayReason: function() {
-    if($('.reason:visible').length === 0) {
-      $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
-    }
-    else {
-      $('.reason').not('#'+$('#state option:selected').val()).slideUp('slow', function(){
-        $('#'+$('#state option:selected').val()).slideDown('slow').find('select:disabled').selectmenu('enable');
-      });
-    }
-
-  },
-
-
   dim: function() {
     $(this).fadeTo('fast', 0.2);
     return this;
@@ -431,7 +418,6 @@
 
     // State changes reasons...
     // SCAPE.displayReason();
-    $('.show-page').on('change','#state', SCAPE.displayReason);
     $('.well').each(SCAPE.animateWell);
   });
 

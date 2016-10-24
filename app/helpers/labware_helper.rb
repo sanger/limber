@@ -31,8 +31,9 @@ module LabwareHelper
   end
 
   def self.disable_based_on_state(state_name)
-    define_method(:"disable_#{state_name}_by_state") do |transitions|
-      return {:disabled => true} unless transitions.first.to == state_name.to_s
+    define_method(:"disable_#{state_name}_by_state") do |transitions,options|
+      options ||= {}
+      return {:disabled => true}.merge(options) unless transitions.first.to == state_name.to_s
       {}
     end
   end
