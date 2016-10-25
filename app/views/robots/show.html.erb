@@ -1,45 +1,34 @@
 <%= page(:"robot-verification-#{robot.layout}") do %>
-
-  <%= header do %>
-    <h1>Validate Plate Beds</h1>
-  <% end %>
-
   <%= content do %>
-    <%= flash_messages %>
-    <h2><%= robot.name %></h2>
-    <%= form_for :robot, :url => start_robot_path(robot.id) do |form| %>
-      <div class="ui-grid-a">
-        <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
-
-        <div class="ui-block-b">
-          <div id="robot-verification" class="scape-ui-block" >
-            <div class="instructions ui-body">
-              <h3><%= t("robots.#{robot.id}.instruction_summary") %></h3>
-              <ol>
-                <%= t("robots.#{robot.id}.instructions").html_safe %>
-              </ol>
-              <h3>Layout</h3>
-              <dl>
-                <% robot.beds.each do |barcode,config| %>
-                  <dt><%= config.label %></dt>
-                  <dd><%= config.purpose_labels %></dd>
-                <% end %>
-              </dl>
-            </div>
-
-            <h2>Start Robot</h2>
-              <%= submit_tag "Start the #{robot.name}",
-                :name           => nil,
-                :class          => "submit",
-                :id             => 'start-robot',
-                :'data-icon'    => "arrow-r",
-                :'data-iconpos' => "right",
-                :'data-theme'   => "b",
-                :disabled       => true
-              %>
-          </div>
+    <%= card title: robot.name do %>
+      <div id="robot-verification" class="scape-ui-block" >
+        <div class="instructions">
+          <h4><%= t("robots.#{robot.id}.instruction_summary") %></h4>
+          <ol>
+            <%= t("robots.#{robot.id}.instructions").html_safe %>
+          </ol>
+          <h4>Layout</h4>
+          <dl class="row">
+            <% robot.beds.each do |barcode,config| %>
+              <dt class='col-xs-2'><%= config.label %></dt>
+              <dd class='col-xs-6'><%= config.purpose_labels %></dd>
+            <% end %>
+          </dl>
         </div>
       </div>
-    <% end # of form%>
-  <% end %>
-<% end %>
+    <% end # of card%>
+  <% end # of content%>
+
+  <%= sidebar do %>
+    <%= form_for :robot, :url => start_robot_path(robot.id) do |form| %>
+      <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
+      <%= submit_tag "Start the #{robot.name}",
+        :name           => nil,
+        :class          => "submit",
+        :id             => 'start-robot',
+        :class          => 'btn btn-lg btn-success btn-block',
+        :disabled       => true
+      %>
+    <% end # of form %>
+  <% end # of sidebar %>
+<% end # of page %>

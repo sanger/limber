@@ -39,8 +39,8 @@
           return false;
         }
       },
-      enableActivity : function() { $('#start-robot').button('enable'); },
-      disableActivity : function() { $('#start-robot').button('disable'); }
+      enableActivity : function() { $('#start-robot').prop('disabled',false); },
+      disableActivity : function() { $('#start-robot').prop('disabled',true); }
     });
 
     $('.bed').each(function(){
@@ -179,8 +179,6 @@
 
         $('#pooling-summary').append(listElement);
       });
-
-      $('#pooling-summary').listview('refresh');
     };
 
 
@@ -323,12 +321,12 @@
         enter: function(){
           plateSummaryHandler();
           renderPoolingSummary(SCAPE.plate.preCapPools);
-          $('.create-button').button('enable');
+          $('.create-button').prop('disabled',false);
         },
 
         leave: function(){
           $('#pooling-summary').empty();
-          $('.create-button').button('disable');
+          $('.create-button').prop('disabled',true);
         }
       }
     });
@@ -338,7 +336,7 @@
     SCAPE.plate.preCapPools = SCAPE.preCapPools( SCAPE.plate.preCapGroups, null );
     SCAPE.poolingSM.transitionTo('poolingSummary');
 
-    $('.create-button').button('enable');
+    $('.create-button').prop('disabled',false);
   });
 
   ////////////////////////////////////////////////////////////////////
@@ -498,7 +496,6 @@
               append('<div class="ui-li-aside">'+plates[i].barcode+': '+preCapPool.join(', ')+'</div>');
             $('#pooling-summary').append(listElement);
           });
-          $('#pooling-summary').listview('refresh');
         };
       };
     };
@@ -591,7 +588,7 @@
 
       'addPlates' :{
         enter: function(){
-          $('.create-button').button('disable');
+          $('.create-button').prop('disabled',true);
         },
 
         leave: function(){
@@ -605,19 +602,19 @@
             plateSummaryHandler();
             $('#pooling-summary').empty();
             renderPoolingSummary(SCAPE.plates);
-            $('.create-button').button('enable');
+            $('.create-button').prop('disabled',false);
             SCAPE.message('Check pooling and create plate','valid');
           } else {
             // Pooling Went wrong
             $('#pooling-summary').empty();
-            $('.create-button').button('disable');
+            $('.create-button').prop('disabled',true);
             SCAPE.message('Too many pools for the target plate.','invalid');
           }
         },
 
         leave: function(){
           $('#pooling-summary').empty();
-          $('.create-button').button('disable');
+          $('.create-button').prop('disabled',true);
         }
       }
     });
@@ -626,120 +623,4 @@
     SCAPE.poolingSM.transitionTo('addPlates');
 
   });
-
-
-  ////////////////////////////////////////////////////////////////////
-  // Bed Robot Page
-  $(document).on('pageinit','#robot-verification-bed',function(event) {
-
-    $.ajaxSetup({
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      }
-    });
-
-    SCAPE.robot_beds = {};
-
-    // var bed_index = 0;
-
-    var newScanned = function(bed,plate){
-      var new_li;
-      // $('#whole\\['+bed+'\\]').detach();
-      new_li = $(document.createElement('li')).
-        // attr('id','whole['+bed+']['+( bed_index++) +']').
-        attr('data-icon','delete').
-        attr('data-bed',bed).
-        attr('data-labware',plate).
-        on('click', removeEntry).
-        append(
-          $(document.createElement('a')).
-          attr('href','#').append(
-            $(document.createElement('h3')).
-            attr('class',"ui-li-heading").
-            text('Bed: '+bed)
-          ).append(
-            $(document.createElement('p')).
-            attr('class','ui-li-desc').
-            text('Plate: '+plate)
-          ).append(
-            $(document.createElement('input')).
-            attr('type','hidden').attr('id','bed['+bed+']').attr('name','bed['+bed+'][]').
-            val(plate)
-          )
-        );
-      SCAPE.robot_beds[bed] = SCAPE.robot_beds[bed] || []
-      SCAPE.robot_beds[bed].push(plate);
-      $('#start-robot').button('disable');
-      $('.bedv').append(new_li).listview('refresh');
-    }
-
-    var removeEntry = function() {
-      var lw_index, bed_list;
-      bed_list = SCAPE.robot_beds[$(this).attr('data-bed')];
-      lw_index = bed_list.indexOf($(this).attr('data-labware'));
-      bed_list.splice(lw_index,1);
-      if (bed_list.length === 0) { SCAPE.robot_beds[$(this).attr('data-bed')] = undefined };
-      $(this).detach();
-      $('.bedv').listview('refresh');
-    }
-
-    var checkResponse = function(response) {
-      if ($('.bedv').children().length===0) {
-        // We don't have any content
-        $.mobile.hidePageLoadingMsg();
-      } else if (response.valid) {
-        pass();
-      } else {
-        flagBeds(response.beds,response.message);
-        fail();
-      }
-
-    }
-
-    var flagBeds = function(beds,message) {
-      var bad_beds = [];
-      $.each(beds, function(bed_id) {
-        if (!this) {$('#whole\\['+bed_id+'\\]').addClass('bad_bed'); bad_beds.push(bed_id);}
-      });
-      SCAPE.message('There were problems: '+message,'invalid');
-    }
-
-    var wait = function() {
-      $.mobile.showPageLoadingMsg();
-    }
-
-    var pass = function() {
-      $.mobile.hidePageLoadingMsg();
-      SCAPE.message('No problems detected!','valid');
-      $('#start-robot').button('enable');
-    }
-
-    var fail = function() {
-      $.mobile.hidePageLoadingMsg();
-      $('#start-robot').button('disable');
-    }
-
-    $('#plate_scan').on('change', function(){
-      var plate_barcode, bed_barcode;
-      plate_barcode = this.value
-      bed_barcode = $('#bed_scan').val();
-      this.value = "";
-      $('#bed_scan').val("");
-      $('#bed_scan').focus();
-      newScanned(bed_barcode,plate_barcode);
-    });
-
-    $('#validate_layout').on('click',function(){
-      wait();
-      var ajax = $.ajax({
-          dataType: "json",
-          url: window.location.pathname+'/verify',
-          type: 'POST',
-          data: {"beds" : SCAPE.robot_beds },
-          success: function(data,status) { checkResponse(data); }
-        }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','invalid'); fail(); });
-    })
-  });
-
-
 })(jQuery,window);

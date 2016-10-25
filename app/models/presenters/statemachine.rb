@@ -14,6 +14,9 @@ module Presenters::Statemachine
     def suggested_purposes
     end
 
+    def compatible_purposes
+    end
+
   end
 
   module StateAllowsChildCreation

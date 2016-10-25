@@ -21,9 +21,12 @@
   margin: 18px 0;
 }
 
+// Bootstrap alerts have a bottom margin of 1rem, which looks
+// a little silly in out card stack.
+.qc_validation_report { .alert { margin-bottom: 0; } }
+
 // Bootstrap 4 doesn't seem to do this automatically
 .content-secondary, .content-main { padding-top: 20px; }
-
 
 
 .dimmed {
@@ -159,21 +162,10 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 .ui-field-contain label.bed-label {
   width: 4em;
 }
-.robot {
-  list-style-type: none;
-}
 
 .bad_bed h3, .bad_bed p {
   color: red;
   font-style: italic;
-}
-
-.interface {
-  @include border-radius(4px);
-  border: 1px solid #AAAAAA;
-  background: #DDDDDD;
-  padding: 10px;
-  margin: 0 10px;
 }
 
 #validation_report div {
@@ -193,10 +185,6 @@ div.tube_validation_report {
   font-weight: initial;
 }
 
-div.tube_validation_report, .qc_validation_report div {
-  @include border-radius(4px);
-  padding: 10px;
-}
 .bad-tube div.tube_validation_report, .qc_validation_report .invalid {
   border: 1px solid #FF7A7A;
   background: #FFE6E6;
@@ -214,10 +202,6 @@ div.tube_validation_report, .qc_validation_report div {
 
 .barcode {
   font-family: 'Monaco', 'Courier new', courier, fixed;
-}
-
-.robot {
-  list-style-type: none;
 }
 
 div.wait-plate a.bed-status-scan, div.wait-plate a.bed-status-good, div.wait-plate  a.bed-status-bad {

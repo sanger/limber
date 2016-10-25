@@ -1,64 +1,54 @@
 <%= page(:'tag-creation-page') do -%>
-  <%= header(@creation_form, '→ ILB_STD_PCR - Choose tag layout') %>
+  <script type="text/javascript" charset="utf-8">
+    (function(exports, $, undefined){
+       $.extend(SCAPE, {
+        tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
+        tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>,
+        tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
+       });
+     })(window,jQuery);
+  </script>
 
-  <%= content do %>
-    <%= semantic_form_for(@creation_form, :as => :plate, :url => limber_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
+  <%= semantic_form_for(@creation_form, :as => :plate, :url => limber_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+    <%= content do %>
       <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
-      <%= f.inputs do %>
-        <%= f.input :purpose_uuid, :as => :hidden %>
-        <%= f.input :parent_uuid, :as => :hidden %>
-        <% @creation_form.tag2_field do -%>
-          <div data-role="fieldcontain">
-            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
-            <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s'} %>
-          </div>
-        <% end -%>
-        <div data-role="fieldcontain">
-          <%= f.input :tag_plate_barcode, :input_html => {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts'} %>
-        </div>
-      <%- end -%>
-      <br/>
       <% @creation_form.tag2_field do -%>
         <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f } %>
       <% end %>
       <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
-      <%= f.submit 'Create Plate', :disabled => 'disabled'
-      %>
-    </div>
-
-      <div class="ui-block-b">
-        <h2>Tag plate addition</h2>
-        <br/>
-        <div id="instructions" class="instructions ui-body">
-          <h2>Instructions</h2>
-          <ol>
-            <% @creation_form.tag2_field do -%>
-              <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
-            <% end %>
-            <li>Scan a target tag plate into 'Tag plate barcode'.</li>
-            <li>Confirm the details and ensure both are passed as valid.</li>
-            <li>Click 'Create plate'</li>
-            <li>This will link up the tag plate.</li>
-          </ol>
-
-          To substitute a tag first select it on the plate then choose a replacement from the list of available tags.
-        </div>
-      </div>
-    </div>
     <%- end -%>
 
+    <%= sidebar do %>
 
-<script type="text/javascript" charset="utf-8">
-  (function(exports, $, undefined){
-     $.extend(SCAPE, {
-      tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-      tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>,
-      tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
-     });
-   })(window,jQuery);
-</script>
+      <%= card title: 'Tag plate addition' do %>
+        <ol>
+          <% @creation_form.tag2_field do -%>
+            <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
+          <% end %>
+          <li>Scan a target tag plate into 'Tag plate barcode'.</li>
+          <li>Confirm the details and ensure both are passed as valid.</li>
+          <li>Click 'Create plate'</li>
+          <li>This will link up the tag plate.</li>
+        </ol>
+      <% end %>
+
+      <%= card title:'Set up tags' do %>
+        <%= f.inputs do %>
+          <%= f.input :purpose_uuid, :as => :hidden %>
+          <%= f.input :parent_uuid, :as => :hidden %>
+          <% @creation_form.tag2_field do -%>
+
+              <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+              <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s', 'class'=>'form-control'} %>
+            </div>
+          <% end -%>
+
+            <%= f.input :tag_plate_barcode, :input_html => {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts','class'=>'form-control'} %>
+
+        <%- end -%>
+        <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
+      <% end %>
+    <%- end -%>
   <%- end -%>
 <%- end -%>
 

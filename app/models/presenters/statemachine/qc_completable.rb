@@ -6,21 +6,18 @@ module Presenters
     module QcCompletable
 
       module QcCreatableStep
-        def self.included(base)
-          base.instance_eval do
-            def control_additional_creation(&block)
-              yield unless default_child_purpose.nil?
-              nil
-            end
+        def control_additional_creation(&block)
+          yield unless default_child_purpose.nil?
+          nil
+        end
 
-            def valid_purposes
-              yield default_child_purpose unless default_child_purpose.nil?
-              nil
-            end
+        def valid_purposes
+          yield default_child_purpose unless default_child_purpose.nil?
+          nil
+        end
 
-            def default_child_purpose
-              purpose.children.detect(&:is_qc?)
-            end
+        def default_child_purpose
+          purpose.children.detect(&:is_qc?)
         end
       end
 

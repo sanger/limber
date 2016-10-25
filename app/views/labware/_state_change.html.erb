@@ -1,8 +1,8 @@
 <%# TODO This form code breaks the semantic presenter model pattern.
     The form should use attriutes on the presenter class not the labware directly.
 %>
-<%= card title: 'Cancel or fail labware' do %>
 <% presenter.control_state_change do |transitions| %>
+<%= card title: 'Cancel or fail' do %>
   <%= form_for(
         presenter.labware,
         presenter.labware_form_details(self).merge(
@@ -21,13 +21,13 @@
       </div>
 
       <div id="cancelled_reasons" class="reason form-group row" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>
-        <%= label_tag :reason, 'Reason for cancellation:' %>
-        <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), disable_cancelled_by_state(transitions,class: 'custom-select')) %>
+        <%= label_tag :reason, 'Reason for cancellation' %>
+        <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), disable_cancelled_by_state(transitions, class: 'custom-select')) %>
       </div>
       <div id="failed_reasons" class="reason form-group row" <%= 'style=display:none;' unless show_state?('failed', presenter, transitions)%>>
-        <%= label_tag :reason, 'Reason for failure:' %>
-        <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions,class: 'custom-select')) %>
-        <%= label_tag :customer_accepts_responsibility, 'Still charge customer:' %>
+        <%= label_tag :reason, 'Reason for failure' %>
+        <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions, class: 'custom-select')) %>
+        <%= label_tag :customer_accepts_responsibility, 'Still charge customer' %>
         <%= check_box_tag :customer_accepts_responsibility, true, false %>
       </div>
         <%= f.submit 'Change State', class: 'btn btn-lg btn-danger' %>

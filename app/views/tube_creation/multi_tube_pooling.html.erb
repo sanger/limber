@@ -22,12 +22,12 @@
         %>
           <div>
             <% if @creation_form.all_ready? %>
-              <div class="tube-scanner scape-ui-block interface">
+              <div class="tube-scanner scape-ui-block card card-inverse">
                 <label for="tube_scan" class="tube-label">Scan tube:</label>
                 <input id="tube_scan" name="tube_scan" placeholder="Tube barcode" class="tube" tabindex="1"/>
               </div>
             <% else %>
-              <div class="tube-suggestions scape-ui-block interface">
+              <div class="tube-suggestions scape-ui-block card card-inverse">
                 <p>Please resolve any issues with the tubes below before continuing.</p>
               </div>
             <% end %>
