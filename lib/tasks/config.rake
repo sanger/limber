@@ -97,22 +97,16 @@ namespace :config do
             :presenter_class => 'Presenters::StockPlatePresenter'
           )
 
-          presenters['Limber Shear'].merge!(
-            :presenter_class => 'Presenters::StandardPresenter'
-          )
+          presenters['Limber Shear'].merge!({})
 
           presenters['Limber Post Shear'].merge!(
             :presenter_class     => 'Presenters::PostShearPlatePresenter',
             :default_child  => 'Post Shear XP'
           )
 
-          presenters['Limber Post Shear XP'].merge!(
-            :presenter_class         => 'Presenters::StandardPresenter'
-          )
+          presenters['Limber Post Shear XP'].merge!({})
 
-          presenters['Limber AL Libs'].merge!(
-            :presenter_class         => 'Presenters::AlLibsPlatePresenter'
-          )
+          presenters['Limber AL Libs'].merge!({})
 
           presenters['Limber Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
@@ -127,7 +121,7 @@ namespace :config do
           )
 
           presenters['Limber Lib PCR-XP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpPresenter',
+            # :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
             :default_printer_type => :plate_b
           )

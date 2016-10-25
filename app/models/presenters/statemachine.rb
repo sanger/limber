@@ -75,7 +75,7 @@ module Presenters::Statemachine
       if default_transition.present?
         # This ugly thing should yield the default transition first followed by
         # any other transitions to states that aren't the default...
-        yield( [default_transition] + state_transitions.reject {|t| t.to == default_transition.to } )
+        yield( state_transitions.reject {|t| t.to == default_transition.to } )
       elsif state_transitions.present?
         # ...if there's no default transition but there are still other transitions
         # present then yield those.
@@ -130,11 +130,11 @@ module Presenters::Statemachine
 
         # These are the states, which are really the only things we need ...
         state :pending do
-          include StateDoesNotAllowChildCreation
+          include StateAllowsChildCreation
         end
 
         state :started do
-          include StateDoesNotAllowChildCreation
+          include StateAllowsChildCreation
         end
 
         state :passed do

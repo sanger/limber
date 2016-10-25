@@ -168,19 +168,6 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
   font-style: italic;
 }
 
-#validation_report div {
-  @include border-radius(4px);
-  padding: 10px;
-}
-#validation_report .invalid {
-  border: 1px solid #FF7A7A;
-  background: #FFE6E6;
-}
-#validation_report .valid {
-  border: 1px solid #61D457;
-  background: #C9FFC4;
-}
-
 div.tube_validation_report {
   font-weight: initial;
 }

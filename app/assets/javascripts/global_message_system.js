@@ -10,8 +10,8 @@
    exports.SCAPE.message = function(message,status) {
       $('#validation_report').empty().append(
         $(document.createElement('div')).
-          addClass('report').
-          addClass(status).
+          addClass('alert').
+          addClass('alert-'+status).
           text(message)
         );
     }
