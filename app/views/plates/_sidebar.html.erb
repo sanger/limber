@@ -26,6 +26,10 @@
       <%= simple_state_change_form(@presenter) %>
     <% end %>
 
+    <% presenter.control_library_passing do %>
+      <button class="btn btn-lg btn-block btn-success">Charge and pass libraries</button>
+    <% end %>
+
   <% end %>
 
   <%= card title:'Other Actions' do %>

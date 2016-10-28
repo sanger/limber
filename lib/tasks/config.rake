@@ -18,7 +18,7 @@ namespace :config do
     'Limber Cap Lib',
     'Limber Cap Lib PCR',
     'Limber Cap Lib PCR-XP',
-    'Limber Cap Lib Pool',
+    'Limber Cap Lib Pool'
   ]
 
   QC_PLATE_PURPOSES = [
@@ -106,7 +106,7 @@ namespace :config do
 
           presenters['Limber Post Shear XP'].merge!({})
 
-          presenters['Limber AL Libs'].merge!({})
+          presenters['Limber AL Libs']
 
           presenters['Limber Lib PCR'].merge!(
             :form_class      => 'Forms::TaggingForm',
@@ -121,20 +121,7 @@ namespace :config do
           )
 
           presenters['Limber Lib PCR-XP'].merge!(
-            # :presenter_class      => 'Presenters::PcrXpPresenter',
             :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
-            :default_printer_type => :plate_b
-          )
-
-
-          presenters['Limber Lib PCRR-XP'].merge!(
-            :presenter_class      => 'Presenters::PcrXpPresenter',
-            :state_changer_class  => 'StateChangers::BranchingPlateToTubeStateChanger',
-            :default_printer_type => :plate_b
-          )
-
-          presenters['Limber Lib PCRR-XP QC'].merge!(
-            :presenter_class     => 'Presenters::QcPlatePresenter',
             :default_printer_type => :plate_b
           )
 
