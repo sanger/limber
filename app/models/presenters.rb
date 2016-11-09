@@ -1,17 +1,20 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
 module Presenters
   module Presenter
     def self.included(base)
       base.class_eval do
         include Forms::Form
-        self.page =  'show'
+        self.page = 'show'
 
         class_attribute :csv
-        self.csv =  'show'
+        self.csv = 'show'
 
-        def has_qc_data?; false; end
+        def has_qc_data?
+          false
+        end
       end
     end
 
@@ -43,7 +46,7 @@ module Presenters
     end
 
     def label_type
-      yield "custom-labels"
+      yield 'custom-labels'
       nil
     end
 
@@ -54,18 +57,18 @@ module Presenters
       return str if match.nil?
       # Sets the priorities position matches in the regular expression to dump into the final string. They will be
       # performed with preference on the most right characters from the original match string
-      priorities = [7,5,2,6,3,1,4]
+      priorities = [7, 5, 2, 6, 3, 1, 4]
 
       # Builds the final string by adding the matching string using the previous priorities list
-      priorities.reduce([]) do |cad_list, value|
-        size_to_copy = (max_size) - cad_list.join("").length
+      priorities.each_with_object([]) do |value, cad_list|
+        size_to_copy = max_size - cad_list.join('').length
         text_to_copy = match[value]
-        cad_list[value] = (text_to_copy[[0, text_to_copy.length-size_to_copy].max, size_to_copy])
+        cad_list[value] = (text_to_copy[[0, text_to_copy.length - size_to_copy].max, size_to_copy])
         cad_list
-      end.join("")
+      end.join('')
     end
 
-    def statechange_link(view)
+    def statechange_link(_view)
       '#'
     end
 
@@ -78,7 +81,7 @@ module Presenters
     end
 
     def default_statechange_label
-      "Move to next state"
+      'Move to next state'
     end
 
     def statechange_attributes

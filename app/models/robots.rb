@@ -1,6 +1,7 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2013,2014,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2013,2014,2015 Genome Research Ltd.
 module Robots
   class Robot
     include Forms::Form
@@ -13,7 +14,7 @@ module Robots
       attr_reader :plate, :error_messages
 
       class_attribute :attributes
-      self.attributes =  [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
+      self.attributes = [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
 
       def initialize(*args)
         @error_messages = []
@@ -26,7 +27,7 @@ module Robots
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
-        StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,"Robot #{robot.name} started")
+        StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
       end
 
       def error(message)
@@ -39,16 +40,14 @@ module Robots
         purpose
       end
 
-
       def valid?
-        case
-        when @barcode == :multiple
-          error("This bed has been scanned multiple times with different barcodes. Only once is expected.")
-        when plate.nil? # The bed is empty or untested
-          return @barcode.nil? || error("Could not find a plate with the barcode #{@barcode}.")
-        when plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
+        if @barcode == :multiple
+          error('This bed has been scanned multiple times with different barcodes. Only once is expected.')
+        elsif plate.nil? # The bed is empty or untested
+          @barcode.nil? || error("Could not find a plate with the barcode #{@barcode}.")
+        elsif plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
           error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is a #{plate.plate_purpose.name} not a #{purpose} plate.")
-        when !states.include?(plate.state) # The plate is in the wrong state
+        elsif !states.include?(plate.state) # The plate is in the wrong state
           error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is #{plate.state} when it should be #{states.join(', ')}.")
         else
           true
@@ -56,13 +55,13 @@ module Robots
       end
 
       def load(barcodes)
-        barcodes = Array(barcodes).uniq.reject {|bc| bc.blank? } # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
+        barcodes = Array(barcodes).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
         if barcodes.length > 1 # If we have multiple barcodes, just give up now.
           @barcode = :multiple
         else
           @barcode = barcodes.first
           begin
-            @plate = api.search.find(Settings.searches['Find assets by barcode']).first(:barcode => @barcode) unless @barcode.nil?
+            @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: @barcode) unless @barcode.nil?
           rescue Sequencescape::Api::ResourceNotFound
             @plate = nil
           end
@@ -72,32 +71,34 @@ module Robots
       def parent_plate
         return nil if recieving_labware.nil?
         begin
-          api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(:barcode => recieving_labware.barcode.ean13)
+          api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(barcode: recieving_labware.barcode.ean13)
         rescue Sequencescape::Api::ResourceNotFound
           error("Labware #{recieving_labware.barcode.prefix}#{recieving_labware.barcode.number} doesn't seem to have a parent, and yet one was expected.")
           nil
         end
       end
 
-      alias_method :recieving_labware, :plate
+      alias recieving_labware plate
 
       def formatted_message
         "#{label} - #{error_messages.join(' ')}"
       end
-
     end
 
     class InvalidBed
       def initialize(barcode)
         @barcode = barcode
       end
+
       def load(_)
       end
+
       def formatted_message
         match = /[0-9]{12,13}/.match(@barcode)
         match ? "Bed with barcode #{@barcode} is not expected to contain a tracked plate." :
                 "#{@barcode} does not appear to be a valid bed barcode."
       end
+
       def valid?
         false
       end
@@ -105,30 +106,30 @@ module Robots
 
     def self.find(options)
       robot_settings = Settings.robots[options[:id]]
-      raise ActionController::RoutingError.new("Robot #{options[:name]} Not Found") if robot_settings.nil?
-      robot_class = (robot_settings[:class]||'Robots::Robot').constantize
+      raise ActionController::RoutingError, "Robot #{options[:name]} Not Found" if robot_settings.nil?
+      robot_class = (robot_settings[:class] || 'Robots::Robot').constantize
       robot_class.new(robot_settings.merge(options))
     end
 
     def self.each_robot
-      Settings.robots.each do |key,config|
+      Settings.robots.each do |key, config|
         yield key, config[:name]
       end
     end
 
     class_attribute :attributes
-    self.attributes =  [:api, :user_uuid, :layout, :beds, :name, :id ]
+    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id]
 
     def beds=(new_beds)
-      beds = ActiveSupport::OrderedHash.new {|beds,barcode| InvalidBed.new(barcode) }
-      new_beds.each do |id,bed|
-        beds[id] = bed_class(bed).new(bed.merge({:api=>api, :user_uuid=>user_uuid, :robot=>self }))
+      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
+      new_beds.each do |id, bed|
+        beds[id] = bed_class(bed).new(bed.merge(api: api, user_uuid: user_uuid, robot: self))
       end
       @beds = beds
     end
     private :beds=
 
-    def bed_class(bed)
+    def bed_class(_bed)
       self.class::Bed
     end
     private :bed_class
@@ -136,13 +137,13 @@ module Robots
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
         bed.load(bed_settings[id]) if bed.has_transition?
-        bed.valid? or raise BedError, bed.error_message
+        bed.valid? || raise(BedError, bed.error_message)
       end
       beds.values.each(&:transition)
     end
 
     def error_messages
-      @error_messages||=[]
+      @error_messages ||= []
     end
 
     def error(bed, message)
@@ -160,26 +161,25 @@ module Robots
     end
 
     def verify(bed_contents)
-
-      valid_plates = Hash[bed_contents.map do |bed_id,plate_barcode|
+      valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
         beds[bed_id].load(plate_barcode)
-        [bed_id, beds[bed_id].valid?||bed_error(beds[bed_id])]
+        [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
       end]
 
-      valid_parents = Hash[parents_and_position do |parent,position|
+      valid_parents = Hash[parents_and_position do |parent, position|
         beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
           "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
-          "Could not match labware with expected child.")
+          'Could not match labware with expected child.')
       end]
 
-      verified = valid_plates.merge(valid_parents) {|k,v1,v2| v1 && v2 }
+      verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
       unless plates_compatible?
-        bed_contents.keys.each {|k| verified[k] = false }
+        bed_contents.keys.each { |k| verified[k] = false }
         error_messages << "#{bed_prefixes.to_sentence} can not be processed together."
       end
 
-      {:beds=>verified, :valid=>verified.all?{|_,v| v}, :message=>formatted_message}
+      { beds: verified, valid: verified.all? { |_, v| v }, message: formatted_message }
     end
 
     def plates_compatible?
@@ -187,18 +187,16 @@ module Robots
     end
 
     def bed_prefixes
-      beds.map {|id,bed| bed.plate.label.prefix unless bed.plate.nil?}.compact.uniq
+      beds.map { |_id, bed| bed.plate.label.prefix unless bed.plate.nil? }.compact.uniq
     end
 
     def parents_and_position
       beds.map do |id, bed|
         next if bed.parent.nil?
-        result = yield(bed.parent_plate,bed.parent)
-        [id,result]
+        result = yield(bed.parent_plate, bed.parent)
+        [id, result]
       end
     end
     private :parents_and_position
-
   end
-
 end

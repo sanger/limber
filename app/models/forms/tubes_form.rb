@@ -1,11 +1,10 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012 Genome Research Ltd.
 module Forms
   class TubesForm < CreationForm
-
     class Sibling
-
       READY_STATE = 'qc_complete'
 
       attr_reader :name, :uuid, :state, :barcode
@@ -29,6 +28,7 @@ module Forms
       end
 
       private
+
       def missing_sibling
         @name  = 'Other'
         @state = 'Not Present'
@@ -39,7 +39,7 @@ module Forms
       if no_pooling_required?
         super
       else
-        controller.render(self.page)
+        controller.render(page)
       end
     end
 
@@ -50,11 +50,11 @@ module Forms
     end
 
     def siblings
-      @siblings ||= tube.sibling_tubes.map {|s| Sibling.new(s) }
+      @siblings ||= tube.sibling_tubes.map { |s| Sibling.new(s) }
     end
 
     def each_sibling
-      siblings.each {|s| yield s }
+      siblings.each { |s| yield s }
     end
 
     def all_ready?
@@ -62,26 +62,26 @@ module Forms
     end
 
     def barcode_to_uuid(barcode)
-      siblings.detect {|s| s.barcode == barcode }.uuid
+      siblings.detect { |s| s.barcode == barcode }.uuid
     end
 
-    self.page =  'multi_tube_pooling'
-    self.attributes =  [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
+    self.page = 'multi_tube_pooling'
+    self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
 
-    validate :all_parents_and_only_parents?, :if => :barcodes_provided?
+    validate :all_parents_and_only_parents?, if: :barcodes_provided?
 
     def create_objects!
       success = []
       @all_tube_transfers = parents.map do |this_parent_uuid|
         transfer_template.create!(
-          :user   => user_uuid,
-          :source => this_parent_uuid
+          user: user_uuid,
+          source: this_parent_uuid
         ).tap { success << this_parent_uuid }
       end
       true
     rescue => e
-      errors.add(:base,"#{success.count} tubes were transferred successfully before something went wrong." )
-      errors.add(:base,e.message)
+      errors.add(:base, "#{success.count} tubes were transferred successfully before something went wrong.")
+      errors.add(:base, e.message)
       false
     end
 
@@ -98,17 +98,17 @@ module Forms
 
     def parents=(barcode_hash)
       return unless barcode_hash.respond_to?(:keys)
-      @barcodes = barcode_hash.select {|barcode,selected| selected == "1" }.keys
-      @parents = @barcodes.map {|barcode| barcode_to_uuid(barcode) }
+      @barcodes = barcode_hash.select { |_barcode, selected| selected == '1' }.keys
+      @parents = @barcodes.map { |barcode| barcode_to_uuid(barcode) }
     end
 
     def parent
       @parent ||= api.tube.find(parent_uuid)
     end
-    alias_method(:tube, :parent)
+    alias tube parent
 
     def parents
-      @parents || [ parent_uuid ]
+      @parents || [parent_uuid]
     end
 
     private
@@ -122,19 +122,18 @@ module Forms
       valid = true
       siblings.each do |s|
         next if val_barcodes.delete(s.barcode)
-        errors.add(:base,"Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+        errors.add(:base, "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
         valid = false
       end
       return valid if val_barcodes.empty?
-      errors.add(:base,"#{val_barcodes.join(', ')} barcodes are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+      errors.add(:base, "#{val_barcodes.join(', ')} barcodes are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
       false
     end
 
     def transfer_template
       @template ||= api.transfer_template.find(
-        Settings.transfer_templates["Transfer from tube to tube by submission"]
+        Settings.transfer_templates['Transfer from tube to tube by submission']
       )
     end
-
   end
 end

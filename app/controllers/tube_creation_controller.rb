@@ -1,8 +1,8 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2013 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2013 Genome Research Ltd.
 class TubeCreationController < CreationController
-
   def form_lookup(form_attributes = params)
     Settings.purposes[form_attributes[:purpose_uuid]][:form_class].constantize
   end
@@ -11,9 +11,8 @@ class TubeCreationController < CreationController
     limber_tube_path(form.child.uuid)
   end
 
-
   def new
-    @creation_form = create_form(params.merge(:parent_uuid => params[:sequencescape_tube_id]))
+    @creation_form = create_form(params.merge(parent_uuid: params[:sequencescape_tube_id]))
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
@@ -27,14 +26,14 @@ class TubeCreationController < CreationController
       format.html do
         redirect_to(
           sequencescape_tube_path(@creation_form.parent),
-          :alert =>[  "Cannot create tube: #{exception.message}", *exception.resource.errors.full_messages ]
+          alert: ["Cannot create tube: #{exception.message}", *exception.resource.errors.full_messages]
         )
       end
     end
   end
 
   def create
-    @creation_form = create_form(params[:tube].reverse_merge(:parent_uuid => params[:sequencescape_tube_id]))
+    @creation_form = create_form(params[:tube].reverse_merge(parent_uuid: params[:sequencescape_tube_id]))
 
     @creation_form.save!
     respond_to do |format|
@@ -48,7 +47,7 @@ class TubeCreationController < CreationController
       format.html do
         redirect_to(
           sequencescape_tube_path(@creation_form.parent),
-          :alert => "Cannot create tube: #{exception.message}"
+          alert: "Cannot create tube: #{exception.message}"
         )
       end
     end

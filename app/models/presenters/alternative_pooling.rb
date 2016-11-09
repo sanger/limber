@@ -1,10 +1,10 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2015 Genome Research Ltd.
 ##
 # Helper methods to assist with show_pooled_alternative.erb
 module Presenters::AlternativePooling
-
   def pool_destination_location(location)
     transfer_hash[location]
   end
@@ -16,7 +16,7 @@ module Presenters::AlternativePooling
   end
 
   def pool_number(source_location)
-    sorted_pools.index(pool_destination_location(source_location))+1
+    sorted_pools.index(pool_destination_location(source_location)) + 1
   end
 
   def pool(location)
@@ -26,14 +26,14 @@ module Presenters::AlternativePooling
 
   def num_rows(size)
     {
-      96 => [ 12, 8 ],
-      384 => [ 24, 16 ]
+      96 => [12, 8],
+      384 => [24, 16]
     }[size][1]
   end
 
   def destination_by_column(location)
     column, row_alpha = split_location(location)
-    row_numeric = (row_alpha.ord - "A".ord) + 1
+    row_numeric = (row_alpha.ord - 'A'.ord) + 1
     row_numeric + (num_rows(labware.size) * (column - 1))
   end
 
@@ -52,8 +52,8 @@ module Presenters::AlternativePooling
   private
 
   def pool_hash
-    @pool_hash ||= Hash.new do |hash,destination|
-      hash[destination] = source_wells_for(destination).sort_by {|source| destination_by_column(source)}
+    @pool_hash ||= Hash.new do |hash, destination|
+      hash[destination] = source_wells_for(destination).sort_by { |source| destination_by_column(source) }
     end
   end
 
@@ -62,10 +62,10 @@ module Presenters::AlternativePooling
   end
 
   def source_wells_for(destination_well)
-    transfer_hash.select {|source,destination| destination == destination_well}.keys
+    transfer_hash.select { |_source, destination| destination == destination_well }.keys
   end
 
   def well_baits
-    @well_baits ||= Hash[labware.pools.values.map {|pool| [pool['wells'].first,pool['bait_library']['name']]}]
+    @well_baits ||= Hash[labware.pools.values.map { |pool| [pool['wells'].first, pool['bait_library']['name']] }]
   end
 end

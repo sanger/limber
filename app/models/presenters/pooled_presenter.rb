@@ -1,6 +1,7 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2015 Genome Research Ltd.
 module Presenters
   class PooledPresenter < PlatePresenter
     include Presenters::Statemachine
@@ -16,7 +17,7 @@ module Presenters
       PlateWalking::Walker.new(labware, labware.wells)
     end
 
-    Barcode = Struct.new(:prefix,:number,:label_name,:label_description,:type,:label_type,:suffix)
+    Barcode = Struct.new(:prefix, :number, :label_name, :label_description, :type, :label_type, :suffix)
 
     def tube_barcodes
       plate.tubes.map do |tube|
@@ -26,10 +27,10 @@ module Presenters
           "#{tube.barcode.prefix} #{tube.barcode.number}",
           "#{prioritized_name(tube.name, 10)} #{tube.label.prefix} #{tube.label.text}",
           tube.barcode.type,
-          "custom-labels",
-          "P#{tube.aliquots.count}")
+          'custom-labels',
+          "P#{tube.aliquots.count}"
+        )
       end
     end
-
   end
 end

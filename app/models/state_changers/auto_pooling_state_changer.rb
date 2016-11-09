@@ -1,6 +1,7 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2013 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2013 Genome Research Ltd.
 class StateChangers::AutoPoolingStateChanger < StateChangers::DefaultStateChanger
   def move_to!(state, reason, customer_accepts_responsibility = false)
     super
@@ -10,13 +11,12 @@ class StateChangers::AutoPoolingStateChanger < StateChangers::DefaultStateChange
   # Updates the plate so that it pools into the tubes and then updates their state to be passed,
   # as this is effectively what the lab technicians are doing.
   def change_tube_states_to_passed!
-
     # Reload the plate so that we can use the tubes
     api.plate.find(labware_uuid).coerce.tubes.each do |tube|
       api.state_change.create!(
-        :target       => tube.uuid,
-        :target_state => 'passed',
-        :user         => user_uuid
+        target: tube.uuid,
+        target_state: 'passed',
+        user: user_uuid
       )
     end
   end

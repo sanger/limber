@@ -1,10 +1,9 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2013 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2013 Genome Research Ltd.
 module Presenters
-
   class TubePresenter
-
     def qc_owner
       labware
     end
@@ -13,27 +12,27 @@ module Presenters
     include Statemachine::Shared
 
     class_attribute :labware_class
-    self.labware_class =  :tube
+    self.labware_class = :tube
 
-    self.attributes =  [ :api, :labware ]
+    self.attributes =  [:api, :labware]
 
     class_attribute :additional_creation_partial
-    self.additional_creation_partial =  'labware/tube/child_tube_creation'
+    self.additional_creation_partial = 'labware/tube/child_tube_creation'
 
     class_attribute :tab_views
-    self.tab_views =  {
-      'labware-summary-button'          => [ 'labware-summary', 'tube-printing' ],
-      'labware-creation-button' => [ 'labware-summary', 'tube-creation' ],
-      'labware-QC-button'       => [ 'labware-summary', 'tube-creation' ],
-      'labware-state-button'    => [ 'labware-summary', 'tube-state' ]
+    self.tab_views = {
+      'labware-summary-button' => ['labware-summary', 'tube-printing'],
+      'labware-creation-button' => ['labware-summary', 'tube-creation'],
+      'labware-QC-button'       => ['labware-summary', 'tube-creation'],
+      'labware-state-button'    => ['labware-summary', 'tube-state']
     }
 
-    class_attribute    :tab_states
+    class_attribute :tab_states
 
     LABEL_TEXT = 'ILB Stock'
 
     def label_text
-      "#{labware.label.prefix} #{labware.label.text|| LABEL_TEXT}"
+      "#{labware.label.prefix} #{labware.label.text || LABEL_TEXT}"
     end
 
     def label_name
@@ -45,11 +44,11 @@ module Presenters
     end
 
     def default_statechange_label
-      "Move tube to next state"
+      'Move tube to next state'
     end
 
     # The state is delegated to the tube
-    delegate :state, :to => :labware
+    delegate :state, to: :labware
 
     def label_description
       "#{prioritized_name(labware.name, 10)} #{label_text}"
@@ -67,12 +66,10 @@ module Presenters
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
     # all presenters.
-    def purpose
-      labware.purpose
-    end
+    delegate :purpose, to: :labware
 
     def labware_form_details(view)
-      { :url => view.limber_tube_path(self.labware), :as => :tube }
+      { url: view.limber_tube_path(labware), as: :tube }
     end
 
     class UnknownTubeType < StandardError
@@ -85,7 +82,7 @@ module Presenters
     end
 
     def self.lookup_for(labware)
-      presentation_classes = Settings.purposes[labware.purpose.uuid] or raise UnknownTubeType, labware
+      (presentation_classes = Settings.purposes[labware.purpose.uuid]) || raise(UnknownTubeType, labware)
       presentation_classes[:presenter_class].constantize
     end
   end

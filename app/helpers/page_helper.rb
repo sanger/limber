@@ -1,8 +1,8 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012 Genome Research Ltd.
 module PageHelper
-
   FLASH_STYLES = {
     'alert'   => 'danger',
     'danger'  => 'danger',
@@ -23,19 +23,19 @@ module PageHelper
   DEFAULT_STATE_STYLE = 'default'
 
   def flash_messages
-    render(:partial => 'labware/flash_messages')
+    render(partial: 'labware/flash_messages')
   end
 
-  def grouping(data_role, options = {}, &block)
+  def grouping(_data_role, options = {}, &block)
     content_tag(:div, options, &block)
   end
   private :grouping
 
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
-  def page(id, css_class=nil, &block)
-    grouping(:page, :id => id, :class => "container-fluid #{css_class}") do
-      concat render :partial => 'header'
+  def page(id, css_class = nil, &block)
+    grouping(:page, id: id, class: "container-fluid #{css_class}") do
+      concat render partial: 'header'
       concat flash_messages
       concat content_tag(:div, class: 'row', &block)
     end
@@ -43,11 +43,10 @@ module PageHelper
     content_for :header, ''
   end
 
-  def header(presenter = nil, title = nil, options = {}, &block)
-
+  def header(presenter = nil, title = nil, _options = {}, &block)
     content_for(:header, &block) if block_given?
     grouping(:header) do
-      render(:partial => 'header', :locals => { :presenter => presenter, :title => title })
+      render(partial: 'header', locals: { presenter: presenter, title: title })
     end
   end
 
@@ -67,24 +66,24 @@ module PageHelper
       if without_block
         yield
       else
-        concat content_tag(:div, class: 'card-block',&block)
+        concat content_tag(:div, class: 'card-block', &block)
       end
     end
   end
 
-  def footer(&block)
+  def footer
     grouping(:footer, 'data-position' => 'fixed') do
-      render(:partial => 'labware/footer')
+      render(partial: 'labware/footer')
     end
   end
 
   def section(options = {}, &block)
     # add section to the section's CSS class attribute
-    options[:class] = [ options[:class], 'section' ].compact.join(" ")
+    options[:class] = [options[:class], 'section'].compact.join(' ')
     content_tag(:div, options, &block)
   end
 
-  def jumbotron(jumbotron_id=nil, options={}, &block)
+  def jumbotron(jumbotron_id = nil, options = {}, &block)
     options[:class] ||= ''
     options[:class] << ' jumbotron'
     options[:id] = jumbotron_id
@@ -92,10 +91,10 @@ module PageHelper
   end
 
   def flash_style(level)
-    FLASH_STYLES[level]||DEFAULT_FLASH_STYLE
+    FLASH_STYLES[level] || DEFAULT_FLASH_STYLE
   end
 
   def state_style(state)
-    STATE_STYLES[state]||DEFAULT_STATE_STYLE
+    STATE_STYLES[state] || DEFAULT_STATE_STYLE
   end
 end

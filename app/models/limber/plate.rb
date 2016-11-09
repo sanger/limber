@@ -1,12 +1,13 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
 class Limber::Plate < Sequencescape::Plate
   # Returns a plate instance that has been coerced into the appropriate class if necessary.  Typically
   # this is only done at the end of the pipelines when extra functionality is required when dealing
   # with the transfers into tubes.
   def coerce
-    return self unless tubes_created? and is_a_final_pooling_plate?
+    return self unless tubes_created? && is_a_final_pooling_plate?
     coerce_to(Limber::FinalPoolPlate)
   end
 
@@ -17,15 +18,15 @@ class Limber::Plate < Sequencescape::Plate
     'Lib PCRR-XP',
     'ISCH lib pool',
     'ISCH cap lib pool'
-  ]
+  ].freeze
 
   TUBES_ON_PASS = [
-  ]
+  ].freeze
 
   TUBES_ON_CREATE = [
 
     'ISCH cap lib pool'
-  ]
+  ].freeze
 
   def is_a_final_pooling_plate?
     FINAL_POOLING_PLATE_PURPOSES.include?(plate_purpose.name)
@@ -59,7 +60,6 @@ class Limber::Plate < Sequencescape::Plate
 
   def shearing_size
     uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]["insert_size"].to_a.join(' ')
+    uuid.nil? ? 'Unknown' : pools[uuid]['insert_size'].to_a.join(' ')
   end
-
 end

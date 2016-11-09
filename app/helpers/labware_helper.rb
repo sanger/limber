@@ -1,39 +1,40 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2012,2013,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2012,2013,2015 Genome Research Ltd.
 module LabwareHelper
   def state_change_form(presenter)
-    render :partial => 'labware/state_change', :locals => { :presenter => presenter }
-  end
-  def simple_state_change_form(presenter)
-    render :partial => 'labware/simple_state_change', :locals => { :presenter => presenter }
+    render partial: 'labware/state_change', locals: { presenter: presenter }
   end
 
+  def simple_state_change_form(presenter)
+    render partial: 'labware/simple_state_change', locals: { presenter: presenter }
+  end
 
   STANDARD_COLOURS = (1..96).map { |i| "colour-#{i}" }
-  FAILED_STATES    = [ 'failed', 'cancelled' ]
+  FAILED_STATES    = %w(failed cancelled).freeze
 
   def self.cycling_colours(name, &block)
     define_method(:"#{name}_colour") do |*args|
-      return 'failed' if FAILED_STATES.include?(args.first)  # First argument is always the well
-      @colours  ||= Hash.new { |h,k| h[k] = STANDARD_COLOURS.dup }
-      @rotating ||= Hash.new { |h,k| h[k] = @colours[name].rotate!.last } # Go for last as it was first before the rotate
+      return 'failed' if FAILED_STATES.include?(args.first) # First argument is always the well
+      @colours  ||= Hash.new { |h, k| h[k] = STANDARD_COLOURS.dup }
+      @rotating ||= Hash.new { |h, k| h[k] = @colours[name].rotate!.last } # Go for last as it was first before the rotate
       @rotating[block.call(*args)]
     end
   end
 
   cycling_colours(:bait)    { |labware, _|            labware.bait }
   cycling_colours(:tag)     { |labware, _|            labware.pool_id }
-  cycling_colours(:pooling) { |labware, destination|  destination }
+  cycling_colours(:pooling) { |_labware, destination| destination }
 
   def show_state?(state, presenter, transitions)
     [presenter.labware.state, transitions.first.to].include?(state)
   end
 
   def self.disable_based_on_state(state_name)
-    define_method(:"disable_#{state_name}_by_state") do |transitions,options|
+    define_method(:"disable_#{state_name}_by_state") do |transitions, options|
       options ||= {}
-      return {:disabled => true}.merge(options) unless transitions.first.to == state_name.to_s
+      return { disabled: true }.merge(options) unless transitions.first.to == state_name.to_s
       {}.merge(options)
     end
   end
@@ -49,17 +50,17 @@ module LabwareHelper
 
   def aliquot_colour(labware)
     case labware.state
-      when "passed"   then "green"
-      when "started"  then "orange"
-      when "failed"   then "red"
-      when "canceled" then "red"
-      else "blue"
+    when 'passed'   then 'green'
+    when 'started'  then 'orange'
+    when 'failed'   then 'red'
+    when 'canceled' then 'red'
+    else 'blue'
     end
   end
 
   def permanent_state(container)
-    return "permanent-failure" if container.state == "failed"
-    "good"
+    return 'permanent-failure' if container.state == 'failed'
+    'good'
   end
 
   def colours_by_location
@@ -67,8 +68,8 @@ module LabwareHelper
 
     @location_colours = {}
 
-    ('A'..'H').each_with_index do |row,row_index|
-      (1..12).each_with_index do |col,col_index|
+    ('A'..'H').each_with_index do |row, row_index|
+      (1..12).each_with_index do |col, col_index|
         @location_colours[row + col.to_s] = "colour-#{(col_index * 8) + row_index + 1}"
       end
     end
@@ -77,8 +78,8 @@ module LabwareHelper
   end
 
   def column(well)
-    location = well.try(:location) or return
-    column = location.match( /^[A-H](\d[0-2]?)$/ ).try(:[], 1) or return
+    (location = well.try(:location)) || return
+    (column = location.match(/^[A-H](\d[0-2]?)$/).try(:[], 1)) || return
 
     "col-#{column}"
   end
@@ -97,7 +98,7 @@ module LabwareHelper
   private :tab_states_or_summary
 
   def plates_by_state(plates)
-    plates.each_with_object(Hash.new {|h,k| h[k]=[]}) do |plate, plates_by_state|
+    plates.each_with_object(Hash.new { |h, k| h[k] = [] }) do |plate, plates_by_state|
       plates_by_state[plate.state] << plate
     end
   end

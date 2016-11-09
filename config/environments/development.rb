@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -53,28 +54,26 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-
   config.action_mailer.delivery_method = :test
-  config.action_mailer.smtp_settings = { }
+  config.action_mailer.smtp_settings = {}
 
-  config.admin_email          = "nnnnnnnnnnnnnnnn"
-  config.exception_recipients = "nnnnnnnnnnnnnnnn"
+  config.admin_email          = 'nnnnnnnnnnnnnnnn'
+  config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Limber'
-  config.api_connection_options.url           = ENV.fetch('API_URL','http://localhost:3000/api/1/')
+  config.api_connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
   config.api_connection_options.authorisation = 'development'
 
-
-  config.qc_submission_name = "MiSeq for QC"
+  config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project
   config.study_uuid = nil
   config.project_uuid = nil
   config.request_options = {
-    "read_length" => 11,
-    "fragment_size_required" => {
-      "from" => 100,
-      "to"   => 100
+    'read_length' => 11,
+    'fragment_size_required' => {
+      'from' => 100,
+      'to'   => 100
     }
   }
 end

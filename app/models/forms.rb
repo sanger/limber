@@ -1,12 +1,13 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012,2013 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012,2013 Genome Research Ltd.
 module Forms
   module Form
     module CustomPage
       # We need to do something special at this point in order to create the plate.
       def render(controller)
-        controller.render(self.page)
+        controller.render(page)
       end
     end
 
@@ -70,10 +71,10 @@ module Forms
     attr_reader :plate_creation
 
     def plate_to_walk
-      self.parent
+      parent
     end
 
-    validates_presence_of attributes
+    validates presence: { attributes }
 
     def child
       plate_creation.try(:child) || :child_not_created
@@ -86,10 +87,10 @@ module Forms
     def parent
       @parent ||= api.plate.find(parent_uuid)
     end
-    alias_method(:plate, :parent)
+    alias plate parent
 
     def labware
-      self.plate
+      plate
     end
 
     # Purpose returns the plate or tube purpose of the labware.
@@ -105,22 +106,22 @@ module Forms
     end
 
     def save!
-      raise StandardError, 'Invalid data; ' + self.errors.full_messages.join('; ') unless valid?
+      raise StandardError, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
 
       create_objects!
     end
 
-    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
+    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid)
       @plate_creation = api.plate_creation.create!(
-        :parent        => parent_uuid,
-        :child_purpose => purpose_uuid,
-        :user          => user_uuid
+        parent: parent_uuid,
+        child_purpose: purpose_uuid,
+        user: user_uuid
       )
 
       api.transfer_template.find(selected_transfer_template_uuid).create!(
-        :source      => parent_uuid,
-        :destination => @plate_creation.child.uuid,
-        :user        => user_uuid
+        source: parent_uuid,
+        destination: @plate_creation.child.uuid,
+        user: user_uuid
       )
 
       yield(@plate_creation.child) if block_given?
@@ -128,6 +129,6 @@ module Forms
     end
     private :create_plate!
 
-    alias_method(:create_objects!, :create_plate!)
+    alias create_objects! create_plate!
   end
 end

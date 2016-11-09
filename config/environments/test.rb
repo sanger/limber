@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -41,7 +42,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Legacy options
-  config.admin_email          = "nnnnnnnnnnnnnnnn"
-  config.exception_recipients = "nnnnnnnnnnnnnnnn"
-
+  config.admin_email          = 'nnnnnnnnnnnnnnnn'
+  config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 end

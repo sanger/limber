@@ -1,22 +1,22 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012 Genome Research Ltd.
 module Forms
   class CustomPoolingForm < CreationForm
     include Forms::Form::CustomPage
 
-    self.page =  'custom_pooling'
-    self.aliquot_partial =  "custom_pooled_aliquot"
+    self.page = 'custom_pooling'
+    self.aliquot_partial = 'custom_pooled_aliquot'
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Pool wells based on submission']
 
-    self.attributes =  [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers]
+    self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers]
 
     class TransferHelper
       def initialize(transfers)
         @transfers = transfers
       end
-
 
       def method_missing(name, *args, &block)
         return @transfers[name.to_s] if name.to_s =~ /^[A-H]\d+$/
@@ -25,7 +25,7 @@ module Forms
       end
 
       def respond_to?(name, include_private = false)
-        (name.to_s =~ /^[A-H]\d+$/) or @transfers.respond_to?(name, include_private)
+        (name.to_s =~ /^[A-H]\d+$/) || @transfers.respond_to?(name, include_private)
       end
     end
 
@@ -49,11 +49,11 @@ module Forms
     def transfer_preview
       @transfer_preview ||= TransferHelper.new(
         api.transfer_template.find(
-          self.default_transfer_template_uuid
+          default_transfer_template_uuid
         ).preview!(
-          :source      => parent_uuid,
-          :destination => parent_uuid,
-          :user        => user_uuid
+          source: parent_uuid,
+          destination: parent_uuid,
+          user: user_uuid
         ).transfers
       )
     end
@@ -67,33 +67,31 @@ module Forms
     end
 
     def wells_by_row
-      rows = Hash[('A'..'H').map { |row| [ row, [] ] }]
+      rows = Hash[('A'..'H').map { |row| [row, []] }]
 
       transfers.values.uniq.map do |location|
         [PlateWalking::Walker::Location.new(location), CustomPoolingForm::Well.new(location)]
       end.group_by do |location, _|
         location.row
       end.map do |row, location_and_well_pairs|
-        rows[row] = location_and_well_pairs.sort { |(a,_),(b,_)| a.column <=> b.column }.map(&:last)
+        rows[row] = location_and_well_pairs.sort { |(a, _), (b, _)| a.column <=> b.column }.map(&:last)
       end
 
       rows
     end
 
-
-    def create_objects!(selected_transfer_template_uuid = default_transfer_template_uuid, &block)
+    def create_objects!(_selected_transfer_template_uuid = default_transfer_template_uuid)
       @plate_creation = api.plate_creation.create!(
-        :parent        => parent_uuid,
-        :child_purpose => purpose_uuid,
-        :user          => user_uuid
+        parent: parent_uuid,
+        child_purpose: purpose_uuid,
+        user: user_uuid
       )
 
-
       api.transfer_template.find(Settings.transfer_templates['Custom pooling']).create!(
-        :source      => parent_uuid,
-        :destination => @plate_creation.child.uuid,
-        :user        => user_uuid,
-        :transfers   => transfers
+        source: parent_uuid,
+        destination: @plate_creation.child.uuid,
+        user: user_uuid,
+        transfers: transfers
       )
 
       yield(@plate_creation.child) if block_given?
@@ -102,4 +100,3 @@ module Forms
     private :create_objects!
   end
 end
-

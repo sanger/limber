@@ -1,31 +1,30 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2015 Genome Research Ltd.
 module Presenters::ExtendedCsv
-
   def self.included(base)
     base.class_eval do
-
       class_attribute :bed_prefix
 
-      self.csv =  'show_extended'
-      self.bed_prefix =  'PCRXP'
+      self.csv = 'show_extended'
+      self.bed_prefix = 'PCRXP'
     end
   end
 
   # Yields information for the show_pooled.csv
-  def each_well_transfer(offset=0)
+  def each_well_transfer(offset = 0)
     index = 0
-    transfers_for_csv[offset*4...(offset+1)*4].each_with_index do |transfers_list, bed_index|
+    transfers_for_csv[offset * 4...(offset + 1) * 4].each_with_index do |transfers_list, bed_index|
       transfers_list[:transfers].each do |transfer|
         source_well, destination_wells = transfer
         Array(destination_wells).each do |destination_well|
-          yield ({
-            :index => (index += 1),
-            :name => "#{bed_prefix}#{(offset*4)+bed_index+1}",
-            :source_well => source_well,
-            :destination_well => destination_well,
-            }.merge(transfers_list))
+          yield {
+            index: (index += 1),
+            name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
+            source_well: source_well,
+            destination_well: destination_well
+          }.merge(transfers_list)
         end
       end
     end
@@ -36,28 +35,26 @@ module Presenters::ExtendedCsv
   def all_wells
     return @all_wells unless @all_wells.nil?
     @all_wells = {}
-    ('A'..'H').each {|r| (1..12).each{|c| @all_wells["#{r}#{c}"]="H12"}}
+    ('A'..'H').each { |r| (1..12).each { |c| @all_wells["#{r}#{c}"] = 'H12' } }
     @all_wells
   end
 
   def transfers_for_csv
-    self.labware.creation_transfers.map do |ct|
+    labware.creation_transfers.map do |ct|
       source_ean = ct.source.barcode.ean13
       source_barcode = "#{ct.source.barcode.prefix}#{ct.source.barcode.number}"
       source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
       destination_ean = ct.destination.barcode.ean13
       destination_barcode = "#{ct.destination.barcode.prefix}#{ct.destination.barcode.number}"
-      transfers = ct.transfers.reverse_merge(all_wells).sort {|a,b| split_location(a.first) <=> split_location(b.first) }
+      transfers = ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
       {
-        :source_ean          => source_ean,
-        :source_barcode      => source_barcode,
-        :source_stock        => source_stock,
-        :destination_ean     => destination_ean,
-        :destination_barcode => destination_barcode,
-        :transfers           => transfers
+        source_ean: source_ean,
+        source_barcode: source_barcode,
+        source_stock: source_stock,
+        destination_ean: destination_ean,
+        destination_barcode: destination_barcode,
+        transfers: transfers
       }
     end
   end
-
 end
-

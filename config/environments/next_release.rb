@@ -1,6 +1,7 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2011,2012 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2011,2012 Genome Research Ltd.
 Limber::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -13,7 +14,7 @@ Limber::Application.configure do
   config.action_controller.perform_caching = true
 
   # Specifies the header that your server uses for sending files
-  config.action_dispatch.x_sendfile_header = "X-Sendfile"
+  config.action_dispatch.x_sendfile_header = 'X-Sendfile'
 
   # For nginx:
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
@@ -56,4 +57,3 @@ Limber::Application.configure do
   config.api_connection_options.url           = 'http://psd-dev.internal.sanger.ac.uk:6801/api/1/'
   config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
 end
-

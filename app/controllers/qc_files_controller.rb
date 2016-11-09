@@ -1,12 +1,12 @@
-#This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-#Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-#Copyright (C) 2013,2015 Genome Research Ltd.
+# frozen_string_literal: true
+# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
+# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
+# Copyright (C) 2013,2015 Genome Research Ltd.
 class QcFilesController < ApplicationController
-
   def show
     response = api.qc_file.find(params[:id]).retrieve
-    filename = /filename="([^"]*)"/.match(response['Content-Disposition'])[1]||"unnamed_file"
-    send_data(response.body, :filename => filename, :type => 'sequencescape/qc_file')
+    filename = /filename="([^"]*)"/.match(response['Content-Disposition'])[1] || 'unnamed_file'
+    send_data(response.body, filename: filename, type: 'sequencescape/qc_file')
   end
 
   def create
@@ -21,8 +21,8 @@ class QcFilesController < ApplicationController
   before_action :find_assets
 
   def find_assets
-    ['limber', 'pulldown'].each do |app_name|
-      ['plate','tube','multiplexed_library_tube'].each do |klass|
+    %w(limber pulldown).each do |app_name|
+      %w(plate tube multiplexed_library_tube).each do |klass|
         next if params["#{app_name}_#{klass}_id"].nil?
         @asset_path = send(:"#{app_name}_#{klass}_path", params["#{app_name}_#{klass}_id"])
         @asset      = api.send(:"#{klass}").find(params["#{app_name}_#{klass}_id"])
@@ -36,5 +36,4 @@ class QcFilesController < ApplicationController
     end
     false
   end
-
 end
