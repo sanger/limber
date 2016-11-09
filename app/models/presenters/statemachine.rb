@@ -7,6 +7,7 @@ module Presenters::Statemachine
     def control_child_plate_creation(&block)
       # Does nothing because you can't!
     end
+
     def control_additional_creation(&block)
       # Does nothing because you can't!
     end
@@ -31,6 +32,7 @@ module Presenters::Statemachine
       yield unless default_child_purpose.nil?
       nil
     end
+
     # Returns the child plate purposes that can be created in the passed state.  Typically
     # this is only one, but it specifically excludes QC plates.
     def default_child_purpose
@@ -39,7 +41,7 @@ module Presenters::Statemachine
 
     def valid_purposes
       yield default_child_purpose unless default_child_purpose.nil?
-       nil
+      nil
     end
 
     def suggested_purposes
@@ -138,7 +140,12 @@ module Presenters::Statemachine
         end
 
         state :passed do
-         include StateAllowsChildCreation
+          include StateAllowsChildCreation
+        end
+
+        state :qc_complete, :human_name => 'QC Complete' do
+          include StateAllowsChildCreation
+          def has_qc_data?; true; end
         end
 
         state :cancelled do
