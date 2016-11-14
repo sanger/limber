@@ -62,4 +62,8 @@ class Limber::Plate < Sequencescape::Plate
     uuid = pools.keys.first
     uuid.nil? ? 'Unknown' : pools[uuid]['insert_size'].to_a.join(' ')
   end
+
+  def purpose
+    plate_purpose
+  end
 end

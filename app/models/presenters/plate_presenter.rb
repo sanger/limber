@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_dependency 'presenters/presenter'
 module Presenters
   class PlatePresenter
     include Presenter
@@ -22,15 +23,6 @@ module Presenters
 
     class_attribute :printing_partial
 
-    class_attribute :tab_views
-    self.tab_views = {
-      'labware-summary-button'  => ['labware-summary', 'plate-printing'],
-      'labware-creation-button' => ['labware-summary', 'plate-creation'],
-      'labware-QC-button'       => ['labware-summary', 'plate-creation'],
-      'labware-state-button'    => ['labware-summary', 'plate-state'],
-      'well-failing-button'     => ['well-failing', 'well-failing-instructions']
-    }
-
     # This is now generated dynamically by the LabwareHelper
     class_attribute    :tab_states
 
@@ -50,7 +42,7 @@ module Presenters
       else self.class.additional_creation_partial
       end
     end
-
+    
     def default_statechange_label
       'Move plate to next state'
     end

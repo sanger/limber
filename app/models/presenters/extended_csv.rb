@@ -19,12 +19,12 @@ module Presenters::ExtendedCsv
       transfers_list[:transfers].each do |transfer|
         source_well, destination_wells = transfer
         Array(destination_wells).each do |destination_well|
-          yield {
+          yield({
             index: (index += 1),
             name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
             source_well: source_well,
             destination_well: destination_well
-          }.merge(transfers_list)
+          }.merge(transfers_list))
         end
       end
     end

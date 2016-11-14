@@ -74,7 +74,7 @@ module Forms
       parent
     end
 
-    validates presence: { attributes }
+    validates(*self.attributes, presence: true)
 
     def child
       plate_creation.try(:child) || :child_not_created

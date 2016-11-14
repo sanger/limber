@@ -31,19 +31,21 @@ gem 'exception_notification'
 gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
   :github  => 'jamesGlover/sequencescape-client-api',
-  :branch  => 'with_rails_5_support',
+  :branch  => 'add_limber_needs',
   :require => 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
-gem 'sanger_barcodeable', path: '../barcode_gem'
+gem 'sanger_barcode_format', path: '../barcode_gem'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara'
-  gem 'rspec'
+  gem 'rspec-rails'
   gem 'launchy'
+  gem 'factory_girl'
+  gem 'webmock'
 end
 group :development do
   gem 'pry'

@@ -15,13 +15,6 @@ module Presenters
     class_attribute    :additional_creation_partial
     self.additional_creation_partial = nil
 
-    class_attribute :tab_views
-    self.tab_views = {
-      'labware-summary-button'  => ['labware-summary', 'tube-printing'],
-      'labware-creation-button' => ['labware-summary', 'tube-creation'],
-      'labware-state-button'    => ['labware-summary', 'tube-state']
-    }
-
     class_attribute    :tab_states
 
     class_attribute    :authenticated_tab_states
@@ -56,16 +49,10 @@ module Presenters
       end
 
       state :passed do
-        def has_qc_data?
-          true
-        end
         include Statemachine::StateDoesNotAllowChildCreation
       end
 
       state :qc_complete, human_name: 'QC Complete' do
-        def has_qc_data?
-          true
-        end
         include Statemachine::StateDoesNotAllowChildCreation
       end
 

@@ -143,9 +143,6 @@ module Presenters::Statemachine
 
         state :qc_complete, human_name: 'QC Complete' do
           include StateAllowsChildCreation
-          def has_qc_data?
-            true
-          end
         end
 
         state :cancelled do

@@ -87,8 +87,8 @@ class SearchController < ApplicationController
 
   def find_plate(barcode)
     machine_barcode =
-      if SangerBarcodeable::HUMAN_BARCODE_FORMAT.match(barcode)
-        SangerBarcodeable::SangerBarcode.from_human(barcode).machine_barcode
+      if SBCF::HUMAN_BARCODE_FORMAT.match(barcode)
+        SBCF::SangerBarcode.from_human(barcode).machine_barcode
       else
         barcode
       end

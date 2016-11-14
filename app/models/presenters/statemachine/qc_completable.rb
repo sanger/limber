@@ -52,9 +52,6 @@ module Presenters
             end
 
             state :passed do
-              def has_qc_data?
-                true
-              end
               include QcCreatableStep
             end
 
@@ -69,10 +66,6 @@ module Presenters
               # Returns the child plate purposes that can be created in the qc_complete state.
               def default_child_purpose
                 labware.plate_purpose.children.detect(&:not_qc?)
-              end
-
-              def has_qc_data?
-                true
               end
             end
 

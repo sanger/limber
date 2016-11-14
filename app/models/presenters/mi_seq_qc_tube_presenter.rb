@@ -46,9 +46,6 @@ module Presenters
       end
 
       state :passed do
-        def has_qc_data?
-          true
-        end
         include Statemachine::StateDoesNotAllowChildCreation
       end
     end

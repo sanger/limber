@@ -9,7 +9,7 @@ module Forms
     self.page = 'robot'
     self.attributes = [:api, :user_uuid, :purpose_uuid, :parent_uuid, :transfer_template_uuid]
 
-    validates presence: { *attributes }
+    validates presence: attributes
 
     def transfer_template_uuids
       Settings.transfer_templates.select { |name, _| name =~ /columns \d+-\d+/ }.to_a.reverse

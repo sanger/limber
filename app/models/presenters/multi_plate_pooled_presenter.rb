@@ -30,20 +30,11 @@ class Presenters::MultiPlatePooledPresenter < Presenters::PooledPresenter
 
     state :passed do
       include Presenters::Statemachine::StateAllowsChildCreation
-      def has_qc_data?
-        true
-      end
     end
 
     state :failed do
-      def has_qc_data?
-        true
-      end
     end
     state :cancelled do
-      def has_qc_data?
-        true
-      end
     end
   end
 

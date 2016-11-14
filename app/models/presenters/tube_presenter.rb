@@ -19,14 +19,6 @@ module Presenters
     class_attribute :additional_creation_partial
     self.additional_creation_partial = 'labware/tube/child_tube_creation'
 
-    class_attribute :tab_views
-    self.tab_views = {
-      'labware-summary-button' => ['labware-summary', 'tube-printing'],
-      'labware-creation-button' => ['labware-summary', 'tube-creation'],
-      'labware-QC-button'       => ['labware-summary', 'tube-creation'],
-      'labware-state-button'    => ['labware-summary', 'tube-state']
-    }
-
     class_attribute :tab_states
 
     LABEL_TEXT = 'ILB Stock'

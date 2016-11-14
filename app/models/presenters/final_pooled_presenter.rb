@@ -18,10 +18,6 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
     failed: ['labware-summary-button']
   }
 
-  def has_qc_data?
-    true
-  end
-
   def tube_label_text
     labware.tubes.map do |tube|
       "#{tube.label.prefix} #{tube.label.text}"

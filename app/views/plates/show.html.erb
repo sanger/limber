@@ -2,7 +2,7 @@
 <script type="text/javascript">
   SCAPE.labware = {
     'state':     '<%= @presenter.labware.state %>',
-    'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
+    'tabViews':  {},
     'tabStates': <%= get_tab_states(@presenter) %>,
     'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
     'uuid':     '<%= @presenter.labware.uuid %>'
@@ -13,7 +13,7 @@
     <%= card without_block: true do %>
       <div class="card-block">
         <h2 class="card-title">
-          <%= @presenter.purpose.name %>
+          <%= @presenter.title %>
           <span class="tag tag-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
         </h2>

@@ -11,14 +11,6 @@ module Forms
     self.default_transfer_template_uuid = Settings.transfer_templates['Pool wells based on submission']
     self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid, :transfers, :plates]
 
-    def tab_views
-      {
-        'add-plates' => ['add-plates-instructions-block', 'add-plates-block'],
-        'pooling-summary' => ['pooling-summary-block', 'input-plate-block',
-                              'create-plate-block', 'output-plate-block']
-      }
-    end
-
     def create_objects!(_selected_transfer_template_uuid = default_transfer_template_uuid)
       @plate_creation = api.pooled_plate_creation.create!(
         parents: transfers.keys,

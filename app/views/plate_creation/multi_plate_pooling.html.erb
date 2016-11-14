@@ -130,7 +130,7 @@
       coloursByLocation: <%= colours_by_location.to_json.html_safe %>,
       plates: new Array(8),
       plate: {
-        tabViews: <%= @creation_form.tab_views.to_json.html_safe %>
+        tabViews: {} // Deprecated: Remove dependent code
       },
       sourceState: "qc_complete",
       sourcePurpose: "Lib PCR-XP"

@@ -13,10 +13,6 @@ module Presenters
       passed: ['labware-summary-button']
     }
 
-    def has_qc_data?
-      labware.passed?
-     end
-
     def qc_owner
       labware.creation_transfers.first.source
     end

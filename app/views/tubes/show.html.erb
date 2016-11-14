@@ -2,7 +2,7 @@
   <script type="text/javascript">
     SCAPE.labware = {
       'state':     '<%= @presenter.labware.state %>',
-      'tabViews':  <%= @presenter.tab_views.to_json.html_safe %>,
+      'tabViews':  {},
       'tabStates': <%= get_tab_states(@presenter) %>,
       'uuid':     '<%= @presenter.labware.uuid %>'
     };
@@ -50,7 +50,7 @@
 
 
           <div id="tube-printing" class="scape-ui-block" style="display:none;">
-            <%= render(:partial => 'labware/qc_data') if @presenter.has_qc_data? %>
+            <%= render(:partial => 'labware/qc_data') %>
 
             <%= individual_barcode_printing_form(
               @presenter.labware.barcode,
