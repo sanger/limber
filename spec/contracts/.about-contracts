@@ -1,0 +1,13 @@
+This follows the testing pattern established in the sequencescape-client-api itself
+
+A contract composes two files:
+- retrieve-contract-name
+- contract name
+
+The former lists the expected headers/content of the request
+The later includes the headers/content of the response
+
+A contract is declared through the use of expect_request_and_respone('contract_name') in the context.
+
+In practice most contracts will be generated via contract helpers, that allow you to use factories
+to automatically generate the bulk of your json.
