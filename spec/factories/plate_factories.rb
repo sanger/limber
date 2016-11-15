@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 require './lib/well_helpers'
+require_relative '../support/factory_girl_extensions'
+
 FactoryGirl.define do
-  factory :plate, class: Limber::Plate, traits: [:api_object] do
+  factory :plate, class: Limber::Plate, traits: [:api_object, :barcoded] do
     json_root 'plate'
     size 96
     state 'pending'
 
-    ['wells','comments','creation_transfers','qc_files','requests','source_transfers','submission_pools','transfers_to_tubes'].each do |association|
-      transient { send(association+'_count', 0) }
-      send(association) do
-        {
-          "size" => send(association+'_count'),
-          "actions" => { "read" => resource_url + '/' + association }
-        }
-      end
+    transient do
+      barcode_prefix 'DN'
+      barcode_type 1
     end
+
+    with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
+      'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
 
     transient do
       purpose_name 'example-purpose'
@@ -27,12 +27,12 @@ FactoryGirl.define do
     pools do
       wells = WellHelpers.column_order.dup
       pool_hash = {}
-      pool_sizes.each_with_index do |size,index|
-        pool_hash["pool-#{index+1}-uuid"] = {
-          'wells' => wells.shift(size),
-          "insert_size": { "from": 100, "to": 300 },
-          "library_type": { "name": library_type },
-          "request_type": request_type
+      pool_sizes.each_with_index do |size, index|
+        pool_hash["pool-#{index + 1}-uuid"] = {
+          wells: wells.shift(size),
+          insert_size: { from: 100, to: 300 },
+          library_type: { name: library_type },
+          request_type: request_type
         }
       end
       pool_hash

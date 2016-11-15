@@ -6,7 +6,7 @@ describe 'plate factory' do
     json(:plate,
          uuid: 'example-plate-uuid',
          state: 'passed',
-         barcode: { 'ean13' => '1220427444877', 'number' => '427444', 'prefix' => 'DN', 'two_dimensional' => nil, 'type' => 1 },
+         barcode_number: 427444,
          name: 'Cherrypicked 427444',
          qc_state: nil,
          iteration: 1,
@@ -29,8 +29,7 @@ describe 'plate factory' do
          updated_at: '2016-01-21 16:16:42 +0000',
          wells_count: 30,
          comments_count: 3,
-         submission_pools_count: 2#,
-         #purpose_attributes: attributes_for(:plate_purpose, uuid: 'ilc-stock-plate-purpose-uuid', name: "ILC Stock" )
+         submission_pools_count: 2
       )
   end
 

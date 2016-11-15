@@ -92,5 +92,11 @@ module Presenters
     def robot_exists?
       false
     end
+
+    def summary
+      summary_items.each do |label,method_symbol|
+        yield label, send(method_symbol)
+      end
+    end
   end
 end

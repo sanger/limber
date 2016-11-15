@@ -7,12 +7,16 @@ shared_examples 'a labware presenter' do
     expect(subject.labware).to eq(labware)
   end
 
-  # it 'provides a title' do
-  #   expect(subject.title).to eq(title)
-  # end
+  it 'provides a title' do
+    expect(subject.title).to eq(title)
+  end
 
   it 'has a state' do
-    expect(subject.state).to eq('pending')
+    expect(subject.state).to eq(state)
+  end
+
+  it 'has a summary' do
+    expect() { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
   end
 end
 
@@ -21,8 +25,15 @@ describe Presenters::PlatePresenter do
   # Want to get the basics working first though
   has_a_working_api(times: 2)
 
-  let(:labware) { build :plate }
-  # let(:title)   { 'Limber example purpose' }
+  let(:labware) do
+    build :plate, purpose_name: title, state: state, barcode_number: 1
+  end
+
+  let(:title) { 'Limber example purpose' }
+  let(:state) { 'pending' }
+  let(:summary_tab) {[
+      ['Barcode','DN1 <em>1220000001831</em>']
+  ]}
 
   subject do
     Presenters::PlatePresenter.new(

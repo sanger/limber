@@ -5,6 +5,7 @@ module Presenters
     include Presenter
     include PlateWalking
     include RobotControlled
+    include BarcodeLabelsHelper
 
     class_attribute :labware_class
     self.labware_class = :plate
@@ -22,6 +23,13 @@ module Presenters
     self.additional_creation_partial = 'labware/plates/child_plate_creation'
 
     class_attribute :printing_partial
+
+    # summary_items is a has of ittem label, and a symbol representing the
+    # method to call to get the value
+    class_attribute :summary_items
+    self.summary_items = {
+      'Barcode' => :barcode
+    }
 
     # This is now generated dynamically by the LabwareHelper
     class_attribute    :tab_states
@@ -140,6 +148,10 @@ module Presenters
 
     def filename
       false
+    end
+
+    def barcode
+      useful_barcode(labware.barcode)
     end
   end
 end
