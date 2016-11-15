@@ -4,15 +4,6 @@
 # Copyright (C) 2013,2015 Genome Research Ltd.
 module Presenters
   class PendingCreationTubePresenter < TubePresenter
-    class_attribute :authenticated_tab_states
-    self.authenticated_tab_states = {
-      pending: ['labware-summary-button', 'labware-creation-button'],
-      started: ['labware-state-button', 'labware-summary-button'],
-      passed: ['labware-creation-button', 'labware-summary-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
-    }
-
     state_machine :state, initial: :pending do
       event :start do
         transition pending: :started

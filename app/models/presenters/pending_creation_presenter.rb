@@ -7,12 +7,5 @@ module Presenters
     include Presenters::Statemachine::PendingPlateCreation
 
     self.aliquot_partial = 'tagged_aliquot'
-
-    self.authenticated_tab_states = {
-      pending: ['labware-creation-button', 'labware-summary-button', 'labware-state-button'],
-      passed: ['labware-state-button', 'labware-summary-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
-    }
   end
 end

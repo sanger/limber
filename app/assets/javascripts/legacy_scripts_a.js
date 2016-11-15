@@ -388,40 +388,6 @@
     $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
   });
 
-
-  $(document).on('pagecreate', '.show-page', function(event) {
-
-    var tabsForState = '#'+SCAPE.labware.tabStates[SCAPE.labware.state].join(', #');
-
-    $('#navbar li').not(tabsForState).addClass('ui-disabled');
-    $('#'+SCAPE.labware.tabStates[SCAPE.labware.state][0]).find('a').addClass('ui-btn-active');
-
-
-    SCAPE.linkHandler = function(){
-      var targetTab = $(this).attr('rel');
-      var targetIds = '#'+SCAPE.labware.tabViews[targetTab].join(', #');
-
-      $('.scape-ui-block').
-        not(targetIds).
-        filter(':visible').
-        fadeOut().
-        promise().
-        done( function(){ $(targetIds).fadeIn(); } );
-    };
-
-    var targetTab = SCAPE.labware.tabStates[SCAPE.labware.state][0];
-    var targetIds = '#'+SCAPE.labware.tabViews[targetTab].join(', #');
-    $(targetIds).not(':visible').fadeIn();
-
-    $('.show-page').on('click', '.navbar-link', SCAPE.linkHandler);
-
-
-
-    // State changes reasons...
-    // SCAPE.displayReason();
-    $('.well').each(SCAPE.animateWell);
-  });
-
   $(document).on('pageinit', function(){
     SCAPE.linkCallbacks.add(SCAPE.linkHandler);
 

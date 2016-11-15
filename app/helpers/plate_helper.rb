@@ -33,10 +33,6 @@ module PlateHelper
     pool['insert_size']['from'] > Settings.large_insert_limit ? 'large-insert-size' : ''
   end
 
-  def well_failing_applicable?(presenter)
-    presenter.authenticated_tab_states[presenter.state.to_sym].include?('well-failing-button')
-  end
-
   # Altered to sort by column first then row
   def sortable_well_location_for(location)
     match = location.match(/^([A-Z])(\d+)$/)

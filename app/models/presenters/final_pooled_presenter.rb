@@ -10,14 +10,6 @@ class Presenters::FinalPooledPresenter < Presenters::PooledPresenter
   self.printing_partial = 'labware/plates/tube_printing'
   self.csv = 'show_pooled_alternative'
 
-  self.authenticated_tab_states = {
-    pending: ['labware-summary-button', 'labware-state-button'],
-    started: ['labware-state-button',   'labware-summary-button'],
-    passed: ['labware-summary-button', 'labware-state-button'],
-    cancelled: ['labware-summary-button'],
-    failed: ['labware-summary-button']
-  }
-
   def tube_label_text
     labware.tubes.map do |tube|
       "#{tube.label.prefix} #{tube.label.text}"

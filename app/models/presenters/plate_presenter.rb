@@ -34,14 +34,8 @@ module Presenters
     # This is now generated dynamically by the LabwareHelper
     class_attribute    :tab_states
 
-    class_attribute    :authenticated_tab_states
-    self.authenticated_tab_states = {
-      pending: ['labware-summary-button', 'labware-state-button'],
-      started: ['labware-state-button', 'labware-summary-button'],
-      passed: ['labware-creation-button', 'labware-state-button', 'labware-summary-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
-    }
+    class_attribute :well_failure_states
+    self.well_failure_states = []
 
     def additional_creation_partial
       case default_child_purpose.asset_type
@@ -49,10 +43,6 @@ module Presenters
       when 'tube' then 'labware/tube/child_tube_creation'
       else self.class.additional_creation_partial
       end
-    end
-
-    def default_statechange_label
-      'Move plate to next state'
     end
 
     def label_name

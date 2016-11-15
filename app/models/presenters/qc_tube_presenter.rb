@@ -6,16 +6,6 @@ module Presenters
   class QCTubePresenter < TubePresenter
     include RobotControlled
 
-    class_attribute :authenticated_tab_states
-    self.authenticated_tab_states = {
-      pending: ['labware-summary-button', 'labware-state-button'],
-      started: ['labware-summary-button', 'labware-state-button'],
-      passed: ['labware-summary-button', 'labware-state-button'],
-      qc_complete: ['labware-summary-button', 'labware-creation-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
-    }
-
     state_machine :state, initial: :pending do
       event :start do
         transition pending: :started

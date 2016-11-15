@@ -10,6 +10,7 @@ module Presenters
 
     include Presenter
     include Statemachine::Shared
+    include RobotControlled
 
     class_attribute :labware_class
     self.labware_class = :tube
@@ -33,10 +34,6 @@ module Presenters
 
     def control_child_links(&block)
       # Mostly, no.
-    end
-
-    def default_statechange_label
-      'Move tube to next state'
     end
 
     # The state is delegated to the tube

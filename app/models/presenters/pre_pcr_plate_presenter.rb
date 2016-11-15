@@ -6,13 +6,7 @@ module Presenters
   class PrePcrPlatePresenter < PlatePresenter
     include Presenters::Statemachine
 
-    self.authenticated_tab_states = {
-      pending: ['labware-summary-button', 'labware-creation-button'],
-      started: ['labware-summary-button'],
-      passed: ['labware-creation-button', 'well-failing-button', 'labware-summary-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
-    }
+    self.well_failure_states = [:passed]
 
     state_machine :state, initial: :pending do
       Statemachine::StateTransitions.inject(self)

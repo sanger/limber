@@ -23,10 +23,6 @@ module Presenters
       labware.purpose.name
     end
 
-    def purpose_config
-      Settings.purposes[purpose.uuid]
-    end
-
     def default_printer_uuid
       @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
     end
@@ -39,6 +35,11 @@ module Presenters
       @printer_limit ||= Settings.printers['limit']
     end
 
+    def well_failing_applicable?
+      well_failure_states.include?(state.to_sym)
+    end
+
+    # To get rid!
     def suitable_labware
       yield
     end
@@ -70,33 +71,16 @@ module Presenters
       end.join('')
     end
 
-    def statechange_link(_view)
-      '#'
-    end
-
-    def if_statechange_active(content)
-      content
-    end
-
-    def statechange_label
-      default_statechange_label
-    end
-
-    def default_statechange_label
-      'Move to next state'
-    end
-
-    def statechange_attributes
-    end
-
-    def robot_exists?
-      false
-    end
-
     def summary
-      summary_items.each do |label,method_symbol|
+      summary_items.each do |label, method_symbol|
         yield label, send(method_symbol)
       end
+    end
+
+    private
+
+    def purpose_config
+      Settings.purposes[purpose.uuid]
     end
   end
 end

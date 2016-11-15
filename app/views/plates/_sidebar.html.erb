@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <% if well_failing_applicable?(@presenter) %>
+    <% if @presenter.well_failing_applicable? %>
       <button class='btn btn-lg btn-block btn-danger'>Fail Wells</button>
     <% end %>
 
