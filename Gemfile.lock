@@ -22,8 +22,10 @@ GIT
       i18n
       yajl-ruby (>= 1.1.0)
 
-PATH
-  remote: ../barcode_gem
+GIT
+  remote: git@github.com:sanger/sanger_barcode_format.git
+  revision: ebe7a89697ffe97f69a84a31a6451300caf83a16
+  branch: development
   specs:
     sanger_barcode_format (0.0.1)
 

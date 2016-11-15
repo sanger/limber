@@ -35,7 +35,7 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   require: 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
-gem 'sanger_barcode_format', path: '../barcode_gem'
+gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
