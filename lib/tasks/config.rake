@@ -38,16 +38,16 @@ namespace :config do
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
-    all_plate_purposes = Hash[api.plate_purpose.all.map {|pp| [pp.name,pp] }]
+    all_plate_purposes = Hash[api.plate_purpose.all.map { |pp| [pp.name, pp] }]
 
-    all_plate_purposes[STOCK_PURPOSE] ||= api.plate_purpose.create!(name: STOCK_PURPOSE, stock_plate: true, cherrypickable_target: true )
+    all_plate_purposes[STOCK_PURPOSE] ||= api.plate_purpose.create!(name: STOCK_PURPOSE, stock_plate: true, cherrypickable_target: true)
 
-    PLATE_PURPOSES.inject(all_plate_purposes[STOCK_PURPOSE].uuid) do |parent,name|
-      all_plate_purposes[name] ||=  api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parents: [parent] )
+    PLATE_PURPOSES.inject(all_plate_purposes[STOCK_PURPOSE].uuid) do |parent, name|
+      all_plate_purposes[name] ||= api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parents: [parent])
       all_plate_purposes[name].uuid
     end
 
-    plate_purposes    = all_plate_purposes.values.select { |pp| PLATE_PURPOSES.include?(pp.name)|| STOCK_PURPOSE == pp.name }
+    plate_purposes    = all_plate_purposes.values.select { |pp| PLATE_PURPOSES.include?(pp.name) || STOCK_PURPOSE == pp.name }
     qc_plate_purposes = all_plate_purposes.values.select { |pp| QC_PLATE_PURPOSES.include?(pp.name) }
     tube_purposes     = api.tube_purpose.all.select { |tp| TUBE_PURPOSES.include?(tp.name) }
 

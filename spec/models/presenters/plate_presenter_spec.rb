@@ -19,7 +19,7 @@ end
 describe Presenters::PlatePresenter do
   # Not sure why this is getting executed twice.
   # Want to get the basics working first though
-  has_a_working_api(times:2)
+  has_a_working_api(times: 2)
 
   let(:labware) { build :plate }
   # let(:title)   { 'Limber example purpose' }
@@ -36,5 +36,4 @@ describe Presenters::PlatePresenter do
   end
 
   it_behaves_like 'a labware presenter'
-
 end

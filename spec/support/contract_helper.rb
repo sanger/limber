@@ -87,7 +87,7 @@ module ContractHelper
       expect_request_from("retrieve-#{contract_name}") { response(contract_name, times: times) }
     end
 
-    def has_a_working_api(times:1)
+    def has_a_working_api(times: 1)
       expect_request_from('retrieve-api-root') { response('api-root', times: times) }
       let(:api) do
         Sequencescape::Api.new(

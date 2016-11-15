@@ -42,7 +42,7 @@ module Presenters
       else self.class.additional_creation_partial
       end
     end
-    
+
     def default_statechange_label
       'Move plate to next state'
     end

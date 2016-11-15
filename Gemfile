@@ -30,11 +30,11 @@ gem 'exception_notification'
 
 gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
-  :github  => 'jamesGlover/sequencescape-client-api',
-  :branch  => 'add_limber_needs',
-  :require => 'sequencescape'
+  github:  'jamesGlover/sequencescape-client-api',
+  branch:  'add_limber_needs',
+  require: 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
-  :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
+  git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
 gem 'sanger_barcode_format', path: '../barcode_gem'
 
 # Bundle gems for the local environment. Make sure to
