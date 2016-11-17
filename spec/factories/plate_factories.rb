@@ -14,7 +14,7 @@ FactoryGirl.define do
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
-      'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
+                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
 
     transient do
       purpose_name 'example-purpose'
@@ -40,9 +40,9 @@ FactoryGirl.define do
 
     plate_purpose do
       {
-        "actions" => {"read" => api_root + purpose_uuid },
-        "uuid" => purpose_uuid,
-        "name" => purpose_name
+        'actions' => { 'read' => api_root + purpose_uuid },
+        'uuid' => purpose_uuid,
+        'name' => purpose_name
       }
     end
   end

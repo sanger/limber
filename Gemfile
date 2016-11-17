@@ -16,7 +16,7 @@ gem 'rails-assets-tether', '>= 1.1.0'
 gem 'bootstrap'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', :require => false
+gem 'therubyracer', require: false
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -30,11 +30,13 @@ gem 'exception_notification'
 
 gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
-  github:  'jamesGlover/sequencescape-client-api',
-  branch:  'add_limber_needs',
+  path: '../sequencescape-client-api',
+  # github:  'jamesGlover/sequencescape-client-api',
+  # branch:  'add_limber_needs',
   require: 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
+gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
 gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
 
 # Bundle gems for the local environment. Make sure to
@@ -55,5 +57,5 @@ end
 
 group :deployment do
   gem 'thin'
-  gem "psd_logger", :git => "git+ssh://git@github.com/sanger/psd_logger.git"
+  gem "psd_logger", git: "git+ssh://git@github.com/sanger/psd_logger.git"
 end

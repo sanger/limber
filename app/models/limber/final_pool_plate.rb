@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2015 Genome Research Ltd.
+
 class Limber::FinalPoolPlate < Sequencescape::Plate
   # We need to specialise the transfers where this plate is a source so that it handles
   # the correct types
@@ -33,19 +31,16 @@ class Limber::FinalPoolPlate < Sequencescape::Plate
     !transfers_to_tubes.empty?
   end
 
-  # Well locations ordered by columns.
-  WELLS_IN_COLUMN_MAJOR_ORDER = (1..12).each_with_object([]) { |c, a| a.concat(('A'..'H').map { |r| "#{r}#{c}" }); a }
-
   # Returns the tubes that an instance of this plate has been transferred into.
   # This ensures that tubes are sorted in column major order
   def tubes
     return [] unless has_transfers_to_tubes?
-    WELLS_IN_COLUMN_MAJOR_ORDER.map(&well_to_tube_transfers.method(:[])).compact.uniq
+    WellHelpers.column_order.map(&well_to_tube_transfers.method(:[])).compact.uniq
   end
 
   def tubes_and_sources
     return [] unless has_transfers_to_tubes?
-    WELLS_IN_COLUMN_MAJOR_ORDER.map do |l|
+    WellHelpers.column_order.map do |l|
       [l, well_to_tube_transfers[l]]
     end.group_by do |_, t|
       t && t.uuid

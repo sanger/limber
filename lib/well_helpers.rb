@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module WellHelpers
   COLUMNS_RANGE = (1..12).freeze
   ROWS_RANGE = ('A'..'H').freeze
@@ -6,7 +7,7 @@ module WellHelpers
   #
   # @return [Array] well names in column order ie. A1, B1, C1 ...
   def self.column_order
-    @column_order ||= COLUMNS_RANGE.map { |c| ROWS_RANGE.map { |r| "#{r}#{c}".freeze }}.flatten.freeze
+    @column_order ||= COLUMNS_RANGE.map { |c| ROWS_RANGE.map { |r| "#{r}#{c}" } }.flatten.freeze
   end
 
   # Returns the name of the well at the given co-ordinates
@@ -15,7 +16,7 @@ module WellHelpers
   # @param [Int] row The row co-ordinate, zero indexed
   # @param [Type] column The column co-ordinate, zero indexed
   # @return [String] the well name, eg. A1
-  def self.well_name(row,column)
+  def self.well_name(row, column)
     "#{ROWS_RANGE.to_a[row]}#{COLUMNS_RANGE.to_a[column]}"
   end
 
@@ -27,5 +28,4 @@ module WellHelpers
   def self.well_at_column_index(index)
     column_order[index]
   end
-
 end

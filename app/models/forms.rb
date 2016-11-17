@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2013 Genome Research Ltd.
+
 module Forms
   module Form
     module CustomPage
@@ -53,6 +51,11 @@ module Forms
       instance_variable_set(instance_variable_name, args.first)
     end
     protected :method_missing
+
+    def respond_to_missing?(name)
+      name_without_assignment = name.to_s.sub(/=$/, '').to_sym
+      attributes.include?(name_without_assignment)
+    end
 
     def persisted?
       false

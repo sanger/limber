@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2015 Genome Research Ltd.
+
 module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
     def control_child_plate_creation(&block)
@@ -107,6 +105,7 @@ module Presenters::Statemachine
       base.instance_eval do
         event :take_default_path do
           transition pending: :passed
+          transition passed: :qc_complete
         end
 
         event :transfer do
@@ -115,6 +114,10 @@ module Presenters::Statemachine
 
         event :cancel do
           transition [:pending, :started, :passed] => :cancelled
+        end
+
+        event :qc_complete do
+          transition passed: :qc_complete
         end
       end
     end

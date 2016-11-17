@@ -6,13 +6,13 @@ describe 'plate factory' do
     json(:plate,
          uuid: 'example-plate-uuid',
          state: 'passed',
-         barcode_number: 427444,
+         barcode_number: 427_444,
          name: 'Cherrypicked 427444',
          qc_state: nil,
          iteration: 1,
          label: { "prefix": 'RNA-seq dUTP eukaryotic PCR', "text": 'ILC Stock' },
          location: 'Library creation freezer',
-         pool_sizes: [8,8],
+         pool_sizes: [8, 8],
          pre_cap_groups: {},
          priority: 0,
          stock_plate: {
@@ -29,8 +29,7 @@ describe 'plate factory' do
          updated_at: '2016-01-21 16:16:42 +0000',
          wells_count: 30,
          comments_count: 3,
-         submission_pools_count: 2
-      )
+         submission_pools_count: 2)
   end
 
   let(:json_content) do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
+
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
@@ -11,6 +9,7 @@ namespace :config do
   PLATE_PURPOSES = [
     'Limber Shear',
     'Limber Post Shear',
+    'Limber Post Shear XP',
     'Limber AL Libs',
     'Limber Lib PCR',
     'Limber Lib PCR-XP',
@@ -103,11 +102,8 @@ namespace :config do
           # New Illumina-B plates
           presenters['Limber Cherrypicked'][:presenter_class] = 'Presenters::StockPlatePresenter'
 
-          presenters['Limber Post Shear'].merge!(
-            presenter_class: 'Presenters::PostShearPlatePresenter',
-            default_child: 'Post Shear XP'
-          )
-
+          presenters['Limber Post Shear']
+          presenters['Limber Post Shear XP']
           presenters['Limber AL Libs']
 
           presenters['Limber Lib PCR'].merge!(

@@ -28,14 +28,19 @@ module Presenters
     # method to call to get the value
     class_attribute :summary_items
     self.summary_items = {
-      'Barcode' => :barcode
+      'Barcode' => :barcode,
+      'Number of wells' => :number_of_wells,
+      'Plate type' => :purpose_name,
+      'Current plate state' => :barcode,
+      'Input plate barcode' => :barcode,
+      'Created on' => :barcode
     }
 
     # This is now generated dynamically by the LabwareHelper
-    class_attribute    :tab_states
+    class_attribute :tab_states
 
     class_attribute :well_failure_states
-    self.well_failure_states = []
+    self.well_failure_states = [:passed]
 
     def additional_creation_partial
       case default_child_purpose.asset_type
@@ -43,6 +48,18 @@ module Presenters
       when 'tube' then 'labware/tube/child_tube_creation'
       else self.class.additional_creation_partial
       end
+    end
+
+    def number_of_wells
+      "#{number_of_filled_wells}/#{total_number_of_wells}"
+    end
+
+    def number_of_filled_wells
+      plate.wells.count { |w| w.aliquots.present? }
+    end
+
+    def total_number_of_wells
+      plate.size
     end
 
     def label_name
@@ -103,14 +120,6 @@ module Presenters
       labware
     end
 
-    # Split a location string into an array containing the row letter
-    # and the column number (as a integer) so that they can be sorted.
-    def split_location(location)
-      match = location.match(/^([A-H])(\d+)/)
-      [match[2].to_i, match[1]] # Order by column first
-    end
-    private :split_location
-
     class UnknownPlateType < StandardError
       attr_reader :plate
 
@@ -142,6 +151,15 @@ module Presenters
 
     def barcode
       useful_barcode(labware.barcode)
+    end
+
+    private
+
+    # Split a location string into an array containing the row letter
+    # and the column number (as a integer) so that they can be sorted.
+    def split_location(location)
+      match = location.match(/^([A-H])(\d+)/)
+      [match[2].to_i, match[1]] # Order by column first
     end
   end
 end

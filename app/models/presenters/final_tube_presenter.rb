@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2012,2013 Genome Research Ltd.
+
 module Presenters
   class FinalTubePresenter
     include Presenter
@@ -15,7 +13,7 @@ module Presenters
     class_attribute    :additional_creation_partial
     self.additional_creation_partial = nil
 
-    class_attribute    :tab_states
+    class_attribute :tab_states
 
     state_machine :state, initial: :pending do
       event :take_default_path do

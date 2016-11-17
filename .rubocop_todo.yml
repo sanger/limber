@@ -7,22 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-# SupportedStyles: start_of_line, def
-Lint/DefEndAlignment:
-  Exclude:
-    - 'app/models/presenters/qc_plate_presenter.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-# SupportedStyles: keyword, variable, start_of_line
-Lint/EndAlignment:
-  Exclude:
-    - 'app/models/limber/user.rb'
-
-# Offense count: 1
 Lint/Eval:
   Exclude:
     - 'config/initializers/settings.rb'
@@ -138,15 +122,6 @@ Style/MultilineTernaryOperator:
     - 'app/models/robots.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, EnforcedStyle, SupportedStyles.
-# SupportedStyles: predicate, comparison
-Style/NumericPredicate:
-  Exclude:
-    - 'spec/**/*'
-    - 'app/models/limber/tag_layout_template/walk_wells_in_pools.rb'
-
-# Offense count: 1
 Style/OpMethod:
   Exclude:
     - 'app/models/plate_walking.rb'
@@ -172,10 +147,3 @@ Style/PredicateName:
     - 'app/models/presenters/statemachine.rb'
     - 'app/models/presenters/statemachine/qc_completable.rb'
     - 'app/models/robots.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'app/models/limber/final_pool_plate.rb'

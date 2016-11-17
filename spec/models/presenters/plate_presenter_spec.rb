@@ -1,24 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
-require './app/models/presenters/plate_presenter'
-
-shared_examples 'a labware presenter' do
-  it 'returns labware' do
-    expect(subject.labware).to eq(labware)
-  end
-
-  it 'provides a title' do
-    expect(subject.title).to eq(title)
-  end
-
-  it 'has a state' do
-    expect(subject.state).to eq(state)
-  end
-
-  it 'has a summary' do
-    expect() { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
-  end
-end
+require 'presenters/plate_presenter'
+require_relative 'shared_labware_presenter_examples'
 
 describe Presenters::PlatePresenter do
   # Not sure why this is getting executed twice.
@@ -29,11 +12,25 @@ describe Presenters::PlatePresenter do
     build :plate, purpose_name: title, state: state, barcode_number: 1
   end
 
-  let(:title) { 'Limber example purpose' }
+  let(:purpose_name) { 'Limber example purpose' }
+  let(:title) { purpose_name }
   let(:state) { 'pending' }
-  let(:summary_tab) {[
-      ['Barcode','DN1 <em>1220000001831</em>']
-  ]}
+  let(:summary_tab) do
+    [
+      ['Barcode', 'DN1 <em>1220000001831</em>'],
+      ['Number of wells', '96/ 96'],
+      ['Plate type', purpose_name],
+      ['Current plate state', state],
+      ['Input plate barcode', 'DN1 1220000001831'],
+      ['Created on', '2016-10-19']
+    ]
+  end
+
+  let(:expected_requests_for_summary) do
+    pending 'The well facotries'
+    stub_request(:get, labware.wells.send(:actions).read)
+      .to_return(status: 200, body: '{}', headers: {})
+  end
 
   subject do
     Presenters::PlatePresenter.new(
