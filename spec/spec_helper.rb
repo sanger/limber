@@ -19,6 +19,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'factory_girl'
 require './spec/support/contract_helper'
+require './spec/support/with_pmb_stubbed'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

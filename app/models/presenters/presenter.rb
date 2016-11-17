@@ -92,5 +92,9 @@ module Presenters
     def robot_exists?
       false
     end
+
+    def date_today
+      Date.today.strftime("%e-%^b-%Y")
+    end
   end
 end

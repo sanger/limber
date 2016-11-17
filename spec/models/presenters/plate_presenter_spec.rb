@@ -35,6 +35,15 @@ describe Presenters::PlatePresenter do
     expect(subject.plate).to eq(labware)
   end
 
+  it 'returns label attributes' do
+    expected_label =  { top_left: Date.today.strftime("%e-%^b-%Y"),
+                        bottom_left: "DN 123",
+                        top_right: "DN10",
+                        bottom_right: "Limber Cherrypicked",
+                        barcode: '1234567890123' }
+    expect(subject.label_attributes).to eq(expected_label)
+  end
+
   it_behaves_like 'a labware presenter'
 
 end

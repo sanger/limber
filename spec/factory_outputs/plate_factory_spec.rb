@@ -8,7 +8,7 @@ describe 'plate factory' do
 
   let(:json_content) {%Q{
       {
-        "plate":{"state":"pending"}
+        "plate":{"state":"pending", "stock_plate":{"barcode":{"prefix":"DN", "number":"10"}}, "barcode":{"prefix":"DN", "number":"123", "ean13":"1234567890123"}, "label":{"prefix":"Limber", "text":"Cherrypicked"}}
       }
   }}
 

@@ -35,7 +35,10 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   :require => 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
-gem 'sanger_barcode_format', path: '../barcode_gem'
+gem 'sanger_barcode_format',
+  :git     => 'git+ssh://git@github.com/sanger/sanger_barcode_format.git',
+  :branch  => 'development'
+gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -46,6 +49,7 @@ group :test do
   gem 'launchy'
   gem 'factory_girl'
   gem 'webmock'
+  gem 'rails-controller-testing'
 end
 group :development do
   gem 'pry'

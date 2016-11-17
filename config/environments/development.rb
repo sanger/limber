@@ -76,4 +76,5 @@ Rails.application.configure do
       'to'   => 100
     }
   }
+  config.pmb_uri = ENV.fetch('PMB_URI','http://localhost:3002/v1/')
 end
