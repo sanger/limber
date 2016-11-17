@@ -11,18 +11,15 @@ FactoryGirl.define do
     transient do
       barcode_prefix 'DN'
       barcode_type 1
-    end
-
-    with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
-                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
-
-    transient do
       purpose_name 'example-purpose'
       purpose_uuid 'ilc-stock-plate-purpose-uuid'
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
     end
+
+    with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
+                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
 
     pools do
       wells = WellHelpers.column_order.dup

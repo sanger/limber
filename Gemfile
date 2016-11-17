@@ -45,6 +45,7 @@ gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.g
 group :test do
   gem 'capybara'
   gem 'rspec-rails'
+  gem 'rspec-json_expectations'
   gem 'launchy'
   gem 'factory_girl'
   gem 'webmock'

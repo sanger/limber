@@ -20,6 +20,7 @@
 require 'factory_girl'
 require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
+require 'rspec/json_expectations'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
