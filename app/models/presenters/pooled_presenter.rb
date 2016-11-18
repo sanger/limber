@@ -17,19 +17,18 @@ module Presenters
       PlateWalking::Walker.new(labware, labware.wells)
     end
 
-    Barcode = Struct.new(:prefix, :number, :label_name, :label_description, :type, :label_type, :suffix)
+    Barcode = Struct.new(:top_line, :middle_line,  :bottom_line, :round_label_top_line, :round_label_bottom_line, :barcode, :type)
 
     def tube_barcodes
       plate.tubes.map do |tube|
         Barcode.new(
+          "P#{tube.aliquots.count} #{prioritized_name(tube.name, 10)} #{tube.label.prefix}",
+          tube.label.text,
+          date_today,
           tube.barcode.prefix,
           tube.barcode.number,
-          "#{tube.barcode.prefix} #{tube.barcode.number}",
-          "#{prioritized_name(tube.name, 10)} #{tube.label.prefix} #{tube.label.text}",
-          tube.barcode.type,
-          'custom-labels',
-          "P#{tube.aliquots.count}"
-        )
+          tube.barcode.ean13,
+          tube.barcode.type)
       end
     end
   end

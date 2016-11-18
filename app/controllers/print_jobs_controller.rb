@@ -7,7 +7,7 @@ class PrintJobsController < ApplicationController
     else
       flash.alert = @print_job.errors.full_messages.uniq
     end
-    redirect_to :back
+    redirect_back(fallback_location: :root)
   end
 
   def print_job_params

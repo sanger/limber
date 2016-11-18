@@ -1,16 +1,12 @@
-<%= form_for(nil, :url => print_multiple_labels_path, :as => :labels, :html => {:method => :post}) do |f| %>
+<%= form_for(nil, :url => print_jobs_path, :as => :print_job, :html => {:method => :post}) do |f| %>
   <%# Hide the details of what is in the label to be printed %>
-    <%= hidden_field_tag(:redirect_to, redirection_url) %>
+    <%= hidden_field_tag :redirect_to, redirection_url %>
+    <%= hidden_field_tag "print_job[printer_type]", barcodes.first.type %>
 
-    <% barcodes.each_with_index do |barcode, index| %>
-      <%= f.fields_for(index.to_s.to_sym, barcode) do |barcode_form| %>
-        <%= barcode_form.hidden_field(:prefix) %>
-        <%= barcode_form.hidden_field(:number) %>
-        <%= barcode_form.hidden_field(:label_name) %>
-        <%= barcode_form.hidden_field(:label_description) %>
-        <%= barcode_form.hidden_field(:suffix) %>
-        <%= barcode_form.hidden_field(:type, :value=>barcode.label_type) %>
-      <% end %>
+    <% barcodes.each do |barcode| %>
+      <% barcode.to_h.except(:type).each do |k, v|%>
+        <%= hidden_field_tag "print_job[labels][][main_label][#{k}]", :value => v %>
+      <%end%>
     <% end %>
 
   <ul data-role="listview" data-inset="true">
@@ -19,8 +15,8 @@
     </li>
     <li>
       <fieldset data-role="controlgroup" data-type="horizontal" class="print_selector">
-        <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcodes), :uuid, :name, @presenter.default_tube_printer_uuid) %>
-        <%= select_tag :number,  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count) %>
+        <%= select_tag "print_job[printer_name]", options_from_collection_for_select(printers_applicable_to(barcodes), :name, :name, @presenter.default_tube_printer_uuid) %>
+        <%= select_tag "print_job[number_of_copies]",  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count) %>
       </fieldset>
     </li>
     <li><%= f.submit 'Print Labels', :class => 'print-button', :'data-theme' => 'b', :'data-icon' => 'grid' %></li>
