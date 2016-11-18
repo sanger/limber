@@ -33,11 +33,11 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   :github  => 'jamesGlover/sequencescape-client-api',
   :branch  => 'add_limber_needs',
   :require => 'sequencescape'
-gem 'sanger_barcode', '>= 0.2.1',
-  :git     => 'git+ssh://git@github.com/sanger/sanger_barcode.git'
+
 gem 'sanger_barcode_format',
   :git     => 'git+ssh://git@github.com/sanger/sanger_barcode_format.git',
   :branch  => 'development'
+
 gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
 
 # Bundle gems for the local environment. Make sure to

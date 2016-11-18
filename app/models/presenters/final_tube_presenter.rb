@@ -83,21 +83,9 @@ module Presenters
           barcode: labware.barcode.ean13  }
     end
 
-    # def label_text
-    #   "#{labware.label.prefix} #{labware.label.text || LABEL_TEXT}"
-    # end
-
-    # def label_name
-    #   "#{labware.barcode.prefix} #{labware.barcode.number}"
-    # end
-
     def sample_count
       labware.aliquots.count
     end
-
-    # def label_suffix
-    #   "P#{sample_count}"
-    # end
 
     def labware_form_details(view)
       { url: view.limber_tube_path(labware), as: :tube }
@@ -107,8 +95,5 @@ module Presenters
       labware
     end
 
-    # def label_description
-    #   "#{prioritized_name(labware.name, 10)} #{label_text}"
-    # end
   end
 end

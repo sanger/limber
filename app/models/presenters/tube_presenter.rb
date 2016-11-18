@@ -32,14 +32,6 @@ module Presenters
           barcode: labware.barcode.ean13  }
     end
 
-    # def label_text
-    #   "#{labware.label.prefix} #{labware.label.text || LABEL_TEXT}"
-    # end
-
-    # def label_name
-    #   "#{labware.barcode.prefix} #{labware.barcode.number}"
-    # end
-
     def control_child_links(&block)
       # Mostly, no.
     end
@@ -51,17 +43,9 @@ module Presenters
     # The state is delegated to the tube
     delegate :state, to: :labware
 
-    # def label_description
-    #   "#{prioritized_name(labware.name, 10)} #{label_text}"
-    # end
-
     def sample_count
       labware.aliquots.count
     end
-
-    # def label_suffix
-    #   "P#{sample_count}"
-    # end
 
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
