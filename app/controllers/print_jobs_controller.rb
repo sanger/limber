@@ -5,7 +5,7 @@ class PrintJobsController < ApplicationController
     if @print_job.execute
       flash.notice = "Your label(s) have been sent to #{print_job_params[:printer_name]}"
     else
-      flash.alert = @print_job.errors.full_messages
+      flash.alert = @print_job.errors.full_messages.uniq
     end
     redirect_to :back
   end

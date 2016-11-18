@@ -1,14 +1,14 @@
 FactoryGirl.define do
-  factory :tube_printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
+  factory :printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
 
     json_root 'barcode_printer'
 
-    name 'tube_printer'
+    name 'plate_printer'
 
     type do
       {
-        layout: 2,
-        name: '1D Tube'
+        layout: 1,
+        name: '96 Well Plate'
       }
     end
   end

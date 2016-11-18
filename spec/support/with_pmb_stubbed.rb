@@ -16,9 +16,8 @@ def print_job_response(printer_name, template_id)
           "body": [
             {
               "label": {
-                "location": "location",
-                "parent_location": "parent_location",
-                "barcode": "barcode"
+                "barcode":"12345",
+                "test_attr":"test"
               }
             }
           ]
@@ -28,8 +27,12 @@ def print_job_response(printer_name, template_id)
   }}
 end
 
-def print_job_post(printer_name,template_id)
+def print_job_post(printer_name, template_id)
   %Q{{"data":{"type":"print_jobs","attributes":{"printer_name":"#{printer_name}","label_template_id":#{template_id},"labels":{"body":[{"label":{"barcode":"12345","test_attr":"test"}}]}}}}}
+end
+
+def print_job_post_multiple_labels(printer_name, template_id)
+  %Q{{"data":{"type":"print_jobs","attributes":{"printer_name":"#{printer_name}","label_template_id":#{template_id},"labels":{"body":[{"label":{"barcode":"12345","test_attr":"test"}},{"label":{"barcode":"67890","test_attr":"test2"}},{"label":{"barcode":"12345","test_attr":"test"}},{"label":{"barcode":"67890","test_attr":"test2"}}]}}}}}
 end
 
 def label_template_response(id, name)

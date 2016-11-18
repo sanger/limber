@@ -55,13 +55,13 @@ module Presenters
         barcode: labware.barcode.ean13 }
     end
 
-    def label_name
-      "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}"
-    end
+    # def label_name
+    #   "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}"
+    # end
 
-    def label_text
-      "#{labware.label.prefix} #{labware.label.text}"
-    end
+    # def label_text
+    #   "#{labware.label.prefix} #{labware.label.text}"
+    # end
 
     def plate_to_walk
       labware
