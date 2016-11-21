@@ -1,7 +1,6 @@
 <%= form_for(nil, :url => print_jobs_path, :as => :print_job, :html => {:method => :post}) do |f| %>
   <%# Hide the details of what is in the label to be printed %>
-    <%= hidden_field_tag :redirect_to, redirection_url %>
-    <%= hidden_field_tag "print_job[printer_type]", barcodes.first.type %>
+    <%= hidden_field_tag "print_job[printer_type]", printers_applicable_to(barcodes).first.type.name %>
 
     <% barcodes.each do |barcode| %>
       <% barcode.to_h.except(:type).each do |k, v|%>
