@@ -18,8 +18,10 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'factory_girl'
-require './spec/support/contract_helper'
-require './spec/support/with_pmb_stubbed'
+require_relative 'support/contract_helper'
+require_relative 'support/api_url_helper'
+require_relative 'support/with_pmb_stubbed'
+require 'rspec/json_expectations'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -105,5 +107,4 @@ RSpec.configure do |config|
   config.before(:suite) do
     FactoryGirl.find_definitions
   end
-
 end

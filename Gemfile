@@ -16,7 +16,7 @@ gem 'rails-assets-tether', '>= 1.1.0'
 gem 'bootstrap'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', :require => false
+gem 'therubyracer', require: false
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -34,11 +34,13 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   :branch  => 'add_limber_needs',
   :require => 'sequencescape'
 
-gem 'sanger_barcode_format',
-  :git     => 'git+ssh://git@github.com/sanger/sanger_barcode_format.git',
-  :branch  => 'development'
-
 gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
+
+gem 'sanger_barcode', '>= 0.2.1',
+  git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
+
+gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
+
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -46,6 +48,7 @@ gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
 group :test do
   gem 'capybara'
   gem 'rspec-rails'
+  gem 'rspec-json_expectations'
   gem 'launchy'
   gem 'factory_girl'
   gem 'webmock'
@@ -59,5 +62,5 @@ end
 
 group :deployment do
   gem 'thin'
-  gem "psd_logger", :git => "git+ssh://git@github.com/sanger/psd_logger.git"
+  gem "psd_logger", git: "git+ssh://git@github.com/sanger/psd_logger.git"
 end

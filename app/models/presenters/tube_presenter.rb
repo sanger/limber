@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2013 Genome Research Ltd.
+
 module Presenters
   class TubePresenter
     def qc_owner
@@ -10,6 +8,7 @@ module Presenters
 
     include Presenter
     include Statemachine::Shared
+    include RobotControlled
 
     class_attribute :labware_class
     self.labware_class = :tube
@@ -34,10 +33,6 @@ module Presenters
 
     def control_child_links(&block)
       # Mostly, no.
-    end
-
-    def default_statechange_label
-      'Move tube to next state'
     end
 
     # The state is delegated to the tube

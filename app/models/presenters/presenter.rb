@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2013,2014,2015 Genome Research Ltd.
+
 module Presenters
   module Presenter
     def self.included(base)
@@ -19,12 +17,12 @@ module Presenters
     def save!
     end
 
-    def title
+    def purpose_name
       labware.purpose.name
     end
 
-    def purpose_config
-      Settings.purposes[purpose.uuid]
+    def title
+      purpose_name
     end
 
     def default_printer_uuid
@@ -39,6 +37,11 @@ module Presenters
       @printer_limit ||= Settings.printers['limit']
     end
 
+    def well_failing_applicable?
+      well_failure_states.include?(state.to_sym)
+    end
+
+    # To get rid!
     def suitable_labware
       yield
     end
@@ -70,27 +73,16 @@ module Presenters
       end.join('')
     end
 
-    def statechange_link(_view)
-      '#'
+    def summary
+      summary_items.each do |label, method_symbol|
+        yield label, send(method_symbol)
+      end
     end
 
-    def if_statechange_active(content)
-      content
-    end
+    private
 
-    def statechange_label
-      default_statechange_label
-    end
-
-    def default_statechange_label
-      'Move to next state'
-    end
-
-    def statechange_attributes
-    end
-
-    def robot_exists?
-      false
+    def purpose_config
+      Settings.purposes[purpose.uuid]
     end
 
     def date_today

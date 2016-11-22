@@ -1,28 +1,49 @@
 # frozen_string_literal: true
 require 'rails_helper'
-require './app/models/presenters/plate_presenter'
-
-shared_examples 'a labware presenter' do
-  it 'returns labware' do
-    expect(subject.labware).to eq(labware)
-  end
-
-  # it 'provides a title' do
-  #   expect(subject.title).to eq(title)
-  # end
-
-  it 'has a state' do
-    expect(subject.state).to eq('pending')
-  end
-end
+require 'presenters/plate_presenter'
+require_relative 'shared_labware_presenter_examples'
 
 describe Presenters::PlatePresenter do
   # Not sure why this is getting executed twice.
   # Want to get the basics working first though
-  has_a_working_api(times:2)
+  has_a_working_api(times: 2)
 
-  let(:labware) { build :plate }
-  # let(:title)   { 'Limber example purpose' }
+  let(:labware) do
+    build(:plate,
+          purpose_name: title,
+          state: state,
+          barcode_number: 1,
+          stock_plate: {
+           "barcode": {
+             "ean13": '1111111111111',
+             "number": '427444',
+             "prefix": 'DN',
+             "two_dimensional": nil,
+             "type": 1
+           },
+           "uuid": 'example-stock-plate-uuid'
+         })
+  end
+
+  let(:purpose_name) { 'Limber example purpose' }
+  let(:title) { purpose_name }
+  let(:state) { 'pending' }
+  let(:summary_tab) do
+    [
+      ['Barcode', 'DN1 <em>1220000001831</em>'],
+      ['Number of wells', '96/ 96'],
+      ['Plate type', purpose_name],
+      ['Current plate state', state],
+      ['Input plate barcode', 'DN1 1220000001831'],
+      ['Created on', '2016-10-19']
+    ]
+  end
+
+  let(:expected_requests_for_summary) do
+    pending 'The well facotries'
+    stub_request(:get, labware.wells.send(:actions).read)
+      .to_return(status: 200, body: '{}', headers: {})
+  end
 
   subject do
     Presenters::PlatePresenter.new(
@@ -37,13 +58,12 @@ describe Presenters::PlatePresenter do
 
   it 'returns label attributes' do
     expected_label =  { top_left: Date.today.strftime("%e-%^b-%Y"),
-                        bottom_left: "DN 123",
-                        top_right: "DN10",
+                        bottom_left: "DN 1",
+                        top_right: "DN427444",
                         bottom_right: "Limber Cherrypicked",
-                        barcode: '1234567890123' }
+                        barcode: '1220000001831' }
     expect(subject.label_attributes).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'
-
 end

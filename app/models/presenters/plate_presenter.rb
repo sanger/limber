@@ -5,6 +5,7 @@ module Presenters
     include Presenter
     include PlateWalking
     include RobotControlled
+    include BarcodeLabelsHelper
 
     class_attribute :labware_class
     self.labware_class = :plate
@@ -23,17 +24,23 @@ module Presenters
 
     class_attribute :printing_partial
 
-    # This is now generated dynamically by the LabwareHelper
-    class_attribute    :tab_states
-
-    class_attribute    :authenticated_tab_states
-    self.authenticated_tab_states = {
-      pending: ['labware-summary-button', 'labware-state-button'],
-      started: ['labware-state-button', 'labware-summary-button'],
-      passed: ['labware-creation-button', 'labware-state-button', 'labware-summary-button'],
-      cancelled: ['labware-summary-button'],
-      failed: ['labware-summary-button']
+    # summary_items is a has of ittem label, and a symbol representing the
+    # method to call to get the value
+    class_attribute :summary_items
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Number of wells' => :number_of_wells,
+      'Plate type' => :purpose_name,
+      'Current plate state' => :barcode,
+      'Input plate barcode' => :barcode,
+      'Created on' => :barcode
     }
+
+    # This is now generated dynamically by the LabwareHelper
+    class_attribute :tab_states
+
+    class_attribute :well_failure_states
+    self.well_failure_states = [:passed]
 
     def additional_creation_partial
       case default_child_purpose.asset_type
@@ -45,6 +52,18 @@ module Presenters
 
     def default_statechange_label
       'Move plate to next state'
+    end
+
+    def number_of_wells
+      "#{number_of_filled_wells}/#{total_number_of_wells}"
+    end
+
+    def number_of_filled_wells
+      plate.wells.count { |w| w.aliquots.present? }
+    end
+
+    def total_number_of_wells
+      plate.size
     end
 
     def label_attributes
@@ -105,14 +124,6 @@ module Presenters
       labware
     end
 
-    # Split a location string into an array containing the row letter
-    # and the column number (as a integer) so that they can be sorted.
-    def split_location(location)
-      match = location.match(/^([A-H])(\d+)/)
-      [match[2].to_i, match[1]] # Order by column first
-    end
-    private :split_location
-
     class UnknownPlateType < StandardError
       attr_reader :plate
 
@@ -140,6 +151,19 @@ module Presenters
 
     def filename
       false
+    end
+
+    def barcode
+      useful_barcode(labware.barcode)
+    end
+
+    private
+
+    # Split a location string into an array containing the row letter
+    # and the column number (as a integer) so that they can be sorted.
+    def split_location(location)
+      match = location.match(/^([A-H])(\d+)/)
+      [match[2].to_i, match[1]] # Order by column first
     end
   end
 end

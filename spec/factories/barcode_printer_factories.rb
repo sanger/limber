@@ -1,15 +1,24 @@
 FactoryGirl.define do
-  factory :printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
-
+  factory :barcode_printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
     json_root 'barcode_printer'
+    active true
+    service do
+      {"url" => "http://localhost:9998/barcode_service.wsdl"}
+    end
 
-    name 'plate_printer'
+    transient do
+      printer_type 'plate'
+      layouts {{"plate" => 1, "tube" => 2}}
+    end
 
     type do
       {
-        layout: 1,
-        name: '96 Well Plate'
+        "name" => printer_type,
+        "layout" => layouts[printer_type]
       }
     end
+
+    name { "#{printer_type} printer" }
+
   end
 end

@@ -5,6 +5,6 @@ class Limber::User < Sequencescape::User
                 "#{first_name} #{last_name}".strip
               else
                 login
-    end
+              end
   end
 end

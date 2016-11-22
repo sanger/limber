@@ -9,29 +9,6 @@ module Presenters
       suitable_robots.present?
     end
 
-    def statechange_link(view)
-      case suitable_robots.count
-      when 0
-        '#'
-      when 1
-        view.robot_path(suitable_robots.keys.first)
-      else
-        '#popupRobots'
-      end
-    end
-
-    def statechange_label
-      robot_exists? ? 'Bed verification' : default_statechange_label
-    end
-
-    def if_statechange_active(content)
-      robot_exists? ? '' : content
-    end
-
-    def statechange_attributes
-      multiple_robots? ? 'data-rel="popup" data-inline="true" data-transition="flip"'.html_safe : ''
-    end
-
     private
 
     def suitable_robots

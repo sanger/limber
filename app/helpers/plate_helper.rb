@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2011,2012,2015 Genome Research Ltd.
+
 module PlateHelper
   class WellFailingPresenter < BasicObject
     def initialize(form, presenter)
@@ -31,10 +29,6 @@ module PlateHelper
 
   def insert_size_class(pool)
     pool['insert_size']['from'] > Settings.large_insert_limit ? 'large-insert-size' : ''
-  end
-
-  def well_failing_applicable?(presenter)
-    presenter.authenticated_tab_states[presenter.state.to_sym].include?('well-failing-button')
   end
 
   # Altered to sort by column first then row

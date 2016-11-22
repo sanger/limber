@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-# This file is part of Illumina-B Pipeline is distributed under the terms of GNU General Public License version 3 or later;
-# Please refer to the LICENSE and README files for information on licensing and authorship of this file.
-# Copyright (C) 2012,2013,2015 Genome Research Ltd.
+
 module LabwareHelper
   def state_change_form(presenter)
     render partial: 'labware/state_change', locals: { presenter: presenter }
@@ -83,19 +81,6 @@ module LabwareHelper
 
     "col-#{column}"
   end
-
-  def get_tab_states(presenter)
-    tab_states_or_summary(presenter).to_json.html_safe
-  end
-
-  # Returns either the tab_states for a logged in user or the labware summary
-  # for the current state.
-  def tab_states_or_summary(presenter)
-    return presenter.authenticated_tab_states if current_user_uuid.present?
-
-    {}.tap { |h| h[presenter.labware.state] = ['labware-summary-button'] }
-  end
-  private :tab_states_or_summary
 
   def plates_by_state(plates)
     plates.each_with_object(Hash.new { |h, k| h[k] = [] }) do |plate, plates_by_state|
