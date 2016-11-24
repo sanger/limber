@@ -30,9 +30,9 @@ gem 'exception_notification'
 
 gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
-  path: '../sequencescape-client-api',
-  # github:  'jamesGlover/sequencescape-client-api',
-  # branch:  'add_limber_needs',
+  # path: '../sequencescape-client-api',
+  github:  'jamesGlover/sequencescape-client-api',
+  branch:  'add_limber_needs',
   require: 'sequencescape'
 gem 'sanger_barcode', '>= 0.2.1',
   git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
