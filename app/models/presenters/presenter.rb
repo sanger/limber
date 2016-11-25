@@ -79,6 +79,10 @@ module Presenters
       end
     end
 
+    def created_on
+      labware.created_at.to_formatted_s(:date_created)
+    end
+
     private
 
     def purpose_config

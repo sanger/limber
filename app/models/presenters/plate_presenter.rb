@@ -24,16 +24,16 @@ module Presenters
 
     class_attribute :printing_partial
 
-    # summary_items is a has of ittem label, and a symbol representing the
+    # summary_items is a hash of a label label, and a symbol representing the
     # method to call to get the value
     class_attribute :summary_items
     self.summary_items = {
       'Barcode' => :barcode,
       'Number of wells' => :number_of_wells,
       'Plate type' => :purpose_name,
-      'Current plate state' => :barcode,
-      'Input plate barcode' => :barcode,
-      'Created on' => :barcode
+      'Current plate state' => :state,
+      'Input plate barcode' => :input_barcode,
+      'Created on' => :created_on
     }
 
     # This is now generated dynamically by the LabwareHelper
@@ -151,6 +151,10 @@ module Presenters
 
     def barcode
       useful_barcode(labware.barcode)
+    end
+
+    def input_barcode
+      useful_barcode(labware.stock_plate.barcode)
     end
 
     private

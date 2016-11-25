@@ -9,7 +9,21 @@ describe Presenters::PlatePresenter do
   has_a_working_api(times: 2)
 
   let(:labware) do
-    build :plate, purpose_name: title, state: state, barcode_number: 1
+    build :plate,
+          purpose_name: purpose_name,
+          state: state,
+          barcode_number: 1,
+          created_at: '2016-10-19 12:00:00 +0100',
+          stock_plate: {
+            "barcode": {
+              "ean13": '1111111111111',
+              "number": '427444',
+              "prefix": 'DN',
+              "two_dimensional": nil,
+              "type": 1
+            },
+            "uuid": 'example-stock-plate-uuid'
+          }
   end
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -18,18 +32,17 @@ describe Presenters::PlatePresenter do
   let(:summary_tab) do
     [
       ['Barcode', 'DN1 <em>1220000001831</em>'],
-      ['Number of wells', '96/ 96'],
+      ['Number of wells', '96/96'],
       ['Plate type', purpose_name],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN1 1220000001831'],
+      ['Input plate barcode', 'DN427444 <em>1111111111111</em>'],
       ['Created on', '2016-10-19']
     ]
   end
 
   let(:expected_requests_for_summary) do
-    pending 'The well facotries'
     stub_request(:get, labware.wells.send(:actions).read)
-      .to_return(status: 200, body: '{}', headers: {})
+      .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
   end
 
   subject do

@@ -19,6 +19,27 @@ FactoryGirl.define do
     end
   end
 
+  factory :well_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+    size 96
+
+    transient do
+      locations { WellHelpers.column_order.slice(0, size) }
+      json_root nil
+      resource_actions %w(read first last)
+      plate_uuid   { SecureRandom.uuid }
+      # While resources can be paginated, wells wont be.
+      # Furthermore, we trust the api gem to handle that side of things.
+      resource_url { "#{api_root}#{plate_uuid}/wells/1" }
+      uuid nil
+    end
+
+    wells do
+      locations.each_with_index.map do |location, i|
+        associated(:well, location: location, uuid: "example-well-uuid-#{i}")
+      end
+    end
+  end
+
   factory :aliquot, class: Sequencescape::Behaviour::Receptacle::Aliquot do
     bait_library nil
     insert_size { {} }
