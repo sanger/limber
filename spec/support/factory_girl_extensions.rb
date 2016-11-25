@@ -23,13 +23,31 @@ module FactoryGirl
       transient do
         names.each do |association|
           send(association + '_count', 0)
+          send(association + '_actions', ['read'])
         end
       end
       names.each do |association|
         send(association) do
           {
             'size' => send(association + '_count'),
-            'actions' => { 'read' => resource_url + '/' + association }
+            'actions' =>  Hash[send(association + '_actions').map {|action_name| [action_name, resource_url + '/' + association]}]
+          }
+        end
+      end
+      nil
+    end
+
+    def with_belongs_to_associations(*names)
+      transient do
+        names.each do |association|
+          send(association + '_uuid', "#{association}-uuid")
+          send(association + '_actions', ['read'])
+        end
+      end
+      names.each do |association|
+        send(association) do
+          {
+            'actions' =>  Hash[send(association + '_actions').map {|action_name| [action_name, api_root + send(association+'_uuid')]}]
           }
         end
       end
@@ -37,3 +55,4 @@ module FactoryGirl
     end
   end
 end
+
