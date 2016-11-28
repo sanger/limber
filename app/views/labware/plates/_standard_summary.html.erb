@@ -1,5 +1,5 @@
 <div id="labware-summary-div">
-  <%= render :partial => "plate", :locals => {:plate_presenter => presenter}  %>
+  <%= render partial: "plate", locals: {:plate_presenter => presenter}  %>
 </div>
 <div id="plate-view-control" class="card-header">
   <ul class="nav nav-tabs card-header-tabs float-xs-left" role="tablist">
@@ -17,12 +17,12 @@
 
 <div class="tab-content">
   <div class="tab-pane active" id='summary_tab' role="tabpanel">
-    <%= render partial: 'plates/plate_information', locals: { plate: presenter.labware   } %>
+    <%= render partial: 'plates/plate_summary', locals: { presenter: presenter } %>
   </div>
-  <div class="tab-pane"        id='pooling_tab' role="tabpanel">
-    <%= render partial: 'plates/pooling_tab',       locals: { plate_presenter: presenter } %>
+  <div class="tab-pane" id='pooling_tab' role="tabpanel">
+    <%= render partial: 'plates/pooling_tab', locals: { plate_presenter: presenter } %>
   </div>
-  <div class="tab-pane"        id='samples_tab' role="tabpanel">
-    <%= render partial: 'plates/samples_tab',       locals: { plate_presenter: presenter } %>
+  <div class="tab-pane" id='samples_tab' role="tabpanel">
+    <%= render partial: 'plates/samples_tab', locals: { plate_presenter: presenter } %>
   </div>
 </div>

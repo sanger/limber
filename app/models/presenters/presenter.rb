@@ -77,6 +77,7 @@ module Presenters
       summary_items.each do |label, method_symbol|
         yield label, send(method_symbol)
       end
+      nil
     end
 
     def created_on

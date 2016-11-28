@@ -1,13 +1,13 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'plate_purpose factory' do
-
   subject do
     json(
       :plate_purpose,
       uuid: 'example-plate-purpose-uuid',
       children_count: 1,
-      plates_actions: ['read', 'create']
+      plates_actions: %w(read create)
     )
   end
 
@@ -39,5 +39,4 @@ describe 'plate_purpose factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['plate_purpose']).to eq JSON.parse(json_content)['plate_purpose']
   end
-
 end

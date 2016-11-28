@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'state change factory' do
-
   subject do
     json(
       :state_change,
@@ -33,5 +33,4 @@ describe 'state change factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['state_change']).to eq JSON.parse(json_content)['state_change']
   end
-
 end

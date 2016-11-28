@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'multiplexed_library_tube factory' do
-
   subject do
     json(
       :multiplexed_library_tube,
@@ -34,5 +34,4 @@ describe 'multiplexed_library_tube factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']
   end
-
 end

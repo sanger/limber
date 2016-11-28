@@ -4,7 +4,6 @@ class SessionsController < ApplicationController
     set_user_by_swipecard!(params[:user_swipecard]) if params[:user_swipecard].present?
     redirect_to :search, notice: 'Logged in'
   rescue Sequencescape::Api::ResourceNotFound => exception
-    flash[:error] = exception.message
     redirect_to :search, alert: exception.message
   end
 
@@ -30,6 +29,6 @@ class SessionsController < ApplicationController
 
     user_search.first(swipecard_code: card_id)
   rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Sorry, that swipecard could not be found. Please try again or contact your administrator.'
+    raise exception, 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'
   end
 end

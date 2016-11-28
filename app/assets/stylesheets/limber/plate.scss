@@ -51,9 +51,7 @@
   .orange            { background-color: $brand-warning; }
   .unknown           { background-color: $gray; }
   .pending           {
-    background:none;
-    border: 2px dotted gray;
-    position: relative;
+    background: none;
   }
   .started           { background-color: $brand-info;    }
   .passed            { background-color: $brand-success; }
@@ -93,4 +91,3 @@
 .plate-view, .tube-view {
   @include labware-view
 }
-

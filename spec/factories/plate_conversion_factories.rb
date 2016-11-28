@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do
@@ -5,6 +6,5 @@ FactoryGirl.define do
     json_root 'plate_conversion'
 
     with_belongs_to_associations 'target', 'purpose'
-
   end
 end

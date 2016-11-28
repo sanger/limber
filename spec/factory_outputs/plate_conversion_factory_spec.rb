@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'plate_conversion factory' do
-
   subject do
     json(
       :plate_conversion,
@@ -34,5 +34,4 @@ describe 'plate_conversion factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['plate_conversion']).to eq JSON.parse(json_content)['plate_conversion']
   end
-
 end

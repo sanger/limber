@@ -30,7 +30,7 @@ module FactoryGirl
         send(association) do
           {
             'size' => send(association + '_count'),
-            'actions' =>  Hash[send(association + '_actions').map {|action_name| [action_name, resource_url + '/' + association]}]
+            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, resource_url + '/' + association] }]
           }
         end
       end
@@ -47,7 +47,7 @@ module FactoryGirl
       names.each do |association|
         send(association) do
           {
-            'actions' =>  Hash[send(association + '_actions').map {|action_name| [action_name, api_root + send(association+'_uuid')]}]
+            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, api_root + send(association + '_uuid')] }]
           }
         end
       end
@@ -55,4 +55,3 @@ module FactoryGirl
     end
   end
 end
-

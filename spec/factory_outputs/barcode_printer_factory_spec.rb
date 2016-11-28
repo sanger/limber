@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'barcode printer factory' do
-
   subject do
     json(
       :barcode_printer,
@@ -33,5 +33,4 @@ describe 'barcode printer factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['barcode_printer']).to eq JSON.parse(json_content)['barcode_printer']
   end
-
 end

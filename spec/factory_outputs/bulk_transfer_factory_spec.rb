@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'bulk_transfer factory' do
-
   subject do
     json(
       :bulk_transfer,
@@ -26,5 +26,4 @@ describe 'bulk_transfer factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['bulk_transfer']).to eq JSON.parse(json_content)['bulk_transfer']
   end
-
 end

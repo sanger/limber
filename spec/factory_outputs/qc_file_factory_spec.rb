@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'qc file factory' do
-
   subject do
     json(
       :qc_file,
@@ -24,5 +24,4 @@ describe 'qc file factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['qc_file']).to eq JSON.parse(json_content)['qc_file']
   end
-
 end

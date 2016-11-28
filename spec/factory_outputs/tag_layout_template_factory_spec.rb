@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'tag layout template factory' do
-
   subject do
     json(
       :tag_layout_template,
@@ -35,5 +35,4 @@ describe 'tag layout template factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['tag_layout_template']).to eq JSON.parse(json_content)['tag_layout_template']
   end
-
 end

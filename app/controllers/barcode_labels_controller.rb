@@ -2,6 +2,7 @@
 
 class BarcodeLabelsController < ApplicationController
   before_action :initialize_printer_and_barcode_service
+
   def initialize_printer_and_barcode_service
     raise StandardError, 'No printer specified!' if params[:printer].blank?
     raise StandardError, 'No copies specified!' if params[:number].blank? || params[:number].to_i <= 0

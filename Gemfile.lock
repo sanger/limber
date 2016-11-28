@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git://github.com/JamesGlover/sequencescape-client-api.git
-  revision: 80550046370235952e79fa49b1857c694374cd9b
+  revision: 8a9739f65c176844251269c771141c122f7506d7
   branch: add_limber_needs
   specs:
     sequencescape-client-api (0.3.0)

@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'search factory' do
-
   subject do
     json(
       :search,
@@ -29,5 +29,4 @@ describe 'search factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['search']).to eq JSON.parse(json_content)['search']
   end
-
 end
