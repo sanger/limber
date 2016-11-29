@@ -13,7 +13,7 @@ describe 'tag2 layout template factory' do
     %({
         "tag2_layout_template": {
           "actions": {
-            "read": "http://localhost:3000/tag2-layout-template-uuid"
+            "read": "http://example.com:300/tag2-layout-template-uuid"
           },
 
           "uuid": "tag2-layout-template-uuid",

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module ApiUrlHelper
-  API_ROOT = 'http://localhost:3000/'
+  API_ROOT = 'http://example.com:300/'
 
   def self.included(base)
     base.extend(ClassMethods)

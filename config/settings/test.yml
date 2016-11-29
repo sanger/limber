@@ -1,0 +1,729 @@
+---
+:large_insert_limit: 250
+:searches:
+  Find assets by barcode: 33ce1740-222b-11e4-ab60-44fb42fffecc
+  Find project by name: 33d1c0c0-222b-11e4-ab60-44fb42fffecc
+  Find study by name: 33d431c0-222b-11e4-ab60-44fb42fffecc
+  Find sample by name: 33d6f0e0-222b-11e4-ab60-44fb42fffecc
+  Find source assets by destination asset barcode: 33dae880-222b-11e4-ab60-44fb42fffecc
+  Find user by login: 33ddceb0-222b-11e4-ab60-44fb42fffecc
+  Find user by swipecard code: 33e0dbf0-222b-11e4-ab60-44fb42fffecc
+  Find pulldown plates: 33e39b10-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-B plates: 33e68140-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-B plates for user: 33e91950-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-B stock plates: 33ebff80-222b-11e4-ab60-44fb42fffecc
+  Find outstanding Illumina-B pre-PCR plates: 33f06c50-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-B tubes: 33f3c7b0-222b-11e4-ab60-44fb42fffecc
+  Find pulldown plates for user: 33f6ade0-222b-11e4-ab60-44fb42fffecc
+  Find pulldown stock plates: 33f8f7d0-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-A plates: 33fbb6f0-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-A stock plates: 33fe4f00-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-C tubes: 3401d170-222b-11e4-ab60-44fb42fffecc
+  Find Illumina-C plates: 3404deb0-222b-11e4-ab60-44fb42fffecc
+  Find lot by lot number: 34079dd0-222b-11e4-ab60-44fb42fffecc
+  Find qcable by barcode: 340ad220-222b-11e4-ab60-44fb42fffecc
+  Find robot by barcode: 340d6a30-222b-11e4-ab60-44fb42fffecc
+  Find lot by batch id: 34107770-222b-11e4-ab60-44fb42fffecc
+:transfer_templates:
+  Transfer columns 1-1: 37a66f70-222b-11e4-ab60-44fb42fffecc
+  Transfer columns 1-2: 37a89250-222b-11e4-ab60-44fb42fffecc
+  Transfer columns 1-3: 37ad2630-222b-11e4-ab60-44fb42fffecc
+  Transfer columns 1-4: 37af7020-222b-11e4-ab60-44fb42fffecc
+  Transfer columns 1-6: 37b1e120-222b-11e4-ab60-44fb42fffecc
+  Transfer columns 1-12: 37b67500-222b-11e4-ab60-44fb42fffecc
+  Pool wells based on submission: 37b8bef0-222b-11e4-ab60-44fb42fffecc
+  Custom pooling: 37ba1e80-222b-11e4-ab60-44fb42fffecc
+  Transfer wells to MX library tubes by submission: 37bc8f80-222b-11e4-ab60-44fb42fffecc
+  Transfer wells to specific tubes by submission: 37be6440-222b-11e4-ab60-44fb42fffecc
+  Transfer from tube to tube by submission: 37c0ae30-222b-11e4-ab60-44fb42fffecc
+  Transfer wells to specific tubes defined by submission: 37c20dc0-222b-11e4-ab60-44fb42fffecc
+  Transfer between specific tubes: 37c3bb70-222b-11e4-ab60-44fb42fffecc
+  Whole plate to tube: 37c67a90-222b-11e4-ab60-44fb42fffecc
+  Flip Plate: 37cbf8d0-222b-11e4-ab60-44fb42fffecc
+:printers:
+  illumina_a:
+    :plate_a: bac4df40-222b-11e4-8ce2-44fb42fffecc
+    :plate_b: bac617c0-222b-11e4-8ce2-44fb42fffecc
+    :tube: bac75040-222b-11e4-8ce2-44fb42fffecc
+  illumina_b:
+    :plate_a: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :plate_b: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :tube: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+  limit: 5
+  default_count: 2
+:purposes:
+  38f9f180-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::StockPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: ILB_STD_INPUT
+  38fc6280-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::StandardPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: ILB_STD_COVARIS
+  38fe3740-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::QcCompletablePresenter
+    :state_changer_class: StateChangers::QcCompletablePlateStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: ILB_STD_SH
+  38ffe4f0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PrePcrPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: ILB_STD_PREPCR
+  3902cb20-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TaggingForm
+    :presenter_class: Presenters::PcrPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :tag_layout_templates:
+    - Illumina B vertical tagging
+    - Illumina B tagging
+    :name: ILB_STD_PCR
+  39049fe0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TaggingForm
+    :presenter_class: Presenters::PcrPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :tag_layout_templates:
+    - Illumina B vertical tagging
+    - Illumina B tagging
+    :name: ILB_STD_PCRR
+  39078610-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PcrXpOldPresenter
+    :state_changer_class: StateChangers::PlateToTubeStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: ILB_STD_PCRXP
+  39095ad0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PcrXpOldPresenter
+    :state_changer_class: StateChangers::PlateToTubeStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: ILB_STD_PCRRXP
+  391f7ae0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::StockPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: Cherrypicked
+  39226110-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::ShearPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: Shear
+  392483f0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::QcBranchCompletablePresenter
+    :state_changer_class: StateChangers::QcCompletablePlateStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :locations_children:
+      illumina_a: Post Shear XP
+      limber: Post Shear XP
+    :name: Post Shear
+  3926a6d0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::AlLibsPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: AL Libs
+  392965f0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TaggingForm
+    :presenter_class: Presenters::PcrRobotPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :tag_layout_templates:
+    - Illumina pipeline tagging
+    :name: Lib PCR
+  392b88d0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TaggingForm
+    :presenter_class: Presenters::PcrPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: Lib PCRR
+  392ebd20-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PcrXpPresenter
+    :state_changer_class: StateChangers::BranchingPlateToTubeStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: Lib PCR-XP
+  3930b8f0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PcrXpPresenter
+    :state_changer_class: StateChangers::BranchingPlateToTubeStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: Lib PCRR-XP
+  39328db0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PostShearXpPresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: Post Shear XP
+  393573e0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::PostShearQcPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_a
+    :name: Post Shear QC
+  39380bf0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::LibPcrXpQcPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: Lib PCR-XP QC
+  393a7cf0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::CreationForm
+    :presenter_class: Presenters::LibPcrXpQcPlatePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :plate_b
+    :name: Lib PCRR-XP QC
+  38daa9b0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TubesForm
+    :presenter_class: Presenters::FinalTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: ILB_STD_MX
+  38dcf3a0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TubesForm
+    :presenter_class: Presenters::QCTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: ILB_STD_STOCK
+  38dfd9d0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TubesForm
+    :presenter_class: Presenters::FinalTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :from_purpose: Lib Pool
+    :name: Lib Pool Norm
+  38e33530-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TubesForm
+    :presenter_class: Presenters::QCTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: Lib Pool
+  38e55810-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::TubesForm
+    :presenter_class: Presenters::FinalTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :from_purpose: Lib Pool Pippin
+    :name: Lib Pool SS-XP-Norm
+  38e705c0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::IntermediateTubesForm
+    :presenter_class: Presenters::SimpleTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: Lib Pool Pippin
+  38e99dd0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::IntermediateTubesForm
+    :presenter_class: Presenters::SimpleTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: Lib Pool Conc
+  38ebc0b0-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::IntermediateTubesForm
+    :presenter_class: Presenters::SimpleTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: Lib Pool SS
+  38ed9570-222b-11e4-ab60-44fb42fffecc:
+    :form_class: Forms::IntermediateTubesForm
+    :presenter_class: Presenters::QCTubePresenter
+    :state_changer_class: StateChangers::DefaultStateChanger
+    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+    :default_printer_type: :tube
+    :name: Lib Pool SS-XP
+:purpose_uuids:
+  ILB_STD_MX: 38daa9b0-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_STOCK: 38dcf3a0-222b-11e4-ab60-44fb42fffecc
+  Lib Pool Norm: 38dfd9d0-222b-11e4-ab60-44fb42fffecc
+  Lib Pool: 38e33530-222b-11e4-ab60-44fb42fffecc
+  Lib Pool SS-XP-Norm: 38e55810-222b-11e4-ab60-44fb42fffecc
+  Lib Pool Pippin: 38e705c0-222b-11e4-ab60-44fb42fffecc
+  Lib Pool Conc: 38e99dd0-222b-11e4-ab60-44fb42fffecc
+  Lib Pool SS: 38ebc0b0-222b-11e4-ab60-44fb42fffecc
+  Lib Pool SS-XP: 38ed9570-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_INPUT: 38f9f180-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_COVARIS: 38fc6280-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_SH: 38fe3740-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_PREPCR: 38ffe4f0-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_PCR: 3902cb20-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_PCRR: 39049fe0-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_PCRXP: 39078610-222b-11e4-ab60-44fb42fffecc
+  ILB_STD_PCRRXP: 39095ad0-222b-11e4-ab60-44fb42fffecc
+  Cherrypicked: 391f7ae0-222b-11e4-ab60-44fb42fffecc
+  Shear: 39226110-222b-11e4-ab60-44fb42fffecc
+  Post Shear: 392483f0-222b-11e4-ab60-44fb42fffecc
+  AL Libs: 3926a6d0-222b-11e4-ab60-44fb42fffecc
+  Lib PCR: 392965f0-222b-11e4-ab60-44fb42fffecc
+  Lib PCRR: 392b88d0-222b-11e4-ab60-44fb42fffecc
+  Lib PCR-XP: 392ebd20-222b-11e4-ab60-44fb42fffecc
+  Lib PCRR-XP: 3930b8f0-222b-11e4-ab60-44fb42fffecc
+  Post Shear XP: 39328db0-222b-11e4-ab60-44fb42fffecc
+  Post Shear QC: 393573e0-222b-11e4-ab60-44fb42fffecc
+  Lib PCR-XP QC: 39380bf0-222b-11e4-ab60-44fb42fffecc
+  Lib PCRR-XP QC: 393a7cf0-222b-11e4-ab60-44fb42fffecc
+:robots:
+  limber:
+    fx:
+      :name: Illumina B fx
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate A
+        '5800000096592':
+          :order: 2
+          :purpose: AL Libs
+          :states:
+          - pending
+          :label: AL Libs Plate A
+          :parent: '5800000018068'
+          :target_state: started
+        '5800000028104':
+          :order: 3
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate B
+        '5800000108158':
+          :order: 4
+          :purpose: AL Libs
+          :states:
+          - pending
+          :label: AL Libs Plate B
+          :parent: '5800000028104'
+          :target_state: started
+        '5800000038240':
+          :order: 5
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate C
+        '5800000118294':
+          :order: 6
+          :purpose: AL Libs
+          :states:
+          - pending
+          :label: AL Libs Plate C
+          :parent: '5800000038240'
+          :target_state: started
+        '5800000048386':
+          :order: 7
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate D
+        '5800000128330':
+          :order: 8
+          :purpose: AL Libs
+          :states:
+          - pending
+          :label: AL Libs Plate D
+          :parent: '5800000048386'
+          :target_state: started
+    fx-add-tags:
+      :name: Illumina B fx-add-tags
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :purpose: AL Libs
+          :states:
+          - started
+        '5800000096592':
+          :purpose: Lib PCR
+          :states:
+          - pending
+          :parent: '5800000018068'
+          :target_state: started_fx
+        '5800000028104':
+          :purpose: AL Libs
+          :states:
+          - started
+        '5800000108158':
+          :purpose: Lib PCR
+          :states:
+          - pending
+          :parent: '5800000028104'
+          :target_state: started_fx
+        '5800000038240':
+          :purpose: AL Libs
+          :states:
+          - started
+        '5800000118294':
+          :purpose: Lib PCR
+          :states:
+          - pending
+          :parent: '5800000038240'
+          :target_state: started_fx
+        '5800000048386':
+          :purpose: AL Libs
+          :states:
+          - started
+        '5800000128330':
+          :purpose: Lib PCR
+          :states:
+          - pending
+          :parent: '5800000048386'
+          :target_state: started_fx
+    nx-96:
+      :name: Illumina B nx-96
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate A
+        '5800000028104':
+          :order: 2
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate A
+          :parent: '5800000018068'
+          :target_state: started
+        '5800000038240':
+          :order: 3
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate B
+        '5800000048386':
+          :order: 4
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate B
+          :parent: '5800000038240'
+          :target_state: started
+        '5800000058422':
+          :order: 5
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate C
+        '5800000068568':
+          :order: 6
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate C
+          :parent: '5800000058422'
+          :target_state: started
+        '5800000078604':
+          :order: 7
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate D
+        '5800000088740':
+          :order: 8
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate D
+          :parent: '5800000078604'
+          :target_state: started
+  illumina_a:
+    cherrypick-to-shear:
+      :name: Illumina A nx-96 Cherrypick to Shear
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Cherrypicked
+          :states:
+          - passed
+          :label: Cherrypicked Plate
+        '5800000096592':
+          :order: 2
+          :purpose: Shear
+          :states:
+          - pending
+          :label: Shear Plate
+          :parent: '5800000018068'
+          :target_state: started
+        '5800000028104':
+          :order: 1
+          :purpose: Cherrypicked
+          :states:
+          - passed
+          :label: Cherrypicked Plate
+        '5800000108158':
+          :order: 2
+          :purpose: Shear
+          :states:
+          - pending
+          :label: Shear Plate
+          :parent: '5800000028104'
+          :target_state: started
+        '5800000038240':
+          :order: 1
+          :purpose: Cherrypicked
+          :states:
+          - passed
+          :label: Cherrypicked Plate
+        '5800000118294':
+          :order: 2
+          :purpose: Shear
+          :states:
+          - pending
+          :label: Shear Plate
+          :parent: '5800000038240'
+          :target_state: started
+        '5800000048386':
+          :order: 1
+          :purpose: Cherrypicked
+          :states:
+          - passed
+          :label: Cherrypicked Plate
+        '5800000128330':
+          :order: 2
+          :purpose: Shear
+          :states:
+          - pending
+          :label: Shear Plate
+          :parent: '5800000048386'
+          :target_state: started
+    shear-post-shear:
+      :name: Illumina A Bravo Shear to Post-Shear and QC
+      :layout: bed
+      :beds:
+        '5800000048386':
+          :order: 1
+          :purpose: Shear
+          :states:
+          - passed
+          :label: Shear Plate
+        '5800000068568':
+          :order: 2
+          :purpose: Post Shear
+          :states:
+          - pending
+          :label: Post Shear Plate
+          :parent: '5800000048386'
+        '5800000058422':
+          :order: 3
+          :purpose: Post Shear QC
+          :states:
+          - pending
+          :label: Post Shear QC Plate
+          :parent: '5800000068568'
+          :target_state: started
+    post-shear-post-shear-xp:
+      :name: Illumina A nx-96 Post-Shear to Post-Shear XP
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate
+        '5800000096592':
+          :order: 2
+          :purpose: Post Shear XP
+          :states:
+          - pending
+          :label: Post Shear XP Plate
+          :parent: '5800000018068'
+          :target_state: started
+        '5800000028104':
+          :order: 1
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate
+        '5800000108158':
+          :order: 2
+          :purpose: Post Shear XP
+          :states:
+          - pending
+          :label: Post Shear XP Plate
+          :parent: '5800000028104'
+          :target_state: started
+        '5800000038240':
+          :order: 1
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate
+        '5800000118294':
+          :order: 2
+          :purpose: Post Shear XP
+          :states:
+          - pending
+          :label: Post Shear XP Plate
+          :parent: '5800000038240'
+          :target_state: started
+        '5800000048386':
+          :order: 1
+          :purpose: Post Shear
+          :states:
+          - qc_complete
+          :label: Post Shear Plate
+        '5800000128330':
+          :order: 2
+          :purpose: Post Shear XP
+          :states:
+          - pending
+          :label: Post Shear XP Plate
+          :parent: '5800000048386'
+          :target_state: started
+    lib-pcr-xp-lib-pcr-xp-qc:
+      :name: Illumina A nx-96 Lib-PCR XP to Lib-PCR XP QC
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Lib PCR-XP
+          :states:
+          - passed
+          :label: Post Shear Plate
+        '5800000096592':
+          :order: 2
+          :purpose: Lib PCR-XP QC
+          :states:
+          - pending
+          :label: Post Shear XP Plate
+          :parent: '5800000018068'
+          :target_state: started
+    fx:
+      :name: Illumina A Bravo Post-Shear XP to Al Libs
+      :layout: bed
+      :beds:
+        '5800000078604':
+          :order: 1
+          :purpose: Post Shear XP
+          :states:
+          - passed
+          :label: Post Shear XP Plate A
+        '5800000436770':
+          :order: 2
+          :purpose: AL Libs
+          :states:
+          - pending
+          :label: AL Libs Plate A
+          :parent: '5800000078604'
+          :target_state: started
+    fx-add-tags:
+      :name: Illumina A Bravo Add Tags
+      :layout: bed
+      :beds:
+        '5800000048386':
+          :purpose: AL Libs
+          :states:
+          - started
+        '5800000068568':
+          :purpose: Lib PCR
+          :states:
+          - pending
+          :parent: '5800000048386'
+          :target_state: started_fx
+    nx-96:
+      :name: Illumina A nx-96
+      :layout: bed
+      :beds:
+        '5800000018068':
+          :order: 1
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate A
+        '5800000096592':
+          :order: 2
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate A
+          :parent: '5800000018068'
+          :target_state: started
+        '5800000028104':
+          :order: 3
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate B
+        '5800000108158':
+          :order: 4
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate B
+          :parent: '5800000028104'
+          :target_state: started
+        '5800000038240':
+          :order: 5
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate C
+        '5800000118294':
+          :order: 6
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate C
+          :parent: '5800000038240'
+          :target_state: started
+        '5800000048386':
+          :order: 7
+          :purpose: Lib PCR
+          :states:
+          - passed
+          :label: Lib PCR Plate D
+        '5800000128330':
+          :order: 8
+          :purpose: Lib PCR-XP
+          :states:
+          - pending
+          :label: Lib PCR-XP Plate D
+          :parent: '5800000048386'
+          :target_state: started
+:locations:
+  Library creation freezer: limber
+  Pulldown freezer: illumina_a
+:qc_purposes:
+- Post Shear QC
+- Lib PCR-XP QC
+- Lib PCRR-XP QC

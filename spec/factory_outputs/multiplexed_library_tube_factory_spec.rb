@@ -14,7 +14,7 @@ describe 'multiplexed_library_tube factory' do
     %({
         "multiplexed_library_tube": {
           "actions": {
-            "read": "http://localhost:3000/example-multiplexed-library-tube-uuid"
+            "read": "http://example.com:300/example-multiplexed-library-tube-uuid"
           },
           "purpose": {
             "uuid": "example-purpose-uuid"

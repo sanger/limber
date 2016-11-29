@@ -62,7 +62,7 @@ module Presenters
         end
 
         # Returns the child plate purposes that can be created in the qc_complete state.
-        def default_child_purpose
+        def default_child_purpos
           purpose.children.first
         end
       end

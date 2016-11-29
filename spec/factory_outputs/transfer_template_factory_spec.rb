@@ -14,9 +14,9 @@ describe 'transfer_template factory' do
     %({
         "transfer_template": {
           "actions": {
-            "read": "http://localhost:3000/example-transfer-template-uuid",
-            "create": "http://localhost:3000/example-transfer-template-uuid",
-            "preview": "http://localhost:3000/example-transfer-template-uuid/preview"
+            "read": "http://example.com:300/example-transfer-template-uuid",
+            "create": "http://example.com:300/example-transfer-template-uuid",
+            "preview": "http://example.com:300/example-transfer-template-uuid/preview"
           },
 
           "uuid": "example-transfer-template-uuid",

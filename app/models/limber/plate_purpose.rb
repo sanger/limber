@@ -10,6 +10,6 @@ class Limber::PlatePurpose < Sequencescape::PlatePurpose
   end
 
   def asset_type
-    Settings.purposes[uuid].asset_type
+    Settings.purposes.fetch(uuid).asset_type
   end
 end

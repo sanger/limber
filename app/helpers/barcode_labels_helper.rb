@@ -16,6 +16,7 @@ module BarcodeLabelsHelper
   end
 
   def useful_barcode(barcode)
+    return "Unknown" if barcode.nil?
     "#{barcode.prefix}#{barcode.number} <em>#{barcode.ean13}</em>".html_safe
   end
 end

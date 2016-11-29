@@ -20,7 +20,13 @@
 require 'factory_girl'
 require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
+require_relative 'support/feature_helpers'
 require 'rspec/json_expectations'
+require 'capybara/rspec'
+require 'capybara/poltergeist'
+require 'webmock/rspec'
+
+Capybara.javascript_driver = :poltergeist
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -102,8 +108,15 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   config.include FactoryGirl::Syntax::Methods
+  config.include FeatureHelpers, type: :feature
 
   config.before(:suite) do
     FactoryGirl.find_definitions
+  end
+
+  config.before(:each) do
+    # We need to be able to talk to capybara.
+    # Unfortunately this means the library, not the animal.
+    WebMock.disable_net_connect!(allow_localhost: true)
   end
 end

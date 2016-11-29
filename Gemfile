@@ -42,6 +42,7 @@ gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.g
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara'
+  gem 'poltergeist'
   gem 'rspec-rails'
   gem 'rspec-json_expectations'
   gem 'launchy'

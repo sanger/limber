@@ -14,7 +14,7 @@ describe 'barcode printer factory' do
     %({
       "barcode_printer": {
         "actions": {
-          "read": "http://localhost:3000/example-barcode-printer-uuid"
+          "read": "http://example.com:300/example-barcode-printer-uuid"
         },
         "uuid": "example-barcode-printer-uuid",
         "name": "tube printer",

@@ -26,7 +26,6 @@ class SessionsController < ApplicationController
 
   def user_for_swipecard(card_id)
     user_search = api.search.find(Settings.searches['Find user by swipecard code'])
-
     user_search.first(swipecard_code: card_id)
   rescue Sequencescape::Api::ResourceNotFound => exception
     raise exception, 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'

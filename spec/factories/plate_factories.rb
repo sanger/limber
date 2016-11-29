@@ -7,6 +7,9 @@ FactoryGirl.define do
     json_root 'plate'
     size 96
     state 'pending'
+    created_at { Time.current.to_s }
+    updated_at { Time.current.to_s }
+    priority 0
 
     transient do
       barcode_prefix 'DN'
@@ -41,6 +44,12 @@ FactoryGirl.define do
         'uuid' => purpose_uuid,
         'name' => purpose_name
       }
+    end
+
+    factory :stock_plate do
+      purpose_name 'Limber Cherrypicked'
+      purpose_uuid 'ilc-stock-plate-purpose-uuid'
+      stock_plate { { barcode: barcode, uuid: uuid } }
     end
   end
 end

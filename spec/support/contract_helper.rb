@@ -29,7 +29,7 @@ module ContractHelper
         (match = REQUEST_REGEXP.match(file.read)) || raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
 
         @http_verb = match[:verb].downcase.to_sym
-        @url = "http://localhost:3000#{match[:path]}"
+        @url = "http://example.com:300#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
@@ -91,7 +91,7 @@ module ContractHelper
       expect_request_from('retrieve-api-root') { response('api-root', times: times) }
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://localhost:3000/', cookie: nil,
+          url: 'http://example.com:300/', cookie: nil,
           namespace: Limber, authorisation: 'testing'
         )
       end

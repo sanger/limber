@@ -154,7 +154,7 @@ module Presenters
     end
 
     def input_barcode
-      useful_barcode(labware.stock_plate.barcode)
+      useful_barcode(labware.stock_plate.try(:barcode))
     end
 
     private

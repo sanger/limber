@@ -13,16 +13,16 @@ describe 'plate_conversion factory' do
     %({
       "plate_conversion": {
         "actions": {
-          "read": "http://localhost:3000/example-plate-conversion-uuid"
+          "read": "http://example.com:300/example-plate-conversion-uuid"
         },
         "target": {
           "actions": {
-            "read": "http://localhost:3000/target-uuid"
+            "read": "http://example.com:300/target-uuid"
           }
         },
         "purpose": {
           "actions": {
-            "read": "http://localhost:3000/purpose-uuid"
+            "read": "http://example.com:300/purpose-uuid"
           }
         },
 
