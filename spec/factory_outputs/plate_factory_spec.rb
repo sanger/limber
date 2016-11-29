@@ -88,9 +88,9 @@ describe 'plate factory' do
         },
         "plate_purpose": {
           "actions": {
-            "read": "http://example.com:300/ilc-stock-plate-purpose-uuid"
+            "read": "http://example.com:300/stock-plate-purpose-uuid"
           },
-          "uuid": "ilc-stock-plate-purpose-uuid",
+          "uuid": "stock-plate-purpose-uuid",
           "name": "example-purpose"
         },
         "actions": {

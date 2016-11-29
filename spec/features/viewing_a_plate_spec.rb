@@ -14,7 +14,7 @@ feature 'Viewing a plate', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['ilc-stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
+    Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
     Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
@@ -30,10 +30,10 @@ feature 'Viewing a plate', js: true do
     stub_request(:get, 'http://example.com:300/barcode_printers')
       .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/ilc-stock-plate-purpose-uuid')
+    stub_request(:get, 'http://example.com:300/stock-plate-purpose-uuid')
       .to_return(status: 200, body: json(:stock_plate_purpose), headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/ilc-stock-plate-purpose-uuid/children')
+    stub_request(:get, 'http://example.com:300/stock-plate-purpose-uuid/children')
       .to_return(status: 200, body: json(:plate_purpose_collection, size: 1), headers: { 'content-type' => 'application/json' })
   end
 

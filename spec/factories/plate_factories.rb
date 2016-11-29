@@ -15,7 +15,7 @@ FactoryGirl.define do
       barcode_prefix 'DN'
       barcode_type 1
       purpose_name 'example-purpose'
-      purpose_uuid 'ilc-stock-plate-purpose-uuid'
+      purpose_uuid 'stock-plate-purpose-uuid'
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
@@ -48,7 +48,7 @@ FactoryGirl.define do
 
     factory :stock_plate do
       purpose_name 'Limber Cherrypicked'
-      purpose_uuid 'ilc-stock-plate-purpose-uuid'
+      purpose_uuid 'stock-plate-purpose-uuid'
       stock_plate { { barcode: barcode, uuid: uuid } }
     end
   end

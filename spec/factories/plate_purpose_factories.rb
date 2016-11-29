@@ -8,7 +8,7 @@ FactoryGirl.define do
 
     factory :stock_plate_purpose do
       name 'Limber Cherrypicked'
-      uuid 'ilc-stock-plate-purpose-uuid'
+      uuid 'stock-plate-purpose-uuid'
     end
   end
 
