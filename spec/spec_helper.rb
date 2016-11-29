@@ -112,6 +112,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     FactoryGirl.find_definitions
+    Settings.robots = []
   end
 
   config.before(:each) do
