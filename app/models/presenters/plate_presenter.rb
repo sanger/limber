@@ -5,7 +5,6 @@ module Presenters
     include Presenter
     include PlateWalking
     include RobotControlled
-    include BarcodeLabelsHelper
 
     class_attribute :labware_class
     self.labware_class = :plate
@@ -147,14 +146,6 @@ module Presenters
 
     def filename
       false
-    end
-
-    def barcode
-      useful_barcode(labware.barcode)
-    end
-
-    def input_barcode
-      useful_barcode(labware.stock_plate.try(:barcode))
     end
 
     private

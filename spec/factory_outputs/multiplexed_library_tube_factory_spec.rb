@@ -6,7 +6,17 @@ describe 'multiplexed_library_tube factory' do
     json(
       :multiplexed_library_tube,
       uuid: 'example-multiplexed-library-tube-uuid',
-      barcode_number: 123_456
+      barcode_number: 123_456,
+      stock_plate: {
+        "barcode": {
+          "ean13": '1111111111111',
+          "number": '427444',
+          "prefix": 'DN',
+          "two_dimensional": nil,
+          "type": 1
+        },
+        "uuid": 'example-stock-plate-uuid'
+      }
     )
   end
 
@@ -16,7 +26,20 @@ describe 'multiplexed_library_tube factory' do
           "actions": {
             "read": "http://example.com:300/example-multiplexed-library-tube-uuid"
           },
+          "requests": {
+            "size": 0,
+            "actions": {
+              "read": "http://example.com:300/example-multiplexed-library-tube-uuid/requests"
+            }
+          },
+          "qc_files": {
+            "size": 0,
+            "actions": {
+              "read": "http://example.com:300/example-multiplexed-library-tube-uuid/qc_files"
+            }
+          },
           "purpose": {
+            "name": "Example Purpose",
             "uuid": "example-purpose-uuid"
           },
           "barcode": {
@@ -26,12 +49,23 @@ describe 'multiplexed_library_tube factory' do
             "ean13": "3980123456878",
             "type": 1
           },
-          "uuid": "example-multiplexed-library-tube-uuid"
+          "uuid": "example-multiplexed-library-tube-uuid",
+          "stock_plate": {
+            "barcode": {
+              "ean13": "1111111111111",
+              "number": "427444",
+              "prefix": "DN",
+              "two_dimensional": null,
+              "type": 1
+            },
+            "uuid": "example-stock-plate-uuid"
+          }
         }
     })
   end
 
   it 'should match the expected json' do
-    expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']
+    expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
+  #  expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']
   end
 end

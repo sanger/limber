@@ -119,5 +119,6 @@ RSpec.configure do |config|
     # We need to be able to talk to capybara.
     # Unfortunately this means the library, not the animal.
     WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.reset!
   end
 end

@@ -5,6 +5,7 @@ module Presenters
     def self.included(base)
       base.class_eval do
         include Forms::Form
+        include BarcodeLabelsHelper
         self.page = 'show'
 
         class_attribute :csv
@@ -80,8 +81,25 @@ module Presenters
       nil
     end
 
+    # Human formatted date of creation
+    #
+    # @return [String] Human formatted date of creation
     def created_on
       labware.created_at.to_formatted_s(:date_created)
+    end
+
+    # Formatted barcode string for display
+    #
+    # @return [String] Barcode string. eg. DN1 12200000123
+    def barcode
+      useful_barcode(labware.barcode)
+    end
+
+    # Formatted stock plate barcode string for display
+    #
+    # @return [String] Barcode string. eg. DN1 12200000123
+    def input_barcode
+      useful_barcode(labware.stock_plate.try(:barcode))
     end
 
     private

@@ -20,6 +20,15 @@ module Presenters
 
     class_attribute :tab_states
 
+    class_attribute :summary_items
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Tube type'=> :purpose_name,
+      'Current tube state' => :state,
+      'Input plate barcode'=> :input_barcode,
+      'Created on' => :created_on
+    }
+
     LABEL_TEXT = 'ILB Stock'
 
     def label_text
@@ -47,6 +56,10 @@ module Presenters
 
     def label_suffix
       "P#{sample_count}"
+    end
+
+    def tube
+      labware
     end
 
     # Purpose returns the plate or tube purpose of the labware.
