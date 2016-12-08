@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 ##
 module RobotConfiguration
-  BED = %w(580000000793 580000001806 580000002810 580000003824 580000004838 580000005842 580000006856 580000007860 580000008874 580000009659 580000010815 580000011829 580000012833).freeze
-
-  CAR = {
-    '1,3' => '580000013847',
-    '2,3' => '580000023860',
-    '4,3' => '580000043677',
-    '4,5' => '580000045695'
-  }.freeze
-
   BedOrCar = Struct.new(:barcode, :name)
 
   class Register
@@ -53,11 +44,16 @@ module RobotConfiguration
     end
 
     def bed(number)
-      BedOrCar.new(BED[number], "Bed #{number}")
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Bed #{number}")
     end
 
-    def car(number)
-      BedOrCar.new(CAR[number], "Carousel #{number}")
+    def car(position)
+      number = position.tr(',').to_i
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Carousel #{position}")
     end
 
     def from(source_purpose, bed, state = 'passed')
