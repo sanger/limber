@@ -51,10 +51,10 @@ module Presenters
       nil
     end
 
-    def label_type
-      yield 'custom-labels'
-      nil
-    end
+    # def label_type
+    #   yield 'custom-labels'
+    #   nil
+    # end
 
     def prioritized_name(str, max_size)
       # Regular expression to match
@@ -106,6 +106,10 @@ module Presenters
 
     def purpose_config
       Settings.purposes[purpose.uuid]
+    end
+
+    def date_today
+      Date.today.strftime("%e-%^b-%Y")
     end
   end
 end

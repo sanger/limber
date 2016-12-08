@@ -1,23 +1,15 @@
-<%= form_for(barcode, :url => print_individual_label_path, as: :label, html: { method: :post, class: 'form-inline'}) do |f| %>
+<%= form_for(barcode, :url => print_jobs_path, as: :print_job, html: { method: :post, class: 'form-inline'}) do |f| %>
 
-  <%= hidden_field_tag(:redirect_to, redirection_url) %>
+  <%= hidden_field_tag "print_job[printer_type]", printers_applicable_to(barcode).first.type.name %>
 
-  <% @presenter.label_type do |type| %>
-    <%= f.hidden_field :type, :value => type %>
-  <% end %>
-
-  <%= f.hidden_field :prefix %>
-  <%= f.hidden_field :number %>
-  <%= f.hidden_field :label_name,        :value => label_name        %>
-  <%= f.hidden_field :label_description, :value => label_description %>
-  <% if label_suffix  %>
-    <%= f.hidden_field :suffix,            :value => label_suffix      %>
-  <% end %>
+  <% label_attributes.each do |k, v|%>
+    <%= f.hidden_field "labels[][main_label][#{k}]", :value => v %>
+  <%end%>
 
   <fieldset class="print_selector form-group">
     <%= label_tag :printer, 'Barcode Printer' %>
-    <%= select_tag :printer, options_from_collection_for_select(printers_applicable_to(barcode), :uuid, :name, @presenter.default_printer_uuid), class: 'custom-select' %>
-    <%= select_tag :number,  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count), class: 'custom-select' %>
+    <%= select_tag "print_job[printer_name]", options_from_collection_for_select(printers_applicable_to(barcode), :name, :name, @presenter.default_printer_uuid), class: 'custom-select' %>
+    <%= select_tag "print_job[number_of_copies]",  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count), class: 'custom-select' %>
     <%= f.submit 'Print Label', :class => 'print-button btn btn-success' %>
   </fieldset>
 

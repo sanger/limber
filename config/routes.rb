@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :print_jobs, only: [:create]
+
   resources :limber_qcables, controller: :tag_plates, only: [:show]
 
   resources :limber_plates, controller: :plates do

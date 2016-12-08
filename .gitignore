@@ -5,4 +5,5 @@ tmp/
 public/stylesheets/*.css
 .DS_Store
 .sass-cache/
+*.orig
 *.sublime-workspace

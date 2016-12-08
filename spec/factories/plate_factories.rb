@@ -3,6 +3,7 @@ require './lib/well_helpers'
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do
+
   factory :plate, class: Limber::Plate, traits: [:api_object, :barcoded] do
     json_root 'plate'
     size 96
@@ -43,6 +44,13 @@ FactoryGirl.define do
         'actions' => { 'read' => api_root + purpose_uuid },
         'uuid' => purpose_uuid,
         'name' => purpose_name
+      }
+    end
+
+    label do
+      {
+        prefix: 'Limber',
+        text: 'Cherrypicked'
       }
     end
 

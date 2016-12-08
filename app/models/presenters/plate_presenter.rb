@@ -49,6 +49,10 @@ module Presenters
       end
     end
 
+    def default_statechange_label
+      'Move plate to next state'
+    end
+
     def number_of_wells
       "#{number_of_filled_wells}/#{total_number_of_wells}"
     end
@@ -61,8 +65,12 @@ module Presenters
       plate.size
     end
 
-    def label_name
-      "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}"
+    def label_attributes
+      { top_left: date_today,
+        bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number}",
+        top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
+        bottom_right: "#{labware.label.prefix} #{labware.label.text}",
+        barcode: labware.barcode.ean13 }
     end
 
     def plate_to_walk
@@ -96,10 +104,6 @@ module Presenters
 
     def allow_plate_label_printing?
       true
-    end
-
-    def label_text
-      "#{labware.label.prefix} #{labware.label.text}"
     end
 
     def labware_form_details(view)

@@ -168,6 +168,12 @@ namespace :config do
         request_types['illumina_a_isc']                   = ['ISCH lib pool', false]
         request_types['illumina_a_re_isc']                = ['ISCH lib pool', false]
       end
+
+      configuration[:label_templates] = {}.tap do |label_templates|
+        label_templates["1D Tube"] = "sqsc_1dtube_label_template"
+        label_templates["96 Well Plate"] = "sqsc_96plate_label_template"
+        label_templates["384 Well Plate"] = "sqsc_384plate_label_template"
+      end
     end
 
     # Write out the current environment configuration file

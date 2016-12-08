@@ -155,8 +155,7 @@ describe 'plate factory' do
           "uuid": "example-stock-plate-uuid"
         }
       }
-    }
-  )
+    })
   end
 
   it 'should match the expected json' do
