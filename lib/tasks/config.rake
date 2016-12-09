@@ -19,6 +19,10 @@ namespace :config do
     'LB Lib Pool Norm'
   ].freeze
 
+  TUBE_PURPOSE_TARGET = {
+    'LB Lib Pool' => 'StockMultiplexedLibraryTube',
+    'LB Lib Pool Norm' => 'MultiplexedLibraryTube'
+  }
 
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
@@ -35,7 +39,7 @@ namespace :config do
     all_tube_purposes = Hash[api.tube_purpose.all.map { |tp| [tp.name, tp] }]
 
     TUBE_PURPOSES.inject(last_purpose_uuid) do |parent, name|
-      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parents: [parent])
+      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parents: [parent], target_type: TUBE_PURPOSE_TARGET[name])
       all_tube_purposes[name].uuid
     end
 
@@ -44,8 +48,8 @@ namespace :config do
 
     barcode_printer_uuid = lambda do |printers|
       lambda do |printer_name|
-        printers.detect { |prt| prt.name == printer_name }.try(:uuid) ||
-          raise("Printer #{printer_name}: not found!")
+        # Update behaviour when we clean this up. At least output an error.
+        printers.detect { |prt| prt.name == printer_name }.try(:uuid) || printers.first
       end
     end.call(api.barcode_printer.all)
 
@@ -147,7 +151,7 @@ namespace :config do
       end
 
       configuration[:robots]      = ROBOT_CONFIG
-      configuration[:qc_purposes] = QC_TUBE_PURPOSES
+      configuration[:qc_purposes] = []
 
       configuration[:submission_templates] = {}.tap do |submission_templates|
         puts 'Preparing submission templates...'
