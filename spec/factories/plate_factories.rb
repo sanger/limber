@@ -19,6 +19,7 @@ FactoryGirl.define do
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
+      stock_plate_barcode 2
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -51,6 +52,11 @@ FactoryGirl.define do
         prefix: 'Limber',
         text: 'Cherrypicked'
       }
+    end
+
+    stock_plate do
+      sp = associated(:stock_plate, barcode_number: stock_plate_barcode)
+      { uuid: sp[:uuid], barcode: sp[:barcode] }
     end
 
     factory :stock_plate do

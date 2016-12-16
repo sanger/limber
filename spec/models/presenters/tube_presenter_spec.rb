@@ -12,6 +12,7 @@ describe Presenters::TubePresenter do
     build :multiplexed_library_tube,
           purpose_name: purpose_name,
           state: state,
+          barcode_number: 6,
           created_at: '2016-10-19 12:00:00 +0100',
           stock_plate: {
             "barcode": {

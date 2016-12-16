@@ -133,7 +133,7 @@ module Presenters::Statemachine
 
         # These are the states, which are really the only things we need ...
         state :pending do
-          include StateAllowsChildCreation
+          include StateDoesNotAllowChildCreation
         end
 
         state :started do
