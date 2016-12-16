@@ -21,19 +21,19 @@ feature 'Viewing a plate', js: true do
     # We lookup the plate
     stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
     # We get the actual plate
-    stub_request(:get, 'http://example.com:300/' + plate_uuid)
+    stub_request(:get, 'http://example.com:3000/' + plate_uuid)
       .to_return(status: 200, body: example_plate, headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/' + plate_uuid + '/wells')
+    stub_request(:get, 'http://example.com:3000/' + plate_uuid + '/wells')
       .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/barcode_printers')
-      .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
+    stub_request(:get, 'http://example.com:3000/barcode_printers')
+      .to_return(status: 200, body: json(:barcode_printer_collection), headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/stock-plate-purpose-uuid')
+    stub_request(:get, 'http://example.com:3000/stock-plate-purpose-uuid')
       .to_return(status: 200, body: json(:stock_plate_purpose), headers: { 'content-type' => 'application/json' })
 
-    stub_request(:get, 'http://example.com:300/stock-plate-purpose-uuid/children')
+    stub_request(:get, 'http://example.com:3000/stock-plate-purpose-uuid/children')
       .to_return(status: 200, body: json(:plate_purpose_collection, size: 1), headers: { 'content-type' => 'application/json' })
   end
 

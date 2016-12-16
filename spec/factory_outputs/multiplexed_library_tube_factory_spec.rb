@@ -24,18 +24,18 @@ describe 'multiplexed_library_tube factory' do
     %({
         "multiplexed_library_tube": {
           "actions": {
-            "read": "http://example.com:300/example-multiplexed-library-tube-uuid"
+            "read": "http://example.com:3000/example-multiplexed-library-tube-uuid"
           },
           "requests": {
             "size": 0,
             "actions": {
-              "read": "http://example.com:300/example-multiplexed-library-tube-uuid/requests"
+              "read": "http://example.com:3000/example-multiplexed-library-tube-uuid/requests"
             }
           },
           "qc_files": {
             "size": 0,
             "actions": {
-              "read": "http://example.com:300/example-multiplexed-library-tube-uuid/qc_files"
+              "read": "http://example.com:3000/example-multiplexed-library-tube-uuid/qc_files"
             }
           },
           "purpose": {
@@ -66,6 +66,6 @@ describe 'multiplexed_library_tube factory' do
 
   it 'should match the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
-  #  expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']
+    #  expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']
   end
 end

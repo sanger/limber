@@ -17,18 +17,18 @@ describe 'plate_purpose factory' do
         "children": {
           "size": 1,
           "actions": {
-            "read": "http://example.com:300/example-plate-purpose-uuid/children"
+            "read": "http://example.com:3000/example-plate-purpose-uuid/children"
           }
         },
         "plates": {
           "size": 0,
           "actions": {
-            "read": "http://example.com:300/example-plate-purpose-uuid/plates",
-            "create": "http://example.com:300/example-plate-purpose-uuid/plates"
+            "read": "http://example.com:3000/example-plate-purpose-uuid/plates",
+            "create": "http://example.com:3000/example-plate-purpose-uuid/plates"
           }
         },
         "actions": {
-          "read": "http://example.com:300/example-plate-purpose-uuid"
+          "read": "http://example.com:3000/example-plate-purpose-uuid"
         },
         "uuid": "example-plate-purpose-uuid",
         "name": "Limber Example Purpose"

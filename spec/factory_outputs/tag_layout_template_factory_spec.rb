@@ -13,7 +13,7 @@ describe 'tag layout template factory' do
     %({
         "tag_layout_template": {
           "actions": {
-            "read": "http://example.com:300/tag-layout-template-uuid"
+            "read": "http://example.com:3000/tag-layout-template-uuid"
           },
 
           "uuid": "tag-layout-template-uuid",

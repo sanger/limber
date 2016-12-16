@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git://github.com/JamesGlover/sequencescape-client-api.git
-  revision: 8a9739f65c176844251269c771141c122f7506d7
+  revision: a21beeff04f881888f9d0210f6d2109c6cbc6b50
   branch: add_limber_needs
   specs:
     sequencescape-client-api (0.3.0)
@@ -174,7 +174,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
-    minitest (5.9.1)
+    minitest (5.10.1)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     nio4r (1.2.1)

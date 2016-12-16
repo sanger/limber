@@ -22,24 +22,24 @@ namespace :config do
   TUBE_PURPOSE_TARGET = {
     'LB Lib Pool' => 'StockMultiplexedLibraryTube',
     'LB Lib Pool Norm' => 'MultiplexedLibraryTube'
-  }
+  }.freeze
 
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
     all_plate_purposes = Hash[api.plate_purpose.all.map { |pp| [pp.name, pp] }]
 
-    all_plate_purposes[STOCK_PURPOSE] ||= api.plate_purpose.create!(name: STOCK_PURPOSE, stock_plate: true, cherrypickable_target: true)
+    all_plate_purposes[STOCK_PURPOSE] ||= api.plate_purpose.create!(name: STOCK_PURPOSE, stock_plate: true, cherrypickable_target: true, input_plate: true)
 
     last_purpose_uuid = PLATE_PURPOSES.inject(all_plate_purposes[STOCK_PURPOSE].uuid) do |parent, name|
-      all_plate_purposes[name] ||= api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parents: [parent])
+      all_plate_purposes[name] ||= api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parent_uuids: [parent])
       all_plate_purposes[name].uuid
     end
 
     all_tube_purposes = Hash[api.tube_purpose.all.map { |tp| [tp.name, tp] }]
 
     TUBE_PURPOSES.inject(last_purpose_uuid) do |parent, name|
-      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parents: [parent], target_type: TUBE_PURPOSE_TARGET[name])
+      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parent_uuids: [parent], target_type: TUBE_PURPOSE_TARGET[name])
       all_tube_purposes[name].uuid
     end
 
@@ -171,12 +171,6 @@ namespace :config do
         request_types['illumina_htp_library_creation']    = ['Lib Norm', false]
         request_types['illumina_a_isc']                   = ['ISCH lib pool', false]
         request_types['illumina_a_re_isc']                = ['ISCH lib pool', false]
-      end
-
-      configuration[:label_templates] = {}.tap do |label_templates|
-        label_templates["1D Tube"] = "sqsc_1dtube_label_template"
-        label_templates["96 Well Plate"] = "sqsc_96plate_label_template"
-        label_templates["384 Well Plate"] = "sqsc_384plate_label_template"
       end
     end
 

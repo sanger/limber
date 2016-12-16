@@ -15,21 +15,21 @@ describe 'plate_creation factory' do
     %({
       "plate_creation": {
         "actions": {
-          "read": "http://example.com:300/example-plate-creation-uuid"
+          "read": "http://example.com:3000/example-plate-creation-uuid"
         },
         "parent": {
           "actions": {
-            "read": "http://example.com:300/example-parent-uuid"
+            "read": "http://example.com:3000/example-parent-uuid"
           }
         },
         "child": {
           "actions": {
-            "read": "http://example.com:300/child-uuid"
+            "read": "http://example.com:3000/child-uuid"
           }
         },
         "child_purpose": {
           "actions": {
-            "read": "http://example.com:300/example-child-purpose-uuid"
+            "read": "http://example.com:3000/example-child-purpose-uuid"
           }
         },
 

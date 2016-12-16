@@ -14,10 +14,10 @@ describe 'search factory' do
     %({
       "search": {
         "actions": {
-          "read": "http://example.com:300/example-search-uuid",
-          "first": "http://example.com:300/example-search-uuid/first",
-          "last": "http://example.com:300/example-search-uuid/last",
-          "all": "http://example.com:300/example-search-uuid/all"
+          "read": "http://example.com:3000/example-search-uuid",
+          "first": "http://example.com:3000/example-search-uuid/first",
+          "last": "http://example.com:3000/example-search-uuid/last",
+          "all": "http://example.com:3000/example-search-uuid/all"
         },
 
         "uuid": "example-search-uuid",

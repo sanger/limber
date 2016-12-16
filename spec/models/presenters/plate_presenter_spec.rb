@@ -57,11 +57,11 @@ describe Presenters::PlatePresenter do
   end
 
   it 'returns label attributes' do
-    expected_label =  { top_left: Date.today.strftime("%e-%^b-%Y"),
-                        bottom_left: "DN 1",
-                        top_right: "DN427444",
-                        bottom_right: "Limber Cherrypicked",
-                        barcode: '1220000001831' }
+    expected_label = { top_left: Date.today.strftime('%e-%^b-%Y'),
+                       bottom_left: 'DN 1',
+                       top_right: 'DN427444',
+                       bottom_right: 'Limber Cherrypicked',
+                       barcode: '1220000001831' }
     expect(subject.label_attributes).to eq(expected_label)
   end
 

@@ -13,10 +13,10 @@ describe 'bait library layout factory' do
   let(:json_content) do
     %({
       "bait_library_layout": {
-        "actions": {"read": "http://example.com:300/bait-library-layout-uuid"},
+        "actions": {"read": "http://example.com:3000/bait-library-layout-uuid"},
         "plate": {
           "actions": {
-            "read": "http://example.com:300/plate-uuid"
+            "read": "http://example.com:3000/plate-uuid"
           }
         },
         "uuid": "bait-library-layout-uuid",

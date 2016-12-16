@@ -48,8 +48,8 @@ Rails.application.configure do
 
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Limber'
-  config.api_connection_options.url           = 'http://localhost:3000/'
+  config.api_connection_options.url           = 'http://example.com:3000/'
   config.api_connection_options.authorisation = 'testing'
 
-  config.pmb_uri = ENV.fetch('PMB_URI','http://localhost:3002/v1/')
+  config.pmb_uri = 'http://example.com:3002/v1/'
 end

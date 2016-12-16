@@ -16,7 +16,7 @@ describe 'well factory' do
     %({
       "well": {
         "actions": {
-          "read": "http://example.com:300/example-well-uuid"
+          "read": "http://example.com:3000/example-well-uuid"
         },
         "uuid": "example-well-uuid",
         "aliquots": [{
@@ -24,7 +24,7 @@ describe 'well factory' do
           "insert_size": {},
           "sample": {
             "actions": {
-              "read": "http://example.com:300/example-sample-uuid-0"
+              "read": "http://example.com:3000/example-sample-uuid-0"
             },
             "uuid": "example-sample-uuid-0",
             "reference": {
@@ -61,14 +61,14 @@ describe 'well_collection factory' do
   let(:json_content) do
     %({
       "actions":{
-        "read":"http://example.com:300/plate-uuid/wells/1",
-        "first":"http://example.com:300/plate-uuid/wells/1",
-        "last":"http://example.com:300/plate-uuid/wells/1"
+        "read":"http://example.com:3000/plate-uuid/wells/1",
+        "first":"http://example.com:3000/plate-uuid/wells/1",
+        "last":"http://example.com:3000/plate-uuid/wells/1"
       },
       "size":2,
       "wells":[{
         "actions": {
-          "read": "http://example.com:300/example-well-uuid-0"
+          "read": "http://example.com:3000/example-well-uuid-0"
         },
         "uuid": "example-well-uuid-0",
         "aliquots": [{
@@ -76,7 +76,7 @@ describe 'well_collection factory' do
           "insert_size": {},
           "sample": {
             "actions": {
-              "read": "http://example.com:300/example-sample-uuid-0"
+              "read": "http://example.com:3000/example-sample-uuid-0"
             },
             "uuid": "example-sample-uuid-0",
             "reference": {
@@ -94,7 +94,7 @@ describe 'well_collection factory' do
       },
       {
         "actions": {
-          "read": "http://example.com:300/example-well-uuid-1"
+          "read": "http://example.com:3000/example-well-uuid-1"
         },
         "uuid": "example-well-uuid-1",
         "aliquots": [{
@@ -102,7 +102,7 @@ describe 'well_collection factory' do
           "insert_size": {},
           "sample": {
             "actions": {
-              "read": "http://example.com:300/example-sample-uuid-0"
+              "read": "http://example.com:3000/example-sample-uuid-0"
             },
             "uuid": "example-sample-uuid-0",
             "reference": {

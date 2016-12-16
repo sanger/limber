@@ -5,4 +5,4 @@ en:
   state_machine:
     transitions:
       passed: 'Manual Transfer'
-      qc_completed: 'Mark QC Complete'
+      qc_complete: 'Mark QC Complete'

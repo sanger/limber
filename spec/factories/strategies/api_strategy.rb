@@ -5,7 +5,7 @@ class ApiStrategy
   def initialize
     @strategy = FactoryGirl.strategy_by_name(:json).new
     @api = Sequencescape::Api.new(
-      url: 'http://example.com:300/', cookie: nil,
+      url: 'http://example.com:3000/', cookie: nil,
       namespace: Limber, authorisation: 'testing'
     )
   end

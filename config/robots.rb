@@ -31,5 +31,4 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     from 'LB End Prep', bed(14)
     to 'LB Lib PCR', bed(6)
   end
-
 end

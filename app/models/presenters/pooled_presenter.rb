@@ -15,7 +15,7 @@ module Presenters
       PlateWalking::Walker.new(labware, labware.wells)
     end
 
-    Barcode = Struct.new(:top_line, :middle_line,  :bottom_line, :round_label_top_line, :round_label_bottom_line, :barcode, :type)
+    Barcode = Struct.new(:top_line, :middle_line, :bottom_line, :round_label_top_line, :round_label_bottom_line, :barcode, :type)
 
     def tube_barcodes
       plate.tubes.map do |tube|
@@ -26,7 +26,8 @@ module Presenters
           tube.barcode.prefix,
           tube.barcode.number,
           tube.barcode.ean13,
-          tube.barcode.type)
+          tube.barcode.type
+        )
       end
     end
   end

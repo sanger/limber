@@ -10,19 +10,19 @@ describe Presenters::TubePresenter do
 
   let(:labware) do
     build :multiplexed_library_tube,
-      purpose_name: purpose_name,
-      state: state,
-      created_at: '2016-10-19 12:00:00 +0100',
-      stock_plate: {
-        "barcode": {
-          "ean13": '1111111111111',
-          "number": '427444',
-          "prefix": 'DN',
-          "two_dimensional": nil,
-          "type": 1
-        },
-        "uuid": 'example-stock-plate-uuid'
-      }
+          purpose_name: purpose_name,
+          state: state,
+          created_at: '2016-10-19 12:00:00 +0100',
+          stock_plate: {
+            "barcode": {
+              "ean13": '1111111111111',
+              "number": '427444',
+              "prefix": 'DN',
+              "two_dimensional": nil,
+              "type": 1
+            },
+            "uuid": 'example-stock-plate-uuid'
+          }
   end
 
   let(:purpose_name) { 'Limber example purpose' }

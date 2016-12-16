@@ -14,7 +14,7 @@ describe 'barcode printer factory' do
     %({
       "barcode_printer": {
         "actions": {
-          "read": "http://example.com:300/example-barcode-printer-uuid"
+          "read": "http://example.com:3000/example-barcode-printer-uuid"
         },
         "uuid": "example-barcode-printer-uuid",
         "name": "tube printer",
@@ -23,7 +23,7 @@ describe 'barcode printer factory' do
           "url": "http://localhost:9998/barcode_service.wsdl"
         },
         "type": {
-          "name": "tube",
+          "name": "1D Tube",
           "layout": 2
         }
       }

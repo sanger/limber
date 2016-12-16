@@ -49,10 +49,6 @@ module Presenters
       end
     end
 
-    def default_statechange_label
-      'Move plate to next state'
-    end
-
     def number_of_wells
       "#{number_of_filled_wells}/#{total_number_of_wells}"
     end

@@ -63,12 +63,12 @@ module Presenters
     delegate :purpose, to: :labware
 
     def label_attributes
-        { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
-          middle_line: labware.label.text,
-          bottom_line: date_today,
-          round_label_top_line: labware.barcode.prefix,
-          round_label_bottom_line: labware.barcode.number,
-          barcode: labware.barcode.ean13  }
+      { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
+        middle_line: labware.label.text,
+        bottom_line: date_today,
+        round_label_top_line: labware.barcode.prefix,
+        round_label_bottom_line: labware.barcode.number,
+        barcode: labware.barcode.ean13 }
     end
 
     def sample_count
@@ -82,6 +82,5 @@ module Presenters
     def qc_owner
       labware
     end
-
   end
 end

@@ -1,9 +1,9 @@
+# frozen_string_literal: true
 class PrintJob
-
   include ActiveModel::Model
   attr_accessor :labels, :printer_name, :printer_type, :number_of_copies
 
-  validates_presence_of :printer_name, :printer_type, :number_of_copies, :labels
+  validates :printer_name, :printer_type, :number_of_copies, :labels, presence: true
 
   def execute
     return false unless valid?
@@ -11,31 +11,34 @@ class PrintJob
       job = PMB::PrintJob.new(
         printer_name: printer_name,
         label_template_id: label_template_id,
-        labels: {body: all_labels}
+        labels: { body: all_labels }
       )
       if job.save
         true
       else
-        errors.add(:print_server,job.errors.full_messages.join(' - '))
+        errors.add(:print_server, job.errors.full_messages.join(' - '))
         false
       end
-    rescue JsonApiClient::Errors::ConnectionError => e
-      errors.add(:pmb, "PrintMyBarcode service is down")
+    rescue JsonApiClient::Errors::ConnectionError
+      errors.add(:pmb, 'PrintMyBarcode service is down')
       return false
     end
+  end
+
+  def number_of_copies=(number)
+    @number_of_copies = number.to_i
   end
 
   private
 
   def label_template_id
-    label_template_name = Settings.label_templates[printer_type]
+    label_template_name = Rails.configuration.label_templates.fetch(printer_type)
     PMB::LabelTemplate.where(name: label_template_name).first.id
   rescue JsonApiClient::Errors::ConnectionError => e
-    errors.add(:pmb, "PrintMyBarcode service is down")
+    errors.add(:pmb, 'PrintMyBarcode service is down')
   end
 
   def all_labels
-    labels*number_of_copies
+    labels * number_of_copies
   end
-
 end

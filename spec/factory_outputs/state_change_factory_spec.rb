@@ -15,11 +15,11 @@ describe 'state change factory' do
     %({
         "state_change": {
           "actions": {
-            "read": "http://example.com:300/example-state-change-uuid"
+            "read": "http://example.com:3000/example-state-change-uuid"
           },
           "target": {
             "actions": {
-              "read": "http://example.com:300/example-target-uuid"
+              "read": "http://example.com:3000/example-target-uuid"
             }
           },
           "target_state": "passed",

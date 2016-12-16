@@ -23,21 +23,21 @@ module Presenters
     class_attribute :summary_items
     self.summary_items = {
       'Barcode' => :barcode,
-      'Tube type'=> :purpose_name,
+      'Tube type' => :purpose_name,
       'Current tube state' => :state,
-      'Input plate barcode'=> :input_barcode,
+      'Input plate barcode' => :input_barcode,
       'Created on' => :created_on
     }
 
     LABEL_TEXT = 'ILB Stock'
 
     def label_attributes
-        { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
-          middle_line: (labware.label.text || LABEL_TEXT),
-          bottom_line: date_today,
-          round_label_top_line: labware.barcode.prefix,
-          round_label_bottom_line: labware.barcode.number,
-          barcode: labware.barcode.ean13  }
+      { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
+        middle_line: (labware.label.text || LABEL_TEXT),
+        bottom_line: date_today,
+        round_label_top_line: labware.barcode.prefix,
+        round_label_bottom_line: labware.barcode.number,
+        barcode: labware.barcode.ean13 }
     end
 
     def control_child_links(&block)
