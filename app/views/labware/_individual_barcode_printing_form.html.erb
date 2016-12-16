@@ -1,5 +1,5 @@
 <%= form_for(print_job, html: { method: :post, class: 'form-inline'}) do |f| %>
-  <%= f.hidden_field :printer_type, value: printers_applicable_to(barcode).first.type.name %>
+  <%= f.hidden_field :printer_type %>
 
   <% label_attributes.each do |k, v|%>
     <%= f.hidden_field "labels[][main_label][#{k}]", :value => v %>
@@ -8,8 +8,8 @@
   <fieldset class="print_selector form-group">
     <%= f.label :printer_name, 'Barcode Printer' %>
 
-    <%= f.select :printer_name, options_from_collection_for_select(printers_applicable_to(barcode), :name, :name, @presenter.default_printer_uuid), class: 'custom-select' %>
-    <%= f.select :number_of_copies,  options_for_select((1..@presenter.printer_limit).map{|i| [i,i]}, @presenter.default_label_count), class: 'custom-select' %>
+    <%= f.select :printer_name, options_from_collection_for_select(printers_applicable_to(barcode), :name, :name), class: 'custom-select' %>
+    <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1 %>
     <%= f.submit 'Print Label', :class => 'print-button btn btn-success' %>
   </fieldset>
 

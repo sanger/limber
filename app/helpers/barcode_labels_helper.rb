@@ -2,7 +2,11 @@
 
 module BarcodeLabelsHelper
   def individual_barcode_printing_form(barcode, locals)
-    print_job = PrintJob.new
+    print_job = PrintJob.new(
+      number_of_copies: Settings.printers['default_count'],
+      printer_name: @presenter.default_printer,
+      printer_type: printers_applicable_to(barcode).first.type.name
+    )
     render(partial: 'labware/individual_barcode_printing_form', locals: locals.merge(barcode: barcode, print_job: print_job))
   end
 

@@ -26,8 +26,8 @@ module Presenters
       purpose_name
     end
 
-    def default_printer_uuid
-      @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
+    def default_printer
+      @default_printer ||= Settings.printers[purpose_config.default_printer_type]
     end
 
     def default_label_count

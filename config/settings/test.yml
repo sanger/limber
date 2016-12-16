@@ -56,35 +56,30 @@
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::StockPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: ILB_STD_INPUT
   38fc6280-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::StandardPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: ILB_STD_COVARIS
   38fe3740-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::QcCompletablePresenter
     :state_changer_class: StateChangers::QcCompletablePlateStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: ILB_STD_SH
   38ffe4f0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PrePcrPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: ILB_STD_PREPCR
   3902cb20-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TaggingForm
     :presenter_class: Presenters::PcrPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :tag_layout_templates:
     - Illumina B vertical tagging
@@ -94,7 +89,6 @@
     :form_class: Forms::TaggingForm
     :presenter_class: Presenters::PcrPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :tag_layout_templates:
     - Illumina B vertical tagging
@@ -104,35 +98,30 @@
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PcrXpOldPresenter
     :state_changer_class: StateChangers::PlateToTubeStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: ILB_STD_PCRXP
   39095ad0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PcrXpOldPresenter
     :state_changer_class: StateChangers::PlateToTubeStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: ILB_STD_PCRRXP
   391f7ae0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::StockPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: Cherrypicked
   39226110-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::ShearPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: Shear
   392483f0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::QcBranchCompletablePresenter
     :state_changer_class: StateChangers::QcCompletablePlateStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :locations_children:
       illumina_a: Post Shear XP
@@ -142,14 +131,12 @@
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::AlLibsPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: AL Libs
   392965f0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TaggingForm
     :presenter_class: Presenters::PcrRobotPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :tag_layout_templates:
     - Illumina pipeline tagging
@@ -158,70 +145,60 @@
     :form_class: Forms::TaggingForm
     :presenter_class: Presenters::PcrPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: Lib PCRR
   392ebd20-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PcrXpPresenter
     :state_changer_class: StateChangers::BranchingPlateToTubeStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: Lib PCR-XP
   3930b8f0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PcrXpPresenter
     :state_changer_class: StateChangers::BranchingPlateToTubeStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: Lib PCRR-XP
   39328db0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PostShearXpPresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: Post Shear XP
   393573e0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::PostShearQcPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_a
     :name: Post Shear QC
   39380bf0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::LibPcrXpQcPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: Lib PCR-XP QC
   393a7cf0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::CreationForm
     :presenter_class: Presenters::LibPcrXpQcPlatePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :plate_b
     :name: Lib PCRR-XP QC
   38daa9b0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TubesForm
     :presenter_class: Presenters::FinalTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: ILB_STD_MX
   38dcf3a0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TubesForm
     :presenter_class: Presenters::QCTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: ILB_STD_STOCK
   38dfd9d0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TubesForm
     :presenter_class: Presenters::FinalTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :from_purpose: Lib Pool
     :name: Lib Pool Norm
@@ -229,14 +206,12 @@
     :form_class: Forms::TubesForm
     :presenter_class: Presenters::QCTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: Lib Pool
   38e55810-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::TubesForm
     :presenter_class: Presenters::FinalTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :from_purpose: Lib Pool Pippin
     :name: Lib Pool SS-XP-Norm
@@ -244,28 +219,24 @@
     :form_class: Forms::IntermediateTubesForm
     :presenter_class: Presenters::SimpleTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: Lib Pool Pippin
   38e99dd0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::IntermediateTubesForm
     :presenter_class: Presenters::SimpleTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: Lib Pool Conc
   38ebc0b0-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::IntermediateTubesForm
     :presenter_class: Presenters::SimpleTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: Lib Pool SS
   38ed9570-222b-11e4-ab60-44fb42fffecc:
     :form_class: Forms::IntermediateTubesForm
     :presenter_class: Presenters::QCTubePresenter
     :state_changer_class: StateChangers::DefaultStateChanger
-    :default_printer_uuid: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
     :default_printer_type: :tube
     :name: Lib Pool SS-XP
 :purpose_uuids:

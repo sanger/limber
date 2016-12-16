@@ -74,9 +74,9 @@ namespace :config do
       end
 
       configuration[:printers] = {}.tap do |printers|
-        printers[:plate_a] = barcode_printer_uuid.call('g316bc')
-        printers[:plate_b] = barcode_printer_uuid.call('g311bc2')
-        printers[:tube]    = barcode_printer_uuid.call('g311bc1')
+        printers[:plate_a] = 'g316bc'
+        printers[:plate_b] = 'g311bc2'
+        printers[:tube]    = 'g311bc1'
         printers['limit'] = 5
         printers['default_count'] = 2
       end
