@@ -31,7 +31,8 @@ Rails.application.routes.draw do
   resources :limber_plates, controller: :plates do
     resources :children, controller: :plate_creation
     resources :tubes,    controller: :tube_creation
-    resources :qc_files, controller: :qc_files
+    resources :qc_files
+    resources :work_completion, only: :create
   end
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
 

@@ -10,7 +10,6 @@ namespace :config do
     'LB Shear',
     'LB Post Shear',
     'LB End Prep',
-    'LB AL Libs',
     'LB Lib PCR',
     'LB Lib PCR-XP'
   ].freeze

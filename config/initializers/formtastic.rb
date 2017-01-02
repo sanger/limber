@@ -9,6 +9,8 @@
 # See the documentation for class_attribute in ActiveSupport for more information.
 # --------------------------------------------------------------------------------------------------
 
+# Enable web-browser form validations
+Formtastic::FormBuilder.perform_browser_validations = true
 # Set the default text field size when input is a string. Default is nil.
 # Formtastic::SemanticFormBuilder.default_text_field_size = 50
 

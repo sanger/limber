@@ -35,6 +35,10 @@
       @include border-radius(7px);
     }
 
+    .aliquot.pending {
+      color: #000;
+    }
+
     .aliquot:hover {
       color: #FFD600;
       cursor: pointer;

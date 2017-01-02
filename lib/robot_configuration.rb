@@ -3,7 +3,23 @@
 module RobotConfiguration
   BedOrCar = Struct.new(:barcode, :name)
 
+  module BedHelpers
+    def bed(number)
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Bed #{number}")
+    end
+
+    def car(position)
+      number = position.tr(',').to_i
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Carousel #{position}")
+    end
+  end
+
   class Register
+    include BedHelpers
     def self.configure(&block)
       register = new
       register.instance_eval(&block)
@@ -34,6 +50,7 @@ module RobotConfiguration
   end
 
   class Simple
+    include BedHelpers
     attr_reader :source_purpose, :target_purpose, :layout, :type, :target_state, :source_bed_state, :target_bed_state
 
     def initialize(type, target_state = 'passed', &block)
@@ -41,19 +58,6 @@ module RobotConfiguration
       @type = type
       @target_state = target_state
       instance_eval(&block) if block
-    end
-
-    def bed(number)
-      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
-      ean13 = barcode.machine_barcode.to_s
-      BedOrCar.new(ean13, "Bed #{number}")
-    end
-
-    def car(position)
-      number = position.tr(',').to_i
-      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
-      ean13 = barcode.machine_barcode.to_s
-      BedOrCar.new(ean13, "Carousel #{position}")
     end
 
     def from(source_purpose, bed, state = 'passed')

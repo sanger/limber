@@ -52,9 +52,10 @@ module Forms
     end
     protected :method_missing
 
-    def respond_to_missing?(name)
+    def respond_to_missing?(name, include_private = false)
       name_without_assignment = name.to_s.sub(/=$/, '').to_sym
-      attributes.include?(name_without_assignment)
+      attributes.include?(name_without_assignment) ||
+        super
     end
 
     def persisted?
