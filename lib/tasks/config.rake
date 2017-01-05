@@ -105,10 +105,7 @@ namespace :config do
             tag_layout_templates: ['Illumina pipeline tagging', 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'],
             presenter_class: 'Presenters::PcrPresenter'
           )
-          presenters['LB Lib PCR-XP'].merge!(
-            state_changer_class: 'StateChangers::BranchingPlateToTubeStateChanger',
-            default_printer_type: :plate_b
-          )
+          presenters['LB Lib PCR-XP'][:default_printer_type] = :plate_b
 
           presenters['LB Lib Pool'].merge!(
             form_class: 'Forms::TubesForm',

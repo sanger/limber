@@ -19,7 +19,7 @@
     <% end %>
 
     <% if presenter.robot_exists? %>
-      <% @presenter.each_robot do |robot_id,robot_name| %>
+      <% @presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
       <% end %>
     <% else %>
@@ -38,12 +38,12 @@
           Stamp other plates
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% @presenter.compatible_purposes do |uuid,name| %>
+        <% @presenter.compatible_purposes do |uuid, name| %>
           <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), :method => 'get' do %>
             <%= hidden_field_tag :purpose_uuid, uuid %>
             <%= submit_tag "Add an empty #{name} plate",
-              :name           => nil,
-              :class          => "submit dropdown-item create-plate-button btn"
+              name: nil,
+              class: "submit dropdown-item create-plate-button btn"
             %>
           <% end %>
         <% end %>
@@ -56,7 +56,9 @@
     <% end %>
 
     <% presenter.control_library_passing do %>
-      <button class="btn btn-lg btn-block btn-success">Charge and pass libraries</button>
+      <%= form_tag [@presenter.labware, :work_completions] do |f| %>
+        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
+      <% end %>
     <% end %>
 
     <div id="plate-state">

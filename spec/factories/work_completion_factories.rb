@@ -7,6 +7,5 @@ FactoryGirl.define do
 
     with_belongs_to_associations 'user', 'target'
     with_has_many_associations 'submissions'
-
   end
 end

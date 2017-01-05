@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Forms
+  # For simple tube to tube transfers
   class IntermediateTubesForm < CreationForm
     attr_reader :tube_transfer
 

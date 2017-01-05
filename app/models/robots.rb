@@ -88,8 +88,7 @@ module Robots
         @barcode = barcode
       end
 
-      def load(_)
-      end
+      def load(_); end
 
       def formatted_message
         match = /[0-9]{12,13}/.match(@barcode)

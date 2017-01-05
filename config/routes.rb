@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     resources :children, controller: :plate_creation
     resources :tubes,    controller: :tube_creation
     resources :qc_files
-    resources :work_completion, only: :create
+    resources :work_completions, only: :create
   end
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
 

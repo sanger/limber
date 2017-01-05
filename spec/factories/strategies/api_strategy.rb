@@ -12,8 +12,7 @@ class ApiStrategy
 
   delegate :association, to: :@strategy
 
-  def result(evaluation)
-  end
+  def result(evaluation); end
 end
 
 FactoryGirl.register_strategy(:api_object, ApiStrategy)

@@ -15,8 +15,7 @@ module Presenters
 
     delegate :state, to: :labware
 
-    def save!
-    end
+    def save!; end
 
     def purpose_name
       labware.purpose.name
@@ -109,7 +108,7 @@ module Presenters
     end
 
     def date_today
-      Date.today.strftime('%e-%^b-%Y')
+      Time.zone.today.strftime('%e-%^b-%Y')
     end
   end
 end

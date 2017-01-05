@@ -21,5 +21,4 @@ class PrintJobsController < ApplicationController
       permitted[:labels] = params.require(:print_job)[:labels].map(&:permit!)
     end
   end
-
 end

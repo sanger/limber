@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class WorkCompletionController < ApplicationController
-   before_action :check_for_current_user!
+class WorkCompletionsController < ApplicationController
+  before_action :check_for_current_user!
   # Create a work completion for the given limber_plate_id
   # and redirect to the plate page.
   # Work completions mark library creation requests as completed

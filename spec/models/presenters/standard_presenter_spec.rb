@@ -4,7 +4,7 @@ describe Presenters::StandardPresenter do
   # Want to get the basics working first though
   has_a_working_api(times: 2)
 
-  let(:labware) { build :plate, state: state}
+  let(:labware) { build :plate, state: state }
 
   subject do
     Presenters::StandardPresenter.new(
