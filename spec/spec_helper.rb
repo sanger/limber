@@ -113,7 +113,8 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     FactoryGirl.find_definitions
-    Settings.robots = []
+    Settings.robots = {}
+    Settings.transfer_templates = {}
   end
 
   config.before(:each) do

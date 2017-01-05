@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module ApiUrlHelper
-  API_ROOT = 'http://example.com:3000/'
+  API_ROOT = 'http://example.com:3000'
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -11,13 +11,15 @@ module ApiUrlHelper
       API_ROOT
     end
 
-    def api_url_for(model, association)
+    def api_url_for(*components)
+      model = components.shift
       uuid = model.is_a?(String) ? model : model.uuid
-      "#{api_root}#{uuid}/#{association}"
+      [api_root, uuid, *components].join('/')
     end
   end
 end
 
 RSpec.configure do |config|
   config.include ApiUrlHelper
+  config.include ApiUrlHelper::ClassMethods
 end
