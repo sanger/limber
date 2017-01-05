@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do

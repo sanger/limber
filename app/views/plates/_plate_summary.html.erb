@@ -1,0 +1,7 @@
+<div class='card-block'>
+  <dl id="summary-information" class="row">
+    <%= presenter.summary do |key,value| %>
+      <dt class="col-sm-3"><%= key %></dt><dd class='col-sm-9'><%= value %></dd>
+    <% end %>
+  </dl>
+</div>

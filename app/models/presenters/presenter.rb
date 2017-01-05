@@ -5,6 +5,7 @@ module Presenters
     def self.included(base)
       base.class_eval do
         include Forms::Form
+        include BarcodeLabelsHelper
         self.page = 'show'
 
         class_attribute :csv
@@ -14,8 +15,7 @@ module Presenters
 
     delegate :state, to: :labware
 
-    def save!
-    end
+    def save!; end
 
     def purpose_name
       labware.purpose.name
@@ -25,8 +25,8 @@ module Presenters
       purpose_name
     end
 
-    def default_printer_uuid
-      @default_printer_uuid ||= Settings.printers[purpose_config.default_printer_type]
+    def default_printer
+      @default_printer ||= Settings.printers[purpose_config.default_printer_type]
     end
 
     def default_label_count
@@ -50,10 +50,10 @@ module Presenters
       nil
     end
 
-    def label_type
-      yield 'custom-labels'
-      nil
-    end
+    # def label_type
+    #   yield 'custom-labels'
+    #   nil
+    # end
 
     def prioritized_name(str, max_size)
       # Regular expression to match
@@ -77,16 +77,38 @@ module Presenters
       summary_items.each do |label, method_symbol|
         yield label, send(method_symbol)
       end
+      nil
     end
 
+    # Human formatted date of creation
+    #
+    # @return [String] Human formatted date of creation
     def created_on
       labware.created_at.to_formatted_s(:date_created)
+    end
+
+    # Formatted barcode string for display
+    #
+    # @return [String] Barcode string. eg. DN1 12200000123
+    def barcode
+      useful_barcode(labware.barcode)
+    end
+
+    # Formatted stock plate barcode string for display
+    #
+    # @return [String] Barcode string. eg. DN1 12200000123
+    def input_barcode
+      useful_barcode(labware.stock_plate.try(:barcode))
     end
 
     private
 
     def purpose_config
       Settings.purposes[purpose.uuid]
+    end
+
+    def date_today
+      Time.zone.today.strftime('%e-%^b-%Y')
     end
   end
 end

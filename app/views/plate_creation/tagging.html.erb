@@ -9,7 +9,7 @@
      })(window,jQuery);
   </script>
 
-  <%= semantic_form_for(@creation_form, :as => :plate, :url => limber_plate_children_path(@creation_form.parent), :html => {:method => :post}) do |f| %>
+  <%= semantic_form_for(@creation_form, :as => :plate, :url => limber_plate_children_path(@creation_form.parent)) do |f| %>
     <%= content do %>
       <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
       <% @creation_form.tag2_field do -%>
@@ -51,4 +51,3 @@
     <%- end -%>
   <%- end -%>
 <%- end -%>
-

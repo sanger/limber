@@ -2,7 +2,12 @@
 
 module BarcodeLabelsHelper
   def individual_barcode_printing_form(barcode, locals)
-    render(partial: 'labware/individual_barcode_printing_form', locals: locals.merge(barcode: barcode))
+    print_job = PrintJob.new(
+      number_of_copies: Settings.printers['default_count'],
+      printer_name: @presenter.default_printer,
+      printer_type: printers_applicable_to(barcode).first.type.name
+    )
+    render(partial: 'labware/individual_barcode_printing_form', locals: locals.merge(barcode: barcode, print_job: print_job))
   end
 
   def multiple_barcodes_printing_form(barcodes, locals)
@@ -12,10 +17,11 @@ module BarcodeLabelsHelper
   # Returns a list of printers applicable to the specified barcode.
   def printers_applicable_to(barcodes)
     barcode_types = Array(barcodes).map(&:type).uniq
-    @printers.select { |p| barcode_types.include?(p.type.layout) }
+    @printers.select { |printer| barcode_types.include?(printer.type.layout) }
   end
 
   def useful_barcode(barcode)
+    return 'Unknown' if barcode.nil?
     "#{barcode.prefix}#{barcode.number} <em>#{barcode.ean13}</em>".html_safe
   end
 end

@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'tag2 layout template factory' do
-
   subject do
     json(
       :tag2_layout_template,
@@ -13,7 +13,7 @@ describe 'tag2 layout template factory' do
     %({
         "tag2_layout_template": {
           "actions": {
-            "read": "http://localhost:3000/tag2-layout-template-uuid"
+            "read": "http://example.com:3000/tag2-layout-template-uuid"
           },
 
           "uuid": "tag2-layout-template-uuid",
@@ -30,5 +30,4 @@ describe 'tag2 layout template factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['tag2_layout_template']).to eq JSON.parse(json_content)['tag2_layout_template']
   end
-
 end

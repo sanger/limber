@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class TubeCreationController < CreationController
-  def form_lookup(form_attributes = params)
-    Settings.purposes[form_attributes[:purpose_uuid]][:form_class].constantize
-  end
-
   def redirection_path(form)
     limber_tube_path(form.child.uuid)
   end

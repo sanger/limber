@@ -10,11 +10,9 @@ module Presenters::Statemachine
       # Does nothing because you can't!
     end
 
-    def suggested_purposes
-    end
+    def suggested_purposes; end
 
-    def compatible_purposes
-    end
+    def compatible_purposes; end
   end
 
   module StateAllowsChildCreation
@@ -87,8 +85,7 @@ module Presenters::Statemachine
     end
 
     # Does nothing
-    def control_additional_printing(&block)
-    end
+    def control_additional_printing(&block); end
 
     def all_plate_states
       self.class.state_machines[:state].states.map(&:value)
@@ -133,7 +130,7 @@ module Presenters::Statemachine
 
         # These are the states, which are really the only things we need ...
         state :pending do
-          include StateAllowsChildCreation
+          include StateDoesNotAllowChildCreation
         end
 
         state :started do

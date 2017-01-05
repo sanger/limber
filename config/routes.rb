@@ -24,12 +24,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :print_jobs, only: [:create]
+
   resources :limber_qcables, controller: :tag_plates, only: [:show]
 
   resources :limber_plates, controller: :plates do
     resources :children, controller: :plate_creation
     resources :tubes,    controller: :tube_creation
-    resources :qc_files, controller: :qc_files
+    resources :qc_files
+    resources :work_completions, only: :create
   end
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
 

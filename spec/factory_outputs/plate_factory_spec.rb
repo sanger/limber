@@ -41,60 +41,60 @@ describe 'plate factory' do
         "comments": {
           "size": 3,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/comments"
+            "read": "http://example.com:3000/example-plate-uuid/comments"
           }
         },
         "wells": {
           "size": 30,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/wells"
+            "read": "http://example.com:3000/example-plate-uuid/wells"
           }
         },
         "submission_pools": {
           "size": 2,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/submission_pools"
+            "read": "http://example.com:3000/example-plate-uuid/submission_pools"
           }
         },
         "requests": {
           "size": 0,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/requests"
+            "read": "http://example.com:3000/example-plate-uuid/requests"
           }
         },
         "qc_files": {
           "size": 0,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/qc_files"
+            "read": "http://example.com:3000/example-plate-uuid/qc_files"
           }
         },
         "source_transfers": {
           "size": 0,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/source_transfers"
+            "read": "http://example.com:3000/example-plate-uuid/source_transfers"
           }
         },
         "transfers_to_tubes": {
           "size": 0,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/transfers_to_tubes"
+            "read": "http://example.com:3000/example-plate-uuid/transfers_to_tubes"
           }
         },
         "creation_transfers": {
           "size": 0,
           "actions": {
-            "read": "http://localhost:3000/example-plate-uuid/creation_transfers"
+            "read": "http://example.com:3000/example-plate-uuid/creation_transfers"
           }
         },
         "plate_purpose": {
           "actions": {
-            "read": "http://localhost:3000/ilc-stock-plate-purpose-uuid"
+            "read": "http://example.com:3000/stock-plate-purpose-uuid"
           },
-          "uuid": "ilc-stock-plate-purpose-uuid",
+          "uuid": "stock-plate-purpose-uuid",
           "name": "example-purpose"
         },
         "actions": {
-          "read": "http://localhost:3000/example-plate-uuid"
+          "read": "http://example.com:3000/example-plate-uuid"
         },
         "uuid": "example-plate-uuid",
         "name": "Cherrypicked 427444",
@@ -155,8 +155,7 @@ describe 'plate factory' do
           "uuid": "example-stock-plate-uuid"
         }
       }
-    }
-  )
+    })
   end
 
   it 'should match the expected json' do

@@ -7,15 +7,19 @@ FactoryGirl.define do
     json_root 'plate'
     size 96
     state 'pending'
+    created_at { Time.current.to_s }
+    updated_at { Time.current.to_s }
+    priority 0
 
     transient do
       barcode_prefix 'DN'
       barcode_type 1
       purpose_name 'example-purpose'
-      purpose_uuid 'ilc-stock-plate-purpose-uuid'
+      purpose_uuid 'stock-plate-purpose-uuid'
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
+      stock_plate_barcode 2
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -41,6 +45,24 @@ FactoryGirl.define do
         'uuid' => purpose_uuid,
         'name' => purpose_name
       }
+    end
+
+    label do
+      {
+        prefix: 'Limber',
+        text: 'Cherrypicked'
+      }
+    end
+
+    stock_plate do
+      sp = associated(:stock_plate, barcode_number: stock_plate_barcode)
+      { uuid: sp[:uuid], barcode: sp[:barcode] }
+    end
+
+    factory :stock_plate do
+      purpose_name 'Limber Cherrypicked'
+      purpose_uuid 'stock-plate-purpose-uuid'
+      stock_plate { { barcode: barcode, uuid: uuid } }
     end
   end
 end

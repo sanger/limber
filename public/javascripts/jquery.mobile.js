@@ -1,1 +1,0 @@
-lib/jquery.mobile-1.3.0.min.js

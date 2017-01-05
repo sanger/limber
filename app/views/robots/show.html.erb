@@ -2,18 +2,20 @@
   <%= content do %>
     <%= card title: robot.name do %>
       <div id="robot-verification" class="scape-ui-block" >
-        <div class="instructions">
-          <h4><%= t("robots.#{robot.id}.instruction_summary") %></h4>
-          <ol>
-            <%= t("robots.#{robot.id}.instructions").html_safe %>
-          </ol>
-          <h4>Layout</h4>
+        <div class="layout">
+        <h4>Layout</h4>
           <dl class="row">
             <% robot.beds.each do |barcode,config| %>
               <dt class='col-xs-2'><%= config.label %></dt>
               <dd class='col-xs-6'><%= config.purpose_labels %></dd>
             <% end %>
           </dl>
+        </div>
+        <div class="instructions">
+          <h4><%= t(robot.id, scope: [:robots, :instruction_summary ], default: :default ) %></h4>
+          <ol>
+            <%= t(robot.id, scope: [:robots, :instructions ], default: :default ).html_safe %>
+          </ol>
         </div>
       </div>
     <% end # of card%>

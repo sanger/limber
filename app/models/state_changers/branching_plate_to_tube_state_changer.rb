@@ -39,7 +39,6 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
   def pool_purposes
     @pool_purposes ||= labware.pools.each_with_object({}) do |pool, pool_purposes|
       pool_purposes[pool.first] = purpose_for(pool.last)
-      pool_purposes
     end
   end
   private :pool_purposes
@@ -59,7 +58,6 @@ class StateChangers::BranchingPlateToTubeStateChanger < StateChangers::QcComplet
     targets = child_tubes.to_a
     pool_purposes.each_with_object({}) do |pool_pool_purpose, pool_targets|
       pool_targets[pool_pool_purpose.first] = allocate_tube!(targets, pool_pool_purpose.last)
-      pool_targets
     end
   end
   private :pool_targets

@@ -5,7 +5,7 @@ require_relative '../support/json_renderers'
 FactoryGirl.define do
   trait :api_object do
     transient do
-      api_root 'http://localhost:3000/'
+      api_root 'http://example.com:3000/'
 
       api do
         Sequencescape::Api.new(

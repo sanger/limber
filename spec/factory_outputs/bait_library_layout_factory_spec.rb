@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'bait library layout factory' do
-
   subject do
     json(
       :bait_library_layout,
@@ -13,10 +13,10 @@ describe 'bait library layout factory' do
   let(:json_content) do
     %({
       "bait_library_layout": {
-        "actions": {"read": "http://localhost:3000/bait-library-layout-uuid"},
+        "actions": {"read": "http://example.com:3000/bait-library-layout-uuid"},
         "plate": {
           "actions": {
-            "read": "http://localhost:3000/plate-uuid"
+            "read": "http://example.com:3000/plate-uuid"
           }
         },
         "uuid": "bait-library-layout-uuid",
@@ -132,5 +132,4 @@ describe 'bait library layout factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['bait_library_layout']).to eq JSON.parse(json_content)['bait_library_layout']
   end
-
 end

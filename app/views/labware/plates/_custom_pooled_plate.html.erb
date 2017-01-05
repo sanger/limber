@@ -4,4 +4,4 @@
 <h2>Pooled Plate</h2>
 <% transfers = Hash[presenter.labware.creation_transfer.transfers.map { |_, location| [ location, location ] }] %>
 <%= render :partial => "pooled_plate", :locals => {:plate_presenter => presenter, :walker => presenter.walk_destination, :transfers => transfers} %>
-<%= render :partial => 'plate_information', :locals => { :plate => presenter.labware } %>
+<%= render :partial => 'plate_summary', :locals => { :presenter => presenter } %>

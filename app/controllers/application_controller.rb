@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require_dependency 'well_helpers'
 class ApplicationController < ActionController::Base
   include Sequencescape::Api::Rails::ApplicationController
   include SessionHelper

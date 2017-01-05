@@ -5,4 +5,21 @@ en:
   state_machine:
     transitions:
       passed: 'Manual Transfer'
-      qc_completed: 'Mark QC Complete'
+      qc_complete: 'Mark QC Complete'
+  robots:
+    instruction_summary:
+      default: 'Bed verification'
+    instructions:
+      default: >
+        <ul><li>Place your plates onto the robot accroding to the layout specified above.</li>
+        <li>Click 'Scan bed' and use the barcode scanner to scan one of the beds occupied by a tracked plate.</li>
+        <li>Next scan the plate on the corresponding bed.</li>
+        <li>Continue to scan each occupied bed, followed by its plate in turn.</li>
+        <li>If you make a mistake, click on the incorrect scan under 'Scanned Beds' to remove it.</li>
+        <li>Once all occupied beds and plates have been scanned, click 'Validate Layout'.</li>
+        <li>If there are any issues, they will be listed at the top of the scanned beds box.
+        Problem beds will be highlighted.</li>
+        <li>Resolve any reported issues on the robot, clear the problem beds and rescan them.</li>
+        <li>Once all problems have been resolved you will recieve the message 'No problems detected!'</li>
+        <li>Click the start button.</li>
+        </ul>

@@ -60,6 +60,8 @@ Rails.application.configure do
   config.admin_email          = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
+  config.disable_exception_notifier = true
+
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Limber'
   config.api_connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
@@ -76,4 +78,5 @@ Rails.application.configure do
       'to'   => 100
     }
   }
+  config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end

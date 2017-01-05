@@ -54,4 +54,5 @@ Limber::Application.configure do
   config.api_connection_options.namespace     = 'Limber'
   config.api_connection_options.url           = 'http://psd-dev.internal.sanger.ac.uk:6801/api/1/'
   config.api_connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
+  config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end

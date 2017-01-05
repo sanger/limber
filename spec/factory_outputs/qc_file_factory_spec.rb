@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'qc file factory' do
-
   subject do
     json(
       :qc_file,
@@ -15,7 +15,7 @@ describe 'qc file factory' do
       "qc_file":
         {
           "filename":"example_file.txt",
-          "actions":{"read":"http://localhost:3000/example-qc-file-uuid"},
+          "actions":{"read":"http://example.com:3000/example-qc-file-uuid"},
           "uuid":"example-qc-file-uuid"
         }
     })
@@ -24,5 +24,4 @@ describe 'qc file factory' do
   it 'should match the expected json' do
     expect(JSON.parse(subject)['qc_file']).to eq JSON.parse(json_content)['qc_file']
   end
-
 end

@@ -92,13 +92,13 @@ class SearchController < ApplicationController
       end
     api.search.find(Settings.searches['Find assets by barcode']).first(barcode: machine_barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Sorry, could not find labware with the specified barcode.'
+    raise exception, "Sorry, could not find labware with the barcode '#{barcode}'."
   end
 
   def find_qcable(barcode)
     api.search.find(Settings.searches['Find qcable by barcode']).first(barcode: barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Sorry, could not find qcable with the specified barcode.'
+    raise exception, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end
 
   def retrieve_parent

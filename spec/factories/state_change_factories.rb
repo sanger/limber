@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do
@@ -6,8 +7,7 @@ FactoryGirl.define do
 
     with_belongs_to_associations 'target'
 
-    previous_state "pending"
-    reason "testing this works"
-
+    previous_state 'pending'
+    reason 'testing this works'
   end
 end

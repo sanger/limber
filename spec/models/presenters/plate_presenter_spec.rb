@@ -13,17 +13,7 @@ describe Presenters::PlatePresenter do
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
-          created_at: '2016-10-19 12:00:00 +0100',
-          stock_plate: {
-            "barcode": {
-              "ean13": '1111111111111',
-              "number": '427444',
-              "prefix": 'DN',
-              "two_dimensional": nil,
-              "type": 1
-            },
-            "uuid": 'example-stock-plate-uuid'
-          }
+          created_at: '2016-10-19 12:00:00 +0100'
   end
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -35,7 +25,7 @@ describe Presenters::PlatePresenter do
       ['Number of wells', '96/96'],
       ['Plate type', purpose_name],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN427444 <em>1111111111111</em>'],
+      ['Input plate barcode', 'DN2 <em>1220000002845</em>'],
       ['Created on', '2016-10-19']
     ]
   end
@@ -54,6 +44,15 @@ describe Presenters::PlatePresenter do
 
   it 'returns plate' do
     expect(subject.plate).to eq(labware)
+  end
+
+  it 'returns label attributes' do
+    expected_label = { top_left: Date.today.strftime('%e-%^b-%Y'),
+                       bottom_left: 'DN 1',
+                       top_right: 'DN2',
+                       bottom_right: 'Limber Cherrypicked',
+                       barcode: '1220000001831' }
+    expect(subject.label_attributes).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'

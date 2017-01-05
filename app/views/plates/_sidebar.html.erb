@@ -19,46 +19,47 @@
     <% end %>
 
     <% if presenter.robot_exists? %>
-      <% @presenter.each_robot do |robot_id,robot_name| %>
+      <% @presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
       <% end %>
     <% else %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
-
-    <% presenter.control_library_passing do %>
-      <button class="btn btn-lg btn-block btn-success">Charge and pass libraries</button>
-    <% end %>
-
   <% end %>
 
   <%= card title:'Other Actions' do %>
-
     <% if presenter.robot_exists? %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
 
-    <div class="btn-group btn-block" role="group">
-      <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Stamp other plates
-      </button>
-      <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-      <% @presenter.compatible_purposes do |uuid,name| %>
-        <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), :method => 'get' do %>
-          <%= hidden_field_tag :purpose_uuid, uuid %>
-          <%= submit_tag "Add an empty #{name} plate",
-            :name           => nil,
-            :class          => "submit dropdown-item create-plate-button btn"
-          %>
+    <%= @presenter.control_additional_creation do %>
+      <div class="btn-group btn-block" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Stamp other plates
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+        <% @presenter.compatible_purposes do |uuid, name| %>
+          <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), :method => 'get' do %>
+            <%= hidden_field_tag :purpose_uuid, uuid %>
+            <%= submit_tag "Add an empty #{name} plate",
+              name: nil,
+              class: "submit dropdown-item create-plate-button btn"
+            %>
+          <% end %>
         <% end %>
-      <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <% if @presenter.well_failing_applicable? %>
       <button class='btn btn-lg btn-block btn-danger'>Fail Wells</button>
     <% end %>
 
+    <% presenter.control_library_passing do %>
+      <%= form_tag [@presenter.labware, :work_completions] do |f| %>
+        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
+      <% end %>
+    <% end %>
 
     <div id="plate-state">
       <%= state_change_form(@presenter) %>

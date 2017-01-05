@@ -1,18 +1,25 @@
 # frozen_string_literal: true
 ##
 module RobotConfiguration
-  BED = %w(580000000793 580000001806 580000002810 580000003824 580000004838 580000005842 580000006856 580000007860 580000008874 580000009659 580000010815 580000011829 580000012833).freeze
-
-  CAR = {
-    '1,3' => '580000013847',
-    '2,3' => '580000023860',
-    '4,3' => '580000043677',
-    '4,5' => '580000045695'
-  }.freeze
-
   BedOrCar = Struct.new(:barcode, :name)
 
+  module BedHelpers
+    def bed(number)
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Bed #{number}")
+    end
+
+    def car(position)
+      number = position.tr(',').to_i
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
+      ean13 = barcode.machine_barcode.to_s
+      BedOrCar.new(ean13, "Carousel #{position}")
+    end
+  end
+
   class Register
+    include BedHelpers
     def self.configure(&block)
       register = new
       register.instance_eval(&block)
@@ -43,6 +50,7 @@ module RobotConfiguration
   end
 
   class Simple
+    include BedHelpers
     attr_reader :source_purpose, :target_purpose, :layout, :type, :target_state, :source_bed_state, :target_bed_state
 
     def initialize(type, target_state = 'passed', &block)
@@ -50,14 +58,6 @@ module RobotConfiguration
       @type = type
       @target_state = target_state
       instance_eval(&block) if block
-    end
-
-    def bed(number)
-      BedOrCar.new(BED[number], "Bed #{number}")
-    end
-
-    def car(number)
-      BedOrCar.new(CAR[number], "Carousel #{number}")
     end
 
     def from(source_purpose, bed, state = 'passed')
