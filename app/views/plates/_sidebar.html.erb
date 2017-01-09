@@ -4,18 +4,18 @@
   <%= card title:'Suggested Actions' do %>
     <%= @presenter.control_additional_printing do %>
       <%= card do %>
-        <%= render(:partial => @presenter.printing_partial, :locals => { :presenter => @presenter }) %>
+        <%= render(partial: @presenter.printing_partial, locals: { presenter: @presenter }) %>
       <% end %>
     <% end %>
 
     <% @presenter.control_additional_creation do -%>
       <% @presenter.suggested_purposes do |purpose| %>
-        <%= render(:partial => @presenter.additional_creation_partial, :locals => { :presenter => @presenter, :purpose => purpose }) %>
+        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, purpose: purpose }) %>
       <% end %>
     <% end %>
 
     <% @presenter.csv_file_links.each do |link| %>
-      <%= link_to("Download Worksheet CSV #{link.first}", link.last, :rel => "external", class: 'btn btn-info btn-lg btn-block') %>
+      <%= link_to("Download Worksheet CSV #{link.first}", link.last, rel: "external", class: 'btn btn-info btn-lg btn-block') %>
     <% end %>
 
     <% if presenter.robot_exists? %>
@@ -39,7 +39,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
         <% @presenter.compatible_purposes do |uuid, name| %>
-          <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), :method => 'get' do %>
+          <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), method: 'get' do %>
             <%= hidden_field_tag :purpose_uuid, uuid %>
             <%= submit_tag "Add an empty #{name} plate",
               name: nil,

@@ -14,10 +14,8 @@ describe Presenters::StandardPresenter do
   end
 
   let(:expect_child_purpose_requests) do
-    stub_request(:get, 'http://example.com:3000/stock-plate-purpose-uuid')
-      .to_return(status: 200, body: json(:stock_plate_purpose), headers: { 'content-type' => 'application/json' })
-    stub_request(:get, 'http://example.com:3000/stock-plate-purpose-uuid/children')
-      .to_return(status: 200, body: json(:plate_purpose_collection, size: 1), headers: { 'content-type' => 'application/json' })
+    stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
+    stub_api_get('stock-plate-purpose-uuid','children', body: json(:plate_purpose_collection, size: 1))
   end
 
   context 'when pending' do

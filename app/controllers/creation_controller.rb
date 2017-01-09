@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class CreationController < ApplicationController
-  class_attribute :creation_message
-  self.creation_message = 'Your new empty labware has been added to the system.'
-
   before_action :check_for_current_user!
 
   def form_lookup(form_attributes = params)

@@ -9,13 +9,13 @@
      })(window,jQuery);
   </script>
 
-  <%= semantic_form_for(@creation_form, :as => :plate, :url => limber_plate_children_path(@creation_form.parent)) do |f| %>
+  <%= semantic_form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent)) do |f| %>
     <%= content do %>
-      <%= render :partial => 'plates/plate', :locals => { :plate_presenter => @creation_form, :id => 'tagging-plate' } %>
+      <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
       <% @creation_form.tag2_field do -%>
-        <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag2 tube', :form=>f } %>
+        <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag2 tube', :form=>f } %>
       <% end %>
-      <%= render :partial => 'plate_creation/tag_information_panel', :locals => {:panel_type => 'tag plate', :form=>f} %>
+      <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag plate', :form=>f} %>
     <%- end -%>
 
     <%= sidebar do %>
@@ -34,16 +34,16 @@
 
       <%= card title:'Set up tags' do %>
         <%= f.inputs do %>
-          <%= f.input :purpose_uuid, :as => :hidden %>
-          <%= f.input :parent_uuid, :as => :hidden %>
+          <%= f.input :purpose_uuid, as: :hidden %>
+          <%= f.input :parent_uuid, as: :hidden %>
           <% @creation_form.tag2_field do -%>
 
               <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
-              <%= f.input :tag2_tube_barcode, :input_html => {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s', 'class'=>'form-control'} %>
+              <%= f.input :tag2_tube_barcode, input_html: {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s', 'class'=>'form-control'} %>
             </div>
           <% end -%>
 
-            <%= f.input :tag_plate_barcode, :input_html => {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts','class'=>'form-control'} %>
+            <%= f.input :tag_plate_barcode, input_html: {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts','class'=>'form-control'} %>
 
         <%- end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>

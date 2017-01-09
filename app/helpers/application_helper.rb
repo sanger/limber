@@ -18,6 +18,11 @@ module ApplicationHelper
   end
   include DeploymentInfo
 
+  # Easy access to the api from the console
+  def api
+    Sequencescape::Api.new(Limber::Application.config.api_connection_options)
+  end
+
   def environment
     Rails.env
   end

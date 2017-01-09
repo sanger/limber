@@ -1,7 +1,8 @@
 @import "compass/css3/images";
 
 @mixin shade-aliquot($base_colour) {
-  background-color: $base_colour;
+  &.aliquot { background-color: $base_colour; }
+  .aliquot { fill: $base_colour; }
 }
 /*
  * Pinched from the crayola wiki page: http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors

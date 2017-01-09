@@ -1,12 +1,12 @@
 <%= page(:'plate-show-page', :'show-page') do %>
-<script type="text/javascript">
-  SCAPE.labware = {
-    'state':     '<%= @presenter.labware.state %>',
-    'tabViews':  {},
-    'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
-    'uuid':     '<%= @presenter.labware.uuid %>'
-  };
-</script>
+  <script type="text/javascript">
+    SCAPE.labware = {
+      'state':     '<%= @presenter.labware.state %>',
+      'tabViews':  {},
+      'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
+      'uuid':     '<%= @presenter.labware.uuid %>'
+    };
+  </script>
 
   <%= content do %>
     <%= card without_block: true do %>
@@ -19,7 +19,7 @@
       </div>
 
       <div id="labware-summary">
-        <%= render(:partial => @presenter.summary_partial, :locals => { :presenter => @presenter }) %>
+        <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
       </div>
     <% end %>
   <% end %>

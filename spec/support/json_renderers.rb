@@ -12,7 +12,7 @@ class JsonRenderer
     renderer.new(root, attrs)
   end
 
-  # Create a new json render. Surpressing the root is useful for rendering json arrays.
+  # Create a new json render. Suppressing the root is useful for rendering json arrays.
   #
   # @param [String] root The root of the generated json. Usually matches the endpoint. Set to nil to surpress the root.
   # @param [Hash] attributes Attributes to be serialized

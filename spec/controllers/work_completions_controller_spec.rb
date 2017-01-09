@@ -15,15 +15,10 @@ describe WorkCompletionsController, type: :controller do
 
     let(:work_completion) { json :work_completion }
 
+    let!(:plate_get) { stub_api_get(plate_uuid, body: example_plate) }
+    let!(:work_completion_creation) { stub_api_post('work_completions', payload: work_completion_request, body: work_completion) }
+
     it 'creates work_completion' do
-      # # We get the actual plate
-      plate_get = stub_request(:get, 'http://example.com:3000/' + plate_uuid)
-                  .to_return(status: 200, body: example_plate, headers: { 'content-type' => 'application/json' })
-
-      work_completion_creation = stub_request(:post, 'http://example.com:3000/work_completions')
-                                 .with(body: work_completion_request, headers: { content_type: 'application/json' })
-                                 .to_return(status: 201, body: work_completion, headers: { 'content-type' => 'application/json' })
-
       post :create, params: { limber_plate_id: plate_uuid }, session: { user_uuid: user_uuid }
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
       expect(plate_get).to have_been_made
