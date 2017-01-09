@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PlateCreationController < CreationController
-  self.creation_message = 'New empty plate added to system.'
-
   def redirection_path(form)
     limber_plate_path(form.child.uuid)
   end

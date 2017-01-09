@@ -16,9 +16,9 @@
       <div id="source-block" class="ui-block-a">
         <%= form_for(
           @creation_form,
-          :url  => sequencescape_tube_children_path(@creation_form.parent),
-          :as   => :tube,
-          :html => { :method => :post }) do |form|
+          url: sequencescape_tube_children_path(@creation_form.parent),
+          as: :tube,
+          html: { method: :post }) do |form|
         %>
           <div>
             <% if @creation_form.all_ready? %>
@@ -44,12 +44,12 @@
           </div>
 
           <div>
-          <%= form.hidden_field :purpose_uuid, :value => @creation_form.purpose_uuid %>
+          <%= form.hidden_field :purpose_uuid, value: @creation_form.purpose_uuid %>
           <%= form.submit "Make Tube",
-              :class        => 'create-button',
+              class: 'create-button',
               :'data-theme' => 'b',
               :'data-icon'  => 'plus',
-              :tab_index    => 2
+              tab_index: 2
             %>
           </div>
 

@@ -10,7 +10,7 @@ class StateChangers::AutoPoolingStateChanger < StateChangers::DefaultStateChange
   # as this is effectively what the lab technicians are doing.
   def change_tube_states_to_passed!
     # Reload the plate so that we can use the tubes
-    api.plate.find(labware_uuid).coerce.tubes.each do |tube|
+    api.plate.find(labware_uuid).tubes.each do |tube|
       api.state_change.create!(
         target: tube.uuid,
         target_state: 'passed',

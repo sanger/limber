@@ -1,4 +1,4 @@
-<%= CSV.generate_line ["PLATE", "Bed", "Bait Type", "SAMPLE WELL", "BA_1", "BA_2", "Ratio", "Average", "Vol of DNA for pool", "Total Vol of DNA", "Buffer Vol", "Destination Tube", "Destination Tube Rack", "EB Source", "EB Well", "pool ID", "Total volume", "BA_Sub"], :row_sep => "" %>
+<%= CSV.generate_line ["PLATE", "Bed", "Bait Type", "SAMPLE WELL", "BA_1", "BA_2", "Ratio", "Average", "Vol of DNA for pool", "Total Vol of DNA", "Buffer Vol", "Destination Tube", "Destination Tube Rack", "EB Source", "EB Well", "pool ID", "Total volume", "BA_Sub"], row_sep: "" %>
 <% @presenter.transfers.each_with_index do |transfer, index| -%>
   <% position = index + 2 -%>
   <% source_well, destination_well = transfer -%>

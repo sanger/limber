@@ -1,4 +1,4 @@
-<%= CSV.generate_line ["Sample", "Name","Source EAN13", "Source Barcode", "Source Stock", "Source Well", "Destination EAN13", "Destination Barcode", "Destination Well", "Source Volume" ], :row_sep => "" %>
+<%= CSV.generate_line ["Sample", "Name","Source EAN13", "Source Barcode", "Source Stock", "Source Well", "Destination EAN13", "Destination Barcode", "Destination Well", "Source Volume" ], row_sep: "" %>
 <% offset = params['offset'].to_i %>
 <% @presenter.each_well_transfer(offset) do |transfer| -%>
   <%= CSV.generate_line [
@@ -12,5 +12,5 @@
     transfer[:destination_barcode],
     transfer[:destination_well],
     nil
-  ], :row_sep => "" %>
+  ], row_sep: "" %>
 <% end -%>

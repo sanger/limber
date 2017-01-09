@@ -14,13 +14,13 @@
   <%= content do %>
         <%= form_for(
           @creation_form,
-          :url  => limber_plate_children_path(@creation_form.parent),
-          :as   => :plate,
-          :html => { :method => :post }) do |form|
+          url: limber_plate_children_path(@creation_form.parent),
+          as: :plate,
+          html: { method: :post }) do |form|
         %>
 
-        <%= form.hidden_field :parent_uuid,        :value => @creation_form.parent_uuid %>
-        <%= form.hidden_field :purpose_uuid, :value => @creation_form.purpose_uuid %>
+        <%= form.hidden_field :parent_uuid,        value: @creation_form.parent_uuid %>
+        <%= form.hidden_field :purpose_uuid, value: @creation_form.purpose_uuid %>
 
     <div class="ui-grid-a">
       <div id="source-block" class="ui-block-a">
@@ -58,7 +58,7 @@
           <br/>
           <div id="validation_report"></div>
           <%= form.submit 'Make Pre-Cap pool Plate',
-            :class        => 'create-button',
+            class: 'create-button',
             :'data-theme' => 'b',
             :'data-icon'  => 'plus'
           %>
@@ -76,7 +76,7 @@
         <div id="input-plate-block" class="scape-ui-block" style="display:none;">
           <h3>Source Plates</h3>
           <% (0...8).each do |plate_id| %>
-            <%= render :partial => "plates/empty_plate", :locals => {:css_class => "source-plate plate-id-#{plate_id}"} %>
+            <%= render partial: "plates/empty_plate", locals: {css_class: "source-plate plate-id-#{plate_id}"} %>
           <% end %>
         </div>
       </div>
@@ -106,7 +106,7 @@
       <div class="ui-block-b">
         <div id="output-plate-block" class="scape-ui-block" style="display:none;">
           <h3>Target Plate</h3>
-          <%= render :partial => "plates/empty_plate", :locals => {:plate_presenter => @creation_form, :css_class => "destination-plate"} %>
+          <%= render partial: "plates/empty_plate", locals: {plate_presenter: @creation_form, css_class: "destination-plate"} %>
         </div>
       </div>
 
