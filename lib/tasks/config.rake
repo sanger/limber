@@ -33,14 +33,14 @@ namespace :config do
     all_plate_purposes[STOCK_PURPOSE] ||= api.plate_purpose.create!(name: STOCK_PURPOSE, stock_plate: true, cherrypickable_target: true, input_plate: true)
 
     last_purpose_uuid = PLATE_PURPOSES.inject(all_plate_purposes[STOCK_PURPOSE].uuid) do |parent, name|
-      all_plate_purposes[name] ||= api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parent_uuids: [parent])
+      all_plate_purposes[name] ||= api.plate_purpose.create!(name: name, stock_plate: false, cherrypickable_target: false, parents: [parent])
       all_plate_purposes[name].uuid
     end
 
     all_tube_purposes = Hash[api.tube_purpose.all.map { |tp| [tp.name, tp] }]
 
     TUBE_PURPOSES.inject(last_purpose_uuid) do |parent, name|
-      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parent_uuids: [parent], target_type: TUBE_PURPOSE_TARGET[name])
+      all_tube_purposes[name] ||= api.tube_purpose.create!(name: name, parents: [parent], target_type: TUBE_PURPOSE_TARGET[name])
       all_tube_purposes[name].uuid
     end
 
