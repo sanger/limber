@@ -12,7 +12,7 @@
   </dl>
   </div>
   <%= form.semantic_fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
-    <%= qcable.input :asset_uuid,    :label => false, :as => :hidden, :required=> true, :input_html => {:class => 'asset_uuid'} %>
-    <%= qcable.input :template_uuid, :label => false, :as => :hidden, :required=> true, :input_html => {:class => 'template_uuid'} %>
+    <%= qcable.input :asset_uuid,    label: false, as: :hidden, :required=> true, input_html: {class: 'asset_uuid'} %>
+    <%= qcable.input :template_uuid, label: false, as: :hidden, :required=> true, input_html: {class: 'template_uuid'} %>
   <% end %>
 </div>

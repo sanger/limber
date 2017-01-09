@@ -22,14 +22,14 @@
   <% end # of content%>
 
   <%= sidebar do %>
-    <%= form_for :robot, :url => start_robot_path(robot.id) do |form| %>
-      <%= render :partial => robot.layout, :locals => {:robot => robot, :form => form } %>
+    <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
+      <%= render partial: robot.layout, locals: {robot: robot, form: form } %>
       <%= submit_tag "Start the #{robot.name}",
-        :name           => nil,
-        :class          => "submit",
-        :id             => 'start-robot',
-        :class          => 'btn btn-lg btn-success btn-block',
-        :disabled       => true
+        name: nil,
+        class: "submit",
+        id: 'start-robot',
+        class: 'btn btn-lg btn-success btn-block',
+        disabled: true
       %>
     <% end # of form %>
   <% end # of sidebar %>

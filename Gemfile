@@ -38,7 +38,7 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   path: '../sequencescape-client-api',
   require: 'sequencescape'
 
-gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
+gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
 gem 'sanger_barcode', '>= 0.2.1',
   git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'

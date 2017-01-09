@@ -6,8 +6,8 @@
   <%= form_for(
         presenter.labware,
         presenter.labware_form_details(self).merge(
-          :html => { :method => :put },
-          :as => :plate
+          html: { method: :put },
+          as: :plate
         )) do |f|
   %>
 

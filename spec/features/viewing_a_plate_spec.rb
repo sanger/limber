@@ -21,16 +21,16 @@ feature 'Viewing a plate', js: true do
     # We lookup the plate
     stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
     # We get the actual plate
-    stub_api_get(plate_uuid, body: example_plate )
+    stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    stub_api_get('stock-plate-purpose-uuid','children', body: json(:plate_purpose_collection, size: 1))
+    stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
   end
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(page).to have_content('Limber Cherrypicked')
+    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)

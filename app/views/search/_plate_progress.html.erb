@@ -3,7 +3,7 @@
     <li data-role="list-divider" class="list-group-item list-group-item-<%= state_style(state) %>"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
       <li class="list-group-item list-group-item-action">
-      <%= link_to(plate, :id => "plate_#{plate.barcode.ean13}", :class => "#{plate.role} list-group-item-action") do %>
+      <%= link_to(plate, id: "plate_#{plate.barcode.ean13}", class: "#{plate.role} list-group-item-action") do %>
         <% if plate.priority > 0 %>
            <%= image_tag("icon_#{plate.priority}_flag.png", size: "64x64", class: 'pull-sm-right') %>
         <% end %>

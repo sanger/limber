@@ -1,5 +1,5 @@
 <%# TODO Dry thit up with child_plate_creation.html.erb %>
-<%= form_tag new_sequencescape_tube_child_path(presenter.labware.uuid), :method => 'get' do %>
+<%= form_tag new_sequencescape_tube_child_path(presenter.labware.uuid), method: 'get' do %>
   <%= hidden_field_tag :purpose_uuid, purpose.uuid %>
   <%= submit_tag "Add an empty #{purpose.name} tube",
                  name:  nil,
