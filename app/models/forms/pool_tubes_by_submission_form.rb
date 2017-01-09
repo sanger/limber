@@ -33,8 +33,13 @@ module Forms
       parent.pools.keys
     end
 
+    # We may create multiple tubes, so cant redirect onto any particular
+    # one. Redirecting back to the parent is a little grim, so we'll need
+    # to come up with a better solution.
+    # 1) Redirect to the transfer/creation and list the tubes that way
+    # 2) Once tube racks are implemented, we can redirect there.
     def child
-      tube_transfer.try(:destination) || :contents_not_transfered
+      parent
     end
   end
 end

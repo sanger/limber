@@ -30,6 +30,12 @@
 // Bootstrap 4 doesn't seem to do this automatically
 .content-secondary, .content-main { padding-top: 20px; }
 
+dl.metadata {
+  dt { @include make-col(3); }
+  dd { @include make-col(9); }
+}
+
+// Old-stuff
 
 .dimmed {
   -webkit-transition: all 0.2s ease-in-out 0s;

@@ -8,24 +8,19 @@
   </script>
 
   <%= content do %>
-    <%= flash_messages %>
-    <h1><%= t("#{labware_type_and_state}.state_text") %></h1>
-    <h2>Tube Status - <%= @presenter.labware.state.titleize %></h2>
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
-        <div id="labware-summary" class="scape-ui-block">
-          <%= render :partial => 'labware/tube', :locals => { :tube => @presenter.labware } %>
-        </div>
+    <%= card without_block: true do %>
+      <div class="card-block">
+        <h2 class="card-title">
+          <%= @presenter.title %>
+          <span class="tag tag-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
+        </h2>
+      </div>
+
+      <div id="labware-summary" class="scape-ui-block">
+        <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>
       </div>
 
       <div class="ui-block-b">
-        <div class="instructions ui-body">
-          <h3><%= t("#{labware_type_and_state}.instruction_summary") %></h3>
-          <ol>
-            <%= t("#{labware_type_and_state}.instructions").html_safe %>
-          </ol>
-        </div>
-
         <div id="tube-printing" class="scape-ui-block" style="display:none;">
           <%= render(:partial => 'labware/qc_data') %>
 
@@ -55,6 +50,6 @@
       </div>
 
     </div>
-
+    <% end #of card %>
   <% end #of content %>
 <% end #of page %>

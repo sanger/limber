@@ -15,11 +15,13 @@ namespace :config do
   ].freeze
   TUBE_PURPOSES = [
     'LB Lib Pool',
+    'LB Lib Pool 2',
     'LB Lib Pool Norm'
   ].freeze
 
   TUBE_PURPOSE_TARGET = {
     'LB Lib Pool' => 'StockMultiplexedLibraryTube',
+    'LB Lib Pool 2' => 'StockMultiplexedLibraryTube',
     'LB Lib Pool Norm' => 'MultiplexedLibraryTube'
   }.freeze
 
@@ -108,7 +110,7 @@ namespace :config do
           presenters['LB Lib PCR-XP'][:default_printer_type] = :plate_b
 
           presenters['LB Lib Pool'].merge!(
-            form_class: 'Forms::TubesForm',
+            form_class: 'Forms::PoolTubesBySubmissionForm',
             presenter_class: 'Presenters::QCTubePresenter',
             state_changer_class: 'StateChangers::DefaultStateChanger',
             default_printer_type: :tube

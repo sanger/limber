@@ -1,6 +1,13 @@
 <div id="labware-summary-div">
   <%= render partial: "plate", locals: {:plate_presenter => presenter}  %>
+  <% presenter.control_tube_display do %>
+    <h3 class='card-header'>Tubes</h3>
+    <% presenter.plate.tubes_and_sources.each do |tube, sources| %>
+      <%= render :partial => 'labware/pooled_tube.html.erb', :locals => {:tube => tube, :source => sources } %>
+    <% end %>
+  <% end %>
 </div>
+
 <div id="plate-view-control" class="card-header">
   <ul class="nav nav-tabs card-header-tabs float-xs-left" role="tablist">
     <li class="nav-item">

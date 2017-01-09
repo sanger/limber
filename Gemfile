@@ -18,6 +18,9 @@ gem 'bootstrap'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', require: false
 
+# Lets us easily inline our svg to allow styling. Supports the asset pipeline.
+gem 'inline_svg'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # We use the sortable component of jquery ui
@@ -41,7 +44,6 @@ gem 'sanger_barcode', '>= 0.2.1',
   git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
 
 gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
-
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

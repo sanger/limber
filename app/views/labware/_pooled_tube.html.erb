@@ -1,12 +1,11 @@
-<div class="tube">
-  <div class="tube-view">
-    <div id="<%= "aliquot_#{tube.uuid}" %>" class="aliquot <%= pooling_colour(tube, tube.uuid) %>">&nbsp;</div>
+<div class="tube card-block row">
+  <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg <%= pooling_colour(tube, tube.uuid) %> col-sm-2">
+    <%= inline_svg 'tube.svg' %>
   </div>
-
-  <ul id="information">
-    <li><span class="label">Pool name</span> <%= tube.name %></li>
-    <li><span class="label">Barcode</span>       <%= link_to(useful_barcode(tube.barcode), limber_tube_path(tube.uuid), :target => '_blank') %></li>
-    <li><span class="label">Current state</span> <%= tube.state %></li>
-    <li><span class="label">Source wells</span>  <%= source.join(', ') %></li>
-  </ul>
+  <dl class='metadata col-sm-10'>
+    <dt>Pool name</dt>    <dd> <%= tube.name %></dd>
+    <dt>Barcode</dt>      <dd> <%= link_to(useful_barcode(tube.barcode), limber_tube_path(tube.uuid), :target => '_blank') %></dd>
+    <dt>Current state</dt><dd> <%= tube.state %></dd>
+    <dt>Source wells</dt> <dd> <%= WellHelpers.formatted_range(source) %></dd>
+  </dl>
 </div>
