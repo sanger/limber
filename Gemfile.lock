@@ -12,6 +12,17 @@ GIT
       savon (= 0.9.2)
 
 GIT
+  remote: git://github.com/JamesGlover/sequencescape-client-api.git
+  revision: bfe96e0b88094e1fd4ba8b5808289ddfd733b2ec
+  branch: add_limber_needs
+  specs:
+    sequencescape-client-api (0.3.0)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      i18n
+      yajl-ruby (>= 1.1.0)
+
+GIT
   remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
@@ -24,15 +35,6 @@ GIT
   branch: development
   specs:
     sanger_barcode_format (0.0.1)
-
-PATH
-  remote: ../sequencescape-client-api
-  specs:
-    sequencescape-client-api (0.3.0)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      i18n
-      yajl-ruby (>= 1.1.0)
 
 GEM
   remote: https://rubygems.org/
