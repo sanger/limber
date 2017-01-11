@@ -1,0 +1,75 @@
+---
+LB Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LB Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Cherrypick
+LB Post Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Shear
+LB End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Post Shear
+LB Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PcrPresenter
+  :form_class: Forms::TaggingForm
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  :parents:
+  - LB End Prep
+LB Lib PCR-XP:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Lib PCR
+LB Lib Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: Forms::PoolTubesBySubmissionForm
+  :presenter_class: Presenters::QCTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - LB Lib PCR-XP
+LB Lib Pool 2:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  :parents:
+  - LB Lib Pool
+LB Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :form_class: Forms::TubesForm
+  :presenter_class: Presenters::FinalTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - LB Lib Pool 2
+
