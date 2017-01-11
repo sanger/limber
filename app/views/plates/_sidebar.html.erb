@@ -18,7 +18,7 @@
       <%= link_to("Download Worksheet CSV #{link.first}", link.last, rel: "external", class: 'btn btn-info btn-lg btn-block') %>
     <% end %>
 
-    <% if presenter.robot_exists? %>
+    <% if presenter.robot? %>
       <% @presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
       <% end %>
@@ -28,7 +28,7 @@
   <% end %>
 
   <%= card title:'Other Actions' do %>
-    <% if presenter.robot_exists? %>
+    <% if presenter.robot? %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
 

@@ -115,10 +115,6 @@ module Presenters
       transfers.sort { |a, b| split_location(a.first) <=> split_location(b.first) }
     end
 
-    def qc_owner
-      labware
-    end
-
     def plate
       labware
     end

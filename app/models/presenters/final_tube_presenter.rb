@@ -78,9 +78,5 @@ module Presenters
     def labware_form_details(view)
       { url: view.limber_tube_path(labware), as: :tube }
     end
-
-    def qc_owner
-      labware
-    end
   end
 end
