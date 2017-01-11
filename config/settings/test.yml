@@ -3,14 +3,6 @@
 :searches: {}
 :transfer_templates: {}
 :printers:
-  illumina_a:
-    :plate_a: bac4df40-222b-11e4-8ce2-44fb42fffecc
-    :plate_b: bac617c0-222b-11e4-8ce2-44fb42fffecc
-    :tube: bac75040-222b-11e4-8ce2-44fb42fffecc
-  illumina_b:
-    :plate_a: bac135c0-222b-11e4-8ce2-44fb42fffecc
-    :plate_b: bac2e370-222b-11e4-8ce2-44fb42fffecc
-    :tube: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
   limit: 5
   default_count: 2
 :purposes: {}

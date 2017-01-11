@@ -70,12 +70,8 @@ module Presenters::Statemachine
     # the valid next states, along with the current one too.
     def control_state_change
       if default_transition.present?
-        # This ugly thing should yield the default transition first followed by
-        # any other transitions to states that aren't the default...
         yield(state_transitions.reject { |t| t.to == default_transition.to })
       elsif state_transitions.present?
-        # ...if there's no default transition but there are still other transitions
-        # present then yield those.
         yield(state_transitions)
       end
     end
