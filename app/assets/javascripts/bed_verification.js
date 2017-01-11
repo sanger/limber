@@ -26,10 +26,11 @@
 
     // var bed_index = 0;
 
-    var newScanned = function(bed,plate){
+    var newScanned = function(bed,plate,robot){
       var new_li;
       // $('#whole\\['+bed+'\\]').detach();
       new_li = $(document.createElement('li')).
+        attr('data-robot',robot).
         attr('data-bed',bed).
         attr('data-labware',plate).
         attr('class','list-group-item list-group-item-action').
@@ -37,7 +38,13 @@
         append(
           $(document.createElement('a')).
           attr('href','#').
-          attr('class','list-group-item-action').append(
+          attr('class','list-group-item-action')
+          .append(
+            $(document.createElement('h3')).
+            attr('class',"ui-li-heading").
+            text('Robot: '+robot)
+            )
+          .append(
             $(document.createElement('h3')).
             attr('class',"ui-li-heading").
             text('Bed: '+bed)
@@ -104,13 +111,14 @@
     }
 
     $('#plate_scan').on('change', function(){
-      var plate_barcode, bed_barcode;
+      var plate_barcode, bed_barcode, robot_barcode;
       plate_barcode = this.value
       bed_barcode = $('#bed_scan').val();
+      robot_barcode = $('#robot_scan').val();
       this.value = "";
       $('#bed_scan').val("");
       $('#bed_scan').focus();
-      newScanned(bed_barcode,plate_barcode);
+      newScanned(bed_barcode,plate_barcode,robot_barcode);
     });
 
     $('#validate_layout').on('click',function(){

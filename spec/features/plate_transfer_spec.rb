@@ -3,7 +3,7 @@ require 'rails_helper'
 require 'pry'
 
 feature 'Plate transfer', js: true do
-  has_a_working_api(times: 5)
+  has_a_working_api(times: 7)
 
   let(:user)              { json :user }
   let(:swipecard)         { 'abcdef' }
@@ -35,6 +35,8 @@ feature 'Plate transfer', js: true do
 
   scenario 'saves the robot barcode' do
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({:beds=>{"580000004838"=>true, "580000014851"=>true}, :valid=>true, :message=>""})
+    allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
+
     fill_in_swipecard_and_barcode(swipecard)
 
     #if we don't do this the next step doesn't work
@@ -45,7 +47,10 @@ feature 'Plate transfer', js: true do
     fill_in "Scan robot", with: robot_barcode
     fill_in "Scan bed", with: '580000004838'
     fill_in "Scan plate", with: plate_barcode_1
+    save_and_open_page
+    
     within('#bed_list') do
+      # expect(page).to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content("Bed: 580000004838")
     end
@@ -53,6 +58,7 @@ feature 'Plate transfer', js: true do
     fill_in "Scan bed", with: '580000014851'
     fill_in "Scan plate", with: plate_barcode_2
      within('#bed_list') do
+      # expect(page).to have_content("Robot: #{robot_barcode}").twice
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content("Bed: 580000004838")
       expect(page).to have_content("Plate: #{plate_barcode_2}")
@@ -64,6 +70,7 @@ feature 'Plate transfer', js: true do
       expect(page).to have_content('No problems detected!')
     end
     click_button("Start the bravo LB Post Shear => LB End Prep")
+    expect(page).to have_content("Robot bravo LB Post Shear => LB End Prep has been started.")
   end
 
    def fill_in_swipecard_and_barcode(swipecard)
