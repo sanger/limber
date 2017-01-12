@@ -34,7 +34,7 @@ feature 'Plate transfer', js: true do
   end
 
   scenario 'saves the robot barcode' do
-    allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({:beds=>{"580000004838"=>true, "580000014851"=>true}, :valid=>true, :message=>""})
+    allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({beds: {"580000004838"=>true, "580000014851"=>true}, valid: true, message: ''})
     allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
 
     fill_in_swipecard_and_barcode(swipecard)
@@ -47,10 +47,9 @@ feature 'Plate transfer', js: true do
     fill_in "Scan robot", with: robot_barcode
     fill_in "Scan bed", with: '580000004838'
     fill_in "Scan plate", with: plate_barcode_1
-    save_and_open_page
     
     within('#bed_list') do
-      # expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content("Bed: 580000004838")
     end
@@ -58,12 +57,13 @@ feature 'Plate transfer', js: true do
     fill_in "Scan bed", with: '580000014851'
     fill_in "Scan plate", with: plate_barcode_2
      within('#bed_list') do
-      # expect(page).to have_content("Robot: #{robot_barcode}").twice
+      expect(page).to have_content("Robot: #{robot_barcode}", count: 2)
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content("Bed: 580000004838")
       expect(page).to have_content("Plate: #{plate_barcode_2}")
       expect(page).to have_content("Bed: 580000014851")
     end
+
 
     click_link('Validate Layout')
     within '#validation_report' do

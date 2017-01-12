@@ -52,4 +52,6 @@ Rails.application.configure do
   config.api_connection_options.authorisation = 'testing'
 
   config.pmb_uri = 'http://example.com:3002/v1/'
+
+  config.assets.debug = true
 end
