@@ -14,8 +14,7 @@
     <%= form_tag("#{@presenter.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
       <div>
       <label class="custom-file">
-        <input type="file" id="qc_file" name="qc_file" class="custom-file-input"/>
-        <span class="custom-file-control"></span>
+        <input type="file" id="qc_file" name="qc_file"/>
       </label>
       </div>
       <input type="submit" value="Upload" class="btn"/>

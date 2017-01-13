@@ -10,8 +10,7 @@ module Forms
         user: user_uuid,
         parent: labware.uuid,
         child_purposes: [purpose_uuid]
-      )
-                      .children.first
+      ).children.first
 
       # Transfer EVERYTHING into it
       @tube_transfer = api.transfer_template.find(
