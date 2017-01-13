@@ -4,6 +4,16 @@ module Presenters
   class FinalTubePresenter
     include Presenter
     include Statemachine::Shared
+    include RobotControlled
+
+    class_attribute :summary_items
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Tube type' => :purpose_name,
+      'Current tube state' => :state,
+      'Input plate barcode' => :input_barcode,
+      'Created on' => :created_on
+    }
 
     class_attribute :labware_class
     self.labware_class = :tube
@@ -53,6 +63,9 @@ module Presenters
       # Do nothing
     end
 
+    def tube
+      labware
+    end
     # The state is delegated to the tube
     delegate :state, to: :labware
 
