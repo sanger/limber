@@ -20,7 +20,8 @@ describe 'state change factory' do
           "target": {
             "actions": {
               "read": "http://example.com:3000/example-target-uuid"
-            }
+            },
+            "uuid": "target_uuid"
           },
           "target_state": "passed",
           "previous_state": "pending",
