@@ -18,12 +18,14 @@ describe 'plate_conversion factory' do
         "target": {
           "actions": {
             "read": "http://example.com:3000/target-uuid"
-          }
+          },
+          "uuid": "target_uuid"
         },
         "purpose": {
           "actions": {
             "read": "http://example.com:3000/purpose-uuid"
-          }
+          },
+          "uuid": "purpose_uuid"
         },
 
         "uuid": "example-plate-conversion-uuid"
