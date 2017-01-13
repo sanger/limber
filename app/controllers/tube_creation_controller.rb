@@ -2,7 +2,7 @@
 
 class TubeCreationController < CreationController
   def redirection_path(form)
-    limber_tube_path(form.child.uuid)
+    url_for(form.child)
   end
 
   def new
