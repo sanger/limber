@@ -16,6 +16,12 @@ class PlateMetadata
   end
 
   def update
+    unless plate.custom_metadatum_collection.uuid.present?
+      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {robot_barcode: robot_barcode})
+    else
+      metadata = plate.custom_metadatum_collection.metadata
+      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(robot_barcode: robot_barcode))
+    end
   end
 
 private
