@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "pry"
 
 module Robots
   class Robot
@@ -134,7 +135,7 @@ module Robots
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
         bed.load(bed_settings[id]) if bed.has_transition?
-        bed.valid? || raise(BedError, bed.error_message)
+        bed.valid? || raise(Bed::BedError, bed.error_messages)
       end
       beds.values.each(&:transition)
     end

@@ -10,17 +10,20 @@ class PlateMetadata
     super
   end
 
-  def plate=(plate_barcode)
-    return unless plate_barcode.present?
-    find_plate(plate_barcode)
+  def plate=(plate)
+    if plate.is_a? Sequencescape::Plate
+      @plate = plate
+    else
+      find_plate(plate)
+    end
   end
 
   def update
     unless plate.custom_metadatum_collection.uuid.present?
-      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {robot_barcode: robot_barcode})
+      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {created_with_robot: robot_barcode})
     else
       metadata = plate.custom_metadatum_collection.metadata
-      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(robot_barcode: robot_barcode))
+      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(created_with_robot: robot_barcode))
     end
   end
 

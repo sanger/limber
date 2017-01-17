@@ -5,13 +5,14 @@ require 'pry'
 feature 'Plate transfer', js: true do
   has_a_working_api(times: 7)
 
-  let(:user)              { json :user }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:user)              { json :user, uuid: user_uuid }
   let(:swipecard)         { 'abcdef' }
   let(:robot_barcode)     { 'robot_barcode'}
   let(:plate_barcode_1)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_barcode_2)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
+  let(:example_plate)  { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
 
    # Setup stubs
   background do
@@ -35,7 +36,17 @@ feature 'Plate transfer', js: true do
 
   scenario 'saves the robot barcode' do
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({beds: {"580000004838"=>true, "580000014851"=>true}, valid: true, message: ''})
-    allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
+    # allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
+
+    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
+    Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
+    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate)
+    stub = stub_api_post('state_changes',
+             payload: {state_change: {"target_state" => "passed", "reason" => "Robot bravo LB Post Shear => LB End Prep started", "customer_accepts_responsibility" => false, "target" => plate_uuid, "user" => user_uuid }},
+             body: json(:state_change))
+    stub = stub_api_post('custom_metadatum_collections',
+             payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: {created_with_robot: 'robot_barcode'} } },
+             body: json(:custom_metadatum_collection))
 
     fill_in_swipecard_and_barcode(swipecard)
 
@@ -47,7 +58,7 @@ feature 'Plate transfer', js: true do
     fill_in "Scan robot", with: robot_barcode
     fill_in "Scan bed", with: '580000004838'
     fill_in "Scan plate", with: plate_barcode_1
-    
+
     within('#bed_list') do
       expect(page).to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
