@@ -30,7 +30,8 @@ feature 'Viewing a plate', js: true do
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+    plate_title = find('#plate-title')
+    expect(plate_title).to have_text('Limber Cherrypicked')
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)
@@ -39,6 +40,7 @@ feature 'Viewing a plate', js: true do
     within '.content-main' do
       fill_in 'User Swipecard', with: swipecard
       find_field('User Swipecard').send_keys :enter
+      expect(page).to have_content('Jane Doe')
       fill_in 'Plate or Tube Barcode', with: barcode
       find_field('Plate or Tube Barcode').send_keys :enter
     end
