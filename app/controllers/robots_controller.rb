@@ -15,6 +15,9 @@ class RobotsController < ApplicationController
 
   def start
     robot.perform_transfer(stripped_beds)
+    robot.beds.values.each do |bed|
+      PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, robot_barcode: params[:robot_scan]).update if bed.has_transition?
+    end
     respond_to do |format|
       format.html do
         redirect_to search_path,

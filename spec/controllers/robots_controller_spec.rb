@@ -1,0 +1,52 @@
+# frozen_string_literal: true
+require 'rails_helper'
+require './app/controllers/robots_controller'
+
+describe RobotsController, type: :controller do
+  describe '#start' do
+
+    include FeatureHelpers
+
+    has_a_working_api
+
+    let(:user_uuid) { SecureRandom.uuid }
+    let(:plate_uuid) { "plate_uuid" }
+    let!(:plate)     { json :plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+
+    it 'adds robot barcode to plate metadata' do
+      Settings.robots["robot_id"] = {"name" => "robot_name",
+                                      "class" => nil,
+                                      "beds" => {
+                                        "bed1_barcode" => {
+                                          purpose: "source_plate_purpose",
+                                          states: ["passed"],
+                                          label: "Bed 7"
+                                        },
+                                        "bed2_barcode" => {
+                                          purpose: "target_plate_purpose",
+                                          states: ["pending"],
+                                          label: "Bed 9",
+                                          parent: 'bed1_barcode',
+                                          target_state: "passed"
+                                        }
+                                      }
+                                    }
+      Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
+      Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
+      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'target_plate_barcode' } }, plate)
+      stub = stub_api_post('state_changes',
+               payload: {state_change: {"target_state" => "passed", "reason" => "Robot robot_name started", "customer_accepts_responsibility" => false, "target" => "plate_uuid", "user" => user_uuid }},
+               body: json(:state_change))
+
+      stub = stub_api_post('custom_metadatum_collections',
+         payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: {created_with_robot: 'robot_barcode'} } },
+         body: json(:custom_metadatum_collection)
+        )
+      # allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
+      post :start, params: { bed: {"bed1_barcode" => ["source_plate_barcode"], "bed2_barcode" => ["target_plate_barcode"]}, robot_scan: 'robot_barcode', id: "robot_id" }, session: { user_uuid: user_uuid }
+      expect(stub).to have_been_requested
+      expect(flash[:notice]).to match "Robot robot_name has been started."
+    end
+
+  end
+end
