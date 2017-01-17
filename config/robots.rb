@@ -23,6 +23,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB End Prep', bed(14)
   end
 
+  bravo_robot(target_state = 'passed', verify = true) do
+    from 'LB End Prep', bed(14)
+    to 'LB End Prep', bed(14), 'passed'
+  end
+
   bravo_robot do
     from 'LB End Prep', bed(14)
     to 'LB Lib PCR', bed(6)
