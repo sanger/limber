@@ -75,7 +75,6 @@ describe PlateMetadata do
       expect(stub).to have_been_requested
     end
 
-
   end
 
 end

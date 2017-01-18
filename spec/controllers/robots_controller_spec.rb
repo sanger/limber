@@ -12,25 +12,11 @@ describe RobotsController, type: :controller do
     let(:user_uuid) { SecureRandom.uuid }
     let(:plate_uuid) { "plate_uuid" }
     let!(:plate)     { json :plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let(:settings)   { YAML::load_file(File.join(Rails.root, "spec", "data", "settings.yml")).with_indifferent_access }
 
     it 'adds robot barcode to plate metadata' do
-      Settings.robots["robot_id"] = {"name" => "robot_name",
-                                      "class" => nil,
-                                      "beds" => {
-                                        "bed1_barcode" => {
-                                          purpose: "source_plate_purpose",
-                                          states: ["passed"],
-                                          label: "Bed 7"
-                                        },
-                                        "bed2_barcode" => {
-                                          purpose: "target_plate_purpose",
-                                          states: ["pending"],
-                                          label: "Bed 9",
-                                          parent: 'bed1_barcode',
-                                          target_state: "passed"
-                                        }
-                                      }
-                                    }
+      Settings.robots["robot_id"] = settings[:robots][:robot_id]
+      
       Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
       Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'target_plate_barcode' } }, plate)

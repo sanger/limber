@@ -172,20 +172,7 @@ module Robots
 
       verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
-      unless plates_compatible?
-        bed_contents.keys.each { |k| verified[k] = false }
-        error_messages << "#{bed_prefixes.to_sentence} can not be processed together."
-      end
-
       { beds: verified, valid: verified.all? { |_, v| v }, message: formatted_message }
-    end
-
-    def plates_compatible?
-      bed_prefixes.count <= 1
-    end
-
-    def bed_prefixes
-      beds.map { |_id, bed| bed.plate.label.prefix unless bed.plate.nil? }.compact.uniq
     end
 
     def parents_and_position
