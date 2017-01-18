@@ -23,11 +23,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB End Prep', bed(14)
   end
 
-  bravo_robot(target_state = 'passed', verify = true) do
-    from 'LB End Prep', bed(14)
-    to 'LB End Prep', bed(14), 'passed'
-  end
-
   bravo_robot do
     from 'LB End Prep', bed(14)
     to 'LB Lib PCR', bed(6)
@@ -35,9 +30,19 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   robot_scope = self
 
+  custom_robot('bravo-lb-end-prep',
+                name: 'Bravo LB End Prep',
+                layout: 'bed',
+                verify: true,
+                beds: {
+                  robot_scope.bed(14).barcode  => { purpose: 'LB End Prep',    states: ['passed'],  label: 'Bed 14' }
+                }
+              )
+
   custom_robot('lib-pcr-purification',
                name: 'Bravo LB Lib PCR => LB Lib PCR XP',
                layout: 'bed',
+               verify: false,
                beds: {
                  robot_scope.bed(1).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
                  robot_scope.bed(9).barcode  => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 9', parent: robot_scope.bed(1).barcode, target_state: 'passed' },
