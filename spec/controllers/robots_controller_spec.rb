@@ -28,7 +28,6 @@ describe RobotsController, type: :controller do
          payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: {created_with_robot: 'robot_barcode'} } },
          body: json(:custom_metadatum_collection)
         )
-      # allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
       post :start, params: { bed: {"bed1_barcode" => ["source_plate_barcode"], "bed2_barcode" => ["target_plate_barcode"]}, robot_scan: 'robot_barcode', id: "robot_id" }, session: { user_uuid: user_uuid }
       expect(stub).to have_been_requested
       expect(flash[:notice]).to match "Robot robot_name has been started."

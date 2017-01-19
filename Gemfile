@@ -61,6 +61,7 @@ end
 
 group :development do
   gem 'pry'
+  gem 'pry-byebug'
   gem 'rubocop', require: false
   gem 'web-console'
 end

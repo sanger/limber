@@ -36,7 +36,6 @@ feature 'Plate transfer', js: true do
 
   scenario 'saves the robot barcode' do
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({beds: {"580000004838"=>true, "580000014851"=>true}, valid: true, message: ''})
-    # allow_any_instance_of(Robots::Robot).to receive(:perform_transfer).and_return(true)
 
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
     Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }

@@ -18,10 +18,9 @@
 :robots: 
   :robot_id:
     :name: robot_name
-    :class:
     :beds:
       bed1_barcode:
-        :purpose: source_plate_purpose
+        :purpose: Limber Cherrypicked
         :states:
           - passed
         :label: Bed 7
@@ -32,5 +31,14 @@
         label: Bed 9
         parent: bed1_barcode
         target_state: passed
+  :robot_id_2:
+    :name: robot_name
+    :verify_robot: true
+    :beds:
+      bed1_barcode:
+        :purpose: Limber Cherrypicked
+        :states:
+          - passed
+        :label: Bed 7
 :locations: {}
 :qc_purposes: []

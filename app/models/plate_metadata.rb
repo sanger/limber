@@ -2,7 +2,7 @@ class PlateMetadata
 
   include ActiveModel::Model
 
-  attr_accessor :plate, :api, :robot_barcode, :user
+  attr_accessor :plate, :api, :created_with_robot, :user
 
   validates_presence_of :api, :plate, :user
 
@@ -20,10 +20,10 @@ class PlateMetadata
 
   def update
     unless plate.custom_metadatum_collection.uuid.present?
-      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {created_with_robot: robot_barcode})
+      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {created_with_robot: created_with_robot})
     else
       metadata = plate.custom_metadatum_collection.metadata
-      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(created_with_robot: robot_barcode))
+      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(created_with_robot: created_with_robot))
     end
   end
 

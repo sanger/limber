@@ -116,7 +116,7 @@ module Robots
     end
 
     class_attribute :attributes
-    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id]
+    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id, :verify_robot]
 
     def beds=(new_beds)
       beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
@@ -158,7 +158,11 @@ module Robots
       error_messages.join(' ')
     end
 
-    def verify(bed_contents)
+    def verify_robot?
+      verify_robot
+    end
+
+    def verify(bed_contents, robot_barcode = nil)
       valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
         beds[bed_id].load(plate_barcode)
         [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
@@ -168,9 +172,23 @@ module Robots
         beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
           "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
           'Could not match labware with expected child.')
-      end]
+      end.compact]
 
       verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
+
+
+      if verify_robot?
+
+        if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
+          error_messages << "Your plate is not on the right robot"
+          verified.merge!("robot" => false)
+        elsif (beds.values.first.plate.custom_metadatum_collection.metadata["created_with_robot"] != robot_barcode)
+           error_messages << "Your plate is not on the right robot"
+            verified.merge!("robot" => false)
+        end
+      end
+
+
 
       { beds: verified, valid: verified.all? { |_, v| v }, message: formatted_message }
     end

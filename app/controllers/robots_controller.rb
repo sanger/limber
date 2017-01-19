@@ -17,7 +17,7 @@ class RobotsController < ApplicationController
     robot.perform_transfer(stripped_beds)
     if params[:robot_scan].present?
       robot.beds.values.each do |bed|
-        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, robot_barcode: params[:robot_scan]).update if bed.has_transition?
+        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, created_with_robot: params[:robot_scan]).update if bed.has_transition?
       end
     end
     respond_to do |format|

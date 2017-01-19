@@ -33,7 +33,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   custom_robot('bravo-lb-end-prep',
                 name: 'Bravo LB End Prep',
                 layout: 'bed',
-                verify: true,
+                verify_robot: true,
                 beds: {
                   robot_scope.bed(14).barcode  => { purpose: 'LB End Prep',    states: ['passed'],  label: 'Bed 14' }
                 }
@@ -42,7 +42,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   custom_robot('lib-pcr-purification',
                name: 'Bravo LB Lib PCR => LB Lib PCR XP',
                layout: 'bed',
-               verify: false,
+               verify_robot: false,
                beds: {
                  robot_scope.bed(1).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
                  robot_scope.bed(9).barcode  => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 9', parent: robot_scope.bed(1).barcode, target_state: 'passed' },

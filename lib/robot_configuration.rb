@@ -30,12 +30,12 @@ module RobotConfiguration
       @robots[key] = hash
     end
 
-    def bravo_robot(target_state = 'passed', verify = false, &block)
-      simple_robot('bravo', target_state, verify, &block)
+    def bravo_robot(target_state = 'passed', verify_robot = false, &block)
+      simple_robot('bravo', target_state, verify_robot, &block)
     end
 
-    def simple_robot(type, target_state = 'passed', verify = false, &block)
-      added_robot = RobotConfiguration::Simple.new(type, target_state, verify, &block)
+    def simple_robot(type, target_state = 'passed', verify_robot = false, &block)
+      added_robot = RobotConfiguration::Simple.new(type, target_state, verify_robot, &block)
       @robots[added_robot.key] = added_robot.configuration
       added_robot
     end
@@ -51,10 +51,10 @@ module RobotConfiguration
 
   class Simple
     include BedHelpers
-    attr_reader :source_purpose, :target_purpose, :layout, :type, :target_state, :source_bed_state, :target_bed_state, :verify
+    attr_reader :source_purpose, :target_purpose, :layout, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot
 
-    def initialize(type, target_state = 'passed', verify = false, &block)
-      @verify = verify
+    def initialize(type, target_state = 'passed', verify_robot = false, &block)
+      @verify_robot = verify_robot
       @layout = 'bed'
       @type = type
       @target_state = target_state
@@ -101,7 +101,7 @@ module RobotConfiguration
       {
         name: name,
         layout: layout,
-        verify: verify,
+        verify_robot: verify_robot,
         beds: {
           source_bed_barcode  => { purpose: source_purpose, states: [source_bed_state],  label: source_bed_name },
           target_bed_barcode  => { purpose: target_purpose, states: [target_bed_state],  label: target_bed_name, parent: source_bed_barcode, target_state: target_state }
