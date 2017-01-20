@@ -3,33 +3,26 @@ require 'rails_helper'
 require 'pry'
 
 feature 'Plate transfer', js: true do
-  has_a_working_api(times: 7)
+  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:user)              { json :user, uuid: user_uuid }
   let(:swipecard)         { 'abcdef' }
   let(:robot_barcode)     { 'robot_barcode'}
-  let(:plate_barcode_1)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
-  let(:plate_barcode_2)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
+  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:plate_uuid)        { SecureRandom.uuid }
+  let(:example_plate)     { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
+  let(:example_plate_without_metadata)   { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'passed' }
+  let(:example_plate_with_metadata)   { json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'passed' }
+  let(:settings)          { YAML::load_file(File.join(Rails.root, "spec", "data", "settings.yml")).with_indifferent_access }
 
    # Setup stubs
   background do
-    # Set-up the plate config
+    # Set-up the plate robot
+    Settings.robots["bravo-lb-post-shear-to-lb-end-prep"] = settings[:robots]['bravo-lb-post-shear-to-lb-end-prep']
+    Settings.robots["bravo-lb-end-prep"] = settings[:robots]['bravo-lb-end-prep']
 
-    Settings.robots['bravo-lb-post-shear-to-lb-end-prep'] = { name: 'bravo LB Post Shear => LB End Prep', layout: 'bed',
-    beds:
-      {'580000004838'=> {
-                     purpose: "LB Post Shear",
-                     states: ['passed'],
-                     label: 'Bed 4'},
-             '580000014851' => {
-                            purpose: 'LB End Prep',
-                            states: ["pending"],
-                            label: 'Bed 14',
-                            parent: '580000004838',
-                            target_state: 'passed'} } }
     # # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => swipecard } }, user)
   end
@@ -83,7 +76,60 @@ feature 'Plate transfer', js: true do
     expect(page).to have_content("Robot bravo LB Post Shear => LB End Prep has been started.")
   end
 
-   def fill_in_swipecard_and_barcode(swipecard)
+  scenario 'informs if the robot barcode is wrong' do
+    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
+    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_1 } }, example_plate_without_metadata)
+
+    fill_in_swipecard_and_barcode(swipecard)
+
+    expect(page).to have_content("Jane Doe")
+    click_button('Robots')
+    click_link "bravo LB End Prep"
+    expect(page).to have_content("bravo LB End Prep")
+    fill_in "Scan robot", with: robot_barcode
+    fill_in "Scan bed", with: '580000014851'
+    fill_in "Scan plate", with: plate_barcode_1
+
+    within('#bed_list') do
+      expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Bed: 580000014851")
+    end
+
+    click_link('Validate Layout')
+    within '#validation_report' do
+      expect(page).to have_content('There were problems: Your plate is not on the right robot')
+    end
+  end
+
+  scenario 'verifies robot barcode' do
+    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
+    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_1 } }, example_plate_with_metadata)
+    stub_api_get('custom_metadatum_collection-uuid', body: json(:custom_metadatum_collection, metadata: {"created_with_robot" => "robot_barcode"}, uuid: 'custom_metadatum_collection-uuid'))
+
+    fill_in_swipecard_and_barcode(swipecard)
+
+    expect(page).to have_content("Jane Doe")
+    click_button('Robots')
+    click_link "bravo LB End Prep"
+    expect(page).to have_content("bravo LB End Prep")
+    fill_in "Scan robot", with: robot_barcode
+    fill_in "Scan bed", with: '580000014851'
+    fill_in "Scan plate", with: plate_barcode_1
+
+    within('#bed_list') do
+      expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Bed: 580000014851")
+    end
+
+    click_link('Validate Layout')
+    within '#validation_report' do
+      expect(page).to have_content('No problems detected!')
+    end
+  end
+
+  def fill_in_swipecard_and_barcode(swipecard)
     visit root_path
 
     within '.content-main' do

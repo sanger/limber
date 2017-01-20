@@ -176,15 +176,13 @@ module Robots
 
       verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
-
       if verify_robot?
-
         if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
           error_messages << "Your plate is not on the right robot"
           verified.merge!("robot" => false)
         elsif (beds.values.first.plate.custom_metadatum_collection.metadata["created_with_robot"] != robot_barcode)
-           error_messages << "Your plate is not on the right robot"
-            verified.merge!("robot" => false)
+          error_messages << "Your plate is not on the right robot"
+          verified.merge!("robot" => false)
         end
       end
 
