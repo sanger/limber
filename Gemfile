@@ -33,9 +33,8 @@ gem 'exception_notification'
 
 gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
-  # github: 'JamesGlover/sequencescape-client-api',
-  # branch: 'add_limber_needs',
-  path: '../sequencescape-client-api',
+  github: 'JamesGlover/sequencescape-client-api',
+  branch: 'add_limber_needs',
   require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
