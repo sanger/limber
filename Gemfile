@@ -63,6 +63,8 @@ group :development do
   gem 'pry'
   gem 'rubocop', require: false
   gem 'web-console'
+  # MiniProfiler allows you to see the speed of a request conveniently on the page.
+  gem 'rack-mini-profiler'
 end
 
 group :deployment do

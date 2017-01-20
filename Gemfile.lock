@@ -196,6 +196,8 @@ GEM
       slop (~> 3.4)
     public_suffix (2.0.5)
     rack (2.0.1)
+    rack-mini-profiler (0.10.1)
+      rack (>= 1.2.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.1)
@@ -332,6 +334,7 @@ DEPENDENCIES
   poltergeist
   pry
   psd_logger!
+  rack-mini-profiler
   rails
   rails-assets-tether (>= 1.1.0)
   rails-controller-testing
