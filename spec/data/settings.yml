@@ -15,7 +15,7 @@
   default_count: 2
 :purposes: {}
 :purpose_uuids: {}
-:robots: 
+:robots:
   :robot_id:
     :name: robot_name
     :beds:
@@ -26,7 +26,7 @@
         :label: Bed 7
       bed2_barcode:
         purpose: target_plate_purpose
-        states: 
+        states:
           - pending
         label: Bed 9
         parent: bed1_barcode
@@ -40,5 +40,32 @@
         :states:
           - passed
         :label: Bed 7
+  'bravo-lb-post-shear-to-lb-end-prep':
+    name: 'bravo LB Post Shear => LB End Prep'
+    layout: 'bed'
+    verify_robot: false
+    beds:
+      '580000004838':
+        purpose: LB Post Shear
+        states:
+          - passed
+        label: Bed 4
+      '580000014851':
+        purpose: LB End Prep
+        states:
+          - pending
+        label: Bed 14
+        parent: 580000004838
+        target_state: passed
+  'bravo-lb-end-prep':
+    name: 'bravo LB End Prep'
+    layout: 'bed'
+    verify_robot: true
+    beds:
+      '580000014851':
+        purpose: LB End Prep
+        states:
+          - passed
+        label: Bed 14
 :locations: {}
 :qc_purposes: []

@@ -23,6 +23,7 @@
 
 
     SCAPE.robot_beds = {};
+    SCAPE.robot_scan = '';
 
     // var bed_index = 0;
 
@@ -115,6 +116,7 @@
       plate_barcode = this.value
       bed_barcode = $('#bed_scan').val();
       robot_barcode = $('#robot_scan').val();
+      SCAPE.robot_scan = robot_barcode
       this.value = "";
       $('#bed_scan').val("");
       $('#bed_scan').focus();
@@ -127,7 +129,7 @@
           dataType: "json",
           url: window.location.pathname+'/verify',
           type: 'POST',
-          data: {"beds" : SCAPE.robot_beds },
+          data: {"beds" : SCAPE.robot_beds, "robot_scan" : SCAPE.robot_scan },
           success: function(data,status) { checkResponse(data); }
         }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','danger'); fail(); });
     })
