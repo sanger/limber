@@ -1,5 +1,5 @@
 <div id="labware-summary-div">
-  <%= render partial: "plate", locals: {plate_presenter: presenter}  %>
+  <%= render partial: "plate", locals: { plate_presenter: presenter }  %>
   <% presenter.control_tube_display do %>
     <h3 class='card-header'>Tubes</h3>
     <% presenter.plate.tubes_and_sources.each do |tube, sources| %>

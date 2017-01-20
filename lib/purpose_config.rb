@@ -19,7 +19,7 @@ class PurposeConfig
   end
 
   def parents
-    @options.fetch(:parents,[]).map { |parent_name| store.fetch(parent_name).uuid }
+    @options.fetch(:parents, []).map { |parent_name| store.fetch(parent_name).uuid }
   end
 
   def config
@@ -53,9 +53,9 @@ class PurposeConfig
     def register!
       api.plate_purpose.create!(
         name: name,
-        stock_plate: config.fetch(:stock_plate,false),
-        cherrypickable_target: config.fetch(:cherrypickable_target,false),
-        input_plate: config.fetch(:input_plate,false),
+        stock_plate: config.fetch(:stock_plate, false),
+        cherrypickable_target: config.fetch(:cherrypickable_target, false),
+        input_plate: config.fetch(:input_plate, false),
         parents: parents
       )
     end

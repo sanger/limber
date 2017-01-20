@@ -50,6 +50,23 @@ module Presenters::Statemachine
         yield uuid, hash['name']
       end
     end
+
+    def compatible_plate_purposes
+      purposes_of_type('plate').each do |uuid, hash|
+        yield uuid, hash['name']
+      end
+    end
+
+    def compatible_tube_purposes
+      purposes_of_type('tube').each do |uuid, hash|
+        yield uuid, hash['name']
+      end
+    end
+
+    # Eventually this will end up on our forms/creations module
+    def purposes_of_type(type)
+      Settings.purposes.select { |uuid,purpose| purpose.asset_type == type }
+    end
   end
 
   # These are shared base methods to be used in all presenter state_machines
