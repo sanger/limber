@@ -34,9 +34,6 @@ class RobotsController < ApplicationController
   end
 
   def verify
-    # respond_to do |format|
-    #   format.json { render(json: @robot.verify(stripped_beds)) }
-    # end
     render(json: @robot.verify(stripped_beds, params[:robot_scan]))
   end
 
