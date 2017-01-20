@@ -13,8 +13,8 @@ feature 'Plate transfer', js: true do
   let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_uuid)        { SecureRandom.uuid }
   let(:example_plate)     { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
-  let(:example_plate_without_metadata)   { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'passed' }
-  let(:example_plate_with_metadata)   { json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'passed' }
+  let(:example_plate_without_metadata)   { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
+  let(:example_plate_with_metadata)   { json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
   let(:settings)          { YAML::load_file(File.join(Rails.root, "spec", "data", "settings.yml")).with_indifferent_access }
 
    # Setup stubs
@@ -27,18 +27,18 @@ feature 'Plate transfer', js: true do
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => swipecard } }, user)
   end
 
-  scenario 'saves the robot barcode' do
+  scenario 'starts the robot and saves the robot barcode' do
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return({beds: {"580000004838"=>true, "580000014851"=>true}, valid: true, message: ''})
 
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
     Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
     stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate)
-    stub = stub_api_post('state_changes',
-             payload: {state_change: {"target_state" => "passed", "reason" => "Robot bravo LB Post Shear => LB End Prep started", "customer_accepts_responsibility" => false, "target" => plate_uuid, "user" => user_uuid }},
-             body: json(:state_change))
-    stub = stub_api_post('custom_metadatum_collections',
+    stub_custom_metdatum_collections_post = stub_api_post('custom_metadatum_collections',
              payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: {created_with_robot: 'robot_barcode'} } },
              body: json(:custom_metadatum_collection))
+    stub_state_changes_post = stub_api_post('state_changes',
+             payload: { state_change: {target_state: "started", reason: "Robot bravo LB Post Shear => LB End Prep started", customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid } },
+             body: json(:state_change, target_state: 'started'))
 
     fill_in_swipecard_and_barcode(swipecard)
 
@@ -74,6 +74,8 @@ feature 'Plate transfer', js: true do
     end
     click_button("Start the bravo LB Post Shear => LB End Prep")
     expect(page).to have_content("Robot bravo LB Post Shear => LB End Prep has been started.")
+    expect(stub_custom_metdatum_collections_post).to have_been_requested
+    expect(stub_state_changes_post).to have_been_requested
   end
 
   scenario 'informs if the robot barcode is wrong' do

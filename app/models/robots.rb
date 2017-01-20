@@ -176,6 +176,8 @@ module Robots
 
       verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
+      #if bed was entered incorrectly it will not have a plate, plate will be nil, it all breaks
+
       if verify_robot?
         if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
           error_messages << "Your plate is not on the right robot"

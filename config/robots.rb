@@ -8,6 +8,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Custom robots are configured manually
 
+  robot_scope = self
+
   bravo_robot do
     from 'LB Cherrypick', bed(7)
     to 'LB Shear', bed(9)
@@ -18,29 +20,27 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB Post Shear', bed(7)
   end
 
-  bravo_robot do
+  bravo_robot 'started' do
     from 'LB Post Shear', bed(4)
     to 'LB End Prep', bed(14)
   end
+
+  custom_robot('bravo-lb-end-prep',
+              name: 'bravo LB End Prep',
+              layout: 'bed',
+              verify_robot: true,
+              beds: {
+                robot_scope.bed(14).barcode  => { purpose: 'LB End Prep',    states: ['started'],  label: 'Bed 14', target_state: 'passed' }
+              }
+            )
 
   bravo_robot do
     from 'LB End Prep', bed(14)
     to 'LB Lib PCR', bed(6)
   end
 
-  robot_scope = self
-
-  custom_robot('bravo-lb-end-prep',
-                name: 'Bravo LB End Prep',
-                layout: 'bed',
-                verify_robot: true,
-                beds: {
-                  robot_scope.bed(14).barcode  => { purpose: 'LB End Prep',    states: ['passed'],  label: 'Bed 14' }
-                }
-              )
-
   custom_robot('lib-pcr-purification',
-               name: 'Bravo LB Lib PCR => LB Lib PCR XP',
+               name: 'bravo LB Lib PCR => LB Lib PCR XP',
                layout: 'bed',
                verify_robot: false,
                beds: {
