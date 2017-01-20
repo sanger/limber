@@ -11,7 +11,7 @@
   <%= content do %>
     <%= card without_block: true do %>
       <div class="card-block">
-        <h2 class="card-title">
+        <h2 id="plate-title" class="card-title">
           <%= @presenter.title %>
           <span class="tag tag-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>

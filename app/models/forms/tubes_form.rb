@@ -90,7 +90,9 @@ module Forms
       destination_uuids = all_tube_transfers.map do |tt|
         tt.destination.uuid
       end.uniq
-      return all_tube_transfers.first.destination if destination_uuids.one?
+      # The client_api returns a 'barcoded asset' here, rather than a tube. By returning a has, url_for
+      # can find the correct controller.
+      return { controller: :tubes, action: :show, id: all_tube_transfers.first.destination.uuid } if destination_uuids.one?
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'
     end
 

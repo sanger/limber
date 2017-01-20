@@ -40,7 +40,7 @@ LB Lib PCR:
   - LB End Prep
 LB Lib PCR-XP:
   :asset_type: plate
-  :stock_plate: true
+  :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
@@ -51,17 +51,11 @@ LB Lib Pool:
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   :form_class: Forms::PoolTubesBySubmissionForm
-  :presenter_class: Presenters::QCTubePresenter
+  :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - LB Lib PCR-XP
-LB Lib Pool 2:
-  :asset_type: tube
-  :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::StockTubePurpose
-  :parents:
-  - LB Lib Pool
 LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
@@ -71,5 +65,5 @@ LB Lib Pool Norm:
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
-  - LB Lib Pool 2
+  - LB Lib Pool
 

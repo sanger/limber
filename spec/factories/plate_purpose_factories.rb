@@ -12,6 +12,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :tube_purpose, class: Sequencescape::TubePurpose, traits: [:api_object] do
+    name 'Limber Example Purpose'
+    json_root 'tube_purpose'
+    with_has_many_associations 'tubes', 'children'
+  end
+
+
   factory :plate_purpose_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
     size 2
 

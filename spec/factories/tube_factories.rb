@@ -1,7 +1,6 @@
 
 # frozen_string_literal: true
 FactoryGirl.define do
-
   factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: [:api_object, :barcoded] do
     json_root 'multiplexed_library_tube'
 
@@ -17,6 +16,7 @@ FactoryGirl.define do
 
     purpose do
       {
+        'actions' => { 'read' => api_root + purpose_uuid },
         'uuid' => purpose_uuid, 'name' => purpose_name
       }
     end
@@ -30,6 +30,17 @@ FactoryGirl.define do
     updated_at { Time.current }
 
     factory :tube, class: Limber::Tube, traits: [:api_object, :barcoded] do
+      # with_has_many_associations 'aliquots'
+      json_root 'tube'
+      state 'pending'
+
+      transient { sample_count 1 }
+
+      aliquots do
+        Array.new(sample_count) do |i|
+          associated(:aliquot, sample_name: "sample_#{i}", sample_id: "SAM#{i}", sample_uuid: "example-sample-uuid-#{i}")
+        end
+      end
     end
   end
 

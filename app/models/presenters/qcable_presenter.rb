@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-
 module Presenters
+  # Used for tag plates / tag 2 tubes. Rendered with default to_json behaviour.
   class QcablePresenter
     def initialize(qcable)
       @uuid = qcable.uuid
