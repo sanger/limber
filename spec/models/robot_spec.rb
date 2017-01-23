@@ -53,7 +53,9 @@ describe Robots::Robot do
       it 'returns an error if the robot barcode does not match the plate metadata robot barcode' do
         plate_json = json :stock_plate, uuid: plate_uuid, barcode_number: "123", purpose_uuid: 'limber_cherrypicked_uuid', state: 'passed'
         stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => "123" } }, plate_json)
+        expect(robot.verify(settings[:robots][:robot_id_2][:beds].keys.first => ["123"])[:valid]).to be_falsey
 
+        stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => "123" } })
         expect(robot.verify(settings[:robots][:robot_id_2][:beds].keys.first => ["123"])[:valid]).to be_falsey
 
         plate_json = json :stock_plate_with_metadata, uuid: plate_uuid, barcode_number: "123", purpose_uuid: 'limber_cherrypicked_uuid', state: 'passed', custom_metadatum_collection_uuid: 'custom_metadatum_collection-uuid'
