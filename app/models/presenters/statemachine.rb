@@ -50,6 +50,23 @@ module Presenters::Statemachine
         yield uuid, hash['name']
       end
     end
+
+    def compatible_plate_purposes
+      purposes_of_type('plate').each do |uuid, hash|
+        yield uuid, hash['name']
+      end
+    end
+
+    def compatible_tube_purposes
+      purposes_of_type('tube').each do |uuid, hash|
+        yield uuid, hash['name']
+      end
+    end
+
+    # Eventually this will end up on our forms/creations module
+    def purposes_of_type(type)
+      Settings.purposes.select { |uuid,purpose| purpose.asset_type == type }
+    end
   end
 
   # These are shared base methods to be used in all presenter state_machines
@@ -70,12 +87,8 @@ module Presenters::Statemachine
     # the valid next states, along with the current one too.
     def control_state_change
       if default_transition.present?
-        # This ugly thing should yield the default transition first followed by
-        # any other transitions to states that aren't the default...
         yield(state_transitions.reject { |t| t.to == default_transition.to })
       elsif state_transitions.present?
-        # ...if there's no default transition but there are still other transitions
-        # present then yield those.
         yield(state_transitions)
       end
     end

@@ -2,20 +2,15 @@
 
 module Presenters
   class QCTubePresenter < TubePresenter
-    include RobotControlled
 
     state_machine :state, initial: :pending do
-      event :start do
-        transition pending: :started
-      end
-
       event :take_default_path do
         transition pending: :passed
         transition passed: :qc_complete
       end
 
       event :pass do
-        transition [:pending, :started] => :passed
+        transition [:pending] => :passed
       end
 
       event :qc_complete do
@@ -27,14 +22,10 @@ module Presenters
       end
 
       event :cancel do
-        transition [:pending, :started] => :cancelled
+        transition [:pending] => :cancelled
       end
 
       state :pending do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :started do
         include Statemachine::StateDoesNotAllowChildCreation
       end
 

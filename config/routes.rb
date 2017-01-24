@@ -37,19 +37,20 @@ Rails.application.routes.draw do
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
 
   resources :limber_multiplexed_library_tube, controller: :tubes do
-    resources :qc_files, controller: :qc_files
-  end
-
-  # This is a hack until I get tube coercion working
-  resources :limber_tube, controller: :tubes do
-    resources :qc_files, controller: :qc_files
-  end
-
-  # This is a hack until I get tube coercion working
-  resources :sequencescape_tubes, controller: :tubes do
     resources :children, controller: :tube_creation
     resources :qc_files, controller: :qc_files
   end
+
+  resources :limber_tubes, controller: :tubes do
+    resources :children, controller: :tube_creation
+    resources :qc_files, controller: :qc_files
+  end
+
+  # This is a hack until I get tube coercion working
+  # resources :sequencescape_tubes, controller: :tubes do
+  #   resources :children, controller: :tube_creation
+  #   resources :qc_files, controller: :qc_files
+  # end
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do

@@ -57,6 +57,7 @@ feature 'Viewing a plate', js: true do
     within '.content-main' do
       fill_in 'User Swipecard', with: swipecard
       find_field('User Swipecard').send_keys :enter
+      expect(page).to have_content('Jane Doe')
       fill_in 'Plate or Tube Barcode', with: barcode
       find_field('Plate or Tube Barcode').send_keys :enter
     end

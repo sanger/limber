@@ -5,7 +5,7 @@ module Presenters
       suitable_robots.each { |key, config| yield(key, config[:name]) }
     end
 
-    def robot_exists?
+    def robot?
       suitable_robots.present?
     end
 
