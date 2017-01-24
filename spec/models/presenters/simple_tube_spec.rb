@@ -17,7 +17,7 @@ describe Presenters::SimpleTubePresenter do
     Settings.purposes = {
       "example-purpose-uuid-1" => { name: 'Example Plate Purpose', asset_type: 'plate' },
       "example-purpose-uuid-2" => { name: 'Example Plate Purpose 2', asset_type: 'plate' },
-      "example-purpose-uuid-3" => { name: 'Example Tube Purpose', asset_type: 'tube' },
+      "example-purpose-uuid-3" => { name: 'Example Tube Purpose', asset_type: 'tube' }
     }
   end
 

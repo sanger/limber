@@ -12,7 +12,7 @@ class PlatesController < LabwareController
   before_action :check_for_current_user!, only: [:update, :fail_wells]
 
   def fail_wells
-    wells_to_fail = params[:plate][:wells].select { |_, v| v == '1' }.map(&:first)
+    wells_to_fail = params[:plate][:wells].select { |_, v| v == '1' }.keys
 
     if wells_to_fail.empty?
       redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to fail')
