@@ -13,12 +13,13 @@ gem 'compass-rails'
 
 # Required for bootstrap tooltips
 gem 'rails-assets-tether', '>= 1.1.0'
+# Bootstrap is a css framework
 gem 'bootstrap'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', require: false
 
-# Lets us easily inline our svg to allow styling. Supports the asset pipeline.
+# Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
 # Use jquery as the JavaScript library
@@ -28,6 +29,7 @@ gem 'jquery-ui-rails'
 
 gem 'rake'
 gem 'state_machines'
+# Used in the setting object, allows access by object and hash notation.
 gem 'hashie'
 gem 'exception_notification'
 
