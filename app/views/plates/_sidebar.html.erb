@@ -68,7 +68,11 @@
     <% end %>
 
     <% if @presenter.well_failing_applicable? %>
-      <button class='btn btn-lg btn-block btn-danger'>Fail Wells</button>
+      <button class='btn btn-lg btn-block btn-danger'
+        data-toggle="collapse"
+        data-parent="#main-content"
+        href="#labware-well-failing"
+        aria-controls="labware-well-failing">Fail Wells</button>
     <% end %>
 
     <% presenter.control_library_passing do %>

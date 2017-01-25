@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class LabwareController < ApplicationController
-  before_action :locate_labware, only: [:show, :update]
-  before_action :get_printers, only: [:show, :update]
+  before_action :locate_labware, only: :show
+  before_action :get_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
   def locate_labware
-    @labware = locate_labware_identified_by(params[:id])
+    @labware ||= locate_labware_identified_by(params[:id])
   end
   private :locate_labware
 

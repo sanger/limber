@@ -35,6 +35,20 @@ dl.metadata {
   dd { @include make-col(9); }
 }
 
+.well {
+  // Format well failing interface
+  input[type=checkbox] {
+    display: none;
+  }
+  input[type=checkbox]:checked + label .aliquot {
+    background-color: red;
+  }
+
+  label {
+    font-size: small;
+  }
+}
+
 // Old-stuff
 
 .dimmed {

@@ -31,15 +31,38 @@ describe PlatesController, type: :controller do
   end
 
   describe '#update' do
-    it 'transitions the plate'
-  end
+    before(:each) do
+      Settings.purposes['stock-plate-purpose-uuid'] = stock_plate_config
+      plate_request
+    end
 
-  describe '#create' do
-    it 'does nothing'
-  end
+    let!(:state_change_request) do
+      stub_api_post('state_changes',
+        payload: {
+          'state_change' => {
+            user: user_uuid,
+            target: plate_uuid,
+            target_state: 'cancelled',
+            reason: 'Because testing',
+            customer_accepts_responsibility: 'true'
+          }
+        },
+        body: '{}') # We don't care about the response
+    end
 
-  describe '#destroy' do
-    it 'does nothing'
+    it 'transitions the plate' do
+      put :update,
+           params: {
+             id: plate_uuid,
+             state: 'cancelled',
+             reason: 'Because testing',
+             purpose_uuid: 'stock-plate-purpose-uuid',
+             customer_accepts_responsibility: true
+           },
+           session: { user_uuid: user_uuid }
+      expect(state_change_request).to have_been_made
+      expect(response).to redirect_to(search_path)
+    end
   end
 
   describe '#fail_wells' do
