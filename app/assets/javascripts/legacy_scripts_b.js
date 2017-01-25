@@ -3,107 +3,6 @@
 
   // Our robot controller
 
-  $(document).on('pageinit','#robot-verification-cytomat', function(){
-
-    $.ajaxSetup({
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      }
-    });
-
-
-    $(document).on('change','.bed', function() {
-      // When we scan in a plate
-      if (this.value === "") { this.scanPlate(); } else { this.waitPlate(); SCAPE.retrievePlate(this); };
-      $.each(this.childBeds,function(){
-        $(this).change();
-      });
-    });
-    $.extend(SCAPE, {
-      checkBeds : function() {
-        var beds, good = 0;
-        beds = $('.bed')
-        for (var i=0; i < beds.length; i+=1) {
-          if (beds[i].isBad()) {
-            SCAPE.disableActivity();
-            return false;
-          } else if (beds[i].isGood()) {
-            good += 1;
-          }
-        };
-        if (good >= 1) {
-          SCAPE.enableActivity();
-          return true
-        } else {
-          SCAPE.disableActivity();
-          return false;
-        }
-      },
-      enableActivity : function() { $('#start-robot').prop('disabled',false); },
-      disableActivity : function() { $('#start-robot').prop('disabled',true); }
-    });
-
-    $('.bed').each(function(){
-
-      this.childBeds = [];
-
-      $.extend(this, {
-        checkPlate : function(data,status) {
-          if (this.parentBed === null || data.plate.parent_plate_barcode===this.parentBed.value) {
-            this.goodPlate();
-          } else {
-            this.badPlate();
-          };
-        },
-        waitPlate : function() {
-          $(this).closest('.bed-container').removeClass('good-plate bad-plate scan-plate');
-          $(this).closest('.bed-container').addClass('wait-plate');
-          SCAPE.disableActivity();
-        },
-        scanPlate : function() {
-          $(this).closest('.bed-container').removeClass('good-plate wait-plate bad-plate');
-          $(this).closest('.bed-container').addClass('scan-plate');
-          SCAPE.disableActivity();
-          SCAPE.checkBeds();
-        },
-        badPlate : function() {
-          $(this).closest('.bed-container').removeClass('good-plate wait-plate scan-plate');
-          $(this).closest('.bed-container').addClass('bad-plate');
-          SCAPE.disableActivity();
-        },
-        goodPlate : function() {
-          $(this).closest('.bed-container').removeClass('bad-plate wait-plate scan-plate');
-          $(this).closest('.bed-container').addClass('good-plate');
-          SCAPE.checkBeds();
-        },
-        ajax: { abort : function(){} },
-        isGood : function() {
-          return $(this).closest('.bed-container').hasClass('good-plate');
-        },
-        isUnused : function() {
-          return this.value === "" && (this.parentBed === null || this.parentBed.isUnused());
-        },
-        isBad : function() {
-          return !(this.isGood()||this.isUnused());
-        },
-        addChild : function(child) {
-          this.childBeds.push(child);
-        }
-      });
-    });
-
-    $('.bed').each(function(){
-      // We need to do this in a seperate loop to ensure our child
-      // handlers are in place.
-      if (this.dataset.parent==="") {
-        this.parentBed = null;
-      } else {
-        this.parentBed = $('#bed\\['+this.dataset.parent+'\\]')[0];
-        this.parentBed.addChild(this);
-      }
-    });
-  });
-
   $.extend(SCAPE, {
     retrievePlate : function(bed) {
       bed.ajax = $.ajax({
@@ -114,8 +13,6 @@
       }).fail(function(data,status) { if (status!=='abort') {bed.badPlate();} });
     }
   })
-
-
 
   ////////////////////////////////////////////////////////////////////
   // Custom pooling...
