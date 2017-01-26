@@ -2,7 +2,6 @@
 
 module Presenters
   class QCTubePresenter < TubePresenter
-
     state_machine :state, initial: :pending do
       event :take_default_path do
         transition pending: :passed

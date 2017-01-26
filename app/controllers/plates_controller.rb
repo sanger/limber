@@ -35,6 +35,6 @@ class PlatesController < LabwareController
   end
 
   def wells_to_fail
-    params.fetch(:plate,{}).fetch(:wells,{}).select { |_, v| v == '1' }.keys
+    params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 end

@@ -15,7 +15,7 @@ feature 'Viewing a plate', js: true do
   background do
     # Set-up the plate config
     Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
-    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate', name: 'Child Purpose 0', parents: ['Limber Cherrypicked']  }
+    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate', name: 'Child Purpose 0', parents: ['Limber Cherrypicked'] }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate
