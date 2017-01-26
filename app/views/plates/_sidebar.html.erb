@@ -9,8 +9,8 @@
     <% end %>
 
     <% @presenter.control_additional_creation do -%>
-      <% @presenter.suggested_purposes do |purpose| %>
-        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, purpose: purpose }) %>
+      <% @presenter.suggested_purposes do |uuid, name| %>
+        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, uuid: uuid, name: name }) %>
       <% end %>
     <% end %>
 

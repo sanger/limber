@@ -3,19 +3,19 @@ require 'rails_helper'
 require 'pry'
 
 feature 'Viewing a plate', js: true do
-  has_a_working_api(times: 5)
+  has_a_working_api
 
   let(:user)           { json :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
+  let(:example_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
 
   # Setup stubs
   background do
     # Set-up the plate config
     Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
-    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
+    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate', name: 'Child Purpose 0', parents: ['Limber Cherrypicked']  }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate
@@ -32,6 +32,7 @@ feature 'Viewing a plate', js: true do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('Limber Cherrypicked')
+    expect(find_button('Add an empty Child Purpose 0 plate')).to be_present
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)
