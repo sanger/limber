@@ -14,7 +14,7 @@
     });
 
     var closeIcon = function() {
-      return $(document.createElement('button')).
+      return $(document.createElement('a')).
         attr('class','close').attr('aria-label','close').append(
           $(document.createElement('span')).
             attr('aria-hidden','true').text('×')
@@ -23,8 +23,6 @@
 
 
     SCAPE.robot_beds = {};
-
-    // var bed_index = 0;
 
     var newScanned = function(bed,plate){
       var new_li;
