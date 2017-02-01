@@ -39,6 +39,8 @@ FactoryGirl.define do
       pool_hash
     end
 
+    pre_cap_groups({})
+
     plate_purpose do
       {
         'actions' => { 'read' => api_root + purpose_uuid },

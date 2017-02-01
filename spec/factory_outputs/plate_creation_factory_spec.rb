@@ -20,17 +20,20 @@ describe 'plate_creation factory' do
         "parent": {
           "actions": {
             "read": "http://example.com:3000/example-parent-uuid"
-          }
+          },
+          "uuid": "example-parent-uuid"
         },
         "child": {
           "actions": {
             "read": "http://example.com:3000/child-uuid"
-          }
+          },
+          "uuid": "child-uuid"
         },
         "child_purpose": {
           "actions": {
             "read": "http://example.com:3000/example-child-purpose-uuid"
-          }
+          },
+          "uuid": "example-child-purpose-uuid"
         },
 
         "uuid": "example-plate-creation-uuid"

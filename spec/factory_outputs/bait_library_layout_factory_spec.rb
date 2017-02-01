@@ -17,7 +17,8 @@ describe 'bait library layout factory' do
         "plate": {
           "actions": {
             "read": "http://example.com:3000/plate-uuid"
-          }
+          },
+          "uuid": "plate-uuid"
         },
         "uuid": "bait-library-layout-uuid",
         "layout": {

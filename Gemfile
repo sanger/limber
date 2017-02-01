@@ -51,13 +51,14 @@ gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.g
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara'
+  gem 'factory_girl' # Generate models and json easily in tests
+  gem 'guard-rspec', require: false
+  gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'poltergeist'
-  gem 'rspec-rails'
-  gem 'rspec-json_expectations'
-  gem 'launchy'
-  gem 'factory_girl'
-  gem 'webmock'
   gem 'rails-controller-testing'
+  gem 'rspec-json_expectations'
+  gem 'rspec-rails'
+  gem 'webmock'
 end
 
 group :development do

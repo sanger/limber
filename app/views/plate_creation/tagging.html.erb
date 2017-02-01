@@ -1,21 +1,23 @@
-<%= page(:'tag-creation-page') do -%>
+<%= page(:'tag-creation-page', prevent_row: true) do -%>
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
        $.extend(SCAPE, {
         tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-        tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>,
-        tags_by_name: <%= @creation_form.tags_by_name.to_json.html_safe %>
+        tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>
        });
      })(window,jQuery);
   </script>
-
-  <%= semantic_form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent)) do |f| %>
+  <% form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
-      <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
-      <% @creation_form.tag2_field do -%>
-        <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag2 tube', :form=>f } %>
+      <%= card without_block: true, id: 'main-content' do %>
+        <div id="labware-summary-div">
+          <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
+        </div>
+        <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag plate', :form=>f} %>
+        <% @creation_form.tag2_field do -%>
+          <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag2 tube', :form=>f } %>
+        <% end %>
       <% end %>
-      <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag plate', :form=>f} %>
     <%- end -%>
 
     <%= sidebar do %>
@@ -33,21 +35,17 @@
       <% end %>
 
       <%= card title:'Set up tags' do %>
-        <%= f.inputs do %>
-          <%= f.input :purpose_uuid, as: :hidden %>
-          <%= f.input :parent_uuid, as: :hidden %>
+          <%= f.hidden_field :purpose_uuid %>
+          <%= f.hidden_field :parent_uuid %>
+          <%= f.label :tag_plate_barcode %>
+          <%= f.text_field :tag_plate_barcode, data: {'info-panel'=>'tag-plate-info', 'qcable-type'=>'IDT Tags','approved-list'=>'tag_layouts'}, class: 'form-control' %>
           <% @creation_form.tag2_field do -%>
-
               <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
-              <%= f.input :tag2_tube_barcode, input_html: {'data-info-panel'=>'tag2-tube-info', 'data-qcable-type'=>'Tag 2 Tubes', 'data-approved-list'=>'tag2s', 'class'=>'form-control'} %>
-            </div>
+              <%= f.label :tag2_tube_barcode %>
+              <%= f.text_field :tag2_tube_barcode, data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag 2 Tubes', 'approved-list'=>'tag2s'}, class: 'form-control' %>
           <% end -%>
-
-            <%= f.input :tag_plate_barcode, input_html: {'data-info-panel'=>'tag-plate-info', 'data-qcable-type'=>'IDT Tags','data-approved-list'=>'tag_layouts','class'=>'form-control'} %>
-
         <%- end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
-      <% end %>
     <%- end -%>
   <%- end -%>
 <%- end -%>

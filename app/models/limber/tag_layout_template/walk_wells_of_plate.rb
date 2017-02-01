@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Limber::TagLayoutTemplate::WalkWellsOfPlate
-  def generate_tag_layout(plate, tagged_wells)
+  def generate_tag_layout(plate, tagged_wells = {})
     tags = tag_ids
     group = []
     groups = group_wells_of_plate(plate).each { |g| group.concat(g) }
@@ -11,5 +11,7 @@ module Limber::TagLayoutTemplate::WalkWellsOfPlate
       throw :unacceptable_tag_layout if tags.size <= index
       tagged_wells[well] = [pools.index(pool_id) + 1, tags[index]] unless well.nil?
     end
+
+    tagged_wells
   end
 end

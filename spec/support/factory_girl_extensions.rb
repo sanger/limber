@@ -47,7 +47,8 @@ module FactoryGirl
       names.each do |association|
         send(association) do
           {
-            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, api_root + send(association + '_uuid')] }]
+            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, api_root + send(association + '_uuid')] }],
+            'uuid'    => send(association + '_uuid')
           }
         end
       end
