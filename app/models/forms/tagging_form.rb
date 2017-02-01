@@ -24,12 +24,12 @@ module Forms
 
     def tag_plate=(params)
       return nil if params.blank?
-      @tag_plate = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def tag2_tube=(params)
       return nil if params.blank?
-      @tag2_tube = QcableObject.new(params[:asset_uuid],params[:template_uuid])
+      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def initialize(*args, &block)
@@ -137,7 +137,7 @@ module Forms
 
     def tags_by_column(layout)
       swl = layout.generate_tag_layout(plate)
-      swl.to_a.sort_by { |well,pool_info| WellHelpers.index_of(well) }
+      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well) }
     end
 
     def available_tag2s

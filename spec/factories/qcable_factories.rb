@@ -30,10 +30,10 @@ FactoryGirl.define do
     with_has_many_association 'qcables'
     with_belongs_to_associations 'lot_type', 'template'
 
-    lot_number "123435"
-    lot_type_name "IDT Tags"
-    received_at "2014-03-27"
-    template_name "Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)"
+    lot_number '123435'
+    lot_type_name 'IDT Tags'
+    received_at '2014-03-27'
+    template_name 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
 
     factory :tag_lot do
       lot_type_uuid 'tag-lot-type-uuid'
@@ -41,7 +41,7 @@ FactoryGirl.define do
     end
     factory :tag2_lot do
       lot_type_uuid 'tag2-lot-type-uuid'
-      lot_type_name "Tag 2 Tubes"
+      lot_type_name 'Tag 2 Tubes'
       template_uuid 'tag2-layout-template-uuid'
     end
   end
@@ -50,20 +50,20 @@ FactoryGirl.define do
     json_root 'lot_type'
     with_has_many_association 'lots'
     name 'Lot type'
-    printer_type "96 Well Plate"
-    qcable_name "Tag Plate"
-    template_class "TagLayoutTemplate"
+    printer_type '96 Well Plate'
+    qcable_name 'Tag Plate'
+    template_class 'TagLayoutTemplate'
 
     factory :tag_lot_type do
       uuid 'tag-lot-type-uuid'
-      qcable_name "Tag Plate"
-      template_class "TagLayoutTemplate"
+      qcable_name 'Tag Plate'
+      template_class 'TagLayoutTemplate'
     end
 
     factory :tag2_lot_type do
       uuid 'tag2-lot-type-uuid'
-      qcable_name "Tag 2 Tube"
-      template_class "Tag2LayoutTemplate"
+      qcable_name 'Tag 2 Tube'
+      template_class 'Tag2LayoutTemplate'
     end
   end
 end

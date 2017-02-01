@@ -85,16 +85,14 @@ describe Forms::TaggingForm do
 
       let(:layout_hash) do
         WellHelpers.column_order.each_with_index.map do |w, i|
-           pool = (i < 8) ? 1 : 2
-           [w, [pool,i+1]]
+          pool = i < 8 ? 1 : 2
+          [w, [pool, i + 1]]
         end
       end
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
-        expect(subject.tag_groups).to eq({
-          "tag-layout-template-0" => layout_hash,
-          "tag-layout-template-1" => layout_hash
-          })
+        expect(subject.tag_groups).to eq('tag-layout-template-0' => layout_hash,
+                                         'tag-layout-template-1' => layout_hash)
       end
     end
 
