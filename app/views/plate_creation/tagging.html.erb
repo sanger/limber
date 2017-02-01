@@ -35,17 +35,17 @@
       <% end %>
 
       <%= card title:'Set up tags' do %>
-          <%= f.hidden_field :purpose_uuid %>
-          <%= f.hidden_field :parent_uuid %>
-          <%= f.label :tag_plate_barcode %>
-          <%= f.text_field :tag_plate_barcode, data: {'info-panel'=>'tag-plate-info', 'qcable-type'=>'IDT Tags','approved-list'=>'tag_layouts'}, class: 'form-control' %>
-          <% @creation_form.tag2_field do -%>
-              <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
-              <%= f.label :tag2_tube_barcode %>
-              <%= f.text_field :tag2_tube_barcode, data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag 2 Tubes', 'approved-list'=>'tag2s'}, class: 'form-control' %>
-          <% end -%>
-        <%- end -%>
+        <%= f.hidden_field :purpose_uuid %>
+        <%= f.hidden_field :parent_uuid %>
+        <%= f.label :tag_plate_barcode %>
+        <%= f.text_field :tag_plate_barcode, data: {'info-panel'=>'tag-plate-info', 'qcable-type'=>'IDT Tags','approved-list'=>'tag_layouts'}, class: 'form-control' %>
+        <% @creation_form.tag2_field do -%>
+            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+            <%= f.label :tag2_tube_barcode %>
+            <%= f.text_field :tag2_tube_barcode, data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag 2 Tubes', 'approved-list'=>'tag2s'}, class: 'form-control' %>
+        <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
+      <%- end -%>
     <%- end -%>
   <%- end -%>
 <%- end -%>

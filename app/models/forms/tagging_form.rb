@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Forms
   class TaggingForm < CreationForm
     include Forms::Form::CustomPage
@@ -51,8 +50,7 @@ module Forms
     end
 
     def tag_groups
-      generate_layouts_and_groups if @tag_groups.nil?
-      @tag_groups
+      @tag_groups ||= generate_tag_groups
     end
 
     def tag2s
@@ -60,7 +58,7 @@ module Forms
     end
 
     def tag2_names
-      tag2s.values.flatten.map(&:name)
+      tag2s.values.map(&:name)
     end
 
     def child
@@ -130,11 +128,6 @@ module Forms
       end
     end
 
-    def tag_layout_templates
-      generate_layouts_and_groups if @tag_layout_templates.nil?
-      @tag_layout_templates
-    end
-
     def tags_by_column(layout)
       swl = layout.generate_tag_layout(plate)
       swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well) }
@@ -143,7 +136,7 @@ module Forms
     def available_tag2s
       api.tag2_layout_template.all.reject do |template|
         used_tag2s.include?(template.uuid)
-      end.group_by(&:uuid)
+      end.index_by(&:uuid)
     end
 
     def used_tag2s
@@ -152,27 +145,21 @@ module Forms
       end
     end
 
-    def used_tag2s
-      @used_tag2s ||= plate.submission_pools.map { |pool| pool.used_tag2_layout_templates.map { |used| used['uuid'] } }.flatten.uniq
-    end
-
-    def generate_layouts_and_groups
-      @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select do |template|
+    def tag_layout_templates
+      api.tag_layout_template.all.map(&:coerce).select do |template|
         acceptable_template?(template) &&
           template.tag_group.tags.size >= maximum_pool_size
       end
+    end
 
-      @tag_groups = Hash[
-        tag_layout_templates.map do |layout|
-          catch(:unacceptable_tag_layout) { [layout.uuid, tags_by_column(layout)] }
-        end.compact
-      ]
-
-      @tag_layout_templates.delete_if { |template| !@tag_groups.key?(template.name) }
+    def generate_tag_groups
+      tag_layout_templates.each_with_object({}) do |layout, hash|
+        catch(:unacceptable_tag_layout) { hash[layout.uuid] = tags_by_column(layout) }
+      end
     end
 
     def maximum_pool_size
-      @maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max || 0
+      @maximum_pool_size ||= plate.pools.map(&:last).map { |pool| pool['wells'].size }.max || 0
     end
   end
 end
