@@ -19,7 +19,7 @@ class Settings
     def instance
       return @instance if @instance.present?
 
-      @instance = Hashie::Mash.new(YAML.load(eval(ERB.new(File.read(configuration_filename)).src, nil, configuration_filename)))
+      @instance = Hashie::Mash.new(YAML.safe_load(eval(ERB.new(File.read(configuration_filename)).src, nil, configuration_filename)))
     rescue => exception
       star_length = [96, 12 + configuration_filename.length].max
       $stderr.puts('*' * star_length)

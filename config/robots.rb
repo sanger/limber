@@ -26,13 +26,12 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   custom_robot('bravo-lb-end-prep',
-              name: 'bravo LB End Prep',
-              layout: 'bed',
-              verify_robot: true,
-              beds: {
-                robot_scope.bed(14).barcode  => { purpose: 'LB End Prep',    states: ['started'],  label: 'Bed 14', target_state: 'passed' }
-              }
-            )
+               name: 'bravo LB End Prep',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 robot_scope.bed(14).barcode => { purpose: 'LB End Prep', states: ['started'], label: 'Bed 14', target_state: 'passed' }
+               })
 
   bravo_robot do
     from 'LB End Prep', bed(14)

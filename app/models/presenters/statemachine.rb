@@ -65,7 +65,7 @@ module Presenters::Statemachine
 
     # Eventually this will end up on our forms/creations module
     def purposes_of_type(type)
-      Settings.purposes.select { |uuid,purpose| purpose.asset_type == type }
+      Settings.purposes.select { |_uuid, purpose| purpose.asset_type == type }
     end
   end
 

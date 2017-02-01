@@ -68,7 +68,6 @@ module ApiUrlHelper
     def stub_api_put(*components, body:, payload:)
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
-
   end
 end
 

@@ -1,12 +1,12 @@
+# frozen_string_literal: true
 class PlateMetadata
-
   include ActiveModel::Model
 
   attr_accessor :plate, :api, :created_with_robot, :user
 
-  validates_presence_of :api, :plate, :user
+  validates :api, :plate, :user, presence: true
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     super
   end
 
@@ -19,21 +19,18 @@ class PlateMetadata
   end
 
   def update
-    unless plate.custom_metadatum_collection.uuid.present?
-      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: {created_with_robot: created_with_robot})
-    else
+    if plate.custom_metadatum_collection.uuid.present?
       metadata = plate.custom_metadatum_collection.metadata
       plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(created_with_robot: created_with_robot))
+    else
+      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: { created_with_robot: created_with_robot })
     end
   end
 
-private
+  private
 
   def find_plate(plate_barcode)
-    begin
-      @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: plate_barcode)
-    rescue Sequencescape::Api::ResourceNotFound
-    end
+    @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: plate_barcode)
+  rescue Sequencescape::Api::ResourceNotFound
   end
-
 end

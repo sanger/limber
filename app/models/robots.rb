@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "pry"
+require 'pry'
 
 module Robots
   class Robot
@@ -178,11 +178,11 @@ module Robots
 
       if verify_robot? && beds.values.first.plate.present?
         if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
-          error_messages << "Your plate is not on the right robot"
-          verified.merge!("robot" => false)
-        elsif (beds.values.first.plate.custom_metadatum_collection.metadata["created_with_robot"] != robot_barcode)
-          error_messages << "Your plate is not on the right robot"
-          verified.merge!("robot" => false)
+          error_messages << 'Your plate is not on the right robot'
+          verified['robot'] = false
+        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
+          error_messages << 'Your plate is not on the right robot'
+          verified['robot'] = false
         end
       end
 

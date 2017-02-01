@@ -24,7 +24,7 @@ FactoryGirl.define do
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
                                'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
-                               
+
     pools do
       wells = WellHelpers.column_order.dup
       pool_hash = {}
@@ -67,7 +67,6 @@ FactoryGirl.define do
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
       end
-
     end
   end
 end
