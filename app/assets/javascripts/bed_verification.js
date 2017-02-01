@@ -39,13 +39,13 @@
         append(
           $(document.createElement('a')).
           attr('href','#').
-          attr('class','list-group-item-action')
-          .append(
+          attr('class','list-group-item-action').
+          append(
             $(document.createElement('h3')).
             attr('class',"ui-li-heading").
             text('Robot: '+robot)
-            )
-          .append(
+          ).
+          append(
             $(document.createElement('h3')).
             attr('class',"ui-li-heading").
             text('Bed: '+bed)
