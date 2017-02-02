@@ -16,8 +16,12 @@
     </div>
   </div>
 
+  <div id="validation_report"></div>
+  <%= card title: 'Robot', without_block: true do -%>
+    <div id="robot" class="bed form-control"></div>
+    <input type="hidden" id="robot_barcode" name="robot_barcode" value="">
+  <%- end %>
   <%= card title: 'Scanned Beds', without_block: true do -%>
-    <div id="validation_report"></div>
     <ul id='bed_list' class="list-group list-group-flush">
     </ul>
   <%- end %>

@@ -25,7 +25,7 @@ describe RobotsController, type: :controller do
       stub = stub_api_post('custom_metadatum_collections',
                            payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
                            body: json(:custom_metadatum_collection))
-      post :start, params: { bed: { 'bed1_barcode' => ['source_plate_barcode'], 'bed2_barcode' => ['target_plate_barcode'] }, robot_scan: 'robot_barcode', id: 'robot_id' }, session: { user_uuid: user_uuid }
+      post :start, params: { bed: { 'bed1_barcode' => ['source_plate_barcode'], 'bed2_barcode' => ['target_plate_barcode'] }, robot_barcode: 'robot_barcode', id: 'robot_id' }, session: { user_uuid: user_uuid }
       expect(stub).to have_been_requested
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
@@ -49,7 +49,7 @@ describe RobotsController, type: :controller do
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => target_plate_barcode } }, target_plate)
       stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_plate_barcode } }, source_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with({ 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, 'abc')
-      post :verify, params: { beds: { 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, robot_scan: 'abc', id: 'robot_id' }, session: { user_uuid: user_uuid }, headers: { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
+      post :verify, params: { beds: { 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, robot_barcode: 'abc', id: 'robot_id' }, session: { user_uuid: user_uuid }, headers: { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
     end
   end
 end

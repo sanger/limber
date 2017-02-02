@@ -47,26 +47,31 @@ feature 'Plate transfer', js: true do
     click_button('Robots')
     click_link 'bravo LB Post Shear => LB End Prep'
     expect(page).to have_content('bravo LB Post Shear => LB End Prep')
-    fill_in 'Scan robot', with: robot_barcode
+    fill_in 'Scan robot', with: '123'
+    within('#robot') do
+      expect(page).to have_content("123")
+    end
     fill_in 'Scan bed', with: '580000004838'
     fill_in 'Scan plate', with: plate_barcode_1
-
     within('#bed_list') do
-      expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
     end
-
+    fill_in 'Scan robot', with: robot_barcode
+    within('#robot') do
+      expect(page).not_to have_content("123")
+      expect(page).to have_content("#{robot_barcode}")
+    end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
-      expect(page).to have_content("Robot: #{robot_barcode}", count: 2)
+      expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
       expect(page).to have_content("Plate: #{plate_barcode_2}")
       expect(page).to have_content('Bed: 580000014851')
     end
-
     click_link('Validate Layout')
     within '#validation_report' do
       expect(page).to have_content('No problems detected!')
@@ -88,15 +93,16 @@ feature 'Plate transfer', js: true do
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
     fill_in 'Scan robot', with: robot_barcode
+    within('#robot') do
+      expect(page).to have_content("#{robot_barcode}")
+    end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_1
-
     within('#bed_list') do
-      expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end
-
     click_link('Validate Layout')
     within '#validation_report' do
       expect(page).to have_content('There were problems: Your plate is not on the right robot')
@@ -115,11 +121,13 @@ feature 'Plate transfer', js: true do
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
     fill_in 'Scan robot', with: robot_barcode
+    within('#robot') do
+      expect(page).to have_content("#{robot_barcode}")
+    end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_1
-
     within('#bed_list') do
-      expect(page).to have_content("Robot: #{robot_barcode}")
+      expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end

@@ -23,15 +23,14 @@
 
 
     SCAPE.robot_beds = {};
-    SCAPE.robot_scan = '';
+    SCAPE.robot_barcode = '';
 
     // var bed_index = 0;
 
-    var newScanned = function(bed,plate,robot){
+    var newScanned = function(bed,plate){
       var new_li;
       // $('#whole\\['+bed+'\\]').detach();
       new_li = $(document.createElement('li')).
-        attr('data-robot',robot).
         attr('data-bed',bed).
         attr('data-labware',plate).
         attr('class','list-group-item list-group-item-action').
@@ -40,11 +39,6 @@
           $(document.createElement('a')).
           attr('href','#').
           attr('class','list-group-item-action').
-          append(
-            $(document.createElement('h3')).
-            attr('class',"ui-li-heading").
-            text('Robot: '+robot)
-          ).
           append(
             $(document.createElement('h3')).
             attr('class',"ui-li-heading").
@@ -63,6 +57,12 @@
       SCAPE.robot_beds[bed].push(plate);
       $('#start-robot').prop('disabled',true);
       $('#bed_list').append(new_li);
+    }
+
+    var newRobotScanned = function(robot_barcode){
+      $('#robot').text('Robot: ' + robot_barcode);
+      $('#robot_barcode').val(robot_barcode)
+      SCAPE.robot_barcode = robot_barcode
     }
 
     var removeEntry = function() {
@@ -120,7 +120,13 @@
       this.value = "";
       $('#bed_scan').val("");
       $('#bed_scan').focus();
-      newScanned(bed_barcode,plate_barcode,robot_barcode);
+      newScanned(bed_barcode,plate_barcode);
+    });
+
+    $('#robot_scan').on('change', function(){
+      var robot_barcode;
+      robot_barcode = this.value
+      newRobotScanned(robot_barcode);
     });
 
     $('#validate_layout').on('click',function(){
@@ -129,7 +135,7 @@
           dataType: "json",
           url: window.location.pathname+'/verify',
           type: 'POST',
-          data: {"beds" : SCAPE.robot_beds, "robot_scan" : SCAPE.robot_scan },
+          data: {"beds" : SCAPE.robot_beds, "robot_barcode" : SCAPE.robot_barcode },
           success: function(data,status) { checkResponse(data); }
         }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','danger'); fail(); });
     })
