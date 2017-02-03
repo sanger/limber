@@ -133,7 +133,7 @@ module Presenters::Statemachine
         end
 
         state :started do
-          include StateAllowsChildCreation
+          include StateDoesNotAllowChildCreation
         end
 
         state :passed do

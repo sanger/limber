@@ -36,7 +36,7 @@ module ContractHelper
       end
     end
 
-    def response(contract_name, times: 1)
+    def response(contract_name, times: nil)
       contract(contract_name) do |file|
         @times = times
         @content = file.read
