@@ -3,7 +3,7 @@ require_relative '../purpose_config'
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
-  require "#{Rails.root}/config/robots.rb"
+  require Rails.root.join('config', 'robots')
 
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
@@ -80,7 +80,7 @@ namespace :config do
     end
 
     # Write out the current environment configuration file
-    File.open(File.join(Rails.root, %w(config settings), "#{Rails.env}.yml"), 'w') do |file|
+    File.open(Rails.root.join('config', 'settings', "#{Rails.env}.yml"), 'w') do |file|
       file.puts(CONFIG.to_yaml)
     end
   end

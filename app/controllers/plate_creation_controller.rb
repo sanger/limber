@@ -7,7 +7,6 @@ class PlateCreationController < CreationController
 
   def new
     @creation_form = create_form(params.merge(parent_uuid: params[:limber_plate_id]))
-
     respond_to do |format|
       format.html { @creation_form.render(self) }
     end
@@ -27,12 +26,11 @@ class PlateCreationController < CreationController
 
   def create
     @creation_form = create_form(params[:plate])
-
     @creation_form.save!
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
     end
-  rescue => exception
+  rescue Sequencescape::Api::ResourceInvalid => exception
     Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 

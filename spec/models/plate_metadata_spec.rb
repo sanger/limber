@@ -31,7 +31,6 @@ describe PlateMetadata do
     it 'is not valid without plate' do
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 123 } }, plate)
       expect(PlateMetadata.new(api: api, plate: 123, user: user_uuid)).to be_valid
-      plate_metadata = PlateMetadata.new(api: api, plate: 123, user: user_uuid)
       expect(PlateMetadata.new(api: api, user: user_uuid)).to_not be_valid
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 456 } }, nil)
       expect(PlateMetadata.new(api: api, plate: 456, user: user_uuid)).to_not be_valid

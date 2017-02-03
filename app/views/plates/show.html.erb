@@ -9,16 +9,18 @@
   </script>
 
   <%= content do %>
-    <%= card without_block: true do %>
+    <%= card without_block: true, id: 'main-content' do %>
       <div class="card-block">
         <h2 id="plate-title" class="card-title">
           <%= @presenter.title %>
-          <span class="tag tag-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
+          <span class="badge badge-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
         </h2>
       </div>
-
-      <div id="labware-summary">
+      <div id="labware-well-failing" class='collapse'>
+        <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
+      </div>
+      <div id="labware-summary" class='collapse show'>
         <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
       </div>
     <% end %>

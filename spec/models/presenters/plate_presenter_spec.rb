@@ -47,7 +47,7 @@ describe Presenters::PlatePresenter do
   end
 
   it 'returns label attributes' do
-    expected_label = { top_left: Date.today.strftime('%e-%^b-%Y'),
+    expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                        bottom_left: 'DN 1',
                        top_right: 'DN2',
                        bottom_right: 'Limber Cherrypicked',

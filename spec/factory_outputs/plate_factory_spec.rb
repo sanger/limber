@@ -13,7 +13,6 @@ describe 'plate factory' do
          label: { "prefix": 'RNA-seq dUTP eukaryotic PCR', "text": 'ILC Stock' },
          location: 'Library creation freezer',
          pool_sizes: [8, 8],
-         pre_cap_groups: {},
          priority: 0,
          stock_plate: {
            "barcode": {

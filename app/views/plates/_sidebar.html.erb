@@ -9,8 +9,8 @@
     <% end %>
 
     <% @presenter.control_additional_creation do -%>
-      <% @presenter.suggested_purposes do |purpose| %>
-        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, purpose: purpose }) %>
+      <% @presenter.suggested_purposes do |uuid, name| %>
+        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, uuid: uuid, name: name }) %>
       <% end %>
     <% end %>
 
@@ -68,7 +68,11 @@
     <% end %>
 
     <% if @presenter.well_failing_applicable? %>
-      <button class='btn btn-lg btn-block btn-danger'>Fail Wells</button>
+      <button class='btn btn-lg btn-block btn-danger'
+        data-toggle="collapse"
+        data-parent="#main-content"
+        href="#labware-well-failing"
+        aria-controls="labware-well-failing">Fail Wells</button>
     <% end %>
 
     <% presenter.control_library_passing do %>

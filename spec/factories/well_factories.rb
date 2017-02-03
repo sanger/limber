@@ -31,11 +31,14 @@ FactoryGirl.define do
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}#{plate_uuid}/wells/1" }
       uuid nil
+      default_state 'pending'
+      custom_state({})
     end
 
     wells do
       locations.each_with_index.map do |location, i|
-        associated(:well, location: location, uuid: "example-well-uuid-#{i}")
+        state = custom_state[location] || default_state
+        associated(:well, location: location, uuid: "example-well-uuid-#{i}", state: state)
       end
     end
   end

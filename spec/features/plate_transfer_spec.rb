@@ -15,7 +15,7 @@ feature 'Plate transfer', js: true do
   let(:example_plate)     { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
   let(:example_plate_without_metadata) { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
   let(:example_plate_with_metadata) { json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
-  let(:settings) { YAML.load_file(File.join(Rails.root, 'spec', 'data', 'settings.yml')).with_indifferent_access }
+  let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
 
   # Setup stubs
   background do
@@ -36,9 +36,17 @@ feature 'Plate transfer', js: true do
     stub_custom_metdatum_collections_post = stub_api_post('custom_metadatum_collections',
                                                           payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
                                                           body: json(:custom_metadatum_collection))
-    stub_state_changes_post = stub_api_post('state_changes',
-                                            payload: { state_change: { target_state: 'started', reason: 'Robot bravo LB Post Shear => LB End Prep started', customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid } },
-                                            body: json(:state_change, target_state: 'started'))
+    stub_state_changes_post = stub_api_post(
+      'state_changes',
+      payload: {
+        state_change: {
+          target_state: 'started',
+          reason: 'Robot bravo LB Post Shear => LB End Prep started',
+          customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
+        }
+      },
+      body: json(:state_change, target_state: 'started')
+    )
 
     fill_in_swipecard_and_barcode(swipecard)
 
@@ -49,7 +57,7 @@ feature 'Plate transfer', js: true do
     expect(page).to have_content('bravo LB Post Shear => LB End Prep')
     fill_in 'Scan robot', with: '123'
     within('#robot') do
-      expect(page).to have_content("123")
+      expect(page).to have_content('123')
     end
     fill_in 'Scan bed', with: '580000004838'
     fill_in 'Scan plate', with: plate_barcode_1
@@ -60,8 +68,8 @@ feature 'Plate transfer', js: true do
     end
     fill_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).not_to have_content("123")
-      expect(page).to have_content("#{robot_barcode}")
+      expect(page).not_to have_content('123')
+      expect(page).to have_content(robot_barcode.to_s)
     end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_2
@@ -94,7 +102,7 @@ feature 'Plate transfer', js: true do
     expect(page).to have_content('bravo LB End Prep')
     fill_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).to have_content("#{robot_barcode}")
+      expect(page).to have_content(robot_barcode.to_s)
     end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_1
@@ -122,7 +130,7 @@ feature 'Plate transfer', js: true do
     expect(page).to have_content('bravo LB End Prep')
     fill_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).to have_content("#{robot_barcode}")
+      expect(page).to have_content(robot_barcode.to_s)
     end
     fill_in 'Scan bed', with: '580000014851'
     fill_in 'Scan plate', with: plate_barcode_1

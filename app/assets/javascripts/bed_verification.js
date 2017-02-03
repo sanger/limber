@@ -14,7 +14,7 @@
     });
 
     var closeIcon = function() {
-      return $(document.createElement('button')).
+      return $(document.createElement('a')).
         attr('class','close').attr('aria-label','close').append(
           $(document.createElement('span')).
             attr('aria-hidden','true').text('×')
@@ -24,8 +24,6 @@
 
     SCAPE.robot_beds = {};
     SCAPE.robot_barcode = '';
-
-    // var bed_index = 0;
 
     var newScanned = function(bed,plate){
       var new_li;
@@ -78,7 +76,7 @@
     var checkResponse = function(response) {
       if ($('#bed_list').children().length===0) {
         // We don't have any content
-        $('#loadingModal').modal('hide');
+        $('#loadingModal').fadeOut(100);
       } else if (response.valid) {
         pass();
       } else {
@@ -97,17 +95,17 @@
     }
 
     var wait = function() {
-      $('#loadingModal').modal({backdrop: 'static', keyboard: false});
+      $('#loadingModal').fadeIn(100);
     }
 
     var pass = function() {
-      $('#loadingModal').modal('hide');
+      $('#loadingModal').fadeOut(100);
       SCAPE.message('No problems detected!','success');
       $('#start-robot').prop('disabled',false);
     }
 
     var fail = function() {
-      $('#loadingModal').modal('hide');
+      $('#loadingModal').fadeOut(100);
       $('#start-robot').prop('disabled',true);
     }
 

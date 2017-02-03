@@ -2,29 +2,20 @@
 
 module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
-    def control_child_plate_creation(&block)
-      # Does nothing because you can't!
-    end
-
     def control_additional_creation(&block)
       # Does nothing because you can't!
     end
 
     def suggested_purposes; end
 
-    def compatible_purposes; end
+    def compatible_plate_purposes; end
+
+    def compatible_tube_purposes; end
   end
 
   module StateAllowsChildCreation
-    # Yields to the block if there are child plates that can be created from the current one.
-    # It passes the valid child plate purposes to the block.
-    def control_child_plate_creation
-      yield unless default_child_purpose.nil?
-      nil
-    end
-
     def control_additional_creation
-      yield unless default_child_purpose.nil?
+      yield
       nil
     end
 
@@ -40,14 +31,9 @@ module Presenters::Statemachine
     end
 
     def suggested_purposes
-      labware.plate_purpose.children.each do |purpose|
-        yield purpose
-      end
-    end
-
-    def compatible_purposes
-      Settings.purposes.each do |uuid, hash|
-        yield uuid, hash['name']
+      Settings.purposes.each do |uuid, purpose_settings|
+        next unless purpose_settings.parents && purpose_settings.parents.include?(labware.plate_purpose.name)
+        yield uuid, purpose_settings.name
       end
     end
 

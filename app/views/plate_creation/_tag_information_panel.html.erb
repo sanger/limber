@@ -11,8 +11,8 @@
     <dd class="col-sm-9 state">...</dd>
   </dl>
   </div>
-  <%= form.semantic_fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
-    <%= qcable.input :asset_uuid,    label: false, as: :hidden, :required=> true, input_html: {class: 'asset_uuid'} %>
-    <%= qcable.input :template_uuid, label: false, as: :hidden, :required=> true, input_html: {class: 'template_uuid'} %>
+  <%= form.fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
+    <%= qcable.hidden_field :asset_uuid,    required: true, class: 'asset_uuid' %>
+    <%= qcable.hidden_field :template_uuid, required: true, class: 'template_uuid' %>
   <% end %>
 </div>

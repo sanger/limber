@@ -33,7 +33,6 @@ class Limber::Plate < Sequencescape::Plate
   # We know that if there are any transfers with this plate as a source then they are into
   # tubes.
   def transfers_to_tubes?
-    # Caution: using present? here results in an additional api call.
     transfers_to_tubes.present?
   end
 

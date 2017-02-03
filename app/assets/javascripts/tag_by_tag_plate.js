@@ -61,7 +61,7 @@
       var qc_lookup = this, status;
       this.inputBox = barcodeBox;
       this.infoPanelId = $('#'+barcodeBox.data('info-panel'));
-      // this.qcableType  = barcodeBox.data('qcable-type');
+      this.qcableType  = barcodeBox.data('qcable-type');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
       this.required = this.inputBox.parents('.required').length > 0;
       this.inputBox.on('change',function(){
@@ -126,7 +126,7 @@
         this.errors = '';
 
         if (qcable.state !== 'available') { this.errors += ' The scanned item is not available.' };
-        // if (qcable.type  !== this.qcableType ) { this.errors += ' The scanned item is not a(n) ' + this.qcableType + '.' };
+        if (qcable.type  !== this.qcableType ) { this.errors += ' The scanned item is not a(n) ' + this.qcableType + '.' };
         this.validateTemplate(qcable);
         return this.errors === '';
       },

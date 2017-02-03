@@ -61,6 +61,10 @@ module LabwareHelper
     'good'
   end
 
+  def failable?(container)
+    container.state == 'passed'
+  end
+
   def colours_by_location
     return @location_colours if @location_colours.present?
 
@@ -79,7 +83,7 @@ module LabwareHelper
     (location = well.try(:location)) || return
     (column = location.match(/^[A-H](\d[0-2]?)$/).try(:[], 1)) || return
 
-    "col-#{column}"
+    "plate-col-#{column}"
   end
 
   def plates_by_state(plates)
