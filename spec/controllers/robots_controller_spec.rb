@@ -5,7 +5,7 @@ require './app/controllers/robots_controller'
 describe RobotsController, type: :controller do
   include FeatureHelpers
 
-  let(:settings) { YAML.load_file(File.join(Rails.root, 'spec', 'data', 'settings.yml')).with_indifferent_access }
+  let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
 
   describe '#start' do
     has_a_working_api
@@ -19,9 +19,9 @@ describe RobotsController, type: :controller do
       Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
       Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'target_plate_barcode' } }, plate)
-      stub = stub_api_post('state_changes',
-                           payload: { state_change: { 'target_state' => 'passed', 'reason' => 'Robot robot_name started', 'customer_accepts_responsibility' => false, 'target' => 'plate_uuid', 'user' => user_uuid } },
-                           body: json(:state_change))
+      stub_api_post('state_changes',
+                    payload: { state_change: { 'target_state' => 'passed', 'reason' => 'Robot robot_name started', 'customer_accepts_responsibility' => false, 'target' => 'plate_uuid', 'user' => user_uuid } },
+                    body: json(:state_change))
       stub = stub_api_post('custom_metadatum_collections',
                            payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
                            body: json(:custom_metadatum_collection))
@@ -49,7 +49,17 @@ describe RobotsController, type: :controller do
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => target_plate_barcode } }, target_plate)
       stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_plate_barcode } }, source_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with({ 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, 'abc')
-      post :verify, params: { beds: { 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, robot_barcode: 'abc', id: 'robot_id' }, session: { user_uuid: user_uuid }, headers: { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
+      post :verify,
+           params: {
+             beds: {
+               'bed1_barcode' => [source_plate_barcode],
+               'bed2_barcode' => [target_plate_barcode]
+             },
+             robot_barcode: 'abc',
+             id: 'robot_id'
+           },
+           session: { user_uuid: user_uuid },
+           headers: { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
     end
   end
 end

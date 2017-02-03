@@ -76,7 +76,7 @@
     var checkResponse = function(response) {
       if ($('#bed_list').children().length===0) {
         // We don't have any content
-        $('#loadingModal').modal('hide');
+        $('#loadingModal').fadeOut(100);
       } else if (response.valid) {
         pass();
       } else {

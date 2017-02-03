@@ -32,5 +32,6 @@ class PlateMetadata
   def find_plate(plate_barcode)
     @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: plate_barcode)
   rescue Sequencescape::Api::ResourceNotFound
+    @plate = nil
   end
 end
