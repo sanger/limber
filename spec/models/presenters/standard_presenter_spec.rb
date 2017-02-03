@@ -15,7 +15,7 @@ describe Presenters::StandardPresenter do
 
   let(:expect_child_purpose_requests) do
     stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    stub_api_get('stock-plate-purpose-uuid','children', body: json(:plate_purpose_collection, size: 1))
+    stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
   end
 
   context 'when pending' do

@@ -45,7 +45,7 @@ namespace :config do
       end
 
       configuration[:purposes] = {}.tap do |labware_purposes|
-        puts "Preparing purpose configs..."
+        puts 'Preparing purpose configs...'
         purpose_config.each do |purpose|
           labware_purposes[purpose.uuid] = purpose.config
         end

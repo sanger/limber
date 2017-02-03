@@ -59,12 +59,12 @@ describe Forms::PoolTubesBySubmissionForm do
 
     let!(:transfer_creation_request) do
       stub_api_post('transfer-to-wells-by-submission-uuid',
-        payload: { transfer: {
-          targets: { 'pool-1-uuid' => 'tube-0', 'pool-2-uuid' => 'tube-1' },
-          source: parent_uuid,
-          user: user_uuid
-        }},
-        body: '{}')
+                    payload: { transfer: {
+                      targets: { 'pool-1-uuid' => 'tube-0', 'pool-2-uuid' => 'tube-1' },
+                      source: parent_uuid,
+                      user: user_uuid
+                    } },
+                    body: '{}')
     end
 
     it 'pools by submission' do

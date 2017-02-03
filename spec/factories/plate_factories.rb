@@ -63,6 +63,10 @@ FactoryGirl.define do
       purpose_name 'Limber Cherrypicked'
       purpose_uuid 'stock-plate-purpose-uuid'
       stock_plate { { barcode: barcode, uuid: uuid } }
+
+      factory :stock_plate_with_metadata do
+        with_belongs_to_associations 'custom_metadatum_collection'
+      end
     end
   end
 end
