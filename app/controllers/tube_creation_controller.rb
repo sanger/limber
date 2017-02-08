@@ -6,7 +6,7 @@ class TubeCreationController < CreationController
   end
 
   def new
-    @creation_form = create_form(params.merge(parent_uuid: params[:sequencescape_tube_id]))
+    @creation_form = create_form(params.merge(parent_uuid: params[:limber_tube_id]))
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
@@ -18,7 +18,7 @@ class TubeCreationController < CreationController
     respond_to do |format|
       format.html do
         redirect_to(
-          sequencescape_tube_path(@creation_form.parent),
+          limber_tube_path(@creation_form.parent),
           alert: ["Cannot create tube: #{exception.message}", *exception.resource.errors.full_messages]
         )
       end
@@ -26,7 +26,7 @@ class TubeCreationController < CreationController
   end
 
   def create
-    @creation_form = create_form(params[:tube].reverse_merge(parent_uuid: params[:sequencescape_tube_id]))
+    @creation_form = create_form(params[:tube].reverse_merge(parent_uuid: params[:limber_tube_id]))
 
     @creation_form.save!
     respond_to do |format|
@@ -39,7 +39,7 @@ class TubeCreationController < CreationController
     respond_to do |format|
       format.html do
         redirect_to(
-          sequencescape_tube_path(@creation_form.parent),
+          limber_tube_path(@creation_form.parent),
           alert: "Cannot create tube: #{exception.message}"
         )
       end
