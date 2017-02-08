@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'pry'
-
 module Robots
   class Robot
     include Forms::Form

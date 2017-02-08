@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'rails_helper'
-require 'pry'
 require_relative '../support/shared_tagging_examples'
 
 feature 'Creating a tag plate', js: true do

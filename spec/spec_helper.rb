@@ -27,6 +27,13 @@ require 'capybara/rspec'
 require 'capybara/poltergeist'
 require 'webmock/rspec'
 
+begin
+  require 'pry'
+rescue LoadError => e
+  # We don't have pry. We're probably on Travis.
+  nil
+end
+
 Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = 15
 

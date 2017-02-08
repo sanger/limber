@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'rails_helper'
-require 'pry'
 
 feature 'Plate transfer', js: true do
   has_a_working_api
