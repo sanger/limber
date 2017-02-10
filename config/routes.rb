@@ -46,12 +46,6 @@ Rails.application.routes.draw do
     resources :qc_files, controller: :qc_files
   end
 
-  # This is a hack until I get tube coercion working
-  # resources :sequencescape_tubes, controller: :tubes do
-  #   resources :children, controller: :tube_creation
-  #   resources :qc_files, controller: :qc_files
-  # end
-
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
     match 'individual', action: 'individual', as: :print_individual_label
