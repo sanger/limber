@@ -12,7 +12,7 @@
     <%= javascript_include_tag 'underscore', 'application'  %>
     <%= csrf_meta_tag %>
   </head>
-  <body class='<%= environment %> <%= non_production_class %> <%= logged_in_class %>'>
+  <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
       <%= yield %>
       <%= render partial: 'loading_modal' %>
   </body>
