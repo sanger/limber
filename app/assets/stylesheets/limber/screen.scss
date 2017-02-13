@@ -49,6 +49,23 @@ dl.metadata {
   }
 }
 
+// Tubes borrow bootstrap styling. We could use the styles directly,
+// but using extend allows us to make more meaningful names. We should
+// probably to this more regularly.
+.bad-tube {
+  @extend .list-group-item-danger;
+}
+.wait-tube {
+  @extend .list-group-item-warning;
+}
+.good-tube {
+  @extend .list-group-item-success;
+}
+.sibling-tube {
+  @extend .flex-column;
+  @extend .align-items-start;
+}
+
 // Old-stuff
 
 .dimmed {
@@ -192,19 +209,6 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 
 div.tube_validation_report {
   font-weight: initial;
-}
-
-.bad-tube div.tube_validation_report, .qc_validation_report .invalid {
-  border: 1px solid #FF7A7A;
-  background: #FFE6E6;
-}
-.good-tube div.tube_validation_report, .qc_validation_report .valid {
-  border: 1px solid #61D457;
-  background: #C9FFC4;
-}
-.wait-tube div.tube_validation_report {
-  border: 1px solid #FFFF7A;
-  background: #FFFFE6;
 }
 
 #key .tube-view { display: inline-block; }

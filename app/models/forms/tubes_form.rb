@@ -3,7 +3,7 @@
 module Forms
   class TubesForm < CreationForm
     class Sibling
-      READY_STATE = 'qc_complete'
+      READY_STATE = 'passed'
 
       attr_reader :name, :uuid, :state, :barcode
 
@@ -18,7 +18,7 @@ module Forms
       def message
         return 'This tube is ready for pooling, find it, and scan it in above' if state == READY_STATE
         return 'Some requests still need to be progressed to appropriate tubes' if state == 'Not Present'
-        'Must be %s first' % READY_STATE
+        'Must be %s first' % READY_STATE.humanize
       end
 
       def ready?
