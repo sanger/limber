@@ -14,7 +14,9 @@
   <%= render partial: 'plate_summary', locals: { presenter: presenter } %>
 
   <h2>Tubes</h2>
+  <div class="list-group">
   <% presenter.plate.tubes_and_sources.each do |tube, sources| %>
     <%= render partial: 'labware/pooled_tube.html.erb', locals: {tube: tube, source: sources } %>
   <% end %>
+  </div>
 <% end %>

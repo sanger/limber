@@ -53,7 +53,7 @@ FactoryGirl.define do
           siblings_count 1
           sibling_default_state 'passed'
           other_siblings do
-            Array.new(siblings_count) { |i| {name: "Sibling #{i+1}", ean13_barcode: (1234567890123 + i).to_s, state: sibling_default_state, uuid: "sibling-tube-#{i}" } }
+            Array.new(siblings_count) { |i| { name: "Sibling #{i + 1}", ean13_barcode: (1_234_567_890_123 + i).to_s, state: sibling_default_state, uuid: "sibling-tube-#{i}" } }
           end
         end
 

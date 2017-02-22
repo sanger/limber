@@ -18,13 +18,13 @@ feature 'Pool tubes at end of pipeline', js: true do
 
   let(:transfer_request) do
     stub_api_post(transfer_template_uuid,
-      payload: { transfer: { user: user_uuid, source: tube_uuid } },
-      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+                  payload: { transfer: { user: user_uuid, source: tube_uuid } },
+                  body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
   end
   let(:transfer_request_b) do
     stub_api_post(transfer_template_uuid,
-      payload: { transfer: { user: user_uuid, source: sibling_uuid } },
-      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+                  payload: { transfer: { user: user_uuid, source: sibling_uuid } },
+                  body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
   end
 
   # Setup stubs
@@ -33,8 +33,18 @@ feature 'Pool tubes at end of pipeline', js: true do
 
     # Set-up the tube config
     Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = { presenter_class: 'Presenters::SimpleTubePresenter', asset_type: 'Tube', name: 'Example Purpose' }
-    Settings.purposes[child_purpose_uuid] = { presenter_class: 'Presenters::FinalTubePresenter', asset_type: 'Tube', name: 'Final Tube Purpose', form_class: 'Forms::FinalTubesForm', parents: ['Example Purpose'] }
+    Settings.purposes['example-purpose-uuid'] = {
+      presenter_class: 'Presenters::SimpleTubePresenter',
+      asset_type: 'Tube',
+      name: 'Example Purpose'
+    }
+    Settings.purposes[child_purpose_uuid] = {
+      presenter_class: 'Presenters::FinalTubePresenter',
+      asset_type: 'Tube',
+      name: 'Final Tube Purpose',
+      form_class: 'Forms::FinalTubesForm',
+      parents: ['Example Purpose']
+    }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the tube

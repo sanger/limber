@@ -88,13 +88,13 @@ describe Forms::FinalTubesForm do
         let(:sibling_uuid) { 'sibling-tube-0' }
         let(:transfer_request) do
           stub_api_post(transfer_template_uuid,
-            payload: { transfer: { user: user_uuid, source: parent_uuid } },
-            body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+                        payload: { transfer: { user: user_uuid, source: parent_uuid } },
+                        body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
         end
         let(:transfer_request_b) do
           stub_api_post(transfer_template_uuid,
-            payload: { transfer: { user: user_uuid, source: sibling_uuid } },
-            body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+                        payload: { transfer: { user: user_uuid, source: sibling_uuid } },
+                        body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
         end
 
         before(:each) do
