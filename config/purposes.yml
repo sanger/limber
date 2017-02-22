@@ -60,7 +60,7 @@ LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
-  :form_class: Forms::TubesForm
+  :form_class: Forms::FinalTubesForm
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube

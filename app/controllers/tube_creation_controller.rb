@@ -26,13 +26,13 @@ class TubeCreationController < CreationController
   end
 
   def create
-    @creation_form = create_form(params[:tube].reverse_merge(parent_uuid: params[:limber_tube_id]))
-
+    tube_params[:parent_uuid] ||= params[:limber_tube_id]
+    @creation_form = create_form(tube_params)
     @creation_form.save!
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
     end
-  rescue => exception
+  rescue Sequencescape::Api::ResourceInvalid => exception
     Rails.logger.error("Cannot create child tube of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
@@ -44,5 +44,9 @@ class TubeCreationController < CreationController
         )
       end
     end
+  end
+
+  def tube_params
+    params.require(:tube)
   end
 end

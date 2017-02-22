@@ -5,7 +5,7 @@ module Forms
   class CreationForm
     module ClassMethods
       def class_for(purpose_uuid)
-        Settings.purposes.fetch(purpose_uuid)[:form_class].constantize
+        Settings.purposes.fetch(purpose_uuid).fetch(:form_class).constantize
       end
     end
     extend ClassMethods

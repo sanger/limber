@@ -29,7 +29,7 @@ require 'webmock/rspec'
 
 begin
   require 'pry'
-rescue LoadError => e
+rescue LoadError
   # We don't have pry. We're probably on Travis.
   nil
 end

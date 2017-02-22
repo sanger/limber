@@ -16,8 +16,8 @@
 
     <div id="state-changer">
       <div class="form-group row">
-      <%= label_tag :state, "Change state to" %>
-      <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to), class: 'custom-select' %>
+        <%= label_tag :state, "Change state to" %>
+        <%= select_tag :state, options_for_select(transitions.map { |tr| [ tr.human_to_name, tr.to ] }, transitions.first.to), class: 'custom-select' %>
       </div>
 
       <div id="cancelled_reasons" class="reason form-group row" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>

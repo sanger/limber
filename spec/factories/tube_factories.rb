@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 FactoryGirl.define do
   factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: [:api_object, :barcoded] do
@@ -28,6 +27,7 @@ FactoryGirl.define do
 
     created_at { Time.current }
     updated_at { Time.current }
+    state 'pending'
 
     factory :tube, class: Limber::Tube, traits: [:api_object, :barcoded] do
       # with_has_many_associations 'aliquots'
@@ -39,6 +39,26 @@ FactoryGirl.define do
       aliquots do
         Array.new(sample_count) do |i|
           associated(:aliquot, sample_name: "sample_#{i}", sample_id: "SAM#{i}", sample_uuid: "example-sample-uuid-#{i}")
+        end
+      end
+
+      factory :tube_without_siblings, traits: [:api_object, :barcoded] do
+        json_root 'tube'
+        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
+      end
+
+      factory :tube_with_siblings, traits: [:api_object, :barcoded] do
+        json_root 'tube'
+        transient do
+          siblings_count 1
+          sibling_default_state 'passed'
+          other_siblings do
+            Array.new(siblings_count) { |i| {name: "Sibling #{i+1}", ean13_barcode: (1234567890123 + i).to_s, state: sibling_default_state, uuid: "sibling-tube-#{i}" } }
+          end
+        end
+
+        sibling_tubes do
+          [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + other_siblings
         end
       end
     end

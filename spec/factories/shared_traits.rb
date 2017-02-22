@@ -36,10 +36,10 @@ FactoryGirl.define do
   trait :barcoded do
     transient do
       sequence(:barcode_number) { |i| i }
+      ean13 { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).machine_barcode.to_s }
     end
 
     barcode do
-      ean13 = SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).machine_barcode.to_s
       { 'ean13' => ean13, 'number' => barcode_number.to_s, 'prefix' => barcode_prefix, 'two_dimensional' => nil, 'type' => barcode_type }
     end
   end

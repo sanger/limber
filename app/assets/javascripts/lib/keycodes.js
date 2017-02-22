@@ -1,0 +1,1 @@
+var ENTER_KEYCODE = 13, TAB_KEYCODE = 9;
