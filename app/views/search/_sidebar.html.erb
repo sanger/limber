@@ -14,7 +14,7 @@
    <button id="btnGroupRobots" type="button" class="btn btn-primary dropdown-toggle btn-lg btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
      Robots
    </button>
-   <ul class="dropdown-menu btn-block" aria-labelledby="btnGroupRobots">
+   <ul class="dropdown-menu btn-block" aria-labelledby="btnGroupRobots" id="robots-list">
      <% each_robot do |robot_id,robot_name| %>
        <li class='dropdown-item'><%= link_to robot_name, robot_path(robot_id) %></li>
      <% end %>

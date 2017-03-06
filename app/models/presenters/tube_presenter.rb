@@ -2,10 +2,6 @@
 
 module Presenters
   class TubePresenter
-    def qc_owner
-      labware
-    end
-
     include Presenter
     include Statemachine::Shared
     include RobotControlled
@@ -29,11 +25,9 @@ module Presenters
       'Created on' => :created_on
     }
 
-    LABEL_TEXT = 'ILB Stock'
-
     def label_attributes
       { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
-        middle_line: (labware.label.text || LABEL_TEXT),
+        middle_line: labware.label.text,
         bottom_line: date_today,
         round_label_top_line: labware.barcode.prefix,
         round_label_bottom_line: labware.barcode.number,

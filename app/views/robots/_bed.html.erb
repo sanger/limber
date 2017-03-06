@@ -1,19 +1,27 @@
 
   <div class="bed-scanner scape-ui-block card card-inverse">
    <div class="card-block">
+       <div class="input-group">
+        <label for="robot_scan" class="bed-label input-group-addon">Scan robot</label>
+        <input type="text" id="robot_scan" name="robot_scan" placeholder="Robot barcode" tabindex="1" class="bed form-control"/>
+      </div>
       <div class="input-group">
         <label for="bed_scan" class="bed-label input-group-addon">Scan bed</label>
-        <input type="text" id="bed_scan" name="bed_scan" placeholder="Bed barcode" tabindex="1" class="bed form-control"/>
+        <input type="text" id="bed_scan" name="bed_scan" placeholder="Bed barcode" tabindex="2" class="bed form-control"/>
       </div>
       <div class="input-group">
         <label for="plate_scan" class="bed-label input-group-addon">Scan plate</label>
-        <input type="text" id="plate_scan" name="plate_scan" placeholder="Plate barcode" tabindex="2" class="bed form-control"/>
+        <input type="text" id="plate_scan" name="plate_scan" placeholder="Plate barcode" tabindex="3" class="bed form-control"/>
       </div>
     </div>
   </div>
 
+  <div id="validation_report"></div>
+  <%= card title: 'Robot', without_block: true do -%>
+    <div id="robot" class="bed form-control"></div>
+    <input type="hidden" id="robot_barcode" name="robot_barcode" value="">
+  <%- end %>
   <%= card title: 'Scanned Beds', without_block: true do -%>
-    <div id="validation_report"></div>
     <ul id='bed_list' class="list-group list-group-flush">
     </ul>
   <%- end %>

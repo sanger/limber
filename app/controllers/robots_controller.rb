@@ -15,6 +15,11 @@ class RobotsController < ApplicationController
 
   def start
     robot.perform_transfer(stripped_beds)
+    if params[:robot_barcode].present?
+      robot.beds.values.each do |bed|
+        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, created_with_robot: params[:robot_barcode]).update if bed.has_transition?
+      end
+    end
     respond_to do |format|
       format.html do
         redirect_to search_path,
@@ -29,9 +34,7 @@ class RobotsController < ApplicationController
   end
 
   def verify
-    respond_to do |format|
-      format.json { render(json: @robot.verify(stripped_beds)) }
-    end
+    render(json: @robot.verify(stripped_beds, params[:robot_barcode]))
   end
 
   def find_robot
@@ -44,7 +47,11 @@ class RobotsController < ApplicationController
   private :find_robot
 
   def stripped_beds
-    Hash[(params[:beds] || params[:bed] || {}).map { |k, v| [k.strip, stripped_plates(v)] }]
+    {}.tap do |stripped|
+      (params[:beds] || params[:bed] || {}).each do |k, v|
+        stripped[k.strip] = stripped_plates(v)
+      end
+    end
   end
   private :stripped_beds
 

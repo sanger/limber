@@ -12,16 +12,18 @@ class Settings
     protected :method_missing
 
     def configuration_filename
-      File.join(File.dirname(__FILE__), '..', 'settings', "#{Rails.env}.yml")
+      Rails.root.join('config', 'settings', "#{Rails.env}.yml")
     end
     private :configuration_filename
 
     def instance
       return @instance if @instance.present?
-
-      @instance = Hashie::Mash.new(YAML.load(eval(ERB.new(File.read(configuration_filename)).src, nil, configuration_filename)))
-    rescue => exception
-      star_length = [96, 12 + configuration_filename.length].max
+      # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here
+      # but the creates an immutable setting object that messes with tests.
+      # Immutability is good here though, so we should probably fix that.
+      @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol]))
+    rescue Errno::ENOENT => exception
+      star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)
       $stderr.puts "WARNING! No #{configuration_filename}"
       $stderr.puts "You need to run 'rake config:generate' and can ignore this message if that's what you are doing!"

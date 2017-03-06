@@ -11,25 +11,25 @@ describe WellHelpers do
 
   context 'Full plate' do
     let(:wells) { WellHelpers.column_order }
-    let(:range) { 'A1-H12'}
+    let(:range) { 'A1-H12' }
     it_behaves_like 'range generator'
   end
 
   context 'Partial plate' do
     let(:wells) { WellHelpers.column_order.slice(0, 12) }
-    let(:range) { 'A1-D2'}
+    let(:range) { 'A1-D2' }
     it_behaves_like 'range generator'
   end
 
   context 'Split pool' do
-    let(:wells) { ['A1', 'B1', 'C1', 'F1', 'G1', 'H1', 'A2', 'C10', 'F10', 'G10'] }
-    let(:range) { 'A1-C1, F1-A2, C10, F10-G10'}
+    let(:wells) { %w(A1 B1 C1 F1 G1 H1 A2 C10 F10 G10) }
+    let(:range) { 'A1-C1, F1-A2, C10, F10-G10' }
     it_behaves_like 'range generator'
   end
 
   context 'Unordered pool' do
-    let(:wells) { ['A1', 'F10', 'F1', 'B1', 'C1', 'G1', 'H1', 'A2', 'C10', 'G10'] }
-    let(:range) { 'A1-C1, F1-A2, C10, F10-G10'}
+    let(:wells) { %w(A1 F10 F1 B1 C1 G1 H1 A2 C10 G10) }
+    let(:range) { 'A1-C1, F1-A2, C10, F10-G10' }
     it_behaves_like 'range generator'
   end
 end

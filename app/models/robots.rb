@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Robots
   class Robot
     include Forms::Form
@@ -115,26 +114,12 @@ module Robots
     end
 
     class_attribute :attributes
-    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id]
-
-    def beds=(new_beds)
-      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
-      new_beds.each do |id, bed|
-        beds[id] = bed_class(bed).new(bed.merge(api: api, user_uuid: user_uuid, robot: self))
-      end
-      @beds = beds
-    end
-    private :beds=
-
-    def bed_class(_bed)
-      self.class::Bed
-    end
-    private :bed_class
+    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id, :verify_robot]
 
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
         bed.load(bed_settings[id]) if bed.has_transition?
-        bed.valid? || raise(BedError, bed.error_message)
+        bed.valid? || raise(Bed::BedError, bed.error_messages)
       end
       beds.values.each(&:transition)
     end
@@ -157,34 +142,54 @@ module Robots
       error_messages.join(' ')
     end
 
-    def verify(bed_contents)
-      valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
-        beds[bed_id].load(plate_barcode)
-        [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
-      end]
+    def verify_robot?
+      verify_robot
+    end
 
-      valid_parents = Hash[parents_and_position do |parent, position|
-        beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
-          "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
-          'Could not match labware with expected child.')
-      end]
+    def verify(bed_contents, robot_barcode = nil)
 
-      verified = valid_plates.merge(valid_parents) { |_k, v1, v2| v1 && v2 }
+      verified = valid_plates(bed_contents).merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
-      unless plates_compatible?
-        bed_contents.keys.each { |k| verified[k] = false }
-        error_messages << "#{bed_prefixes.to_sentence} can not be processed together."
+      if verify_robot? && beds.values.first.plate.present?
+        if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
+          error_messages << 'Your plate is not on the right robot'
+          verified['robot'] = false
+        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
+          error_messages << 'Your plate is not on the right robot'
+          verified['robot'] = false
+        end
       end
 
       { beds: verified, valid: verified.all? { |_, v| v }, message: formatted_message }
     end
 
-    def plates_compatible?
-      bed_prefixes.count <= 1
+    private
+
+    def valid_plates(bed_contents)
+      Hash[bed_contents.map do |bed_id, plate_barcode|
+        beds[bed_id].load(plate_barcode)
+        [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
+      end]
     end
 
-    def bed_prefixes
-      beds.map { |_id, bed| bed.plate.label.prefix unless bed.plate.nil? }.compact.uniq
+    def valid_parents
+      Hash[parents_and_position do |parent, position|
+        beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
+          "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
+          'Could not match labware with expected child.')
+      end.compact]
+    end
+
+    def beds=(new_beds)
+      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
+      new_beds.each do |id, bed|
+        beds[id] = bed_class(bed).new(bed.merge(api: api, user_uuid: user_uuid, robot: self))
+      end
+      @beds = beds
+    end
+
+    def bed_class(_bed)
+      self.class::Bed
     end
 
     def parents_and_position
@@ -194,6 +199,5 @@ module Robots
         [id, result]
       end
     end
-    private :parents_and_position
   end
 end

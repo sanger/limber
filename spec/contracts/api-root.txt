@@ -331,5 +331,12 @@ Content-Type: application/json
     "actions": {
       "read": "http://example.com:3000/tube/purposes"
     }
-  }
+  },
+  "custom_metadatum_collections": {
+   "actions": {
+     "read": "http://example.com:3000/custom_metadatum_collection",
+     "update": "http://example.com:3000/custom_metadatum_collection",
+     "create": "http://example.com:3000/custom_metadatum_collections"
+   }
+ }
 }

@@ -1,19 +1,23 @@
-<%= section do %>
-  <h2>QC Data</h2>
-  <ul class="qc_data" data-role="listview" data-inset="true">
-      <li data-role="list-divider">Attatched Files</li>
-    <% @presenter.qc_owner.qc_files.each do |qc_file| %>
-      <li>
-        <a href="<%= @presenter.qc_owner.uuid %>/qc_files/<%= qc_file.uuid %>"><h3><%= qc_file.filename %></h3>
-        <p>Created at:<%= qc_file.created_at %></p></a>
-      </li>
+<%= card title: 'Attached files', without_block: true do %>
+  <% @presenter.control_qc_files do %>
+    <ul class="qc_data card-block list-group">
+      <% @presenter.each_qc_file do |qc_file| %>
+        <li class="list-group-item">
+          <a href="<%= @presenter.uuid %>/qc_files/<%= qc_file.uuid %>"><h3><%= qc_file.filename %></h3>
+          <p>Created at:<%= qc_file.created_at %></p></a>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <div class='card-block'>
+    <p>Attach additional files...</p>
+    <%= form_tag("#{@presenter.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
+      <div>
+      <label class="custom-file">
+        <input type="file" id="qc_file" name="qc_file"/>
+      </label>
+      </div>
+      <input type="submit" value="Upload" class="btn"/>
     <% end %>
-      <li data-role="list-divider">Add New Qc Files</li>
-      <li>
-        <%= form_tag("#{@presenter.qc_owner.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
-          <input type="file" id="qc_file" name="qc_file"/>
-          <input type="submit" value="Upload" />
-        <% end %>
-      </li>
-  </ul>
+  </div>
 <% end %>

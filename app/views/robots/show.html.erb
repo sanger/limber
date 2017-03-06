@@ -6,8 +6,8 @@
         <h4>Layout</h4>
           <dl class="row">
             <% robot.beds.each do |barcode,config| %>
-              <dt class='col-xs-2'><%= config.label %></dt>
-              <dd class='col-xs-6'><%= config.purpose_labels %></dd>
+              <dt class='col-2'><%= config.label %></dt>
+              <dd class='col-10'><%= config.purpose_labels %></dd>
             <% end %>
           </dl>
         </div>
@@ -26,9 +26,8 @@
       <%= render partial: robot.layout, locals: {robot: robot, form: form } %>
       <%= submit_tag "Start the #{robot.name}",
         name: nil,
-        class: "submit",
+        class: "submit btn btn-lg btn-success btn-block",
         id: 'start-robot',
-        class: 'btn btn-lg btn-success btn-block',
         disabled: true
       %>
     <% end # of form %>

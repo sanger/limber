@@ -27,7 +27,15 @@ require 'capybara/rspec'
 require 'capybara/poltergeist'
 require 'webmock/rspec'
 
+begin
+  require 'pry'
+rescue LoadError => e
+  # We don't have pry. We're probably on Travis.
+  nil
+end
+
 Capybara.javascript_driver = :poltergeist
+Capybara.default_max_wait_time = 15
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -122,5 +130,6 @@ RSpec.configure do |config|
     # Unfortunately this means the library, not the animal.
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
+    Capybara.current_session.driver.resize_window(1400, 1400) if Capybara.current_session.driver.respond_to?(:resize_window)
   end
 end

@@ -13,12 +13,13 @@ gem 'compass-rails'
 
 # Required for bootstrap tooltips
 gem 'rails-assets-tether', '>= 1.1.0'
+# Bootstrap is a css framework
 gem 'bootstrap'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', require: false
 
-# Lets us easily inline our svg to allow styling. Supports the asset pipeline.
+# Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
 # Use jquery as the JavaScript library
@@ -28,6 +29,7 @@ gem 'jquery-ui-rails'
 
 gem 'rake'
 gem 'state_machines'
+# Used in the setting object, allows access by object and hash notation.
 gem 'hashie'
 gem 'exception_notification'
 
@@ -35,7 +37,6 @@ gem 'sequencescape-client-api', '>= 0.3.0',
   # Should be switched back to sanger + production for deployment
   github: 'JamesGlover/sequencescape-client-api',
   branch: 'add_limber_needs',
-  # path: '../sequencescape-client-api',
   require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
@@ -50,19 +51,23 @@ gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.g
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara'
+  gem 'factory_girl' # Generate models and json easily in tests
+  gem 'guard-rspec', require: false
+  gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'poltergeist'
-  gem 'rspec-rails'
-  gem 'rspec-json_expectations'
-  gem 'launchy'
-  gem 'factory_girl'
-  gem 'webmock'
   gem 'rails-controller-testing'
+  gem 'rspec-json_expectations'
+  gem 'rspec-rails'
+  gem 'webmock'
 end
 
 group :development do
   gem 'pry'
+  gem 'pry-byebug'
   gem 'rubocop', require: false
   gem 'web-console'
+  # MiniProfiler allows you to see the speed of a request conveniently on the page.
+  gem 'rack-mini-profiler'
 end
 
 group :deployment do

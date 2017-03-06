@@ -54,6 +54,8 @@ describe 'well_collection factory' do
     json(
       :well_collection,
       size: 2,
+      default_state: 'passed',
+      custom_state: { 'B1' => 'failed' },
       plate_uuid: 'plate-uuid'
     )
   end
@@ -90,7 +92,7 @@ describe 'well_collection factory' do
           "tag": {}
         }],
         "location": "A1",
-        "state": "pending"
+        "state": "passed"
       },
       {
         "actions": {
@@ -116,7 +118,7 @@ describe 'well_collection factory' do
           "tag": {}
         }],
         "location": "B1",
-        "state": "pending"
+        "state": "failed"
       }]
     })
   end

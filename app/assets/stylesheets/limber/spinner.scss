@@ -1,3 +1,14 @@
+#loadingModal {
+  top: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 300;
+  display: none;
+}
+
 // Spinner from
 // http://projects.lukehaas.me/css-loaders/
 .spinner {

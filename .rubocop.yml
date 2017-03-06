@@ -9,3 +9,6 @@ Style/VariableNumber:
   Enabled: false
 Rails:
   Enabled: true
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*

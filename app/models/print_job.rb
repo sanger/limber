@@ -33,8 +33,9 @@ class PrintJob
 
   def label_template_id
     label_template_name = Rails.configuration.label_templates.fetch(printer_type)
-    PMB::LabelTemplate.where(name: label_template_name).first.id
-  rescue JsonApiClient::Errors::ConnectionError => e
+    # This isn't a rails finder; so we disable the cop.
+    PMB::LabelTemplate.where(name: label_template_name).first.id # rubocop:disable Rails/FindBy
+  rescue JsonApiClient::Errors::ConnectionError
     errors.add(:pmb, 'PrintMyBarcode service is down')
   end
 

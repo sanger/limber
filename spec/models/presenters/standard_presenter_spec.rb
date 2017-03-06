@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 describe Presenters::StandardPresenter do
-  # Not sure why this is getting executed twice.
-  # Want to get the basics working first though
-  has_a_working_api(times: 2)
+  has_a_working_api
 
-  let(:labware) { build :plate, state: state }
+  let(:purpose_name) { 'Example purpose' }
+  let(:labware) { build :plate, state: state, purpose_name: purpose_name }
 
   subject do
     Presenters::StandardPresenter.new(
@@ -13,16 +12,10 @@ describe Presenters::StandardPresenter do
     )
   end
 
-  let(:expect_child_purpose_requests) do
-    stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    stub_api_get('stock-plate-purpose-uuid','children', body: json(:plate_purpose_collection, size: 1))
-  end
-
   context 'when pending' do
     let(:state) { 'pending' }
 
     it 'prevents child creation' do
-      expect_child_purpose_requests
       expect { |b| subject.control_additional_creation(&b) }.not_to yield_control
     end
 
@@ -32,11 +25,21 @@ describe Presenters::StandardPresenter do
   end
 
   context 'when passed' do
+    before(:each) do
+      Settings.purposes = {
+        'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose' },
+        'other-purpose' => { 'parents' => [], 'name' => 'Other purpose' }
+      }
+    end
+
     let(:state) { 'passed' }
 
     it 'allows child creation' do
-      expect_child_purpose_requests
       expect { |b| subject.control_additional_creation(&b) }.to yield_control
+    end
+
+    it 'suggests child purposes' do
+      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose')
     end
   end
 end

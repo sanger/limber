@@ -6,3 +6,7 @@ test:
   1D Tube: sqsc_1dtube_label_template
   96 Well Plate: sqsc_96plate_label_template
   384 Well Plate: sqsc_384plate_label_template
+staging:
+  1D Tube: sqsc_1dtube_label_template
+  96 Well Plate: sqsc_96plate_label_template
+  384 Well Plate: sqsc_384plate_label_template

@@ -7,7 +7,7 @@
         <% if plate.priority > 0 %>
            <%= image_tag("icon_#{plate.priority}_flag.png", size: "64x64", class: 'pull-sm-right') %>
         <% end %>
-        <h3 class="barcode list-group-item-heading"><%= useful_barcode(plate.barcode) %> <span class="tag tag-<%= state_style(plate.state) %>"><%= plate.state.titleize %></span></h3>
+        <h3 class="barcode list-group-item-heading"><%= useful_barcode(plate.barcode) %> <span class="badge badge-<%= state_style(plate.state) %>"><%= plate.state.titleize %></span></h3>
         <% if plate.stock_plate.present? %><p class="list-group-item-text"><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
         <dl class="list-inline">
           <% if plate.iteration.present? %><dt>Iteration</dt><dd class="list-inline-item"><%= plate.iteration %></dd><% end %>

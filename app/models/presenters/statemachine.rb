@@ -2,29 +2,20 @@
 
 module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
-    def control_child_plate_creation(&block)
-      # Does nothing because you can't!
-    end
-
     def control_additional_creation(&block)
       # Does nothing because you can't!
     end
 
     def suggested_purposes; end
 
-    def compatible_purposes; end
+    def compatible_plate_purposes; end
+
+    def compatible_tube_purposes; end
   end
 
   module StateAllowsChildCreation
-    # Yields to the block if there are child plates that can be created from the current one.
-    # It passes the valid child plate purposes to the block.
-    def control_child_plate_creation
-      yield unless default_child_purpose.nil?
-      nil
-    end
-
     def control_additional_creation
-      yield unless default_child_purpose.nil?
+      yield
       nil
     end
 
@@ -40,15 +31,27 @@ module Presenters::Statemachine
     end
 
     def suggested_purposes
-      labware.plate_purpose.children.each do |purpose|
-        yield purpose
+      Settings.purposes.each do |uuid, purpose_settings|
+        next unless purpose_settings.parents && purpose_settings.parents.include?(labware.plate_purpose.name)
+        yield uuid, purpose_settings.name
       end
     end
 
-    def compatible_purposes
-      Settings.purposes.each do |uuid, hash|
+    def compatible_plate_purposes
+      purposes_of_type('plate').each do |uuid, hash|
         yield uuid, hash['name']
       end
+    end
+
+    def compatible_tube_purposes
+      purposes_of_type('tube').each do |uuid, hash|
+        yield uuid, hash['name']
+      end
+    end
+
+    # Eventually this will end up on our forms/creations module
+    def purposes_of_type(type)
+      Settings.purposes.select { |_uuid, purpose| purpose.asset_type == type }
     end
   end
 
@@ -70,12 +73,8 @@ module Presenters::Statemachine
     # the valid next states, along with the current one too.
     def control_state_change
       if default_transition.present?
-        # This ugly thing should yield the default transition first followed by
-        # any other transitions to states that aren't the default...
         yield(state_transitions.reject { |t| t.to == default_transition.to })
       elsif state_transitions.present?
-        # ...if there's no default transition but there are still other transitions
-        # present then yield those.
         yield(state_transitions)
       end
     end
@@ -134,7 +133,7 @@ module Presenters::Statemachine
         end
 
         state :started do
-          include StateAllowsChildCreation
+          include StateDoesNotAllowChildCreation
         end
 
         state :passed do

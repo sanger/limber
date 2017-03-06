@@ -39,6 +39,8 @@ FactoryGirl.define do
       pool_hash
     end
 
+    pre_cap_groups({})
+
     plate_purpose do
       {
         'actions' => { 'read' => api_root + purpose_uuid },
@@ -63,6 +65,10 @@ FactoryGirl.define do
       purpose_name 'Limber Cherrypicked'
       purpose_uuid 'stock-plate-purpose-uuid'
       stock_plate { { barcode: barcode, uuid: uuid } }
+
+      factory :stock_plate_with_metadata do
+        with_belongs_to_associations 'custom_metadatum_collection'
+      end
     end
   end
 end

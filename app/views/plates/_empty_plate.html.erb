@@ -13,8 +13,8 @@
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% (1..12).each do | index| %>
-          <td class="col-all <%= "col-#{index}" %>">
-            <div class="well <%= "col-#{index}" %> <%= "#{row_label}#{index}" %>" data-location="<%= "#{row_label}#{index}"%>">
+          <td class="col-all <%= "plate-col-#{index}" %>">
+            <div class="well <%= "plate-col-#{index}" %> <%= "#{row_label}#{index}" %>" data-location="<%= "#{row_label}#{index}"%>">
             </div>
           </td>
         <% end %>

@@ -1,0 +1,72 @@
+---
+:large_insert_limit: 250
+:searches: {}
+:transfer_templates: {}
+:printers:
+  illumina_a:
+    :plate_a: bac4df40-222b-11e4-8ce2-44fb42fffecc
+    :plate_b: bac617c0-222b-11e4-8ce2-44fb42fffecc
+    :tube: bac75040-222b-11e4-8ce2-44fb42fffecc
+  illumina_b:
+    :plate_a: bac135c0-222b-11e4-8ce2-44fb42fffecc
+    :plate_b: bac2e370-222b-11e4-8ce2-44fb42fffecc
+    :tube: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
+  limit: 5
+  default_count: 2
+:purposes: {}
+:purpose_uuids: {}
+:robots:
+  :robot_id:
+    :name: robot_name
+    :beds:
+      bed1_barcode:
+        :purpose: Limber Cherrypicked
+        :states:
+          - passed
+        :label: Bed 7
+      bed2_barcode:
+        purpose: target_plate_purpose
+        states:
+          - pending
+        label: Bed 9
+        parent: bed1_barcode
+        target_state: passed
+  :robot_id_2:
+    :name: robot_name
+    :verify_robot: true
+    :beds:
+      bed1_barcode:
+        :purpose: Limber Cherrypicked
+        :states:
+          - passed
+        :label: Bed 7
+  'bravo-lb-post-shear-to-lb-end-prep':
+    name: 'bravo LB Post Shear => LB End Prep'
+    layout: 'bed'
+    verify_robot: false
+    beds:
+      '580000004838':
+        purpose: LB Post Shear
+        states:
+          - passed
+        label: Bed 4
+      '580000014851':
+        purpose: LB End Prep
+        states:
+          - pending
+        label: Bed 14
+        parent: 580000004838
+        target_state: started
+  'bravo-lb-end-prep':
+    name: 'bravo LB End Prep'
+    layout: 'bed'
+    verify_robot: true
+    beds:
+      '580000014851':
+        purpose: LB End Prep
+        states:
+          - started
+        label: Bed 14
+        target_state: passed
+:locations: {}
+:qc_purposes: []

@@ -5,12 +5,11 @@
     <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
   <%end%>
 
-  <fieldset class="print_selector form-group">
-    <%= f.label :printer_name, 'Barcode Printer' %>
+  <%= f.label :printer_name, 'Barcode Printer', class: 'col-sm-3' %>
 
-    <%= f.select :printer_name, options_from_collection_for_select(printers_applicable_to(barcode), :name, :name), {}, class: 'custom-select' %>
-    <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1, class: 'custom-select' %>
-    <%= f.submit 'Print Label', class: 'print-button btn btn-success' %>
-  </fieldset>
+  <%= f.select :printer_name, options_from_collection_for_select(printers_applicable_to(barcode), :name, :name), {}, class: 'custom-select' %>
+  <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1, class: 'custom-select' %>
+  <%= f.submit 'Print Label', class: 'print-button btn btn-success' %>
+
 
 <% end %>

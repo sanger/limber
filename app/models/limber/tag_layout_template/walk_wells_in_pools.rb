@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Limber::TagLayoutTemplate::WalkWellsInPools
-  def generate_tag_layout(plate, tagged_wells)
+  def generate_tag_layout(plate, tagged_wells = {})
     tags   = tag_ids
     groups = group_wells_of_plate(plate)
     pools  = groups.map { |pool| pool.map { |w| w.try(:[], 1) } }.flatten.compact.uniq
@@ -28,5 +28,7 @@ module Limber::TagLayoutTemplate::WalkWellsInPools
         tagged_wells[well] = [pools.index(pool_id) + 1, tags[index]] unless well.nil?
       end
     end
+
+    tagged_wells
   end
 end

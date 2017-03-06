@@ -35,9 +35,31 @@ describe PrintJob do
   end
 
   it 'should multiply lablels if several copies required' do
-    PMB::TestSuiteStubs.get(label_template_url) { |_env| [200, { content_type: 'application/json' }, label_template_response(label_template_id, label_template_name)] }
-    PMB::TestSuiteStubs.post('/v1/print_jobs', print_job_post_multiple_labels(printer.name, label_template_id)) { |_env| [200, { content_type: 'application/json' }, print_job_response(printer.name, label_template_id)] }
-    pj = PrintJob.new(printer_name: printer.name, printer_type: printer.type.name, labels: [{ label: { barcode: '12345', test_attr: 'test' } }, { label: { barcode: '67890', test_attr: 'test2' } }], number_of_copies: 2)
+    PMB::TestSuiteStubs.get(label_template_url) do |_env|
+      [
+        200,
+        { content_type: 'application/json' },
+        label_template_response(label_template_id, label_template_name)
+      ]
+    end
+
+    PMB::TestSuiteStubs.post('/v1/print_jobs', print_job_post_multiple_labels(printer.name, label_template_id)) do |_env|
+      [
+        200,
+        { content_type: 'application/json' },
+        print_job_response(printer.name, label_template_id)
+      ]
+    end
+
+    pj = PrintJob.new(
+      printer_name: printer.name,
+      printer_type: printer.type.name,
+      labels: [
+        { label: { barcode: '12345', test_attr: 'test' } },
+        { label: { barcode: '67890', test_attr: 'test2' } }
+      ],
+      number_of_copies: 2
+    )
     expect(pj.execute).to be true
   end
 

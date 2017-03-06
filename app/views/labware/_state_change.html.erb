@@ -2,7 +2,7 @@
     The form should use attriutes on the presenter class not the labware directly.
 %>
 <% presenter.control_state_change do |transitions| %>
-<%= card title: 'Cancel or fail' do %>
+<%= card title: 'Other changes' do %>
   <%= form_for(
         presenter.labware,
         presenter.labware_form_details(self).merge(

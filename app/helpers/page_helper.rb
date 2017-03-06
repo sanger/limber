@@ -31,11 +31,15 @@ module PageHelper
 
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
-  def page(id, css_class = nil, &block)
+  def page(id, css_class = nil, prevent_row: false, &block)
+    concat render partial: 'header'
     grouping(:page, id: id, class: "container-fluid #{css_class}") do
-      concat render partial: 'header'
       concat flash_messages
-      concat content_tag(:div, class: 'row', &block)
+      if prevent_row
+        concat yield
+      else
+        concat content_tag(:div, class: 'row', &block)
+      end
     end
   ensure
     content_for :header, ''
@@ -58,8 +62,8 @@ module PageHelper
     grouping(:sidebar, class: 'col-sm-12 col-md-4 col-lg-5 col-xl-6 sidebar content-secondary', &block)
   end
 
-  def card(title: nil, without_block: false, &block)
-    content_tag(:div, class: 'card') do
+  def card(title: nil, without_block: false, id: nil, &block)
+    content_tag(:div, class: 'card', id: id) do
       concat content_tag(:h3, title, class: 'card-header') if title
       if without_block
         yield

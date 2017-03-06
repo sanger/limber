@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Forms
   class TaggingForm < CreationForm
     include Forms::Form::CustomPage
@@ -41,24 +40,6 @@ module Forms
       @substitutions ||= {}
     end
 
-    def generate_layouts_and_groups
-      maximum_pool_size = plate.pools.map(&:last).map { |pool| pool['wells'].size }.max
-
-      @tag_layout_templates = api.tag_layout_template.all.map(&:coerce).select do |template|
-        acceptable_template?(template) &&
-          template.tag_group.tags.size >= maximum_pool_size
-      end
-
-      @tag_groups = Hash[
-        tag_layout_templates.map do |layout|
-          catch(:unacceptable_tag_layout) { [layout.uuid, tags_by_row(layout)] }
-        end.compact
-      ]
-
-      @tag_layout_templates.delete_if { |template| !@tag_groups.key?(template.name) }
-    end
-    private :generate_layouts_and_groups
-
     def acceptable_template?(template)
       acceptable_templates.blank? ||
         acceptable_templates.include?(template.name)
@@ -68,26 +49,8 @@ module Forms
       Settings.purposes[purpose_uuid].fetch('tag_layout_templates', [])
     end
 
-    def available_tag2s
-      api.tag2_layout_template.all.reject do |template|
-        used_tag2s.include?(template.uuid)
-      end.group_by(&:uuid)
-    end
-    private :available_tag2s
-
-    def used_tag2s
-      @used_tag2s ||= plate.submission_pools.map { |pool| pool.used_tag2_layout_templates.map { |used| used['uuid'] } }.flatten.uniq
-    end
-    private :used_tag2s
-
-    def tag_layout_templates
-      generate_layouts_and_groups if @tag_layout_templates.nil?
-      @tag_layout_templates
-    end
-
     def tag_groups
-      generate_layouts_and_groups if @tag_groups.nil?
-      @tag_groups
+      @tag_groups ||= generate_tag_groups
     end
 
     def tag2s
@@ -95,48 +58,22 @@ module Forms
     end
 
     def tag2_names
-      tag2s.values.flatten.map(&:name)
+      tag2s.values.map(&:name)
     end
-
-    def tags_by_name
-      @tags_by_name ||=
-        Hash[
-          tag_layout_templates.map do |layout|
-            catch(:unacceptable_tag_layout) { [layout.name, layout.tag_group.tags.keys.map(&:to_i).sort] }
-          end
-        ]
-    end
-
-    # Creates a 96 element array of tags from the tag array passed in.
-    # If the input is longer than 96 it takes the first 96 if shorter
-    # it loops the elements to make up the 96.
-    def first_96_tags(tags)
-      Array.new(96) { |i| tags[(i % tags.size)] }
-    end
-
-    def structured_well_locations
-      {}.tap do |ordered_wells|
-        ('A'..'H').each do |row|
-          (1..12).each do |column|
-            ordered_wells["#{row}#{column}"] = nil
-          end
-        end
-        yield(ordered_wells)
-        ordered_wells.delete_if { |_, v| v.nil? }
-      end
-    end
-    private :structured_well_locations
-
-    def tags_by_row(layout)
-      structured_well_locations { |tagged_wells| layout.generate_tag_layout(plate, tagged_wells) }.to_a
-    end
-    private :tags_by_row
 
     def child
       plate_conversion.try(:target) || :child_not_created
     end
 
     def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid)
+      api.transfer_template.find(selected_transfer_template_uuid).create!(
+        source: parent_uuid,
+        destination: tag_plate.asset_uuid,
+        user: user_uuid
+      )
+
+      yield(tag_plate.asset_uuid) if block_given?
+
       api.state_change.create!(
         user: user_uuid,
         target: tag_plate.asset_uuid,
@@ -152,13 +89,6 @@ module Forms
         parent: parent_uuid
       )
 
-      api.transfer_template.find(selected_transfer_template_uuid).create!(
-        source: parent_uuid,
-        destination: tag_plate.asset_uuid,
-        user: user_uuid
-      )
-
-      yield(@plate_conversion.target) if block_given?
       true
     end
 
@@ -171,30 +101,65 @@ module Forms
       nil
     end
 
+    private
+
     def create_objects!
-      create_plate! do |plate|
+      create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
-          plate: plate.uuid,
+          plate: plate_uuid,
           user: user_uuid,
           substitutions: substitutions.reject { |_, new_tag| new_tag.blank? }
         )
 
-        return true unless tag2_tube_barcode.present?
+        if tag2_tube_barcode.present?
+          api.state_change.create!(
+            user: user_uuid,
+            target: tag2_tube.asset_uuid,
+            reason: 'Used in Library creation',
+            target_state: 'exhausted'
+          )
 
-        api.state_change.create!(
-          user: user_uuid,
-          target: tag2_tube.asset_uuid,
-          reason: 'Used in Library creation',
-          target_state: 'exhausted'
-        )
-
-        api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
-          source: tag2_tube.asset_uuid,
-          plate: plate.uuid,
-          user: user_uuid
-        )
+          api.tag2_layout_template.find(tag2_tube.template_uuid).create!(
+            source: tag2_tube.asset_uuid,
+            plate: plate_uuid,
+            user: user_uuid
+          )
+        end
       end
     end
-    private :create_objects!
+
+    def tags_by_column(layout)
+      swl = layout.generate_tag_layout(plate)
+      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well) }
+    end
+
+    def available_tag2s
+      api.tag2_layout_template.all.reject do |template|
+        used_tag2s.include?(template.uuid)
+      end.index_by(&:uuid)
+    end
+
+    def used_tag2s
+      @used_tag2s ||= plate.submission_pools.each_with_object(Set.new) do |pool, set|
+        pool.used_tag2_layout_templates.each { |used| set << used['uuid'] }
+      end
+    end
+
+    def tag_layout_templates
+      api.tag_layout_template.all.map(&:coerce).select do |template|
+        acceptable_template?(template) &&
+          template.tag_group.tags.size >= maximum_pool_size
+      end
+    end
+
+    def generate_tag_groups
+      tag_layout_templates.each_with_object({}) do |layout, hash|
+        catch(:unacceptable_tag_layout) { hash[layout.uuid] = tags_by_column(layout) }
+      end
+    end
+
+    def maximum_pool_size
+      @maximum_pool_size ||= plate.pools.map(&:last).map { |pool| pool['wells'].size }.max || 0
+    end
   end
 end

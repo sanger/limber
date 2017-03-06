@@ -39,7 +39,7 @@ module WellHelpers
   def self.formatted_range(wells)
     wells.sort_by { |well| index_of(well) }
          .slice_when { |previous_well, next_well| index_of(next_well) - index_of(previous_well) > 1 }
-         .map { |range| [range.first,range.last].uniq.join('-') }
+         .map { |range| [range.first, range.last].uniq.join('-') }
          .join(', ')
   end
 end

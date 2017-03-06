@@ -385,7 +385,6 @@
     // Set up the plate element as an illuminaBPlate...
     if ($('#plate-show-page').length === 0) { return };
     $('#plate').limberPlateView(SCAPE.labware);
-    $('#well-failures').on('click','.plate-view .aliquot:not(".permanent-failure")', SCAPE.failWellToggleHandler);
   });
 
   $(document).on('pageinit', function(){

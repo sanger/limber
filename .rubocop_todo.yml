@@ -7,11 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-Lint/Eval:
-  Exclude:
-    - 'config/initializers/settings.rb'
-
-# Offense count: 1
 Lint/HandleExceptions:
   Exclude:
     - 'config/application.rb'

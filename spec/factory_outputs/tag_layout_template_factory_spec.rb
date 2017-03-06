@@ -5,7 +5,8 @@ describe 'tag layout template factory' do
   subject do
     json(
       :tag_layout_template,
-      uuid: 'tag-layout-template-uuid'
+      uuid: 'tag-layout-template-uuid',
+      size: 2
     )
   end
 
@@ -13,19 +14,20 @@ describe 'tag layout template factory' do
     %({
         "tag_layout_template": {
           "actions": {
-            "read": "http://example.com:3000/tag-layout-template-uuid"
+            "read": "http://example.com:3000/tag-layout-template-uuid",
+            "create": "http://example.com:3000/tag-layout-template-uuid"
           },
 
           "uuid": "tag-layout-template-uuid",
           "name": "Test tag layout",
           "direction": "column",
-          "walking_by": "wells in pools",
+          "walking_by": "wells of plate",
 
           "tag_group": {
             "name": "Tag group 1",
             "tags": {
-              "1": "ACTG",
-              "2": "GTCA"
+              "1": "T",
+              "2": "C"
             }
           }
         }

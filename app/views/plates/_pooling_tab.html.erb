@@ -1,7 +1,7 @@
 <ul id="pools-information" class="list-group">
   <% plate_presenter.labware.pools.each do |pool_id, pool| -%>
     <li data-pool="<%= pool_id %>" class='list-group-item'>
-      <dl class='metadata'>
+      <dl class='metadata row'>
         <dt>Wells</dt>
         <dd class='well-list'><%= WellHelpers.formatted_range(pool['wells']) %></dd>
         <dt>Insert Size</dt>
