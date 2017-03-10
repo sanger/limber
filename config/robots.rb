@@ -30,11 +30,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                layout: 'bed',
                verify_robot: true,
                beds: {
-                 robot_scope.bed(14).barcode => { purpose: 'LB End Prep', states: ['started'], label: 'Bed 14', target_state: 'passed' }
+                 robot_scope.bed(7).barcode => { purpose: 'LB End Prep', states: ['started'], label: 'Bed 14', target_state: 'passed' }
                })
 
   bravo_robot do
-    from 'LB End Prep', bed(14)
+    from 'LB End Prep', bed(7)
     to 'LB Lib PCR', bed(6)
   end
 

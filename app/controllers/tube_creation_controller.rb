@@ -6,7 +6,8 @@ class TubeCreationController < CreationController
   end
 
   def new
-    @creation_form = create_form(params.merge(parent_uuid: params[:limber_tube_id]))
+    params[:parent_uuid] ||= parent_uuid
+    @creation_form = create_form(params)
 
     respond_to do |format|
       format.html { @creation_form.render(self) }
@@ -26,8 +27,9 @@ class TubeCreationController < CreationController
   end
 
   def create
-    tube_params[:parent_uuid] ||= params[:limber_tube_id]
+    tube_params[:parent_uuid] ||= parent_uuid
     @creation_form = create_form(tube_params)
+
     @creation_form.save!
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
@@ -46,7 +48,13 @@ class TubeCreationController < CreationController
     end
   end
 
+  private
+
   def tube_params
     params.require(:tube)
+  end
+
+  def parent_uuid
+    params[:limber_tube_id] || params[:limber_plate_id]
   end
 end
