@@ -1,10 +1,11 @@
-<%= page(:'multi-tube-pooling-page') do %>
-  <%= form_for(
+<%= page(:'multi-tube-pooling-page', prevent_row: true) do %>
+  <% form_for(
       @creation_form,
       url: limber_tube_children_path(@creation_form.parent),
       as: :tube,
       html: { method: :post }) do |form|
   %>
+  <div class='row'>
     <%= content do %>
       <%= card title: 'Tubes', without_block: true do %>
         <ul id="scanned_tube_list" class="robot tubev list-group">
@@ -30,7 +31,7 @@
                 </div>
               </div>
             </div>
-            <div class="tube-scanner scape-ui-block card card-inverse">
+            <div class="tube-scanner">
               <label for="tube_scan" class="tube-label">Scan tube:</label>
               <input id="tube_scan" name="tube_scan" placeholder="Tube barcode" class="tube" tabindex="1"/>
             </div>
@@ -49,5 +50,6 @@
         </div>
       <% end %>
     <% end %>
+  </div>
   <% end %>
 <% end %>
