@@ -43,7 +43,7 @@ gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
 gem 'sanger_barcode', '>= 0.2.1', github: 'sanger/sanger_barcode'
 
-gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
+gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

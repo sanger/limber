@@ -19,6 +19,13 @@ GIT
       savon (= 0.9.2)
 
 GIT
+  remote: git://github.com/sanger/sanger_barcode_format.git
+  revision: ebe7a89697ffe97f69a84a31a6451300caf83a16
+  branch: development
+  specs:
+    sanger_barcode_format (0.0.1)
+
+GIT
   remote: git://github.com/sanger/sequencescape-client-api.git
   revision: bb1f270f46a38e3181894d74c812b0b6161459dc
   branch: rails_4
@@ -28,13 +35,6 @@ GIT
       activesupport (>= 4.0.0)
       i18n
       yajl-ruby (>= 1.1.0)
-
-GIT
-  remote: git@github.com:sanger/sanger_barcode_format.git
-  revision: ebe7a89697ffe97f69a84a31a6451300caf83a16
-  branch: development
-  specs:
-    sanger_barcode_format (0.0.1)
 
 GEM
   remote: https://rubygems.org/
