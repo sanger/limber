@@ -1,38 +1,13 @@
 # frozen_string_literal: true
 
 module Forms
-  class TubesForm < CreationForm
-    class Sibling
-      READY_STATE = 'qc_complete'
-
-      attr_reader :name, :uuid, :state, :barcode
-
-      def initialize(options)
-        return missing_sibling unless options.respond_to?(:[])
-        @name = options['name']
-        @uuid = options['uuid']
-        @barcode = options['ean13_barcode']
-        @state = options['state']
-      end
-
-      def message
-        return 'This tube is ready for pooling, find it, and scan it in above' if state == READY_STATE
-        return 'Some requests still need to be progressed to appropriate tubes' if state == 'Not Present'
-        'Must be %s first' % READY_STATE
-      end
-
-      def ready?
-        state == READY_STATE
-      end
-
-      private
-
-      def missing_sibling
-        @name  = 'Other'
-        @state = 'Not Present'
-      end
-    end
-
+  # The final tubes form handles the transfer to the Multiplexed Library Tube
+  # that gets generated upfront. It has two behaviours:
+  # 1) For single plate pools it gnerates the new tube immediately
+  # 2) For cross-plate pools (such as dual index) it prompts the user to scan
+  #    all tubes in the submission
+  # This check is based on the contents of sibling_tubes in the json
+  class FinalTubesForm < CreationForm
     def render(controller)
       if no_pooling_required?
         super
@@ -43,24 +18,12 @@ module Forms
 
     attr_reader :all_tube_transfers
 
-    def no_pooling_required?
-      tube.sibling_tubes.count == 1
-    end
-
-    def siblings
-      @siblings ||= tube.sibling_tubes.map { |s| Sibling.new(s) }
-    end
-
     def each_sibling
       siblings.each { |s| yield s }
     end
 
     def all_ready?
       siblings.all?(&:ready?)
-    end
-
-    def barcode_to_uuid(barcode)
-      siblings.detect { |s| s.barcode == barcode }.uuid
     end
 
     self.page = 'multi_tube_pooling'
@@ -77,10 +40,6 @@ module Forms
         ).tap { success << this_parent_uuid }
       end
       true
-    rescue => e
-      errors.add(:base, "#{success.count} tubes were transferred successfully before something went wrong.")
-      errors.add(:base, e.message)
-      false
     end
 
     # We pretend that we've added a new blank tube when we're actually
@@ -112,6 +71,19 @@ module Forms
     end
 
     private
+
+    # Tubes siblings include themselves, so we expect to see just one sibling
+    def no_pooling_required?
+      tube.sibling_tubes.count == 1
+    end
+
+    def barcode_to_uuid(barcode)
+      siblings.detect { |s| s.barcode == barcode }.uuid
+    end
+
+    def siblings
+      @siblings ||= tube.sibling_tubes.map { |s| Sibling.new(s) }
+    end
 
     def barcodes_provided?
       @barcode_hash.present?

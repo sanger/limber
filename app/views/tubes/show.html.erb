@@ -11,7 +11,7 @@
   <%= content do %>
     <%= card without_block: true do %>
       <div class="card-block">
-        <h2 class="card-title">
+        <h2 id="tube-title" class="card-title">
           <%= @presenter.title %>
           <span class="badge badge-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
           <%# No priority flag %>

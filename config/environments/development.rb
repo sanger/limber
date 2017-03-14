@@ -65,7 +65,7 @@ Rails.application.configure do
   config.api_connection_options               = ActiveSupport::OrderedOptions.new
   config.api_connection_options.namespace     = 'Limber'
   config.api_connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
-  config.api_connection_options.authorisation = 'development'
+  config.api_connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project

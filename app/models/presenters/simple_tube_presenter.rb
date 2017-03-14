@@ -15,7 +15,7 @@ module Presenters
         transition [:pending, :started] => :passed
       end
 
-      event :fail do
+      event :mark_as_failed do
         transition [:passed] => :failed
       end
 

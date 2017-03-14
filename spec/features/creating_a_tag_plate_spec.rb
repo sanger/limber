@@ -65,7 +65,6 @@ feature 'Creating a tag plate', js: true do
     expect(plate_title).to have_text('Limber Cherrypicked')
     click_on('Add an empty Tag Purpose plate')
     expect(page).to have_content('Tag plate addition')
-    expect(page).to have_content('Tag plate addition')
     stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
     fill_in('Tag plate barcode', with: tag_plate_barcode)
     expect(page).to have_content('12345')

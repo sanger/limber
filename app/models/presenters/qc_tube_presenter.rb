@@ -16,7 +16,7 @@ module Presenters
         transition passed: :qc_complete
       end
 
-      event :fail do
+      event :mark_as_failed do
         transition [:passed] => :failed
       end
 

@@ -27,12 +27,8 @@ module ApplicationHelper
     Rails.env
   end
 
-  def non_production_class
-    Rails.env != 'production' ? 'nonproduction' : ''
-  end
-
-  def custom_theme
-    yield 'nonproduction' unless Rails.env == 'production'
+  def environment_type_class
+    Rails.env.production? ? 'production' : 'nonproduction'
   end
 
   def each_robot(&block)
