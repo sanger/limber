@@ -60,21 +60,36 @@ feature 'Pool tubes at end of pipeline', js: true do
     transfer_request_b
   end
 
-  scenario 'of a recognised type' do
-    fill_in_swipecard_and_barcode user_swipecard, tube_barcode
-    page_title = find('#tube-title')
-    expect(page_title).to have_text('Example Purpose')
-    click_on('Add an empty Final Tube Purpose tube')
-    expect(page).to have_text('Multi Tube pooling')
-    expect(page).to have_button('Make Tube', disabled: true)
-    fill_in('Tube barcode', with: tube_barcode)
-    find_field('Tube barcode').send_keys :tab
-    fill_in('Tube barcode', with: sibling_barcode)
-    find_field('Tube barcode').send_keys :tab
-    click_on('Make Tube')
-    expect(page).to have_content('New empty labware added to the system.')
-    expect(transfer_request).to have_been_made.once
-    expect(transfer_request_b).to have_been_made.once
+  shared_examples 'a tube validation form' do
+    scenario 'of a recognised type' do
+      fill_in_swipecard_and_barcode user_swipecard, tube_barcode
+      page_title = find('#tube-title')
+      expect(page_title).to have_text('Example Purpose')
+      click_on('Add an empty Final Tube Purpose tube')
+      expect(page).to have_text('Multi Tube pooling')
+      expect(page).to have_button('Make Tube', disabled: true)
+      fill_in('Tube barcode', with: tube_barcode)
+      find_field('Tube barcode').send_keys barcode_reader_key
+      fill_in('Tube barcode', with: sibling_barcode)
+      find_field('Tube barcode').send_keys barcode_reader_key
+      click_on('Make Tube')
+      expect(page).to have_content('New empty labware added to the system.')
+      expect(transfer_request).to have_been_made.once
+      expect(transfer_request_b).to have_been_made.once
+    end
+  end
+
+  # Barcode readers can have different configurations.
+  # To avoid frustrations when using different readers we
+  # want to show the same behaviour.
+  context 'when barcode readers send a tab' do
+    let(:barcode_reader_key) { :tab }
+    it_behaves_like 'a tube validation form'
+  end
+
+  context 'when barcode readers send an enter' do
+    let(:barcode_reader_key) { :enter }
+    it_behaves_like 'a tube validation form'
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)
