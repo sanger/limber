@@ -33,16 +33,15 @@ gem 'state_machines'
 gem 'hashie'
 gem 'exception_notification'
 
-gem 'sequencescape-client-api', '>= 0.3.0',
-  # Should be switched back to sanger + production for deployment
-  github: 'JamesGlover/sequencescape-client-api',
-  branch: 'add_limber_needs',
+gem 'sequencescape-client-api', '>= 0.3.1',
+  # Should be switched back to sanger + rails4 for deployment
+  github: 'sanger/sequencescape-client-api',
+  branch: 'rails_4',
   require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
-gem 'sanger_barcode', '>= 0.2.1',
-  git: 'git+ssh://git@github.com/sanger/sanger_barcode.git'
+gem 'sanger_barcode', '>= 0.2.1', github: 'sanger/sanger_barcode'
 
 gem 'sanger_barcode_format', git: 'git@github.com:sanger/sanger_barcode_format.git', branch: 'development'
 
