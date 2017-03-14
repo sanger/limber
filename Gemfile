@@ -69,5 +69,5 @@ end
 
 group :deployment do
   gem 'thin'
-  gem "psd_logger", git: 'git+ssh://git@github.com/sanger/psd_logger.git'
+  gem "psd_logger", github: 'sanger/psd_logger'
 end

@@ -1,15 +1,15 @@
 GIT
-  remote: git+ssh://git@github.com/sanger/psd_logger.git
-  revision: dd2d634114df75b1d8535715c169a7fc99521389
-  specs:
-    psd_logger (0.1.6)
-
-GIT
   remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
     pmb-client (0.1.0)
       json_api_client (~> 1.1)
+
+GIT
+  remote: git://github.com/sanger/psd_logger.git
+  revision: dd2d634114df75b1d8535715c169a7fc99521389
+  specs:
+    psd_logger (0.1.6)
 
 GIT
   remote: git://github.com/sanger/sanger_barcode_format.git
