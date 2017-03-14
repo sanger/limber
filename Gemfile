@@ -41,8 +41,6 @@ gem 'sequencescape-client-api', '>= 0.3.1',
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
-gem 'sanger_barcode', '>= 0.2.1', github: 'sanger/sanger_barcode'
-
 gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
 
 # Bundle gems for the local environment. Make sure to
