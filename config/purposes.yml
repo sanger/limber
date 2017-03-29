@@ -66,4 +66,52 @@ LB Lib Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Lib Pool
-
+LB Lib PrePool:
+  :asset_type: plate
+  :stock_plate: false
+  :form_class: Forms::MultiPlatePoolingForm
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Lib PCR-XP
+LB Hyb:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Lib PrePool
+LB Cap Lib:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Hyb
+LB Cap Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib
+LB Cap Lib PCR-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib PCR
+LB ISCH Cap Lib Pool:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib PCR-XP
