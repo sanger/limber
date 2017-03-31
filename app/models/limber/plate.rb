@@ -26,33 +26,32 @@ class Limber::Plate < Sequencescape::Plate
     plate_purpose
   end
 
-  def well_to_tube_transfers
-    @transfers ||= transfers_to_tubes.first.transfers
-  end
-
   # We know that if there are any transfers with this plate as a source then they are into
   # tubes.
   def transfers_to_tubes?
     transfers_to_tubes.present?
   end
 
-  # Returns the tubes that an instance of this plate has been transferred into.
-  # This ensures that tubes are sorted in column major order
-  def tubes
-    return [] unless transfers_to_tubes?
-    WellHelpers.column_order.map(&well_to_tube_transfers.method(:[])).compact.uniq
-  end
-
   def tubes_and_sources
     return [] unless transfers_to_tubes?
-    WellHelpers.column_order.map do |l|
-      [l, well_to_tube_transfers[l]]
-    end.group_by do |_, t|
-      t && t.uuid
-    end.reject do |uuid, _|
-      uuid.nil?
-    end.map do |_, well_tube_pairs|
-      [well_tube_pairs.first.last, well_tube_pairs.map(&:first)]
+    tube_hash = Hash.new { |h, i| h[i] = [] }
+    # Build a list of all source wells for a given tube
+    well_to_tube_transfers.each do |well, tube|
+      tube_hash[tube] << well
+    end
+    # Sort the source well list in column order
+    tube_hash.transform_values! do |well_list|
+      well_list.sort_by { |well_name| WellHelpers.index_of(well_name) }
+    end
+    # Sort the tubes in column order based on their first well
+    tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
+  end
+
+  private
+
+  def well_to_tube_transfers
+    @transfers ||= transfers_to_tubes.each_with_object([]) do |transfer, all_transfers|
+      all_transfers.concat(transfer.transfers.to_a)
     end
   end
 end

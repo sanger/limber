@@ -27,9 +27,9 @@ class QcFilesController < ApplicationController
         return true
       end
     end
-    if params['sequencescape_tube_id']
-      @asset_path = sequencescape_tube_path(params['sequencescape_tube_id'])
-      @asset      = api.tube.find(params['sequencescape_tube_id'])
+    if params['limber_tube_id']
+      @asset_path = limber_tube_path(params['limber_tube_id'])
+      @asset      = api.tube.find(params['limber_tube_id'])
       return true
     end
     false

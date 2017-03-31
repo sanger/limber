@@ -3,8 +3,8 @@
 
   <% content do %>
     <h2>Baited Plate Preview</h2>
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
+    <div>
+      <div>
         <%= render partial: "plates/plate", locals: {plate_presenter: @creation_form}  %>
 
         <br/>
@@ -19,7 +19,7 @@
         <% end %>
       </div>
 
-      <ul id="key" class="ui-block-b">
+      <ul id="key" >
         <ul>
           <li>Carefully check the bait layout against your worksheet.</li>
           <li>Click on 'Create plate' button.</li>

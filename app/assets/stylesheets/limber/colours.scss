@@ -9,6 +9,20 @@
  * Honestly, couldn't come up with a better set of colours and ones with greater names.  All credit
  * to them!
  */
+  .green             { @include shade-aliquot($brand-success); }
+  .red               { @include shade-aliquot($brand-danger); }
+  .blue              { @include shade-aliquot($brand-info); }
+  .orange            { @include shade-aliquot($brand-warning); }
+  .unknown           { @include shade-aliquot($gray); }
+  .pending           { @include shade-aliquot(#ffffff); }
+  .started           { @include shade-aliquot($brand-info); }
+  .passed            { @include shade-aliquot($brand-success); }
+  .qc_complete       { @include shade-aliquot($brand-primary); }
+  .good              { @include shade-aliquot($brand-success); } // Used on well failure page
+  .failed            { @include shade-aliquot($brand-danger); }
+  .cancelled         { @include shade-aliquot($brand-danger); }
+  .permanent-failure { @include shade-aliquot($brand-danger); }
+
 .colour-1   { @include shade-aliquot(#EA7E5D); }
 .colour-2   { @include shade-aliquot(#78DBE2); }
 .colour-3   { @include shade-aliquot(#FDD9B5); }

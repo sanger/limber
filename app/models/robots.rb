@@ -147,7 +147,6 @@ module Robots
     end
 
     def verify(bed_contents, robot_barcode = nil)
-
       verified = valid_plates(bed_contents).merge(valid_parents) { |_k, v1, v2| v1 && v2 }
 
       if verify_robot? && beds.values.first.plate.present?

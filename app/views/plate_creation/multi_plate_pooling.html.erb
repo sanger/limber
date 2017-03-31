@@ -22,8 +22,8 @@
         <%= form.hidden_field :parent_uuid,        value: @creation_form.parent_uuid %>
         <%= form.hidden_field :purpose_uuid, value: @creation_form.purpose_uuid %>
 
-    <div class="ui-grid-a">
-      <div id="source-block" class="ui-block-a">
+    <div>
+      <div id="source-block" >
 
         <div id="add-plates-block" class="scape-ui-block">
           <% (0...8).each do |i| %>
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="ui-block-b">
+      <div>
         <div id="add-plates-instructions-block" class="scape-ui-block" >
           <div class="instructions ui-blody">
             <h3>Add Lib PCR-XP Plates</h3>
@@ -83,8 +83,8 @@
 
     </div>
 
-    <div class="ui-grid-a">
-      <div class="ui-block-a">
+    <div>
+      <div>
 
         <div id="edit-pool-block" class="scape-ui-block" style="display:none;">
           <div data-role="fieldcontain">
@@ -103,7 +103,7 @@
 
       </div>
 
-      <div class="ui-block-b">
+      <div>
         <div id="output-plate-block" class="scape-ui-block" style="display:none;">
           <h3>Target Plate</h3>
           <%= render partial: "plates/empty_plate", locals: {plate_presenter: @creation_form, css_class: "destination-plate"} %>
