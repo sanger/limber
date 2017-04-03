@@ -8,7 +8,7 @@ describe 'plate_purpose factory' do
       :plate_purpose,
       uuid: 'example-plate-purpose-uuid',
       children_count: 1,
-      plates_actions: %w(read create)
+      plates_actions: %w[read create]
     )
   end
 

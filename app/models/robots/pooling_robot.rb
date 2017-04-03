@@ -3,7 +3,7 @@
 module Robots
   class PoolingRobot < Robot
     class Bed < Robot::Bed
-      self.attributes = %i(api user_uuid purpose states label parents target_state robot)
+      self.attributes = %i[api user_uuid purpose states label parents target_state robot]
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
@@ -34,7 +34,7 @@ module Robots
       private :range
     end
 
-    self.attributes = %i(api user_uuid layout beds name destination_bed id)
+    self.attributes = %i[api user_uuid layout beds name destination_bed id]
 
     def verify(bed_contents)
       valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|

@@ -5,11 +5,11 @@ module Forms
     include Forms::Form::CustomPage
 
     self.page = 'tagging'
-    self.attributes = %i(
+    self.attributes = %i[
       api purpose_uuid parent_uuid user_uuid
       tag_plate_barcode tag_plate
       tag2_tube_barcode tag2_tube
-    )
+    ]
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :requires_tag2? }

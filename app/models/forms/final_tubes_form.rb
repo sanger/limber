@@ -27,7 +27,7 @@ module Forms
     end
 
     self.page = 'multi_tube_pooling'
-    self.attributes = %i(api purpose_uuid parent_uuid user_uuid parents)
+    self.attributes = %i[api purpose_uuid parent_uuid user_uuid parents]
 
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
 

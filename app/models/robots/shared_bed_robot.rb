@@ -5,7 +5,7 @@ module Robots
     class Bed < Robot::Bed
       attr_reader :labware
 
-      self.attributes = %i(api user_uuid purpose states label parent target_state robot secondary_purposes)
+      self.attributes = %i[api user_uuid purpose states label parent target_state robot secondary_purposes]
 
       def transition
         return if target_state.nil? || labware.empty? # We have nothing to do

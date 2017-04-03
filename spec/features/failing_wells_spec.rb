@@ -19,7 +19,7 @@ feature 'Failing wells', js: true do
         'state_change' => {
           user: user_uuid,
           target: plate_uuid,
-          contents: %w(A2 A3),
+          contents: %w[A2 A3],
           target_state: 'failed',
           reason: 'Individual Well Failure',
           customer_accepts_responsibility: nil

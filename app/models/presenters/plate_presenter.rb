@@ -11,7 +11,7 @@ module Presenters
     self.labware_class = :plate
 
     attr_accessor :api, :labware
-    self.attributes =  %i(api labware)
+    self.attributes =  %i[api labware]
 
     class_attribute    :aliquot_partial
     self.aliquot_partial = 'labware/aliquot'

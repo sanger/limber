@@ -62,7 +62,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(6).barcode => { purpose: 'Lib PCR-XP', states: ['qc_complete'], child: bed(4).barcode, label: 'Bed 6' },
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
-                   states: %w(pending started),
+                   states: %w[pending started],
                    parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode, bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed',
                    label: 'Bed 4'

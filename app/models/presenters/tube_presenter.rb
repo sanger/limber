@@ -9,7 +9,7 @@ module Presenters
     class_attribute :labware_class
     self.labware_class = :tube
 
-    self.attributes =  %i(api labware)
+    self.attributes =  %i[api labware]
 
     class_attribute :additional_creation_partial
     self.additional_creation_partial = 'labware/tube/child_tube_creation'

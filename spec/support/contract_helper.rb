@@ -84,7 +84,7 @@ module ContractHelper
 
   module ClassMethods
     def expect_request_from(request_filename, &block)
-      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w(.. contracts)))
+      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w[.. contracts]))
       stubbed_request.request(request_filename)
       stubbed_request.instance_eval(&block)
       stubbed_request.inject_into(self)

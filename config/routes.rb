@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     get '/my_plates', action: :my_plates
   end
 
-  resource :sessions, only: %i(create delete) do
+  resource :sessions, only: %i[create delete] do
     # Also map logout to destroy
     get 'logout', action: :destroy
   end

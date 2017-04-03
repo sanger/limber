@@ -6,10 +6,10 @@ module Forms
     self.page = 'multi_plate_pooling'
     self.aliquot_partial = 'custom_pooled_aliquot'
 
-    self.attributes = %i(
+    self.attributes = %i[
       api purpose_uuid parent_uuid user_uuid
       transfers
-    )
+    ]
 
     private
 

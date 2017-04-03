@@ -15,7 +15,7 @@ module Presenters
       end
 
       event :pass do
-        transition %i(pending started) => :passed
+        transition %i[pending started] => :passed
       end
 
       event :mark_as_failed do
@@ -23,7 +23,7 @@ module Presenters
       end
 
       event :cancel do
-        transition %i(pending started) => :cancelled
+        transition %i[pending started] => :cancelled
       end
 
       state :pending do

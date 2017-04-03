@@ -5,6 +5,6 @@ FactoryGirl.define do
     json_root 'custom_metadatum_collection'
     with_belongs_to_associations 'user', 'asset'
     metadata { { metadata_1: 'metadata_1', metadata_2: 'metadata_2' } }
-    resource_actions %w(read create update)
+    resource_actions %w[read create update]
   end
 end

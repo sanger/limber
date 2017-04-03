@@ -24,7 +24,7 @@ FactoryGirl.define do
 
     transient do
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       purpose_uuid { SecureRandom.uuid }
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.

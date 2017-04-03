@@ -4,7 +4,7 @@ require './lib/well_helpers'
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do
-  factory :plate, class: Limber::Plate, traits: %i(api_object barcoded) do
+  factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root 'plate'
     size 96
     state 'pending'
