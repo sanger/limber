@@ -103,7 +103,7 @@ module Forms
 
     private
 
-    def create_objects!
+    def create_labware!
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,

@@ -60,7 +60,9 @@ module ContractHelper
     private :setup_request_and_response_mock
 
     def validate_request_and_response_called(scope)
-      if @times
+      if @times == :any
+        # Nothing
+      elsif @times
         scope.expect(a_request(@http_verb, @url).with(@conditions)).to have_been_made.times(@times)
       else
         scope.expect(a_request(@http_verb, @url).with(@conditions)).to have_been_made.at_least_once

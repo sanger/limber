@@ -80,6 +80,7 @@ class SearchController < ApplicationController
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
       format.html { render :new }
+      format.json { render json: { error: exception.message }, status: 404 }
     end
   end
 

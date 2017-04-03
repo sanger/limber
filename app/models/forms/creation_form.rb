@@ -57,11 +57,12 @@ module Forms
 
     def save!
       raise StandardError, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
-
-      create_objects!
+      create_labware!
     end
 
-    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid)
+    private
+
+    def create_labware!(selected_transfer_template_uuid = default_transfer_template_uuid)
       @plate_creation = api.plate_creation.create!(
         parent: parent_uuid,
         child_purpose: purpose_uuid,
@@ -77,8 +78,5 @@ module Forms
       yield(@plate_creation.child) if block_given?
       true
     end
-    private :create_plate!
-
-    alias create_objects! create_plate!
   end
 end

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'formtastic'
 
+gem 'coffee-rails'
 gem 'rails'
 gem 'sass-rails'
 gem 'uglifier'
-gem 'coffee-rails'
 
 # Provides some css helpers
 # Deprecate!
