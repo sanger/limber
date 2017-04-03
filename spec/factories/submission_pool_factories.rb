@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../support/json_renderers'
 
 FactoryGirl.define do

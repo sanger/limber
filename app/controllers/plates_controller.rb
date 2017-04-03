@@ -9,7 +9,7 @@ class PlatesController < LabwareController
 
   include PlatesController::LabwareWrangler
 
-  before_action :check_for_current_user!, only: [:update, :fail_wells]
+  before_action :check_for_current_user!, only: %i(update fail_wells)
 
   def fail_wells
     if wells_to_fail.empty?

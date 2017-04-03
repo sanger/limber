@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_dependency 'forms'
 
 module Forms
@@ -13,7 +14,7 @@ module Forms
     include Form
     include PlateWalking
 
-    self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid]
+    self.attributes = %i(api purpose_uuid parent_uuid user_uuid)
 
     class_attribute :default_transfer_template_uuid
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer columns 1-12']

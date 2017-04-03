@@ -1,7 +1,8 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
-  factory :qcable, class: Limber::Qcable, traits: [:api_object, :barcoded] do
+  factory :qcable, class: Limber::Qcable, traits: %i(api_object barcoded) do
     with_belongs_to_associations 'lot', 'qcable_creator', 'asset'
     json_root 'qcable'
 

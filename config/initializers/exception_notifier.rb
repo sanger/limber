@@ -1,5 +1,6 @@
 
 # frozen_string_literal: true
+
 unless Rails.application.config.disable_exception_notifier
   Rails.application.config.middleware.use ExceptionNotification::Rack,
                                           email: {

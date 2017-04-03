@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Robots
   class Robot
     include Forms::Form
@@ -11,7 +12,7 @@ module Robots
       attr_reader :plate, :error_messages
 
       class_attribute :attributes
-      self.attributes = [:api, :user_uuid, :purpose, :states, :label, :parent, :target_state, :robot]
+      self.attributes = %i(api user_uuid purpose states label parent target_state robot)
 
       def initialize(*args)
         @error_messages = []
@@ -114,7 +115,7 @@ module Robots
     end
 
     class_attribute :attributes
-    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :id, :verify_robot]
+    self.attributes = %i(api user_uuid layout beds name id verify_robot)
 
     def perform_transfer(bed_settings)
       beds.each do |id, bed|

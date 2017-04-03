@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Pool tubes at end of pipeline', js: true do
@@ -90,17 +91,5 @@ feature 'Pool tubes at end of pipeline', js: true do
   context 'when barcode readers send an enter' do
     let(:barcode_reader_key) { :enter }
     it_behaves_like 'a tube validation form'
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
-
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
-    end
   end
 end

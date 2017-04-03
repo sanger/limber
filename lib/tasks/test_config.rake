@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :test_config do
   task :generate do
     settings = { searches: { 'Find something' => nil },

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Fake the web connections so we don't trash anything
 require 'webmock/rspec'
 
@@ -32,7 +33,7 @@ module ContractHelper
         @url = "http://example.com:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
-        @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
+        @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) if match[:body].present?
       end
     end
 

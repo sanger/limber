@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PurposeConfig
   attr_reader :name, :options, :store, :api
   class_attribute :default_printer

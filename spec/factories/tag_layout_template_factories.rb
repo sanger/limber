@@ -1,5 +1,6 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :tag_layout_template, class: Sequencescape::TagLayoutTemplate, traits: [:api_object] do
     json_root 'tag_layout_template'

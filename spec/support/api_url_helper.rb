@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ApiUrlHelper
   API_ROOT = 'http://example.com:3000'
 

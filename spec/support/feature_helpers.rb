@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module FeatureHelpers
   def stub_search_and_single_result(search, query, result = nil)
     search_uuid = search.downcase.tr(' ', '-')

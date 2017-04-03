@@ -62,7 +62,6 @@ class LabwareController < ApplicationController
         )
       end
     end
-
   rescue StateChangers::StateChangeError => exception
     respond_to do |format|
       format.html { redirect_to(search_path, alert: exception.message) }

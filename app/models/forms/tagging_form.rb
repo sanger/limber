@@ -1,14 +1,15 @@
 # frozen_string_literal: true
+
 module Forms
   class TaggingForm < CreationForm
     include Forms::Form::CustomPage
 
     self.page = 'tagging'
-    self.attributes = [
-      :api, :purpose_uuid, :parent_uuid, :user_uuid,
-      :tag_plate_barcode, :tag_plate,
-      :tag2_tube_barcode, :tag2_tube
-    ]
+    self.attributes = %i(
+      api purpose_uuid parent_uuid user_uuid
+      tag_plate_barcode tag_plate
+      tag2_tube_barcode tag2_tube
+    )
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :requires_tag2? }

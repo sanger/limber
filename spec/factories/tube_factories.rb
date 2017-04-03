@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 FactoryGirl.define do
-  factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: [:api_object, :barcoded] do
+  factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i(api_object barcoded) do
     json_root 'multiplexed_library_tube'
 
     transient do
@@ -29,7 +30,7 @@ FactoryGirl.define do
     updated_at { Time.current }
     state 'pending'
 
-    factory :tube, class: Limber::Tube, traits: [:api_object, :barcoded] do
+    factory :tube, class: Limber::Tube, traits: %i(api_object barcoded) do
       # with_has_many_associations 'aliquots'
       json_root 'tube'
       state 'pending'
@@ -42,12 +43,12 @@ FactoryGirl.define do
         end
       end
 
-      factory :tube_without_siblings, traits: [:api_object, :barcoded] do
+      factory :tube_without_siblings, traits: %i(api_object barcoded) do
         json_root 'tube'
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
       end
 
-      factory :tube_with_siblings, traits: [:api_object, :barcoded] do
+      factory :tube_with_siblings, traits: %i(api_object barcoded) do
         json_root 'tube'
         transient do
           siblings_count 1

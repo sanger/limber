@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 ##
 module RobotConfiguration
   BedOrCar = Struct.new(:barcode, :name)

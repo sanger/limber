@@ -1,5 +1,6 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :transfer_template, class: Sequencescape::TransferTemplate, traits: [:api_object] do
     json_root 'transfer_template'
@@ -26,7 +27,7 @@ FactoryGirl.define do
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}transfer_templates" }
       uuid nil
-      available_templates [:transfer_template, :transfer_to_specific_tubes_by_submission]
+      available_templates %i(transfer_template transfer_to_specific_tubes_by_submission)
     end
 
     transfer_templates do

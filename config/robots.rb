@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'robot_configuration'
 
 ROBOT_CONFIG = RobotConfiguration::Register.configure do
