@@ -17,9 +17,9 @@
       },
       checkPlates : function() {
         if ($('.wait-plate, .bad-plate').size() === 0) {
-          $('#summary_tab').removeClass('ui-disabled');
+          $('#create-labware').attr('disabled', null);
         } else {
-          $('#summary_tab').addClass('ui-disabled');
+          $('#create-labware').attr('disabled', 'disabled');
         }
       }
     })
@@ -29,7 +29,7 @@
       if (this.value === "") {
         this.scanPlate();
       } else {
-        this.waitPlate(); $('#summary_tab').addClass('ui-disabled'); SCAPE.retrievePlate(this); };
+        this.waitPlate(); $('#create-labware').attr('disabled', 'disabled'); SCAPE.retrievePlate(this); };
     });
 
     $('.plate-box').each(function(){
@@ -74,7 +74,6 @@
           SCAPE.plates[$(this).data('position')] = undefined;
         }
       })
-
     })
 
     SCAPE.totalPools = function() {
@@ -219,7 +218,7 @@
             }
           });
           for (var i in SCAPE.plates[0].preCapPools) { seqPoolOffset +=1 };
-          $('.plate-id-'+plateIndex).append(newInputs);
+          $('#new_plate').append(newInputs);
         }
       }
     };
@@ -252,53 +251,12 @@
         plateSummaryHandler();
         $('#pooling-summary').empty();
         renderPoolingSummary(SCAPE.plates);
-        $('.create-button').prop('disabled',false);
         SCAPE.message('Check pooling and create plate','valid');
       } else {
         // Pooling Went wrong
         $('#pooling-summary').empty();
-        $('.create-button').prop('disabled',true);
         SCAPE.message('Too many pools for the target plate.','invalid');
       }
     };
-
-    // SCAPE.poolingSM = new SCAPE.StateMachine('.ui-content', {
-
-    //   'addPlates' :{
-    //     enter: function(){
-    //       $('.create-button').prop('disabled',true);
-    //     },
-
-    //     leave: function(){
-    //       // validatePlates();
-    //     }
-    //   },
-
-    //   'poolingSummary': {
-    //     enter: function(){
-    //       if (SCAPE.calculatePreCapPools()) {
-    //         plateSummaryHandler();
-    //         $('#pooling-summary').empty();
-    //         renderPoolingSummary(SCAPE.plates);
-    //         $('.create-button').prop('disabled',false);
-    //         SCAPE.message('Check pooling and create plate','valid');
-    //       } else {
-    //         // Pooling Went wrong
-    //         $('#pooling-summary').empty();
-    //         $('.create-button').prop('disabled',true);
-    //         SCAPE.message('Too many pools for the target plate.','invalid');
-    //       }
-    //     },
-
-    //     leave: function(){
-    //       $('#pooling-summary').empty();
-    //       $('.create-button').prop('disabled',true);
-    //     }
-    //   }
-    // });
-
-    // SCAPE.linkCallbacks.add(SCAPE.poolingSM.transitionLink);
-    // SCAPE.poolingSM.transitionTo('addPlates');
-
   });
 })(jQuery,window);

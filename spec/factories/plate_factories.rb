@@ -71,5 +71,12 @@ FactoryGirl.define do
         with_belongs_to_associations 'custom_metadatum_collection'
       end
     end
+
+    factory :plate_for_pooling do
+      purpose_name 'Pooled example'
+      pre_cap_groups({
+        'pre-cap-group' => { 'wells' => ['A1', 'B1'] }
+      })
+    end
   end
 end

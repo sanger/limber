@@ -54,8 +54,6 @@ feature 'Pool tubes at end of pipeline', js: true do
     stub_api_get(tube_uuid, body: example_tube)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
-    # stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    # stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
     stub_api_get(multiplexed_library_tube_uuid, body: json(:multiplexed_library_tube))
     transfer_request
     transfer_request_b
