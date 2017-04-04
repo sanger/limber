@@ -74,9 +74,7 @@ FactoryGirl.define do
 
     factory :plate_for_pooling do
       purpose_name 'Pooled example'
-      pre_cap_groups({
-        'pre-cap-group' => { 'wells' => ['A1', 'B1'] }
-      })
+      pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
     end
   end
 end
