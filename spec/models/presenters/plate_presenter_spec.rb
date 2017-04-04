@@ -32,8 +32,7 @@ describe Presenters::PlatePresenter do
   end
 
   let(:expected_requests_for_summary) do
-    stub_request(:get, labware.wells.send(:actions).read)
-      .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
+    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
   end
 
   subject do
