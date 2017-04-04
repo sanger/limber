@@ -7,6 +7,7 @@ FactoryGirl.define do
     named_actions ['preview']
     resource_actions %w(read create)
     transfers('A1' => 'A1', 'B1' => 'B1')
+    uuid 'transfer-template-uuid'
 
     factory :transfer_to_specific_tubes_by_submission do
       name 'Transfer wells to specific tubes defined by submission'

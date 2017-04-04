@@ -9,8 +9,8 @@ FactoryGirl.define do
 
     transient do
       pools [
-        { size: 48, bait: 'Human all exon 50MB' },
-        { size: 48, bait: 'Mouse all exon' }
+        { size: 2, bait: 'Human all exon 50MB' },
+        { size: 2, bait: 'Mouse all exon' }
       ]
     end
 
