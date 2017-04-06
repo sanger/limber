@@ -15,7 +15,7 @@ FactoryGirl.define do
       barcode_prefix 'DN'
       barcode_type 1
       purpose_name 'example-purpose'
-      purpose_uuid 'stock-plate-purpose-uuid'
+      purpose_uuid 'example-purpose-uuid'
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
