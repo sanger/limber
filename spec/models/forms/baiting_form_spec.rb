@@ -32,8 +32,7 @@ describe Forms::BaitingForm do
     expect(Forms::BaitingForm.page).to eq 'baiting'
   end
 
-  context "create plate" do
-
+  context 'create plate' do
     has_a_working_api
 
     let!(:bait_library_layout_preview_request) do
@@ -83,14 +82,12 @@ describe Forms::BaitingForm do
     end
 
     it 'should make an api call for bait library layout preview' do
-      bait_library_layout_preview = {"A1"=>"Human all exon 50MB", "B1"=>"Human all exon 50MB", "C1"=>"Mouse all exon", "D1"=>"Mouse all exon"}
+      bait_library_layout_preview = { 'A1' => 'Human all exon 50MB', 'B1' => 'Human all exon 50MB', 'C1' => 'Mouse all exon', 'D1' => 'Mouse all exon' }
       expect(subject.bait_library_layout_preview).to eq bait_library_layout_preview
     end
 
-    it "should create objects" do
+    it 'should create objects' do
       expect(subject.create_objects!).to eq true
     end
-
   end
-
 end

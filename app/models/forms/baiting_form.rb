@@ -5,26 +5,26 @@ module Forms
   class BaitingForm < CreationForm
     include Forms::Form::CustomPage
 
-    self.page = "baiting"
+    self.page = 'baiting'
     class_attribute :aliquot_partial
-    self.aliquot_partial = "plates/baited_aliquot"
+    self.aliquot_partial = 'plates/baited_aliquot'
 
     def plate
-      self.parent
+      parent
     end
 
     def bait_library_layout_preview
       @bait_library_layout_preview ||= api.bait_library_layout.preview!(
-        :plate => parent_uuid,
-        :user => user_uuid
+        plate: parent_uuid,
+        user: user_uuid
       ).layout
     end
 
     def create_objects!
       create_plate! do |plate|
         api.bait_library_layout.create!(
-          :plate => plate.uuid,
-          :user  => user_uuid
+          plate: plate.uuid,
+          user: user_uuid
         )
       end
     end
@@ -39,9 +39,9 @@ module Forms
         aliquot  = bait # Fudge, will be nil if no bait
 
         Hashie::Mash.new(
-          :location => location,
-          :bait     => bait,
-          :aliquots => [aliquot].compact
+          location: location,
+          bait: bait,
+          aliquots: [aliquot].compact
         )
       end
     end

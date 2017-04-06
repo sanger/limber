@@ -29,28 +29,28 @@ feature 'Creating a plate with bait', js: true do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('example-purpose-uuid', body: json(:plate_purpose))
     stub_api_get('example-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
-    #end of stubs for plate show page
+    # end of stubs for plate show page
 
-    #These stubs are required to render plate_creation baiting page
-    stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout), payload: {bait_library_layout: {plate: plate_uuid, user:  user_uuid} })
-    #end of stubs for plate_creation baiting page
+    # These stubs are required to render plate_creation baiting page
+    stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: plate_uuid, user: user_uuid } })
+    # end of stubs for plate_creation baiting page
 
-    #These stubs are required to create a new plate with baits
-    stub_api_post('plate_creations', body: json(:plate_creation), payload: {plate_creation: {parent: plate_uuid, user:  user_uuid, child_purpose: child_purpose_uuid} })
+    # These stubs are required to create a new plate with baits
+    stub_api_post('plate_creations', body: json(:plate_creation), payload: { plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid } })
     stub_api_get('transfer-columns-uuid', body: transfer_template)
-    stub_api_post('transfer-columns-uuid', body: json(:transfer), payload: {transfer: {source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
-    stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: {bait_library_layout: {plate: 'child-uuid', user:  user_uuid} })
-    #end of stubs for creating a new plate with baits
+    stub_api_post('transfer-columns-uuid', body: json(:transfer), payload: { transfer: { source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
+    stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
+    # end of stubs for creating a new plate with baits
   end
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
-    click_on "Add an empty with-baits plate"
-    expect(page).to have_content("Carefully check the bait layout")
-    click_on "Create plate"
-    #I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative
+    click_on 'Add an empty with-baits plate'
+    expect(page).to have_content('Carefully check the bait layout')
+    click_on 'Create plate'
+    # I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)
@@ -63,5 +63,4 @@ feature 'Creating a plate with bait', js: true do
       find_field('Plate or Tube Barcode').send_keys :enter
     end
   end
-
 end

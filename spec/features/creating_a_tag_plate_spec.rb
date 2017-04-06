@@ -55,7 +55,7 @@ feature 'Creating a tag plate', js: true do
     stub_api_get('lot2-uuid', body: json(:tag2_lot, lot_number: '67890', template_uuid: tag2_template_uuid))
     stub_api_get('tag2-lot-type-uuid', body: json(:tag2_lot_type))
 
-    stub_api_get(tag_plate_uuid, body: json(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' ))
+    stub_api_get(tag_plate_uuid, body: json(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
     stub_api_get(tag_plate_uuid, 'wells', body: json(:well_collection))
   end
 
