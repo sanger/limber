@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'forms/creation_form'
 require 'forms/baiting_form'
@@ -87,7 +88,7 @@ describe Forms::BaitingForm do
     end
 
     it 'should create objects' do
-      expect(subject.create_objects!).to eq true
+      expect(subject.create_labware!).to eq true
     end
   end
 end
