@@ -49,7 +49,7 @@ module Presenters::Statemachine
       end
     end
 
-    # Eventually this will end up on our forms/creations module
+    # Eventually this will end up on our labware_creators/creations module
     def purposes_of_type(type)
       Settings.purposes.select { |_uuid, purpose| purpose.asset_type == type }
     end

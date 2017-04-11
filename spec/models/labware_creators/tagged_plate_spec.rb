@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'forms/creation_form'
+require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe Forms::TaggingForm do
+describe LabwareCreators::TaggedPlate do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
@@ -28,13 +28,13 @@ describe Forms::TaggingForm do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
-    Forms::CreationForm.default_transfer_template_uuid = 'transfer-template-uuid'
+    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     plate_request
     wells_request
   end
 
   subject do
-    Forms::TaggingForm.new(form_attributes.merge(api: api))
+    LabwareCreators::TaggedPlate.new(form_attributes.merge(api: api))
   end
 
   context 'on new' do
@@ -56,7 +56,7 @@ describe Forms::TaggingForm do
     let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
 
     it 'can be created' do
-      expect(subject).to be_a Forms::TaggingForm
+      expect(subject).to be_a LabwareCreators::TaggedPlate
     end
 
     context 'with purpose mocks' do
@@ -159,7 +159,7 @@ describe Forms::TaggingForm do
       end
 
       it 'can be created' do
-        expect(subject).to be_a Forms::TaggingForm
+        expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
       it 'renders the "tagging" page' do
@@ -200,7 +200,7 @@ describe Forms::TaggingForm do
       end
 
       it 'can be created' do
-        expect(subject).to be_a Forms::TaggingForm
+        expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
       it 'renders the "tagging" page' do

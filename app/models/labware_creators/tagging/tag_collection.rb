@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Forms::Tagging
+module LabwareCreators::Tagging
   class TagCollection
     #
     # Create a tag collection

@@ -2,10 +2,10 @@
 
 module Robots
   class Robot
-    include Forms::Form
+    include Form
 
     class Bed
-      include Forms::Form
+      include Form
 
       class BedError < StandardError; end
       # Our robot has beds/rack-spaces

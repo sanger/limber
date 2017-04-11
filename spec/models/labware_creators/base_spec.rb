@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'forms/creation_form'
+require 'labware_creators/base'
 
 # CreationForm is the base class for our forms
-describe Forms::CreationForm do
+describe LabwareCreators::Base do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
   before(:each) do
     Settings.purposes[basic_purpose] = {
-      form_class: 'Forms::CreationForm'
+      form_class: 'LabwareCreators::Base'
     }
     Settings.purposes[tagged_purpose] = {
-      form_class: 'Forms::TaggingForm'
+      form_class: 'LabwareCreators::TaggedPlate'
     }
   end
 
   it 'can lookup form for a given purpose' do
-    expect(described_class.class_for(basic_purpose)).to eq(Forms::CreationForm)
+    expect(described_class.class_for(basic_purpose)).to eq(LabwareCreators::Base)
   end
 
   it 'can lookup form for another purpose' do
-    expect(described_class.class_for(tagged_purpose)).to eq(Forms::TaggingForm)
+    expect(described_class.class_for(tagged_purpose)).to eq(LabwareCreators::TaggedPlate)
   end
 
   context 'with a custom transfer-template' do
@@ -31,7 +31,7 @@ describe Forms::CreationForm do
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
 
-    subject { Forms::CreationForm.new(purpose_uuid: 'test-purpose') }
+    subject { LabwareCreators::Base.new(purpose_uuid: 'test-purpose') }
 
     it 'can lookup form for another purpose' do
       expect(subject.transfer_template_uuid).to eq('custom-template-uuid')

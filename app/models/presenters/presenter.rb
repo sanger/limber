@@ -4,7 +4,7 @@ module Presenters
   module Presenter
     def self.included(base)
       base.class_eval do
-        include Forms::Form
+        include Form
         include BarcodeLabelsHelper
         self.page = 'show'
 

@@ -4,7 +4,7 @@ class CreationController < ApplicationController
   before_action :check_for_current_user!
 
   def form_lookup(form_attributes = params)
-    Forms::CreationForm.class_for(form_attributes.fetch(:purpose_uuid))
+    LabwareCreators::Base.class_for(form_attributes.fetch(:purpose_uuid))
   end
 
   def redirect_to_form_destination(form)

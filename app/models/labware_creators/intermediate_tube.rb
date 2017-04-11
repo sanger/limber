@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-module Forms
-  # Pools an entire plate into a single tube. Useful for MiSeqQC
-  class PooledTubesForm < CreationForm
+module LabwareCreators
+  # For simple tube to tube transfers
+  class IntermediateTube < Base
     attr_reader :tube_transfer
 
     def create_labware!
-      # Create a single tube
-      child_tube = api.specific_tube_creation.create!(
-        user: user_uuid,
+      child_tube = api.tube_from_tube_creation.create!(
         parent: labware.uuid,
-        child_purposes: [purpose_uuid]
-      ).children.first
+        child_purpose: purpose_uuid,
+        user: user_uuid
+      ).child
 
-      # Transfer EVERYTHING into it
       @tube_transfer = api.transfer_template.find(
-        Settings.transfer_templates['Whole plate to tube']
+        Settings.transfer_templates['Transfer between specific tubes']
       ).create!(
         user: user_uuid,
         source: labware.uuid,
@@ -26,6 +24,8 @@ module Forms
       false
     end
 
+    # We pretend that we've added a new blank tube when we're actually
+    # transfering to the tube on the original LibraryRequest
     def child
       tube_transfer.try(:destination) || :contents_not_transfered
     end

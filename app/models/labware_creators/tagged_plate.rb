@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Forms
-  class TaggingForm < CreationForm
-    include Forms::Form::CustomPage
+module LabwareCreators
+  class TaggedPlate < Base
+    include Form::CustomPage
 
     self.page = 'tagging'
     self.attributes = %i[
@@ -38,11 +38,11 @@ module Forms
     end
 
     def tag_groups
-      @tag_groups ||= Forms::Tagging::TagCollection.new(api, plate, purpose_uuid).available
+      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid).available
     end
 
     def tag2s
-      @tag2s ||= Forms::Tagging::Tag2Collection.new(api, plate).available
+      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate).available
     end
 
     def tag2_names

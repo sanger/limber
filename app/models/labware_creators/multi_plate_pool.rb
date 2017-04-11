@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Forms
-  class MultiPlatePoolingForm < CreationForm
-    include Forms::Form::CustomPage
+module LabwareCreators
+  class MultiPlatePool < Base
+    include Form::CustomPage
     self.page = 'multi_plate_pooling'
     self.aliquot_partial = 'custom_pooled_aliquot'
 

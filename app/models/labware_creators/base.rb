@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'forms'
+require_dependency 'form'
 
-module Forms
-  class CreationForm
+module LabwareCreators
+  class Base
     module ClassMethods
       def class_for(purpose_uuid)
         Settings.purposes.fetch(purpose_uuid).fetch(:form_class).constantize

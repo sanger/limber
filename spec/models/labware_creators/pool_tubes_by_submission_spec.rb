@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'forms/creation_form'
+require 'labware_creators/base'
 
 # CreationForm is the base class for our forms
-describe Forms::PoolTubesBySubmissionForm do
+describe LabwareCreators::PoolTubesBySubmission do
   subject do
-    Forms::PoolTubesBySubmissionForm.new(form_attributes)
+    LabwareCreators::PoolTubesBySubmission.new(form_attributes)
   end
 
   # Set up our templates
   before(:each) do
-    Forms::PoolTubesBySubmissionForm.default_transfer_template_uuid = 'transfer-to-wells-by-submission-uuid'
+    LabwareCreators::PoolTubesBySubmission.default_transfer_template_uuid = 'transfer-to-wells-by-submission-uuid'
   end
 
   let(:user_uuid)    { SecureRandom.uuid }

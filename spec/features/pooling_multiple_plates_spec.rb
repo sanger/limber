@@ -85,7 +85,7 @@ feature 'Multi plate pooling', js: true do
   end
 
   background do
-    Forms::CreationForm.default_transfer_template_uuid = 'transfer-template-uuid'
+    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = {
       presenter_class: 'Presenters::StandardPresenter',
@@ -93,7 +93,7 @@ feature 'Multi plate pooling', js: true do
     }
     Settings.purposes['child-purpose-0'] = {
       presenter_class: 'Presenters::StandardPresenter',
-      form_class: 'Forms::MultiPlatePoolingForm',
+      form_class: 'LabwareCreators::MultiPlatePool',
       asset_type: 'Plate',
       name: 'Pool Plate',
       parents: ['Pooled example']

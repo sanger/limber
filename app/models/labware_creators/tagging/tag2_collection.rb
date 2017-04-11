@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Forms::Tagging
+module LabwareCreators::Tagging
   #
   # Class Tag2Collection provides a list of tag 2 templates available for a given plate.
   class Tag2Collection

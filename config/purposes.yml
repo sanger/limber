@@ -32,7 +32,7 @@ LB Lib PCR:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
-  :form_class: Forms::TaggingForm
+  :form_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
@@ -50,7 +50,7 @@ LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: Forms::PoolTubesBySubmissionForm
+  :form_class: LabwareCreators::PoolTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -60,7 +60,7 @@ LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
-  :form_class: Forms::FinalTubesForm
+  :form_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -69,7 +69,7 @@ LB Lib Pool Norm:
 LB Lib PrePool:
   :asset_type: plate
   :stock_plate: false
-  :form_class: Forms::MultiPlatePoolingForm
+  :form_class: LabwareCreators::MultiPlatePool
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b

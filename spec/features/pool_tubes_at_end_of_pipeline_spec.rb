@@ -43,7 +43,7 @@ feature 'Pool tubes at end of pipeline', js: true do
       presenter_class: 'Presenters::FinalTubePresenter',
       asset_type: 'Tube',
       name: 'Final Tube Purpose',
-      form_class: 'Forms::FinalTubesForm',
+      form_class: 'LabwareCreators::FinalTube',
       parents: ['Example Purpose']
     }
     # We look up the user

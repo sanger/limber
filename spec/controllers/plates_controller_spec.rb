@@ -97,7 +97,7 @@ describe PlatesController, type: :controller do
   def stock_plate_config
     {
       'name' => 'Example plate',
-      'form_class' => 'Forms::CreationForm',
+      'form_class' => 'LabwareCreators::Base',
       'presenter_class' => 'Presenters::StockPlatePresenter',
       'state_changer_class' => 'StateChangers::DefaultStateChanger',
       'default_printer_type' => :plate_a,

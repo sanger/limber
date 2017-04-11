@@ -14,8 +14,8 @@ Lint/HandleExceptions:
 # Offense count: 5
 Lint/UselessAssignment:
   Exclude:
-    - 'app/models/forms/intermediate_tubes_form.rb'
-    - 'app/models/forms/pooled_tubes_form.rb'
+    - 'app/models/labware_creators/intermediate_tubes_form.rb'
+    - 'app/models/labware_creators/pooled_tubes_form.rb'
     - 'config/compass.rb'
     - 'config/initializers/settings.rb'
 

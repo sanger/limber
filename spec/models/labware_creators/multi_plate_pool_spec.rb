@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'forms/creation_form'
+require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe Forms::MultiPlatePoolingForm do
+describe LabwareCreators::MultiPlatePool do
   has_a_working_api(times: :any)
 
   let(:plate_uuid) { 'example-plate-uuid' }
@@ -28,13 +28,13 @@ describe Forms::MultiPlatePoolingForm do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
-    Forms::CreationForm.default_transfer_template_uuid = 'transfer-template-uuid'
+    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     plate_request
     wells_request
   end
 
   it 'can be created' do
-    expect(subject).to be_a Forms::MultiPlatePoolingForm
+    expect(subject).to be_a LabwareCreators::MultiPlatePool
   end
 
   context 'on new' do
@@ -46,7 +46,7 @@ describe Forms::MultiPlatePoolingForm do
     end
 
     subject do
-      Forms::MultiPlatePoolingForm.new(form_attributes.merge(api: api))
+      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api))
     end
 
     it 'renders the "multi_plate_pooling" page' do
@@ -70,7 +70,7 @@ describe Forms::MultiPlatePoolingForm do
 
   context 'on create' do
     subject do
-      Forms::MultiPlatePoolingForm.new(form_attributes.merge(api: api, user_uuid: user_uuid))
+      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api, user_uuid: user_uuid))
     end
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
