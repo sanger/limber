@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class LabwareController < ApplicationController
   before_action :locate_labware, only: :show
   before_action :get_printers, only: [:show]
@@ -30,7 +32,7 @@ class LabwareController < ApplicationController
         end
         format.csv do
           render @presenter.csv
-          response.headers['Content-Disposition'] = "inline; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+          response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
           response.headers['Vary'] = 'Accept'
         end
         format.json do

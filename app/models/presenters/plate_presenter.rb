@@ -6,6 +6,7 @@ module Presenters
     include Presenter
     include PlateWalking
     include RobotControlled
+    include Presenters::ExtendedCsv
 
     class_attribute :labware_class
     self.labware_class = :plate
