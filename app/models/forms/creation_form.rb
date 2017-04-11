@@ -14,7 +14,7 @@ module Forms
     include Form
     include PlateWalking
 
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid transfer_template_uuid]
+    self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
 
     class_attribute :default_transfer_template_uuid
@@ -60,11 +60,15 @@ module Forms
       create_labware!
     end
 
-    private
-
-    def selected_transfer_template_uuid
-      transfer_template_uuid || default_transfer_template_uuid
+    def transfer_template_uuid
+      if Settings.purposes.dig(purpose_uuid, :transfer_template)
+        Settings.transfer_templates[Settings.purposes.dig(purpose_uuid, :transfer_template)]
+      else
+        default_transfer_template_uuid
+      end
     end
+
+    private
 
     def create_labware!
       @plate_creation = api.plate_creation.create!(
@@ -73,7 +77,7 @@ module Forms
         user: user_uuid
       )
 
-      api.transfer_template.find(selected_transfer_template_uuid).create!(
+      api.transfer_template.find(transfer_template_uuid).create!(
         source: parent_uuid,
         destination: @plate_creation.child.uuid,
         user: user_uuid

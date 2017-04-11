@@ -107,11 +107,12 @@ LB Cap Lib PCR-XP:
   :default_printer_type: :plate_b
   :parents:
   - LB Cap Lib PCR
-LB ISCH Cap Lib Pool:
+LB Cap Lib Pool:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
+  :transfer_template: 'Pool wells based on submission'
   :parents:
   - LB Cap Lib PCR-XP
