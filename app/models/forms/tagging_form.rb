@@ -49,7 +49,7 @@ module Forms
       tag2s.values.map(&:name)
     end
 
-    def create_plate!(selected_transfer_template_uuid = default_transfer_template_uuid)
+    def create_plate!
       api.transfer_template.find(selected_transfer_template_uuid).create!(
         source: parent_uuid,
         destination: tag_plate.asset_uuid,
