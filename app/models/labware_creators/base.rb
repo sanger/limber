@@ -70,7 +70,7 @@ module LabwareCreators
 
     private
 
-    def create_labware!
+    def create_plate_with_standard_transfer!
       @plate_creation = api.plate_creation.create!(
         parent: parent_uuid,
         child_purpose: purpose_uuid,
@@ -85,6 +85,10 @@ module LabwareCreators
 
       yield(@plate_creation.child) if block_given?
       true
+    end
+
+    def create_labware!
+      create_plate_with_standard_transfer!
     end
   end
 end

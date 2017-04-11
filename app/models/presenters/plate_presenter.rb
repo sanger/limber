@@ -121,22 +121,6 @@ module Presenters
       labware
     end
 
-    class UnknownPlateType < StandardError
-      attr_reader :plate
-
-      def errors
-        "Unknown plate type #{plate.plate_purpose.name.inspect}. Perhaps you are using the wrong pipeline application?"
-      end
-
-      def suitable_labware
-        false
-      end
-
-      def initialize(opts)
-        @plate = opts[:labware]
-      end
-    end
-
     def self.lookup_for(labware)
       (presentation_classes = Settings.purposes[labware.plate_purpose.uuid]) || (return UnknownPlateType)
       presentation_classes[:presenter_class].constantize

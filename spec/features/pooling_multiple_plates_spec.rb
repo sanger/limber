@@ -30,7 +30,7 @@ feature 'Multi plate pooling', js: true do
   end
 
   let(:child_plate_uuid) { SecureRandom.uuid }
-  let(:child_plate) { json :plate, purpose_name: 'Pool Plate', uuid: child_plate_uuid }
+  let(:child_plate) { json :plate, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool Plate', uuid: child_plate_uuid }
 
   let!(:pooled_plate_creation_request) do
     stub_api_post(
