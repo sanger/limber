@@ -6,7 +6,7 @@ describe PlatesController, type: :controller do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_json) { json :plate, uuid: plate_uuid }
+  let(:plate_json) { json :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:wells_json) { json :well_collection }
   let(:plate_request) { stub_api_get plate_uuid, body: plate_json }
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }

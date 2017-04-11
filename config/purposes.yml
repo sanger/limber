@@ -66,4 +66,25 @@ LB Lib Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Lib Pool
-
+ISCH lib pool:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :form_class: Forms::CreationForm
+  :presenter_class: Presenters::StandardPresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :parents:
+  - LB Lib PCR-XP
+ISCH hyb:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :form_class: Forms::BaitingForm
+  :presenter_class: Presenters::StandardPresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :parents:
+  - ISCH lib pool
