@@ -10,7 +10,7 @@ feature 'Failing wells', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :plate, uuid: plate_uuid, state: 'passed' }
+  let(:example_plate)  { json :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed' }
 
   let!(:state_change_request) do
     stub_api_post(
