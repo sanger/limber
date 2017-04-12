@@ -3,23 +3,37 @@
 <head>
   <title>We're sorry, but something went wrong (500)</title>
   <style type="text/css">
-    body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
-    div.dialog {
-      width: 25em;
-      padding: 0 4em;
-      margin: 4em auto 0 auto;
-      border: 1px solid #ccc;
-      border-right-color: #999;
-      border-bottom-color: #999;
+    body {
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: normal;
+      line-height: 1.5;
+      color: #292b2c;
+      padding: 100px 15px;
     }
-    h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
+    div.dialog {
+      margin-bottom: 2rem;
+      background-color: #eceeef;
+      padding: 4rem 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-family: inherit;
+      font-weight: 500;
+      line-height: 1.1;
+      color: inherit;
+    }
+    .status-code {
+      color: rgb(217,83,79);
+    }
   </style>
 </head>
 
 <body>
   <!-- This file lives in public/500.html -->
   <div class="dialog">
-    <h1>We're sorry, but something went wrong.</h1>
+    <h1><span class="status-code">&#9888;500</span> <small>We're sorry, but something went wrong.</snall></h1>
     <p>We've been notified about this issue and we'll take a look at it shortly.</p>
   </div>
 </body>
