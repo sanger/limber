@@ -81,7 +81,7 @@ LB Hyb:
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
-  :form_class: Forms::BaitingForm
+  :form_class: LabwareCreators::BaitedPlate
   :parents:
   - LB Lib PrePool
 LB Cap Lib:

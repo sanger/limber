@@ -20,7 +20,7 @@ module LabwareCreators
         targets: Hash[pool_uuids.zip(child_stock_tubes.map(&:uuid))]
       )
       true
-    rescue => e
+    rescue
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace)
       false

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_dependency 'forms'
+require_dependency 'labware_creators/base'
 
-module Forms
-  class BaitingForm < CreationForm
-    include Forms::Form::CustomPage
+module LabwareCreators
+  class BaitedPlate < Base
+    include Form::CustomPage
 
     self.page = 'baiting'
     class_attribute :aliquot_partial

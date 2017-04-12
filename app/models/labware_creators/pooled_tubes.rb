@@ -22,7 +22,7 @@ module LabwareCreators
         destination: child_tube.uuid
       )
       true
-    rescue => e
+    rescue
       false
     end
 

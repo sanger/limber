@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'forms/creation_form'
-require 'forms/baiting_form'
+require 'labware_creators/baited_plate'
 
-describe Forms::BaitingForm do
+describe LabwareCreators::BaitedPlate do
   subject do
-    Forms::BaitingForm.new(form_attributes)
+    LabwareCreators::BaitedPlate.new(form_attributes)
   end
 
   before(:each) do
-    Forms::BaitingForm.default_transfer_template_uuid = 'transfer-columns-uuid'
+    LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
@@ -30,7 +29,7 @@ describe Forms::BaitingForm do
   end
 
   it 'should have page' do
-    expect(Forms::BaitingForm.page).to eq 'baiting'
+    expect(LabwareCreators::BaitedPlate.page).to eq 'baiting'
   end
 
   context 'create plate' do

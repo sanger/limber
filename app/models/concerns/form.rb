@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Form
   module CustomPage
     # We need to do something special at this point in order to create the plate.
