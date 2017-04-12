@@ -56,11 +56,14 @@ class LabwareController < ApplicationController
   def update
     state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
+    notice = String.new("Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.")
+    notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
+
     respond_to do |format|
       format.html do
         redirect_to(
           search_path,
-          notice: "Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.#{params[:customer_accepts_responsibility] ? ' The customer will still be charged.' : ''}"
+          notice: notice
         )
       end
     end

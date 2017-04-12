@@ -98,7 +98,10 @@ module LabwareCreators
         valid = false
       end
       return valid if val_barcodes.empty?
-      errors.add(:base, "#{val_barcodes.join(', ')} barcodes are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+      errors.add(
+        :base,
+        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
+      )
       false
     end
 

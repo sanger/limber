@@ -29,6 +29,26 @@ feature 'Plate transfer', js: true do
       { 'search' => { 'swipecard_code' => swipecard } },
       user
     )
+
+    stub_custom_metdatum_collections_post
+    stub_state_changes_post
+  end
+
+  let(:stub_custom_metdatum_collections_post) do
+    stub_api_post('custom_metadatum_collections',
+                  payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
+                  body: json(:custom_metadatum_collection))
+  end
+  let(:stub_state_changes_post) do
+    stub_api_post('state_changes',
+                  payload: {
+                    state_change: {
+                      target_state: 'started',
+                      reason: 'Robot bravo LB Post Shear => LB End Prep started',
+                      customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
+                    }
+                  },
+                  body: json(:state_change, target_state: 'started'))
   end
 
   scenario 'starts the robot and saves the robot barcode' do
@@ -41,20 +61,6 @@ feature 'Plate transfer', js: true do
     stub_search_and_single_result(
       'Find assets by barcode',
       { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate
-    )
-    stub_custom_metdatum_collections_post = stub_api_post('custom_metadatum_collections',
-                                                          payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
-                                                          body: json(:custom_metadatum_collection))
-    stub_state_changes_post = stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          target_state: 'started',
-          reason: 'Robot bravo LB Post Shear => LB End Prep started',
-          customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
-        }
-      },
-      body: json(:state_change, target_state: 'started')
     )
 
     fill_in_swipecard(swipecard)
