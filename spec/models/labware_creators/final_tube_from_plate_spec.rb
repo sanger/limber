@@ -65,7 +65,7 @@ describe LabwareCreators::FinalTubeFromPlate do
         body: '{}' # We don't care about the response
       )
     end
-      let!(:tube_state_change_request_1) do
+    let!(:tube_state_change_request_1) do
       stub_api_post(
         'state_changes',
         payload: {

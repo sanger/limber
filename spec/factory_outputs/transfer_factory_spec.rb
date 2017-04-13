@@ -66,8 +66,20 @@ describe 'transfer_to_mx_tubes_by_submission' do
           "uuid":"user-uuid"
         },
         "transfers": {
-          "A1":{"uuid":"child-tube-0","name":"Child tube 0","state":"pending","label":{"text":"Example purpose","prefix":"prefix"},"barcode":{"number":"1","prefix":"NT","two_dimensional":null,"ean13":"3980000001795","type":2}},
-          "B1":{"uuid":"child-tube-1","name":"Child tube 1","state":"pending","label":{"text":"Example purpose","prefix":"prefix"},"barcode":{"number":"2","prefix":"NT","two_dimensional":null,"ean13":"3980000002808","type":2}}
+          "A1":{
+            "uuid":"child-tube-0",
+            "name":"Child tube 0",
+            "state":"pending",
+            "label":{"text":"Example purpose","prefix":"prefix"},
+            "barcode":{"number":"1","prefix":"NT","two_dimensional":null,"ean13":"3980000001795","type":2}
+          },
+          "B1":{
+            "uuid":"child-tube-1",
+            "name":"Child tube 1",
+            "state":"pending",
+            "label":{"text":"Example purpose","prefix":"prefix"},
+            "barcode":{"number":"2","prefix":"NT","two_dimensional":null,"ean13":"3980000002808","type":2}
+          }
         }
       }
     })
@@ -77,4 +89,3 @@ describe 'transfer_to_mx_tubes_by_submission' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end
-
