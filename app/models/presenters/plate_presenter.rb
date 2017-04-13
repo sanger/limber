@@ -20,9 +20,6 @@ module Presenters
     class_attribute :summary_partial
     self.summary_partial = 'labware/plates/standard_summary'
 
-    class_attribute :additional_creation_partial
-    self.additional_creation_partial = 'labware/plates/child_plate_creation'
-
     class_attribute :printing_partial
 
     # summary_items is a hash of a label label, and a symbol representing the
@@ -42,14 +39,6 @@ module Presenters
 
     class_attribute :well_failure_states
     self.well_failure_states = [:passed]
-
-    def additional_creation_partial
-      case default_child_purpose.asset_type
-      when 'plate' then 'labware/plates/child_plate_creation'
-      when 'tube' then 'labware/tube/child_tube_creation'
-      else self.class.additional_creation_partial
-      end
-    end
 
     def number_of_wells
       "#{number_of_filled_wells}/#{total_number_of_wells}"

@@ -36,7 +36,7 @@ module Presenters
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation
-          yield unless default_child_purpose.nil? || !labware.requests.empty?
+          yield unless labware.requests.present?
           nil
         end
 
@@ -46,7 +46,7 @@ module Presenters
         end
 
         # Returns the child plate purposes that can be created in the qc_complete state.
-        def default_child_purpos
+        def default_child_purpose
           purpose.children.first
         end
       end

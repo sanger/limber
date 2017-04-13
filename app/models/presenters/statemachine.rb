@@ -28,7 +28,7 @@ module Presenters::Statemachine
     def suggested_purposes
       Settings.purposes.each do |uuid, purpose_settings|
         next unless purpose_settings.parents && purpose_settings.parents.include?(labware.plate_purpose.name)
-        yield uuid, purpose_settings.name
+        yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end
 
