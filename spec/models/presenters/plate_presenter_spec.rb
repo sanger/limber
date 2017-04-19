@@ -13,6 +13,7 @@ describe Presenters::PlatePresenter do
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
+          pool_sizes: [2, 2],
           created_at: '2016-10-19 12:00:00 +0100'
   end
 
@@ -26,6 +27,7 @@ describe Presenters::PlatePresenter do
       ['Plate type', purpose_name],
       ['Current plate state', state],
       ['Input plate barcode', 'DN2 <em>1220000002845</em>'],
+      ['PCR Cycles', 10],
       ['Created on', '2016-10-19']
     ]
   end

@@ -32,6 +32,7 @@ module Presenters
       'Plate type' => :purpose_name,
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
+      'PCR Cycles' => :pcr_cycles,
       'Created on' => :created_on
     }
 
@@ -59,6 +60,16 @@ module Presenters
 
     def total_number_of_wells
       plate.size
+    end
+
+    def pcr_cycles
+      cycles = plate.pcr_cycles
+      case cycles.length
+      when 0 then 'Not specified'
+      when 1 then cycles.first
+      else
+        "Caution! #{cycles.to_sentence} specified."
+      end
     end
 
     def label_attributes

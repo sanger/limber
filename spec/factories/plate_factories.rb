@@ -33,7 +33,8 @@ FactoryGirl.define do
           wells: wells.shift(size),
           insert_size: { from: 100, to: 300 },
           library_type: { name: library_type },
-          request_type: request_type
+          request_type: request_type,
+          pcr_cycles: 10
         }
       end
       pool_hash

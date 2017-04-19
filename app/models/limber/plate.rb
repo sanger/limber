@@ -13,6 +13,10 @@ class Limber::Plate < Sequencescape::Plate
     pools.keys.count
   end
 
+  def pcr_cycles
+    pools.values.map { |pool| pool.fetch(:pcr_cycles, 'Not specified') }.uniq
+  end
+
   def role
     label.prefix
   end
