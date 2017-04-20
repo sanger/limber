@@ -22,16 +22,10 @@ describe Presenters::SimpleTubePresenter do
     }
   end
 
-  let(:expect_child_purpose_requests) do
-    stub_api_get('example-purpose-uuid', body: json(:tube_purpose, uuid: 'example-purpose-uuid'))
-    stub_api_get('example-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
-  end
-
   context 'when pending' do
     let(:state) { 'pending' }
 
     it 'prevents child creation' do
-      expect_child_purpose_requests
       expect { |b| subject.control_additional_creation(&b) }.not_to yield_control
     end
 
@@ -44,7 +38,6 @@ describe Presenters::SimpleTubePresenter do
     let(:state) { 'passed' }
 
     it 'allows child creation' do
-      expect_child_purpose_requests
       expect { |b| subject.control_additional_creation(&b) }.to yield_control
     end
 

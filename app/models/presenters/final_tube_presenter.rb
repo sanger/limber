@@ -20,9 +20,6 @@ module Presenters
 
     self.attributes =  %i[api labware]
 
-    class_attribute    :additional_creation_partial
-    self.additional_creation_partial = nil
-
     class_attribute :tab_states
 
     state_machine :state, initial: :pending do

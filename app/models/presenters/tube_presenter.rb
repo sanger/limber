@@ -11,9 +11,6 @@ module Presenters
 
     self.attributes =  %i[api labware]
 
-    class_attribute :additional_creation_partial
-    self.additional_creation_partial = 'labware/tube/child_tube_creation'
-
     class_attribute :tab_states
 
     class_attribute :summary_items

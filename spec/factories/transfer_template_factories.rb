@@ -15,6 +15,12 @@ FactoryGirl.define do
       uuid 'transfer-to-wells-by-submission-uuid'
       transfers nil
     end
+
+    factory :transfer_wells_to_mx_library_tubes_by_submission do
+      name 'Transfer wells to MX library tubes by submission'
+      uuid 'transfer-to-mx-tubes-on-submission'
+      transfers nil
+    end
   end
 
   # Builds all the transfer templates we're going to actually be using.

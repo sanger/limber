@@ -3,7 +3,7 @@
 module LabwareCreators
   # The final tubes form handles the transfer to the Multiplexed Library Tube
   # that gets generated upfront. It has two behaviours:
-  # 1) For single plate pools it gnerates the new tube immediately
+  # 1) For single plate pools it generates the new tube immediately
   # 2) For cross-plate pools (such as dual index) it prompts the user to scan
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json

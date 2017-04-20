@@ -33,11 +33,11 @@ feature 'Creating a tag plate', js: true do
     LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
+    Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
     Settings.purposes['child-purpose-0'] = {
       presenter_class: 'Presenters::StandardPresenter',
       form_class: 'LabwareCreators::TaggedPlate',
-      asset_type: 'Plate',
+      asset_type: 'plate',
       name: 'Tag Purpose',
       parents: ['Limber Cherrypicked']
     }
@@ -49,8 +49,6 @@ feature 'Creating a tag plate', js: true do
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
-    stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
     stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2))
     stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection, size: 2))
     stub_api_get(plate_uuid, 'submission_pools', body: json(:dual_submission_pool_collection))

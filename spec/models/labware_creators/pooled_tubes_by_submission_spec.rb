@@ -4,14 +4,14 @@ require 'spec_helper'
 require 'labware_creators/base'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators::PoolTubesBySubmission do
+describe LabwareCreators::PooledTubesBySubmission do
   subject do
-    LabwareCreators::PoolTubesBySubmission.new(form_attributes)
+    LabwareCreators::PooledTubesBySubmission.new(form_attributes)
   end
 
   # Set up our templates
   before(:each) do
-    LabwareCreators::PoolTubesBySubmission.default_transfer_template_uuid = 'transfer-to-wells-by-submission-uuid'
+    LabwareCreators::PooledTubesBySubmission.default_transfer_template_uuid = 'transfer-to-wells-by-submission-uuid'
   end
 
   let(:user_uuid)    { SecureRandom.uuid }

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  # Pools an entire plate into a single tube. Useful for MiSeqQC
-  class PoolTubesBySubmission < Base
+  # Creates a new tube per submission, and transfers all the wells matching that submission
+  # into each tube.
+  class PooledTubesBySubmission < Base
     attr_reader :tube_transfer
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to specific tubes defined by submission']

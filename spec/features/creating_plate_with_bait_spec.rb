@@ -17,11 +17,11 @@ feature 'Creating a plate with bait', js: true do
   background do
     LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
     Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
+    Settings.purposes['example-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
     Settings.purposes['child-purpose-0'] = {
       presenter_class: 'Presenters::StandardPresenter',
       form_class: 'LabwareCreators::BaitedPlate',
-      asset_type: 'Plate',
+      asset_type: 'plate',
       name: 'with-baits',
       parents: ['example-purpose']
     }
@@ -34,8 +34,6 @@ feature 'Creating a plate with bait', js: true do
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
-    stub_api_get('example-purpose-uuid', body: json(:plate_purpose))
-    stub_api_get('example-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
     # end of stubs for plate show page
 
     # These stubs are required to render plate_creation baiting page

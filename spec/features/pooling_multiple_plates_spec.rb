@@ -89,12 +89,12 @@ feature 'Multi plate pooling', js: true do
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = {
       presenter_class: 'Presenters::StandardPresenter',
-      asset_type: 'Plate'
+      asset_type: 'plate'
     }
     Settings.purposes['child-purpose-0'] = {
       presenter_class: 'Presenters::StandardPresenter',
       form_class: 'LabwareCreators::MultiPlatePool',
-      asset_type: 'Plate',
+      asset_type: 'plate',
       name: 'Pool Plate',
       parents: ['Pooled example']
     }
@@ -114,8 +114,6 @@ feature 'Multi plate pooling', js: true do
     stub_api_get(child_plate_uuid, 'wells', body: json(:well_collection))
 
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
-    stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
-    stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
   end
 
   scenario 'creates multiple plates' do
