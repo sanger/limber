@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class JsonRenderer
   # Returns a new json renderer based on the Factory Girl output
   #

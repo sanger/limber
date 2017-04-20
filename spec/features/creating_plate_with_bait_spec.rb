@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Creating a plate with bait', js: true do
@@ -14,10 +15,16 @@ feature 'Creating a plate with bait', js: true do
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   background do
-    Forms::BaitingForm.default_transfer_template_uuid = 'transfer-columns-uuid'
+    LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
     Settings.purposes = {}
     Settings.purposes['example-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
-    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', form_class: 'Forms::BaitingForm', asset_type: 'Plate', name: 'with-baits', parents: ['example-purpose'] }
+    Settings.purposes['child-purpose-0'] = {
+      presenter_class: 'Presenters::StandardPresenter',
+      form_class: 'LabwareCreators::BaitedPlate',
+      asset_type: 'Plate',
+      name: 'with-baits',
+      parents: ['example-purpose']
+    }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate

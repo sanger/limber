@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class LabwareController < ApplicationController
   before_action :locate_labware, only: :show
   before_action :get_printers, only: [:show]
@@ -30,7 +32,7 @@ class LabwareController < ApplicationController
         end
         format.csv do
           render @presenter.csv
-          response.headers['Content-Disposition'] = "inline; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+          response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
           response.headers['Vary'] = 'Accept'
         end
         format.json do
@@ -44,7 +46,7 @@ class LabwareController < ApplicationController
       notice: @presenter.errors
     )
     return
-  rescue Presenters::PlatePresenter::UnknownPlateType => exception
+  rescue Presenters::UnknownPlateType => exception
     redirect_to(
       search_path,
       notice: "#{exception.message}. Perhaps you are using the wrong pipeline application?"
@@ -54,15 +56,17 @@ class LabwareController < ApplicationController
   def update
     state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
+    notice = String.new("Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.")
+    notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
+
     respond_to do |format|
       format.html do
         redirect_to(
           search_path,
-          notice: "Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.#{params[:customer_accepts_responsibility] ? ' The customer will still be charged.' : ''}"
+          notice: notice
         )
       end
     end
-
   rescue StateChangers::StateChangeError => exception
     respond_to do |format|
       format.html { redirect_to(search_path, alert: exception.message) }

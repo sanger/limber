@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PrintJobsController < ApplicationController
   def create
     @print_job = PrintJob.new(print_job_params)

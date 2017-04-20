@@ -1,12 +1,13 @@
 # frozen_string_literal: true
-module Forms
+
+module LabwareCreators
   # Pools an entire plate into a single tube. Useful for MiSeqQC
-  class PoolTubesBySubmissionForm < CreationForm
+  class PoolTubesBySubmission < Base
     attr_reader :tube_transfer
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to specific tubes defined by submission']
 
-    def create_objects!
+    def create_labware!
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,
         parent: parent_uuid,
@@ -19,7 +20,7 @@ module Forms
         targets: Hash[pool_uuids.zip(child_stock_tubes.map(&:uuid))]
       )
       true
-    rescue => e
+    rescue
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace)
       false
