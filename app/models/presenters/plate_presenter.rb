@@ -42,6 +42,14 @@ module Presenters
     class_attribute :well_failure_states
     self.well_failure_states = [:passed]
 
+    # Note: Validation here is intended as a warning. Rather than strict validation
+    validates :pcr_cycles_specified, numericality: { equal_to: 1, message: 'is not consistent across the plate.' }
+
+    validates :pcr_cycles,
+              inclusion: { in: ->(r) { r.expected_cycles },
+                           message: 'differs from standard. %{value} cycles have been requested.' },
+              if: :expected_cycles
+
     def additional_creation_partial
       case default_child_purpose.asset_type
       when 'plate' then 'labware/plates/child_plate_creation'
@@ -63,13 +71,15 @@ module Presenters
     end
 
     def pcr_cycles
-      cycles = plate.pcr_cycles
-      case cycles.length
-      when 0 then 'Not specified'
-      when 1 then cycles.first
+      if pcr_cycles_specified.zero?
+        'No pools specified'
       else
-        "Caution! #{cycles.to_sentence} specified."
+        cycles.to_sentence
       end
+    end
+
+    def expected_cycles
+      purpose_config.dig(:warnings, :pcr_cycles_not_in)
     end
 
     def label_attributes
@@ -86,10 +96,6 @@ module Presenters
 
     def suitable_labware
       yield
-    end
-
-    def errors
-      nil
     end
 
     def control_library_passing
@@ -160,6 +166,14 @@ module Presenters
     end
 
     private
+
+    def pcr_cycles_specified
+      cycles.length
+    end
+
+    def cycles
+      plate.pcr_cycles
+    end
 
     # Split a location string into an array containing the row letter
     # and the column number (as a integer) so that they can be sorted.

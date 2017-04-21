@@ -46,10 +46,6 @@ module Presenters
       yield
     end
 
-    def errors
-      nil
-    end
-
     # def label_type
     #   yield 'custom-labels'
     #   nil
@@ -112,7 +108,7 @@ module Presenters
     private
 
     def purpose_config
-      Settings.purposes[purpose.uuid]
+      Settings.purposes.fetch(purpose.uuid, {})
     end
 
     def date_today

@@ -14,7 +14,7 @@ class Limber::Plate < Sequencescape::Plate
   end
 
   def pcr_cycles
-    pools.values.map { |pool| pool.fetch(:pcr_cycles, 'Not specified') }.uniq
+    @pcr_cycles ||= pools.values.map { |pool| pool.fetch(:pcr_cycles, 'Not specified') }.uniq
   end
 
   def role
