@@ -66,6 +66,19 @@ dl.metadata {
   @extend .align-items-start;
 }
 
+.asset-warnings {
+  @extend .card-block;
+  @extend .card-warning;
+  @extend .text-white;
+
+  h3 {
+    @extend .col-2;
+  }
+  ul {
+    @extend .col-10;
+  }
+}
+
 // Old-stuff
 
 .dimmed {

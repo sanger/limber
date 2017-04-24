@@ -62,14 +62,6 @@ module Presenters
       "#{number_of_filled_wells}/#{total_number_of_wells}"
     end
 
-    def number_of_filled_wells
-      plate.wells.count { |w| w.aliquots.present? }
-    end
-
-    def total_number_of_wells
-      plate.size
-    end
-
     def pcr_cycles
       if pcr_cycles_specified.zero?
         'No pools specified'
@@ -119,10 +111,6 @@ module Presenters
       labware.plate_purpose
     end
 
-    def allow_plate_label_printing?
-      true
-    end
-
     def labware_form_details(view)
       { url: view.limber_plate_path(labware), as: :plate }
     end
@@ -150,6 +138,14 @@ module Presenters
     end
 
     private
+
+    def number_of_filled_wells
+      plate.wells.count { |w| w.aliquots.present? }
+    end
+
+    def total_number_of_wells
+      plate.size
+    end
 
     def pcr_cycles_specified
       cycles.length
