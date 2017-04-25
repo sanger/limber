@@ -1,0 +1,12 @@
+<% unless @presenter.valid? %>
+  <div class="asset-warnings">
+    <div class="row">
+      <h3>Warning!</h3>
+      <ul>
+        <% @presenter.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
