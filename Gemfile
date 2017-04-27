@@ -33,7 +33,7 @@ gem 'state_machines'
 gem 'hashie'
 gem 'exception_notification'
 
-gem 'sequencescape-client-api', '>= 0.3.1',
+gem 'sequencescape-client-api', '>= 0.3.2',
   # Should be switched back to sanger + rails4 for deployment
   github: 'sanger/sequencescape-client-api',
   branch: 'rails_4',

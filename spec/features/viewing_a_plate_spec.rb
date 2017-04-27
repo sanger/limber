@@ -11,6 +11,7 @@ feature 'Viewing a plate', js: true do
   let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
   let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
   let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
+  let(:wells_collection) { json(:well_collection) }
 
   # Setup stubs
   background do
@@ -23,7 +24,7 @@ feature 'Viewing a plate', js: true do
     stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
+    stub_api_get(plate_uuid, 'wells', body: wells_collection)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('stock-plate-purpose-uuid', body: json(:stock_plate_purpose))
     stub_api_get('stock-plate-purpose-uuid', 'children', body: json(:plate_purpose_collection, size: 1))
@@ -51,6 +52,30 @@ feature 'Viewing a plate', js: true do
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.badge')).to have_content('started')
     expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+  end
+
+  feature 'with a suboptimal well' do
+    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content('Wells contain suboptimal aliquots')
+    end
+    scenario 'the well is flagged as suboptimal' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(page).to have_css('#aliquot_A1.suboptimal')
+    end
+  end
+
+  feature 'without a suboptimal well' do
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).not_to have_content('Wells contain suboptimal aliquots')
+    end
+    scenario 'the well is flagged as suboptimal' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(page).not_to have_css('#aliquot_A1.suboptimal')
+    end
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)

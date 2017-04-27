@@ -39,9 +39,6 @@ describe Presenters::TubePresenter do
     ]
   end
 
-  let(:expected_requests_for_summary) do
-  end
-
   subject do
     Presenters::TubePresenter.new(
       api:     api,

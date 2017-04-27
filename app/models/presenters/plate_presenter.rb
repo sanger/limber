@@ -43,12 +43,14 @@ module Presenters
     self.well_failure_states = [:passed]
 
     # Note: Validation here is intended as a warning. Rather than strict validation
-    validates :pcr_cycles_specified, numericality: { equal_to: 1, message: 'is not consistent across the plate.' }
+    validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
 
     validates :pcr_cycles,
               inclusion: { in: ->(r) { r.expected_cycles },
                            message: 'differs from standard. %{value} cycles have been requested.' },
               if: :expected_cycles
+
+    validates_with Validators::SuboptimalValidator
 
     def additional_creation_partial
       case default_child_purpose.asset_type

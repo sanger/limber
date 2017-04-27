@@ -78,6 +78,15 @@ dl.metadata {
     @extend .col-10;
   }
 }
+.aliquot.suboptimal {
+  position: relative;
+}
+.aliquot.suboptimal::before {
+  content: '⚠';
+  font-size: 25px;
+  position: absolute;
+  top: -3px; left:1px;
+}
 
 // Old-stuff
 

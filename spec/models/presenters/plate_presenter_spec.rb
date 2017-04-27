@@ -15,6 +15,10 @@ describe Presenters::PlatePresenter do
           created_at: '2016-10-19 12:00:00 +0100'
   end
 
+  before(:each) do
+    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
+  end
+
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -28,10 +32,6 @@ describe Presenters::PlatePresenter do
       ['PCR Cycles', '10'],
       ['Created on', '2016-10-19']
     ]
-  end
-
-  let(:expected_requests_for_summary) do
-    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
   end
 
   subject do
