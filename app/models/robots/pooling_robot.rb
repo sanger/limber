@@ -36,7 +36,7 @@ module Robots
 
     self.attributes = %i[api user_uuid layout beds name destination_bed id]
 
-    def verify(bed_contents)
+    def verify(bed_contents, _robot_barcode = nil)
       valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
         beds[bed_id].load(plate_barcode)
         [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
