@@ -73,6 +73,7 @@ LB Lib PrePool:
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
+  :csv_template: 'show_extended'
   :parents:
   - LB Lib PCR-XP
 LB Hyb:
