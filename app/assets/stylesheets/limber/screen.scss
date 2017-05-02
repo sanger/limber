@@ -6,6 +6,15 @@
 @import "compass/css3/images";
 @import "colours";
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 50px;
+}
+
 /* New stuff */
 .limber-logo { font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter; }
 
@@ -86,6 +95,18 @@ dl.metadata, dl#samples-information {
       @extend .small;
     }
   }
+}
+
+footer.version-info {
+  @extend .text-muted;
+  @extend .small;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 50px;
+  line-height: 50px; /* Vertically center the text there */
+  background-color: $gray-lightest;
 }
 
 // Old-stuff

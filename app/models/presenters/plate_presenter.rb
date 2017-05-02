@@ -119,8 +119,8 @@ module Presenters
       [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
     end
 
-    def filename(offset=nil)
-      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ','_')
+    def filename(offset = nil)
+      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
     end
 
     private
