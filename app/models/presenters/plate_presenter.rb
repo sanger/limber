@@ -73,7 +73,7 @@ module Presenters
     end
 
     def control_library_passing
-      yield if tagged?
+      yield if allow_library_passing?
     end
 
     def tagged?

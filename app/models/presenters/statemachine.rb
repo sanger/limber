@@ -13,6 +13,18 @@ module Presenters::Statemachine
     def compatible_tube_purposes; end
   end
 
+  module AllowsLibraryPassing
+    def allow_library_passing?
+      tagged?
+    end
+  end
+
+  module DoesNotAllowLibraryPassing
+    def allow_library_passing?
+      false
+    end
+  end
+
   module StateAllowsChildCreation
     def control_additional_creation
       yield
@@ -125,22 +137,27 @@ module Presenters::Statemachine
         # These are the states, which are really the only things we need ...
         state :pending do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
 
         state :started do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
 
         state :passed do
           include StateAllowsChildCreation
+          include AllowsLibraryPassing
         end
 
         state :qc_complete, human_name: 'QC Complete' do
           include StateAllowsChildCreation
+          include AllowsLibraryPassing
         end
 
         state :cancelled do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
       end
     end

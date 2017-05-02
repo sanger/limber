@@ -51,11 +51,6 @@ module Presenters
       nil
     end
 
-    # def label_type
-    #   yield 'custom-labels'
-    #   nil
-    # end
-
     def prioritized_name(str, max_size)
       # Regular expression to match
       return 'Unnamed' if str.blank?
