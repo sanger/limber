@@ -93,6 +93,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   simple_robot('nx-8') do
     from 'LB Cap Lib PCR-XP', bed(4)
-    to 'LB Cap Lib pool', bed(2)
+    to 'LB Cap Lib Pool', bed(2)
   end
 end
