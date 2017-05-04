@@ -118,3 +118,13 @@ LB Cap Lib Pool:
   :transfer_template: 'Pool wells based on submission'
   :parents:
   - LB Cap Lib PCR-XP
+Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :form_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - LB Cap Lib Pool
