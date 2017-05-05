@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Utility methods to assist with session management
 module SessionHelper
   # Toggle class if user is logged in.

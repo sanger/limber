@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Fake the web connections so we don't trash anything
 require 'webmock/rspec'
 
@@ -32,7 +33,7 @@ module ContractHelper
         @url = "http://example.com:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
-        @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
+        @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) if match[:body].present?
       end
     end
 
@@ -60,7 +61,9 @@ module ContractHelper
     private :setup_request_and_response_mock
 
     def validate_request_and_response_called(scope)
-      if @times
+      if @times == :any
+        # Nothing
+      elsif @times
         scope.expect(a_request(@http_verb, @url).with(@conditions)).to have_been_made.times(@times)
       else
         scope.expect(a_request(@http_verb, @url).with(@conditions)).to have_been_made.at_least_once
@@ -81,7 +84,7 @@ module ContractHelper
 
   module ClassMethods
     def expect_request_from(request_filename, &block)
-      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w(.. contracts)))
+      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w[.. contracts]))
       stubbed_request.request(request_filename)
       stubbed_request.instance_eval(&block)
       stubbed_request.inject_into(self)

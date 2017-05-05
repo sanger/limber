@@ -1,11 +1,12 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :transfer_template, class: Sequencescape::TransferTemplate, traits: [:api_object] do
     json_root 'transfer_template'
     name 'Test transfers'
     named_actions ['preview']
-    resource_actions %w(read create)
+    resource_actions %w[read create]
     transfers('A1' => 'A1', 'B1' => 'B1')
     uuid 'transfer-template-uuid'
 
@@ -22,12 +23,12 @@ FactoryGirl.define do
 
     transient do
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}transfer_templates" }
       uuid nil
-      available_templates [:transfer_template, :transfer_to_specific_tubes_by_submission]
+      available_templates %i[transfer_template transfer_to_specific_tubes_by_submission]
     end
 
     transfer_templates do

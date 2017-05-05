@@ -1,5 +1,6 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :barcode_printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
     json_root 'barcode_printer'
@@ -39,7 +40,7 @@ FactoryGirl.define do
       tube_printer_size 2
       plate_printer_size 2
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       resource_url { "#{api_root}/barcode_printers/1" }
       uuid nil
     end

@@ -105,11 +105,11 @@ module Presenters::Statemachine
         end
 
         event :transfer do
-          transition [:pending, :started] => :passed
+          transition %i[pending started] => :passed
         end
 
         event :cancel do
-          transition [:pending, :started, :passed] => :cancelled
+          transition %i[pending started passed] => :cancelled
         end
 
         event :qc_complete do

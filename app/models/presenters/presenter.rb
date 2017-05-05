@@ -8,8 +8,9 @@ module Presenters
         include BarcodeLabelsHelper
         self.page = 'show'
 
-        class_attribute :csv
-        self.csv = 'show'
+        def csv
+          purpose_config.fetch(:csv_template, 'show')
+        end
       end
     end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Forms
   # Pools an entire plate into a single tube. Useful for MiSeqQC
   class PoolTubesBySubmissionForm < CreationForm
@@ -6,7 +7,7 @@ module Forms
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to specific tubes defined by submission']
 
-    def create_objects!
+    def create_labware!
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,
         parent: parent_uuid,

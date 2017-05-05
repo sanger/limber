@@ -5,7 +5,7 @@ module Forms
   class IntermediateTubesForm < CreationForm
     attr_reader :tube_transfer
 
-    def create_objects!
+    def create_labware!
       child_tube = api.tube_from_tube_creation.create!(
         parent: labware.uuid,
         child_purpose: purpose_uuid,

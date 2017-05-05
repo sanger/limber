@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'formtastic'
 
+gem 'coffee-rails'
 gem 'rails'
 gem 'sass-rails'
 gem 'uglifier'
-gem 'coffee-rails'
 
 # Provides some css helpers
 # Deprecate!
@@ -30,14 +32,14 @@ gem 'jquery-ui-rails'
 gem 'rake'
 gem 'state_machines'
 # Used in the setting object, allows access by object and hash notation.
-gem 'hashie'
 gem 'exception_notification'
+gem 'hashie'
 
 gem 'sequencescape-client-api', '>= 0.3.1',
-  # Should be switched back to sanger + rails4 for deployment
-  github: 'sanger/sequencescape-client-api',
-  branch: 'rails_4',
-  require: 'sequencescape'
+    # Should be switched back to sanger + rails4 for deployment
+    github: 'sanger/sequencescape-client-api',
+    branch: 'rails_4',
+    require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
@@ -68,6 +70,6 @@ group :development do
 end
 
 group :deployment do
+  gem 'psd_logger', github: 'sanger/psd_logger'
   gem 'thin'
-  gem "psd_logger", github: 'sanger/psd_logger'
 end
