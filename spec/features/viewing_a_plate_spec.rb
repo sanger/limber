@@ -69,12 +69,11 @@ feature 'Viewing a plate', js: true do
   feature 'without a suboptimal well' do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).not_to have_content('Wells contain suboptimal aliquots')
+      expect(find('#plate-show-page')).not_to have_content('Wells contain suboptimal aliquots')
     end
     scenario 'the well is flagged as suboptimal' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(page).not_to have_css('#aliquot_A1.suboptimal')
+      expect(find('#plate-show-page')).not_to have_css('#aliquot_A1.suboptimal')
     end
   end
 
