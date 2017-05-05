@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Limber::User < Sequencescape::User
   def name
     @name ||= if first_name || last_name

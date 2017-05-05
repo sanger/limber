@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PurposeConfig
   attr_reader :name, :options, :store, :api
   class_attribute :default_printer
@@ -26,7 +27,7 @@ class PurposeConfig
   def config
     {
       name: name,
-      form_class: 'Forms::CreationForm',
+      form_class: 'LabwareCreators::Base',
       presenter_class: 'Presenters::StandardPresenter',
       state_changer_class: 'StateChangers::DefaultStateChanger',
       default_printer_type: default_printer

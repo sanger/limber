@@ -1,5 +1,6 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :plate_purpose, class: Limber::PlatePurpose, traits: [:api_object] do
     name 'Limber Example Purpose'
@@ -24,7 +25,7 @@ FactoryGirl.define do
 
     transient do
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       purpose_uuid { SecureRandom.uuid }
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.

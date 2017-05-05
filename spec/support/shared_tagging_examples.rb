@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # frozen_string_literal: true
+
 shared_context 'a tag plate creator' do
   # Requests that might get made
   let!(:state_change_tag_plate_request) do

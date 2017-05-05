@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 PMB::TestSuiteStubs = Faraday::Adapter::Test::Stubs.new

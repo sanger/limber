@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../support/json_renderers'
 
 FactoryGirl.define do
@@ -18,7 +19,7 @@ FactoryGirl.define do
 
     transient do
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       pool_count 1
       uuid nil
       plate_uuid 'plate-uuid'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :test do
   namespace :factories do
     desc 'Lint the factories'

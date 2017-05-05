@@ -10,7 +10,7 @@ module LabwareHelper
   end
 
   STANDARD_COLOURS = (1..96).map { |i| "colour-#{i}" }
-  FAILED_STATES    = %w(failed cancelled).freeze
+  FAILED_STATES    = %w[failed cancelled].freeze
 
   def self.cycling_colours(name, &block)
     define_method(:"#{name}_colour") do |*args|
@@ -98,5 +98,16 @@ module LabwareHelper
 
   def labware_type_and_state
     "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
+  end
+
+  def creation_partial_for(type)
+    case type.downcase
+    when 'tube' then 'labware/tubes/creation_button'
+    when 'plate' then 'labware/plates/creation_button'
+    # If we're here, something has gone wrong.
+    # I'm not throwing an exception though as the user may not
+    # even want to create the broken plate/tube
+    else 'labware/unknown_type'
+    end
   end
 end
