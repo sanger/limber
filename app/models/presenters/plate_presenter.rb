@@ -1,16 +1,18 @@
 # frozen_string_literal: true
+
 require_dependency 'presenters/presenter'
 module Presenters
   class PlatePresenter
     include Presenter
     include PlateWalking
     include RobotControlled
+    include Presenters::ExtendedCsv
 
     class_attribute :labware_class
     self.labware_class = :plate
 
     attr_accessor :api, :labware
-    self.attributes =  [:api, :labware]
+    self.attributes =  %i[api labware]
 
     class_attribute    :aliquot_partial
     self.aliquot_partial = 'labware/aliquot'
@@ -117,22 +119,6 @@ module Presenters
 
     def plate
       labware
-    end
-
-    class UnknownPlateType < StandardError
-      attr_reader :plate
-
-      def errors
-        "Unknown plate type #{plate.plate_purpose.name.inspect}. Perhaps you are using the wrong pipeline application?"
-      end
-
-      def suitable_labware
-        false
-      end
-
-      def initialize(opts)
-        @plate = opts[:labware]
-      end
     end
 
     def self.lookup_for(labware)

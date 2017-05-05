@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require './app/controllers/tubes_controller'
 
@@ -23,7 +24,7 @@ describe TubeCreationController, type: :controller do
   context 'for a tube with an automatic form' do
     setup do
       Settings.purposes[child_purpose_uuid] = {
-        form_class: 'Forms::PoolTubesBySubmissionForm'
+        form_class: 'LabwareCreators::PoolTubesBySubmission'
       }
     end
 
@@ -36,8 +37,8 @@ describe TubeCreationController, type: :controller do
       # direct to #create.
 
       setup do
-        expect_any_instance_of(Forms::PoolTubesBySubmissionForm).to receive(:save!).and_return(true)
-        expect_any_instance_of(Forms::PoolTubesBySubmissionForm).to receive(:child).and_return(build(:tube, uuid: child_uuid))
+        expect_any_instance_of(LabwareCreators::PoolTubesBySubmission).to receive(:save!).and_return(true)
+        expect_any_instance_of(LabwareCreators::PoolTubesBySubmission).to receive(:child).and_return(build(:tube, uuid: child_uuid))
       end
 
       context 'from a tube parent' do
@@ -63,8 +64,8 @@ describe TubeCreationController, type: :controller do
 
     describe '#create' do
       setup do
-        expect_any_instance_of(Forms::PoolTubesBySubmissionForm).to receive(:save!).and_return(true)
-        expect_any_instance_of(Forms::PoolTubesBySubmissionForm).to receive(:child).and_return(build(:tube, uuid: child_uuid))
+        expect_any_instance_of(LabwareCreators::PoolTubesBySubmission).to receive(:save!).and_return(true)
+        expect_any_instance_of(LabwareCreators::PoolTubesBySubmission).to receive(:child).and_return(build(:tube, uuid: child_uuid))
       end
 
       context 'from a tube parent' do

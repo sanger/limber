@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 # A simple stand in for form classes to allow testing
 module TestFormClass
   class Auto
-    include Forms::Form::NoCustomPage
+    include Form::CustomPage
 
     attr_reader :params
     def initialize(params)

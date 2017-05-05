@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require_relative '../support/shared_tagging_examples'
 
@@ -29,11 +30,17 @@ feature 'Creating a tag plate', js: true do
 
   # Setup stubs
   background do
-    Forms::CreationForm.default_transfer_template_uuid = 'transfer-template-uuid'
+    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'Plate' }
-    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', form_class: 'Forms::TaggingForm', asset_type: 'Plate', name: 'Tag Purpose', parents: ['Limber Cherrypicked'] }
+    Settings.purposes['child-purpose-0'] = {
+      presenter_class: 'Presenters::StandardPresenter',
+      form_class: 'LabwareCreators::TaggedPlate',
+      asset_type: 'Plate',
+      name: 'Tag Purpose',
+      parents: ['Limber Cherrypicked']
+    }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate
@@ -73,17 +80,5 @@ feature 'Creating a tag plate', js: true do
     expect(page).to have_content('67890')
     click_on('Create Plate')
     expect(page).to have_content('New empty labware added to the system.')
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
-
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
-    end
   end
 end

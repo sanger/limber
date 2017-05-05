@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Viewing a plate', js: true do
@@ -51,17 +52,5 @@ feature 'Viewing a plate', js: true do
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.badge')).to have_content('started')
     expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
-
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
-    end
   end
 end

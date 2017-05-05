@@ -32,7 +32,7 @@ LB Lib PCR:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
-  :form_class: Forms::TaggingForm
+  :form_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
@@ -50,7 +50,7 @@ LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: Forms::PoolTubesBySubmissionForm
+  :form_class: LabwareCreators::PoolTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -60,31 +60,60 @@ LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
-  :form_class: Forms::FinalTubesForm
+  :form_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - LB Lib Pool
-ISCH lib pool:
+LB Lib PrePool:
   :asset_type: plate
   :stock_plate: false
+  :form_class: LabwareCreators::MultiPlatePool
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
-  :form_class: Forms::CreationForm
-  :presenter_class: Presenters::StandardPresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :parents:
   - LB Lib PCR-XP
-ISCH hyb:
+LB Hyb:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
-  :form_class: Forms::BaitingForm
-  :presenter_class: Presenters::StandardPresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
+  :form_class: LabwareCreators::BaitedPlate
   :parents:
-  - ISCH lib pool
+  - LB Lib PrePool
+LB Cap Lib:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Hyb
+LB Cap Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib
+LB Cap Lib PCR-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib PCR
+LB Cap Lib Pool:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :transfer_template: 'Pool wells based on submission'
+  :parents:
+  - LB Cap Lib PCR-XP

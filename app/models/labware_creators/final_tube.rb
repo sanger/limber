@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-module Forms
+module LabwareCreators
   # The final tubes form handles the transfer to the Multiplexed Library Tube
   # that gets generated upfront. It has two behaviours:
   # 1) For single plate pools it gnerates the new tube immediately
   # 2) For cross-plate pools (such as dual index) it prompts the user to scan
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json
-  class FinalTubesForm < CreationForm
+  class FinalTube < Base
     def render(controller)
       if no_pooling_required?
         super
@@ -27,11 +27,11 @@ module Forms
     end
 
     self.page = 'multi_tube_pooling'
-    self.attributes = [:api, :purpose_uuid, :parent_uuid, :user_uuid, :parents]
+    self.attributes = %i[api purpose_uuid parent_uuid user_uuid parents]
 
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
 
-    def create_objects!
+    def create_labware!
       success = []
       @all_tube_transfers = parents.map do |this_parent_uuid|
         transfer_template.create!(
@@ -98,7 +98,10 @@ module Forms
         valid = false
       end
       return valid if val_barcodes.empty?
-      errors.add(:base, "#{val_barcodes.join(', ')} barcodes are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+      errors.add(
+        :base,
+        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
+      )
       false
     end
 

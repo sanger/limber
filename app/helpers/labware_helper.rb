@@ -10,7 +10,7 @@ module LabwareHelper
   end
 
   STANDARD_COLOURS = (1..96).map { |i| "colour-#{i}" }
-  FAILED_STATES    = %w(failed cancelled).freeze
+  FAILED_STATES    = %w[failed cancelled].freeze
 
   def self.cycling_colours(name, &block)
     define_method(:"#{name}_colour") do |*args|

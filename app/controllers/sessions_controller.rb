@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SessionsController < ApplicationController
   def create
     set_user_by_swipecard!(params[:user_swipecard]) if params[:user_swipecard].present?

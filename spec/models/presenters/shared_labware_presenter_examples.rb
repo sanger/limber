@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 shared_examples 'a labware presenter' do
   it 'returns labware' do
     expect(subject.labware).to eq(labware)

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 ##
 module RobotConfiguration
   BedOrCar = Struct.new(:barcode, :name)
@@ -11,7 +12,7 @@ module RobotConfiguration
     end
 
     def car(position)
-      number = position.tr(',').to_i
+      number = position.tr(',', '').to_i
       barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
       ean13 = barcode.machine_barcode.to_s
       BedOrCar.new(ean13, "Carousel #{position}")

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Presenters::SimpleTubePresenter do
   # Not sure why this is getting executed twice.
   # Want to get the basics working first though
