@@ -29,12 +29,19 @@ describe Robots::Robot do
   let(:metadata_uuid)               { SecureRandom.uuid }
   let(:custom_metadatum_collection) { json :custom_metdatum_collection, uuid: metadata_uuid }
 
+  let(:robot) { Robots::Robot.find(id: robot_id, api: api, user_uuid: user_uuid) }
+
+  before(:each) do
+    Settings.robots[robot_id] = settings[:robots][robot_id]
+  end
+
   describe '#verify' do
-    describe 'plate and bed' do
-      let(:robot) { Robots::Robot.find(id: 'robot_id', api: api, user_uuid: user_uuid) }
+    subject { robot.verify(scanned_layout) }
+
+    context 'a simple robot' do
+      let(:robot_id) { 'robot_id' }
 
       before(:each) do
-        Settings.robots['robot_id'] = settings[:robots][:robot_id]
         Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid
         Settings.purpose_uuids[target_purpose_name] = target_purpose_uuid
 
@@ -42,49 +49,64 @@ describe Robots::Robot do
         stub_asset_search(target_barcode, target_plate)
       end
 
-      it 'returns an error if there is an invalid bed' do
-        stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'dodgy_barcode' } }, nil)
-        expect(robot.verify(settings[:robots][:robot_id][:beds].keys.first => ['dodgy_barcode'])[:valid]).to be_falsey
+      context 'with an unknown plate' do
+        before(:each) { stub_asset_search('dodgy_barcode', nil) }
+        let(:scanned_layout) { { settings[:robots][robot_id][:beds].keys.first => ['dodgy_barcode'] } }
+
+        it { is_expected.not_to be_valid }
       end
 
-      it 'returns an error if the plate is not on the right bed' do
-        expect(robot.verify('bed3_barcode' => [source_barcode])[:valid]).to be_falsey
+      context 'with a plate on an unknown bed' do
+        let(:scanned_layout) { { 'bed3_barcode' => [source_barcode] } }
+
+        it { is_expected.not_to be_valid }
       end
 
-      it 'passes if everything is tickety-boo' do
-        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
-        expect(robot.verify('bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode])[:valid]).to be_truthy
-      end
+      context 'with a valid layout' do
+        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode] } }
 
-      it 'fails if the plates aren\'t related' do
-        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, json(:plate))
-        expect(robot.verify('bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode])[:valid]).to be_falsey
-      end
-
-      context 'with grand children' do
-        let(:robot) { Robots::Robot.find(id: 'grandparent_robot', api: api, user_uuid: user_uuid) }
-        let(:grandchild_purpose_name) { 'target2_plate_purpose' }
-        let(:grandchild_purpose_uuid) { SecureRandom.uuid }
-        let(:grandchild_barcode)      { ean13(3) }
-        let(:grandchild_plate)        { json :plate, uuid: plate_uuid, purpose_name: grandchild_purpose_name, purpose_uuid: grandchild_purpose_uuid, barcode_number: 3 }
-
-        before(:each) do
-          Settings.robots['grandparent_robot'] = settings[:robots][:grandparent_robot]
-          Settings.purpose_uuids[grandchild_purpose_name] = grandchild_purpose_uuid
-          stub_asset_search(grandchild_barcode, grandchild_plate)
+        context 'and related plates' do
+          before(:each) do
+            stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
+          end
+          it { is_expected.to be_valid }
         end
 
-        it 'passes if everything is tickety-boo' do
-          stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
-          stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => grandchild_barcode } }, target_plate)
-          v = robot.verify('bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode], 'bed3_barcode' => [grandchild_barcode])
-          expect(v[:valid]).to be_truthy
+        context 'but unrelated plates' do
+          before(:each) do
+            stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, json(:plate))
+          end
+          it { is_expected.not_to be_valid }
         end
       end
     end
 
+    context 'a robot with grandchildren' do
+      let(:robot_id) { 'grandparent_robot' }
+      let(:grandchild_purpose_name) { 'target2_plate_purpose' }
+      let(:grandchild_purpose_uuid) { SecureRandom.uuid }
+      let(:grandchild_barcode)      { ean13(3) }
+      let(:grandchild_plate)        { json :plate, uuid: plate_uuid, purpose_name: grandchild_purpose_name, purpose_uuid: grandchild_purpose_uuid, barcode_number: 3 }
+
+      before(:each) do
+        Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid
+        Settings.purpose_uuids[target_purpose_name] = target_purpose_uuid
+        stub_asset_search(source_barcode, plate)
+        stub_asset_search(target_barcode, target_plate)
+        Settings.purpose_uuids[grandchild_purpose_name] = grandchild_purpose_uuid
+        stub_asset_search(grandchild_barcode, grandchild_plate)
+        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
+        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => grandchild_barcode } }, target_plate)
+      end
+
+      context 'and the correct layout' do
+        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode], 'bed3_barcode' => [grandchild_barcode] } }
+        it { is_expected.to be_valid }
+      end
+    end
+
     describe 'robot barcode' do
-      let(:robot) { Robots::Robot.find(id: 'robot_id_2', api: api, user_uuid: user_uuid) }
+      let(:robot_id) {'robot_id_2'}
 
       before(:each) do
         Settings.purpose_uuids['Limber Cherrypicked'] = 'limber_cherrypicked_uuid'
@@ -150,7 +172,7 @@ describe Robots::Robot do
   end
 
   describe '#perform_transfer' do
-    let(:robot) { Robots::Robot.find(id: 'bravo-lb-end-prep', api: api, user_uuid: user_uuid) }
+    let(:robot_id) { 'bravo-lb-end-prep' }
 
     let(:state_change_request) do
       stub_api_post('state_changes',
@@ -176,7 +198,6 @@ describe Robots::Robot do
     end
 
     before(:each) do
-      Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
       Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
       Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       state_change_request
