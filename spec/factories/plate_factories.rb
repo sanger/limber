@@ -21,6 +21,7 @@ FactoryGirl.define do
       library_type 'Standard'
       request_type 'Limber Library Creation'
       stock_plate_barcode 2
+      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -34,7 +35,8 @@ FactoryGirl.define do
           wells: wells.shift(size),
           insert_size: { from: 100, to: 300 },
           library_type: { name: library_type },
-          request_type: request_type
+          request_type: request_type,
+          pcr_cycles: pool_prc_cycles[index]
         }
       end
       pool_hash
