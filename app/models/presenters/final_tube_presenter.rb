@@ -18,10 +18,7 @@ module Presenters
     class_attribute :labware_class
     self.labware_class = :tube
 
-    self.attributes =  [:api, :labware]
-
-    class_attribute    :additional_creation_partial
-    self.additional_creation_partial = nil
+    self.attributes =  %i[api labware]
 
     class_attribute :tab_states
 
@@ -31,11 +28,11 @@ module Presenters
       end
 
       event :pass do
-        transition [:pending, :started] => :passed
+        transition %i[pending started] => :passed
       end
 
       event :cancel do
-        transition [:pending, :started] => :cancelled
+        transition %i[pending started] => :cancelled
       end
 
       state :pending do

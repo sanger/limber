@@ -15,6 +15,7 @@
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
       <%= yield %>
       <%= render partial: 'loading_modal' %>
+      <%= render partial: 'version_information' %>
   </body>
 </html>
 

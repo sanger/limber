@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Presenters::StandardPresenter do
   has_a_working_api
 
@@ -27,7 +28,7 @@ describe Presenters::StandardPresenter do
   context 'when passed' do
     before(:each) do
       Settings.purposes = {
-        'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose' },
+        'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose', 'asset_type' => 'plate' },
         'other-purpose' => { 'parents' => [], 'name' => 'Other purpose' }
       }
     end
@@ -39,7 +40,7 @@ describe Presenters::StandardPresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose')
+      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose', 'plate')
     end
   end
 end

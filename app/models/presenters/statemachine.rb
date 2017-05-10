@@ -13,6 +13,18 @@ module Presenters::Statemachine
     def compatible_tube_purposes; end
   end
 
+  module AllowsLibraryPassing
+    def allow_library_passing?
+      tagged?
+    end
+  end
+
+  module DoesNotAllowLibraryPassing
+    def allow_library_passing?
+      false
+    end
+  end
+
   module StateAllowsChildCreation
     def control_additional_creation
       yield
@@ -25,15 +37,10 @@ module Presenters::Statemachine
       labware.plate_purpose.children.detect(&:not_qc?)
     end
 
-    def valid_purposes
-      yield default_child_purpose unless default_child_purpose.nil?
-      nil
-    end
-
     def suggested_purposes
       Settings.purposes.each do |uuid, purpose_settings|
         next unless purpose_settings.parents && purpose_settings.parents.include?(labware.plate_purpose.name)
-        yield uuid, purpose_settings.name
+        yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end
 
@@ -49,7 +56,7 @@ module Presenters::Statemachine
       end
     end
 
-    # Eventually this will end up on our forms/creations module
+    # Eventually this will end up on our labware_creators/creations module
     def purposes_of_type(type)
       Settings.purposes.select { |_uuid, purpose| purpose.asset_type == type }
     end
@@ -105,11 +112,11 @@ module Presenters::Statemachine
         end
 
         event :transfer do
-          transition [:pending, :started] => :passed
+          transition %i[pending started] => :passed
         end
 
         event :cancel do
-          transition [:pending, :started, :passed] => :cancelled
+          transition %i[pending started passed] => :cancelled
         end
 
         event :qc_complete do
@@ -130,22 +137,27 @@ module Presenters::Statemachine
         # These are the states, which are really the only things we need ...
         state :pending do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
 
         state :started do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
 
         state :passed do
           include StateAllowsChildCreation
+          include AllowsLibraryPassing
         end
 
         state :qc_complete, human_name: 'QC Complete' do
           include StateAllowsChildCreation
+          include AllowsLibraryPassing
         end
 
         state :cancelled do
           include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
         end
       end
     end

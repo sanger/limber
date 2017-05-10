@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../purpose_config'
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'

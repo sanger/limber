@@ -4,8 +4,8 @@
 
   <%= card title:'Suggested Actions' do %>
     <% @presenter.control_additional_creation do -%>
-      <% @presenter.suggested_purposes do |uuid, name| %>
-        <%= render(partial: @presenter.additional_creation_partial, locals: { presenter: @presenter, uuid: uuid, name: name }) %>
+      <% @presenter.suggested_purposes do |uuid, name, type| %>
+        <%= render(partial: creation_partial_for(type), locals: { presenter: @presenter, uuid: uuid, name: name }) %>
       <% end %>
     <% end %>
     <% if presenter.robot? %>
