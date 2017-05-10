@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module StateChangers
   class MiSeqQcTubeStateChanger < StateChangers::DefaultStateChanger
     REQUEST_GENERATION_STEP = 'passed'
@@ -27,7 +28,6 @@ module StateChangers
       )
 
       submission.submit!
-
     rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => exception
       raise SubmissionFailure, ('Submission Failed. ' + /.+\[([^\]]+)\]/.match(exception.message)[1])
     rescue Sequencescape::Api::ResourceInvalid => exception

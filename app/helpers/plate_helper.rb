@@ -39,7 +39,7 @@ module PlateHelper
   private :sortable_well_location_for
 
   def sorted_pre_cap_group_json
-    failed_wells = current_plate.wells.select { |w| %w(failed unknown).include?(w.state) }.map(&:location)
+    failed_wells = current_plate.wells.select { |w| %w[failed unknown].include?(w.state) }.map(&:location)
 
     sorted_group_array = current_plate.pre_cap_groups.map do |group_id, group|
       [group_id, group].tap do

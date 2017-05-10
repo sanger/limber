@@ -12,7 +12,7 @@ class SearchController < ApplicationController
   ## REVIEW: It needs to set the correct ongoing_plate_searching parameter
   def ongoing_plates(search = 'Find Illumina-B plates')
     plate_search = api.search.find(Settings.searches[search])
-    states = %w(pending started passed started_fx started_mj qc_complete nx_in_progress)
+    states = %w[pending started passed started_fx started_mj qc_complete nx_in_progress]
 
     @search_results = plate_search.all(
       Limber::Plate,
@@ -33,7 +33,7 @@ class SearchController < ApplicationController
 
   def my_plates
     plate_search = api.search.find(Settings.searches['Find plates for user'])
-    states = %w(pending started passed qc_complete)
+    states = %w[pending started passed qc_complete]
 
     @search_results = plate_search.all(
       Limber::Plate,
@@ -46,7 +46,7 @@ class SearchController < ApplicationController
 
   def stock_plates(search = 'Find Illumina-B stock plates')
     plate_search = api.search.find(Settings.searches[search])
-    states = %w(pending started passed qc_complete)
+    states = %w[pending started passed qc_complete]
 
     @search_results = plate_search.all(
       Limber::Plate,
@@ -80,6 +80,7 @@ class SearchController < ApplicationController
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
       format.html { render :new }
+      format.json { render json: { error: exception.message }, status: 404 }
     end
   end
 

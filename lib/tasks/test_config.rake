@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :test_config do
   task :generate do
     settings = { searches: { 'Find something' => nil },
@@ -7,7 +8,7 @@ namespace :test_config do
                  request_types: { 'Request_type' => nil },
                  purpose_uuids: { 'purpose' => 'uuid' },
                  printers: { 'limit' => 5, 'default_count' => 2 },
-                 metadata_key_options: %w(Key1 Key2 Key3 Key4),
+                 metadata_key_options: %w[Key1 Key2 Key3 Key4],
                  label_templates:
                   { 'tube' => 'sqsc_1dtube_label_template',
                     'plate' => 'sqsc_96plate_label_template' } }

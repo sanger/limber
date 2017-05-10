@@ -3,7 +3,7 @@
 module Robots
   class PoolingRobot < Robot
     class Bed < Robot::Bed
-      self.attributes = [:api, :user_uuid, :purpose, :states, :label, :parents, :target_state, :robot]
+      self.attributes = %i[api user_uuid purpose states label parents target_state robot]
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
@@ -34,9 +34,9 @@ module Robots
       private :range
     end
 
-    self.attributes = [:api, :user_uuid, :layout, :beds, :name, :destination_bed, :id]
+    self.attributes = %i[api user_uuid layout beds name destination_bed id]
 
-    def verify(bed_contents)
+    def verify(bed_contents, _robot_barcode = nil)
       valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
         beds[bed_id].load(plate_barcode)
         [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]

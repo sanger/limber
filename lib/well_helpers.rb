@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module WellHelpers
   COLUMNS_RANGE = (1..12).freeze
   ROWS_RANGE = ('A'..'H').freeze

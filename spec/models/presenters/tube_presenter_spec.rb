@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
@@ -37,9 +38,6 @@ describe Presenters::TubePresenter do
       ['Input plate barcode', 'DN427444 <em>1111111111111</em>'],
       ['Created on', '2016-10-19']
     ]
-  end
-
-  let(:expected_requests_for_summary) do
   end
 
   subject do

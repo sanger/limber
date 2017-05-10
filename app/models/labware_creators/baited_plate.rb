@@ -1,9 +1,10 @@
 # frozen_string_literal: true
-require_dependency 'forms'
 
-module Forms
-  class BaitingForm < CreationForm
-    include Forms::Form::CustomPage
+require_dependency 'labware_creators/base'
+
+module LabwareCreators
+  class BaitedPlate < Base
+    include Form::CustomPage
 
     self.page = 'baiting'
     class_attribute :aliquot_partial
@@ -20,8 +21,8 @@ module Forms
       ).layout
     end
 
-    def create_objects!
-      create_plate! do |plate|
+    def create_labware!
+      create_plate_with_standard_transfer! do |plate|
         api.bait_library_layout.create!(
           plate: plate.uuid,
           user: user_uuid

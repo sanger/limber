@@ -1,25 +1,24 @@
 # frozen_string_literal: true
+
 require_dependency 'presenters/presenter'
 module Presenters
   class PlatePresenter
     include Presenter
     include PlateWalking
     include RobotControlled
+    include Presenters::ExtendedCsv
 
     class_attribute :labware_class
     self.labware_class = :plate
 
     attr_accessor :api, :labware
-    self.attributes =  [:api, :labware]
+    self.attributes =  %i[api labware]
 
     class_attribute    :aliquot_partial
     self.aliquot_partial = 'labware/aliquot'
 
     class_attribute :summary_partial
     self.summary_partial = 'labware/plates/standard_summary'
-
-    class_attribute :additional_creation_partial
-    self.additional_creation_partial = 'labware/plates/child_plate_creation'
 
     class_attribute :printing_partial
 
@@ -32,6 +31,7 @@ module Presenters
       'Plate type' => :purpose_name,
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
+      'PCR Cycles' => :pcr_cycles,
       'Created on' => :created_on
     }
 
@@ -40,6 +40,16 @@ module Presenters
 
     class_attribute :well_failure_states
     self.well_failure_states = [:passed]
+
+    # Note: Validation here is intended as a warning. Rather than strict validation
+    validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
+
+    validates :pcr_cycles,
+              inclusion: { in: ->(r) { r.expected_cycles },
+                           message: 'differs from standard. %{value} cycles have been requested.' },
+              if: :expected_cycles
+
+    validates_with Validators::SuboptimalValidator
 
     def additional_creation_partial
       case default_child_purpose.asset_type
@@ -53,12 +63,16 @@ module Presenters
       "#{number_of_filled_wells}/#{total_number_of_wells}"
     end
 
-    def number_of_filled_wells
-      plate.wells.count { |w| w.aliquots.present? }
+    def pcr_cycles
+      if pcr_cycles_specified.zero?
+        'No pools specified'
+      else
+        cycles.to_sentence
+      end
     end
 
-    def total_number_of_wells
-      plate.size
+    def expected_cycles
+      purpose_config.dig(:warnings, :pcr_cycles_not_in)
     end
 
     def label_attributes
@@ -77,12 +91,8 @@ module Presenters
       yield
     end
 
-    def errors
-      nil
-    end
-
     def control_library_passing
-      yield if tagged?
+      yield if allow_library_passing?
     end
 
     def tagged?
@@ -102,10 +112,6 @@ module Presenters
       labware.plate_purpose
     end
 
-    def allow_plate_label_printing?
-      true
-    end
-
     def labware_form_details(view)
       { url: view.limber_plate_path(labware), as: :plate }
     end
@@ -119,24 +125,8 @@ module Presenters
       labware
     end
 
-    class UnknownPlateType < StandardError
-      attr_reader :plate
-
-      def errors
-        "Unknown plate type #{plate.plate_purpose.name.inspect}. Perhaps you are using the wrong pipeline application?"
-      end
-
-      def suitable_labware
-        false
-      end
-
-      def initialize(opts)
-        @plate = opts[:labware]
-      end
-    end
-
     def self.lookup_for(labware)
-      (presentation_classes = Settings.purposes[labware.plate_purpose.uuid]) || (return UnknownPlateType)
+      (presentation_classes = Settings.purposes[labware.plate_purpose.uuid]) || (return UnknownLabwareType)
       presentation_classes[:presenter_class].constantize
     end
 
@@ -144,11 +134,27 @@ module Presenters
       [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
     end
 
-    def filename
-      false
+    def filename(offset = nil)
+      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
     end
 
     private
+
+    def number_of_filled_wells
+      plate.wells.count { |w| w.aliquots.present? }
+    end
+
+    def total_number_of_wells
+      plate.size
+    end
+
+    def pcr_cycles_specified
+      cycles.length
+    end
+
+    def cycles
+      plate.pcr_cycles
+    end
 
     # Split a location string into an array containing the row letter
     # and the column number (as a integer) so that they can be sorted.

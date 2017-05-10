@@ -1,13 +1,14 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
-require 'forms/final_tubes_form'
+require 'labware_creators/final_tube'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe Forms::FinalTubesForm do
+describe LabwareCreators::FinalTube do
   has_a_working_api
 
   subject do
-    Forms::FinalTubesForm.new(form_attributes.merge(api: api))
+    LabwareCreators::FinalTube.new(form_attributes.merge(api: api))
   end
 
   before(:each) do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'Plate transfer', js: true do
@@ -23,31 +24,46 @@ feature 'Plate transfer', js: true do
     Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
 
     # # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => swipecard } }, user)
+    stub_search_and_single_result(
+      'Find user by swipecard code',
+      { 'search' => { 'swipecard_code' => swipecard } },
+      user
+    )
+
+    stub_custom_metdatum_collections_post
+    stub_state_changes_post
+  end
+
+  let(:stub_custom_metdatum_collections_post) do
+    stub_api_post('custom_metadatum_collections',
+                  payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
+                  body: json(:custom_metadatum_collection))
+  end
+  let(:stub_state_changes_post) do
+    stub_api_post('state_changes',
+                  payload: {
+                    state_change: {
+                      target_state: 'started',
+                      reason: 'Robot bravo LB Post Shear => LB End Prep started',
+                      customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
+                    }
+                  },
+                  body: json(:state_change, target_state: 'started'))
   end
 
   scenario 'starts the robot and saves the robot barcode' do
-    allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(beds: { '580000004838' => true, '580000014851' => true }, valid: true, message: '')
+    allow_any_instance_of(Robots::Robot)
+      .to receive(:verify)
+      .and_return(beds: { '580000004838' => true, '580000014851' => true }, valid: true, message: '')
 
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
     Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate)
-    stub_custom_metdatum_collections_post = stub_api_post('custom_metadatum_collections',
-                                                          payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
-                                                          body: json(:custom_metadatum_collection))
-    stub_state_changes_post = stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          target_state: 'started',
-          reason: 'Robot bravo LB Post Shear => LB End Prep started',
-          customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
-        }
-      },
-      body: json(:state_change, target_state: 'started')
+    stub_search_and_single_result(
+      'Find assets by barcode',
+      { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate
     )
 
-    fill_in_swipecard_and_barcode(swipecard)
+    fill_in_swipecard(swipecard)
 
     # if we don't do this the next step doesn't work
     expect(page).to have_content('Jane Doe')
@@ -91,9 +107,13 @@ feature 'Plate transfer', js: true do
 
   scenario 'informs if the robot barcode is wrong' do
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_1 } }, example_plate_without_metadata)
+    stub_search_and_single_result(
+      'Find assets by barcode',
+      { 'search' => { 'barcode' => plate_barcode_1 } },
+      example_plate_without_metadata
+    )
 
-    fill_in_swipecard_and_barcode(swipecard)
+    fill_in_swipecard(swipecard)
 
     expect(page).to have_content('Jane Doe')
     click_button('Robots')
@@ -118,10 +138,21 @@ feature 'Plate transfer', js: true do
 
   scenario 'verifies robot barcode' do
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode_1 } }, example_plate_with_metadata)
-    stub_api_get('custom_metadatum_collection-uuid', body: json(:custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' }, uuid: 'custom_metadatum_collection-uuid'))
+    stub_search_and_single_result(
+      'Find assets by barcode',
+      { 'search' => { 'barcode' => plate_barcode_1 } },
+      example_plate_with_metadata
+    )
+    stub_api_get(
+      'custom_metadatum_collection-uuid',
+      body: json(
+        :custom_metadatum_collection,
+        metadata: { 'created_with_robot' => 'robot_barcode' },
+        uuid: 'custom_metadatum_collection-uuid'
+      )
+    )
 
-    fill_in_swipecard_and_barcode(swipecard)
+    fill_in_swipecard(swipecard)
 
     expect(page).to have_content('Jane Doe')
     click_button('Robots')
@@ -142,15 +173,6 @@ feature 'Plate transfer', js: true do
     click_link('Validate Layout')
     within '#validation_report' do
       expect(page).to have_content('No problems detected!')
-    end
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard)
-    visit root_path
-
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
     end
   end
 end

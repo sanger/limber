@@ -1,19 +1,23 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 describe Presenters::PlatePresenter do
-  # Not sure why this is getting executed twice.
-  # Want to get the basics working first though
-  has_a_working_api(times: 2)
+  has_a_working_api
 
   let(:labware) do
     build :plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
+          pool_sizes: [2, 2],
           created_at: '2016-10-19 12:00:00 +0100'
+  end
+
+  before(:each) do
+    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
   end
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -26,13 +30,9 @@ describe Presenters::PlatePresenter do
       ['Plate type', purpose_name],
       ['Current plate state', state],
       ['Input plate barcode', 'DN2 <em>1220000002845</em>'],
+      ['PCR Cycles', '10'],
       ['Created on', '2016-10-19']
     ]
-  end
-
-  let(:expected_requests_for_summary) do
-    stub_request(:get, labware.wells.send(:actions).read)
-      .to_return(status: 200, body: json(:well_collection), headers: { 'content-type' => 'application/json' })
   end
 
   subject do
@@ -56,4 +56,57 @@ describe Presenters::PlatePresenter do
   end
 
   it_behaves_like 'a labware presenter'
+
+  context 'a plate with conflicting pools' do
+    let(:labware) do
+      build :plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
+    end
+
+    it 'reports as invalid' do
+      expect(subject).to_not be_valid
+    end
+
+    it 'reports the error' do
+      subject.valid?
+      expect(subject.errors.full_messages).to include('Pcr cycles specified is not consistent across the plate.')
+    end
+  end
+
+  context 'where the cycles differs from the default' do
+    before(:each) do
+      Settings.purposes[labware.purpose.uuid] ||= {}
+      Settings.purposes[labware.purpose.uuid]['warnings'] = { 'pcr_cycles_not_in' => ['6'] }
+    end
+
+    it 'reports as invalid' do
+      expect(subject).to_not be_valid
+    end
+
+    it 'reports the error' do
+      subject.valid?
+      expect(subject.errors.full_messages).to include('Pcr cycles differs from standard. 10 cycles have been requested.')
+    end
+  end
+
+  context 'where the cycles matches the default' do
+    before(:each) do
+      Settings.purposes[labware.purpose.uuid] ||= {}
+      Settings.purposes[labware.purpose.uuid]['warnings'] = { 'pcr_cycles_not_in' => ['10'] }
+    end
+
+    it 'reports as valid' do
+      expect(subject).to be_valid
+    end
+  end
+
+  context 'where no default is specified' do
+    before(:each) do
+      Settings.purposes[labware.purpose.uuid] ||= {}
+      Settings.purposes[labware.purpose.uuid]['warnings'] = {}
+    end
+
+    it 'reports as valid' do
+      expect(subject).to be_valid
+    end
+  end
 end
