@@ -47,10 +47,6 @@ module Presenters
       yield
     end
 
-    def errors
-      nil
-    end
-
     def prioritized_name(str, max_size)
       # Regular expression to match
       return 'Unnamed' if str.blank?
@@ -108,7 +104,7 @@ module Presenters
     private
 
     def purpose_config
-      Settings.purposes[purpose.uuid]
+      Settings.purposes.fetch(purpose.uuid, {})
     end
 
     def date_today

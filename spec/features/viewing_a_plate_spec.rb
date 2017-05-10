@@ -12,6 +12,7 @@ feature 'Viewing a plate', js: true do
   let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
   let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
   let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
+  let(:wells_collection) { json(:well_collection) }
 
   # Setup stubs
   background do
@@ -24,7 +25,7 @@ feature 'Viewing a plate', js: true do
     stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
+    stub_api_get(plate_uuid, 'wells', body: wells_collection)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 
@@ -50,5 +51,40 @@ feature 'Viewing a plate', js: true do
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.badge')).to have_content('started')
     expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+  end
+
+  feature 'with a suboptimal well' do
+    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content('Wells contain suboptimal aliquots')
+    end
+    scenario 'the well is flagged as suboptimal' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(page).to have_css('#aliquot_A1.suboptimal')
+    end
+  end
+
+  feature 'without a suboptimal well' do
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).not_to have_content('Wells contain suboptimal aliquots')
+    end
+    scenario 'the well is flagged as suboptimal' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).not_to have_css('#aliquot_A1.suboptimal')
+    end
+  end
+
+  def fill_in_swipecard_and_barcode(swipecard, barcode)
+    visit root_path
+
+    within '.content-main' do
+      fill_in 'User Swipecard', with: swipecard
+      find_field('User Swipecard').send_keys :enter
+      expect(page).to have_content('Jane Doe')
+      fill_in 'Plate or Tube Barcode', with: barcode
+      find_field('Plate or Tube Barcode').send_keys :enter
+    end
   end
 end
