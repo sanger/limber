@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'presenters/presenter'
+
 class Presenters::PlatePresenter
   include Presenters::Presenter
   include PlateWalking
