@@ -53,7 +53,7 @@ module FeatureHelpers
     end
   end
 
-  def ean13(number,prefix='DN')
+  def ean13(number, prefix = 'DN')
     SBCF::SangerBarcode.new(prefix: prefix, number: number).machine_barcode.to_s
   end
 end

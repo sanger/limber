@@ -12,3 +12,4 @@ Rails:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+    - config/robots.rb

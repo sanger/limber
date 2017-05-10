@@ -2,9 +2,9 @@
   <%= render partial: 'plate_printing' %>
 
   <%= card title:'Suggested Actions' do %>
-    <%= @presenter.control_additional_printing do %>
+    <%= @presenter.control_tube_display do %>
       <%= card do %>
-        <%= render(partial: @presenter.printing_partial, locals: { presenter: @presenter }) %>
+        <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: @presenter }) %>
       <% end %>
     <% end %>
 

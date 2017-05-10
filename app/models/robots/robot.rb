@@ -4,25 +4,12 @@ module Robots
   class Robot
     include Form
 
-    def self.find(options)
-      robot_settings = Settings.robots[options[:id]]
-      raise ActionController::RoutingError, "Robot #{options[:name]} Not Found" if robot_settings.nil?
-      robot_class = (robot_settings[:class] || 'Robots::Robot').constantize
-      robot_class.new(robot_settings.merge(options))
-    end
-
-    def self.each_robot
-      Settings.robots.each do |key, config|
-        yield key, config[:name]
-      end
-    end
-
     class_attribute :attributes
     self.attributes = %i[api user_uuid layout beds name id verify_robot]
 
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
-        bed.load(bed_settings[id]) if bed.has_transition?
+        bed.load(bed_settings[id]) if bed.transitions?
         bed.valid? || raise(Bed::BedError, bed.error_messages)
       end
       beds.values.each(&:transition)
@@ -77,9 +64,13 @@ module Robots
 
     def valid_parents
       Hash[parents_and_position do |parent, position|
-        beds[position].plate.try(:uuid) == parent.try(:uuid) || error(beds[position], parent.present? ?
-          "Should contain #{parent.barcode.prefix}#{parent.barcode.number}." :
-          'Could not match labware with expected child.')
+        next true if beds[position].plate.try(:uuid) == parent.try(:uuid)
+        message = if parent.present?
+                    "Should contain #{parent.barcode.prefix}#{parent.barcode.number}."
+                  else
+                    'Could not match labware with expected child.'
+                  end
+        error(beds[position], message)
       end.compact]
     end
 

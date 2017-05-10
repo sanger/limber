@@ -6,7 +6,7 @@ class TubesController < LabwareController
   end
 
   def presenter_for(labware)
-    Presenters::TubePresenter.lookup_for(labware).new(
+    Presenters.lookup_for(labware).new(
       api: api,
       labware: labware
     )

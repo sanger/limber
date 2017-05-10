@@ -29,7 +29,7 @@ describe Robots::Robot do
   let(:metadata_uuid)               { SecureRandom.uuid }
   let(:custom_metadatum_collection) { json :custom_metdatum_collection, uuid: metadata_uuid }
 
-  let(:robot) { Robots::Robot.find(id: robot_id, api: api, user_uuid: user_uuid) }
+  let(:robot) { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
 
   before(:each) do
     Settings.robots[robot_id] = settings[:robots][robot_id]
@@ -106,7 +106,7 @@ describe Robots::Robot do
     end
 
     describe 'robot barcode' do
-      let(:robot_id) {'robot_id_2'}
+      let(:robot_id) { 'robot_id_2' }
 
       before(:each) do
         Settings.purpose_uuids['Limber Cherrypicked'] = 'limber_cherrypicked_uuid'

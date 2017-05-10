@@ -16,7 +16,7 @@ module Robots
       super
     end
 
-    def has_transition?
+    def transitions?
       @target_state.present?
     end
 

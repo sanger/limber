@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Limber::Well < Sequencescape::Well
   def suboptimal?
-    aliquots.any? { |a| a.suboptimal }
+    aliquots.any?(&:suboptimal)
   end
 end
