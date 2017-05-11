@@ -39,7 +39,8 @@ feature 'Creating a tag plate', js: true do
       form_class: 'LabwareCreators::TaggedPlate',
       asset_type: 'plate',
       name: 'Tag Purpose',
-      parents: ['Limber Cherrypicked']
+      parents: ['Limber Cherrypicked'],
+      tag_layout_templates: acceptable_templates
     }
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
@@ -64,6 +65,7 @@ feature 'Creating a tag plate', js: true do
     stub_api_get(tag_plate_uuid, 'wells', body: json(:well_collection))
   end
 
+
   shared_examples 'a recognised template' do
     scenario 'of a recognised type' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -83,15 +85,45 @@ feature 'Creating a tag plate', js: true do
     end
   end
 
-  feature 'by column layout' do
-    let(:templates) { json(:tag_layout_template_collection, size: 2) }
-    let(:a2_tag)    { '9' }
-    it_behaves_like 'a recognised template'
+  feature 'with no configure templates' do
+    let(:acceptable_templates) { nil }
+
+    feature 'by column layout' do
+      let(:templates) { json(:tag_layout_template_collection, size: 2) }
+      let(:a2_tag)    { '9' }
+      it_behaves_like 'a recognised template'
+    end
+
+    feature 'by row layout' do
+      let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
+      let(:a2_tag)    { '2' }
+      it_behaves_like 'a recognised template'
+    end
   end
 
-  feature 'by row layout' do
+  feature 'with configured templates' do
+    let(:acceptable_templates) { ['Tag2 layout 0'] }
     let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
     let(:a2_tag)    { '2' }
-    it_behaves_like 'a recognised template'
+
+    feature 'and matching scanned template' do
+      it_behaves_like 'a recognised template'
+    end
+
+    feature 'and non matching scanned template' do
+      let(:tag_template_uuid) { 'unrecognised template' }
+
+      scenario 'rejects the candidate plate' do
+        fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+        plate_title = find('#plate-title')
+        expect(plate_title).to have_text('Limber Cherrypicked')
+        click_on('Add an empty Tag Purpose plate')
+        expect(page).to have_content('Tag plate addition')
+        stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
+        fill_in('Tag plate barcode', with: tag_plate_barcode)
+        expect(page).to have_content('The Tag Plate is not suitable.')
+        expect(page).to have_content('It does not contain suitable tags.')
+      end
+    end
   end
 end
