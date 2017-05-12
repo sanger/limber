@@ -45,7 +45,8 @@ feature 'Plate transfer', js: true do
                     state_change: {
                       target_state: 'started',
                       reason: 'Robot bravo LB Post Shear => LB End Prep started',
-                      customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid
+                      customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid,
+                      contents: nil
                     }
                   },
                   body: json(:state_change, target_state: 'started'))
