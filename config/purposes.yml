@@ -128,3 +128,14 @@ Cap Lib Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Cap Lib Pool
+PF Lib:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :presenter_class: Presenters::PermissivePresenter # Merge notes: This is the important line
+  :form_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+
