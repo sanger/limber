@@ -23,7 +23,7 @@ module Presenters
     }
 
     def label_attributes
-      { top_line: "P#{sample_count} #{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
+      { top_line: "#{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
         middle_line: labware.label.text,
         bottom_line: date_today,
         round_label_top_line: labware.barcode.prefix,
