@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_dependency 'presenters'
 module Presenters
   module Presenter
     def self.included(base)

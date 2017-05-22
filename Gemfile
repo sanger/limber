@@ -36,7 +36,6 @@ gem 'exception_notification'
 gem 'hashie'
 
 gem 'sequencescape-client-api', '>= 0.3.2',
-  # Should be switched back to sanger + rails4 for deployment
   github: 'sanger/sequencescape-client-api',
   branch: 'rails_4',
   require: 'sequencescape'

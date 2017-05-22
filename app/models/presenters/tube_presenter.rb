@@ -55,19 +55,5 @@ module Presenters
     def labware_form_details(view)
       { url: view.limber_tube_path(labware), as: :tube }
     end
-
-    class UnknownTubeType < StandardError
-      attr_reader :tube
-
-      def initialize(tube)
-        super("Unknown plate type #{tube.purpose.name.inspect}")
-        @tube = tube
-      end
-    end
-
-    def self.lookup_for(labware)
-      (presentation_classes = Settings.purposes[labware.purpose.uuid]) || raise(UnknownTubeType, labware)
-      presentation_classes[:presenter_class].constantize
-    end
   end
 end

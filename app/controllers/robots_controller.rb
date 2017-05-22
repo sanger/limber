@@ -17,7 +17,7 @@ class RobotsController < ApplicationController
     robot.perform_transfer(stripped_beds)
     if params[:robot_barcode].present?
       robot.beds.values.each do |bed|
-        next unless bed.has_transition? && bed.plate
+        next unless bed.transitions? && bed.plate
         PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, created_with_robot: params[:robot_barcode]).update
       end
     end
@@ -39,7 +39,7 @@ class RobotsController < ApplicationController
   end
 
   def find_robot
-    @robot = Robots::Robot.find(
+    @robot = Robots.find(
       id: params[:id],
       api: api,
       user_uuid: current_user_uuid

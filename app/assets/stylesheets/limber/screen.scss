@@ -121,9 +121,11 @@ footer.version-info {
     @extend .col-10;
   }
 }
+
 .aliquot.suboptimal {
   position: relative;
 }
+
 .aliquot.suboptimal::before {
   content: '⚠';
   font-size: 25px;
