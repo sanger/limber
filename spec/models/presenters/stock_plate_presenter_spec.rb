@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Presenters::StockPlatePresenter do
   has_a_working_api(times: 2)
 

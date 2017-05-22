@@ -4,12 +4,13 @@ module Presenters
   module Presenter
     def self.included(base)
       base.class_eval do
-        include Forms::Form
+        include Form
         include BarcodeLabelsHelper
         self.page = 'show'
 
-        class_attribute :csv
-        self.csv = 'show'
+        def csv
+          purpose_config.fetch(:csv_template, 'show')
+        end
       end
     end
 
@@ -49,11 +50,6 @@ module Presenters
     def errors
       nil
     end
-
-    # def label_type
-    #   yield 'custom-labels'
-    #   nil
-    # end
 
     def prioritized_name(str, max_size)
       # Regular expression to match

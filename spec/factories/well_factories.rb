@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require './lib/well_helpers'
 require_relative '../support/factory_girl_extensions'
 
@@ -25,7 +26,7 @@ FactoryGirl.define do
     transient do
       locations { WellHelpers.column_order.slice(0, size) }
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       plate_uuid   { SecureRandom.uuid }
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.

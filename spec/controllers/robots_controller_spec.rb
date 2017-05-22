@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
@@ -19,13 +20,34 @@ describe RobotsController, type: :controller do
       Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
       Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'target_plate_barcode' } }, plate)
-      stub_api_post('state_changes',
-                    payload: { state_change: { 'target_state' => 'passed', 'reason' => 'Robot robot_name started', 'customer_accepts_responsibility' => false, 'target' => 'plate_uuid', 'user' => user_uuid } },
-                    body: json(:state_change))
+
+      stub_api_post(
+        'state_changes',
+        payload: {
+          state_change: {
+            'target_state' => 'passed',
+            'reason' => 'Robot robot_name started',
+            'customer_accepts_responsibility' => false,
+            'target' => 'plate_uuid',
+            'user' => user_uuid,
+            'contents' => nil
+          }
+        },
+        body: json(:state_change)
+      )
       stub = stub_api_post('custom_metadatum_collections',
                            payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
                            body: json(:custom_metadatum_collection))
-      post :start, params: { bed: { 'bed1_barcode' => ['source_plate_barcode'], 'bed2_barcode' => ['target_plate_barcode'] }, robot_barcode: 'robot_barcode', id: 'robot_id' }, session: { user_uuid: user_uuid }
+      post :start,
+           params: {
+             bed: {
+               'bed1_barcode' => ['source_plate_barcode'],
+               'bed2_barcode' => ['target_plate_barcode']
+             },
+             robot_barcode: 'robot_barcode',
+             id: 'robot_id'
+           },
+           session: { user_uuid: user_uuid }
       expect(stub).to have_been_requested
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end

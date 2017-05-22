@@ -1,9 +1,10 @@
 
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :tag_layout_template, class: Sequencescape::TagLayoutTemplate, traits: [:api_object] do
     json_root 'tag_layout_template'
-    resource_actions %w(read create)
+    resource_actions %w[read create]
 
     direction 'column'
     walking_by 'wells of plate'
@@ -27,7 +28,7 @@ FactoryGirl.define do
 
     transient do
       json_root nil
-      resource_actions %w(read first last)
+      resource_actions %w[read first last]
       resource_url { 'tag_layout_templates/1' }
       uuid nil
     end

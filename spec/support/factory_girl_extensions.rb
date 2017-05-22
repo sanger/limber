@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module FactoryGirl
   class DefinitionProxy
     # Auto generate the necessary attributes for building
