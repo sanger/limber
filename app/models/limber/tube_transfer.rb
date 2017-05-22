@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Provides some specialized behaviour for handling tube transfers.
 # Not instantiated directly through eg. api.transfer.find(...)
 # but instead when loaded via the association on plate.

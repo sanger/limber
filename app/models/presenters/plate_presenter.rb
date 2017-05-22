@@ -1,25 +1,24 @@
 # frozen_string_literal: true
+
 require_dependency 'presenters/presenter'
 module Presenters
   class PlatePresenter
     include Presenter
     include PlateWalking
     include RobotControlled
+    include Presenters::ExtendedCsv
 
     class_attribute :labware_class
     self.labware_class = :plate
 
     attr_accessor :api, :labware
-    self.attributes =  [:api, :labware]
+    self.attributes =  %i[api labware]
 
     class_attribute    :aliquot_partial
     self.aliquot_partial = 'labware/aliquot'
 
     class_attribute :summary_partial
     self.summary_partial = 'labware/plates/standard_summary'
-
-    class_attribute :additional_creation_partial
-    self.additional_creation_partial = 'labware/plates/child_plate_creation'
 
     class_attribute :printing_partial
 
@@ -40,14 +39,6 @@ module Presenters
 
     class_attribute :well_failure_states
     self.well_failure_states = [:passed]
-
-    def additional_creation_partial
-      case default_child_purpose.asset_type
-      when 'plate' then 'labware/plates/child_plate_creation'
-      when 'tube' then 'labware/tube/child_tube_creation'
-      else self.class.additional_creation_partial
-      end
-    end
 
     def number_of_wells
       "#{number_of_filled_wells}/#{total_number_of_wells}"
@@ -82,7 +73,7 @@ module Presenters
     end
 
     def control_library_passing
-      yield if tagged?
+      yield if allow_library_passing?
     end
 
     def tagged?
@@ -119,22 +110,6 @@ module Presenters
       labware
     end
 
-    class UnknownPlateType < StandardError
-      attr_reader :plate
-
-      def errors
-        "Unknown plate type #{plate.plate_purpose.name.inspect}. Perhaps you are using the wrong pipeline application?"
-      end
-
-      def suitable_labware
-        false
-      end
-
-      def initialize(opts)
-        @plate = opts[:labware]
-      end
-    end
-
     def self.lookup_for(labware)
       (presentation_classes = Settings.purposes[labware.plate_purpose.uuid]) || (return UnknownPlateType)
       presentation_classes[:presenter_class].constantize
@@ -144,8 +119,8 @@ module Presenters
       [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
     end
 
-    def filename
-      false
+    def filename(offset = nil)
+      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
     end
 
     private

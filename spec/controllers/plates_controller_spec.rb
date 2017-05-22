@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require './app/controllers/plates_controller'
 
@@ -6,7 +7,7 @@ describe PlatesController, type: :controller do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_json) { json :plate, uuid: plate_uuid }
+  let(:plate_json) { json :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:wells_json) { json :well_collection }
   let(:plate_request) { stub_api_get plate_uuid, body: plate_json }
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
@@ -44,7 +45,8 @@ describe PlatesController, type: :controller do
                         target: plate_uuid,
                         target_state: 'cancelled',
                         reason: 'Because testing',
-                        customer_accepts_responsibility: 'true'
+                        customer_accepts_responsibility: 'true',
+                        contents: nil
                       }
                     },
                     body: '{}') # We don't care about the response
@@ -96,7 +98,7 @@ describe PlatesController, type: :controller do
   def stock_plate_config
     {
       'name' => 'Example plate',
-      'form_class' => 'Forms::CreationForm',
+      'form_class' => 'LabwareCreators::Base',
       'presenter_class' => 'Presenters::StockPlatePresenter',
       'state_changer_class' => 'StateChangers::DefaultStateChanger',
       'default_printer_type' => :plate_a,

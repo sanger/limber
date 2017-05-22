@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PrintJob
   include ActiveModel::Model
   attr_accessor :labels, :printer_name, :printer_type, :number_of_copies

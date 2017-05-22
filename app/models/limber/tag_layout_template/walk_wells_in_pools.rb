@@ -7,7 +7,7 @@ module Limber::TagLayoutTemplate::WalkWellsInPools
     pools  = groups.map { |pool| pool.map { |w| w.try(:[], 1) } }.flatten.compact.uniq
 
     groups.each_with_index do |current_group, group_index|
-      if group_index.positive?
+      unless group_index.zero?
         prior_group = groups[group_index - 1]
 
         current_group.each_with_index do |(well, pool_id, emptiness), index|

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
-module Forms
+
+module LabwareCreators
   # Pools an entire plate into a single tube. Useful for MiSeqQC
-  class PooledTubesForm < CreationForm
+  class PooledTubes < Base
     attr_reader :tube_transfer
 
-    def create_objects!
+    def create_labware!
       # Create a single tube
       child_tube = api.specific_tube_creation.create!(
         user: user_uuid,
@@ -21,7 +22,7 @@ module Forms
         destination: child_tube.uuid
       )
       true
-    rescue => e
+    rescue
       false
     end
 

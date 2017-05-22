@@ -4,8 +4,6 @@ module Presenters::ExtendedCsv
   def self.included(base)
     base.class_eval do
       class_attribute :bed_prefix
-
-      self.csv = 'show_extended'
       self.bed_prefix = 'PCRXP'
     end
   end

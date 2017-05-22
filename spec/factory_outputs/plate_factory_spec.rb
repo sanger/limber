@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'plate factory' do
@@ -87,9 +88,9 @@ describe 'plate factory' do
         },
         "plate_purpose": {
           "actions": {
-            "read": "http://example.com:3000/stock-plate-purpose-uuid"
+            "read": "http://example.com:3000/example-purpose-uuid"
           },
-          "uuid": "stock-plate-purpose-uuid",
+          "uuid": "example-purpose-uuid",
           "name": "example-purpose"
         },
         "actions": {

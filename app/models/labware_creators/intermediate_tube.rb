@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module Forms
+module LabwareCreators
   # For simple tube to tube transfers
-  class IntermediateTubesForm < CreationForm
+  class IntermediateTube < Base
     attr_reader :tube_transfer
 
-    def create_objects!
+    def create_labware!
       child_tube = api.tube_from_tube_creation.create!(
         parent: labware.uuid,
         child_purpose: purpose_uuid,
@@ -20,7 +20,7 @@ module Forms
         destination: child_tube.uuid
       )
       true
-    rescue => e
+    rescue
       false
     end
 

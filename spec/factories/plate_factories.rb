@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 require './lib/well_helpers'
 require_relative '../support/factory_girl_extensions'
 
 FactoryGirl.define do
-  factory :plate, class: Limber::Plate, traits: [:api_object, :barcoded] do
+  factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root 'plate'
     size 96
     state 'pending'
@@ -15,7 +16,7 @@ FactoryGirl.define do
       barcode_prefix 'DN'
       barcode_type 1
       purpose_name 'example-purpose'
-      purpose_uuid 'stock-plate-purpose-uuid'
+      purpose_uuid 'example-purpose-uuid'
       pool_sizes   []
       library_type 'Standard'
       request_type 'Limber Library Creation'
@@ -69,6 +70,11 @@ FactoryGirl.define do
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
       end
+    end
+
+    factory :plate_for_pooling do
+      purpose_name 'Pooled example'
+      pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Robots::Robot do
@@ -114,7 +115,8 @@ describe Robots::Robot do
                         reason: 'Robot bravo LB End Prep started',
                         customer_accepts_responsibility: false,
                         target: plate_uuid,
-                        user: user_uuid
+                        user: user_uuid,
+                        contents: nil
                       }
                     },
                     body: json(:state_change, target_state: 'passed'))

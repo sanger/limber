@@ -19,8 +19,8 @@ class QcFilesController < ApplicationController
   before_action :find_assets
 
   def find_assets
-    %w(limber pulldown).each do |app_name|
-      %w(plate tube multiplexed_library_tube).each do |klass|
+    %w[limber pulldown].each do |app_name|
+      %w[plate tube multiplexed_library_tube].each do |klass|
         next if params["#{app_name}_#{klass}_id"].nil?
         @asset_path = send(:"#{app_name}_#{klass}_path", params["#{app_name}_#{klass}_id"])
         @asset      = api.send(:"#{klass}").find(params["#{app_name}_#{klass}_id"])

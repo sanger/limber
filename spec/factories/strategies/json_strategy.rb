@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class JsonStrategy
   def initialize
     @strategy = FactoryGirl.strategy_by_name(:attributes_for).new

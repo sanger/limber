@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'well_helpers'
 
@@ -22,13 +23,13 @@ describe WellHelpers do
   end
 
   context 'Split pool' do
-    let(:wells) { %w(A1 B1 C1 F1 G1 H1 A2 C10 F10 G10) }
+    let(:wells) { %w[A1 B1 C1 F1 G1 H1 A2 C10 F10 G10] }
     let(:range) { 'A1-C1, F1-A2, C10, F10-G10' }
     it_behaves_like 'range generator'
   end
 
   context 'Unordered pool' do
-    let(:wells) { %w(A1 F10 F1 B1 C1 G1 H1 A2 C10 G10) }
+    let(:wells) { %w[A1 F10 F1 B1 C1 G1 H1 A2 C10 G10] }
     let(:range) { 'A1-C1, F1-A2, C10, F10-G10' }
     it_behaves_like 'range generator'
   end
