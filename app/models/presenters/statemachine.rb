@@ -105,7 +105,6 @@ module Presenters::Statemachine
       base.instance_eval do
         event :take_default_path do
           transition pending: :passed
-          transition passed: :qc_complete
         end
 
         event :transfer do
@@ -114,10 +113,6 @@ module Presenters::Statemachine
 
         event :cancel do
           transition %i[pending started passed] => :cancelled
-        end
-
-        event :qc_complete do
-          transition passed: :qc_complete
         end
       end
     end

@@ -29,7 +29,8 @@ describe RobotsController, type: :controller do
             'reason' => 'Robot robot_name started',
             'customer_accepts_responsibility' => false,
             'target' => 'plate_uuid',
-            'user' => user_uuid
+            'user' => user_uuid,
+            'contents' => nil
           }
         },
         body: json(:state_change)

@@ -45,7 +45,8 @@ describe PlatesController, type: :controller do
                         target: plate_uuid,
                         target_state: 'cancelled',
                         reason: 'Because testing',
-                        customer_accepts_responsibility: 'true'
+                        customer_accepts_responsibility: 'true',
+                        contents: nil
                       }
                     },
                     body: '{}') # We don't care about the response
