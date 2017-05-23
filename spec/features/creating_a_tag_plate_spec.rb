@@ -65,7 +65,6 @@ feature 'Creating a tag plate', js: true do
     stub_api_get(tag_plate_uuid, 'wells', body: json(:well_collection))
   end
 
-
   shared_examples 'a recognised template' do
     scenario 'of a recognised type' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

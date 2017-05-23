@@ -56,10 +56,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
                layout: 'bed',
                beds: {
-                 bed(2).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 2' },
-                 bed(5).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 5' },
-                 bed(3).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 3' },
-                 bed(6).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 6' },
+                 bed(2).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 2' },
+                 bed(5).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 5' },
+                 bed(3).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 3' },
+                 bed(6).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 6' },
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
                    states: %w[pending started],
