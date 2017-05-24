@@ -32,11 +32,11 @@ FactoryGirl.define do
       pool_hash = {}
       pool_sizes.each_with_index do |size, index|
         pool_hash["pool-#{index + 1}-uuid"] = {
-          wells: wells.shift(size),
-          insert_size: { from: 100, to: 300 },
-          library_type: { name: library_type },
-          request_type: request_type,
-          pcr_cycles: pool_prc_cycles[index]
+          'wells' => wells.shift(size),
+          'insert_size' => { from: 100, to: 300 },
+          'library_type' => { name: library_type },
+          'request_type' => request_type,
+          'pcr_cycles' => pool_prc_cycles[index]
         }
       end
       pool_hash
