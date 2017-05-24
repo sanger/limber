@@ -33,6 +33,9 @@ LB Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :form_class: LabwareCreators::TaggedPlate
+  warnings:
+    pcr_cycles_no_in:
+      - 6
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
