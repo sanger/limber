@@ -34,14 +34,9 @@ feature 'Pool tubes at end of pipeline', js: true do
 
     # Set-up the tube config
     Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = {
-      presenter_class: 'Presenters::SimpleTubePresenter',
-      asset_type: 'tube',
-      name: 'Example Purpose'
-    }
-    Settings.purposes[child_purpose_uuid] = {
+    Settings.purposes['example-purpose-uuid'] = build :tube_config, name: 'Example Purpose'
+    Settings.purposes[child_purpose_uuid] = build :tube_config, {
       presenter_class: 'Presenters::FinalTubePresenter',
-      asset_type: 'tube',
       name: 'Final Tube Purpose',
       form_class: 'LabwareCreators::FinalTube',
       parents: ['Example Purpose']

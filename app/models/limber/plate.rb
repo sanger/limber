@@ -47,6 +47,11 @@ class Limber::Plate < Sequencescape::Plate
     tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
   end
 
+  def tagged?
+    first_filled_well = wells.detect { |w| w.aliquots.first }
+    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
+  end
+
   private
 
   def well_to_tube_transfers

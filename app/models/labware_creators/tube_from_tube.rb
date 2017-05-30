@@ -3,6 +3,8 @@
 module LabwareCreators
   # For simple tube to tube transfers
   class TubeFromTube < Base
+    extend SupportParent::TubeOnly
+
     attr_reader :tube_transfer
 
     def create_labware!

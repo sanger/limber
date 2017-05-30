@@ -17,7 +17,7 @@ describe Robots::Robot do
     describe 'plate and bed' do
       let(:robot) { Robots::Robot.find(id: 'robot_id', api: api, user_uuid: user_uuid) }
 
-      before(:each) do
+      before do
         Settings.robots['robot_id'] = settings[:robots][:robot_id]
       end
 
@@ -39,7 +39,7 @@ describe Robots::Robot do
 
       let(:robot) { Robots::Robot.find(id: 'robot_id_2', api: api, user_uuid: user_uuid) }
 
-      before(:each) do
+      before do
         Settings.purpose_uuids['Limber Cherrypicked'] = 'limber_cherrypicked_uuid'
         Settings.robots['robot_id_2'] = settings[:robots][:robot_id_2]
         stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => '123' } }, plate_json)
@@ -131,7 +131,7 @@ describe Robots::Robot do
            state: 'started'
     end
 
-    before(:each) do
+    before do
       Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
       Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
       Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }

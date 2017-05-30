@@ -8,6 +8,8 @@ module LabwareCreators
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json
   class FinalTube < Base
+    extend SupportParent::TubeOnly
+
     def render(controller)
       if no_pooling_required?
         super

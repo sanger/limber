@@ -2,13 +2,16 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
+require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
 describe LabwareCreators::Base do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
-  before(:each) do
+   it_behaves_like 'it only allows creation from plates'
+
+  before do
     Settings.purposes[basic_purpose] = {
       form_class: 'LabwareCreators::Base'
     }
@@ -17,16 +20,8 @@ describe LabwareCreators::Base do
     }
   end
 
-  it 'can lookup form for a given purpose' do
-    expect(described_class.class_for(basic_purpose)).to eq(LabwareCreators::Base)
-  end
-
-  it 'can lookup form for another purpose' do
-    expect(described_class.class_for(tagged_purpose)).to eq(LabwareCreators::TaggedPlate)
-  end
-
   context 'with a custom transfer-template' do
-    before(:each) do
+    before do
       Settings.purposes['test-purpose'] = { transfer_template: 'Custom transfer template' }
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end

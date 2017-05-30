@@ -128,3 +128,11 @@ Cap Lib Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Cap Lib Pool
+LB Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :form_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
