@@ -12,11 +12,6 @@ module BarcodeLabelsHelper
     render(partial: 'labware/barcode_printing_form', locals: locals.merge(print_job: print_job, printers: printers))
   end
 
-  # Returns a list of printers applicable to the specified barcode.
-  def printers_applicable_to(barcodes)
-    printers_of_type(Array(barcodes).map(&:type).uniq)
-  end
-
   def printers_of_type(barcode_types)
     @printers.select { |printer| barcode_types.include?(printer.type.layout) }
   end
