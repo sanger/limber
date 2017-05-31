@@ -1,5 +1,6 @@
-<h2>Print tube labels</h2>
-<%= multiple_barcodes_printing_form(
-      presenter.tube_barcodes,
-       redirection_url: limber_plate_path(presenter.labware)
-) %>
+<%= card title: 'Print tube labels' do %>
+  <%= barcode_printing_form(
+        labels: presenter.tube_labels,
+        redirection_url: limber_plate_path(presenter.labware)
+  ) %>
+<% end %>

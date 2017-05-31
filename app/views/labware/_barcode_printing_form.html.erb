@@ -1,13 +1,14 @@
 <%= form_for(print_job, html: { method: :post, class: 'form-inline'}) do |f| %>
   <%= f.hidden_field :printer_type %>
-  <% label_attributes.each do |k, v|%>
-    <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
-  <%end%>
+  <% labels.each do |label| %>
+    <% label.attributes.each do |k, v|%>
+      <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+    <%end%>
+  <% end %>
 
   <%= f.label :printer_name, 'Barcode Printer', class: 'col-sm-3' %>
-  <%=  f.collection_select :printer_name, printers_applicable_to(barcode), :name, :name, {}, class: 'custom-select' %>
+  <%=  f.collection_select :printer_name, printers, :name, :name, {}, class: 'custom-select' %>
   <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1, class: 'custom-select' %>
   <%= f.submit 'Print Label', class: 'print-button btn btn-success' %>
-
 
 <% end %>

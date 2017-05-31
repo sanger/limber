@@ -64,12 +64,12 @@ class Presenters::PlatePresenter
     purpose_config.dig(:warnings, :pcr_cycles_not_in)
   end
 
-  def label_attributes
-    { top_left: date_today,
-      bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number}",
-      top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
-      bottom_right: "#{labware.label.prefix} #{labware.label.text}",
-      barcode: labware.barcode.ean13 }
+  def label
+    Labels::PlateLabel.new(labware)
+  end
+
+  def tube_labels
+    labware.tubes.map { |t| Labels::TubeLabel.new(t) }
   end
 
   def suitable_labware

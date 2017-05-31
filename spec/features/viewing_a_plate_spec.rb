@@ -76,15 +76,16 @@ feature 'Viewing a plate', js: true do
     end
   end
 
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
+  feature 'with transfers to tubes' do
+    let(:example_plate) { json :plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
 
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
+    before do
+      stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
+    end
+
+    scenario 'we see the tube label form' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(page).to have_content('Print tube labels')
     end
   end
 end

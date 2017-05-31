@@ -22,13 +22,8 @@ module Presenters
       'Created on' => :created_on
     }
 
-    def label_attributes
-      { top_line: "#{prioritized_name(labware.name, 10)} #{labware.label.prefix}",
-        middle_line: labware.label.text,
-        bottom_line: date_today,
-        round_label_top_line: labware.barcode.prefix,
-        round_label_bottom_line: labware.barcode.number,
-        barcode: labware.barcode.ean13 }
+    def label
+      Labels::TubeLabel.new(labware)
     end
 
     def control_child_links(&block)

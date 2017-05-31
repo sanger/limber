@@ -36,6 +36,10 @@ class Limber::Plate < Sequencescape::Plate
     transfers_to_tubes.present?
   end
 
+  def tubes
+    well_to_tube_transfers.map(&:last)
+  end
+
   def tubes_and_sources
     return [] unless transfers_to_tubes?
     tube_hash = Hash.new { |h, i| h[i] = [] }

@@ -52,7 +52,7 @@ describe Presenters::PlatePresenter do
                        top_right: 'DN2',
                        bottom_right: 'Limber Cherrypicked',
                        barcode: '1220000001831' }
-    expect(subject.label_attributes).to eq(expected_label)
+    expect(subject.label.attributes).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'
