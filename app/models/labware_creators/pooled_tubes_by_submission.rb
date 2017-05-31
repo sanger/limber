@@ -14,18 +14,24 @@ module LabwareCreators
         user: user_uuid,
         parent: parent_uuid,
         child_purposes: [purpose_uuid] * pool_uuids.length
-      ).children
+      ).children.map(&:uuid)
 
-      api.transfer_template.find(default_transfer_template_uuid).create!(
+      transfer_requests = []
+
+      pools.values.each_with_index do |pool, index|
+        pool['wells'].each do |location|
+          transfer_requests << {
+            'source_asset' => well_locations[location],
+            'target_asset' => child_stock_tubes[index]
+          }
+        end
+      end
+
+      api.transfer_request_collection.create!(
         user: user_uuid,
-        source: parent_uuid,
-        targets: Hash[pool_uuids.zip(child_stock_tubes.map(&:uuid))]
+        transfer_requests: transfer_requests
       )
       true
-    rescue
-      Rails.logger.error(e.message)
-      Rails.logger.error(e.backtrace)
-      false
     end
 
     def parent
@@ -43,6 +49,21 @@ module LabwareCreators
     # 2) Once tube racks are implemented, we can redirect there.
     def child
       parent
+    end
+
+    private
+
+    delegate :pools, to: :parent
+
+    #
+    # Maps well locations to the corresponding uuid
+    #
+    # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
+    #
+    def well_locations
+      @well_locations ||= parent.wells.each_with_object({}) do |w,hash|
+        hash[w.location] = w.uuid
+      end
     end
   end
 end

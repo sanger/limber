@@ -4,7 +4,10 @@ require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
 
-# CreationForm is the base class for our forms
+# Parent in a plate
+# Creates new tubes of the child purpose
+# Each well on the plate gets transferred into a tube
+# transfer targets are determined by pool
 describe LabwareCreators::PooledTubesBySubmission do
   it_behaves_like 'it only allows creation from tagged plates'
 
@@ -33,12 +36,15 @@ describe LabwareCreators::PooledTubesBySubmission do
     }
   end
 
+  let(:wells_json) { json :well_collection, size: 6 }
+
   context '#save!' do
     has_a_working_api
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)
+      stub_api_get(parent_uuid,'wells',body: wells_json)
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -56,17 +62,18 @@ describe LabwareCreators::PooledTubesBySubmission do
       stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection))
     end
 
-    # The API needs to pull back the transfer template to know what actions it can perform
-    let!(:transfer_template_request) do
-      stub_api_get('transfer-to-wells-by-submission-uuid', body: json(:transfer_to_specific_tubes_by_submission))
-    end
-
     let!(:transfer_creation_request) do
-      stub_api_post('transfer-to-wells-by-submission-uuid',
-                    payload: { transfer: {
-                      targets: { 'pool-1-uuid' => 'tube-0', 'pool-2-uuid' => 'tube-1' },
-                      source: parent_uuid,
-                      user: user_uuid
+      stub_api_post('transfer_request_collections',
+                    payload: { transfer_request_collection: {
+                      user: user_uuid,
+                      transfer_requests: [
+                        {'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0'},
+                        {'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0'},
+                        {'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0'},
+                        {'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1'},
+                        {'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1'},
+                        {'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1'}
+                      ]
                     } },
                     body: '{}')
     end
