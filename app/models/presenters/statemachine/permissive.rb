@@ -14,22 +14,27 @@ module Presenters::Statemachine
           # These are the states, which are really the only things we need ...
           state :pending do
             include StateAllowsChildCreation
+            include DoesNotAllowLibraryPassing
           end
 
           state :started do
             include StateAllowsChildCreation
+            include DoesNotAllowLibraryPassing
           end
 
           state :passed do
             include StateAllowsChildCreation
+            include DoesNotAllowLibraryPassing
           end
 
           state :qc_complete, human_name: 'QC Complete' do
             include StateAllowsChildCreation
+            include DoesNotAllowLibraryPassing
           end
 
           state :cancelled do
             include StateDoesNotAllowChildCreation
+            include DoesNotAllowLibraryPassing
           end
         end
       end
