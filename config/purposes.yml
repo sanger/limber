@@ -137,14 +137,14 @@ PF Cherrypicked:
   :stock_plate: true
   :cherrypickable_target: true
   :input_plate: true
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StockPlatePresenter
 PF Shear:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Cherrypicked
@@ -153,7 +153,7 @@ PF Post Shear:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Shear
@@ -162,7 +162,7 @@ PF Post Shear XP:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Post Shear
@@ -171,7 +171,7 @@ PF Lib:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::PermissivePresenter
   :form_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
@@ -183,7 +183,7 @@ PF Lib XP:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Lib
@@ -192,7 +192,7 @@ PF Lib XP2:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :default_printer_type: :plate_b
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Lib XP
