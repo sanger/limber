@@ -2,18 +2,17 @@
 # frozen_string_literal: true
 
 FactoryGirl.define do
-
   factory :purpose_config, class: Hash do
     transient do
-      name  'Plate Purpose'
-      form_class  'LabwareCreators::Base'
-      presenter_class  'Presenters::StandardPresenter'
-      state_changer_class  'StateChangers::DefaultStateChanger'
-      default_printer_type  :plate_a
-      asset_type  'plate'
-      stock_plate  false
-      cherrypickable_target  false
-      input_plate  false
+      name 'Plate Purpose'
+      form_class 'LabwareCreators::Base'
+      presenter_class 'Presenters::StandardPresenter'
+      state_changer_class 'StateChangers::DefaultStateChanger'
+      default_printer_type :plate_a
+      asset_type 'plate'
+      stock_plate false
+      cherrypickable_target false
+      input_plate false
       parents []
     end
 
@@ -32,12 +31,12 @@ FactoryGirl.define do
       )
     end
 
-   factory :tube_config do
+    factory :tube_config do
       transient do
         asset_type 'tube'
         default_printer_type :tube
         presenter_class 'Presenters::SimpleTubePresenter'
       end
-   end
+    end
   end
 end

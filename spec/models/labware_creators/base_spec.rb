@@ -9,7 +9,7 @@ describe LabwareCreators::Base do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
-   it_behaves_like 'it only allows creation from plates'
+  it_behaves_like 'it only allows creation from plates'
 
   before do
     Settings.purposes[basic_purpose] = {

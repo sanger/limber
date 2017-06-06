@@ -29,8 +29,8 @@ describe Presenters::StandardPresenter do
     before do
       Settings.purposes = {
         'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose', 'asset_type' => 'plate', 'form_class' => 'LabwareCreators::Base' },
-        'other-purpose' => { 'parents' => [], 'name' => 'Other purpose', 'asset_type' => 'plate', 'form_class' => 'LabwareCreators::Base'  },
-        'tube-purpose' => { 'parents' => [], 'name' => 'Tube purpose', 'asset_type' => 'tube', 'form_class' => 'LabwareCreators::FinalTubeFromPlate'},
+        'other-purpose' => { 'parents' => [], 'name' => 'Other purpose', 'asset_type' => 'plate', 'form_class' => 'LabwareCreators::Base' },
+        'tube-purpose' => { 'parents' => [], 'name' => 'Tube purpose', 'asset_type' => 'tube', 'form_class' => 'LabwareCreators::FinalTubeFromPlate' },
         'incompatible-tube-purpose' => { 'parents' => [], 'name' => 'Incompatible purpose', 'asset_type' => 'tube', 'form_class' => 'LabwareCreators::FinalTube' }
       }
     end

@@ -25,7 +25,7 @@ describe LabwareCreators::PooledTubesBySubmission do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
+  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3], stock_plate_barcode: 5 }
 
   let(:form_attributes) do
     {
@@ -44,7 +44,7 @@ describe LabwareCreators::PooledTubesBySubmission do
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)
-      stub_api_get(parent_uuid,'wells',body: wells_json)
+      stub_api_get(parent_uuid, 'wells', body: wells_json)
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -52,7 +52,14 @@ describe LabwareCreators::PooledTubesBySubmission do
     let!(:tube_creation_request) do
       stub_api_post(
         'specific_tube_creations',
-        payload: { specific_tube_creation: { user: user_uuid, parent: parent_uuid, child_purposes: [purpose_uuid, purpose_uuid] } },
+        payload: {
+          specific_tube_creation: {
+            user: user_uuid,
+            parent: parent_uuid,
+            child_purposes: [purpose_uuid, purpose_uuid],
+            tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:F1' }]
+          }
+        },
         body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2)
       )
     end
@@ -67,12 +74,12 @@ describe LabwareCreators::PooledTubesBySubmission do
                     payload: { transfer_request_collection: {
                       user: user_uuid,
                       transfer_requests: [
-                        {'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0'},
-                        {'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0'},
-                        {'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0'},
-                        {'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1'},
-                        {'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1'},
-                        {'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1'}
+                        { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0' },
+                        { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0' },
+                        { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0' },
+                        { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1' },
+                        { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1' },
+                        { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1' }
                       ]
                     } },
                     body: '{}')

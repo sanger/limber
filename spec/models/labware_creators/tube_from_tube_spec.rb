@@ -55,14 +55,12 @@ describe LabwareCreators::TubeFromTube do
 
     let(:creation_request) do
       stub_api_post('tube_from_tube_creations',
-        payload: { tube_from_tube_creation: {
-            parent: 'parent-uuid',
-            child_purpose: 'child-purpose-uuid',
-            user: 'user-uuid'
-          }
-        },
-        body: json(:tube_creation, child_uuid: child_uuid)
-      )
+                    payload: { tube_from_tube_creation: {
+                      parent: 'parent-uuid',
+                      child_purpose: 'child-purpose-uuid',
+                      user: 'user-uuid'
+                    } },
+                    body: json(:tube_creation, child_uuid: child_uuid))
     end
 
     let(:transfer_request) do
@@ -81,5 +79,4 @@ describe LabwareCreators::TubeFromTube do
       end
     end
   end
-
 end

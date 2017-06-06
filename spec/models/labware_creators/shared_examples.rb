@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'it only allows creation from tubes' do
   context 'pre creation' do
     has_a_working_api

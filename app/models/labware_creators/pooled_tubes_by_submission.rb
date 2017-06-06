@@ -61,7 +61,7 @@ module LabwareCreators
     # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
     #
     def well_locations
-      @well_locations ||= parent.wells.each_with_object({}) do |w,hash|
+      @well_locations ||= parent.wells.each_with_object({}) do |w, hash|
         hash[w.location] = w.uuid
       end
     end

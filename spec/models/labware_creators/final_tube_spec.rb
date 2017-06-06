@@ -11,7 +11,6 @@ describe LabwareCreators::FinalTube do
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-
     subject do
       LabwareCreators::FinalTube.new(form_attributes.merge(api: api))
     end

@@ -77,7 +77,6 @@ class Limber::Plate < Sequencescape::Plate
 
   def updated_tube_hash
     tube_hash = Hash.new { |h, i| h[i] = [] }
-    tube_index = {}
 
     transfer_requests = []
     tube_indexes = {}
@@ -90,7 +89,7 @@ class Limber::Plate < Sequencescape::Plate
     transfer_requests.each do |tr|
       location = well_uuids_to_location.fetch(tr.source_asset.uuid)
       tube = tube_indexes[tr.target_asset.uuid]
-      tube_hash[ tube ] << location if tube
+      tube_hash[tube] << location if tube
     end
 
     tube_hash
