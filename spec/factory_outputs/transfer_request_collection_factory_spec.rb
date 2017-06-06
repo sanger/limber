@@ -25,12 +25,16 @@ describe 'transfer_request_collection factory' do
             { "source_asset": { "uuid": "example-well-uuid-2"}, "target_asset": { "uuid": "target-0-uuid"} },
             { "source_asset": { "uuid": "example-well-uuid-3"}, "target_asset": { "uuid": "target-1-uuid"} },
             { "source_asset": { "uuid": "example-well-uuid-4"}, "target_asset": { "uuid": "target-1-uuid"} }
+          ],
+          "target_tubes": [
+            { "uuid": "target-0-uuid", "name":"DN2 A1:C1" },
+            { "uuid": "target-1-uuid", "name":"DN2 D1:E1" }
           ]
         }
     })
   end
 
   it 'should match the expected json' do
-    expect(JSON.parse(subject)).to eq JSON.parse(json_content)
+    expect(JSON.parse(subject)).to include_json JSON.parse(json_content)
   end
 end
