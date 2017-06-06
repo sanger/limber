@@ -12,8 +12,10 @@ module LabwareCreators
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,
         parent: parent_uuid,
-        child_purposes: [purpose_uuid] * pool_uuids.length
+        child_purposes: [purpose_uuid] * pool_uuids.length,
+        tube_attributes: tube_attributes
       ).children
+
 
       api.transfer_template.find(default_transfer_template_uuid).create!(
         user: user_uuid,
@@ -42,6 +44,37 @@ module LabwareCreators
     # 2) Once tube racks are implemented, we can redirect there.
     def child
       parent
+    end
+
+    private
+
+    def tube_attributes
+      pools.values.map do |pool_details|
+        { name: name_for(pool_details) }
+      end
+    end
+
+    def name_for(pool_details)
+      wells = pool_details['wells']
+      # Wells SHOULD already be sorted
+      "#{stock_plate_barcode} #{wells.first}:#{wells.last}"
+    end
+
+    def stock_plate_barcode
+      "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+    end
+
+    delegate :pools, to: :parent
+
+    #
+    # Maps well locations to the corresponding uuid
+    #
+    # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
+    #
+    def well_locations
+      @well_locations ||= parent.wells.each_with_object({}) do |w, hash|
+        hash[w.location] = w.uuid
+      end
     end
   end
 end
