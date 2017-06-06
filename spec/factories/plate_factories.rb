@@ -24,7 +24,8 @@ FactoryGirl.define do
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
-                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes'
+                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes',
+                               'transfer_request_collections'
 
     pools do
       wells = WellHelpers.column_order.dup

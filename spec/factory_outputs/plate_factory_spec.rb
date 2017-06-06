@@ -74,6 +74,12 @@ describe 'plate factory' do
             "read": "http://example.com:3000/example-plate-uuid/source_transfers"
           }
         },
+        "transfer_request_collections": {
+          "size": 0,
+          "actions": {
+            "read": "http://example.com:3000/example-plate-uuid/transfer_request_collections"
+          }
+        },
         "transfers_to_tubes": {
           "size": 0,
           "actions": {
@@ -159,6 +165,6 @@ describe 'plate factory' do
   end
 
   it 'should match the expected json' do
-    expect(JSON.parse(subject)['plate']).to eq JSON.parse(json_content)['plate']
+    expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end
