@@ -13,7 +13,8 @@ module LabwareCreators
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,
         parent: parent_uuid,
-        child_purposes: [purpose_uuid] * pool_uuids.length
+        child_purposes: [purpose_uuid] * pool_uuids.length,
+        tube_attributes: tube_attributes
       ).children.map(&:uuid)
 
       transfer_requests = []
@@ -52,6 +53,22 @@ module LabwareCreators
     end
 
     private
+
+    def tube_attributes
+      pools.values.map do |pool_details|
+        { name: name_for(pool_details) }
+      end
+    end
+
+    def name_for(pool_details)
+      wells = pool_details['wells']
+      # Wells SHOULD already be sorted
+      "#{stock_plate_barcode} #{wells.first}:#{wells.last}"
+    end
+
+    def stock_plate_barcode
+      "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+    end
 
     delegate :pools, to: :parent
 
