@@ -15,15 +15,15 @@ module LabwareCreators
         parent: parent_uuid,
         child_purposes: [purpose_uuid] * pool_uuids.length,
         tube_attributes: tube_attributes
-      ).children.map(&:uuid)
+      ).children.index_by(&:name)
 
       transfer_requests = []
 
-      pools.values.each_with_index do |pool, index|
+      pools.values.each do |pool|
         pool['wells'].each do |location|
           transfer_requests << {
             'source_asset' => well_locations[location],
-            'target_asset' => child_stock_tubes[index]
+            'target_asset' => child_stock_tubes.fetch(name_for(pool)).uuid
           }
         end
       end

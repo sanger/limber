@@ -66,7 +66,7 @@ describe LabwareCreators::PooledTubesBySubmission do
 
     # Find out what tubes we've just made!
     let!(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection))
+      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:C1', 'DN5 D1:F1']))
     end
 
     let!(:transfer_creation_request) do
