@@ -124,7 +124,8 @@ describe 'plate factory' do
             "library_type": {
               "name": "Standard"
             },
-            "request_type": "Limber Library Creation"
+            "request_type": "Limber Library Creation",
+            "pcr_cycles": 10
           },
           "pool-2-uuid": {
             "wells": [
@@ -137,7 +138,8 @@ describe 'plate factory' do
             "library_type": {
               "name": "Standard"
             },
-            "request_type": "Limber Library Creation"
+            "request_type": "Limber Library Creation",
+            "pcr_cycles": 10
           }
         },
         "pre_cap_groups": {},

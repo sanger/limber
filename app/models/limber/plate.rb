@@ -13,6 +13,10 @@ class Limber::Plate < Sequencescape::Plate
     pools.keys.count
   end
 
+  def pcr_cycles
+    @pcr_cycles ||= pools.values.map { |pool| pool.fetch('pcr_cycles', 'Not specified') }.uniq
+  end
+
   def role
     label.prefix
   end
@@ -32,7 +36,17 @@ class Limber::Plate < Sequencescape::Plate
     transfers_to_tubes.present?
   end
 
+  def tubes
+    tubes_and_sources.map(&:first)
+  end
+
   def tubes_and_sources
+    @tubes_and_sources ||= generate_tubes_and_sources
+  end
+
+  private
+
+  def generate_tubes_and_sources
     return [] unless transfers_to_tubes?
     tube_hash = Hash.new { |h, i| h[i] = [] }
     # Build a list of all source wells for a given tube
@@ -46,8 +60,6 @@ class Limber::Plate < Sequencescape::Plate
     # Sort the tubes in column order based on their first well
     tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
   end
-
-  private
 
   def well_to_tube_transfers
     @transfers ||= transfers_to_tubes.each_with_object([]) do |transfer, all_transfers|

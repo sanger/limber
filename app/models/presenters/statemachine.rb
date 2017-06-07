@@ -90,9 +90,6 @@ module Presenters::Statemachine
       yield default_transition unless default_transition.nil?
     end
 
-    # Does nothing
-    def control_additional_printing(&block); end
-
     def all_plate_states
       self.class.state_machines[:state].states.map(&:value)
     end

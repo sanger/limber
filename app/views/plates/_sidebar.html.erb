@@ -1,13 +1,11 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
+  <% @presenter.control_tube_display do %>
+      <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: @presenter }) %>
+  <% end %>
+
 
   <%= card title:'Suggested Actions' do %>
-    <%= @presenter.control_additional_printing do %>
-      <%= card do %>
-        <%= render(partial: @presenter.printing_partial, locals: { presenter: @presenter }) %>
-      <% end %>
-    <% end %>
-
     <% @presenter.control_additional_creation do -%>
       <% @presenter.suggested_purposes do |uuid, name, type| %>
         <%= render(partial: creation_partial_for(type), locals: { presenter: @presenter, uuid: uuid, name: name }) %>

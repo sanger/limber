@@ -46,7 +46,7 @@ class LabwareController < ApplicationController
       notice: @presenter.errors
     )
     return
-  rescue Presenters::UnknownPlateType => exception
+  rescue Presenters::UnknownLabwareType => exception
     redirect_to(
       search_path,
       notice: "#{exception.message}. Perhaps you are using the wrong pipeline application?"
