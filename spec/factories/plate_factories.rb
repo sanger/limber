@@ -74,6 +74,10 @@ FactoryGirl.define do
       end
     end
 
+    factory :plate_with_transfers do
+      transfers_to_tubes_count 1
+    end
+
     factory :plate_for_pooling do
       purpose_name 'Pooled example'
       pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })

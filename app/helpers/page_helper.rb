@@ -62,8 +62,8 @@ module PageHelper
     grouping(:sidebar, class: 'col-sm-12 col-md-4 col-lg-5 col-xl-6 sidebar content-secondary', &block)
   end
 
-  def card(title: nil, without_block: false, id: nil, &block)
-    content_tag(:div, class: 'card', id: id) do
+  def card(title: nil, css_class: '', without_block: false, id: nil, &block)
+    content_tag(:div, class: "card #{css_class}", id: id) do
       concat content_tag(:h3, title, class: 'card-header') if title
       if without_block
         yield
