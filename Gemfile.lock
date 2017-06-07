@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/jamesglover/sequencescape-client-api.git
-  revision: 45a33ddbefd98003bb42003f623d9ccbbd94f2b4
-  branch: add_custom_tube_naming
+  revision: 5c845a3c4371c2eb654902451241a2dd286df76c
+  branch: rails_4_rc_li
   specs:
     sequencescape-client-api (0.3.2)
       activemodel (>= 4.0.0)
