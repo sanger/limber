@@ -85,24 +85,24 @@ feature 'Viewing a plate', js: true do
 
     let(:label_a) do
       { "label": {
-          "top_line": 'Child tube 0 prefix',
-          "middle_line": 'Example purpose',
-          "bottom_line": ' 7-JUN-2017',
-          "round_label_top_line": 'NT',
-          "round_label_bottom_line": '1',
-          "barcode": '3980000001795'
-        } }
+        "top_line": 'Child tube 0 prefix',
+        "middle_line": 'Example purpose',
+        "bottom_line": ' 7-JUN-2017',
+        "round_label_top_line": 'NT',
+        "round_label_bottom_line": '1',
+        "barcode": '3980000001795'
+      } }
     end
 
     let(:label_b) do
       { "label": {
-          "top_line": 'Child tube 1 prefix',
-          "middle_line": 'Example purpose',
-          "bottom_line": ' 7-JUN-2017',
-          "round_label_top_line": 'NT',
-          "round_label_bottom_line": '2',
-          "barcode": '3980000001795'
-        } }
+        "top_line": 'Child tube 1 prefix',
+        "middle_line": 'Example purpose',
+        "bottom_line": ' 7-JUN-2017',
+        "round_label_top_line": 'NT',
+        "round_label_bottom_line": '2',
+        "barcode": '3980000001795'
+      } }
     end
 
     before do
