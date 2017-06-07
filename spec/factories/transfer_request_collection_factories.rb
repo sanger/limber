@@ -24,10 +24,10 @@ FactoryGirl.define do
       Array.new(number_of_targets) do |i|
         wells_per_transition = (transfer_count / number_of_targets.to_f).ceil
         from = WellHelpers.column_order[initial_well + (i * wells_per_transition)]
-        last_well = initial_well + ((i+1) * wells_per_transition) - 1
-        last_well_rounded = [last_well, (transfer_count+initial_well-1)].min
+        last_well = initial_well + ((i + 1) * wells_per_transition) - 1
+        last_well_rounded = [last_well, (transfer_count + initial_well - 1)].min
         to = WellHelpers.column_order[last_well_rounded]
-        associated(:tube,name: "#{source_plate_barcode} #{from}:#{to}", uuid: "target-#{initial_target + i}-uuid")
+        associated(:tube, name: "#{source_plate_barcode} #{from}:#{to}", uuid: "target-#{initial_target + i}-uuid")
       end
     end
   end
