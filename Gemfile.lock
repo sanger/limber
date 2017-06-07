@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/jamesglover/sequencescape-client-api.git
+  revision: 45a33ddbefd98003bb42003f623d9ccbbd94f2b4
+  branch: add_custom_tube_naming
+  specs:
+    sequencescape-client-api (0.3.2)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      i18n
+      yajl-ruby (>= 1.1.0)
+
+GIT
   remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
@@ -17,15 +28,6 @@ GIT
   branch: development
   specs:
     sanger_barcode_format (0.0.1)
-
-PATH
-  remote: ../sequencescape-client-api
-  specs:
-    sequencescape-client-api (0.3.2)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      i18n
-      yajl-ruby (>= 1.1.0)
 
 GEM
   remote: https://rubygems.org/
