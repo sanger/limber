@@ -28,7 +28,7 @@ module PlateHelper
   end
 
   def insert_size_class(pool)
-    pool.dig('insert_size','from')||0 > Settings.large_insert_limit ? 'large-insert-size' : ''
+    pool.dig('insert_size', 'from') || 0 > Settings.large_insert_limit ? 'large-insert-size' : ''
   end
 
   # Altered to sort by column first then row

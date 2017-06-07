@@ -2,9 +2,9 @@
 
 class Labels::TubeLabel < Labels::Base
   def attributes
-    #we have to remove first two characters from name (normally it is 'DN'),
-    #because otherwise we will lose important information about wells
-    #if each well takes 3 (not 2) characters, like E10:H10, for example
+    # we have to remove first two characters from name (normally it is 'DN'),
+    # because otherwise we will lose important information about wells
+    # if each well takes 3 (not 2) characters, like E10:H10, for example
     { first_line: first_line,
       second_line: second_line,
       third_line: labware.label.text,
@@ -23,5 +23,4 @@ class Labels::TubeLabel < Labels::Base
   def second_line
     labware.barcode.number.to_s + ', P' + labware.aliquots.count.to_s
   end
-
 end
