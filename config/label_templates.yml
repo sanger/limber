@@ -1,16 +1,16 @@
 development:
-  1D Tube: sqsc_1dtube_label_template
+  1D Tube: limber_tube_label_template
   96 Well Plate: sqsc_96plate_label_template
   384 Well Plate: sqsc_384plate_label_template
 test:
-  1D Tube: sqsc_1dtube_label_template
+  1D Tube: limber_tube_label_template
   96 Well Plate: sqsc_96plate_label_template
   384 Well Plate: sqsc_384plate_label_template
 staging:
-  1D Tube: sqsc_1dtube_label_template
+  1D Tube: limber_tube_label_template
   96 Well Plate: sqsc_96plate_label_template
   384 Well Plate: sqsc_384plate_label_template
 production:
-  1D Tube: sqsc_1dtube_label_template
+  1D Tube: limber_tube_label_template
   96 Well Plate: sqsc_96plate_label_template
   384 Well Plate: sqsc_384plate_label_template
