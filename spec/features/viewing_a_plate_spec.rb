@@ -13,12 +13,14 @@ feature 'Viewing a plate', js: true do
   let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
   let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
   let(:wells_collection) { json(:well_collection) }
+  let(:default_tube_printer) { 'tube printer 1' }
 
   # Setup stubs
   background do
     # Set-up the plate config
     Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
     Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate', name: 'Child Purpose 0', parents: ['Limber Cherrypicked'] }
+    Settings.printers[:tube] = default_tube_printer
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate
@@ -78,6 +80,30 @@ feature 'Viewing a plate', js: true do
 
   feature 'with transfers to tubes' do
     let(:example_plate) { json :plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
+    let(:barcode_printer) { 'tube printer 0' }
+    let(:print_copies) { 2 }
+
+    let(:label_a) do
+      { "label": {
+        "top_line": 'Child tube 0 prefix',
+        "middle_line": 'Example purpose',
+        "bottom_line": ' 7-JUN-2017',
+        "round_label_top_line": 'NT',
+        "round_label_bottom_line": '1',
+        "barcode": '3980000001795'
+      } }
+    end
+
+    let(:label_b) do
+      { "label": {
+        "top_line": 'Child tube 1 prefix',
+        "middle_line": 'Example purpose',
+        "bottom_line": ' 7-JUN-2017',
+        "round_label_top_line": 'NT',
+        "round_label_bottom_line": '2',
+        "barcode": '3980000001795'
+      } }
+    end
 
     before do
       stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
@@ -86,6 +112,23 @@ feature 'Viewing a plate', js: true do
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(page).to have_content('Print tube labels')
+      expect(page).to have_select('Barcode Printer', selected: default_tube_printer)
+    end
+
+    scenario 'we can use the tube label form' do
+      # expect(job).to receive(:execute).and_return(true)
+
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      within('.tube-printing') do
+        expect(page).to have_content('Print tube labels')
+        select(barcode_printer, from: 'Barcode Printer')
+
+        job = instance_double('Print_job', execute: true)
+
+        expect(PrintJob).to receive(:new).and_return(job).twice
+
+        click_on('Print Label')
+      end
     end
   end
 end

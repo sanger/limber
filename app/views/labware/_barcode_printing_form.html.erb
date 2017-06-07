@@ -1,5 +1,6 @@
 <%= form_for(print_job, html: { method: :post, class: 'form-inline'}) do |f| %>
   <%= f.hidden_field :printer_type %>
+
   <% labels.each do |label| %>
     <% label.attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
