@@ -7,4 +7,5 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
+// Currently setting up each component as its own mini vue app.
 require("file-list")

@@ -55,7 +55,7 @@ describe QcFilesController, type: :controller do
     it 'posts the file to the appropriate labware' do
       post :create, params: { qc_file: file, limber_plate_id: plate_uuid}
       expect(stub_post).to have_been_made.once
-      expect(flash).to eq(notice: "Your file has been uploaded and is available from the file tab")
+      expect(flash.notice).to eq('Your file has been uploaded and is available from the file tab')
     end
   end
 
