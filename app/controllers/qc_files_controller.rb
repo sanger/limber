@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class QcFilesController < ApplicationController
+  attr_reader :asset, :asset_path
+
+  before_action :find_assets, only: [:create, :index]
+
+  def index
+    respond_to do |format|
+      format.json { render json: { 'qc_files' => asset.qc_files } }
+    end
+  end
+
   def show
     response = api.qc_file.find(params[:id]).retrieve
     filename = /filename="([^"]*)"/.match(response['Content-Disposition'])[1] || 'unnamed_file'
@@ -9,27 +19,16 @@ class QcFilesController < ApplicationController
 
   def create
     asset.qc_files.create_from_file!(params['qc_file'], params['qc_file'].original_filename)
-    redirect_to(asset_path)
+    redirect_to(asset_path, notice: "Your file has been uploaded and is available from the file tab.")
   end
-
-  attr_reader :asset, :asset_path
 
   private
 
-  before_action :find_assets
-
   def find_assets
-    %w[limber pulldown].each do |app_name|
-      %w[plate tube multiplexed_library_tube].each do |klass|
-        next if params["#{app_name}_#{klass}_id"].nil?
-        @asset_path = send(:"#{app_name}_#{klass}_path", params["#{app_name}_#{klass}_id"])
-        @asset      = api.send(:"#{klass}").find(params["#{app_name}_#{klass}_id"])
-        return true
-      end
-    end
-    if params['limber_tube_id']
-      @asset_path = limber_tube_path(params['limber_tube_id'])
-      @asset      = api.tube.find(params['limber_tube_id'])
+    %w[plate tube multiplexed_library_tube].each do |klass|
+      next if params["limber_#{klass}_id"].nil?
+      @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
+      @asset      = api.send(:"#{klass}").find(params["limber_#{klass}_id"])
       return true
     end
     false

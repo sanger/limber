@@ -13,6 +13,8 @@ gem 'uglifier'
 # Deprecate!
 gem 'compass-rails'
 
+gem 'webpacker', '~> 2.0'
+
 # Required for bootstrap tooltips
 gem 'rails-assets-tether', '>= 1.1.0'
 # Bootstrap is a css framework

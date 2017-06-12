@@ -28,6 +28,7 @@ describe 'plate factory' do
          created_at: '2016-01-21 16:08:28 +0000',
          updated_at: '2016-01-21 16:16:42 +0000',
          wells_count: 30,
+         qc_files_actions: %w[read create],
          comments_count: 3,
          submission_pools_count: 2)
   end
@@ -65,7 +66,8 @@ describe 'plate factory' do
         "qc_files": {
           "size": 0,
           "actions": {
-            "read": "http://example.com:3000/example-plate-uuid/qc_files"
+            "read": "http://example.com:3000/example-plate-uuid/qc_files",
+            "create": "http://example.com:3000/example-plate-uuid/qc_files"
           }
         },
         "source_transfers": {

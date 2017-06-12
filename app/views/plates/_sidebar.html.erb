@@ -1,5 +1,6 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
+  <%= render(partial: 'labware/qc_data') %>
 
   <%= card title:'Suggested Actions' do %>
     <%= @presenter.control_additional_printing do %>

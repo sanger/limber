@@ -10,6 +10,8 @@
     <%= stylesheet_link_tag "print", :media=>'print' %>
 
     <%= javascript_include_tag 'underscore', 'application'  %>
+    <%= javascript_pack_tag 'application' %>
+
     <%= csrf_meta_tag %>
   </head>
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>

@@ -16,6 +16,7 @@ describe 'qc file factory' do
       "qc_file":
         {
           "filename":"example_file.txt",
+          "size": 123,
           "actions":{"read":"http://example.com:3000/example-qc-file-uuid"},
           "uuid":"example-qc-file-uuid"
         }

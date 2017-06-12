@@ -188,55 +188,41 @@
 
     that['summary-view'] = {
       activate: function(){
-          $('#summary-information').fadeIn('fast');
           that.statusColour();
           that.colourPools();
 
       },
 
-      deactivate: function(){
-        $('#summary-information').hide();
-      }
+      deactivate: function(){}
     };
 
     that['pools-view'] = {
       activate: function(){
-        $('#pools-information').fadeIn('fast');
-
         $('#pools-information li').fadeIn('fast');
-
         that.plateElement.find('.aliquot').
           removeClass(that.plate.state).
           removeClass('selected-aliquot dimmed');
-
         that.colourPools();
-
-        that.control.find('a[data-plate-view="pools-view"]').tab('show')
       },
 
       deactivate: function(){
-        $('#pools-information').hide(function(){
-          $('#pools-information li').
-            removeClass('dimmed');
-
-          that.plateElement.
-            find('.aliquot').
-            removeClass('selected-aliquot dimmed');
-
-        });
+        that.plateElement.
+          find('.aliquot').
+          removeClass('selected-aliquot dimmed');
       }
     };
 
     that['samples-view'] = {
       activate: function(){
-          $('#samples-information').fadeIn('fast');
-          that.statusColour();
+        that.statusColour();
       },
+      deactivate: function(){}
 
-      deactivate: function(){
-        $('#samples-information').hide();
-      }
+    };
 
+    that['files-view'] = {
+      activate: function() { },
+      deactivate: function() { }
     };
 
 
@@ -244,6 +230,7 @@
     that.sm.add(that['summary-view']);
     that.sm.add(that['pools-view']);
     that.sm.add(that['samples-view']);
+    that.sm.add(that['files-view']);
 
     that['summary-view'].active();
   },

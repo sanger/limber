@@ -27,6 +27,11 @@
   -webkit-animation: load6 1.7s infinite ease;
   animation: load6 1.7s infinite ease;
 }
+
+.spinner-dark {
+  @extend .spinner;
+  color: #292b2c;
+}
 @-webkit-keyframes load6 {
   0% {
     -webkit-transform: rotate(0deg);
