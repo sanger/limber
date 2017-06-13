@@ -5,8 +5,6 @@ AllCops:
     - Rakefile
     - config.ru
     - lib/**/*.rake
-node_js:
-  - "7"
 Style/VariableNumber:
   Enabled: false
 Rails:

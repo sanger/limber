@@ -10,3 +10,5 @@ cache: bundler
 matrix:
   allow_failures:
   - rvm: 2.4.0
+node_js:
+  - "7"
