@@ -8,3 +8,6 @@ sudo: false
 cache: bundler
 node_js:
   - "7"
+install:
+  - nvm install node
+  - npm i -g yarn
