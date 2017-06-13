@@ -1,8 +1,7 @@
 language: ruby
 rvm:
   - 2.4.1
-# We don't specify a list of ruby versions, as Travis will fall back to .ruby-version
-# This is the behaviour we want, so no sense in overriding it
+dist: trusty
 bundler_args: --without deployment
 sudo: false
 cache: bundler
