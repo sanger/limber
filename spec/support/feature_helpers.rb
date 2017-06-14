@@ -52,4 +52,8 @@ module FeatureHelpers
       find_field('User Swipecard').send_keys :enter
     end
   end
+
+  def ean13(number, prefix = 'DN')
+    SBCF::SangerBarcode.new(prefix: prefix, number: number).machine_barcode.to_s
+  end
 end

@@ -27,7 +27,7 @@ module Robots
       def valid_purposes?
         grouped_labware.map do |lw_purpose, lw|
           if lw.count > 1
-            error("There are multiple pieces of labware with purpose #{lw.first.purpose.name}, the should be only one.")
+            error("There are multiple pieces of labware with purpose #{lw.first.purpose.name}, there should be only one.")
           elsif !ordered_purposes.include?(lw_purpose)
             error("#{lw.first.barcode.prefix}#{lw.first.barcode.number} is a #{lw.first.purpose.name}; it should be either a #{secondary_purposes.join(', ')} or #{purpose}.")
           elsif !states.include?(lw.first.state)
