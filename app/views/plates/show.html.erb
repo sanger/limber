@@ -17,6 +17,7 @@
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
         </h2>
       </div>
+      <%= render partial: 'warnings', locals: { presenter: @presenter } %>
       <div id="labware-well-failing" class='collapse'>
         <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
       </div>

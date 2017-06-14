@@ -56,10 +56,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
                layout: 'bed',
                beds: {
-                 bed(2).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 2' },
-                 bed(5).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 5' },
-                 bed(3).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 3' },
-                 bed(6).barcode => { purpose: 'LB Lib PCR-XP', states: ['passed', 'qc_complete'], child: bed(4).barcode, label: 'Bed 6' },
+                 bed(2).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 2' },
+                 bed(5).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 5' },
+                 bed(3).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 3' },
+                 bed(6).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 6' },
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
                    states: %w[pending started],
@@ -94,5 +94,61 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   simple_robot('nx-8') do
     from 'LB Cap Lib PCR-XP', bed(4)
     to 'LB Cap Lib Pool', bed(2)
+  end
+
+  bravo_robot do
+    from 'PF Cherrypicked', bed(7)
+    to 'PF Shear', bed(9)
+  end
+
+  bravo_robot do
+    from 'PF Shear', bed(9)
+    to 'PF Post Shear', bed(7)
+  end
+
+  bravo_robot('started') do
+    from 'PF Post Shear', bed(4)
+    to 'PF Post Shear XP', car('2,3')
+  end
+
+  custom_robot(
+    'nx-96-pf-post-shear-to-pf-post-shear-xp',
+    name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
+    layout: 'bed',
+    beds: {
+      bed(1).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 1' },
+      bed(9).barcode   => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'started' },
+      bed(2).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 2' },
+      bed(10).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'started' },
+      bed(3).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 3' },
+      bed(11).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'started' },
+      bed(4).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 4' },
+      bed(12).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'started' }
+    }
+  )
+
+  custom_robot(
+    'bravo-pf-post-shear-xp-prep',
+    name: 'Bravo PF Post Shear XP Preparation',
+    layout: 'bed',
+    beds: {
+      bed(5).barcode => { purpose: 'PF Post Shear XP', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+    }
+  )
+
+  custom_robot(
+    'bravo-pf-post-shear-xp-to-pf-lib-xp',
+    name: 'Bravo PF Post Shear XP to PF Lib XP',
+    layout: 'bed',
+    beds: {
+      car('1,3').barcode => { purpose: 'PF Post Shear XP', states: ['passed'], label: 'Carousel 1,3' },
+      bed(6).barcode => { purpose: 'PF Lib', states: ['pending'], label: 'Bed 6', target_state: 'passed', parent: car('1,3').barcode },
+      car('4,3').barcode => { purpose: 'PF Lib XP', states: ['pending'], label: 'Carousel 4,3', target_state: 'passed', parent: bed(6).barcode }
+    }
+  )
+
+  bravo_robot do
+    from 'PF Lib XP', bed(4)
+    to 'PF Lib XP2', car('2,3')
   end
 end
