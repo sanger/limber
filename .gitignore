@@ -8,5 +8,6 @@ public/stylesheets/*.css
 *.orig
 *.sublime-workspace
 /public/packs
+/public/packs-test
 /node_modules
 /public/app/assets
