@@ -20,10 +20,10 @@ GIT
 
 GIT
   remote: git://github.com/sanger/sequencescape-client-api.git
-  revision: cb701074bdf48167d0c0b5a4b81516fe008e761a
+  revision: 9c8a83a895b7c0bfb93a11668458199ee190877d
   branch: rails_4
   specs:
-    sequencescape-client-api (0.3.2)
+    sequencescape-client-api (0.3.3)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       i18n
@@ -362,7 +362,7 @@ DEPENDENCIES
   rubocop
   sanger_barcode_format!
   sass-rails
-  sequencescape-client-api (>= 0.3.2)!
+  sequencescape-client-api (>= 0.3.3)!
   state_machines
   therubyracer
   thin
@@ -371,4 +371,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.14.6
+   1.15.0
