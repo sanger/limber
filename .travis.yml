@@ -11,3 +11,5 @@ install:
   - bundle install
   - nvm install node
   - npm i -g yarn
+before_script:
+  - RAILS_ENV=test bundle exec rake assets:precompile
