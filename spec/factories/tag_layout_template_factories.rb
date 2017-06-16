@@ -21,6 +21,10 @@ FactoryGirl.define do
         'tags' => Hash[(1..size).map { |i| [i.to_s, i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')] }]
       }
     end
+
+    factory :tag_layout_template_by_row do
+      direction 'row'
+    end
   end
 
   factory :tag_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
@@ -31,11 +35,18 @@ FactoryGirl.define do
       resource_actions %w[read first last]
       resource_url { 'tag_layout_templates/1' }
       uuid nil
+      template_factory :tag_layout_template
     end
 
     tag_layout_templates do
       Array.new(size) do |i|
-        associated(:tag_layout_template, uuid: "tag-layout-template-#{i}", name: "Tag2 layout #{i}")
+        associated(template_factory, uuid: "tag-layout-template-#{i}", name: "Tag2 layout #{i}")
+      end
+    end
+
+    factory :tag_layout_template_collection_by_row do
+      transient do
+        template_factory :tag_layout_template_by_row
       end
     end
   end

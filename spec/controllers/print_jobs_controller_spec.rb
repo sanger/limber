@@ -8,12 +8,12 @@ describe PrintJobsController, type: :controller do
     has_a_working_api
 
     let(:label_template_id) { 1 }
-    let(:label_template_name) { 'sqsc_1dtube_label_template' }
+    let(:label_template_name) { 'limber_tube_label_template' }
     let(:expected_labels) { [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }] }
 
     it 'creates print_job' do
       PMB::TestSuiteStubs.get(
-        '/v1/label_templates?filter%5Bname%5D=sqsc_1dtube_label_template&page%5Bnumber%5D=1&page%5Bsize%5D=1'
+        '/v1/label_templates?filter%5Bname%5D=limber_tube_label_template&page%5Bnumber%5D=1&page%5Bsize%5D=1'
       ) do |_env|
         [
           200,

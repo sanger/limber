@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_dependency 'presenters'
 module Presenters
   module Presenter
     def self.included(base)
@@ -47,28 +48,6 @@ module Presenters
       yield
     end
 
-    def errors
-      nil
-    end
-
-    def prioritized_name(str, max_size)
-      # Regular expression to match
-      return 'Unnamed' if str.blank?
-      match = str.match(/([A-Z]{2})(\d+)([[:alpha:]])( )(\w+)(:)(\w+)/)
-      return str if match.nil?
-      # Sets the priorities position matches in the regular expression to dump into the final string. They will be
-      # performed with preference on the most right characters from the original match string
-      priorities = [7, 5, 2, 6, 3, 1, 4]
-
-      # Builds the final string by adding the matching string using the previous priorities list
-      priorities.each_with_object([]) do |value, cad_list|
-        size_to_copy = max_size - cad_list.join('').length
-        text_to_copy = match[value]
-        cad_list[value] = (text_to_copy[[0, text_to_copy.length - size_to_copy].max, size_to_copy])
-        cad_list
-      end.join('')
-    end
-
     def summary
       summary_items.each do |label, method_symbol|
         yield label, send(method_symbol)
@@ -100,11 +79,7 @@ module Presenters
     private
 
     def purpose_config
-      Settings.purposes[purpose.uuid]
-    end
-
-    def date_today
-      Time.zone.today.strftime('%e-%^b-%Y')
+      Settings.purposes.fetch(purpose.uuid, {})
     end
   end
 end

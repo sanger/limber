@@ -6,10 +6,10 @@
         <dd class='well-list'><%= WellHelpers.formatted_range(pool['wells']) %></dd>
         <dt>Insert Size</dt>
         <dd class="insert-size <%= insert_size_class(pool) %>">
-          From: <%= pool['insert_size']['from'] %> - To: <%= pool['insert_size']['to'] %>
+          From: <%= pool.dig('insert_size','from') %> - To: <%= pool.dig('insert_size','to') %>
         </dd>
         <dt>Library Type</dt>
-        <dd><%= pool['library_type']['name'] %></dd>
+        <dd><%= pool.dig('library_type','name') %></dd>
       </dl>
     </li>
   <% end -%>

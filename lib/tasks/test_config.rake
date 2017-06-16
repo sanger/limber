@@ -10,7 +10,7 @@ namespace :test_config do
                  printers: { 'limit' => 5, 'default_count' => 2 },
                  metadata_key_options: %w[Key1 Key2 Key3 Key4],
                  label_templates:
-                  { 'tube' => 'sqsc_1dtube_label_template',
+                  { 'tube' => 'limber_tube_label_template',
                     'plate' => 'sqsc_96plate_label_template' } }
     File.open(Rails.root.join('config', 'settings', 'test.yml'), 'w') { |f| f.write(settings.to_yaml) }
   end

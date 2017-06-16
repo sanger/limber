@@ -1,8 +1,7 @@
 <%= card title: 'Print tube label' do %>
-  <%= individual_barcode_printing_form(
-        @presenter.labware.barcode,
+  <%= barcode_printing_form(
         redirection_url: limber_tube_path(@presenter.labware),
-        label_attributes: @presenter.label_attributes
+        labels: [@presenter.label]
   ) %>
 <% end %>
 
