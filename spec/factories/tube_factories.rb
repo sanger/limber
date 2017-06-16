@@ -77,10 +77,11 @@ FactoryGirl.define do
       resource_url { "#{api_root}#{purpose_uuid}/children/1" }
       uuid nil
       tube_factory :tube
+      names { Array.new(size) { |i| "Tube #{i}" } }
     end
 
     plate_purposes do
-      Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s) }
+      Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i]) }
     end
   end
 end
