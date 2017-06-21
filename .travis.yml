@@ -7,6 +7,8 @@ rvm:
 bundler_args: --without deployment
 sudo: false
 cache: bundler
+before_script:
+  - RAILS_ENV=test bundle exec rake assets:precompile
 matrix:
   allow_failures:
   - rvm: 2.4.0
