@@ -7,8 +7,6 @@ module LabwareCreators
     extend SupportParent::TaggedPlateOnly
     attr_reader :tube_transfer
 
-    self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to specific tubes defined by submission']
-
     def create_labware!
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,

@@ -28,7 +28,7 @@ module LabwareCreators
       siblings.all?(&:ready?)
     end
 
-    self.page = 'multi_tube_pooling'
+    self.page = 'final_tube'
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid parents]
 
     validate :all_parents_and_only_parents?, if: :barcodes_provided?

@@ -198,9 +198,12 @@ PF Lib XP2:
   - PF Lib XP
 LB Custom Pool Norm:
   :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubePurpose
-  :form_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::FinalTubePresenter
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
+  :parents:
+  - LB Lib PCR-XP
+  - PF Lib XP2
