@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/jamesglover/sequencescape-client-api.git
+  revision: 03443f8c122bc39a5f7570d38b792e19d62f9f7a
+  branch: rails_4_rc_li
+  specs:
+    sequencescape-client-api (0.3.3)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      i18n
+      yajl-ruby (>= 1.1.0)
+
+GIT
   remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
@@ -17,17 +28,6 @@ GIT
   branch: development
   specs:
     sanger_barcode_format (0.0.1)
-
-GIT
-  remote: git://github.com/sanger/sequencescape-client-api.git
-  revision: cb701074bdf48167d0c0b5a4b81516fe008e761a
-  branch: rails_4
-  specs:
-    sequencescape-client-api (0.3.2)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      i18n
-      yajl-ruby (>= 1.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -153,7 +153,7 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     hashdiff (0.3.2)
     hashie (3.5.5)
-    i18n (0.8.1)
+    i18n (0.8.4)
     inline_svg (0.12.1)
       activesupport (>= 3.0)
       loofah (>= 2.0)
@@ -187,7 +187,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
-    minitest (5.10.1)
+    minitest (5.10.2)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     nenv (0.3.0)
@@ -376,4 +376,4 @@ DEPENDENCIES
   webpacker (~> 2.0)
 
 BUNDLED WITH
-   1.14.6
+   1.15.0

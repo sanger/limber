@@ -11,6 +11,8 @@ module LabwareCreators
   # of the existing pipeline, and may be removed in future. Essentially, as used currently, the tubes are ACTUALLY part
   # of the previous plate, so are already filled by this stage.
   class FinalTubeFromPlate < Base
+    extend SupportParent::TaggedPlateOnly
+
     attr_reader :tube_transfer
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to MX library tubes by submission']

@@ -2,15 +2,18 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
+require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
 describe LabwareCreators::FinalTubeFromPlate do
+  it_behaves_like 'it only allows creation from tagged plates'
+
   subject do
     LabwareCreators::FinalTubeFromPlate.new(form_attributes)
   end
 
   # Set up our templates
-  before(:each) do
+  before do
     LabwareCreators::FinalTubeFromPlate.default_transfer_template_uuid = 'transfer-to-mx-tubes-on-submission'
   end
 

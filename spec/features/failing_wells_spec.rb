@@ -32,8 +32,8 @@ feature 'Failing wells', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
+    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
+    Settings.purposes['child-purpose-0'] = build :purpose_config
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate

@@ -2,12 +2,14 @@
 
 module LabwareCreators
   # For simple tube to tube transfers
-  class IntermediateTube < Base
+  class TubeFromTube < Base
+    extend SupportParent::TubeOnly
+
     attr_reader :tube_transfer
 
     def create_labware!
-      child_tube = api.tube_from_tube_creation.create!(
-        parent: labware.uuid,
+      @child_tube = api.tube_from_tube_creation.create!(
+        parent: parent_uuid,
         child_purpose: purpose_uuid,
         user: user_uuid
       ).child
@@ -16,18 +18,16 @@ module LabwareCreators
         Settings.transfer_templates['Transfer between specific tubes']
       ).create!(
         user: user_uuid,
-        source: labware.uuid,
-        destination: child_tube.uuid
+        source: parent_uuid,
+        destination: @child_tube.uuid
       )
       true
-    rescue
-      false
     end
 
     # We pretend that we've added a new blank tube when we're actually
     # transfering to the tube on the original LibraryRequest
     def child
-      tube_transfer.try(:destination) || :contents_not_transfered
+      @child_tube
     end
   end
 end

@@ -278,6 +278,12 @@ Content-Type: application/json
       "create": "http://example.com:3000/tag_layouts"
     }
   },
+  "transfer_request_collections": {
+    "actions": {
+      "read": "http://example.com:3000/transfer_request_collections",
+      "create": "http://example.com:3000/transfer_request_collections"
+    }
+  },
   "transfer_templates": {
     "actions": {
       "read": "http://example.com:3000/transfer_templates"

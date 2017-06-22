@@ -38,8 +38,9 @@ gem 'exception_notification'
 gem 'hashie'
 
 gem 'sequencescape-client-api', '>= 0.3.2',
-    github: 'sanger/sequencescape-client-api',
-    branch: 'rails_4',
+    # Should be switched back to sanger + rails_4 for deployment
+    github: 'jamesglover/sequencescape-client-api',
+    branch: 'rails_4_rc_li',
     require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'

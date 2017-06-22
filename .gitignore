@@ -11,3 +11,4 @@ public/stylesheets/*.css
 /public/packs-test
 /node_modules
 /public/app/assets
+/public/assets
