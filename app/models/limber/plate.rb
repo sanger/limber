@@ -32,6 +32,13 @@ class Limber::Plate < Sequencescape::Plate
     transfer_request_collections.present? || transfers_to_tubes.present?
   end
 
+  #
+  # Returns an array consisting of the child tubes of a plate, and the wells
+  # that were transfered into each.
+  #
+  # @return [Array<Array>] An araay of arrays, tubes and their source wells.
+  # eg. [[<Limber::Tube>, ['A1','B1']],[<Limber::Tube>,['C1','D1']]]
+  #
   def tubes_and_sources
     return [] unless transfers_to_tubes?
 
