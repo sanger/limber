@@ -3,7 +3,7 @@
 class CreationController < ApplicationController
   before_action :check_for_current_user!
 
-  def form_lookup(form_attributes = params)
+  def creator_for(form_attributes = params)
     LabwareCreators.class_for(form_attributes.fetch(:purpose_uuid))
   end
 
@@ -15,7 +15,7 @@ class CreationController < ApplicationController
   end
 
   def create_form(form_attributes)
-    form_lookup(form_attributes).new(
+    creator_for(form_attributes).new(
       form_attributes.merge(
         api: api,
         user_uuid: current_user_uuid
