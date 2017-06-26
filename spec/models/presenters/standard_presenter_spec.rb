@@ -59,4 +59,16 @@ describe Presenters::StandardPresenter do
       )
     end
   end
+
+  context 'with tubes' do
+    let(:labware) { build :plate, uuid: 'plate-uuid', transfers_to_tubes_count: 1 }
+
+    before do
+      stub_api_get('plate-uuid', 'transfers_to_tubes', body: json(:transfer_collection, size: 2))
+    end
+
+    it 'returns the correct number of labels' do
+      expect(subject.tube_labels.length).to eq 2
+    end
+  end
 end

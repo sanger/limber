@@ -46,11 +46,11 @@ FactoryGirl.define do
     end
 
     barcoder_printers do
-      Array.new(tube_printer_size) do |_location, _i|
-        associated(:plate_barcode_printer)
+      Array.new(tube_printer_size) do |i|
+        associated(:plate_barcode_printer, name: "plate printer #{i}")
       end +
-        Array.new(plate_printer_size) do |_location, _i|
-          associated(:tube_barcode_printer)
+        Array.new(plate_printer_size) do |i|
+          associated(:tube_barcode_printer, name: "tube printer #{i}")
         end
     end
   end

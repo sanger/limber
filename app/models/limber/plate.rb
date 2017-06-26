@@ -13,6 +13,10 @@ class Limber::Plate < Sequencescape::Plate
     pools.keys.count
   end
 
+  def pcr_cycles
+    @pcr_cycles ||= pools.values.map { |pool| pool.fetch('pcr_cycles', 'Not specified') }.uniq
+  end
+
   def role
     label.prefix
   end
@@ -32,6 +36,15 @@ class Limber::Plate < Sequencescape::Plate
     transfer_request_collections.present? || transfers_to_tubes.present?
   end
 
+  def tubes
+    tubes_and_sources.map(&:first)
+  end
+
+  def tagged?
+    first_filled_well = wells.detect { |w| w.aliquots.first }
+    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
+  end
+
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
   # that were transfered into each.
@@ -40,6 +53,12 @@ class Limber::Plate < Sequencescape::Plate
   # eg. [[<Limber::Tube>, ['A1','B1']],[<Limber::Tube>,['C1','D1']]]
   #
   def tubes_and_sources
+    @tubes_and_sources ||= generate_tubes_and_sources
+  end
+
+  private
+
+  def generate_tubes_and_sources
     return [] unless transfers_to_tubes?
 
     tube_hash = generate_tube_hash
@@ -50,13 +69,6 @@ class Limber::Plate < Sequencescape::Plate
     # Sort the tubes in column order based on their first well
     tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
   end
-
-  def tagged?
-    first_filled_well = wells.detect { |w| w.aliquots.first }
-    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
-  end
-
-  private
 
   def generate_tube_hash
     if transfer_request_collections.present?

@@ -33,6 +33,9 @@ LB Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :form_class: LabwareCreators::TaggedPlate
+  warnings:
+    pcr_cycles_no_in:
+      - 6
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
@@ -56,6 +59,7 @@ LB Lib Pool:
   :default_printer_type: :tube
   :parents:
   - LB Lib PCR-XP
+  - PF Lib XP2
 LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
@@ -136,3 +140,67 @@ LB Custom Pool Norm:
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
+PF Cherrypicked:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+PF Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Cherrypicked
+PF Post Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Shear
+PF Post Shear XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Post Shear
+PF Lib:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::PermissivePresenter
+  :form_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+  :parents:
+  - PF Post Shear XP
+PF Lib XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Lib
+PF Lib XP2:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Lib XP

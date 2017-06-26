@@ -109,6 +109,30 @@ footer.version-info {
   background-color: $gray-lightest;
 }
 
+.asset-warnings {
+  @extend .card-block;
+  @extend .card-warning;
+  @extend .text-white;
+
+  h3 {
+    @extend .col-2;
+  }
+  ul {
+    @extend .col-10;
+  }
+}
+
+.aliquot.suboptimal {
+  position: relative;
+}
+
+.aliquot.suboptimal::before {
+  content: '⚠';
+  font-size: 25px;
+  position: absolute;
+  top: -3px; left:1px;
+}
+
 // Old-stuff
 
 .dimmed {

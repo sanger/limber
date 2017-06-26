@@ -13,7 +13,7 @@ describe 'plate factory' do
          iteration: 1,
          label: { "prefix": 'RNA-seq dUTP eukaryotic PCR', "text": 'ILC Stock' },
          location: 'Library creation freezer',
-         pool_sizes: [8, 8],
+         pool_sizes: [9, 9],
          priority: 0,
          stock_plate: {
            "barcode": {
@@ -121,7 +121,7 @@ describe 'plate factory' do
         "pools": {
           "pool-1-uuid": {
             "wells": [
-              "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"
+              "A1", "A2", "B1", "C1", "D1", "E1", "F1", "G1", "H1"
             ],
             "insert_size": {
               "from": 100,
@@ -130,11 +130,12 @@ describe 'plate factory' do
             "library_type": {
               "name": "Standard"
             },
-            "request_type": "Limber Library Creation"
+            "request_type": "Limber Library Creation",
+            "pcr_cycles": 10
           },
           "pool-2-uuid": {
             "wells": [
-              "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"
+              "A3", "B2", "B3", "C2", "D2", "E2", "F2", "G2", "H2"
             ],
             "insert_size": {
               "from": 100,
@@ -143,7 +144,8 @@ describe 'plate factory' do
             "library_type": {
               "name": "Standard"
             },
-            "request_type": "Limber Library Creation"
+            "request_type": "Limber Library Creation",
+            "pcr_cycles": 10
           }
         },
         "pre_cap_groups": {},

@@ -14,6 +14,7 @@ FactoryGirl.define do
       cherrypickable_target false
       input_plate false
       parents []
+      tag_layout_templates nil
     end
 
     after(:build) do |hash, evaluator|
@@ -27,7 +28,8 @@ FactoryGirl.define do
         stock_plate: evaluator.stock_plate,
         cherrypickable_target: evaluator.cherrypickable_target,
         input_plate: evaluator.input_plate,
-        parents: evaluator.parents
+        parents: evaluator.parents,
+        tag_layout_templates: evaluator.tag_layout_templates
       )
     end
 

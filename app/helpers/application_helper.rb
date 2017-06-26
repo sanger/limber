@@ -32,6 +32,6 @@ module ApplicationHelper
   end
 
   def each_robot(&block)
-    Robots::Robot.each_robot(&block)
+    Robots.each_robot(&block)
   end
 end

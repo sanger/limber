@@ -9,6 +9,8 @@ module LabwareCreators
 
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to specific tubes defined by submission']
 
+    delegate :pools, to: :parent
+
     def create_labware!
       child_stock_tubes = api.specific_tube_creation.create!(
         user: user_uuid,
@@ -61,16 +63,13 @@ module LabwareCreators
     end
 
     def name_for(pool_details)
-      wells = pool_details['wells']
-      # Wells SHOULD already be sorted
-      "#{stock_plate_barcode} #{wells.first}:#{wells.last}"
+      first, last = WellHelpers.first_and_last_in_columns(pool_details['wells'])
+      "#{stock_plate_barcode} #{first}:#{last}"
     end
 
     def stock_plate_barcode
       "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
     end
-
-    delegate :pools, to: :parent
 
     #
     # Maps well locations to the corresponding uuid

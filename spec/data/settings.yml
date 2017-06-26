@@ -23,12 +23,12 @@
         :purpose: Limber Cherrypicked
         :states:
           - passed
-        :label: Bed 7
+        :label: Bed 2
       bed2_barcode:
         purpose: target_plate_purpose
         states:
           - pending
-        label: Bed 9
+        label: Bed 1
         parent: bed1_barcode
         target_state: passed
   :robot_id_2:
@@ -40,6 +40,28 @@
         :states:
           - passed
         :label: Bed 7
+  :grandparent_robot:
+    :name: robot_name
+    :beds:
+      bed1_barcode:
+        :purpose: Limber Cherrypicked
+        :states:
+          - passed
+        :label: Bed 1
+      bed2_barcode:
+        purpose: target_plate_purpose
+        states:
+          - pending
+        label: Bed 2
+        parent: bed1_barcode
+        target_state: passed
+      bed3_barcode:
+        purpose: target2_plate_purpose
+        states:
+          - pending
+        label: Bed 3
+        parent: bed2_barcode
+        target_state: passed
   'bravo-lb-post-shear-to-lb-end-prep':
     name: 'bravo LB Post Shear => LB End Prep'
     layout: 'bed'

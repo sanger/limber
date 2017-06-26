@@ -53,5 +53,27 @@ FactoryGirl.define do
         transfer_hash
       end
     end
+
+    factory :transfer_collection do
+      size 2
+
+      transient do
+        json_root nil
+        resource_actions %w[read first last]
+        associated_on 'transfers_to_tubes'
+        plate_uuid   { SecureRandom.uuid }
+        # While resources can be paginated, wells wont be.
+        # Furthermore, we trust the api gem to handle that side of things.
+        resource_url { "#{api_root}#{plate_uuid}/#{associated_on}/1" }
+        uuid nil
+        transfer_factory :aliquot
+      end
+
+      transfers do
+        Array.new(size) do |_i|
+          associated(:transfer_to_mx_tubes_by_submission)
+        end
+      end
+    end
   end
 end
