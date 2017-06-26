@@ -11,6 +11,15 @@ module WellHelpers
     @column_order ||= COLUMNS_RANGE.map { |c| ROWS_RANGE.map { |r| "#{r}#{c}" } }.flatten.freeze
   end
 
+  # Returns an array of all well names in row order
+  # Sequencescape returns some wells in column order. THis is primarily used to help
+  # us mimic Sequencescape output in tests.
+  #
+  # @return [Array] well names in row order ie. A1, A2, A3 ...
+  def self.row_order
+    @row_order ||= ROWS_RANGE.map { |r| COLUMNS_RANGE.map { |c| "#{r}#{c}" } }.flatten.freeze
+  end
+
   # Returns the index of the well by column
   # @param [String] well The well name eg. A1
   # @return [Int] the index, eg. 0
@@ -37,10 +46,43 @@ module WellHelpers
     column_order[index]
   end
 
-  def self.formatted_range(wells)
+  #
+  # Returns a new array sorted into column order
+  # eg. sort_in_column_order(['A1', 'A2', 'B1']) => ['A1', 'B1', 'A2']
+  #
+  # @param [Array<String>] wells Array of well names to sort
+  #
+  # @return [Array<String>] Array of well names sorted in column order
+  #
+  def self.sort_in_column_order(wells)
     wells.sort_by { |well| index_of(well) }
-         .slice_when { |previous_well, next_well| index_of(next_well) - index_of(previous_well) > 1 }
-         .map { |range| [range.first, range.last].uniq.join('-') }
-         .join(', ')
+  end
+
+  #
+  # Compacts the provided well range into an easy to read summary.
+  # eg. formatted_range(['A1', 'B1', 'C1','A2','A5','B5']) => 'A1-C1,A2,A5-B5'
+  # Mostly this will just be start_well-end_well
+  #
+  # @param [Array<String>] wells Array of well names to format
+  #
+  # @return [String] A name describing the range
+  #
+  def self.formatted_range(wells)
+    sort_in_column_order(wells)
+      .slice_when { |previous_well, next_well| index_of(next_well) - index_of(previous_well) > 1 }
+      .map { |range| [range.first, range.last].uniq.join('-') }
+      .join(', ')
+  end
+
+  #
+  # Extracts the first and last well (as sorted in column order) from the array
+  #
+  # @param [Array<String>] wells Array of well names to sort
+  #
+  # @return [Array<string>] ['first_well_name','last_well_name']
+  #
+  def self.first_and_last_in_columns(wells)
+    sorted = sort_in_column_order(wells)
+    [sorted.first, sorted.last]
   end
 end
