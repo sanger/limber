@@ -7,3 +7,7 @@ public/stylesheets/*.css
 .sass-cache/
 *.orig
 *.sublime-workspace
+node_modules/
+public/assets/
+public/packs-test/
+public/packs/
