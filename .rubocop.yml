@@ -5,6 +5,8 @@ AllCops:
     - Rakefile
     - config.ru
     - lib/**/*.rake
+  Exclude:
+    - node_modules/**/*
 Style/VariableNumber:
   Enabled: false
 Rails:
