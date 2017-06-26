@@ -44,14 +44,14 @@ describe LabwareCreators::PooledTubesBySubmission do
       stub_api_post(
         'specific_tube_creations',
         payload: {
-           specific_tube_creation: {
-             user: user_uuid,
-             parent: parent_uuid,
-             child_purposes: [purpose_uuid, purpose_uuid],
-             tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
-           }
+          specific_tube_creation: {
+            user: user_uuid,
+            parent: parent_uuid,
+            child_purposes: [purpose_uuid, purpose_uuid],
+            tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
+          }
         },
-        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2, )
+        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2, names: ['DN5 A1:C1', 'DN5 D1:A2'])
       )
     end
 
