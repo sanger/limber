@@ -56,9 +56,8 @@ module LabwareCreators
     end
 
     def name_for(pool_details)
-      wells = pool_details['wells']
-      # Wells SHOULD already be sorted
-      "#{stock_plate_barcode} #{wells.first}:#{wells.last}"
+      first, last = WellHelpers.first_and_last_in_columns(pool_details['wells'])
+      "#{stock_plate_barcode} #{first}:#{last}"
     end
 
     def stock_plate_barcode

@@ -32,7 +32,7 @@ FactoryGirl.define do
       pool_hash = {}
       pool_sizes.each_with_index do |size, index|
         pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => wells.shift(size),
+          'wells' => wells.shift(size).sort_by { |well|  WellHelpers.row_order.index(well) },
           'insert_size' => { from: 100, to: 300 },
           'library_type' => { name: library_type },
           'request_type' => request_type,

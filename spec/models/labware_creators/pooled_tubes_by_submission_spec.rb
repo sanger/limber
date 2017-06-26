@@ -19,7 +19,7 @@ describe LabwareCreators::PooledTubesBySubmission do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3], stock_plate_barcode: 5 }
+  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5 }
 
   let(:form_attributes) do
     {
@@ -48,7 +48,7 @@ describe LabwareCreators::PooledTubesBySubmission do
              user: user_uuid,
              parent: parent_uuid,
              child_purposes: [purpose_uuid, purpose_uuid],
-             tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:F1' }]
+             tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
            }
         },
         body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2, )
@@ -57,7 +57,7 @@ describe LabwareCreators::PooledTubesBySubmission do
 
     # Find out what tubes we've just made!
     let!(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:C1', 'DN5 D1:F1']))
+      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:C1', 'DN5 D1:A2']))
     end
 
     # The API needs to pull back the transfer template to know what actions it can perform
