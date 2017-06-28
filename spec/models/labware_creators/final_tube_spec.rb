@@ -65,7 +65,7 @@ describe LabwareCreators::FinalTube do
 
         describe '#render' do
           it 'should immediately render' do
-            expect(controller).to receive(:render).with('multi_tube_pooling').and_return(true)
+            expect(controller).to receive(:render).with('final_tube').and_return(true)
             subject.render(controller)
           end
         end

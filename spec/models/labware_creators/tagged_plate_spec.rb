@@ -165,9 +165,9 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagging" page' do
+      it 'renders the "tagged_plate" page' do
         controller = CreationController.new
-        expect(controller).to receive(:render).with('tagging')
+        expect(controller).to receive(:render).with('tagged_plate')
         subject.render(controller)
       end
 
@@ -206,9 +206,9 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagging" page' do
+      it 'renders the "tagged_plate" page' do
         controller = CreationController.new
-        expect(controller).to receive(:render).with('tagging')
+        expect(controller).to receive(:render).with('tagged_plate')
         subject.render(controller)
       end
 

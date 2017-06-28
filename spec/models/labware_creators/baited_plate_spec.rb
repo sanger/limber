@@ -32,7 +32,7 @@ describe LabwareCreators::BaitedPlate do
   end
 
   it 'should have page' do
-    expect(LabwareCreators::BaitedPlate.page).to eq 'baiting'
+    expect(LabwareCreators::BaitedPlate.page).to eq 'baited_plate'
   end
 
   context 'create plate' do
