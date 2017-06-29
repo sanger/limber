@@ -13,10 +13,10 @@ describe QcFilesController, type: :controller do
     before do
       stub_api_get(file_uuid, body: json(:qc_file, uuid: file_uuid, filename: filename))
       stub_request(:get, api_url_for(file_uuid))
-        .with(headers: { 'Accept'=>'sequencescape/qc_file'})
+        .with(headers: { 'Accept' => 'sequencescape/qc_file' })
         .to_return(
           body: 'example file content',
-          headers: { 'Content-Disposition' => "attachment; filename=\"#{filename}\""}
+          headers: { 'Content-Disposition' => "attachment; filename=\"#{filename}\"" }
         )
     end
 
@@ -29,16 +29,20 @@ describe QcFilesController, type: :controller do
 
   describe '#create' do
     let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
-    let(:file_content) { content = file.read; file.rewind; content }
+    let(:file_content) do
+      content = file.read
+      file.rewind
+      content
+    end
     let(:plate_uuid) { 'plate-uuid' }
 
     let(:stub_post) do
-      stub_request(:post, api_url_for(plate_uuid,'qc_files'))
+      stub_request(:post, api_url_for(plate_uuid, 'qc_files'))
         .with(
           body: file_content,
           headers: {
-            'Content-Type'=>'sequencescape/qc_file',
-            'Content-Disposition'=>'form-data; filename="test_file.txt"'
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="test_file.txt"'
           }
         ).to_return(
           status: 201,
@@ -53,7 +57,7 @@ describe QcFilesController, type: :controller do
     end
 
     it 'posts the file to the appropriate labware' do
-      post :create, params: { qc_file: file, limber_plate_id: plate_uuid}
+      post :create, params: { qc_file: file, limber_plate_id: plate_uuid }
       expect(stub_post).to have_been_made.once
       expect(flash.notice).to eq('Your file has been uploaded and is available from the file tab')
     end
@@ -70,16 +74,16 @@ describe QcFilesController, type: :controller do
     let(:expected_response) do
       {
         'qc_files' => [
-          { 'filename'=> 'file0.txt', 'size'=>123, 'uuid'=>'example-file-uuid-0' },
-          { 'filename'=> 'file1.txt', 'size'=>123, 'uuid'=>'example-file-uuid-1' },
-          { 'filename'=> 'file2.txt', 'size'=>123, 'uuid'=>'example-file-uuid-2' }
+          { 'filename' => 'file0.txt', 'size' => 123, 'uuid' => 'example-file-uuid-0' },
+          { 'filename' => 'file1.txt', 'size' => 123, 'uuid' => 'example-file-uuid-1' },
+          { 'filename' => 'file2.txt', 'size' => 123, 'uuid' => 'example-file-uuid-2' }
         ]
       }
     end
 
     it 'returns the qc files as json' do
       get :index, params: { limber_plate_id: plate_uuid },
-        format: 'json'
+                  format: 'json'
       expect(JSON.parse(response.body)).to eq(expected_response)
     end
   end

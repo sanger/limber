@@ -4,6 +4,6 @@ class Limber::QcFile < Sequencescape::QcFile
   # Done this here for the moment, could look at using
   # ActiveModel::Serializers in future.
   def as_json(_args)
-    {filename: filename, size: size, uuid: uuid}
+    { filename: filename, size: size, uuid: uuid }
   end
 end

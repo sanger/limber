@@ -41,7 +41,6 @@ describe Robots::Robot do
     context 'a simple robot' do
       let(:robot_id) { 'robot_id' }
 
-
       before do
         Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid
         Settings.purpose_uuids[target_purpose_name] = target_purpose_uuid

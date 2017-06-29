@@ -39,6 +39,7 @@ class Limber::Plate < Sequencescape::Plate
   def tubes
     tubes_and_sources.map(&:first)
   end
+
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
   # that were transfered into each.

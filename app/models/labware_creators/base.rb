@@ -52,7 +52,7 @@ module LabwareCreators
     end
 
     def save!
-      raise StandardError, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
+      raise ResourceInvalid, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
       create_labware!
     end
 

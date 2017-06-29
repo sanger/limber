@@ -3,7 +3,7 @@
 class QcFilesController < ApplicationController
   attr_reader :asset, :asset_path
 
-  before_action :find_assets, only: [:create, :index]
+  before_action :find_assets, only: %i[create index]
 
   def index
     respond_to do |format|
@@ -19,7 +19,7 @@ class QcFilesController < ApplicationController
 
   def create
     asset.qc_files.create_from_file!(params['qc_file'], params['qc_file'].original_filename)
-    redirect_to(asset_path, notice: "Your file has been uploaded and is available from the file tab")
+    redirect_to(asset_path, notice: 'Your file has been uploaded and is available from the file tab')
   end
 
   private

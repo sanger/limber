@@ -22,7 +22,7 @@ FactoryGirl.define do
     end
 
     qc_files do
-      Array.new(size) { |i| associated(:qc_file, uuid: "example-file-uuid-#{i}", filename: "file#{i}.txt")}
+      Array.new(size) { |i| associated(:qc_file, uuid: "example-file-uuid-#{i}", filename: "file#{i}.txt") }
     end
   end
 end

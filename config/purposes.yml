@@ -206,4 +206,3 @@ LB Custom Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Lib PCR-XP
-  - PF Lib XP2

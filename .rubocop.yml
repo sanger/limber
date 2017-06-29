@@ -5,6 +5,10 @@ AllCops:
     - Rakefile
     - config.ru
     - lib/**/*.rake
+  Exclude:
+    - node_modules/**/*
+    - bin/webpack
+    - bin/webpack-dev-server
 Style/VariableNumber:
   Enabled: false
 Rails:

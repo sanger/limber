@@ -10,7 +10,7 @@ class PlateCreationController < CreationController
     respond_to do |format|
       format.html { @creation_form.render(self) }
     end
-  rescue Sequencescape::Api::ResourceInvalid => exception
+  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
     Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
@@ -30,7 +30,7 @@ class PlateCreationController < CreationController
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
     end
-  rescue Sequencescape::Api::ResourceInvalid => exception
+  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
     Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
