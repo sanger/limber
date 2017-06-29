@@ -34,7 +34,7 @@ module LabwareCreators
     # Upload the csv file onto the plate
     #
     def upload_file
-      parent.qc_files.create_from_file!(file, file.original_filename)
+      parent.qc_files.create_from_file!(file, 'robot_pooling_file.csv')
     end
 
     def csv_file

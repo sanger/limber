@@ -2,7 +2,7 @@
 <div class="list-group">
 <div class="spinner-dark" v-if="loading">Updating...</div>
 <a class="list-group-item" v-for="qc_file in qc_files" v-bind:href="'/qc_files/' + qc_file.uuid">
-{{qc_file.filename}}
+  {{qc_file.filename}} - {{ qc_file.created }}
 </a>
 </div>
 </template>

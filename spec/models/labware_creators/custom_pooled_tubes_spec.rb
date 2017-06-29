@@ -67,7 +67,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
           body: file_content,
           headers: {
             'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="pooling_file.csv"'
+            'Content-Disposition' => 'form-data; filename="robot_pooling_file.csv"'
           }
         ).to_return(
           status: 201,
