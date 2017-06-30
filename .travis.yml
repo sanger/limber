@@ -8,13 +8,13 @@ cache: bundler
 node_js:
   - "7"
 install:
+  - nvm install node
+  - npm i -g yarn
   - bundle install
   - bundle binstubs webpacker
   - bundle exec rails webpacker:check_webpack_binstubs
   - bundle exec rails webpacker:compile
   - bundle exec rails webpacker
-  - nvm install node
-  - npm i -g yarn
 before_script:
   - bundle exec rails webpacker:verify_install
   - RAILS_ENV=test bundle exec rake assets:precompile
