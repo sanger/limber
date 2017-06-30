@@ -12,4 +12,5 @@ install:
   - nvm install node
   - npm i -g yarn
 before_script:
+  - bundle exec rails webpacker:verify_install
   - RAILS_ENV=test bundle exec rake assets:precompile
