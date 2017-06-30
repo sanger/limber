@@ -4,19 +4,20 @@ rvm:
 dist: trusty
 bundler_args: --without deployment
 sudo: false
-cache: bundler
+cache:
+  bundler: true
+  directories:
+    - node_modules
+  yarn: true
 node_js:
   - "7"
+env: TZ=Europe/London
 install:
   - nvm install node
   - node -v
   - npm i -g yarn
   - yarn
   - bundle install
-  - bundle binstubs webpacker
-  - bundle exec rails webpacker:check_webpack_binstubs
-  - bundle exec rails webpacker:compile
-  - bundle exec rails webpacker
 before_script:
   - bundle exec rails webpacker:verify_install
   - RAILS_ENV=test bundle exec rake assets:precompile
