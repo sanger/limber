@@ -24,6 +24,7 @@ before_script:
 deploy:
   skip_cleanup: true
   provider: releases
+  file: *
   on:
     tags: true
   api_key:
