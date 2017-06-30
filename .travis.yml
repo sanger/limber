@@ -9,6 +9,7 @@ node_js:
   - "7"
 install:
   - bundle install
+  - bundle binstubs webpacker
   - nvm install node
   - npm i -g yarn
 before_script:
