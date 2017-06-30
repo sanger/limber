@@ -10,6 +10,9 @@ node_js:
 install:
   - bundle install
   - bundle binstubs webpacker
+  - bundle exec rails webpacker:check_webpack_binstubs
+  - bundle exec rails webpacker:compile
+  - bundle exec rails webpacker
   - nvm install node
   - npm i -g yarn
 before_script:
