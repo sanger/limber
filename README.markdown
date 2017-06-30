@@ -8,6 +8,7 @@ Running Specs
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install
 its dependencies properly. One way of doing this is by precompiling the assets:
 
+yarn
 rake assets:precompile
 
 This has the added benefit that it reduces the risk of timeouts when the tests are running, as assets will not get compiled on the fly.

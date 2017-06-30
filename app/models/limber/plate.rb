@@ -40,6 +40,11 @@ class Limber::Plate < Sequencescape::Plate
     tubes_and_sources.map(&:first)
   end
 
+  def tagged?
+    first_filled_well = wells.detect { |w| w.aliquots.first }
+    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
+  end
+
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
   # that were transfered into each.
@@ -49,11 +54,6 @@ class Limber::Plate < Sequencescape::Plate
   #
   def tubes_and_sources
     @tubes_and_sources ||= generate_tubes_and_sources
-  end
-
-  def tagged?
-    first_filled_well = wells.detect { |w| w.aliquots.first }
-    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
   private

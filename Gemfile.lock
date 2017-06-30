@@ -1,6 +1,10 @@
 GIT
   remote: git://github.com/jamesglover/sequencescape-client-api.git
+<<<<<<< HEAD
   revision: 03443f8c122bc39a5f7570d38b792e19d62f9f7a
+=======
+  revision: a2829540236b3eb758db498d10360abad6f5d851
+>>>>>>> 4460d8eed4b00431097a5a66affb750d066b8cd6
   branch: rails_4_rc_li
   specs:
     sequencescape-client-api (0.3.3)
@@ -366,7 +370,7 @@ DEPENDENCIES
   rubocop
   sanger_barcode_format!
   sass-rails
-  sequencescape-client-api (>= 0.3.2)!
+  sequencescape-client-api (>= 0.3.3)!
   state_machines
   therubyracer
   thin

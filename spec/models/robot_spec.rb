@@ -42,13 +42,12 @@ describe Robots::Robot do
       let(:robot_id) { 'robot_id' }
 
       before do
+        Settings.robots['robot_id'] = settings[:robots][:robot_id]
         Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid
         Settings.purpose_uuids[target_purpose_name] = target_purpose_uuid
 
         stub_asset_search(source_barcode, plate)
         stub_asset_search(target_barcode, target_plate)
-
-        Settings.robots['robot_id'] = settings[:robots][:robot_id]
       end
 
       context 'with an unknown plate' do
