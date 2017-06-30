@@ -9,7 +9,9 @@ node_js:
   - "7"
 install:
   - nvm install node
+  - node -v
   - npm i -g yarn
+  - yarn
   - bundle install
   - bundle binstubs webpacker
   - bundle exec rails webpacker:check_webpack_binstubs
