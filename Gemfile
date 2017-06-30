@@ -69,6 +69,7 @@ group :development do
   gem 'web-console'
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
+  gem 'travis'
 end
 
 group :deployment do
