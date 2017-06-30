@@ -21,11 +21,12 @@ install:
 before_script:
 - bundle exec rails webpacker:verify_install
 - RAILS_ENV=test bundle exec rake assets:precompile
+before_deploy: compile-build
 deploy:
   skip_cleanup: true
   provider: releases
   file_glob: true
-  file: '*'
+  file: 'release.tar.gz'
   on:
     tags: true
   api_key:
