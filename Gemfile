@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'formtastic'
 
-gem 'coffee-rails'
+gem 'coffee-rails', require: false
 gem 'rails'
 gem 'sass-rails'
 gem 'uglifier'
@@ -19,6 +19,9 @@ gem 'webpacker', '~> 2.0'
 gem 'rails-assets-tether', '>= 1.1.0'
 # Bootstrap is a css framework
 gem 'bootstrap'
+
+# See https://github.com/rails/execjs#readme for more supported runtimes
+# gem 'therubyracer', require: false
 
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
