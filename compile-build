@@ -1,2 +1,3 @@
+bundle package
 git rev-parse HEAD > REVISION
 tar --exclude='./.git' --exclude='./tmp/' --exclude='./node_modules' --exclude='./log/*' --exclude='release.tar.gz' -zcvf release.tar.gz ./
