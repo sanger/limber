@@ -24,6 +24,15 @@ module LabwareCreators
 
     private
 
+    # Our transfer requests don't include a submission id
+    # as they don't have a submission
+    def request_hash(source, target, _submission)
+      {
+        'source_asset' => source,
+        'target_asset' => target
+      }
+    end
+
     def csv_file_valid?
       return true if csv_file.valid?
       errors.add(:file, csv_file.errors.full_messages.join('; '))

@@ -5,32 +5,48 @@ module LabwareCreators
   # into each tube.
   class PooledTubesBase < Base
     extend SupportParent::TaggedPlateOnly
-    attr_reader :tube_transfer
+    attr_reader :tube_transfer, :child_stock_tubes
 
     def create_labware!
-      child_stock_tubes = api.specific_tube_creation.create!(
+      @child_stock_tubes = create_child_stock_tubes
+      perform_transfers
+      true
+    end
+
+    def create_child_stock_tubes
+      api.specific_tube_creation.create!(
         user: user_uuid,
         parent: parent_uuid,
         child_purposes: [purpose_uuid] * pool_uuids.length,
         tube_attributes: tube_attributes
       ).children.index_by(&:name)
+    end
 
-      transfer_requests = []
-
-      pools.values.each do |pool|
-        pool['wells'].each do |location|
-          transfer_requests << {
-            'source_asset' => well_locations[location],
-            'target_asset' => child_stock_tubes.fetch(name_for(pool)).uuid
-          }
-        end
-      end
-
+    def perform_transfers
       api.transfer_request_collection.create!(
         user: user_uuid,
-        transfer_requests: transfer_requests
+        transfer_requests: transfer_request_attributes
       )
-      true
+    end
+
+    def transfer_request_attributes
+      pools.each_with_object([]) do |(submission_uuid, pool), transfer_requests|
+        pool['wells'].each do |location|
+          transfer_requests << request_hash(
+            well_locations[location],
+            child_stock_tubes.fetch(name_for(pool)).uuid,
+            submission_uuid
+          )
+        end
+      end
+    end
+
+    def request_hash(source, target, submission)
+      {
+        'source_asset' => source,
+        'target_asset' => target,
+        'submission'   => submission
+      }
     end
 
     def parent

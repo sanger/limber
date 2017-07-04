@@ -75,15 +75,15 @@ describe LabwareCreators::PooledTubesBySubmission do
                     payload: { transfer_request_collection: {
                       user: user_uuid,
                       transfer_requests: [
-                        { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0' },
-                        { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0' },
-                        { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0' },
-                        { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1' },
-                        { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1' },
-                        { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1' },
-                        { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1' },
-                        { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1' },
-                        { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1' }
+                        { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid'},
+                        { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid'},
+                        { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid'},
+                        { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'},
+                        { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'},
+                        { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'},
+                        { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'},
+                        { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'},
+                        { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid'}
                       ]
                     } },
                     body: '{}')

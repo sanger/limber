@@ -140,7 +140,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
     context 'with a valid file' do
       let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
 
-      it 'pools by submission' do
+      it 'pools according to the file' do
         expect(subject.save!).to be_truthy
         expect(stub_qc_file_creation).to have_been_made.once
         expect(tube_creation_request).to have_been_made.once

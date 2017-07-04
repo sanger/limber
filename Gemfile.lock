@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/jamesglover/sequencescape-client-api.git
-  revision: a2829540236b3eb758db498d10360abad6f5d851
+  revision: 40ebf1e91913cf115278fef2f0802b50559c1704
   branch: rails_4_rc_li
   specs:
     sequencescape-client-api (0.3.3)
@@ -185,7 +185,7 @@ GEM
       faraday_middleware (~> 0.9)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.19-x86_64-darwin-15)
+    libv8 (3.16.14.19)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
