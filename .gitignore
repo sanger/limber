@@ -14,3 +14,4 @@ public/stylesheets/*.css
 /public/assets
 release.tar.gz
 REVISION
+/vendor

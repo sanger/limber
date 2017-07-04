@@ -1,3 +1,8 @@
+echo 'Packaging gems'
 bundle package
+echo 'Compiling assets'
+bundle exec rake assets:precompile
+echo 'Generating sha'
 git rev-parse HEAD > REVISION
+echo 'Compiling tar.gz'
 tar --exclude='./.git' --exclude='./tmp' --exclude='./vendor/bundle' --exclude='./node_modules' --exclude='./log/*' --exclude='release.tar.gz' -zcvf release.tar.gz ./
