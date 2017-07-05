@@ -54,7 +54,7 @@ module LabwareCreators
     # @return [Integer] Index of the column
     #
     def source_column
-      @source_column ||= header_row.index { |value| SOURCE_COLUMN.casecmp?(value.strip) }
+      @source_column ||= index_of_header(SOURCE_COLUMN)
     end
 
     #
@@ -64,7 +64,7 @@ module LabwareCreators
     # @return [Integer] Index of the column
     #
     def destination_column
-      header_row.index { |value| DEST_COLUMN.casecmp?(value.strip) }
+      @destination_column ||= index_of_header(DEST_COLUMN)
     end
 
     def recognized_wells
@@ -79,6 +79,20 @@ module LabwareCreators
     end
 
     private
+
+    #
+    # Returns the index of the given column name. Returns nil if the column can't be found.
+    # Uses strip and case insensitive matching
+    #
+    # @param [String] column_header The header of the column to find
+    #
+    # @return [Int,nil] The index of the header in the column list. nil is missing.
+    #
+    def index_of_header(column_header)
+      header_row.index do |value|
+        value.respond_to?(:strip) && column_header.casecmp?(value.strip)
+      end
+    end
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
