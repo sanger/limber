@@ -34,7 +34,7 @@ class TubeCreationController < CreationController
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
     end
-  rescue Sequencescape::Api::ResourceInvalid => exception
+  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
     Rails.logger.error("Cannot create child tube of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
