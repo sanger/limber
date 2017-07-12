@@ -26,7 +26,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
   let(:parent_uuid)  { SecureRandom.uuid }
   let(:parent)       { json :plate, uuid: parent_uuid, stock_plate_barcode: 5, qc_files_actions: %w[read create] }
 
-  let(:wells_json) { json :well_collection, size: 16 }
+  let(:wells_json) { json :well_collection, size: 16, default_state: 'passed' }
 
   context 'on new' do
     has_a_working_api
@@ -150,6 +150,16 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
     context 'with an invalid file' do
       let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
+
+      it 'raises an exception' do
+        # Note: This really shouldn't be an exception, but need to make some other adjustments first.
+        expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+      end
+    end
+
+    context 'with empty wells includes' do
+      let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+      let(:wells_json) { json :well_collection, size: 8 }
 
       it 'raises an exception' do
         # Note: This really shouldn't be an exception, but need to make some other adjustments first.

@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
+require './lib/nested_validation'
+
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes'
 
   # Takes the user uploaded csv file and extracts the pool information
+  # Also validates the content of the CSV file.
   class CustomPooledTubes::CsvFile
-    SOURCE_COLUMN = 'Source Well'
-    DEST_COLUMN = 'Dest. well'
-
     include ActiveModel::Validations
+    extend NestedValidation
+
+    attr_reader :header_row
 
     validate :correctly_parsed?
     validates :header_row, presence: true
-    validates :source_column, presence: { message: ->(object, _data) { "could not be found in header row: #{object.header_row.join(',')}" } }
-    validates :destination_column, presence: { message: ->(object, _data) { "could not be found in header row: #{object.header_row.join(',')}" } }
-    validate :recognized_wells, if: :correctly_formatted?
+    validates_nested :header_row
+    validates_nested :transfers, if: :correctly_formatted?
+
+    delegate :source_column, :destination_column, :volume_column, to: :header_row
 
     def initialize(file)
       @data = CSV.parse(file.read)
@@ -44,78 +48,28 @@ module LabwareCreators
 
     # Returns the contents of the header row
     def header_row
-      @data[0]
-    end
-
-    #
-    # Returns the index of the source column. Uses strip and case insensitive matching
-    #
-    #
-    # @return [Integer] Index of the column
-    #
-    def source_column
-      @source_column ||= index_of_header(SOURCE_COLUMN)
-    end
-
-    #
-    # Returns the index of the destination column. Uses strip and case insensitive matching
-    #
-    #
-    # @return [Integer] Index of the column
-    #
-    def destination_column
-      @destination_column ||= index_of_header(DEST_COLUMN)
-    end
-
-    def recognized_wells
-      listed_wells.reduce(true) do |valid, well|
-        if WellHelpers.column_order.include?(well.strip.upcase)
-          valid
-        else
-          errors.add(:base, "Couldn't recognise the well named: '#{well}'")
-          false
-        end
-      end
+      @header_row ||= Header.new(@data[0]) if @data[0]
     end
 
     private
 
-    #
-    # Returns the index of the given column name. Returns nil if the column can't be found.
-    # Uses strip and case insensitive matching
-    #
-    # @param [String] column_header The header of the column to find
-    #
-    # @return [Int,nil] The index of the header in the column list. nil is missing.
-    #
-    def index_of_header(column_header)
-      header_row.index do |value|
-        value.respond_to?(:strip) && column_header.casecmp?(value.strip)
+    def transfers
+      @transfers ||= @data[1..-1].each_with_index.map do |row_data, index|
+        Row.new(header_row, index + 2, row_data)
       end
     end
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && source_column && destination_column
-    end
-
-    # An array containing all
-    def listed_wells
-      pools.values.reduce([]) do |wells, pool|
-        wells.concat(pool['wells'])
-      end
-    end
-
-    def pool_hash
-      { 'wells' => [] }
+      correctly_parsed? && header_row.valid?
     end
 
     def generate_pools_hash
-      pools = Hash.new { |hash, pool_name| hash[pool_name] = pool_hash }
-      @data[1..-1].each do |row|
-        pool_name = (row[destination_column] || '').strip.downcase
-        next if pool_name.empty?
-        pools.dig(pool_name, 'wells') << (row[source_column] || '').strip.upcase
+      return {} unless valid?
+      pools = Hash.new { |hash, pool_name| hash[pool_name] = [] }
+      transfers.each do |row|
+        next if row.empty?
+        pools[row.destination] << row.source
       end
       pools
     end

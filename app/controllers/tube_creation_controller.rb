@@ -18,8 +18,8 @@ class TubeCreationController < CreationController
 
     respond_to do |format|
       format.html do
-        redirect_to(
-          limber_tube_path(@creation_form.parent),
+        redirect_back(
+          fallback_location: url_for(@creation_form.parent),
           alert: ["Cannot create tube: #{exception.message}", *exception.resource.errors.full_messages]
         )
       end
@@ -40,8 +40,8 @@ class TubeCreationController < CreationController
 
     respond_to do |format|
       format.html do
-        redirect_to(
-          limber_tube_path(@creation_form.parent),
+        redirect_back(
+          fallback_location: url_for(@creation_form.parent),
           alert: "Cannot create tube: #{exception.message}"
         )
       end

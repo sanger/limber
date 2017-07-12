@@ -31,9 +31,9 @@ module LabwareCreators
 
     def transfer_request_attributes
       pools.each_with_object([]) do |(submission_uuid, pool), transfer_requests|
-        pool['wells'].each do |location|
+        pool.each do |location|
           transfer_requests << request_hash(
-            well_locations[location],
+            well_locations.fetch(location).uuid,
             child_stock_tubes.fetch(name_for(pool)).uuid,
             submission_uuid
           )
@@ -75,7 +75,7 @@ module LabwareCreators
     end
 
     def name_for(pool_details)
-      first, last = WellHelpers.first_and_last_in_columns(pool_details['wells'])
+      first, last = WellHelpers.first_and_last_in_columns(pool_details)
       "#{stock_plate_barcode} #{first}:#{last}"
     end
 
@@ -89,14 +89,12 @@ module LabwareCreators
     # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
     #
     def well_locations
-      @well_locations ||= parent.wells.each_with_object({}) do |w, hash|
-        hash[w.location] = w.uuid
-      end
+      @well_locations ||= parent.wells.index_by(&:location)
     end
 
     #
     # pools should return a hash of pools with the following minimal information
-    # { 'unique-pool-identifier' => { 'wells' => <Array of well locations> }}
+    # { 'unique-pool-identifier' => <Array of well locations> }
     #
     # @return [<type>] <description>
     #
