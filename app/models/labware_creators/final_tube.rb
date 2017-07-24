@@ -8,6 +8,8 @@ module LabwareCreators
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json
   class FinalTube < Base
+    extend SupportParent::TubeOnly
+
     def render(controller)
       if no_pooling_required?
         super
@@ -26,7 +28,7 @@ module LabwareCreators
       siblings.all?(&:ready?)
     end
 
-    self.page = 'multi_tube_pooling'
+    self.page = 'final_tube'
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid parents]
 
     validate :all_parents_and_only_parents?, if: :barcodes_provided?

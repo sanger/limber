@@ -3,9 +3,12 @@
 require 'spec_helper'
 require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
+require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 describe LabwareCreators::TaggedPlate do
+  it_behaves_like 'it only allows creation from plates'
+
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
@@ -24,7 +27,7 @@ describe LabwareCreators::TaggedPlate do
   let(:plate_request) { stub_api_get(plate_uuid, body: plate) }
   let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
 
-  before(:each) do
+  before do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
@@ -80,7 +83,7 @@ describe LabwareCreators::TaggedPlate do
     end
 
     context 'fetching layout templates' do
-      before(:each) do
+      before do
         stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2))
       end
 
@@ -102,7 +105,7 @@ describe LabwareCreators::TaggedPlate do
         json(:dual_submission_pool_collection,
              used_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
       end
-      before(:each) do
+      before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
 
@@ -111,7 +114,7 @@ describe LabwareCreators::TaggedPlate do
       end
 
       context 'with advertised tag2 templates' do
-        before(:each) do
+        before do
           stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
         end
 
@@ -123,7 +126,7 @@ describe LabwareCreators::TaggedPlate do
     end
 
     context 'when a submission is not split over multiple plates' do
-      before(:each) do
+      before do
         stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
       end
 
@@ -143,7 +146,7 @@ describe LabwareCreators::TaggedPlate do
 
     include_context 'a tag plate creator'
 
-    before(:each) do
+    before do
       stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
     end
 
@@ -162,9 +165,9 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagging" page' do
+      it 'renders the "tagged_plate" page' do
         controller = CreationController.new
-        expect(controller).to receive(:render).with('tagging')
+        expect(controller).to receive(:render).with('tagged_plate')
         subject.render(controller)
       end
 
@@ -203,9 +206,9 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagging" page' do
+      it 'renders the "tagged_plate" page' do
         controller = CreationController.new
-        expect(controller).to receive(:render).with('tagging')
+        expect(controller).to receive(:render).with('tagged_plate')
         subject.render(controller)
       end
 

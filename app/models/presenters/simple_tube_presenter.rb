@@ -20,7 +20,7 @@ module Presenters
       end
 
       event :cancel do
-        transition %i[pending started] => :cancelled
+        transition %i[pending started passed] => :cancelled
       end
 
       state :pending do

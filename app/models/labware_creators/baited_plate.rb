@@ -6,7 +6,7 @@ module LabwareCreators
   class BaitedPlate < Base
     include Form::CustomPage
 
-    self.page = 'baiting'
+    self.page = 'baited_plate'
     class_attribute :aliquot_partial
     self.aliquot_partial = 'plates/baited_aliquot'
 

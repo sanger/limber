@@ -1,0 +1,2 @@
+This is an example file
+It is used to test qc file upload

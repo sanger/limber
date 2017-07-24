@@ -18,8 +18,8 @@ class TubeCreationController < CreationController
 
     respond_to do |format|
       format.html do
-        redirect_to(
-          limber_tube_path(@creation_form.parent),
+        redirect_back(
+          fallback_location: url_for(@creation_form.parent),
           alert: ["Cannot create tube: #{exception.message}", *exception.resource.errors.full_messages]
         )
       end
@@ -34,14 +34,14 @@ class TubeCreationController < CreationController
     respond_to do |format|
       format.html { redirect_to_form_destination(@creation_form) }
     end
-  rescue Sequencescape::Api::ResourceInvalid => exception
+  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
     Rails.logger.error("Cannot create child tube of #{@creation_form.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
     respond_to do |format|
       format.html do
-        redirect_to(
-          limber_tube_path(@creation_form.parent),
+        redirect_back(
+          fallback_location: url_for(@creation_form.parent),
           alert: "Cannot create tube: #{exception.message}"
         )
       end

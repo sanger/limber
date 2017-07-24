@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
 require_dependency 'form'
+require_dependency 'labware_creators'
 
 module LabwareCreators
   class Base
-    module ClassMethods
-      def class_for(purpose_uuid)
-        Settings.purposes.fetch(purpose_uuid).fetch(:form_class).constantize
-      end
-    end
-    extend ClassMethods
+    extend SupportParent::PlateOnly
 
     include Form
     include PlateWalking
@@ -56,7 +52,7 @@ module LabwareCreators
     end
 
     def save!
-      raise StandardError, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
+      raise ResourceInvalid, 'Invalid data; ' + errors.full_messages.join('; ') unless valid?
       create_labware!
     end
 

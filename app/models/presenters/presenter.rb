@@ -76,14 +76,6 @@ module Presenters
       useful_barcode(labware.stock_plate.try(:barcode))
     end
 
-    def control_qc_files
-      labware.qc_files.present?
-    end
-
-    def each_qc_file(&block)
-      labware.qc_files.each(&block)
-    end
-
     private
 
     def purpose_config

@@ -28,6 +28,7 @@ describe 'plate factory' do
          created_at: '2016-01-21 16:08:28 +0000',
          updated_at: '2016-01-21 16:16:42 +0000',
          wells_count: 30,
+         qc_files_actions: %w[read create],
          comments_count: 3,
          submission_pools_count: 2)
   end
@@ -65,13 +66,20 @@ describe 'plate factory' do
         "qc_files": {
           "size": 0,
           "actions": {
-            "read": "http://example.com:3000/example-plate-uuid/qc_files"
+            "read": "http://example.com:3000/example-plate-uuid/qc_files",
+            "create": "http://example.com:3000/example-plate-uuid/qc_files"
           }
         },
         "source_transfers": {
           "size": 0,
           "actions": {
             "read": "http://example.com:3000/example-plate-uuid/source_transfers"
+          }
+        },
+        "transfer_request_collections": {
+          "size": 0,
+          "actions": {
+            "read": "http://example.com:3000/example-plate-uuid/transfer_request_collections"
           }
         },
         "transfers_to_tubes": {
@@ -161,6 +169,6 @@ describe 'plate factory' do
   end
 
   it 'should match the expected json' do
-    expect(JSON.parse(subject)['plate']).to eq JSON.parse(json_content)['plate']
+    expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end

@@ -2,15 +2,21 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
+require_relative 'shared_examples'
 
-# CreationForm is the base class for our forms
+# Parent in a plate
+# Creates new tubes of the child purpose
+# Each well on the plate gets transferred into a tube
+# transfer targets are determined by pool
 describe LabwareCreators::PooledTubesBySubmission do
+  it_behaves_like 'it only allows creation from tagged plates'
+
   subject do
     LabwareCreators::PooledTubesBySubmission.new(form_attributes)
   end
 
   # Set up our templates
-  before(:each) do
+  before do
     LabwareCreators::PooledTubesBySubmission.default_transfer_template_uuid = 'transfer-to-wells-by-submission-uuid'
   end
 
@@ -19,6 +25,7 @@ describe LabwareCreators::PooledTubesBySubmission do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
+
   let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5 }
 
   let(:form_attributes) do
@@ -30,12 +37,15 @@ describe LabwareCreators::PooledTubesBySubmission do
     }
   end
 
+  let(:wells_json) { json :well_collection, size: 9, default_state: 'passed' }
+
   context '#save!' do
     has_a_working_api
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)
+      stub_api_get(parent_uuid, 'wells', body: wells_json)
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -60,17 +70,25 @@ describe LabwareCreators::PooledTubesBySubmission do
       stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:C1', 'DN5 D1:A2']))
     end
 
-    # The API needs to pull back the transfer template to know what actions it can perform
-    let!(:transfer_template_request) do
-      stub_api_get('transfer-to-wells-by-submission-uuid', body: json(:transfer_to_specific_tubes_by_submission))
+    let(:transfer_requests) do
+      [
+        { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+        { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+        { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+        { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+        { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+        { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+        { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+        { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+        { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' }
+      ]
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer-to-wells-by-submission-uuid',
-                    payload: { transfer: {
-                      targets: { 'pool-1-uuid' => 'tube-0', 'pool-2-uuid' => 'tube-1' },
-                      source: parent_uuid,
-                      user: user_uuid
+      stub_api_post('transfer_request_collections',
+                    payload: { transfer_request_collection: {
+                      user: user_uuid,
+                      transfer_requests: transfer_requests
                     } },
                     body: '{}')
     end
@@ -79,6 +97,26 @@ describe LabwareCreators::PooledTubesBySubmission do
       expect(subject.save!).to be_truthy
       expect(tube_creation_request).to have_been_made.once
       expect(transfer_creation_request).to have_been_made.once
+    end
+
+    context 'with a failed well' do
+      let(:wells_json) { json :well_collection, size: 9, default_state: 'passed', custom_state: { 'B1' => 'failed' } }
+      let(:transfer_requests) do
+        [
+          { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+          { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+          { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+          { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+          { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+          { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+          { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
+          { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' }
+        ]
+      end
+      it 'pools by submission' do
+        expect(subject.save!).to be_truthy
+        expect(transfer_creation_request).to have_been_made.once
+      end
     end
   end
 end

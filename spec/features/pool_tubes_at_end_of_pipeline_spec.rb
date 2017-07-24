@@ -34,18 +34,11 @@ feature 'Pool tubes at end of pipeline', js: true do
 
     # Set-up the tube config
     Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = {
-      presenter_class: 'Presenters::SimpleTubePresenter',
-      asset_type: 'tube',
-      name: 'Example Purpose'
-    }
-    Settings.purposes[child_purpose_uuid] = {
-      presenter_class: 'Presenters::FinalTubePresenter',
-      asset_type: 'tube',
-      name: 'Final Tube Purpose',
-      form_class: 'LabwareCreators::FinalTube',
-      parents: ['Example Purpose']
-    }
+    Settings.purposes['example-purpose-uuid'] = build :tube_config, name: 'Example Purpose'
+    Settings.purposes[child_purpose_uuid] = build :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
+                                                                name: 'Final Tube Purpose',
+                                                                form_class: 'LabwareCreators::FinalTube',
+                                                                parents: ['Example Purpose']
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the tube

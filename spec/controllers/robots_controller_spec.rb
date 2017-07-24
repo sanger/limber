@@ -81,7 +81,7 @@ describe RobotsController, type: :controller do
              id: 'robot_id'
            },
            session: { user_uuid: user_uuid },
-           headers: { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
+           format: :json
     end
   end
 end

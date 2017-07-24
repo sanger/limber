@@ -2,8 +2,9 @@
 
 module LabwareCreators
   class MultiPlatePool < Base
+    extend SupportParent::TaggedPlateOnly
     include Form::CustomPage
-    self.page = 'multi_plate_pooling'
+    self.page = 'multi_plate_pool'
     self.aliquot_partial = 'custom_pooled_aliquot'
 
     self.attributes = %i[

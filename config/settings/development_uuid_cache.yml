@@ -1,0 +1,265 @@
+---
+:searches:
+  Find assets by barcode: 25652e62-556c-11e0-a1ac-00144f2041da
+  Find project by name: c69225c8-5568-11e0-a489-00144f01a414
+  Find study by name: c693a542-5568-11e0-a489-00144f01a414
+  Find sample by name: c694e22c-5568-11e0-a489-00144f01a414
+  Find source assets by destination asset barcode: 1ce5ce58-6b61-11e0-b29c-00144f01a414
+  Find user by login: 8e4a2966-bf87-11e0-834c-00144f01a414
+  Find user by swipecard code: 8e52d368-bf87-11e0-834c-00144f01a414
+  Find pulldown plates: f89e38f2-c03b-11e0-834c-00144f01a414
+  Find Illumina-B plates: 922f652e-1c3c-11e2-bcb9-68b59976a382
+  Find Illumina-B plates for user: 9246ad38-1c3c-11e2-bcb9-68b59976a382
+  Find Illumina-B stock plates: 9249cfd6-1c3c-11e2-bcb9-68b59976a382
+  Find outstanding Illumina-B pre-PCR plates: 92ab80aa-1c3c-11e2-bcb9-68b59976a382
+  Find pulldown plates for user: 5549c892-1c3d-11e2-8de1-68b59976a382
+  Find pulldown stock plates: 554b3e66-1c3d-11e2-8de1-68b59976a382
+  Find Illumina-A plates: 002d7ef0-e7d8-11e2-ab4e-68b599768938
+  Find Illumina-A stock plates: '00308c30-e7d8-11e2-ab4e-68b599768938'
+  Find Illumina-C tubes: 653e3540-14a2-11e3-ab67-3c4a9275d6c6
+  Find Illumina-C plates: 6542c920-14a2-11e3-ab67-3c4a9275d6c6
+  Find lot by lot number: 4ac60950-c568-11e3-ad09-3c4a9275d6c6
+  Find qcable by barcode: 4ad4af50-c568-11e3-ad09-3c4a9275d6c6
+  Find robot by barcode: 4ae2e020-c568-11e3-ad09-3c4a9275d6c6
+  Find lot by batch id: 4bace6e0-c568-11e3-ad09-3c4a9275d6c6
+  Find Illumina-C plates for user: 998879c0-3158-11e6-b327-68b599768938
+:transfer_templates:
+  Transfer columns 1-1: 79fb9cce-bf87-11e0-834c-00144f01a414
+  Transfer columns 1-2: 7a071446-bf87-11e0-834c-00144f01a414
+  Transfer columns 1-3: 7a094de2-bf87-11e0-834c-00144f01a414
+  Transfer columns 1-4: 7a0b69ce-bf87-11e0-834c-00144f01a414
+  Transfer columns 1-6: 7a0dd970-bf87-11e0-834c-00144f01a414
+  Transfer columns 1-12: 7a3b071a-bf87-11e0-834c-00144f01a414
+  Pool wells based on submission: 7a3c5138-bf87-11e0-834c-00144f01a414
+  Custom pooling: 7a3d3e18-bf87-11e0-834c-00144f01a414
+  Transfer wells to MX library tubes by submission: 7a3ebc16-bf87-11e0-834c-00144f01a414
+  Transfer wells to specific tubes by submission: 98d0f672-1c3c-11e2-bcb9-68b59976a382
+  Transfer from tube to tube by submission: 98d6da1a-1c3c-11e2-bcb9-68b59976a382
+  Transfer wells to specific tubes defined by submission: ffa7d430-e7d7-11e2-ab4e-68b599768938
+  Transfer between specific tubes: ffab7db0-e7d7-11e2-ab4e-68b599768938
+  Whole plate to tube: 654e88f0-14a2-11e3-ab67-3c4a9275d6c6
+  Flip Plate: 4b9455d0-c568-11e3-ad09-3c4a9275d6c6
+  Transfer wells to MX library tubes by multiplex: 47245080-4e2b-11e4-99d7-3c4a9275d6c6
+  Pooling rows to first column: 8c5512e0-cbf1-11e4-8cef-3c4a9275d6c6
+:purposes:
+  Working Dilution: 8a3fc77e-1c40-11e2-9790-68b59976a382
+  Stock Plate: 8a531f22-1c40-11e2-9790-68b59976a382
+  optimisation: 8a53d5ac-1c40-11e2-9790-68b59976a382
+  4ng: 8a54ba76-1c40-11e2-9790-68b59976a382
+  8ng: 8a559bc6-1c40-11e2-9790-68b59976a382
+  40ng: 8a564238-1c40-11e2-9790-68b59976a382
+  Whole Genome Amplification: 8a56f1a6-1c40-11e2-9790-68b59976a382
+  Perlegen: 8a576ac8-1c40-11e2-9790-68b59976a382
+  GoldenGate: 8a5816a8-1c40-11e2-9790-68b59976a382
+  Affymetrix: 8a588c14-1c40-11e2-9790-68b59976a382
+  Pre Amplification: 8a5953a6-1c40-11e2-9790-68b59976a382
+  800ng: 8a5a3e38-1c40-11e2-9790-68b59976a382
+  Sequenom: 8a5b5b2e-1c40-11e2-9790-68b59976a382
+  Gel Dilution: 8a5c46e2-1c40-11e2-9790-68b59976a382
+  Pico Dilution: 8a5d26a2-1c40-11e2-9790-68b59976a382
+  Pico Assay A: 8a5e0590-1c40-11e2-9790-68b59976a382
+  Normalisation: 8a5ee384-1c40-11e2-9790-68b59976a382
+  Purification: 8a5f58b4-1c40-11e2-9790-68b59976a382
+  Returned To Supplier: 8a5fdfbe-1c40-11e2-9790-68b59976a382
+  PCR QC Dilution: 8a60703c-1c40-11e2-9790-68b59976a382
+  External: 8a60e40e-1c40-11e2-9790-68b59976a382
+  Solexa_Seq: 8a61a088-1c40-11e2-9790-68b59976a382
+  Illumina-external: 8a621cde-1c40-11e2-9790-68b59976a382
+  Infinium_610K: 8a6296e6-1c40-11e2-9790-68b59976a382
+  Template: 8a636602-1c40-11e2-9790-68b59976a382
+  Pico Standard: 8a6449a0-1c40-11e2-9790-68b59976a382
+  Affymetrix_SNP6: 8a6754ba-1c40-11e2-9790-68b59976a382
+  Infinium 670k: 8a67ed6c-1c40-11e2-9790-68b59976a382
+  Sty PCR: 8a68647c-1c40-11e2-9790-68b59976a382
+  Nsp PCR: 8a6919b2-1c40-11e2-9790-68b59976a382
+  Elution: 8a69f940-1c40-11e2-9790-68b59976a382
+  Frag: 8a6ae058-1c40-11e2-9790-68b59976a382
+  Label: 8a6b9674-1c40-11e2-9790-68b59976a382
+  Hybridisation: 8a6c47f4-1c40-11e2-9790-68b59976a382
+  Omnichip: 8a6cecc2-1c40-11e2-9790-68b59976a382
+  Methylation: 8a6de2a8-1c40-11e2-9790-68b59976a382
+  ImmunoChip: 8a6ec7a4-1c40-11e2-9790-68b59976a382
+  OMNI 1: 8a6f7c3a-1c40-11e2-9790-68b59976a382
+  OMNI EXPRESS: 8a6ff764-1c40-11e2-9790-68b59976a382
+  Pulldown: 8a70932c-1c40-11e2-9790-68b59976a382
+  Omnichip_Express: 8a7e4ec2-1c40-11e2-9790-68b59976a382
+  Dilution Plates: 8a7f4232-1c40-11e2-9790-68b59976a382
+  Pico Assay Plates: 8a803584-1c40-11e2-9790-68b59976a382
+  Pico Assay B: 8a811e4a-1c40-11e2-9790-68b59976a382
+  Gel Dilution Plates: 8a820b34-1c40-11e2-9790-68b59976a382
+  Pulldown Aliquot: 8a832b86-1c40-11e2-9790-68b59976a382
+  Sonication: 8a844da4-1c40-11e2-9790-68b59976a382
+  Run of Robot: 8a857b34-1c40-11e2-9790-68b59976a382
+  EnRichment 1: 8a86aaf4-1c40-11e2-9790-68b59976a382
+  EnRichment 2: 8a87e64e-1c40-11e2-9790-68b59976a382
+  EnRichment 3: 8a88c49c-1c40-11e2-9790-68b59976a382
+  EnRichment 4: 8a8960fa-1c40-11e2-9790-68b59976a382
+  Sequence Capture: 8a89e96c-1c40-11e2-9790-68b59976a382
+  Pulldown PCR: 8a8aa078-1c40-11e2-9790-68b59976a382
+  Pulldown qPCR: 8a8b2e26-1c40-11e2-9790-68b59976a382
+  mspec: 8a8bbd46-1c40-11e2-9790-68b59976a382
+  PicoGreen Dilution: 8a8c5f94-1c40-11e2-9790-68b59976a382
+  PicoGreen: 8a8d170e-1c40-11e2-9790-68b59976a382
+  Spare Genotyping Plate: 8a8dbe70-1c40-11e2-9790-68b59976a382
+  Infinium 2.5M: 8a8e7d6a-1c40-11e2-9790-68b59976a382
+  stock entry: 8a8f22a6-1c40-11e2-9790-68b59976a382
+  aCGH: 8a8fc7ba-1c40-11e2-9790-68b59976a382
+  Cherrypicked Working Dilution: 8a90b33c-1c40-11e2-9790-68b59976a382
+  CGP: 8a919b26-1c40-11e2-9790-68b59976a382
+  DDD OMNI: 8a9286da-1c40-11e2-9790-68b59976a382
+  SEQCAP WG: 8a937cf2-1c40-11e2-9790-68b59976a382
+  SEQCAP SC: 8a99a348-1c40-11e2-9790-68b59976a382
+  Aliquot 1: 8a9a172e-1c40-11e2-9790-68b59976a382
+  Aliquot 2: 8a9aba1c-1c40-11e2-9790-68b59976a382
+  Aliquot 3: 8a9b9aae-1c40-11e2-9790-68b59976a382
+  Aliquot 4: 8a9c79c4-1c40-11e2-9790-68b59976a382
+  Aliquot 5: 8a9d73ec-1c40-11e2-b925-68b59976a382
+  OMNI2.5M-8: 8a9e0f32-1c40-11e2-b925-68b59976a382
+  WGS stock DNA: 8aa50a8a-1c40-11e2-b925-68b59976a382
+  WGS Covaris: 8aa62be0-1c40-11e2-b925-68b59976a382
+  WGS post-Cov: 8aa710aa-1c40-11e2-b925-68b59976a382
+  WGS post-Cov-XP: 8aa79a84-1c40-11e2-b925-68b59976a382
+  WGS lib: 8aa8439e-1c40-11e2-b925-68b59976a382
+  WGS lib PCR: 8aa95bbc-1c40-11e2-b925-68b59976a382
+  WGS lib PCR-XP: 8aaa53a0-1c40-11e2-b925-68b59976a382
+  WGS lib pool: 8aab4710-1c40-11e2-b925-68b59976a382
+  SC stock DNA: 8ab81878-1c40-11e2-b925-68b59976a382
+  SC Covaris: 8ab8dd80-1c40-11e2-b925-68b59976a382
+  SC post-Cov: 8ab9b58e-1c40-11e2-9790-68b59976a382
+  SC post-Cov-XP: 8aba4fee-1c40-11e2-9790-68b59976a382
+  SC lib: 8abae594-1c40-11e2-9790-68b59976a382
+  SC lib PCR: 8abba542-1c40-11e2-9790-68b59976a382
+  SC lib PCR-XP: 8abc9b3c-1c40-11e2-b925-68b59976a382
+  SC hyb: 8abd252a-1c40-11e2-b925-68b59976a382
+  SC cap lib: 8abdc8cc-1c40-11e2-b925-68b59976a382
+  SC cap lib PCR: 8abe5d28-1c40-11e2-b925-68b59976a382
+  SC cap lib PCR-XP: 8abee338-1c40-11e2-b925-68b59976a382
+  SC cap lib pool: 8abf9d32-1c40-11e2-b925-68b59976a382
+  ISC stock DNA: 8ac042a0-1c40-11e2-b925-68b59976a382
+  ISC Covaris: 8ac0e98a-1c40-11e2-b925-68b59976a382
+  ISC post-Cov: 8ac196dc-1c40-11e2-b925-68b59976a382
+  ISC post-Cov-XP: 8ac252c0-1c40-11e2-b925-68b59976a382
+  ISC lib: 8ac31bc4-1c40-11e2-b925-68b59976a382
+  ISC lib PCR: 8ac3a698-1c40-11e2-b925-68b59976a382
+  ISC lib PCR-XP: 8ac47d52-1c40-11e2-b925-68b59976a382
+  ISC lib pool: 95fb1906-1c40-11e2-b925-68b59976a382
+  ISC hyb: 960741d6-1c40-11e2-b925-68b59976a382
+  ISC cap lib: 960834d8-1c40-11e2-b925-68b59976a382
+  ISC cap lib PCR: 9609174a-1c40-11e2-b925-68b59976a382
+  ISC cap lib PCR-XP: 9609e0da-1c40-11e2-b925-68b59976a382
+  ISC cap lib pool: 960aa9c0-1c40-11e2-b925-68b59976a382
+  Pulldown QC plate: 96100456-1c40-11e2-9790-68b59976a382
+  OMNI 5M: 9610cf30-1c40-11e2-9790-68b59976a382
+  Fake Stock Plate: 9611ae3c-1c40-11e2-9790-68b59976a382
+  Exome Chip: 96129aae-1c40-11e2-9790-68b59976a382
+  Exome Chip Extra: 96139ff8-1c40-11e2-9790-68b59976a382
+  Illumina B test: 961480a8-1c40-11e2-9790-68b59976a382
+  ILB_STD_INPUT: 4319d5cc-1c3d-11e2-a197-68b59976a382
+  ILB_STD_COVARIS: 4325821e-1c3d-11e2-a197-68b59976a382
+  ILB_STD_SH: 43271340-1c3d-11e2-a197-68b59976a382
+  ILB_STD_PREPCR: 43283ae0-1c3d-11e2-a197-68b59976a382
+  ILB_STD_PCR: 4329b6ea-1c3d-11e2-a197-68b59976a382
+  ILB_STD_PCRR: 432ae2f4-1c3d-11e2-a197-68b59976a382
+  ILB_STD_PCRXP: 432c5d5a-1c3d-11e2-a197-68b59976a382
+  ILB_STD_PCRRXP: 434e956e-1c3d-11e2-a197-68b59976a382
+  Human Core Exome: a1c42c50-6c5e-11e2-a912-68b59976a382
+  Fluidigm: c820a3c0-952f-11e2-9389-68b59976a382
+  Illumina GEX - Hu12v4: 9f8e5120-bb9d-11e2-b3bd-68b59976a382
+  Cherrypicked: fd2f0c00-e7d7-11e2-ab4e-68b599768938
+  Shear: fd3c7980-e7d7-11e2-ab4e-68b599768938
+  Post Shear: fd44ddf0-e7d7-11e2-ab4e-68b599768938
+  AL Libs: fd4bbbc0-e7d7-11e2-ab4e-68b599768938
+  Lib PCR: fd516110-e7d7-11e2-ab4e-68b599768938
+  Lib PCRR: fd57c9b0-e7d7-11e2-ab4e-68b599768938
+  Lib PCR-XP: fd65d370-e7d7-11e2-ab4e-68b599768938
+  Lib PCRR-XP: fd6cb140-e7d7-11e2-ab4e-68b599768938
+  Post Shear QC: fd747970-e7d7-11e2-ab4e-68b599768938
+  Lib PCR-XP QC: fd83bbb0-e7d7-11e2-ab4e-68b599768938
+  Lib PCRR-XP QC: fd89af20-e7d7-11e2-ab4e-68b599768938
+  ISCH lib pool: ffc60a90-e7d7-11e2-ab4e-68b599768938
+  ISCH hyb: ffcee430-e7d7-11e2-ab4e-68b599768938
+  ISCH cap lib: ffd3c630-e7d7-11e2-ab4e-68b599768938
+  ISCH cap lib PCR: ffd796c0-e7d7-11e2-ab4e-68b599768938
+  ISCH cap lib PCR-XP: ffdb6750-e7d7-11e2-ab4e-68b599768938
+  ISCH cap lib pool: ffdf8600-e7d7-11e2-ab4e-68b599768938
+  Stock RNA Plate: d2262690-000c-11e3-9b0b-3c4a9275d6c6
+  ILC Stock: 635fff60-14a2-11e3-ab67-3c4a9275d6c6
+  ILC AL Libs: 63890b30-14a2-11e3-ab67-3c4a9275d6c6
+  ILC Lib PCR: 63995ee0-14a2-11e3-ab67-3c4a9275d6c6
+  ILC Lib PCR-XP: 63a7ddd0-14a2-11e3-ab67-3c4a9275d6c6
+  ILC AL Libs Tagged: 63b26520-14a2-11e3-ab67-3c4a9275d6c6
+  Post Shear XP: 5ac0c470-1af1-11e3-a546-3c4a9275d6c6
+  RNASEQ: caa9af50-2c2f-11e3-bfef-68b59976a382
+  STA: 1a03fc90-4625-11e3-9247-68b599768938
+  STA2: 1a19a770-4625-11e3-9247-68b599768938
+  Fluidigm 96-96: 1a23e0a0-4625-11e3-9247-68b599768938
+  Fluidigm 192-24: 1a2b0c90-4625-11e3-9247-68b599768938
+  SNP Type: 5ae2e3c0-4625-11e3-9247-68b599768938
+  PacBio Sheared: 3103ef20-8448-11e3-9f03-68b599768938
+  Pacbio: ca819b60-8e7b-11e3-b47f-3c4a9275d6c6
+  Tag Plate: 49f747a0-c568-11e3-ad09-3c4a9275d6c6
+  Reporter Plate: 4a28b7e0-c568-11e3-ad09-3c4a9275d6c6
+  Tag PCR: 4b5020e0-c568-11e3-ad09-3c4a9275d6c6
+  Tag PCR-XP: 4b5aa830-c568-11e3-ad09-3c4a9275d6c6
+  RNA Working Dilution: 281f8340-d756-11e3-8c7f-68b599768938
+  Lib Norm: 8bf78990-cbf1-11e4-8cef-3c4a9275d6c6
+  Lib Norm 2: 8c039780-cbf1-11e4-8cef-3c4a9275d6c6
+  Lib Norm 2 Pool: 8c0b5fb0-cbf1-11e4-8cef-3c4a9275d6c6
+  Strip Tube Purpose: 8c8ff900-cbf1-11e4-8cef-3c4a9275d6c6
+  Lib Norm QC: 8d281a50-cbf1-11e4-8cef-3c4a9275d6c6
+  PacBio Sequencing: 943653a0-f8a8-11e4-a14f-68b59976a382
+  Quant STD: 5ff05880-1990-11e5-b56d-3c4a9275d6c6
+  MEGAarray: e4dc08d0-1a41-11e5-89d7-68b59976a382
+  Pre-Extracted Plate: e55a1030-c5dc-11e5-8770-68b59976a382
+  PF Cherrypicked: 69acab70-f028-11e5-980a-3c4a9275d6c8
+  PF Shear: 69ec9aa0-f028-11e5-980a-3c4a9275d6c8
+  PF Post Shear: 6a124b10-f028-11e5-980a-3c4a9275d6c8
+  PF Post Shear XP: 6a1cab50-f028-11e5-980a-3c4a9275d6c8
+  PF Lib: 6a23d740-f028-11e5-980a-3c4a9275d6c8
+  PF Lib XP: 6a33dcd0-f028-11e5-980a-3c4a9275d6c8
+  PF Lib XP2: 6a48c460-f028-11e5-980a-3c4a9275d6c8
+  PF EM Pool: 6a4fc940-f028-11e5-980a-3c4a9275d6c8
+  PF Lib Norm: 6a63c670-f028-11e5-980a-3c4a9275d6c8
+  PF EM Pool QC: 6b439f20-f028-11e5-980a-3c4a9275d6c8
+  Pre Stamped Tag Plate: 6c6ed8b0-f028-11e5-980a-3c4a9275d6c8
+  QA Plate: b67213b0-1818-11e6-a780-3c4a9275d6c8
+  ILC Lib Chromium: fbd91610-b700-11e6-aa24-68b599768938
+  Chromium quant: ed13ed90-bb9b-11e6-a3f7-68b59976a384
+  LB Cherrypick: c1f9b2a0-25d8-11e7-83ce-68b59977951e
+  LB Shear: 37d2bc80-25dc-11e7-83ce-68b59977951e
+  LB Post Shear: 37fdc420-25dc-11e7-83ce-68b59977951e
+  LB End Prep: 38245ef0-25dc-11e7-83ce-68b59977951e
+  LB Lib PCR: 385bc2a0-25dc-11e7-83ce-68b59977951e
+  LB Lib PCR-XP: 38889f00-25dc-11e7-83ce-68b59977951e
+  LB Lib PrePool: 589cf150-25dd-11e7-83ce-68b59977951e
+  LB Hyb: 58d8c1d0-25dd-11e7-83ce-68b59977951e
+  LB Cap Lib: 5903c970-25dd-11e7-83ce-68b59977951e
+  LB Cap Lib PCR: 592a6440-25dd-11e7-83ce-68b59977951e
+  LB Cap Lib PCR-XP: 594fc690-25dd-11e7-83ce-68b59977951e
+  LB Cap Lib Pool: 596e4b10-25dd-11e7-83ce-68b59977951e
+  Stock MX: 9387d884-1c3c-11e2-bcb9-68b59976a382
+  Standard MX: 938ec806-1c3c-11e2-bcb9-68b59976a382
+  Standard sample: 93913032-1c3c-11e2-bcb9-68b59976a382
+  Standard library: 939386f2-1c3c-11e2-bcb9-68b59976a382
+  Stock library: 9395da06-1c3c-11e2-bcb9-68b59976a382
+  ILB_STD_STOCK: 43082ec6-1c3d-11e2-a197-68b59976a382
+  ILB_STD_MX: 4318072e-1c3d-11e2-a197-68b59976a382
+  Lib Pool Norm: fcd61690-e7d7-11e2-ab4e-68b599768938
+  Lib Pool: fcec36a0-e7d7-11e2-ab4e-68b599768938
+  Lib Pool SS-XP-Norm: fcf5d390-e7d7-11e2-ab4e-68b599768938
+  Lib Pool Pippin: fcfead30-e7d7-11e2-ab4e-68b599768938
+  Lib Pool Conc: fd0ae230-e7d7-11e2-ab4e-68b599768938
+  Lib Pool SS: fd108780-e7d7-11e2-ab4e-68b599768938
+  Lib Pool SS-XP: fd1b8400-e7d7-11e2-ab4e-68b599768938
+  ILC Lib Pool Norm: 63c15940-14a2-11e3-ab67-3c4a9275d6c6
+  ILC QC Pool: 63cb9270-14a2-11e3-ab67-3c4a9275d6c6
+  Tag Stock-MX: 4b6aadc0-c568-11e3-ad09-3c4a9275d6c6
+  Tag MX: 4b738760-c568-11e3-ad09-3c4a9275d6c6
+  Cap Lib Pool Norm: 6ffd91f0-ac69-11e4-a64d-68b599768938
+  Legacy MX tube: 702abc70-ac69-11e4-a64d-68b599768938
+  Tag 2 Tube: aa0628b0-313b-11e5-8518-68b599768938
+  PF MiSeq QC: 68a4d860-f028-11e5-980a-3c4a9275d6c8
+  PF MiSeq Stock: 693bc130-f028-11e5-980a-3c4a9275d6c8
+  PF MiSeq QCR: 6949caf0-f028-11e5-980a-3c4a9275d6c8
+  LB Lib Pool: 38b3f4c0-25dc-11e7-83ce-68b59977951e
+  LB Lib Pool Norm: 38e516e0-25dc-11e7-83ce-68b59977951e
