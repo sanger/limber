@@ -1,5 +1,3 @@
-echo 'Packaging gems'
-bundle package
 echo 'Compiling assets'
 bundle exec rake assets:precompile
 echo 'Generating sha'
