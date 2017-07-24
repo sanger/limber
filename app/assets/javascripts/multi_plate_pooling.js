@@ -217,7 +217,7 @@
               newInputs.append(newInput);
             }
           });
-          for (var i in SCAPE.plates[0].preCapPools) { seqPoolOffset +=1 };
+          seqPoolOffset += SCAPE.plates[plateIndex].preCapPools.length;
           $('#new_plate').append(newInputs);
         }
       }
