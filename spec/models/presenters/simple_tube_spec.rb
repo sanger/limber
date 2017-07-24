@@ -16,9 +16,9 @@ describe Presenters::SimpleTubePresenter do
 
   before(:all) do
     Settings.purposes = {
-      'example-purpose-uuid-1' => { name: 'Example Plate Purpose', asset_type: 'plate' },
-      'example-purpose-uuid-2' => { name: 'Example Plate Purpose 2', asset_type: 'plate' },
-      'example-purpose-uuid-3' => { name: 'Example Tube Purpose', asset_type: 'tube' }
+      'example-purpose-uuid-1' => build(:purpose_config, name: 'Example Plate Purpose'),
+      'example-purpose-uuid-2' => build(:purpose_config, name: 'Example Plate Purpose 2'),
+      'example-purpose-uuid-3' => build(:tube_config, name: 'Example Tube Purpose', form_class: 'LabwareCreators::TubeFromTube')
     }
   end
 
@@ -42,10 +42,8 @@ describe Presenters::SimpleTubePresenter do
     end
 
     it 'yields the configured plates' do
-      expect { |b| subject.compatible_plate_purposes(&b) }.to yield_successive_args(
-        ['example-purpose-uuid-1', 'Example Plate Purpose'],
-        ['example-purpose-uuid-2', 'Example Plate Purpose 2']
-      )
+      # No plates, as you can't make plates from tools
+      expect { |b| subject.compatible_plate_purposes(&b) }.not_to yield_control
     end
 
     it 'yields the configured tube' do

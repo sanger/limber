@@ -44,4 +44,14 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # In a few places we have models that receive a file from an uploader
+  # fixture_file_upload() ensures that the tests mimic the live behaviour.
+  # This include make sit available to us. Including it globally causes
+  # issues eleswhere
+  config.include ActionDispatch::TestProcess, with: :uploader
+
+  config.before(:suite) do
+    Webpacker.compile
+  end
 end

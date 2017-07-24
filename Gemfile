@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'formtastic'
 
-gem 'coffee-rails'
+gem 'coffee-rails', require: false
 gem 'rails'
 gem 'sass-rails'
 gem 'uglifier'
@@ -12,6 +12,8 @@ gem 'uglifier'
 # Provides some css helpers
 # Deprecate!
 gem 'compass-rails'
+
+gem 'webpacker', '~> 2.0'
 
 # Required for bootstrap tooltips
 gem 'rails-assets-tether', '>= 1.1.0'
@@ -36,8 +38,9 @@ gem 'exception_notification'
 gem 'hashie'
 
 gem 'sequencescape-client-api', '>= 0.3.3',
-    github: 'sanger/sequencescape-client-api',
-    branch: 'rails_4',
+    # Should be switched back to sanger + rails_4 for deployment
+    github: 'jamesglover/sequencescape-client-api',
+    branch: 'rails_4_rc_li',
     require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
@@ -66,6 +69,7 @@ group :development do
   gem 'web-console'
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
+  gem 'travis'
 end
 
 group :deployment do

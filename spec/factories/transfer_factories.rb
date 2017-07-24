@@ -17,6 +17,12 @@ FactoryGirl.define do
       user { associated :user, uuid: user_uuid }
     end
 
+    factory :transfer_between_specific_tubes do
+      source { associated :multiplexed_library_tube, uuid: source_uuid }
+      destination { associated :multiplexed_library_tube, uuid: destination_uuid }
+      user { associated :user, uuid: user_uuid }
+    end
+
     factory :transfer_to_mx_tubes_by_submission do
       transient do
         target_tubes_count 2

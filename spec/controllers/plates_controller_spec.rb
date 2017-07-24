@@ -15,7 +15,7 @@ describe PlatesController, type: :controller do
   let(:user_uuid) { SecureRandom.uuid }
 
   describe '#show' do
-    before(:each) do
+    before do
       Settings.purposes['stock-plate-purpose-uuid'] = stock_plate_config
       plate_request
       plate_wells_request
@@ -32,7 +32,7 @@ describe PlatesController, type: :controller do
   end
 
   describe '#update' do
-    before(:each) do
+    before do
       Settings.purposes['stock-plate-purpose-uuid'] = stock_plate_config
       plate_request
     end

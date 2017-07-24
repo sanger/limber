@@ -4,7 +4,7 @@ module LabwareCreators
   class TaggedPlate < Base
     include Form::CustomPage
 
-    self.page = 'tagging'
+    self.page = 'tagged_plate'
     self.attributes = %i[
       api purpose_uuid parent_uuid user_uuid
       tag_plate_barcode tag_plate

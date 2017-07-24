@@ -1,9 +1,9 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
+  <%= render(partial: 'labware/qc_data') %>
   <% @presenter.control_tube_display do %>
       <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: @presenter }) %>
   <% end %>
-
 
   <%= card title:'Suggested Actions' do %>
     <% @presenter.control_additional_creation do -%>

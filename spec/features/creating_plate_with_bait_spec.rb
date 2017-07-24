@@ -17,14 +17,10 @@ feature 'Creating a plate with bait', js: true do
   background do
     LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
     Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = {
-      presenter_class: 'Presenters::StandardPresenter',
-      form_class: 'LabwareCreators::BaitedPlate',
-      asset_type: 'plate',
-      name: 'with-baits',
-      parents: ['example-purpose']
-    }
+    Settings.purposes['example-purpose-uuid'] = build :purpose_config
+    Settings.purposes['child-purpose-0'] = build :purpose_config, form_class: 'LabwareCreators::BaitedPlate',
+                                                                  name: 'with-baits',
+                                                                  parents: ['example-purpose']
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate

@@ -8,7 +8,8 @@
       // editing.
       "path": ".",
       "folder_exclude_patterns": [
-        ".bundle"
+        ".bundle",
+        "node_modules"
       ],
       "file_exclude_patterns":[
         "limber.sublime-workspace"

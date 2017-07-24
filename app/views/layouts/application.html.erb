@@ -9,11 +9,15 @@
     <%= stylesheet_link_tag "application" %>
     <%= stylesheet_link_tag "print", :media=>'print' %>
 
-    <%= javascript_include_tag 'underscore', 'application'  %>
+    <%= javascript_include_tag 'application'  %>
+    <%= javascript_pack_tag 'application' %>
+
     <%= csrf_meta_tag %>
   </head>
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
+      <div id='app'>
       <%= yield %>
+      </div>
       <%= render partial: 'loading_modal' %>
       <%= render partial: 'version_information' %>
   </body>

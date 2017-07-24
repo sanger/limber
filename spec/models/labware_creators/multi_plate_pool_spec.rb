@@ -3,9 +3,12 @@
 require 'spec_helper'
 require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
+require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 describe LabwareCreators::MultiPlatePool do
+  it_behaves_like 'it only allows creation from tagged plates'
+
   has_a_working_api(times: :any)
 
   let(:plate_uuid) { 'example-plate-uuid' }
@@ -24,7 +27,7 @@ describe LabwareCreators::MultiPlatePool do
   let(:plate_request) { stub_api_get(plate_uuid, body: plate) }
   let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
 
-  before(:each) do
+  before do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
@@ -49,9 +52,9 @@ describe LabwareCreators::MultiPlatePool do
       LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api))
     end
 
-    it 'renders the "multi_plate_pooling" page' do
+    it 'renders the "multi_plate_pool" page' do
       controller = CreationController.new
-      expect(controller).to receive(:render).with('multi_plate_pooling')
+      expect(controller).to receive(:render).with('multi_plate_pool')
       subject.render(controller)
     end
 

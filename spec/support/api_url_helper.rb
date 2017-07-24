@@ -27,6 +27,7 @@ module ApiUrlHelper
     # @return mocked_request
     def stub_api_get(*components, status: 200, body:)
       stub_request(:get, api_url_for(*components))
+        .with(headers: { 'Accept' => 'application/json' })
         .to_return(
           status: status,
           body: body,

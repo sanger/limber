@@ -2,13 +2,16 @@
 
 require 'spec_helper'
 require 'labware_creators/baited_plate'
+require_relative 'shared_examples'
 
 describe LabwareCreators::BaitedPlate do
+  it_behaves_like 'it only allows creation from plates'
+
   subject do
     LabwareCreators::BaitedPlate.new(form_attributes)
   end
 
-  before(:each) do
+  before do
     LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
   end
 
@@ -29,7 +32,7 @@ describe LabwareCreators::BaitedPlate do
   end
 
   it 'should have page' do
-    expect(LabwareCreators::BaitedPlate.page).to eq 'baiting'
+    expect(LabwareCreators::BaitedPlate.page).to eq 'baited_plate'
   end
 
   context 'create plate' do

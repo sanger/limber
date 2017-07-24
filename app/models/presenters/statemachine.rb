@@ -46,19 +46,23 @@ module Presenters::Statemachine
 
     def compatible_plate_purposes
       purposes_of_type('plate').each do |uuid, hash|
+        next unless LabwareCreators.class_for(uuid).support_parent?(labware)
         yield uuid, hash['name']
       end
     end
 
     def compatible_tube_purposes
       purposes_of_type('tube').each do |uuid, hash|
+        next unless LabwareCreators.class_for(uuid).support_parent?(labware)
         yield uuid, hash['name']
       end
     end
 
     # Eventually this will end up on our labware_creators/creations module
     def purposes_of_type(type)
-      Settings.purposes.select { |_uuid, purpose| purpose.asset_type == type }
+      Settings.purposes.select do |_uuid, purpose|
+        purpose.asset_type == type
+      end
     end
   end
 
