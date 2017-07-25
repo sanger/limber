@@ -1,5 +1,5 @@
 echo 'Compiling assets'
-bundle exec rake assets:precompile
+RAILS_ENV=production bundle exec rake assets:precompile
 echo 'Generating sha'
 git rev-parse HEAD > REVISION
 echo 'Compiling tar.gz'

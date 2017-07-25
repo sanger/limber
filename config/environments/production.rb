@@ -83,7 +83,11 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.admin_email          = 'example@example.com'
+  config.exception_recipients = 'example@example.com'
+  config.disable_exception_notifier = true
+
   # Do not dump schema after migrations.
-  config.active_record.dump_schema_after_migration = false
+  # config.active_record.dump_schema_after_migration = false
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end
