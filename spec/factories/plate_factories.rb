@@ -22,6 +22,7 @@ FactoryGirl.define do
       request_type 'Limber Library Creation'
       stock_plate_barcode 2
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      for_multiplexing false
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -37,7 +38,9 @@ FactoryGirl.define do
           'insert_size' => { from: 100, to: 300 },
           'library_type' => { name: library_type },
           'request_type' => request_type,
-          'pcr_cycles' => pool_prc_cycles[index]
+          'pcr_cycles' => pool_prc_cycles[index],
+          'for_multiplexing' => for_multiplexing,
+          'pool_complete' => false
         }
       end
       pool_hash
@@ -82,6 +85,18 @@ FactoryGirl.define do
     factory :plate_for_pooling do
       purpose_name 'Pooled example'
       pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
+    end
+
+    factory :passed_plate do
+      transient do
+        for_multiplexing true
+        pool_sizes [2, 2]
+        request_type 'limber_multiplexing'
+      end
+    end
+
+    factory :unpassed_plate do
+      pool_sizes [2, 2]
     end
   end
 end

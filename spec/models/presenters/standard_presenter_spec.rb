@@ -4,7 +4,7 @@ describe Presenters::StandardPresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { build :plate, state: state, purpose_name: purpose_name }
+  let(:labware) { build :passed_plate, state: state, purpose_name: purpose_name }
 
   subject do
     Presenters::StandardPresenter.new(
