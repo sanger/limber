@@ -79,6 +79,19 @@ feature 'Viewing a plate', js: true do
     end
   end
 
+  feature 'with passed pools' do
+    let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, pool_sizes: [5] }
+    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content(
+        'Libraries on this plate have already been completed. ' \
+        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+      )
+    end
+  end
+
   feature 'with transfers to tubes' do
     let(:example_plate) { json :plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
     let(:barcode_printer) { 'tube printer 0' }

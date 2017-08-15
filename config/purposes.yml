@@ -57,6 +57,8 @@ LB Lib Pool:
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
   :parents:
   - LB Lib PCR-XP
   - PF Lib XP2
@@ -78,6 +80,9 @@ LB Lib PrePool:
   :input_plate: false
   :default_printer_type: :plate_b
   :csv_template: 'show_extended'
+  :expected_request_types:
+  - limber_isc
+  - limber_reisc
   :parents:
   - LB Lib PCR-XP
 LB Hyb:
@@ -204,6 +209,8 @@ LB Custom Pool:
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
+  :expected_request_types:
+  - :none
   :parents:
   - LB Lib PCR-XP
 LB Custom Pool Norm:

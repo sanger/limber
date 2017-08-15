@@ -11,10 +11,9 @@ class Presenters::PlatePresenter
   attr_accessor :api, :labware
   self.attributes = %i[api labware]
 
-  class_attribute :labware_class, :aliquot_partial, :summary_partial
+  class_attribute :labware_class, :aliquot_partial
   self.labware_class = :plate
   self.aliquot_partial = 'labware/aliquot'
-  self.summary_partial = 'labware/plates/standard_summary'
 
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
@@ -44,6 +43,7 @@ class Presenters::PlatePresenter
             if: :expected_cycles
 
   validates_with Validators::SuboptimalValidator
+  validates_with Validators::InProgressValidator
 
   alias plate labware
   alias plate_to_walk labware
@@ -77,7 +77,15 @@ class Presenters::PlatePresenter
   end
 
   def control_library_passing
-    yield if allow_library_passing?
+    yield if allow_library_passing? && !suggest_library_passing?
+  end
+
+  def control_suggested_library_passing
+    yield if allow_library_passing? && suggest_library_passing?
+  end
+
+  def suggest_library_passing?
+    purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
   end
 
   def tagged?
@@ -137,5 +145,10 @@ class Presenters::PlatePresenter
   def split_location(location)
     match = location.match(/^([A-H])(\d+)/)
     [match[2].to_i, match[1]] # Order by column first
+  end
+
+  def active_request_type
+    return :none if labware.pools.empty?
+    labware.pools.values.first['request_type']
   end
 end

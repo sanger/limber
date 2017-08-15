@@ -23,6 +23,7 @@ FactoryGirl.define do
       stock_plate_barcode 2
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       for_multiplexing false
+      pool_complete false
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -40,7 +41,7 @@ FactoryGirl.define do
           'request_type' => request_type,
           'pcr_cycles' => pool_prc_cycles[index],
           'for_multiplexing' => for_multiplexing,
-          'pool_complete' => false
+          'pool_complete' => pool_complete
         }
       end
       pool_hash
