@@ -162,6 +162,11 @@ module Presenters::Statemachine
           include StateDoesNotAllowChildCreation
           include DoesNotAllowLibraryPassing
         end
+
+        state :unknown do
+          include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
+        end
       end
     end
   end
