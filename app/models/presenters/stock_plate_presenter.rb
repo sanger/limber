@@ -6,6 +6,8 @@ module Presenters
 
     self.well_failure_states = [:passed]
 
+    validates_with Validators::StockStateValidator, if: :pending?
+
     def control_state_change(&_block)
       # You cannot change the state of the stock plate
     end
