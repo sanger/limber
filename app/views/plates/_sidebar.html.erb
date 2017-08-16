@@ -31,14 +31,14 @@
     <% end %>
   <% end %>
 
-  <%= card title:'Other Actions' do %>
+  <%= card title:'Other Actions', css_class: 'other-actions' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(presenter) %>
     <% end %>
 
     <%= presenter.control_additional_creation do %>
-      <div class="btn-group btn-block" role="group">
-        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div role="group">
+        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Stamp other plates
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -53,8 +53,8 @@
         <% end %>
         </div>
       </div>
-      <div class="btn-group btn-block" role="group">
-        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div role="group">
+        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Create tubes
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -71,18 +71,18 @@
       </div>
     <% end %>
 
+    <% presenter.control_library_passing do %>
+      <%= form_tag [presenter.labware, :work_completions] do |f| %>
+        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-secondary" %>
+      <% end %>
+    <% end %>
+
     <% if presenter.well_failing_applicable? %>
-      <button class='btn btn-lg btn-block btn-danger'
+      <button class='fail-wells'
         data-toggle="collapse"
         data-parent="#main-content"
         href="#labware-well-failing"
         aria-controls="labware-well-failing">Fail Wells</button>
-    <% end %>
-
-    <% presenter.control_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-default" %>
-      <% end %>
     <% end %>
 
     <div id="plate-state">

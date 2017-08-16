@@ -2,14 +2,14 @@
     The form should use attriutes on the presenter class not the labware directly.
 %>
 <% presenter.control_state_change do |transitions| %>
-<%= card title: 'Other changes' do %>
-  <%= form_for(
-        presenter.labware,
-        presenter.labware_form_details(self).merge(
-          html: { method: :put },
-          as: :plate
-        )) do |f|
-  %>
+  <%= card title: 'Other changes' do %>
+    <%= form_for(
+          presenter.labware,
+          presenter.labware_form_details(self).merge(
+            html: { method: :put },
+            as: :plate
+          )) do |f|
+    %>
 
     <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
     <%= hidden_field_tag :labware_ean13_barcode, presenter.labware.barcode.ean13 %>
@@ -30,8 +30,8 @@
         <%= label_tag :customer_accepts_responsibility, 'Still charge customer' %>
         <%= check_box_tag :customer_accepts_responsibility, true, false %>
       </div>
-        <%= f.submit 'Change State', class: 'btn btn-lg btn-danger' %>
+        <%= f.submit 'Change State', class: 'btn btn-lg btn-danger btn-block' %>
     </div>
     <% end %>
-<% end %>
+  <% end %>
 <% end %>
