@@ -48,6 +48,8 @@ class Presenters::PlatePresenter
   alias plate labware
   alias plate_to_walk labware
 
+  delegate :tagged?, to: :labware
+
   def number_of_wells
     "#{number_of_filled_wells}/#{total_number_of_wells}"
   end
@@ -86,11 +88,6 @@ class Presenters::PlatePresenter
 
   def suggest_library_passing?
     purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
-  end
-
-  def tagged?
-    first_filled_well = labware.wells.detect { |w| w.aliquots.first }
-    first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
   def control_tube_display

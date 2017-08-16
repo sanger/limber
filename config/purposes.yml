@@ -47,6 +47,9 @@ LB Lib PCR-XP:
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
+  :suggest_library_pass_for:
+  - limber_wgs
+  - limber_lcmb
   :parents:
   - LB Lib PCR
 LB Lib Pool:
@@ -116,6 +119,9 @@ LB Cap Lib PCR-XP:
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
+  :suggest_library_pass_for:
+  - limber_isc
+  - limber_reisc
   :parents:
   - LB Cap Lib PCR
 LB Cap Lib Pool:
@@ -125,6 +131,9 @@ LB Cap Lib Pool:
   :input_plate: false
   :default_printer_type: :plate_b
   :transfer_template: 'Pool wells based on submission'
+  :suggest_library_pass_for:
+  - limber_isc
+  - limber_reisc
   :parents:
   - LB Cap Lib PCR-XP
 Cap Lib Pool Norm:
@@ -199,6 +208,8 @@ PF Lib XP2:
   :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
   :parents:
   - PF Lib XP
 LB Custom Pool:
