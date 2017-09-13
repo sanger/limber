@@ -136,6 +136,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       car('1,4').barcode => { purpose: 'PF End Prep', states: ['pending'], label: 'Carousel 1,4', parent: bed(4).barcode, target_state: 'started' }
     }
   )
+  
+  custom_robot(
+    'bravo-pf-end-prep',
+    name: 'Bravo PF End Preparation',
+    layout: 'bed',
+    beds: {
+      bed(5).barcode => { purpose: 'PF End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+    }
+  )
 
   custom_robot(
     'bravo-pf-post-shear-xp-prep',
