@@ -168,12 +168,12 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   custom_robot(
     'bravo-pf-end-prep-to-pf-lib-xp-2',
-    name: 'Bravo PF End Prep to PF Lib XP 2',
+    name: 'Bravo PF End Prep to PF Lib XP2',
     layout: 'bed',
     beds: {
       bed(5).barcode => { purpose: 'PF End Prep', states: ['passed'], label: 'Bed 5' },
       bed(6).barcode => { purpose: 'PF Lib', states: ['pending'], label: 'Bed 6', target_state: 'passed', parent: bed(5).barcode },
-      car('4,3').barcode => { purpose: 'PF Lib XP 2', states: ['pending'], label: 'Carousel 4,3', target_state: 'passed', parent: bed(6).barcode }
+      car('4,3').barcode => { purpose: 'PF Lib XP2', states: ['pending'], label: 'Carousel 4,3', target_state: 'passed', parent: bed(6).barcode }
     }
   )
 
