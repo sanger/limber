@@ -181,7 +181,7 @@
             if (preCapPool.length)
               well.append(SCAPE.newAliquot(capPoolOffset+poolNumber, seqPoolID, preCapPool.length));
           });
-        for (var i in SCAPE.plates[0].preCapPools) { seqPoolOffset +=1 };
+        for (var i in SCAPE.plates[plateIndex].preCapPools) { seqPoolOffset +=1 };
         }
       }
     };
@@ -197,8 +197,10 @@
         } else {
 
           var preCapPools = SCAPE.plates[plateIndex].preCapPools;
+          var barcode = SCAPE.plates[plateIndex].barcode;
           $('.plate-id-'+plateIndex).show();
           $('.plate-id-'+plateIndex+' .well').empty();
+          $('.plate-id-'+plateIndex+' caption').text(barcode);
           $('#well-transfers-'+plateIndex).detach();
 
           var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-'+plateIndex);

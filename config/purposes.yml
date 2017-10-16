@@ -39,6 +39,7 @@ LB Lib PCR:
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
   :parents:
   - LB End Prep
 LB Lib PCR-XP:
@@ -164,6 +165,13 @@ PF Post Shear XP:
   :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
+PF End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Post Shear
 PF Lib:
@@ -182,6 +190,7 @@ PF Lib:
   - 'PF_adapters_UDI_96_D'
   :parents:
   - PF Post Shear XP
+  - PF End Prep
 PF Lib XP:
   :asset_type: plate
   :stock_plate: false
@@ -189,8 +198,6 @@ PF Lib XP:
   :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
-  :parents:
-  - PF Lib
 PF Lib XP2:
   :asset_type: plate
   :stock_plate: false
@@ -200,6 +207,7 @@ PF Lib XP2:
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Lib XP
+  - PF Lib
 LB Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

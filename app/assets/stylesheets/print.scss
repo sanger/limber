@@ -7,6 +7,8 @@
 @import "compass/css3/border-radius";
 @import "limber_print/print-colours";
 
+#labware-well-failing { display: none; }
+
 h1 {
   font-size:larger;
   display: inline;
@@ -52,12 +54,7 @@ h1 {
   margin:3mm;
   padding:0;
 }
-#labware-summary-div {
-  position: relative;
-}
-#labware-summary-div > div{
- display:none;
-}
+
 #pools-information .ui-li-divider {
  border: solid 1px black;
  margin: 0.5em 0 0 0;
@@ -83,7 +80,7 @@ h1 {
 }
 
 /* Hide all the interactive stuff */
-button, .instructions, .ui-btn, .ui-navbar, #navbar, #plate-view-control, .ui-loader, #labware-summary h2, #samples-information {
+button, .instructions, #navbar, #plate-view-control, .ui-loader, #labware-summary h2, #samples-information, .content-secondary, .spinner-dark, .spinner, .version-info, .static-top {
   display: none !important;
 }
 
