@@ -181,7 +181,7 @@
             if (preCapPool.length)
               well.append(SCAPE.newAliquot(capPoolOffset+poolNumber, seqPoolID, preCapPool.length));
           });
-        for (var i in SCAPE.plates[0].preCapPools) { seqPoolOffset +=1 };
+        for (var i in SCAPE.plates[plateIndex].preCapPools) { seqPoolOffset +=1 };
         }
       }
     };
