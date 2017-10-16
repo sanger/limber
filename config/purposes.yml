@@ -39,6 +39,7 @@ LB Lib PCR:
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
   :parents:
   - LB End Prep
 LB Lib PCR-XP:
