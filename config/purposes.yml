@@ -176,6 +176,10 @@ PF Lib:
   :form_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
   - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+  - 'PF_adapters_UDI_96_A'
+  - 'PF_adapters_UDI_96_B'
+  - 'PF_adapters_UDI_96_C'
+  - 'PF_adapters_UDI_96_D'
   :parents:
   - PF Post Shear XP
 PF Lib XP:

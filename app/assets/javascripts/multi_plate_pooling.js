@@ -197,8 +197,10 @@
         } else {
 
           var preCapPools = SCAPE.plates[plateIndex].preCapPools;
+          var barcode = SCAPE.plates[plateIndex].barcode;
           $('.plate-id-'+plateIndex).show();
           $('.plate-id-'+plateIndex+' .well').empty();
+          $('.plate-id-'+plateIndex+' caption').text(barcode);
           $('#well-transfers-'+plateIndex).detach();
 
           var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-'+plateIndex);
