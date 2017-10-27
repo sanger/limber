@@ -128,6 +128,40 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot(
+    'nx-96-scrna-stock-to-scrna-cdna-xp',
+    name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
+    layout: 'bed',
+    beds: {
+      bed(1).barcode => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 1' },
+      bed(9).barcode   => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
+      bed(2).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 2' },
+      bed(10).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
+      bed(3).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 3' },
+      bed(11).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
+      bed(4).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 4' },
+      bed(12).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
+    }
+  )
+
+  bravo_robot 'started' do
+    from 'scRNA cDNA-XP', bed(4)
+    to 'scRNA End Prep', car('1,4')
+  end
+
+  custom_robot('bravo-scdna-end-prep',
+               name: 'bravo scDNA End Prep',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => { purpose: 'scRNA End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+               })
+
+  bravo_robot do
+    from 'scRNA End Prep', car('1,4')
+    to 'scRNA Lib PCR', bed(6)
+  end
+
+  custom_robot(
     'bravo-pf-post-shear-to-pf-end-prep',
     name: 'Bravo PF Post-Shear => PF End Prep',
     layout: 'bed',
@@ -136,7 +170,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       car('1,4').barcode => { purpose: 'PF End Prep', states: ['pending'], label: 'Carousel 1,4', parent: bed(4).barcode, target_state: 'started' }
     }
   )
-  
+
   custom_robot(
     'bravo-pf-end-prep',
     name: 'Bravo PF End Preparation',
