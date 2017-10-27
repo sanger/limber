@@ -26,6 +26,7 @@ LB End Prep:
   :input_plate: false
   :parents:
   - LB Post Shear
+  - LB cDNA XP
 LB Lib PCR:
   :asset_type: plate
   :stock_plate: false
@@ -34,7 +35,7 @@ LB Lib PCR:
   :presenter_class: Presenters::PcrPresenter
   :form_class: LabwareCreators::TaggedPlate
   warnings:
-    pcr_cycles_no_in:
+    pcr_cycles_not_in:
       - 6
   :tag_layout_templates:
   - Illumina pipeline tagging
@@ -228,6 +229,40 @@ LB Custom Pool Norm:
   :default_printer_type: :tube
   :parents:
   - LB Custom Pool
+LBR Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LBR mRNA Cap:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR Cherrypick
+LBR Frag:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR mRNA Cap
+LB cDNA:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR Frag
+LB cDNA XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB cDNA
 scRNA Stock:
   :asset_type: plate
   :stock_plate: true
