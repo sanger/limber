@@ -22,7 +22,7 @@
         <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
       </div>
       <div id="labware-summary" class='collapse show'>
-        <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
+        <%= render(partial: 'labware/plates/standard_summary', locals: { presenter: @presenter }) %>
       </div>
     <% end %>
   <% end %>

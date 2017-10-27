@@ -63,6 +63,17 @@ FactoryGirl.define do
     factory :suboptimal_aliquot do
       suboptimal true
     end
+
+    factory :tagged_aliquot do
+      tag do
+        {
+          name: 'Tag 1',
+          identifier: 1,
+          oligo: 'ATCG',
+          group: 'My first tag group'
+        }
+      end
+    end
   end
 
   factory :sample, class: Sequencescape::Sample, traits: [:api_object] do

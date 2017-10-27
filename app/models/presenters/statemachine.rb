@@ -37,9 +37,16 @@ module Presenters::Statemachine
       labware.plate_purpose.children.detect(&:not_qc?)
     end
 
+    def compatible_pipeline?(pipelines)
+      pipelines.nil? ||
+        pipelines.include?(active_request_type)
+    end
+
     def suggested_purposes
       Settings.purposes.each do |uuid, purpose_settings|
-        next unless purpose_settings.parents && purpose_settings.parents.include?(labware.plate_purpose.name)
+        next unless purpose_settings.parents &&
+                    purpose_settings.parents.include?(labware.plate_purpose.name) &&
+                    compatible_pipeline?(purpose_settings.expected_request_types)
         yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end
@@ -152,6 +159,11 @@ module Presenters::Statemachine
         end
 
         state :cancelled do
+          include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
+        end
+
+        state :unknown do
           include StateDoesNotAllowChildCreation
           include DoesNotAllowLibraryPassing
         end
