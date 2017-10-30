@@ -222,12 +222,12 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   custom_robot('bravo-lbr-mrna-cap',
-             name: 'bravo LBR mRNA Cap',
-             layout: 'bed',
-             verify_robot: true,
-             beds: {
-               bed(8).barcode => { purpose: 'LBR mRNA Cap', states: ['started'], label: 'Bed 8', target_state: 'passed' }
-             })
+               name: 'bravo LBR mRNA Cap',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR mRNA Cap', states: ['started'], label: 'Bed 8', target_state: 'passed' }
+               })
 
   bravo_robot do
     from 'LBR mRNA Cap', bed(8)
@@ -240,21 +240,20 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   custom_robot('bravo-lb-cdna',
-             name: 'bravo LB cDNA',
-             layout: 'bed',
-             verify_robot: true,
-             beds: {
-               bed(8).barcode => { purpose: 'LB cDNA', states: ['started'], label: 'Bed 8', target_state: 'passed' }
-             })
+               name: 'bravo LB cDNA',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LB cDNA', states: ['started'], label: 'Bed 8', target_state: 'passed' }
+               })
 
   bravo_robot do
     from 'LB cDNA', bed(8)
     to 'LB cDNA XP', car('4,3')
   end
 
-   bravo_robot 'started' do
+  bravo_robot 'started' do
     from 'LB cDNA XP', bed(7)
     to 'LB End Prep', car('1,4')
   end
-
 end

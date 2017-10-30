@@ -25,7 +25,6 @@ describe Presenters::UnknownPlatePresenter do
   end
 
   context 'with a well request' do
-
     before do
       stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
     end
