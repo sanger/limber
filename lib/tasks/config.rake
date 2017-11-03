@@ -61,7 +61,7 @@ namespace :config do
 
       configuration[:submission_templates] = {}.tap do |submission_templates|
         puts 'Preparing submission templates...'
-        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
+#        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
       end
 
       puts 'Setting study...'

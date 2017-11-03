@@ -20,8 +20,6 @@ module Presenters
 
     self.attributes =  %i[api labware]
 
-    class_attribute :tab_states
-
     state_machine :state, initial: :pending do
       event :take_default_path do
         transition pending: :passed

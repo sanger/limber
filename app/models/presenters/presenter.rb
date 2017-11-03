@@ -80,6 +80,8 @@ module Presenters
       "<#{self.class.name} labware:#{labware.uuid} ...>"
     end
 
+    def prepare; end
+
     private
 
     def purpose_config

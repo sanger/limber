@@ -24,6 +24,7 @@ class LabwareController < ApplicationController
 
   def show
     @presenter = presenter_for(@labware)
+    @presenter.prepare
     @presenter.suitable_labware do
       respond_to do |format|
         format.html do
@@ -41,11 +42,11 @@ class LabwareController < ApplicationController
       end
       return
     end
+
     redirect_to(
       search_path,
       notice: @presenter.errors
     )
-    return
   rescue Presenters::UnknownLabwareType => exception
     redirect_to(
       search_path,

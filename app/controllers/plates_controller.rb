@@ -3,7 +3,7 @@
 class PlatesController < LabwareController
   module LabwareWrangler
     def locate_labware_identified_by(id)
-      api.plate.find(id).tap(&:populate_wells_with_pool)
+      api.plate.find(id)
     end
   end
 

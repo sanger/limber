@@ -2,7 +2,7 @@
 
 module Presenters
   class UnknownPlatePresenter < PlatePresenter
-    include Presenters::Statemachine
+    include Presenters::Statemachine::Standard
 
     validate :add_unknown_plate_warnings
 
