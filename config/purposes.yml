@@ -52,6 +52,7 @@ LB Lib PCR-XP:
   :suggest_library_pass_for:
   - limber_wgs
   - limber_lcmb
+  - limber_rnaa
   :parents:
   - LB Lib PCR
 LB Lib Pool:
