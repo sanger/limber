@@ -336,7 +336,7 @@ scRNA Lib Pool XP:
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
-  - scRNA Lib PCR
+  - scRNA Lib Pool
 scRNA Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
