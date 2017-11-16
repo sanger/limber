@@ -5,7 +5,7 @@ module LabwareCreators::SupportParent
   # This is used to work out is we should render the link
   module TubeOnly
     def support_parent?(parent)
-      parent.is_a?(Limber::Tube)
+      parent.is_a?(Sequencescape::Tube)
     end
   end
 end
