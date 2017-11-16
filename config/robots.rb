@@ -129,7 +129,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   custom_robot(
     'nx-96-scrna-stock-to-scrna-cdna-xp',
-    name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
+    name: 'nx-96 scRNA Stock => scRNA cDNA-XP',
     layout: 'bed',
     beds: {
       bed(1).barcode => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 1' },
