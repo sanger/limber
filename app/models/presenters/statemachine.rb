@@ -46,7 +46,8 @@ module Presenters::Statemachine
       Settings.purposes.each do |uuid, purpose_settings|
         next unless purpose_settings.parents &&
                     purpose_settings.parents.include?(labware.plate_purpose.name) &&
-                    compatible_pipeline?(purpose_settings.expected_request_types)
+                    compatible_pipeline?(purpose_settings.expected_request_types) &&
+                    LabwareCreators.class_for(uuid).support_parent?(labware)
         yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end
