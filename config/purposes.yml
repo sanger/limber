@@ -317,6 +317,8 @@ scRNA Lib PCR:
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  :suggest_library_pass_for:
+  - limber_scrna
 scRNA Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
