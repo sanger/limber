@@ -53,6 +53,7 @@ class PurposeConfig
 
   class Plate < PurposeConfig
     def register!
+      puts "Creating #{name}"
       api.plate_purpose.create!(
         name: name,
         stock_plate: config.fetch(:stock_plate, false),

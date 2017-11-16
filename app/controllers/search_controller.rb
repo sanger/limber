@@ -9,50 +9,16 @@ class SearchController < ApplicationController
     @search_results = []
   end
 
-  ## REVIEW: It needs to set the correct ongoing_plate_searching parameter
-  def ongoing_plates(search = 'Find Illumina-B plates')
-    plate_search = api.search.find(Settings.searches[search])
-    states = %w[pending started passed started_fx started_mj qc_complete nx_in_progress]
+  def ongoing_plates
+    plate_search = api.search.find(Settings.searches['Find plates'])
+    @ongoing_plate = OngoingPlate.new(ongoing_plate_search_params)
+    @purpose_options = Settings.purposes.map {|uuid,settings| [settings[:name], uuid] }
 
     @search_results = plate_search.all(
       Limber::Plate,
-      state: states,
-      user_uuid: current_user_uuid
+      @ongoing_plate.search_parameters
     )
-  end
-
-  def ongoing_plates_illumina_a
-    ongoing_plates('Find Illumina-A plates')
     render :ongoing_plates
-  end
-
-  def stock_plates_illumina_a
-    stock_plates('Find Illumina-A stock plates')
-    render :stock_plates
-  end
-
-  def my_plates
-    plate_search = api.search.find(Settings.searches['Find plates for user'])
-    states = %w[pending started passed qc_complete]
-
-    @search_results = plate_search.all(
-      Limber::Plate,
-      state: states,
-      user_uuid: current_user_uuid
-    )
-
-    render :my_plates
-  end
-
-  def stock_plates(search = 'Find Illumina-B stock plates')
-    plate_search = api.search.find(Settings.searches[search])
-    states = %w[pending started passed qc_complete]
-
-    @search_results = plate_search.all(
-      Limber::Plate,
-      state: states,
-      user_uuid: current_user_uuid
-    )
   end
 
   def qcables
@@ -111,5 +77,9 @@ class SearchController < ApplicationController
     respond_to do |format|
       format.json { render json: { 'general' => exception.message }, status: 404 }
     end
+  end
+
+  def ongoing_plate_search_params
+    params.fetch(:ongoing_plate,{}).permit(:show_my_plates_only, :include_used, plate_purposes: [])
   end
 end

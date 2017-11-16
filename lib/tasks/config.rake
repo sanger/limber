@@ -15,6 +15,7 @@ namespace :config do
       PurposeConfig.load(name, options, all_purposes, api)
     end
 
+    puts 'Preparing purposes...'
     tracked_purposes = purpose_config.map do |config|
       all_purposes[config.name] ||= config.register!
     end
