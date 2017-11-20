@@ -98,13 +98,13 @@ feature 'Multi plate pooling', js: true do
     stub_asset_search(plate_barcode_2, example_plate_2)
 
     stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
+    stub_api_get(plate_uuid, 'wells', body: json(:well_collection, aliquot_factory: :tagged_aliquot))
 
     stub_api_get(plate_uuid_2, body: example_plate_2)
-    stub_api_get(plate_uuid_2, 'wells', body: json(:well_collection))
+    stub_api_get(plate_uuid_2, 'wells', body: json(:well_collection, aliquot_factory: :tagged_aliquot))
 
     stub_api_get(child_plate_uuid, body: child_plate)
-    stub_api_get(child_plate_uuid, 'wells', body: json(:well_collection))
+    stub_api_get(child_plate_uuid, 'wells', body: json(:well_collection, aliquot_factory: :tagged_aliquot))
 
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
