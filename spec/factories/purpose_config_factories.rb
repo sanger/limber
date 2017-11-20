@@ -15,6 +15,8 @@ FactoryGirl.define do
       input_plate false
       parents []
       tag_layout_templates nil
+      expected_request_types nil
+      suggest_library_pass_for nil
     end
 
     after(:build) do |hash, evaluator|
@@ -29,7 +31,9 @@ FactoryGirl.define do
         cherrypickable_target: evaluator.cherrypickable_target,
         input_plate: evaluator.input_plate,
         parents: evaluator.parents,
-        tag_layout_templates: evaluator.tag_layout_templates
+        tag_layout_templates: evaluator.tag_layout_templates,
+        expected_request_types: evaluator.expected_request_types,
+        suggest_library_pass_for: evaluator.suggest_library_pass_for
       )
     end
 

@@ -51,6 +51,10 @@ module Presenters
         include Statemachine::StateDoesNotAllowChildCreation
       end
 
+      state :unknown do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
       event :qc_complete do
         transition passed: :qc_complete
       end

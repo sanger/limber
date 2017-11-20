@@ -1,4 +1,4 @@
-<%= card title: 'Attached files', without_block: true do %>
+<%= card title: 'Attach files', without_block: true do %>
   <div class='card-block'>
     <%= form_tag("#{@presenter.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
       <div>

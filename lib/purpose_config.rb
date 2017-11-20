@@ -57,8 +57,7 @@ class PurposeConfig
         name: name,
         stock_plate: config.fetch(:stock_plate, false),
         cherrypickable_target: config.fetch(:cherrypickable_target, false),
-        input_plate: config.fetch(:input_plate, false),
-        parents: parents
+        input_plate: config.fetch(:input_plate, false)
       )
     end
   end

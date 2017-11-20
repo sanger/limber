@@ -35,7 +35,7 @@ describe Presenters::PlatePresenter do
     ]
   end
 
-  subject do
+  subject(:presenter) do
     Presenters::PlatePresenter.new(
       api:     api,
       labware: labware

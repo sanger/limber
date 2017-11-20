@@ -76,6 +76,10 @@ module Presenters
       useful_barcode(labware.stock_plate.try(:barcode))
     end
 
+    def inspect
+      "<#{self.class.name} labware:#{labware.uuid} ...>"
+    end
+
     private
 
     def purpose_config
