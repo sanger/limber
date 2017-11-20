@@ -45,6 +45,20 @@ class Limber::Plate < Sequencescape::Plate
     first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
+  # Plates are ready for pooling once we're in to the multiplex phase of the pipeline
+  # This is indicated by the request type on the pools, and indicates that the plates
+  # have been charged and passed.
+  # We need at least one pool for automatic pooling to function.
+  def ready_for_automatic_pooling?
+    !pools.empty? && pools.all? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
+  end
+
+  # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
+  # require downstream submission and is completely happy with empty pools
+  def ready_for_custom_pooling?
+    pools.all? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
+  end
+
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
   # that were transfered into each.

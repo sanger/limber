@@ -9,7 +9,7 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 describe LabwareCreators::CustomPooledTubes, with: :uploader do
-  it_behaves_like 'it only allows creation from tagged plates'
+  it_behaves_like 'it only allows creation from charged and passed plates'
 
   subject do
     described_class.new(form_attributes.merge(api: api))

@@ -11,7 +11,7 @@ module LabwareCreators
   # of the existing pipeline, and may be removed in future. Essentially, as used currently, the tubes are ACTUALLY part
   # of the previous plate, so are already filled by this stage.
   class FinalTubeFromPlate < Base
-    extend SupportParent::TaggedPlateOnly
+    extend SupportParent::PlateReadyForPoolingOnly
 
     attr_reader :tube_transfer
 

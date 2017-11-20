@@ -15,8 +15,8 @@ describe Presenters::PermissivePresenter do
 
   before(:each) do
     Settings.purposes = {
-      'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose', 'asset_type' => 'plate' },
-      'other-purpose' => { 'parents' => [], 'name' => 'Other purpose', 'asset_type' => 'plate' }
+      'child-purpose' => build(:purpose_config, parents: [purpose_name], name: 'Child purpose'),
+      'other-purpose' => build(:purpose_config, parents: [], name: 'Other purpose')
     }
   end
 

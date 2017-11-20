@@ -39,6 +39,11 @@ body {
 // Bootstrap 4 doesn't seem to do this automatically
 .content-secondary, .content-main { padding-top: 20px; }
 
+#state-changer {
+  label { @include make-col(3); }
+  .custom-select { @include make-col(9); }
+}
+
 dl.metadata, dl#samples-information {
   dt { @include make-col(3); }
   dd { @include make-col(9); }
@@ -58,6 +63,32 @@ dl.metadata, dl#samples-information {
   label {
     font-size: small;
   }
+}
+
+.other-actions {
+  div[role=group] {
+    @extend .btn-group;
+    @extend .btn-block;
+    button { @extend .dropdown-toggle }
+  }
+
+  button {
+    @extend .btn;
+    @extend .btn-block;
+    @extend .btn-lg;
+    @extend .btn-secondary;
+  }
+
+  div[role=group] + form { margin-top: 0.5rem; }
+  #plate-state { margin-top: 0.5rem; }
+
+  button.fail-wells {
+    @extend .btn-danger;
+  }
+}
+
+form + .btn-block {
+  margin-top: 0.5rem;
 }
 
 // Tubes borrow bootstrap styling. We could use the styles directly,
@@ -115,10 +146,10 @@ footer.version-info {
   @extend .text-white;
 
   h3 {
-    @extend .col-2;
+    @extend .col-lg-2;
   }
   ul {
-    @extend .col-10;
+    @extend .col-lg-10;
   }
 }
 

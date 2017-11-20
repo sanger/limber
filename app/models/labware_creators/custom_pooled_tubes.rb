@@ -7,9 +7,9 @@ module LabwareCreators
   # 1 or more wells in each. An individual well may contribute
   # to more than one tube.
   class CustomPooledTubes < PooledTubesBase
-    extend SupportParent::TaggedPlateOnly
     include Form::CustomPage
     extend NestedValidation
+    extend SupportParent::PlateReadyForCustomPoolingOnly
 
     self.page = 'custom_pooled_tubes'
     self.attributes += [:file]

@@ -4,7 +4,8 @@ describe Presenters::StandardPresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { build :plate, state: state, purpose_name: purpose_name }
+  let(:labware) { build :passed_plate, state: state, purpose_name: purpose_name, purpose_uuid: 'test-purpose', uuid: 'plate-uuid' }
+  let(:suggest_passes) { nil }
 
   subject do
     Presenters::StandardPresenter.new(
@@ -28,10 +29,12 @@ describe Presenters::StandardPresenter do
   context 'when passed' do
     before do
       Settings.purposes = {
-        'child-purpose' => { 'parents' => [purpose_name], 'name' => 'Child purpose', 'asset_type' => 'plate', 'form_class' => 'LabwareCreators::Base' },
-        'other-purpose' => { 'parents' => [], 'name' => 'Other purpose', 'asset_type' => 'plate', 'form_class' => 'LabwareCreators::Base' },
-        'tube-purpose' => { 'parents' => [], 'name' => 'Tube purpose', 'asset_type' => 'tube', 'form_class' => 'LabwareCreators::FinalTubeFromPlate' },
-        'incompatible-tube-purpose' => { 'parents' => [], 'name' => 'Incompatible purpose', 'asset_type' => 'tube', 'form_class' => 'LabwareCreators::FinalTube' }
+        'child-purpose' => build(:purpose_config, name: 'Child purpose', parents: [purpose_name]),
+        'child-purpose-2' => build(:purpose_config, name: 'Child purpose 2', parents: [purpose_name], expected_request_types: ['limber_multiplexing']),
+        'other-purpose' => build(:purpose_config, name: 'Other purpose'),
+        'other-purpose-2' => build(:purpose_config, name: 'Other purpose 2', parents: [purpose_name], expected_request_types: ['other_type']),
+        'tube-purpose' => build(:tube_config, name: 'Tube purpose', form_class: 'LabwareCreators::FinalTubeFromPlate'),
+        'incompatible-tube-purpose' => build(:tube_config, name: 'Incompatible purpose', form_class: 'LabwareCreators::FinalTube')
       }
     end
 
@@ -42,13 +45,18 @@ describe Presenters::StandardPresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose', 'plate')
+      expect { |b| subject.suggested_purposes(&b) }.to yield_successive_args(
+        ['child-purpose', 'Child purpose', 'plate'],
+        ['child-purpose-2', 'Child purpose 2', 'plate']
+      )
     end
 
     it 'yields the configured plates' do
       expect { |b| subject.compatible_plate_purposes(&b) }.to yield_successive_args(
         ['child-purpose', 'Child purpose'],
-        ['other-purpose', 'Other purpose']
+        ['child-purpose-2', 'Child purpose 2'],
+        ['other-purpose', 'Other purpose'],
+        ['other-purpose-2', 'Other purpose 2']
       )
     end
 
@@ -69,6 +77,72 @@ describe Presenters::StandardPresenter do
 
     it 'returns the correct number of labels' do
       expect(subject.tube_labels.length).to eq 2
+    end
+  end
+
+  describe '#control_library_passing' do
+    before do
+      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: aliquot_type))
+      Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
+    end
+
+    context 'tagged' do
+      let(:aliquot_type) { :tagged_aliquot }
+
+      context 'and passed' do
+        let(:state) { 'passed' }
+
+        context 'when not suggested' do
+          it 'supports passing' do
+            expect { |b| subject.control_library_passing(&b) }.to yield_control
+          end
+        end
+        context 'when suggested' do
+          let(:suggest_passes) { ['limber_multiplexing'] }
+          it 'supports passing' do
+            expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+          end
+        end
+      end
+
+      context 'and pending' do
+        let(:state) { 'pending' }
+        it 'supports passing' do
+          expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+        end
+      end
+    end
+
+    context 'untagged' do
+      let(:aliquot_type) { :aliquot }
+      context 'and passed' do
+        let(:state) { 'passed' }
+        it 'supports passing' do
+          expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+        end
+      end
+    end
+  end
+
+  describe '#control_suggested_library_passing' do
+    before do
+      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: :tagged_aliquot))
+      Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
+    end
+    let(:suggest_passes) { ['limber_multiplexing'] }
+    context 'and passed' do
+      let(:state) { 'passed' }
+
+      it 'suggests passing' do
+        expect { |b| subject.control_suggested_library_passing(&b) }.to yield_control
+      end
+    end
+    context 'and pending' do
+      let(:state) { 'pending' }
+
+      it 'suggests passing' do
+        expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
+      end
     end
   end
 end
