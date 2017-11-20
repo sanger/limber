@@ -71,7 +71,7 @@ LB Lib Pool:
 LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubePurpose
+  :type: IlluminaHtp::MxTubeNoQcPurpose
   :form_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
@@ -342,7 +342,7 @@ scRNA Lib Pool XP:
 scRNA Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubePurpose
+  :type: IlluminaHtp::MxTubeNoQcPurpose
   :form_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
