@@ -15,6 +15,7 @@ namespace :config do
       PurposeConfig.load(name, options, all_purposes, api)
     end
 
+    puts 'Preparing purposes...'
     tracked_purposes = purpose_config.map do |config|
       all_purposes[config.name] ||= config.register!
     end
@@ -61,7 +62,7 @@ namespace :config do
 
       configuration[:submission_templates] = {}.tap do |submission_templates|
         puts 'Preparing submission templates...'
-        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
+#        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
       end
 
       puts 'Setting study...'

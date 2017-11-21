@@ -4,9 +4,9 @@
      Inboxes
    </button>
    <ul class="dropdown-menu btn-block" aria-labelledby="btnGroupInboxes">
-    <li class='dropdown-item'><%= link_to 'New Input Plates', all_stock_plates_path %></li>
+    <li class='dropdown-item'><%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { plate_purposes: stock_plate_uuids }), params: { plate_purposes: stock_plate_uuids } %></li>
     <li class='dropdown-item'><%= link_to 'All Ongoing Plates', ongoing_plates_path %></li>
-    <li class='dropdown-item'><%= link_to 'My Plates', my_plates_path %></li>
+    <li class='dropdown-item'><%= link_to 'My Plates', ongoing_plates_path(ongoing_plate: { how_my_plates_only: '1' }) %></li>
    </ul>
  </div>
 

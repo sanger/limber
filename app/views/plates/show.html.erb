@@ -18,11 +18,13 @@
         </h2>
       </div>
       <%= render partial: 'warnings', locals: { presenter: @presenter } %>
-      <div id="labware-well-failing" class='collapse'>
-        <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
-      </div>
+      <% if @presenter.well_failing_applicable? %>
+        <div id="labware-well-failing" class='collapse'>
+          <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
+        </div>
+      <% end %>
       <div id="labware-summary" class='collapse show'>
-        <%= render(partial: 'labware/plates/standard_summary', locals: { presenter: @presenter }) %>
+        <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
       </div>
     <% end %>
   <% end %>

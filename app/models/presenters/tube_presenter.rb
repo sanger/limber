@@ -6,14 +6,10 @@ module Presenters
     include Statemachine::Shared
     include RobotControlled
 
-    class_attribute :labware_class
+    class_attribute :labware_class, :summary_items
+
     self.labware_class = :tube
-
     self.attributes =  %i[api labware]
-
-    class_attribute :tab_states
-
-    class_attribute :summary_items
     self.summary_items = {
       'Barcode' => :barcode,
       'Tube type' => :purpose_name,

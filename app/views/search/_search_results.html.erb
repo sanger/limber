@@ -1,23 +1,21 @@
 <%= content do %>
-    <h1><%= search_title %></h1>
-      <%= section do %>
-        <%= form_tag perform_search_path, class: "plate-search-form", method: 'post' do %>
-          <%= label_tag :card_id do %>
-            User Swipecard:
-            <%= text_field_tag :card_id, params[:card_id], class: 'card-id' %>
-          <% end -%>
+  <h1><%= search_title %></h1>
+  <%= section do %>
+    <%= form_for(@ongoing_plate, method: :get) do |f| %>
+      <%= f.label :plate_purposes, 'Select plate purposes' %>
+      <%= f.select :plate_purposes, options_for_select(@purpose_options, @ongoing_plate.plate_purposes), {}, multiple: true, class: 'form-control' %>
+      <%= f.label :show_my_plates_only, 'Show my plates only' %>
+      <%= f.check_box :show_my_plates_only %>
+      <%= f.label :include_used, 'Include used plates' %>
+      <%= f.check_box :include_used %>
+      <%= f.submit 'Update', class: 'btn btn-default' %>
+    <% end %>
+  <% end %>
 
-          <%= hidden_field_tag :'show-my-plates', false, class: 'show-my-plates' %>
-          <%= hidden_field_tag :plate_barcode, params[:plate_barcode], class: 'plate-barcode' %>
-
-        <% end %>
-      <% end %>
-
-      <h2><%= search_status(search_results) %></h2>
-      <% unless search_results.empty? %>
-        <%= section do %>
-          <%= render(partial: 'plate_progress', locals: { plates: search_results }) %>
-        <% end %>
-      <% end %>
-
+  <h2><%= search_status(search_results) %></h2>
+  <% unless search_results.empty? %>
+    <%= section do %>
+      <%= render(partial: 'plate_progress', locals: { plates: search_results }) %>
+    <% end %>
+  <% end %>
 <% end %>

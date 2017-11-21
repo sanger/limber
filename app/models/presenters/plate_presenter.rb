@@ -9,15 +9,14 @@ class Presenters::PlatePresenter
   include Presenters::ExtendedCsv
 
   attr_accessor :api, :labware
-  self.attributes = %i[api labware]
+  class_attribute :labware_class, :aliquot_partial, :summary_partial, :summary_items, :well_failure_states
 
-  class_attribute :labware_class, :aliquot_partial
+  self.attributes = %i[api labware]
+  self.summary_partial = 'labware/plates/standard_summary'
   self.labware_class = :plate
   self.aliquot_partial = 'labware/aliquot'
-
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
-  class_attribute :summary_items
   self.summary_items = {
     'Barcode' => :barcode,
     'Number of wells' => :number_of_wells,
@@ -27,11 +26,6 @@ class Presenters::PlatePresenter
     'PCR Cycles' => :pcr_cycles,
     'Created on' => :created_on
   }
-
-  # This is now generated dynamically by the LabwareHelper
-  class_attribute :tab_states
-
-  class_attribute :well_failure_states
   self.well_failure_states = [:passed]
 
   # Note: Validation here is intended as a warning. Rather than strict validation
@@ -42,7 +36,6 @@ class Presenters::PlatePresenter
                          message: 'differs from standard. %{value} cycles have been requested.' },
             if: :expected_cycles
 
-  validates_with Validators::SuboptimalValidator
   validates_with Validators::InProgressValidator
 
   alias plate labware
@@ -117,6 +110,10 @@ class Presenters::PlatePresenter
 
   def filename(offset = nil)
     "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
+  end
+
+  def prepare
+    plate.populate_wells_with_pool
   end
 
   private
