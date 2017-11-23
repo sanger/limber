@@ -1,0 +1,69 @@
+---
+GBS Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :input_plate: true
+  :size: 384
+GBS PCR1:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :input_plate: false
+  :size: 384
+  :parents:
+    - GBS Stock
+GBS PCR2:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :size: 384
+  :parents:
+    - GBS PCR1
+GBS PCR2 Pool Stock:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: LabwareCreators::PooledTubesByWholePlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - GBS PCR2
+GBS PCR Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - GBS PCR2 Pool Stock
+GBS PCR Pool Selected:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - GBS PCR Pool
+GBS MiSeq Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :form_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - GBS PCR Pool Selected

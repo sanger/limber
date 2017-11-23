@@ -10,6 +10,6 @@ module SearchHelper
   end
 
   def stock_plate_uuids
-    Settings.purposes.select {|uuid,config| config.input_plate }.keys
+    Settings.purposes.select { |_uuid, config| config.input_plate }.keys
   end
 end

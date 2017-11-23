@@ -19,7 +19,7 @@ describe RobotsController, type: :controller do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
       Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
       Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => 'target_plate_barcode' } }, plate)
+      stub_asset_search('target_plate_barcode', plate)
 
       stub_api_post(
         'state_changes',
@@ -67,8 +67,8 @@ describe RobotsController, type: :controller do
       source_plate_barcode = JSON.parse(source_plate)['plate']['barcode']['ean13']
       target_plate_barcode = JSON.parse(target_plate)['plate']['barcode']['ean13']
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => source_plate_barcode } }, source_plate)
-      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => target_plate_barcode } }, target_plate)
+      stub_asset_search(source_plate_barcode, source_plate)
+      stub_asset_search(target_plate_barcode, target_plate)
       stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_plate_barcode } }, source_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with({ 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, 'abc')
       post :verify,

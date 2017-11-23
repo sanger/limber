@@ -39,9 +39,9 @@ feature 'Creating a tag plate', js: true do
                                                                   parents: ['Limber Cherrypicked'],
                                                                   tag_layout_templates: acceptable_templates
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))

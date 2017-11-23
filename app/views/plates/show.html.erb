@@ -3,7 +3,7 @@
     SCAPE.labware = {
       'state':     '<%= @presenter.labware.state %>',
       'tabViews':  {},
-      'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
+      'pools':     <%= @presenter.labware.pools; raw @presenter.labware.pools.to_json %>,
       'uuid':     '<%= @presenter.labware.uuid %>'
     };
   </script>

@@ -22,9 +22,9 @@ feature 'Creating a plate with bait', js: true do
                                                                   name: 'with-baits',
                                                                   parents: ['example-purpose']
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
 
     # These stube are required to render plate show page
     stub_api_get(plate_uuid, body: example_plate)

@@ -116,14 +116,21 @@ class Presenters::PlatePresenter
     plate.populate_wells_with_pool
   end
 
+  #
+  # Returns the total number of wells on the plate
+  # Taken directly from the plate size, so not dependant on the
+  # existence of actual well models.
+  #
+  # @return [Integer] Well count
+  #
+  def total_number_of_wells
+    plate.size
+  end
+
   private
 
   def number_of_filled_wells
     plate.wells.count { |w| w.aliquots.present? }
-  end
-
-  def total_number_of_wells
-    plate.size
   end
 
   def pcr_cycles_specified

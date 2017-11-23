@@ -153,17 +153,19 @@
         addClass(that.plate.state);
     };
 
-    that.well_index_by_row = function(well){
+    // Caution. Only suitable for sorting. Compatible with any plate
+    // size up to 26 columns
+    that.well_index_by_column = function(well){
       var row, col
       row = well.charCodeAt(0)-65;
       col = parseInt(well.slice(1));
-      return (row*12)+col
+      return (row*26)+col
     };
 
     that.poolsArray = function(){
       var poolsArray = _.toArray(that.plate.pools);
       poolsArray = _.sortBy(poolsArray, function(pool){
-        return that.well_index_by_row(pool.wells[0]);
+        return that.well_index_by_column(pool.wells[0]);
       });
 
       return poolsArray;

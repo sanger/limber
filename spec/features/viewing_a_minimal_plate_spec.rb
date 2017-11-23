@@ -9,9 +9,8 @@ feature 'Viewing a plate', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
-  let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
-  let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
+  let(:plate_state) { 'pending' }
+  let(:example_plate) { json :stock_plate, uuid: plate_uuid, size: 384, state: plate_state }
   let(:default_tube_printer) { 'tube printer 1' }
 
   # Setup stubs
@@ -22,9 +21,9 @@ feature 'Viewing a plate', js: true do
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -36,26 +35,43 @@ feature 'Viewing a plate', js: true do
     expect(find('.badge')).to have_content('pending')
   end
 
-  scenario 'if a plate is passed creation of a child is allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_passed_plate)
-    stub_api_get(plate_uuid, body: example_passed_plate)
-    fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('passed')
-    expect(page).to have_button('Add an empty Child Purpose 0 plate')
+  context 'a passed plate' do
+    let(:plate_state) { 'passed' }
+
+    scenario 'if a plate is passed creation of a child is allowed' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.badge')).to have_content('passed')
+      expect(page).to have_button('Add an empty Child Purpose 0 plate')
+    end
   end
 
-  scenario 'if a plate is started creation of a child is not allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_started_plate)
-    stub_api_get(plate_uuid, body: example_started_plate)
-    fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('started')
-    expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+  context 'a started plate' do
+    let(:plate_state) { 'started' }
+
+    scenario 'if a plate is started creation of a child is not allowed' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.badge')).to have_content('started')
+      expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+    end
   end
 
   feature 'with passed pools' do
     let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, pool_sizes: [5] }
+    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content(
+        'Libraries on this plate have already been completed. ' \
+        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+      )
+    end
+  end
+
+  feature 'plates with 384 wells' do
+    let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, size: 384, pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35] }
     let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
 
     scenario 'there is a warning' do

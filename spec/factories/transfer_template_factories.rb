@@ -21,6 +21,12 @@ FactoryGirl.define do
       uuid 'transfer-to-mx-tubes-on-submission'
       transfers nil
     end
+
+    factory :whole_plate_to_tube do
+      name 'Whole plate to tube'
+      uuid 'whole-plate-to-tube'
+      transfers nil
+    end
   end
 
   # Builds all the transfer templates we're going to actually be using.

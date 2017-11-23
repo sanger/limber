@@ -9,10 +9,20 @@ namespace :config do
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
+    puts 'Fetching purposes...'
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
-    purpose_config = YAML.parse_file('config/purposes.yml').to_ruby.map do |name, options|
-      PurposeConfig.load(name, options, all_purposes, api)
+    purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
+      YAML.parse_file(file).to_ruby.each do |name, options|
+        purposes << PurposeConfig.load(name, options, all_purposes, api)
+      end
+    end
+
+    # Check for duplicates: We spread config over multiple files. If we have duplicates its going
+    # to result in strange behaviour. So lets blow up early.
+    if purpose_config.map(&:name).uniq != purpose_config.map(&:name)
+      dupes = purpose_config.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
+      raise StandardError, "Duplicate purpose config detected: #{dupes}"
     end
 
     puts 'Preparing purposes...'
@@ -60,9 +70,9 @@ namespace :config do
       configuration[:robots]      = ROBOT_CONFIG
       configuration[:qc_purposes] = []
 
-      configuration[:submission_templates] = {}.tap do |submission_templates|
+      configuration[:submission_templates] = {}.tap do |_submission_templates|
         puts 'Preparing submission templates...'
-#        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
+        #        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
       end
 
       puts 'Setting study...'

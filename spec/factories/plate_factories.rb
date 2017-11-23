@@ -31,11 +31,11 @@ FactoryGirl.define do
                                'transfer_request_collections'
 
     pools do
-      wells = WellHelpers.column_order.dup
+      wells = WellHelpers.column_order(size).dup
       pool_hash = {}
-      pool_sizes.each_with_index do |size, index|
+      pool_sizes.each_with_index do |pool_size, index|
         pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => wells.shift(size).sort_by { |well| WellHelpers.row_order.index(well) },
+          'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
           'insert_size' => { from: 100, to: 300 },
           'library_type' => { name: library_type },
           'request_type' => request_type,

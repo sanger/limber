@@ -12,7 +12,7 @@ class SearchController < ApplicationController
   def ongoing_plates
     plate_search = api.search.find(Settings.searches['Find plates'])
     @ongoing_plate = OngoingPlate.new(ongoing_plate_search_params)
-    @purpose_options = Settings.purposes.map {|uuid,settings| [settings[:name], uuid] }
+    @purpose_options = Settings.purposes.map { |uuid, settings| [settings[:name], uuid] }
 
     @search_results = plate_search.all(
       Limber::Plate,
@@ -80,6 +80,6 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plate_search_params
-    params.fetch(:ongoing_plate,{}).permit(:show_my_plates_only, :include_used, plate_purposes: [])
+    params.fetch(:ongoing_plate, {}).permit(:show_my_plates_only, :include_used, plate_purposes: [])
   end
 end

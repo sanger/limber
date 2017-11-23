@@ -1,0 +1,80 @@
+---
+LB Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::MinimalPlatePresenter
+LB Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Cherrypick
+LB Post Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Shear
+LB End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB Post Shear
+  - LB cDNA XP
+LB Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PcrPresenter
+  :form_class: LabwareCreators::TaggedPlate
+  warnings:
+    pcr_cycles_not_in:
+      - 6
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
+  :parents:
+  - LB End Prep
+LB Lib PCR-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :suggest_library_pass_for:
+  - limber_wgs
+  - limber_lcmb
+  - limber_rnaa
+  :parents:
+  - LB Lib PCR
+LB Lib Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :form_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - LB Lib PCR-XP
+  - PF Lib XP2
+LB Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :form_class: LabwareCreators::FinalTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :state_changer_class: StateChangers::DefaultStateChanger
+  :default_printer_type: :tube
+  :parents:
+  - LB Lib Pool

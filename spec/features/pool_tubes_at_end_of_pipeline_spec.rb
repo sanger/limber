@@ -40,9 +40,9 @@ feature 'Pool tubes at end of pipeline', js: true do
                                                                 form_class: 'LabwareCreators::FinalTube',
                                                                 parents: ['Example Purpose']
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the tube
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => tube_barcode } }, example_tube)
+    stub_asset_search(tube_barcode, example_tube)
     # We get the actual tube
     stub_api_get(tube_uuid, body: example_tube)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))

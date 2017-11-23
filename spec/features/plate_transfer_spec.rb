@@ -24,11 +24,7 @@ feature 'Plate transfer', js: true do
     Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
 
     # # We look up the user
-    stub_search_and_single_result(
-      'Find user by swipecard code',
-      { 'search' => { 'swipecard_code' => swipecard } },
-      user
-    )
+    stub_swipecard_search(swipecard, user)
 
     stub_custom_metdatum_collections_post
     stub_state_changes_post
@@ -59,10 +55,7 @@ feature 'Plate transfer', js: true do
 
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
     Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-    stub_search_and_single_result(
-      'Find assets by barcode',
-      { 'search' => { 'barcode' => plate_barcode_2 } }, example_plate
-    )
+    stub_asset_search(plate_barcode_2, example_plate)
 
     fill_in_swipecard(swipecard)
 
@@ -108,11 +101,7 @@ feature 'Plate transfer', js: true do
 
   scenario 'informs if the robot barcode is wrong' do
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_search_and_single_result(
-      'Find assets by barcode',
-      { 'search' => { 'barcode' => plate_barcode_1 } },
-      example_plate_without_metadata
-    )
+    stub_asset_search(plate_barcode_1, example_plate_without_metadata)
 
     fill_in_swipecard(swipecard)
 
@@ -139,11 +128,7 @@ feature 'Plate transfer', js: true do
 
   scenario 'verifies robot barcode' do
     Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_search_and_single_result(
-      'Find assets by barcode',
-      { 'search' => { 'barcode' => plate_barcode_1 } },
-      example_plate_with_metadata
-    )
+    stub_asset_search(plate_barcode_1, example_plate_with_metadata)
     stub_api_get(
       'custom_metadatum_collection-uuid',
       body: json(

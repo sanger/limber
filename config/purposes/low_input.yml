@@ -1,0 +1,35 @@
+---
+LBR Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LBR mRNA Cap:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR Cherrypick
+LBR Frag:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR mRNA Cap
+LB cDNA:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LBR Frag
+LB cDNA XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - LB cDNA

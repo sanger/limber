@@ -42,6 +42,7 @@ class PurposeConfig
     self.default_printer = :tube
 
     def register!
+      puts "Registering #{name}"
       api.tube_purpose.create!(
         name: name,
         parents: parents,
@@ -58,7 +59,8 @@ class PurposeConfig
         name: name,
         stock_plate: config.fetch(:stock_plate, false),
         cherrypickable_target: config.fetch(:cherrypickable_target, false),
-        input_plate: config.fetch(:input_plate, false)
+        input_plate: config.fetch(:input_plate, false),
+        size: config.fetch(:size, 96)
       )
     end
   end
