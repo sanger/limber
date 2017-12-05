@@ -10,7 +10,7 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plates
-    plate_search = api.search.find(Settings.searches['Find plates'])
+    plate_search = api.search.find(Settings.searches.fetch('Find plates'))
     @ongoing_plate = OngoingPlate.new(ongoing_plate_search_params)
     @purpose_options = Settings.purposes.map { |uuid, settings| [settings[:name], uuid] }
 

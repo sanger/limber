@@ -2,19 +2,19 @@
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
        $.extend(SCAPE, {
-        tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-        tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>
+        tag_layouts:  <%= @creator_form.tag_groups.to_json.html_safe %>,
+        tag2s:  <%= @creator_form.tag2s.to_json.html_safe %>
        });
      })(window,jQuery);
   </script>
-  <% form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@creator_form, as: :plate, url: limber_plate_children_path(@creator_form.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">
-          <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
+          <%= render partial: 'plates/plate', locals: { plate_presenter: @creator_form, id: 'tagging-plate' } %>
         </div>
         <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag plate', :form=>f} %>
-        <% @creation_form.tag2_field do -%>
+        <% @creator_form.tag2_field do -%>
           <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag2 tube', :form=>f } %>
         <% end %>
       <% end %>
@@ -23,7 +23,7 @@
     <%= sidebar do %>
       <%= card title: 'Tag plate addition' do %>
         <ol>
-          <% @creation_form.tag2_field do -%>
+          <% @creator_form.tag2_field do -%>
             <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
           <% end %>
           <li>Scan a target tag plate into 'Tag plate barcode'.</li>
@@ -38,8 +38,8 @@
         <%= f.hidden_field :parent_uuid %>
         <%= f.label :tag_plate_barcode %>
         <%= f.text_field :tag_plate_barcode, data: {'info-panel'=>'tag-plate-info', 'qcable-type'=>'IDT Tags','approved-list'=>'tag_layouts'}, class: 'form-control' %>
-        <% @creation_form.tag2_field do -%>
-            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+        <% @creator_form.tag2_field do -%>
+            <p><em>Available templates:</em> <%= @creator_form.tag2_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
             <%= f.text_field :tag2_tube_barcode, data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag 2 Tubes', 'approved-list'=>'tag2s'}, class: 'form-control' %>
         <% end -%>

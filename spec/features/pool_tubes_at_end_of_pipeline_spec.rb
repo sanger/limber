@@ -37,7 +37,7 @@ feature 'Pool tubes at end of pipeline', js: true do
     Settings.purposes['example-purpose-uuid'] = build :tube_config, name: 'Example Purpose'
     Settings.purposes[child_purpose_uuid] = build :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
                                                                 name: 'Final Tube Purpose',
-                                                                form_class: 'LabwareCreators::FinalTube',
+                                                                creator_class: 'LabwareCreators::FinalTube',
                                                                 parents: ['Example Purpose']
     # We look up the user
     stub_swipecard_search(user_swipecard, user)

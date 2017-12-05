@@ -8,7 +8,7 @@ module Presenters::ExtendedCsv
     end
   end
 
-  # Yields information for the show_pooled.csv
+  # Yields information for the show_extended.csv
   def each_well_transfer(offset = 0)
     index = 0
     transfers_for_csv[offset * 4...(offset + 1) * 4].each_with_index do |transfers_list, bed_index|

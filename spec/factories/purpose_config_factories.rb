@@ -5,7 +5,7 @@ FactoryGirl.define do
   factory :purpose_config, class: Hash do
     transient do
       name 'Plate Purpose'
-      form_class 'LabwareCreators::Base'
+      creator_class 'LabwareCreators::Base'
       presenter_class 'Presenters::StandardPresenter'
       state_changer_class 'StateChangers::DefaultStateChanger'
       default_printer_type :plate_a
@@ -22,7 +22,7 @@ FactoryGirl.define do
     after(:build) do |hash, evaluator|
       hash.merge!(
         name: evaluator.name,
-        form_class: evaluator.form_class,
+        creator_class: evaluator.creator_class,
         presenter_class: evaluator.presenter_class,
         state_changer_class: evaluator.state_changer_class,
         default_printer_type: evaluator.default_printer_type,

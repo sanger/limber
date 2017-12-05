@@ -10,6 +10,8 @@ module LabwareCreators
     class_attribute :aliquot_partial
     self.aliquot_partial = 'plates/baited_aliquot'
 
+    delegate :height, :width, :size, to: :plate
+
     def plate
       parent
     end

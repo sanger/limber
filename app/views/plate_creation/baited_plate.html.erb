@@ -3,7 +3,7 @@
     <h2>Baited Plate Preview</h2>
     <div>
       <div>
-        <%= render partial: "plates/plate", locals: {plate_presenter: @creation_form}  %>
+        <%= render partial: "plates/plate", locals: {plate_presenter: @creator_form}  %>
       </div>
     </div>
     <br/>
@@ -18,7 +18,7 @@
       </div>
       <div class='card-block'>
         <ul id="key" class="list-group">
-          <%- @creation_form.baits.each do |bait| -%>
+          <%- @creator_form.baits.each do |bait| -%>
               <li class="list-group-item">
                 <div class="tube-view">
                   <div class="aliquot <%= bait_colour(bait) %>">&nbsp;</div>
@@ -27,9 +27,9 @@
               </li>
           <%- end -%>
         </ul>
-        <%= semantic_form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: {method: :post}) do |f| %>
-          <%= f.hidden_field :purpose_uuid, as: :hidden, value:@creation_form.purpose_uuid %>
-          <%= f.hidden_field :parent_uuid, as: :hidden, value: @creation_form.parent_uuid %>
+        <%= semantic_form_for(@creator_form, as: :plate, url: limber_plate_children_path(@creator_form.parent), html: {method: :post}) do |f| %>
+          <%= f.hidden_field :purpose_uuid, as: :hidden, value:@creator_form.purpose_uuid %>
+          <%= f.hidden_field :parent_uuid, as: :hidden, value: @creator_form.parent_uuid %>
           <%= f.submit'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
         <% end %>
       </div>

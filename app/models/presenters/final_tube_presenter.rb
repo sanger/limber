@@ -21,7 +21,7 @@ module Presenters
     self.attributes =  %i[api labware]
 
     state_machine :state, initial: :pending do
-      event :take_default_path do
+      event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed
       end
 

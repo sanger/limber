@@ -41,10 +41,10 @@ class Presenters::PlatePresenter
   alias plate labware
   alias plate_to_walk labware
 
-  delegate :tagged?, to: :labware
+  delegate :tagged?, :width, :height, :size, to: :labware
 
   def number_of_wells
-    "#{number_of_filled_wells}/#{total_number_of_wells}"
+    "#{number_of_filled_wells}/#{size}"
   end
 
   def pcr_cycles
@@ -114,17 +114,6 @@ class Presenters::PlatePresenter
 
   def prepare
     plate.populate_wells_with_pool
-  end
-
-  #
-  # Returns the total number of wells on the plate
-  # Taken directly from the plate size, so not dependant on the
-  # existence of actual well models.
-  #
-  # @return [Integer] Well count
-  #
-  def total_number_of_wells
-    plate.size
   end
 
   private

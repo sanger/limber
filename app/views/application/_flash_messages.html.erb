@@ -1,0 +1,7 @@
+<div id="flashes">
+  <% flash.each do |name, message| %>
+    <div class="row alert alert-<%= flash_style(name) %>">
+      <h3><%= name %></h3><% Array(message).each do |m| %> <%= m %> <% end %>
+    </div>
+  <% end %>
+</div>

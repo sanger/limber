@@ -55,6 +55,6 @@ module PlateHelper
   end
 
   def current_plate
-    (@creation_form || @presenter).labware
+    (@creator_form || @presenter).labware
   end
 end

@@ -7,10 +7,14 @@ module Presenters
     self.well_failure_states = []
 
     def number_of_wells
-      total_number_of_wells
+      size
     end
 
     # This is a lie.
+    # TODO: Work out a more elegant way to handle this
+    # We may not actually need to, as this is mainly used to work out
+    # if we should allow library passing. Which I'm not sure we want to allow anyway
+    # for most minimal plates.
     def tagged?
       true
     end

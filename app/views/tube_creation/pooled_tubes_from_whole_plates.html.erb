@@ -1,19 +1,6 @@
 <%= page(:'multi-plate-pooling-page') do %>
   <%= content do %>
-    <%= card without_block: true, id: 'main-content' do %>
-      <div id="labware-summary-div">
-        <div class="card-block bg-inverse text-white">
-          <div id="output-plate-block" class="scape-ui-block">
-            <h3>Target Plate</h3>
-            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @creator_form, css_class: "destination-plate"} %>
-          </div>
-          <h3>Source Plates</h3>
-            <% 4.times do |plate_id| %>
-              <%= render partial: "plates/empty_plate", locals: {css_class: "source-plate plate-id-#{plate_id}"} %>
-            <% end %>
-        </div>
-      </div>
-    <% end %>
+    <%= render(partial: './search/plate_progress', locals: { plates: @creator_form.available_plates }) %>
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>
@@ -26,19 +13,19 @@
       <div class="card-block">
       <%= form_for(
         @creator_form,
-        url: limber_plate_children_path(@creator_form.parent),
-        as: :plate,
+        url: limber_plate_tubes_path(@creator_form.parent),
+        as: :tube,
         html: { method: :post }) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
         <% 4.times do |i| %>
           <div class="plate-container scan-plate form-group row">
-            <label for="plate[<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
-            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
+            <label for="tube[barocdes][<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
+            <input id="tube[barocdes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
           </div>
         <% end %>
-        <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware' %>
+        <%= form.submit 'Make Pool', class: 'btn btn-success btn-lg', id: 'create-labware' %>
       <% end %>
       </div>
        <ul id="pooling-summary" class="list-group"></ul>

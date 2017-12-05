@@ -10,10 +10,10 @@ describe LabwareCreators do
 
   before do
     Settings.purposes[basic_purpose] = {
-      form_class: 'LabwareCreators::Base'
+      creator_class: 'LabwareCreators::Base'
     }
     Settings.purposes[tagged_purpose] = {
-      form_class: 'LabwareCreators::TaggedPlate'
+      creator_class: 'LabwareCreators::TaggedPlate'
     }
   end
 

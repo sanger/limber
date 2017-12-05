@@ -47,7 +47,7 @@ PF Lib:
   :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::PermissivePresenter
-  :form_class: LabwareCreators::TaggedPlate
+  :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
   - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
   - 'PF_adapters_UDI_96_A'

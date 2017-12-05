@@ -13,7 +13,7 @@ module Form
     # redirect.  If you have a special form to display include Form::CustomPage
     def render(controller)
       raise StandardError, "Not saving #{self.class} form...." unless save!
-      controller.redirect_to_form_destination(self)
+      controller.redirect_to_creator_child(self)
     end
   end
 

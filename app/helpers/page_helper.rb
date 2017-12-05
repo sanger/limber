@@ -21,7 +21,7 @@ module PageHelper
   DEFAULT_STATE_STYLE = 'default'
 
   def flash_messages
-    render(partial: 'labware/flash_messages')
+    render(partial: 'application/flash_messages')
   end
 
   def grouping(_data_role, options = {}, &block)

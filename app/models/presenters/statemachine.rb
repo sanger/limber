@@ -76,6 +76,13 @@ module Presenters::Statemachine
 
   # These are shared base methods to be used in all presenter state_machines
   module Shared
+    def self.included(base)
+      base.class_eval do
+        # Determines the scope to use when looking up state transitions
+        class_attribute :state_transition_name_scope
+        self.state_transition_name_scope = :default
+      end
+    end
     #--
     # We ignore the assignment of the state because that is the statemachine getting in before
     # the plate has been loaded.
@@ -115,7 +122,7 @@ module Presenters::Statemachine
   module StateTransitions #:nodoc:
     def self.inject(base)
       base.instance_eval do
-        event :take_default_path do
+        event :take_default_path, human_name: 'Manual Transfer' do
           transition pending: :passed
         end
 

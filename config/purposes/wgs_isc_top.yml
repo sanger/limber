@@ -33,7 +33,7 @@ LB Lib PCR:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
-  :form_class: LabwareCreators::TaggedPlate
+  :creator_class: LabwareCreators::TaggedPlate
   warnings:
     pcr_cycles_not_in:
       - 6
@@ -59,7 +59,7 @@ LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: LabwareCreators::PooledTubesBySubmission
+  :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -72,7 +72,7 @@ LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubeNoQcPurpose
-  :form_class: LabwareCreators::FinalTube
+  :creator_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube

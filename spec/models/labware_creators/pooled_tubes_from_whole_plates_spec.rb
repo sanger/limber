@@ -12,6 +12,8 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
   it_behaves_like 'it only allows creation from tagged plates'
 
+ # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
+
   subject { described_class.new(form_attributes.merge(api: api)) }
 
   it 'should have page' do
@@ -40,25 +42,15 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     ]
   end
 
-  let(:wells_json) { json :well_collection, size: 16, default_state: 'passed' }
-
   before do
     Settings.transfer_templates['Whole plate to tube'] = 'whole-plate-to-tube'
   end
 
   describe '#new' do
+    it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
     has_a_working_api
 
-    let(:form_attributes) do
-      {
-        purpose_uuid: purpose_uuid,
-        parent_uuid:  parent_uuid
-      }
-    end
-
-    it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PooledTubesFromWholePlates
-    end
+    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid:  parent_uuid } }
   end
 
   describe '#save!' do

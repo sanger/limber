@@ -34,7 +34,7 @@ feature 'Creating a tag plate', js: true do
     # Set-up the plate config
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config # { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = build :purpose_config, form_class: 'LabwareCreators::TaggedPlate',
+    Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::TaggedPlate',
                                                                   name: 'Tag Purpose',
                                                                   parents: ['Limber Cherrypicked'],
                                                                   tag_layout_templates: acceptable_templates

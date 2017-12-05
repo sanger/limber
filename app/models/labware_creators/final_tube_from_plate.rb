@@ -20,10 +20,6 @@ module LabwareCreators
     def create_labware!
       transfer_into_existing_tubes!
       pass_tubes!
-    rescue Sequencescape::Api::ResourceInvalid => e
-      Rails.logger.error(e.message)
-      Rails.logger.error(e.backtrace)
-      false
     end
 
     def parent

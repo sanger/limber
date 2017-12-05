@@ -4,6 +4,24 @@ class Limber::Plate < Sequencescape::Plate
   # Customize the has_many association to use out custom class.
   has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
 
+  #
+  # The width of the plate. Assumes a 4:3 ratio
+  #
+  # @return [Integer] Plate width in wells
+  #
+  def width
+    Math.sqrt(size/6).to_i * 3
+  end
+
+  #
+  # The height of the plate. Assumes a 4:3 ratio
+  #
+  # @return [Integer] Plate height in wells
+  #
+  def height
+    Math.sqrt(size/6).to_i * 2
+  end
+
   def library_type_name
     uuid = pools.keys.first
     uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']

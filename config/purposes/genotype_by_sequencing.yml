@@ -3,15 +3,16 @@ GBS Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPlatePresenter
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: true
   :size: 384
 GBS PCR1:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPlatePresenter
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
+  :creator_class: LabwareCreators::BaitedPlate
   :size: 384
   :parents:
     - GBS Stock
@@ -19,6 +20,12 @@ GBS PCR2:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
+  :presenter_class: Presenters::MinimalPlatePresenter
   :input_plate: false
   :size: 384
   :parents:
@@ -27,7 +34,7 @@ GBS PCR2 Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: LabwareCreators::PooledTubesByWholePlate
+  :creator_class: LabwareCreators::PooledTubesFromWholePlates
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -37,7 +44,7 @@ GBS PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: LabwareCreators::TubeFromTube
+  :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -49,7 +56,7 @@ GBS PCR Pool Selected:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :form_class: LabwareCreators::TubeFromTube
+  :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -61,7 +68,7 @@ GBS MiSeq Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubeNoQcPurpose
-  :form_class: LabwareCreators::TubeFromTube
+  :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube

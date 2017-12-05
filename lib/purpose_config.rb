@@ -27,7 +27,7 @@ class PurposeConfig
   def config
     {
       name: name,
-      form_class: 'LabwareCreators::Base',
+      creator_class: 'LabwareCreators::Base',
       presenter_class: 'Presenters::StandardPresenter',
       state_changer_class: 'StateChangers::DefaultStateChanger',
       default_printer_type: default_printer

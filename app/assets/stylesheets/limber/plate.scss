@@ -48,6 +48,29 @@
   }
 }
 
+.plate-view.plate-384 {
+  padding: 5px;
+  border-collapse: separate;
+  font-size: 50%;
+
+  th.first-col {
+    width: 15px;
+  }
+
+  .well {
+    height:18px;
+    width:18px;
+
+    .aliquot {
+      width:16px;
+      height:16px;
+      margin-top: 1px;
+      border: 1px $gray-dark solid;
+      @include border-radius(3px);
+    }
+  }
+}
+
 @mixin labware-view {
   .green             { background-color: $brand-success; }
   .red               { background-color: $brand-danger; }

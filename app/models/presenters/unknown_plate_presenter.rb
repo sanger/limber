@@ -14,11 +14,11 @@ module Presenters
       errors.add(:plate, "type '#{labware.purpose.name}' is not a limber plate. Perhaps you are using the wrong pipeline application?")
     end
 
-    def control_state_change(&_block)
+    def control_state_change
       # You cannot change the state of the stock plate
     end
 
-    def default_state_change(&_block)
+    def default_state_change
       # You cannot change the state of the stock plate
     end
 

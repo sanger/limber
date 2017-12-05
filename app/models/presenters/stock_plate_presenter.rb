@@ -9,11 +9,11 @@ module Presenters
     validates_with Validators::SuboptimalValidator
     validates_with Validators::StockStateValidator, if: :pending?
 
-    def control_state_change(&_block)
+    def control_state_change
       # You cannot change the state of the stock plate
     end
 
-    def default_state_change(&_block)
+    def default_state_change
       # You cannot change the state of the stock plate
     end
   end
