@@ -76,12 +76,12 @@ module Presenters::Statemachine
 
   # These are shared base methods to be used in all presenter state_machines
   module Shared
-    def self.included(base)
-      base.class_eval do
-        # Determines the scope to use when looking up state transitions
-        class_attribute :state_transition_name_scope
-        self.state_transition_name_scope = :default
-      end
+    extend ActiveSupport::Concern
+
+    included do
+      # Determines the scope to use when looking up state transitions
+      class_attribute :state_transition_name_scope
+      self.state_transition_name_scope = :default
     end
 
     #--

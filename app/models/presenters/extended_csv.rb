@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Presenters::ExtendedCsv
-  def self.included(base)
-    base.class_eval do
-      class_attribute :bed_prefix
-      self.bed_prefix = 'PCRXP'
-    end
+  extend ActiveSupport::Concern
+  included do
+    class_attribute :bed_prefix
+    self.bed_prefix = 'PCRXP'
   end
 
   # Yields information for the show_extended.csv

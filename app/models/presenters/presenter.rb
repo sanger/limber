@@ -3,15 +3,15 @@
 require_dependency 'presenters'
 module Presenters
   module Presenter
-    def self.included(base)
-      base.class_eval do
-        include Form
-        include BarcodeLabelsHelper
-        self.page = 'show'
+    extend ActiveSupport::Concern
 
-        def csv
-          purpose_config.fetch(:csv_template, 'show')
-        end
+    included do
+      include Form
+      include BarcodeLabelsHelper
+      self.page = 'show'
+
+      def csv
+        purpose_config.fetch(:csv_template, 'show')
       end
     end
 

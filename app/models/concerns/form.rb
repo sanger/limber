@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Form
+  extend ActiveSupport::Concern
+
   module CustomPage
     # We need to do something special at this point in order to create the plate.
     def render(controller)
@@ -17,21 +19,19 @@ module Form
     end
   end
 
-  def self.included(base)
-    base.class_eval do
-      extend ActiveModel::Naming
-      include ActiveModel::Conversion
-      include ActiveModel::Validations
-      include NoCustomPage
+  included do
+    extend ActiveModel::Naming
+    include ActiveModel::Conversion
+    include ActiveModel::Validations
+    include NoCustomPage
 
-      class_attribute :page
-      self.page = 'new'
+    class_attribute :page
+    self.page = 'new'
 
-      class_attribute :aliquot_partial
-      self.aliquot_partial = 'labware/aliquot'
+    class_attribute :aliquot_partial
+    self.aliquot_partial = 'labware/aliquot'
 
-      class_attribute :attributes
-    end
+    class_attribute :attributes
   end
 
   # We should probably use active model model, but need to clean up some forms
