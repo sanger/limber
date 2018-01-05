@@ -10,6 +10,8 @@ module LabwareCreators
     self.page = 'pooled_tubes_from_whole_plates'
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid barcodes]
 
+    self.default_transfer_template_name = 'Whole plate to tube'
+
     validate :parents_suitable
 
     def create_labware!
@@ -49,14 +51,6 @@ module LabwareCreators
     def parents_suitable
       missing_barcodes = barcodes.reject(&:blank?) - parents.map {|p| p.barcode.ean13 }
       errors.add(:barcodes, "could not be found: #{missing_barcodes}") unless missing_barcodes.empty?
-    end
-
-    private
-
-    def transfer_template
-      api.transfer_template.find(
-        Settings.transfer_templates['Whole plate to tube']
-      )
     end
   end
 end

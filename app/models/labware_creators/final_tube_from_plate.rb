@@ -15,7 +15,7 @@ module LabwareCreators
 
     attr_reader :tube_transfer
 
-    self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to MX library tubes by submission']
+    self.default_transfer_template_name = 'Transfer wells to MX library tubes by submission'
 
     def create_labware!
       transfer_into_existing_tubes!
@@ -38,7 +38,7 @@ module LabwareCreators
     private
 
     def transfer_into_existing_tubes!
-      @transfer ||= api.transfer_template.find(default_transfer_template_uuid).create!(
+      @transfer ||= api.transfer_template.find(transfer_template_uuid).create!(
         user: user_uuid,
         source: parent_uuid
       )

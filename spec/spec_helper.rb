@@ -123,7 +123,13 @@ RSpec.configure do |config|
   config.before(:suite) do
     FactoryGirl.find_definitions
     Settings.robots = {}
-    Settings.transfer_templates = {}
+    Settings.transfer_templates = {
+      'Transfer columns 1-12' => 'transfer-1-12',
+      'Transfer wells to MX library tubes by submission' => 'transfer-to-mx-tubes-on-submission',
+      'Custom pooling' => 'custom-pooling',
+      'Transfer from tube to tube by submission' => 'tube-to-tube-by-sub',
+      'Whole plate to tube' => 'whole-plate-to-tube'
+    }
   end
 
   config.before(:each) do

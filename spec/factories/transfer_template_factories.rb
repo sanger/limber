@@ -10,6 +10,18 @@ FactoryGirl.define do
     transfers('A1' => 'A1', 'B1' => 'B1')
     uuid 'transfer-template-uuid'
 
+    factory :transfer_custom_pooling do
+      name 'Custom pooling'
+      uuid 'custom-pooling'
+      transfers nil
+    end
+
+    factory :transfer_1_12 do
+      name 'Transfer columns 1-12'
+      uuid 'transfer-1-12'
+      transfers WellHelpers.stamp_hash(96)
+    end
+
     factory :transfer_to_specific_tubes_by_submission do
       name 'Transfer wells to specific tubes defined by submission'
       uuid 'transfer-to-wells-by-submission-uuid'
@@ -40,7 +52,7 @@ FactoryGirl.define do
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}transfer_templates" }
       uuid nil
-      available_templates %i[transfer_template transfer_to_specific_tubes_by_submission]
+      available_templates %i[transfer_template transfer_to_specific_tubes_by_submission transfer_custom_pooling]
     end
 
     transfer_templates do

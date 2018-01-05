@@ -11,11 +11,10 @@ feature 'Creating a plate with bait', js: true do
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:example_plate)         { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
-  let(:transfer_template_uuid) { 'transfer-columns-uuid' }
+  let(:transfer_template_uuid) { 'transfer-1-12' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   background do
-    LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
     Settings.purposes = {}
     Settings.purposes['example-purpose-uuid'] = build :purpose_config
     Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::BaitedPlate',

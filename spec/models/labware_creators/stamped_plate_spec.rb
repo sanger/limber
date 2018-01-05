@@ -18,7 +18,7 @@ describe LabwareCreators::StampedPlate do
   let(:plate) { json :plate, uuid: parent_uuid, barcode_number: '2', size: plate_size }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -33,8 +33,6 @@ describe LabwareCreators::StampedPlate do
     Settings.purposes = {
       child_purpose_uuid => build(:purpose_config, name: child_purpose_name)
     }
-    LabwareCreators::StampedPlate.default_transfer_template_uuid = transfer_template_uuid
-    Settings.transfer_templates['Custom pooling'] = transfer_template_uuid
     plate_request
     wells_request
   end
@@ -77,7 +75,7 @@ describe LabwareCreators::StampedPlate do
         stub_api_get(transfer_template_uuid, body: transfer_template)
       end
 
-      let(:expected_transfers) { WellHelpers.column_order(plate_size).each_with_object({}) { |w,h| h[w] = w } }
+      let(:expected_transfers) { WellHelpers.stamp_hash(plate_size) }
 
       let!(:transfer_creation_request) do
         stub_api_post(transfer_template_uuid,

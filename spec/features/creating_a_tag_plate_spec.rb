@@ -20,7 +20,7 @@ feature 'Creating a tag plate', js: true do
   let(:tag2_tube_qcable_uuid) { 'tag-tube-qcable' }
   let(:tag2_tube_barcode)     { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tag2_tube_qcable)      { json :tag2_tube_qcable, uuid: tag2_tube_qcable_uuid, lot_uuid: 'lot2-uuid' }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:tag2_template_uuid) { 'tag2-layout-template-0' }
@@ -30,7 +30,6 @@ feature 'Creating a tag plate', js: true do
 
   # Setup stubs
   background do
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config

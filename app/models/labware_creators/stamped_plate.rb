@@ -6,21 +6,21 @@ require_dependency 'labware_creators'
 module LabwareCreators
   class StampedPlate < Base
     extend SupportParent::PlateOnly
-    self.default_transfer_template_uuid = Settings.transfer_templates['Custom pooling']
+    self.default_transfer_template_name = 'Custom pooling'
 
     private
 
-    def transfer_material_from_parent!
+    def transfer_material_from_parent!(child_uuid)
       api.transfer_template.find(transfer_template_uuid).create!(
         source: parent_uuid,
-        destination: @plate_creation.child.uuid,
+        destination: child_uuid,
         user: user_uuid,
         transfers: transfer_hash
       )
     end
 
     def transfer_hash
-      WellHelpers.column_order(labware.size).each_with_object({}) { |well,hash| hash[well] = well }
+      WellHelpers.stamp_hash(labware.size)
     end
   end
 end

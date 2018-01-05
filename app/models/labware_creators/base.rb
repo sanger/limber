@@ -12,8 +12,8 @@ module LabwareCreators
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
 
-    class_attribute :default_transfer_template_uuid
-    self.default_transfer_template_uuid = Settings.transfer_templates['Transfer columns 1-12']
+    class_attribute :default_transfer_template_name
+    self.default_transfer_template_name = 'Transfer columns 1-12'
 
     attr_reader :plate_creation
 
@@ -60,35 +60,53 @@ module LabwareCreators
       create_labware!
     end
 
+    #
+    # The name of the transfer template which will be used.
+    # In post cases this will be the default transfer template
+    # but it can be overridden by specifying a custom template
+    # in the purpose config.
+    #
+    # @return [<String] The name of the transfer template which will be used.
+    #
+    def transfer_template_name
+      Settings.purposes.dig(purpose_uuid, :transfer_template) || default_transfer_template_name
+    end
+
+    #
+    # The uuid of the transfer template to be used.
+    # Extracted from the transfer template cache base on the name
+    #
+    # @return [String] UUID
+    #
     def transfer_template_uuid
-      if Settings.purposes.dig(purpose_uuid, :transfer_template)
-        Settings.transfer_templates[Settings.purposes.dig(purpose_uuid, :transfer_template)]
-      else
-        default_transfer_template_uuid
-      end
+      Settings.transfer_templates.fetch(transfer_template_name)
     end
 
     private
 
+    def transfer_template
+      @template ||= api.transfer_template.find(transfer_template_uuid)
+    end
+
     def create_plate_with_standard_transfer!
-      create_plate_from_parent!
-      transfer_material_from_parent!
+      @plate_creation = create_plate_from_parent!
+      transfer_material_from_parent!(@plate_creation.child.uuid)
       yield(@plate_creation.child) if block_given?
       true
     end
 
     def create_plate_from_parent!
-      @plate_creation = api.plate_creation.create!(
+      api.plate_creation.create!(
         parent: parent_uuid,
         child_purpose: purpose_uuid,
         user: user_uuid
       )
     end
 
-    def transfer_material_from_parent!
-      api.transfer_template.find(transfer_template_uuid).create!(
+    def transfer_material_from_parent!(child_uuid)
+      transfer_template.create!(
         source: parent_uuid,
-        destination: @plate_creation.child.uuid,
+        destination: child_uuid,
         user: user_uuid
       )
     end

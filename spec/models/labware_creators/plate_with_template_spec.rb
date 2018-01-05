@@ -33,7 +33,6 @@ describe LabwareCreators::PlateWithTemplate do
     Settings.purposes = {
       child_purpose_uuid => build(:templated_transfer_config, name: child_purpose_name)
     }
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     Settings.transfer_templates[transfer_template_name] = transfer_template_uuid
     plate_request
     wells_request

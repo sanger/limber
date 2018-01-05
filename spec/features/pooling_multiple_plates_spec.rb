@@ -85,7 +85,6 @@ feature 'Multi plate pooling', js: true do
   end
 
   background do
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     Settings.purposes = {}
     Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
     Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::MultiPlatePool',

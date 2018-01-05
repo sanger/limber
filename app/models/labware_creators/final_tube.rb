@@ -10,6 +10,8 @@ module LabwareCreators
   class FinalTube < Base
     extend SupportParent::TubeOnly
 
+    self.default_transfer_template_name = 'Transfer from tube to tube by submission'
+
     def render(controller)
       if no_pooling_required?
         super
@@ -105,12 +107,6 @@ module LabwareCreators
         "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
       )
       false
-    end
-
-    def transfer_template
-      @template ||= api.transfer_template.find(
-        Settings.transfer_templates['Transfer from tube to tube by submission']
-      )
     end
   end
 end

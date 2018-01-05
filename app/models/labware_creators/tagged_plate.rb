@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < Base
+  class TaggedPlate < StampedPlate
     include Form::CustomPage
     extend SupportParent::PlateOnly
 
@@ -53,11 +53,7 @@ module LabwareCreators
     end
 
     def create_plate!
-      api.transfer_template.find(transfer_template_uuid).create!(
-        source: parent_uuid,
-        destination: tag_plate.asset_uuid,
-        user: user_uuid
-      )
+      transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
 

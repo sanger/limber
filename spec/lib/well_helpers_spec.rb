@@ -47,8 +47,10 @@ describe WellHelpers do
   ].freeze
 
   let(:well_96) { WELL_96 }
+  let(:stamp_96) { Hash[WELL_96.zip(WELL_96)] }
 
   let(:well_384) { WELL_384 }
+  let(:stamp_384) { Hash[WELL_384.zip(WELL_384)] }
 
   shared_examples 'range generator' do
     it 'generates ranges' do
@@ -96,6 +98,18 @@ describe WellHelpers do
         let(:size) { 384 }
         it { is_expected.to eq(well_384) }
       end
+    end
+  end
+
+  describe '::stamp_hash' do
+    subject { WellHelpers.stamp_hash(size) }
+    context '96' do
+      let(:size) { 96 }
+      it { is_expected.to eq(stamp_96) }
+    end
+    context '384' do
+      let(:size) { 384 }
+      it { is_expected.to eq(stamp_384) }
     end
   end
 
