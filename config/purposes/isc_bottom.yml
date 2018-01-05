@@ -54,6 +54,7 @@ LB Cap Lib Pool:
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'
   :suggest_library_pass_for:
   - limber_isc

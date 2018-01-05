@@ -5,7 +5,7 @@ FactoryGirl.define do
   factory :purpose_config, class: Hash do
     transient do
       name 'Plate Purpose'
-      creator_class 'LabwareCreators::Base'
+      creator_class 'LabwareCreators::StampedPlate'
       presenter_class 'Presenters::StandardPresenter'
       state_changer_class 'StateChangers::DefaultStateChanger'
       default_printer_type :plate_a
@@ -19,22 +19,25 @@ FactoryGirl.define do
       suggest_library_pass_for nil
     end
 
+    # Builds the hash up automatically.
     after(:build) do |hash, evaluator|
-      hash.merge!(
-        name: evaluator.name,
-        creator_class: evaluator.creator_class,
-        presenter_class: evaluator.presenter_class,
-        state_changer_class: evaluator.state_changer_class,
-        default_printer_type: evaluator.default_printer_type,
-        asset_type: evaluator.asset_type,
-        stock_plate: evaluator.stock_plate,
-        cherrypickable_target: evaluator.cherrypickable_target,
-        input_plate: evaluator.input_plate,
-        parents: evaluator.parents,
-        tag_layout_templates: evaluator.tag_layout_templates,
-        expected_request_types: evaluator.expected_request_types,
-        suggest_library_pass_for: evaluator.suggest_library_pass_for
-      )
+      evaluator.attribute_lists.each do |list|
+        list.names.each do |attribute|
+          hash[attribute] = evaluator.send(attribute)
+        end
+      end
+    end
+
+    factory :templated_transfer_config do
+      transient do
+        transfer_template 'Pool wells based on submission'
+      end
+    end
+
+    factory :tagged_purpose_config do
+      creator_class 'LabwareCreators::TaggedPlate'
+      name 'Tag Purpose'
+      tag_layout_templates ['tag-layout-template']
     end
 
     factory :tube_config do

@@ -6,6 +6,13 @@ GBS Stock:
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: true
   :size: 384
+GBS Stock2:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :input_plate: true
+  :size: 384
 GBS PCR1:
   :asset_type: plate
   :stock_plate: false
@@ -48,8 +55,6 @@ GBS PCR Pool:
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
-  :expected_request_types:
-  - limber_multiplexing
   :parents:
   - GBS PCR2 Pool Stock
 GBS PCR Pool Selected:
@@ -60,8 +65,6 @@ GBS PCR Pool Selected:
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
-  :expected_request_types:
-  - limber_multiplexing
   :parents:
   - GBS PCR Pool
 GBS MiSeq Pool:

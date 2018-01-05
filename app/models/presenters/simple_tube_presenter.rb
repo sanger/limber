@@ -39,5 +39,9 @@ module Presenters
         end
       end
     end
+
+    def active_request_type
+      :tube
+    end
   end
 end

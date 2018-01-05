@@ -33,11 +33,10 @@ feature 'Creating a tag plate', js: true do
     LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config # { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::TaggedPlate',
-                                                                  name: 'Tag Purpose',
-                                                                  parents: ['Limber Cherrypicked'],
-                                                                  tag_layout_templates: acceptable_templates
+    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
+    Settings.purposes['child-purpose-0'] = build :tagged_purpose_config,
+                                                 tag_layout_templates: acceptable_templates,
+                                                 parents: ['Limber Cherrypicked']
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We lookup the plate

@@ -27,7 +27,7 @@ class PurposeConfig
   def config
     {
       name: name,
-      creator_class: 'LabwareCreators::Base',
+      creator_class: 'LabwareCreators::StampedPlate',
       presenter_class: 'Presenters::StandardPresenter',
       state_changer_class: 'StateChangers::DefaultStateChanger',
       default_printer_type: default_printer
@@ -42,7 +42,7 @@ class PurposeConfig
     self.default_printer = :tube
 
     def register!
-      puts "Registering #{name}"
+      puts "Creating #{name}"
       api.tube_purpose.create!(
         name: name,
         parents: parents,

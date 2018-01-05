@@ -3,6 +3,7 @@
 module LabwareCreators
   class TaggedPlate < Base
     include Form::CustomPage
+    extend SupportParent::PlateOnly
 
     self.page = 'tagged_plate'
     self.attributes = %i[

@@ -5,7 +5,6 @@ require_dependency 'labware_creators'
 
 module LabwareCreators
   class Base
-    extend SupportParent::PlateOnly
 
     include Form
     include PlateWalking
@@ -17,6 +16,11 @@ module LabwareCreators
     self.default_transfer_template_uuid = Settings.transfer_templates['Transfer columns 1-12']
 
     attr_reader :plate_creation
+
+    # The base creator is abstract, and is not intended tu be used directly
+    def self.support_parent?(_parent)
+      false
+    end
 
     def plate_to_walk
       parent
@@ -67,20 +71,26 @@ module LabwareCreators
     private
 
     def create_plate_with_standard_transfer!
+      create_plate_from_parent!
+      transfer_material_from_parent!
+      yield(@plate_creation.child) if block_given?
+      true
+    end
+
+    def create_plate_from_parent!
       @plate_creation = api.plate_creation.create!(
         parent: parent_uuid,
         child_purpose: purpose_uuid,
         user: user_uuid
       )
+    end
 
+    def transfer_material_from_parent!
       api.transfer_template.find(transfer_template_uuid).create!(
         source: parent_uuid,
         destination: @plate_creation.child.uuid,
         user: user_uuid
       )
-
-      yield(@plate_creation.child) if block_given?
-      true
     end
 
     def create_labware!
