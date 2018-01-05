@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TubesController < LabwareController
-
   private
 
   def locate_labware_identified_by(_id)

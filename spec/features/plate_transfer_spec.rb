@@ -13,8 +13,12 @@ feature 'Plate transfer', js: true do
   let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_uuid)        { SecureRandom.uuid }
   let(:example_plate)     { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
-  let(:example_plate_without_metadata) { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
-  let(:example_plate_with_metadata) { json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started' }
+  let(:example_plate_without_metadata) do
+    json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started'
+  end
+  let(:example_plate_with_metadata) do
+    json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started'
+  end
   let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
 
   # Setup stubs
@@ -30,9 +34,13 @@ feature 'Plate transfer', js: true do
     stub_state_changes_post
   end
 
+  let(:payload) do
+    { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } }
+  end
+
   let(:stub_custom_metdatum_collections_post) do
     stub_api_post('custom_metadatum_collections',
-                  payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
+                  payload: payload,
                   body: json(:custom_metadatum_collection))
   end
   let(:stub_state_changes_post) do

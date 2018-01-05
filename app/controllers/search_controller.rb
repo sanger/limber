@@ -24,7 +24,7 @@ class SearchController < ApplicationController
   def qcables
     raise InputError, 'You have not supplied a barcode' if params[:qcable_barcode].blank?
     pruned_barcode = params[:qcable_barcode].strip
-    raise InputError, "#{params[:qcable_barcode]} is not a valid barcode" unless /^[0-9]{13}$/ === pruned_barcode
+    raise InputError, "#{params[:qcable_barcode]} is not a valid barcode" unless /^[0-9]{13}$/.match?(pruned_barcode)
     respond_to do |format|
       format.json do
         redirect_to find_qcable(pruned_barcode)
@@ -52,7 +52,7 @@ class SearchController < ApplicationController
 
   def find_plate(barcode)
     machine_barcode =
-      if SBCF::HUMAN_BARCODE_FORMAT.match(barcode)
+      if SBCF::HUMAN_BARCODE_FORMAT.match?(barcode)
         SBCF::SangerBarcode.from_human(barcode).machine_barcode
       else
         barcode

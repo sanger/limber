@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PlatesController < LabwareController
-
   before_action :check_for_current_user!, only: %i[update fail_wells]
 
   def fail_wells

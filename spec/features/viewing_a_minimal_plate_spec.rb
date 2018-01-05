@@ -16,8 +16,10 @@ feature 'Viewing a plate', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config, presenter_class: 'Presenters::MinimalPlatePresenter'
-    Settings.purposes['child-purpose-0'] = build :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked'], presenter_class: 'Presenters::MinimalPlatePresenter'
+    Settings.purposes['stock-plate-purpose-uuid'] = build :minimal_purpose_config
+    Settings.purposes['child-purpose-0'] = build :minimal_purpose_config,
+                                                 name: 'Child Purpose 0',
+                                                 parents: ['Limber Cherrypicked']
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user

@@ -1,16 +1,10 @@
 inherit_from: .rubocop_todo.yml
 AllCops:
-  TargetRubyVersion: 2.3
-  Include:
-    - Rakefile
-    - config.ru
-    - lib/**/*.rake
+  TargetRubyVersion: 2.4
   Exclude:
     - node_modules/**/*
     - bin/webpack
     - bin/webpack-dev-server
-Style/VariableNumber:
-  Enabled: false
 Rails:
   Enabled: true
 Metrics/BlockLength:

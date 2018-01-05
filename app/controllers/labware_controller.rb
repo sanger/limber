@@ -40,7 +40,7 @@ class LabwareController < ApplicationController
   end
 
   def update
-    state_changer_for(params[:purpose_uuid], params[:id]).move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
+    state_changer.move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
     notice = String.new("Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.")
     notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
@@ -61,6 +61,10 @@ class LabwareController < ApplicationController
   end
 
   private
+
+  def state_changer
+    state_changer_for(params[:purpose_uuid], params[:id])
+  end
 
   def locate_labware
     @labware ||= locate_labware_identified_by(params[:id])

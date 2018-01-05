@@ -28,6 +28,12 @@ FactoryGirl.define do
       end
     end
 
+    factory :minimal_purpose_config do
+      transient do
+        presenter_class 'Presenters::MinimalPlatePresenter'
+      end
+    end
+
     factory :templated_transfer_config do
       transient do
         transfer_template 'Pool wells based on submission'
