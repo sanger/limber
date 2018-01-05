@@ -3,7 +3,7 @@
 # A simple stand in for form classes to allow testing
 module TestFormClass
   class Auto
-    include Form::CustomPage
+    include LabwareCreators::CustomPage
 
     attr_reader :params
     def initialize(params)

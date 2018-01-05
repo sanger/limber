@@ -7,21 +7,6 @@ class LabwareController < ApplicationController
   before_action :get_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
-  def locate_labware
-    @labware ||= locate_labware_identified_by(params[:id])
-  end
-  private :locate_labware
-
-  def get_printers
-    @printers = api.barcode_printer.all
-  end
-  private :get_printers
-
-  def state_changer_for(purpose_uuid, labware_uuid)
-    StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
-  end
-  private :state_changer_for
-
   def show
     @presenter = presenter_for(@labware)
     @presenter.prepare
@@ -73,5 +58,26 @@ class LabwareController < ApplicationController
       format.html { redirect_to(search_path, alert: exception.message) }
       format.csv
     end
+  end
+
+  private
+
+  def locate_labware
+    @labware ||= locate_labware_identified_by(params[:id])
+  end
+
+  def get_printers
+    @printers = api.barcode_printer.all
+  end
+
+  def state_changer_for(purpose_uuid, labware_uuid)
+    StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
+  end
+
+  def presenter_for(labware)
+    Presenters.lookup_for(labware).new(
+      api: api,
+      labware: labware
+    )
   end
 end

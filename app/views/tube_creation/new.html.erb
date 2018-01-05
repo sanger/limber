@@ -4,9 +4,9 @@
   <% end %>
 
   <%= content do %>
-    <%= semantic_form_for(@creator_form, as: :plate, url: limber_plate_tubes_path(@creator_form.parent), html: {method: :post}) do |f| %>
+    <%= semantic_form_for(@labware_creator, as: :plate, url: limber_plate_tubes_path(@labware_creator.parent), html: {method: :post}) do |f| %>
       <%= f.inputs do %>
-        <%= f.input :parent_uuid, as: :hidden, value: @creator_form.parent_uuid %>
+        <%= f.input :parent_uuid, as: :hidden, value: @labware_creator.parent_uuid %>
       <% end %>
       <%= f.buttons do %>
         <%= f.commit_button 'Create Tubes' %>

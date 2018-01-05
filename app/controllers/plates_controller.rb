@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class PlatesController < LabwareController
-  module LabwareWrangler
-    def locate_labware_identified_by(id)
-      api.plate.find(id)
-    end
-  end
-
-  include PlatesController::LabwareWrangler
 
   before_action :check_for_current_user!, only: %i[update fail_wells]
 
@@ -27,14 +20,13 @@ class PlatesController < LabwareController
     end
   end
 
-  def presenter_for(labware)
-    Presenters.lookup_for(labware).new(
-      api:     api,
-      labware: labware
-    )
-  end
-
   def wells_to_fail
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
+  end
+
+  private
+
+  def locate_labware_identified_by(id)
+    api.plate.find(id)
   end
 end

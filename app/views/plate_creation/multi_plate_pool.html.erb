@@ -5,7 +5,7 @@
         <div class="card-block bg-inverse text-white">
           <div id="output-plate-block" class="scape-ui-block">
             <h3>Target Plate</h3>
-            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @creator_form, css_class: "destination-plate"} %>
+            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @labware_creator, css_class: "destination-plate"} %>
           </div>
           <h3>Source Plates</h3>
             <% 4.times do |plate_id| %>
@@ -25,8 +25,8 @@
       </div>
       <div class="card-block">
       <%= form_for(
-        @creator_form,
-        url: limber_plate_children_path(@creator_form.parent),
+        @labware_creator,
+        url: limber_plate_children_path(@labware_creator.parent),
         as: :plate,
         html: { method: :post }) do |form| %>
 

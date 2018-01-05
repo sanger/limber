@@ -7,6 +7,7 @@ module LabwareCreators
   class Base
     include Form
     include PlateWalking
+    include NoCustomPage
 
     class_attribute :default_transfer_template_name
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid]

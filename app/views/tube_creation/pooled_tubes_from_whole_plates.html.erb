@@ -1,6 +1,6 @@
 <%= page(:'multi-plate-pooling-page') do %>
   <%= content do %>
-    <%= render(partial: './search/plate_progress', locals: { plates: @creator_form.available_plates }) %>
+    <%= render(partial: './search/plate_progress', locals: { plates: @labware_creator.available_plates }) %>
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>
@@ -12,8 +12,8 @@
       </div>
       <div class="card-block">
       <%= form_for(
-        @creator_form,
-        url: limber_plate_tubes_path(@creator_form.parent),
+        @labware_creator,
+        url: limber_plate_tubes_path(@labware_creator.parent),
         as: :tube,
         html: { method: :post }) do |form| %>
 

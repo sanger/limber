@@ -10,10 +10,10 @@ class CreationController < ApplicationController
 
   def new
     params[:parent_uuid] ||= parent_uuid
-    @creator_form = creator_form(params)
+    @labware_creator = labware_creator(params)
 
     respond_to do |format|
-      format.html { @creator_form.render(self) }
+      format.html { @labware_creator.render(self) }
     end
   end
 
@@ -24,7 +24,7 @@ class CreationController < ApplicationController
     )
   end
 
-  def creator_form(form_attributes)
+  def labware_creator(form_attributes)
     creator_for(form_attributes).new(
       form_attributes.merge(
         api: api,
@@ -34,13 +34,13 @@ class CreationController < ApplicationController
   end
 
   def creation_failed(exception)
-    Rails.logger.error("Cannot create child of #{@creator_form.parent.uuid}")
+    Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
     exception.backtrace.map(&Rails.logger.method(:error))
 
     respond_to do |format|
       format.html do
         redirect_back(
-          fallback_location: url_for(@creator_form.parent),
+          fallback_location: url_for(@labware_creator.parent),
           alert: ['Cannot create the next piece of labware:', *exception.resource.errors.full_messages]
         )
       end

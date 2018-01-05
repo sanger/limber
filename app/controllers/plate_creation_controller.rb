@@ -6,10 +6,10 @@ class PlateCreationController < CreationController
   end
 
   def create
-    @creator_form = creator_form(params[:plate])
-    @creator_form.save!
+    @labware_creator = labware_creator(params[:plate])
+    @labware_creator.save!
     respond_to do |format|
-      format.html { redirect_to_creator_child(@creator_form) }
+      format.html { redirect_to_creator_child(@labware_creator) }
     end
   end
 

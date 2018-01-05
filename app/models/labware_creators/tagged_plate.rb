@@ -2,7 +2,7 @@
 
 module LabwareCreators
   class TaggedPlate < StampedPlate
-    include Form::CustomPage
+    include LabwareCreators::CustomPage
     extend SupportParent::PlateOnly
 
     self.page = 'tagged_plate'

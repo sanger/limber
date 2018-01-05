@@ -5,7 +5,7 @@ require_dependency 'labware_creators/base'
 module LabwareCreators
   class BaitedPlate < Base
     extend SupportParent::PlateOnly
-    include Form::CustomPage
+    include LabwareCreators::CustomPage
 
     self.page = 'baited_plate'
     class_attribute :aliquot_partial

@@ -2,28 +2,10 @@
 
 module Form
   extend ActiveSupport::Concern
-
-  module CustomPage
-    # We need to do something special at this point in order to create the plate.
-    def render(controller)
-      controller.render(page)
-    end
-  end
-
-  module NoCustomPage
-    # By default forms need no special processing to they actually do the creation and then
-    # redirect.  If you have a special form to display include Form::CustomPage
-    def render(controller)
-      raise StandardError, "Not saving #{self.class} form...." unless save!
-      controller.redirect_to_creator_child(self)
-    end
-  end
-
   included do
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Validations
-    include NoCustomPage
 
     class_attribute :page
     self.page = 'new'

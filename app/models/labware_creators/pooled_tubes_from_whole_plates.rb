@@ -4,7 +4,7 @@ module LabwareCreators
   # Pools an entire plate into a single tube. Useful for MiSeqQC
   class PooledTubesFromWholePlates < Base
     extend SupportParent::TaggedPlateOnly
-    include Form::CustomPage
+    include LabwareCreators::CustomPage
     attr_reader :tube_transfer, :child
 
     self.page = 'pooled_tubes_from_whole_plates'
