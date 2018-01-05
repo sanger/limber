@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This is used as part of a take task, and will be run within a console.
+# rubocop:disable Rails/Output
+
 class PurposeConfig
   attr_reader :name, :options, :store, :api
   class_attribute :default_printer
@@ -65,3 +68,4 @@ class PurposeConfig
     end
   end
 end
+# rubocop:enable Rails/Output

@@ -5,29 +5,24 @@ require_dependency 'labware_creators'
 
 module LabwareCreators
   class Base
-
     include Form
     include PlateWalking
 
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
-
     class_attribute :default_transfer_template_name
+    self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
     self.default_transfer_template_name = 'Transfer columns 1-12'
 
-    attr_reader :plate_creation
+    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
 
-    # The base creator is abstract, and is not intended tu be used directly
+    attr_reader :child
+
+    # The base creator is abstract, and is not intended to be used directly
     def self.support_parent?(_parent)
       false
     end
 
     def plate_to_walk
       parent
-    end
-
-    def child
-      plate_creation.try(:child) || :child_not_created
     end
 
     def child_purpose
@@ -69,7 +64,8 @@ module LabwareCreators
     # @return [<String] The name of the transfer template which will be used.
     #
     def transfer_template_name
-      Settings.purposes.dig(purpose_uuid, :transfer_template) || default_transfer_template_name
+      Settings.purposes.dig(purpose_uuid, :transfer_template) ||
+        default_transfer_template_name
     end
 
     #
@@ -89,9 +85,10 @@ module LabwareCreators
     end
 
     def create_plate_with_standard_transfer!
-      @plate_creation = create_plate_from_parent!
-      transfer_material_from_parent!(@plate_creation.child.uuid)
-      yield(@plate_creation.child) if block_given?
+      plate_creation = create_plate_from_parent!
+      @child = plate_creation.child
+      transfer_material_from_parent!(@child.uuid)
+      yield(@child) if block_given?
       true
     end
 

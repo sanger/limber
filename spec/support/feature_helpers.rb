@@ -17,10 +17,9 @@ module FeatureHelpers
 
   def stub_search_and_multi_result(search, query, result)
     search_uuid = search.downcase.tr(' ', '-')
-    search_url = 'http://example.com:3000/' + search_uuid
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
-    stub_api_post(search_uuid, 'all', status: 301, payload: query, body: { searches: result }.to_json )
+    stub_api_post(search_uuid, 'all', status: 301, payload: query, body: { searches: result }.to_json)
   end
 
   def stub_swipecard_search(swipecard, user)

@@ -38,7 +38,7 @@ module LabwareCreators
     private
 
     def transfer_into_existing_tubes!
-      @transfer ||= api.transfer_template.find(transfer_template_uuid).create!(
+      @transfer ||= transfer_template.create!(
         user: user_uuid,
         source: parent_uuid
       )

@@ -12,7 +12,7 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
   it_behaves_like 'it only allows creation from tagged plates'
 
- # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
+  # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
 
   subject { described_class.new(form_attributes.merge(api: api)) }
 
@@ -28,7 +28,7 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   let(:parent2_uuid)  { SecureRandom.uuid }
   let(:parent3_uuid)  { SecureRandom.uuid }
   let(:parent4_uuid)  { SecureRandom.uuid }
-  let(:parent)       { associated :plate, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent) { associated :plate, uuid: parent_uuid, barcode_number: 1 }
   let(:parent2)       { associated :plate, uuid: parent2_uuid, barcode_number: 2 }
   let(:parent3)       { associated :plate, uuid: parent3_uuid, barcode_number: 3 }
   let(:parent4)       { associated :plate, uuid: parent4_uuid, barcode_number: 4 }
@@ -50,7 +50,7 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
     has_a_working_api
 
-    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid:  parent_uuid } }
+    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
   end
 
   describe '#save!' do
@@ -94,15 +94,15 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     end
 
     let(:transfer_creation_request) do
-      stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube) )
+      stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube))
       [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |uuid|
         stub_api_post('whole-plate-to-tube',
-                    payload: { transfer: {
-                      user: user_uuid,
-                      source: uuid,
-                      destination: 'tube-0'
-                    } },
-                    body: '{}')
+                      payload: { transfer: {
+                        user: user_uuid,
+                        source: uuid,
+                        destination: 'tube-0'
+                      } },
+                      body: '{}')
       end
     end
 

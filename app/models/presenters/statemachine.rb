@@ -83,6 +83,7 @@ module Presenters::Statemachine
         self.state_transition_name_scope = :default
       end
     end
+
     #--
     # We ignore the assignment of the state because that is the statemachine getting in before
     # the plate has been loaded.

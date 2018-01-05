@@ -11,7 +11,7 @@ module LabwareCreators
     private
 
     def transfer_material_from_parent!(child_uuid)
-      api.transfer_template.find(transfer_template_uuid).create!(
+      transfer_template.create!(
         source: parent_uuid,
         destination: child_uuid,
         user: user_uuid,

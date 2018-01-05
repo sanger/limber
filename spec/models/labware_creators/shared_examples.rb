@@ -34,7 +34,7 @@ shared_examples 'it has a custom page' do |custom_page|
   end
 end
 
-shared_examples 'it has no custom page' do |custom_page|
+shared_examples 'it has no custom page' do |_custom_page|
   it 'saves and redirects' do
     controller = CreationController.new
     expect(controller).to receive(:redirect_to_creator_child).with(subject)
@@ -46,7 +46,6 @@ shared_examples 'it has no custom page' do |custom_page|
     expect(subject).to be_a described_class
   end
 end
-
 
 shared_examples 'it only allows creation from plates' do
   context 'pre creation' do

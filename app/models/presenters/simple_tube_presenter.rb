@@ -7,7 +7,7 @@ module Presenters
         transition pending: :started
       end
 
-      event :take_default_path, human_name: 'Manual Transfer'  do
+      event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed
       end
 
