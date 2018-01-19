@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require './lib/well_helpers'
-require_relative '../support/factory_girl_extensions'
+require_relative '../support/factory_bot_extensions'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root 'plate'
     size 96

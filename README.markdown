@@ -23,7 +23,7 @@ Writing specs
 
 There are a few tools available to assist with writing specs:
 
-- Factory Girl
+- Factory Bot
 -- Strategies
 You can use json :factory_name to generate the json that the API is expected to receive. This is very useful for mocking web responses.
 The association strategy is used for building nested json, it will usually only be used as part of other factories.

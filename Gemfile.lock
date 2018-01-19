@@ -129,7 +129,7 @@ GEM
       actionmailer (>= 4.0, < 6)
       activesupport (>= 4.0, < 6)
     execjs (2.7.0)
-    factory_girl (4.8.0)
+    factory_bot (4.8.2)
       activesupport (>= 3.0.0)
     faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
@@ -377,7 +377,7 @@ DEPENDENCIES
   coffee-rails
   compass-rails
   exception_notification
-  factory_girl
+  factory_bot
   formtastic
   guard-rspec
   hashie

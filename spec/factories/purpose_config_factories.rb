@@ -1,7 +1,7 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :purpose_config, class: Hash do
     skip_create
     initialize_with { attributes }

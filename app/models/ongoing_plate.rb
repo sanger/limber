@@ -6,7 +6,7 @@ class OngoingPlate
   attr_accessor :plate_purposes, :show_my_plates_only, :include_used, :states
 
   def purpose_uuids
-    plate_purposes.blank? ? Settings.purposes.keys : plate_purposes
+    plate_purposes.presence || default_purposes
   end
 
   def search_parameters
@@ -16,5 +16,11 @@ class OngoingPlate
       show_my_plates_only: show_my_plates_only == '1',
       include_used: include_used == '1'
     }
+  end
+
+  def default_purposes
+    Settings.purposes
+            .select { |_uuid, settings| settings[:asset_type] == 'plate' }
+            .keys
   end
 end

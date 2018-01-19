@@ -18,7 +18,7 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require 'factory_girl'
+require 'factory_bot'
 require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
 require_relative 'support/feature_helpers'
@@ -117,11 +117,11 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include FeatureHelpers, type: :feature
 
   config.before(:suite) do
-    FactoryGirl.find_definitions
+    FactoryBot.find_definitions
     Settings.robots = {}
     Settings.transfer_templates = {
       'Transfer columns 1-12' => 'transfer-1-12',

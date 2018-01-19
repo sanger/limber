@@ -5,14 +5,12 @@ class SearchController < ApplicationController
 
   before_action :check_for_login!, only: [:my_plates]
 
-  def new
-    @search_results = []
-  end
+  def new; end
 
   def ongoing_plates
     plate_search = api.search.find(Settings.searches.fetch('Find plates'))
+    @purpose_options = helpers.purpose_options('plate')
     @ongoing_plate = OngoingPlate.new(ongoing_plate_search_params)
-    @purpose_options = Settings.purposes.map { |uuid, settings| [settings[:name], uuid] }
 
     @search_results = plate_search.all(
       Limber::Plate,

@@ -4,7 +4,7 @@ class ApiStrategy
   attr_reader :api
 
   def initialize
-    @strategy = FactoryGirl.strategy_by_name(:json).new
+    @strategy = FactoryBot.strategy_by_name(:json).new
     @api = Sequencescape::Api.new(
       url: 'http://example.com:3000/', cookie: nil,
       namespace: Limber, authorisation: 'testing'
@@ -16,4 +16,4 @@ class ApiStrategy
   def result(evaluation); end
 end
 
-FactoryGirl.register_strategy(:api_object, ApiStrategy)
+FactoryBot.register_strategy(:api_object, ApiStrategy)

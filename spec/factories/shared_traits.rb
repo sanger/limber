@@ -3,7 +3,7 @@
 
 require_relative '../support/json_renderers'
 
-FactoryGirl.define do
+FactoryBot.define do
   trait :api_object do
     transient do
       api_root 'http://example.com:3000/'

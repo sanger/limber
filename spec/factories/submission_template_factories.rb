@@ -2,7 +2,7 @@
 
 require_relative '../support/json_renderers'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :submission_template, class: Sequencescape::OrderTemplate, traits: %i[api_object] do
     json_root 'order_template'
     name 'Submission Template'

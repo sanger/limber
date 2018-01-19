@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FactoryGirl
+module FactoryBot
   class DefinitionProxy
     # Auto generate the necessary attributes for building
     # client api has_many associations. Can take multiple
