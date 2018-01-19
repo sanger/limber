@@ -3,43 +3,22 @@
 
 FactoryGirl.define do
   factory :purpose_config, class: Hash do
-    transient do
-      name 'Plate Purpose'
-      creator_class 'LabwareCreators::StampedPlate'
-      presenter_class 'Presenters::StandardPresenter'
-      state_changer_class 'StateChangers::DefaultStateChanger'
-      default_printer_type :plate_a
-      asset_type 'plate'
-      stock_plate false
-      cherrypickable_target false
-      input_plate false
-      parents []
-      tag_layout_templates nil
-      expected_request_types nil
-      suggest_library_pass_for nil
-      pcr_stage nil
-      submission {}
-    end
+    skip_create
+    initialize_with { attributes }
 
-    # Builds the hash up automatically.
-    after(:build) do |hash, evaluator|
-      evaluator.attribute_lists.each do |list|
-        list.names.each do |attribute|
-          hash[attribute] = evaluator.send(attribute)
-        end
-      end
-    end
+    name 'Plate Purpose'
+    creator_class 'LabwareCreators::StampedPlate'
+    presenter_class 'Presenters::StandardPresenter'
+    state_changer_class 'StateChangers::DefaultStateChanger'
+    default_printer_type :plate_a
+    asset_type 'plate'
 
     factory :minimal_purpose_config do
-      transient do
-        presenter_class 'Presenters::MinimalPlatePresenter'
-      end
+      presenter_class 'Presenters::MinimalPlatePresenter'
     end
 
     factory :templated_transfer_config do
-      transient do
-        transfer_template 'Pool wells based on submission'
-      end
+      transfer_template 'Pool wells based on submission'
     end
 
     factory :tagged_purpose_config do
@@ -49,24 +28,18 @@ FactoryGirl.define do
     end
 
     factory :tube_config do
-      transient do
-        asset_type 'tube'
-        default_printer_type :tube
-        presenter_class 'Presenters::SimpleTubePresenter'
-      end
+      asset_type 'tube'
+      default_printer_type :tube
+      presenter_class 'Presenters::SimpleTubePresenter'
 
       factory :pooled_tube_from_plates_purpose_config do
-        transient do
-          name 'Pool tube'
-          creator_class 'LabwareCreators::PooledTubesFromWholePlates'
-        end
+        name 'Pool tube'
+        creator_class 'LabwareCreators::PooledTubesFromWholePlates'
       end
 
       factory :pooled_tube_from_tubes_purpose_config do
-        transient do
-          name 'Pool tube'
-          creator_class 'LabwareCreators::PooledTubesFromWholeTubes'
-        end
+        name 'Pool tube'
+        creator_class 'LabwareCreators::PooledTubesFromWholeTubes'
       end
     end
   end
