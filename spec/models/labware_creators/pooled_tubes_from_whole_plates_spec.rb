@@ -76,7 +76,7 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
             user: user_uuid,
             parent: parent_uuid,
             child_purposes: [purpose_uuid],
-            tube_attributes: [{ name: 'DN1+' }]
+            tube_attributes: [{ name: 'DN2+' }]
           }
         },
         body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 1)
@@ -85,7 +85,7 @@ describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
     # Find out what tubes we've just made!
     let(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN1+']))
+      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN2+']))
     end
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form

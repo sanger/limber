@@ -30,13 +30,8 @@ module LabwareCreators
       @child_purpose ||= api.plate_purpose.find(purpose_uuid)
     end
 
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
-    end
-    alias plate parent
-
     def labware
-      plate
+      parent
     end
 
     # Purpose returns the plate or tube purpose of the labware.
@@ -65,8 +60,7 @@ module LabwareCreators
     # @return [<String] The name of the transfer template which will be used.
     #
     def transfer_template_name
-      Settings.purposes.dig(purpose_uuid, :transfer_template) ||
-        default_transfer_template_name
+      purpose_config.fetch(:transfer_template, default_transfer_template_name)
     end
 
     #
@@ -111,6 +105,10 @@ module LabwareCreators
 
     def create_labware!
       create_plate_with_standard_transfer!
+    end
+
+    def purpose_config
+      Settings.purposes.fetch(purpose_uuid, {})
     end
   end
 end

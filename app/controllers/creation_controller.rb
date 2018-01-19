@@ -11,7 +11,6 @@ class CreationController < ApplicationController
   def new
     params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(params)
-
     respond_to do |format|
       format.html { @labware_creator.render(self) }
     end

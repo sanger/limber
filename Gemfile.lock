@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/jamesglover/sequencescape-client-api.git
-  revision: a3dc03c78da2f46d4676bf82aee9621a3228508a
+  revision: 69ce8b63e8fe5067327abb15f03f627f4a4a4af5
   branch: rails_4_rc_li
   specs:
     sequencescape-client-api (0.3.3)

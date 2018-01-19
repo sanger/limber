@@ -3,7 +3,7 @@
 module LabwareCreators
   # Pools an entire plate into a single tube. Useful for MiSeqQC
   class PooledTubesFromWholePlates < Base
-    extend SupportParent::TaggedPlateOnly
+    include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage
     attr_reader :tube_transfer, :child
 
@@ -19,9 +19,9 @@ module LabwareCreators
       # TODO: This should link to multiple parents in production
       @child = api.specific_tube_creation.create!(
         user: user_uuid,
-        parent: parent_uuid,
+        parent: parents.first.uuid,
         child_purposes: [purpose_uuid],
-        tube_attributes: [{ name: 'DN1+' }]
+        tube_attributes: [{ name: "#{stock_plate_barcode}+" }]
       ).children.first
 
       # Transfer EVERYTHING into it
@@ -34,9 +34,16 @@ module LabwareCreators
       end
     end
 
+    def barcodes=(input)
+      @barcodes = (input || []).map(&:strip).reject(&:blank?)
+    end
+
+    def stock_plate_barcode
+      "#{parents.first.stock_plate.barcode.prefix}#{parents.first.stock_plate.barcode.number}"
+    end
+
     # TODO: This should probably be asynchronous
     def available_plates
-      plate_search = api.search.find(Settings.searches['Find plates'])
       @ongoing_plate = OngoingPlate.new(plate_purposes: [parent.plate_purpose.uuid], include_used: false, states: ['passed'])
       @search_results = plate_search.all(
         Limber::Plate,
@@ -49,8 +56,12 @@ module LabwareCreators
     end
 
     def parents_suitable
-      missing_barcodes = barcodes.reject(&:blank?) - parents.map { |p| p.barcode.ean13 }
+      missing_barcodes = barcodes - parents.map { |p| p.barcode.ean13 }
       errors.add(:barcodes, "could not be found: #{missing_barcodes}") unless missing_barcodes.empty?
+    end
+
+    def plate_search
+      api.search.find(Settings.searches['Find plates'])
     end
   end
 end

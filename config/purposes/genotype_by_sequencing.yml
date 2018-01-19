@@ -3,14 +3,7 @@ GBS Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :input_plate: true
-  :size: 384
-GBS Stock2:
-  :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :presenter_class: Presenters::MinimalPlatePresenter
   :input_plate: true
   :size: 384
 GBS PCR1:
@@ -19,8 +12,9 @@ GBS PCR1:
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
-  :creator_class: LabwareCreators::BaitedPlate
+  :creator_class: LabwareCreators::PlateWithPrimerPanel
   :size: 384
+  :pcr_stage: 'pcr 1'
   :parents:
     - GBS Stock
 GBS PCR2:
@@ -29,12 +23,11 @@ GBS PCR2:
   :cherrypickable_target: false
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - Illumina pipeline tagging
-  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
-  - hWGS and RNAseq UDI tag layout v3
-  :presenter_class: Presenters::MinimalPlatePresenter
+  - GbS Tag Set
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
   :size: 384
+  :pcr_stage: 'pcr 2'
   :parents:
     - GBS PCR1
 GBS PCR2 Pool Stock:

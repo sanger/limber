@@ -10,9 +10,10 @@ FactoryGirl.define do
       purpose_uuid 'example-purpose-uuid'
       purpose_name 'Example Purpose'
       stock_plate_barcode 2
+      aliquot_factory :tagged_aliquot
     end
 
-    with_has_many_associations 'requests', 'qc_files'
+    with_has_many_associations 'requests', 'qc_files', 'studies'
 
     purpose do
       {
@@ -40,7 +41,7 @@ FactoryGirl.define do
       aliquots do
         Array.new(sample_count) do |i|
           associated(
-            :aliquot,
+            aliquot_factory,
             sample_name: "sample_#{i}",
             sample_id: "SAM#{i}",
             sample_uuid: "example-sample-uuid-#{i}"
@@ -92,8 +93,24 @@ FactoryGirl.define do
       names { Array.new(size) { |i| "Tube #{i}" } }
     end
 
-    plate_purposes do
+    children do
       Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i]) }
+    end
+
+    factory :single_study_multiplexed_library_tube_collection do
+      transient do
+        tube_factory :multiplexed_library_tube
+        study_count 1
+      end
+      children do
+        Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count) }
+      end
+
+      factory :multi_study_multiplexed_library_tube_collection do
+        transient do
+          study_count 2
+        end
+      end
     end
   end
 end

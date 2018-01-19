@@ -33,7 +33,7 @@ shared_context 'a tag plate creator' do
     )
   end
 
-  let(:expected_transfers) { WellHelpers.column_order.each_with_object({}) { |w, h| h[w] = w } }
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
   let!(:transfer_creation_request) do
     stub_api_get(transfer_template_uuid, body: transfer_template)

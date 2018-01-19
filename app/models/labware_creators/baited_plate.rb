@@ -4,7 +4,7 @@ require_dependency 'labware_creators/base'
 
 module LabwareCreators
   class BaitedPlate < Base
-    extend SupportParent::PlateOnly
+    include SupportParent::PlateOnly
     include LabwareCreators::CustomPage
 
     self.page = 'baited_plate'
@@ -34,11 +34,11 @@ module LabwareCreators
     end
 
     def baits
-      Hash[wells.map { |w| [w.bait, w] if w.bait.present? }.compact].values
+      wells.select { |w| w.bait.present? }
     end
 
     def wells
-      plate.locations_in_rows.map do |location|
+      parent.locations_in_rows.map do |location|
         bait     = bait_library_layout_preview[location]
         aliquot  = bait # Fudge, will be nil if no bait
 
@@ -51,7 +51,7 @@ module LabwareCreators
     end
 
     def wells_by_row
-      PlateWalking::Walker.new(plate, wells)
+      PlateWalking::Walker.new(parent, wells)
     end
   end
 end

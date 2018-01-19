@@ -1,4 +1,4 @@
-<%= page(:'multi-plate-pooling-page') do %>
+<%= page(:'pooled-tubes-from-whole-plates') do %>
   <%= content do %>
     <%= render(partial: './search/plate_progress', locals: { plates: @labware_creator.available_plates }) %>
   <% end %>
@@ -22,7 +22,7 @@
         <% 4.times do |i| %>
           <div class="plate-container scan-plate form-group row">
             <label for="tube[barocdes][<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
-            <input id="tube[barocdes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
+            <input id="tube[barocdes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> data-labware-type="plate"/>
           </div>
         <% end %>
         <%= form.submit 'Make Pool', class: 'btn btn-success btn-lg', id: 'create-labware' %>
@@ -46,7 +46,6 @@
     // Sequencing Pool ordering relys on Ruby 1.9 hashes being ordered
     $.extend(SCAPE, {
       coloursByLocation: <%= colours_by_location.to_json.html_safe %>,
-      plates: new Array(4),
       plate: {},
       sourceStates: ["passed", "qc_complete"]
     });

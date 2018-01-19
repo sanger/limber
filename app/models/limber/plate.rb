@@ -27,6 +27,10 @@ class Limber::Plate < Sequencescape::Plate
     uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']
   end
 
+  def primer_panel
+    @primer_panel ||= PrimerPanel.new(pools.values.dig(0, 'primer_panel'))
+  end
+
   def number_of_pools
     pools.keys.count
   end

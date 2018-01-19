@@ -4,7 +4,7 @@ module Presenters
   class StockPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
-    self.well_failure_states = [:passed]
+    self.well_failure_states = []
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::StockStateValidator, if: :pending?

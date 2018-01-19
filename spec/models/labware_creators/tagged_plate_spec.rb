@@ -70,7 +70,7 @@ describe LabwareCreators::TaggedPlate do
     end
 
     it 'describes the parent barcode' do
-      expect(subject.labware.barcode.ean13).to eq(plate_barcode)
+      expect(subject.parent.barcode.ean13).to eq(plate_barcode)
     end
 
     it 'describes the parent uuid' do

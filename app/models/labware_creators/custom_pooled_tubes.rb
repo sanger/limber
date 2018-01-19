@@ -9,7 +9,7 @@ module LabwareCreators
   class CustomPooledTubes < PooledTubesBase
     include LabwareCreators::CustomPage
     extend NestedValidation
-    extend SupportParent::PlateReadyForCustomPoolingOnly
+    include SupportParent::PlateReadyForCustomPoolingOnly
 
     self.page = 'custom_pooled_tubes'
     self.attributes += [:file]

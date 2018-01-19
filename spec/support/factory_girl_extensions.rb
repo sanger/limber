@@ -20,19 +20,19 @@ module FactoryGirl
     # comments { { "size" => comments_count, "actions" => { "read" => resource_url + '/comments' } } }
     # @param [*String] names 1 or more association names
     # @return [nil] nil
-    def with_has_many_associations(*names)
+    def with_has_many_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
           send(association + '_count', 0)
-          send(association + '_actions', ['read'])
+          send(association + '_actions', actions)
         end
       end
       names.each do |association|
         send(association) do
-          {
-            'size' => send(association + '_count'),
-            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, resource_url + '/' + association] }]
-          }
+          {}.tap do |h|
+            h['size'] = send(association + '_count') if send(association + '_actions').include?('read')
+            h['actions'] = Hash[send(association + '_actions').map { |action_name| [action_name, resource_url + '/' + association] }]
+          end
         end
       end
       nil

@@ -25,7 +25,7 @@ module ApiUrlHelper
     # @param [String] body: named_parameter reflecting the expected response JSON
     # @param [Int] status: the response status, defaults to 200
     # @return mocked_request
-    def stub_api_get(*components, status: 200, body:)
+    def stub_api_get(*components, status: 200, body: '{}')
       stub_request(:get, api_url_for(*components))
         .with(headers: { 'Accept' => 'application/json' })
         .to_return(
@@ -49,7 +49,7 @@ module ApiUrlHelper
     # @param [Hash] payload: the payload of the post request. Hash strongly recommended over raw json
     # @param [Int] status: the response status, defaults to 201
     # @return mocked_request
-    def stub_api_post(*components, status: 201, body:, payload:)
+    def stub_api_post(*components, status: 201, body: '{}', payload: {})
       stub_api_modify(*components, status: status, body: body, payload: payload)
     end
 

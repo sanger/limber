@@ -88,6 +88,32 @@ FactoryGirl.define do
       pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
     end
 
+    factory :plate_with_primer_panels do
+      pools do
+        wells = WellHelpers.column_order(size).dup
+        pool_hash = {}
+        pool_sizes.each_with_index do |pool_size, index|
+          pool_hash["pool-#{index + 1}-uuid"] = {
+            'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+            'insert_size' => { from: 100, to: 300 },
+            'library_type' => { name: library_type },
+            'request_type' => request_type,
+            'pcr_cycles' => pool_prc_cycles[index],
+            'for_multiplexing' => for_multiplexing,
+            'pool_complete' => pool_complete,
+            'primer_panel' => {
+              'name' => 'example panel',
+              'programs' => {
+                'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
+                'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
+              }
+            }
+          }
+        end
+        pool_hash
+      end
+    end
+
     factory :passed_plate do
       transient do
         for_multiplexing true

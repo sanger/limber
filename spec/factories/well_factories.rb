@@ -50,6 +50,7 @@ FactoryGirl.define do
     bait_library nil
     insert_size { {} }
     tag { {} }
+    tag2 { {} }
     suboptimal false
 
     sample { associated(:sample, name: sample_name, sample_id: sample_id, uuid: sample_uuid) }
@@ -65,11 +66,19 @@ FactoryGirl.define do
     end
 
     factory :tagged_aliquot do
-      tag do
+      sequence(:tag) do |i|
         {
-          name: 'Tag 1',
-          identifier: 1,
-          oligo: 'ATCG',
+          name: "Tag #{i}",
+          identifier: i,
+          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
+          group: 'My first tag group'
+        }
+      end
+      sequence(:tag2) do |i|
+        {
+          name: "Tag #{i}",
+          identifier: i,
+          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
           group: 'My first tag group'
         }
       end

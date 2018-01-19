@@ -86,9 +86,9 @@ module LabwareHelper
     "plate-col-#{column}"
   end
 
-  def plates_by_state(plates)
-    plates.each_with_object(Hash.new { |h, k| h[k] = [] }) do |plate, plates_by_state|
-      plates_by_state[plate.state] << plate
+  def labware_by_state(labwares)
+    labwares.each_with_object(Hash.new { |h, k| h[k] = [] }) do |labware, labware_by_state|
+      labware_by_state[labware.state] << labware
     end
   end
 

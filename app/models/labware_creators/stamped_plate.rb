@@ -5,7 +5,7 @@ require_dependency 'labware_creators'
 
 module LabwareCreators
   class StampedPlate < Base
-    extend SupportParent::PlateOnly
+    include SupportParent::PlateOnly
     self.default_transfer_template_name = 'Custom pooling'
 
     private
@@ -20,7 +20,7 @@ module LabwareCreators
     end
 
     def transfer_hash
-      WellHelpers.stamp_hash(labware.size)
+      WellHelpers.stamp_hash(parent.size)
     end
   end
 end

@@ -24,19 +24,18 @@ module Form
   end
 
   def method_missing(name, *args, &block)
-    name_without_assignment = name.to_s.sub(/=$/, '').to_sym
+    name_without_assignment = name.to_s.chomp('=').to_sym
     return super unless attributes.include?(name_without_assignment)
 
-    instance_variable_name = :"@#{name_without_assignment}"
+    instance_variable_name = "@#{name_without_assignment}"
     return instance_variable_get(instance_variable_name) if name_without_assignment == name.to_sym
     instance_variable_set(instance_variable_name, args.first)
   end
   protected :method_missing
 
   def respond_to_missing?(name, include_private = false)
-    name_without_assignment = name.to_s.sub(/=$/, '').to_sym
-    attributes.include?(name_without_assignment) ||
-      super
+    name_without_assignment = name.to_s.chomp('=').to_sym
+    attributes.include?(name_without_assignment) || super
   end
 
   def persisted?

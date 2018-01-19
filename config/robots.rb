@@ -19,7 +19,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB Post Shear', bed(7)
   end
 
-  bravo_robot 'started' do
+  bravo_robot transition_to: 'started' do
     from 'LB Post Shear', bed(4)
     to 'LB End Prep', bed(14)
   end
@@ -96,6 +96,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB Cap Lib Pool', bed(2)
   end
 
+  simple_robot('nx-8') do
+    from 'LB Cap Lib PCR-XP', bed(4)
+    to 'LB Cap Lib Pool', bed(2)
+  end
+
   bravo_robot do
     from 'PF Cherrypicked', bed(7)
     to 'PF Shear', bed(9)
@@ -106,7 +111,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'PF Post Shear', bed(7)
   end
 
-  bravo_robot('started') do
+  bravo_robot(transition_to: 'started') do
     from 'PF Post Shear', bed(4)
     to 'PF Post Shear XP', car('2,3')
   end
@@ -143,7 +148,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  bravo_robot 'started' do
+  bravo_robot transition_to: 'started' do
     from 'scRNA cDNA-XP', bed(4)
     to 'scRNA End Prep', car('1,4')
   end
@@ -216,7 +221,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'PF Lib XP2', car('2,3')
   end
 
-  bravo_robot 'started' do
+  bravo_robot transition_to: 'started' do
     from 'LBR Cherrypick', bed(7)
     to 'LBR mRNA Cap', bed(6)
   end
@@ -234,7 +239,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LBR Frag', car('2,3')
   end
 
-  bravo_robot 'started' do
+  bravo_robot transition_to: 'started' do
     from 'LBR Frag', bed(8)
     to 'LB cDNA', car('3,4')
   end
@@ -252,8 +257,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB cDNA XP', car('4,3')
   end
 
-  bravo_robot 'started' do
+  bravo_robot transition_to: 'started' do
     from 'LB cDNA XP', bed(7)
     to 'LB End Prep', car('1,4')
+  end
+
+  simple_robot('mosquito', transition_to: 'started') do
+    from 'GBS PCR1', bed(1)
+    to 'GBS PCR2', bed(2)
   end
 end

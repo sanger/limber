@@ -8,7 +8,13 @@ module Presenters
     included do
       include Form
       include BarcodeLabelsHelper
+
+      class_attribute :labware_class, :summary_items
+
+      attr_accessor :api, :labware
+
       self.page = 'show'
+      self.attributes = %i[api labware]
 
       def csv
         purpose_config.fetch(:csv_template, 'show')

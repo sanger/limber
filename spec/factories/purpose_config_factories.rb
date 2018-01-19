@@ -17,6 +17,8 @@ FactoryGirl.define do
       tag_layout_templates nil
       expected_request_types nil
       suggest_library_pass_for nil
+      pcr_stage nil
+      submission {}
     end
 
     # Builds the hash up automatically.
@@ -51,6 +53,20 @@ FactoryGirl.define do
         asset_type 'tube'
         default_printer_type :tube
         presenter_class 'Presenters::SimpleTubePresenter'
+      end
+
+      factory :pooled_tube_from_plates_purpose_config do
+        transient do
+          name 'Pool tube'
+          creator_class 'LabwareCreators::PooledTubesFromWholePlates'
+        end
+      end
+
+      factory :pooled_tube_from_tubes_purpose_config do
+        transient do
+          name 'Pool tube'
+          creator_class 'LabwareCreators::PooledTubesFromWholeTubes'
+        end
       end
     end
   end

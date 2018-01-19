@@ -36,7 +36,8 @@ describe 'well factory' do
               "sample_id": "SAMA10"
             }
           },
-          "tag": {}
+          "tag": {},
+          "tag2": {}
         }],
         "location": "A1",
         "state": "pending"

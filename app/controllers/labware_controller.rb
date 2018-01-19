@@ -11,19 +11,16 @@ class LabwareController < ApplicationController
     @presenter = presenter_for(@labware)
     @presenter.prepare
     @presenter.suitable_labware do
+      response.headers['Vary'] = 'Accept'
       respond_to do |format|
         format.html do
           render @presenter.page
-          response.headers['Vary'] = 'Accept'
         end
         format.csv do
           render @presenter.csv
           response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
-          response.headers['Vary'] = 'Accept'
         end
-        format.json do
-          response.headers['Vary'] = 'Accept'
-        end
+        format.json {}
       end
       return
     end
@@ -31,11 +28,6 @@ class LabwareController < ApplicationController
     redirect_to(
       search_path,
       notice: @presenter.errors
-    )
-  rescue Presenters::UnknownLabwareType => exception
-    redirect_to(
-      search_path,
-      notice: "#{exception.message}. Perhaps you are using the wrong pipeline application?"
     )
   end
 

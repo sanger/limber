@@ -3,7 +3,7 @@
 module LabwareCreators
   class TaggedPlate < StampedPlate
     include LabwareCreators::CustomPage
-    extend SupportParent::PlateOnly
+    include SupportParent::PlateOnly
 
     self.page = 'tagged_plate'
     self.attributes = %i[
@@ -33,7 +33,7 @@ module LabwareCreators
 
     def initialize(*args, &block)
       super
-      plate.populate_wells_with_pool
+      parent.populate_wells_with_pool
     end
 
     def substitutions
@@ -41,11 +41,11 @@ module LabwareCreators
     end
 
     def tag_groups
-      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid).available
+      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, parent, purpose_uuid).available
     end
 
     def tag2s
-      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate).available
+      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, parent).available
     end
 
     def tag2_names
@@ -76,7 +76,7 @@ module LabwareCreators
     end
 
     def requires_tag2?
-      plate.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
+      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
 
     def tag2_field

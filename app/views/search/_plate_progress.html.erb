@@ -1,5 +1,5 @@
 <ul id="ongoing_plates" data-role="listview" data-theme="d" data-filter="true" data-filter-placeholder="Filter plates..." data-inset="true" class="list-group">
-  <% plates_by_state(plates).each do |state, sorted_plates| -%>
+  <% labware_by_state(plates).each do |state, sorted_plates| -%>
     <li data-role="list-divider" class="list-group-item list-group-item-<%= state_style(state) %>"><%= state.titleize %></li>
     <% sorted_plates.each do |plate| -%>
       <li class="list-group-item list-group-item-action">
@@ -24,7 +24,7 @@
 
   <% if plates.empty? -%>
     <li>
-      <h2><i><%= no_results_msg ||= 'No plates found.' %></i></h2>
+      <h2><i>No plates found.</i></h2>
     </li>
   <% end -%>
 </ul>

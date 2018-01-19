@@ -3,7 +3,7 @@
 module LabwareCreators
   # For simple tube to tube transfers
   class TubeFromTube < Base
-    extend SupportParent::TubeOnly
+    include SupportParent::TubeOnly
 
     self.default_transfer_template_name = 'Transfer between specific tubes'
 

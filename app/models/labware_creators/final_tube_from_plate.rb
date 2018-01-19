@@ -11,7 +11,7 @@ module LabwareCreators
   # of the existing pipeline, and may be removed in future. Essentially, as used currently, the tubes are ACTUALLY part
   # of the previous plate, so are already filled by this stage.
   class FinalTubeFromPlate < Base
-    extend SupportParent::PlateReadyForPoolingOnly
+    include SupportParent::PlateReadyForPoolingOnly
 
     attr_reader :tube_transfer
 
@@ -20,10 +20,6 @@ module LabwareCreators
     def create_labware!
       transfer_into_existing_tubes!
       pass_tubes!
-    end
-
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
     end
 
     # We may create multiple tubes, so cant redirect onto any particular

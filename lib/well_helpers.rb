@@ -26,6 +26,13 @@ module WellHelpers
     columns_range(size).each_with_object([]) { |c, wells| rows_range(size).each { |r| wells << "#{r}#{c}" } }.freeze
   end
 
+  # Returns an array of all well names in row order
+  #
+  # @return [Array] well names in column order ie. A1, A2, A3 ...
+  def self.row_order(size = 96)
+    rows_range(size).each_with_object([]) { |r, wells| columns_range(size).each { |c| wells << "#{r}#{c}" } }.freeze
+  end
+
   #
   # Returns a hash suitable for stamping an entire plate
   #
@@ -35,15 +42,6 @@ module WellHelpers
   #
   def self.stamp_hash(size)
     column_order(size).each_with_object({}) { |well, hash| hash[well] = well }
-  end
-
-  # Returns an array of all well names in row order
-  # Sequencescape returns some wells in column order. THis is primarily used to help
-  # us mimic Sequencescape output in tests.
-  #
-  # @return [Array] well names in row order ie. A1, A2, A3 ...
-  def self.row_order(size = 96)
-    rows_range(size).each_with_object([]) { |r, wells| columns_range(size).each { |c| wells << "#{r}#{c}" } }.freeze
   end
 
   # Returns the index of the well by column

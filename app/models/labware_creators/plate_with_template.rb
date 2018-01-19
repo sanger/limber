@@ -5,6 +5,6 @@ require_dependency 'labware_creators'
 
 module LabwareCreators
   class PlateWithTemplate < Base
-    extend SupportParent::PlateOnly
+    include SupportParent::PlateOnly
   end
 end
