@@ -5,6 +5,10 @@ class OngoingPlate
   include ActiveModel::Model
   attr_accessor :plate_purposes, :show_my_plates_only, :include_used, :states
 
+  def to_partial_path
+    'search/plate_search_form'
+  end
+
   def purpose_uuids
     plate_purposes.presence || default_purposes
   end

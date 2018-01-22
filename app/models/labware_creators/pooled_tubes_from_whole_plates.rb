@@ -44,10 +44,10 @@ module LabwareCreators
 
     # TODO: This should probably be asynchronous
     def available_plates
-      @ongoing_plate = OngoingPlate.new(plate_purposes: [parent.plate_purpose.uuid], include_used: false, states: ['passed'])
+      @search_options = OngoingPlate.new(plate_purposes: [parent.plate_purpose.uuid], include_used: false, states: ['passed'])
       @search_results = plate_search.all(
         Limber::Plate,
-        @ongoing_plate.search_parameters
+        @search_options.search_parameters
       )
     end
 

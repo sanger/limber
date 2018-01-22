@@ -75,7 +75,7 @@ describe SearchController, type: :controller do
 
         it 'finds all plates' do
           expected_search
-          post :ongoing_plates
+          get :ongoing_plates
           expect(expected_search).to have_been_made.once
         end
       end
@@ -91,8 +91,47 @@ describe SearchController, type: :controller do
 
         it 'finds specified plates' do
           expected_search
-          post :ongoing_plates, params: { ongoing_plate: { plate_purposes: ['uuid-1'], show_my_plates_only: '1', include_used: '1' } }
+          get :ongoing_plates, params: { ongoing_plate: { plate_purposes: ['uuid-1'], show_my_plates_only: '1', include_used: '1' } }
           expect(expected_search).to have_been_made.once
+          expect(response).to have_http_status(:ok)
+        end
+      end
+    end
+
+    describe '#ongoing_tubes' do
+      let(:search_name) { 'Find tubes' }
+      let(:result) { associated :tube }
+      context 'without parameters' do
+        let(:search_parameters) do
+          {
+            states: %w[pending started passed qc_complete failed cancelled],
+            tube_purpose_uuids: ['uuid-3', 'uuid-4'],
+            include_used: false
+          }
+        end
+
+        it 'finds all tubes' do
+          expected_search
+          get :ongoing_tubes
+          expect(expected_search).to have_been_made.once
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'with parameters' do
+        let(:search_parameters) do
+          {
+            states: %w[pending started passed qc_complete failed cancelled],
+            tube_purpose_uuids: ['uuid-3'],
+            include_used: true
+          }
+        end
+
+        it 'finds specified tubes' do
+          expected_search
+          get :ongoing_tubes, params: { ongoing_tube: { tube_purposes: ['uuid-3'], include_used: '1' } }
+          expect(expected_search).to have_been_made.once
+          expect(response).to have_http_status(:ok)
         end
       end
     end

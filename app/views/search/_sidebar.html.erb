@@ -8,6 +8,7 @@
     <li class='dropdown-item'><%= link_to 'All Ongoing Plates', ongoing_plates_path %></li>
     <li class='dropdown-item'><%= link_to 'My Plates', ongoing_plates_path(ongoing_plate: { show_my_plates_only: '1' }) %></li>
     <li class='dropdown-item'><%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { plate_purposes: [Settings.purpose_uuids["GBS Stock"]] }) %></li>
+    <li class='dropdown-item'><%= link_to 'All Ongoing Tubes', ongoing_tubes_path %></li>
    </ul>
  </div>
 

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     get  '/',                 action: :new, as: :search
     post '/',                 action: :create, as: :perform_search
     get  '/ongoing_plates',   action: :ongoing_plates
+    get  '/ongoing_tubes',    action: :ongoing_tubes
     post '/qcables',          action: :qcables, as: :qcables_search
     get  '/retrieve_parent',  action: :retrieve_parent
   end

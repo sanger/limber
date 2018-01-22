@@ -39,6 +39,20 @@ body {
 // Bootstrap 4 doesn't seem to do this automatically
 .content-secondary, .content-main { padding-top: 20px; }
 
+.content-main {
+  @extend .col-sm-12;
+  @extend .col-md-8;
+  @extend .col-lg-7;
+  @extend .col-xl-6;
+}
+
+.content-secondary {
+  @extend .col-sm-12;
+  @extend .col-md-4;
+  @extend .col-lg-5;
+  @extend .col-xl-6;
+}
+
 #state-changer {
   label { @include make-col(3); }
   .custom-select { @include make-col(9); }
@@ -63,6 +77,31 @@ dl.metadata, dl#samples-information {
   label {
     font-size: small;
   }
+}
+
+.inbox-results {
+  @extend .list-group;
+  li { @extend .list-group-item; }
+  li.state-pending { @extend .list-group-item-warning; }
+  li.state-started { @extend .list-group-item-info; }
+  li.state-passed { @extend .list-group-item-success; }
+  // TODO: Update to primary when bootstrap updated
+  li.state-qc_completed { @extend .list-group-item-success; }
+  li.state-cancelled { @extend .list-group-item-danger; }
+  li.state-failed { @extend .list-group-item-danger; }
+  li.labware { @extend .list-group-item-action }
+}
+
+.labware {
+  dl {
+    @extend .list-inline;
+    dt { @extend .list-inline-item; }
+    dd { @extend .list-inline-item; }
+  }
+}
+
+.card {
+  .inbox-results { @extend .list-group-flush }
 }
 
 .other-actions {

@@ -117,12 +117,6 @@ Rails/OutputSafety:
     - 'app/helpers/barcode_labels_helper.rb'
     - 'app/helpers/plate_helper.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/Presence:
-  Exclude:
-    - 'app/models/ongoing_plate.rb'
-
 # Offense count: 40
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, EnforcedStyle.

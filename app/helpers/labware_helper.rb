@@ -87,9 +87,7 @@ module LabwareHelper
   end
 
   def labware_by_state(labwares)
-    labwares.each_with_object(Hash.new { |h, k| h[k] = [] }) do |labware, labware_by_state|
-      labware_by_state[labware.state] << labware
-    end
+    labwares.group_by(&:state)
   end
 
   def well_state_value(container)

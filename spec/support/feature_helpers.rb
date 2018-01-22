@@ -64,6 +64,7 @@ module FeatureHelpers
     within '.content-main' do
       fill_in 'User Swipecard', with: swipecard
       find_field('User Swipecard').send_keys :enter
+      expect(page).to have_content('Jane Doe')
     end
   end
 

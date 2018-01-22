@@ -54,12 +54,12 @@ module PageHelper
 
   # Main body of the page, provides information about what you HAVE
   def content(&block)
-    grouping(:content, class: 'col-sm-12 col-md-8 col-lg-7 col-xl-6 content-main', &block)
+    grouping(:content, class: 'content-main', &block)
   end
 
   # Provides information about what you can DO
   def sidebar(&block)
-    grouping(:sidebar, class: 'col-sm-12 col-md-4 col-lg-5 col-xl-6 sidebar content-secondary', &block)
+    grouping(:sidebar, class: 'sidebar content-secondary', &block)
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)

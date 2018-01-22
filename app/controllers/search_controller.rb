@@ -10,13 +10,23 @@ class SearchController < ApplicationController
   def ongoing_plates
     plate_search = api.search.find(Settings.searches.fetch('Find plates'))
     @purpose_options = helpers.purpose_options('plate')
-    @ongoing_plate = OngoingPlate.new(ongoing_plate_search_params)
+    @search_options = OngoingPlate.new(ongoing_plate_search_params)
 
     @search_results = plate_search.all(
       Limber::Plate,
-      @ongoing_plate.search_parameters
+      @search_options.search_parameters
     )
-    render :ongoing_plates
+  end
+
+  def ongoing_tubes
+    tube_search = api.search.find(Settings.searches.fetch('Find tubes'))
+    @purpose_options = helpers.purpose_options('tube')
+    @search_options = OngoingTube.new(ongoing_tube_search_params)
+
+    @search_results = tube_search.all(
+      Limber::Tube,
+      @search_options.search_parameters
+    )
   end
 
   def qcables
@@ -77,7 +87,13 @@ class SearchController < ApplicationController
     end
   end
 
+  private
+
   def ongoing_plate_search_params
     params.fetch(:ongoing_plate, {}).permit(:show_my_plates_only, :include_used, plate_purposes: [])
+  end
+
+  def ongoing_tube_search_params
+    params.fetch(:ongoing_tube, {}).permit(:include_used, tube_purposes: [])
   end
 end

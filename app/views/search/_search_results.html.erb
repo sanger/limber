@@ -1,21 +1,9 @@
 <%= content do %>
-  <h1><%= search_title %></h1>
-  <%= section do %>
-    <%= form_for(@ongoing_plate, method: :get) do |f| %>
-      <%= f.label :plate_purposes, 'Select plate purposes' %>
-      <%= f.select :plate_purposes, options_for_select(@purpose_options, @ongoing_plate.plate_purposes), {}, multiple: true, class: 'form-control' %>
-      <%= f.label :show_my_plates_only, 'Show my plates only' %>
-      <%= f.check_box :show_my_plates_only %>
-      <%= f.label :include_used, 'Include used plates' %>
-      <%= f.check_box :include_used %>
-      <%= f.submit 'Update', class: 'btn btn-default' %>
-    <% end %>
+  <%= card title: search_title do %>
+    <%= render partial: @search_options %>
   <% end %>
 
-  <h2><%= search_status(search_results) %></h2>
-  <% unless search_results.empty? %>
-    <%= section do %>
-      <%= render(partial: 'plate_progress', locals: { plates: search_results }) %>
-    <% end %>
+  <%= card title: 'Results', without_block: true do %>
+    <%= render(partial: 'inbox', locals: { search_results: search_results }) %>
   <% end %>
 <% end %>
