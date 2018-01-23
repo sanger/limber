@@ -13,7 +13,7 @@
       <div class="card-block">
         <h2 id="plate-title" class="card-title">
           <%= @presenter.title %>
-          <span class="badge badge-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
+          <%= state_badge(@presenter.state) %>
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
         </h2>
       </div>

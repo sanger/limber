@@ -15,8 +15,20 @@ body {
   margin-bottom: 50px;
 }
 
+header.limber-header {
+  nav {
+    @extend .navbar;
+    @extend .navbar-toggleable-md;
+    @extend .bg-inverse;
+    @extend .navbar-inverse;
+  }
+}
+
 /* New stuff */
-.limber-logo { font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter; }
+.limber-logo {
+  @extend .navbar-brand;
+  font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter;
+}
 
 .logged_in {
   .logged_out_only { display: none; }
@@ -91,6 +103,26 @@ dl.metadata, dl#samples-information {
   li.state-failed { @extend .list-group-item-danger; }
   li.labware { @extend .list-group-item-action }
 }
+
+.state-badge { @extend.badge; }
+.state-badge.pending { @extend.badge-warning; }
+.state-badge.started { @extend.badge-info; }
+.state-badge.passed { @extend.badge-success; }
+.state-badge.qc_completed { @extend.badge-success }
+.state-badge.cancelled { @extend .list-group-item-danger; }
+.state-badge.failed { @extend .list-group-item-danger; }
+
+.flash {
+  @extend .row;
+  @extend .alert;
+}
+.flash-alert { @extend .alert-danger; }
+.flash-danger { @extend .alert-danger; }
+.flash-notice { @extend .alert-success; }
+.flash-success { @extend .alert-success; }
+.flash-warning { @extend .alert-warning; }
+.flash-info { @extend .alert-info; }
+
 
 .labware {
   dl {
@@ -221,71 +253,6 @@ footer.version-info {
 .information {
   .total { font-weight: bold; }
 }
-
-.tooltip {
-  display:none;
-  background:transparent url(/images/black_arrow.png);
-  font-size:12px;
-  height:70px;
-  width:160px;
-  padding:25px;
-  color:#fff;
-}
-
-.tooltip.bottom {
-  background:url(/images/black_arrow_bottom.png);
-  padding-top:40px;
-  height:65px;
-}
-
-.tooltip.bottom {
-  background:url(/images/black_arrow_bottom.png);
-}
-
-/* the overlayed element */
-.aliquot-details {
-
-  /* must be initially hidden */
-  display:none;
-
-  /* place overlay on top of other elements */
-  z-index:10000;
-
-  /* styling */
-  @include background(linear-gradient(#353535,#0F0F0F));
-
-  width:600px;
-  min-height:400px;
-  border:3px solid #fff;
-  @include border-radius(5px);
-  /* CSS3 styling for latest browsers */
-  -moz-box-shadow:1px 1px 9px #000;
-  -webkit-box-shadow: 1px 1px 9px #000;
-}
-
-/* close button positioned on upper right corner */
-.aliquot-details .close {
-  /*Replace image with jquery-ui image*/
-  background-image: url(/images/close.png);
-  position:         absolute;
-  right:            -15px;
-  top:              -15px;
-  cursor:           pointer;
-  height:           35px;
-  width:            35px;
-}
-
-div.aliquot-details h3 {
-  color:     #55D8FF;
-  font-size: 15px;
-}
-
-.aliquot-details img {
-  position: absolute;
-  left:     15px;
-  top:      65px;
-}
-
 
 /* styling for elements inside overlay */
 .details {

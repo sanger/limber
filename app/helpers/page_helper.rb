@@ -1,25 +1,6 @@
 # frozen_string_literal: true
 
 module PageHelper
-  FLASH_STYLES = {
-    'alert'   => 'danger',
-    'danger'  => 'danger',
-    'notice'  => 'success',
-    'success' => 'success',
-    'warning' => 'warning',
-    'info'    => 'info'
-  }.freeze
-  DEFAULT_FLASH_STYLE = 'info'
-
-  STATE_STYLES = {
-    'pending'     => 'default',
-    'started'     => 'info',
-    'passed'      => 'success',
-    'qc_complete' => 'primary',
-    'cancelled'   => 'danger'
-  }.freeze
-  DEFAULT_STATE_STYLE = 'default'
-
   def flash_messages
     render(partial: 'application/flash_messages')
   end
@@ -40,15 +21,6 @@ module PageHelper
       else
         concat content_tag(:div, class: 'row', &block)
       end
-    end
-  ensure
-    content_for :header, ''
-  end
-
-  def header(presenter = nil, title = nil, _options = {}, &block)
-    content_for(:header, &block) if block_given?
-    grouping(:header) do
-      render(partial: 'header', locals: { presenter: presenter, title: title })
     end
   end
 
@@ -79,24 +51,16 @@ module PageHelper
     end
   end
 
-  def section(options = {}, &block)
-    # add section to the section's CSS class attribute
-    options[:class] = [options[:class], 'section'].compact.join(' ')
+  def jumbotron(jumbotron_id = nil, options = {}, &block)
+    options[:class] ||= +''
+    options[:class] << ' jumbotron'
+    options[:id] = jumbotron_id
     content_tag(:div, options, &block)
   end
 
-  def jumbotron(jumbotron_id = nil, options = {}, &block)
-    options[:class] ||= ''
-    options[:class] << ' jumbotron'
-    options[:id] = jumbotron_id
-    section(options, &block)
-  end
-
-  def flash_style(level)
-    FLASH_STYLES[level] || DEFAULT_FLASH_STYLE
-  end
-
-  def state_style(state)
-    STATE_STYLES[state] || DEFAULT_STATE_STYLE
+  # eg. state_badge('pending')
+  # <span class="state-badge-pending">Pending</span>
+  def state_badge(state)
+    content_tag(:span, state.titleize, class: "state-badge #{state}")
   end
 end

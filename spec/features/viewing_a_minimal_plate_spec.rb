@@ -34,7 +34,7 @@ feature 'Viewing a plate', js: true do
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('pending')
+    expect(find('.state-badge')).to have_content('Pending')
   end
 
   context 'a passed plate' do
@@ -43,7 +43,7 @@ feature 'Viewing a plate', js: true do
     scenario 'if a plate is passed creation of a child is allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.badge')).to have_content('passed')
+      expect(find('.state-badge')).to have_content('Passed')
       expect(page).to have_button('Add an empty Child Purpose 0 plate')
     end
   end
@@ -54,7 +54,7 @@ feature 'Viewing a plate', js: true do
     scenario 'if a plate is started creation of a child is not allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.badge')).to have_content('started')
+      expect(find('.state-badge')).to have_content('Started')
       expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
     end
   end

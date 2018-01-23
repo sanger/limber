@@ -13,7 +13,7 @@
       <div class="card-block">
         <h2 id="tube-title" class="card-title">
           <%= @presenter.title %>
-          <span class="badge badge-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
+          <%= state_badge(@presenter.state) %>
           <%# No priority flag %>
         </h2>
       </div>
