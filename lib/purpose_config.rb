@@ -8,19 +8,29 @@ class PurposeConfig
   class_attribute :default_printer
   self.default_printer = :plate_a
 
-  def self.load(name, options, store, api)
+  def self.load(name, options, store, api, submission_templates)
     case options.fetch(:asset_type)
-    when 'plate' then PurposeConfig::Plate.new(name, options, store, api)
-    when 'tube' then PurposeConfig::Tube.new(name, options, store, api)
+    when 'plate' then PurposeConfig::Plate.new(name, options, store, api, submission_templates)
+    when 'tube' then PurposeConfig::Tube.new(name, options, store, api, submission_templates)
     else raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
   end
 
-  def initialize(name, options, store, api)
+  def initialize(name, options, store, api, submission_templates)
     @name = name
     @options = options
+    @submission = options.delete(:submission)
     @store = store
     @api = api
+    @submission_templates = submission_templates
+  end
+
+  def submission_options
+    return {} if @submission.nil?
+    {
+      options: @submission.fetch('options', {}),
+      template_uuid: @submission_templates[@submission.fetch('template_name')]
+    }
   end
 
   def parents
@@ -33,7 +43,8 @@ class PurposeConfig
       creator_class: 'LabwareCreators::StampedPlate',
       presenter_class: 'Presenters::StandardPresenter',
       state_changer_class: 'StateChangers::DefaultStateChanger',
-      default_printer_type: default_printer
+      default_printer_type: default_printer,
+      submission: submission_options
     }.merge(@options)
   end
 

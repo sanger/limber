@@ -13,8 +13,13 @@ class PrimerPanel
 
   def initialize(panel_config_hash)
     panel_config_hash ||= {}
+    @exists = panel_config_hash.present?
     @name = panel_config_hash.fetch('name', UNKNOWN)
     @programs = panel_config_hash.fetch('programs', {})
+  end
+
+  def exists?
+    @exists
   end
 
   def program_name_for(step)

@@ -117,7 +117,7 @@ dl.metadata, dl#samples-information {
   @extend .alert;
 }
 .flash-alert { @extend .alert-danger; }
-.flash-danger { @extend .alert-danger; }
+.flash-error { @extend .alert-danger; }
 .flash-notice { @extend .alert-success; }
 .flash-success { @extend .alert-success; }
 .flash-warning { @extend .alert-warning; }

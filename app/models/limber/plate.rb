@@ -23,8 +23,7 @@ class Limber::Plate < Sequencescape::Plate
   end
 
   def library_type_name
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']
+    pools.values.dig(0, 'library_type', 'name') || 'Unknown'
   end
 
   def primer_panel

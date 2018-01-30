@@ -7,12 +7,14 @@
     <h3 class="barcode list-group-item-heading"><%= useful_barcode(plate.barcode) %> <%= state_badge(plate.state) %></h3>
     <% if plate.stock_plate.present? %><p class="list-group-item-text"><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
     <dl>
-      <% if plate.iteration.present? %><dt>Iteration</dt><dd><%= plate.iteration %></dd><% end %>
       <dt>Created</dt><dd><%= plate.created_at.to_formatted_s(:date_created) %></dd>
       <dt>Type</dt><dd><%= plate.plate_purpose.name %></dd>
       <dt>Library Type</dt><dd><%= plate.library_type_name %></dd>
       <dt>Number of Pools</dt><dd><%= plate.number_of_pools %></dd>
-      <dt> Shearing Size</dt><dd><%= plate.shearing_size %></dd>
+      <dt>Shearing Size</dt><dd><%= plate.shearing_size %></dd>
+      <% if plate.primer_panel.exists? %>
+        <dt>Primer Panel</dt><dd><%= plate.primer_panel.name %></dd>
+      <% end %>
     </dl>
   <% end -%>
 </li>

@@ -9,12 +9,15 @@ namespace :config do
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
+    puts 'Fetching submission_templates...'
+    submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
+
     puts 'Fetching purposes...'
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       YAML.parse_file(file).to_ruby.each do |name, options|
-        purposes << PurposeConfig.load(name, options, all_purposes, api)
+        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
       end
     end
 
@@ -68,27 +71,6 @@ namespace :config do
       end
 
       configuration[:robots]      = ROBOT_CONFIG
-      configuration[:qc_purposes] = []
-
-      configuration[:submission_templates] = {}.tap do |_submission_templates|
-        puts 'Preparing submission templates...'
-        #        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
-      end
-
-      puts 'Setting study...'
-      configuration[:study] = Limber::Application.config.study_uuid ||
-                              puts('No study specified, using first study') ||
-                              api.study.first.uuid
-      puts 'Setting project...'
-      configuration[:project] = Limber::Application.config.project_uuid ||
-                                puts('No project specified, using first project') ||
-                                api.project.first.uuid
-
-      configuration[:request_types] = {}.tap do |request_types|
-        request_types['illumina_htp_library_creation']    = ['Lib Norm', false]
-        request_types['illumina_a_isc']                   = ['ISCH lib pool', false]
-        request_types['illumina_a_re_isc']                = ['ISCH lib pool', false]
-      end
     end
 
     # Write out the current environment configuration file

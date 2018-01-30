@@ -110,7 +110,7 @@ class Presenters::PlatePresenter
   def tag_sequences
     @tag_sequences ||= labware.wells.each_with_object([]) do |well, tags|
       well.aliquots.each do |aliquot|
-        tags << [aliquot.tag.oligo, aliquot.tag2.oligo]
+        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
       end
     end
   end
