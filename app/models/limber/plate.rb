@@ -91,6 +91,10 @@ class Limber::Plate < Sequencescape::Plate
     @tubes_and_sources ||= generate_tubes_and_sources
   end
 
+  def submissions
+    pools.keys
+  end
+
   private
 
   def generate_tubes_and_sources

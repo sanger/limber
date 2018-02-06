@@ -28,7 +28,7 @@ class PurposeConfig
   def submission_options
     return {} if @submission.nil?
     {
-      options: @submission.fetch('options', {}),
+      request_options: @submission.fetch('request_options', {}),
       template_uuid: @submission_templates[@submission.fetch('template_name')]
     }
   end

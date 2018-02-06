@@ -34,7 +34,17 @@ GBS PCR2 Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
-  :creator_class: LabwareCreators::PooledTubesFromWholePlates
+  # V1
+  # We assume one submission per plate. And limit pooling to
+  # one plate per tube. This assumption will not be valid
+  # for long. But currently results in complications
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  # V2
+  # This allows cross-plate cross-submission pooling
+  # Lab wise this works fine, but disrupts some of the large scale
+  # tracking, preventing us from passing requests, and extracting
+  # submission info reliably once things are pooled.
+  #:creator_class: LabwareCreators::PooledTubesFromWholePlates
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
@@ -70,7 +80,7 @@ GBS MiSeq Pool:
   :default_printer_type: :tube
   :submission:
     template_name: 'MiSeq for GBS'
-    options:
+    request_options:
       :read_length: 150
   :parents:
   - GBS PCR Pool Selected

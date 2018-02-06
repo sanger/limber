@@ -7,9 +7,7 @@
 
   <%= card title:'Suggested Actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
 
     <% presenter.control_additional_creation do -%>
@@ -72,9 +70,7 @@
     <% end %>
 
     <% presenter.control_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-secondary" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
 
     <% if presenter.well_failing_applicable? %>

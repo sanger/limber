@@ -7,28 +7,23 @@ class LabwareController < ApplicationController
   before_action :get_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
+  rescue_from Presenters::UnknownLabwareType, with: :unknown_type
+
   def show
     @presenter = presenter_for(@labware)
     @presenter.prepare
-    @presenter.suitable_labware do
-      response.headers['Vary'] = 'Accept'
-      respond_to do |format|
-        format.html do
-          render @presenter.page
-        end
-        format.csv do
-          render @presenter.csv
-          response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
-        end
-        format.json {}
-      end
-      return
-    end
 
-    redirect_to(
-      search_path,
-      notice: @presenter.errors
-    )
+    response.headers['Vary'] = 'Accept'
+    respond_to do |format|
+      format.html do
+        render @presenter.page
+      end
+      format.csv do
+        render @presenter.csv
+        response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+      end
+      format.json {}
+    end
   end
 
   def update
@@ -53,6 +48,13 @@ class LabwareController < ApplicationController
   end
 
   private
+
+  def unknown_type
+    redirect_to(
+      search_path,
+      error: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
+    )
+  end
 
   def state_changer
     state_changer_for(params[:purpose_uuid], params[:id])

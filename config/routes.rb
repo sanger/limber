@@ -30,23 +30,25 @@ Rails.application.routes.draw do
   resources :limber_plates, controller: :plates do
     resources :children, controller: :plate_creation
     resources :tubes,    controller: :tube_creation
-    resources :qc_files, controller: :qc_files
-    resources :work_completions, only: :create
+    resources :qc_files
+    resources :work_completions, only: :create, module: :plates
   end
 
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
-
-  resources :limber_multiplexed_library_tube, controller: :tubes do
-    resources :children, controller: :tube_creation
-    resources :qc_files, controller: :qc_files
-  end
 
   resources :qc_files, only: :show
 
   resources :limber_tubes, controller: :tubes do
     resources :children, controller: :tube_creation
     resources :qc_files, controller: :qc_files
+    resources :work_completions, only: :create, module: :tubes
   end
+
+  # limber_multiplexed_library_tube routes have been removed, and instead
+  # mx tubes behave like standard tubes for the purposes of routing/url generation
+  # Keeping this redirect here to handle bookmarks. The other routes weren't
+  # actively being used.
+  get '/limber_multiplexed_library_tube/:uuid', to: redirect('/limber_tubes/%<uuid>s')
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do

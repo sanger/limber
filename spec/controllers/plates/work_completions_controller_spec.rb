@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require './app/controllers/work_completions_controller'
 
-describe WorkCompletionsController, type: :controller do
+describe Plates::WorkCompletionsController, type: :controller do
   describe '#create' do
     has_a_working_api
 
@@ -24,7 +23,7 @@ describe WorkCompletionsController, type: :controller do
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
       expect(plate_get).to have_been_made
       expect(work_completion_creation).to have_been_made.once
-      assert_equal 'Requests have been passed', flash.notice
+      assert_equal ['Requests have been passed'], flash.notice
     end
   end
 end

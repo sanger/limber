@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 module Presenters
-  class UnknownPlatePresenter < PlatePresenter
+  class UnknownTubePresenter < UubePresenter
     include Presenters::Statemachine::Standard
+    include Statemachine::DoesNotAllowLibraryPassing
 
-    validate :add_unknown_plate_warnings
+    validate :add_unknown_tube_warnings
 
     def well_failing_applicable?
       false
     end
 
     def add_unknown_plate_warnings
-      errors.add(:plate, "type '#{labware.purpose.name}' is not a limber plate. Perhaps you are using the wrong pipeline application?")
+      errors.add(:plate, "type '#{labware.purpose.name}' is not a limber tube. Perhaps you are using the wrong pipeline application?")
     end
 
     def control_state_change

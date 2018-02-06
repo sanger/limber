@@ -66,22 +66,6 @@ class Presenters::PlatePresenter
     labware.tubes.map { |t| Labels::TubeLabel.new(t) }
   end
 
-  def suitable_labware
-    yield
-  end
-
-  def control_library_passing
-    yield if allow_library_passing? && !suggest_library_passing?
-  end
-
-  def control_suggested_library_passing
-    yield if allow_library_passing? && suggest_library_passing?
-  end
-
-  def suggest_library_passing?
-    purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
-  end
-
   def control_tube_display
     yield if labware.transfers_to_tubes?
   end

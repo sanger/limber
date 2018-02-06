@@ -32,8 +32,6 @@ module LabwareCreators
         user: user_uuid,
         transfer_requests: transfer_request_attributes
       )
-
-      generate_submissions_for_child
     end
 
     def barcodes=(input)
@@ -60,37 +58,10 @@ module LabwareCreators
 
     private
 
-    def generate_submissions_for_child
-      order = submission_template.orders.create!(
-        assets: [@child.uuid],
-        request_options: request_options,
-        user: user_uuid
-      )
-
-      submission = api.submission.create!(
-        orders: [order.uuid],
-        user: user_uuid
-      )
-
-      submission.submit!
-    rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => exception
-      raise SubmissionFailure, ('Submission Failed. ' + /.+\[([^\]]+)\]/.match(exception.message)[1])
-    rescue Sequencescape::Api::ResourceInvalid => exception
-      raise SubmissionFailure, ('Submission Failed. ' + exception.resource.errors.full_messages.join('; '))
-    end
-
     def transfer_request_attributes
       parents.each_with_object([]) do |parent, transfer_requests|
         transfer_requests << { source_asset: parent.uuid, target_asset: @child.uuid }
       end
-    end
-
-    def submission_template
-      api.order_template.find(purpose_config.submission.template_uuid)
-    end
-
-    def request_options
-      purpose_config.submission.options
     end
 
     def tube_search

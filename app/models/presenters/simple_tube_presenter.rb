@@ -25,14 +25,17 @@ module Presenters
 
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :started do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
 
         def default_child_purpose
           purpose.children.first

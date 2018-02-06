@@ -17,22 +17,27 @@ module Presenters
 
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :started do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :passed do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::TubeAllowsLibraryPassing
       end
 
       state :qc_complete, human_name: 'QC Complete' do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::TubeAllowsLibraryPassing
       end
 
       state :unknown do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       event :qc_complete do

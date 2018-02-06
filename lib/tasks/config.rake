@@ -17,6 +17,7 @@ namespace :config do
 
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       YAML.parse_file(file).to_ruby.each do |name, options|
+        next unless file.extname == '.yml'
         purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
       end
     end
@@ -70,7 +71,7 @@ namespace :config do
         store[purpose.name] = purpose.uuid
       end
 
-      configuration[:robots]      = ROBOT_CONFIG
+      configuration[:robots] = ROBOT_CONFIG
     end
 
     # Write out the current environment configuration file

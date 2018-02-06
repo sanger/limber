@@ -33,7 +33,11 @@ describe LabwareCreators::PooledTubesFromWholeTubes do
   end
 
   before do
-    Settings.purposes[purpose_uuid] = build :purpose_config, submission: { template_uuid: template_uuid, options: { read_length: 150 } }
+    Settings.purposes[purpose_uuid] = build :purpose_config,
+                                            submission: {
+                                              template_uuid: template_uuid,
+                                              request_options: { read_length: 150 }
+                                            }
   end
 
   describe '#new' do
@@ -93,35 +97,11 @@ describe LabwareCreators::PooledTubesFromWholeTubes do
                     body: '{}')
     end
 
-    let(:order_request) do
-      stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-      stub_api_post(template_uuid, 'orders',
-                    payload: { order: {
-                      assets: [child_uuid],
-                      request_options: { read_length: 150 },
-                      user: user_uuid
-                    } },
-                    body: '{"order":{"uuid":"order-uuid"}}')
-    end
-
-    let(:submission_request) do
-      stub_api_post('submissions',
-                    payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                    body:  json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
-    end
-
-    let(:submission_submit) do
-      stub_api_post('sub-uuid', 'submit')
-    end
-
     before do
       stub_barcode_searches
       tube_creation_request
       tube_creation_children_request
       transfer_creation_request
-      order_request
-      submission_request
-      submission_submit
     end
 
     context 'with compatible tubes' do
@@ -129,12 +109,6 @@ describe LabwareCreators::PooledTubesFromWholeTubes do
         expect(subject.save!).to be_truthy
         expect(tube_creation_request).to have_been_made.once
         expect(transfer_creation_request).to have_been_made.once
-      end
-      it 'generates a submission' do
-        expect(subject.save!).to be_truthy
-        expect(order_request).to have_been_made.once
-        expect(submission_request).to have_been_made.once
-        expect(submission_submit).to have_been_made.once
       end
     end
   end

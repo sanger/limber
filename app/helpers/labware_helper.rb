@@ -46,15 +46,15 @@ module LabwareHelper
     pooling_colour(well, tube_uuid)
   end
 
-  def aliquot_colour(labware)
-    case labware.state
-    when 'passed'   then 'green'
-    when 'started'  then 'orange'
-    when 'failed'   then 'red'
-    when 'canceled' then 'red'
-    else 'blue'
-    end
-  end
+  # def aliquot_colour(labware)
+  #   case labware.state
+  #   when 'passed'   then 'green'
+  #   when 'started'  then 'orange'
+  #   when 'failed'   then 'red'
+  #   when 'canceled' then 'red'
+  #   else 'blue'
+  #   end
+  # end
 
   def permanent_state(container)
     return 'permanent-failure' if container.state == 'failed'

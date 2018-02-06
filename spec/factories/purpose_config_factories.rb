@@ -13,6 +13,10 @@ FactoryBot.define do
     default_printer_type :plate_a
     asset_type 'plate'
 
+    factory :passable_plate do
+      suggest_library_pass_for ['Limber Library Creation']
+    end
+
     factory :minimal_purpose_config do
       presenter_class 'Presenters::MinimalPlatePresenter'
     end
@@ -31,6 +35,11 @@ FactoryBot.define do
       asset_type 'tube'
       default_printer_type :tube
       presenter_class 'Presenters::SimpleTubePresenter'
+
+      factory :passable_tube do
+        presenter_class 'Presenters::FinalTubePresenter'
+        suggest_library_pass_for ['Limber Library Creation']
+      end
 
       factory :pooled_tube_from_plates_purpose_config do
         name 'Pool tube'

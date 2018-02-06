@@ -23,7 +23,9 @@ module Presenters
 
     delegate :state, :uuid, to: :labware
 
-    def save!; end
+    def suggest_library_passing?
+      purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
+    end
 
     def purpose_name
       labware.purpose.name
@@ -47,11 +49,6 @@ module Presenters
 
     def well_failing_applicable?
       well_failure_states.include?(state.to_sym)
-    end
-
-    # To get rid!
-    def suitable_labware
-      yield
     end
 
     def summary
