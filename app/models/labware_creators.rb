@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  # Raised on validation errors. We shoudl return false instead if these are
+  # Raised on validation errors. We should return false instead if these are
   # user error.
   class ResourceInvalid < StandardError
     def initialize(resource)

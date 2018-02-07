@@ -67,7 +67,6 @@ Cap Lib Pool Norm:
   :type: IlluminaHtp::MxTubeNoQcPurpose
   :creator_class: LabwareCreators::FinalTubeFromPlate
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - LB Cap Lib Pool
@@ -77,7 +76,6 @@ LB Custom Pool:
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::CustomPooledTubes
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :expected_request_types:
   - :none
@@ -89,7 +87,6 @@ LB Custom Pool Norm:
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - LB Custom Pool

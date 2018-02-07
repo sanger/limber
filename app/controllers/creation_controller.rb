@@ -4,7 +4,7 @@ class CreationController < ApplicationController
   before_action :check_for_current_user!
   rescue_from Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid, with: :creation_failed
 
-  def creator_for(form_attributes = params)
+  def creator_for(form_attributes)
     LabwareCreators.class_for(form_attributes.fetch(:purpose_uuid))
   end
 

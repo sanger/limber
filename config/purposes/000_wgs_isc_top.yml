@@ -61,7 +61,6 @@ LB Lib Pool:
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :expected_request_types:
   - limber_multiplexing
@@ -74,7 +73,6 @@ LB Lib Pool Norm:
   :type: IlluminaHtp::MxTubeNoQcPurpose
   :creator_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - LB Lib Pool

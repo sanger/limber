@@ -2,7 +2,7 @@
   id="aliquot_<%= id %>"
   class="aliquot
         <%= container.location %>
-        <%= well_state_value(container) %>
+        <%= container.state %>
         <%= column(container) %> col-all
         <%= container.suboptimal? ? 'suboptimal' : '' %>"
   rel="<%= "details_#{id}" %>"

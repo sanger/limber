@@ -5,8 +5,9 @@
 
 class PurposeConfig
   attr_reader :name, :options, :store, :api
-  class_attribute :default_printer
-  self.default_printer = :plate_a
+  class_attribute :default_printer, :default_presenter, :default_creator, :default_state_changer
+
+  self.default_state_change = 'StateChangers::DefaultStateChanger'
 
   def self.load(name, options, store, api, submission_templates)
     case options.fetch(:asset_type)
@@ -40,9 +41,9 @@ class PurposeConfig
   def config
     {
       name: name,
-      creator_class: 'LabwareCreators::StampedPlate',
-      presenter_class: 'Presenters::StandardPresenter',
-      state_changer_class: 'StateChangers::DefaultStateChanger',
+      creator_class: default_creator,
+      presenter_class: default_presenter,
+      state_changer_class: default_state_changer,
       default_printer_type: default_printer,
       submission: submission_options
     }.merge(@options)
@@ -54,6 +55,8 @@ class PurposeConfig
 
   class Tube < PurposeConfig
     self.default_printer = :tube
+    self.default_presenter = 'Presenters::SimpleTubePresenter'
+    self.default_creator = 'LabwareCreators::StampedPlate'
 
     def register!
       puts "Creating #{name}"
@@ -67,6 +70,10 @@ class PurposeConfig
   end
 
   class Plate < PurposeConfig
+    self.default_printer = :plate_a
+    self.default_presenter = 'Presenters::StandardPresenter'
+    self.default_creator = 'LabwareCreators::TubeFromTube'
+
     def register!
       puts "Creating #{name}"
       api.plate_purpose.create!(

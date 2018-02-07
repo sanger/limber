@@ -46,7 +46,6 @@ GBS PCR2 Pool Stock:
   # submission info reliably once things are pooled.
   #:creator_class: LabwareCreators::PooledTubesFromWholePlates
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - GBS PCR2
@@ -56,17 +55,15 @@ GBS PCR Pool:
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - GBS PCR2 Pool Stock
 GBS PCR Pool Selected:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::StockTubePurposee
+  :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :parents:
   - GBS PCR Pool
@@ -76,7 +73,6 @@ GBS MiSeq Pool:
   :type: IlluminaHtp::MxTubeNoQcPurpose
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
   :presenter_class: Presenters::FinalTubePresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
   :default_printer_type: :tube
   :submission:
     template_name: 'MiSeq for GBS'

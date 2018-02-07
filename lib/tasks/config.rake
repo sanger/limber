@@ -16,15 +16,15 @@ namespace :config do
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
+      next unless file.extname == '.yml'
       YAML.parse_file(file).to_ruby.each do |name, options|
-        next unless file.extname == '.yml'
         purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
       end
     end
 
     # Check for duplicates: We spread config over multiple files. If we have duplicates its going
     # to result in strange behaviour. So lets blow up early.
-    if purpose_config.map(&:name).uniq != purpose_config.map(&:name)
+    if purpose_config.map(&:name).uniq!
       dupes = purpose_config.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
       raise StandardError, "Duplicate purpose config detected: #{dupes}"
     end

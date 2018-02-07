@@ -156,10 +156,10 @@
     // Caution. Only suitable for sorting. Compatible with any plate
     // size up to 26 columns
     that.well_index_by_column = function(well){
-      var row, col
+      var row, col;
       row = well.charCodeAt(0)-65;
       col = parseInt(well.slice(1));
-      return (row*26)+col
+      return (row*26)+col;
     };
 
     that.poolsArray = function(){

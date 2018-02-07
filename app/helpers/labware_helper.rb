@@ -41,24 +41,13 @@ module LabwareHelper
   disable_based_on_state(:failed)
 
   def pool_colour_for_well(presenter, well)
-    return 'permanent-failure' if well.state == 'failed'
+    return 'failure' if well.state == 'failed'
     tube_uuid = presenter.transfers[well.location].uuid
     pooling_colour(well, tube_uuid)
   end
 
-  # def aliquot_colour(labware)
-  #   case labware.state
-  #   when 'passed'   then 'green'
-  #   when 'started'  then 'orange'
-  #   when 'failed'   then 'red'
-  #   when 'canceled' then 'red'
-  #   else 'blue'
-  #   end
-  # end
-
   def permanent_state(container)
-    return 'permanent-failure' if container.state == 'failed'
-    'good'
+    container.state == 'failed' ? 'failed' : 'good'
   end
 
   def failable?(container)
@@ -88,14 +77,6 @@ module LabwareHelper
 
   def labware_by_state(labwares)
     labwares.group_by(&:state)
-  end
-
-  def well_state_value(container)
-    container.state == 'failed' ? 'permanent-failure' : container.state
-  end
-
-  def labware_type_and_state
-    "#{@presenter.purpose.name}.#{@presenter.labware.state.downcase}"
   end
 
   def creation_partial_for(type)

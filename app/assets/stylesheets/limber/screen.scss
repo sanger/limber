@@ -24,6 +24,21 @@ header.limber-header {
   }
 }
 
+button#btnGroupInboxes, button#btnGroupRobots {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .dropdown-toggle;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
+nav.inbox-list, nav.robots-list {
+  @extend .dropdown-menu;
+  @extend .btn-block;
+
+  a { @extend .dropdown-item };
+}
+
 /* New stuff */
 .limber-logo {
   @extend .navbar-brand;
