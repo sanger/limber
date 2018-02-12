@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+#
+# Class Limber::Plate provides a client side representation of Sequencescape plates
+#
+# @author Genome Research Ltd.
+#
 class Limber::Plate < Sequencescape::Plate
   # Customize the has_many association to use out custom class.
   has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
@@ -82,9 +87,9 @@ class Limber::Plate < Sequencescape::Plate
 
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
-  # that were transfered into each.
+  # that were transferred into each.
   #
-  # @return [Array<Array>] An araay of arrays, tubes and their source wells.
+  # @return [Array<Array>] An array of arrays, tubes and their source wells.
   # eg. [[<Limber::Tube>, ['A1','B1']],[<Limber::Tube>,['C1','D1']]]
   #
   def tubes_and_sources
@@ -103,10 +108,10 @@ class Limber::Plate < Sequencescape::Plate
     tube_hash = generate_tube_hash
     # Sort the source well list in column order
     tube_hash.transform_values! do |well_list|
-      well_list.sort_by { |well_name| WellHelpers.index_of(well_name) }
+      WellHelpers.sort_in_column_order(well_list)
     end
     # Sort the tubes in column order based on their first well
-    tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
+    tube_hash.sort_by { |_tube, well_list| WellHelpers.well_coordinate(well_list.first) }
   end
 
   def generate_tube_hash

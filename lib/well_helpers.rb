@@ -52,7 +52,7 @@ module WellHelpers
   end
 
   # Returns the name of the well at the given co-ordinates
-  # eg.
+  # e.g..
   # `WellHelpers.well_name(2,3) #=> 'D3'`
   # @param [Int] row The row co-ordinate, zero indexed
   # @param [Int] column The column co-ordinate, zero indexed
@@ -63,7 +63,7 @@ module WellHelpers
   end
 
   # Returns the name of the well at the provided index.
-  # eg.
+  # e.g..
   # `WellHelpers.column_index(2) #=> 'C1'`
   # @param [Int] index Well index by column
   # @return [String] string name of the well
@@ -73,19 +73,19 @@ module WellHelpers
 
   #
   # Returns a new array sorted into column order
-  # eg. sort_in_column_order(['A1', 'A2', 'B1']) => ['A1', 'B1', 'A2']
+  # e.g.. sort_in_column_order(['A1', 'A2', 'B1']) => ['A1', 'B1', 'A2']
   #
   # @param [Array<String>] wells Array of well names to sort
   #
   # @return [Array<String>] Array of well names sorted in column order
   #
-  def self.sort_in_column_order(wells, size = 96)
-    wells.sort_by { |well| index_of(well, size) }
+  def self.sort_in_column_order(wells)
+    wells.sort_by { |well| well_coordinate(well) }
   end
 
   #
   # Compacts the provided well range into an easy to read summary.
-  # eg. formatted_range(['A1', 'B1', 'C1','A2','A5','B5']) => 'A1-C1,A2,A5-B5'
+  # e.g.. formatted_range(['A1', 'B1', 'C1','A2','A5','B5']) => 'A1-C1,A2,A5-B5'
   # Mostly this will just be start_well-end_well
   #
   # @param [Array<String>] wells Array of well names to format
@@ -93,7 +93,7 @@ module WellHelpers
   # @return [String] A name describing the range
   #
   def self.formatted_range(wells, size = 96)
-    sort_in_column_order(wells, size)
+    sort_in_column_order(wells)
       .slice_when { |previous_well, next_well| index_of(next_well, size) - index_of(previous_well, size) > 1 }
       .map { |range| [range.first, range.last].uniq.join('-') }
       .join(', ')
@@ -106,8 +106,19 @@ module WellHelpers
   #
   # @return [Array<string>] ['first_well_name','last_well_name']
   #
-  def self.first_and_last_in_columns(wells, size = 96)
-    sorted = sort_in_column_order(wells, size)
+  def self.first_and_last_in_columns(wells)
+    sorted = sort_in_column_order(wells)
     [sorted.first, sorted.last]
+  end
+
+  #
+  # Converts a well name to its co-ordinates
+  #
+  # @param [<String>] well Name of the well. Eg. A3
+  #
+  # @return [Array<Integer>] An array of two integers indicating column and row. eg. [0, 2]
+  #
+  def self.well_coordinate(well)
+    [well[1..-1].to_i, well.getbyte(0) - 'A'.getbyte(0)]
   end
 end

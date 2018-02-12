@@ -61,7 +61,7 @@ describe Presenters::StandardPresenter do
     end
 
     it 'yields the configured tube' do
-      expect(labware).to receive(:tagged?).and_return(:true)
+      expect(labware).to receive(:tagged?).and_return(true)
       expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
         ['tube-purpose', 'Tube purpose']
       )

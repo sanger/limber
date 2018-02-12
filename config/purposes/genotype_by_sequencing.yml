@@ -71,7 +71,10 @@ GBS MiSeq Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  # V1
+  :creator_class: LabwareCreators::TubeFromTube
+  # V2
+  # :creator_class: LabwareCreators::PooledTubesFromWholeTubes
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
   :submission:

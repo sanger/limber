@@ -7,7 +7,7 @@ class PurposeConfig
   attr_reader :name, :options, :store, :api
   class_attribute :default_printer, :default_presenter, :default_creator, :default_state_changer
 
-  self.default_state_change = 'StateChangers::DefaultStateChanger'
+  self.default_state_changer = 'StateChangers::DefaultStateChanger'
 
   def self.load(name, options, store, api, submission_templates)
     case options.fetch(:asset_type)

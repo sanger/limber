@@ -11,8 +11,6 @@ module LabwareCreators
     include ActiveModel::Validations
     extend NestedValidation
 
-    attr_reader :header_row
-
     validate :correctly_parsed?
     validates :header_row, presence: true
     validates_nested :header_row

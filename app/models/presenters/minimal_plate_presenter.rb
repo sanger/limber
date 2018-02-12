@@ -10,6 +10,10 @@ module Presenters
       size
     end
 
+    def csv_file_links
+      []
+    end
+
     # This is a lie.
     # TODO: Work out a more elegant way to handle this
     # We may not actually need to, as this is mainly used to work out

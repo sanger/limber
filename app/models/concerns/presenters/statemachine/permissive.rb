@@ -36,6 +36,11 @@ module Presenters::Statemachine
           include StateDoesNotAllowChildCreation
           include DoesNotAllowLibraryPassing
         end
+
+        state :failed do
+          include StateDoesNotAllowChildCreation
+          include DoesNotAllowLibraryPassing
+        end
       end
     end
   end

@@ -39,6 +39,13 @@ nav.inbox-list, nav.robots-list {
   a { @extend .dropdown-item };
 }
 
+.csv-link {
+  @extend .btn;
+  @extend .btn-info;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
 /* New stuff */
 .limber-logo {
   @extend .navbar-brand;

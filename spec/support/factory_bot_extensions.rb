@@ -31,25 +31,29 @@ module FactoryBot
         send(association) do
           {}.tap do |h|
             h['size'] = send(association + '_count') if send(association + '_actions').include?('read')
-            h['actions'] = Hash[send(association + '_actions').map { |action_name| [action_name, resource_url + '/' + association] }]
+            h['actions'] = send(association + '_actions').each_with_object({}) do |action_name, actions_store|
+              actions_store[action_name] = resource_url + '/' + association
+            end
           end
         end
       end
       nil
     end
 
-    def with_belongs_to_associations(*names)
+    def with_belongs_to_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
           send(association + '_uuid', "#{association}-uuid")
-          send(association + '_actions', ['read'])
+          send(association + '_actions', actions)
         end
       end
       names.each do |association|
         send(association) do
           {
-            'actions' =>  Hash[send(association + '_actions').map { |action_name| [action_name, api_root + send(association + '_uuid')] }],
-            'uuid'    => send(association + '_uuid')
+            'actions' => send(association + '_actions').each_with_object({}) do |action_name, actions_store|
+              actions_store[action_name] = api_root + send(association + '_uuid')
+            end,
+            'uuid' => send(association + '_uuid')
           }
         end
       end

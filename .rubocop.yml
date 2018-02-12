@@ -3,11 +3,15 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude:
     - node_modules/**/*
-    - bin/webpack
-    - bin/webpack-dev-server
+    - bin/**/*
 Rails:
   Enabled: true
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
     - config/robots.rb
+# We're not actually using Rails methods here.
+Rails/InverseOf:
+  Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: false

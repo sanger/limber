@@ -27,7 +27,8 @@ module ContractHelper
 
     def request(contract_name)
       contract(contract_name) do |file|
-        (match = REQUEST_REGEXP.match(file.read)) || raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
+        match = REQUEST_REGEXP.match(file.read) ||
+                raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
 
         @http_verb = match[:verb].downcase.to_sym
         @url = "http://example.com:3000#{match[:path]}"

@@ -80,7 +80,7 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
+    [["Download Worksheet CSV", { format: :csv }]]
   end
 
   def filename(offset = nil)

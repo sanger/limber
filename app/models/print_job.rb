@@ -2,7 +2,9 @@
 
 class PrintJob
   include ActiveModel::Model
-  attr_accessor :labels, :printer_name, :printer_type, :number_of_copies
+
+  attr_reader :number_of_copies
+  attr_accessor :labels, :printer_name, :printer_type
 
   validates :printer_name, :printer_type, :number_of_copies, :labels, presence: true
 

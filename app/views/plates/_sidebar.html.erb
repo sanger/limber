@@ -16,8 +16,8 @@
       <% end %>
     <% end %>
 
-    <% presenter.csv_file_links.each do |link| %>
-      <%= link_to("Download Worksheet CSV #{link.first}", link.last, rel: "external", class: 'btn btn-info btn-lg btn-block') %>
+    <% @presenter.csv_file_links.each do |link| %>
+      <%= link_to(link.first, limber_plate_path(@presenter.uuid, link.last), :rel => "external",  class: 'csv-link') %>
     <% end %>
 
     <% if presenter.robot? %>

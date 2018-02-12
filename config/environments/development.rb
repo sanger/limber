@@ -73,11 +73,7 @@ Rails.application.configure do
   config.study_uuid = nil
   config.project_uuid = nil
   config.request_options = {
-    'read_length' => 11,
-    'fragment_size_required' => {
-      'from' => 100,
-      'to'   => 100
-    }
+    'read_length' => 11
   }
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end
