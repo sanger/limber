@@ -7,10 +7,18 @@
 # It is specified as a property on pool during submission, and
 # also directs the use of specific PCR programs at particular
 # point during the process.
-class PrimerPanel
+# This class wraps the primer panel information in the pool
+# providing a convenient interface
+class Limber::Plate::PrimerPanel
   UNKNOWN = 'Unknown'
   attr_reader :name
 
+  #
+  # Create a new PrimerPanel from the pool information
+  #
+  # @param [Hash] panel_config_hash As provided by the pools > primer_panel
+  #                                 hash in the plate json
+  #
   def initialize(panel_config_hash)
     panel_config_hash ||= {}
     @exists = panel_config_hash.present?

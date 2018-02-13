@@ -9,6 +9,10 @@ class Limber::Plate < Sequencescape::Plate
   # Customize the has_many association to use out custom class.
   has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
 
+  delegate :number_of_pools, :pcr_cycles, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
+           :ready_for_custom_pooling?, :submissions,
+           to: :pools_info
+
   #
   # The width of the plate. Assumes a 4:3 ratio
   #
@@ -27,29 +31,16 @@ class Limber::Plate < Sequencescape::Plate
     Math.sqrt(size / 6).to_i * 2
   end
 
-  def library_type_name
-    pools.values.dig(0, 'library_type', 'name') || 'Unknown'
+  def pools_info
+    @pools_info ||= Pools.new(pools)
   end
 
   def primer_panel
     @primer_panel ||= PrimerPanel.new(pools.values.dig(0, 'primer_panel'))
   end
 
-  def number_of_pools
-    pools.keys.count
-  end
-
-  def pcr_cycles
-    @pcr_cycles ||= pools.values.map { |pool| pool.fetch('pcr_cycles', 'Not specified') }.uniq
-  end
-
   def role
     label.prefix
-  end
-
-  def shearing_size
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]['insert_size'].to_a.join(' ')
   end
 
   def purpose
@@ -71,20 +62,6 @@ class Limber::Plate < Sequencescape::Plate
     first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
-  # Plates are ready for pooling once we're in to the multiplex phase of the pipeline
-  # This is indicated by the request type on the pools, and indicates that the plates
-  # have been charged and passed.
-  # We need at least one pool for automatic pooling to function.
-  def ready_for_automatic_pooling?
-    !pools.empty? && pools.all? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
-  end
-
-  # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
-  # require downstream submission and is completely happy with empty pools
-  def ready_for_custom_pooling?
-    pools.all? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
-  end
-
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
   # that were transferred into each.
@@ -94,10 +71,6 @@ class Limber::Plate < Sequencescape::Plate
   #
   def tubes_and_sources
     @tubes_and_sources ||= generate_tubes_and_sources
-  end
-
-  def submissions
-    pools.keys
   end
 
   private
