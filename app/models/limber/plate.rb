@@ -10,7 +10,7 @@ class Limber::Plate < Sequencescape::Plate
   has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
 
   delegate :number_of_pools, :pcr_cycles, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
-           :ready_for_custom_pooling?, :submissions,
+           :ready_for_custom_pooling?, :submissions, :primer_panel,
            to: :pools_info
 
   #
@@ -33,10 +33,6 @@ class Limber::Plate < Sequencescape::Plate
 
   def pools_info
     @pools_info ||= Pools.new(pools)
-  end
-
-  def primer_panel
-    @primer_panel ||= PrimerPanel.new(pools.values.dig(0, 'primer_panel'))
   end
 
   def role

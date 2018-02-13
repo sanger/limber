@@ -41,11 +41,11 @@ gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'de
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :test do
-  gem 'capybara'
+  gem 'capybara' # Interface for integration tests
   gem 'factory_bot' # Generate models and json easily in tests
   gem 'guard-rspec', require: false
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
-  gem 'poltergeist'
+  gem 'poltergeist' # Headless browser for integration tests
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'

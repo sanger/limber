@@ -18,7 +18,7 @@ class Limber::Plate::Pools
   # We should possibly move away from this assumption
   attr_reader :example_pool
 
-  delegate :library_type_name, :insert_size, to: :example_pool
+  delegate :library_type_name, :insert_size, :primer_panel, to: :example_pool
   #
   # Create a new Pools from the pool information.
   #

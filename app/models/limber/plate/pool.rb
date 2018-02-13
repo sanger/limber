@@ -34,6 +34,10 @@ class Limber::Plate::Pool
     sizes.to_a.join(' ')
   end
 
+  def primer_panel
+    @primer_panel ||= Limber::Plate::PrimerPanel.new(@pool_hash['primer_panel'])
+  end
+
   # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
