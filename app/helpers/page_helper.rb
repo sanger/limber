@@ -40,7 +40,7 @@ module PageHelper
       if without_block
         yield
       else
-        concat content_tag(:div, class: 'card-block', &block)
+        concat content_tag(:div, class: 'card-body', &block)
       end
     end
   end

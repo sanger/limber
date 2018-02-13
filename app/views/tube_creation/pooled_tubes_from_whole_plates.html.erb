@@ -5,12 +5,12 @@
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>
       <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-block" >
+      <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
           <p>Scan in up to 4 plates.</p>
         </div>
       </div>
-      <div class="card-block">
+      <div class="card-body">
       <%= form_for(
         @labware_creator,
         url: limber_plate_tubes_path(@labware_creator.parent),
