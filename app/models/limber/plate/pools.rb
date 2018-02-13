@@ -13,6 +13,12 @@ class Limber::Plate::Pools
   attr_reader :number_of_pools
   # An array of the uuids of the submissions associated with the plate
   attr_reader :submissions
+  # A number of attributes should be consistent across the plate.
+  # The example pool provides a source of this information
+  # We should possibly move away from this assumption
+  attr_reader :example_pool
+
+  delegate :library_type_name, :insert_size, to: :example_pool
   #
   # Create a new Pools from the pool information.
   #
@@ -22,20 +28,12 @@ class Limber::Plate::Pools
     pools_hash ||= {}
     @number_of_pools = pools_hash.length
     @submissions = pools_hash.keys
-    @pools = pools_hash.values
+    @pools = pools_hash.map { |uuid, pool| Limber::Plate::Pool.new(uuid, pool) }
+    @example_pool = @pools.first || Limber::Plate::Pool.new(nil, {})
   end
 
   def pcr_cycles
-    @pcr_cycles ||= @pools.map { |pool| pool.fetch('pcr_cycles', 'Not specified') }.uniq
-  end
-
-  def library_type_name
-    @pools.dig(0, 'library_type', 'name') || 'Unknown'
-  end
-
-  def insert_size
-    sizes = @pools.dig(0, 'insert_size') || ['Unknown']
-    sizes.to_a.join(' ')
+    @pcr_cycles ||= @pools.map(&:pcr_cycles).uniq
   end
 
   # Plates are ready for pooling once we're in to the multiplex phase of the pipeline
@@ -49,6 +47,6 @@ class Limber::Plate::Pools
   # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
-    @pools.all? { |pool_info| pool_info['for_multiplexing'] }
+    @pools.all?(&:ready_for_custom_pooling?)
   end
 end
