@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/nested_validation'
+require 'csv'
 
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes'
