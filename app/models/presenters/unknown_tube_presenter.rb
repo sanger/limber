@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class UnknownTubePresenter < UubePresenter
+  class UnknownTubePresenter < TubePresenter
     include Presenters::Statemachine::Standard
     include Statemachine::DoesNotAllowLibraryPassing
 

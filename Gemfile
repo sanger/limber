@@ -2,27 +2,13 @@
 
 source 'https://rubygems.org'
 
-gem 'coffee-rails', require: false
 gem 'rails'
-gem 'uglifier'
-
-gem 'webpacker', '~> 2.0'
-# Bootstrap is a css framework
-gem 'bootstrap'
-
-# See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', require: false
-
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# We use the sortable component of jquery ui
-gem 'jquery-ui-rails'
-
 gem 'rake'
 gem 'state_machines'
+gem 'webpacker', '~> 2.0'
 # Used in the setting object, allows access by object and hash notation.
 gem 'exception_notification'
 gem 'hashie'
@@ -60,6 +46,16 @@ group :development do
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'travis'
+  gem 'uglifier'
+  # See https://github.com/rails/execjs#readme for more supported runtimes
+  gem 'therubyracer', require: false
+  # Bootstrap is a css framework
+  gem 'bootstrap'
+  gem 'coffee-rails', require: false
+  # Use jquery as the JavaScript library
+  gem 'jquery-rails'
+  # We use the sortable component of jquery ui
+  gem 'jquery-ui-rails'
 end
 
 group :deployment do
