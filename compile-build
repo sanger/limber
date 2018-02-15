@@ -1,5 +1,8 @@
+set -e
+echo 'Cleaning up'
+NODE_ENV=production bundle exec rake assets:clobber
 echo 'Compiling assets'
-RAILS_ENV=production bundle exec rake assets:precompile
+NODE_ENV=production bundle exec rake assets:precompile
 echo 'Generating sha'
 git rev-parse HEAD > REVISION
 echo 'Compiling tar.gz'

@@ -56,7 +56,7 @@ class PurposeConfig
   class Tube < PurposeConfig
     self.default_printer = :tube
     self.default_presenter = 'Presenters::SimpleTubePresenter'
-    self.default_creator = 'LabwareCreators::StampedPlate'
+    self.default_creator = 'LabwareCreators::TubeFromTube'
 
     def register!
       puts "Creating #{name}"
@@ -72,7 +72,7 @@ class PurposeConfig
   class Plate < PurposeConfig
     self.default_printer = :plate_a
     self.default_presenter = 'Presenters::StandardPresenter'
-    self.default_creator = 'LabwareCreators::TubeFromTube'
+    self.default_creator = 'LabwareCreators::StampedPlate'
 
     def register!
       puts "Creating #{name}"

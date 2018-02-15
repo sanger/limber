@@ -233,10 +233,10 @@ footer.version-info {
   @extend .text-white;
 
   h3 {
-    @extend .col-lg-2;
+    @extend .col-xl-3;
   }
   ul {
-    @extend .col-lg-10;
+    @extend .col-xl-9;
   }
 }
 
@@ -364,30 +364,6 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 
 .ui-li-desc span.field-description {
     margin-left: 0.5em;
-}
-
-.ILA {
-  border-left: red 10px solid;
-}
-
-.PWGS {
-  border-left: green 10px solid;
-}
-
-.ISC {
-  border-left: yellow 10px solid;
-}
-
-.ReISC {
-  border-left: yellow 10px dashed;
-}
-
-.HSqX {
-  border-left: blue 10px solid;
-}
-
-.MWGS {
-  border-left: orange 10px solid;
 }
 
 .ui-field-contain label.plate-label {

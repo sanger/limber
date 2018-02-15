@@ -31,7 +31,7 @@
       color:#fff;
       display: inline-block;
       border: 2px $gray-800 solid;
-      @include border-radius(7px);
+      border-radius: 7px;
     }
 
     .aliquot.pending {
@@ -65,7 +65,7 @@
       height:16px;
       margin-top: 1px;
       border: 1px $gray-800 solid;
-      @include border-radius(3px);
+      border-radius: 3px;
     }
   }
 }
@@ -94,7 +94,7 @@
   overflow: hidden;
   border: 1px ridge rgba(5,19,40,0.1);
   background: $gray-200;
-  @include border-radius(7px);
+  border-radius: 7px;
 }
 .substitute-tag {
   @extend .aliquot;
