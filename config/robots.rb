@@ -52,6 +52,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(12).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
                })
 
+  custom_robot('zephyr-lib-pcr-purification',
+               name: 'Zephyr LB Lib PCR => LB Lib PCR XP',
+               layout: 'bed',
+               verify_robot: false,
+               beds: {
+                 bed(2).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
+                 bed(7).barcode  => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 7', parent: bed(2).barcode, target_state: 'passed' }
+               })
+
   custom_robot('nx-8-lib-pcr-xp-to-isch-lib-pool',
                name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
                layout: 'bed',
