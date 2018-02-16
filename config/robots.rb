@@ -217,8 +217,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot(
-    'bravo-mrna-capture',
-    name: 'Bravo mRNA capture',
+    'bravo-mrna-capture-rnaag',
+    name: 'Bravo mRNA capture RNAAG',
     layout: 'bed',
     beds: {
       bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
@@ -226,6 +226,31 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       car('2,3').barcode => { purpose: 'LBR Globin', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode }
     }
   )
+
+  custom_robot(
+    'bravo-mrna-capture-rnaa',
+    name: 'Bravo mRNA capture RNAA',
+    layout: 'bed',
+    beds: {
+      bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
+      bed(6).barcode => { purpose: 'LBR mRNA Cap', states: ['pending'], label: 'Bed 6', target_state: 'started', parent: bed(7).barcode },
+      car('2,3').barcode => { purpose: 'LBR Frag', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode },
+      car('3,4').barcode => { purpose: 'LB cDNA', states: ['pending'], label: 'Carousel 3,4', parent: car('2,3').barcode },
+      car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
+    }
+  )
+
+  custom_robot(
+    'bravo-mrna-capture-rnaa-m',
+    name: 'Bravo mRNA capture RNAA (modular)',
+    layout: 'bed',
+    beds: {
+      bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
+      bed(6).barcode => { purpose: 'LBR mRNA Cap', states: ['pending'], label: 'Bed 6', target_state: 'started', parent: bed(7).barcode },
+      car('2,3').barcode => { purpose: 'LBR Frag', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode }
+    }
+  )
+
 
   bravo_robot do
     from 'PF Lib XP', bed(4)
@@ -238,7 +263,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   custom_robot('bravo-lbr-mrna-cap',
-               name: 'bravo LBR mRNA Cap',
+               name: 'Bravo LBR mRNA Cap',
                layout: 'bed',
                verify_robot: true,
                beds: {
@@ -246,7 +271,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                })
 
   custom_robot('bravo-lbr-mrna-cap-globin',
-             name: 'bravo LBR mRNA Cap to LBR Globin',
+             name: 'Bravo LBR mRNA Cap to LBR Globin',
              layout: 'bed',
              verify_robot: true,
              beds: {
@@ -266,7 +291,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot('bravo-depletion-setup',
-               name: 'bravo Depletion Setup',
+               name: 'Bravo Depletion Setup',
                layout: 'bed',
                verify_robot: true,
                beds: {
@@ -274,7 +299,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                })
 
   custom_robot('bravo-globin-globin-dnase',
-             name: 'bravo Globin To Globin DNase',
+             name: 'Bravo Globin To Globin DNase',
              layout: 'bed',
              verify_robot: true,
              beds: {
@@ -283,7 +308,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
              })
 
   custom_robot('bravo-lbr-globin-dnase-frag-cdna',
-             name: 'bravo LBR Globin DNase To LBR Frag cDNA',
+             name: 'Bravo LBR Globin DNase To LBR Frag cDNA',
              layout: 'bed',
              verify_robot: true,
              beds: {
@@ -292,16 +317,26 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
              })
 
  custom_robot('bravo-strand-setup',
-               name: 'bravo Strand Setup',
+               name: 'Bravo Strand Setup',
                layout: 'bed',
                beds: {
                  bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['process_1'], label: 'Bed 8', target_state: 'process_2' },
                  car('4,3').barcode => { purpose: 'LB cDNA XP', state: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode }
                })
 
+ custom_robot('bravo-strand-setup-rnaa-m',
+               name: 'Bravo Strand Setup RNAA (modular)',
+               layout: 'bed',
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['passed'], label: 'Bed 8' },
+                 car('3,4').barcode => { purpose: 'LB cDNA', state: ['pending'], label: 'Carousel 3,4', parent: bed(8).barcode },
+                 car('4,3').barcode => { purpose: 'LB cDNA XP', state: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
+               })
+
+
 
  custom_robot('bravo-second-strand-setup',
-               name: 'bravo Second Strand Setup',
+               name: 'Bravo Second Strand Setup',
                layout: 'bed',
                verify_robot: true,
                beds: {
@@ -309,7 +344,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                })
 
  custom_robot('bravo-lbr-frag-lb-cdna-xp',
-               name: 'bravo LBR Frag To LB cDNA XP',
+               name: 'Bravo LBR Frag To LB cDNA XP',
                layout: 'bed',
                verify_robot: true,
                beds: {
@@ -328,7 +363,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   custom_robot('bravo-lb-cdna',
-               name: 'bravo LB cDNA',
+               name: 'Bravo LB cDNA',
                layout: 'bed',
                verify_robot: true,
                beds: {
