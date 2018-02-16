@@ -38,14 +38,7 @@ group :test do
   gem 'webmock'
 end
 
-group :development do
-  gem 'pry'
-  gem 'pry-byebug'
-  gem 'rubocop', require: false
-  gem 'web-console'
-  # MiniProfiler allows you to see the speed of a request conveniently on the page.
-  gem 'rack-mini-profiler'
-  gem 'travis'
+group :development, :test do
   gem 'uglifier'
   # See https://github.com/rails/execjs#readme for more supported runtimes
   gem 'therubyracer', require: false
@@ -56,6 +49,16 @@ group :development do
   gem 'jquery-rails'
   # We use the sortable component of jquery ui
   gem 'jquery-ui-rails'
+end
+
+group :development do
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'rubocop', require: false
+  gem 'web-console'
+  # MiniProfiler allows you to see the speed of a request conveniently on the page.
+  gem 'rack-mini-profiler'
+  gem 'travis'
 end
 
 group :deployment do

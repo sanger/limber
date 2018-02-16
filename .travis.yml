@@ -20,7 +20,6 @@ install:
 - bundle install
 before_script:
 - bundle exec rails webpacker:verify_install
-- RAILS_ENV=test bundle exec rake assets:precompile
 before_deploy: "./compile-build"
 deploy:
   provider: releases
