@@ -77,7 +77,7 @@
   .orange            { background-color: $warning; }
   .unknown           { background-color: $secondary; }
   .pending           { background: none; }
-  .started           { background-color: $info;    }
+  .started, .process_1, .process_2 { background-color: $info;    }
   .passed            { background-color: $success; }
   .qc_complete       { background-color: $primary; }
   .good              { background-color: $success; } // Used on well failure page
