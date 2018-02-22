@@ -7,7 +7,7 @@ module LabwareCreators
     extend SupportParent::PlateReadyForPoolingOnly
 
     def pools
-      @pools ||= parent.pools.transform_values do |hash|
+      @pools ||= parent.pools.select { |_submission_id, pool_info| pool_info['for_multiplexing'] }.transform_values do |hash|
         hash.fetch('wells', []).select { |location| pick?(location) }
       end
     end
