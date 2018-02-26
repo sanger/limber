@@ -62,7 +62,6 @@ class PurposeConfig
       puts "Creating #{name}"
       api.tube_purpose.create!(
         name: name,
-        parents: parents,
         target_type: options.fetch(:target),
         type: options.fetch(:type)
       )

@@ -1,6 +1,6 @@
 <%= form_for(tube_search_form, method: :get) do |f| %>
-  <%= f.label :tube_purposes, 'Select plate purposes' %>
-  <%= f.select :tube_purposes, options_for_select(@purpose_options, tube_search_form.tube_purposes), { include_hidden: false }, multiple: true, class: 'form-control' %>
+  <%= f.label :purposes, 'Select tube purposes' %>
+  <%= f.select :purposes, options_for_select(@purpose_options, tube_search_form.purposes), { include_hidden: false }, multiple: true, class: 'form-control' %>
   <%= f.label :include_used, 'Include used tubes' %>
   <%= f.check_box :include_used %>
   <%= f.submit 'Update', class: 'btn btn-default' %>

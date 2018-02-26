@@ -40,7 +40,7 @@ module LabwareCreators
 
     # TODO: This should probably be asynchronous
     def available_tubes
-      @search_options = OngoingTube.new(tube_purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
+      @search_options = OngoingTube.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
       @search_results = tube_search.all(
         Limber::Tube,
         @search_options.search_parameters

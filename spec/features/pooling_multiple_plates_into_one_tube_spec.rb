@@ -86,7 +86,7 @@ feature 'Poling multiple plates into a tube', js: true do
     # We have a basic inbox search running
     stub_search_and_multi_result(
       'Find plates',
-      { 'search' => { states: ['passed'], plate_purpose_uuids: ['example-purpose-uuid'], show_my_plates_only: false, include_used: false } },
+      { 'search' => { states: ['passed'], plate_purpose_uuids: ['example-purpose-uuid'], show_my_plates_only: false, include_used: false, page: 1 } },
       [example_plate_listed, example_plate_2_listed]
     )
 

@@ -21,7 +21,8 @@ feature 'Viewing an inbox', js: true do
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
         plate_purpose_uuids: ['uuid-1', 'uuid-2'],
-        show_my_plates_only: false, include_used: false
+        show_my_plates_only: false, include_used: false,
+        page: 1
       } },
       [associated(:plate, barcode_number: 1), associated(:plate, barcode_number: 3)]
     )
@@ -30,7 +31,8 @@ feature 'Viewing an inbox', js: true do
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
         plate_purpose_uuids: ['uuid-1', 'uuid-2'],
-        show_my_plates_only: true, include_used: false
+        show_my_plates_only: true, include_used: false,
+        page: 1
       } },
       [associated(:plate, barcode_number: 1)]
     )
@@ -39,7 +41,8 @@ feature 'Viewing an inbox', js: true do
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
         tube_purpose_uuids: ['uuid-3', 'uuid-4'],
-        include_used: false
+        include_used: false,
+        page: 1
       } },
       [associated(:tube, barcode_number: 2)]
     )
@@ -51,7 +54,7 @@ feature 'Viewing an inbox', js: true do
     click_link 'All Ongoing Plates'
     expect(page).to have_content('Ongoing Plates')
     expect(page).to have_content('DN3')
-    check 'Show my plates only'
+    check 'Show my plates only', allow_label_click: true
     click_on 'Update'
     expect(page).not_to have_content('DN3')
   end

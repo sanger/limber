@@ -69,7 +69,8 @@ describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: ['uuid-1', 'uuid-2'],
-            show_my_plates_only: false, include_used: false
+            show_my_plates_only: false, include_used: false,
+            page: 1
           }
         end
 
@@ -85,13 +86,14 @@ describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: ['uuid-1'],
-            show_my_plates_only: true, include_used: true
+            show_my_plates_only: true, include_used: true,
+            page: 1
           }
         end
 
         it 'finds specified plates' do
           expected_search
-          get :ongoing_plates, params: { ongoing_plate: { plate_purposes: ['uuid-1'], show_my_plates_only: '1', include_used: '1' } }
+          get :ongoing_plates, params: { ongoing_plate: { purposes: ['uuid-1'], show_my_plates_only: '1', include_used: '1' } }
           expect(expected_search).to have_been_made.once
           expect(response).to have_http_status(:ok)
         end
@@ -106,7 +108,8 @@ describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             tube_purpose_uuids: ['uuid-3', 'uuid-4'],
-            include_used: false
+            include_used: false,
+            page: 1
           }
         end
 
@@ -123,13 +126,14 @@ describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             tube_purpose_uuids: ['uuid-3'],
-            include_used: true
+            include_used: true,
+            page: 1
           }
         end
 
         it 'finds specified tubes' do
           expected_search
-          get :ongoing_tubes, params: { ongoing_tube: { tube_purposes: ['uuid-3'], include_used: '1' } }
+          get :ongoing_tubes, params: { ongoing_tube: { purposes: ['uuid-3'], include_used: '1' } }
           expect(expected_search).to have_been_made.once
           expect(response).to have_http_status(:ok)
         end

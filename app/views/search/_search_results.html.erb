@@ -4,6 +4,7 @@
   <% end %>
 
   <%= card title: 'Results', without_block: true do %>
+    <%= render(partial: 'pagination', locals: {search_options: @search_options }) %>
     <%= render(partial: 'inbox', locals: { search_results: search_results }) %>
   <% end %>
 <% end %>

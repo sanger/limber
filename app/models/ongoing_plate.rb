@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
 # Simple class to handle form input for searching
-class OngoingPlate
-  include ActiveModel::Model
-  attr_accessor :plate_purposes, :show_my_plates_only, :include_used, :states
-
-  def to_partial_path
-    'search/plate_search_form'
-  end
-
-  def purpose_uuids
-    plate_purposes.presence || default_purposes
-  end
+class OngoingPlate < AssetSearchForm
+  self.form_partial = 'plate_search_form'
 
   def search_parameters
     {
@@ -19,7 +10,7 @@ class OngoingPlate
       plate_purpose_uuids: purpose_uuids,
       show_my_plates_only: show_my_plates_only == '1',
       include_used: include_used == '1',
-      limit: 50
+      page: page
     }
   end
 

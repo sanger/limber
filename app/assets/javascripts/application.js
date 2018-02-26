@@ -4,4 +4,5 @@
 //= require popper
 //= require bootstrap
 //= require lib/underscore
+//= require select2
 //= require_tree .

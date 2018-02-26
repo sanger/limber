@@ -4,10 +4,10 @@
       Inboxes
     </button>
     <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupInboxes">
-     <%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { plate_purposes: stock_plate_uuids }) %>
+     <%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { purposes: stock_plate_uuids }) %>
      <%= link_to 'All Ongoing Plates', ongoing_plates_path %>
      <%= link_to 'My Plates', ongoing_plates_path(ongoing_plate: { show_my_plates_only: '1' }) %>
-     <%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { plate_purposes: [Settings.purpose_uuids["GBS Stock"]] }) %>
+     <%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { purposes: [Settings.purpose_uuids["GBS Stock"]] }) %>
      <%= link_to 'All Ongoing Tubes', ongoing_tubes_path %>
     </nav>
   </div>
