@@ -101,7 +101,7 @@ feature 'Pooling multiple tubes into a tube', js: true do
     # We have a basic inbox search running
     stub_search_and_multi_result(
       'Find tubes',
-      { 'search' => { states: ['passed'], tube_purpose_uuids: ['example-purpose-uuid'], include_used: false } },
+      { 'search' => { states: ['passed'], tube_purpose_uuids: ['example-purpose-uuid'], include_used: false, page: 1 } },
       [example_tube_listed, example_tube_2_listed]
     )
 
