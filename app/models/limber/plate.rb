@@ -56,7 +56,7 @@ class Limber::Plate < Sequencescape::Plate
   # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
-    pools.any? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
+    pools.empty? || pools.any? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
   end
 
   #
