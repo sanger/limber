@@ -25,6 +25,8 @@ feature 'Creating a tag plate', js: true do
   let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:tag2_template_uuid) { 'tag2-layout-template-0' }
 
+  let(:submission_pools) { json(:dual_submission_pool_collection) }
+
   include_context 'a tag plate creator'
   include_context 'a tag plate creator with dual indexing'
 
@@ -48,7 +50,7 @@ feature 'Creating a tag plate', js: true do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('tag_layout_templates', body: templates)
     stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection, size: 2))
-    stub_api_get(plate_uuid, 'submission_pools', body: json(:dual_submission_pool_collection))
+    stub_api_get(plate_uuid, 'submission_pools', body: submission_pools)
 
     stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
     stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: '12345', template_uuid: tag_template_uuid))

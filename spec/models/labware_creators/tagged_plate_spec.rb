@@ -103,7 +103,7 @@ describe LabwareCreators::TaggedPlate do
     context 'when a submission is split over multiple plates' do
       let(:pool_json) do
         json(:dual_submission_pool_collection,
-             used_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
+             used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
       end
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
