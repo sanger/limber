@@ -18,9 +18,7 @@ module Presenters
 
     def suitable_for_labware?(config)
       config.beds.detect do |_bed, bed_config|
-        # We only want to detect target plates, otherwise we stop eg. manual failures
-        bed_config.target_state.present? &&
-          bed_config.purpose == purpose.name && bed_config.states.include?(labware.state)
+        bed_config.purpose == purpose.name && bed_config.states.include?(labware.state)
       end.present?
     end
 

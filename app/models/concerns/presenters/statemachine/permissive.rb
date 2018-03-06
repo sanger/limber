@@ -22,6 +22,16 @@ module Presenters::Statemachine
           include DoesNotAllowLibraryPassing
         end
 
+        state :processed_1 do
+          include StateAllowsChildCreation
+          include DoesNotAllowLibraryPassing
+        end
+
+        state :processed_2 do
+          include StateAllowsChildCreation
+          include DoesNotAllowLibraryPassing
+        end
+
         state :passed do
           include StateAllowsChildCreation
           include DoesNotAllowLibraryPassing

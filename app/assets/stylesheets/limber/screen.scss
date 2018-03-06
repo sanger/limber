@@ -111,7 +111,7 @@ dl.metadata, dl#samples-information {
   @extend .list-group;
   li { @extend .list-group-item; }
   li.state-pending { @extend .list-group-item-warning; }
-  li.state-started { @extend .list-group-item-info; }
+  li.state-started, li.state-process_1, li.state-process_2 { @extend .list-group-item-info; }
   li.state-passed { @extend .list-group-item-success; }
   // TODO: Update to primary when bootstrap updated
   li.state-qc_completed { @extend .list-group-item-success; }
@@ -122,7 +122,7 @@ dl.metadata, dl#samples-information {
 
 .state-badge { @extend.badge; }
 .state-badge.pending { @extend.badge-warning; }
-.state-badge.started { @extend.badge-info; }
+.state-badge.started, .state-badge.process_1, .state-badge.process_2 { @extend.badge-info; }
 .state-badge.passed { @extend.badge-success; }
 .state-badge.qc_completed { @extend.badge-success }
 .state-badge.cancelled { @extend .list-group-item-danger; }
