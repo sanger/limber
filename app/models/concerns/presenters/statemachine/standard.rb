@@ -24,7 +24,7 @@ module Presenters::Statemachine
         end
 
         state :processed_1 do
-          include StateDoesNotAllowChildCreation
+          include StateAllowsChildCreation
           include DoesNotAllowLibraryPassing
         end
 
