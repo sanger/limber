@@ -33,7 +33,7 @@
         <%= f.text_field :tag_plate_barcode,
                          data: {
                            'info-panel'=>'tag-plate-info',
-                           'qcable-type'=>'Tag plate',
+                           'qcable-type'=>'tag plate',
                            'approved-list'=>'tag_layouts',
                            'dual-index' => @creation_form.tag_plate_dual_index?
                          },
@@ -42,7 +42,7 @@
             <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
             <%= f.text_field :tag2_tube_barcode,
-                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag Tube', 'approved-list'=>'tag2s'},
+                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag2s'},
                              class: 'form-control', required: @creation_form.require_tag_tube? %>
         <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>

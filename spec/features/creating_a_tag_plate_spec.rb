@@ -151,12 +151,18 @@ feature 'Creating a tag plate', js: true do
         it_behaves_like 'supports dual-index plates'
       end
       context 'when the pool has been tagged by plates' do
-        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]) }
+        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }]) }
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         it_behaves_like 'supports dual-index plates'
       end
+      context 'when the template has been used' do
+        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]) }
+        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
+        let(:tag_error) { 'The Tag Plate is not suitable.' }
+        it_behaves_like 'it rejects the candidate plate'
+      end
       context 'when a tube has already been used in the pool' do
-         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }]) }
+         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }]) }
          let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
          let(:tag_error) { 'Pool has been tagged with tube. Dual indexed plates are unsupported.' }
          it_behaves_like 'it rejects the candidate plate'

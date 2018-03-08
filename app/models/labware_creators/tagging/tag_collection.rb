@@ -25,6 +25,7 @@ module LabwareCreators::Tagging
     def available
       @available ||= tag_layout_templates.each_with_object({}) do |layout, hash|
         catch(:unacceptable_tag_layout) do
+          next if used.include?(layout.uuid)
           hash[layout.uuid] = {
             tags: tags_by_column(layout),
             dual_index: layout.dual_index?
