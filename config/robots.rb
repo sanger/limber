@@ -329,7 +329,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                layout: 'bed',
                beds: {
                  bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['processed_1'], label: 'Bed 8', target_state: 'processed_2' },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', state: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode }
+                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode }
                })
 
   custom_robot('bravo-strand-setup-rnaa-m',
@@ -337,8 +337,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                layout: 'bed',
                beds: {
                  bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['passed'], label: 'Bed 8' },
-                 car('3,4').barcode => { purpose: 'LB cDNA', state: ['pending'], label: 'Carousel 3,4', parent: bed(8).barcode },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', state: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
+                 car('3,4').barcode => { purpose: 'LB cDNA', states: ['pending'], label: 'Carousel 3,4', parent: bed(8).barcode },
+                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
                })
 
   custom_robot('bravo-second-strand-setup',
@@ -355,7 +355,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                verify_robot: true,
                beds: {
                  bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['passed'], label: 'Bed 8' },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', state: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
                })
 
   bravo_robot do
