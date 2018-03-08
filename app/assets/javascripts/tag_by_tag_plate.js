@@ -93,6 +93,7 @@
       },
       validateTemplate: function() {
         if (this.template.unknown) { this.errors += ' It does not contain suitable tags.'; }
+        if (this.template.used) { this.errors += ' This template has already been used.'; }
         if (this.dualIndex && !this.template.dual_index) { this.errors += ' Pool has been tagged with a UDI plate. UDI plates must be used.'; }
         // We explicitly check false, as null/undefined means "Don't check either way"
         if (this.dualIndex == false && this.template.dual_index) { this.errors += ' Pool has been tagged with tube. Dual indexed plates are unsupported.'; }

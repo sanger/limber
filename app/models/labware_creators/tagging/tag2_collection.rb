@@ -22,8 +22,11 @@ module LabwareCreators::Tagging
     # @return [Hash] A hash of template uuids as keys, and simple summary as values
     #
     def available
-      @available ||= available_templates.each_with_object({}) do |template, hash|
-        hash[template.uuid] = { dual_index: true }
+      @available ||= all_templates.each_with_object({}) do |template, hash|
+        hash[template.uuid] = {
+          dual_index: true,
+          used: used.include?(template.uuid)
+        }
       end
     end
 
@@ -51,8 +54,12 @@ module LabwareCreators::Tagging
 
     private
 
+    def all_templates
+      @all_templates ||= @api.tag2_layout_template.all
+    end
+
     def available_templates
-      @available_templates ||= @api.tag2_layout_template.all.reject do |template|
+      @available_templates ||= all_templates.reject do |template|
                                  used.include?(template.uuid)
                                end
     end

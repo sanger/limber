@@ -158,7 +158,7 @@ feature 'Creating a tag plate', js: true do
       context 'when the template has been used' do
         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]) }
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
-        let(:tag_error) { 'The Tag Plate is not suitable.' }
+        let(:tag_error) { 'This template has already been used.' }
         it_behaves_like 'it rejects the candidate plate'
       end
       context 'when a tube has already been used in the pool' do
