@@ -57,8 +57,7 @@ shared_context 'a tag plate creator' do
       payload: {
         tag_layout: {
           plate: tag_plate_uuid,
-          user: user_uuid,
-          substitutions: {}
+          user: user_uuid
         }
       },
       body: '{}'
@@ -85,7 +84,7 @@ shared_context 'a tag plate creator with dual indexing' do
   let(:tag2_layout_template) { json(:tag2_layout_template, uuid: tag2_template_uuid) }
 
   let!(:tag2_layout_request) do
-    stub_api_get(tag2_template_uuid, body: tag2_layout_template )
+    stub_api_get(tag2_template_uuid, body: tag2_layout_template)
     stub_api_post(
       tag2_template_uuid,
       payload: {

@@ -93,7 +93,8 @@
       },
       validateTemplate: function() {
         if (this.template.unknown) { this.errors += ' It does not contain suitable tags.'; }
-        if (this.template.used) { this.errors += ' This template has already been used.'; }
+        // Reject used templates only if we're dealing with a dual indexed template
+        if (this.template.used && this.template.dual_index) { this.errors += ' This template has already been used.'; }
         if (this.dualIndex && !this.template.dual_index) { this.errors += ' Pool has been tagged with a UDI plate. UDI plates must be used.'; }
         // We explicitly check false, as null/undefined means "Don't check either way"
         if (this.dualIndex == false && this.template.dual_index) { this.errors += ' Pool has been tagged with tube. Dual indexed plates are unsupported.'; }
@@ -133,10 +134,10 @@
     $.extend(SCAPE, {
       fetch_tags: function () {
         var selected_layout = $('#plate_tag_plate_template_uuid').val();
-        if (SCAPE.tag_layouts[selected_layout] === undefined) {
+        if (SCAPE.tag_plates_list[selected_layout] === undefined) {
           return $([]);
         } else {
-          return $(SCAPE.tag_layouts[selected_layout].tags);
+          return $(SCAPE.tag_plates_list[selected_layout].tags);
         }
       },
       update_layout: function () {

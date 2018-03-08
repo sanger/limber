@@ -22,8 +22,8 @@ module LabwareCreators::Tagging
     # where { tag_template_uuid => { tags: [[well_name, [ pool_id, tag_id ]]], dual_index: dual_index? } }
     # @return [Hash] Tag layouts and their tags
     #
-    def available
-      @available ||= tag_layout_templates.each_with_object({}) do |layout, hash|
+    def list
+      @list ||= tag_layout_templates.each_with_object({}) do |layout, hash|
         catch(:unacceptable_tag_layout) do
           hash[layout.uuid] = {
             tags: tags_by_column(layout),
@@ -35,6 +35,7 @@ module LabwareCreators::Tagging
     end
 
     def used
+      return [] if @plate.submission_pools.empty?
       @used ||= @plate.submission_pools.each_with_object(Set.new) do |pool, set|
         pool.used_tag_layout_templates.each { |used| set << used['uuid'] }
       end

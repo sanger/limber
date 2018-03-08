@@ -13,7 +13,8 @@ describe LabwareCreators::TaggedPlate do
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8] }
+  let(:pools) { 0 }
+  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'transfer-template-uuid' }
@@ -95,12 +96,13 @@ describe LabwareCreators::TaggedPlate do
       end
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
-        expect(subject.tag_groups).to eq('tag-layout-template-0' => layout_hash,
-                                         'tag-layout-template-1' => layout_hash)
+        expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false },
+                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false })
       end
     end
 
     context 'when a submission is split over multiple plates' do
+      let(:pools) { 1 }
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
@@ -119,8 +121,9 @@ describe LabwareCreators::TaggedPlate do
           end
 
           it 'describes only the unused tube' do
-            expect(subject.tag2s.keys).to eq(['tag2-layout-template-1'])
-            expect(subject.tag2_names).to eq(['Tag2 layout 1'])
+            expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true },
+                                                 'tag2-layout-template-1' => { dual_index: true, used: false })
+            expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
           end
 
           it 'enforces use of tubes' do
@@ -133,7 +136,7 @@ describe LabwareCreators::TaggedPlate do
           json(:dual_submission_pool_collection)
         end
         it 'allows tubes or plates' do
-          expect(subject.acceptable_tag2_sources).to eq ['tube', 'plate']
+          expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
         end
       end
       context 'and dual index plates have been used' do
@@ -157,7 +160,7 @@ describe LabwareCreators::TaggedPlate do
       end
 
       it 'allows tubes or plates' do
-        expect(subject.acceptable_tag2_sources).to eq ['tube', 'plate']
+        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
       end
     end
   end

@@ -2,8 +2,8 @@
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
        $.extend(SCAPE, {
-        tag_layouts: <%= @creation_form.tag_groups.to_json.html_safe %>,
-        tag2s: <%= @creation_form.tag2s.to_json.html_safe %>,
+        tag_plates_list: <%= @creation_form.tag_plates_list.to_json.html_safe %>,
+        tag_tubes_list: <%= @creation_form.tag_tubes_list.to_json.html_safe %>,
         dualRequired: <%= @creation_form.requires_tag2? %>
        });
      })(window,jQuery);
@@ -16,7 +16,7 @@
         </div>
         <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag plate', form: f, required: true } %>
         <% @creation_form.tag2_field do -%>
-          <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag2 tube', form: f, required: @creation_form.require_tag_tube? } %>
+          <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag2 tube', form: f, required: @creation_form.tag_tubes_used? } %>
         <% end %>
       <% end %>
     <%- end -%>
@@ -34,16 +34,16 @@
                          data: {
                            'info-panel'=>'tag-plate-info',
                            'qcable-type'=>'tag plate',
-                           'approved-list'=>'tag_layouts',
+                           'approved-list'=>'tag_plates_list',
                            'dual-index' => @creation_form.tag_plate_dual_index?
                          },
                          class: 'form-control', required: true %>
         <% @creation_form.tag2_field do -%>
-            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+            <p><em>Available templates:</em> <%= @creation_form.tag_tubes_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
             <%= f.text_field :tag2_tube_barcode,
-                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag2s'},
-                             class: 'form-control', required: @creation_form.require_tag_tube? %>
+                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag_tubes_list'},
+                             class: 'form-control', required: @creation_form.tag_tubes_used? %>
         <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
         <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>

@@ -14,9 +14,12 @@ module LabwareCreators
     ]
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
-    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :require_tag_tube? }
+    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
+
+    delegate :used?, :list, :names, to: :tag_plates, prefix: true
+    delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
     def tag_plate=(params)
       return nil if params.blank?
@@ -31,22 +34,6 @@ module LabwareCreators
     def initialize(*args, &block)
       super
       plate.populate_wells_with_pool
-    end
-
-    def substitutions
-      @substitutions ||= {}
-    end
-
-    def tag_groups
-      tag_collection.available
-    end
-
-    def tag2s
-      tag2_collection.available
-    end
-
-    def tag2_names
-      tag2_collection.names
     end
 
     def create_plate!
@@ -90,9 +77,9 @@ module LabwareCreators
     #
     # @return [Array<String>] An array of acceptable sources, 'plate' and/or 'tube'
     def acceptable_tag2_sources
-      return ['tube'] if require_tag_tube?
-      return ['plate'] if tag_collection.used?
-      ['tube', 'plate']
+      return ['tube'] if tag_tubes_used?
+      return ['plate'] if tag_plates_used?
+      %w[tube plate]
     end
 
     def tag2_field
@@ -100,17 +87,13 @@ module LabwareCreators
       nil
     end
 
-    def require_tag_tube?
-      tag2_collection.used?
-    end
-
     def allow_tag_tube?
       acceptable_tag2_sources.include?('tube')
     end
 
     def tag_plate_dual_index?
-      return false if require_tag_tube?
-      return true if tag_collection.used?
+      return false if tag_tubes_used?
+      return true if tag_plates_used?
       nil
     end
 
@@ -121,20 +104,19 @@ module LabwareCreators
 
     private
 
-    def tag_collection
-      @tag_collection ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid)
+    def tag_plates
+      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid)
     end
 
-    def tag2_collection
-      @tag2_collection ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate)
+    def tag_tubes
+      @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate)
     end
 
     def create_labware!
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,
-          user: user_uuid,
-          substitutions: substitutions.reject { |_, new_tag| new_tag.blank? }
+          user: user_uuid
         )
 
         if tag2_tube_barcode.present?

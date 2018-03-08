@@ -11,7 +11,8 @@ feature 'Creating a tag plate', js: true do
   let(:plate_barcode)         { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:example_plate)         { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8] }
+  let(:pools) { 1 }
+  let(:example_plate)         { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid)        { 'tag-plate-uuid' }
@@ -130,9 +131,13 @@ feature 'Creating a tag plate', js: true do
         it_behaves_like 'supports a plate-tube combo'
       end
       context 'when a tube has already been used in the pool' do
-         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }]) }
-         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
-         it_behaves_like 'supports a plate-tube combo'
+        let(:submission_pools) do
+          json(:dual_submission_pool_collection,
+               used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }],
+               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]) # The same template has been used, but we don't actually care here
+        end
+        let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
+        it_behaves_like 'supports a plate-tube combo'
       end
       context 'when the pool has been tagged by plates' do
         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }]) }
@@ -162,10 +167,10 @@ feature 'Creating a tag plate', js: true do
         it_behaves_like 'it rejects the candidate plate'
       end
       context 'when a tube has already been used in the pool' do
-         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }]) }
-         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
-         let(:tag_error) { 'Pool has been tagged with tube. Dual indexed plates are unsupported.' }
-         it_behaves_like 'it rejects the candidate plate'
+        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }]) }
+        let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
+        let(:tag_error) { 'Pool has been tagged with tube. Dual indexed plates are unsupported.' }
+        it_behaves_like 'it rejects the candidate plate'
       end
     end
   end
