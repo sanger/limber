@@ -28,7 +28,8 @@ module LabwareCreators::Tagging
           hash[layout.uuid] = {
             tags: tags_by_column(layout),
             dual_index: layout.dual_index?,
-            used: used.include?(layout.uuid)
+            used: used.include?(layout.uuid),
+            approved: acceptable_template?(layout)
           }
         end
       end
@@ -77,9 +78,7 @@ module LabwareCreators::Tagging
     end
 
     def tag_layout_templates
-      @api.tag_layout_template.all.map(&:coerce).select do |template|
-        acceptable_template?(template)
-      end
+      @api.tag_layout_template.all.map(&:coerce)
     end
   end
 end

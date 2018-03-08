@@ -2,6 +2,7 @@
   "use strict";
 
   //= require lib/tag_collector
+  //= require lib/validator
 
   // TAG CREATION
   $(document).ready(function(){
@@ -64,12 +65,20 @@
           qc_lookup.message('The barcode could not be found. There may be network issues, or problems with Sequencescape.','danger');
         };
       },
+      validators: [
+        new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
+        new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
+        new validator(function(t) { return t.template.approved; }, 'Is not approved for use with this pipeline.'),
+        new validator(function(t) { return !(t.template.used && t.template.dual_index); }, 'This template has already been used.'),
+        new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
+        new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.')
+      ],
       plateFound: function(qcable) {
         this.qcable = qcable;
         this.template = this.approvedTypes[qcable.template_uuid] || unknownTemplate;
         this.populateData();
         if (this.validPlate()) {
-          this.message('The ' + qcable.qcable_type + ' is suitable.'+ this.errors,'success');
+          this.message('The ' + qcable.qcable_type + ' is suitable.', 'success');
           SCAPE.update_layout();
           this.monitor.pass();
         } else {
@@ -86,18 +95,11 @@
       },
       validPlate: function() {
         this.errors = '';
-
-        if (this.qcable.state !== 'available') { this.errors += ' The scanned item is not available.'; }
-        this.validateTemplate();
+        for (var i =0; i < this.validators.length; i+=1) {
+          var response = this.validators[i].validate(this);
+          if (!response.valid) { this.errors += ' ' + response.message; }
+        }
         return this.errors === '';
-      },
-      validateTemplate: function() {
-        if (this.template.unknown) { this.errors += ' It does not contain suitable tags.'; }
-        // Reject used templates only if we're dealing with a dual indexed template
-        if (this.template.used && this.template.dual_index) { this.errors += ' This template has already been used.'; }
-        if (this.dualIndex && !this.template.dual_index) { this.errors += ' Pool has been tagged with a UDI plate. UDI plates must be used.'; }
-        // We explicitly check false, as null/undefined means "Don't check either way"
-        if (this.dualIndex == false && this.template.dual_index) { this.errors += ' Pool has been tagged with tube. Dual indexed plates are unsupported.'; }
       },
       message: function(message, status) {
         this.infoPanel.find('.qc_validation_report').empty().append(

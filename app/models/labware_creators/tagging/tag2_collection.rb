@@ -25,7 +25,8 @@ module LabwareCreators::Tagging
       @list ||= all_templates.each_with_object({}) do |template, hash|
         hash[template.uuid] = {
           dual_index: true,
-          used: used.include?(template.uuid)
+          used: used.include?(template.uuid),
+          approved: true
         }
       end
     end

@@ -96,8 +96,8 @@ describe LabwareCreators::TaggedPlate do
       end
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
-        expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false },
-                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false })
+        expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
+                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true })
       end
     end
 
@@ -121,8 +121,8 @@ describe LabwareCreators::TaggedPlate do
           end
 
           it 'describes only the unused tube' do
-            expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true },
-                                                 'tag2-layout-template-1' => { dual_index: true, used: false })
+            expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
+                                                 'tag2-layout-template-1' => { dual_index: true, used: false, approved: true })
             expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
           end
 
