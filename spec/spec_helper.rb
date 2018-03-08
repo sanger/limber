@@ -36,7 +36,7 @@ rescue LoadError
 end
 
 Capybara.javascript_driver = :poltergeist
-Capybara.default_max_wait_time = 15
+Capybara.default_max_wait_time = 1
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

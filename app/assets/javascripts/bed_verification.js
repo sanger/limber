@@ -7,11 +7,7 @@
 
     if ($('#robot-verification-bed').length === 0) { return };
 
-    $.ajaxSetup({
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      }
-    });
+    //= require lib/ajax_support
 
     var closeIcon = function() {
       return $(document.createElement('a')).

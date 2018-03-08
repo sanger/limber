@@ -56,15 +56,13 @@ class SearchController < ApplicationController
   end
 
   def qcables
-    raise InputError, 'You have not supplied a barcode' if params[:qcable_barcode].blank?
-    pruned_barcode = params[:qcable_barcode].strip
-    raise InputError, "#{params[:qcable_barcode]} is not a valid barcode" unless /^[0-9]{13}$/ === pruned_barcode
+    raise InputError, "#{qcable_barcode} is not a valid barcode" unless /^[0-9]{13}$/ === qcable_barcode
     respond_to do |format|
       format.json do
-        redirect_to find_qcable(pruned_barcode)
+        redirect_to find_qcable(qcable_barcode)
       end
     end
-  rescue Sequencescape::Api::ResourceNotFound, InputError => exception
+  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => exception
     render json: { 'error' => exception.message }
   end
 
@@ -111,5 +109,11 @@ class SearchController < ApplicationController
     respond_to do |format|
       format.json { render json: { 'general' => exception.message }, status: 404 }
     end
+  end
+
+  private
+
+  def qcable_barcode
+    params.require(:qcable_barcode).strip
   end
 end

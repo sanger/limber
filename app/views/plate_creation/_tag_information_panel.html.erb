@@ -12,7 +12,7 @@
   </dl>
   </div>
   <%= form.fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
-    <%= qcable.hidden_field :asset_uuid,    required: true, class: 'asset_uuid' %>
-    <%= qcable.hidden_field :template_uuid, required: true, class: 'template_uuid' %>
+    <%= qcable.hidden_field :asset_uuid,    required: required, class: 'asset_uuid' %>
+    <%= qcable.hidden_field :template_uuid, required: required, class: 'template_uuid' %>
   <% end %>
 </div>

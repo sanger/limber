@@ -25,7 +25,11 @@ feature 'Creating a tag plate', js: true do
   let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:tag2_template_uuid) { 'tag2-layout-template-0' }
 
-  let(:submission_pools) { json(:dual_submission_pool_collection) }
+  let(:submission_pools) { json(:submission_pool_collection) }
+  let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
+
+  let(:tag_lot_number) { 'tag_lot_number' }
+  let(:tag2_lot_number) { 'tag2_lot_number' }
 
   include_context 'a tag plate creator'
   include_context 'a tag plate creator with dual indexing'
@@ -53,18 +57,37 @@ feature 'Creating a tag plate', js: true do
     stub_api_get(plate_uuid, 'submission_pools', body: submission_pools)
 
     stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
-    stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: '12345', template_uuid: tag_template_uuid))
+    stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
     stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
     stub_api_get(tag2_tube_qcable_uuid, body: tag2_tube_qcable)
-    stub_api_get('lot2-uuid', body: json(:tag2_lot, lot_number: '67890', template_uuid: tag2_template_uuid))
+    stub_api_get('lot2-uuid', body: json(:tag2_lot, lot_number: tag2_lot_number, template_uuid: tag2_template_uuid))
     stub_api_get('tag2-lot-type-uuid', body: json(:tag2_lot_type))
 
     stub_api_get(tag_plate_uuid, body: json(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
     stub_api_get(tag_plate_uuid, 'wells', body: json(:well_collection))
   end
 
-  shared_examples 'a recognised template' do
-    scenario 'of a recognised type' do
+  shared_examples 'supports dual-index plates' do
+    let(:help_text) { "Click 'Create plate'" }
+
+    scenario 'creation with dual-index plates' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      plate_title = find('#plate-title')
+      expect(plate_title).to have_text('Limber Cherrypicked')
+      click_on('Add an empty Tag Purpose plate')
+      expect(page).to have_content('Tag plate addition')
+      expect(find('#tag-help')).to have_content(help_text)
+      stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
+      fill_in('Tag plate barcode', with: tag_plate_barcode)
+      expect(page).to have_content(tag_lot_number)
+      expect(find('#well_A2')).to have_content(a2_tag)
+      click_on('Create Plate')
+      expect(page).to have_content('New empty labware added to the system.')
+    end
+  end
+
+  shared_examples 'supports a plate-tube combo' do
+    scenario 'allows plate creation' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
@@ -72,27 +95,88 @@ feature 'Creating a tag plate', js: true do
       expect(page).to have_content('Tag plate addition')
       stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
       fill_in('Tag plate barcode', with: tag_plate_barcode)
-      expect(page).to have_content('12345')
+      expect(page).to have_content(tag_lot_number)
       stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag2_tube_barcode } }, tag2_tube_qcable)
       fill_in('Tag2 tube barcode', with: tag2_tube_barcode)
-      expect(page).to have_content('67890')
+      expect(page).to have_content(tag2_lot_number)
       expect(find('#well_A2')).to have_content(a2_tag)
       click_on('Create Plate')
       expect(page).to have_content('New empty labware added to the system.')
     end
   end
 
+  shared_examples 'it rejects the candidate plate' do
+    scenario 'rejects the candidate plate' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      plate_title = find('#plate-title')
+      expect(plate_title).to have_text('Limber Cherrypicked')
+      click_on('Add an empty Tag Purpose plate')
+      expect(page).to have_content('Tag plate addition')
+      stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
+      fill_in('Tag plate barcode', with: tag_plate_barcode)
+      # expect(page).to have_content('The Tag Plate is not suitable.')
+      expect(page).to have_button('Create Plate', disabled: true)
+      expect(page).to have_content(tag_error)
+    end
+  end
+
+  shared_examples 'a recognised template' do
+    context 'a single indexed tag plate' do
+      let(:template_factory) { :tag_layout_template }
+
+      context 'when nothing has been done' do
+        let(:submission_pools) { json(:dual_submission_pool_collection) }
+        let(:help_text) { 'This plate is part of a larger pool and must be dual indexed.' }
+        it_behaves_like 'supports a plate-tube combo'
+      end
+      context 'when a tube has already been used in the pool' do
+         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-1', name: 'Used template' }]) }
+         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
+         it_behaves_like 'supports a plate-tube combo'
+      end
+      context 'when the pool has been tagged by plates' do
+        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }]) }
+        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
+        let(:tag_error) { 'Pool has been tagged with a UDI plate. UDI plates must be used.' }
+        it_behaves_like 'it rejects the candidate plate'
+      end
+    end
+
+    context 'a dual indexed tag plate' do
+      let(:template_factory) { :dual_index_tag_layout_template }
+
+      context 'when nothing has been done' do
+        let(:submission_pools) { json(:dual_submission_pool_collection) }
+        let(:help_text) { 'This plate is part of a larger pool and must be dual indexed.' }
+        it_behaves_like 'supports dual-index plates'
+      end
+      context 'when the pool has been tagged by plates' do
+        let(:submission_pools) { json(:dual_submission_pool_collection, used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]) }
+        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
+        it_behaves_like 'supports dual-index plates'
+      end
+      context 'when a tube has already been used in the pool' do
+         let(:submission_pools) { json(:dual_submission_pool_collection, used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }]) }
+         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
+         let(:tag_error) { 'Pool has been tagged with tube. Dual indexed plates are unsupported.' }
+         it_behaves_like 'it rejects the candidate plate'
+      end
+    end
+  end
+
   feature 'with no configure templates' do
     let(:acceptable_templates) { nil }
+    let(:templates) { json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory) }
+    let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
 
     feature 'by column layout' do
-      let(:templates) { json(:tag_layout_template_collection, size: 2) }
+      let(:direction) { 'column' }
       let(:a2_tag)    { '9' }
       it_behaves_like 'a recognised template'
     end
 
     feature 'by row layout' do
-      let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
+      let(:direction) { 'row' }
       let(:a2_tag)    { '2' }
       it_behaves_like 'a recognised template'
     end
@@ -100,7 +184,8 @@ feature 'Creating a tag plate', js: true do
 
   feature 'with configured templates' do
     let(:acceptable_templates) { ['Tag2 layout 0'] }
-    let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
+    let(:direction) { 'row' }
+    let(:templates) { json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory) }
     let(:a2_tag)    { '2' }
 
     feature 'and matching scanned template' do
@@ -108,19 +193,10 @@ feature 'Creating a tag plate', js: true do
     end
 
     feature 'and non matching scanned template' do
+      let(:template_factory) { :dual_index_tag_layout_template }
       let(:tag_template_uuid) { 'unrecognised template' }
-
-      scenario 'rejects the candidate plate' do
-        fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-        plate_title = find('#plate-title')
-        expect(plate_title).to have_text('Limber Cherrypicked')
-        click_on('Add an empty Tag Purpose plate')
-        expect(page).to have_content('Tag plate addition')
-        stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
-        fill_in('Tag plate barcode', with: tag_plate_barcode)
-        expect(page).to have_content('The Tag Plate is not suitable.')
-        expect(page).to have_content('It does not contain suitable tags.')
-      end
+      let(:tag_error) { 'It does not contain suitable tags.' }
+      it_behaves_like 'it rejects the candidate plate'
     end
   end
 end

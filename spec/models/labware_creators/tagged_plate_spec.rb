@@ -101,26 +101,48 @@ describe LabwareCreators::TaggedPlate do
     end
 
     context 'when a submission is split over multiple plates' do
-      let(:pool_json) do
-        json(:dual_submission_pool_collection,
-             used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
-      end
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
-
-      it 'requires tag2' do
-        expect(subject.requires_tag2?).to be true
-      end
-
-      context 'with advertised tag2 templates' do
-        before do
-          stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
+      context 'and tubes have been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection,
+               used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
+        end
+        it 'requires tag2' do
+          expect(subject.requires_tag2?).to be true
         end
 
-        it 'describes only the unused tube' do
-          expect(subject.tag2s.keys).to eq(['tag2-layout-template-1'])
-          expect(subject.tag2_names).to eq(['Tag2 layout 1'])
+        context 'with advertised tag2 templates' do
+          before do
+            stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
+          end
+
+          it 'describes only the unused tube' do
+            expect(subject.tag2s.keys).to eq(['tag2-layout-template-1'])
+            expect(subject.tag2_names).to eq(['Tag2 layout 1'])
+          end
+
+          it 'enforces use of tubes' do
+            expect(subject.acceptable_tag2_sources).to eq ['tube']
+          end
+        end
+      end
+      context 'and nothing has been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection)
+        end
+        it 'allows tubes or plates' do
+          expect(subject.acceptable_tag2_sources).to eq ['tube', 'plate']
+        end
+      end
+      context 'and dual index plates have been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection,
+               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
+        end
+        it 'enforces use of plates' do
+          expect(subject.acceptable_tag2_sources).to eq ['plate']
         end
       end
     end
@@ -132,6 +154,10 @@ describe LabwareCreators::TaggedPlate do
 
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
+      end
+
+      it 'allows tubes or plates' do
+        expect(subject.acceptable_tag2_sources).to eq ['tube', 'plate']
       end
     end
   end

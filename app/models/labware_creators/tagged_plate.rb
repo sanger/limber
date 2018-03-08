@@ -4,6 +4,8 @@ module LabwareCreators
   class TaggedPlate < Base
     include Form::CustomPage
 
+    attr_reader :child
+
     self.page = 'tagged_plate'
     self.attributes = %i[
       api purpose_uuid parent_uuid user_uuid
@@ -12,9 +14,7 @@ module LabwareCreators
     ]
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
-    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :requires_tag2? }
-
-    attr_reader :child
+    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :require_tag_tube? }
 
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
 
@@ -38,15 +38,15 @@ module LabwareCreators
     end
 
     def tag_groups
-      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid).available
+      tag_collection.available
     end
 
     def tag2s
-      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate).available
+      tag2_collection.available
     end
 
     def tag2_names
-      tag2s.values.map(&:name)
+      tag2_collection.names
     end
 
     def create_plate!
@@ -80,12 +80,54 @@ module LabwareCreators
       plate.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
 
+    #
+    # Returns an array of acceptable source of tag2. The rules are as follows:
+    # - If we don't need a tag2, allow anything, it doesn't matter.
+    # - If we've already started using one method, enforce it for the rest of the pool
+    # - Otherwise, anything goes
+    # Note: The order matter here, as pools tagged with tubes will still list plates
+    # for the i5 (tag) tag.
+    #
+    # @return [Array<String>] An array of acceptable sources, 'plate' and/or 'tube'
+    def acceptable_tag2_sources
+      return ['tube'] if require_tag_tube?
+      return ['plate'] if tag_collection.used?
+      ['tube', 'plate']
+    end
+
     def tag2_field
-      yield if requires_tag2?
+      yield if allow_tag_tube?
       nil
     end
 
+    def require_tag_tube?
+      tag2_collection.used?
+    end
+
+    def allow_tag_tube?
+      acceptable_tag2_sources.include?('tube')
+    end
+
+    def tag_plate_dual_index?
+      return false if require_tag_tube?
+      return true if tag_collection.used?
+      nil
+    end
+
+    def help
+      return 'single' unless requires_tag2?
+      "dual_#{acceptable_tag2_sources.join('_')}"
+    end
+
     private
+
+    def tag_collection
+      @tag_collection ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid)
+    end
+
+    def tag2_collection
+      @tag2_collection ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate)
+    end
 
     def create_labware!
       create_plate! do |plate_uuid|
