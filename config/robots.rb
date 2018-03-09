@@ -266,4 +266,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     from 'GBS PCR1', bed(1)
     to 'GBS PCR2', bed(2)
   end
+
+  custom_robot(
+    'mosquito-gbs-pcr1-to-gbs-pcr2',
+    name: 'mosquito GBS PCR1 => GBS PCR2',
+    layout: 'bed',
+    beds: {
+      bed(1).barcode => { purpose: 'GBS PCR1', states: ['passed'], label: 'Bed 1' },
+      bed(2).barcode => { purpose: 'GBS PCR2', states: ['pending'], label: 'Bed 2', parent: bed(1).barcode, target_state: 'started' },
+      bed(4).barcode => { purpose: 'GBS PCR1', states: ['passed'], label: 'Bed 4' },
+      bed(5).barcode => { purpose: 'GBS PCR2', states: ['pending'], label: 'Bed 5', parent: bed(4).barcode, target_state: 'started' }
+    }
+  )
 end

@@ -80,18 +80,9 @@ feature 'Creating a tag plate', js: true do
 
   feature 'with no configure templates' do
     let(:acceptable_templates) { nil }
-
-    feature 'by column layout' do
-      let(:templates) { json(:tag_layout_template_collection, size: 2) }
-      let(:a2_tag)    { '9' }
-      it_behaves_like 'a recognised template'
-    end
-
-    feature 'by row layout' do
-      let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
-      let(:a2_tag)    { '2' }
-      it_behaves_like 'a recognised template'
-    end
+    let(:templates) { json(:tag_layout_template_collection, size: 2) }
+    let(:a2_tag)    { '9' }
+    it_behaves_like 'a recognised template'
   end
 
   feature 'with configured templates' do
