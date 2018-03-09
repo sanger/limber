@@ -23,6 +23,7 @@ FactoryBot.define do
       stock_plate_barcode 2
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       for_multiplexing false
+      pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
       pool_complete false
     end
 
@@ -40,7 +41,7 @@ FactoryBot.define do
           'library_type' => { name: library_type },
           'request_type' => request_type,
           'pcr_cycles' => pool_prc_cycles[index],
-          'for_multiplexing' => for_multiplexing,
+          'for_multiplexing' => pool_for_multiplexing[index],
           'pool_complete' => pool_complete
         }
       end
