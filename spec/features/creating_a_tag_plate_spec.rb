@@ -115,7 +115,6 @@ feature 'Creating a tag plate', js: true do
       expect(page).to have_content('Tag plate addition')
       stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } }, tag_plate_qcable)
       fill_in('Tag plate barcode', with: tag_plate_barcode)
-      # expect(page).to have_content('The Tag Plate is not suitable.')
       expect(page).to have_button('Create Plate', disabled: true)
       expect(page).to have_content(tag_error)
     end
