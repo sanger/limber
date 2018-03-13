@@ -5,7 +5,7 @@
       <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
 
-  <%= card title:'Suggested Actions' do %>
+  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
       <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
