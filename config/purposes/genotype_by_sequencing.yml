@@ -3,7 +3,7 @@ GBS Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPlatePresenter
+  :presenter_class: Presenters::MinimalStockPlatePresenter
   :input_plate: true
   :size: 384
 GBS PCR1:

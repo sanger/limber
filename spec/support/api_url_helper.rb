@@ -70,6 +70,7 @@ module ApiUrlHelper
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
   end
+  extend ClassMethods
 end
 
 RSpec.configure do |config|

@@ -6,6 +6,10 @@ class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
   def coerce
     extend("limber/tag_layout_template/in_#{direction.gsub(/\s+/, '_')}s".camelize.constantize)
     extend("limber/tag_layout_template/walk_#{walking_by.gsub(/\s+/, '_')}".camelize.constantize)
+  rescue NameError => exception
+    Rails.logger.warn("Unrecognised layout options: #{exception.message}")
+    extend Unsupported
+  ensure
     self
   end
 
@@ -18,9 +22,9 @@ class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
     prior_pool = nil
     callback = lambda do |row_column|
       prior_pool = pool = (well_to_pool[row_column] || prior_pool) # or next
-      emptiness = well_to_pool[row_column].nil?
+      well_empty = well_to_pool[row_column].nil?
       well = pool.nil? ? nil : row_column
-      [well, pool, emptiness] # Triplet: [ A1, pool_id, emptiness ]
+      [well, pool, well_empty] # Triplet: [ A1, pool_id, well_empty ]
     end
     yield(callback)
   end

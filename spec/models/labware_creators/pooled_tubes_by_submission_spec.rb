@@ -21,7 +21,7 @@ describe LabwareCreators::PooledTubesBySubmission do
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
 
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5 }
+  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5, for_multiplexing: true }
 
   let(:form_attributes) do
     {
@@ -43,18 +43,22 @@ describe LabwareCreators::PooledTubesBySubmission do
       stub_api_get(parent_uuid, 'wells', body: wells_json)
     end
 
+    let(:creation_payload) do
+      {
+        user: user_uuid,
+        parent: parent_uuid,
+        child_purposes: [purpose_uuid, purpose_uuid],
+        tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
+      }
+    end
+
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
 
     let!(:tube_creation_request) do
       stub_api_post(
         'specific_tube_creations',
         payload: {
-          specific_tube_creation: {
-            user: user_uuid,
-            parent: parent_uuid,
-            child_purposes: [purpose_uuid, purpose_uuid],
-            tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
-          }
+          specific_tube_creation: creation_payload
         },
         body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2, names: ['DN5 A1:C1', 'DN5 D1:A2'])
       )
@@ -108,6 +112,32 @@ describe LabwareCreators::PooledTubesBySubmission do
           { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' }
         ]
       end
+      it 'pools by submission' do
+        expect(subject.save!).to be_truthy
+        expect(transfer_creation_request).to have_been_made.once
+      end
+    end
+
+    context 'with previously passed requests' do
+      let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], pool_for_multiplexing: [true, false], stock_plate_barcode: 5 }
+
+      let(:transfer_requests) do
+        [
+          { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+          { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
+          { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' }
+        ]
+      end
+
+      let(:creation_payload) do
+        {
+          user: user_uuid,
+          parent: parent_uuid,
+          child_purposes: [purpose_uuid],
+          tube_attributes: [{ name: 'DN5 A1:C1' }]
+        }
+      end
+
       it 'pools by submission' do
         expect(subject.save!).to be_truthy
         expect(transfer_creation_request).to have_been_made.once
