@@ -112,7 +112,7 @@ describe Robots::Robot do
       before do
         Settings.purpose_uuids['Limber Cherrypicked'] = 'limber_cherrypicked_uuid'
         Settings.robots['robot_id_2'] = settings[:robots][:robot_id_2]
-        stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => '123' } }, plate_json)
+        stub_asset_search('123', plate_json)
       end
 
       context 'without metadata' do
@@ -204,7 +204,7 @@ describe Robots::Robot do
       Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
       Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       state_change_request
-      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => '123' } }, plate_json)
+      stub_asset_search('123', plate_json)
     end
 
     it 'performs transfer from started to passed' do

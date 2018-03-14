@@ -35,9 +35,9 @@ feature 'Failing wells', js: true do
     Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
     Settings.purposes['child-purpose-0'] = build :purpose_config
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))

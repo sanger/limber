@@ -71,7 +71,7 @@ describe LabwareCreators::TubeFromTube do
 
     describe '#render' do
       it 'should immediately redirect' do
-        expect(controller).to receive(:redirect_to_form_destination).with(subject).and_return(true)
+        expect(controller).to receive(:redirect_to_creator_child).with(subject).and_return(true)
         subject.render(controller)
         expect(subject.child.uuid).to eq(child_uuid)
         expect(creation_request).to have_been_made.once

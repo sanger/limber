@@ -3,6 +3,10 @@
   <%= render(partial: 'labware/qc_data') %>
 
   <%= card title:'Suggested Actions' do %>
+    <% presenter.control_suggested_library_passing do %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
+    <% end %>
+
     <% @presenter.control_additional_creation do -%>
       <% @presenter.suggested_purposes do |uuid, name, type| %>
         <%= render(partial: creation_partial_for(type), locals: { presenter: @presenter, uuid: uuid, name: name }) %>

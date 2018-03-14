@@ -1,8 +1,13 @@
+set -e
+echo 'Cleaning up'
+NODE_ENV=production bundle exec rake assets:clobber
 echo 'Compiling assets'
-RAILS_ENV=production bundle exec rake assets:precompile
+NODE_ENV=production bundle exec rake assets:precompile
 echo 'Generating sha'
 git rev-parse HEAD > REVISION
 echo 'Compiling tar.gz'
 tar --version
 tar --exclude='./.git' --exclude='./tmp' --exclude='./vendor/bundle' --exclude='./node_modules' --exclude='./log/*' --exclude='release.tar.gz' -zcvf /tmp/release.tar.gz ./
 mv /tmp/release.tar.gz ./release.tar.gz
+echo 'Release complete!'
+echo `pwd`/release.tar.gz

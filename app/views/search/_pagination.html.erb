@@ -1,0 +1,12 @@
+<%= form_for(search_options, method: :get) do |f| %>
+  <% search_options.purposes.each do |purpose_uuid| %>
+    <%= f.fields_for :purposes do |purpose_form|%>
+      <%= purpose_form.hidden_field nil, value: purpose_uuid  %>
+    <% end %>
+  <% end %>
+  <%= f.hidden_field :show_my_plates_only, class: 'custom-control-input' %>
+  <%= f.hidden_field :include_used, class: 'custom-control-input' %>
+  <% search_options.each_page do |page, selected| %>
+    <%= f.submit page, name: 'page', class: "btn btn-#{selected ? 'secondary' : 'default'}" %>
+  <% end %>
+<% end %>

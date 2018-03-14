@@ -3,7 +3,7 @@
 
 require_relative '../support/json_renderers'
 
-FactoryGirl.define do
+FactoryBot.define do
   trait :api_object do
     transient do
       api_root 'http://example.com:3000/'
@@ -32,6 +32,8 @@ FactoryGirl.define do
     initialize_with do
       new(api, json_render.new(json_root, attributes).to_hash)
     end
+
+#    to_create { |_i| ApiUrlHelper.stub_api_get uuid, body: JsonRenderer.new(json_root, attributes) }
   end
 
   trait :barcoded do

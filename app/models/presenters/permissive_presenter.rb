@@ -7,5 +7,7 @@ module Presenters
   #
   class PermissivePresenter < PlatePresenter
     include Presenters::Statemachine::Permissive
+
+    validates_with Validators::SuboptimalValidator
   end
 end

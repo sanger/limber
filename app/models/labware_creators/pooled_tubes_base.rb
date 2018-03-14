@@ -4,7 +4,7 @@ module LabwareCreators
   # Creates a new tube per submission, and transfers all the wells matching that submission
   # into each tube.
   class PooledTubesBase < Base
-    extend SupportParent::TaggedPlateOnly
+    include SupportParent::TaggedPlateOnly
     attr_reader :tube_transfer, :child_stock_tubes
 
     def create_labware!
@@ -47,10 +47,6 @@ module LabwareCreators
         'target_asset' => target,
         'submission'   => submission
       }
-    end
-
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
     end
 
     def pool_uuids

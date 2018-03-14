@@ -2,7 +2,7 @@
   <%= content do %>
     <%= jumbotron(:login, class: 'logged_out_only') do %>
       <h1>Limber up and log in...</h1>
-      <p>Touch your swipecard to the reader to log yourself in... Don't worry. The corniness is a symptom of the prototype stage!</p>
+      <p>Touch your swipecard to the reader to log yourself in...</p>
       <%= form_tag sessions_path, class: 'plate-search-form', :'data-ajax' => 'false', method: 'post' do %>
         <fieldset class="form-group">
           <%= label_tag :user_swipecard, 'User Swipecard', class: 'col-form-label-lg' %>

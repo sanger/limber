@@ -12,11 +12,6 @@ describe LabwareCreators::FinalTubeFromPlate do
     LabwareCreators::FinalTubeFromPlate.new(form_attributes)
   end
 
-  # Set up our templates
-  before do
-    LabwareCreators::FinalTubeFromPlate.default_transfer_template_uuid = 'transfer-to-mx-tubes-on-submission'
-  end
-
   let(:user_uuid)    { SecureRandom.uuid }
   let(:user)         { json :user, uuid: user_uuid }
   let(:purpose_uuid) { SecureRandom.uuid }

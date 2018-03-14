@@ -31,12 +31,12 @@ module RobotConfiguration
       @robots[key] = hash
     end
 
-    def bravo_robot(target_state = 'passed', verify_robot = false, &block)
-      simple_robot('bravo', target_state, verify_robot, &block)
+    def bravo_robot(transition_to: 'passed', verify_robot: false, &block)
+      simple_robot('bravo', transition_to: transition_to, verify_robot: verify_robot, &block)
     end
 
-    def simple_robot(type, target_state = 'passed', verify_robot = false, &block)
-      added_robot = RobotConfiguration::Simple.new(type, target_state, verify_robot, &block)
+    def simple_robot(type, transition_to: 'passed', verify_robot: false, &block)
+      added_robot = RobotConfiguration::Simple.new(type, transition_to, verify_robot, &block)
       @robots[added_robot.key] = added_robot.configuration
       added_robot
     end

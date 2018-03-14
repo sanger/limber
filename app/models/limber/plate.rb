@@ -1,29 +1,42 @@
 # frozen_string_literal: true
 
+#
+# Class Limber::Plate provides a client side representation of Sequencescape plates
+#
+# @author Genome Research Ltd.
+#
 class Limber::Plate < Sequencescape::Plate
   # Customize the has_many association to use out custom class.
   has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
 
-  def library_type_name
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]['library_type']['name']
+  delegate :number_of_pools, :pcr_cycles, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
+           :ready_for_custom_pooling?, :submissions, :primer_panel,
+           to: :pools_info
+
+  #
+  # The width of the plate. Assumes a 4:3 ratio
+  #
+  # @return [Integer] Plate width in wells
+  #
+  def width
+    Math.sqrt(size / 6).to_i * 3
   end
 
-  def number_of_pools
-    pools.keys.count
+  #
+  # The height of the plate. Assumes a 4:3 ratio
+  #
+  # @return [Integer] Plate height in wells
+  #
+  def height
+    Math.sqrt(size / 6).to_i * 2
   end
 
-  def pcr_cycles
-    @pcr_cycles ||= pools.values.map { |pool| pool.fetch('pcr_cycles', 'Not specified') }.uniq
+  def pools_info
+    @pools_info ||= Pools.new(pools)
   end
 
   def role
     label.prefix
-  end
-
-  def shearing_size
-    uuid = pools.keys.first
-    uuid.nil? ? 'Unknown' : pools[uuid]['insert_size'].to_a.join(' ')
   end
 
   def purpose
@@ -45,25 +58,11 @@ class Limber::Plate < Sequencescape::Plate
     first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
-  # Plates are ready for pooling once we're in to the multiplex phase of the pipeline
-  # This is indicated by the request type on the pools, and indicates that the plates
-  # have been charged and passed.
-  # We need at least one pool for automatic pooling to function.
-  def ready_for_automatic_pooling?
-    !pools.empty? && pools.any? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
-  end
-
-  # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
-  # require downstream submission and is completely happy with empty pools
-  def ready_for_custom_pooling?
-    pools.any? { |_submission_id, pool_info| pool_info['for_multiplexing'] }
-  end
-
   #
   # Returns an array consisting of the child tubes of a plate, and the wells
-  # that were transfered into each.
+  # that were transferred into each.
   #
-  # @return [Array<Array>] An araay of arrays, tubes and their source wells.
+  # @return [Array<Array>] An array of arrays, tubes and their source wells.
   # eg. [[<Limber::Tube>, ['A1','B1']],[<Limber::Tube>,['C1','D1']]]
   #
   def tubes_and_sources
@@ -78,10 +77,10 @@ class Limber::Plate < Sequencescape::Plate
     tube_hash = generate_tube_hash
     # Sort the source well list in column order
     tube_hash.transform_values! do |well_list|
-      well_list.sort_by { |well_name| WellHelpers.index_of(well_name) }
+      WellHelpers.sort_in_column_order(well_list)
     end
     # Sort the tubes in column order based on their first well
-    tube_hash.sort_by { |_tube, well_list| WellHelpers.index_of(well_list.first) }
+    tube_hash.sort_by { |_tube, well_list| WellHelpers.well_coordinate(well_list.first) }
   end
 
   def generate_tube_hash

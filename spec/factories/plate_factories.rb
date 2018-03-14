@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require './lib/well_helpers'
-require_relative '../support/factory_girl_extensions'
+require_relative '../support/factory_bot_extensions'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root 'plate'
     size 96
@@ -32,11 +32,11 @@ FactoryGirl.define do
                                'transfer_request_collections'
 
     pools do
-      wells = WellHelpers.column_order.dup
+      wells = WellHelpers.column_order(size).dup
       pool_hash = {}
-      pool_sizes.each_with_index do |size, index|
+      pool_sizes.each_with_index do |pool_size, index|
         pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => wells.shift(size).sort_by { |well| WellHelpers.row_order.index(well) },
+          'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
           'insert_size' => { from: 100, to: 300 },
           'library_type' => { name: library_type },
           'request_type' => request_type,
@@ -87,6 +87,32 @@ FactoryGirl.define do
     factory :plate_for_pooling do
       purpose_name 'Pooled example'
       pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
+    end
+
+    factory :plate_with_primer_panels do
+      pools do
+        wells = WellHelpers.column_order(size).dup
+        pool_hash = {}
+        pool_sizes.each_with_index do |pool_size, index|
+          pool_hash["pool-#{index + 1}-uuid"] = {
+            'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+            'insert_size' => { from: 100, to: 300 },
+            'library_type' => { name: library_type },
+            'request_type' => request_type,
+            'pcr_cycles' => pool_prc_cycles[index],
+            'for_multiplexing' => for_multiplexing,
+            'pool_complete' => pool_complete,
+            'primer_panel' => {
+              'name' => 'example panel',
+              'programs' => {
+                'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
+                'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
+              }
+            }
+          }
+        end
+        pool_hash
+      end
     end
 
     factory :passed_plate do

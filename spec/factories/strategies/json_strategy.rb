@@ -2,7 +2,7 @@
 
 class JsonStrategy
   def initialize
-    @strategy = FactoryGirl.strategy_by_name(:attributes_for).new
+    @strategy = FactoryBot.strategy_by_name(:attributes_for).new
   end
 
   delegate :association, to: :@strategy
@@ -12,4 +12,4 @@ class JsonStrategy
   end
 end
 
-FactoryGirl.register_strategy(:json, JsonStrategy)
+FactoryBot.register_strategy(:json, JsonStrategy)

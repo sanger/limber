@@ -10,15 +10,15 @@ describe LabwareCreators do
 
   before do
     Settings.purposes[basic_purpose] = {
-      form_class: 'LabwareCreators::Base'
+      creator_class: 'LabwareCreators::StampedPlate'
     }
     Settings.purposes[tagged_purpose] = {
-      form_class: 'LabwareCreators::TaggedPlate'
+      creator_class: 'LabwareCreators::TaggedPlate'
     }
   end
 
   it 'can lookup form for a given purpose' do
-    expect(LabwareCreators.class_for(basic_purpose)).to eq(LabwareCreators::Base)
+    expect(LabwareCreators.class_for(basic_purpose)).to eq(LabwareCreators::StampedPlate)
   end
 
   it 'can lookup form for another purpose' do

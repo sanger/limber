@@ -16,7 +16,7 @@
         }).fail(function(data,status) { if (status!=='abort') { plate.badPlate(); } });
       },
       checkPlates : function() {
-        if ($('.wait-plate, .bad-plate').size() === 0) {
+        if ($('.wait-plate, .bad-plate').length === 0) {
           $('#create-labware').attr('disabled', null);
         } else {
           $('#create-labware').attr('disabled', 'disabled');

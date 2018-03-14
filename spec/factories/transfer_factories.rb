@@ -1,7 +1,7 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :transfer, class: Sequencescape::Transfer, traits: [:api_object] do
     json_root 'transfer'
 

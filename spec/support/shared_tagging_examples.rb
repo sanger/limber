@@ -33,6 +33,8 @@ shared_context 'a tag plate creator' do
     )
   end
 
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
+
   let!(:transfer_creation_request) do
     stub_api_get(transfer_template_uuid, body: transfer_template)
     stub_api_post(
@@ -41,7 +43,8 @@ shared_context 'a tag plate creator' do
         transfer: {
           source: plate_uuid,
           destination: tag_plate_uuid,
-          user: user_uuid
+          user: user_uuid,
+          transfers: expected_transfers
         }
       },
       body: '{}'

@@ -1,0 +1,78 @@
+---
+PF Cherrypicked:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+PF Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Cherrypicked
+PF Post Shear:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Shear
+PF Post Shear XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+PF End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :parents:
+  - PF Post Shear
+PF Lib:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+  - 'PF_adapters_UDI_96_A'
+  - 'PF_adapters_UDI_96_B'
+  - 'PF_adapters_UDI_96_C'
+  - 'PF_adapters_UDI_96_D'
+  :parents:
+  - PF Post Shear XP
+  - PF End Prep
+PF Lib XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+PF Lib XP2:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :parents:
+  - PF Lib XP
+  - PF Lib
