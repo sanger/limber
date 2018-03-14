@@ -157,9 +157,30 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  custom_robot(
+    'star-384-scrna-384-stock-to-scrna-384-cdna-xp',
+    name: 'STAR-384 scRNA Stock => scRNA-384 cDNA-XP',
+    layout: 'bed',
+    beds: {
+      bed(12).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 12' },
+      bed(17).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 17', parent: bed(12).barcode, target_state: 'passed' },
+      bed(13).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 13' },
+      bed(18).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 18', parent: bed(13).barcode, target_state: 'passed' },
+      bed(14).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 14' },
+      bed(19).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 19', parent: bed(14).barcode, target_state: 'passed' },
+      bed(15).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 15' },
+      bed(20).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 20', parent: bed(15).barcode, target_state: 'passed' }
+    }
+  )
+
   bravo_robot transition_to: 'started' do
     from 'scRNA cDNA-XP', bed(4)
     to 'scRNA End Prep', car('1,4')
+  end
+
+  bravo_robot transition_to: 'started' do
+    from 'scRNA-384 cDNA-XP', bed(4)
+    to 'scRNA-384 End Prep', car('1,4')
   end
 
   custom_robot('bravo-scdna-end-prep',
@@ -170,9 +191,22 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(5).barcode => { purpose: 'scRNA End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
                })
 
+  custom_robot('bravo-scdna-384-end-prep',
+               name: 'bravo scDNA-384 End Prep',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => { purpose: 'scRNA-384 End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+               })
+
   bravo_robot do
     from 'scRNA End Prep', car('1,4')
     to 'scRNA Lib PCR', bed(6)
+  end
+
+  bravo_robot do
+    from 'scRNA-384 End Prep', car('1,4')
+    to 'scRNA-384 Lib PCR', bed(6)
   end
 
   custom_robot(

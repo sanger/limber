@@ -5,6 +5,13 @@ scRNA Stock:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+scRNA-384 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::MinimalStockPlatePresenter
+  :size: 384
 scRNA cDNA-XP:
   :asset_type: plate
   :stock_plate: false
@@ -12,6 +19,15 @@ scRNA cDNA-XP:
   :input_plate: false
   :parents:
   - scRNA Stock
+scRNA-384 cDNA-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :size: 384
+  :parents:
+  - scRNA-384 Stock
 scRNA End Prep:
   :asset_type: plate
   :stock_plate: false
@@ -19,6 +35,15 @@ scRNA End Prep:
   :input_plate: false
   :parents:
   - scRNA cDNA-XP
+scRNA-384 End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :size: 384
+  :parents:
+  - scRNA-384 cDNA-XP
 scRNA Lib PCR:
   :asset_type: plate
   :stock_plate: false
@@ -31,6 +56,24 @@ scRNA Lib PCR:
       - 8
   :parents:
   - scRNA End Prep
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  :suggest_library_pass_for:
+  - limber_scrna
+scRNA-384 Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :size: 384
+  warnings:
+    pcr_cycles_not_in:
+      - 8
+  :parents:
+  - scRNA-384 End Prep
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
