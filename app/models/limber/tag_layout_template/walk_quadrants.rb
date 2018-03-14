@@ -9,7 +9,7 @@ module Limber::TagLayoutTemplate::WalkQuadrants
 
     groups.each do |(well, pool_id, _well_empty)|
       column, row = WellHelpers.well_coordinate(well)
-      index = primary_index(row, column-1, 2, plate.height)
+      index = primary_index(row, column - 1, 2, plate.height)
       throw :unacceptable_tag_layout if tags.size <= index
       tagged_wells[well] = [pools.index(pool_id) + 1, tags[index]] unless well.nil?
     end

@@ -33,7 +33,7 @@ FactoryBot.define do
       new(api, json_render.new(json_root, attributes).to_hash)
     end
 
-#    to_create { |_i| ApiUrlHelper.stub_api_get uuid, body: JsonRenderer.new(json_root, attributes) }
+    #    to_create { |_i| ApiUrlHelper.stub_api_get uuid, body: JsonRenderer.new(json_root, attributes) }
   end
 
   trait :barcoded do
