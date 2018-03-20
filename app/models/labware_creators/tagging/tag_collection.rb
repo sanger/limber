@@ -56,7 +56,7 @@ module LabwareCreators::Tagging
 
     def tags_by_column(layout)
       swl = layout.generate_tag_layout(@plate)
-      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well) }
+      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well, @plate.size) }
     end
 
     def tag_layout_templates

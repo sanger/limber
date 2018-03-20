@@ -1,23 +1,25 @@
 <%= sidebar do %>
   <div class="btn-group btn-block" role="group">
-   <button id="btnGroupInboxes" type="button" class="btn btn-primary dropdown-toggle btn-lg btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     Inboxes
-   </button>
-   <ul class="dropdown-menu btn-block" aria-labelledby="btnGroupInboxes">
-    <li class='dropdown-item'><%= link_to 'New Input Plates', all_stock_plates_path %></li>
-    <li class='dropdown-item'><%= link_to 'All Ongoing Plates', ongoing_plates_path %></li>
-    <li class='dropdown-item'><%= link_to 'My Plates', my_plates_path %></li>
-   </ul>
- </div>
+    <button id="btnGroupInboxes" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Inboxes
+    </button>
+    <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupInboxes">
+     <%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { purposes: stock_plate_uuids }) %>
+     <%= link_to 'All Ongoing Plates', ongoing_plates_path %>
+     <%= link_to 'My Plates', ongoing_plates_path(ongoing_plate: { show_my_plates_only: '1' }) %>
+     <%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { purposes: [Settings.purpose_uuids["GBS Stock"]] }) %>
+     <%= link_to 'All Ongoing Tubes', ongoing_tubes_path %>
+    </nav>
+  </div>
 
   <div class="btn-group btn-block" role="group">
-   <button id="btnGroupRobots" type="button" class="btn btn-primary dropdown-toggle btn-lg btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+   <button id="btnGroupRobots" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
      Robots
    </button>
-   <ul class="dropdown-menu btn-block" aria-labelledby="btnGroupRobots" id="robots-list">
+   <nav class="robots-list dropdown-menu" aria-labelledby="btnGroupRobots" id="robots-list">
      <% each_robot do |robot_id,robot_name| %>
-       <li class='dropdown-item'><%= link_to robot_name, robot_path(robot_id) %></li>
+       <%= link_to robot_name, robot_path(robot_id) %>
      <% end %>
-   </ul>
+   </nav>
  </div>
 <% end %>

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/nested_validation'
+require 'csv'
 
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes'
@@ -10,8 +11,6 @@ module LabwareCreators
   class CustomPooledTubes::CsvFile
     include ActiveModel::Validations
     extend NestedValidation
-
-    attr_reader :header_row
 
     validate :correctly_parsed?
     validates :header_row, presence: true

@@ -47,9 +47,5 @@ describe Presenters::TubePresenter do
     )
   end
 
-  it 'returns tube' do
-    expect(subject.tube).to eq(labware)
-  end
-
   it_behaves_like 'a labware presenter'
 end

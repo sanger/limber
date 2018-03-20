@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < Base
-    include Form::CustomPage
+  class TaggedPlate < StampedPlate
+    include LabwareCreators::CustomPage
+    include SupportParent::PlateOnly
 
     self.page = 'tagged_plate'
     self.attributes = %i[
@@ -13,6 +14,8 @@ module LabwareCreators
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :requires_tag2? }
+
+    delegate :height, :width, :size, to: :labware
 
     attr_reader :child
 
@@ -30,7 +33,7 @@ module LabwareCreators
 
     def initialize(*args, &block)
       super
-      plate.populate_wells_with_pool
+      parent.populate_wells_with_pool
     end
 
     def substitutions
@@ -38,11 +41,11 @@ module LabwareCreators
     end
 
     def tag_groups
-      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid).available
+      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, parent, purpose_uuid).available
     end
 
     def tag2s
-      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate).available
+      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, parent).available
     end
 
     def tag2_names
@@ -50,11 +53,7 @@ module LabwareCreators
     end
 
     def create_plate!
-      api.transfer_template.find(transfer_template_uuid).create!(
-        source: parent_uuid,
-        destination: tag_plate.asset_uuid,
-        user: user_uuid
-      )
+      transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
 
@@ -77,7 +76,7 @@ module LabwareCreators
     end
 
     def requires_tag2?
-      plate.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
+      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
 
     def tag2_field

@@ -11,23 +11,15 @@ module LabwareCreators
   # of the existing pipeline, and may be removed in future. Essentially, as used currently, the tubes are ACTUALLY part
   # of the previous plate, so are already filled by this stage.
   class FinalTubeFromPlate < Base
-    extend SupportParent::PlateReadyForPoolingOnly
+    include SupportParent::PlateReadyForPoolingOnly
 
     attr_reader :tube_transfer
 
-    self.default_transfer_template_uuid = Settings.transfer_templates['Transfer wells to MX library tubes by submission']
+    self.default_transfer_template_name = 'Transfer wells to MX library tubes by submission'
 
     def create_labware!
       transfer_into_existing_tubes!
       pass_tubes!
-    rescue Sequencescape::Api::ResourceInvalid => e
-      Rails.logger.error(e.message)
-      Rails.logger.error(e.backtrace)
-      false
-    end
-
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
     end
 
     # We may create multiple tubes, so cant redirect onto any particular
@@ -42,7 +34,7 @@ module LabwareCreators
     private
 
     def transfer_into_existing_tubes!
-      @transfer ||= api.transfer_template.find(default_transfer_template_uuid).create!(
+      @transfer ||= transfer_template.create!(
         user: user_uuid,
         source: parent_uuid
       )

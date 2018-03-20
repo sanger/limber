@@ -3,21 +3,29 @@
 require_dependency 'presenters'
 module Presenters
   module Presenter
-    def self.included(base)
-      base.class_eval do
-        include Form
-        include BarcodeLabelsHelper
-        self.page = 'show'
+    extend ActiveSupport::Concern
 
-        def csv
-          purpose_config.fetch(:csv_template, 'show')
-        end
+    included do
+      include Form
+      include BarcodeLabelsHelper
+
+      class_attribute :labware_class, :summary_items
+
+      attr_accessor :api, :labware
+
+      self.page = 'show'
+      self.attributes = %i[api labware]
+
+      def csv
+        purpose_config.fetch(:csv_template, 'show')
       end
     end
 
     delegate :state, :uuid, to: :labware
 
-    def save!; end
+    def suggest_library_passing?
+      purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
+    end
 
     def purpose_name
       labware.purpose.name
@@ -41,11 +49,6 @@ module Presenters
 
     def well_failing_applicable?
       well_failure_states.include?(state.to_sym)
-    end
-
-    # To get rid!
-    def suitable_labware
-      yield
     end
 
     def summary
@@ -79,6 +82,8 @@ module Presenters
     def inspect
       "<#{self.class.name} labware:#{labware.uuid} ...>"
     end
+
+    def prepare; end
 
     private
 

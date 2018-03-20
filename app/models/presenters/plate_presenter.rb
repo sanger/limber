@@ -2,22 +2,20 @@
 
 require_dependency 'presenters/presenter'
 
+# Basic core presenter class for plates
 class Presenters::PlatePresenter
   include Presenters::Presenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
 
-  attr_accessor :api, :labware
-  self.attributes = %i[api labware]
+  class_attribute :aliquot_partial, :summary_partial, :well_failure_states
 
-  class_attribute :labware_class, :aliquot_partial
+  self.summary_partial = 'labware/plates/standard_summary'
   self.labware_class = :plate
   self.aliquot_partial = 'labware/aliquot'
-
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
-  class_attribute :summary_items
   self.summary_items = {
     'Barcode' => :barcode,
     'Number of wells' => :number_of_wells,
@@ -27,11 +25,6 @@ class Presenters::PlatePresenter
     'PCR Cycles' => :pcr_cycles,
     'Created on' => :created_on
   }
-
-  # This is now generated dynamically by the LabwareHelper
-  class_attribute :tab_states
-
-  class_attribute :well_failure_states
   self.well_failure_states = [:passed]
 
   # Note: Validation here is intended as a warning. Rather than strict validation
@@ -42,24 +35,23 @@ class Presenters::PlatePresenter
                          message: 'differs from standard. %{value} cycles have been requested.' },
             if: :expected_cycles
 
-  validates_with Validators::SuboptimalValidator
   validates_with Validators::InProgressValidator
 
-  alias plate labware
-  alias plate_to_walk labware
+  delegate :tagged?, :width, :height, :size, :plate_purpose, to: :labware
 
-  delegate :tagged?, to: :labware
+  alias plate_to_walk labware
+  # Purpose returns the plate or tube purpose of the labware.
+  # Currently this needs to be specialised for tube or plate but in future
+  # both should use #purpose and we'll be able to share the same method for
+  # all presenters.
+  alias purpose plate_purpose
 
   def number_of_wells
-    "#{number_of_filled_wells}/#{total_number_of_wells}"
+    "#{number_of_filled_wells}/#{size}"
   end
 
   def pcr_cycles
-    if pcr_cycles_specified.zero?
-      'No pools specified'
-    else
-      cycles.to_sentence
-    end
+    pcr_cycles_specified.zero? ? 'No pools specified' : cycles.to_sentence
   end
 
   def expected_cycles
@@ -74,32 +66,8 @@ class Presenters::PlatePresenter
     labware.tubes.map { |t| Labels::TubeLabel.new(t) }
   end
 
-  def suitable_labware
-    yield
-  end
-
-  def control_library_passing
-    yield if allow_library_passing? && !suggest_library_passing?
-  end
-
-  def control_suggested_library_passing
-    yield if allow_library_passing? && suggest_library_passing?
-  end
-
-  def suggest_library_passing?
-    purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
-  end
-
   def control_tube_display
     yield if labware.transfers_to_tubes?
-  end
-
-  # Purpose returns the plate or tube purpose of the labware.
-  # Currently this needs to be specialised for tube or plate but in future
-  # both should use #purpose and we'll be able to share the same method for
-  # all presenters.
-  def purpose
-    labware.plate_purpose
   end
 
   def labware_form_details(view)
@@ -112,21 +80,29 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
+    [["Download Worksheet CSV", { format: :csv }]]
   end
 
   def filename(offset = nil)
     "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
   end
 
+  def prepare
+    labware.populate_wells_with_pool
+  end
+
+  def tag_sequences
+    @tag_sequences ||= labware.wells.each_with_object([]) do |well, tags|
+      well.aliquots.each do |aliquot|
+        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
+      end
+    end
+  end
+
   private
 
   def number_of_filled_wells
-    plate.wells.count { |w| w.aliquots.present? }
-  end
-
-  def total_number_of_wells
-    plate.size
+    labware.wells.count { |w| w.aliquots.present? }
   end
 
   def pcr_cycles_specified
@@ -134,7 +110,7 @@ class Presenters::PlatePresenter
   end
 
   def cycles
-    plate.pcr_cycles
+    labware.pcr_cycles
   end
 
   # Split a location string into an array containing the row letter

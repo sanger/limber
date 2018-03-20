@@ -9,12 +9,27 @@ namespace :config do
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
 
+    puts 'Fetching submission_templates...'
+    submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
+
+    puts 'Fetching purposes...'
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
-    purpose_config = YAML.parse_file('config/purposes.yml').to_ruby.map do |name, options|
-      PurposeConfig.load(name, options, all_purposes, api)
+    purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
+      next unless file.extname == '.yml'
+      YAML.parse_file(file).to_ruby.each do |name, options|
+        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
+      end
     end
 
+    # Check for duplicates: We spread config over multiple files. If we have duplicates its going
+    # to result in strange behaviour. So lets blow up early.
+    if purpose_config.map(&:name).uniq!
+      dupes = purpose_config.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
+      raise StandardError, "Duplicate purpose config detected: #{dupes}"
+    end
+
+    puts 'Preparing purposes...'
     tracked_purposes = purpose_config.map do |config|
       all_purposes[config.name] ||= config.register!
     end
@@ -56,28 +71,7 @@ namespace :config do
         store[purpose.name] = purpose.uuid
       end
 
-      configuration[:robots]      = ROBOT_CONFIG
-      configuration[:qc_purposes] = []
-
-      configuration[:submission_templates] = {}.tap do |submission_templates|
-        puts 'Preparing submission templates...'
-        submission_templates['miseq'] = api.order_template.all.detect { |ot| ot.name == Limber::Application.config.qc_submission_name }.uuid
-      end
-
-      puts 'Setting study...'
-      configuration[:study] = Limber::Application.config.study_uuid ||
-                              puts('No study specified, using first study') ||
-                              api.study.first.uuid
-      puts 'Setting project...'
-      configuration[:project] = Limber::Application.config.project_uuid ||
-                                puts('No project specified, using first project') ||
-                                api.project.first.uuid
-
-      configuration[:request_types] = {}.tap do |request_types|
-        request_types['illumina_htp_library_creation']    = ['Lib Norm', false]
-        request_types['illumina_a_isc']                   = ['ISCH lib pool', false]
-        request_types['illumina_a_re_isc']                = ['ISCH lib pool', false]
-      end
+      configuration[:robots] = ROBOT_CONFIG
     end
 
     # Write out the current environment configuration file

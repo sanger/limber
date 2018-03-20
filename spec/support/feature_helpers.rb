@@ -6,7 +6,6 @@ module FeatureHelpers
     search_url = 'http://example.com:3000/' + search_uuid
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
-
     if result.present?
       stub_api_post(search_uuid, 'first', status: 301, payload: query, body: result)
     else
@@ -14,6 +13,13 @@ module FeatureHelpers
         .with(body: query.to_json)
         .to_raise(Sequencescape::Api::ResourceNotFound)
     end
+  end
+
+  def stub_search_and_multi_result(search, query, result)
+    search_uuid = search.downcase.tr(' ', '-')
+    Settings.searches[search] = search_uuid
+    stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
+    stub_api_post(search_uuid, 'all', status: 301, payload: query, body: { size: result.length, searches: result }.to_json)
   end
 
   def stub_swipecard_search(swipecard, user)
@@ -25,11 +31,19 @@ module FeatureHelpers
   end
 
   def stub_asset_search(barcode, asset)
-    stub_search_and_single_result(
-      'Find assets by barcode',
-      { 'search' => { 'barcode' => barcode } },
-      asset
-    )
+    if asset.is_a?(Array)
+      stub_search_and_multi_result(
+        'Find assets by barcode',
+        { 'search' => { 'barcode' => barcode } },
+        asset
+      )
+    else
+      stub_search_and_single_result(
+        'Find assets by barcode',
+        { 'search' => { 'barcode' => barcode } },
+        asset
+      )
+    end
   end
 
   def fill_in_swipecard_and_barcode(swipecard, barcode)
@@ -50,6 +64,7 @@ module FeatureHelpers
     within '.content-main' do
       fill_in 'User Swipecard', with: swipecard
       find_field('User Swipecard').send_keys :enter
+      expect(page).to have_content('Jane Doe')
     end
   end
 

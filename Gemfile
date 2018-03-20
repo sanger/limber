@@ -2,37 +2,13 @@
 
 source 'https://rubygems.org'
 
-gem 'formtastic'
-
-gem 'coffee-rails', require: false
 gem 'rails'
-gem 'sass-rails'
-gem 'uglifier'
-
-# Provides some css helpers
-# Deprecate!
-gem 'compass-rails'
-
-gem 'webpacker', '~> 2.0'
-
-# Required for bootstrap tooltips
-gem 'rails-assets-tether', '>= 1.1.0'
-# Bootstrap is a css framework
-gem 'bootstrap'
-
-# See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'therubyracer', require: false
-
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# We use the sortable component of jquery ui
-gem 'jquery-ui-rails'
-
 gem 'rake'
 gem 'state_machines'
+gem 'webpacker', '~> 2.0'
 # Used in the setting object, allows access by object and hash notation.
 gem 'exception_notification'
 gem 'hashie'
@@ -51,15 +27,30 @@ gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'de
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :test do
-  gem 'capybara'
-  gem 'factory_girl' # Generate models and json easily in tests
+  gem 'capybara' # Interface for integration tests
+  gem 'factory_bot' # Generate models and json easily in tests
   gem 'guard-rspec', require: false
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
-  gem 'poltergeist'
+  gem 'poltergeist' # Headless browser for integration tests
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'webmock'
+end
+
+group :development, :test do
+  gem 'uglifier'
+  # See https://github.com/rails/execjs#readme for more supported runtimes
+  gem 'therubyracer', require: false
+  # Bootstrap is a css framework
+  gem 'bootstrap'
+  gem 'coffee-rails', require: false
+  # Use jquery as the JavaScript library
+  gem 'jquery-rails'
+  gem 'sass-rails'
+  gem 'select2-rails'
+  # We use the sortable component of jquery ui
+  gem 'jquery-ui-rails'
 end
 
 group :development do

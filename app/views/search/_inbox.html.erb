@@ -1,0 +1,10 @@
+<ul id="ongoing_plates" class="inbox-results">
+  <% labware_by_state(search_results).each do |state, sorted_labware| -%>
+    <li class="state-<%= state %>"><%= state.titleize %></li>
+    <%= render sorted_labware %>
+  <% end -%>
+
+  <% if search_results.empty? -%>
+    <li class="list-group-item disabled list-group-item-secondary">No labware found.</li>
+  <% end -%>
+</ul>

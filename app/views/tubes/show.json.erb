@@ -1,0 +1,9 @@
+{
+  "tube":{
+    "barcode": "<%= "#{@presenter.labware.barcode.prefix}#{@presenter.labware.barcode.number}" %>",
+    "uuid": "<%= @presenter.uuid %>",
+    "state": "<%= @presenter.state %>",
+    "purpose": "<%= @presenter.purpose_name %>",
+    "tags": <%= @presenter.tag_sequences.to_json.html_safe %>
+  }
+}

@@ -12,7 +12,7 @@
     <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
     <%= hidden_field_tag :labware_ean13_barcode, presenter.labware.barcode.ean13 %>
     <%= hidden_field_tag :state, transition.to %>
-    <%= hidden_field_tag :reason, 'Manual transfer' %>
-    <%= f.submit t(transition.to,scope:[:state_machine,:transitions]), class: 'btn btn-lg btn-block btn-warning' %>
-    <% end %>
+    <%= hidden_field_tag :reason, t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]) %>
+    <%= f.submit t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]), class: 'btn btn-lg btn-block btn-warning' %>
+  <% end %>
 <% end %>

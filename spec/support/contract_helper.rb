@@ -27,7 +27,8 @@ module ContractHelper
 
     def request(contract_name)
       contract(contract_name) do |file|
-        (match = REQUEST_REGEXP.match(file.read)) || raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
+        match = REQUEST_REGEXP.match(file.read) ||
+                raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
 
         @http_verb = match[:verb].downcase.to_sym
         @url = "http://example.com:3000#{match[:path]}"
@@ -94,7 +95,7 @@ module ContractHelper
       expect_request_from("retrieve-#{contract_name}") { response(contract_name, times: times) }
     end
 
-    def has_a_working_api(times: nil)
+    def has_a_working_api(times: :any)
       expect_request_from('retrieve-api-root') { response('api-root', times: times) }
       let(:api) do
         Sequencescape::Api.new(

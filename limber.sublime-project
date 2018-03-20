@@ -9,7 +9,8 @@
       "path": ".",
       "folder_exclude_patterns": [
         ".bundle",
-        "node_modules"
+        "node_modules",
+        "public/assets"
       ],
       "file_exclude_patterns":[
         "limber.sublime-workspace"

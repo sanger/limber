@@ -20,7 +20,7 @@ feature 'Creating a tag plate', js: true do
   let(:tag2_tube_qcable_uuid) { 'tag-tube-qcable' }
   let(:tag2_tube_barcode)     { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tag2_tube_qcable)      { json :tag2_tube_qcable, uuid: tag2_tube_qcable_uuid, lot_uuid: 'lot2-uuid' }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:tag2_template_uuid) { 'tag2-layout-template-0' }
@@ -30,18 +30,16 @@ feature 'Creating a tag plate', js: true do
 
   # Setup stubs
   background do
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config # { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = build :purpose_config, form_class: 'LabwareCreators::TaggedPlate',
-                                                                  name: 'Tag Purpose',
-                                                                  parents: ['Limber Cherrypicked'],
-                                                                  tag_layout_templates: acceptable_templates
+    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
+    Settings.purposes['child-purpose-0'] = build :tagged_purpose_config,
+                                                 tag_layout_templates: acceptable_templates,
+                                                 parents: ['Limber Cherrypicked']
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
@@ -82,18 +80,9 @@ feature 'Creating a tag plate', js: true do
 
   feature 'with no configure templates' do
     let(:acceptable_templates) { nil }
-
-    feature 'by column layout' do
-      let(:templates) { json(:tag_layout_template_collection, size: 2) }
-      let(:a2_tag)    { '9' }
-      it_behaves_like 'a recognised template'
-    end
-
-    feature 'by row layout' do
-      let(:templates) { json(:tag_layout_template_collection_by_row, size: 2) }
-      let(:a2_tag)    { '2' }
-      it_behaves_like 'a recognised template'
-    end
+    let(:templates) { json(:tag_layout_template_collection, size: 2) }
+    let(:a2_tag)    { '9' }
+    it_behaves_like 'a recognised template'
   end
 
   feature 'with configured templates' do

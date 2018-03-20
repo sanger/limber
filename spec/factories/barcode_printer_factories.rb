@@ -1,7 +1,7 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :barcode_printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
     json_root 'barcode_printer'
     active true

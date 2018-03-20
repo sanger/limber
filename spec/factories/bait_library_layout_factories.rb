@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../support/factory_girl_extensions'
+require_relative '../support/factory_bot_extensions'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :bait_library_layout, class: Sequencescape::BaitLibraryLayout, traits: [:api_object] do
     json_root 'bait_library_layout'
 

@@ -1,0 +1,18 @@
+<%= form_tag [presenter.labware, :work_completions] do |f| %>
+  <% presenter.sequencescape_submission do |submission| %>
+    <%= fields_for(submission) do |sub| %>
+      <%= sub.fields_for('request_options') do |ro| %>
+        <% submission.request_options.each do |k,v| %>
+          <%= ro.hidden_field k, value: v %>
+        <% end %>
+      <% end %>
+      <%= sub.hidden_field :template_uuid %>
+      <% submission.assets.each do |asset_uuid| %>
+        <%= sub.fields_for :assets do |asset_form|%>
+          <%= asset_form.hidden_field nil, value: asset_uuid  %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
+<% end %>

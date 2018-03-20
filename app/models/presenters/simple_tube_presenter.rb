@@ -7,7 +7,7 @@ module Presenters
         transition pending: :started
       end
 
-      event :take_default_path do
+      event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed
       end
 
@@ -25,19 +25,31 @@ module Presenters
 
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :started do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
+      end
+
+      state :failed do
+        include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
 
         def default_child_purpose
           purpose.children.first
         end
       end
+    end
+
+    def active_request_type
+      :tube
     end
   end
 end

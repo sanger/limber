@@ -2,7 +2,7 @@
 
 require_relative '../support/json_renderers'
 
-FactoryGirl.define do
+FactoryBot.define do
   # Caution! You probably don't want this one! Submission pools
   # are always accessed via their plate
   factory :submission_pool_base, class: Sequencescape::SubmissionPool do

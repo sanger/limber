@@ -20,6 +20,33 @@ shared_examples 'it only allows creation from tubes' do
   end
 end
 
+shared_examples 'it has a custom page' do |custom_page|
+  it 'has a page' do
+    expect(described_class.page).to eq custom_page
+  end
+  it 'renders the page' do
+    controller = CreationController.new
+    expect(controller).to receive(:render).with(custom_page)
+    subject.render(controller)
+  end
+  it 'can be created' do
+    expect(subject).to be_a described_class
+  end
+end
+
+shared_examples 'it has no custom page' do |_custom_page|
+  it 'saves and redirects' do
+    controller = CreationController.new
+    expect(controller).to receive(:redirect_to_creator_child).with(subject)
+    # We have LOTS of different behaviour on save, which we'll test separately.
+    expect(subject).to receive(:save!).and_return(true)
+    subject.render(controller)
+  end
+  it 'can be created' do
+    expect(subject).to be_a described_class
+  end
+end
+
 shared_examples 'it only allows creation from plates' do
   context 'pre creation' do
     has_a_working_api
@@ -103,10 +130,24 @@ shared_examples 'it only allows creation from charged and passed plates with def
         let(:pools) do
           # Taken from actual problem plate. Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
           {
-            'pool-we-want-to-use-1' => { 'wells' => %w[B3 C9 H10], 'pool_complete' => false, 'request_type' => 'limber_multiplexing', 'for_multiplexing' => true },
-            'pool-we-want-to-use-2' => { 'wells' => %w[C3 H5], 'pool_complete' => false, 'request_type' => 'limber_multiplexing', 'for_multiplexing' => true },
-            'older-complete-pool-1' => { 'wells' => %w[A5 A7 A10 B5 C9 E6 E11 F5 G5 G8 G10 H3 H10 H11], 'pool_complete' => true, 'insert_size' => { 'from' => 100, 'to' => 400 }, 'library_type' => { 'name' => 'Agilent Pulldown' }, 'request_type' => 'limber_reisc' },
-            'older-complete-pool-2' => { 'wells' => %w[A3 A6 B3 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9 H5], 'pool_complete' => true, 'insert_size' => { 'from' => 100, 'to' => 400 }, 'library_type' => { 'name' => 'Agilent Pulldown' }, 'request_type' => 'limber_reisc' }
+            'pool-we-want-to-use-1' => { 'wells' => %w[B3 C9 H10],
+                                         'pool_complete' => false,
+                                         'request_type' => 'limber_multiplexing',
+                                         'for_multiplexing' => true },
+            'pool-we-want-to-use-2' => { 'wells' => %w[C3 H5],
+                                         'pool_complete' => false,
+                                         'request_type' => 'limber_multiplexing',
+                                         'for_multiplexing' => true },
+            'older-complete-pool-1' => { 'wells' => %w[A5 A7 A10 B5 C9 E6 E11 F5 G5 G8 G10 H3 H10 H11],
+                                         'pool_complete' => true,
+                                         'insert_size' => { 'from' => 100, 'to' => 400 },
+                                         'library_type' => { 'name' => 'Agilent Pulldown' },
+                                         'request_type' => 'limber_reisc' },
+            'older-complete-pool-2' => { 'wells' => %w[A3 A6 B3 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9 H5],
+                                         'pool_complete' => true,
+                                         'insert_size' => { 'from' => 100, 'to' => 400 },
+                                         'library_type' => { 'name' => 'Agilent Pulldown' },
+                                         'request_type' => 'limber_reisc' }
           }
         end
         it { is_expected.to be true }

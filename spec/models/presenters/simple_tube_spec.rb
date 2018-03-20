@@ -18,7 +18,7 @@ describe Presenters::SimpleTubePresenter do
     Settings.purposes = {
       'example-purpose-uuid-1' => build(:purpose_config, name: 'Example Plate Purpose'),
       'example-purpose-uuid-2' => build(:purpose_config, name: 'Example Plate Purpose 2'),
-      'example-purpose-uuid-3' => build(:tube_config, name: 'Example Tube Purpose', form_class: 'LabwareCreators::TubeFromTube')
+      'example-purpose-uuid-3' => build(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube')
     }
   end
 

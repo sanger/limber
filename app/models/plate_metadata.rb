@@ -3,7 +3,8 @@
 class PlateMetadata
   include ActiveModel::Model
 
-  attr_accessor :plate, :api, :created_with_robot, :user
+  attr_reader :plate
+  attr_accessor :api, :created_with_robot, :user
 
   validates :api, :plate, :user, presence: true
 

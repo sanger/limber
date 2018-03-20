@@ -3,10 +3,8 @@
 module Limber::TagLayoutTemplate::InColumns
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
-      (1..12).map do |column|
-        ('A'..'H').map do |row|
-          well_location_pool_pair.call(row, column)
-        end
+      WellHelpers.column_order(plate.size).map do |row_column|
+        well_location_pool_pair.call(row_column)
       end
     end
   end

@@ -3,26 +3,28 @@
     SCAPE.labware = {
       'state':     '<%= @presenter.labware.state %>',
       'tabViews':  {},
-      'pools':     <%= @presenter.labware.pools.to_json.html_safe %>,
+      'pools':     <%= @presenter.labware.pools; raw @presenter.labware.pools.to_json %>,
       'uuid':     '<%= @presenter.labware.uuid %>'
     };
   </script>
 
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
-      <div class="card-block">
+      <div class="card-body">
         <h2 id="plate-title" class="card-title">
           <%= @presenter.title %>
-          <span class="badge badge-<%= state_style(@presenter.state) %>"><%= @presenter.state %></span>
+          <%= state_badge(@presenter.state) %>
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
         </h2>
       </div>
       <%= render partial: 'warnings', locals: { presenter: @presenter } %>
-      <div id="labware-well-failing" class='collapse'>
-        <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
-      </div>
+      <% if @presenter.well_failing_applicable? %>
+        <div id="labware-well-failing" class='collapse'>
+          <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
+        </div>
+      <% end %>
       <div id="labware-summary" class='collapse show'>
-        <%= render(partial: 'labware/plates/standard_summary', locals: { presenter: @presenter }) %>
+        <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
       </div>
     <% end %>
   <% end %>
