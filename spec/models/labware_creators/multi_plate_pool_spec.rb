@@ -31,7 +31,6 @@ describe LabwareCreators::MultiPlatePool do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     plate_request
     wells_request
   end

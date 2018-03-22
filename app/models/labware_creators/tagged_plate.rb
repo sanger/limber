@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < Base
-    include Form::CustomPage
+  class TaggedPlate < StampedPlate
+    include LabwareCreators::CustomPage
+    include SupportParent::PlateOnly
 
     attr_reader :child
 
@@ -15,6 +16,8 @@ module LabwareCreators
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
+
+    delegate :height, :width, :size, to: :labware
 
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
 
@@ -33,15 +36,11 @@ module LabwareCreators
 
     def initialize(*args, &block)
       super
-      plate.populate_wells_with_pool
+      parent.populate_wells_with_pool
     end
 
     def create_plate!
-      api.transfer_template.find(transfer_template_uuid).create!(
-        source: parent_uuid,
-        destination: tag_plate.asset_uuid,
-        user: user_uuid
-      )
+      transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
 
@@ -64,7 +63,7 @@ module LabwareCreators
     end
 
     def requires_tag2?
-      plate.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
+      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
 
     #
@@ -105,11 +104,11 @@ module LabwareCreators
     private
 
     def tag_plates
-      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, plate, purpose_uuid)
+      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
     end
 
     def tag_tubes
-      @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, plate)
+      @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, labware)
     end
 
     def create_labware!

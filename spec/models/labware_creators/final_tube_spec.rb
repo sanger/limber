@@ -51,7 +51,7 @@ describe LabwareCreators::FinalTube do
 
       describe '#render' do
         it 'should immediately redirect' do
-          expect(controller).to receive(:redirect_to_form_destination).with(subject).and_return(true)
+          expect(controller).to receive(:redirect_to_creator_child).with(subject).and_return(true)
           subject.render(controller)
           expect(subject.child).to eq(controller: :tubes, action: :show, id: 'multiplexed-library-tube--uuid')
           expect(transfer_request).to have_been_made.once

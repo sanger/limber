@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object barcoded] do
     json_root 'multiplexed_library_tube'
 
@@ -10,9 +10,10 @@ FactoryGirl.define do
       purpose_uuid 'example-purpose-uuid'
       purpose_name 'Example Purpose'
       stock_plate_barcode 2
+      aliquot_factory :tagged_aliquot
     end
 
-    with_has_many_associations 'requests', 'qc_files'
+    with_has_many_associations 'requests', 'qc_files', 'studies'
 
     purpose do
       {
@@ -39,7 +40,12 @@ FactoryGirl.define do
 
       aliquots do
         Array.new(sample_count) do |i|
-          associated(:aliquot, sample_name: "sample_#{i}", sample_id: "SAM#{i}", sample_uuid: "example-sample-uuid-#{i}")
+          associated(
+            aliquot_factory,
+            sample_name: "sample_#{i}",
+            sample_id: "SAM#{i}",
+            sample_uuid: "example-sample-uuid-#{i}"
+          )
         end
       end
 
@@ -54,7 +60,14 @@ FactoryGirl.define do
           siblings_count 1
           sibling_default_state 'passed'
           other_siblings do
-            Array.new(siblings_count) { |i| { name: "Sibling #{i + 1}", ean13_barcode: (1_234_567_890_123 + i).to_s, state: sibling_default_state, uuid: "sibling-tube-#{i}" } }
+            Array.new(siblings_count) do |i|
+              {
+                name: "Sibling #{i + 1}",
+                ean13_barcode: (1_234_567_890_123 + i).to_s,
+                state: sibling_default_state,
+                uuid: "sibling-tube-#{i}"
+              }
+            end
           end
         end
 
@@ -80,8 +93,24 @@ FactoryGirl.define do
       names { Array.new(size) { |i| "Tube #{i}" } }
     end
 
-    plate_purposes do
+    children do
       Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i]) }
+    end
+
+    factory :single_study_multiplexed_library_tube_collection do
+      transient do
+        tube_factory :multiplexed_library_tube
+        study_count 1
+      end
+      children do
+        Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count) }
+      end
+
+      factory :multi_study_multiplexed_library_tube_collection do
+        transient do
+          study_count 2
+        end
+      end
     end
   end
 end

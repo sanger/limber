@@ -3,7 +3,7 @@
     <li data-pool="<%= pool_id %>" class='list-group-item'>
       <dl class='metadata row'>
         <dt>Wells</dt>
-        <dd class='well-list'><%= WellHelpers.formatted_range(pool['wells']) %></dd>
+        <dd class='well-list'><%= WellHelpers.formatted_range(pool['wells'], plate_presenter.labware.size ) %></dd>
         <dt>Insert Size</dt>
         <dd class="insert-size <%= insert_size_class(pool) %>">
           From: <%= pool.dig('insert_size','from') %> - To: <%= pool.dig('insert_size','to') %>

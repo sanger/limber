@@ -1,0 +1,13 @@
+<%= form_for(plate_search_form, method: :get) do |f| %>
+  <%= f.label :purposes, 'Select plate purposes' %>
+  <%= f.select :purposes, options_for_select(@purpose_options, plate_search_form.purposes), { include_hidden: false }, multiple: true, class: 'form-control' %>
+  <div class="custom-control custom-checkbox">
+    <%= f.check_box :show_my_plates_only, class: 'custom-control-input' %>
+    <%= f.label :show_my_plates_only, 'Show my plates only', class: 'custom-control-label' %>
+  </div>
+  <div class="custom-control custom-checkbox">
+    <%= f.check_box :include_used, class: 'custom-control-input' %>
+    <%= f.label :include_used, 'Include used plates', class: 'custom-control-label' %>
+  </div>
+  <%= f.submit 'Update', class: 'btn btn-default' %>
+<% end %>

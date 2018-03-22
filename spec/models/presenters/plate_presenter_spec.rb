@@ -42,10 +42,6 @@ describe Presenters::PlatePresenter do
     )
   end
 
-  it 'returns plate' do
-    expect(subject.plate).to eq(labware)
-  end
-
   it 'returns label attributes' do
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                        bottom_left: 'DN 1',

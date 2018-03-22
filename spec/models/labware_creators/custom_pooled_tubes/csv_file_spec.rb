@@ -5,9 +5,9 @@ describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
     let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
 
     describe '#valid?' do
-      subject { described_class.new(file).valid? }
+      subject { described_class.new(file) }
 
-      it { is_expected.to be true }
+      it { is_expected.to be_valid }
     end
 
     describe '#pools' do

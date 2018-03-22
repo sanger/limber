@@ -2,28 +2,28 @@
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
        $.extend(SCAPE, {
-        tag_plates_list: <%= @creation_form.tag_plates_list.to_json.html_safe %>,
-        tag_tubes_list: <%= @creation_form.tag_tubes_list.to_json.html_safe %>,
-        dualRequired: <%= @creation_form.requires_tag2? %>
+        tag_plates_list: <%= @labware_creator.tag_plates_list.to_json.html_safe %>,
+        tag_tubes_list: <%= @labware_creator.tag_tubes_list.to_json.html_safe %>,
+        dualRequired: <%= @labware_creator.requires_tag2? %>
        });
      })(window,jQuery);
   </script>
-  <% form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">
-          <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
+          <%= render partial: 'plates/plate', locals: { plate_presenter: @labware_creator, id: 'tagging-plate' } %>
         </div>
         <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag plate', form: f, required: true } %>
-        <% @creation_form.tag2_field do -%>
-          <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag2 tube', form: f, required: @creation_form.tag_tubes_used? } %>
+        <% @labware_creator.tag2_field do -%>
+          <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag2 tube', form: f, required: @labware_creator.tag_tubes_used? } %>
         <% end %>
       <% end %>
     <%- end -%>
 
     <%= sidebar do %>
       <%= card title: 'Tag plate addition', id: 'tag-help' do %>
-        <%= t("#{@creation_form.help}_html", scope: [:tagged_plate, :help]) %>
+        <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
       <% end %>
 
       <%= card title:'Set up tags' do %>
@@ -35,15 +35,15 @@
                            'info-panel'=>'tag-plate-info',
                            'qcable-type'=>'tag plate',
                            'approved-list'=>'tag_plates_list',
-                           'dual-index' => @creation_form.tag_plate_dual_index?
+                           'dual-index' => @labware_creator.tag_plate_dual_index?
                          },
                          class: 'form-control', required: true %>
-        <% @creation_form.tag2_field do -%>
-            <p><em>Available templates:</em> <%= @creation_form.tag_tubes_names.join(', ') %></p>
+        <% @labware_creator.tag2_field do -%>
+            <p><em>Available templates:</em> <%= @labware_creator.tag_tubes_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
             <%= f.text_field :tag2_tube_barcode,
                              data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag_tubes_list'},
-                             class: 'form-control', required: @creation_form.tag_tubes_used? %>
+                             class: 'form-control', required: @labware_creator.tag_tubes_used? %>
         <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
         <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>

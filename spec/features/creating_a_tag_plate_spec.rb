@@ -21,7 +21,7 @@ feature 'Creating a tag plate', js: true do
   let(:tag2_tube_qcable_uuid) { 'tag-tube-qcable' }
   let(:tag2_tube_barcode)     { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tag2_tube_qcable)      { json :tag2_tube_qcable, uuid: tag2_tube_qcable_uuid, lot_uuid: 'lot2-uuid' }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:tag2_template_uuid) { 'tag2-layout-template-0' }
@@ -37,14 +37,12 @@ feature 'Creating a tag plate', js: true do
 
   # Setup stubs
   background do
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     # Set-up the plate config
     Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config # { presenter_class: 'Presenters::StandardPresenter', asset_type: 'plate' }
-    Settings.purposes['child-purpose-0'] = build :purpose_config, form_class: 'LabwareCreators::TaggedPlate',
-                                                                  name: 'Tag Purpose',
-                                                                  parents: ['Limber Cherrypicked'],
-                                                                  tag_layout_templates: acceptable_templates
+    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
+    Settings.purposes['child-purpose-0'] = build :tagged_purpose_config,
+                                                 tag_layout_templates: acceptable_templates,
+                                                 parents: ['Limber Cherrypicked']
     # We look up the user
     stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
     # We lookup the plate
@@ -178,18 +176,9 @@ feature 'Creating a tag plate', js: true do
     let(:acceptable_templates) { nil }
     let(:templates) { json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory) }
     let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
-
-    feature 'by column layout' do
-      let(:direction) { 'column' }
-      let(:a2_tag)    { '9' }
-      it_behaves_like 'a recognised template'
-    end
-
-    feature 'by row layout' do
-      let(:direction) { 'row' }
-      let(:a2_tag)    { '2' }
-      it_behaves_like 'a recognised template'
-    end
+    let(:direction) { 'column' }
+    let(:a2_tag)    { '9' }
+    it_behaves_like 'a recognised template'
   end
 
   feature 'with configured templates' do

@@ -1,0 +1,85 @@
+---
+GBS Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalStockPlatePresenter
+  :input_plate: true
+  :size: 384
+GBS PCR1:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :input_plate: false
+  :creator_class: LabwareCreators::PlateWithPrimerPanel
+  :size: 384
+  :pcr_stage: 'pcr 1'
+  :parents:
+    - GBS Stock
+GBS PCR2:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - GbS Tag Set
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :input_plate: false
+  :size: 384
+  :pcr_stage: 'pcr 2'
+  :parents:
+    - GBS PCR1
+GBS PCR2 Pool Stock:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  # V1
+  # We assume one submission per plate. And limit pooling to
+  # one plate per tube. This assumption will not be valid
+  # for long. But currently results in complications
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  # V2
+  # This allows cross-plate cross-submission pooling
+  # Lab wise this works fine, but disrupts some of the large scale
+  # tracking, preventing us from passing requests, and extracting
+  # submission info reliably once things are pooled.
+  #:creator_class: LabwareCreators::PooledTubesFromWholePlates
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GBS PCR2
+GBS PCR Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GBS PCR2 Pool Stock
+GBS PCR Pool Selected:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GBS PCR Pool
+GBS MiSeq Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  # V1
+  :creator_class: LabwareCreators::TubeFromTube
+  # V2
+  # :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+  :submission:
+    template_name: 'MiSeq for GBS'
+    request_options:
+      :read_length: 150
+  :parents:
+  - GBS PCR Pool Selected

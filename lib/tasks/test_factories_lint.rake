@@ -5,7 +5,7 @@ namespace :test do
     desc 'Lint the factories'
     task lint: :environment do
       puts 'Linting factories...'
-      FactoryGirl.lint
+      FactoryBot.lint
       puts 'Done'
     end
   end

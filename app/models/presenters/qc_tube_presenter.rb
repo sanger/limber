@@ -26,13 +26,16 @@ module Presenters
 
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :passed do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :qc_complete, human_name: 'QC Complete' do
+        include Statemachine::DoesNotAllowLibraryPassing
         # Yields to the block if there are child plates that can be created from the current one.
         # It passes the valid child plate purposes to the block.
         def control_additional_creation

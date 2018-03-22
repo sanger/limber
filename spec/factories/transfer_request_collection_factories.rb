@@ -1,7 +1,7 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :transfer_request_collection, class: Sequencescape::TransferRequestCollection, traits: [:api_object] do
     json_root 'transfer_request_collection'
 

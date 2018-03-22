@@ -23,9 +23,9 @@ feature 'Viewing a plate', js: true do
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, example_plate)
     # We get the actual plate
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: wells_collection)
@@ -35,24 +35,24 @@ feature 'Viewing a plate', js: true do
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('pending')
+    expect(find('.state-badge')).to have_content('Pending')
   end
 
   scenario 'if a plate is passed creation of a child is allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_passed_plate)
+    stub_asset_search(plate_barcode, example_passed_plate)
     stub_api_get(plate_uuid, body: example_passed_plate)
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('passed')
+    expect(find('.state-badge')).to have_content('Passed')
     expect(page).to have_button('Add an empty Child Purpose 0 plate')
   end
 
   scenario 'if a plate is started creation of a child is not allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_started_plate)
+    stub_asset_search(plate_barcode, example_started_plate)
     stub_api_get(plate_uuid, body: example_started_plate)
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('started')
+    expect(find('.state-badge')).to have_content('Started')
     expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
   end
 

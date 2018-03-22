@@ -3,9 +3,9 @@
     <%= inline_svg 'tube.svg' %>
   </div>
   <dl class='metadata col-sm-10'>
-    <dt>Pool name</dt>    <dd> <%= tube.name %></dd>
-    <dt>Barcode</dt>      <dd> <%= useful_barcode(tube.barcode) %></dd>
-    <dt>Current state</dt><dd> <%= tube.state %></dd>
-    <dt>Source wells</dt> <dd> <%= WellHelpers.formatted_range(source) %></dd>
+    <dt>Pool name</dt>    <dd><%= tube.name %></dd>
+    <dt>Barcode</dt>      <dd><%= useful_barcode(tube.barcode) %></dd>
+    <dt>Current state</dt><dd><%= tube.state %></dd>
+    <dt>Source wells</dt> <dd><%= WellHelpers.formatted_range(source, size) %></dd>
   </dl>
 <% end %>

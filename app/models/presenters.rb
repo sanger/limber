@@ -8,7 +8,8 @@ module Presenters
     else
       case labware
       when Limber::Plate then Presenters::UnknownPlatePresenter
-      else UnknownLabwareType
+      when Limber::Tube then Presenters::UnknownTubePresenter
+      else raise UnknownLabwareType
       end
     end
   end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This is used as part of a take task, and will be run within a console.
+# rubocop:disable Style/StderrPuts
 class Settings
   class << self
     def respond_to?(method, include_private = false)
@@ -33,3 +35,4 @@ class Settings
 end
 
 Settings.instance
+# rubocop:enable Style/StderrPuts

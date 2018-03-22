@@ -3,9 +3,13 @@
 
 en:
   state_machine:
-    transitions:
-      passed: 'Manual Transfer'
-      qc_complete: 'Mark QC Complete'
+    default:
+      transitions:
+        passed: 'Manual Transfer'
+        qc_complete: 'Mark QC Complete'
+    pcr:
+      transitions:
+        passed: 'Perform PCR'
   robots:
     instruction_summary:
       default: 'Bed verification'

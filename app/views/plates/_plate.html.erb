@@ -1,9 +1,9 @@
-<div class="card-block bg-inverse">
-  <table id="<%= (id ||= "plate") %>" class="plate-view mx-auto">
+<div class="card-body bg-dark">
+  <table id="<%= (id ||= "plate") %>" class="plate-view mx-auto plate-<%= plate_presenter.size %>">
     <thead>
       <tr>
         <th class="first-col">&nbsp;</th>
-        <% (1..12).each do |column_number| %>
+        <% (1..plate_presenter.width).each do |column_number| %>
         <th><%= column_number %></th>
         <% end %>
       </tr>
@@ -13,7 +13,7 @@
       <% plate_presenter.wells_by_row.each do |row_label, row_wells| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
-        <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
+        <% (0...plate_presenter.width).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
         <td class="col-all <%= column(well) %>">
           <% location = "#{row_label}#{index + 1}" %>
           <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>

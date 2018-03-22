@@ -9,15 +9,9 @@ describe LabwareCreators::Base do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
-  it_behaves_like 'it only allows creation from plates'
-
   before do
-    Settings.purposes[basic_purpose] = {
-      form_class: 'LabwareCreators::Base'
-    }
-    Settings.purposes[tagged_purpose] = {
-      form_class: 'LabwareCreators::TaggedPlate'
-    }
+    Settings.purposes[basic_purpose] = { creator_class: 'LabwareCreators::Base' }
+    Settings.purposes[tagged_purpose] = { creator_class: 'LabwareCreators::TaggedPlate' }
   end
 
   context 'with a custom transfer-template' do

@@ -1,0 +1,9 @@
+<div id="labware-summary-div" class="card-body text-white bg-info">
+  <dl>
+    <dt>Primer Panel</dt><dd><%= presenter.panel_name %></dd>
+    <dt>PCR Program</dt><dd><%= presenter.pcr_program %></dd>
+    <dt>PCR Duration</dt><dd><%= presenter.pcr_duration %></dd>
+  </dl>
+</div>
+
+<%= render partial: 'labware/plates/minimal_summary', locals: { presenter: presenter } %>

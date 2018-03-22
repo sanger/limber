@@ -3,7 +3,7 @@
     <h2>Baited Plate Preview</h2>
     <div>
       <div>
-        <%= render partial: "plates/plate", locals: {plate_presenter: @creation_form}  %>
+        <%= render partial: "plates/plate", locals: {plate_presenter: @labware_creator}  %>
       </div>
     </div>
     <br/>
@@ -12,13 +12,13 @@
   <%= sidebar do %>
     <%= card do %>
       <h3 class='card-header'>Instructions</h3>
-      <div class='card-block'>
+      <div class='card-body'>
         <p class='card-text'>Carefully check the bait layout against your worksheet.</p>
         <p class='card-text'>Click on 'Create plate' button.</p>
       </div>
-      <div class='card-block'>
+      <div class='card-body'>
         <ul id="key" class="list-group">
-          <%- @creation_form.baits.each do |bait| -%>
+          <%- @labware_creator.baits.each do |bait| -%>
               <li class="list-group-item">
                 <div class="tube-view">
                   <div class="aliquot <%= bait_colour(bait) %>">&nbsp;</div>
@@ -27,9 +27,9 @@
               </li>
           <%- end -%>
         </ul>
-        <%= semantic_form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: {method: :post}) do |f| %>
-          <%= f.hidden_field :purpose_uuid, as: :hidden, value:@creation_form.purpose_uuid %>
-          <%= f.hidden_field :parent_uuid, as: :hidden, value: @creation_form.parent_uuid %>
+        <%= form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent)) do |f| %>
+          <%= f.hidden_field :purpose_uuid, as: :hidden, value:@labware_creator.purpose_uuid %>
+          <%= f.hidden_field :parent_uuid, as: :hidden, value: @labware_creator.parent_uuid %>
           <%= f.submit'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
         <% end %>
       </div>

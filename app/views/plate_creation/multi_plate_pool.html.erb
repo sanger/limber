@@ -2,10 +2,10 @@
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
       <div id="labware-summary-div">
-        <div class="card-block bg-inverse text-white">
+        <div class="card-body bg-dark text-white">
           <div id="output-plate-block" class="scape-ui-block">
             <h3>Target Plate</h3>
-            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @creation_form, css_class: "destination-plate"} %>
+            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @labware_creator, css_class: "destination-plate"} %>
           </div>
           <h3>Source Plates</h3>
             <% 4.times do |plate_id| %>
@@ -18,15 +18,15 @@
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>
       <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-block" >
+      <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
           <p>Scan in up to 4 plates.</p>
         </div>
       </div>
-      <div class="card-block">
+      <div class="card-body">
       <%= form_for(
-        @creation_form,
-        url: limber_plate_children_path(@creation_form.parent),
+        @labware_creator,
+        url: limber_plate_children_path(@labware_creator.parent),
         as: :plate,
         html: { method: :post }) do |form| %>
 

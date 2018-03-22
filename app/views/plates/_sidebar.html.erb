@@ -5,11 +5,9 @@
       <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
 
-  <%= card title:'Suggested Actions' do %>
+  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
 
     <% presenter.control_additional_creation do -%>
@@ -18,11 +16,12 @@
       <% end %>
     <% end %>
 
-    <% presenter.csv_file_links.each do |link| %>
-      <%= link_to("Download Worksheet CSV #{link.first}", link.last, rel: "external", class: 'btn btn-info btn-lg btn-block') %>
+    <% @presenter.csv_file_links.each do |link| %>
+      <%= link_to(link.first, limber_plate_path(@presenter.uuid, link.last), :rel => "external",  class: 'csv-link') %>
     <% end %>
 
     <% if presenter.robot? %>
+      <h4 class="card-title mt-3">Robots</h4>
       <% presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
       <% end %>
@@ -72,9 +71,7 @@
     <% end %>
 
     <% presenter.control_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-secondary" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
 
     <% if presenter.well_failing_applicable? %>

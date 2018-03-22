@@ -17,7 +17,7 @@ describe LabwareCreators::TaggedPlate do
   let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -32,7 +32,6 @@ describe LabwareCreators::TaggedPlate do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     plate_request
     wells_request
   end
@@ -72,7 +71,7 @@ describe LabwareCreators::TaggedPlate do
     end
 
     it 'describes the parent barcode' do
-      expect(subject.labware.barcode.ean13).to eq(plate_barcode)
+      expect(subject.parent.barcode.ean13).to eq(plate_barcode)
     end
 
     it 'describes the parent uuid' do

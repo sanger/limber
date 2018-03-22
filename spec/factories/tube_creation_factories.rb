@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../support/factory_girl_extensions'
+require_relative '../support/factory_bot_extensions'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :tube_creation, class: Sequencescape::TubeCreation, traits: [:api_object] do
     json_root 'tube_creation'
 

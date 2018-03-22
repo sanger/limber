@@ -33,8 +33,8 @@ describe Presenters::StandardPresenter do
         'child-purpose-2' => build(:purpose_config, name: 'Child purpose 2', parents: [purpose_name], expected_request_types: ['limber_multiplexing']),
         'other-purpose' => build(:purpose_config, name: 'Other purpose'),
         'other-purpose-2' => build(:purpose_config, name: 'Other purpose 2', parents: [purpose_name], expected_request_types: ['other_type']),
-        'tube-purpose' => build(:tube_config, name: 'Tube purpose', form_class: 'LabwareCreators::FinalTubeFromPlate'),
-        'incompatible-tube-purpose' => build(:tube_config, name: 'Incompatible purpose', form_class: 'LabwareCreators::FinalTube')
+        'tube-purpose' => build(:tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate'),
+        'incompatible-tube-purpose' => build(:tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube')
       }
     end
 
@@ -61,7 +61,7 @@ describe Presenters::StandardPresenter do
     end
 
     it 'yields the configured tube' do
-      expect(labware).to receive(:tagged?).and_return(:true)
+      expect(labware).to receive(:tagged?).and_return(true)
       expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
         ['tube-purpose', 'Tube purpose']
       )

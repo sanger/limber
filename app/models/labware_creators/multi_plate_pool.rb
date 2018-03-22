@@ -2,8 +2,8 @@
 
 module LabwareCreators
   class MultiPlatePool < Base
-    extend SupportParent::TaggedPlateOnly
-    include Form::CustomPage
+    include SupportParent::TaggedPlateOnly
+    include LabwareCreators::CustomPage
     self.page = 'multi_plate_pool'
     self.aliquot_partial = 'custom_pooled_aliquot'
 
@@ -15,18 +15,20 @@ module LabwareCreators
     private
 
     def create_labware!
-      @plate_creation = api.pooled_plate_creation.create!(
+      plate_creation = api.pooled_plate_creation.create!(
         parents:        transfers.keys,
         child_purpose:  purpose_uuid,
         user:           user_uuid
       )
+
+      @child = plate_creation.child
 
       api.bulk_transfer.create!(
         user:           user_uuid,
         well_transfers: well_transfers
       )
 
-      yield(@plate_creation.child) if block_given?
+      yield(@child) if block_given?
       true
     end
 
@@ -57,7 +59,7 @@ module LabwareCreators
     def each_well
       transfers.each do |source_uuid, well_well_transfers|
         well_well_transfers.each do |source_well, destination_well|
-          yield(source_uuid, source_well, @plate_creation.child.uuid, destination_well)
+          yield(source_uuid, source_well, @child.uuid, destination_well)
         end
       end
     end

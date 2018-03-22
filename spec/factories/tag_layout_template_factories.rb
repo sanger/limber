@@ -1,8 +1,8 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
-  factory :tag_layout_template, class: Sequencescape::TagLayoutTemplate, traits: [:api_object] do
+FactoryBot.define do
+  factory :tag_layout_template, class: Limber::TagLayoutTemplate, traits: [:api_object] do
     json_root 'tag_layout_template'
     resource_actions %w[read create]
 
@@ -24,6 +24,11 @@ FactoryGirl.define do
 
     factory :tag_layout_template_by_row do
       direction 'row'
+    end
+
+    factory :tag_layout_template_by_quadrant do
+      walking_by 'quadrants'
+      direction 'column then row'
     end
 
     factory :dual_index_tag_layout_template do
@@ -58,6 +63,12 @@ FactoryGirl.define do
       transient do
         direction 'row'
         template_factory :tag_layout_template_by_row
+      end
+    end
+
+    factory :tag_layout_template_collection_by_quadrant do
+      transient do
+        template_factory :tag_layout_template_by_quadrant
       end
     end
   end

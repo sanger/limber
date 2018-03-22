@@ -1,4 +1,4 @@
-<dl id="samples-information" class="card-block">
+<dl id="samples-information" class="card-body">
   <% plate_presenter.labware.wells.each do |well| -%>
     <% next if well.aliquots.empty? %>
     <dt class="col-sm-1"><%= well.location %></dt>

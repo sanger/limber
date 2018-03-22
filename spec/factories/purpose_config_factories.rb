@@ -1,47 +1,54 @@
 
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :purpose_config, class: Hash do
-    transient do
-      name 'Plate Purpose'
-      form_class 'LabwareCreators::Base'
-      presenter_class 'Presenters::StandardPresenter'
-      state_changer_class 'StateChangers::DefaultStateChanger'
-      default_printer_type :plate_a
-      asset_type 'plate'
-      stock_plate false
-      cherrypickable_target false
-      input_plate false
-      parents []
-      tag_layout_templates nil
-      expected_request_types nil
-      suggest_library_pass_for nil
+    skip_create
+    initialize_with { attributes }
+
+    name 'Plate Purpose'
+    creator_class 'LabwareCreators::StampedPlate'
+    presenter_class 'Presenters::StandardPresenter'
+    state_changer_class 'StateChangers::DefaultStateChanger'
+    default_printer_type :plate_a
+    asset_type 'plate'
+
+    factory :passable_plate do
+      suggest_library_pass_for ['Limber Library Creation']
     end
 
-    after(:build) do |hash, evaluator|
-      hash.merge!(
-        name: evaluator.name,
-        form_class: evaluator.form_class,
-        presenter_class: evaluator.presenter_class,
-        state_changer_class: evaluator.state_changer_class,
-        default_printer_type: evaluator.default_printer_type,
-        asset_type: evaluator.asset_type,
-        stock_plate: evaluator.stock_plate,
-        cherrypickable_target: evaluator.cherrypickable_target,
-        input_plate: evaluator.input_plate,
-        parents: evaluator.parents,
-        tag_layout_templates: evaluator.tag_layout_templates,
-        expected_request_types: evaluator.expected_request_types,
-        suggest_library_pass_for: evaluator.suggest_library_pass_for
-      )
+    factory :minimal_purpose_config do
+      presenter_class 'Presenters::MinimalPlatePresenter'
+    end
+
+    factory :templated_transfer_config do
+      transfer_template 'Pool wells based on submission'
+    end
+
+    factory :tagged_purpose_config do
+      creator_class 'LabwareCreators::TaggedPlate'
+      name 'Tag Purpose'
+      tag_layout_templates ['tag-layout-template']
     end
 
     factory :tube_config do
-      transient do
-        asset_type 'tube'
-        default_printer_type :tube
-        presenter_class 'Presenters::SimpleTubePresenter'
+      asset_type 'tube'
+      default_printer_type :tube
+      presenter_class 'Presenters::SimpleTubePresenter'
+
+      factory :passable_tube do
+        presenter_class 'Presenters::FinalTubePresenter'
+        suggest_library_pass_for ['Limber Library Creation']
+      end
+
+      factory :pooled_tube_from_plates_purpose_config do
+        name 'Pool tube'
+        creator_class 'LabwareCreators::PooledTubesFromWholePlates'
+      end
+
+      factory :pooled_tube_from_tubes_purpose_config do
+        name 'Pool tube'
+        creator_class 'LabwareCreators::PooledTubesFromWholeTubes'
       end
     end
   end

@@ -140,17 +140,19 @@
         addClass(that.plate.state);
     };
 
-    that.well_index_by_row = function(well){
-      var row, col
+    // Caution. Only suitable for sorting. Compatible with any plate
+    // size up to 26 columns
+    that.well_index_by_column = function(well){
+      var row, col;
       row = well.charCodeAt(0)-65;
       col = parseInt(well.slice(1));
-      return (row*12)+col
+      return (row*26)+col;
     };
 
     that.poolsArray = function(){
       var poolsArray = _.toArray(that.plate.pools);
       poolsArray = _.sortBy(poolsArray, function(pool){
-        return that.well_index_by_row(pool.wells[0]);
+        return that.well_index_by_column(pool.wells[0]);
       });
 
       return poolsArray;
@@ -280,27 +282,7 @@
 
   // ########################################################################
   // # Page events....
-  $(document).on('pageinit', function(){
-    // Trap the carriage return sent by the swipecard reader
-    $(document).on("keydown", "input.card-id", function(e) {
-      var code=e.charCode || e.keyCode;
-      if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
-        $('input[data-type="search"], .plate-barcode').last().focus();
-        return false;
-      }
-
-    });
-
-    var myPlateButtonObserver = function(event){
-      if ($(event.currentTarget).val()) {
-          $('.show-my-plates-button').prop('disabled',true);
-      } else if ($('input.card-id').val()) {
-          $('.show-my-plates-button').prop('disabled',false);
-      }
-    };
-
-    $(document).on("keyup", ".plate-barcode", myPlateButtonObserver);
-    $(document).on("keyup", ".card-id", myPlateButtonObserver);
+  $(function(){
 
     // Trap the carriage return sent by barcode scanner
     $(document).on("keydown", ".plate-barcode", function(event) {
@@ -314,41 +296,6 @@
         }
       }
     });
-
-    if ($('input.card-id').val()) {
-      $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-    }
-
-    // Change the colour of the title bar to show a user id
-    $(document).on('blur', 'input.card-id', function(event){
-      if ($(event.currentTarget).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
-      }
-    });
-
-
-    // Fill in the plate barcode with the plate links barcode
-    $(document).on('click', ".plate-link", function(event) {
-      $('.plate-barcode').val($(event.currentTarget).attr('id').substr(6));
-      $('.show-my-plates').val(false);
-      $('.plate-search-form').submit();
-      return false;
-    });
-
-
-    // Disable submit buttons after first click...
-    $(document).on('submit', 'form', function(event){
-      $(event.currentTarget).find(':submit').
-        button('disable').
-        prev('.ui-btn-inner').
-        find('.ui-btn-text').
-        text('Working...');
-
-      return true;
-    });
-
   });
 
   $(document).bind('pageshow', function() {
