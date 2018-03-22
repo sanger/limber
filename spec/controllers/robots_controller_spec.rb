@@ -15,12 +15,7 @@ describe RobotsController, type: :controller do
     let(:plate_uuid) { 'plate_uuid' }
     let!(:plate)     { json :plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
-    it 'adds robot barcode to plate metadata' do
-      Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
-      Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-      stub_asset_search('target_plate_barcode', plate)
-
+    let!(:state_chage) do
       stub_api_post(
         'state_changes',
         payload: {
@@ -35,9 +30,22 @@ describe RobotsController, type: :controller do
         },
         body: json(:state_change)
       )
-      stub = stub_api_post('custom_metadatum_collections',
-                           payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
-                           body: json(:custom_metadatum_collection))
+    end
+
+    let!(:metadata_request) do
+      stub_api_post('custom_metadatum_collections',
+                    payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
+                    body: json(:custom_metadatum_collection))
+    end
+
+    setup do
+      Settings.robots['robot_id'] = settings[:robots][:robot_id]
+      Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
+      Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
+      stub_asset_search('target_plate_barcode', plate)
+    end
+
+    it 'adds robot barcode to plate metadata' do
       post :start,
            params: {
              bed: {
@@ -48,7 +56,7 @@ describe RobotsController, type: :controller do
              id: 'robot_id'
            },
            session: { user_uuid: user_uuid }
-      expect(stub).to have_been_requested
+      expect(metadata_request).to have_been_requested
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
   end

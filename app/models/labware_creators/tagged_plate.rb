@@ -25,13 +25,11 @@ module LabwareCreators
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
     def tag_plate=(params)
-      return nil if params.blank?
-      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
     end
 
     def tag2_tube=(params)
-      return nil if params.blank?
-      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
     end
 
     def initialize(*args, &block)

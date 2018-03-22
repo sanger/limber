@@ -80,7 +80,7 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    [["Download Worksheet CSV", { format: :csv }]]
+    [['Download Worksheet CSV', { format: :csv }]]
   end
 
   def filename(offset = nil)

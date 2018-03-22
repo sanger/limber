@@ -11,28 +11,29 @@ describe PrintJobsController, type: :controller do
     let(:label_template_name) { 'limber_tube_label_template' }
     let(:expected_labels) { [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }] }
 
-    it 'creates print_job' do
+    setup do
       PMB::TestSuiteStubs.get(
         '/v1/label_templates?filter%5Bname%5D=limber_tube_label_template&page%5Bnumber%5D=1&page%5Bsize%5D=1'
-      ) do |_env|
+      ) do
         [
           200,
           { content_type: 'application/json' },
           label_template_response(label_template_id, label_template_name)
         ]
       end
-
       PMB::TestSuiteStubs.post(
         '/v1/print_jobs',
         print_job_post('tube_printer', label_template_id)
-      ) do |_env|
+      ) do
         [
           200,
           { content_type: 'application/json' },
           print_job_response('tube_printer', label_template_id)
         ]
       end
+    end
 
+    it 'creates print_job' do
       request.env['HTTP_REFERER'] = root_path
 
       post :create, params: { print_job: { printer_name: 'tube_printer', printer_type: '1D Tube',

@@ -6,12 +6,34 @@ AllCops:
     - bin/**/*
 Rails:
   Enabled: true
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*
-    - config/robots.rb
 # We're not actually using Rails methods here.
 Rails/InverseOf:
   Enabled: false
 Rails/HasManyOrHasOneDependent:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+# Filter out all the DSLs
+Metrics/BlockLength:
+  ExcludedMethods:
+    - describe
+    - context
+    - background
+    - scenario
+    - namespace
+    - task
+    - included
+    - shared_context
+    - shared_examples
+    - state_machine
+    - configure
+    - draw
+    - feature
+    - subject
+    - let
+    - let!
+    - factory
+    - define
+    - guard
+  Exclude:
+    - config/robots.rb

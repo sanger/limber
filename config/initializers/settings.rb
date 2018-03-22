@@ -24,7 +24,7 @@ class Settings
       # but the creates an immutable setting object that messes with tests.
       # Immutability is good here though, so we should probably fix that.
       @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol]))
-    rescue Errno::ENOENT => exception
+    rescue Errno::ENOENT
       star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)
       $stderr.puts "WARNING! No #{configuration_filename}"

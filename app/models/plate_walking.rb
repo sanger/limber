@@ -17,8 +17,8 @@ module PlateWalking
 
       delegate :hash, to: :to_s
 
-      def eql?(location)
-        to_s.eql?(location.to_s)
+      def eql?(other)
+        to_s.eql?(other.to_s)
       end
 
       def to_s
