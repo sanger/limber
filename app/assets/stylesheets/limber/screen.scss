@@ -18,6 +18,18 @@ header.limber-header {
   }
 }
 
+.tube-list {
+  @extend .list-group;
+  @extend .list-group-flush;
+
+  .tube {
+    @extend .list-group-item;
+    @extend .justify-content-between;
+    @extend .d-flex;
+  }
+}
+
+
 button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn;
   @extend .btn-primary;
@@ -82,13 +94,14 @@ nav.inbox-list, nav.robots-list {
 }
 
 #state-changer {
-  label { @include make-col(3); }
-  .custom-select { @include make-col(9); }
+  label { @extend .col-3; }
+  .custom-select { @extend .col-9; }
 }
 
 dl.metadata, dl#samples-information {
-  dt { @include make-col(3); }
-  dd { @include make-col(9); }
+  @extend .row;
+  dt { @extend .col-3; }
+  dd { @extend .col-9; }
 }
 
  dl#samples-information { @extend .row; }
