@@ -75,8 +75,7 @@ scRNA-384 Lib PCR:
   :parents:
   - scRNA-384 End Prep
   :tag_layout_templates:
-  - Illumina pipeline tagging
-  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - '384sc'
   :suggest_library_pass_for:
   - limber_scrna
 scRNA Lib Pool:
