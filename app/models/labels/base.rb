@@ -7,6 +7,10 @@ class Labels::Base
     @labware = labware
   end
 
+  def extra_attributes
+    {}
+  end
+
   def date_today
     Time.zone.today.strftime('%e-%^b-%Y')
   end

@@ -5,6 +5,9 @@
     <% label.attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
     <%end%>
+    <% label.extra_attributes.each do |k, v|%>
+      <%= f.hidden_field "labels[][extra_label][#{k}]", value: v %>
+    <%end%>
   <% end %>
 
   <%= f.label :printer_name, 'Barcode Printer', class: 'col-2' %>

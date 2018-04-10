@@ -59,7 +59,7 @@ class Presenters::PlatePresenter
   end
 
   def label
-    Labels::PlateLabel.new(labware)
+    Labels::PlateLabel.new(labware) # labware.barcode
   end
 
   def tube_labels
