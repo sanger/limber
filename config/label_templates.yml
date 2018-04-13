@@ -1,16 +1,10 @@
-development:
-  1D Tube: limber_tube_label_template
-  96 Well Plate: sqsc_96plate_label_template
-  384 Well Plate: sqsc_384plate_label_template
-test:
-  1D Tube: limber_tube_label_template
-  96 Well Plate: sqsc_96plate_label_template
-  384 Well Plate: sqsc_384plate_label_template
-staging:
-  1D Tube: limber_tube_label_template
-  96 Well Plate: sqsc_96plate_label_template
-  384 Well Plate: sqsc_384plate_label_template
-production:
-  1D Tube: limber_tube_label_template
-  96 Well Plate: sqsc_96plate_label_template
-  384 Well Plate: sqsc_384plate_label_template
+---
+default_pmb_template_for_printer:
+  1: sqsc_96plate_label_template
+  2: limber_tube_label_template
+  6: sqsc_384plate_label_template
+
+plate_6mm_double:
+  :label_class: Labels::PlateDoubleLabel
+  :printer_type: 10
+  :pmb_template: 'plate_6mm_double'

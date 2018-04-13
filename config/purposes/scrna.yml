@@ -11,6 +11,7 @@ scRNA-384 Stock:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::MinimalStockPlatePresenter
+  :label_template: plate_6mm_double
   :size: 384
 scRNA cDNA-XP:
   :asset_type: plate
@@ -25,6 +26,7 @@ scRNA-384 cDNA-XP:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::MinimalPlatePresenter
+  :label_template: plate_6mm_double
   :size: 384
   :parents:
   - scRNA-384 Stock
@@ -41,6 +43,7 @@ scRNA-384 End Prep:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::MinimalPlatePresenter
+  :label_template: plate_6mm_double
   :size: 384
   :parents:
   - scRNA-384 cDNA-XP
@@ -68,6 +71,7 @@ scRNA-384 Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
   :size: 384
   warnings:
     pcr_cycles_not_in:

@@ -15,7 +15,13 @@ class Labels::Base
     Time.zone.today.strftime('%e-%^b-%Y')
   end
 
-  def type
-    labware.barcode.type
+  def printer_type
+    purpose_printer_type = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, nil)
+    purpose_printer_type || labware.barcode.type
+  end
+
+  def label_template
+    purpose_pmb_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, nil)
+    purpose_pmb_template || Settings.default_pmb_template_for_printer[printer_type]
   end
 end

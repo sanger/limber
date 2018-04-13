@@ -7,19 +7,6 @@ require_relative 'shared_labware_presenter_examples'
 describe Presenters::PlatePresenter do
   has_a_working_api
 
-  let(:labware) do
-    build :plate,
-          purpose_name: purpose_name,
-          state: state,
-          barcode_number: 1,
-          pool_sizes: [2, 2],
-          created_at: '2016-10-19 12:00:00 +0100'
-  end
-
-  before(:each) do
-    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
-  end
-
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -35,6 +22,20 @@ describe Presenters::PlatePresenter do
     ]
   end
 
+  let(:labware) do
+    build :plate,
+          purpose_name: purpose_name,
+          state: state,
+          barcode_number: 1,
+          pool_sizes: [2, 2],
+          created_at: '2016-10-19 12:00:00 +0100'
+  end
+
+  before(:each) do
+    stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
+    Settings.purposes = {}
+  end
+
   subject(:presenter) do
     Presenters::PlatePresenter.new(
       api:     api,
@@ -42,13 +43,40 @@ describe Presenters::PlatePresenter do
     )
   end
 
-  it 'returns label attributes' do
+  it 'returns PlateLabel attributes when no label class is specified in the purpose settings' do
+    Settings.purposes[labware.purpose.uuid] = build(:purpose_config)
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                        bottom_left: 'DN 1',
                        top_right: 'DN2',
                        bottom_right: 'Limber Cherrypicked',
                        barcode: '1220000001831' }
-    expect(subject.label.attributes).to eq(expected_label)
+    expect(presenter.label.attributes).to eq(expected_label)
+  end
+
+  it 'returns PlateLabel attributes when PlateLabel is defined in the purpose settings' do
+    Settings.purposes[labware.purpose.uuid] = build(:purpose_config, label_class: 'Labels::PlateLabel')
+    expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+                       bottom_left: 'DN 1',
+                       top_right: 'DN2',
+                       bottom_right: 'Limber Cherrypicked',
+                       barcode: '1220000001831' }
+    expect(presenter.label.attributes).to eq(expected_label)
+  end
+
+  it 'returns PlateDoubleLabel attributes when PlateDoubleLabel is defined in the purpose settings' do
+    Settings.purposes[labware.purpose.uuid] = build(:purpose_config, label_class: 'Labels::PlateDoubleLabel')
+    expected_label = {
+      attributes: { right_text: 'DN2',
+                    left_text: 'DN 1',
+                    barcode: '1220000001831' },
+      extra_attributes: { right_text: 'DN2 Limber Cherrypicked',
+                          left_text: Time.zone.today.strftime('%e-%^b-%Y') }
+    }
+    actual_label = {
+      attributes: presenter.label.attributes,
+      extra_attributes: presenter.label.extra_attributes
+    }
+    expect(actual_label).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'
@@ -59,12 +87,12 @@ describe Presenters::PlatePresenter do
     end
 
     it 'reports as invalid' do
-      expect(subject).to_not be_valid
+      expect(presenter).to_not be_valid
     end
 
     it 'reports the error' do
-      subject.valid?
-      expect(subject.errors.full_messages).to include('Pcr cycles specified is not consistent across the plate.')
+      presenter.valid?
+      expect(presenter.errors.full_messages).to include('Pcr cycles specified is not consistent across the plate.')
     end
   end
 
@@ -75,12 +103,12 @@ describe Presenters::PlatePresenter do
     end
 
     it 'reports as invalid' do
-      expect(subject).to_not be_valid
+      expect(presenter).to_not be_valid
     end
 
     it 'reports the error' do
-      subject.valid?
-      expect(subject.errors.full_messages).to include('Pcr cycles differs from standard. 10 cycles have been requested.')
+      presenter.valid?
+      expect(presenter.errors.full_messages).to include('Pcr cycles differs from standard. 10 cycles have been requested.')
     end
   end
 
@@ -91,7 +119,7 @@ describe Presenters::PlatePresenter do
     end
 
     it 'reports as valid' do
-      expect(subject).to be_valid
+      expect(presenter).to be_valid
     end
   end
 
@@ -102,7 +130,7 @@ describe Presenters::PlatePresenter do
     end
 
     it 'reports as valid' do
-      expect(subject).to be_valid
+      expect(presenter).to be_valid
     end
   end
 end

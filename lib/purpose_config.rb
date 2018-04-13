@@ -38,6 +38,15 @@ class PurposeConfig
     @options.fetch(:parents, []).map { |parent_name| store.fetch(parent_name).uuid }
   end
 
+  def print_options
+    template_name = @options.delete(:label_template)
+    unless template_name.nil?
+      YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.fetch(template_name.to_s, {})
+    else
+      {}
+    end
+  end
+
   def config
     {
       name: name,
@@ -46,7 +55,7 @@ class PurposeConfig
       state_changer_class: default_state_changer,
       default_printer_type: default_printer,
       submission: submission_options
-    }.merge(@options)
+    }.merge(print_options).merge(@options)
   end
 
   def uuid

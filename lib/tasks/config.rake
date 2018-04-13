@@ -72,6 +72,11 @@ namespace :config do
       end
 
       configuration[:robots] = ROBOT_CONFIG
+
+      YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.tap do |label_templates|
+        key = :default_pmb_template_for_printer
+        configuration[key] = label_templates[key.to_s]
+      end
     end
 
     # Write out the current environment configuration file

@@ -130,6 +130,11 @@ RSpec.configure do |config|
       'Transfer from tube to tube by submission' => 'tube-to-tube-by-sub',
       'Whole plate to tube' => 'whole-plate-to-tube'
     }
+    Settings.default_pmb_template_for_printer = {
+      1 => 'sqsc_96plate_label_template',
+      2 => 'limber_tube_label_template',
+      6 => 'sqsc_384plate_label_template'
+    }
   end
 
   config.before(:each) do

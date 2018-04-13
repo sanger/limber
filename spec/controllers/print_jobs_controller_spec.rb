@@ -35,7 +35,7 @@ describe PrintJobsController, type: :controller do
 
       request.env['HTTP_REFERER'] = root_path
 
-      post :create, params: { print_job: { printer_name: 'tube_printer', printer_type: '1D Tube',
+      post :create, params: { print_job: { printer_name: 'tube_printer', label_template: 'limber_tube_label_template',
                                            labels: [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }],
                                            number_of_copies: 1 } },
                     format: :json
