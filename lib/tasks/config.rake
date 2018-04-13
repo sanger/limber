@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative '../purpose_config'
+
+# rubocop:disable Metrics/BlockLength
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
@@ -85,5 +87,6 @@ namespace :config do
     end
   end
 
+  # rubocop:enable Metrics/BlockLength
   task default: :generate
 end

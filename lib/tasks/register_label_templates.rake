@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :pmb do
   task register_label_templates: :environment do
     [{ 'name' => 'limber_tube_label_template',
@@ -125,8 +126,7 @@ namespace :pmb do
                'space_adjustment' => '00',
                'rotational_angles' => '00' }
            ] }
-       ] }
-    ].each do |template|
+       ] }].each do |template|
       template_name = template['name']
       pmb_template = PMB::LabelTemplate.find(name: template_name).first
       if pmb_template.nil?
@@ -139,3 +139,5 @@ namespace :pmb do
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength

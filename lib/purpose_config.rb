@@ -40,10 +40,10 @@ class PurposeConfig
 
   def print_options
     template_name = @options.delete(:label_template)
-    unless template_name.nil?
-      YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.fetch(template_name.to_s, {})
-    else
+    if template_name.nil?
       {}
+    else
+      YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.fetch(template_name.to_s, {})
     end
   end
 

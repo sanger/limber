@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Labels::PlateDoubleLabel < Labels::Base
   def attributes
     {
