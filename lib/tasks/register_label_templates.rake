@@ -72,7 +72,7 @@ namespace :pmb do
                'no_of_columns' => nil }
            ] }
        ] },
-     { 'name' => 'limber_plate_6mm_double',
+     { 'name' => 'plate_6mm_double',
        'label_type_id' => PMB::LabelType.find(name: 'plate - 6mm').first.id,
        'labels_attributes' => [
          { 'name' => 'main_label',
