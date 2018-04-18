@@ -2,6 +2,7 @@
 
 # This is used as part of a take task, and will be run within a console.
 # rubocop:disable Rails/Output
+# rubocop:disable Metrics/ParameterLists
 
 class PurposeConfig
   attr_reader :name, :options, :store, :api
@@ -104,7 +105,6 @@ class PurposeConfig
     @label_templates.fetch(@template_name.to_s, {}).fetch(option, default_options[option])
   end
 
-
   def default_printer_type_for(printer_type)
     @label_templates.fetch('default_printer_type_names').fetch(printer_type)
   end
@@ -113,4 +113,5 @@ class PurposeConfig
     @label_templates.fetch('default_pmb_templates').fetch(printer_type)
   end
 end
+# rubocop:enable Metrics/ParameterLists
 # rubocop:enable Rails/Output
