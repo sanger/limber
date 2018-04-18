@@ -76,7 +76,7 @@ namespace :config do
 
       configuration[:robots] = ROBOT_CONFIG
 
-      [:default_pmb_template_for_printer, :printer_type_names].each do |key|
+      [:default_pmb_templates, :default_printer_type_names].each do |key|
         configuration[key] = label_templates[key.to_s]
       end
     end
