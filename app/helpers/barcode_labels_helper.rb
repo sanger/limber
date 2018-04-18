@@ -16,7 +16,7 @@ module BarcodeLabelsHelper
   end
 
   def printers_of_type(printer_types)
-    @printers.select { |printer| printer_types.include?(printer.type.layout) }
+    @printers.select { |printer| printer_types.include?(printer.type.name) }
   end
 
   def useful_barcode(barcode)

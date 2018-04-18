@@ -10,6 +10,7 @@ namespace :config do
 
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
+    label_templates = YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby
 
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
@@ -20,7 +21,7 @@ namespace :config do
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       next unless file.extname == '.yml'
       YAML.parse_file(file).to_ruby.each do |name, options|
-        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
+        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
       end
     end
 
@@ -75,8 +76,7 @@ namespace :config do
 
       configuration[:robots] = ROBOT_CONFIG
 
-      YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.tap do |label_templates|
-        key = :default_pmb_template_for_printer
+      [:default_pmb_template_for_printer, :printer_type_names].each do |key|
         configuration[key] = label_templates[key.to_s]
       end
     end
