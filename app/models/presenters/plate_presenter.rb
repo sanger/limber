@@ -60,11 +60,7 @@ class Presenters::PlatePresenter
 
   def label
     label_class = Settings.purposes.fetch(labware.purpose.uuid).fetch(:label_class, nil)
-    if label_class.nil?
-      Labels::PlateLabel.new(labware)
-    else
-      label_class.constantize.new(labware)
-    end
+    label_class.constantize.new(labware)
   end
 
   def tube_labels
