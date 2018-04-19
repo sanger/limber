@@ -7,7 +7,7 @@ echo 'Generating sha'
 git rev-parse HEAD > REVISION
 echo 'Compiling tar.gz'
 tar --version
-tar --exclude='./.git' --exclude='./tmp' --exclude='./vendor/bundle' --exclude='./node_modules' --exclude='./log/*' --exclude='release.tar.gz' -zcvf /tmp/release.tar.gz ./
+tar --exclude='./.git' --exclude='./tmp' --exclude='./vendor/bundle' --exclude='./node_modules' --exclude='./log/*' --exclude='release.tar.gz' --exclude='./.bundle/*' -zcvf /tmp/release.tar.gz ./
 mv /tmp/release.tar.gz ./release.tar.gz
 echo 'Release complete!'
 echo `pwd`/release.tar.gz

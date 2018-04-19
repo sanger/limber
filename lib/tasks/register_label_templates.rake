@@ -131,7 +131,7 @@ namespace :pmb do
       pmb_template = PMB::LabelTemplate.find(name: template_name).first
       if pmb_template.nil?
         ok = PMB::LabelTemplate.new(template).save
-        print "Label template: `#{template_name}` "
+        print "Label template: #{template_name} "
         ok ? (puts  'created.') : (puts 'registration failed.')
       else
         puts "Label template: #{template_name}, already registered in PMB"
