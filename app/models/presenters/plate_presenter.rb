@@ -8,6 +8,7 @@ class Presenters::PlatePresenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
+  include Presenters::LibraryPoolCsv
 
   class_attribute :aliquot_partial, :summary_partial, :well_failure_states
 
@@ -37,7 +38,7 @@ class Presenters::PlatePresenter
 
   validates_with Validators::InProgressValidator
 
-  delegate :tagged?, :width, :height, :size, :plate_purpose, to: :labware
+  delegate :tagged?, :width, :height, :size, :plate_purpose, :human_barcode, to: :labware
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.

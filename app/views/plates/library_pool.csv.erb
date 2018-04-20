@@ -1,0 +1,6 @@
+<%= CSV.generate_line ['Plate Barcode', @presenter.human_barcode], row_sep: "" %>
+<%= CSV.generate_line ['Plate Purpose', @presenter.purpose_name], row_sep: "" %>
+
+<%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>
+<% @presenter.each_well_and_concentration do |well_details| %>
+<% end %>
