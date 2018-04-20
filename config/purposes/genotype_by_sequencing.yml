@@ -23,7 +23,10 @@ GBS PCR2:
   :cherrypickable_target: false
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - GbS Tag Set
+  - GbS Tag Set A
+  - GbS Tag Set B
+  - GbS Tag Set C
+  - GbS Tag Set D
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
   :size: 384
