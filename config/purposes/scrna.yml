@@ -91,6 +91,15 @@ scRNA Lib Pool:
   :default_printer_type: :tube
   :parents:
   - scRNA Lib PCR
+scRNA-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - scRNA-384 Lib PCR
 scRNA Lib Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -109,3 +118,4 @@ scRNA Lib Pool Norm:
   :default_printer_type: :tube
   :parents:
   - scRNA Lib Pool XP
+  - scRNA-384 Lib Pool XP
