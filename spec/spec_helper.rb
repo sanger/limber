@@ -130,6 +130,10 @@ RSpec.configure do |config|
       'Transfer from tube to tube by submission' => 'tube-to-tube-by-sub',
       'Whole plate to tube' => 'whole-plate-to-tube'
     }
+    YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby.tap do |label_templates|
+      Settings.default_pmb_templates = label_templates['default_pmb_templates']
+      Settings.default_printer_type_names = label_templates['default_printer_type_names']
+    end
   end
 
   config.before(:each) do
