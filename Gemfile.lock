@@ -235,7 +235,7 @@ GEM
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+      loofah (~> 2.2.1)
     railties (5.1.5)
       actionpack (= 5.1.5)
       activesupport (= 5.1.5)
