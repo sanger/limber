@@ -28,7 +28,7 @@ describe PrintJob do
 
     pj = PrintJob.new(
       printer_name: printer.name,
-      printer_type: printer.type.name,
+      label_template: label_template_name,
       labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
       number_of_copies: 1
     )
@@ -54,7 +54,7 @@ describe PrintJob do
 
     pj = PrintJob.new(
       printer_name: printer.name,
-      printer_type: printer.type.name,
+      label_template: label_template_name,
       labels: [
         { label: { barcode: '12345', test_attr: 'test' } },
         { label: { barcode: '67890', test_attr: 'test2' } }

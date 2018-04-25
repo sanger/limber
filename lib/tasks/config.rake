@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative '../purpose_config'
+
+# rubocop:disable Metrics/BlockLength
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
@@ -8,6 +10,7 @@ namespace :config do
 
   task generate: :environment do
     api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
+    label_templates = YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby
 
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
@@ -18,7 +21,7 @@ namespace :config do
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       next unless file.extname == '.yml'
       YAML.parse_file(file).to_ruby.each do |name, options|
-        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates)
+        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
       end
     end
 
@@ -72,6 +75,10 @@ namespace :config do
       end
 
       configuration[:robots] = ROBOT_CONFIG
+
+      %i[default_pmb_templates default_printer_type_names].each do |key|
+        configuration[key] = label_templates[key.to_s]
+      end
     end
 
     # Write out the current environment configuration file
@@ -80,5 +87,6 @@ namespace :config do
     end
   end
 
+  # rubocop:enable Metrics/BlockLength
   task default: :generate
 end
