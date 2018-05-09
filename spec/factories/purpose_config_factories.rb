@@ -12,6 +12,9 @@ FactoryBot.define do
     state_changer_class 'StateChangers::DefaultStateChanger'
     default_printer_type :plate_a
     asset_type 'plate'
+    label_class 'Labels::PlateLabel'
+    printer_type '96 Well Plate'
+    pmb_template 'sqsc_96plate_label_template'
 
     factory :passable_plate do
       suggest_library_pass_for ['Limber Library Creation']

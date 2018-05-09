@@ -40,6 +40,8 @@ describe Presenters::MinimalPcrPlatePresenter do
   end
 
   it 'returns label attributes' do
+    Settings.purposes = {}
+    Settings.purposes[labware.purpose.uuid] = build(:purpose_config)
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                        bottom_left: 'DN 1',
                        top_right: 'DN2',

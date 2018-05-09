@@ -10,6 +10,10 @@ module Presenters
       false
     end
 
+    def label
+      Labels::PlateLabel.new(labware)
+    end
+
     def add_unknown_plate_warnings
       errors.add(:plate, "type '#{labware.purpose.name}' is not a limber plate. Perhaps you are using the wrong pipeline application?")
     end

@@ -14,6 +14,14 @@ class Labels::TubeLabel < Labels::Base
       barcode: labware.barcode.ean13 }
   end
 
+  def default_printer_type
+    default_printer_type_for(:tube)
+  end
+
+  def default_label_template
+    default_label_template_for(:tube)
+  end
+
   private
 
   def first_line
