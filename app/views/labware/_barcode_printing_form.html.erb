@@ -1,9 +1,12 @@
 <%= form_for(print_job, html: { method: :post, class: 'form-inline'}) do |f| %>
-  <%= f.hidden_field :printer_type %>
+  <%= f.hidden_field :label_template %>
 
   <% labels.each do |label| %>
     <% label.attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+    <%end%>
+    <% label.extra_attributes.each do |k, v|%>
+      <%= f.hidden_field "labels[][extra_label][#{k}]", value: v %>
     <%end%>
   <% end %>
 

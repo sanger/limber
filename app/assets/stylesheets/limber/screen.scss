@@ -18,6 +18,18 @@ header.limber-header {
   }
 }
 
+.tube-list {
+  @extend .list-group;
+  @extend .list-group-flush;
+
+  .tube {
+    @extend .list-group-item;
+    @extend .justify-content-between;
+    @extend .d-flex;
+  }
+}
+
+
 button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn;
   @extend .btn-primary;
@@ -65,7 +77,7 @@ nav.inbox-list, nav.robots-list {
 .qc_validation_report { .alert { margin-bottom: 0; } }
 
 // Bootstrap 4 doesn't seem to do this automatically
-.content-secondary, .content-main { padding-top: 20px; }
+.content-secondary, .content-main { @extend .mt-3; }
 
 .content-main {
   @extend .col-sm-12;
@@ -79,16 +91,38 @@ nav.inbox-list, nav.robots-list {
   @extend .col-md-4;
   @extend .col-lg-5;
   @extend .col-xl-6;
+
+  .card {
+    @extend .mb-3;
+  }
 }
 
+.work-completion-button, .robots-button {
+  @extend .btn;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
+.other-actions {
+  .work-completion-button { @extend .btn-secondary;}
+}
+.suggested-actions {
+  .work-completion-button { @extend .btn-success;}
+}
+.robots-button {
+  @extend .btn-primary;
+}
+
+
 #state-changer {
-  label { @include make-col(3); }
-  .custom-select { @include make-col(9); }
+  label { @extend .col-3; }
+  .custom-select { @extend .col-9; }
 }
 
 dl.metadata, dl#samples-information {
-  dt { @include make-col(3); }
-  dd { @include make-col(9); }
+  @extend .row;
+  dt { @extend .col-3; }
+  dd { @extend .col-9; }
 }
 
  dl#samples-information { @extend .row; }

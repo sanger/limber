@@ -47,6 +47,6 @@ class Limber::Plate::Pools
   # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
-    @pools.any?(&:ready_for_custom_pooling?)
+    @pools.empty? || @pools.any?(&:ready_for_custom_pooling?)
   end
 end
