@@ -363,6 +363,7 @@ DEPENDENCIES
   inline_svg
   jquery-rails
   jquery-ui-rails
+  json_api_client
   launchy
   pmb-client (= 0.1.0)!
   poltergeist

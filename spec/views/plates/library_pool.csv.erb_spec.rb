@@ -5,20 +5,21 @@ describe "plates/library_pool.csv.erb" do
   context "with a full plate" do
     has_a_working_api
 
-    let(:labware) { build(:plate)  }
+    let(:well_a1) { create(:well_v2, position: 'A1', qc_results: create_list(:qc_result, 1)) }
+    let(:well_b1) { create(:well_v2, position: 'B1', qc_results: create_list(:qc_result, 1)) }
+    let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }
 
-    before(:each) do
-      assign(:presenter, Presenters::PlatePresenter.new(api: api, labware: labware ))
-      stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
+    before do
+      assign(:plate, labware)
     end
 
     let(:expected_content) do
       [
-        ['Plate Barcode','DN1'],
-        ['Plate Purpose','example-purpose'],
+        ['Plate Barcode','DN1S'],
         [],
         ['Well','Concentration','Pick','Pool'],
-        ['A1',0,1]
+        ['A1','1','1'],
+        ['B1','1','1']
       ]
     end
 

@@ -4,6 +4,22 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+
+  factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+    skip_create
+    transient do
+      wells []
+      size 96
+      pool_sizes   []
+    end
+
+    has_pools_hash
+
+    after(:build) do |plate, evaluator|
+      plate.stub(:wells) { evaluator.wells }
+    end
+  end
+
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root 'plate'
     size 96
@@ -31,22 +47,7 @@ FactoryBot.define do
                                'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes',
                                'transfer_request_collections'
 
-    pools do
-      wells = WellHelpers.column_order(size).dup
-      pool_hash = {}
-      pool_sizes.each_with_index do |pool_size, index|
-        pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
-          'insert_size' => { from: 100, to: 300 },
-          'library_type' => { name: library_type },
-          'request_type' => request_type,
-          'pcr_cycles' => pool_prc_cycles[index],
-          'for_multiplexing' => pool_for_multiplexing[index],
-          'pool_complete' => pool_complete
-        }
-      end
-      pool_hash
-    end
+    has_pools_hash
 
     pre_cap_groups({})
 
@@ -90,29 +91,16 @@ FactoryBot.define do
     end
 
     factory :plate_with_primer_panels do
-      pools do
-        wells = WellHelpers.column_order(size).dup
-        pool_hash = {}
-        pool_sizes.each_with_index do |pool_size, index|
-          pool_hash["pool-#{index + 1}-uuid"] = {
-            'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
-            'insert_size' => { from: 100, to: 300 },
-            'library_type' => { name: library_type },
-            'request_type' => request_type,
-            'pcr_cycles' => pool_prc_cycles[index],
-            'for_multiplexing' => for_multiplexing,
-            'pool_complete' => pool_complete,
-            'primer_panel' => {
+      transient do
+        extra_pool_info('primer_panel' => {
               'name' => 'example panel',
               'programs' => {
                 'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
                 'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
               }
-            }
-          }
-        end
-        pool_hash
+            })
       end
+      has_pools_hash
     end
 
     factory :passed_plate do
@@ -125,6 +113,28 @@ FactoryBot.define do
 
     factory :unpassed_plate do
       pool_sizes [2, 2]
+    end
+  end
+
+  trait :has_pools_hash do
+    transient do
+      extra_pool_info { {} }
+    end
+    pools do
+      wells = WellHelpers.column_order(size).dup
+      pool_hash = {}
+      pool_sizes.each_with_index do |pool_size, index|
+        pool_hash["pool-#{index + 1}-uuid"] = {
+          'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+          'insert_size' => { from: 100, to: 300 },
+          'library_type' => { name: library_type },
+          'request_type' => request_type,
+          'pcr_cycles' => pool_prc_cycles[index],
+          'for_multiplexing' => pool_for_multiplexing[index],
+          'pool_complete' => pool_complete
+        }.merge(extra_pool_info)
+      end
+      pool_hash
     end
   end
 end

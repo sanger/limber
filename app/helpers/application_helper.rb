@@ -20,7 +20,7 @@ module ApplicationHelper
 
   # Easy access to the api from the console
   def api
-    Sequencescape::Api.new(Limber::Application.config.api_connection_options.dup)
+    Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options.dup)
   end
 
   def environment

@@ -46,4 +46,19 @@ FactoryBot.define do
       { 'ean13' => ean13, 'number' => barcode_number.to_s, 'prefix' => barcode_prefix, 'two_dimensional' => nil, 'type' => barcode_type }
     end
   end
+
+  trait :barcoded_v2 do
+      transient do
+      sequence(:barcode_number) { |i| i }
+      barcode_prefix 'DN'
+      barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
+    end
+
+    labware_barcode do
+      {
+        'ean13_barcode' => barcode.machine_barcode,
+        'human_barcode' => barcode.human_barcode
+      }
+    end
+  end
 end
