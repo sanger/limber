@@ -29,6 +29,15 @@ describe PlatesController, type: :controller do
       expect(assigns(:labware)).to be_a(Limber::Plate)
       expect(assigns(:presenter)).to be_a(Presenters::StockPlatePresenter)
     end
+
+    it 'renders a csv' do
+      get :show, params: { id: plate_uuid }, as: :csv
+      expect(plate_request).to have_been_made.once
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Limber::Plate)
+      expect(assigns(:presenter)).to be_a(Presenters::StockPlatePresenter)
+      assert_equal 'text/csv', @response.content_type
+    end
   end
 
   describe '#update' do

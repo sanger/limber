@@ -48,13 +48,13 @@ Rails.application.configure do
   config.disable_exception_notifier = true
 
   config.api = ActiveSupport::OrderedOptions.new
-  config.api.v1 =  ActiveSupport::OrderedOptions.new
+  config.api.v1 = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options.namespace     = 'Limber'
   config.api.v1.connection_options.url           = 'http://example.com:3000/'
   config.api.v1.connection_options.authorisation = 'testing'
 
-  config.api.v2 =  ActiveSupport::OrderedOptions.new
+  config.api.v2 = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options.url           = 'http://example.com:3000/api/v2'
 

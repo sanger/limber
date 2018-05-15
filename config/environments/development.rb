@@ -63,16 +63,16 @@ Rails.application.configure do
 
   config.disable_exception_notifier = true
 
+  config.api                                     = ActiveSupport::OrderedOptions.new
+  config.api.v1                                  = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options.namespace     = 'Limber'
   config.api.v1.connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
   config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
-
-  config.api.v2 =  ActiveSupport::OrderedOptions.new
+  config.api.v2                                  = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options.url           = 'http://localhost:3000/api/v2'
-
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project

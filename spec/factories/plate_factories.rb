@@ -4,13 +4,12 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
     skip_create
     transient do
       wells []
       size 96
-      pool_sizes   []
+      pool_sizes []
     end
 
     has_pools_hash
@@ -93,12 +92,12 @@ FactoryBot.define do
     factory :plate_with_primer_panels do
       transient do
         extra_pool_info('primer_panel' => {
-              'name' => 'example panel',
-              'programs' => {
-                'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
-                'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
-              }
-            })
+                          'name' => 'example panel',
+                          'programs' => {
+                            'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
+                            'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
+                          }
+                        })
       end
       has_pools_hash
     end
