@@ -11,6 +11,12 @@ FactoryBot.define do
       wells []
       size 96
       pool_sizes   []
+      library_type 'Standard'
+      request_type 'Limber Library Creation'
+      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      for_multiplexing false
+      pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
+      pool_complete false
     end
 
     has_pools_hash
