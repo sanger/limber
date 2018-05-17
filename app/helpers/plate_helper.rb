@@ -54,6 +54,21 @@ module PlateHelper
     Hash[sorted_group_array].to_json.html_safe
   end
 
+  def pools_by_id(pools)
+    pools_by_position = pools.inject({}) do |result, (key, value)|
+      result[key] = WellHelpers.sort_in_column_order(value['wells']).first
+      result
+    end.sort_by {|_k, v| WellHelpers.well_coordinate(v)}.map.with_index {|v, i| [v.first, i+1]}.to_h
+
+    {}.tap do |h|
+      pools.each do |key, value|
+        value['wells'].each do |well|
+          h[well] = pools_by_position[key]
+        end
+      end
+    end
+  end
+
   def current_plate
     (@labware_creator || @presenter).labware
   end
