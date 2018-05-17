@@ -55,10 +55,9 @@ module PlateHelper
   end
 
   def pools_by_id(pools)
-    pools_by_position = pools.inject({}) do |result, (key, value)|
+    pools_by_position = pools.each_with_object({}) do |(key, value), result|
       result[key] = WellHelpers.sort_in_column_order(value['wells']).first
-      result
-    end.sort_by {|_k, v| WellHelpers.well_coordinate(v)}.map.with_index {|v, i| [v.first, i+1]}.to_h
+    end.sort_by { |_k, v| WellHelpers.well_coordinate(v) }.map.with_index { |v, i| [v.first, i + 1] }.to_h
 
     {}.tap do |h|
       pools.each do |key, value|
