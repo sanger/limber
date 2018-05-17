@@ -30,7 +30,7 @@ FactoryBot.define do
     end
 
     after(:build) do |well, evaluator|
-      well.stub(:qc_results) { evaluator.qc_results }
+      RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results)
     end
     skip_create
   end

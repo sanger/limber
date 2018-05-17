@@ -21,7 +21,7 @@ FactoryBot.define do
     has_pools_hash
 
     after(:build) do |plate, evaluator|
-      plate.stub(:wells) { evaluator.wells }
+      RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
     end
   end
 
