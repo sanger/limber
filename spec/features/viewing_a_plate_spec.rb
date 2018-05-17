@@ -37,7 +37,7 @@ feature 'Viewing a plate', js: true do
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
     find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
-    find_link('Download Library Pool CSV', href: '/limber_plates/DN1/exports/library_pool.csv')
+    find_link('Download Concentration CSV', href: '/limber_plates/DN1/exports/concentrations.csv')
   end
 
   scenario 'if a plate is passed creation of a child is allowed' do

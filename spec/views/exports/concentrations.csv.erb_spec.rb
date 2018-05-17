@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'exports/library_pool.csv.erb' do
+describe 'exports/concentrations.csv.erb' do
   context 'with a full plate' do
     has_a_working_api
 

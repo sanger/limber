@@ -16,12 +16,12 @@ describe ExportsController, type: :controller do
     expect(Sequencescape::Api::V2::Plate).to receive(:where).with(barcode: 'DN1S').and_return(plate_query)
   end
 
-  it 'renders a library_pooling csv' do
-    get :show, params: { id: 'library_pool', limber_plate_id: 'DN1S' }, as: :csv
+  it 'renders a concentrations.csv' do
+    get :show, params: { id: 'concentrations', limber_plate_id: 'DN1S' }, as: :csv
     expect(response).to have_http_status(:ok)
     expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
     expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-    expect(response).to render_template('library_pool')
+    expect(response).to render_template('concentrations')
     assert_equal 'text/csv', @response.content_type
   end
 

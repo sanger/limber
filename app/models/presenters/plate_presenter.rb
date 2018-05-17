@@ -83,7 +83,7 @@ class Presenters::PlatePresenter
   def csv_file_links
     [
       ["Download Worksheet CSV", { format: :csv }],
-      ["Download Library Pool CSV", [:limber_plate, :export, { id: 'library_pool', limber_plate_id: human_barcode, format: :csv }]]
+      ["Download Concentration CSV", [:limber_plate, :export, { id: 'concentrations', limber_plate_id: human_barcode, format: :csv }]]
     ]
   end
 
