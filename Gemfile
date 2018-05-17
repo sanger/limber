@@ -6,10 +6,10 @@ gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
+gem 'exception_notification'
 gem 'rake'
 gem 'state_machines'
 gem 'webpacker', '~> 2.0'
-gem 'exception_notification'
 
 # Used in the setting object, allows access by object and hash notation.
 gem 'hashie'

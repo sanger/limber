@@ -48,7 +48,7 @@ FactoryBot.define do
   end
 
   trait :barcoded_v2 do
-      transient do
+    transient do
       sequence(:barcode_number) { |i| i }
       barcode_prefix 'DN'
       barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }

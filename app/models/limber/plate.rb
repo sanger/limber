@@ -73,7 +73,6 @@ class Limber::Plate < Sequencescape::Plate
     "#{barcode.prefix}#{barcode.number}"
   end
 
-
   private
 
   def generate_tubes_and_sources

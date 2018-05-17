@@ -9,7 +9,7 @@ feature 'Viewing a plate', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
+  let(:example_plate)  { json :stock_plate, uuid: plate_uuid, barcode_number: 1 }
   let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
   let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
   let(:wells_collection) { json(:well_collection) }
@@ -36,6 +36,8 @@ feature 'Viewing a plate', js: true do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
+    find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
+    find_link('Download Library Pool CSV', href: '/limber_plates/DN1/exports/library_pool.csv')
   end
 
   scenario 'if a plate is passed creation of a child is allowed' do

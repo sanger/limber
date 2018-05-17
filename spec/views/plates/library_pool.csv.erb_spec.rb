@@ -1,8 +1,9 @@
-require "spec_helper"
+# frozen_string_literal: true
 
-describe "plates/library_pool.csv.erb" do
+require 'spec_helper'
 
-  context "with a full plate" do
+describe 'plates/library_pool.csv.erb' do
+  context 'with a full plate' do
     has_a_working_api
 
     let(:well_a1) { create(:well_v2, position: 'A1', qc_results: create_list(:qc_result, 1)) }
@@ -15,15 +16,15 @@ describe "plates/library_pool.csv.erb" do
 
     let(:expected_content) do
       [
-        ['Plate Barcode','DN1S'],
+        ['Plate Barcode', 'DN1S'],
         [],
-        ['Well','Concentration','Pick','Pool'],
-        ['A1','1','1','1'],
-        ['B1','1','1','2']
+        %w[Well Concentration Pick Pool],
+        %w[A1 1 1 1],
+        %w[B1 1 1 2]
       ]
     end
 
-    it "renders the expected content" do
+    it 'renders the expected content' do
       expect(CSV.parse(render)).to eq(expected_content)
     end
 

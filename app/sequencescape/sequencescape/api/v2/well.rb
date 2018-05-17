@@ -6,7 +6,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def latest_concentration
     qc_results.select { |qc| qc.key == 'concentration' }
-              .sort_by { |qc| qc.created_at }
+              .sort_by(&:created_at)
               .last
   end
 

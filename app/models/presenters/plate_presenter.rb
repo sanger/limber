@@ -8,7 +8,6 @@ class Presenters::PlatePresenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
-  include Presenters::LibraryPoolCsv
 
   class_attribute :aliquot_partial, :summary_partial, :well_failure_states
 
@@ -82,7 +81,10 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    [["Download Worksheet CSV", { format: :csv }]]
+    [
+      ["Download Worksheet CSV", { format: :csv }],
+      ["Download Library Pool CSV", [:limber_plate, :export, { id: 'library_pool', limber_plate_id: human_barcode, format: :csv }]]
+    ]
   end
 
   def filename(offset = nil)
