@@ -21,7 +21,13 @@ describe ExportsController, type: :controller do
     expect(response).to have_http_status(:ok)
     expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
     expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-    expect(response).to render_template('plates/library_pool.csv')
+    expect(response).to render_template('library_pool')
     assert_equal 'text/csv', @response.content_type
+  end
+
+  it 'returns 404 with unknown templates' do
+    expect do
+      get :show, params: { id: 'not_a_template', limber_plate_id: 'DN1S' }, as: :csv
+    end.to raise_error(ActionController::RoutingError, 'Unknown template not_a_template')
   end
 end
