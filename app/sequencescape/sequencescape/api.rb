@@ -1,4 +1,5 @@
 # frozen_string_literal: true
 
-module Sequencescape::Api
-end
+require 'sequencescape_client_gem'
+# class Sequencescape::Api
+# end
