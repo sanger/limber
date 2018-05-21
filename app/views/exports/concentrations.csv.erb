@@ -3,5 +3,5 @@
 
 <%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>
 <% @plate.wells.each do |well| %>
-<%= CSV.generate_line [well.position,well.latest_concentration&.value&.to_i, (well.passed? ? 1 : 0), @pooling_ids[well.position]], row_sep: '' %>
+<%= CSV.generate_line [well.position['name'], well.latest_concentration&.value&.to_i, (well.passed? ? 1 : 0), @pooling_ids[well.position['name']]], row_sep: '' %>
 <% end %>
