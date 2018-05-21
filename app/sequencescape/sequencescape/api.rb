@@ -1,5 +1,4 @@
 # frozen_string_literal: true
 
-require 'sequencescape_client_gem'
-# class Sequencescape::Api
-# end
+# The sequencescape-client-api gem includes the constant Sequencescape::Api, so we load it from there
+require 'sequencescape-api'
