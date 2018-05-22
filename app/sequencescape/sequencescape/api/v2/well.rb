@@ -5,7 +5,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   has_many :qc_results
 
   def latest_concentration
-    qc_results.select { |qc| qc.key == 'concentration' }
+    qc_results.select { |qc| qc.key.casecmp('concentration').zero? }
               .sort_by(&:created_at)
               .last
   end
