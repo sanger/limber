@@ -17,7 +17,7 @@ module Presenters
       self.attributes = %i[api labware]
 
       def csv
-        purpose_config.fetch(:csv_template, 'show')
+        purpose_config[:csv_template]
       end
     end
 

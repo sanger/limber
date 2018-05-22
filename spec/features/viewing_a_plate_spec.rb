@@ -14,11 +14,12 @@ feature 'Viewing a plate', js: true do
   let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
   let(:wells_collection) { json(:well_collection) }
   let(:default_tube_printer) { 'tube printer 1' }
+  let(:purpose_config) { build :purpose_config }
 
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
+    Settings.purposes['stock-plate-purpose-uuid'] = purpose_config
     Settings.purposes['child-purpose-0'] = build :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked']
     Settings.printers[:tube] = default_tube_printer
 
@@ -36,8 +37,18 @@ feature 'Viewing a plate', js: true do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
-    find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
     find_link('Download Concentration CSV', href: '/limber_plates/DN1/exports/concentrations.csv')
+  end
+
+  context 'with a custom csv' do
+    let(:purpose_config) { build :purpose_config, csv_template: 'show_extended' }
+    scenario 'of a recognised type' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_content('Pending')
+      find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
+      find_link('Download Concentration CSV', href: '/limber_plates/DN1/exports/concentrations.csv')
+    end
   end
 
   scenario 'if a plate is passed creation of a child is allowed' do

@@ -81,10 +81,11 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    [
-      ["Download Worksheet CSV", { format: :csv }],
+    links = [
       ["Download Concentration CSV", [:limber_plate, :export, { id: 'concentrations', limber_plate_id: human_barcode, format: :csv }]]
     ]
+    links << ["Download Worksheet CSV", { format: :csv }] if csv.present?
+    links
   end
 
   def filename(offset = nil)
@@ -101,6 +102,10 @@ class Presenters::PlatePresenter
         tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
       end
     end
+  end
+
+  def wells
+    labware.wells.sort_by { |w| WellHelpers.well_coordinate(w.location) }
   end
 
   private
