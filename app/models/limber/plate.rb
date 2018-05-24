@@ -69,6 +69,10 @@ class Limber::Plate < Sequencescape::Plate
     @tubes_and_sources ||= generate_tubes_and_sources
   end
 
+  def human_barcode
+    "#{barcode.prefix}#{barcode.number}"
+  end
+
   private
 
   def generate_tubes_and_sources

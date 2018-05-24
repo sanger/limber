@@ -6,13 +6,18 @@ gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
 gem 'inline_svg'
 
+gem 'exception_notification'
 gem 'rake'
 gem 'state_machines'
 gem 'webpacker', '~> 2.0'
+
 # Used in the setting object, allows access by object and hash notation.
-gem 'exception_notification'
 gem 'hashie'
 
+# Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
+gem 'json_api_client'
+
+# Older Sequencescape API
 gem 'sequencescape-client-api', '>= 0.3.3',
     # Should be switched back to sanger + rails_4 for deployment
     github: 'jamesglover/sequencescape-client-api',
