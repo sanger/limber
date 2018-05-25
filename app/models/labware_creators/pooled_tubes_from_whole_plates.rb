@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  # Pools an entire plate into a single tube. Useful for MiSeqQC
+  # Pools one or more plates into a single tube. Useful for MiSeqQC
   class PooledTubesFromWholePlates < Base
     include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage

@@ -356,8 +356,8 @@ div.wait-plate {
 }
 
 div.good-plate {
-  @extend .is-invalid;
-  .form-control { @extend .is-invalid; }
+  @extend .is-valid;
+  .form-control { @extend .is-valid; }
 }
 
 .ui-field-contain label.bed-label {
