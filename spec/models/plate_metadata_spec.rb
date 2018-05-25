@@ -20,7 +20,7 @@ describe PlateMetadata do
 
     has_a_working_api(times: 1)
 
-    let(:api) { Sequencescape::Api.new(Limber::Application.config.api_connection_options) }
+    let(:api) { Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options) }
 
     it 'is not valid without a user' do
       stub_asset_search(123, plate)

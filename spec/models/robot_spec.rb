@@ -7,7 +7,7 @@ describe Robots::Robot do
 
   has_a_working_api
 
-  let(:api)                         { Sequencescape::Api.new(Limber::Application.config.api_connection_options) }
+  let(:api)                         { Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options) }
   let(:settings)                    { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
   let(:user_uuid)                   { SecureRandom.uuid }
   let(:plate_uuid)                  { SecureRandom.uuid }

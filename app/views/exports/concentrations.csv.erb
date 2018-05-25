@@ -1,0 +1,7 @@
+<%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode['human_barcode']], row_sep: "" %>
+<% @pooling_ids = pools_by_id(@plate.pools) %>
+
+<%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>
+<% @plate.wells_in_columns.each do |well| %>
+<%= CSV.generate_line [well.position['name'], well.latest_concentration&.value&.to_i, (well.passed? ? 1 : 0), @pooling_ids[well.position['name']]], row_sep: '' %>
+<% end %>
