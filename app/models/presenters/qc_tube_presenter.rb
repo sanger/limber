@@ -47,11 +47,6 @@ module Presenters
           yield if labware.requests.present?
           nil
         end
-
-        # Returns the child plate purposes that can be created in the qc_complete state.
-        def default_child_purpose
-          purpose.children.first
-        end
       end
     end
   end

@@ -1,11 +1,7 @@
 (function($, exports, undefined){
   "use strict";
 
-  $.ajaxSetup({
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-    }
-  });
+  //= require lib/ajax_support
 
   var Events = {
     on: function(){

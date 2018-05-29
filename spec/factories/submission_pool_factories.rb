@@ -8,6 +8,7 @@ FactoryBot.define do
   factory :submission_pool_base, class: Sequencescape::SubmissionPool do
     plates_in_submission 1
     used_tag2_layout_templates []
+    used_tag_layout_templates []
 
     factory :dual_submission_pool_base do
       plates_in_submission 2
@@ -24,16 +25,19 @@ FactoryBot.define do
       uuid nil
       plate_uuid 'plate-uuid'
       resource_url { "#{api_root}#{plate_uuid}/submission_pools/1" }
-      used_templates []
+      used_tag_templates []
+      used_tag2_templates []
     end
 
     submission_pools do
-      Array.new(pool_count) { associated(:submission_pool_base, used_tag2_layout_templates: used_templates) }
+      Array.new(pool_count) { associated(:submission_pool_base, used_tag2_layout_templates: used_tag2_templates, used_tag_layout_templates: used_tag_templates) }
     end
 
     factory :dual_submission_pool_collection do
       submission_pools do
-        Array.new(pool_count) { associated(:dual_submission_pool_base, used_tag2_layout_templates: used_templates) }
+        Array.new(pool_count) do
+          associated(:dual_submission_pool_base, used_tag2_layout_templates: used_tag2_templates, used_tag_layout_templates: used_tag_templates)
+        end
       end
     end
   end

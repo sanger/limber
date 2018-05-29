@@ -124,7 +124,10 @@ shared_examples 'it only allows creation from charged and passed plates with def
       end
 
       context 'with a previously passed library and a new repool' do
-        let(:parent) { build :plate, pools: pools }
+        let(:parent) do
+          build :plate,
+                pools: pools
+        end
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         let(:pools) do

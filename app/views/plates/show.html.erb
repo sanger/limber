@@ -14,7 +14,7 @@
         <h2 id="plate-title" class="card-title">
           <%= @presenter.title %>
           <%= state_badge(@presenter.state) %>
-          <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", :size=>"32x32") %>
+          <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", size: "32x32") %>
         </h2>
       </div>
       <%= render partial: 'warnings', locals: { presenter: @presenter } %>

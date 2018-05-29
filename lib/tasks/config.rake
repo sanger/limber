@@ -9,7 +9,7 @@ namespace :config do
   require Rails.root.join('config', 'robots')
 
   task generate: :environment do
-    api = Sequencescape::Api.new(Limber::Application.config.api_connection_options)
+    api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
     label_templates = YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby
 
     puts 'Fetching submission_templates...'

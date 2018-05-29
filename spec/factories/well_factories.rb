@@ -21,6 +21,20 @@ FactoryBot.define do
     end
   end
 
+  factory :well_v2, class: Sequencescape::Api::V2::Well do
+    position 'A1'
+    state 'passed'
+
+    transient do
+      qc_results []
+    end
+
+    after(:build) do |well, evaluator|
+      RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results)
+    end
+    skip_create
+  end
+
   factory :well_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
     size 96
 

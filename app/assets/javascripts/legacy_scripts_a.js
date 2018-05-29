@@ -18,20 +18,7 @@
 
 
   $.extend(SCAPE, {
-  //temporarily used until page ready event sorted... :(
-  //This is a copy of the template held in the tagging page.
-  tag_palette_template:
-    '<li class="ui-li ui-li-static ui-body-c">'+
-    '<div class="available-tag palette-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
-    '</li>',
 
-  //temporarily used until page ready event sorted... :(
-  //This is a copy of the template held in the tagging page.
-  substitution_tag_template:
-    '<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
-    '<div class="substitute-tag palette-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%= replacement_tag_id %></div>'+
-    '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
-    '</li>',
   animateWell: function() {
     if ($(this).children().length < 2) { return; }
     this.pos = 0;

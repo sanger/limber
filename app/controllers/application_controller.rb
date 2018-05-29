@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   include SessionHelper
 
   def api_connection_options
-    Limber::Application.config.api_connection_options.dup
+    Limber::Application.config.api.v1.connection_options.dup
   end
 
   protect_from_forgery

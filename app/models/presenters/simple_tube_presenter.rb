@@ -41,10 +41,6 @@ module Presenters
       state :passed do
         include Statemachine::StateAllowsChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
-
-        def default_child_purpose
-          purpose.children.first
-        end
       end
     end
 

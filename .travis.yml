@@ -13,16 +13,16 @@ node_js:
   - '7'
 env: TZ=Europe/London
 install:
-  - nvm install v9.11.1
+  - nvm install node
   - node -v
   - npm i -g yarn
   - yarn
   - bundle install
 before_script:
-  - bundle exec rails webpacker:verify_install
+- bundle exec rails webpacker:verify_install
 script:
-  - rubocop
-  - bundle exec rake
+- bundle exec rake
+- bundle exec rubocop
 before_deploy: "./compile-build"
 deploy:
   provider: releases

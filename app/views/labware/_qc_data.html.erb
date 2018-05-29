@@ -1,6 +1,6 @@
 <%= card title: 'Attach files', without_block: true do %>
   <div class='card-body'>
-    <%= form_tag("#{@presenter.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
+    <%= form_tag("#{@presenter.uuid}/qc_files/", multipart: true, method: 'post', authenticity_token: true) do %>
       <div>
         <label class="custom-file">
           <input type="file" id="qc_file" name="qc_file"/>
