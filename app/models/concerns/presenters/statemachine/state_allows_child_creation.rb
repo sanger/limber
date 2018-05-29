@@ -8,12 +8,6 @@ module Presenters::Statemachine
       nil
     end
 
-    # Returns the child plate purposes that can be created in the passed state.  Typically
-    # this is only one, but it specifically excludes QC plates.
-    def default_child_purpose
-      labware.plate_purpose.children.detect(&:not_qc?)
-    end
-
     def compatible_pipeline?(pipelines)
       pipelines.nil? ||
         pipelines.include?(active_request_type)

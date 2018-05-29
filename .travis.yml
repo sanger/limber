@@ -19,10 +19,10 @@ install:
   - yarn
   - bundle install
 before_script:
-  - bundle exec rails webpacker:verify_install
+- bundle exec rails webpacker:verify_install
 script:
-  - rubocop
-  - bundle exec rake
+- bundle exec rake
+- bundle exec rubocop
 before_deploy: "./compile-build"
 deploy:
   provider: releases

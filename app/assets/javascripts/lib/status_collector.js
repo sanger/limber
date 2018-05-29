@@ -14,7 +14,7 @@
   var monitor = function(state,collector) {
     this.valid     = state||false;
     this.collector = collector;
-  }
+  };
 
   monitor.prototype = {
     pass: function () {
@@ -25,12 +25,12 @@
       this.valid = false;
       this.collector.collate();
     }
-  }
+  };
 
   statusCollector.prototype = {
     register: function (status) {
       var new_monitor = new monitor(status,this);
-      this.monitors.push(new_monitor)
+      this.monitors.push(new_monitor);
       return new_monitor;
     },
     collate: function () {
@@ -39,4 +39,4 @@
       }
       return this.onSuccess();
     }
-  }
+  };

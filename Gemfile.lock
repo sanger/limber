@@ -1,15 +1,4 @@
 GIT
-  remote: git://github.com/jamesglover/sequencescape-client-api.git
-  revision: 45dd4a121d6aa495e5700046d5d75d17280bd9fa
-  branch: rails_4_rc_li
-  specs:
-    sequencescape-client-api (0.3.3)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      i18n
-      yajl-ruby (>= 1.1.0)
-
-GIT
   remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
@@ -28,6 +17,17 @@ GIT
   branch: development
   specs:
     sanger_barcode_format (0.0.2)
+
+GIT
+  remote: git://github.com/sanger/sequencescape-client-api.git
+  revision: 1e13c3cb96ecf26d392a451a0bb4224c96c777db
+  branch: rails_4
+  specs:
+    sequencescape-client-api (0.3.3)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      i18n
+      yajl-ruby (>= 1.3.1)
 
 GEM
   remote: https://rubygems.org/

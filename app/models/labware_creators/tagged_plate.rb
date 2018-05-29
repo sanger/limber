@@ -5,6 +5,8 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
+    attr_reader :child
+
     self.page = 'tagged_plate'
     self.attributes = %i[
       api purpose_uuid parent_uuid user_uuid
@@ -13,43 +15,26 @@ module LabwareCreators
     ]
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
-    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :requires_tag2? }
+    validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
     delegate :height, :width, :size, to: :labware
 
-    attr_reader :child
-
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
 
+    delegate :used?, :list, :names, to: :tag_plates, prefix: true
+    delegate :used?, :list, :names, to: :tag_tubes, prefix: true
+
     def tag_plate=(params)
-      return nil if params.blank?
-      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
     end
 
     def tag2_tube=(params)
-      return nil if params.blank?
-      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
     end
 
     def initialize(*args, &block)
       super
       parent.populate_wells_with_pool
-    end
-
-    def substitutions
-      @substitutions ||= {}
-    end
-
-    def tag_groups
-      @tag_groups ||= LabwareCreators::Tagging::TagCollection.new(api, parent, purpose_uuid).available
-    end
-
-    def tag2s
-      @tag2s ||= LabwareCreators::Tagging::Tag2Collection.new(api, parent).available
-    end
-
-    def tag2_names
-      tag2s.values.map(&:name)
     end
 
     def create_plate!
@@ -79,19 +64,56 @@ module LabwareCreators
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
 
+    #
+    # Returns an array of acceptable source of tag2. The rules are as follows:
+    # - If we don't need a tag2, allow anything, it doesn't matter.
+    # - If we've already started using one method, enforce it for the rest of the pool
+    # - Otherwise, anything goes
+    # Note: The order matter here, as pools tagged with tubes will still list plates
+    # for the i5 (tag) tag.
+    #
+    # @return [Array<String>] An array of acceptable sources, 'plate' and/or 'tube'
+    def acceptable_tag2_sources
+      return ['tube'] if tag_tubes_used?
+      return ['plate'] if tag_plates_used?
+      %w[tube plate]
+    end
+
     def tag2_field
-      yield if requires_tag2?
+      yield if allow_tag_tube?
       nil
     end
 
+    def allow_tag_tube?
+      acceptable_tag2_sources.include?('tube')
+    end
+
+    def tag_plate_dual_index?
+      return false if tag_tubes_used?
+      return true if tag_plates_used?
+      nil
+    end
+
+    def help
+      return 'single' unless requires_tag2?
+      "dual_#{acceptable_tag2_sources.join('_')}"
+    end
+
     private
+
+    def tag_plates
+      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
+    end
+
+    def tag_tubes
+      @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, labware)
+    end
 
     def create_labware!
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,
-          user: user_uuid,
-          substitutions: substitutions.reject { |_, new_tag| new_tag.blank? }
+          user: user_uuid
         )
 
         if tag2_tube_barcode.present?

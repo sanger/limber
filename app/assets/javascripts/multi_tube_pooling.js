@@ -10,11 +10,7 @@
 
     var newScanned, tubeCollector, siblingTube, barcodeRegister = {}
 
-    $.ajaxSetup({
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      }
-    });
+    //= require lib/ajax_support
 
     siblingTube = function(list_element,collector) {
       this.listElement = $(list_element);

@@ -17,7 +17,9 @@ require 'rails'
 ].each do |railtie|
   begin
     require railtie.to_s
-  rescue LoadError
+  rescue LoadError # rubocop:disable Lint/HandleExceptions
+    # Do nothing. We're mimicking rails/all here, so
+    # use the same behaviour.
   end
 end
 # Require the gems listed in Gemfile, including any gems
