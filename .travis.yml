@@ -13,7 +13,7 @@ node_js:
   - '7'
 env: TZ=Europe/London
 install:
-  - nvm install v9.11.1
+  - nvm install node
   - node -v
   - npm i -g yarn
   - yarn
