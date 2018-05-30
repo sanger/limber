@@ -19,8 +19,8 @@ describe 'exports/concentrations.csv.erb' do
         ['Plate Barcode', 'DN1S'],
         [],
         %w[Well Concentration Pick Pool],
-        %w[A1 1 1 1],
-        %w[B1 1 1 2]
+        %w[A1 1.5 1 1],
+        %w[B1 1.5 1 2]
       ]
     end
 
