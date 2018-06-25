@@ -80,6 +80,7 @@ scRNA-384 Lib PCR:
   - scRNA-384 End Prep
   :tag_layout_templates:
   - '384sc'
+  - 'TSsc384'
   :suggest_library_pass_for:
   - limber_scrna
 scRNA Lib Pool:
