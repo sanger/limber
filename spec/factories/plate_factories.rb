@@ -39,6 +39,7 @@ FactoryBot.define do
       purpose_name 'example-purpose'
       purpose_uuid 'example-purpose-uuid'
       pool_sizes   []
+      empty_wells []
       library_type 'Standard'
       request_type 'Limber Library Creation'
       stock_plate_barcode 2
@@ -124,13 +125,15 @@ FactoryBot.define do
   trait :has_pools_hash do
     transient do
       extra_pool_info { {} }
+      empty_wells []
     end
     pools do
       wells = WellHelpers.column_order(size).dup
+      pooled_wells = wells.reject { |w| empty_wells.include?(w) }
       pool_hash = {}
       pool_sizes.each_with_index do |pool_size, index|
         pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+          'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
           'insert_size' => { from: 100, to: 300 },
           'library_type' => { name: library_type },
           'request_type' => request_type,
