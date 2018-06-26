@@ -45,8 +45,6 @@ end
 
 group :development, :test do
   gem 'uglifier'
-  # See https://github.com/rails/execjs#readme for more supported runtimes
-  gem 'therubyracer', require: false
   # Bootstrap is a css framework
   gem 'bootstrap'
   gem 'coffee-rails', require: false

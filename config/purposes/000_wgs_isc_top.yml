@@ -45,6 +45,10 @@ LB Lib PCR:
   - pWGS UDI tag layout v2 B
   - pWGS UDI tag layout v2 C
   - pWGS UDI tag layout v2 D
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
   :parents:
   - LB End Prep
 LB Lib PCR-XP:

@@ -166,7 +166,6 @@ GEM
       faraday_middleware (~> 0.9)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.19)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -247,7 +246,6 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    ref (2.0.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -302,9 +300,6 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     state_machines (0.5.0)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -382,7 +377,6 @@ DEPENDENCIES
   select2-rails
   sequencescape-client-api (>= 0.3.3)!
   state_machines
-  therubyracer
   thin
   travis
   uglifier
