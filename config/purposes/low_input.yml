@@ -15,7 +15,7 @@ LBR Globin:
   :expected_request_types:
   - limber_rnaag
   :parents:
-    - LBR mRNA Cap
+  - LBR mRNA Cap
 LBR Ribo DNase:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
