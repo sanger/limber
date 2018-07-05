@@ -5,8 +5,6 @@ scRNA Stock:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
-  :parents:
-  - GnT Stock
 scRNA-384 Stock:
   :asset_type: plate
   :stock_plate: true
@@ -22,6 +20,7 @@ scRNA cDNA-XP:
   :input_plate: false
   :parents:
   - scRNA Stock
+  - GnT Stock
 scRNA-384 cDNA-XP:
   :asset_type: plate
   :stock_plate: false
