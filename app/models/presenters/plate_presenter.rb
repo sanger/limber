@@ -82,9 +82,9 @@ class Presenters::PlatePresenter
 
   def csv_file_links
     links = [
-      ["Download Concentration CSV", [:limber_plate, :export, { id: 'concentrations', limber_plate_id: human_barcode, format: :csv }]]
+      ['Download Concentration CSV', [:limber_plate, :export, { id: 'concentrations', limber_plate_id: human_barcode, format: :csv }]]
     ]
-    links << ["Download Worksheet CSV", { format: :csv }] if csv.present?
+    links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
     links
   end
 

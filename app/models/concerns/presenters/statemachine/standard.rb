@@ -4,7 +4,6 @@ require_dependency 'presenters/statemachine'
 module Presenters::Statemachine
   module Standard
     extend ActiveSupport::Concern
-
     included do
       include Shared
 

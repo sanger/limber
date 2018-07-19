@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+# CAUTION: This is set to http while we resolve SSL issues. It should be set back to https ASAP
+source 'http://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
@@ -20,8 +21,8 @@ gem 'json_api_client'
 # Older Sequencescape API
 gem 'sequencescape-client-api', '>= 0.3.3',
     # Should be switched back to sanger + rails_4 for deployment
-    github: 'jamesglover/sequencescape-client-api',
-    branch: 'rails_4_rc_li',
+    github: 'sanger/sequencescape-client-api',
+    branch: 'rails_4',
     require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
@@ -45,8 +46,6 @@ end
 
 group :development, :test do
   gem 'uglifier'
-  # See https://github.com/rails/execjs#readme for more supported runtimes
-  gem 'therubyracer', require: false
   # Bootstrap is a css framework
   gem 'bootstrap'
   gem 'coffee-rails', require: false

@@ -4,7 +4,7 @@ require 'csv'
 
 class LabwareController < ApplicationController
   before_action :locate_labware, only: :show
-  before_action :get_printers, only: [:show]
+  before_action :find_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
@@ -29,7 +29,7 @@ class LabwareController < ApplicationController
   def update
     state_changer.move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
-    notice = String.new("Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}.")
+    notice = +"Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
 
     respond_to do |format|
@@ -64,7 +64,7 @@ class LabwareController < ApplicationController
     @labware ||= locate_labware_identified_by(params[:id])
   end
 
-  def get_printers
+  def find_printers
     @printers = api.barcode_printer.all
   end
 

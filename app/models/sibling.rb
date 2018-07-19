@@ -10,11 +10,14 @@ class Sibling
   attr_reader :name, :uuid, :state, :barcode
 
   def initialize(options)
-    return missing_sibling unless options.respond_to?(:[])
-    @name = options['name']
-    @uuid = options['uuid']
-    @barcode = options['ean13_barcode']
-    @state = options['state']
+    if options.respond_to?(:[])
+      @name = options['name']
+      @uuid = options['uuid']
+      @barcode = options['ean13_barcode']
+      @state = options['state']
+    else
+      missing_sibling
+    end
   end
 
   def message

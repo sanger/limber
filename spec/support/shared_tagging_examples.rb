@@ -51,15 +51,16 @@ shared_context 'a tag plate creator' do
     )
   end
 
+  let(:tag_layout_template) { json(:tag_layout_template, uuid: tag_template_uuid) }
+
   let!(:tag_layout_creation_request) do
-    stub_api_get(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
+    stub_api_get(tag_template_uuid, body: tag_layout_template)
     stub_api_post(
       tag_template_uuid,
       payload: {
         tag_layout: {
           plate: tag_plate_uuid,
-          user: user_uuid,
-          substitutions: {}
+          user: user_uuid
         }
       },
       body: '{}'
@@ -83,8 +84,10 @@ shared_context 'a tag plate creator with dual indexing' do
     )
   end
 
+  let(:tag2_layout_template) { json(:tag2_layout_template, uuid: tag2_template_uuid) }
+
   let!(:tag2_layout_request) do
-    stub_api_get(tag2_template_uuid, body: json(:tag2_layout_template, uuid: tag2_template_uuid))
+    stub_api_get(tag2_template_uuid, body: tag2_layout_template)
     stub_api_post(
       tag2_template_uuid,
       payload: {

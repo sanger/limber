@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :pmb do
   task register_label_templates: :environment do
     [{ 'name' => 'limber_tube_label_template',
@@ -139,5 +138,3 @@ namespace :pmb do
     end
   end
 end
-
-# rubocop:enable Metrics/BlockLength
