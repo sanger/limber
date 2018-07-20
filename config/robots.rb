@@ -157,6 +157,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  bravo_robot transition_to: 'started' do
+    from 'scRNA Stock', bed(4)
+    to 'scRNA cDNA-XP', car('1,4')
+  end
+
   custom_robot(
     'star-384-scrna-384-stock-to-scrna-384-cdna-xp',
     name: 'STAR-384 scRNA Stock => scRNA-384 cDNA-XP',
