@@ -55,9 +55,6 @@ scRNA Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  warnings:
-    pcr_cycles_not_in:
-      - 8
   :parents:
   - scRNA End Prep
   :tag_layout_templates:
@@ -74,9 +71,6 @@ scRNA-384 Lib PCR:
   :creator_class: LabwareCreators::TaggedPlate
   :label_template: plate_6mm_double
   :size: 384
-  warnings:
-    pcr_cycles_not_in:
-      - 8
   :parents:
   - scRNA-384 End Prep
   :tag_layout_templates:
