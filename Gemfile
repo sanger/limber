@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+# CAUTION: This is set to http while we resolve SSL issues. It should be set back to https ASAP
+source 'http://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
