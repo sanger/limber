@@ -7,8 +7,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   def latest_concentration
     qc_results.select { |qc| qc.key.casecmp('molarity').zero? || qc.key.casecmp('concentration').zero? }
               .select { |qc| qc.units.casecmp('nM').zero? }
-              .sort_by(&:created_at)
-              .last
+              .max_by(&:created_at)
   end
 
   def passed?

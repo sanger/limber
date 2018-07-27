@@ -106,12 +106,6 @@ Naming/UncommunicativeMethodParamName:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Performance/UnneededSort:
-  Exclude:
-    - 'app/sequencescape/sequencescape/api/v2/well.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Rails/ActiveRecordAliases:
   Exclude:
     - 'app/models/plate_metadata.rb'
