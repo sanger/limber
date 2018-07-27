@@ -57,14 +57,6 @@ Rails/ActiveRecordAliases:
     - 'app/models/plate_metadata.rb'
 
 # Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: numeric, symbolic
-Rails/HttpStatus:
-  Exclude:
-    - 'app/controllers/search_controller.rb'
-
-# Offense count: 2
 # Configuration parameters: Include.
 # Include: app/controllers/**/*.rb
 Rails/LexicallyScopedActionFilter:
@@ -100,21 +92,6 @@ Style/AccessModifierDeclarations:
 # Offense count: 113
 Style/Documentation:
   Enabled: false
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/ExpandPathArguments:
-  Exclude:
-    - 'Rakefile'
-    - 'spec/rails_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-Style/HashSyntax:
-  Exclude:
-    - 'spec/spec_helper.rb'
 
 # Offense count: 2
 Style/MethodMissingSuper:

@@ -56,7 +56,7 @@ class SearchController < ApplicationController
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
       format.html { render :new }
-      format.json { render json: { error: exception.message }, status: 404 }
+      format.json { render json: { error: exception.message }, status: :not_found }
     end
   end
 
@@ -85,7 +85,7 @@ class SearchController < ApplicationController
     end
   rescue Sequencescape::Api::ResourceNotFound => exception
     respond_to do |format|
-      format.json { render json: { 'general' => exception.message }, status: 404 }
+      format.json { render json: { 'general' => exception.message }, status: :not_found }
     end
   end
 
