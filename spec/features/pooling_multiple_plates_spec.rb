@@ -113,10 +113,10 @@ feature 'Multi plate pooling', js: true do
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('Pooled example')
     click_on('Add an empty Pool Plate plate')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 2', with: plate_barcode_2)
+    scan_in('Plate 1', with: plate_barcode_1)
+    scan_in('Plate 2', with: plate_barcode_2)
     # Trigger a blur by filling in the next box
-    fill_in('Plate 3', with: '')
+    scan_in('Plate 3', with: '')
     expect(page).to have_content('DN1: A1, B1')
     expect(page).to have_content('DN2: A1, B1')
     click_on('Make Pre-Cap pool Plate')

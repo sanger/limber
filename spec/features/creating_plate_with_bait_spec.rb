@@ -11,6 +11,7 @@ feature 'Creating a plate with bait', js: true do
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:example_plate)         { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
+  let(:child_plate)         { json :plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
   let(:transfer_template_uuid) { 'transfer-1-12' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
@@ -37,10 +38,13 @@ feature 'Creating a plate with bait', js: true do
 
     # These stubs are required to create a new plate with baits
     stub_api_post('plate_creations', body: json(:plate_creation), payload: { plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid } })
-    stub_api_get('transfer-columns-uuid', body: transfer_template)
-    stub_api_post('transfer-columns-uuid', body: json(:transfer), payload: { transfer: { source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
+    stub_api_get(transfer_template_uuid, body: transfer_template)
+    stub_api_post(transfer_template_uuid, body: json(:transfer), payload: { transfer: { source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
     stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
     # end of stubs for creating a new plate with baits
+    # Stub the requests for the next plate page
+    stub_api_get('child-uuid', body: child_plate)
+    stub_api_get('child-uuid', 'wells', body: json(:well_collection))
   end
 
   scenario 'of a recognised type' do
@@ -51,16 +55,5 @@ feature 'Creating a plate with bait', js: true do
     expect(page).to have_content('Carefully check the bait layout')
     click_on 'Create plate'
     # I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
-    end
   end
 end

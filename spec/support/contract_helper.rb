@@ -45,6 +45,14 @@ module ContractHelper
       end
     end
 
+    def inject_into(spec)
+      builder = self
+      spec.before(:each) { builder.send(:setup_request_and_response_mock) }
+      spec.after(:each)  { builder.send(:validate_request_and_response_called, self) }
+    end
+
+    private
+
     def contract(contract_name)
       path = @root.dup
       until path.empty?
@@ -54,12 +62,10 @@ module ContractHelper
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"
     end
-    private :contract
 
     def setup_request_and_response_mock
       stub_request(@http_verb, @url).with(@conditions).to_return(@content)
     end
-    private :setup_request_and_response_mock
 
     def validate_request_and_response_called(scope)
       if @times == :any
@@ -69,13 +75,6 @@ module ContractHelper
       else
         scope.expect(a_request(@http_verb, @url).with(@conditions)).to have_been_made.at_least_once
       end
-    end
-    private :validate_request_and_response_called
-
-    def inject_into(spec)
-      builder = self
-      spec.before(:each) { builder.send(:setup_request_and_response_mock) }
-      spec.after(:each)  { builder.send(:validate_request_and_response_called, self) }
     end
   end
 

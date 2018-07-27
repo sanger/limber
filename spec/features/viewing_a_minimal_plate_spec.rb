@@ -130,9 +130,7 @@ feature 'Viewing a plate', js: true do
         expect(page).to have_content('Print tube labels')
         select(barcode_printer, from: 'Barcode Printer')
 
-        job = instance_double('Print_job', execute: true)
-
-        expect(PrintJob).to receive(:new).and_return(job).twice
+        allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
 
         click_on('Print Label')
       end

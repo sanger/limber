@@ -109,10 +109,10 @@ feature 'Poling multiple plates into a tube', js: true do
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 2', with: plate_barcode_2)
+    scan_in('Plate 1', with: plate_barcode_1)
+    scan_in('Plate 2', with: plate_barcode_2)
     # Trigger a blur by filling in the next box
-    fill_in('Plate 3', with: '')
+    scan_in('Plate 3', with: '')
     click_on('Make Pool')
     expect(page).to have_text('New empty labware added to the system')
     expect(page).to have_text('Pool tube')
@@ -130,8 +130,8 @@ feature 'Poling multiple plates into a tube', js: true do
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 3', with: plate_barcode_3)
+    scan_in('Plate 1', with: plate_barcode_1)
+    scan_in('Plate 3', with: plate_barcode_3)
     expect(page).to have_text('Scanned plates have matching tags')
   end
 end
