@@ -42,20 +42,20 @@ end
 Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--headless')
- # options.add_argument('--disable_gpu')
+  # options.add_argument('--disable_gpu')
   options.add_argument('--window-size=1600,3200')
   driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   # enable_chrome_headless_downloads(driver, DownloadHelpers::PATH.to_s)
 end
 
 Capybara.register_server :thin do |app, port, host|
-    require 'rack/handler/thin'
-   Rack::Handler::Thin.run(app, :Port => port, :Host => host)
+  require 'rack/handler/thin'
+  Rack::Handler::Thin.run(app, :Port => port, :Host => host)
 end
 
 Capybara.server = :thin
 
-Capybara.javascript_driver = ENV.fetch('JS_DRIVER','headless_chrome').to_sym
+Capybara.javascript_driver = ENV.fetch('JS_DRIVER', 'headless_chrome').to_sym
 Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|

@@ -11,7 +11,7 @@ feature 'Creating a plate with bait', js: true do
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:example_plate)         { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
-  let(:child_plate)         { json :plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
+  let(:child_plate) { json :plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
   let(:transfer_template_uuid) { 'transfer-1-12' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
