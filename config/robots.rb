@@ -141,21 +141,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot(
-    'nx-96-scrna-stock-to-scrna-cdna-xp',
-    name: 'nx-96 scRNA Stock => scRNA cDNA-XP',
-    layout: 'bed',
-    beds: {
-      bed(1).barcode => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 1' },
-      bed(9).barcode   => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
-      bed(2).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 2' },
-      bed(10).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
-      bed(3).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 3' },
-      bed(11).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
-      bed(4).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 4' },
-      bed(12).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
-    }
-  )
+  bravo_robot transition_to: 'started' do
+    from 'scRNA Stock', bed(4)
+    to 'scRNA cDNA-XP', car('2,3')
+  end
 
   custom_robot(
     'star-384-scrna-384-stock-to-scrna-384-cdna-xp',
@@ -510,4 +499,53 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       bed(5).barcode => { purpose: 'GBS PCR2', states: ['pending'], label: 'Bed 5', parent: bed(4).barcode, target_state: 'started' }
     }
   )
+
+  # GnT Stuff, might change a lot.
+  custom_robot(
+    'hamilton-gnt-stock-to-gnt-scdna-stock',
+    name: 'Hamilton GnT Stock => GnT scDNA Stock and scRNA Stock',
+    layout: 'bed',
+    beds: {
+      bed(3).barcode => { purpose: 'GnT Stock', states: ['passed'], label: 'Bed 1' },
+      bed(10).barcode => { purpose: 'GnT scDNA Stock', states: ['pending'], label: 'Bed 10', parent: bed(3).barcode, target_state: 'started' }
+    }
+  )
+
+  custom_robot(
+    'hamilton-gnt-scdna-stock',
+    name: 'Hamilton GnT scDNA Stock',
+    layout: 'bed',
+    verify_robot: true,
+    beds: {
+      bed(10).barcode => { purpose: 'GnT scDNA Stock', states: ['started'], label: 'Bed 10', target_state: 'passed' }
+    }
+  )
+
+  bravo_robot transition_to: 'started' do
+    from 'GnT Pico-XP', bed(4)
+    to 'GnT Pico End Prep', car('1,4')
+  end
+
+  custom_robot('bravo-pico-end-prep',
+               name: 'bravo GnT Pico End Prep',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => { purpose: 'GnT Pico End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+               })
+
+  bravo_robot do
+    from 'GnT Pico End Prep', car('1,4')
+    to 'GnT Pico Lib PCR', bed(6)
+  end
+
+  bravo_robot do
+    from 'GnT scDNA Stock', bed(4)
+    to 'GnT Pico-XP', car('2,3')
+  end
+
+  bravo_robot do
+    from 'GnT scDNA Stock', bed(4)
+    to 'GnT MDA Norm', car('2,3')
+  end
 end

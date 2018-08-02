@@ -1,0 +1,79 @@
+---
+GnT Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+GnT scDNA Stock:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - GnT Stock
+GnT Pico-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - GnT scDNA Stock
+GnT Pico End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - GnT Pico-XP
+GnT Pico Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :parents:
+  - GnT Pico End Prep
+GnT MDA-XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - GnT scDNA Stock
+GnT MDA Norm:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :parents:
+  - GnT scDNA Stock
+GnT Pico Lib Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GnT Pico Lib PCR
+GnT Pico Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GnT Pico Lib Pool
+GnT Pico Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - GnT Pico Lib Pool XP
+

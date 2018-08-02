@@ -19,6 +19,11 @@ FactoryBot.define do
         associated(aliquot_factory, sample_name: "sample_#{location}_#{i}", sample_id: "SAM#{location}#{i}", sample_uuid: "example-sample-uuid-#{i}")
       end
     end
+
+    factory :empty_well do
+      aliquots []
+      state 'unknown'
+    end
   end
 
   factory :well_v2, class: Sequencescape::Api::V2::Well do
@@ -50,12 +55,17 @@ FactoryBot.define do
       default_state 'pending'
       custom_state({})
       aliquot_factory :aliquot
+      empty_wells []
     end
 
     wells do
       locations.each_with_index.map do |location, i|
-        state = custom_state[location] || default_state
-        associated(:well, location: location, uuid: "example-well-uuid-#{i}", state: state, aliquot_factory: aliquot_factory)
+        if empty_wells.include?(location)
+          associated(:empty_well, location: location, uuid: "example-well-uuid-#{i}")
+        else
+          state = custom_state[location] || default_state
+          associated(:well, location: location, uuid: "example-well-uuid-#{i}", state: state, aliquot_factory: aliquot_factory)
+        end
       end
     end
   end
