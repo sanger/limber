@@ -9,6 +9,10 @@ module Presenters
     validates_with Validators::SuboptimalValidator
     validates_with Validators::StockStateValidator, if: :pending?
 
+    def input_barcode
+      barcode
+    end
+
     def control_state_change
       # You cannot change the state of the stock plate
     end

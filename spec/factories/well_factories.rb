@@ -26,18 +26,38 @@ FactoryBot.define do
     end
   end
 
-  factory :well_v2, class: Sequencescape::Api::V2::Well do
-    position 'A1'
-    state 'passed'
+  factory :v2_well, class: Sequencescape::Api::V2::Well do
+    skip_create
 
     transient do
+      location 'A1'
       qc_results []
+      aliquot_count 1
+      outer_request { create request_factory, state: library_state }
+      aliquot_factory :v2_aliquot
+      aliquots { create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request }
+      request_factory :library_request
+      requests_as_source []
+      requests_as_target []
+      library_state { 'pending' }
     end
+
+    position { { 'name' => location } }
+    state 'passed'
 
     after(:build) do |well, evaluator|
       RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results)
+      RSpec::Mocks.allow_message(well, :aliquots).and_return(evaluator.aliquots)
+      RSpec::Mocks.allow_message(well, :requests_as_source).and_return(evaluator.requests_as_source)
+      RSpec::Mocks.allow_message(well, :requests_as_target).and_return(evaluator.requests_as_target)
     end
-    skip_create
+
+    factory :v2_stock_well do
+      transient do
+        aliquot_factory :v2_stock_aliquot
+        requests_as_source { [outer_request].compact }
+      end
+    end
   end
 
   factory :well_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
@@ -107,6 +127,37 @@ FactoryBot.define do
         }
       end
     end
+  end
+
+  factory :v2_aliquot, class: Sequencescape::Api::V2::Aliquot do
+    transient do
+      library_state 'pending'
+      outer_request { create :library_request, state: library_state }
+      request { outer_request }
+    end
+
+    tag_oligo nil
+    tag2_oligo nil
+    suboptimal false
+
+    after(:build) do |aliquot, evaluator|
+      RSpec::Mocks.allow_message(aliquot, :request).and_return(evaluator.request)
+    end
+
+    factory :v2_tagged_aliquot do
+      sequence(:tag_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+      sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+    end
+
+    factory :v2_suboptimal_aliquot do
+      suboptimal true
+    end
+
+    factory :v2_stock_aliquot do
+      request nil
+    end
+
+    skip_create
   end
 
   factory :sample, class: Sequencescape::Sample, traits: [:api_object] do

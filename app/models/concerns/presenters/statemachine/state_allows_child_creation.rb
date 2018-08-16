@@ -10,14 +10,14 @@ module Presenters::Statemachine
 
     def compatible_pipeline?(pipelines)
       pipelines.nil? ||
-        pipelines.include?(active_request_type)
+        (pipelines & active_request_types).present?
     end
 
     def suggested_purposes
       Settings.purposes.each do |uuid, purpose_settings|
-        next unless purpose_settings.parents&.include?(labware.purpose.name) &&
-                    compatible_pipeline?(purpose_settings.expected_request_types) &&
-                    LabwareCreators.class_for(uuid).support_parent?(labware)
+        next unless  purpose_settings.parents&.include?(labware.purpose.name) &&
+                     compatible_pipeline?(purpose_settings.expected_request_types) &&
+                     LabwareCreators.class_for(uuid).support_parent?(labware)
         yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end

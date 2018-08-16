@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
-describe Presenters::PlatePresenter do
+RSpec.describe Presenters::PlatePresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -23,17 +23,19 @@ describe Presenters::PlatePresenter do
   end
 
   let(:labware) do
-    build :plate,
+    build :v2_plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
-          pool_sizes: [2, 2],
+          pool_sizes: [48, 48],
           created_at: '2016-10-19 12:00:00 +0100'
   end
 
   before(:each) do
     stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
-    Settings.purposes = {}
+    Settings.purposes = {
+      'stock-plate-purpose-uuid' => build(:stock_plate_config)
+    }
   end
 
   subject(:presenter) do
@@ -46,9 +48,9 @@ describe Presenters::PlatePresenter do
   it 'returns PlateLabel attributes when PlateLabel is defined in the purpose settings' do
     Settings.purposes[labware.purpose.uuid] = build(:purpose_config)
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                       bottom_left: 'DN 1',
-                       top_right: 'DN2',
-                       bottom_right: 'Limber Cherrypicked',
+                       bottom_left: 'DN1S',
+                       top_right: 'DN2T',
+                       bottom_right: "WGS #{purpose_name}",
                        barcode: '1220000001831' }
     expect(presenter.label.attributes).to eq(expected_label)
   end
@@ -56,10 +58,10 @@ describe Presenters::PlatePresenter do
   it 'returns PlateDoubleLabel attributes when PlateDoubleLabel is defined in the purpose settings' do
     Settings.purposes[labware.purpose.uuid] = build(:purpose_config, label_class: 'Labels::PlateDoubleLabel')
     expected_label = {
-      attributes: { right_text: 'DN2',
-                    left_text: 'DN 1',
+      attributes: { right_text: 'DN2T',
+                    left_text: 'DN1S',
                     barcode: '1220000001831' },
-      extra_attributes: { right_text: 'DN2 Limber Cherrypicked',
+      extra_attributes: { right_text: "DN2T WGS #{purpose_name}",
                           left_text: Time.zone.today.strftime('%e-%^b-%Y') }
     }
     actual_label = {
@@ -73,7 +75,7 @@ describe Presenters::PlatePresenter do
 
   context 'a plate with conflicting pools' do
     let(:labware) do
-      build :plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
+      create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
     end
 
     it 'reports as invalid' do

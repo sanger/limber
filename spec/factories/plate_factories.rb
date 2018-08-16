@@ -6,22 +6,81 @@ require_relative '../support/factory_bot_extensions'
 FactoryBot.define do
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
     skip_create
+
     transient do
-      wells []
-      size 96
-      pool_sizes   []
+      well_count { number_of_rows * number_of_columns }
+      well_factory :v2_well
+      request_factory :library_request
+      outer_requests do
+        pool_sizes.each_with_index.flat_map do |size, index|
+          create_list request_factory, size, pcr_cycles: pool_prc_cycles[index], state: library_state
+        end
+      end
+      wells do
+        Array.new(well_count) do |i|
+          create well_factory, location: WellHelpers.well_at_column_index(i, size), state: state, outer_request: outer_requests[i]
+        end
+      end
+      purpose_name 'example-purpose'
+      purpose_uuid 'example-purpose-uuid'
+      purpose { create :v2_plate_purpose, name: purpose_name, uuid: purpose_uuid }
+      pool_sizes []
       library_type 'Standard'
       request_type 'Limber Library Creation'
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       for_multiplexing false
       pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
-      pool_complete false
+      library_state 'pending'
+      stock_plate { create :v2_stock_plate }
+      ancestors { [stock_plate] }
+      transfer_targets { [] }
     end
 
-    has_pools_hash
+    uuid { SecureRandom.uuid }
+    number_of_rows 8
+    number_of_columns 12
+    state 'pending'
+    created_at '2017-06-29T09:31:59.000+01:00'
+    updated_at '2017-06-29T09:31:59.000+01:00'
 
+    # has_pools_hash
+
+    # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |plate, evaluator|
       RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
+      RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
+      ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
+
+      # Mock the behaviour of the search
+      # This is all a bit inelegant at the moment.
+      RSpec::Mocks.allow_message(ancestors_scope, :where) do |parameters|
+        evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
+      end
+      RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
+      transfer_targets_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
+
+      # Mock the behaviour of the search
+      # This is all a bit inelegant at the moment.
+      RSpec::Mocks.allow_message(transfer_targets_scope, :where) do |parameters|
+        evaluator.transfer_targets.select { |a| parameters[:type].include?(a.type) }
+      end
+      RSpec::Mocks.allow_message(plate, :transfer_targets).and_return(transfer_targets_scope)
+    end
+
+    factory :v2_stock_plate do
+      transient do
+        barcode_number 2
+        well_factory :v2_stock_well
+        purpose_name 'Limber Cherrypicked'
+        purpose_uuid 'stock-plate-purpose-uuid'
+        ancestors []
+      end
+    end
+
+    factory :v2_plate_with_primer_panels do
+      transient do
+        request_factory :gbs_library_request
+      end
     end
   end
 

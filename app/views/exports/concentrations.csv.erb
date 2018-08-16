@@ -1,4 +1,4 @@
-<%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode['human_barcode']], row_sep: "" %>
+<%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode.human], row_sep: "" %>
 <% @pooling_ids = pools_by_id(@plate.pools) %>
 
 <%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>

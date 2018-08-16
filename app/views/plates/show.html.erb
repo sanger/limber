@@ -1,7 +1,7 @@
 <%= page(:'plate-show-page', :'show-page') do %>
   <script type="text/javascript">
     SCAPE.labware = {
-      'state':     '<%= @presenter.labware.state %>',
+      'state':     '<%= @presenter.state %>',
       'tabViews':  {},
       'pools':     <%= @presenter.labware.pools; raw @presenter.labware.pools.to_json %>,
       'uuid':     '<%= @presenter.labware.uuid %>'

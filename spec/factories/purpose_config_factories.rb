@@ -2,8 +2,12 @@
 
 FactoryBot.define do
   factory :purpose_config, class: Hash do
-    skip_create
+    to_create { |instance| Settings.purposes[uuid] = instance }
     initialize_with { attributes }
+
+    transient do
+      uuid 'example-purpose-uuid'
+    end
 
     name 'Plate Purpose'
     creator_class 'LabwareCreators::StampedPlate'
@@ -14,6 +18,17 @@ FactoryBot.define do
     label_class 'Labels::PlateLabel'
     printer_type '96 Well Plate'
     pmb_template 'sqsc_96plate_label_template'
+
+    factory :stock_plate_config do
+      transient do
+        uuid 'stock-plate-purpose-uuid'
+      end
+      name 'Limber Cherrypicked'
+      presenter_class 'Presenters::StockPlatePresenter'
+      stock_plate true
+      cherrypickable_target true
+      input_plate true
+    end
 
     factory :passable_plate do
       suggest_library_pass_for ['Limber Library Creation']

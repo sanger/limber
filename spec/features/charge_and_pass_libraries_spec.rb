@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Charge and pass libraries', js: true do
+RSpec.feature 'Charge and pass libraries', js: true do
   has_a_working_api
 
   let(:user)           { json :user, uuid: user_uuid }
@@ -10,7 +10,7 @@ feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid)     { SecureRandom.uuid }
-  let(:wells_collection) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
+  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: 'passed', position: { 'name' => loc }, aliquot_factory: :v2_tagged_aliquot) } }
   let(:default_tube_printer) { 'tube printer 1' }
   let(:work_completion_request) do
     { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
@@ -29,7 +29,6 @@ feature 'Charge and pass libraries', js: true do
     stub_asset_search(labware_barcode, example_labware)
     # We get the actual plate
     stub_api_get(labware_uuid, body: example_labware)
-    stub_api_get(labware_uuid, 'wells', body: wells_collection)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
   end
@@ -38,6 +37,18 @@ feature 'Charge and pass libraries', js: true do
     let(:submissions) { ['pool-1-uuid', 'pool-2-uuid'] }
     let(:purpose_spec) { build :passable_plate }
     let(:example_labware) { json :plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8] }
+    let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', wells: wells_collection }
+
+    before do
+      2.times do
+        stub_api_v2(
+          'Plate',
+          includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+          where: { uuid: labware_uuid },
+          first: example_plate_v2
+        )
+      end
+    end
 
     scenario 'charge and pass libraries' do
       fill_in_swipecard_and_barcode user_swipecard, labware_barcode

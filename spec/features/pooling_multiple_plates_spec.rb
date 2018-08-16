@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Multi plate pooling', js: true do
+RSpec.feature 'Multi plate pooling', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }

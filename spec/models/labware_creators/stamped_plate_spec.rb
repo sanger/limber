@@ -6,7 +6,7 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # Uses a custom transfer template to transfer material into the new plate
-describe LabwareCreators::StampedPlate do
+RSpec.describe LabwareCreators::StampedPlate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 

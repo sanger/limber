@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # frozen_string_literal: true
 
-shared_context 'a tag plate creator' do
+RSpec.shared_context 'a tag plate creator' do
   # Requests that might get made
   let!(:state_change_tag_plate_request) do
     stub_api_post(
@@ -68,7 +68,7 @@ shared_context 'a tag plate creator' do
   end
 end
 
-shared_context 'a tag plate creator with dual indexing' do
+RSpec.shared_context 'a tag plate creator with dual indexing' do
   let!(:state_change_tag2_request) do
     stub_api_post(
       'state_changes',

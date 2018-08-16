@@ -17,7 +17,7 @@ module LabwareCreators
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
-    delegate :height, :width, :size, to: :labware
+    delegate :size, to: :labware
 
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
 
@@ -97,6 +97,14 @@ module LabwareCreators
     def help
       return 'single' unless requires_tag2?
       "dual_#{acceptable_tag2_sources.join('_')}"
+    end
+
+    def number_of_columns
+      labware.width
+    end
+
+    def number_of_rows
+      labware.height
     end
 
     private

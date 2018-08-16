@@ -33,6 +33,14 @@ module LabwareCreators
       end
     end
 
+    def number_of_columns
+      width
+    end
+
+    def number_of_rows
+      height
+    end
+
     def baits
       wells.select { |w| w.bait.present? }
     end

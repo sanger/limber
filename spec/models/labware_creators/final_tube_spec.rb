@@ -5,7 +5,7 @@ require 'labware_creators/final_tube'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::FinalTube do
+RSpec.describe LabwareCreators::FinalTube do
   has_a_working_api
 
   it_behaves_like 'it only allows creation from tubes'

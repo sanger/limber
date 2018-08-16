@@ -24,7 +24,7 @@ module Presenters
     delegate :state, :uuid, to: :labware
 
     def suggest_library_passing?
-      purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
+      (purpose_config[:suggest_library_pass_for] & active_request_types).present?
     end
 
     def purpose_name

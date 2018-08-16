@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/tubes_controller'
 
-describe TubeCreationController, type: :controller do
+RSpec.describe TubeCreationController, type: :controller do
   has_a_working_api
   include FeatureHelpers
 

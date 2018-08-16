@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # CreationForm is the base class for our forms
-describe Limber::Plate do
+RSpec.describe Limber::Plate do
   has_a_working_api
 
   subject(:plate) { build :plate, transfer_request_collections_count: 2 }

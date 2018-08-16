@@ -26,6 +26,8 @@ class PlatesController < LabwareController
   private
 
   def locate_labware_identified_by(id)
-    api.plate.find(id)
+    Sequencescape::Api::V2::Plate.includes(
+      :purpose, wells: [:aliquots, { requests_as_source: :request_type }]
+    ).where(uuid: id).first || raise(ActionController::RoutingError, "Unknown resource #{id}")
   end
 end

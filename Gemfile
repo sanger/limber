@@ -16,7 +16,7 @@ gem 'webpacker', '~> 2.0'
 gem 'hashie'
 
 # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
-gem 'json_api_client'
+gem 'json_api_client', github: 'sanger/json_api_client'
 
 # Older Sequencescape API
 gem 'sequencescape-client-api', '>= 0.3.3',
@@ -41,6 +41,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
+  gem 'simplecov'
   gem 'webmock'
 end
 

@@ -5,7 +5,7 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators::FinalTubeFromPlate do
+RSpec.describe LabwareCreators::FinalTubeFromPlate do
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   subject do

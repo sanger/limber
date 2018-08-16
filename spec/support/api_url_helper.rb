@@ -69,6 +69,24 @@ module ApiUrlHelper
     def stub_api_put(*components, body:, payload:)
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
+
+    def stub_api_v2(klass, includes: nil, where:, first: nil, all: nil)
+      query_builder = "Sequencescape::Api::V2::#{klass}".constantize
+      expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
+      expect(query_builder).to receive(:where).with(where).and_return(query_builder)
+      expect(query_builder).to receive(:first).and_return(first) if first
+      expect(query_builder).to receive(:all).and_return(all) if all
+    end
+
+    # Builds the basic v2 plate finding query.
+    def stub_v2_plate(uuid, plate)
+      stub_api_v2(
+        'Plate',
+        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+        where: { uuid: uuid },
+        first: plate
+      )
+    end
   end
   extend ClassMethods
 end

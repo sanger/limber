@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Pool tubes at end of pipeline', js: true do
+RSpec.feature 'Pool tubes at end of pipeline', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }

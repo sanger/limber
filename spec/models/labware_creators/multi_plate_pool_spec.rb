@@ -6,10 +6,10 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::MultiPlatePool do
+RSpec.describe LabwareCreators::MultiPlatePool do
   it_behaves_like 'it only allows creation from tagged plates'
 
-  has_a_working_api(times: :any)
+  has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }

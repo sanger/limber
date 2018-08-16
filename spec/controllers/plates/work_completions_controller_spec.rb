@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Plates::WorkCompletionsController, type: :controller do
+RSpec.describe Plates::WorkCompletionsController, type: :controller do
   describe '#create' do
     has_a_working_api
 

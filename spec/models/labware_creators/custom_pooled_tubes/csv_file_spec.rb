@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
+RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   context 'A valid file' do
     let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
 

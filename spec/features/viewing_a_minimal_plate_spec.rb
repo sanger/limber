@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Viewing a plate', js: true do
+RSpec.feature 'Viewing a plate', js: true do
   has_a_working_api
 
   let(:user)           { json :user }
@@ -10,7 +10,8 @@ feature 'Viewing a plate', js: true do
   let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)     { SecureRandom.uuid }
   let(:plate_state) { 'pending' }
-  let(:example_plate) { json :stock_plate, uuid: plate_uuid, size: 384, state: plate_state }
+  let(:old_api_example_plate) { json :stock_plate, uuid: plate_uuid, size: 384, state: plate_state }
+  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state }
   let(:default_tube_printer) { 'tube printer 1' }
 
   # Setup stubs
@@ -25,9 +26,9 @@ feature 'Viewing a plate', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_asset_search(plate_barcode, example_plate)
+    stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
-    stub_api_get(plate_uuid, body: example_plate)
+    stub_v2_plate(plate_uuid, example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 
@@ -60,8 +61,7 @@ feature 'Viewing a plate', js: true do
   end
 
   feature 'with passed pools' do
-    let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, pool_sizes: [5] }
-    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: 'passed', pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -73,7 +73,7 @@ feature 'Viewing a plate', js: true do
   end
 
   feature 'plates with 384 wells' do
-    let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, size: 384, pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35] }
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: 'passed', size: 384, pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35] }
     let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
 
     scenario 'there is a warning' do
@@ -86,7 +86,7 @@ feature 'Viewing a plate', js: true do
   end
 
   feature 'with transfers to tubes' do
-    let(:example_plate) { json :plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
+    let(:example_plate) { create :v2_plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 

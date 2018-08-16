@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Creating a plate with bait', js: true do
+RSpec.feature 'Creating a plate with bait', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }
@@ -10,8 +10,9 @@ feature 'Creating a plate with bait', js: true do
   let(:plate_barcode)         { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:example_plate)         { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
-  let(:child_plate) { json :plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
+  let(:old_api_example_plate) { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
+  let(:example_plate) { create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
+  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
   let(:transfer_template_uuid) { 'transfer-1-12' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
@@ -24,15 +25,22 @@ feature 'Creating a plate with bait', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_asset_search(plate_barcode, example_plate)
+    stub_asset_search(plate_barcode, old_api_example_plate)
 
     # These stube are required to render plate show page
-    stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
+    stub_api_v2(
+      'Plate',
+      includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+      where: { uuid: plate_uuid },
+      first: example_plate
+    )
+
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     # end of stubs for plate show page
 
     # These stubs are required to render plate_creation baiting page
+    # Still going through the old api for the time being
+    stub_api_get(plate_uuid, body: old_api_example_plate)
     stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: plate_uuid, user: user_uuid } })
     # end of stubs for plate_creation baiting page
 
@@ -43,8 +51,12 @@ feature 'Creating a plate with bait', js: true do
     stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
     # end of stubs for creating a new plate with baits
     # Stub the requests for the next plate page
-    stub_api_get('child-uuid', body: child_plate)
-    stub_api_get('child-uuid', 'wells', body: json(:well_collection))
+    stub_api_v2(
+      'Plate',
+      includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+      where: { uuid: 'child-uuid' },
+      first: child_plate
+    )
   end
 
   scenario 'of a recognised type' do

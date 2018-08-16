@@ -37,14 +37,14 @@ class Presenters::PlatePresenter
 
   validates_with Validators::InProgressValidator
 
-  delegate :tagged?, :width, :height, :size, :plate_purpose, :human_barcode, to: :labware
+  delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, to: :labware
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
   # Currently this needs to be specialised for tube or plate but in future
   # both should use #purpose and we'll be able to share the same method for
   # all presenters.
-  alias purpose plate_purpose
+  alias plate_purpose purpose
 
   def number_of_wells
     "#{number_of_filled_wells}/#{size}"
@@ -59,7 +59,7 @@ class Presenters::PlatePresenter
   end
 
   def label
-    label_class = Settings.purposes.fetch(labware.purpose.uuid).fetch(:label_class, nil)
+    label_class = purpose_config.fetch(:label_class)
     label_class.constantize.new(labware)
   end
 
@@ -90,10 +90,6 @@ class Presenters::PlatePresenter
 
   def filename(offset = nil)
     "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
-  end
-
-  def prepare
-    labware.populate_wells_with_pool
   end
 
   def tag_sequences
@@ -129,8 +125,11 @@ class Presenters::PlatePresenter
     [match[2].to_i, match[1]] # Order by column first
   end
 
-  def active_request_type
-    return :none if labware.pools.empty?
-    labware.pools.values.first['request_type']
+  def active_request_types
+    wells.reduce([]) do |active_requests, well|
+      active_requests.concat(
+        well.active_requests.map { |request| request.request_type.key }
+      )
+    end
   end
 end

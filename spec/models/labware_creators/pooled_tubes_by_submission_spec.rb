@@ -8,7 +8,7 @@ require_relative 'shared_examples'
 # Creates new tubes of the child purpose
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
-describe LabwareCreators::PooledTubesBySubmission do
+RSpec.describe LabwareCreators::PooledTubesBySubmission do
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   subject do

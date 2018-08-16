@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe Presenters::StockPlatePresenter do
-  has_a_working_api(times: 2)
+RSpec.describe Presenters::StockPlatePresenter do
+  has_a_working_api
 
   let(:labware) { build :stock_plate }
 

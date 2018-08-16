@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Pooling multiple tubes into a tube', js: true do
+RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }

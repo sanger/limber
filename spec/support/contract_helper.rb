@@ -90,10 +90,6 @@ module ContractHelper
       stubbed_request.inject_into(self)
     end
 
-    def expect_request_and_response(contract_name, times: nil)
-      expect_request_from("retrieve-#{contract_name}") { response(contract_name, times: times) }
-    end
-
     def has_a_working_api(times: :any)
       expect_request_from('retrieve-api-root') { response('api-root', times: times) }
       let(:api) do

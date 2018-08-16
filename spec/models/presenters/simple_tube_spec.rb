@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-describe Presenters::SimpleTubePresenter do
-  # Not sure why this is getting executed twice.
-  # Want to get the basics working first though
-  has_a_working_api(times: 2)
+RSpec.describe Presenters::SimpleTubePresenter do
+  has_a_working_api
 
   let(:labware) { build :tube, state: state }
 

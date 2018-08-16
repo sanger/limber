@@ -5,7 +5,7 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators::Base do
+RSpec.describe LabwareCreators::Base do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 

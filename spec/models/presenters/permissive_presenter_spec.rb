@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Presenters::PermissivePresenter do
+RSpec.describe Presenters::PermissivePresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }

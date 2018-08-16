@@ -3,7 +3,7 @@
 require 'rails_helper'
 require_relative '../support/shared_tagging_examples'
 
-feature 'Creating a tag plate', js: true do
+RSpec.feature 'Creating a tag plate', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }
@@ -12,7 +12,8 @@ feature 'Creating a tag plate', js: true do
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:pools) { 1 }
-  let(:example_plate)         { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
+  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
+  let(:old_api_example_plate) { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid)        { 'tag-plate-uuid' }
@@ -44,12 +45,22 @@ feature 'Creating a tag plate', js: true do
                                                  tag_layout_templates: acceptable_templates,
                                                  parents: ['Limber Cherrypicked']
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
+    stub_swipecard_search(user_swipecard, user)
     # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
-    stub_api_get(plate_uuid, body: example_plate)
+    stub_api_v2(
+      'Plate',
+      includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+      where: { uuid: plate_uuid },
+      first: example_plate
+    )
+
+    # Used in the tag plate creator itself.
+    # TODO: Switch this for the new API as well
+    stub_api_get(plate_uuid, body: old_api_example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
+
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('tag_layout_templates', body: templates)
     stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection, size: 2))
@@ -61,13 +72,19 @@ feature 'Creating a tag plate', js: true do
     stub_api_get(tag2_tube_qcable_uuid, body: tag2_tube_qcable)
     stub_api_get('lot2-uuid', body: json(:tag2_lot, lot_number: tag2_lot_number, template_uuid: tag2_template_uuid))
     stub_api_get('tag2-lot-type-uuid', body: json(:tag2_lot_type))
-
-    stub_api_get(tag_plate_uuid, body: json(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
-    stub_api_get(tag_plate_uuid, 'wells', body: json(:well_collection))
   end
 
   shared_examples 'supports dual-index plates' do
     let(:help_text) { "Click 'Create plate'" }
+
+    before do
+      stub_api_v2(
+        'Plate',
+        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+        where: { uuid: tag_plate_uuid },
+        first: create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')
+      )
+    end
 
     scenario 'creation with dual-index plates' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -86,6 +103,15 @@ feature 'Creating a tag plate', js: true do
   end
 
   shared_examples 'supports a plate-tube combo' do
+    before do
+      stub_api_v2(
+        'Plate',
+        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
+        where: { uuid: tag_plate_uuid },
+        first: create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')
+      )
+    end
+
     scenario 'allows plate creation' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')

@@ -1,10 +1,28 @@
 # frozen_string_literal: true
 
-describe Presenters::StandardPresenter do
+RSpec.describe Presenters::StandardPresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { build :passed_plate, state: state, purpose_name: purpose_name, purpose_uuid: 'test-purpose', uuid: 'plate-uuid' }
+  let(:aliquot_type) { :v2_aliquot }
+  let(:state) { 'pending' }
+  let(:labware) do
+    create :v2_plate,
+           barcode_number: 1,
+           state: state,
+           purpose_name: purpose_name,
+           purpose_uuid: 'test-purpose',
+           uuid: 'plate-uuid',
+           wells: wells
+  end
+  let(:wells) do
+    [
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 2), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1))
+    ]
+  end
   let(:suggest_passes) { nil }
 
   subject do
@@ -12,6 +30,10 @@ describe Presenters::StandardPresenter do
       api:     api,
       labware: labware
     )
+  end
+
+  it 'returns the priority' do
+    expect(subject.priority).to eq(2)
   end
 
   context 'when pending' do
@@ -23,6 +45,10 @@ describe Presenters::StandardPresenter do
 
     it 'allows state change' do
       expect { |b| subject.default_state_change(&b) }.to yield_control
+    end
+
+    it 'returns the labware state' do
+      expect(subject.state).to eq(state)
     end
   end
 
@@ -66,6 +92,10 @@ describe Presenters::StandardPresenter do
         ['tube-purpose', 'Tube purpose']
       )
     end
+
+    it 'returns the labware state' do
+      expect(subject.state).to eq(state)
+    end
   end
 
   context 'with tubes' do
@@ -82,12 +112,11 @@ describe Presenters::StandardPresenter do
 
   describe '#control_library_passing' do
     before do
-      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: aliquot_type))
       Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
     end
 
     context 'tagged' do
-      let(:aliquot_type) { :tagged_aliquot }
+      let(:aliquot_type) { :v2_tagged_aliquot }
 
       context 'and passed' do
         let(:state) { 'passed' }
@@ -114,7 +143,7 @@ describe Presenters::StandardPresenter do
     end
 
     context 'untagged' do
-      let(:aliquot_type) { :aliquot }
+      let(:aliquot_type) { :v2_aliquot }
       context 'and passed' do
         let(:state) { 'passed' }
         it 'supports passing' do
@@ -125,8 +154,8 @@ describe Presenters::StandardPresenter do
   end
 
   describe '#control_suggested_library_passing' do
+    let(:aliquot_type) { :v2_tagged_aliquot }
     before do
-      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: :tagged_aliquot))
       Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
     end
     let(:suggest_passes) { ['limber_multiplexing'] }

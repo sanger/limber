@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SearchController, type: :controller do
+RSpec.describe SearchController, type: :controller do
   include FeatureHelpers
 
   has_a_working_api

@@ -2,12 +2,11 @@
 
 require 'rails_helper'
 
-describe Robots::Robot do
+RSpec.describe Robots::Robot do
   include FeatureHelpers
 
   has_a_working_api
 
-  let(:api)                         { Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options) }
   let(:settings)                    { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
   let(:user_uuid)                   { SecureRandom.uuid }
   let(:plate_uuid)                  { SecureRandom.uuid }
@@ -68,14 +67,14 @@ describe Robots::Robot do
 
         context 'and related plates' do
           before(:each) do
-            stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
+            stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
           end
           it { is_expected.to be_valid }
         end
 
         context 'but unrelated plates' do
           before(:each) do
-            stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, json(:plate))
+            stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_barcode } }, json(:plate))
           end
           it { is_expected.not_to be_valid }
         end
@@ -96,8 +95,8 @@ describe Robots::Robot do
         stub_asset_search(target_barcode, target_plate)
         Settings.purpose_uuids[grandchild_purpose_name] = grandchild_purpose_uuid
         stub_asset_search(grandchild_barcode, grandchild_plate)
-        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
-        stub_search_and_single_result('find-source-assets-by-destination-asset-barcode', { 'search' => { 'barcode' => grandchild_barcode } }, target_plate)
+        stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_barcode } }, plate)
+        stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => grandchild_barcode } }, target_plate)
       end
 
       context 'and the correct layout' do

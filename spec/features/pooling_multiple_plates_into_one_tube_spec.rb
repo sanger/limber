@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Poling multiple plates into a tube', js: true do
+RSpec.feature 'Poling multiple plates into a tube', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }
@@ -13,6 +13,7 @@ feature 'Poling multiple plates into a tube', js: true do
   let(:plate_uuid)        { SecureRandom.uuid }
   let(:example_plate_args) { [:plate, barcode_number: 1, state: 'passed', uuid: plate_uuid] }
   let(:example_plate) { json(*example_plate_args) }
+  let(:example_plate_new_api) { create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid) }
   let(:example_plate_listed) { associated(*example_plate_args) }
 
   let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
@@ -89,6 +90,9 @@ feature 'Poling multiple plates into a tube', js: true do
       { 'search' => { states: ['passed'], plate_purpose_uuids: ['example-purpose-uuid'], show_my_plates_only: false, include_used: false, page: 1 } },
       [example_plate_listed, example_plate_2_listed]
     )
+
+    # For the view page, we actually only need to v2 stub one of our plates
+    stub_v2_plate(plate_uuid, example_plate_new_api)
 
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: well_set_a)

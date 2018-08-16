@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'it only allows creation from tubes' do
+RSpec.shared_examples 'it only allows creation from tubes' do
   context 'pre creation' do
     has_a_working_api
 
@@ -20,7 +20,7 @@ shared_examples 'it only allows creation from tubes' do
   end
 end
 
-shared_examples 'it has a custom page' do |custom_page|
+RSpec.shared_examples 'it has a custom page' do |custom_page|
   it 'has a page' do
     expect(described_class.page).to eq custom_page
   end
@@ -34,7 +34,7 @@ shared_examples 'it has a custom page' do |custom_page|
   end
 end
 
-shared_examples 'it has no custom page' do |_custom_page|
+RSpec.shared_examples 'it has no custom page' do |_custom_page|
   it 'saves and redirects' do
     controller = CreationController.new
     expect(controller).to receive(:redirect_to_creator_child).with(subject)
@@ -47,7 +47,7 @@ shared_examples 'it has no custom page' do |_custom_page|
   end
 end
 
-shared_examples 'it only allows creation from plates' do
+RSpec.shared_examples 'it only allows creation from plates' do
   context 'pre creation' do
     has_a_working_api
 
@@ -67,7 +67,7 @@ shared_examples 'it only allows creation from plates' do
   end
 end
 
-shared_examples 'it only allows creation from tagged plates' do
+RSpec.shared_examples 'it only allows creation from tagged plates' do
   context 'pre creation' do
     has_a_working_api
 
@@ -97,7 +97,7 @@ shared_examples 'it only allows creation from tagged plates' do
   end
 end
 
-shared_examples 'it only allows creation from charged and passed plates with defined downstream pools' do
+RSpec.shared_examples 'it only allows creation from charged and passed plates with defined downstream pools' do
   context 'pre creation' do
     has_a_working_api
 
@@ -159,7 +159,7 @@ shared_examples 'it only allows creation from charged and passed plates with def
   end
 end
 
-shared_examples 'it only allows creation from charged and passed plates' do
+RSpec.shared_examples 'it only allows creation from charged and passed plates' do
   context 'pre creation' do
     has_a_working_api
 

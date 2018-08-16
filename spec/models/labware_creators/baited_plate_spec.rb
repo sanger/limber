@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'labware_creators/baited_plate'
 require_relative 'shared_examples'
 
-describe LabwareCreators::BaitedPlate do
+RSpec.describe LabwareCreators::BaitedPlate do
   it_behaves_like 'it only allows creation from plates'
 
   subject do

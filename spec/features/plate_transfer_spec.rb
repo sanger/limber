@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Plate transfer', js: true do
+RSpec.feature 'Plate transfer', js: true do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }

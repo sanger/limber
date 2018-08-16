@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'plate_creation factory' do
+RSpec.describe 'plate_creation factory' do
   subject do
     json(
       :plate_creation,

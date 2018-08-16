@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'transfer_between_tubes_by_submission factory' do
+RSpec.describe 'transfer_between_tubes_by_submission factory' do
   subject do
     json(
       :transfer_between_tubes_by_submission,
@@ -39,7 +39,7 @@ describe 'transfer_between_tubes_by_submission factory' do
   end
 end
 
-describe 'transfer_to_mx_tubes_by_submission' do
+RSpec.describe 'transfer_to_mx_tubes_by_submission' do
   subject do
     json(
       :transfer_to_mx_tubes_by_submission,
