@@ -12,12 +12,10 @@ RSpec.describe Presenters::SimpleTubePresenter do
     )
   end
 
-  before(:all) do
-    Settings.purposes = {
-      'example-purpose-uuid-1' => build(:purpose_config, name: 'Example Plate Purpose'),
-      'example-purpose-uuid-2' => build(:purpose_config, name: 'Example Plate Purpose 2'),
-      'example-purpose-uuid-3' => build(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube')
-    }
+  before do
+    create(:purpose_config, name: 'Example Plate Purpose', uuid: 'example-purpose-uuid-1')
+    create(:purpose_config, name: 'Example Plate Purpose 2', uuid: 'example-purpose-uuid-2')
+    create(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube', uuid: 'example-purpose-uuid-3')
   end
 
   context 'when pending' do

@@ -39,11 +39,12 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
     )
   end
 
-  it 'returns label attributes' do
-    Settings.purposes = {}
-    Settings.purposes[labware.purpose.uuid] = build(:purpose_config)
-    create(:stock_plate_config)
+  before do
+    create(:purpose_config, uuid: labware.purpose.uuid)
+    create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
+  end
 
+  it 'returns label attributes' do
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                        bottom_left: 'DN1S',
                        top_right: 'DN2T',

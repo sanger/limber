@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
+  self.plate = true
   has_many :wells
   has_many :samples
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
@@ -23,9 +24,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     ::ActiveModel::Name.new(Limber::Plate, false)
   end
 
-  # Currently us the uuid as out main identifier, might witch to human barcode soon
+  # Currently us the uuid as our main identifier, might switch to human barcode soon
   def to_param
     uuid
+  end
+
+  def active_requests
+    wells.flat_map(&:active_requests)
   end
 
   def wells_in_columns
@@ -34,14 +39,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def tagged?
     wells.any?(&:tagged?)
-  end
-
-  def plate?
-    true
-  end
-
-  def tube?
-    false
   end
 
   def human_barcode
@@ -80,16 +77,16 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     purpose_names.include?(purpose.name)
   end
 
+  def tubes
+    wells.flat_map(&:downstream_tubes).uniq
+  end
+
   def transfers_to_tubes?
-    false # TODO: Add the right logic
+    tubes.present?
   end
 
   def pcr_cycles
     active_requests.map(&:pcr_cycles).uniq
-  end
-
-  def active_requests
-    wells.flat_map(&:active_requests)
   end
 
   def primer_panels
@@ -111,13 +108,5 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def priority
     wells.map(&:priority).max || 0
-  end
-
-  deprecate def height
-    number_of_rows
-  end
-
-  deprecate def width
-    number_of_columns
   end
 end

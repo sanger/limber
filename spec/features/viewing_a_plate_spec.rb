@@ -28,7 +28,7 @@ RSpec.feature 'Viewing a plate', js: true do
     # We lookup the plate
     stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
-    stub_v2_plate(plate_uuid, example_plate)
+    stub_v2_plate(example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 
@@ -109,7 +109,11 @@ RSpec.feature 'Viewing a plate', js: true do
   end
 
   feature 'with transfers to tubes' do
-    let(:example_plate) { create :v2_plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
+    let(:example_plate) do
+      create :v2_plate, uuid: plate_uuid,
+                        transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) },
+                        purpose_uuid: 'child-purpose-0'
+    end
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 
@@ -156,7 +160,7 @@ RSpec.feature 'Viewing a plate', js: true do
         # So RSpec cautions against this as a code smell, but tbh it feels vastly better than the
         # alternative in integration tests.
         allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
-
+        stub_v2_plate(example_plate)
         click_on('Print Label')
       end
     end

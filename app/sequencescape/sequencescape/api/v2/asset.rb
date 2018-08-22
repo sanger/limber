@@ -6,4 +6,20 @@ class Sequencescape::Api::V2::Asset < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
+
+  # Not great, as only true for tubes/plates not wells
+  # But until we get polymorphic association support
+  has_one :purpose
+
+  def plate?
+    type == 'plates'
+  end
+
+  def tube?
+    type == 'tubes'
+  end
+
+  def barcode
+    labware_barcode
+  end
 end

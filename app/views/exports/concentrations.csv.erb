@@ -1,7 +1,10 @@
 <%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode.human], row_sep: "" %>
-<% @pooling_ids = pools_by_id(@plate.pools) %>
+<%# Essentially a unique element counter, ensuring that submissions will be numbered 1 upwards in the order we first saw them %>
+<% @pooling_ids = Hash.new {|h,i| h[i] = h.length + 1 } %>
 
 <%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>
 <% @plate.wells_in_columns.each do |well| %>
-<%= CSV.generate_line [well.position['name'], well.latest_concentration&.value, (well.passed? ? 1 : 0), @pooling_ids[well.position['name']]], row_sep: '' %>
+  <% well.submission_ids.each do |submission_id| %>
+<%= CSV.generate_line [well.position['name'], well.latest_concentration&.value, (well.passed? ? 1 : 0), @pooling_ids[submission_id]], row_sep: '' %>
+  <% end %>
 <% end %>

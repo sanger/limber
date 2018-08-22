@@ -162,5 +162,7 @@ RSpec.configure do |config|
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
     Capybara.current_session.driver.resize_window(1400, 1400) if Capybara.current_session.driver.respond_to?(:resize_window)
+    # Wipe out existing purposes
+    Settings.purposes = {}
   end
 end

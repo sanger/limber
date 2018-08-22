@@ -11,7 +11,7 @@ module LabwareCreators
     class_attribute :aliquot_partial
     self.aliquot_partial = 'plates/baited_aliquot'
 
-    delegate :height, :width, :size, to: :plate
+    delegate :number_of_columns, :number_of_rows, :size, to: :plate
 
     def plate
       parent
@@ -31,14 +31,6 @@ module LabwareCreators
           user: user_uuid
         )
       end
-    end
-
-    def number_of_columns
-      width
-    end
-
-    def number_of_rows
-      height
     end
 
     def baits

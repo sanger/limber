@@ -18,22 +18,24 @@ FactoryBot.define do
       end
       wells do
         Array.new(well_count) do |i|
-          create well_factory, location: WellHelpers.well_at_column_index(i, size), state: state, outer_request: outer_requests[i]
+          location = WellHelpers.well_at_column_index(i, size)
+          create well_factory, location: location,
+                               state: state,
+                               outer_request: outer_requests[i],
+                               downstream_assets: transfer_targets[location]
         end
       end
       purpose_name 'example-purpose'
       purpose_uuid 'example-purpose-uuid'
-      purpose { create :v2_plate_purpose, name: purpose_name, uuid: purpose_uuid }
+      purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       pool_sizes []
       library_type 'Standard'
       request_type 'Limber Library Creation'
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
-      for_multiplexing false
-      pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
       library_state 'pending'
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
-      transfer_targets { [] }
+      transfer_targets { {} }
     end
 
     uuid { SecureRandom.uuid }
@@ -57,14 +59,6 @@ FactoryBot.define do
         evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
       end
       RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
-      transfer_targets_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
-
-      # Mock the behaviour of the search
-      # This is all a bit inelegant at the moment.
-      RSpec::Mocks.allow_message(transfer_targets_scope, :where) do |parameters|
-        evaluator.transfer_targets.select { |a| parameters[:type].include?(a.type) }
-      end
-      RSpec::Mocks.allow_message(plate, :transfer_targets).and_return(transfer_targets_scope)
     end
 
     factory :v2_stock_plate do
@@ -80,6 +74,14 @@ FactoryBot.define do
     factory :v2_plate_with_primer_panels do
       transient do
         request_factory :gbs_library_request
+      end
+    end
+
+    factory :v2_plate_for_pooling do
+      transient do
+        purpose_name 'Pooled example'
+        request_factory :isc_library_request
+        pool_sizes [2]
       end
     end
   end

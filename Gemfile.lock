@@ -1,8 +1,8 @@
 GIT
-  remote: https://github.com/sanger/json_api_client.git
-  revision: 79dc09623b028b7f6d34da7bcd30070ab96ff819
+  remote: git://github.com/sanger/json_api_client.git
+  revision: abc4217f7d8266ac6c90d6db2427375e8078d90e
   specs:
-    json_api_client (1.5.3)
+    json_api_client (1.5.4a)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       addressable (~> 2.2)
@@ -10,27 +10,27 @@ GIT
       faraday_middleware (~> 0.9)
 
 GIT
-  remote: https://github.com/sanger/pmb-client.git
+  remote: git://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
     pmb-client (0.1.0)
       json_api_client (~> 1.1)
 
 GIT
-  remote: https://github.com/sanger/psd_logger.git
+  remote: git://github.com/sanger/psd_logger.git
   revision: dd2d634114df75b1d8535715c169a7fc99521389
   specs:
     psd_logger (0.1.6)
 
 GIT
-  remote: https://github.com/sanger/sanger_barcode_format.git
+  remote: git://github.com/sanger/sanger_barcode_format.git
   revision: ea1fa6840c8d41f8ce9ccf32b422f44d6edda859
   branch: development
   specs:
     sanger_barcode_format (0.0.3)
 
 GIT
-  remote: https://github.com/sanger/sequencescape-client-api.git
+  remote: git://github.com/sanger/sequencescape-client-api.git
   revision: 1e13c3cb96ecf26d392a451a0bb4224c96c777db
   branch: rails_4
   specs:
@@ -403,4 +403,4 @@ DEPENDENCIES
   webpacker (~> 2.0)
 
 BUNDLED WITH
-   1.16.2
+   1.16.3

@@ -16,7 +16,7 @@ RSpec.describe 'exports/concentrations.csv.erb' do
 
     let(:expected_content) do
       [
-        ['Plate Barcode', 'DN1S'],
+        ['Plate Barcode', labware.barcode.human],
         [],
         %w[Well Concentration Pick Pool],
         %w[A1 1.5 1 1],

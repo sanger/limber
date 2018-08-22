@@ -99,10 +99,15 @@ RSpec.describe Presenters::StandardPresenter do
   end
 
   context 'with tubes' do
-    let(:labware) { build :plate, uuid: 'plate-uuid', transfers_to_tubes_count: 1 }
+    # Due to limitations in polymorphic associations in the json-client-api gem
+    # we actually get assets back. But we can check their type
+    let(:target_tube) { create :v2_asset_tube }
+    let(:target_tube2) { create :v2_asset_tube }
 
-    before do
-      stub_api_get('plate-uuid', 'transfers_to_tubes', body: json(:transfer_collection, size: 2))
+    let(:labware) do
+      create :v2_plate, uuid: 'plate-uuid', transfer_targets: {
+        'A1' => [target_tube], 'B1' => [target_tube], 'C1' => [target_tube2]
+      }
     end
 
     it 'returns the correct number of labels' do

@@ -40,16 +40,18 @@ FactoryBot.define do
       requests_as_source []
       requests_as_target []
       library_state { 'pending' }
+      downstream_assets []
     end
 
     position { { 'name' => location } }
     state 'passed'
 
     after(:build) do |well, evaluator|
-      RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results)
-      RSpec::Mocks.allow_message(well, :aliquots).and_return(evaluator.aliquots)
-      RSpec::Mocks.allow_message(well, :requests_as_source).and_return(evaluator.requests_as_source)
-      RSpec::Mocks.allow_message(well, :requests_as_target).and_return(evaluator.requests_as_target)
+      RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results || [])
+      RSpec::Mocks.allow_message(well, :aliquots).and_return(evaluator.aliquots || [])
+      RSpec::Mocks.allow_message(well, :requests_as_source).and_return(evaluator.requests_as_source || [])
+      RSpec::Mocks.allow_message(well, :requests_as_target).and_return(evaluator.requests_as_target || [])
+      RSpec::Mocks.allow_message(well, :downstream_assets).and_return(evaluator.downstream_assets || [])
     end
 
     factory :v2_stock_well do
@@ -57,6 +59,10 @@ FactoryBot.define do
         aliquot_factory :v2_stock_aliquot
         requests_as_source { [outer_request].compact }
       end
+    end
+
+    factory :v2_tagged_well do
+      transient { aliquot_factory :v2_tagged_aliquot }
     end
   end
 

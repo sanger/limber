@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
-  belongs_to :plate
   has_many :qc_results
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :requests_as_target, class_name: 'Sequencescape::Api::V2::Request'
+  has_many :downstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
   has_many :aliquots
 
   def latest_concentration
@@ -46,7 +46,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def pcr_cycles
-    active_requests.map(&:pcr_cycles)
+    active_requests.map(&:pcr_cycles).uniq
   end
 
   def role
@@ -55,5 +55,13 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def priority
     active_requests.map(&:priority).max || 0
+  end
+
+  def submission_ids
+    active_requests.map(&:submission_id).uniq
+  end
+
+  def downstream_tubes
+    downstream_assets.select(&:tube?)
   end
 end

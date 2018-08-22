@@ -18,7 +18,7 @@ class Limber::Plate < Sequencescape::Plate
   #
   # @return [Integer] Plate width in wells
   #
-  def width
+  def number_of_columns
     Math.sqrt(size / 6).to_i * 3
   end
 
@@ -27,7 +27,7 @@ class Limber::Plate < Sequencescape::Plate
   #
   # @return [Integer] Plate height in wells
   #
-  def height
+  def number_of_rows
     Math.sqrt(size / 6).to_i * 2
   end
 

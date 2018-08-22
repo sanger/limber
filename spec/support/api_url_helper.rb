@@ -73,17 +73,22 @@ module ApiUrlHelper
     def stub_api_v2(klass, includes: nil, where:, first: nil, all: nil)
       query_builder = "Sequencescape::Api::V2::#{klass}".constantize
       expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
-      expect(query_builder).to receive(:where).with(where).and_return(query_builder)
-      expect(query_builder).to receive(:first).and_return(first) if first
-      expect(query_builder).to receive(:all).and_return(all) if all
+      if all
+        expect(query_builder).to receive(:where).with(where).and_return(query_builder)
+        expect(query_builder).to receive(:all).and_return(all)
+      else
+        expect(query_builder).to receive(:find).with(where).and_return(first)
+      end
     end
 
     # Builds the basic v2 plate finding query.
-    def stub_v2_plate(uuid, plate)
+    def stub_v2_plate(plate)
+      # Stub to v1 api search here as well!
+      stub_asset_search(plate.barcode.machine, json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid))
       stub_api_v2(
         'Plate',
         includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: uuid },
+        where: { uuid: plate.uuid },
         first: plate
       )
     end

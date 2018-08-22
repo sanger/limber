@@ -64,7 +64,10 @@ class Presenters::PlatePresenter
   end
 
   def tube_labels
-    labware.tubes.map { |t| Labels::TubeLabel.new(t) }
+    # Optimization: To avoid needing to load in the tube aliquots, we use the transfers into the
+    # tube to work out the pool size. This information is already available. Two values are different
+    # for ISC though. TODO: MUST RE-JIG
+    tubes_and_sources.map { |tube, sources| Labels::TubeLabel.new(tube, pool_size: sources.length) }
   end
 
   def control_tube_display
@@ -78,6 +81,15 @@ class Presenters::PlatePresenter
   def transfers
     transfers = labware.creation_transfer.transfers
     transfers.sort { |a, b| split_location(a.first) <=> split_location(b.first) }
+  end
+
+  def tubes_and_sources
+    @tubes_and_sources ||= labware.wells.each_with_object({}) do |well, store|
+      well.downstream_tubes.each do |tube|
+        store[tube] ||= []
+        store[tube] << well.location
+      end
+    end
   end
 
   def csv_file_links
@@ -95,7 +107,7 @@ class Presenters::PlatePresenter
   def tag_sequences
     @tag_sequences ||= labware.wells.each_with_object([]) do |well, tags|
       well.aliquots.each do |aliquot|
-        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
+        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
       end
     end
   end

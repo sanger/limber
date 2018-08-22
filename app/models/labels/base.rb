@@ -3,8 +3,13 @@
 class Labels::Base
   attr_reader :labware
 
-  def initialize(labware)
+  #
+  # Generates a label object for the provided labware
+  # @param labware [Labware] The tube or plate for which to generate a label
+  # @param options = {} [Hash] Optional parameters hash
+  def initialize(labware, options = {})
     @labware = labware
+    @options = options
   end
 
   def extra_attributes
@@ -16,13 +21,11 @@ class Labels::Base
   end
 
   def printer_type
-    purpose_printer_type = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, nil)
-    purpose_printer_type || default_printer_type
+    Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, default_printer_type)
   end
 
   def label_template
-    purpose_pmb_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, nil)
-    purpose_pmb_template || default_label_template
+    Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, default_label_template)
   end
 
   private

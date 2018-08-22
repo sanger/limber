@@ -39,19 +39,13 @@ module PlateHelper
   private :sortable_well_location_for
 
   def sorted_pre_cap_group_json
-    failed_wells = current_plate.wells.select { |w| %w[failed unknown].include?(w.state) }.map(&:location)
-
-    sorted_group_array = current_plate.pre_cap_groups.map do |group_id, group|
-      [group_id, group].tap do
-        group['failures']  = group['wells'] & failed_wells
-        group['all_wells'] = group['wells'].sort_by { |w| WellHelpers.index_of(w) }
-        group['wells']     = group['all_wells'] - group['failures']
+    current_plate.wells.each_with_object({}) do |well, pool_store|
+      well.active_requests.each do |request|
+        wa = []
+        pool_store[request.pre_capture_pool.id] ||= { 'wells' => wa, 'all_wells' => wa, 'failures' => [] }
+        pool_store[request.pre_capture_pool.id]['wells'] << well.location
       end
-    end.sort_by do |(_, group)|
-      sortable_well_location_for(group['wells'].first || group['all_wells'].first)
-    end
-
-    Hash[sorted_group_array].to_json.html_safe
+    end.to_json.html_safe
   end
 
   def pools_by_id(pools)
