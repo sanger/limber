@@ -24,7 +24,8 @@ env:
     - 'TZ=Europe/London'
     - 'PATH=$PATH:/usr/lib/chromium-browser/'
     - 'DISPLAY=:99.0'
-    - 'sh -e /etc/init.d/xvfb start'
+before_install:
+  - 'sh -e /etc/init.d/xvfb start'
 install:
   - nvm install node
   - node -v
