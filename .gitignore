@@ -16,4 +16,4 @@ release.tar.gz
 REVISION
 /vendor
 /coverage
-spec/examples.txt
+/spec/examples.txt
