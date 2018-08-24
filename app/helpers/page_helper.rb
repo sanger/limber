@@ -45,12 +45,6 @@ module PageHelper
     end
   end
 
-  def footer
-    grouping(:footer, 'data-position' => 'fixed') do
-      render(partial: 'labware/footer')
-    end
-  end
-
   def jumbotron(jumbotron_id = nil, options = {}, &block)
     options[:class] ||= +''
     options[:class] << ' jumbotron'

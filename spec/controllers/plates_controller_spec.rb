@@ -17,13 +17,8 @@ RSpec.describe PlatesController, type: :controller do
 
   describe '#show' do
     before do
-      Settings.purposes['stock-plate-purpose-uuid'] = create :stock_plate_config
-      stub_api_v2(
-        'Plate',
-        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: plate_uuid },
-        first: v2_plate
-      )
+      create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
+      stub_v2_plate(v2_plate, stub_search: false)
       barcode_printers_request
     end
 

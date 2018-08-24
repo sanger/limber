@@ -11,7 +11,7 @@ module Form
     self.page = 'new'
 
     class_attribute :aliquot_partial
-    self.aliquot_partial = 'labware/aliquot'
+    self.aliquot_partial = 'standard_aliquot'
 
     class_attribute :attributes
   end

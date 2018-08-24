@@ -11,7 +11,6 @@ class LabwareController < ApplicationController
 
   def show
     @presenter = presenter_for(@labware)
-    @presenter.prepare
 
     response.headers['Vary'] = 'Accept'
     respond_to do |format|

@@ -98,23 +98,6 @@ RSpec.describe Presenters::StandardPresenter do
     end
   end
 
-  context 'with tubes' do
-    # Due to limitations in polymorphic associations in the json-client-api gem
-    # we actually get assets back. But we can check their type
-    let(:target_tube) { create :v2_asset_tube }
-    let(:target_tube2) { create :v2_asset_tube }
-
-    let(:labware) do
-      create :v2_plate, uuid: 'plate-uuid', transfer_targets: {
-        'A1' => [target_tube], 'B1' => [target_tube], 'C1' => [target_tube2]
-      }
-    end
-
-    it 'returns the correct number of labels' do
-      expect(subject.tube_labels.length).to eq 2
-    end
-  end
-
   describe '#control_library_passing' do
     before do
       Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }

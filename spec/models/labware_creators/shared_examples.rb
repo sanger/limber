@@ -13,7 +13,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       end
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { create :v2_plate }
         it { is_expected.to be false }
       end
     end

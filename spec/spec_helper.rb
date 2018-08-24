@@ -56,7 +56,7 @@ end
 Capybara.server = :thin
 
 Capybara.javascript_driver = ENV.fetch('JS_DRIVER', 'headless_chrome').to_sym
-Capybara.default_max_wait_time = 5
+Capybara.default_max_wait_time = 3
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

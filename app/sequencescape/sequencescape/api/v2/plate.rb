@@ -14,6 +14,12 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
 
+  def self.find_by(options)
+    Sequencescape::Api::V2::Plate.includes(
+      :purpose, wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: :request }]
+    ).find(options).first
+  end
+
   #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
@@ -30,7 +36,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def active_requests
-    wells.flat_map(&:active_requests)
+    @active_requests ||= wells.flat_map(&:active_requests)
   end
 
   def wells_in_columns

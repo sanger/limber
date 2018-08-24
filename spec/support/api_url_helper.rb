@@ -77,20 +77,20 @@ module ApiUrlHelper
         expect(query_builder).to receive(:where).with(where).and_return(query_builder)
         expect(query_builder).to receive(:all).and_return(all)
       else
-        expect(query_builder).to receive(:find).with(where).and_return(first)
+        expect(query_builder).to receive(:find).with(where).and_return(JsonApiClient::ResultSet.new([first]))
       end
     end
 
     # Builds the basic v2 plate finding query.
-    def stub_v2_plate(plate)
+    def stub_v2_plate(plate, stub_search: true)
       # Stub to v1 api search here as well!
-      stub_asset_search(plate.barcode.machine, json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid))
-      stub_api_v2(
-        'Plate',
-        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: plate.uuid },
-        first: plate
-      )
+      if stub_search
+        stub_asset_search(
+          plate.barcode.machine,
+          json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
+        )
+      end
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: plate.uuid).and_return(plate)
     end
   end
   extend ClassMethods

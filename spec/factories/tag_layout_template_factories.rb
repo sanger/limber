@@ -25,6 +25,14 @@ FactoryBot.define do
       direction 'row'
     end
 
+    factory :tag_layout_template_by_inverse_column do
+      direction 'inverse_column'
+    end
+
+    factory :tag_layout_template_by_inverse_row do
+      direction 'inverse_row'
+    end
+
     factory :tag_layout_template_by_quadrant do
       walking_by 'quadrants'
       direction 'column then row'

@@ -16,7 +16,7 @@
         <tr>
           <th class="first-col"><%= row_label %></th>
           <% (0...12).map { |index| [ row_wells[index], index ] }.each do |well, index| %>
-            <td class="col-all <%= "plate-col-#{index+1}" %>">
+            <td>
               <% location = "#{row_label}#{index + 1}" %>
               <div id="<%= "source_well_#{location}" %>" class="well source_well">
                 <% unless well.try(:aliquots).blank? -%>

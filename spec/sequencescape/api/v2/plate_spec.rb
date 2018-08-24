@@ -26,4 +26,20 @@ RSpec.describe Sequencescape::Api::V2::Plate do
       expect(plate.labware_barcode.prefix).to eq('DN')
     end
   end
+
+  describe '::find_by' do
+    let(:plate) { create(:v2_plate) }
+    before do
+      # Consider actually mocking at the request level
+      stub_api_v2(
+        'Plate',
+        includes: [:purpose, { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: :request }] }],
+        where: { uuid: plate.uuid },
+        first: plate
+      )
+    end
+    it 'finds a plate' do
+      expect(Sequencescape::Api::V2::Plate.find_by(uuid: plate.uuid)).to be_a Sequencescape::Api::V2::Plate
+    end
+  end
 end

@@ -9,7 +9,7 @@ module Presenters
       include Form
       include BarcodeLabelsHelper
 
-      class_attribute :labware_class, :summary_items
+      class_attribute :summary_items
 
       attr_accessor :api, :labware
 
@@ -82,8 +82,6 @@ module Presenters
     def inspect
       "<#{self.class.name} labware:#{labware.uuid} ...>"
     end
-
-    def prepare; end
 
     private
 

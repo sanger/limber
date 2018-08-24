@@ -40,14 +40,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
     let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', wells: wells_collection }
 
     before do
-      2.times do
-        stub_api_v2(
-          'Plate',
-          includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-          where: { uuid: labware_uuid },
-          first: example_plate_v2
-        )
-      end
+      2.times { stub_v2_plate(example_plate_v2) }
     end
 
     scenario 'charge and pass libraries' do

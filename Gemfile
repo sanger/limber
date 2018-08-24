@@ -41,7 +41,8 @@ group :test do
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
-  gem 'simplecov'
+  gem 'simplecov', require: false
+  gem 'simplecov-json', require: false
   gem 'webmock'
 end
 

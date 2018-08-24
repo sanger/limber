@@ -7,9 +7,8 @@ RSpec.feature 'Viewing a plate', js: true do
 
   let(:user)           { json :user }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:old_api_example_plate) { json :stock_plate, uuid: plate_uuid, barcode_number: 1 }
   let(:state) { 'pending' }
   let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection }
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
@@ -25,8 +24,6 @@ RSpec.feature 'Viewing a plate', js: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the plate
-    stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
     stub_v2_plate(example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -139,9 +136,9 @@ RSpec.feature 'Viewing a plate', js: true do
       } }
     end
 
-    before do
-      stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
-    end
+    # before do
+    #   stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
+    # end
 
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

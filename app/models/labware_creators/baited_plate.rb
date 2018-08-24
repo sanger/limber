@@ -9,7 +9,7 @@ module LabwareCreators
 
     self.page = 'baited_plate'
     class_attribute :aliquot_partial
-    self.aliquot_partial = 'plates/baited_aliquot'
+    self.aliquot_partial = 'baited_aliquot'
 
     delegate :number_of_columns, :number_of_rows, :size, to: :plate
 

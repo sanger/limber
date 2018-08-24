@@ -8,7 +8,7 @@ RSpec.feature 'Creating a tag plate', js: true do
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }
   let(:user_swipecard)        { 'abcdef' }
-  let(:plate_barcode)         { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:pools) { 1 }
@@ -39,22 +39,16 @@ RSpec.feature 'Creating a tag plate', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
-    Settings.purposes['child-purpose-0'] = build :tagged_purpose_config,
-                                                 tag_layout_templates: acceptable_templates,
-                                                 parents: ['Limber Cherrypicked']
+
+    create :purpose_config, uuid: 'stock-plate-purpose-uuid'
+    create :tagged_purpose_config,
+           tag_layout_templates: acceptable_templates,
+           parents: ['Limber Cherrypicked'],
+           uuid: 'child-purpose-0'
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the plate
-    stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
-    stub_api_v2(
-      'Plate',
-      includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-      where: { uuid: plate_uuid },
-      first: example_plate
-    )
+    stub_v2_plate(example_plate)
 
     # Used in the tag plate creator itself.
     # TODO: Switch this for the new API as well
@@ -78,12 +72,7 @@ RSpec.feature 'Creating a tag plate', js: true do
     let(:help_text) { "Click 'Create plate'" }
 
     before do
-      stub_api_v2(
-        'Plate',
-        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: tag_plate_uuid },
-        first: create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')
-      )
+      stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
     end
 
     scenario 'creation with dual-index plates' do
@@ -104,12 +93,7 @@ RSpec.feature 'Creating a tag plate', js: true do
 
   shared_examples 'supports a plate-tube combo' do
     before do
-      stub_api_v2(
-        'Plate',
-        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: tag_plate_uuid },
-        first: create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')
-      )
+      stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
     end
 
     scenario 'allows plate creation' do

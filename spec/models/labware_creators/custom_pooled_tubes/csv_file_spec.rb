@@ -22,6 +22,26 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
     end
   end
 
+  context 'something that can not parse' do
+    let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+
+    before do
+      allow(CSV).to receive(:parse).and_raise('Really bad file')
+    end
+
+    describe '#valid?' do
+      subject { described_class.new(file).valid? }
+
+      it { is_expected.to be false }
+
+      it 'reports the errors' do
+        thing = described_class.new(file)
+        thing.valid?
+        expect(thing.errors.full_messages).to include('Could not read csv: Really bad file')
+      end
+    end
+  end
+
   context 'A valid file with missing volumes' do
     let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file_with_zero_and_blank.csv', 'sequencescape/qc_file') }
 

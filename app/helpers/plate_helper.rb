@@ -4,23 +4,15 @@ module PlateHelper
   class WellFailingPresenter < BasicObject
     def initialize(form, presenter)
       @form = form
-      @presenter = presenter
+      @_presenter = presenter
     end
-
-    def respond_to?(name, include_private = false)
-      super || @presenter.respond_to?(name, include_private)
-    end
-
-    def method_missing(name, *args, &block)
-      @presenter.send(name, *args, &block)
-    end
-    protected :method_missing
 
     def aliquot_partial
       'well_failing_aliquot'
     end
 
-    attr_reader :form
+    delegate_missing_to :_presenter
+    attr_reader :form, :_presenter
   end
 
   def fail_wells_presenter_from(form, presenter)

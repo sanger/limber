@@ -12,8 +12,7 @@ class Presenters::PlatePresenter
   class_attribute :aliquot_partial, :summary_partial, :well_failure_states
 
   self.summary_partial = 'labware/plates/standard_summary'
-  self.labware_class = :plate
-  self.aliquot_partial = 'labware/aliquot'
+  self.aliquot_partial = 'standard_aliquot'
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
   self.summary_items = {
@@ -113,13 +112,28 @@ class Presenters::PlatePresenter
   end
 
   def wells
-    labware.wells.sort_by { |w| WellHelpers.well_coordinate(w.location) }
+    @well ||= labware.wells.sort_by { |w| WellHelpers.well_coordinate(w.location) }
+  end
+
+  def pools
+    @pools ||= generate_pools
+    []
   end
 
   private
 
+  def generate_pools
+    pool_store = Hash.new { |hash, pool_id| hash[pool_id] = [] }
+    labware.wells.each do |well|
+      well.active_requests.each do |request|
+        pool_store[request.submission_id] << [well, request]
+      end
+    end
+    pool_store.values
+  end
+
   def number_of_filled_wells
-    labware.wells.count { |w| w.aliquots.present? }
+    wells.count { |w| w.aliquots.present? }
   end
 
   def pcr_cycles_specified

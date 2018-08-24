@@ -4,7 +4,7 @@ RSpec.describe Presenters::PermissivePresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { build :plate, state: state, purpose_name: purpose_name }
+  let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name }
 
   subject do
     Presenters::PermissivePresenter.new(

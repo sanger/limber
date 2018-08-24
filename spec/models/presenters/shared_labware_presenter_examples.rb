@@ -18,3 +18,13 @@ RSpec.shared_examples 'a labware presenter' do
     expect { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
   end
 end
+
+RSpec.shared_examples 'a stock presenter' do
+  it 'prevents state change' do
+    expect { |b| subject.default_state_change(&b) }.not_to yield_control
+  end
+
+  it 'displays its own barcode as stock' do
+    expect(subject.input_barcode).to eq(barcode_string)
+  end
+end

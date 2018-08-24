@@ -3,7 +3,7 @@
 RSpec.describe Presenters::StockPlatePresenter do
   has_a_working_api
 
-  let(:labware) { build :stock_plate }
+  let(:labware) { create :v2_stock_plate }
 
   subject do
     Presenters::StockPlatePresenter.new(
@@ -12,7 +12,7 @@ RSpec.describe Presenters::StockPlatePresenter do
     )
   end
 
-  it 'prevents state change' do
-    expect { |b| subject.default_state_change(&b) }.not_to yield_control
-  end
+  let(:barcode_string) { 'DN2 <em>1220000002845</em>' }
+
+  it_behaves_like 'a stock presenter'
 end

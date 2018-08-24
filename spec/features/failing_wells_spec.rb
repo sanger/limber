@@ -8,9 +8,8 @@ RSpec.feature 'Failing wells', js: true do
   let(:user_uuid)      { 'user-uuid' }
   let(:user)           { json :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:old_api_example_plate) { json :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed' }
   let(:wells) do
     [
       create(:v2_well, location: 'A1', state: 'passed'),
@@ -46,17 +45,10 @@ RSpec.feature 'Failing wells', js: true do
     Settings.purposes['child-purpose-0'] = build :purpose_config
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the plate
-    stub_asset_search(plate_barcode, old_api_example_plate)
     # We get the actual plate
 
     2.times do # For both the initial find, and the redirect post state change
-      stub_api_v2(
-        'Plate',
-        includes: [:purpose, wells: [:aliquots, { requests_as_source: :request_type }]],
-        where: { uuid: plate_uuid },
-        first: example_plate
-      )
+      stub_v2_plate(example_plate)
     end
     # stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
