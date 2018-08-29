@@ -332,12 +332,50 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  custom_robot(
+    'bravo-ribo-hyb-setup',
+    name: 'Bravo Ribo Hyb Setup',
+    layout: 'bed',
+    beds: {
+      bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' },
+      car('4,3').barcode => { purpose: 'LBR Ribo DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(6).barcode },
+      car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: car('4,3').barcode }
+    }
+  )
+
+  custom_robot(
+    'bravo-riboglobin-hyb-setup',
+    name: 'Bravo Ribo Globin Hyb Setup',
+    layout: 'bed',
+    beds: {
+      bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' },
+      car('4,3').barcode => { purpose: 'LBR RiboGlobin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(6).barcode },
+      car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: car('4,3').barcode }
+    }
+  )
+
   custom_robot('bravo-depletion-setup',
                name: 'Bravo Depletion Setup',
                layout: 'bed',
                verify_robot: true,
                beds: {
                  bed(6).barcode => { purpose: 'LBR Globin', states: ['processed_2'], label: 'Bed 6', target_state: 'passed' }
+               })
+
+  custom_robot('bravo-ribo-depletion-setup',
+               name: 'Bravo Ribo Depletion Setup',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' }
+               })
+
+  custom_robot('bravo-riboglobin-depletion-setup',
+               name: 'Bravo Ribo Globin Depletion Setup',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' }
                })
 
   custom_robot('bravo-globin-globin-dnase',
@@ -349,12 +387,48 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  car('4,3').barcode => { purpose: 'LBR Globin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
                })
 
+  custom_robot('bravo-ribo-dnase',
+               name: 'Bravo Cherrypick To Ribo DNase',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 8' },
+                 car('4,3').barcode => { purpose: 'LBR Ribo DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+               })
+
+  custom_robot('bravo-riboglobin-dnase',
+               name: 'Bravo Cherrypick To Ribo Globin DNase',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 8' },
+                 car('4,3').barcode => { purpose: 'LBR RiboGlobin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+               })
+
   custom_robot('bravo-lbr-globin-dnase-frag-cdna',
                name: 'Bravo LBR Globin DNase To LBR Frag cDNA',
                layout: 'bed',
                verify_robot: true,
                beds: {
                  bed(8).barcode => { purpose: 'LBR Globin DNase', states: ['passed'], label: 'Bed 8' },
+                 car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
+               })
+
+  custom_robot('bravo-lbr-ribo-dnase-frag-cdna',
+               name: 'Bravo LBR Ribo DNase To LBR Frag cDNA',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR Ribo DNase', states: ['passed'], label: 'Bed 8' },
+                 car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
+               })
+
+  custom_robot('bravo-lbr-riboglobin-dnase-frag-cdna',
+               name: 'Bravo LBR Ribo Globin DNase To LBR Frag cDNA',
+               layout: 'bed',
+               verify_robot: true,
+               beds: {
+                 bed(8).barcode => { purpose: 'LBR RiboGlobin DNase', states: ['passed'], label: 'Bed 8' },
                  car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
                })
 
