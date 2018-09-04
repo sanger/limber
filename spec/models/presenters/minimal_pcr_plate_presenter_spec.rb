@@ -46,7 +46,7 @@ describe Presenters::MinimalPcrPlatePresenter do
                        bottom_left: 'DN 1',
                        top_right: 'DN2',
                        bottom_right: 'Limber Cherrypicked',
-                       barcode: '1220000001831' }
+                       barcode: 'DN1' }
     expect(subject.label.attributes).to eq(expected_label)
   end
 
