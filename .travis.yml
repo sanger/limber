@@ -2,8 +2,8 @@ language: ruby
 rvm:
 - 2.5.1
 dist: xenial
-bundler_args: "--deployment"
-sudo: false
+bundler_args: "--without deployment"
+sudo: required
 addons:
   apt:
     packages:
@@ -19,9 +19,9 @@ node_js:
 - '10'
 env:
   global:
-    - TZ=Europe/London
-    - PATH=$PATH:/usr/lib/chromium-browser/
-    - DISPLAY=:99.0
+  - TZ=Europe/London
+  - PATH=$PATH:/usr/lib/chromium-browser/
+  - DISPLAY=:99.0
 before_install:
 - sh -e /etc/init.d/xvfb start
 install:
