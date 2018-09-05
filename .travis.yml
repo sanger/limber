@@ -18,9 +18,10 @@ cache:
 node_js:
   - '10'
 env:
-- TZ=Europe/London
-- PATH=$PATH:/usr/lib/chromium-browser/
-- DISPLAY=:99.0
+  global:
+    - TZ=Europe/London
+    - PATH=$PATH:/usr/lib/chromium-browser/
+    - DISPLAY=:99.0
 before_install:
 - sh -e /etc/init.d/xvfb start
 install:
