@@ -4,14 +4,25 @@ rvm:
 dist: trusty
 bundler_args: "--deployment"
 sudo: false
+addons:
+  apt:
+    packages:
+    - haveged
+    - google-chrome-stable
+    - chromium-chromedriver
 cache:
   bundler: true
   directories:
     - node_modules
   yarn: true
 node_js:
-  - '7'
-env: TZ=Europe/London
+  - '10'
+env:
+- TZ=Europe/London
+- PATH=$PATH:/usr/lib/chromium-browser/
+- DISPLAY=:99.0
+before_install:
+- sh -e /etc/init.d/xvfb start
 install:
   - nvm install node
   - node -v
