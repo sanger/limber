@@ -119,8 +119,8 @@ feature 'Pooling multiple tubes into a tube', js: true do
       tube_title = find('#tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
       click_on('Add an empty Pool tube tube')
-      fill_in('Plate 1', with: tube_barcode_1)
-      fill_in('Plate 2', with: tube_barcode_2)
+      fill_in('Plate 1', with: tube_barcode_1).send_keys(:return)
+      fill_in('Plate 2', with: tube_barcode_2).send_keys(:return)
       # # Trigger a blur by filling in the next box
       # fill_in('Plate 3', with: '')
       click_on('Make Pool')
@@ -142,8 +142,8 @@ feature 'Pooling multiple tubes into a tube', js: true do
       tube_title = find('#tube-title')
       expect(tube_title).to have_text('example-purpose')
       click_on('Add an empty Pool tube tube')
-      fill_in('Plate 1', with: tube_barcode_1)
-      fill_in('Plate 2', with: tube_barcode_2)
+      fill_in('Plate 1', with: tube_barcode_1).send_keys(:return)
+      fill_in('Plate 2', with: tube_barcode_2).send_keys(:return)
 
       expect(page).to have_text('Scanned tubes have matching tags')
     end
