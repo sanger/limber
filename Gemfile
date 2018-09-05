@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # CAUTION: This is set to http while we resolve SSL issues. It should be set back to https ASAP
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
@@ -68,6 +68,5 @@ group :development do
 end
 
 group :deployment do
-  gem 'psd_logger', github: 'sanger/psd_logger'
-  gem 'thin'
+  gem 'puma'
 end
