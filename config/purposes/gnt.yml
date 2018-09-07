@@ -53,7 +53,7 @@ GnT Pico Lib Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
+  :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
   :parents:
