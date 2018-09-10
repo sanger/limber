@@ -503,21 +503,21 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   # GnT Stuff, might change a lot.
   custom_robot(
     'hamilton-gnt-stock-to-gnt-scdna-stock',
-    name: 'Hamilton GnT Stock => GnT scDNA Stock and scRNA Stock',
+    name: 'Hamilton GnT Stock => GnT scDNA and scRNA Stock',
     layout: 'bed',
     beds: {
       bed(3).barcode => { purpose: 'GnT Stock', states: ['passed'], label: 'Bed 1' },
-      bed(10).barcode => { purpose: 'GnT scDNA Stock', states: ['pending'], label: 'Bed 10', parent: bed(3).barcode, target_state: 'started' }
+      bed(10).barcode => { purpose: 'GnT scDNA', states: ['pending'], label: 'Bed 10', parent: bed(3).barcode, target_state: 'started' }
     }
   )
 
   custom_robot(
     'hamilton-gnt-scdna-stock',
-    name: 'Hamilton GnT scDNA Stock',
+    name: 'Hamilton GnT scDNA',
     layout: 'bed',
     verify_robot: true,
     beds: {
-      bed(10).barcode => { purpose: 'GnT scDNA Stock', states: ['started'], label: 'Bed 10', target_state: 'passed' }
+      bed(10).barcode => { purpose: 'GnT scDNA', states: ['started'], label: 'Bed 10', target_state: 'passed' }
     }
   )
 
@@ -540,12 +540,12 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   bravo_robot do
-    from 'GnT scDNA Stock', bed(4)
+    from 'GnT scDNA', bed(4)
     to 'GnT Pico-XP', car('2,3')
   end
 
   bravo_robot do
-    from 'GnT scDNA Stock', bed(4)
+    from 'GnT scDNA', bed(4)
     to 'GnT MDA Norm', car('2,3')
   end
 end

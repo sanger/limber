@@ -5,9 +5,8 @@ GnT Stock:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
-GnT scDNA Stock:
+GnT scDNA:
   :asset_type: plate
-  :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :parents:
@@ -18,7 +17,7 @@ GnT Pico-XP:
   :cherrypickable_target: false
   :input_plate: false
   :parents:
-  - GnT scDNA Stock
+  - GnT scDNA
 GnT Pico End Prep:
   :asset_type: plate
   :stock_plate: false
@@ -33,6 +32,8 @@ GnT Pico Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
+  :suggest_library_pass_for:
+  - limber_gnt_picoplex
   :parents:
   - GnT Pico End Prep
 GnT MDA-XP:
@@ -41,14 +42,14 @@ GnT MDA-XP:
   :cherrypickable_target: false
   :input_plate: false
   :parents:
-  - GnT scDNA Stock
+  - GnT scDNA
 GnT MDA Norm:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :parents:
-  - GnT scDNA Stock
+  - GnT scDNA
 GnT Pico Lib Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
