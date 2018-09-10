@@ -503,7 +503,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   # GnT Stuff, might change a lot.
   custom_robot(
     'hamilton-gnt-stock-to-gnt-scdna-stock',
-    name: 'Hamilton GnT Stock => GnT scDNA and scRNA Stock',
+    name: 'Hamilton GnT Stock => GnT scDNA and scRNA',
     layout: 'bed',
     beds: {
       bed(3).barcode => { purpose: 'GnT Stock', states: ['passed'], label: 'Bed 1' },
