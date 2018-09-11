@@ -16,7 +16,9 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
+  let(:parent)       { create :v2_plate, uuid: parent_uuid, pool_sizes: [3, 3] }
+  let(:transfer_template_uuid) { 'custom-pooling' }
+  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:form_attributes) do
     {
@@ -63,19 +65,22 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
 
     let!(:plate_request) do
-      stub_api_get(parent_uuid, body: parent)
+      stub_v2_plate(parent, stub_search: false)
     end
 
+    let(:expected_transfers) { WellHelpers.stamp_hash(96) }
+
     let!(:transfer_template_request) do
-      stub_api_get('transfer-1-12', body: json(:transfer_1_12))
+      stub_api_get(transfer_template_uuid, body: transfer_template)
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer-1-12',
+      stub_api_post(transfer_template_uuid,
                     payload: { transfer: {
                       destination: 'child-uuid',
                       source: parent_uuid,
-                      user: user_uuid
+                      user: user_uuid,
+                      transfers: expected_transfers
                     } },
                     body: '{}')
     end

@@ -1,46 +1,47 @@
 # frozen_string_literal: true
 
-# A pool is a set of samples due to be processed together
-# with similar parameters. Usually they will end up eventually
-# being combined together in a 'pool although increasingly this
-# definition is being stretched. Pool information is supplied as
-# part of the plate json.
+# A pool is a set of samples forming part of the same submission,
+# usually to be pooled together.
 # The Pool class takes an individual pool, and provides a convenient interface
-class Limber::Plate::Pool
+class Sequencescape::Api::V2::Plate::Pool
   # The uuid of the submission associated with the pool
-  attr_reader :submission_uuid
+  attr_reader :submission_id, :subpools
+
+  alias id submission_id
+
   #
   # Create a new Pools from the pool information.
   #
-  # @param [String] submission_uuid  The submission uuid of the pool (the key in the pools hash)
-  # @param [Hash] pool_hash  As provided by the values in the pools hash in the plate json
-  #
-  def initialize(submission_uuid, pool_hash)
-    @submission_uuid = submission_uuid
-    pool_hash ||= {}
-    @pool_hash = pool_hash
+  # @param [String] submission)id  The submission id of the pool
+  def initialize(submission_id)
+    @submission_id = submission_id
+    @subpools = []
   end
 
-  def pcr_cycles
-    @pool_hash.fetch('pcr_cycles', 'Not specified')
+  def add_well_request(well, request)
+    compatible_subpool(well, request).add_well_request(well, request)
   end
 
-  def library_type_name
-    @pool_hash.dig('library_type', 'name') || 'Unknown'
+  # The total number of wells contributing to the pool
+  # Note: If a well goes down two separate routes, then it will
+  # be counted twice.
+  def well_count
+    subpools.sum(&:well_count)
   end
 
-  def insert_size
-    sizes = @pool_hash.fetch('insert_size', ['Unknown'])
-    sizes.to_a.join(' ')
+  def well_locations
+    subpools.flat_map(&:well_locations)
   end
 
-  def primer_panel
-    @primer_panel ||= Limber::Plate::PrimerPanel.new(@pool_hash['primer_panel'])
+  private
+
+  def compatible_subpool(well, request)
+    @subpools.detect { |sp| sp.compatible?(well, request) } || new_subpool
   end
 
-  # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
-  # require downstream submission and is completely happy with empty pools
-  def ready_for_custom_pooling?
-    @pool_hash.fetch('for_multiplexing', false)
+  def new_subpool
+    Sequencescape::Api::V2::Plate::Subpool.new.tap do |subpool|
+      @subpools << subpool
+    end
   end
 end

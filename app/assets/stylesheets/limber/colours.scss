@@ -1,25 +1,22 @@
 @mixin shade-aliquot($base_colour) {
   &.aliquot { background-color: $base_colour; }
   .aliquot { fill: $base_colour; }
+  &.plate-view.plate-stock .aliquot.unknown { fill: $base_colour; background-color: $base_colour; }
 }
 /*
  * Pinched from the crayola wiki page: http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors
  * Honestly, couldn't come up with a better set of colours and ones with greater names.  All credit
  * to them!
  */
-  .green             { @include shade-aliquot($success); }
-  .red               { @include shade-aliquot($danger); }
-  .blue              { @include shade-aliquot($info); }
-  .orange            { @include shade-aliquot($warning); }
-  .unknown           { @include shade-aliquot($secondary); }
-  .pending           { @include shade-aliquot($light); }
-  .started           { @include shade-aliquot($info); }
-  .passed            { @include shade-aliquot($success); }
-  .qc_complete       { @include shade-aliquot($primary); }
-  .good              { @include shade-aliquot($success); } // Used on well failure page
-  .failed            { @include shade-aliquot($danger); }
-  .cancelled         { @include shade-aliquot($danger); }
-  .permanent-failure { @include shade-aliquot($danger); }
+.unknown           { @include shade-aliquot($secondary); }
+.pending           { @include shade-aliquot($light); }
+.started           { @include shade-aliquot($info); }
+.passed            { @include shade-aliquot($success); }
+.qc_complete       { @include shade-aliquot($primary); }
+.good              { @include shade-aliquot($success); } // Used on well failure page
+.failed            { @include shade-aliquot($danger); }
+.cancelled         { @include shade-aliquot($danger); }
+.permanent-failure { @include shade-aliquot($danger); }
 
 .colour-1   { @include shade-aliquot(#EA7E5D); }
 .colour-2   { @include shade-aliquot(#78DBE2); }

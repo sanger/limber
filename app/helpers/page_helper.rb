@@ -13,7 +13,6 @@ module PageHelper
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
   def page(id, css_class = nil, prevent_row: false, &block)
-    concat render partial: 'header'
     grouping(:page, id: id, class: "container-fluid #{css_class}") do
       concat flash_messages
       if prevent_row

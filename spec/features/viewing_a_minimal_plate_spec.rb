@@ -16,7 +16,6 @@ RSpec.feature 'Viewing a plate', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes = {}
     create :minimal_purpose_config, uuid: 'stock-plate-purpose-uuid'
     create :minimal_purpose_config,
            uuid: 'child-purpose-0',

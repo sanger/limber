@@ -15,7 +15,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_size) { 96 }
-  let(:plate) { json :plate, uuid: parent_uuid, barcode_number: '2', size: plate_size }
+  let(:plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
@@ -26,14 +26,13 @@ RSpec.describe LabwareCreators::StampedPlate do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:plate_request) { stub_api_get(parent_uuid, body: plate) }
   let(:wells_request) { stub_api_get(parent_uuid, 'wells', body: wells) }
 
   before do
     Settings.purposes = {
       child_purpose_uuid => build(:purpose_config, name: child_purpose_name)
     }
-    plate_request
+    stub_v2_plate(plate, stub_search: false)
     wells_request
   end
 
@@ -68,7 +67,7 @@ RSpec.describe LabwareCreators::StampedPlate do
       end
 
       let!(:plate_request) do
-        stub_api_get(parent_uuid, body: plate)
+        stub_v2_plate(plate, stub_search: false)
       end
 
       let!(:transfer_template_request) do

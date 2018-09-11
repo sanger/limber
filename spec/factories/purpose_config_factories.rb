@@ -44,6 +44,7 @@ FactoryBot.define do
 
     factory :tagged_purpose_config do
       creator_class 'LabwareCreators::TaggedPlate'
+      presenter_class 'Presenters::PcrPresenter'
       name 'Tag Purpose'
       tag_layout_templates ['tag-layout-template']
     end

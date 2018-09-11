@@ -16,6 +16,7 @@
   </head>
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
       <div id='app'>
+      <%= render 'header' %>
       <%= yield %>
       </div>
       <%= render partial: 'loading_modal' %>

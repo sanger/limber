@@ -12,7 +12,9 @@ RSpec.feature 'Creating a tag plate', js: true do
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:pools) { 1 }
-  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
+  let(:example_plate) do
+    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools, purpose_name: 'Limber Cherrypicked'
+  end
   let(:old_api_example_plate) { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
@@ -48,7 +50,7 @@ RSpec.feature 'Creating a tag plate', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We get the actual plate
-    stub_v2_plate(example_plate)
+    2.times { stub_v2_plate(example_plate) }
 
     # Used in the tag plate creator itself.
     # TODO: Switch this for the new API as well

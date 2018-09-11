@@ -13,7 +13,7 @@ FactoryBot.define do
       request_factory :library_request
       outer_requests do
         pool_sizes.each_with_index.flat_map do |size, index|
-          create_list request_factory, size, pcr_cycles: pool_prc_cycles[index], state: library_state
+          create_list request_factory, size, pcr_cycles: pool_prc_cycles[index], state: library_state, submission_id: index, order_id: index * 2
         end
       end
       wells do
@@ -36,11 +36,12 @@ FactoryBot.define do
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
       transfer_targets { {} }
+      size 96
     end
 
     uuid { SecureRandom.uuid }
-    number_of_rows 8
-    number_of_columns 12
+    number_of_rows { (((size / 6)**0.5) * 2).floor }
+    number_of_columns { (((size / 6)**0.5) * 3).floor }
     state 'pending'
     created_at '2017-06-29T09:31:59.000+01:00'
     updated_at '2017-06-29T09:31:59.000+01:00'

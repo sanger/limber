@@ -1,5 +1,6 @@
 <div class="card-body bg-dark">
-  <table id="<%= (id ||= "plate") %>" class="plate-view mx-auto plate-<%= plate_presenter.size %>">
+  <table id="<%= (id ||= "plate") %>"
+         class="plate-view plate-<%= plate_presenter.size %> plate-<%= plate_presenter.style_class %> <%= plate_presenter.state %>">
     <thead>
       <tr>
         <th class="first-col">&nbsp;</th>

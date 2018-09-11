@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
   let(:plate_size)   { 384 }
-  let(:parent)       { json :plate_with_primer_panels, uuid: parent_uuid, size: plate_size, pool_sizes: [384] }
+  let(:parent)       { create :v2_plate_with_primer_panels, uuid: parent_uuid, size: plate_size, pool_sizes: [384] }
 
   let(:form_attributes) do
     {
@@ -43,7 +43,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   # is solely for the user's benefit!
   context 'create plate' do
     let!(:plate_request) do
-      stub_api_get(parent_uuid, body: parent)
+      stub_v2_plate(parent, stub_search: false)
     end
 
     let(:expected_transfers) { WellHelpers.stamp_hash(plate_size) }

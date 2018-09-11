@@ -10,16 +10,17 @@ RSpec.feature 'Viewing a plate', js: true do
   let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }
   let(:state) { 'pending' }
-  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection }
+  let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
+  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection, purpose_uuid: purpose_uuid }
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
   let(:default_tube_printer) { 'tube printer 1' }
-  let(:purpose_config) { build :purpose_config }
+  let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }
 
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = purpose_config
-    Settings.purposes['child-purpose-0'] = build :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked']
+    purpose_config
+    create :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked'], uuid: 'child-purpose-0'
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
@@ -37,7 +38,7 @@ RSpec.feature 'Viewing a plate', js: true do
   end
 
   context 'with a custom csv' do
-    let(:purpose_config) { build :purpose_config, csv_template: 'show_extended' }
+    let(:purpose_config) { create :purpose_config, csv_template: 'show_extended', uuid: purpose_uuid }
     scenario 'of a recognised type' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
@@ -94,7 +95,6 @@ RSpec.feature 'Viewing a plate', js: true do
 
   feature 'with passed pools' do
     let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: 'passed', pool_sizes: [5] }
-    let(:wells_collection) { create_list(:v2_well, 2) }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -102,6 +102,17 @@ RSpec.feature 'Viewing a plate', js: true do
         'Libraries on this plate have already been completed. ' \
         'Any further work conducted from this plate may run into issues at the end of the pipeline.'
       )
+    end
+  end
+
+  feature 'with a tagged plate' do
+    let(:purpose_config) { create :tagged_purpose_config, uuid: purpose_uuid }
+    let(:wells_collection) do
+      %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) }
+    end
+    scenario 'it shows tags' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#aliquot_A1')).to have_content('1')
     end
   end
 
@@ -135,10 +146,6 @@ RSpec.feature 'Viewing a plate', js: true do
         "barcode": '3980000001795'
       } }
     end
-
-    # before do
-    #   stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
-    # end
 
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

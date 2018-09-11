@@ -140,10 +140,13 @@ FactoryBot.define do
       library_state 'pending'
       outer_request { create :library_request, state: library_state }
       request { outer_request }
+      well_location 'A1'
     end
 
     tag_oligo nil
+    tag_index nil
     tag2_oligo nil
+    tag2_index nil
     suboptimal false
 
     after(:build) do |aliquot, evaluator|
@@ -152,7 +155,9 @@ FactoryBot.define do
 
     factory :v2_tagged_aliquot do
       sequence(:tag_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+      tag_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
       sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+      tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
     end
 
     factory :v2_suboptimal_aliquot do

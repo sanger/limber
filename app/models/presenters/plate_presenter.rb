@@ -9,7 +9,7 @@ class Presenters::PlatePresenter
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
 
-  class_attribute :aliquot_partial, :summary_partial, :well_failure_states
+  class_attribute :aliquot_partial, :summary_partial, :well_failure_states, :style_class
 
   self.summary_partial = 'labware/plates/standard_summary'
   self.aliquot_partial = 'standard_aliquot'
@@ -25,6 +25,7 @@ class Presenters::PlatePresenter
     'Created on' => :created_on
   }
   self.well_failure_states = [:passed]
+  self.style_class = 'standard'
 
   # Note: Validation here is intended as a warning. Rather than strict validation
   validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
@@ -36,7 +37,7 @@ class Presenters::PlatePresenter
 
   validates_with Validators::InProgressValidator
 
-  delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, to: :labware
+  delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
@@ -77,13 +78,8 @@ class Presenters::PlatePresenter
     { url: view.limber_plate_path(labware), as: :plate }
   end
 
-  def transfers
-    transfers = labware.creation_transfer.transfers
-    transfers.sort { |a, b| split_location(a.first) <=> split_location(b.first) }
-  end
-
   def tubes_and_sources
-    @tubes_and_sources ||= labware.wells.each_with_object({}) do |well, store|
+    @tubes_and_sources ||= wells.each_with_object({}) do |well, store|
       well.downstream_tubes.each do |tube|
         store[tube] ||= []
         store[tube] << well.location
@@ -104,7 +100,7 @@ class Presenters::PlatePresenter
   end
 
   def tag_sequences
-    @tag_sequences ||= labware.wells.each_with_object([]) do |well, tags|
+    @tag_sequences ||= wells.each_with_object([]) do |well, tags|
       well.aliquots.each do |aliquot|
         tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
       end
@@ -112,25 +108,10 @@ class Presenters::PlatePresenter
   end
 
   def wells
-    @well ||= labware.wells.sort_by { |w| WellHelpers.well_coordinate(w.location) }
-  end
-
-  def pools
-    @pools ||= generate_pools
-    []
+    labware.wells_in_columns
   end
 
   private
-
-  def generate_pools
-    pool_store = Hash.new { |hash, pool_id| hash[pool_id] = [] }
-    labware.wells.each do |well|
-      well.active_requests.each do |request|
-        pool_store[request.submission_id] << [well, request]
-      end
-    end
-    pool_store.values
-  end
 
   def number_of_filled_wells
     wells.count { |w| w.aliquots.present? }

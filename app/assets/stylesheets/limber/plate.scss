@@ -71,10 +71,6 @@
 }
 
 @mixin labware-view {
-  .green             { background-color: $success; }
-  .red               { background-color: $danger; }
-  .blue              { background-color: $info; }
-  .orange            { background-color: $warning; }
   .unknown           { background-color: $secondary; }
   .pending           { background: none; }
   .started, .process_1, .process_2 { background-color: $info;    }

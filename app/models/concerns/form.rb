@@ -7,13 +7,9 @@ module Form
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    class_attribute :page
+    class_attribute :page, :aliquot_partial, :attributes, instance_writer: false
     self.page = 'new'
-
-    class_attribute :aliquot_partial
     self.aliquot_partial = 'standard_aliquot'
-
-    class_attribute :attributes
   end
 
   # We should probably use active model model, but need to clean up some forms

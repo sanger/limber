@@ -13,8 +13,9 @@ RSpec.feature 'Creating a plate with bait', js: true do
   let(:old_api_example_plate) { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
   let(:example_plate) { create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3] }
-  let(:transfer_template_uuid) { 'transfer-1-12' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid'
@@ -39,7 +40,14 @@ RSpec.feature 'Creating a plate with bait', js: true do
     # These stubs are required to create a new plate with baits
     stub_api_post('plate_creations', body: json(:plate_creation), payload: { plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid } })
     stub_api_get(transfer_template_uuid, body: transfer_template)
-    stub_api_post(transfer_template_uuid, body: json(:transfer), payload: { transfer: { source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
+    stub_api_post(transfer_template_uuid,
+                  body: json(:transfer),
+                  payload: { transfer: {
+                    source: plate_uuid,
+                    destination: 'child-uuid',
+                    user:  user_uuid,
+                    transfers: expected_transfers
+                  } })
     stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
     # end of stubs for creating a new plate with baits
     # Stub the requests for the next plate page

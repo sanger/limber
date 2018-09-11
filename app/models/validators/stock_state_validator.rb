@@ -50,9 +50,9 @@ module Validators
 
       def analyze_pools
         @well_pools = Hash.new { |h, i| h[i] = [] }
-        @labware.pools.each do |pool, pool_info|
-          pool_info.fetch('wells', []).each do |well|
-            @well_pools[well] << pool
+        @labware.pools.each do |pool|
+          pool.well_locations.each do |well|
+            @well_pools[well] << pool.id
           end
         end
       end

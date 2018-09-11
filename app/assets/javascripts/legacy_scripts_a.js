@@ -134,12 +134,6 @@
     that.plateElement = plateElement;
     that.control      = control;
 
-
-    that.statusColour = function() {
-      that.plateElement.find('.aliquot').
-        addClass(that.plate.state);
-    };
-
     // Caution. Only suitable for sorting. Compatible with any plate
     // size up to 26 columns
     that.well_index_by_column = function(well){
@@ -177,7 +171,6 @@
 
     that['summary-view'] = {
       activate: function(){
-          that.statusColour();
           that.colourPools();
 
       },
@@ -202,11 +195,8 @@
     };
 
     that['samples-view'] = {
-      activate: function(){
-        that.statusColour();
-      },
+      activate: function(){},
       deactivate: function(){}
-
     };
 
     that['files-view'] = {

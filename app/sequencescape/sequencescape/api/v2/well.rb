@@ -17,6 +17,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     aliquots.flat_map(&:request).compact
   end
 
+  def coordinate
+    WellHelpers.well_coordinate(location)
+  end
+
   def location
     position['name']
   end
@@ -59,6 +63,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def submission_ids
     active_requests.map(&:submission_id).uniq
+  end
+
+  def pool_id
+    submission_ids.first
   end
 
   def downstream_tubes

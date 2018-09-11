@@ -9,9 +9,12 @@ module LabwareCreators
     include PlateWalking
     include NoCustomPage
 
-    class_attribute :default_transfer_template_name
+    class_attribute :default_transfer_template_name, :style_class, :state
     self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
     self.default_transfer_template_name = 'Transfer columns 1-12'
+    self.style_class = 'creator'
+    # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
+    self.state = 'pending'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
 
@@ -26,24 +29,8 @@ module LabwareCreators
       parent
     end
 
-    def child_purpose
-      @child_purpose ||= api.plate_purpose.find(purpose_uuid)
-    end
-
     def labware
       parent
-    end
-
-    # Purpose returns the plate or tube purpose of the labware.
-    # Currently this needs to be specialised for tube or plate but in future
-    # both should use #purpose and we'll be able to share the same method for
-    # all presenters.
-    def purpose
-      labware.plate_purpose
-    end
-
-    def label_text
-      "#{labware.label.prefix} #{labware.label.text}"
     end
 
     def save!

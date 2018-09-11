@@ -62,14 +62,6 @@ RSpec.describe LabwareCreators::TaggedPlate do
       expect(subject).to be_a LabwareCreators::TaggedPlate
     end
 
-    context 'with purpose mocks' do
-      it 'describes the child purpose' do
-        # TODO: This request is possibly unnecessary
-        stub_api_get(child_purpose_uuid, body: json(:plate_purpose, name: child_purpose_name))
-        expect(subject.child_purpose.name).to eq(child_purpose_name)
-      end
-    end
-
     it 'describes the parent barcode' do
       expect(subject.parent.barcode.ean13).to eq(plate_barcode)
     end

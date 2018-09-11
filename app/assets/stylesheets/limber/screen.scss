@@ -13,8 +13,22 @@ header.limber-header {
   nav {
     @extend .navbar;
     @extend .navbar-expand-md;
-    @extend .bg-dark;
     @extend .navbar-dark;
+  }
+}
+
+.production {
+  header.limber-header {
+    nav {
+      @extend .bg-dark;
+    }
+  }
+}
+.nonproduction {
+  header.limber-header{
+    nav {
+      @extend .bg-danger;
+    }
   }
 }
 
@@ -45,13 +59,6 @@ nav.inbox-list, nav.robots-list {
   a { @extend .dropdown-item };
 }
 
-.csv-link {
-  @extend .btn;
-  @extend .btn-info;
-  @extend .btn-lg;
-  @extend .btn-block;
-}
-
 /* New stuff */
 .limber-logo {
   @extend .navbar-brand;
@@ -80,38 +87,34 @@ nav.inbox-list, nav.robots-list {
 .content-secondary, .content-main { @extend .mt-3; }
 
 .content-main {
-  @extend .col-sm-12;
-  @extend .col-md-8;
-  @extend .col-lg-7;
-  @extend .col-xl-6;
+  @extend .col;
 }
 
 .content-secondary {
-  @extend .col-sm-12;
-  @extend .col-md-4;
-  @extend .col-lg-5;
-  @extend .col-xl-6;
-
+  @extend .col;
   .card {
     @extend .mb-3;
   }
 }
 
-.work-completion-button, .robots-button {
+.work-completion-button, .robots-button, .create-plate-button, .create-tube-button, .csv-link {
   @extend .btn;
   @extend .btn-lg;
   @extend .btn-block;
+  @extend .mb-2;
 }
 
 .other-actions {
-  .work-completion-button { @extend .btn-secondary;}
+  .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-secondary;}
 }
 .suggested-actions {
-  .work-completion-button { @extend .btn-success;}
+  .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-success;}
 }
 .robots-button {
   @extend .btn-primary;
 }
+
+.csv-link { @extend .btn-info; }
 
 
 #state-changer {

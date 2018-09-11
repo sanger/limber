@@ -40,7 +40,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def wells_in_columns
-    @wells_in_columns ||= wells.sort_by { |w| WellHelpers.well_coordinate(w.position['name']) }
+    @wells_in_columns ||= wells.sort_by(&:coordinate)
   end
 
   def tagged?
@@ -103,9 +103,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     primer_panels.first
   end
 
-  # TODO: Remove this
   def pools
-    []
+    @pools ||= generate_pools
   end
 
   def role
@@ -114,5 +113,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def priority
     wells.map(&:priority).max || 0
+  end
+
+  private
+
+  def generate_pools
+    Pools.new(wells)
   end
 end

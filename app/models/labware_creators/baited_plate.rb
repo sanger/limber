@@ -3,12 +3,11 @@
 require_dependency 'labware_creators/base'
 
 module LabwareCreators
-  class BaitedPlate < Base
+  class BaitedPlate < StampedPlate
     include SupportParent::PlateOnly
     include LabwareCreators::CustomPage
 
     self.page = 'baited_plate'
-    class_attribute :aliquot_partial
     self.aliquot_partial = 'baited_aliquot'
 
     delegate :number_of_columns, :number_of_rows, :size, to: :plate
@@ -25,9 +24,9 @@ module LabwareCreators
     end
 
     def create_labware!
-      create_plate_with_standard_transfer! do |plate|
+      create_plate_with_standard_transfer! do |child|
         api.bait_library_layout.create!(
-          plate: plate.uuid,
+          plate: child.uuid,
           user: user_uuid
         )
       end

@@ -8,6 +8,7 @@ FactoryBot.define do
     transient do
       pcr_cycles 10
       sequence(:submission_id) { |i| i }
+      sequence(:order_id) { |i| i }
     end
 
     skip_create
@@ -17,7 +18,10 @@ FactoryBot.define do
     state 'pending'
     options do
       {
-        'pcr_cycles' => pcr_cycles
+        'pcr_cycles' => pcr_cycles,
+        'fragment_size_required_from' => 100,
+        'fragment_size_required_to' => 200,
+        'library_type' => 'Standard'
       }
     end
     request_type { create :request_type }
@@ -31,6 +35,13 @@ FactoryBot.define do
           'related' => "http://localhost:3000/api/v2/requests/#{request.id}/submission"
         },
         'data' => { 'type' => 'submissions', 'id' => evaluator.submission_id.to_s }
+      }
+      request.relationships.order = {
+        'links' => {
+          'self' => "http://localhost:3000/api/v2/requests/#{request.id}/relationships/order",
+          'related' => "http://localhost:3000/api/v2/requests/#{request.id}/order"
+        },
+        'data' => { 'type' => 'orders', 'id' => evaluator.order_id.to_s }
       }
     end
 

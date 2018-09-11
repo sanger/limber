@@ -60,6 +60,10 @@ module LabwareCreators
       true
     end
 
+    def parent
+      @parent ||= api.plate.find(parent_uuid)
+    end
+
     def requires_tag2?
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
