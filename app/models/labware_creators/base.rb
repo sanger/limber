@@ -9,8 +9,12 @@ module LabwareCreators
     include PlateWalking
     include NoCustomPage
 
+    attr_reader :api
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
+
     class_attribute :default_transfer_template_name, :style_class, :state
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
+
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
@@ -23,6 +27,14 @@ module LabwareCreators
     # The base creator is abstract, and is not intended to be used directly
     def self.support_parent?(_parent)
       false
+    end
+
+    # We pull out the api as the first argument as it ensures
+    # we'll always have it available, even during assignment of
+    # other attributes. Otherwise we end up relying on hash order.
+    def initialize(api, *args)
+      @api = api
+      super(*args)
     end
 
     def plate_to_walk

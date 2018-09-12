@@ -45,7 +45,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   end
 
   subject do
-    LabwareCreators::StampedPlate.new(form_attributes.merge(api: api))
+    LabwareCreators::StampedPlate.new(api, form_attributes)
   end
 
   context 'on new' do

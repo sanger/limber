@@ -8,7 +8,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
   it_behaves_like 'it only allows creation from plates'
 
   subject do
-    LabwareCreators::BaitedPlate.new(form_attributes)
+    LabwareCreators::BaitedPlate.new(api, form_attributes)
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
@@ -24,8 +24,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
     {
       user_uuid: user_uuid,
       purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid,
-      api: api
+      parent_uuid: parent_uuid
     }
   end
 

@@ -15,7 +15,7 @@ RSpec.feature 'Creating a tag plate', js: true do
   let(:example_plate) do
     create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools, purpose_name: 'Limber Cherrypicked'
   end
-  let(:old_api_example_plate) { json :stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
+  let(:old_api_example_plate) { json :stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid)        { 'tag-plate-uuid' }

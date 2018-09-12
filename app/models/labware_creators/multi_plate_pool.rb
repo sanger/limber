@@ -4,13 +4,12 @@ module LabwareCreators
   class MultiPlatePool < Base
     include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage
+
+    attr_accessor :transfers
+
     self.page = 'multi_plate_pool'
     self.aliquot_partial = 'custom_pooled_aliquot'
-
-    self.attributes = %i[
-      api purpose_uuid parent_uuid user_uuid
-      transfers
-    ]
+    self.attributes += [{ transfers: {} }]
 
     private
 

@@ -12,7 +12,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   it_behaves_like 'it only allows creation from charged and passed plates'
 
   subject do
-    described_class.new(form_attributes.merge(api: api))
+    described_class.new(api, form_attributes)
   end
 
   it 'should have page' do

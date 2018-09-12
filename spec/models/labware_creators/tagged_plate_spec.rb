@@ -37,7 +37,7 @@ RSpec.describe LabwareCreators::TaggedPlate do
   end
 
   subject do
-    LabwareCreators::TaggedPlate.new(form_attributes.merge(api: api))
+    LabwareCreators::TaggedPlate.new(api, form_attributes)
   end
 
   context 'on new' do

@@ -12,7 +12,7 @@ RSpec.describe LabwareCreators::FinalTube do
 
   context 'on creation' do
     subject do
-      LabwareCreators::FinalTube.new(form_attributes.merge(api: api))
+      LabwareCreators::FinalTube.new(api, form_attributes)
     end
 
     before do

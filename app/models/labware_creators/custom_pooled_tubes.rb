@@ -14,6 +14,8 @@ module LabwareCreators
     self.page = 'custom_pooled_tubes'
     self.attributes += [:file]
 
+    attr_accessor :file
+
     delegate :pools, to: :csv_file
 
     validates :file, presence: true

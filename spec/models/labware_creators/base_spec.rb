@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::Base do
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
 
-    subject { LabwareCreators::Base.new(purpose_uuid: 'test-purpose') }
+    subject { LabwareCreators::Base.new(nil, purpose_uuid: 'test-purpose') }
 
     it 'can lookup form for another purpose' do
       expect(subject.transfer_template_uuid).to eq('custom-template-uuid')

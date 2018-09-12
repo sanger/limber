@@ -30,15 +30,15 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
 
   # Setup stubs
   background do
-    Settings.transfer_templates['Transfer from tube to tube by submission'] = 'transfer-template-uuid'
+    Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
 
     # Set-up the tube config
-    Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = build :tube_config, name: 'Example Purpose'
-    Settings.purposes[child_purpose_uuid] = build :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
-                                                                name: 'Final Tube Purpose',
-                                                                creator_class: 'LabwareCreators::FinalTube',
-                                                                parents: ['Example Purpose']
+    create :tube_config, name: 'Example Purpose', uuid: 'example-purpose-uuid'
+    create :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
+                         name: 'Final Tube Purpose',
+                         creator_class: 'LabwareCreators::FinalTube',
+                         parents: ['Example Purpose'],
+                         uuid: child_purpose_uuid
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We lookup the tube

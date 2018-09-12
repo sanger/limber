@@ -6,8 +6,8 @@ class TubeCreationController < CreationController
   end
 
   def create
-    tube_params[:parent_uuid] ||= parent_uuid
-    @labware_creator = labware_creator(tube_params)
+    creator_params[:parent_uuid] ||= parent_uuid
+    @labware_creator = labware_creator(creator_params)
     @labware_creator.save!
     respond_to do |format|
       format.html { redirect_to_creator_child(@labware_creator) }
@@ -16,7 +16,7 @@ class TubeCreationController < CreationController
 
   private
 
-  def tube_params
+  def creator_params
     params.require(:tube)
   end
 

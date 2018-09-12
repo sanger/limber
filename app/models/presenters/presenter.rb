@@ -14,7 +14,7 @@ module Presenters
       attr_accessor :api, :labware
 
       self.page = 'show'
-      self.attributes = %i[api labware]
+      #     self.attributes = %i[api labware]
 
       def csv
         purpose_config[:csv_template]

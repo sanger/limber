@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
   context 'on creation' do
     subject do
-      described_class.new(form_attributes.merge(api: api))
+      described_class.new(api, form_attributes)
     end
 
     before do

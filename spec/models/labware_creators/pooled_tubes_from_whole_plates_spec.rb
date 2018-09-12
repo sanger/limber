@@ -14,7 +14,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
   # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
 
-  subject { described_class.new(form_attributes.merge(api: api)) }
+  subject { described_class.new(api, form_attributes) }
 
   it 'should have page' do
     expect(described_class.page).to eq 'pooled_tubes_from_whole_plates'

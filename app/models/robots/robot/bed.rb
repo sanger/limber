@@ -6,15 +6,10 @@ module Robots
 
     class BedError < StandardError; end
     # Our robot has beds/rack-spaces
-    attr_reader :plate, :error_messages
+    attr_reader :plate
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot
 
-    class_attribute :attributes
-    self.attributes = %i[api user_uuid purpose states label parent target_state robot]
-
-    def initialize(*args)
-      @error_messages = []
-      super
-    end
+    delegate :api, :user_uuid, to: :robot
 
     def transitions?
       @target_state.present?
@@ -24,12 +19,6 @@ module Robots
       return if target_state.nil? || plate.nil? # We have nothing to do
       StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
     end
-
-    def error(message)
-      error_messages << message
-      false
-    end
-    private :error
 
     def purpose_labels
       purpose
@@ -76,7 +65,14 @@ module Robots
     alias recieving_labware plate
 
     def formatted_message
-      "#{label} - #{error_messages.join(' ')}"
+      "#{label} - #{errors.full_messages.join('; ')}"
+    end
+
+    private
+
+    def error(message)
+      errors.add(:base, message)
+      false
     end
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   subject do
-    LabwareCreators::PooledTubesBySubmission.new(form_attributes)
+    LabwareCreators::PooledTubesBySubmission.new(api, form_attributes)
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
@@ -27,8 +27,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
     {
       user_uuid: user_uuid,
       purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid,
-      api: api
+      parent_uuid: parent_uuid
     }
   end
 

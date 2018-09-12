@@ -4,8 +4,10 @@ module Robots
   class Robot
     include Form
 
-    class_attribute :attributes
-    self.attributes = %i[api user_uuid layout beds name id verify_robot]
+    attr_reader :beds
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot
+    # class_attribute :attributes
+    # self.attributes = %i[api user_uuid layout beds name id verify_robot]
 
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
@@ -53,6 +55,14 @@ module Robots
       Report.new(verified, verified.values.all?, formatted_message)
     end
 
+    def beds=(new_beds)
+      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
+      new_beds.each do |id, bed|
+        beds[id] = bed_class(bed).new(bed.merge(robot: self))
+      end
+      @beds = beds
+    end
+
     private
 
     def valid_plates(bed_contents)
@@ -72,14 +82,6 @@ module Robots
                   end
         error(beds[position], message)
       end.compact]
-    end
-
-    def beds=(new_beds)
-      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
-      new_beds.each do |id, bed|
-        beds[id] = bed_class(bed).new(bed.merge(api: api, user_uuid: user_uuid, robot: self))
-      end
-      @beds = beds
     end
 
     def bed_class(_bed)

@@ -5,11 +5,10 @@ module LabwareCreators
   class PooledTubesFromWholePlates < Base
     include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage
-    attr_reader :tube_transfer, :child
+    attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_plates'
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid barcodes]
-
+    self.attributes += [{ barcodes: [] }]
     self.default_transfer_template_name = 'Whole plate to tube'
 
     validate :parents_suitable

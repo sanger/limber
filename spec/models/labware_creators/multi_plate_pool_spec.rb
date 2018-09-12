@@ -35,10 +35,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     wells_request
   end
 
-  it 'can be created' do
-    expect(subject).to be_a LabwareCreators::MultiPlatePool
-  end
-
   context 'on new' do
     let(:form_attributes) do
       {
@@ -48,7 +44,11 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     end
 
     subject do
-      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api))
+      LabwareCreators::MultiPlatePool.new(api, form_attributes)
+    end
+
+    it 'can be created' do
+      expect(subject).to be_a LabwareCreators::MultiPlatePool
     end
 
     it 'renders the "multi_plate_pool" page' do
@@ -64,7 +64,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
 
   context 'on create' do
     subject do
-      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api, user_uuid: user_uuid))
+      LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid))
     end
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
@@ -76,10 +76,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
       {
         parent_uuid: plate_uuid,
         purpose_uuid: child_purpose_uuid,
-        '0' => plate_barcode,
-        '1' => plate_b_barcode,
-        '2' => '',
-        '3' => '',
         transfers: {
           plate_uuid => { 'A1' => 'A1', 'B1' => 'A1' },
           plate_b_uuid => { 'A1' => 'B1', 'B1' => 'B1' }

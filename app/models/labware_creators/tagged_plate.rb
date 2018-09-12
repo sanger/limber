@@ -5,31 +5,30 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
-    attr_reader :child
+    attr_reader :child, :tag_plate, :tag2_tube
+    attr_accessor :tag_plate_barcode, :tag2_tube_barcode
 
     self.page = 'tagged_plate'
-    self.attributes = %i[
-      api purpose_uuid parent_uuid user_uuid
-      tag_plate_barcode tag_plate
-      tag2_tube_barcode tag2_tube
+    self.attributes += [
+      :tag_plate_barcode, :tag2_tube_barcode,
+      { tag_plate: %i[asset_uuid template_uuid], tag2_tube: %i[asset_uuid template_uuid] }
     ]
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
-
-    QcableObject = Struct.new(:asset_uuid, :template_uuid)
-
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
+    QcableObject = Struct.new(:asset_uuid, :template_uuid)
+
     def tag_plate=(params)
-      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
+      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def tag2_tube=(params)
-      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
+      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def initialize(*args, &block)

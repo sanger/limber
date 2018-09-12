@@ -11,6 +11,11 @@ module LabwareCreators
     include SupportParent::TubeOnly
 
     self.default_transfer_template_name = 'Transfer from tube to tube by submission'
+    self.page = 'final_tube'
+    self.attributes += [{ parents: {} }]
+
+    attr_reader :all_tube_transfers
+    validate :all_parents_and_only_parents?, if: :barcodes_provided?
 
     def render(controller)
       if no_pooling_required?
@@ -20,8 +25,6 @@ module LabwareCreators
       end
     end
 
-    attr_reader :all_tube_transfers
-
     def each_sibling
       siblings.each { |s| yield s }
     end
@@ -29,11 +32,6 @@ module LabwareCreators
     def all_ready?
       siblings.all?(&:ready?)
     end
-
-    self.page = 'final_tube'
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid parents]
-
-    validate :all_parents_and_only_parents?, if: :barcodes_provided?
 
     def create_labware!
       success = []
@@ -90,7 +88,7 @@ module LabwareCreators
     end
 
     def barcodes_provided?
-      @barcode_hash.present?
+      @barcode.present?
     end
 
     def all_parents_and_only_parents?

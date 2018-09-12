@@ -47,7 +47,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   end
 
   subject do
-    LabwareCreators::PlateWithTemplate.new(form_attributes.merge(api: api))
+    LabwareCreators::PlateWithTemplate.new(api, form_attributes)
   end
 
   context 'on new' do
