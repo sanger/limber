@@ -6,7 +6,7 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-RSpec.describe LabwareCreators::TaggedPlate do
+RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api

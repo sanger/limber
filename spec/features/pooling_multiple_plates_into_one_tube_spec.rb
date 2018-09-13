@@ -13,21 +13,21 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
   let(:plate_uuid)        { 'plate-1' }
   let(:example_plate_args) { [:plate, barcode_number: 1, state: 'passed', uuid: plate_uuid] }
   let(:example_plate) { json(*example_plate_args) }
-  let(:example_plate_new_api) { create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid, well_factory: :v2_tagged_well) }
+  let(:example_plate_new_api) { create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_listed) { associated(*example_plate_args) }
 
   let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_uuid_2)      { 'plate-2' }
   let(:example_plate2_args) { [:plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2] }
 
-  let(:example_plate_2) { create(:v2_plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2, well_factory: :v2_tagged_well) }
+  let(:example_plate_2) { create(:v2_plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_2_listed) { associated(*example_plate2_args) }
 
   let(:plate_barcode_3)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).machine_barcode.to_s }
   let(:plate_uuid_3)      { 'plate-3' }
   let(:example_plate3_args) { [:plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3] }
 
-  let(:example_plate_3) { create(:v2_plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3, wells: example_plate_new_api.wells) }
+  let(:example_plate_3) { create(:v2_plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3, wells: example_plate_new_api.wells, pool_sizes: [96]) }
   let(:example_plate_3_listed) { associated(*example_plate3_args) }
 
   let(:child_tube_uuid) { 'tube-0' }

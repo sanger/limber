@@ -11,9 +11,15 @@ FactoryBot.define do
       well_count { number_of_rows * number_of_columns }
       well_factory :v2_well
       request_factory :library_request
+      well_uuid_result { "#{barcode_number}-well-%s" }
       outer_requests do
         pool_sizes.each_with_index.flat_map do |size, index|
-          create_list request_factory, size, pcr_cycles: pool_prc_cycles[index], state: library_state, submission_id: index, order_id: index * 2
+          create_list request_factory,
+                      size,
+                      pcr_cycles: pool_prc_cycles[index],
+                      state: library_state,
+                      submission_id: index,
+                      order_id: index * 2
         end
       end
       wells do
@@ -22,7 +28,9 @@ FactoryBot.define do
           create well_factory, location: location,
                                state: state,
                                outer_request: outer_requests[i],
-                               downstream_assets: transfer_targets[location]
+                               downstream_assets: transfer_targets[location],
+                               uuid: well_uuid_result % location,
+                               aliquot_count: outer_requests[i] ? 1 : 0
         end
       end
       purpose_name 'example-purpose'

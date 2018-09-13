@@ -45,6 +45,7 @@ FactoryBot.define do
 
     position { { 'name' => location } }
     state 'passed'
+    uuid { SecureRandom.uuid }
 
     after(:build) do |well, evaluator|
       RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results || [])

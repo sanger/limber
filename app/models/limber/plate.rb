@@ -6,9 +6,6 @@
 # @author Genome Research Ltd.
 #
 class Limber::Plate < Sequencescape::Plate
-  # Customize the has_many association to use out custom class.
-  has_many :transfers_to_tubes, class_name: 'Limber::TubeTransfer'
-
   delegate :number_of_pools, :pcr_cycles, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
            :ready_for_custom_pooling?, :submissions, :primer_panel,
            to: :pools_info

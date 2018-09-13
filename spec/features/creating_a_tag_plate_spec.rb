@@ -3,7 +3,7 @@
 require 'rails_helper'
 require_relative '../support/shared_tagging_examples'
 
-RSpec.feature 'Creating a tag plate', js: true do
+RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }

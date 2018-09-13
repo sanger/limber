@@ -29,8 +29,16 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     aliquots.any?(&:tagged?)
   end
 
+  def empty?
+    aliquots.blank?
+  end
+
   def passed?
     state == 'passed'
+  end
+
+  def failed?
+    state == 'failed'
   end
 
   def active_requests

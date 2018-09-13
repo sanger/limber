@@ -11,18 +11,17 @@ module LabwareCreators
 
     attr_reader :api
     attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
+    attr_reader :child
 
     class_attribute :default_transfer_template_name, :style_class, :state
-    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
 
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
     self.state = 'pending'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
-
-    attr_reader :child
+    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
 
     # The base creator is abstract, and is not intended to be used directly
     def self.support_parent?(_parent)

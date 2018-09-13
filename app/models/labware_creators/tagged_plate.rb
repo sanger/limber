@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < StampedPlate
+  class TaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
@@ -13,6 +13,7 @@ module LabwareCreators
       :tag_plate_barcode, :tag2_tube_barcode,
       { tag_plate: %i[asset_uuid template_uuid], tag2_tube: %i[asset_uuid template_uuid] }
     ]
+    self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
@@ -59,10 +60,6 @@ module LabwareCreators
       true
     end
 
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
-    end
-
     def requires_tag2?
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
     end
@@ -103,6 +100,19 @@ module LabwareCreators
     end
 
     private
+
+    def transfer_material_from_parent!(child_uuid)
+      transfer_template.create!(
+        source: parent_uuid,
+        destination: child_uuid,
+        user: user_uuid,
+        transfers: transfer_hash
+      )
+    end
+
+    def transfer_hash
+      WellHelpers.stamp_hash(parent.size)
+    end
 
     def tag_plates
       @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)

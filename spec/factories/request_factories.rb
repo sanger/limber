@@ -27,6 +27,7 @@ FactoryBot.define do
     request_type { create :request_type }
     primer_panel nil
     pre_capture_pool nil
+    uuid { SecureRandom.uuid }
 
     after(:build) do |request, evaluator|
       request.relationships.submission = {

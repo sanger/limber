@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# CAUTION: This is set to http while we resolve SSL issues. It should be set back to https ASAP
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
@@ -19,7 +18,7 @@ gem 'hashie'
 gem 'json_api_client', github: 'sanger/json_api_client'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', '>= 0.3.3',
+gem 'sequencescape-client-api', '>= 0.3.4',
     # Should be switched back to sanger + rails_4 for deployment
     github: 'sanger/sequencescape-client-api',
     branch: 'rails_4',
