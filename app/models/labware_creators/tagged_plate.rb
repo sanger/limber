@@ -101,15 +101,6 @@ module LabwareCreators
 
     private
 
-    def transfer_material_from_parent!(child_uuid)
-      transfer_template.create!(
-        source: parent_uuid,
-        destination: child_uuid,
-        user: user_uuid,
-        transfers: transfer_hash
-      )
-    end
-
     def transfer_hash
       WellHelpers.stamp_hash(parent.size)
     end

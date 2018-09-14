@@ -45,8 +45,11 @@ module LabwareCreators
     end
 
     def save!
-      raise ResourceInvalid, self unless valid?
-      create_labware!
+      save || raise(ResourceInvalid, self)
+    end
+
+    def save
+      valid? && create_labware!
     end
 
     #
@@ -97,8 +100,14 @@ module LabwareCreators
       transfer_template.create!(
         source: parent_uuid,
         destination: child_uuid,
-        user: user_uuid
+        user: user_uuid,
+        transfers: transfer_hash
       )
+    end
+
+    # Over-ride in classes with custom transfers
+    def transfer_hash
+      nil
     end
 
     def create_labware!

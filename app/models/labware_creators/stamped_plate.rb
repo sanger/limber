@@ -32,8 +32,12 @@ module LabwareCreators
       {
         'source_asset' => source_well.uuid,
         'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid,
-        'outer_request' => source_well.active_requests.first.uuid
+        'outer_request' => filter_requests(source_well.active_requests).uuid
       }
+    end
+
+    def filter_requests(requests)
+      requests.first
     end
   end
 end
