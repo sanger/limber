@@ -7,10 +7,9 @@ GnT Stock:
   :presenter_class: Presenters::StockPlatePresenter
 GnT scDNA Stock:
   :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: true
+  :stock_plate: false
+  :cherrypickable_target: false
   :input_plate: false
-  :presenter_class: Presenters::StockPlatePresenter
   :parents:
   - GnT Stock
 GnT Pico-XP:
@@ -34,9 +33,6 @@ GnT Pico Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  warnings:
-    pcr_cycles_not_in:
-      - 8
   :parents:
   - GnT Pico End Prep
 GnT MDA-XP:

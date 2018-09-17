@@ -141,25 +141,9 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot(
-    'nx-96-scrna-stock-to-scrna-cdna-xp',
-    name: 'nx-96 scRNA Stock => scRNA cDNA-XP',
-    layout: 'bed',
-    beds: {
-      bed(1).barcode => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 1' },
-      bed(9).barcode   => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
-      bed(2).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 2' },
-      bed(10).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
-      bed(3).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 3' },
-      bed(11).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
-      bed(4).barcode   => { purpose: 'scRNA Stock', states: ['passed'], label: 'Bed 4' },
-      bed(12).barcode  => { purpose: 'scRNA cDNA-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
-    }
-  )
-
   bravo_robot transition_to: 'started' do
     from 'scRNA Stock', bed(4)
-    to 'scRNA cDNA-XP', car('1,4')
+    to 'scRNA cDNA-XP', car('2,3')
   end
 
   custom_robot(
@@ -463,22 +447,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot(
-    'nx-96-gnt-scdna-stock-to-gnt-pico-xp',
-    name: 'nx-96 GnT scDNA Stock => GnT Pico-XP',
-    layout: 'bed',
-    beds: {
-      bed(1).barcode => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 1' },
-      bed(9).barcode   => { purpose: 'GnT Pico-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
-      bed(2).barcode   => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 2' },
-      bed(10).barcode  => { purpose: 'GnT Pico-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
-      bed(3).barcode   => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 3' },
-      bed(11).barcode  => { purpose: 'GnT Pico-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
-      bed(4).barcode   => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 4' },
-      bed(12).barcode  => { purpose: 'GnT Pico-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
-    }
-  )
-
   bravo_robot transition_to: 'started' do
     from 'GnT Pico-XP', bed(4)
     to 'GnT Pico End Prep', car('1,4')
@@ -497,25 +465,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'GnT Pico Lib PCR', bed(6)
   end
 
-  custom_robot(
-    'nx-96-gnt-scdna-stock-to-gnt-mda-xp-gnt-mda-norm',
-    name: 'nx-96 GnT scDNA Stock => GnT MDA-XP and GnT MDA Norm',
-    layout: 'bed',
-    beds: {
-      bed(4).barcode => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 4' },
-      bed(5).barcode => { purpose: 'GnT MDA-XP', states: ['pending'], label: 'Bed 5', parent: bed(4).barcode, target_state: 'passed' },
-      bed(6).barcode => { purpose: 'GnT MDA Norm', states: ['pending'], label: 'Bed 6', parent: bed(5).barcode, target_state: 'passed' }
-    }
-  )
+  bravo_robot do
+    from 'GnT scDNA Stock', bed(4)
+    to 'GnT Pico-XP', car('2,3')
+  end
 
-  custom_robot(
-    'bravo-gnt-scdna-stock-to-gnt-mda-xp-gnt-mda-norm',
-    name: 'bravo GnT scDNA Stock => GnT MDA-XP and GnT MDA Norm',
-    layout: 'bed',
-    beds: {
-      bed(4).barcode => { purpose: 'GnT scDNA Stock', states: ['passed'], label: 'Bed 4' },
-      bed(5).barcode => { purpose: 'GnT MDA-XP', states: ['pending'], label: 'Bed 5', parent: bed(4).barcode, target_state: 'passed' },
-      bed(6).barcode => { purpose: 'GnT MDA Norm', states: ['pending'], label: 'Bed 6', parent: bed(5).barcode, target_state: 'passed' }
-    }
-  )
+  bravo_robot do
+    from 'GnT scDNA Stock', bed(4)
+    to 'GnT MDA Norm', car('2,3')
+  end
 end
