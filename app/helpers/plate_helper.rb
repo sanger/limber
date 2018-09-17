@@ -23,6 +23,7 @@ module PlateHelper
     current_plate.wells.each_with_object({}) do |well, pool_store|
       well.active_requests.each do |request|
         next unless request.pre_capture_pool
+
         wa = []
         pool_store[request.pre_capture_pool.id] ||= { 'wells' => wa, 'all_wells' => wa, 'failures' => [] }
         pool_store[request.pre_capture_pool.id]['wells'] << well.location

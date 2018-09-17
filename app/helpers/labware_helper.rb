@@ -15,6 +15,7 @@ module LabwareHelper
   def self.cycling_colours(name, &block)
     define_method(:"#{name}_colour") do |*args|
       return 'failed' if FAILED_STATES.include?(args.first) # First argument is always the well
+
       @colours  ||= Hash.new { |h, k| h[k] = STANDARD_COLOURS.dup }
       @rotating ||= Hash.new { |h, k| h[k] = @colours[name].rotate!.last } # Go for last as it was first before the rotate
       @rotating[block.call(*args)]
@@ -33,6 +34,7 @@ module LabwareHelper
     define_method(:"disable_#{state_name}_by_state") do |transitions, options|
       options ||= {}
       return { disabled: true }.merge(options) unless transitions.first.to == state_name.to_s
+
       {}.merge(options)
     end
   end
@@ -42,6 +44,7 @@ module LabwareHelper
 
   def pool_colour_for_well(presenter, well)
     return 'failure' if well.state == 'failed'
+
     tube_uuid = presenter.transfers[well.location].uuid
     pooling_colour(well, tube_uuid)
   end

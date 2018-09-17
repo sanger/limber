@@ -29,6 +29,7 @@ module Presenters::ExtendedCsv
 
   def all_wells
     return @all_wells unless @all_wells.nil?
+
     @all_wells = {}
     ('A'..'H').each { |r| (1..12).each { |c| @all_wells["#{r}#{c}"] = 'H12' } }
     @all_wells

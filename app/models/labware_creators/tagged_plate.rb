@@ -76,6 +76,7 @@ module LabwareCreators
     def acceptable_tag2_sources
       return ['tube'] if tag_tubes_used?
       return ['plate'] if tag_plates_used?
+
       %w[tube plate]
     end
 
@@ -91,11 +92,13 @@ module LabwareCreators
     def tag_plate_dual_index?
       return false if tag_tubes_used?
       return true if tag_plates_used?
+
       nil
     end
 
     def help
       return 'single' unless requires_tag2?
+
       "dual_#{acceptable_tag2_sources.join('_')}"
     end
 

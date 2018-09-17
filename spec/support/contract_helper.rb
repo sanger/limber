@@ -58,6 +58,7 @@ module ContractHelper
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
         return File.open(filename, 'r') { |file| yield(file) } if File.file?(filename)
+
         path.pop
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"

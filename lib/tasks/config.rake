@@ -20,6 +20,7 @@ namespace :config do
 
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       next unless file.extname == '.yml'
+
       YAML.parse_file(file).to_ruby.each do |name, options|
         purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
       end

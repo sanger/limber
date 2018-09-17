@@ -10,6 +10,7 @@ class PrintJob
 
   def execute
     return false unless valid?
+
     begin
       job = PMB::PrintJob.new(
         printer_name: printer_name,

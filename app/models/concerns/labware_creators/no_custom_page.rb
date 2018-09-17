@@ -5,6 +5,7 @@
 module LabwareCreators::NoCustomPage
   def render(controller)
     raise StandardError, "Not saving #{self.class} form...." unless save!
+
     controller.redirect_to_creator_child(self)
   end
 end

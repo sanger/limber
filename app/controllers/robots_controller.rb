@@ -17,6 +17,7 @@ class RobotsController < ApplicationController
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
         next unless bed.transitions? && bed.plate
+
         PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, created_with_robot: params[:robot_barcode]).update
       end
     end
@@ -58,11 +59,13 @@ class RobotsController < ApplicationController
   def stripped_plates(plates)
     return plates.strip if plates.respond_to?(:strip) # We have a string
     return plates.map(&:strip) if plates.respond_to?(:map) # We have an array
+
     plates # No idea, but lets be optimistic!
   end
 
   def validate_beds
     return true if params['bed'].present?
+
     redirect_to robot_path(id: robot.id), notice: "We didn't receive any bed information"
     false
   end

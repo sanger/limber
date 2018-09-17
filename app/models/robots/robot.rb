@@ -75,6 +75,7 @@ module Robots
     def valid_parents
       Hash[parents_and_position do |parent, position|
         next true if beds[position].plate.try(:uuid) == parent.try(:uuid)
+
         message = if parent.present?
                     "Should contain #{parent.barcode.prefix}#{parent.barcode.number}."
                   else
@@ -91,6 +92,7 @@ module Robots
     def parents_and_position
       beds.map do |id, bed|
         next if bed.parent.nil?
+
         result = yield(bed.parent_plate, bed.parent)
         [id, result]
       end

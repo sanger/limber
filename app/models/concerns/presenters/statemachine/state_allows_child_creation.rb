@@ -18,6 +18,7 @@ module Presenters::Statemachine
         next unless  purpose_settings.parents&.include?(labware.purpose.name) &&
                      compatible_pipeline?(purpose_settings.expected_request_types) &&
                      LabwareCreators.class_for(uuid).support_parent?(labware)
+
         yield uuid, purpose_settings.name, purpose_settings.asset_type
       end
     end
@@ -25,6 +26,7 @@ module Presenters::Statemachine
     def compatible_plate_purposes
       purposes_of_type('plate').each do |uuid, hash|
         next unless LabwareCreators.class_for(uuid).support_parent?(labware)
+
         yield uuid, hash['name']
       end
     end
@@ -32,6 +34,7 @@ module Presenters::Statemachine
     def compatible_tube_purposes
       purposes_of_type('tube').each do |uuid, hash|
         next unless LabwareCreators.class_for(uuid).support_parent?(labware)
+
         yield uuid, hash['name']
       end
     end

@@ -19,6 +19,7 @@ module NestedValidation
     def validate_each(record, attribute, value)
       Array(value).each do |nested|
         next if nested.valid?
+
         nested.errors.each do |nested_attribute, nested_error|
           record.errors.add("#{attribute}.#{nested_attribute}", nested_error)
         end

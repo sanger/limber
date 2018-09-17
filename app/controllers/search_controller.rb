@@ -35,6 +35,7 @@ class SearchController < ApplicationController
 
   def qcables
     raise InputError, "#{qcable_barcode} is not a valid barcode" unless /^[0-9]{13}$/.match?(qcable_barcode)
+
     respond_to do |format|
       format.json do
         redirect_to find_qcable(qcable_barcode)
@@ -46,10 +47,11 @@ class SearchController < ApplicationController
 
   def create
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
+
     respond_to do |format|
       format.html { redirect_to find_plate(params[:plate_barcode]) }
     end
-  rescue => exception
+  rescue StandardError => exception
     @search_results = []
     flash[:error]   = exception.message
 

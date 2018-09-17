@@ -27,6 +27,7 @@ class QcFilesController < ApplicationController
   def find_assets
     %w[plate tube multiplexed_library_tube].each do |klass|
       next if params["limber_#{klass}_id"].nil?
+
       @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
       @asset      = api.send(:"#{klass}").find(params["limber_#{klass}_id"])
       return true

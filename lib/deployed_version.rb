@@ -63,13 +63,7 @@ module Deployed
     end
   end
 
-  ENVIRONMENT = (
-    defined?(Rails) && Rails.respond_to?(:env) ? Rails.env :
-                           defined?(RAILS_ENV) ? RAILS_ENV :
-                              ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] :
-                                                 'unknown_environment'
-  )
-
+  ENVIRONMENT = Rails.env
   REPO_DATA = RepoData.new
 
   VERSION_ID = REPO_DATA.version_label
@@ -88,8 +82,8 @@ module Deployed
 
   require 'ostruct'
   DETAILS = OpenStruct.new(
-    :name        => APP_NAME,
-    :version     => VERSION_ID,
-    :environment => ENVIRONMENT
+    name: APP_NAME,
+    version: VERSION_ID,
+    environment: ENVIRONMENT
   )
 end

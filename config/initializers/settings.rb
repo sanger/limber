@@ -20,6 +20,7 @@ class Settings
 
     def instance
       return @instance if @instance.present?
+
       # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here
       # but the creates an immutable setting object that messes with tests.
       # Immutability is good here though, so we should probably fix that.

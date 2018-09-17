@@ -17,6 +17,7 @@ module Robots
 
     def transition
       return if target_state.nil? || plate.nil? # We have nothing to do
+
       StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
     end
 
@@ -54,6 +55,7 @@ module Robots
 
     def parent_plate
       return nil if recieving_labware.nil?
+
       begin
         api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(barcode: recieving_labware.barcode.ean13)
       rescue Sequencescape::Api::ResourceNotFound

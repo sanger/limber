@@ -35,6 +35,7 @@ class AssetSearchForm
   def each_page
     1.upto(total_pages) do |page_number|
       next if filter(page_number)
+
       yield page_number, page == page_number
     end
   end
@@ -42,6 +43,7 @@ class AssetSearchForm
   def filter(number)
     return false if total_pages < MAX_TABS
     return false if [1, total_pages].include?(number)
+
     (page - number).magnitude > MAX_TABS / 2
   end
 end

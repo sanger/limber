@@ -25,10 +25,10 @@ GIT
 
 GIT
   remote: git://github.com/sanger/sequencescape-client-api.git
-  revision: 9f624e146c97ff5610b9412931518b4a60206d2e
+  revision: 00cfdbe400a047b10a3d14c0c420704732946e85
   branch: rails_4
   specs:
-    sequencescape-client-api (0.3.4)
+    sequencescape-client-api (0.3.5)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       i18n
@@ -268,7 +268,7 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    rubocop (0.58.2)
+    rubocop (0.59.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
