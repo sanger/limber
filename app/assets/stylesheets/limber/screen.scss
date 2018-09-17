@@ -22,12 +22,18 @@ header.limber-header {
     nav {
       @extend .bg-dark;
     }
+    .environment { display: none; }
   }
 }
 .nonproduction {
   header.limber-header{
     nav {
       @extend .bg-danger;
+    }
+    .environment {
+      @extend .badge;
+      @extend .badge-light;
+      @extend .mr-2;
     }
   }
 }

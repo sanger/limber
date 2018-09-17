@@ -54,8 +54,6 @@ FactoryBot.define do
     created_at '2017-06-29T09:31:59.000+01:00'
     updated_at '2017-06-29T09:31:59.000+01:00'
 
-    # has_pools_hash
-
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |plate, evaluator|
       RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
@@ -155,28 +153,6 @@ FactoryBot.define do
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
       end
-    end
-
-    factory :plate_with_transfers do
-      transfers_to_tubes_count 1
-    end
-
-    factory :plate_for_pooling do
-      purpose_name 'Pooled example'
-      pre_cap_groups('pre-cap-group' => { 'wells' => %w[A1 B1] })
-    end
-
-    factory :plate_with_primer_panels do
-      transient do
-        extra_pool_info('primer_panel' => {
-                          'name' => 'example panel',
-                          'programs' => {
-                            'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
-                            'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
-                          }
-                        })
-      end
-      has_pools_hash
     end
 
     factory :passed_plate do
