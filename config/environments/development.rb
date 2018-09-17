@@ -61,8 +61,6 @@ Rails.application.configure do
   config.admin_email          = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
-  config.disable_exception_notifier = true
-
   config.api                                     = ActiveSupport::OrderedOptions.new
   config.api.v1                                  = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new

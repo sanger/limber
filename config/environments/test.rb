@@ -45,7 +45,6 @@ Rails.application.configure do
   # Legacy options
   config.admin_email          = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
-  config.disable_exception_notifier = true
 
   config.api = ActiveSupport::OrderedOptions.new
   config.api.v1 = ActiveSupport::OrderedOptions.new

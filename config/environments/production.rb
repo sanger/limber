@@ -85,7 +85,6 @@ Rails.application.configure do
 
   config.admin_email          = 'example@example.com'
   config.exception_recipients = 'example@example.com'
-  config.disable_exception_notifier = true
 
   # Do not dump schema after migrations.
   # config.active_record.dump_schema_after_migration = false

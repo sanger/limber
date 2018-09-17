@@ -25,8 +25,8 @@ require_relative 'support/feature_helpers'
 require_relative 'support/with_pmb_stubbed'
 require 'rspec/json_expectations'
 require 'capybara/rspec'
-require 'selenium/webdriver'
 require 'webmock/rspec'
+require 'selenium/webdriver'
 
 begin
   require 'pry'
@@ -47,13 +47,6 @@ Capybara.register_driver :headless_chrome do |app|
   driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   # enable_chrome_headless_downloads(driver, DownloadHelpers::PATH.to_s)
 end
-
-Capybara.register_server :thin do |app, port, host|
-  require 'rack/handler/thin'
-  Rack::Handler::Thin.run(app, Port: port, Host: host)
-end
-
-Capybara.server = :thin
 
 Capybara.javascript_driver = ENV.fetch('JS_DRIVER', 'headless_chrome').to_sym
 Capybara.default_max_wait_time = 3

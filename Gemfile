@@ -27,6 +27,7 @@ gem 'sequencescape-client-api', '>= 0.3.4',
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
 gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
+gem 'puma'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -66,9 +67,4 @@ group :development do
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'travis'
-end
-
-group :deployment do
-  gem 'psd_logger', github: 'sanger/psd_logger'
-  gem 'thin'
 end
