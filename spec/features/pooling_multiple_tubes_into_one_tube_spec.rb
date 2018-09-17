@@ -119,8 +119,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       tube_title = find('#tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
       click_on('Add an empty Pool tube tube')
-      scan_in('Plate 1', with: tube_barcode_1)
-      scan_in('Plate 2', with: tube_barcode_2)
+      scan_in('Tube 1', with: tube_barcode_1)
+      scan_in('Tube 2', with: tube_barcode_2)
       click_on('Make Pool')
       expect(page).to have_text('New empty labware added to the system')
       expect(page).to have_text('Pool tube')
@@ -140,8 +140,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       tube_title = find('#tube-title')
       expect(tube_title).to have_text('example-purpose')
       click_on('Add an empty Pool tube tube')
-      scan_in('Plate 1', with: tube_barcode_1)
-      scan_in('Plate 2', with: tube_barcode_2)
+      scan_in('Tube 1', with: tube_barcode_1)
+      scan_in('Tube 2', with: tube_barcode_2)
 
       expect(page).to have_text('Scanned tubes have matching tags')
     end

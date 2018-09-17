@@ -1,13 +1,6 @@
 <div id="labware-summary-div">
   <%= render partial: "plate", locals: { plate_presenter: presenter }  %>
-  <% presenter.control_tube_display do %>
-    <h3 class='card-header'>Tubes</h3>
-    <div class="tube-list">
-      <% presenter.tubes_and_sources.each do |tube, sources| %>
-        <%= render partial: 'labware/pooled_tube.html.erb', locals: {tube: tube, source: sources, size: presenter.size } %>
-      <% end %>
-    </div>
-  <% end %>
+  <%= render partial: 'tube_list.html.erb', locals: { presenter: presenter } %>
 </div>
 
 <div id="plate-view-control" class="card-header">

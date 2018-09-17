@@ -3,11 +3,11 @@
     <%= render(partial: './search/inbox', locals: { search_results: @labware_creator.available_tubes }) %>
   <% end %>
   <%= sidebar do %>
-    <%= card title: 'Add plates to pool', without_block: true do %>
+    <%= card title: 'Add tubes to pool', without_block: true do %>
       <div id="validation_report"></div>
       <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
-          <p>Scan in up to 4 plates.</p>
+          <p>Scan in up to 4 tubes.</p>
         </div>
       </div>
       <div class="card-body">
@@ -21,7 +21,7 @@
         <%= form.hidden_field :purpose_uuid %>
         <% 4.times do |i| %>
           <div class="plate-container scan-plate form-group row">
-            <label for="tube[barocdes][<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
+            <label for="tube[barocdes][<%= i %>]" class="plate-label col-2" >Tube <%= i+1 %></label>
             <input id="tube[barocdes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> data-labware-type="tube"/>
           </div>
         <% end %>
