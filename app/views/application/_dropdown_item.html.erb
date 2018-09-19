@@ -1,0 +1,8 @@
+<%= form_for [item.parent, item], as: item.type, method: item.default_method do |f| %>
+  <%= f.hidden_field :purpose_uuid %>
+  <%= f.hidden_field :parent_uuid %>
+  <%= f.submit "Add an empty #{item.name} #{item.type}",
+                 name:  nil,
+                 class: "dropdown-item"
+  %>
+<% end %>

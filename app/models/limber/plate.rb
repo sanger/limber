@@ -11,7 +11,7 @@ class Limber::Plate < Sequencescape::Plate
            to: :pools_info
 
   #
-  # The width of the plate. Assumes a 4:3 ratio
+  # The width of the plate. Assumes a 3:2 ratio
   #
   # @return [Integer] Plate width in wells
   #

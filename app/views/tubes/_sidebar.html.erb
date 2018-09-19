@@ -8,9 +8,7 @@
     <% end %>
 
     <% @presenter.control_additional_creation do -%>
-      <% @presenter.suggested_purposes do |uuid, name, type, request_types| %>
-        <%= render(partial: creation_partial_for(type), locals: { presenter: @presenter, uuid: uuid, name: name }) %>
-      <% end %>
+      <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% end %>
     <% if presenter.robot? %>
       <% @presenter.each_robot do |robot_id, robot_name| %>
@@ -27,22 +25,7 @@
     <% end %>
 
     <%= @presenter.control_additional_creation do %>
-      <div class="btn-group btn-block" role="group">
-        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Transfer to other tubes
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% @presenter.compatible_tube_purposes do |uuid, name| %>
-          <%= form_tag new_limber_tube_child_path(presenter.labware.uuid), method: 'get' do %>
-            <%= hidden_field_tag :purpose_uuid, uuid %>
-            <%= submit_tag "Add an empty #{name} tube",
-              name: nil,
-              class: "submit dropdown-item create-tube-button btn"
-            %>
-          <% end %>
-        <% end %>
-        </div>
-      </div>
+      <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
     <% end %>
 
     <div id="tube-state">

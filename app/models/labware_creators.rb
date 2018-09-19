@@ -22,6 +22,10 @@ module LabwareCreators
 
     include ActiveModel::Model
 
+    def default_method
+      'post'
+    end
+
     def model_name
       case type
       when 'plate' then ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
@@ -34,5 +38,8 @@ module LabwareCreators
 
   # Used to render the create plate/tube buttons, separate class forces different template
   class CustomCreatorButton < CreatorButton
+    def default_method
+      'get'
+    end
   end
 end

@@ -12,6 +12,19 @@ class CreationController < ApplicationController
     end
   end
 
+  def create
+    creator_params[:parent_uuid] ||= parent_uuid
+    @labware_creator = labware_creator(creator_params)
+    if @labware_creator.save
+      respond_to do |format|
+        format.html { redirect_to_creator_child(@labware_creator) }
+      end
+    else
+      flash.now.alert = @labware_creator.errors.full_messages
+      render @labware_creator.page
+    end
+  end
+
   def redirect_to_creator_child(creator)
     redirect_to(
       redirection_path(creator),
@@ -48,5 +61,9 @@ class CreationController < ApplicationController
 
   def creator_class
     @creator_class ||= LabwareCreators.class_for(params[:purpose_uuid] || creator_params.fetch(:purpose_uuid))
+  end
+
+  def parent_uuid
+    params[:limber_tube_id] || params[:limber_plate_id]
   end
 end

@@ -43,9 +43,10 @@ RSpec.describe Presenters::SimpleTubePresenter do
     end
 
     it 'yields the configured tube' do
-      expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
-        ['example-purpose-uuid-3', 'Example Tube Purpose']
-      )
+      ctp = subject.compatible_tube_purposes
+      expect(ctp).to be_an Array
+      expect(ctp.length).to eq 1
+      expect(ctp.first.purpose_uuid).to eq 'example-purpose-uuid-3'
     end
   end
 end

@@ -79,19 +79,23 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     it 'yields the configured plates' do
-      expect { |b| subject.compatible_plate_purposes(&b) }.to yield_successive_args(
-        ['child-purpose', 'Child purpose'],
-        ['child-purpose-2', 'Child purpose 2'],
-        ['other-purpose', 'Other purpose'],
-        ['other-purpose-2', 'Other purpose 2']
-      )
+      cpp = subject.compatible_plate_purposes
+      expect(cpp).to be_an Array
+      expect(cpp.length).to eq 4
+      expect(cpp.map(&:purpose_uuid)).to eq([
+                                              'child-purpose',
+                                              'child-purpose-2',
+                                              'other-purpose',
+                                              'other-purpose-2'
+                                            ])
     end
 
     it 'yields the configured tube' do
       expect(labware).to receive(:tagged?).and_return(true)
-      expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
-        ['tube-purpose', 'Tube purpose']
-      )
+      ctp = subject.compatible_tube_purposes
+      expect(ctp).to be_an Array
+      expect(ctp.length).to eq 1
+      expect(ctp.first.purpose_uuid).to eq 'tube-purpose'
     end
 
     it 'returns the labware state' do
