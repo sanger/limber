@@ -13,13 +13,16 @@ FactoryBot.define do
       request_factory :library_request
       well_uuid_result { "#{barcode_number}-well-%s" }
       outer_requests do
+        request_index = -1
         pool_sizes.each_with_index.flat_map do |size, index|
-          create_list request_factory,
-                      size,
-                      pcr_cycles: pool_prc_cycles[index],
-                      state: library_state,
-                      submission_id: index,
-                      order_id: index * 2
+          Array.new(size) do
+            create request_factory,
+                   pcr_cycles: pool_prc_cycles[index],
+                   state: library_state,
+                   submission_id: index,
+                   order_id: index * 2,
+                   uuid: "request-#{request_index += 1}"
+          end
         end
       end
       wells do

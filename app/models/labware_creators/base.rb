@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require './lib/nested_validation'
+
 require_dependency 'form'
 require_dependency 'labware_creators'
 
@@ -8,6 +10,8 @@ module LabwareCreators
     include Form
     include PlateWalking
     include NoCustomPage
+
+    extend NestedValidation
 
     attr_reader :api
     attr_accessor :purpose_uuid, :parent_uuid, :user_uuid

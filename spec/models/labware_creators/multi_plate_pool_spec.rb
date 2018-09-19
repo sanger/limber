@@ -52,9 +52,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     end
 
     it 'renders the "multi_plate_pool" page' do
-      controller = CreationController.new
-      expect(controller).to receive(:render).with('multi_plate_pool')
-      subject.render(controller)
+      expect(subject.page).to eq('multi_plate_pool')
     end
 
     it 'describes the purpose uuid' do

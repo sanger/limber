@@ -8,7 +8,7 @@
     <% end %>
 
     <% @presenter.control_additional_creation do -%>
-      <% @presenter.suggested_purposes do |uuid, name, type| %>
+      <% @presenter.suggested_purposes do |uuid, name, type, request_types| %>
         <%= render(partial: creation_partial_for(type), locals: { presenter: @presenter, uuid: uuid, name: name }) %>
       <% end %>
     <% end %>

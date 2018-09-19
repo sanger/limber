@@ -25,10 +25,6 @@ module Presenters
       Labels::TubeLabel.new(labware)
     end
 
-    def control_child_links(&block)
-      # Mostly, no.
-    end
-
     def sample_count
       labware.aliquots.count
     end

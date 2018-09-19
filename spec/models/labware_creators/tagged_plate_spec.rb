@@ -185,17 +185,13 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
-      context 'on save!' do
+      context 'on save' do
         Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
 
         it 'creates a tag plate' do
-          subject.save!
+          expect(subject.save).to be true
           expect(state_change_tag_plate_request).to have_been_made.once
           expect(plate_conversion_request).to have_been_made.once
           expect(transfer_creation_request).to have_been_made.once
@@ -203,7 +199,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         end
 
         it 'has the correct child (and uuid)' do
-          subject.save!
+          expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)
         end
       end
@@ -226,11 +222,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
       context 'on save!' do
         include_context 'a tag plate creator with dual indexing'

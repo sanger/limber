@@ -71,10 +71,11 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_successive_args(
-        ['child-purpose', 'Child purpose', 'plate'],
-        ['child-purpose-2', 'Child purpose 2', 'plate']
-      )
+      expect(subject.suggested_purposes).to be_an Array
+      expect(subject.suggested_purposes.length).to eq 2
+      expect(subject.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      expect(subject.suggested_purposes.first.purpose_uuid).to eq('child-purpose')
+      expect(subject.suggested_purposes.last.purpose_uuid).to eq('child-purpose-2')
     end
 
     it 'yields the configured plates' do

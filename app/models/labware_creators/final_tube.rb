@@ -16,14 +16,7 @@ module LabwareCreators
 
     attr_reader :all_tube_transfers
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
-
-    def render(controller)
-      if no_pooling_required?
-        super
-      else
-        controller.render(page)
-      end
-    end
+    validate :custom_input_expected, unless: :no_pooling_required?
 
     def each_sibling
       siblings.each { |s| yield s }
@@ -42,6 +35,10 @@ module LabwareCreators
         ).tap { success << this_parent_uuid }
       end
       true
+    end
+
+    def custom_input_expected
+      errors.add(:parent, 'has sibling tubes, which must be pooled.') unless barcodes_provided?
     end
 
     # We pretend that we've added a new blank tube when we're actually
@@ -79,7 +76,7 @@ module LabwareCreators
 
     # Tubes siblings include themselves, so we expect to see just one sibling
     def no_pooling_required?
-      tube.sibling_tubes.count == 1
+      parent.sibling_tubes.count == 1
     end
 
     def barcode_to_uuid(barcode)
@@ -87,11 +84,11 @@ module LabwareCreators
     end
 
     def siblings
-      @siblings ||= tube.sibling_tubes.map { |s| Sibling.new(s) }
+      @siblings ||= parent.sibling_tubes.map { |s| Sibling.new(s) }
     end
 
     def barcodes_provided?
-      @barcode.present?
+      @barcodes.present?
     end
 
     def all_parents_and_only_parents?

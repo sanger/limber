@@ -7,21 +7,27 @@ module LabwareCreators
   class StampedPlate < Base
     include SupportParent::PlateOnly
     self.default_transfer_template_name = 'Custom pooling'
-    self.attributes += [{ filter: {} }]
+    self.attributes += [{ filters: {} }]
+
+    validates_nested :well_filter
 
     def parent
       @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
 
-    def filter=(filter_parameters)
-      @filter = WellFilter.new(filter_parameters)
+    def filters=(filter_parameters)
+      well_filter.assign_attributes(filter_parameters)
     end
 
-    def filter
-      @filter ||= WellFilter.new({})
+    def labware_wells
+      parent.wells
     end
 
     private
+
+    def well_filter
+      @well_filter ||= WellFilter.new(creator: self)
+    end
 
     def transfer_material_from_parent!(child_uuid)
       child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
@@ -32,7 +38,7 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plate)
-      filter.filtered(parent.wells).map do |well, request|
+      well_filter.filtered.map do |well, request|
         request_hash(well, child_plate, request)
       end
     end

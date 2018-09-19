@@ -86,7 +86,13 @@ RSpec.describe Robots::Robot do
       let(:grandchild_purpose_name) { 'target2_plate_purpose' }
       let(:grandchild_purpose_uuid) { SecureRandom.uuid }
       let(:grandchild_barcode)      { ean13(3) }
-      let(:grandchild_plate)        { json :plate, uuid: plate_uuid, purpose_name: grandchild_purpose_name, purpose_uuid: grandchild_purpose_uuid, barcode_number: 3 }
+      let(:grandchild_plate) do
+        json :plate,
+             uuid: plate_uuid,
+             purpose_name: grandchild_purpose_name,
+             purpose_uuid: grandchild_purpose_uuid,
+             barcode_number: 3
+      end
 
       before(:each) do
         Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid

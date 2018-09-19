@@ -40,12 +40,6 @@ module Presenters
         # It passes the valid child plate purposes to the block.
         def control_additional_creation
           yield if labware.requests.empty?
-          nil
-        end
-
-        def control_child_links
-          yield if labware.requests.present?
-          nil
         end
       end
     end

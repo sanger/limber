@@ -7,9 +7,13 @@ class PlateCreationController < CreationController
 
   def create
     @labware_creator = labware_creator(creator_params)
-    @labware_creator.save!
-    respond_to do |format|
-      format.html { redirect_to_creator_child(@labware_creator) }
+    if @labware_creator.save
+      respond_to do |format|
+        format.html { redirect_to_creator_child(@labware_creator) }
+      end
+    else
+      flash.now.alert = @labware_creator.errors.full_messages
+      render @labware_creator.page
     end
   end
 

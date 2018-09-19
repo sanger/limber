@@ -32,7 +32,9 @@ RSpec.describe Presenters::PermissivePresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose', 'plate')
+      expect(subject.suggested_purposes).to be_an Array
+      expect(subject.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      expect(subject.suggested_purposes.first.purpose_uuid).to eq('child-purpose')
     end
   end
 
@@ -44,7 +46,9 @@ RSpec.describe Presenters::PermissivePresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_with_args('child-purpose', 'Child purpose', 'plate')
+      expect(subject.suggested_purposes).to be_an Array
+      expect(subject.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      expect(subject.suggested_purposes.first.purpose_uuid).to eq('child-purpose')
     end
   end
 end

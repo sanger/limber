@@ -31,6 +31,8 @@ RSpec.describe LabwareCreators::TubeFromTube do
       described_class.new(api, form_attributes)
     end
 
+    it_behaves_like 'it has no custom page'
+
     before do
       Settings.transfer_templates['Transfer between specific tubes'] = transfer_template_uuid
       stub_api_get(transfer_template_uuid, body: json(:transfer_template, uuid: transfer_template_uuid))
@@ -69,10 +71,9 @@ RSpec.describe LabwareCreators::TubeFromTube do
                     body: json(:transfer_between_specific_tubes, destination_uuid: child_uuid))
     end
 
-    describe '#render' do
-      it 'should immediately redirect' do
-        expect(controller).to receive(:redirect_to_creator_child).with(subject).and_return(true)
-        subject.render(controller)
+    describe '#save!' do
+      it 'creates the child' do
+        subject.save!
         expect(subject.child.uuid).to eq(child_uuid)
         expect(creation_request).to have_been_made.once
         expect(transfer_request).to have_been_made.once

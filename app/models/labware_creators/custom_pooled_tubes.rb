@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require './lib/nested_validation'
 module LabwareCreators
   # Allows the user to create custom pooled tubes.
   # THe user may create an arbitrary number of tubes, with a
@@ -8,7 +7,6 @@ module LabwareCreators
   # to more than one tube.
   class CustomPooledTubes < PooledTubesBase
     include LabwareCreators::CustomPage
-    extend NestedValidation
     include SupportParent::PlateReadyForCustomPoolingOnly
 
     self.page = 'custom_pooled_tubes'

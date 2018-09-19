@@ -8,7 +8,7 @@ class CreationController < ApplicationController
     params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(params.permit(permitted_attributes))
     respond_to do |format|
-      format.html { @labware_creator.render(self) }
+      format.html { render(@labware_creator.page) }
     end
   end
 

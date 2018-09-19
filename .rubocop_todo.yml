@@ -179,7 +179,6 @@ Style/Documentation:
     - 'app/sequencescape/sequencescape/api/v2/well.rb'
     - 'config/application.rb'
     - 'lib/deployed_version.rb'
-    - 'lib/nested_validation.rb'
     - 'lib/psd_formatter.rb'
     - 'lib/purpose_config.rb'
     - 'lib/robot_configuration.rb'

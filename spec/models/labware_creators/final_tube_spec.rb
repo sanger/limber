@@ -49,10 +49,9 @@ RSpec.describe LabwareCreators::FinalTube do
         transfer_request
       end
 
-      describe '#render' do
-        it 'should immediately redirect' do
-          expect(controller).to receive(:redirect_to_creator_child).with(subject).and_return(true)
-          subject.render(controller)
+      describe '#save' do
+        it 'should be vaild' do
+          expect(subject.save).to be true
           expect(subject.child).to eq(controller: :tubes, action: :show, id: 'multiplexed-library-tube--uuid')
           expect(transfer_request).to have_been_made.once
         end
@@ -63,10 +62,9 @@ RSpec.describe LabwareCreators::FinalTube do
       context 'when all are passed' do
         let(:tube_json) { json(:tube_with_siblings, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
 
-        describe '#render' do
-          it 'should immediately render' do
-            expect(controller).to receive(:render).with('final_tube').and_return(true)
-            subject.render(controller)
+        describe '#save' do
+          it 'should return false' do
+            expect(subject.save).to be false
           end
         end
 
@@ -77,7 +75,7 @@ RSpec.describe LabwareCreators::FinalTube do
           end
         end
 
-        describe '#save!' do
+        describe '#save' do
           let(:form_attributes) do
             {
               purpose_uuid: child_purpose_uuid,
@@ -108,7 +106,8 @@ RSpec.describe LabwareCreators::FinalTube do
           end
 
           it 'should create transfers per sibling' do
-            subject.save!
+            expect(subject).to be_valid
+            expect(subject.save).to be true
             expect(transfer_request).to have_been_made.once
             expect(transfer_request_b).to have_been_made.once
           end
