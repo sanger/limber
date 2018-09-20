@@ -16,15 +16,25 @@ LBR Globin:
   - limber_rnaag
   :parents:
   - LBR mRNA Cap
+LBR Ribo DNase:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+  :parents:
+  - LBR Cherrypick
 LBR Globin DNase:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
   :parents:
   - LBR Globin
+LBR RiboGlobin DNase:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
 LBR Frag cDNA:
   :asset_type: plate
   :parents:
   - LBR Globin DNase
+  - LBR Ribo DNase
+  - LBR RiboGlobin DNase
 LBR Frag:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
