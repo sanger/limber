@@ -1,7 +1,7 @@
 ---
 default_pmb_templates:
   :plate_double: plate_6mm_double
-  :plate_a: sqsc_96plate_label_template_code128
+  :plate_a: sqsc_96plate_label_template
   :tube: limber_tube_label_template
 
 default_printer_type_names:
@@ -13,3 +13,7 @@ plate_6mm_double:
   :label_class: Labels::PlateDoubleLabel
   :printer_type: '384 Well Plate Double'
   :pmb_template: 'plate_6mm_double'
+
+plate_xp:
+  :label_class: Labels::PlateLabelXp
+  :pmb_template: 'sqsc_96plate_label_template_code128'

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::PlateLabel < Labels::Base
+class Labels::PlateLabelXp < Labels::Base
   def attributes
     {
       top_left: date_today,
@@ -8,6 +8,15 @@ class Labels::PlateLabel < Labels::Base
       top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
       bottom_right: "#{labware.label.prefix} #{labware.label.text}",
       barcode: labware.human_barcode
+    }
+  end
+
+  def qc_attributes
+    {
+      top_left: date_today,
+      bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number} QC",
+      top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
+      barcode: "#{labware.human_barcode}_QC"
     }
   end
 
