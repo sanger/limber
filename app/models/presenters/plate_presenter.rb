@@ -38,6 +38,7 @@ class Presenters::PlatePresenter
   validates_with Validators::InProgressValidator
 
   delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
+  delegare :pool_index, to: :pools
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
@@ -109,10 +110,6 @@ class Presenters::PlatePresenter
 
   def wells
     labware.wells_in_columns
-  end
-
-  def pool_index(submission_id)
-    labware.pools.pool_index(submission_id)
   end
 
   private
