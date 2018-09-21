@@ -1,6 +1,7 @@
 Limber Pipeline Application
 =============================
 
+[![Build Status](https://travis-ci.org/radome/limber.svg?branch=test_openstack)](https://travis-ci.org/radome/limber)
 
 Description
 -----------
@@ -34,14 +35,14 @@ There are a few tools available to assist with writing specs:
 
 #### Factory Bot
 
-    * Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
+* Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
 
-    * Traits
-        * `api_object`: Ensures that lots o the shared behaviour, like actions and uuids are generated automatically
+* Traits
+    * `api_object`: Ensures that lots o the shared behaviour, like actions and uuids are generated automatically
 barcoded: Automatically ensures that barcode is populated with the correct hash, and calculates human and machine barcodes
-        * `build`: Returns an actual object, as though already found via the api. Useful for unti tests
+    * `build`: Returns an actual object, as though already found via the api. Useful for unti tests
 
-    * Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
+* Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
 
 #### Request stubbing
 
