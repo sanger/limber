@@ -18,7 +18,7 @@ class Sequencescape::Api::V2::Plate::Pools
   # @param [Hash] pools_hash  As provided by the pools hash in the plate json
   #
   def initialize(wells)
-    pools_hash = Hash.new { |hash, submission_id| hash[submission_id] = Sequencescape::Api::V2::Plate::Pool.new(submission_id) }
+    pools_hash = Hash.new { |hash, submission_id| hash[submission_id] = Sequencescape::Api::V2::Plate::Pool.new(submission_id, hash.length + 1) }
     wells.each do |well|
       well.active_requests.each do |request|
         pools_hash[request.submission_id].add_well_request(well, request)
@@ -30,7 +30,7 @@ class Sequencescape::Api::V2::Plate::Pools
   # The total number of pools listed on the plate. In most
   # cases indicated the number of tubes which will be created
   def number_of_pools
-    @pools.length
+    @pools_hash.length
   end
 
   def pcr_cycles
@@ -42,16 +42,20 @@ class Sequencescape::Api::V2::Plate::Pools
   # have been charged and passed.
   # We need at least one pool for automatic pooling to function.
   def ready_for_automatic_pooling?
-    @pools.present? && ready_for_custom_pooling?
+    @pools_hash.present? && ready_for_custom_pooling?
   end
 
   # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
-    @pools.empty? || @pools.any?(&:ready_for_custom_pooling?)
+    @pools_hash.empty? || @pools_hash.any?(&:ready_for_custom_pooling?)
   end
 
   def pools
-    pools_hash.values
+    @pools_hash.values
+  end
+
+  def pool_index(submission_id)
+    @pools_hash.fetch(submission_id, nil)&.pool_index
   end
 end

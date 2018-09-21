@@ -41,10 +41,11 @@ module LabwareCreators
         bait     = bait_library_layout_preview[location]
         aliquot  = bait # Fudge, will be nil if no bait
 
-        Hashie::Mash.new(
+        OpenStruct.new(
           location: location,
           bait: bait,
-          aliquots: [aliquot].compact
+          aliquots: [aliquot].compact,
+          pool_id: nil
         )
       end
     end

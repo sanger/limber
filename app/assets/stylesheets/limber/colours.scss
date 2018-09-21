@@ -18,7 +18,7 @@
  * Colours from: https://stackoverflow.com/questions/33295120/how-to-generate-gif-256-colors-palette/33295456#33295456
  * calculated that each colour on the list has maximal distance from all previous colours.
  */
-
+.pool-colours {
 .colour-1 { @include shade-aliquot(#FFFF00); }
 .colour-2 { @include shade-aliquot(#1CE6FF); }
 .colour-3 { @include shade-aliquot(#FF34FF); }
@@ -403,6 +403,7 @@
 .colour-382 { @include shade-aliquot(#BF45CC); }
 .colour-383 { @include shade-aliquot(#493941); }
 .colour-384 { @include shade-aliquot(#863B60); }
+}
 
 // Original crayola colours
 // .colour-1   { @include shade-aliquot(#EA7E5D); }

@@ -3,5 +3,4 @@
   class="aliquot <%= container.location %> <%= container.state %>"
   rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool) ? container.pool_id : '' %>">
-  <%= container.aliquots.first.tag_index %>
 </div>

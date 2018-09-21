@@ -111,6 +111,10 @@ class Presenters::PlatePresenter
     labware.wells_in_columns
   end
 
+  def pool_index(submission_id)
+    labware.pools.pool_index(submission_id)
+  end
+
   private
 
   def number_of_filled_wells

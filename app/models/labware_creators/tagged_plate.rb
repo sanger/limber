@@ -97,9 +97,11 @@ module LabwareCreators
     end
 
     def help
-      return 'single' unless requires_tag2?
+      requires_tag2? ? 'single' : "dual_#{acceptable_tag2_sources.join('_')}"
+    end
 
-      "dual_#{acceptable_tag2_sources.join('_')}"
+    def pool_index(_pool_index)
+      nil
     end
 
     private

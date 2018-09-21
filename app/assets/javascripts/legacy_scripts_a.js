@@ -110,25 +110,6 @@
       return (row*26)+col;
     };
 
-    that.poolsArray = function(){
-      var poolsArray = _.toArray(that.plate.pools);
-      poolsArray = _.sortBy(poolsArray, function(pool){
-        return that.well_index_by_column(pool.wells[0]);
-      });
-
-      return poolsArray;
-    }();
-
-    that.colourPools = function() {
-
-      for (var i=0; i < that.poolsArray.length; i++){
-        var poolId = that.poolsArray[i].id;
-
-        that.plateElement.find('.aliquot[data-pool='+poolId+']').
-          addClass('colour-'+(i+1));
-      }
-
-    };
 
     that.clearAliquotSelection = function(){
       that.plateElement.
@@ -137,24 +118,20 @@
     };
 
     that['summary-view'] = {
-      activate: function(){
-          that.colourPools();
-
-      },
-
+      activate: function(){},
       deactivate: function(){}
     };
 
     that['pools-view'] = {
       activate: function(){
         $('#pools-information li').fadeIn('fast');
+        that.plateElement.addClass('pool-colours');
         that.plateElement.find('.aliquot').
-          removeClass(that.plate.state).
           removeClass('selected-aliquot dimmed');
-        that.colourPools();
       },
 
       deactivate: function(){
+        that.plateElement.removeClass('pool-colours');
         that.plateElement.
           find('.aliquot').
           removeClass('selected-aliquot dimmed');

@@ -5,7 +5,7 @@
 # The Pool class takes an individual pool, and provides a convenient interface
 class Sequencescape::Api::V2::Plate::Pool
   # The uuid of the submission associated with the pool
-  attr_reader :submission_id, :subpools
+  attr_reader :submission_id, :subpools, :pool_index
 
   alias id submission_id
 
@@ -13,9 +13,10 @@ class Sequencescape::Api::V2::Plate::Pool
   # Create a new Pools from the pool information.
   #
   # @param [String] submission)id  The submission id of the pool
-  def initialize(submission_id)
+  def initialize(submission_id, pool_index)
     @submission_id = submission_id
     @subpools = []
+    @pool_index = pool_index
   end
 
   def add_well_request(well, request)
