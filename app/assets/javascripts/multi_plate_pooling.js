@@ -1,6 +1,21 @@
 (function($, exports, undefined){
   "use strict";
 
+  const WELLS_IN_COLUMN_MAJOR_ORDER = [
+      "A1",  "B1",  "C1",  "D1",  "E1",  "F1",  "G1",  "H1",
+      "A2",  "B2",  "C2",  "D2",  "E2",  "F2",  "G2",  "H2",
+      "A3",  "B3",  "C3",  "D3",  "E3",  "F3",  "G3",  "H3",
+      "A4",  "B4",  "C4",  "D4",  "E4",  "F4",  "G4",  "H4",
+      "A5",  "B5",  "C5",  "D5",  "E5",  "F5",  "G5",  "H5",
+      "A6",  "B6",  "C6",  "D6",  "E6",  "F6",  "G6",  "H6",
+      "A7",  "B7",  "C7",  "D7",  "E7",  "F7",  "G7",  "H7",
+      "A8",  "B8",  "C8",  "D8",  "E8",  "F8",  "G8",  "H8",
+      "A9",  "B9",  "C9",  "D9",  "E9",  "F9",  "G9",  "H9",
+      "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10",
+      "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11",
+      "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"
+    ]
+
   $(function(event) {
 
     if ($('#multi-plate-pooling-page').length === 0) { return };
@@ -151,9 +166,9 @@
         } else {
           var preCapPools = plates[i].preCapPools
           capPoolOffset += walkPreCapPools(preCapPools, function(preCapPool, poolNumber, seqPoolID, seqPoolIndex){
-            var destinationWell = SCAPE.WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber];
+            var destinationWell = WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber];
             var listElement = $('<li/>').
-              text(SCAPE.WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]).
+              text(WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]).
               append('<div class="pool-size">'+preCapPool.length+'</div>').
               append('<div class="pool-info">'+plates[i].barcode+': '+preCapPool.join(', ')+'</div>');
             $('#pooling-summary').append(listElement);
@@ -176,7 +191,7 @@
           var preCapPools = SCAPE.plates[plateIndex].preCapPools;
           var well;
           capPoolOffset += walkPreCapPools(preCapPools, function(preCapPool, poolNumber, seqPoolID, seqPoolIndex){
-            well = $('.destination-plate .' + SCAPE.WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]);
+            well = $('.destination-plate .' + WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]);
             well.addClass('seqPool-'+(seqPoolOffset+seqPoolIndex+1));
             if (preCapPool.length)
               well.append(SCAPE.newAliquot(capPoolOffset+poolNumber, seqPoolID, preCapPool.length));
@@ -209,12 +224,12 @@
 
             for (var wellIndex in preCapPool){
               well = $('.plate-id-'+plateIndex+' .'+preCapPool[wellIndex]).addClass('seqPool-'+(seqPoolOffset+seqPoolIndex+1));
-              well.append( SCAPE.newAliquot(capPoolOffset+poolNumber, seqPoolID, SCAPE.WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]));
+              well.append( SCAPE.newAliquot(capPoolOffset+poolNumber, seqPoolID, WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]));
 
               newInput = $(document.createElement('input')).
                 attr('name', 'plate[transfers]['+SCAPE.plates[plateIndex].uuid+']['+preCapPool[wellIndex]+']').
                 attr('type', 'hidden').
-                val(SCAPE.WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]);
+                val(WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]);
 
               newInputs.append(newInput);
             }

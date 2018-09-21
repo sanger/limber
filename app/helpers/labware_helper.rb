@@ -9,7 +9,7 @@ module LabwareHelper
     render partial: 'labware/simple_state_change', locals: { presenter: presenter }
   end
 
-  STANDARD_COLOURS = (1..96).map { |i| "colour-#{i}" }
+  STANDARD_COLOURS = (1..384).map { |i| "colour-#{i}" }
   FAILED_STATES    = %w[failed cancelled].freeze
 
   def self.cycling_colours(name, &block)
@@ -23,7 +23,6 @@ module LabwareHelper
   end
 
   cycling_colours(:bait)    { |labware, _|            labware.bait }
-  cycling_colours(:tag)     { |labware, _|            labware.pool_id }
   cycling_colours(:pooling) { |_labware, destination| destination }
 
   def show_state?(state, presenter, transitions)
@@ -71,25 +70,7 @@ module LabwareHelper
     @location_colours
   end
 
-  def column(well)
-    (location = well.try(:location)) || return
-    (column = location.match(/^[A-H](\d[0-2]?)$/).try(:[], 1)) || return
-
-    "plate-col-#{column}"
-  end
-
   def labware_by_state(labwares)
     labwares.group_by(&:state)
-  end
-
-  def creation_partial_for(type)
-    case type.downcase
-    when 'tube' then 'labware/tubes/creation_button'
-    when 'plate' then 'labware/plates/creation_button'
-    # If we're here, something has gone wrong.
-    # I'm not throwing an exception though as the user may not
-    # even want to create the broken plate/tube
-    else 'labware/unknown_type'
-    end
   end
 end

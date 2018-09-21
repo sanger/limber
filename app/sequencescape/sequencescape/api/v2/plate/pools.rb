@@ -8,7 +8,6 @@
 # The Pools class takes the pools hash, and provides a convenient
 # interface for accessing the information
 class Sequencescape::Api::V2::Plate::Pools
-  attr_reader :pools
   # Pools is a bit of a wrapper for the pools array, so lets delegate missing
   # to that.
   delegate_missing_to :pools
@@ -25,7 +24,7 @@ class Sequencescape::Api::V2::Plate::Pools
         pools_hash[request.submission_id].add_well_request(well, request)
       end
     end
-    @pools = pools_hash.values
+    @pools_hash = pools_hash
   end
 
   # The total number of pools listed on the plate. In most
@@ -50,5 +49,9 @@ class Sequencescape::Api::V2::Plate::Pools
   # require downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
     @pools.empty? || @pools.any?(&:ready_for_custom_pooling?)
+  end
+
+  def pools
+    pools_hash.values
   end
 end
