@@ -3,11 +3,7 @@
   .aliquot { fill: $base_colour; }
   &.plate-view.plate-stock .aliquot.unknown { fill: $base_colour; background-color: $base_colour; }
 }
-/*
- * Pinched from the crayola wiki page: http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors
- * Honestly, couldn't come up with a better set of colours and ones with greater names.  All credit
- * to them!
- */
+
 .unknown           { @include shade-aliquot($secondary); }
 .pending           { @include shade-aliquot($light); }
 .started           { @include shade-aliquot($info); }
@@ -18,139 +14,530 @@
 .cancelled         { @include shade-aliquot($danger); }
 .permanent-failure { @include shade-aliquot($danger); }
 
-.colour-1   { @include shade-aliquot(#EA7E5D); }
-.colour-2   { @include shade-aliquot(#78DBE2); }
-.colour-3   { @include shade-aliquot(#FDD9B5); }
-.colour-4   { @include shade-aliquot(#CD9575); }
-.colour-5   { @include shade-aliquot(#87A96B); }
-.colour-6   { @include shade-aliquot(#FFA474); }
-.colour-7   { @include shade-aliquot(#FAE7B5); }
-.colour-8   { @include shade-aliquot(#9F8170); }
-.colour-9   { @include shade-aliquot(#FD7C6E); }
-.colour-10  { @include shade-aliquot(#ababab); }
-.colour-11  { @include shade-aliquot(#ACE5EE); }
-.colour-12  { @include shade-aliquot(#1F75FE); }
-.colour-13  { @include shade-aliquot(#A2A2D0); }
-.colour-14  { @include shade-aliquot(#6699CC); }
-.colour-15  { @include shade-aliquot(#0D98BA); }
-.colour-16  { @include shade-aliquot(#7366BD); }
-.colour-17  { @include shade-aliquot(#DE5D83); }
-.colour-18  { @include shade-aliquot(#CB4154); }
-.colour-19  { @include shade-aliquot(#B4674D); }
-.colour-20  { @include shade-aliquot(#FF7F49); }
-.colour-21  { @include shade-aliquot(#EFDECD); }
-.colour-22  { @include shade-aliquot(#B0B7C6); }
-.colour-23  { @include shade-aliquot(#FFFF99); }
-.colour-24  { @include shade-aliquot(#1CD3A2); }
-.colour-25  { @include shade-aliquot(#FFAACC); }
-.colour-26  { @include shade-aliquot(#DD4492); }
-.colour-27  { @include shade-aliquot(#1DACD6); }
-.colour-28  { @include shade-aliquot(#BC5D58); }
-.colour-29  { @include shade-aliquot(#DD9475); }
-.colour-30  { @include shade-aliquot(#9ACEEB); }
-.colour-31  { @include shade-aliquot(#FFBCD9); }
-.colour-32  { @include shade-aliquot(#FDDB6D); }
-.colour-33  { @include shade-aliquot(#2B6CC4); }
-.colour-34  { @include shade-aliquot(#EFCDB8); }
-.colour-35  { @include shade-aliquot(#6E5160); }
-.colour-36  { @include shade-aliquot(#CEFF1D); }
-.colour-37  { @include shade-aliquot(#71BC78); }
-.colour-38  { @include shade-aliquot(#6DAE81); }
-.colour-39  { @include shade-aliquot(#C364C5); }
-.colour-40  { @include shade-aliquot(#CC6666); }
-.colour-41  { @include shade-aliquot(#E7C697); }
-.colour-42  { @include shade-aliquot(#FCD975); }
-.colour-43  { @include shade-aliquot(#A8E4A0); }
-.colour-44  { @include shade-aliquot(#95918C); }
-.colour-45  { @include shade-aliquot(#1CAC78); }
-.colour-46  { @include shade-aliquot(#1164B4); }
-.colour-47  { @include shade-aliquot(#F0E891); }
-.colour-48  { @include shade-aliquot(#FF1DCE); }
-.colour-49  { @include shade-aliquot(#B2EC5D); }
-.colour-50  { @include shade-aliquot(#5D76CB); }
-.colour-51  { @include shade-aliquot(#CA3767); }
-.colour-52  { @include shade-aliquot(#3BB08F); }
-.colour-53  { @include shade-aliquot(#FEFE22); }
-.colour-54  { @include shade-aliquot(#FCB4D5); }
-.colour-55  { @include shade-aliquot(#FFF44F); }
-.colour-56  { @include shade-aliquot(#FFBD88); }
-.colour-57  { @include shade-aliquot(#F664AF); }
-.colour-58  { @include shade-aliquot(#AAF0D1); }
-.colour-59  { @include shade-aliquot(#CD4A4C); }
-.colour-60  { @include shade-aliquot(#EDD19C); }
-.colour-61  { @include shade-aliquot(#979AAA); }
-.colour-62  { @include shade-aliquot(#FF8243); }
-.colour-63  { @include shade-aliquot(#C8385A); }
-.colour-64  { @include shade-aliquot(#EF98AA); }
-.colour-65  { @include shade-aliquot(#FDBCB4); }
-.colour-66  { @include shade-aliquot(#1A4876); }
-.colour-67  { @include shade-aliquot(#30BA8F); }
-.colour-68  { @include shade-aliquot(#C54B8C); }
-.colour-69  { @include shade-aliquot(#1974D2); }
-.colour-70  { @include shade-aliquot(#FFA343); }
-.colour-71  { @include shade-aliquot(#BAB86C); }
-.colour-72  { @include shade-aliquot(#FF7538); }
-.colour-73  { @include shade-aliquot(#FF2B2B); }
-.colour-74  { @include shade-aliquot(#F8D568); }
-.colour-75  { @include shade-aliquot(#E6A8D7); }
-.colour-76  { @include shade-aliquot(#414A4C); }
-.colour-77  { @include shade-aliquot(#FF6E4A); }
-.colour-78  { @include shade-aliquot(#1CA9C9); }
-.colour-79  { @include shade-aliquot(#FFCFAB); }
-.colour-80  { @include shade-aliquot(#C5D0E6); }
-.colour-81  { @include shade-aliquot(#FDDDE6); }
-.colour-82  { @include shade-aliquot(#158078); }
-.colour-83  { @include shade-aliquot(#FC74FD); }
-.colour-84  { @include shade-aliquot(#F78FA7); }
-.colour-85  { @include shade-aliquot(#8E4585); }
-.colour-86  { @include shade-aliquot(#7442C8); }
-.colour-87  { @include shade-aliquot(#9D81BA); }
-.colour-88  { @include shade-aliquot(#FE4EDA); }
-.colour-89  { @include shade-aliquot(#FF496C); }
-.colour-90  { @include shade-aliquot(#D68A59); }
-.colour-91  { @include shade-aliquot(#714B23); }
-.colour-92  { @include shade-aliquot(#FF48D0); }
-.colour-93  { @include shade-aliquot(#E3256B); }
-.colour-94  { @include shade-aliquot(#EE204D); }
-.colour-95  { @include shade-aliquot(#FF5349); }
-.colour-96  { @include shade-aliquot(#C0448F); }
-.colour-97  { @include shade-aliquot(#1FCECB); }
-.colour-98  { @include shade-aliquot(#7851A9); }
-.colour-99  { @include shade-aliquot(#FF9BAA); }
-.colour-100 { @include shade-aliquot(#FC2847); }
-.colour-101 { @include shade-aliquot(#76FF7A); }
-.colour-102 { @include shade-aliquot(#9FE2BF); }
-.colour-103 { @include shade-aliquot(#A5694F); }
-.colour-104 { @include shade-aliquot(#8A795D); }
-.colour-105 { @include shade-aliquot(#45CEA2); }
-.colour-106 { @include shade-aliquot(#FB7EFD); }
-.colour-107 { @include shade-aliquot(#CDC5C2); }
-.colour-108 { @include shade-aliquot(#80DAEB); }
-.colour-109 { @include shade-aliquot(#ECEABE); }
-.colour-110 { @include shade-aliquot(#FFCF48); }
-.colour-111 { @include shade-aliquot(#FD5E53); }
-.colour-112 { @include shade-aliquot(#FAA76C); }
-.colour-113 { @include shade-aliquot(#18A7B5); }
-.colour-114 { @include shade-aliquot(#EBC7DF); }
-.colour-115 { @include shade-aliquot(#FC89AC); }
-.colour-116 { @include shade-aliquot(#DBD7D2); }
-.colour-117 { @include shade-aliquot(#17806D); }
-.colour-118 { @include shade-aliquot(#DEAA88); }
-.colour-119 { @include shade-aliquot(#77DDE7); }
-.colour-120 { @include shade-aliquot(#FFFF66); }
-.colour-121 { @include shade-aliquot(#926EAE); }
-.colour-122 { @include shade-aliquot(#324AB2); }
-.colour-123 { @include shade-aliquot(#F75394); }
-.colour-124 { @include shade-aliquot(#FFA089); }
-.colour-125 { @include shade-aliquot(#8F509D); }
-.colour-126 { @include shade-aliquot(#FFFFFF); }
-.colour-127 { @include shade-aliquot(#A2ADD0); }
-.colour-128 { @include shade-aliquot(#FF43A4); }
-.colour-129 { @include shade-aliquot(#FC6C85); }
-.colour-130 { @include shade-aliquot(#CDA4DE); }
-.colour-131 { @include shade-aliquot(#FCE883); }
-.colour-132 { @include shade-aliquot(#C5E384); }
-.colour-133 { @include shade-aliquot(#FFAE42); }
+/*
+ * Colours from: https://stackoverflow.com/questions/33295120/how-to-generate-gif-256-colors-palette/33295456#33295456
+ * calculated that each colour on the list has maximal distance from all previous colours.
+ */
+
+.colour-1 { @include shade-aliquot(#FFFF00); }
+.colour-2 { @include shade-aliquot(#1CE6FF); }
+.colour-3 { @include shade-aliquot(#FF34FF); }
+.colour-4 { @include shade-aliquot(#FF4A46); }
+.colour-5 { @include shade-aliquot(#008941); }
+.colour-6 { @include shade-aliquot(#006FA6); }
+.colour-7 { @include shade-aliquot(#A30059); }
+.colour-8 { @include shade-aliquot(#FFDBE5); }
+.colour-9 { @include shade-aliquot(#7A4900); }
+.colour-10 { @include shade-aliquot(#0000A6); }
+.colour-11 { @include shade-aliquot(#63FFAC); }
+.colour-12 { @include shade-aliquot(#B79762); }
+.colour-13 { @include shade-aliquot(#004D43); }
+.colour-14 { @include shade-aliquot(#8FB0FF); }
+.colour-15 { @include shade-aliquot(#997D87); }
+.colour-16 { @include shade-aliquot(#5A0007); }
+.colour-17 { @include shade-aliquot(#809693); }
+.colour-18 { @include shade-aliquot(#FEFFE6); }
+.colour-19 { @include shade-aliquot(#1B4400); }
+.colour-20 { @include shade-aliquot(#4FC601); }
+.colour-21 { @include shade-aliquot(#3B5DFF); }
+.colour-22 { @include shade-aliquot(#4A3B53); }
+.colour-23 { @include shade-aliquot(#FF2F80); }
+.colour-24 { @include shade-aliquot(#61615A); }
+.colour-25 { @include shade-aliquot(#BA0900); }
+.colour-26 { @include shade-aliquot(#6B7900); }
+.colour-27 { @include shade-aliquot(#00C2A0); }
+.colour-28 { @include shade-aliquot(#FFAA92); }
+.colour-29 { @include shade-aliquot(#FF90C9); }
+.colour-30 { @include shade-aliquot(#B903AA); }
+.colour-31 { @include shade-aliquot(#D16100); }
+.colour-32 { @include shade-aliquot(#DDEFFF); }
+.colour-33 { @include shade-aliquot(#000035); }
+.colour-34 { @include shade-aliquot(#7B4F4B); }
+.colour-35 { @include shade-aliquot(#A1C299); }
+.colour-36 { @include shade-aliquot(#300018); }
+.colour-37 { @include shade-aliquot(#0AA6D8); }
+.colour-38 { @include shade-aliquot(#013349); }
+.colour-39 { @include shade-aliquot(#00846F); }
+.colour-40 { @include shade-aliquot(#372101); }
+.colour-41 { @include shade-aliquot(#FFB500); }
+.colour-42 { @include shade-aliquot(#C2FFED); }
+.colour-43 { @include shade-aliquot(#A079BF); }
+.colour-44 { @include shade-aliquot(#CC0744); }
+.colour-45 { @include shade-aliquot(#C0B9B2); }
+.colour-46 { @include shade-aliquot(#C2FF99); }
+.colour-47 { @include shade-aliquot(#001E09); }
+.colour-48 { @include shade-aliquot(#00489C); }
+.colour-49 { @include shade-aliquot(#6F0062); }
+.colour-50 { @include shade-aliquot(#0CBD66); }
+.colour-51 { @include shade-aliquot(#EEC3FF); }
+.colour-52 { @include shade-aliquot(#456D75); }
+.colour-53 { @include shade-aliquot(#B77B68); }
+.colour-54 { @include shade-aliquot(#7A87A1); }
+.colour-55 { @include shade-aliquot(#788D66); }
+.colour-56 { @include shade-aliquot(#885578); }
+.colour-57 { @include shade-aliquot(#FAD09F); }
+.colour-58 { @include shade-aliquot(#FF8A9A); }
+.colour-59 { @include shade-aliquot(#D157A0); }
+.colour-60 { @include shade-aliquot(#BEC459); }
+.colour-61 { @include shade-aliquot(#456648); }
+.colour-62 { @include shade-aliquot(#0086ED); }
+.colour-63 { @include shade-aliquot(#886F4C); }
+.colour-64 { @include shade-aliquot(#34362D); }
+.colour-65 { @include shade-aliquot(#B4A8BD); }
+.colour-66 { @include shade-aliquot(#00A6AA); }
+.colour-67 { @include shade-aliquot(#452C2C); }
+.colour-68 { @include shade-aliquot(#636375); }
+.colour-69 { @include shade-aliquot(#A3C8C9); }
+.colour-70 { @include shade-aliquot(#FF913F); }
+.colour-71 { @include shade-aliquot(#938A81); }
+.colour-72 { @include shade-aliquot(#575329); }
+.colour-73 { @include shade-aliquot(#00FECF); }
+.colour-74 { @include shade-aliquot(#B05B6F); }
+.colour-75 { @include shade-aliquot(#8CD0FF); }
+.colour-76 { @include shade-aliquot(#3B9700); }
+.colour-77 { @include shade-aliquot(#04F757); }
+.colour-78 { @include shade-aliquot(#C8A1A1); }
+.colour-79 { @include shade-aliquot(#1E6E00); }
+.colour-80 { @include shade-aliquot(#7900D7); }
+.colour-81 { @include shade-aliquot(#A77500); }
+.colour-82 { @include shade-aliquot(#6367A9); }
+.colour-83 { @include shade-aliquot(#A05837); }
+.colour-84 { @include shade-aliquot(#6B002C); }
+.colour-85 { @include shade-aliquot(#772600); }
+.colour-86 { @include shade-aliquot(#D790FF); }
+.colour-87 { @include shade-aliquot(#9B9700); }
+.colour-88 { @include shade-aliquot(#549E79); }
+.colour-89 { @include shade-aliquot(#FFF69F); }
+.colour-90 { @include shade-aliquot(#201625); }
+.colour-91 { @include shade-aliquot(#72418F); }
+.colour-92 { @include shade-aliquot(#BC23FF); }
+.colour-93 { @include shade-aliquot(#99ADC0); }
+.colour-94 { @include shade-aliquot(#3A2465); }
+.colour-95 { @include shade-aliquot(#922329); }
+.colour-96 { @include shade-aliquot(#5B4534); }
+.colour-97 { @include shade-aliquot(#FDE8DC); }
+.colour-98 { @include shade-aliquot(#404E55); }
+.colour-99 { @include shade-aliquot(#0089A3); }
+.colour-100 { @include shade-aliquot(#CB7E98); }
+.colour-101 { @include shade-aliquot(#A4E804); }
+.colour-102 { @include shade-aliquot(#324E72); }
+.colour-103 { @include shade-aliquot(#6A3A4C); }
+.colour-104 { @include shade-aliquot(#83AB58); }
+.colour-105 { @include shade-aliquot(#001C1E); }
+.colour-106 { @include shade-aliquot(#D1F7CE); }
+.colour-107 { @include shade-aliquot(#004B28); }
+.colour-108 { @include shade-aliquot(#C8D0F6); }
+.colour-109 { @include shade-aliquot(#A3A489); }
+.colour-110 { @include shade-aliquot(#806C66); }
+.colour-111 { @include shade-aliquot(#222800); }
+.colour-112 { @include shade-aliquot(#BF5650); }
+.colour-113 { @include shade-aliquot(#E83000); }
+.colour-114 { @include shade-aliquot(#66796D); }
+.colour-115 { @include shade-aliquot(#DA007C); }
+.colour-116 { @include shade-aliquot(#FF1A59); }
+.colour-117 { @include shade-aliquot(#8ADBB4); }
+.colour-118 { @include shade-aliquot(#1E0200); }
+.colour-119 { @include shade-aliquot(#5B4E51); }
+.colour-120 { @include shade-aliquot(#C895C5); }
+.colour-121 { @include shade-aliquot(#320033); }
+.colour-122 { @include shade-aliquot(#FF6832); }
+.colour-123 { @include shade-aliquot(#66E1D3); }
+.colour-124 { @include shade-aliquot(#CFCDAC); }
+.colour-125 { @include shade-aliquot(#D0AC94); }
+.colour-126 { @include shade-aliquot(#7ED379); }
+.colour-127 { @include shade-aliquot(#012C58); }
+.colour-128 { @include shade-aliquot(#7A7BFF); }
+.colour-129 { @include shade-aliquot(#D68E01); }
+.colour-130 { @include shade-aliquot(#353339); }
+.colour-131 { @include shade-aliquot(#78AFA1); }
+.colour-132 { @include shade-aliquot(#FEB2C6); }
+.colour-133 { @include shade-aliquot(#75797C); }
+.colour-134 { @include shade-aliquot(#837393); }
+.colour-135 { @include shade-aliquot(#943A4D); }
+.colour-136 { @include shade-aliquot(#B5F4FF); }
+.colour-137 { @include shade-aliquot(#D2DCD5); }
+.colour-138 { @include shade-aliquot(#9556BD); }
+.colour-139 { @include shade-aliquot(#6A714A); }
+.colour-140 { @include shade-aliquot(#001325); }
+.colour-141 { @include shade-aliquot(#02525F); }
+.colour-142 { @include shade-aliquot(#0AA3F7); }
+.colour-143 { @include shade-aliquot(#E98176); }
+.colour-144 { @include shade-aliquot(#DBD5DD); }
+.colour-145 { @include shade-aliquot(#5EBCD1); }
+.colour-146 { @include shade-aliquot(#3D4F44); }
+.colour-147 { @include shade-aliquot(#7E6405); }
+.colour-148 { @include shade-aliquot(#02684E); }
+.colour-149 { @include shade-aliquot(#962B75); }
+.colour-150 { @include shade-aliquot(#8D8546); }
+.colour-151 { @include shade-aliquot(#9695C5); }
+.colour-152 { @include shade-aliquot(#E773CE); }
+.colour-153 { @include shade-aliquot(#D86A78); }
+.colour-154 { @include shade-aliquot(#3E89BE); }
+.colour-155 { @include shade-aliquot(#CA834E); }
+.colour-156 { @include shade-aliquot(#518A87); }
+.colour-157 { @include shade-aliquot(#5B113C); }
+.colour-158 { @include shade-aliquot(#55813B); }
+.colour-159 { @include shade-aliquot(#E704C4); }
+.colour-160 { @include shade-aliquot(#00005F); }
+.colour-161 { @include shade-aliquot(#A97399); }
+.colour-162 { @include shade-aliquot(#4B8160); }
+.colour-163 { @include shade-aliquot(#59738A); }
+.colour-164 { @include shade-aliquot(#FF5DA7); }
+.colour-165 { @include shade-aliquot(#F7C9BF); }
+.colour-166 { @include shade-aliquot(#643127); }
+.colour-167 { @include shade-aliquot(#513A01); }
+.colour-168 { @include shade-aliquot(#6B94AA); }
+.colour-169 { @include shade-aliquot(#51A058); }
+.colour-170 { @include shade-aliquot(#A45B02); }
+.colour-171 { @include shade-aliquot(#1D1702); }
+.colour-172 { @include shade-aliquot(#E20027); }
+.colour-173 { @include shade-aliquot(#E7AB63); }
+.colour-174 { @include shade-aliquot(#4C6001); }
+.colour-175 { @include shade-aliquot(#9C6966); }
+.colour-176 { @include shade-aliquot(#64547B); }
+.colour-177 { @include shade-aliquot(#97979E); }
+.colour-178 { @include shade-aliquot(#006A66); }
+.colour-179 { @include shade-aliquot(#391406); }
+.colour-180 { @include shade-aliquot(#F4D749); }
+.colour-181 { @include shade-aliquot(#0045D2); }
+.colour-182 { @include shade-aliquot(#006C31); }
+.colour-183 { @include shade-aliquot(#DDB6D0); }
+.colour-184 { @include shade-aliquot(#7C6571); }
+.colour-185 { @include shade-aliquot(#9FB2A4); }
+.colour-186 { @include shade-aliquot(#00D891); }
+.colour-187 { @include shade-aliquot(#15A08A); }
+.colour-188 { @include shade-aliquot(#BC65E9); }
+.colour-189 { @include shade-aliquot(#FFFFFE); }
+.colour-190 { @include shade-aliquot(#C6DC99); }
+.colour-191 { @include shade-aliquot(#203B3C); }
+.colour-192 { @include shade-aliquot(#671190); }
+.colour-193 { @include shade-aliquot(#6B3A64); }
+.colour-194 { @include shade-aliquot(#F5E1FF); }
+.colour-195 { @include shade-aliquot(#FFA0F2); }
+.colour-196 { @include shade-aliquot(#CCAA35); }
+.colour-197 { @include shade-aliquot(#374527); }
+.colour-198 { @include shade-aliquot(#8BB400); }
+.colour-199 { @include shade-aliquot(#797868); }
+.colour-200 { @include shade-aliquot(#C6005A); }
+.colour-201 { @include shade-aliquot(#3B000A); }
+.colour-202 { @include shade-aliquot(#C86240); }
+.colour-203 { @include shade-aliquot(#29607C); }
+.colour-204 { @include shade-aliquot(#402334); }
+.colour-205 { @include shade-aliquot(#7D5A44); }
+.colour-206 { @include shade-aliquot(#CCB87C); }
+.colour-207 { @include shade-aliquot(#B88183); }
+.colour-208 { @include shade-aliquot(#AA5199); }
+.colour-209 { @include shade-aliquot(#B5D6C3); }
+.colour-210 { @include shade-aliquot(#A38469); }
+.colour-211 { @include shade-aliquot(#9F94F0); }
+.colour-212 { @include shade-aliquot(#A74571); }
+.colour-213 { @include shade-aliquot(#B894A6); }
+.colour-214 { @include shade-aliquot(#71BB8C); }
+.colour-215 { @include shade-aliquot(#00B433); }
+.colour-216 { @include shade-aliquot(#789EC9); }
+.colour-217 { @include shade-aliquot(#6D80BA); }
+.colour-218 { @include shade-aliquot(#953F00); }
+.colour-219 { @include shade-aliquot(#5EFF03); }
+.colour-220 { @include shade-aliquot(#E4FFFC); }
+.colour-221 { @include shade-aliquot(#1BE177); }
+.colour-222 { @include shade-aliquot(#BCB1E5); }
+.colour-223 { @include shade-aliquot(#76912F); }
+.colour-224 { @include shade-aliquot(#003109); }
+.colour-225 { @include shade-aliquot(#0060CD); }
+.colour-226 { @include shade-aliquot(#D20096); }
+.colour-227 { @include shade-aliquot(#895563); }
+.colour-228 { @include shade-aliquot(#29201D); }
+.colour-229 { @include shade-aliquot(#5B3213); }
+.colour-230 { @include shade-aliquot(#A76F42); }
+.colour-231 { @include shade-aliquot(#89412E); }
+.colour-232 { @include shade-aliquot(#1A3A2A); }
+.colour-233 { @include shade-aliquot(#494B5A); }
+.colour-234 { @include shade-aliquot(#A88C85); }
+.colour-235 { @include shade-aliquot(#F4ABAA); }
+.colour-236 { @include shade-aliquot(#A3F3AB); }
+.colour-237 { @include shade-aliquot(#00C6C8); }
+.colour-238 { @include shade-aliquot(#EA8B66); }
+.colour-239 { @include shade-aliquot(#958A9F); }
+.colour-240 { @include shade-aliquot(#BDC9D2); }
+.colour-241 { @include shade-aliquot(#9FA064); }
+.colour-242 { @include shade-aliquot(#BE4700); }
+.colour-243 { @include shade-aliquot(#658188); }
+.colour-244 { @include shade-aliquot(#83A485); }
+.colour-245 { @include shade-aliquot(#453C23); }
+.colour-246 { @include shade-aliquot(#47675D); }
+.colour-247 { @include shade-aliquot(#3A3F00); }
+.colour-248 { @include shade-aliquot(#061203); }
+.colour-249 { @include shade-aliquot(#DFFB71); }
+.colour-250 { @include shade-aliquot(#868E7E); }
+.colour-251 { @include shade-aliquot(#98D058); }
+.colour-252 { @include shade-aliquot(#6C8F7D); }
+.colour-253 { @include shade-aliquot(#D7BFC2); }
+.colour-254 { @include shade-aliquot(#3C3E6E); }
+.colour-255 { @include shade-aliquot(#D83D66); }
+.colour-256 { @include shade-aliquot(#2F5D9B); }
+.colour-257 { @include shade-aliquot(#6C5E46); }
+.colour-258 { @include shade-aliquot(#D25B88); }
+.colour-259 { @include shade-aliquot(#5B656C); }
+.colour-260 { @include shade-aliquot(#00B57F); }
+.colour-261 { @include shade-aliquot(#545C46); }
+.colour-262 { @include shade-aliquot(#866097); }
+.colour-263 { @include shade-aliquot(#365D25); }
+.colour-264 { @include shade-aliquot(#252F99); }
+.colour-265 { @include shade-aliquot(#00CCFF); }
+.colour-266 { @include shade-aliquot(#674E60); }
+.colour-267 { @include shade-aliquot(#FC009C); }
+.colour-268 { @include shade-aliquot(#92896B); }
+.colour-269 { @include shade-aliquot(#1E2324); }
+.colour-270 { @include shade-aliquot(#DEC9B2); }
+.colour-271 { @include shade-aliquot(#9D4948); }
+.colour-272 { @include shade-aliquot(#85ABB4); }
+.colour-273 { @include shade-aliquot(#342142); }
+.colour-274 { @include shade-aliquot(#D09685); }
+.colour-275 { @include shade-aliquot(#A4ACAC); }
+.colour-276 { @include shade-aliquot(#00FFFF); }
+.colour-277 { @include shade-aliquot(#AE9C86); }
+.colour-278 { @include shade-aliquot(#742A33); }
+.colour-279 { @include shade-aliquot(#0E72C5); }
+.colour-280 { @include shade-aliquot(#AFD8EC); }
+.colour-281 { @include shade-aliquot(#C064B9); }
+.colour-282 { @include shade-aliquot(#91028C); }
+.colour-283 { @include shade-aliquot(#FEEDBF); }
+.colour-284 { @include shade-aliquot(#FFB789); }
+.colour-285 { @include shade-aliquot(#9CB8E4); }
+.colour-286 { @include shade-aliquot(#AFFFD1); }
+.colour-287 { @include shade-aliquot(#2A364C); }
+.colour-288 { @include shade-aliquot(#4F4A43); }
+.colour-289 { @include shade-aliquot(#647095); }
+.colour-290 { @include shade-aliquot(#34BBFF); }
+.colour-291 { @include shade-aliquot(#807781); }
+.colour-292 { @include shade-aliquot(#920003); }
+.colour-293 { @include shade-aliquot(#B3A5A7); }
+.colour-294 { @include shade-aliquot(#018615); }
+.colour-295 { @include shade-aliquot(#F1FFC8); }
+.colour-296 { @include shade-aliquot(#976F5C); }
+.colour-297 { @include shade-aliquot(#FF3BC1); }
+.colour-298 { @include shade-aliquot(#FF5F6B); }
+.colour-299 { @include shade-aliquot(#077D84); }
+.colour-300 { @include shade-aliquot(#F56D93); }
+.colour-301 { @include shade-aliquot(#5771DA); }
+.colour-302 { @include shade-aliquot(#4E1E2A); }
+.colour-303 { @include shade-aliquot(#830055); }
+.colour-304 { @include shade-aliquot(#02D346); }
+.colour-305 { @include shade-aliquot(#BE452D); }
+.colour-306 { @include shade-aliquot(#00905E); }
+.colour-307 { @include shade-aliquot(#BE0028); }
+.colour-308 { @include shade-aliquot(#6E96E3); }
+.colour-309 { @include shade-aliquot(#007699); }
+.colour-310 { @include shade-aliquot(#FEC96D); }
+.colour-311 { @include shade-aliquot(#9C6A7D); }
+.colour-312 { @include shade-aliquot(#3FA1B8); }
+.colour-313 { @include shade-aliquot(#893DE3); }
+.colour-314 { @include shade-aliquot(#79B4D6); }
+.colour-315 { @include shade-aliquot(#7FD4D9); }
+.colour-316 { @include shade-aliquot(#6751BB); }
+.colour-317 { @include shade-aliquot(#B28D2D); }
+.colour-318 { @include shade-aliquot(#E27A05); }
+.colour-319 { @include shade-aliquot(#DD9CB8); }
+.colour-320 { @include shade-aliquot(#AABC7A); }
+.colour-321 { @include shade-aliquot(#980034); }
+.colour-322 { @include shade-aliquot(#561A02); }
+.colour-323 { @include shade-aliquot(#8F7F00); }
+.colour-324 { @include shade-aliquot(#635000); }
+.colour-325 { @include shade-aliquot(#CD7DAE); }
+.colour-326 { @include shade-aliquot(#8A5E2D); }
+.colour-327 { @include shade-aliquot(#FFB3E1); }
+.colour-328 { @include shade-aliquot(#6B6466); }
+.colour-329 { @include shade-aliquot(#C6D300); }
+.colour-330 { @include shade-aliquot(#0100E2); }
+.colour-331 { @include shade-aliquot(#88EC69); }
+.colour-332 { @include shade-aliquot(#8FCCBE); }
+.colour-333 { @include shade-aliquot(#21001C); }
+.colour-334 { @include shade-aliquot(#511F4D); }
+.colour-335 { @include shade-aliquot(#E3F6E3); }
+.colour-336 { @include shade-aliquot(#FF8EB1); }
+.colour-337 { @include shade-aliquot(#6B4F29); }
+.colour-338 { @include shade-aliquot(#A37F46); }
+.colour-339 { @include shade-aliquot(#6A5950); }
+.colour-340 { @include shade-aliquot(#1F2A1A); }
+.colour-341 { @include shade-aliquot(#04784D); }
+.colour-342 { @include shade-aliquot(#101835); }
+.colour-343 { @include shade-aliquot(#E6E0D0); }
+.colour-344 { @include shade-aliquot(#FF74FE); }
+.colour-345 { @include shade-aliquot(#00A45F); }
+.colour-346 { @include shade-aliquot(#8F5DF8); }
+.colour-347 { @include shade-aliquot(#4B0059); }
+.colour-348 { @include shade-aliquot(#412F23); }
+.colour-349 { @include shade-aliquot(#D8939E); }
+.colour-350 { @include shade-aliquot(#DB9D72); }
+.colour-351 { @include shade-aliquot(#604143); }
+.colour-352 { @include shade-aliquot(#B5BACE); }
+.colour-353 { @include shade-aliquot(#989EB7); }
+.colour-354 { @include shade-aliquot(#D2C4DB); }
+.colour-355 { @include shade-aliquot(#A587AF); }
+.colour-356 { @include shade-aliquot(#77D796); }
+.colour-357 { @include shade-aliquot(#7F8C94); }
+.colour-358 { @include shade-aliquot(#FF9B03); }
+.colour-359 { @include shade-aliquot(#555196); }
+.colour-360 { @include shade-aliquot(#31DDAE); }
+.colour-361 { @include shade-aliquot(#74B671); }
+.colour-362 { @include shade-aliquot(#802647); }
+.colour-363 { @include shade-aliquot(#2A373F); }
+.colour-364 { @include shade-aliquot(#014A68); }
+.colour-365 { @include shade-aliquot(#696628); }
+.colour-366 { @include shade-aliquot(#4C7B6D); }
+.colour-367 { @include shade-aliquot(#002C27); }
+.colour-368 { @include shade-aliquot(#7A4522); }
+.colour-369 { @include shade-aliquot(#3B5859); }
+.colour-370 { @include shade-aliquot(#E5D381); }
+.colour-371 { @include shade-aliquot(#FFF3FF); }
+.colour-372 { @include shade-aliquot(#679FA0); }
+.colour-373 { @include shade-aliquot(#261300); }
+.colour-374 { @include shade-aliquot(#2C5742); }
+.colour-375 { @include shade-aliquot(#9131AF); }
+.colour-376 { @include shade-aliquot(#AF5D88); }
+.colour-377 { @include shade-aliquot(#C7706A); }
+.colour-378 { @include shade-aliquot(#61AB1F); }
+.colour-379 { @include shade-aliquot(#8CF2D4); }
+.colour-380 { @include shade-aliquot(#C5D9B8); }
+.colour-381 { @include shade-aliquot(#9FFFFB); }
+.colour-382 { @include shade-aliquot(#BF45CC); }
+.colour-383 { @include shade-aliquot(#493941); }
+.colour-384 { @include shade-aliquot(#863B60); }
+
+// Original crayola colours
+// .colour-1   { @include shade-aliquot(#EA7E5D); }
+// .colour-2   { @include shade-aliquot(#78DBE2); }
+// .colour-3   { @include shade-aliquot(#FDD9B5); }
+// .colour-4   { @include shade-aliquot(#CD9575); }
+// .colour-5   { @include shade-aliquot(#87A96B); }
+// .colour-6   { @include shade-aliquot(#FFA474); }
+// .colour-7   { @include shade-aliquot(#FAE7B5); }
+// .colour-8   { @include shade-aliquot(#9F8170); }
+// .colour-9   { @include shade-aliquot(#FD7C6E); }
+// .colour-10  { @include shade-aliquot(#ababab); }
+// .colour-11  { @include shade-aliquot(#ACE5EE); }
+// .colour-12  { @include shade-aliquot(#1F75FE); }
+// .colour-13  { @include shade-aliquot(#A2A2D0); }
+// .colour-14  { @include shade-aliquot(#6699CC); }
+// .colour-15  { @include shade-aliquot(#0D98BA); }
+// .colour-16  { @include shade-aliquot(#7366BD); }
+// .colour-17  { @include shade-aliquot(#DE5D83); }
+// .colour-18  { @include shade-aliquot(#CB4154); }
+// .colour-19  { @include shade-aliquot(#B4674D); }
+// .colour-20  { @include shade-aliquot(#FF7F49); }
+// .colour-21  { @include shade-aliquot(#EFDECD); }
+// .colour-22  { @include shade-aliquot(#B0B7C6); }
+// .colour-23  { @include shade-aliquot(#FFFF99); }
+// .colour-24  { @include shade-aliquot(#1CD3A2); }
+// .colour-25  { @include shade-aliquot(#FFAACC); }
+// .colour-26  { @include shade-aliquot(#DD4492); }
+// .colour-27  { @include shade-aliquot(#1DACD6); }
+// .colour-28  { @include shade-aliquot(#BC5D58); }
+// .colour-29  { @include shade-aliquot(#DD9475); }
+// .colour-30  { @include shade-aliquot(#9ACEEB); }
+// .colour-31  { @include shade-aliquot(#FFBCD9); }
+// .colour-32  { @include shade-aliquot(#FDDB6D); }
+// .colour-33  { @include shade-aliquot(#2B6CC4); }
+// .colour-34  { @include shade-aliquot(#EFCDB8); }
+// .colour-35  { @include shade-aliquot(#6E5160); }
+// .colour-36  { @include shade-aliquot(#CEFF1D); }
+// .colour-37  { @include shade-aliquot(#71BC78); }
+// .colour-38  { @include shade-aliquot(#6DAE81); }
+// .colour-39  { @include shade-aliquot(#C364C5); }
+// .colour-40  { @include shade-aliquot(#CC6666); }
+// .colour-41  { @include shade-aliquot(#E7C697); }
+// .colour-42  { @include shade-aliquot(#FCD975); }
+// .colour-43  { @include shade-aliquot(#A8E4A0); }
+// .colour-44  { @include shade-aliquot(#95918C); }
+// .colour-45  { @include shade-aliquot(#1CAC78); }
+// .colour-46  { @include shade-aliquot(#1164B4); }
+// .colour-47  { @include shade-aliquot(#F0E891); }
+// .colour-48  { @include shade-aliquot(#FF1DCE); }
+// .colour-49  { @include shade-aliquot(#B2EC5D); }
+// .colour-50  { @include shade-aliquot(#5D76CB); }
+// .colour-51  { @include shade-aliquot(#CA3767); }
+// .colour-52  { @include shade-aliquot(#3BB08F); }
+// .colour-53  { @include shade-aliquot(#FEFE22); }
+// .colour-54  { @include shade-aliquot(#FCB4D5); }
+// .colour-55  { @include shade-aliquot(#FFF44F); }
+// .colour-56  { @include shade-aliquot(#FFBD88); }
+// .colour-57  { @include shade-aliquot(#F664AF); }
+// .colour-58  { @include shade-aliquot(#AAF0D1); }
+// .colour-59  { @include shade-aliquot(#CD4A4C); }
+// .colour-60  { @include shade-aliquot(#EDD19C); }
+// .colour-61  { @include shade-aliquot(#979AAA); }
+// .colour-62  { @include shade-aliquot(#FF8243); }
+// .colour-63  { @include shade-aliquot(#C8385A); }
+// .colour-64  { @include shade-aliquot(#EF98AA); }
+// .colour-65  { @include shade-aliquot(#FDBCB4); }
+// .colour-66  { @include shade-aliquot(#1A4876); }
+// .colour-67  { @include shade-aliquot(#30BA8F); }
+// .colour-68  { @include shade-aliquot(#C54B8C); }
+// .colour-69  { @include shade-aliquot(#1974D2); }
+// .colour-70  { @include shade-aliquot(#FFA343); }
+// .colour-71  { @include shade-aliquot(#BAB86C); }
+// .colour-72  { @include shade-aliquot(#FF7538); }
+// .colour-73  { @include shade-aliquot(#FF2B2B); }
+// .colour-74  { @include shade-aliquot(#F8D568); }
+// .colour-75  { @include shade-aliquot(#E6A8D7); }
+// .colour-76  { @include shade-aliquot(#414A4C); }
+// .colour-77  { @include shade-aliquot(#FF6E4A); }
+// .colour-78  { @include shade-aliquot(#1CA9C9); }
+// .colour-79  { @include shade-aliquot(#FFCFAB); }
+// .colour-80  { @include shade-aliquot(#C5D0E6); }
+// .colour-81  { @include shade-aliquot(#FDDDE6); }
+// .colour-82  { @include shade-aliquot(#158078); }
+// .colour-83  { @include shade-aliquot(#FC74FD); }
+// .colour-84  { @include shade-aliquot(#F78FA7); }
+// .colour-85  { @include shade-aliquot(#8E4585); }
+// .colour-86  { @include shade-aliquot(#7442C8); }
+// .colour-87  { @include shade-aliquot(#9D81BA); }
+// .colour-88  { @include shade-aliquot(#FE4EDA); }
+// .colour-89  { @include shade-aliquot(#FF496C); }
+// .colour-90  { @include shade-aliquot(#D68A59); }
+// .colour-91  { @include shade-aliquot(#714B23); }
+// .colour-92  { @include shade-aliquot(#FF48D0); }
+// .colour-93  { @include shade-aliquot(#E3256B); }
+// .colour-94  { @include shade-aliquot(#EE204D); }
+// .colour-95  { @include shade-aliquot(#FF5349); }
+// .colour-96  { @include shade-aliquot(#C0448F); }
+// .colour-97  { @include shade-aliquot(#1FCECB); }
+// .colour-98  { @include shade-aliquot(#7851A9); }
+// .colour-99  { @include shade-aliquot(#FF9BAA); }
+// .colour-100 { @include shade-aliquot(#FC2847); }
+// .colour-101 { @include shade-aliquot(#76FF7A); }
+// .colour-102 { @include shade-aliquot(#9FE2BF); }
+// .colour-103 { @include shade-aliquot(#A5694F); }
+// .colour-104 { @include shade-aliquot(#8A795D); }
+// .colour-105 { @include shade-aliquot(#45CEA2); }
+// .colour-106 { @include shade-aliquot(#FB7EFD); }
+// .colour-107 { @include shade-aliquot(#CDC5C2); }
+// .colour-108 { @include shade-aliquot(#80DAEB); }
+// .colour-109 { @include shade-aliquot(#ECEABE); }
+// .colour-110 { @include shade-aliquot(#FFCF48); }
+// .colour-111 { @include shade-aliquot(#FD5E53); }
+// .colour-112 { @include shade-aliquot(#FAA76C); }
+// .colour-113 { @include shade-aliquot(#18A7B5); }
+// .colour-114 { @include shade-aliquot(#EBC7DF); }
+// .colour-115 { @include shade-aliquot(#FC89AC); }
+// .colour-116 { @include shade-aliquot(#DBD7D2); }
+// .colour-117 { @include shade-aliquot(#17806D); }
+// .colour-118 { @include shade-aliquot(#DEAA88); }
+// .colour-119 { @include shade-aliquot(#77DDE7); }
+// .colour-120 { @include shade-aliquot(#FFFF66); }
+// .colour-121 { @include shade-aliquot(#926EAE); }
+// .colour-122 { @include shade-aliquot(#324AB2); }
+// .colour-123 { @include shade-aliquot(#F75394); }
+// .colour-124 { @include shade-aliquot(#FFA089); }
+// .colour-125 { @include shade-aliquot(#8F509D); }
+// .colour-126 { @include shade-aliquot(#FFFFFF); }
+// .colour-127 { @include shade-aliquot(#A2ADD0); }
+// .colour-128 { @include shade-aliquot(#FF43A4); }
+// .colour-129 { @include shade-aliquot(#FC6C85); }
+// .colour-130 { @include shade-aliquot(#CDA4DE); }
+// .colour-131 { @include shade-aliquot(#FCE883); }
+// .colour-132 { @include shade-aliquot(#C5E384); }
+// .colour-133 { @include shade-aliquot(#FFAE42); }
 
 /* For reference
 .colour-1 { @include radial-gradient(color-stops(#C9891C, #422A00), top left); }

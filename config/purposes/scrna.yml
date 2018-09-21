@@ -21,6 +21,8 @@ scRNA cDNA-XP:
   :parents:
   - scRNA Stock
   - GnT Stock
+  :expected_request_types:
+  - limber_scrna
 scRNA-384 cDNA-XP:
   :asset_type: plate
   :stock_plate: false

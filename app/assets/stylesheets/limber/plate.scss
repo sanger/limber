@@ -3,6 +3,7 @@
   padding: 10px;
   border-collapse: separate;
   border-radius: 0px 15px 15px 15px;
+  @extend .mx-auto;
 
   th {
     padding: 0;

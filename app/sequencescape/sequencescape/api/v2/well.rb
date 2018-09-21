@@ -41,8 +41,18 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     state == 'failed'
   end
 
+  # Shows the requests currently active.
+  # We pre-filter cancelled requests as we tend to treat them as though they never existed
+  # We then prioritise any in progress requests over those which have passed.
+  # Generally, processing passed requests is a bad idea, but can be useful in
+  # rare circumstances. We warn the user if they are trying to do this.
   def active_requests
-    requests_as_source + requests_in_progress
+    completed, in_progress = associated_requests.partition(&:completed?)
+    in_progress.presence || completed
+  end
+
+  def associated_requests
+    (requests_as_source + requests_in_progress).reject(&:cancelled?)
   end
 
   def for_multiplexing

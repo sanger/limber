@@ -22,8 +22,8 @@ module LabwareCreators
 
     include ActiveModel::Model
 
-    def default_method
-      'post'
+    def custom_form?
+      false
     end
 
     def model_name
@@ -38,8 +38,8 @@ module LabwareCreators
 
   # Used to render the create plate/tube buttons, separate class forces different template
   class CustomCreatorButton < CreatorButton
-    def default_method
-      'get'
+    def custom_form?
+      true
     end
   end
 end

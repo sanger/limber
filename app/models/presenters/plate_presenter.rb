@@ -135,7 +135,9 @@ class Presenters::PlatePresenter
   def active_request_types
     wells.reduce([]) do |active_requests, well|
       active_requests.concat(
-        well.active_requests.map { |request| request.request_type.key }
+        well.active_requests.map do |request|
+          request.request_type.key
+        end
       )
     end
   end

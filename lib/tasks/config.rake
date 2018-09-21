@@ -9,7 +9,19 @@ namespace :config do
   require Rails.root.join('config', 'robots')
 
   task generate: :environment do
-    api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
+    begin
+      api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
+    rescue Sequencescape::Api::UnauthenticatedError => _
+      puts <<~HEREDOC
+        Could not authenticate with the Sequencescape API
+        Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
+        The value should be listed in the api_applications table of the Sequencescape instance
+        you are connecting to.
+        In development mode it is recommend that you set the key through the API_KEY environment
+        variable. This reduces the risk of accidentally committing the key.
+      HEREDOC
+      exit 1
+    end
     label_templates = YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby
 
     puts 'Fetching submission_templates...'

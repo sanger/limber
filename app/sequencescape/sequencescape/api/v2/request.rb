@@ -9,6 +9,18 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
     state == 'passed'
   end
 
+  def failed?
+    state == 'failed'
+  end
+
+  def cancelled?
+    state == 'cancelled'
+  end
+
+  def completed?
+    passed? || failed?
+  end
+
   def pcr_cycles
     options['pcr_cycles']
   end

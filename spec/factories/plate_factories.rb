@@ -5,6 +5,9 @@ require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+    initialize_with do
+      Sequencescape::Api::V2::Plate.load(attributes)
+    end
     skip_create
 
     transient do
@@ -20,6 +23,7 @@ FactoryBot.define do
                    pcr_cycles: pool_prc_cycles[index],
                    state: library_state,
                    submission_id: index,
+                   include_submissions: include_submissions,
                    order_id: index * 2,
                    uuid: "request-#{request_index += 1}"
           end
@@ -40,16 +44,16 @@ FactoryBot.define do
       purpose_uuid 'example-purpose-uuid'
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       pool_sizes []
-      library_type 'Standard'
-      request_type 'Limber Library Creation'
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       library_state 'pending'
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
       transfer_targets { {} }
       size 96
+      include_submissions { false }
     end
 
+    sequence(:id) { |i| i }
     uuid { SecureRandom.uuid }
     number_of_rows { (((size / 6)**0.5) * 2).floor }
     number_of_columns { (((size / 6)**0.5) * 3).floor }
@@ -92,6 +96,19 @@ FactoryBot.define do
         purpose_name 'Pooled example'
         request_factory :isc_library_request
         pool_sizes [2]
+      end
+    end
+
+    factory :unpassed_plate do
+      pool_sizes [2, 2]
+    end
+
+    factory :passed_plate do
+      transient do
+        for_multiplexing true
+        pool_sizes [2, 2]
+        request_type 'limber_multiplexing'
+        request_factory :mx_request
       end
     end
   end
@@ -156,18 +173,6 @@ FactoryBot.define do
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
       end
-    end
-
-    factory :passed_plate do
-      transient do
-        for_multiplexing true
-        pool_sizes [2, 2]
-        request_type 'limber_multiplexing'
-      end
-    end
-
-    factory :unpassed_plate do
-      pool_sizes [2, 2]
     end
   end
 

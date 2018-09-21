@@ -10,7 +10,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid)     { SecureRandom.uuid }
-  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: 'passed', position: { 'name' => loc }, aliquot_factory: :v2_tagged_aliquot) } }
   let(:default_tube_printer) { 'tube printer 1' }
   let(:work_completion_request) do
     { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
@@ -37,10 +36,11 @@ RSpec.feature 'Charge and pass libraries', js: true do
     let(:submissions) { ['pool-1-uuid', 'pool-2-uuid'] }
     let(:purpose_spec) { build :passable_plate }
     let(:example_labware) { json :plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8] }
-    let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', wells: wells_collection }
+    let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8], include_submissions: true, well_factory: :v2_tagged_well }
 
     before do
-      2.times { stub_v2_plate(example_plate_v2) }
+      stub_v2_plate(example_plate_v2)
+      stub_v2_plate(example_plate_v2, custom_includes: 'wells.aliquots.request.submission')
     end
 
     scenario 'charge and pass libraries' do

@@ -14,10 +14,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
 
-  def self.find_by(options)
-    Sequencescape::Api::V2::Plate.includes(
-      :purpose, wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: :request }]
-    ).find(options).first
+  DEFAULT_INCLUDES = [
+    :purpose,
+    { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: 'request.request_type' }] }
+  ].freeze
+
+  def self.find_by(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::Plate.includes(*includes).find(options).first
   end
 
   #
@@ -39,6 +42,10 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     @active_requests ||= wells.flat_map(&:active_requests)
   end
 
+  def submissions
+    active_requests.map { |request| request.submission&.uuid }.uniq
+  end
+
   def wells_in_columns
     @wells_in_columns ||= wells.sort_by(&:coordinate)
   end
@@ -53,6 +60,10 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def ready_for_automatic_pooling?
     active_requests.any?(&:for_multiplexing)
+  end
+
+  def ready_for_custom_pooling?
+    any_complete_requests? || ready_for_automatic_pooling?
   end
 
   def any_complete_requests?

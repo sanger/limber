@@ -87,11 +87,12 @@ RSpec.feature 'Multi plate pooling', js: true do
   end
 
   background do
-    Settings.purposes = {}
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
-    Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::MultiPlatePool',
-                                                                  name: 'Pool Plate',
-                                                                  parents: ['Pooled example']
+    create :purpose_config, uuid: 'stock-plate-purpose-uuid'
+    create :purpose_config,
+           creator_class: 'LabwareCreators::MultiPlatePool',
+           name: 'Pool Plate',
+           parents: ['Pooled example'],
+           uuid: 'child-purpose-0'
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_v2_plate(example_plate)

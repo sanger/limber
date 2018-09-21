@@ -1,4 +1,4 @@
-<ul id="pools-information" class="list-group">
+<ul id="pools-information" class="list-group list-group-flush">
   <% plate_presenter.pools.each do |pool| -%>
     <li data-pool="<%= pool.id %>" class='list-group-item'>
       <% pool.subpools.each do |subpool| %>

@@ -9,6 +9,7 @@ FactoryBot.define do
       pcr_cycles 10
       sequence(:submission_id) { |i| i }
       sequence(:order_id) { |i| i }
+      include_submissions { false }
     end
 
     skip_create
@@ -28,8 +29,12 @@ FactoryBot.define do
     primer_panel nil
     pre_capture_pool nil
     uuid { SecureRandom.uuid }
+    submission do
+      create :v2_submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
+    end
 
     after(:build) do |request, evaluator|
+      RSpec::Mocks.allow_message(request, :submission).and_return(evaluator.submission)
       request.relationships.submission = {
         'links' => {
           'self' => "http://localhost:3000/api/v2/requests/#{request.id}/relationships/submission",

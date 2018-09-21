@@ -12,6 +12,9 @@ GnT scDNA Stock:
   :input_plate: false
   :parents:
   - GnT Stock
+  :expected_request_types:
+  - limber_gnt_picoplex
+  - limber_gnt_mda
 GnT Pico-XP:
   :asset_type: plate
   :stock_plate: false
