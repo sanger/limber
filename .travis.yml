@@ -1,7 +1,7 @@
 language: ruby
 # We don't specify a list of ruby versions, as Travis will fall back to .ruby-version
 dist: xenial
-bundler_args: "--deployment"
+bundler_args: "--without deployment"
 sudo: required
 addons:
   apt:
