@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Labels::PlateLabelXp
 class Labels::PlateLabelXp < Labels::Base
   def attributes
     {
