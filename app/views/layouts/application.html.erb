@@ -12,6 +12,12 @@
     <%= javascript_include_tag 'application'  %>
     <%= javascript_pack_tag 'application' %>
 
+    <% if Rails.application.config.disable_animations %>
+      <%= stylesheet_link_tag  'disable_animations' %>
+
+      <!-- Turn off animations in jQuery -->
+      <script>$.fx.off = true;</script>
+    <% end %>
     <%= csrf_meta_tag %>
   </head>
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
