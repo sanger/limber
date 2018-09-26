@@ -130,8 +130,8 @@ feature 'Poling multiple plates into a tube', js: true do
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 3', with: plate_barcode_3)
+    fill_in('Plate 1', with: plate_barcode_1).send_keys(:return)
+    fill_in('Plate 3', with: plate_barcode_3).send_keys(:return)
     expect(page).to have_text('Scanned plates have matching tags')
   end
 end
