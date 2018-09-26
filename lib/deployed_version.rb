@@ -78,7 +78,7 @@ module Deployed
 
   VERSION_ID = REPO_DATA.version_label
 
-  APP_NAME = 'Sequencescape'
+  APP_NAME = 'Limber'
   RELEASE_NAME = REPO_DATA.release.presence || 'unknown_release'
 
   MAJOR = REPO_DATA.major
