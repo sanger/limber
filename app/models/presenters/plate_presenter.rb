@@ -38,7 +38,7 @@ class Presenters::PlatePresenter
   validates_with Validators::InProgressValidator
 
   delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
-  delegare :pool_index, to: :pools
+  delegate :pool_index, to: :pools
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
