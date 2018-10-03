@@ -1,7 +1,15 @@
+// Finds the contrasting colour to ensure white is used on
+// dark colours, and black on light.
+@function foreground($back) {
+  $bright: lightness($back);
+  @if ($bright > 50) { @return black; }
+  @else { @return white; }
+}
+
 @mixin shade-aliquot($base_colour) {
-  &.aliquot { background-color: $base_colour; }
-  .aliquot { fill: $base_colour; }
-  &.plate-view.plate-stock .aliquot.unknown { fill: $base_colour; background-color: $base_colour; }
+  &.aliquot { background-color: $base_colour; color: foreground($base_colour); }
+  .aliquot { fill: $base_colour; color: foreground($base_colour); }
+  &.plate-view.plate-stock .aliquot.unknown { fill: $base_colour; background-color: $base_colour; color: foreground($base_colour); }
 }
 
 .unknown           { @include shade-aliquot($secondary); }
