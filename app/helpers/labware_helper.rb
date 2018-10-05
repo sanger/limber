@@ -30,7 +30,7 @@ module LabwareHelper
   end
 
   def self.disable_based_on_state(state_name)
-    define_method(:"disable_#{state_name}_by_state") do |transitions, options|
+    define_method(:"disable_#{state_name}_by_state") do |transitions, options = {}|
       options ||= {}
       return { disabled: true }.merge(options) unless transitions.first.to == state_name.to_s
 
@@ -40,13 +40,6 @@ module LabwareHelper
 
   disable_based_on_state(:cancelled)
   disable_based_on_state(:failed)
-
-  def pool_colour_for_well(presenter, well)
-    return 'failure' if well.state == 'failed'
-
-    tube_uuid = presenter.transfers[well.location].uuid
-    pooling_colour(well, tube_uuid)
-  end
 
   def permanent_state(container)
     container.state == 'failed' ? 'failed' : 'good'

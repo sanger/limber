@@ -17,6 +17,10 @@ header.limber-header {
   }
 }
 
+#plate-title, #tube-title, .card-header {
+  font-weight: 300;
+}
+
 .production {
   header.limber-header {
     nav {
@@ -41,6 +45,7 @@ header.limber-header {
 .tube-list {
   @extend .list-group;
   @extend .list-group-flush;
+  @extend .pool-colours;
 
   .tube {
     @extend .list-group-item;
@@ -49,11 +54,17 @@ header.limber-header {
   }
 }
 
-
 button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn;
   @extend .btn-primary;
   @extend .dropdown-toggle;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
+.btn-upload {
+  @extend .btn;
+  @extend .btn-success;
   @extend .btn-lg;
   @extend .btn-block;
 }
@@ -125,7 +136,10 @@ nav.inbox-list, nav.robots-list {
 
 #state-changer {
   label { @extend .col-3; }
-  .custom-select { @extend .col-9; }
+  select {
+    @extend .custom-select;
+    @extend .col-9;
+  }
 }
 
 dl.metadata, dl#samples-information {
@@ -210,7 +224,7 @@ dl.metadata, dl#samples-information {
   }
 
   div[role=group] + form { margin-top: 0.5rem; }
-  #plate-state { margin-top: 0.5rem; }
+  .custom-state-change { margin-top: 0.5rem; }
 
   button.fail-wells {
     @extend .btn-danger;

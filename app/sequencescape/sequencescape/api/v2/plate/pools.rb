@@ -12,19 +12,23 @@ class Sequencescape::Api::V2::Plate::Pools
   # to that.
   delegate_missing_to :pools
 
+  def self.pool_hash
+    Hash.new do |hash, submission_id|
+      hash[submission_id] = Sequencescape::Api::V2::Plate::Pool.new(submission_id, hash.length + 1)
+    end
+  end
+
   #
   # Create a new Pools from the pool information.
   #
   # @param [Hash] pools_hash  As provided by the pools hash in the plate json
   #
   def initialize(wells)
-    pools_hash = Hash.new { |hash, submission_id| hash[submission_id] = Sequencescape::Api::V2::Plate::Pool.new(submission_id, hash.length + 1) }
-    wells.each do |well|
+    @pools_hash = wells.each_with_object(self.class.pool_hash) do |well, pools_hash|
       well.active_requests.each do |request|
         pools_hash[request.submission_id].add_well_request(well, request)
       end
     end
-    @pools_hash = pools_hash
   end
 
   # The total number of pools listed on the plate. In most

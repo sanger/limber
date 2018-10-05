@@ -144,7 +144,8 @@ RSpec.describe Presenters::PlatePresenter do
     end
 
     it 'can return the tubes and sources' do
-      expect(subject.tubes_and_sources).to eq(target_tube => %w[A1 B1], target_tube2 => ['C1'])
+      expect(subject.tubes_and_sources.map(&:tube)).to eq([target_tube, target_tube2])
+      expect(subject.tubes_and_sources.map(&:source_locations)).to eq([%w[A1 B1], ['C1']])
     end
   end
 end

@@ -68,7 +68,7 @@ class Presenters::PlatePresenter
     # Optimization: To avoid needing to load in the tube aliquots, we use the transfers into the
     # tube to work out the pool size. This information is already available. Two values are different
     # for ISC though. TODO: MUST RE-JIG
-    tubes_and_sources.map { |tube, sources| Labels::TubeLabel.new(tube, pool_size: sources.length) }
+    tubes_and_sources.map { |tube| Labels::TubeLabel.new(tube, pool_size: tube.pool_size) }
   end
 
   def control_tube_display
@@ -80,12 +80,7 @@ class Presenters::PlatePresenter
   end
 
   def tubes_and_sources
-    @tubes_and_sources ||= wells.each_with_object({}) do |well, store|
-      well.downstream_tubes.each do |tube|
-        store[tube] ||= []
-        store[tube] << well.location
-      end
-    end
+    @tubes_and_sources ||= Presenters::TubesWithSources.build(wells: wells, pools: pools)
   end
 
   def csv_file_links

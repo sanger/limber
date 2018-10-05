@@ -19,7 +19,7 @@
     <% end %>
   <% end %>
 
-  <%= card title:'Other Actions' do %>
+  <%= card title:'Other Actions', css_class: 'other-actions'  do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
