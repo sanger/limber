@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+# Handles robot validation
+# The id parameter indicates which robot is being used
+# The controller looks up the current settings in Setting.robots[id]
+# These settings are currently compiled from robots.rb
+# Robot.find_robot generates a new robot based on the matching settings
+# On each controller action a Robot is initialized based on the sett
+# show => renders the form for the selected robot
+# verify => Checks that the robot has been set up correctly, and returns any problems to the user
+# start => Starts the robot, and transitions the plates to the configured states
 class RobotsController < ApplicationController
   before_action :find_robot
   before_action :validate_beds, only: :start

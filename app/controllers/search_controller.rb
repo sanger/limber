@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Handles most of the indexes of plates/tubes
 class SearchController < ApplicationController
   class InputError < StandardError; end
 

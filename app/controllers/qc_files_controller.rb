@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# Handles upload, listing and download of qc files.
+# Finds source asset depending of the provided parameters
+# index => Ajaxy rendering of the files attached to a plate/tube
+# show => Retrieve a particular file
+# create => Attach a new file to a plate/tube
 class QcFilesController < ApplicationController
   attr_reader :asset, :asset_path
 

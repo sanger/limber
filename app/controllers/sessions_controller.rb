@@ -2,9 +2,10 @@
 
 require_dependency 'limber/user'
 
+# Handles log in / log out
 class SessionsController < ApplicationController
   def create
-    set_user_by_swipecard!(params[:user_swipecard]) if params[:user_swipecard].present?
+    self.user_swipecard = params.require(:user_swipecard)
     redirect_to :search, notice: 'Logged in'
   rescue Sequencescape::Api::ResourceNotFound => exception
     redirect_to :search, alert: exception.message
@@ -18,7 +19,7 @@ class SessionsController < ApplicationController
 
   private
 
-  def set_user_by_swipecard!(card_id)
+  def user_swipecard=(card_id)
     @current_user = user_for_swipecard(card_id)
     session[:user_uuid] = @current_user.uuid
     session[:user_name] = @current_user.name
