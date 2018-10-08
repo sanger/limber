@@ -20,9 +20,8 @@ module LabwareCreators
     validates_nested :csv_file, if: :file
     validate :wells_occupied?
 
-    def save!
-      super # validates and creates tubes
-      upload_file
+    def save
+      super && upload_file && true
     end
 
     def wells_occupied?

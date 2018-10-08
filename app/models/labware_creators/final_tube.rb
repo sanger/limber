@@ -2,7 +2,7 @@
 
 module LabwareCreators
   # The final tubes form handles the transfer to the Multiplexed Library Tube
-  # that gets generated upfront. It has two behaviours:
+  # that gets generated upfront when the submission is made. It has two behaviours:
   # 1) For single plate pools it generates the new tube immediately
   # 2) For cross-plate pools (such as dual index) it prompts the user to scan
   #    all tubes in the submission

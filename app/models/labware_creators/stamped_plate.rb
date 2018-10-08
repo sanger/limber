@@ -4,6 +4,9 @@ require_dependency 'form'
 require_dependency 'labware_creators'
 
 module LabwareCreators
+  # Simply creates a new plate of the specified purpose and transfers material
+  # across in a direct stamp. (ie. The location of a sample on the source plate
+  # is the same as the location on the destination plate.)
   class StampedPlate < Base
     include SupportParent::PlateOnly
     self.default_transfer_template_name = 'Custom pooling'

@@ -5,7 +5,8 @@ require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
-# TaggingForm creates a plate and applies the given tag templates
+# Presents the user with a form allowing them to scan in up to four plates
+# which will then be pooled together according to pre-capture pools
 RSpec.describe LabwareCreators::MultiPlatePool do
   it_behaves_like 'it only allows creation from tagged plates'
 

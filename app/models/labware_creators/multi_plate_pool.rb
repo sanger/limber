@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module LabwareCreators
+  # Multiple parent plates are transferred onto a single child plate
+  # During this process wells are pooled according to the pre-capture
+  # pools specified at submission.
   class MultiPlatePool < Base
     include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage

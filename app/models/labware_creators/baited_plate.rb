@@ -3,6 +3,11 @@
 require_dependency 'labware_creators/base'
 
 module LabwareCreators
+  # In ISC pipeline.
+  # Provides a user with a preview of the expected bait library layout
+  # Creates a new plate, which is a stamp of the parent.
+  # Applies the bait library to the aliquots of the plate in accordance with the
+  # baits specified at submission.
   class BaitedPlate < StampedPlate
     include SupportParent::PlateOnly
     include LabwareCreators::CustomPage
