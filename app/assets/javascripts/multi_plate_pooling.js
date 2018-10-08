@@ -16,6 +16,8 @@
       "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"
     ]
 
+  const SOURCE_STATES = ["passed", "qc_complete"]
+
   $(function(event) {
 
     if ($('#multi-plate-pooling-page').length === 0) { return };
@@ -36,7 +38,9 @@
         } else {
           $('#create-labware').attr('disabled', 'disabled');
         }
-      }
+      },
+      plate: {},
+      plates: []
     })
 
     $('.plate-box').on('change', function() {
@@ -77,7 +81,7 @@
           SCAPE.checkPlates();
         },
         checkPlate : function(data,status) {
-          if (SCAPE.sourceStates.indexOf(data.plate.state) === -1) {
+          if (SOURCE_STATES.indexOf(data.plate.state) === -1) {
             this.badPlate();
           } else {
             SCAPE.plates[$(this).data('position')] = data.plate;

@@ -50,7 +50,7 @@ class SearchController < ApplicationController
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
     respond_to do |format|
-      format.html { redirect_to find_plate(params[:plate_barcode]) }
+      format.html { redirect_to find_labware(params[:plate_barcode]) }
     end
   rescue StandardError => exception
     @search_results = []
@@ -63,14 +63,8 @@ class SearchController < ApplicationController
     end
   end
 
-  def find_plate(barcode)
-    machine_barcode =
-      if SBCF::HUMAN_BARCODE_FORMAT.match?(barcode)
-        SBCF::SangerBarcode.from_human(barcode).machine_barcode
-      else
-        barcode
-      end
-    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: machine_barcode)
+  def find_labware(barcode)
+    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
     raise exception, "Sorry, could not find labware with the barcode '#{barcode}'."
   end

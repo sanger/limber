@@ -24,7 +24,7 @@
         <div>
           <% if @labware_creator.all_ready? %>
             <div>
-              <div id="add-tubes-instructions-block" class="scape-ui-block" >
+              <div id="add-tubes-instructions-block">
                 <div class="instructions">
                   <h3>Add Lib Pool Tubes</h3>
                   <p>Scan in all the tubes in the same submission</p>
@@ -43,7 +43,7 @@
               disabled: true
             %>
           <% else %>
-            <div class="tube-suggestions scape-ui-block alert alert-warning">
+            <div class="tube-suggestions alert alert-warning">
               <p>Please resolve any issues with the tubes before continuing.</p>
             </div>
           <% end %>

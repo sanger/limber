@@ -87,6 +87,7 @@ FactoryBot.define do
 
     factory :v2_plate_with_primer_panels do
       transient do
+        purpose_name 'Primer Panel example'
         request_factory :gbs_library_request
       end
     end

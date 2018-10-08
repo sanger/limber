@@ -1,27 +1,21 @@
-<%= page(:'multi-plate-pooling-page') do %>
+<%= page('multi-plate-pooling-page') do %>
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
       <div id="labware-summary-div">
         <div class="card-body bg-dark text-white">
-          <div id="output-plate-block" class="scape-ui-block">
+          <div id="output-plate-block">
             <h3>Target Plate</h3>
             <%= render partial: "plates/empty_plate", locals: {plate_presenter: @labware_creator, css_class: "destination-plate"} %>
           </div>
-          <h3>Source Plates</h3>
-            <% 4.times do |plate_id| %>
-              <%= render partial: "plates/empty_plate", locals: {css_class: "source-plate plate-id-#{plate_id}"} %>
-            <% end %>
         </div>
       </div>
     <% end %>
   <% end %>
   <%= sidebar do %>
-    <%= card title: 'Add plates to pool', without_block: true do %>
+    <%= card title: 'Add plates to stamp', without_block: true do %>
       <div id="validation_report"></div>
       <div id="add-plates-instructions-block" class="card-body" >
-        <div class="instructions">
-          <p>Scan in up to 4 plates.</p>
-        </div>
+        <div class="instructions"><p>Scan in up to 4 plates.</p></div>
       </div>
       <div class="card-body">
       <%= form_for(
@@ -44,25 +38,4 @@
        <ul id="pooling-summary" class="list-group"></ul>
     <% end %>
   <% end %>
-
-
-<script type="text/javascript">
-  (function(window, $, undefined){
-    "use strict";
-
-    // Set up the SCAPE namespace
-    if (window.SCAPE === undefined) {
-      window.SCAPE = {};
-    }
-
-    // Extend SCAPE as it could have already been defined in the view.
-    // Sequencing Pool ordering relys on Ruby 1.9 hashes being ordered
-    $.extend(SCAPE, {
-      plates: new Array(4),
-      plate: {},
-      sourceStates: ["passed", "qc_complete"]
-    });
-
-  })(window, $);
-</script>
 <% end %>

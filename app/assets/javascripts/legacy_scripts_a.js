@@ -27,16 +27,6 @@
 
     linkCallbacks: $.Callbacks(),
 
-    linkHandler: function(event){
-      var targetTab  = $(event.currentTarget).attr('rel');
-      var targetIds  = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
-      var nonTargets = $('.scape-ui-block').not(targetIds);
-
-      nonTargets.fadeOut();
-      nonTargets.promise().done(function(){ $(targetIds).fadeIn(); });
-    },
-
-
     StateMachine: function(delegateTarget, states){
       var sm             = this;
       var stateNames     = _.keys(states);
@@ -236,12 +226,6 @@
     // Set up the plate element as an illuminaBPlate...
     if ($('#plate-show-page').length === 0) { return };
     $('#plate').limberPlateView(SCAPE.labware);
-  });
-
-  $(document).on('pageinit', function(){
-    SCAPE.linkCallbacks.add(SCAPE.linkHandler);
-
-    $(document).on('click','.navbar-link', SCAPE.linkCallbacks.fire);
   });
 
   //= require lib/status_collector
