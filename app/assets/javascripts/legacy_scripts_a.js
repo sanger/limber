@@ -8,18 +8,6 @@
 
   $.extend(SCAPE, {
 
-    animateWell: function() {
-      if ($(this).children().length < 2) { return; }
-      this.pos = 0;
-      this.slide = function() {
-        var scrollTo;
-        this.pos = (this.pos + 1) % $(this).children().length;
-        scrollTo = $(this).children()[this.pos].offsetTop-5;
-        $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
-      };
-      this.slide();
-    },
-
     dim: function() {
       $(this).fadeTo('fast', 0.2);
       return this;
@@ -27,90 +15,20 @@
 
     linkCallbacks: $.Callbacks(),
 
-    StateMachine: function(delegateTarget, states){
-      var sm             = this;
-      var stateNames     = _.keys(states);
-      var stateCallbacks = {};
-      sm.delegateTarget  = $(delegateTarget);
-
-      var beforeCallback = function(event){
-        sm.delegateTarget.off();
-      };
-
-
-      var afterCallback = function(newState){
-        sm.currentState = newState;
-      };
-
-
-      var callbacks, otherStates;
-      for (var stateName in states){
-        otherStates = _.difference(stateNames, [stateName]);
-        callbacks = [
-          beforeCallback,
-          states[stateName].enter
-        ];
-
-        callbacks = callbacks.concat(otherStates.map(
-          function(otherStateName){
-            return function(){
-              if(sm.currentState === otherStateName)
-              return states[otherStateName].leave();
-            };
-        }
-        ));
-
-        callbacks = _.compact(callbacks).concat(afterCallback);
-
-        stateCallbacks[stateName] = $.Callbacks().add(callbacks);
-      }
-
-
-      sm.transitionTo = function(newState){
-        if (stateCallbacks[newState] === undefined) throw "Unknown State: " + newState;
-
-        stateCallbacks[newState].fire(newState, sm.delegateTarget);
-      };
+    failWellToggleHandler:  function(event){
+      $(event.currentTarget).hide('fast', function(){
+        var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
+        $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
+      });
     },
 
 
-  failWellToggleHandler:  function(event){
-    $(event.currentTarget).hide('fast', function(){
-      var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
-      $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-    });
-  },
-
-
-  PlateViewModel: function(plate, plateElement, control) {
+  PlateViewModel: function(plateElement) {
     // Using the 'that' pattern...
     // ...'that' refers to the object created by this constructor.
     // ...'this' used in any of the functions will be set at runtime.
     var that          = this;
-    that.plate        = plate;
     that.plateElement = plateElement;
-    that.control      = control;
-
-    // Caution. Only suitable for sorting. Compatible with any plate
-    // size up to 26 columns
-    that.well_index_by_column = function(well){
-      var row, col;
-      row = well.charCodeAt(0)-65;
-      col = parseInt(well.slice(1));
-      return (row*26)+col;
-    };
-
-
-    that.clearAliquotSelection = function(){
-      that.plateElement.
-        find('.aliquot').
-        removeClass('selected-aliquot dimmed');
-    };
-
-    that['summary-view'] = {
-      activate: function(){},
-      deactivate: function(){}
-    };
 
     that['pools-view'] = {
       activate: function(){
@@ -127,49 +45,30 @@
           removeClass('selected-aliquot dimmed');
       }
     };
-
-    that['samples-view'] = {
-      activate: function(){},
-      deactivate: function(){}
-    };
-
-    that['files-view'] = {
-      activate: function() { },
-      deactivate: function() { }
-    };
-
-
-    that.sm = new StateMachine;
-    that.sm.add(that['summary-view']);
-    that.sm.add(that['pools-view']);
-    that.sm.add(that['samples-view']);
-    that.sm.add(that['files-view']);
-
-    that['summary-view'].active();
   },
 
 
-  limberPlateView: function(plate) {
+  limberPlateView: function() {
     var plateElement = $(this);
 
     var control = $('#plate-view-control');
 
-    var viewModel = new SCAPE.PlateViewModel(plate, plateElement, control);
+    var viewModel = new SCAPE.PlateViewModel(plateElement);
 
-    $('#plate-view-control a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    control.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       var viewName = e.target.dataset.plateView;
-      viewModel[viewName].active();
+      if (viewModel[viewName]) { viewModel[viewName].activate() }
     })
 
-    control.on('change', 'input:radio', function(event){
-      var viewName = $(event.currentTarget).val();
-      viewModel[viewName].active();
-    });
+    control.find('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
+      var viewName = e.target.dataset.plateView;
+      if (viewModel[viewName]) { viewModel[viewName].deactivate() }
+    })
 
     plateElement.on('click', '.aliquot', function(event) {
       var pool = $(event.currentTarget).data('pool');
 
-      viewModel['pools-view'].active();
+      control.find('a[data-plate-view="pools-view"]').tab('show')
 
       plateElement.
         find('.aliquot[data-pool!='+pool+']').
@@ -186,9 +85,6 @@
           done(function(){
             $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
         });
-
-
-
     });
 
     // ...we will never break the chain...
@@ -215,7 +111,6 @@
       if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
         // Check that the value is 13 characters long like a barcode
         if ($(event.currentTarget).val().length === 13) {
-          $(event.currentTarget).closest('form').find('.show-my-plates').val(false);
           $(event.currentTarget).closest('.plate-search-form').submit();
         }
       }
@@ -225,7 +120,7 @@
   $(function(event) {
     // Set up the plate element as an illuminaBPlate...
     if ($('#plate-show-page').length === 0) { return };
-    $('#plate').limberPlateView(SCAPE.labware);
+    $('#plate').limberPlateView();
   });
 
   //= require lib/status_collector
