@@ -1,59 +1,36 @@
 (function($, exports, undefined){
   "use strict";
 
-  //= require lib/keycodes
+  const PlateViewModel = function(plateElement) {
+      // Using the 'that' pattern...
+      // ...'that' refers to the object created by this constructor.
+      // ...'this' used in any of the functions will be set at runtime.
+      var that          = this;
+      that.plateElement = plateElement;
 
-  // Set up the SCAPE namespace
-  if (exports.SCAPE === undefined) { exports.SCAPE = {}; }
+      that['pools-view'] = {
+        activate: function(){
+          $('#pools-information li').fadeIn('fast');
+          that.plateElement.addClass('pool-colours');
+          that.plateElement.find('.aliquot').
+            removeClass('selected-aliquot dimmed');
+        },
 
-  $.extend(SCAPE, {
+        deactivate: function(){
+          that.plateElement.removeClass('pool-colours');
+          that.plateElement.
+            find('.aliquot').
+            removeClass('selected-aliquot dimmed');
+        }
+      };
+  };
 
-    dim: function() {
-      $(this).fadeTo('fast', 0.2);
-      return this;
-    },
-
-    linkCallbacks: $.Callbacks(),
-
-    failWellToggleHandler:  function(event){
-      $(event.currentTarget).hide('fast', function(){
-        var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
-        $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-      });
-    },
-
-
-  PlateViewModel: function(plateElement) {
-    // Using the 'that' pattern...
-    // ...'that' refers to the object created by this constructor.
-    // ...'this' used in any of the functions will be set at runtime.
-    var that          = this;
-    that.plateElement = plateElement;
-
-    that['pools-view'] = {
-      activate: function(){
-        $('#pools-information li').fadeIn('fast');
-        that.plateElement.addClass('pool-colours');
-        that.plateElement.find('.aliquot').
-          removeClass('selected-aliquot dimmed');
-      },
-
-      deactivate: function(){
-        that.plateElement.removeClass('pool-colours');
-        that.plateElement.
-          find('.aliquot').
-          removeClass('selected-aliquot dimmed');
-      }
-    };
-  },
-
-
-  limberPlateView: function() {
+  const limberPlateView = function() {
     var plateElement = $(this);
 
     var control = $('#plate-view-control');
 
-    var viewModel = new SCAPE.PlateViewModel(plateElement);
+    var viewModel = new PlateViewModel(plateElement);
 
     control.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       var viewName = e.target.dataset.plateView;
@@ -84,26 +61,22 @@
           promise().
           done(function(){
             $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
-        });
+      });
     });
 
     // ...we will never break the chain...
     return this;
   }
 
-  });
-
   // Extend jQuery prototype...
-  $.extend($.fn, {
-    limberPlateView:    SCAPE.limberPlateView,
-    dim:                SCAPE.dim
-  });
+  $.extend($.fn, { limberPlateView:    limberPlateView });
+  $(function(_event) { $('#plate-show-page #plate').limberPlateView() });
 
 
   // ########################################################################
   // # Page events....
   $(function(){
-
+    //= require lib/keycodes
     // Trap the carriage return sent by barcode scanner
     $(document).on("keydown", ".plate-barcode", function(event) {
       var code=event.charCode || event.keyCode;
@@ -116,13 +89,4 @@
       }
     });
   });
-
-  $(function(event) {
-    // Set up the plate element as an illuminaBPlate...
-    if ($('#plate-show-page').length === 0) { return };
-    $('#plate').limberPlateView();
-  });
-
-  //= require lib/status_collector
-
 })(jQuery, window);
