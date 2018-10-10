@@ -38,7 +38,7 @@
             <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
           </div>
         <% end %>
-        <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware' %>
+        <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>
       <% end %>
       </div>
        <ul id="pooling-summary" class="list-group"></ul>

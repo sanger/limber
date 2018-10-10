@@ -9,3 +9,4 @@
 
 // Currently setting up each component as its own mini vue app.
 require("file-list")
+require("quadrant-stamp")

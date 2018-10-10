@@ -17,6 +17,10 @@ header.limber-header {
   }
 }
 
+#flashes {
+  @extend .col-12;
+}
+
 #plate-title, #tube-title, .card-header {
   font-weight: 300;
 }

@@ -1,10 +1,10 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
-  <%= render(partial: 'labware/qc_data') %>
-
   <% presenter.control_tube_display do %>
     <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
+
+  <%= render(partial: 'labware/qc_data') %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>

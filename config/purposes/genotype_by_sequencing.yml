@@ -4,6 +4,7 @@ GBS Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalStockPlatePresenter
+  :creator_class: LabwareCreators::QuadrantStamp
   :input_plate: true
   :size: 384
 GBS PCR1:

@@ -9,7 +9,7 @@ gem 'inline_svg'
 gem 'exception_notification'
 gem 'rake'
 gem 'state_machines'
-gem 'webpacker', '~> 2.0'
+gem 'webpacker'
 
 # Used in the setting object, allows access by object and hash notation.
 gem 'hashie'

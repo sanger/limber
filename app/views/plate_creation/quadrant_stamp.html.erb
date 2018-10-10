@@ -1,41 +1,4 @@
-<%= page('multi-plate-pooling-page') do %>
-  <%= content do %>
-    <%= card without_block: true, id: 'main-content' do %>
-      <div id="labware-summary-div">
-        <div class="card-body bg-dark text-white">
-          <div id="output-plate-block">
-            <h3>Target Plate</h3>
-            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @labware_creator, css_class: "destination-plate"} %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  <% end %>
-  <%= sidebar do %>
-    <%= card title: 'Add plates to stamp', without_block: true do %>
-      <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-body" >
-        <div class="instructions"><p>Scan in up to 4 plates.</p></div>
-      </div>
-      <div class="card-body">
-      <%= form_for(
-        @labware_creator,
-        url: limber_plate_children_path(@labware_creator.parent_uuid),
-        as: :plate,
-        html: { method: :post }) do |form| %>
-
-        <%= form.hidden_field :parent_uuid %>
-        <%= form.hidden_field :purpose_uuid %>
-        <% 4.times do |i| %>
-          <div class="plate-container scan-plate form-group row">
-            <label for="plate[<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
-            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
-          </div>
-        <% end %>
-        <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware' %>
-      <% end %>
-      </div>
-       <ul id="pooling-summary" class="list-group"></ul>
-    <% end %>
-  <% end %>
-<% end %>
+<div id='quadrant-stamp-page'
+     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>">
+  <div class="spinner-dark">Loading...</div>
+</div>
