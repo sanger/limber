@@ -62,6 +62,10 @@ scRNA Lib PCR:
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
   :suggest_library_pass_for:
   - limber_scrna
 scRNA-384 Lib PCR:
