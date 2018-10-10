@@ -6,7 +6,7 @@
         {{ _props }}
       </div>
       <b-card bg-variant="dark" text-variant="white">
-          {{ sequencescapeApi }}
+        <lb-plate caption="New Plate" :rows="16" :columns="24"></lb-plate>
       </b-card>
     </lb-main-content>
     <lb-sidebar>
@@ -19,14 +19,19 @@
 
 <script>
 
-export default {
-  name: 'QuadStamp',
-  data () {
-    return {}
-  },
-  props: {
-    sequencescapeApi: { type: String, default: 'Happy Sausages' }
-  },
-  methods: {}
-}
+  import Plate from 'shared/components/Plate'
+
+  export default {
+    name: 'QuadStamp',
+    data () {
+      return {}
+    },
+    props: {
+      sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' }
+    },
+    methods: {},
+    components: {
+      'lb-plate': Plate
+    }
+  }
 </script>
