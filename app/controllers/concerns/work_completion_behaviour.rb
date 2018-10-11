@@ -12,7 +12,6 @@ module WorkCompletionBehaviour
   # and hook them up to the correct wells.
   def create
     messages = Hash.new { |message_store, category| message_store[category] = [] }
-
     api.work_completion.create!(
       # Our pools keys are our submission uuids.
       submissions: labware.submissions,
@@ -29,7 +28,6 @@ module WorkCompletionBehaviour
         messages[:alert] = ss.errors.full_messages
       end
     end
-
     redirect_to labware, messages
   end
 

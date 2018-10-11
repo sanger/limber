@@ -7,10 +7,16 @@ module Presenters::Statemachine
       # Does nothing because you can't!
     end
 
-    def suggested_purposes; end
+    def suggested_purposes
+      []
+    end
 
-    def compatible_plate_purposes; end
+    def compatible_plate_purposes
+      []
+    end
 
-    def compatible_tube_purposes; end
+    def compatible_tube_purposes
+      []
+    end
   end
 end

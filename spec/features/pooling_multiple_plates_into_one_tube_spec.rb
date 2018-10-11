@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Poling multiple plates into a tube', js: true do
+RSpec.feature 'Poling multiple plates into a tube', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }
@@ -10,21 +10,24 @@ feature 'Poling multiple plates into a tube', js: true do
   let(:user_swipecard)    { 'abcdef' }
 
   let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
-  let(:plate_uuid)        { SecureRandom.uuid }
+  let(:plate_uuid)        { 'plate-1' }
   let(:example_plate_args) { [:plate, barcode_number: 1, state: 'passed', uuid: plate_uuid] }
   let(:example_plate) { json(*example_plate_args) }
+  let(:example_plate_new_api) { create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_listed) { associated(*example_plate_args) }
 
   let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:plate_uuid_2)      { SecureRandom.uuid }
+  let(:plate_uuid_2)      { 'plate-2' }
   let(:example_plate2_args) { [:plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2] }
-  let(:example_plate_2) { json(*example_plate2_args) }
+
+  let(:example_plate_2) { create(:v2_plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_2_listed) { associated(*example_plate2_args) }
 
   let(:plate_barcode_3)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).machine_barcode.to_s }
-  let(:plate_uuid_3)      { SecureRandom.uuid }
+  let(:plate_uuid_3)      { 'plate-3' }
   let(:example_plate3_args) { [:plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3] }
-  let(:example_plate_3) { json(*example_plate3_args) }
+
+  let(:example_plate_3) { create(:v2_plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3, wells: example_plate_new_api.wells, pool_sizes: [96]) }
   let(:example_plate_3_listed) { associated(*example_plate3_args) }
 
   let(:child_tube_uuid) { 'tube-0' }
@@ -79,9 +82,6 @@ feature 'Poling multiple plates into a tube', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We'll look up both plates.
-    stub_asset_search(plate_barcode_1, example_plate)
-    stub_asset_search(plate_barcode_2, example_plate_2)
-    stub_asset_search(plate_barcode_3, example_plate_3)
 
     # We have a basic inbox search running
     stub_search_and_multi_result(
@@ -90,14 +90,12 @@ feature 'Poling multiple plates into a tube', js: true do
       [example_plate_listed, example_plate_2_listed]
     )
 
+    stub_v2_plate(example_plate_new_api)
+
+    stub_v2_plate(example_plate_new_api)
+
     stub_api_get(plate_uuid, body: example_plate)
     stub_api_get(plate_uuid, 'wells', body: well_set_a)
-
-    stub_api_get(plate_uuid_2, body: example_plate_2)
-    stub_api_get(plate_uuid_2, 'wells', body: json(:well_collection, aliquot_factory: :tagged_aliquot))
-
-    stub_api_get(plate_uuid_3, body: example_plate_3)
-    stub_api_get(plate_uuid_3, 'wells', body: well_set_a)
 
     stub_api_get(child_tube_uuid, body: child_tube)
 
@@ -105,14 +103,15 @@ feature 'Poling multiple plates into a tube', js: true do
   end
 
   scenario 'creates multiple plates' do
+    stub_v2_plate(example_plate_2)
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 2', with: plate_barcode_2)
+    scan_in('Plate 1', with: plate_barcode_1)
+    scan_in('Plate 2', with: plate_barcode_2)
     # Trigger a blur by filling in the next box
-    fill_in('Plate 3', with: '')
+    scan_in('Plate 3', with: '')
     click_on('Make Pool')
     expect(page).to have_text('New empty labware added to the system')
     expect(page).to have_text('Pool tube')
@@ -126,12 +125,13 @@ feature 'Poling multiple plates into a tube', js: true do
   end
 
   scenario 'detects tag clash' do
+    stub_v2_plate(example_plate_3)
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
-    fill_in('Plate 1', with: plate_barcode_1)
-    fill_in('Plate 3', with: plate_barcode_3)
+    scan_in('Plate 1', with: plate_barcode_1)
+    scan_in('Plate 3', with: plate_barcode_3)
     expect(page).to have_text('Scanned plates have matching tags')
   end
 end

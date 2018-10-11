@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/plates_controller'
 
-describe ExportsController, type: :controller do
+RSpec.describe ExportsController, type: :controller do
   let(:plate_query) do
     pq = instance_double(JsonApiClient::Query::Builder)
     expect(pq).to receive(:first).and_return(plate)

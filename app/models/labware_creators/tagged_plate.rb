@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < StampedPlate
+  class TaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
-    attr_reader :child
+    attr_reader :child, :tag_plate, :tag2_tube
+    attr_accessor :tag_plate_barcode, :tag2_tube_barcode
 
     self.page = 'tagged_plate'
-    self.attributes = %i[
-      api purpose_uuid parent_uuid user_uuid
-      tag_plate_barcode tag_plate
-      tag2_tube_barcode tag2_tube
+    self.attributes += [
+      :tag_plate_barcode, :tag2_tube_barcode,
+      { tag_plate: %i[asset_uuid template_uuid], tag2_tube: %i[asset_uuid template_uuid] }
     ]
+    self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
-    delegate :height, :width, :size, to: :labware
-
-    QcableObject = Struct.new(:asset_uuid, :template_uuid)
-
+    delegate :size, :number_of_columns, :number_of_rows, to: :labware
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
+    QcableObject = Struct.new(:asset_uuid, :template_uuid)
+
     def tag_plate=(params)
-      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
+      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def tag2_tube=(params)
-      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid]) if params.present?
+      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
     def initialize(*args, &block)
@@ -76,6 +76,7 @@ module LabwareCreators
     def acceptable_tag2_sources
       return ['tube'] if tag_tubes_used?
       return ['plate'] if tag_plates_used?
+
       %w[tube plate]
     end
 
@@ -91,15 +92,23 @@ module LabwareCreators
     def tag_plate_dual_index?
       return false if tag_tubes_used?
       return true if tag_plates_used?
+
       nil
     end
 
     def help
-      return 'single' unless requires_tag2?
-      "dual_#{acceptable_tag2_sources.join('_')}"
+      requires_tag2? ? 'single' : "dual_#{acceptable_tag2_sources.join('_')}"
+    end
+
+    def pool_index(_pool_index)
+      nil
     end
 
     private
+
+    def transfer_hash
+      WellHelpers.stamp_hash(parent.size)
+    end
 
     def tag_plates
       @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)

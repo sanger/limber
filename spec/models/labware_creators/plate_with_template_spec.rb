@@ -6,7 +6,7 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::PlateWithTemplate do
+RSpec.describe LabwareCreators::PlateWithTemplate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -47,7 +47,7 @@ describe LabwareCreators::PlateWithTemplate do
   end
 
   subject do
-    LabwareCreators::PlateWithTemplate.new(form_attributes.merge(api: api))
+    LabwareCreators::PlateWithTemplate.new(api, form_attributes)
   end
 
   context 'on new' do
@@ -80,7 +80,8 @@ describe LabwareCreators::PlateWithTemplate do
                     payload: { transfer: {
                       destination: 'child-uuid',
                       source: parent_uuid,
-                      user: user_uuid
+                      user: user_uuid,
+                      transfers: nil
                     } },
                     body: '{}')
     end

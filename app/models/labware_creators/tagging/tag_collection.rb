@@ -37,6 +37,7 @@ module LabwareCreators::Tagging
 
     def used
       return [] if @plate.submission_pools.empty?
+
       @used ||= @plate.submission_pools.each_with_object(Set.new) do |pool, set|
         pool.used_tag_layout_templates.each { |used| set << used['uuid'] }
       end

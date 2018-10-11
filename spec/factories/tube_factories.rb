@@ -78,6 +78,23 @@ FactoryBot.define do
     end
   end
 
+  factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:barcoded_v2] do
+    skip_create
+    uuid { SecureRandom.uuid }
+    name 'My tube'
+    type 'tubes'
+    state 'passed'
+
+    purpose_name 'example-purpose'
+    purpose_uuid 'example-purpose-uuid'
+    purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+
+    # Mock the relationships. Should probably handle this all a bit differently
+    after(:build) do |asset, evaluator|
+      RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+    end
+  end
+
   factory :tube_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
     size 2
 

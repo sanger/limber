@@ -1,7 +1,7 @@
   // A status collector can have monitors registered. It will trigger
   // its onSuccess event when all monitors are true, and its onRevert
   // event if any are false.
-  var statusCollector = function(onSuccess,onRevert) {
+  const statusCollector = function(onSuccess,onRevert) {
     // Fires when all guards are true
     this.onSuccess =  onSuccess;
     // Fires if a guard is invalidated
@@ -11,7 +11,7 @@
 
   // Monitors are registered to a collector. When the change state they
   // trigger the collector to check the state of all its monitors.
-  var monitor = function(state,collector) {
+  const monitor = function(state,collector) {
     this.valid     = state||false;
     this.collector = collector;
   };

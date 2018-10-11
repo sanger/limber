@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 FactoryBot.define do
@@ -24,6 +23,14 @@ FactoryBot.define do
 
     factory :tag_layout_template_by_row do
       direction 'row'
+    end
+
+    factory :tag_layout_template_by_inverse_column do
+      direction 'inverse_column'
+    end
+
+    factory :tag_layout_template_by_inverse_row do
+      direction 'inverse_row'
     end
 
     factory :tag_layout_template_by_quadrant do

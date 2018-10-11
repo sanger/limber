@@ -9,6 +9,7 @@ module Robots
 
       def transition
         return if target_state.nil? || labware.empty? # We have nothing to do
+
         labware.each do |lw|
           StateChangers.lookup_for(lw.purpose.uuid).new(api, lw.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
         end
@@ -45,6 +46,7 @@ module Robots
           if previous && expected.uuid != previous.uuid
             return error("#{previous.barcode.prefix}#{previous.barcode.number} might be mixed up with #{expected.barcode.prefix}#{expected.barcode.number}")
           end
+
           lw
         end
         true

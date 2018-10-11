@@ -27,9 +27,9 @@ module PlateWalking
     end
 
     def initialize(plate, wells)
-      well_pair = Hash[plate.locations_in_rows.map { |l| [Location.new(l), nil] }]
+      well_pair = plate.locations_in_rows.each_with_object({}) { |l, hash| hash[Location.new(l)] = nil }
       wells.each { |well| well_pair[Location.new(well.location)] = well }
-      @rows = well_pair.group_by { |l, _| l.row }.map { |l, w| [l, w.map(&:last)] }
+      @rows = well_pair.group_by { |l, _| l.row }.map { |row_name, w| [row_name, w.map(&:last)] }
     end
 
     delegate :each, to: :@rows

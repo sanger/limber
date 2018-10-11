@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'tag2 layout template factory' do
+RSpec.describe 'tag2 layout template factory' do
   subject do
     json(
       :tag2_layout_template,

@@ -5,7 +5,7 @@ module LabwareCreators::SupportParent
     extend ActiveSupport::Concern
     class_methods do
       def support_parent?(parent)
-        parent.is_a?(Limber::Plate) && parent.tagged? && parent.ready_for_custom_pooling?
+        parent.plate? && parent.tagged? && parent.ready_for_custom_pooling?
       end
     end
 

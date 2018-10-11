@@ -1,0 +1,12 @@
+<% presenter.control_tube_display do %>
+  <h3 class='card-header'>Tubes</h3>
+  <div class="tube-list">
+
+  <%= render partial: 'labware/pooled_tube',
+             collection: presenter.tubes_and_sources,
+             locals: { size: presenter.size },
+             as: :tube
+  %>
+
+  </div>
+<% end %>

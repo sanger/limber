@@ -1,27 +1,37 @@
 language: ruby
 rvm:
-  - 2.4.1
-dist: trusty
+- 2.5.1
+dist: xenial
 bundler_args: "--deployment"
-sudo: false
+sudo: required
+addons:
+  apt:
+    packages:
+    - haveged
+    - google-chrome-stable
+    - chromium-chromedriver
 cache:
   bundler: true
   directories:
-    - node_modules
+  - node_modules
   yarn: true
 node_js:
-  - '7'
-env: TZ=Europe/London
+- '10'
+env:
+  global:
+  - TZ=Europe/London
+  - PATH=$PATH:/usr/lib/chromium-browser/
+  - DISPLAY=:99.0
 install:
-  - nvm install node
-  - node -v
-  - npm i -g yarn
-  - yarn
-  - bundle install
+- nvm install node
+- node -v
+- npm i -g yarn
+- yarn
+- bundle install
 before_script:
 - bundle exec rails webpacker:verify_install
 script:
-- bundle exec rake
+- xvfb-run bundle exec rake
 - bundle exec rubocop
 before_deploy: "./compile-build"
 deploy:

@@ -3,8 +3,11 @@
 # By default forms need no special processing to they actually do the creation and then
 # redirect.  If you have a special form to display include LabwareCreators::CustomPage
 module LabwareCreators::NoCustomPage
-  def render(controller)
-    raise StandardError, "Not saving #{self.class} form...." unless save!
-    controller.redirect_to_creator_child(self)
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def creator_button(parameters)
+      LabwareCreators::CreatorButton.new(parameters)
+    end
   end
 end

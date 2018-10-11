@@ -2,12 +2,13 @@
 
 require 'rails_helper'
 
-describe PrintJob do
+RSpec.describe PrintJob do
   has_a_working_api
   let(:printer) { build :barcode_printer }
   let(:label_template_id) { 1 }
   let(:label_template_name) { 'sqsc_96plate_label_template' }
-  let(:label_template_url) { "/v1/label_templates?filter%5Bname%5D=#{label_template_name}&page%5Bnumber%5D=1&page%5Bsize%5D=1" }
+  let(:label_template_query) { { 'filter[name]': label_template_name, 'page[page]': 1, 'page[per_page]': 1 } }
+  let(:label_template_url) { "/v1/label_templates?#{URI.encode_www_form(label_template_query)}" }
 
   it 'should send post request to pmb if job is valid' do
     PMB::TestSuiteStubs.get(label_template_url) do |_env|

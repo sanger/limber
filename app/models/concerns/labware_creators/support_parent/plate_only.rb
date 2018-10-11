@@ -8,7 +8,7 @@ module LabwareCreators::SupportParent
 
     class_methods do
       def support_parent?(parent)
-        parent.is_a?(Limber::Plate)
+        parent.plate?
       end
     end
 

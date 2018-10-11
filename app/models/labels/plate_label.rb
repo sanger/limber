@@ -4,9 +4,9 @@ class Labels::PlateLabel < Labels::Base
   def attributes
     {
       top_left: date_today,
-      bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number}",
-      top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
-      bottom_right: "#{labware.label.prefix} #{labware.label.text}",
+      bottom_left: labware.barcode.human,
+      top_right: labware.stock_plate&.barcode&.human,
+      bottom_right: [labware.role, labware.purpose.name].compact.join(' '),
       barcode: labware.barcode.ean13
     }
   end

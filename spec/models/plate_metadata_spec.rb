@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe PlateMetadata do
+RSpec.describe PlateMetadata do
   include FeatureHelpers
 
   describe 'without api' do
@@ -18,9 +18,7 @@ describe PlateMetadata do
     let(:plate)                     { json :stock_plate, uuid: plate_uuid }
     let(:plate_with_metadata)       { json :stock_plate_with_metadata, uuid: plate_uuid }
 
-    has_a_working_api(times: 1)
-
-    let(:api) { Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options) }
+    has_a_working_api
 
     it 'is not valid without a user' do
       stub_asset_search(123, plate)

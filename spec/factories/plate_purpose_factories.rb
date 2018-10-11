@@ -1,7 +1,12 @@
-
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :v2_purpose, class: Sequencescape::Api::V2::Purpose, traits: [:barcoded_v2] do
+    skip_create
+    name 'Limber Example Purpose'
+    uuid 'example-purpose-uuid'
+  end
+
   factory :plate_purpose, class: Limber::PlatePurpose, traits: [:api_object] do
     name 'Limber Example Purpose'
     uuid 'example-purpose-uuid'

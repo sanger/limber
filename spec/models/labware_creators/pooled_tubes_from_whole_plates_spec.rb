@@ -8,13 +8,13 @@ require_relative 'shared_examples'
 # Creates new tubes of the child purpose
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
-describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
+RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
   it_behaves_like 'it only allows creation from tagged plates'
 
   # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
 
-  subject { described_class.new(form_attributes.merge(api: api)) }
+  subject { described_class.new(api, form_attributes) }
 
   it 'should have page' do
     expect(described_class.page).to eq 'pooled_tubes_from_whole_plates'

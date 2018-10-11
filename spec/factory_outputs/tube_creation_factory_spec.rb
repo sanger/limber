@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'specific_tube_creation factory' do
+RSpec.describe 'specific_tube_creation factory' do
   subject do
     json(
       :specific_tube_creation,

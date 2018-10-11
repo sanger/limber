@@ -6,12 +6,12 @@ require_relative 'shared_examples'
 
 # A plate with primer panel has a preview page, but otherwise
 # behaves exactly as a normal plate stamp
-describe LabwareCreators::PlateWithPrimerPanel do
+RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   has_a_working_api
   it_behaves_like 'it only allows creation from plates'
 
   subject do
-    LabwareCreators::PlateWithPrimerPanel.new(form_attributes)
+    LabwareCreators::PlateWithPrimerPanel.new(api, form_attributes)
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
@@ -20,19 +20,20 @@ describe LabwareCreators::PlateWithPrimerPanel do
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
   let(:plate_size)   { 384 }
-  let(:parent)       { json :plate_with_primer_panels, uuid: parent_uuid, size: plate_size, pool_sizes: [384] }
+  let(:requests) { Array.new(plate_size) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
+  let(:parent)   { create :v2_plate_with_primer_panels, barcode_number: '2', uuid: parent_uuid, size: plate_size, outer_requests: requests }
+  let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) do
     {
       user_uuid: user_uuid,
       purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid,
-      api: api
+      parent_uuid: parent_uuid
     }
   end
 
   before do
-    Settings.purposes[purpose_uuid] = build :purpose_config, pcr_stage: 'pcr 1'
+    create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid
   end
 
   it 'should have page' do
@@ -43,10 +44,9 @@ describe LabwareCreators::PlateWithPrimerPanel do
   # is solely for the user's benefit!
   context 'create plate' do
     let!(:plate_request) do
-      stub_api_get(parent_uuid, body: parent)
+      stub_v2_plate(parent, stub_search: false)
+      stub_v2_plate(child, stub_search: false)
     end
-
-    let(:expected_transfers) { WellHelpers.stamp_hash(plate_size) }
 
     let!(:plate_creation_request) do
       stub_api_post('plate_creations',
@@ -76,17 +76,21 @@ describe LabwareCreators::PlateWithPrimerPanel do
       end
     end
 
-    let!(:transfer_template_request) do
-      stub_api_get('custom-pooling', body: json(:transfer_custom_pooling))
+    let(:transfer_requests) do
+      WellHelpers.column_order(plate_size).each_with_index.map do |well_name, index|
+        {
+          'source_asset' => "2-well-#{well_name}",
+          'target_asset' => "3-well-#{well_name}",
+          'outer_request' => "request-#{index}"
+        }
+      end
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('custom-pooling',
-                    payload: { transfer: {
-                      destination: 'child-uuid',
-                      source: parent_uuid,
+      stub_api_post('transfer_request_collections',
+                    payload: { transfer_request_collection: {
                       user: user_uuid,
-                      transfers: expected_transfers
+                      transfer_requests: transfer_requests
                     } },
                     body: '{}')
     end

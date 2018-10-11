@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require './lib/nested_validation'
 module LabwareCreators
   # Allows the user to create custom pooled tubes.
   # THe user may create an arbitrary number of tubes, with a
@@ -8,11 +7,12 @@ module LabwareCreators
   # to more than one tube.
   class CustomPooledTubes < PooledTubesBase
     include LabwareCreators::CustomPage
-    extend NestedValidation
     include SupportParent::PlateReadyForCustomPoolingOnly
 
     self.page = 'custom_pooled_tubes'
     self.attributes += [:file]
+
+    attr_accessor :file
 
     delegate :pools, to: :csv_file
 
@@ -20,9 +20,8 @@ module LabwareCreators
     validates_nested :csv_file, if: :file
     validate :wells_occupied?
 
-    def save!
-      super # validates and creates tubes
-      upload_file
+    def save
+      super && upload_file && true
     end
 
     def wells_occupied?

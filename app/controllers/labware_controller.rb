@@ -2,6 +2,9 @@
 
 require 'csv'
 
+# Inherited by PlatesController and TubesController
+# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# update => Used to update the state of a plate/tube
 class LabwareController < ApplicationController
   before_action :locate_labware, only: :show
   before_action :find_printers, only: [:show]
@@ -11,7 +14,6 @@ class LabwareController < ApplicationController
 
   def show
     @presenter = presenter_for(@labware)
-    @presenter.prepare
 
     response.headers['Vary'] = 'Accept'
     respond_to do |format|

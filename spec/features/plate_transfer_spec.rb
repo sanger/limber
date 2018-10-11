@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Plate transfer', js: true do
+RSpec.feature 'Plate transfer', js: true do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -72,24 +72,24 @@ feature 'Plate transfer', js: true do
     click_button('Robots')
     click_link 'bravo LB Post Shear => LB End Prep'
     expect(page).to have_content('bravo LB Post Shear => LB End Prep')
-    fill_in 'Scan robot', with: '123'
+    scan_in 'Scan robot', with: '123'
     within('#robot') do
       expect(page).to have_content('123')
     end
-    fill_in 'Scan bed', with: '580000004838'
-    fill_in 'Scan plate', with: plate_barcode_1
+    scan_in 'Scan bed', with: '580000004838'
+    scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
     end
-    fill_in 'Scan robot', with: robot_barcode
+    scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
       expect(page).not_to have_content('123')
       expect(page).to have_content(robot_barcode.to_s)
     end
-    fill_in 'Scan bed', with: '580000014851'
-    fill_in 'Scan plate', with: plate_barcode_2
+    scan_in 'Scan bed', with: '580000014851'
+    scan_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
@@ -117,12 +117,12 @@ feature 'Plate transfer', js: true do
     click_button('Robots')
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
-    fill_in 'Scan robot', with: robot_barcode
+    scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
       expect(page).to have_content(robot_barcode.to_s)
     end
-    fill_in 'Scan bed', with: '580000014851'
-    fill_in 'Scan plate', with: plate_barcode_1
+    scan_in 'Scan bed', with: '580000014851'
+    scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")
@@ -152,12 +152,12 @@ feature 'Plate transfer', js: true do
     click_button('Robots')
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
-    fill_in 'Scan robot', with: robot_barcode
+    scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
       expect(page).to have_content(robot_barcode.to_s)
     end
-    fill_in 'Scan bed', with: '580000014851'
-    fill_in 'Scan plate', with: plate_barcode_1
+    scan_in 'Scan bed', with: '580000014851'
+    scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Plate: #{plate_barcode_1}")

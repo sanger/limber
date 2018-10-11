@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'work completion factory' do
+RSpec.describe 'work completion factory' do
   subject do
     json(
       :work_completion,
