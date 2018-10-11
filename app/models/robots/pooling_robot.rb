@@ -50,7 +50,8 @@ module Robots
         # The destination bed is valid, so check its parents are correct
         destination_bed.each_parent do |bed_barcode, expected_barcode|
           scanned_barcode = bed_contents.fetch(bed_barcode, []).first
-          valid_plates[bed_barcode] = scanned_barcode == expected_barcode
+          # TODO: Update SBCF with better matchers and to_s conversion
+          valid_plates[bed_barcode] = SBCF::SangerBarcode.from_user_input(scanned_barcode).machine_barcode.to_s == expected_barcode
           error(beds[bed_barcode], "Expected to contain #{expected_barcode} not #{scanned_barcode}") unless valid_plates[bed_barcode]
         end
       end
