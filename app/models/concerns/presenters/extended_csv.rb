@@ -35,6 +35,13 @@ module Presenters::ExtendedCsv
     @all_wells
   end
 
+  # Split a location string into an array containing the row letter
+  # and the column number (as a integer) so that they can be sorted.
+  def split_location(location)
+    match = location.match(/^([A-H])(\d+)/)
+    [match[2].to_i, match[1]] # Order by column first
+  end
+
   def transfers_for_csv
     labware.creation_transfers.map do |ct|
       source_ean = ct.source.barcode.ean13

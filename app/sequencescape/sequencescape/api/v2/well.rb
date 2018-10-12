@@ -51,6 +51,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     in_progress.presence || completed
   end
 
+  def multiple_requests?
+    active_requests.many?
+  end
+
   def associated_requests
     (requests_as_source + requests_in_progress).reject(&:cancelled?)
   end

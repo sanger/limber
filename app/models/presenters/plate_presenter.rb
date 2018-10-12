@@ -28,7 +28,9 @@ class Presenters::PlatePresenter
   self.style_class = 'standard'
 
   # Note: Validation here is intended as a warning. Rather than strict validation
-  validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
+  validates :pcr_cycles_specified,
+            numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' },
+            unless: :multiple_requests_per_well?
 
   validates :pcr_cycles,
             inclusion: { in: ->(r) { r.expected_cycles },
@@ -109,6 +111,10 @@ class Presenters::PlatePresenter
 
   private
 
+  def multiple_requests_per_well?
+    wells.any?(&:multiple_requests?)
+  end
+
   def number_of_filled_wells
     wells.count { |w| w.aliquots.present? }
   end
@@ -119,13 +125,6 @@ class Presenters::PlatePresenter
 
   def cycles
     labware.pcr_cycles
-  end
-
-  # Split a location string into an array containing the row letter
-  # and the column number (as a integer) so that they can be sorted.
-  def split_location(location)
-    match = location.match(/^([A-H])(\d+)/)
-    [match[2].to_i, match[1]] # Order by column first
   end
 
   def active_request_types
