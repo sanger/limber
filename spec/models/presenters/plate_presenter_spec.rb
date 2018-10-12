@@ -100,6 +100,28 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 
+  context 'a plate with conflicting but overlapping pools' do
+    # In the GnT pipeline we have two requests out of the stock plates, which will be
+    # split up onto different plates. They have different PCR cycle requirements, but
+    # the warning is not required and is unwanted. This check disables the warning
+    # if the plate contains split processes
+    let(:labware) { create :v2_plate, barcode_number: '2', wells: wells }
+    let(:request_a) { create :library_request, pcr_cycles: 1 }
+    let(:request_b) { create :library_request, pcr_cycles: 2 }
+    let(:request_c) { create :library_request, pcr_cycles: 1 }
+    let(:request_d) { create :library_request, pcr_cycles: 2 }
+    let(:wells) do
+      [
+        create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d])
+      ]
+    end
+
+    it 'reports as valid' do
+      expect(presenter).to be_valid
+    end
+  end
+
   context 'where the cycles differs from the default' do
     let(:warnings) { { 'pcr_cycles_not_in' => ['6'] } }
 

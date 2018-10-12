@@ -2,7 +2,7 @@ language: ruby
 rvm:
 - 2.5.1
 dist: xenial
-bundler_args: "--deployment"
+bundler_args: "--without deployment"
 sudo: required
 addons:
   apt:

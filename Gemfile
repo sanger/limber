@@ -34,7 +34,7 @@ gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'de
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara' # Interface for integration tests
-  gem 'capybara-selenium' # Headless browser for integration tests
+  gem 'capybara-selenium' # Browser driver for integration tests
   gem 'factory_bot' # Generate models and json easily in tests
   gem 'guard-rspec', require: false
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
