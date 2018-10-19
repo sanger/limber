@@ -21,7 +21,11 @@ module Robots
       def each_parent
         arrayed_transfers = plate.creation_transfers.to_a
         range.each do |i|
-          plate_barcode = arrayed_transfers[i].present? ? arrayed_transfers[i].source.barcode.ean13 : nil
+          plate_barcode = if arrayed_transfers[i].present?
+                            SBCF::SangerBarcode.from_machine(arrayed_transfers[i].source.barcode.ean13)
+                          else
+                            SBCF::EmptyBarcode.new
+                          end
           yield(parents[i], plate_barcode)
         end
       end
@@ -50,8 +54,7 @@ module Robots
         # The destination bed is valid, so check its parents are correct
         destination_bed.each_parent do |bed_barcode, expected_barcode|
           scanned_barcode = bed_contents.fetch(bed_barcode, []).first
-          # TODO: Update SBCF with better matchers and to_s conversion
-          valid_plates[bed_barcode] = SBCF::SangerBarcode.from_user_input(scanned_barcode).machine_barcode.to_s == expected_barcode
+          valid_plates[bed_barcode] = expected_barcode =~ scanned_barcode
           error(beds[bed_barcode], "Expected to contain #{expected_barcode} not #{scanned_barcode}") unless valid_plates[bed_barcode]
         end
       end
