@@ -51,9 +51,8 @@
 .plate-view.plate-384 {
   padding: 5px;
   border-collapse: separate;
-  font-size: 50%;
+  td, th { font-size: 50%; }
 
-  caption { font-size: 100%; }
 
   th.first-col {
     width: 15px;

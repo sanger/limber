@@ -12,6 +12,10 @@
     <lb-sidebar>
       <b-card header="Add plates" header-tag="h3">
         <p class="card-text">Scan in the plates you wish to use.</p>
+        <lb-plate-scan :plate-api="Api.Plate" label="Plate 1"></lb-plate-scan>
+        <lb-plate-scan :plate-api="Api.Plate" label="Plate 2"></lb-plate-scan>
+        <lb-plate-scan :plate-api="Api.Plate" label="Plate 3"></lb-plate-scan>
+        <lb-plate-scan :plate-api="Api.Plate" label="Plate 4"></lb-plate-scan>
       </b-card>
     </lb-sidebar>
   </lb-page>
@@ -20,15 +24,15 @@
 <script>
 
   import Plate from 'shared/components/Plate'
-
+  import PlateScan from 'shared/components/PlateScan'
   import ApiModule from 'shared/api'
-
-  const Api = ApiModule('test')
 
   export default {
     name: 'QuadStamp',
     data () {
-      return {}
+      return {
+        Api: ApiModule({ baseUrl: this.sequencescapeApi })
+      }
     },
     props: {
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
@@ -36,9 +40,11 @@
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 }
     },
+    computed: {},
     methods: {},
     components: {
-      'lb-plate': Plate
+      'lb-plate': Plate,
+      'lb-plate-scan': PlateScan
     }
   }
 </script>
