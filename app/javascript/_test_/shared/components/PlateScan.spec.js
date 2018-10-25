@@ -9,13 +9,7 @@ const localVue = createLocalVue()
 // install plugins as normal
 localVue.use(BootstrapVue)
 
-import ApiModule from 'shared/api'
-const apiPlate = ApiModule({ baseUrl: this.sequencescapeApi }).Plate
-
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('PlateScan', () => {
-  let searched_options = ''
 
   const nullPlate = { data: null }
   const goodPlate = { data: 'Plate' }
@@ -23,13 +17,19 @@ describe('PlateScan', () => {
   const mockApiFactory = function(promise) {
     return {
       where(options) {
-        searched_options = options
+        this.filteredWith = options
+        return this
+      },
+      includes(options) {
+        this.included = options
         return this
       },
       first() {
         return this.promise
       },
       promise: promise,
+      filteredWith: '',
+      included: []
     }
   }
 
@@ -40,7 +40,8 @@ describe('PlateScan', () => {
       propsData: {
         label: 'My Plate',
         description: 'Scan it in',
-        plateApi: mockApi
+        plateApi: mockApi,
+        includes: {wells: ['requests_as_source',{aliquots: 'request'}]}
       },
       localVue
     })
@@ -49,6 +50,7 @@ describe('PlateScan', () => {
   it('renders the provided label', () => {
     const api = mockApiFactory()
     const wrapper = wrapperFactory(api)
+
     expect(wrapper.find('label').text()).toEqual('My Plate')
   })
 
@@ -70,7 +72,7 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(searched_options).toEqual({ barcode: 'not a barcode' })
+    expect(api.filteredWith).toEqual({ barcode: 'not a barcode' })
     expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find plate')
     expect(wrapper.emitted()).toEqual({
       change: [
@@ -111,7 +113,8 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(searched_options).toEqual({ barcode: 'not a barcode' })
+    expect(api.filteredWith).toEqual({ barcode: 'not a barcode' })
+    expect(api.included).toEqual({wells: ['requests_as_source',{aliquots: 'request'}]})
     expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
     expect(wrapper.emitted()).toEqual({
       change: [

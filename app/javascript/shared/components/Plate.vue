@@ -24,6 +24,11 @@
 <script>
   export default {
     name: 'Page',
+    data() {
+      return {
+        wells: []
+      }
+    },
     props: {
       columns: { type: Number, default: 12 },
       rows: { type: Number, default: 8 },

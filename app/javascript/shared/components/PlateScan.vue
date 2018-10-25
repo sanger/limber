@@ -1,5 +1,8 @@
 <template>
-  <b-form-group :label="label"
+  <b-form-group horizontal
+                :label="label"
+                :label-cols="2"
+                label-size="lg"
                 label-for="plateScan"
                 :description="description"
                 :state="state"
@@ -10,6 +13,7 @@
                   type="text"
                   v-model.trim="plateBarcode"
                   :state="state"
+                  size="lg"
                   placeholder="Scan a plate"
                   v-on:change="lookupPlate"
                   >
@@ -32,7 +36,8 @@
     props: {
       plateApi: { required: true },
       label: { type: String, default: 'Plate'},
-      description: { type: String }
+      description: { type: String },
+      includes: { default: function() { return [] } }
     },
     methods: {
       lookupPlate: function (_) {
@@ -47,7 +52,12 @@
       },
       async findPlate () {
         this.state = 'searching'
-        const plate = (await this.plateApi.where({barcode: this.plateBarcode}).first()).data
+        const plate = (
+          await this.plateApi
+                    .includes(this.includes)
+                    .where({barcode: this.plateBarcode})
+                    .first()
+        ).data
         return plate
       },
       validatePlate: function (plate) {

@@ -1,10 +1,6 @@
 <template>
   <lb-page>
     <lb-main-content>
-      <div class="alert alert-info">
-        <h2>Debug properties:</h2>
-        {{ _props }}
-      </div>
       <b-card bg-variant="dark" text-variant="white">
         <lb-plate caption="New Plate" :rows="targetRows" :columns="targetColumns"></lb-plate>
       </b-card>
@@ -12,14 +8,20 @@
     <lb-sidebar>
       <b-card header="Add plates" header-tag="h3">
         <p class="card-text">Scan in the plates you wish to use.</p>
-        <lb-plate-scan :plate-api="Api.Plate" label="Plate 1"></lb-plate-scan>
-        <lb-plate-scan :plate-api="Api.Plate" label="Plate 2"></lb-plate-scan>
-        <lb-plate-scan :plate-api="Api.Plate" label="Plate 3"></lb-plate-scan>
-        <lb-plate-scan :plate-api="Api.Plate" label="Plate 4"></lb-plate-scan>
+        <lb-plate-scan v-for="i in sourcePlateNumber"
+                       :plate-api="Api.Plate"
+                       :label="'Plate ' + i"
+                       :key="i"
+                       :includes="{wells: ['requests_as_source',{aliquots: 'request'}]}"
+                       v-on:change="updatePlate(i, $event)"></lb-plate-scan>
       </b-card>
     </lb-sidebar>
+    <b-alert>{{ transfers }}</b-alert>
   </lb-page>
 </template>
+
+<style lang="scss" scoped>
+</style>
 
 <script>
 
@@ -30,8 +32,12 @@
   export default {
     name: 'QuadStamp',
     data () {
+      let plateArray = Array(this.sourcePlateNumber)
+      plateArray.fill({ state: 'empty', plate: null })
+
       return {
-        Api: ApiModule({ baseUrl: this.sequencescapeApi })
+        Api: ApiModule({ baseUrl: this.sequencescapeApi }),
+        plates: plateArray
       }
     },
     props: {
@@ -40,8 +46,21 @@
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 }
     },
-    computed: {},
-    methods: {},
+    methods: {
+      updatePlate(index, data) {
+        this.$set(this.plates, index - 1, data)
+      }
+    },
+    computed: {
+      transfers() {
+        let transferArray = []
+        this.plates.forEach(function(plate, index){
+          if (plate.state !== 'valid') { return } // We only process valid plates
+          console.log(plate, index)
+        })
+        return transferArray
+      }
+    },
     components: {
       'lb-plate': Plate,
       'lb-plate-scan': PlateScan
