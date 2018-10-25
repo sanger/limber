@@ -18,10 +18,10 @@ GIT
 
 GIT
   remote: git://github.com/sanger/sanger_barcode_format.git
-  revision: 2bce1cd66d5d9c58c059e2cb674277b79b9d5447
+  revision: 35846331c2b88d049a14b7cace08e18664494de1
   branch: development
   specs:
-    sanger_barcode_format (0.0.4)
+    sanger_barcode_format (0.1.1)
 
 GIT
   remote: git://github.com/sanger/sequencescape-client-api.git
