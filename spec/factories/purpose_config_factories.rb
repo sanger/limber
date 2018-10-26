@@ -6,67 +6,67 @@ FactoryBot.define do
     initialize_with { attributes }
 
     transient do
-      uuid 'example-purpose-uuid'
+      uuid { 'example-purpose-uuid' }
     end
 
-    name 'Plate Purpose'
-    creator_class 'LabwareCreators::StampedPlate'
-    presenter_class 'Presenters::StandardPresenter'
-    state_changer_class 'StateChangers::DefaultStateChanger'
-    default_printer_type :plate_a
-    asset_type 'plate'
-    label_class 'Labels::PlateLabel'
-    printer_type '96 Well Plate'
-    pmb_template 'sqsc_96plate_label_template'
+    name { 'Plate Purpose' }
+    creator_class { 'LabwareCreators::StampedPlate' }
+    presenter_class { 'Presenters::StandardPresenter' }
+    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    default_printer_type { :plate_a }
+    asset_type { 'plate' }
+    label_class { 'Labels::PlateLabel' }
+    printer_type { '96 Well Plate' }
+    pmb_template { 'sqsc_96plate_label_template' }
 
     factory :stock_plate_config do
       transient do
-        uuid 'stock-plate-purpose-uuid'
+        uuid { 'stock-plate-purpose-uuid' }
       end
-      name 'Limber Cherrypicked'
-      presenter_class 'Presenters::StockPlatePresenter'
-      stock_plate true
-      cherrypickable_target true
-      input_plate true
+      name { 'Limber Cherrypicked' }
+      presenter_class { 'Presenters::StockPlatePresenter' }
+      stock_plate { true }
+      cherrypickable_target { true }
+      input_plate { true }
     end
 
     factory :passable_plate do
-      suggest_library_pass_for ['Limber Library Creation']
+      suggest_library_pass_for { ['Limber Library Creation'] }
     end
 
     factory :minimal_purpose_config do
-      presenter_class 'Presenters::MinimalPlatePresenter'
+      presenter_class { 'Presenters::MinimalPlatePresenter' }
     end
 
     factory :templated_transfer_config do
-      transfer_template 'Pool wells based on submission'
+      transfer_template { 'Pool wells based on submission' }
     end
 
     factory :tagged_purpose_config do
-      creator_class 'LabwareCreators::TaggedPlate'
-      presenter_class 'Presenters::PcrPresenter'
-      name 'Tag Purpose'
-      tag_layout_templates ['tag-layout-template']
+      creator_class { 'LabwareCreators::TaggedPlate' }
+      presenter_class { 'Presenters::PcrPresenter' }
+      name { 'Tag Purpose' }
+      tag_layout_templates { ['tag-layout-template'] }
     end
 
     factory :tube_config do
-      asset_type 'tube'
-      default_printer_type :tube
-      presenter_class 'Presenters::SimpleTubePresenter'
+      asset_type { 'tube' }
+      default_printer_type { :tube }
+      presenter_class { 'Presenters::SimpleTubePresenter' }
 
       factory :passable_tube do
-        presenter_class 'Presenters::FinalTubePresenter'
-        suggest_library_pass_for ['Limber Library Creation']
+        presenter_class { 'Presenters::FinalTubePresenter' }
+        suggest_library_pass_for { ['Limber Library Creation'] }
       end
 
       factory :pooled_tube_from_plates_purpose_config do
-        name 'Pool tube'
-        creator_class 'LabwareCreators::PooledTubesFromWholePlates'
+        name { 'Pool tube' }
+        creator_class { 'LabwareCreators::PooledTubesFromWholePlates' }
       end
 
       factory :pooled_tube_from_tubes_purpose_config do
-        name 'Pool tube'
-        creator_class 'LabwareCreators::PooledTubesFromWholeTubes'
+        name { 'Pool tube' }
+        creator_class { 'LabwareCreators::PooledTubesFromWholeTubes' }
       end
     end
   end
