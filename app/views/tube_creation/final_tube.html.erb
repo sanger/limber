@@ -11,7 +11,7 @@
         <ul id="scanned_tube_list" class="robot tubev list-group">
           <% @labware_creator.each_sibling do |sibling| %>
           <li id="listElement[<%= sibling.barcode %>]" class="<%= sibling.ready? ? 'wait-tube' : 'bad-tube' %> sibling-tube list-group-item" data-barcode="<%= sibling.barcode %>">
-            <h3>Tube: <%= sibling.name %> (<%= sibling.barcode %>)</h3>
+            <h3>Tube: <%= sibling.name %> <small><%= SBCF::SangerBarcode.from_machine(sibling.barcode) %></small></h3>
             <input value="0" name="tube[parents][<%= sibling.barcode %>]" id="tube[parents][<%= sibling.barcode %>]" type="hidden">
             <div class="tube_validation_report"><%= sibling.message %></div>
           </li>
