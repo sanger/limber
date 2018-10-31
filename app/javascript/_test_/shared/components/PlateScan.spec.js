@@ -1,13 +1,10 @@
 // Import the component being tested
-import { mount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue'
+import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import PlateScan from 'shared/components/PlateScan.vue'
 
 // create an extended `Vue` constructor
-const localVue = createLocalVue()
-// install plugins as normal
-localVue.use(BootstrapVue)
+import localVue from '_test_/support/base_vue'
 
 describe('PlateScan', () => {
 
@@ -24,11 +21,16 @@ describe('PlateScan', () => {
         this.included = options
         return this
       },
+      select(options) {
+        this.selected = options
+        return this
+      },
       first() {
         return this.promise
       },
       promise: promise,
       filteredWith: '',
+      selected: [],
       included: []
     }
   }
@@ -114,6 +116,7 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(api.filteredWith).toEqual({ barcode: 'not a barcode' })
+    expect(api.selected).toEqual({plates: ['labware_barcode', 'uuid']})
     expect(api.included).toEqual({wells: ['requests_as_source',{aliquots: 'request'}]})
     expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
     expect(wrapper.emitted()).toEqual({

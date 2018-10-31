@@ -1,10 +1,5 @@
-<!-- Encapsulates the main page content
-     Can have two children:
-      - MainContent: The LHS, what you HAVE
-      - Sidebar: The RHS, what you can do
--->
 <template>
-  <table v-bind:class="['plate-view', sizeClass]">
+  <table v-bind:class="['plate-view', sizeClass, 'pool-colours']">
     <caption>{{ caption }}</caption>
     <thead>
       <tr>
@@ -15,32 +10,43 @@
     <tbody>
       <tr v-for="row in rows">
         <th class="first-col">{{ row | toLetter }}</th>
-        <td v-for="column in columns"><div class="well"></div></td>
+        <td v-for="column in columns">
+          <lb-well v-bind="wellAt(row, column)"></lb-well>
+        </td>
       </tr>
     </tbody>
   </table>
 </template>
 
 <script>
-  export default {
-    name: 'Page',
-    data() {
-      return {
-        wells: []
+
+  import Well from 'shared/components/Well'
+
+  const rowNumToLetter = function (value) {
+        return String.fromCharCode(value + 64)
       }
-    },
+
+  export default {
+    name: 'Plate',
     props: {
       columns: { type: Number, default: 12 },
       rows: { type: Number, default: 8 },
-      caption: { type: String }
+      caption: { type: String },
+      wells: { type: Object, default: () => { return {} } }
     },
     computed: {
       sizeClass: function () { return 'plate-' + (this.columns * this.rows) }
     },
     filters: {
-      toLetter: function (value) {
-        return String.fromCharCode(value + 64)
+      toLetter: rowNumToLetter
+    },
+    methods: {
+      wellAt: function (row, column) {
+        return this.wells[`${rowNumToLetter(row)}${column}`] || {}
       }
+    },
+    components: {
+      'lb-well': Well
     }
   }
 </script>

@@ -37,7 +37,8 @@
       plateApi: { required: true },
       label: { type: String, default: 'Plate'},
       description: { type: String },
-      includes: { default: function() { return [] } }
+      includes: { default: () => { return [] } },
+      selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid' ] } } }
     },
     methods: {
       lookupPlate: function (_) {
@@ -56,6 +57,7 @@
           await this.plateApi
                     .includes(this.includes)
                     .where({barcode: this.plateBarcode})
+                    .select(this.selects)
                     .first()
         ).data
         return plate
