@@ -29,9 +29,17 @@ module Presenters::ExtendedCsv
 
   def all_wells
     return @all_wells unless @all_wells.nil?
+
     @all_wells = {}
     ('A'..'H').each { |r| (1..12).each { |c| @all_wells["#{r}#{c}"] = 'H12' } }
     @all_wells
+  end
+
+  # Split a location string into an array containing the row letter
+  # and the column number (as a integer) so that they can be sorted.
+  def split_location(location)
+    match = location.match(/^([A-H])(\d+)/)
+    [match[2].to_i, match[1]] # Order by column first
   end
 
   def transfers_for_csv

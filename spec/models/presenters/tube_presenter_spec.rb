@@ -4,10 +4,8 @@ require 'rails_helper'
 require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
 
-describe Presenters::TubePresenter do
-  # Not sure why this is getting executed twice.
-  # Want to get the basics working first though
-  has_a_working_api(times: 2)
+RSpec.describe Presenters::TubePresenter do
+  has_a_working_api
 
   let(:labware) do
     build :multiplexed_library_tube,

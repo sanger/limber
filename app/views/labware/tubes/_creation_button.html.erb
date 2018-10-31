@@ -1,8 +1,0 @@
-<%# TODO Dry thit up with child_plate_creation.html.erb %>
-<%= form_tag new_limber_tube_child_path(presenter.labware.uuid), method: 'get' do %>
-  <%= hidden_field_tag :purpose_uuid, uuid %>
-  <%= submit_tag "Add an empty #{name} tube",
-                 name:  nil,
-                 class: "submit create-tube-button  btn btn-success btn-lg btn-block"
-  %>
-<% end %>

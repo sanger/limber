@@ -1,0 +1,1 @@
+<%= link_to "Add an empty #{custom_creator_button.name} #{custom_creator_button.type}", new_polymorphic_path([custom_creator_button.parent, custom_creator_button], purpose_uuid: custom_creator_button.purpose_uuid), class:  "create-#{custom_creator_button.type}-button" %>

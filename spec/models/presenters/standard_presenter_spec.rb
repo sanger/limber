@@ -1,10 +1,28 @@
 # frozen_string_literal: true
 
-describe Presenters::StandardPresenter do
+RSpec.describe Presenters::StandardPresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { build :passed_plate, state: state, purpose_name: purpose_name, purpose_uuid: 'test-purpose', uuid: 'plate-uuid' }
+  let(:aliquot_type) { :v2_aliquot }
+  let(:state) { 'pending' }
+  let(:labware) do
+    create :v2_plate,
+           barcode_number: 1,
+           state: state,
+           purpose_name: purpose_name,
+           purpose_uuid: 'test-purpose',
+           uuid: 'plate-uuid',
+           wells: wells
+  end
+  let(:wells) do
+    [
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 2), aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1))
+    ]
+  end
   let(:suggest_passes) { nil }
 
   subject do
@@ -12,6 +30,10 @@ describe Presenters::StandardPresenter do
       api:     api,
       labware: labware
     )
+  end
+
+  it 'returns the priority' do
+    expect(subject.priority).to eq(2)
   end
 
   context 'when pending' do
@@ -23,6 +45,10 @@ describe Presenters::StandardPresenter do
 
     it 'allows state change' do
       expect { |b| subject.default_state_change(&b) }.to yield_control
+    end
+
+    it 'returns the labware state' do
+      expect(subject.state).to eq(state)
     end
   end
 
@@ -45,49 +71,45 @@ describe Presenters::StandardPresenter do
     end
 
     it 'suggests child purposes' do
-      expect { |b| subject.suggested_purposes(&b) }.to yield_successive_args(
-        ['child-purpose', 'Child purpose', 'plate'],
-        ['child-purpose-2', 'Child purpose 2', 'plate']
-      )
+      expect(subject.suggested_purposes).to be_an Array
+      expect(subject.suggested_purposes.length).to eq 2
+      expect(subject.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      expect(subject.suggested_purposes.first.purpose_uuid).to eq('child-purpose')
+      expect(subject.suggested_purposes.last.purpose_uuid).to eq('child-purpose-2')
     end
 
     it 'yields the configured plates' do
-      expect { |b| subject.compatible_plate_purposes(&b) }.to yield_successive_args(
-        ['child-purpose', 'Child purpose'],
-        ['child-purpose-2', 'Child purpose 2'],
-        ['other-purpose', 'Other purpose'],
-        ['other-purpose-2', 'Other purpose 2']
-      )
+      cpp = subject.compatible_plate_purposes
+      expect(cpp).to be_an Array
+      expect(cpp.length).to eq 4
+      expect(cpp.map(&:purpose_uuid)).to eq([
+                                              'child-purpose',
+                                              'child-purpose-2',
+                                              'other-purpose',
+                                              'other-purpose-2'
+                                            ])
     end
 
     it 'yields the configured tube' do
       expect(labware).to receive(:tagged?).and_return(true)
-      expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
-        ['tube-purpose', 'Tube purpose']
-      )
-    end
-  end
-
-  context 'with tubes' do
-    let(:labware) { build :plate, uuid: 'plate-uuid', transfers_to_tubes_count: 1 }
-
-    before do
-      stub_api_get('plate-uuid', 'transfers_to_tubes', body: json(:transfer_collection, size: 2))
+      ctp = subject.compatible_tube_purposes
+      expect(ctp).to be_an Array
+      expect(ctp.length).to eq 1
+      expect(ctp.first.purpose_uuid).to eq 'tube-purpose'
     end
 
-    it 'returns the correct number of labels' do
-      expect(subject.tube_labels.length).to eq 2
+    it 'returns the labware state' do
+      expect(subject.state).to eq(state)
     end
   end
 
   describe '#control_library_passing' do
     before do
-      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: aliquot_type))
       Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
     end
 
     context 'tagged' do
-      let(:aliquot_type) { :tagged_aliquot }
+      let(:aliquot_type) { :v2_tagged_aliquot }
 
       context 'and passed' do
         let(:state) { 'passed' }
@@ -114,7 +136,7 @@ describe Presenters::StandardPresenter do
     end
 
     context 'untagged' do
-      let(:aliquot_type) { :aliquot }
+      let(:aliquot_type) { :v2_aliquot }
       context 'and passed' do
         let(:state) { 'passed' }
         it 'supports passing' do
@@ -125,8 +147,8 @@ describe Presenters::StandardPresenter do
   end
 
   describe '#control_suggested_library_passing' do
+    let(:aliquot_type) { :v2_tagged_aliquot }
     before do
-      stub_api_get('plate-uuid', 'wells', body: json(:well_collection, size: 2, aliquot_factory: :tagged_aliquot))
       Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
     end
     let(:suggest_passes) { ['limber_multiplexing'] }

@@ -1,26 +1,20 @@
 # frozen_string_literal: true
 
+# Involved in creation of tubes
+# Controllers find the appropriate LabwareCreator specified by the purpose configuration
+# new => renders the form specified by the labware creator,
+#        This usually indicates that further information needs to be supplied by the user,
+#        or that we need to display an interstitial page
+# create => Use the specified labware creator to generate the resource. Will usually redirect
+#           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class TubeCreationController < CreationController
   def redirection_path(form)
     url_for(form.child)
   end
 
-  def create
-    tube_params[:parent_uuid] ||= parent_uuid
-    @labware_creator = labware_creator(tube_params)
-    @labware_creator.save!
-    respond_to do |format|
-      format.html { redirect_to_creator_child(@labware_creator) }
-    end
-  end
-
   private
 
-  def tube_params
+  def creator_params
     params.require(:tube)
-  end
-
-  def parent_uuid
-    params[:limber_tube_id] || params[:limber_plate_id]
   end
 end

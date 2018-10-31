@@ -30,6 +30,7 @@ module StateChangers
 
     def contents_for(target_state)
       return nil unless FILTER_FAILS_ON.include?(target_state)
+
       labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
     end
 

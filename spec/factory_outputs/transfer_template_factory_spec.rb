@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'transfer_template factory' do
+RSpec.describe 'transfer_template factory' do
   subject do
     json(
       :transfer_template,

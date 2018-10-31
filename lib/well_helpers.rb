@@ -48,7 +48,7 @@ module WellHelpers
   # @param [String] well The well name eg. A1
   # @return [Int] the index, eg. 0
   def self.index_of(well, size = 96)
-    column_order(size).index(well)
+    column_order(size).index(well) || raise("Unknown well #{well} on plate of size 96")
   end
 
   # Returns the name of the well at the given co-ordinates

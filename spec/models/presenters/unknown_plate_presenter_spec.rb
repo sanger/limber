@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe Presenters::UnknownPlatePresenter do
-  has_a_working_api(times: 2)
+RSpec.describe Presenters::UnknownPlatePresenter do
+  has_a_working_api
 
-  let(:labware) { build :plate, purpose_name: 'Other plate' }
+  let(:labware) { create :v2_plate, purpose_name: 'Other plate' }
 
   subject do
     described_class.new(

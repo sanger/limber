@@ -9,4 +9,12 @@ class Limber::Tube < Sequencescape::Tube
   def submissions
     []
   end
+
+  def plate?
+    false
+  end
+
+  def tube?
+    true
+  end
 end

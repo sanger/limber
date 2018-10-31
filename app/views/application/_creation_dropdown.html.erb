@@ -1,0 +1,11 @@
+<% unless resources.empty? %>
+  <% button_id = SecureRandom.uuid %>
+  <div role="group">
+    <button id="<%= button_id %>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Create <%= resource_type %>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="<%= button_id %>">
+      <%= render partial: 'dropdown_item', collection: resources, as: :item %>
+    </div>
+  </div>
+<% end %>

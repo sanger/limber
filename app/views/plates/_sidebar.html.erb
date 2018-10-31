@@ -1,19 +1,18 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
-  <%= render(partial: 'labware/qc_data') %>
   <% presenter.control_tube_display do %>
-      <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
+    <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
+
+  <%= render(partial: 'labware/qc_data') %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
+      <%= render partial: 'work_completion_form', locals: { presenter: presenter } %>
     <% end %>
 
     <% presenter.control_additional_creation do -%>
-      <% presenter.suggested_purposes do |uuid, name, type| %>
-        <%= render(partial: creation_partial_for(type), locals: { presenter: presenter, uuid: uuid, name: name }) %>
-      <% end %>
+      <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% end %>
 
     <% @presenter.csv_file_links.each do |link_name, link_target| %>
@@ -35,39 +34,9 @@
       <%= simple_state_change_form(presenter) %>
     <% end %>
 
-    <%= presenter.control_additional_creation do %>
-      <div role="group">
-        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Stamp other plates
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% presenter.compatible_plate_purposes do |uuid, name| %>
-          <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), method: 'get' do %>
-            <%= hidden_field_tag :purpose_uuid, uuid %>
-            <%= submit_tag "Add an empty #{name} plate",
-              name: nil,
-              class: "submit dropdown-item create-plate-button btn"
-            %>
-          <% end %>
-        <% end %>
-        </div>
-      </div>
-      <div role="group">
-        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Create tubes
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% presenter.compatible_tube_purposes do |uuid, name| %>
-          <%= form_tag new_limber_plate_tube_path(presenter.labware.uuid), method: 'get' do %>
-            <%= hidden_field_tag :purpose_uuid, uuid %>
-            <%= submit_tag "Add an empty #{name} tube",
-              name: nil,
-              class: "submit dropdown-item create-tube-button btn"
-            %>
-          <% end %>
-        <% end %>
-        </div>
-      </div>
+    <% presenter.control_additional_creation do %>
+      <%= render partial: 'creation_dropdown', locals: { resource_type: 'plates', resources: presenter.compatible_plate_purposes } %>
+      <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
     <% end %>
 
     <% presenter.control_library_passing do %>

@@ -8,11 +8,11 @@ require_relative 'shared_examples'
 # Creates new tubes of the child purpose
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
-describe LabwareCreators::PooledTubesFromWholeTubes do
+RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   include FeatureHelpers
   it_behaves_like 'it only allows creation from tubes'
 
-  subject { described_class.new(form_attributes.merge(api: api)) }
+  subject { described_class.new(api, form_attributes) }
 
   let(:user_uuid)     { SecureRandom.uuid }
   let(:user)          { json :user, uuid: user_uuid }
@@ -33,11 +33,12 @@ describe LabwareCreators::PooledTubesFromWholeTubes do
   end
 
   before do
-    Settings.purposes[purpose_uuid] = build :purpose_config,
-                                            submission: {
-                                              template_uuid: template_uuid,
-                                              request_options: { read_length: 150 }
-                                            }
+    create :purpose_config,
+           submission: {
+             template_uuid: template_uuid,
+             request_options: { read_length: 150 }
+           },
+           uuid: purpose_uuid
   end
 
   describe '#new' do

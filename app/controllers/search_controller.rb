@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Handles most of the indexes of plates/tubes
 class SearchController < ApplicationController
   class InputError < StandardError; end
 
@@ -35,6 +36,7 @@ class SearchController < ApplicationController
 
   def qcables
     raise InputError, "#{qcable_barcode} is not a valid barcode" unless /^[0-9]{13}$/.match?(qcable_barcode)
+
     respond_to do |format|
       format.json do
         redirect_to find_qcable(qcable_barcode)
@@ -46,28 +48,23 @@ class SearchController < ApplicationController
 
   def create
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
+
     respond_to do |format|
-      format.html { redirect_to find_plate(params[:plate_barcode]) }
+      format.html { redirect_to find_labware(params[:plate_barcode]) }
     end
-  rescue => exception
+  rescue StandardError => exception
     @search_results = []
     flash[:error]   = exception.message
 
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
       format.html { render :new }
-      format.json { render json: { error: exception.message }, status: 404 }
+      format.json { render json: { error: exception.message }, status: :not_found }
     end
   end
 
-  def find_plate(barcode)
-    machine_barcode =
-      if SBCF::HUMAN_BARCODE_FORMAT.match?(barcode)
-        SBCF::SangerBarcode.from_human(barcode).machine_barcode
-      else
-        barcode
-      end
-    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: machine_barcode)
+  def find_labware(barcode)
+    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: barcode)
   rescue Sequencescape::Api::ResourceNotFound => exception
     raise exception, "Sorry, could not find labware with the barcode '#{barcode}'."
   end
@@ -85,7 +82,7 @@ class SearchController < ApplicationController
     end
   rescue Sequencescape::Api::ResourceNotFound => exception
     respond_to do |format|
-      format.json { render json: { 'general' => exception.message }, status: 404 }
+      format.json { render json: { 'general' => exception.message }, status: :not_found }
     end
   end
 

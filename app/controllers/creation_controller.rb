@@ -1,18 +1,34 @@
 # frozen_string_literal: true
 
+# Base class for labware creation. Inherited by PlateCreationController and TubeCreation Controller.
+# Controllers find the appropriate LabwareCreator specified by the purpose configuration
+# new => renders the form specified by the labware creator,
+#        This usually indicates that further information needs to be supplied by the user,
+#        or that we need to display an interstitial page
+# create => Use the specified labware creator to generate the resource. Will usually redirect
+#           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class CreationController < ApplicationController
   before_action :check_for_current_user!
   rescue_from Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid, with: :creation_failed
 
-  def creator_for(form_attributes)
-    LabwareCreators.class_for(form_attributes.fetch(:purpose_uuid))
-  end
-
   def new
     params[:parent_uuid] ||= parent_uuid
-    @labware_creator = labware_creator(params)
+    @labware_creator = labware_creator(params.permit(permitted_attributes))
     respond_to do |format|
-      format.html { @labware_creator.render(self) }
+      format.html { render(@labware_creator.page) }
+    end
+  end
+
+  def create
+    creator_params[:parent_uuid] ||= parent_uuid
+    @labware_creator = labware_creator(creator_params)
+    if @labware_creator.save
+      respond_to do |format|
+        format.html { redirect_to_creator_child(@labware_creator) }
+      end
+    else
+      flash.now.alert = @labware_creator.errors.full_messages
+      render @labware_creator.page
     end
   end
 
@@ -24,12 +40,10 @@ class CreationController < ApplicationController
   end
 
   def labware_creator(form_attributes)
-    creator_for(form_attributes).new(
-      form_attributes.merge(
-        api: api,
-        user_uuid: current_user_uuid
-      )
-    )
+    creator_class.new(api,
+                      form_attributes.permit(permitted_attributes).merge(
+                        user_uuid: current_user_uuid
+                      ))
   end
 
   def creation_failed(exception)
@@ -44,5 +58,19 @@ class CreationController < ApplicationController
         )
       end
     end
+  end
+
+  private
+
+  def permitted_attributes
+    creator_class.attributes
+  end
+
+  def creator_class
+    @creator_class ||= LabwareCreators.class_for(params[:purpose_uuid] || creator_params.fetch(:purpose_uuid))
+  end
+
+  def parent_uuid
+    params[:limber_tube_id] || params[:limber_plate_id]
   end
 end
