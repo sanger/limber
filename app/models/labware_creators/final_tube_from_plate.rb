@@ -42,6 +42,7 @@ module LabwareCreators
 
     def pass_tubes!
       raise StandardError, 'Tubes cannot be passed before transfer' if @transfer.nil?
+
       tubes_from_transfer.each do |tube_uuid|
         api.state_change.create!(
           user: user_uuid,

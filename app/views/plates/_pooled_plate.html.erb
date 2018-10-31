@@ -13,7 +13,7 @@
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% row_wells.each_with_index do |well, index| %>
-          <td class="col-all <%= "plate-col-#{index+1}" %>">
+          <td>
             <div id="<%= "well_#{well.location}" %>" class="well">
               <% unless transfers[well.location].nil? -%>
                 <% Array(transfers[well.location]).each do |location| -%>

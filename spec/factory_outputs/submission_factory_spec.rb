@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'submission factories' do
+RSpec.describe 'submission factories' do
   describe 'basic' do
     subject do
       json(

@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
 
-describe Presenters::FinalTubePresenter do
+RSpec.describe Presenters::FinalTubePresenter do
   # Not sure why this is getting executed twice.
   # Want to get the basics working first though
   has_a_working_api(times: 2)

@@ -69,6 +69,30 @@ module ApiUrlHelper
     def stub_api_put(*components, body:, payload:)
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
+
+    def stub_api_v2(klass, includes: nil, where:, first: nil, all: nil)
+      query_builder = "Sequencescape::Api::V2::#{klass}".constantize
+      expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
+      if all
+        expect(query_builder).to receive(:where).with(where).and_return(query_builder)
+        expect(query_builder).to receive(:all).and_return(all)
+      else
+        expect(query_builder).to receive(:find).with(where).and_return(JsonApiClient::ResultSet.new([first]))
+      end
+    end
+
+    # Builds the basic v2 plate finding query.
+    def stub_v2_plate(plate, stub_search: true, custom_includes: false)
+      # Stub to v1 api search here as well!
+      if stub_search
+        stub_asset_search(
+          plate.barcode.machine,
+          json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
+        )
+      end
+      arguments = custom_includes ? [{ uuid: plate.uuid }, { includes: custom_includes }] : [{ uuid: plate.uuid }]
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*arguments).and_return(plate)
+    end
   end
   extend ClassMethods
 end

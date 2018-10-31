@@ -9,11 +9,10 @@ class Presenters::PlatePresenter
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
 
-  class_attribute :aliquot_partial, :summary_partial, :well_failure_states
+  class_attribute :aliquot_partial, :summary_partial, :well_failure_states, :style_class
 
   self.summary_partial = 'labware/plates/standard_summary'
-  self.labware_class = :plate
-  self.aliquot_partial = 'labware/aliquot'
+  self.aliquot_partial = 'standard_aliquot'
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
   self.summary_items = {
@@ -26,9 +25,12 @@ class Presenters::PlatePresenter
     'Created on' => :created_on
   }
   self.well_failure_states = [:passed]
+  self.style_class = 'standard'
 
   # Note: Validation here is intended as a warning. Rather than strict validation
-  validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
+  validates :pcr_cycles_specified,
+            numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' },
+            unless: :multiple_requests_per_well?
 
   validates :pcr_cycles,
             inclusion: { in: ->(r) { r.expected_cycles },
@@ -37,14 +39,15 @@ class Presenters::PlatePresenter
 
   validates_with Validators::InProgressValidator
 
-  delegate :tagged?, :width, :height, :size, :plate_purpose, :human_barcode, to: :labware
+  delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
+  delegate :pool_index, to: :pools
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
   # Currently this needs to be specialised for tube or plate but in future
   # both should use #purpose and we'll be able to share the same method for
   # all presenters.
-  alias purpose plate_purpose
+  alias plate_purpose purpose
 
   def number_of_wells
     "#{number_of_filled_wells}/#{size}"
@@ -59,12 +62,15 @@ class Presenters::PlatePresenter
   end
 
   def label
-    label_class = Settings.purposes.fetch(labware.purpose.uuid).fetch(:label_class, nil)
+    label_class = purpose_config.fetch(:label_class)
     label_class.constantize.new(labware)
   end
 
   def tube_labels
-    labware.tubes.map { |t| Labels::TubeLabel.new(t) }
+    # Optimization: To avoid needing to load in the tube aliquots, we use the transfers into the
+    # tube to work out the pool size. This information is already available. Two values are different
+    # for ISC though. TODO: MUST RE-JIG
+    tubes_and_sources.map { |tube| Labels::TubeLabel.new(tube, pool_size: tube.pool_size) }
   end
 
   def control_tube_display
@@ -75,9 +81,8 @@ class Presenters::PlatePresenter
     { url: view.limber_plate_path(labware), as: :plate }
   end
 
-  def transfers
-    transfers = labware.creation_transfer.transfers
-    transfers.sort { |a, b| split_location(a.first) <=> split_location(b.first) }
+  def tubes_and_sources
+    @tubes_and_sources ||= Presenters::TubesWithSources.build(wells: wells, pools: pools)
   end
 
   def csv_file_links
@@ -92,26 +97,26 @@ class Presenters::PlatePresenter
     "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
   end
 
-  def prepare
-    labware.populate_wells_with_pool
-  end
-
   def tag_sequences
-    @tag_sequences ||= labware.wells.each_with_object([]) do |well, tags|
+    @tag_sequences ||= wells.each_with_object([]) do |well, tags|
       well.aliquots.each do |aliquot|
-        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
+        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
       end
     end
   end
 
   def wells
-    labware.wells.sort_by { |w| WellHelpers.well_coordinate(w.location) }
+    labware.wells_in_columns
   end
 
   private
 
+  def multiple_requests_per_well?
+    wells.any?(&:multiple_requests?)
+  end
+
   def number_of_filled_wells
-    labware.wells.count { |w| w.aliquots.present? }
+    wells.count { |w| w.aliquots.present? }
   end
 
   def pcr_cycles_specified
@@ -122,15 +127,13 @@ class Presenters::PlatePresenter
     labware.pcr_cycles
   end
 
-  # Split a location string into an array containing the row letter
-  # and the column number (as a integer) so that they can be sorted.
-  def split_location(location)
-    match = location.match(/^([A-H])(\d+)/)
-    [match[2].to_i, match[1]] # Order by column first
-  end
-
-  def active_request_type
-    return :none if labware.pools.empty?
-    labware.pools.values.first['request_type']
+  def active_request_types
+    wells.reduce([]) do |active_requests, well|
+      active_requests.concat(
+        well.active_requests.map do |request|
+          request.request_type.key
+        end
+      )
+    end
   end
 end

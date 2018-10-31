@@ -22,8 +22,5 @@ module Presenters
     def tagged?
       true
     end
-
-    # We don't want to load the wells here.
-    def prepare; end
   end
 end

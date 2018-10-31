@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'Viewing an inbox', js: true do
+RSpec.feature 'Viewing an inbox', js: true do
   has_a_working_api
 
   let(:user) { json :user }

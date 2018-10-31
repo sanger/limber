@@ -44,8 +44,8 @@ module Presenters
       end
     end
 
-    def active_request_type
-      :tube
+    def active_request_types
+      [:tube]
     end
   end
 end

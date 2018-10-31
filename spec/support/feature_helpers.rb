@@ -3,12 +3,12 @@
 module FeatureHelpers
   def stub_search_and_single_result(search, query, result = nil)
     search_uuid = search.downcase.tr(' ', '-')
-    search_url = 'http://example.com:3000/' + search_uuid
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
     if result.present?
       stub_api_post(search_uuid, 'first', status: 301, payload: query, body: result)
     else
+      search_url = 'http://example.com:3000/' + search_uuid
       stub_request(:post, search_url + '/first')
         .with(body: query.to_json)
         .to_raise(Sequencescape::Api::ResourceNotFound)
@@ -50,11 +50,9 @@ module FeatureHelpers
     visit root_path
 
     within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
+      swipe_in 'User Swipecard', with: swipecard
       expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
+      scan_in 'Plate or Tube Barcode', with: barcode
     end
   end
 
@@ -62,10 +60,23 @@ module FeatureHelpers
     visit root_path
 
     within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
+      swipe_in 'User Swipecard', with: swipecard
       expect(page).to have_content('Jane Doe')
     end
+  end
+
+  def scan_in(field, options)
+    terminate = options.delete(:terminate) || :tab
+    fill_in_with_terminate(terminate, field, options)
+  end
+
+  def swipe_in(field, options)
+    fill_in_with_terminate(:enter, field, options)
+  end
+
+  def fill_in_with_terminate(terminate, field, options)
+    fill_in(field, options)
+    find_field(field).send_keys terminate
   end
 
   def ean13(number, prefix = 'DN')

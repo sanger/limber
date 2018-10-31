@@ -1,13 +1,4 @@
 <%= page(:'tube-show-page', :'show-page') do %>
-  <script type="text/javascript">
-    SCAPE.labware = {
-      'state':     '<%= @presenter.labware.state %>',
-      'tabViews':  {},
-       //
-      'uuid':     '<%= @presenter.labware.uuid %>'
-    };
-  </script>
-
   <%= content do %>
     <%= card without_block: true do %>
       <div class="card-body">

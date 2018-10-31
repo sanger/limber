@@ -34,6 +34,7 @@ class SequencescapeSubmission
   #
   def save
     return false unless valid?
+
     generate_submissions
   end
 

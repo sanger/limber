@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'plate factory' do
+RSpec.describe 'plate factory' do
   subject do
     json(:plate,
          uuid: 'example-plate-uuid',

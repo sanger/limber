@@ -3,10 +3,15 @@
 module Robots
   class PoolingRobot < Robot
     class Bed < Robot::Bed
-      self.attributes = %i[api user_uuid purpose states label parents target_state robot]
+      #    self.attributes = %i[api user_uuid purpose states label parents target_state robot]
+
+      attr_accessor :purpose, :states, :label, :parents, :target_state, :robot
+
+      delegate :api, :user_uuid, to: :robot
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
+
         StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(next_state, "Robot #{robot.name} started")
       end
 

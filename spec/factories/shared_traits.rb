@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require_relative '../support/json_renderers'
@@ -34,6 +33,10 @@ FactoryBot.define do
     end
 
     #    to_create { |_i| ApiUrlHelper.stub_api_get uuid, body: JsonRenderer.new(json_root, attributes) }
+  end
+
+  trait :uuid do
+    uuid { SecureRandom.uuid }
   end
 
   trait :barcoded do

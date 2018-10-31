@@ -3,8 +3,8 @@
 require 'rails_helper'
 require './app/controllers/print_jobs_controller'
 
-describe PrintJobsController, type: :controller do
-  describe 'CREATE' do
+RSpec.describe PrintJobsController, type: :controller do
+  describe '#create' do
     has_a_working_api
 
     let(:label_template_id) { 1 }
@@ -13,7 +13,7 @@ describe PrintJobsController, type: :controller do
 
     setup do
       PMB::TestSuiteStubs.get(
-        '/v1/label_templates?filter%5Bname%5D=limber_tube_label_template&page%5Bnumber%5D=1&page%5Bsize%5D=1'
+        '/v1/label_templates?filter%5Bname%5D=limber_tube_label_template&page%5Bpage%5D=1&page%5Bper_page%5D=1'
       ) do
         [
           200,

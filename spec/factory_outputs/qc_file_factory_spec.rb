@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'qc file factory' do
+RSpec.describe 'qc file factory' do
   subject do
     json(
       :qc_file,

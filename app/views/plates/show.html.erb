@@ -1,13 +1,4 @@
 <%= page(:'plate-show-page', :'show-page') do %>
-  <script type="text/javascript">
-    SCAPE.labware = {
-      'state':     '<%= @presenter.labware.state %>',
-      'tabViews':  {},
-      'pools':     <%= @presenter.labware.pools; raw @presenter.labware.pools.to_json %>,
-      'uuid':     '<%= @presenter.labware.uuid %>'
-    };
-  </script>
-
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
       <div class="card-body">

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'transfer_request_collection factory' do
+RSpec.describe 'transfer_request_collection factory' do
   subject do
     json(
       :transfer_request_collection,

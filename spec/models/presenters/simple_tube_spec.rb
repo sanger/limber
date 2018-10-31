@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-describe Presenters::SimpleTubePresenter do
-  # Not sure why this is getting executed twice.
-  # Want to get the basics working first though
-  has_a_working_api(times: 2)
+RSpec.describe Presenters::SimpleTubePresenter do
+  has_a_working_api
 
   let(:labware) { build :tube, state: state }
 
@@ -14,12 +12,10 @@ describe Presenters::SimpleTubePresenter do
     )
   end
 
-  before(:all) do
-    Settings.purposes = {
-      'example-purpose-uuid-1' => build(:purpose_config, name: 'Example Plate Purpose'),
-      'example-purpose-uuid-2' => build(:purpose_config, name: 'Example Plate Purpose 2'),
-      'example-purpose-uuid-3' => build(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube')
-    }
+  before do
+    create(:purpose_config, name: 'Example Plate Purpose', uuid: 'example-purpose-uuid-1')
+    create(:purpose_config, name: 'Example Plate Purpose 2', uuid: 'example-purpose-uuid-2')
+    create(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube', uuid: 'example-purpose-uuid-3')
   end
 
   context 'when pending' do
@@ -47,9 +43,10 @@ describe Presenters::SimpleTubePresenter do
     end
 
     it 'yields the configured tube' do
-      expect { |b| subject.compatible_tube_purposes(&b) }.to yield_successive_args(
-        ['example-purpose-uuid-3', 'Example Tube Purpose']
-      )
+      ctp = subject.compatible_tube_purposes
+      expect(ctp).to be_an Array
+      expect(ctp.length).to eq 1
+      expect(ctp.first.purpose_uuid).to eq 'example-purpose-uuid-3'
     end
   end
 end

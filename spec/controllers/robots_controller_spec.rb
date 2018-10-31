@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
-describe RobotsController, type: :controller do
+RSpec.describe RobotsController, type: :controller do
   include FeatureHelpers
 
   let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require './lib/nested_validation'
+
 require_dependency 'form'
 require_dependency 'labware_creators'
 
@@ -9,46 +11,49 @@ module LabwareCreators
     include PlateWalking
     include NoCustomPage
 
-    class_attribute :default_transfer_template_name
-    self.attributes = %i[api purpose_uuid parent_uuid user_uuid]
-    self.default_transfer_template_name = 'Transfer columns 1-12'
+    extend NestedValidation
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
-
+    attr_reader :api
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
     attr_reader :child
+
+    class_attribute :default_transfer_template_name, :style_class, :state
+
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
+    self.default_transfer_template_name = 'Transfer columns 1-12'
+    self.style_class = 'creator'
+    # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
+    self.state = 'pending'
+
+    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
 
     # The base creator is abstract, and is not intended to be used directly
     def self.support_parent?(_parent)
       false
     end
 
-    def plate_to_walk
-      parent
+    # We pull out the api as the first argument as it ensures
+    # we'll always have it available, even during assignment of
+    # other attributes. Otherwise we end up relying on hash order.
+    def initialize(api, *args)
+      @api = api
+      super(*args)
     end
 
-    def child_purpose
-      @child_purpose ||= api.plate_purpose.find(purpose_uuid)
+    def plate_to_walk
+      parent
     end
 
     def labware
       parent
     end
 
-    # Purpose returns the plate or tube purpose of the labware.
-    # Currently this needs to be specialised for tube or plate but in future
-    # both should use #purpose and we'll be able to share the same method for
-    # all presenters.
-    def purpose
-      labware.plate_purpose
-    end
-
-    def label_text
-      "#{labware.label.prefix} #{labware.label.text}"
-    end
-
     def save!
-      raise ResourceInvalid, self unless valid?
-      create_labware!
+      save || raise(ResourceInvalid, self)
+    end
+
+    def save
+      valid? && create_labware!
     end
 
     #
@@ -99,8 +104,14 @@ module LabwareCreators
       transfer_template.create!(
         source: parent_uuid,
         destination: child_uuid,
-        user: user_uuid
+        user: user_uuid,
+        transfers: transfer_hash
       )
+    end
+
+    # Over-ride in classes with custom transfers
+    def transfer_hash
+      nil
     end
 
     def create_labware!

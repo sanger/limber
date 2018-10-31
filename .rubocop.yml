@@ -35,5 +35,6 @@ Metrics/BlockLength:
     - factory
     - define
     - guard
+    - transient
   Exclude:
     - config/robots.rb

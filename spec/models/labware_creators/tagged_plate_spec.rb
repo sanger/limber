@@ -6,7 +6,7 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::TaggedPlate do
+RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api
@@ -37,7 +37,7 @@ describe LabwareCreators::TaggedPlate do
   end
 
   subject do
-    LabwareCreators::TaggedPlate.new(form_attributes.merge(api: api))
+    LabwareCreators::TaggedPlate.new(api, form_attributes)
   end
 
   context 'on new' do
@@ -60,14 +60,6 @@ describe LabwareCreators::TaggedPlate do
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::TaggedPlate
-    end
-
-    context 'with purpose mocks' do
-      it 'describes the child purpose' do
-        # TODO: This request is possibly unnecessary
-        stub_api_get(child_purpose_uuid, body: json(:plate_purpose, name: child_purpose_name))
-        expect(subject.child_purpose.name).to eq(child_purpose_name)
-      end
     end
 
     it 'describes the parent barcode' do
@@ -193,17 +185,13 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
-      context 'on save!' do
+      context 'on save' do
         Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
 
         it 'creates a tag plate' do
-          subject.save!
+          expect(subject.save).to be true
           expect(state_change_tag_plate_request).to have_been_made.once
           expect(plate_conversion_request).to have_been_made.once
           expect(transfer_creation_request).to have_been_made.once
@@ -211,7 +199,7 @@ describe LabwareCreators::TaggedPlate do
         end
 
         it 'has the correct child (and uuid)' do
-          subject.save!
+          expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)
         end
       end
@@ -234,11 +222,7 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
       context 'on save!' do
         include_context 'a tag plate creator with dual indexing'

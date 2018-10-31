@@ -7,7 +7,7 @@ module LabwareCreators::SupportParent
     extend ActiveSupport::Concern
     class_methods do
       def support_parent?(parent)
-        parent.is_a?(Sequencescape::Tube)
+        parent.tube?
       end
     end
 
