@@ -80,8 +80,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
                     payload: { transfer: {
                       destination: 'child-uuid',
                       source: parent_uuid,
-                      user: user_uuid,
-                      transfers: nil
+                      user: user_uuid
                     } },
                     body: '{}')
     end

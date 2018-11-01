@@ -198,5 +198,60 @@ RSpec.describe LabwareCreators::StampedPlate do
         end
       end
     end
+
+    context 'such as the ISC pipeline post pooling' do
+      # Here we have multiple aliquots in the source well, which all need to be transferred
+      # We don't specify an outer request, and Sequencescape should just move the aliquots across
+      # as normal.
+      let(:request_type) { create :request_type, key: 'rt_a' }
+      let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a' }
+      let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-b' }
+      let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-c' }
+      let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d' }
+      let(:aliquots_a) do
+        [
+          create(:v2_aliquot, library_state: 'started', outer_request: request_a),
+          create(:v2_aliquot, library_state: 'started', outer_request: request_b)
+        ]
+      end
+      let(:aliquots_b) do
+        [
+          create(:v2_aliquot, library_state: 'started', outer_request: request_c),
+          create(:v2_aliquot, library_state: 'started', outer_request: request_d)
+        ]
+      end
+
+      let(:wells) do
+        [
+          create(:v2_well, uuid: '2-well-A1', location: 'A1', aliquots: aliquots_a),
+          create(:v2_well, uuid: '2-well-B1', location: 'B1', aliquots: aliquots_b)
+        ]
+      end
+
+      context 'when a request_type is supplied' do
+        let(:form_attributes) do
+          {
+            purpose_uuid: child_purpose_uuid,
+            parent_uuid:  parent_uuid,
+            user_uuid: user_uuid
+          }
+        end
+
+        let(:transfer_requests) do
+          [
+            {
+              'source_asset' => '2-well-A1',
+              'target_asset' => '3-well-A1'
+            },
+            {
+              'source_asset' => '2-well-B1',
+              'target_asset' => '3-well-B1'
+            }
+          ]
+        end
+
+        it_behaves_like 'a stamped plate creator'
+      end
+    end
   end
 end

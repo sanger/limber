@@ -6,5 +6,13 @@ require_dependency 'labware_creators'
 module LabwareCreators
   class PlateWithTemplate < Base
     include SupportParent::PlateOnly
+
+    def transfer_material_from_parent!(child_uuid)
+      transfer_template.create!(
+        source: parent_uuid,
+        destination: child_uuid,
+        user: user_uuid
+      )
+    end
   end
 end
