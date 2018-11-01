@@ -22,7 +22,11 @@ class LabwareCreators::WellFilter
     well_transfers
   end
 
+  private
+
   def filter_requests(requests, well)
+    return nil if well.requests_as_source.empty?
+
     filtered_requests = requests.select { |r| @request_type_keys.blank? || @request_type_keys.include?(r.request_type.key) }
     if filtered_requests.count == 1
       filtered_requests.first
@@ -34,8 +38,6 @@ class LabwareCreators::WellFilter
   def wells
     creator.labware_wells
   end
-
-  private
 
   def well_transfers
     @well_transfers ||= wells.each_with_object([]) do |well, transfers|
