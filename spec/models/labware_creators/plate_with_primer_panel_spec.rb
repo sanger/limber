@@ -77,11 +77,10 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     let(:transfer_requests) do
-      WellHelpers.column_order(plate_size).each_with_index.map do |well_name, index|
+      WellHelpers.column_order(plate_size).map do |well_name|
         {
           'source_asset' => "2-well-#{well_name}",
-          'target_asset' => "3-well-#{well_name}",
-          'outer_request' => "request-#{index}"
+          'target_asset' => "3-well-#{well_name}"
         }
       end
     end

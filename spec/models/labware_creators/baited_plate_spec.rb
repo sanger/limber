@@ -31,11 +31,10 @@ RSpec.describe LabwareCreators::BaitedPlate do
   end
 
   let(:transfer_requests) do
-    WellHelpers.column_order(96)[0, 6].each_with_index.map do |well_name, index|
+    WellHelpers.column_order(96)[0, 6].map do |well_name|
       {
         'source_asset' => "2-well-#{well_name}",
-        'target_asset' => "3-well-#{well_name}",
-        'outer_request' => "request-#{index}"
+        'target_asset' => "3-well-#{well_name}"
       }
     end
   end
