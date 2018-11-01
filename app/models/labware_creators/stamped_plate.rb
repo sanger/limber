@@ -49,9 +49,10 @@ module LabwareCreators
     def request_hash(source_well, child_plate, request)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid,
-        'outer_request' => request.uuid
-      }
+        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
+      }.tap do |options|
+        options['outer_request'] = request.uuid if request.present?
+      end
     end
   end
 end
