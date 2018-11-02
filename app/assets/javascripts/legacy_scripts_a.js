@@ -29,7 +29,7 @@
 
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
-  const limberPlateView = function() {
+  var limberPlateView = function() {
     var plateElement = $(this);
 
     var control = $('#plate-view-control');
