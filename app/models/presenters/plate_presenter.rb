@@ -127,13 +127,17 @@ class Presenters::PlatePresenter
     labware.pcr_cycles
   end
 
+  # Passable requests are those associated with aliquots,
+  # which have not yet been passed, failed or cancelled
+  def passable_request_types
+    wells.flat_map do |well|
+      well.requests_in_progress.select(&:passable?).map(&:request_type_key)
+    end
+  end
+
   def active_request_types
-    wells.reduce([]) do |active_requests, well|
-      active_requests.concat(
-        well.active_requests.map do |request|
-          request.request_type.key
-        end
-      )
+    wells.flat_map do |well|
+      well.active_requests.map(&:request_type_key)
     end
   end
 end
