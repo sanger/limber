@@ -4,7 +4,7 @@
     <dt class="col-sm-1"><%= well.location %> <%= state_badge(well.state) %></dt>
     <dd class="col-sm-11"><ul class="list-inline">
     <% well.aliquots.each do |aliquot| -%>
-      <li class="list-inline-item"><%#= aliquot.sample.sanger.name %></li>
+      <li class="list-inline-item"><%= aliquot.sample.sanger_sample_id %></li>
     <% end -%></ul></dd>
   <% end -%>
 </dl>
