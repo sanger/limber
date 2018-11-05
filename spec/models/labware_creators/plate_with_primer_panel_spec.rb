@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
   let(:plate_size)   { 384 }
-  let(:requests) { Array.new(plate_size) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
+  let(:requests) { Array.new(plate_size) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2' } }
   let(:parent)   { create :v2_plate_with_primer_panels, barcode_number: '2', uuid: parent_uuid, size: plate_size, outer_requests: requests }
   let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
@@ -80,7 +80,8 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
       WellHelpers.column_order(plate_size).map do |well_name|
         {
           'source_asset' => "2-well-#{well_name}",
-          'target_asset' => "3-well-#{well_name}"
+          'target_asset' => "3-well-#{well_name}",
+          'submission_id' => '2'
         }
       end
     end

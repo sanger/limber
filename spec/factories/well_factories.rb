@@ -149,9 +149,11 @@ FactoryBot.define do
     tag2_oligo nil
     tag2_index nil
     suboptimal false
+    sample { create :v2_sample }
 
     after(:build) do |aliquot, evaluator|
       RSpec::Mocks.allow_message(aliquot, :request).and_return(evaluator.request)
+      RSpec::Mocks.allow_message(aliquot, :sample).and_return(evaluator.sample)
     end
 
     factory :v2_tagged_aliquot do
@@ -170,6 +172,11 @@ FactoryBot.define do
     end
 
     skip_create
+  end
+
+  factory :v2_sample, class: Sequencescape::Api::V2::Sample do
+    skip_create
+    sequence(:sanger_sample_id) { |i| "sample #{i}" }
   end
 
   factory :sample, class: Sequencescape::Sample, traits: [:api_object] do

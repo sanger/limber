@@ -204,10 +204,10 @@ RSpec.describe LabwareCreators::StampedPlate do
       # We don't specify an outer request, and Sequencescape should just move the aliquots across
       # as normal.
       let(:request_type) { create :request_type, key: 'rt_a' }
-      let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a' }
-      let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-b' }
-      let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-c' }
-      let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d' }
+      let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a', submission_id: '2' }
+      let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-b', submission_id: '2' }
+      let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-c', submission_id: '2' }
+      let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d', submission_id: '2' }
       let(:aliquots_a) do
         [
           create(:v2_aliquot, library_state: 'started', outer_request: request_a),
@@ -241,11 +241,13 @@ RSpec.describe LabwareCreators::StampedPlate do
           [
             {
               'source_asset' => '2-well-A1',
-              'target_asset' => '3-well-A1'
+              'target_asset' => '3-well-A1',
+              'submission_id' => '2'
             },
             {
               'source_asset' => '2-well-B1',
-              'target_asset' => '3-well-B1'
+              'target_asset' => '3-well-B1',
+              'submission_id' => '2'
             }
           ]
         end
