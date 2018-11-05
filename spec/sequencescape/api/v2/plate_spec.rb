@@ -33,7 +33,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
       # Consider actually mocking at the request level
       stub_api_v2(
         'Plate',
-        includes: [:purpose, { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: 'request.request_type' }] }],
+        includes: [:purpose, { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: ['request.request_type', 'sample'] }] }],
         where: { uuid: plate.uuid },
         first: plate
       )

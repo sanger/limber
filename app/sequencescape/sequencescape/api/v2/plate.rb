@@ -16,7 +16,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
-    { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: 'request.request_type' }] }
+    { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: ['request.request_type', 'sample'] }] }
   ].freeze
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)
