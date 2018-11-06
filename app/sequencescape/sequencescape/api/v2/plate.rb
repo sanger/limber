@@ -16,7 +16,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
-    { wells: [:downstream_assets, { requests_as_source: :request_type, aliquots: ['request.request_type', 'sample'] }] }
+    { wells: [
+      :downstream_assets,
+      {
+        requests_as_source: %w[request_type primer_panel],
+        aliquots: ['request.request_type', 'request.primer_panel', 'sample']
+      }
+    ] }
   ].freeze
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)
@@ -103,11 +109,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def pcr_cycles
-    active_requests.map(&:pcr_cycles).uniq
+    active_requests.map(&:pcr_cycles).compact.uniq
   end
 
   def primer_panels
-    active_requests.map(&:primer_panel).uniq
+    active_requests.map(&:primer_panel).compact.uniq
   end
 
   def primer_panel
