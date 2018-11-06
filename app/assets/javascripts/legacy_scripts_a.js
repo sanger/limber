@@ -1,31 +1,35 @@
 (function($, exports, undefined){
   "use strict";
 
-  const PlateViewModel = function(plateElement) {
-      // Using the 'that' pattern...
-      // ...'that' refers to the object created by this constructor.
-      // ...'this' used in any of the functions will be set at runtime.
-      var that          = this;
-      that.plateElement = plateElement;
+  // Declared as var  rather than const due to issues with const in strict mode
+  // in the older versions of Chrome (34) used in the labs.
+  var PlateViewModel = function(plateElement) {
+    // Using the 'that' pattern...
+    // ...'that' refers to the object created by this constructor.
+    // ...'this' used in any of the functions will be set at runtime.
+    var that          = this;
+    that.plateElement = plateElement;
 
-      that['pools-view'] = {
-        activate: function(){
-          $('#pools-information li').fadeIn('fast');
-          that.plateElement.addClass('pool-colours');
-          that.plateElement.find('.aliquot').
-            removeClass('selected-aliquot dimmed');
-        },
+    that['pools-view'] = {
+      activate: function(){
+        $('#pools-information li').fadeIn('fast');
+        that.plateElement.addClass('pool-colours');
+        that.plateElement.find('.aliquot').
+          removeClass('selected-aliquot dimmed');
+      },
 
-        deactivate: function(){
-          that.plateElement.removeClass('pool-colours');
-          that.plateElement.
-            find('.aliquot').
-            removeClass('selected-aliquot dimmed');
-        }
-      };
+      deactivate: function(){
+        that.plateElement.removeClass('pool-colours');
+        that.plateElement.
+          find('.aliquot').
+          removeClass('selected-aliquot dimmed');
+      }
+    };
   };
 
-  const limberPlateView = function() {
+  // Declared as var  rather than const due to issues with const in strict mode
+  // in the older versions of Chrome (34) used in the labs.
+  var limberPlateView = function() {
     var plateElement = $(this);
 
     var control = $('#plate-view-control');
@@ -56,11 +60,11 @@
         addClass('selected-aliquot').
         removeClass('dimmed');
 
-        $('#pools-information li[data-pool!='+pool+']').
-          fadeOut('fast').
-          promise().
-          done(function(){
-            $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
+      $('#pools-information li[data-pool!='+pool+']').
+        fadeOut('fast').
+        promise().
+        done(function(){
+          $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
       });
     });
 
@@ -82,8 +86,7 @@
       var code=event.charCode || event.keyCode;
       // Check for carrage return (key code ENTER_KEYCODE)
       if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
-        // Check that the value is 13 characters long like a barcode
-        if ($(event.currentTarget).val().length === 13) {
+        if ($(event.currentTarget).val().length > 0) {
           $(event.currentTarget).closest('.plate-search-form').submit();
         }
       }

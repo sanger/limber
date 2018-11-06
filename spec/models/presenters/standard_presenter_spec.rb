@@ -103,67 +103,162 @@ RSpec.describe Presenters::StandardPresenter do
     end
   end
 
-  describe '#control_library_passing' do
-    before do
-      Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
+  context 'before passing' do
+    let(:wells) do
+      [
+        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started')))
+      ]
     end
 
-    context 'tagged' do
-      let(:aliquot_type) { :v2_tagged_aliquot }
+    describe '#control_library_passing' do
+      before do
+        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+      end
 
-      context 'and passed' do
-        let(:state) { 'passed' }
+      context 'tagged' do
+        let(:aliquot_type) { :v2_tagged_aliquot }
 
-        context 'when not suggested' do
-          it 'supports passing' do
-            expect { |b| subject.control_library_passing(&b) }.to yield_control
+        context 'and passed' do
+          let(:state) { 'passed' }
+
+          context 'when not suggested' do
+            it 'supports passing' do
+              expect { |b| subject.control_library_passing(&b) }.to yield_control
+            end
+          end
+          context 'when suggested' do
+            let(:suggest_passes) { ['limber_wgs'] }
+            it 'does not have inactive passing' do
+              expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+            end
           end
         end
-        context 'when suggested' do
-          let(:suggest_passes) { ['limber_multiplexing'] }
+
+        context 'and pending' do
+          let(:state) { 'pending' }
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
         end
       end
 
-      context 'and pending' do
-        let(:state) { 'pending' }
-        it 'supports passing' do
-          expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+      context 'untagged' do
+        let(:aliquot_type) { :v2_aliquot }
+        context 'and passed' do
+          let(:state) { 'passed' }
+          it 'supports passing' do
+            expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+          end
         end
       end
     end
 
-    context 'untagged' do
-      let(:aliquot_type) { :v2_aliquot }
+    describe '#control_suggested_library_passing' do
+      let(:aliquot_type) { :v2_tagged_aliquot }
+      before do
+        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+      end
+      let(:suggest_passes) { ['limber_wgs'] }
       context 'and passed' do
         let(:state) { 'passed' }
-        it 'supports passing' do
-          expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+
+        it 'suggests passing' do
+          expect { |b| subject.control_suggested_library_passing(&b) }.to yield_control
+        end
+      end
+      context 'and pending' do
+        let(:state) { 'pending' }
+
+        it 'suggests passing' do
+          expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
         end
       end
     end
   end
 
-  describe '#control_suggested_library_passing' do
-    let(:aliquot_type) { :v2_tagged_aliquot }
-    before do
-      Settings.purposes = { 'test-purpose' => build(:purpose_config, suggest_library_pass_for: suggest_passes) }
+  context 'after passing' do
+    let(:wells) do
+      [
+        create(:v2_well,
+               requests_as_source: create_list(:mx_request, 1, priority: 1),
+               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))),
+        create(:v2_well,
+               requests_as_source: create_list(:mx_request, 1, priority: 1),
+               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))),
+        create(:v2_well,
+               requests_as_source: [],
+               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))),
+        create(:v2_well,
+               requests_as_source: create_list(:mx_request, 1, priority: 1),
+               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed')))
+      ]
     end
-    let(:suggest_passes) { ['limber_multiplexing'] }
-    context 'and passed' do
-      let(:state) { 'passed' }
 
-      it 'suggests passing' do
-        expect { |b| subject.control_suggested_library_passing(&b) }.to yield_control
+    describe '#control_library_passing' do
+      before do
+        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+      end
+
+      context 'tagged' do
+        let(:aliquot_type) { :v2_tagged_aliquot }
+
+        context 'and passed' do
+          let(:state) { 'passed' }
+
+          context 'when not suggested' do
+            it 'supports passing' do
+              expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+            end
+          end
+          context 'when suggested' do
+            let(:suggest_passes) { ['limber_wgs'] }
+            it 'does not have inactive passing' do
+              expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+            end
+          end
+        end
+
+        context 'and pending' do
+          let(:state) { 'pending' }
+          it 'supports passing' do
+            expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+          end
+        end
+      end
+
+      context 'untagged' do
+        let(:aliquot_type) { :v2_aliquot }
+        context 'and passed' do
+          let(:state) { 'passed' }
+          it 'supports passing' do
+            expect { |b| subject.control_library_passing(&b) }.not_to yield_control
+          end
+        end
       end
     end
-    context 'and pending' do
-      let(:state) { 'pending' }
 
-      it 'suggests passing' do
-        expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
+    describe '#control_suggested_library_passing' do
+      let(:aliquot_type) { :v2_tagged_aliquot }
+      before do
+        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+      end
+      let(:suggest_passes) { ['limber_wgs'] }
+      context 'and passed' do
+        let(:state) { 'passed' }
+
+        it 'suggests passing' do
+          expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
+        end
+      end
+      context 'and pending' do
+        let(:state) { 'pending' }
+
+        it 'suggests passing' do
+          expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
+        end
       end
     end
   end

@@ -22,20 +22,31 @@ class LabwareCreators::WellFilter
     well_transfers
   end
 
+  private
+
   def filter_requests(requests, well)
-    filtered_requests = requests.select { |r| @request_type_keys.blank? || @request_type_keys.include?(r.request_type.key) }
+    return extract_submission(well) if well.requests_as_source.empty?
+
+    filtered_requests = filter_by_request_type(requests)
     if filtered_requests.count == 1
-      filtered_requests.first
+      { 'outer_request' => filtered_requests.first.uuid }
     else
       errors.add(:base, "found #{filtered_requests.count} eligible requests for #{well.location}")
     end
   end
 
+  def extract_submission(well)
+    submission_ids = well.aliquots.map { |aliquot| aliquot.request.submission_id }.uniq
+    submission_ids.one? ? { 'submission_id' => submission_ids.first } : {}
+  end
+
+  def filter_by_request_type(requests)
+    requests.select { |r| @request_type_keys.blank? || @request_type_keys.include?(r.request_type.key) }
+  end
+
   def wells
     creator.labware_wells
   end
-
-  private
 
   def well_transfers
     @well_transfers ||= wells.each_with_object([]) do |well, transfers|

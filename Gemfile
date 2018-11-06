@@ -18,11 +18,7 @@ gem 'hashie'
 gem 'json_api_client', github: 'sanger/json_api_client'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', '>= 0.3.4',
-    # Should be switched back to sanger + rails_4 for deployment
-    github: 'sanger/sequencescape-client-api',
-    branch: 'rails_4',
-    require: 'sequencescape'
+gem 'sequencescape-client-api', require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 

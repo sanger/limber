@@ -3,7 +3,7 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#headernavigation" aria-controls="headernavigation" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <%= link_to 'Limber', :root, class: 'limber-logo'%><span class="badge badge-light mr-2">Development</span>
+  <%= link_to 'Limber', :root, class: 'limber-logo'%><span class="environment"><%= Rails.env %></span>
   <div class="collapse navbar-collapse" id="headernavigation">
     <%= form_tag perform_search_path, class: 'plate-search-form form-inline', :'data-ajax' => 'false', method: 'post' do %>
       <%= label_tag :plate_barcode, 'Plate or Tube Barcode', class: 'sr-only' %>

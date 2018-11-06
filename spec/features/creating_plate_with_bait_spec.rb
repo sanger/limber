@@ -10,7 +10,7 @@ RSpec.feature 'Creating a plate with bait', js: true do
   let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
+  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' } }
   let(:example_plate) { create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests }
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
   let(:transfer_template_uuid) { 'custom-pooling' }
@@ -18,11 +18,11 @@ RSpec.feature 'Creating a plate with bait', js: true do
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
   let(:transfer_requests) do
-    WellHelpers.column_order(96)[0, 6].each_with_index.map do |well_name, index|
+    WellHelpers.column_order(96)[0, 6].map do |well_name|
       {
         'source_asset' => "2-well-#{well_name}",
         'target_asset' => "3-well-#{well_name}",
-        'outer_request' => "request-#{index}"
+        'submission_id' => '2'
       }
     end
   end

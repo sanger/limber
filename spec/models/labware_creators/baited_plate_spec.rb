@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { 'parent-uuid' }
-  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
+  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2' } }
   let(:parent) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
   let(:child) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
   let(:transfer_template_uuid) { 'custom-pooling' }
@@ -31,11 +31,11 @@ RSpec.describe LabwareCreators::BaitedPlate do
   end
 
   let(:transfer_requests) do
-    WellHelpers.column_order(96)[0, 6].each_with_index.map do |well_name, index|
+    WellHelpers.column_order(96)[0, 6].map do |well_name|
       {
         'source_asset' => "2-well-#{well_name}",
         'target_asset' => "3-well-#{well_name}",
-        'outer_request' => "request-#{index}"
+        'submission_id' => '2'
       }
     end
   end

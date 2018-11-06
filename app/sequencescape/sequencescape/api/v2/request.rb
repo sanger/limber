@@ -4,6 +4,7 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
   FragmentSize = Struct.new(:from, :to)
 
   delegate :for_multiplexing, to: :request_type
+  delegate :key, to: :request_type, prefix: true
 
   def passed?
     state == 'passed'
@@ -19,6 +20,10 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
 
   def completed?
     passed? || failed?
+  end
+
+  def passable?
+    !(cancelled? || completed?)
   end
 
   def pcr_cycles
