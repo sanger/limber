@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 module LabwareCreators
+  # Multiple parent plates are transferred onto a single child plate
+  # During this process wells are pooled according to the pre-capture
+  # pools specified at submission.
   class MultiPlatePool < Base
     include SupportParent::TaggedPlateOnly
     include LabwareCreators::CustomPage
+
+    attr_accessor :transfers
+
     self.page = 'multi_plate_pool'
     self.aliquot_partial = 'custom_pooled_aliquot'
-
-    self.attributes = %i[
-      api purpose_uuid parent_uuid user_uuid
-      transfers
-    ]
+    self.attributes += [{ transfers: {} }]
 
     private
 

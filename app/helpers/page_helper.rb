@@ -13,9 +13,7 @@ module PageHelper
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
   def page(id, css_class = nil, prevent_row: false, &block)
-    concat render partial: 'header'
     grouping(:page, id: id, class: "container-fluid #{css_class}") do
-      concat flash_messages
       if prevent_row
         concat yield
       else
@@ -42,12 +40,6 @@ module PageHelper
       else
         concat content_tag(:div, class: 'card-body', &block)
       end
-    end
-  end
-
-  def footer
-    grouping(:footer, 'data-position' => 'fixed') do
-      render(partial: 'labware/footer')
     end
   end
 

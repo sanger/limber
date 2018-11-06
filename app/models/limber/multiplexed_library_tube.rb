@@ -7,6 +7,14 @@ class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
 
   alias plate_purpose purpose
 
+  def tube?
+    true
+  end
+
+  def plate?
+    false
+  end
+
   #
   # Override the model used in form/URL helpers
   # to allow us to treat tubes and multiplexed tubes

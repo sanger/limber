@@ -3,10 +3,15 @@
 module Robots
   class PoolingRobot < Robot
     class Bed < Robot::Bed
-      self.attributes = %i[api user_uuid purpose states label parents target_state robot]
+      #    self.attributes = %i[api user_uuid purpose states label parents target_state robot]
+
+      attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
+
+      delegate :api, :user_uuid, to: :robot
 
       def transition
         return if target_state.nil? || plate.nil? # We have nothing to do
+
         StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(next_state, "Robot #{robot.name} started")
       end
 
@@ -21,7 +26,11 @@ module Robots
       def each_parent
         arrayed_transfers = plate.creation_transfers.to_a
         range.each do |i|
-          plate_barcode = arrayed_transfers[i].present? ? arrayed_transfers[i].source.barcode.ean13 : nil
+          plate_barcode = if arrayed_transfers[i].present?
+                            SBCF::SangerBarcode.from_machine(arrayed_transfers[i].source.barcode.ean13)
+                          else
+                            SBCF::EmptyBarcode.new
+                          end
           yield(parents[i], plate_barcode)
         end
       end
@@ -50,7 +59,7 @@ module Robots
         # The destination bed is valid, so check its parents are correct
         destination_bed.each_parent do |bed_barcode, expected_barcode|
           scanned_barcode = bed_contents.fetch(bed_barcode, []).first
-          valid_plates[bed_barcode] = scanned_barcode == expected_barcode
+          valid_plates[bed_barcode] = expected_barcode =~ scanned_barcode
           error(beds[bed_barcode], "Expected to contain #{expected_barcode} not #{scanned_barcode}") unless valid_plates[bed_barcode]
         end
       end

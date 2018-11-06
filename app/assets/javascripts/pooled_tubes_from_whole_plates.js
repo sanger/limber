@@ -1,6 +1,10 @@
 (function($, exports, undefined){
   "use strict";
 
+  // Declared as var  rather than const due to issues with const in strict mode
+  // in the older versions of Chrome (34) used in the labs.
+  var SOURCE_STATES = ["passed", "qc_complete"]
+
   $(function(event) {
 
     if ($('#pooled-tubes-from-whole-plates').length === 0) { return };
@@ -117,7 +121,7 @@
         },
         checkLabware : function(data,status) {
           var response = data[this.dataset.labwareType];
-          if (SCAPE.sourceStates.indexOf(response.state) === -1) {
+          if (SOURCE_STATES.indexOf(response.state) === -1) {
             this.badLabware();
             SCAPE.message('Scanned '+ this.dataset.labwareType + 's are unsuitable','invalid');
           } else {

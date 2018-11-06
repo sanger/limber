@@ -23,7 +23,7 @@ class PlateMetadata
   def update
     if plate.custom_metadatum_collection.uuid.present?
       metadata = plate.custom_metadatum_collection.metadata
-      plate.custom_metadatum_collection.update_attributes!(metadata: metadata.merge(created_with_robot: created_with_robot))
+      plate.custom_metadatum_collection.update!(metadata: metadata.merge(created_with_robot: created_with_robot))
     else
       api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: { created_with_robot: created_with_robot })
     end

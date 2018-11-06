@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'multiplexed_library_tube factory' do
+RSpec.describe 'multiplexed_library_tube factory' do
   subject do
     json(
       :multiplexed_library_tube,

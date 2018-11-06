@@ -2,32 +2,43 @@
 
 require 'rails_helper'
 
-feature 'Creating a plate with bait', js: true do
+RSpec.feature 'Creating a plate with bait', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
   let(:user)                  { json :user, uuid: user_uuid }
   let(:user_swipecard)        { 'abcdef' }
-  let(:plate_barcode)         { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:example_plate)         { json :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3] }
-  let(:transfer_template_uuid) { 'transfer-1-12' }
+  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' } }
+  let(:example_plate) { create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests }
+  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
+
+  let(:transfer_requests) do
+    WellHelpers.column_order(96)[0, 6].map do |well_name|
+      {
+        'source_asset' => "2-well-#{well_name}",
+        'target_asset' => "3-well-#{well_name}",
+        'submission_id' => '2'
+      }
+    end
+  end
 
   background do
-    Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = build :purpose_config
-    Settings.purposes['child-purpose-0'] = build :purpose_config, creator_class: 'LabwareCreators::BaitedPlate',
-                                                                  name: 'with-baits',
-                                                                  parents: ['example-purpose']
+    create :purpose_config, uuid: 'example-purpose-uuid'
+    create :purpose_config, creator_class: 'LabwareCreators::BaitedPlate',
+                            name: 'with-baits',
+                            parents: ['example-purpose'],
+                            uuid: 'child-purpose-0'
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the plate
-    stub_asset_search(plate_barcode, example_plate)
+    # These stubs are required to render plate show page
+    stub_v2_plate(example_plate)
+    stub_v2_plate(child_plate)
 
-    # These stube are required to render plate show page
-    stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     # end of stubs for plate show page
 
@@ -37,10 +48,16 @@ feature 'Creating a plate with bait', js: true do
 
     # These stubs are required to create a new plate with baits
     stub_api_post('plate_creations', body: json(:plate_creation), payload: { plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid } })
-    stub_api_get('transfer-columns-uuid', body: transfer_template)
-    stub_api_post('transfer-columns-uuid', body: json(:transfer), payload: { transfer: { source: plate_uuid, destination: 'child-uuid', user:  user_uuid } })
+    stub_api_post('transfer_request_collections',
+                  payload: { transfer_request_collection: {
+                    user: user_uuid,
+                    transfer_requests: transfer_requests
+                  } },
+                  body: '{}')
     stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
     # end of stubs for creating a new plate with baits
+    # Stub the requests for the next plate page
+    stub_v2_plate(child_plate)
   end
 
   scenario 'of a recognised type' do
@@ -51,16 +68,5 @@ feature 'Creating a plate with bait', js: true do
     expect(page).to have_content('Carefully check the bait layout')
     click_on 'Create plate'
     # I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative
-  end
-
-  def fill_in_swipecard_and_barcode(swipecard, barcode)
-    visit root_path
-    within '.content-main' do
-      fill_in 'User Swipecard', with: swipecard
-      find_field('User Swipecard').send_keys :enter
-      expect(page).to have_content('Jane Doe')
-      fill_in 'Plate or Tube Barcode', with: barcode
-      find_field('Plate or Tube Barcode').send_keys :enter
-    end
   end
 end

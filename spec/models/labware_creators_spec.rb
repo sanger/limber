@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'labware_creators'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators do
+RSpec.describe LabwareCreators do
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 

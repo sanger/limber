@@ -6,7 +6,6 @@ module Presenters
     include Statemachine::Shared
     include RobotControlled
 
-    self.labware_class = :tube
     self.summary_items = {
       'Barcode' => :barcode,
       'Tube type' => :purpose_name,
@@ -26,10 +25,6 @@ module Presenters
       Labels::TubeLabel.new(labware)
     end
 
-    def control_child_links(&block)
-      # Mostly, no.
-    end
-
     def sample_count
       labware.aliquots.count
     end
@@ -46,6 +41,7 @@ module Presenters
 
     def sequencescape_submission
       return nil if purpose_config.submission.empty?
+
       s = SequencescapeSubmission.new(purpose_config.submission.to_hash.merge(assets: [labware.uuid]))
       yield s if block_given?
       s

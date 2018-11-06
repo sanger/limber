@@ -5,7 +5,7 @@ require 'labware_creators/final_tube'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::TubeFromTube do
+RSpec.describe LabwareCreators::TubeFromTube do
   has_a_working_api
 
   context 'pre creation' do
@@ -28,8 +28,10 @@ describe LabwareCreators::TubeFromTube do
 
   context 'on creation' do
     subject do
-      described_class.new(form_attributes.merge(api: api))
+      described_class.new(api, form_attributes)
     end
+
+    it_behaves_like 'it has no custom page'
 
     before do
       Settings.transfer_templates['Transfer between specific tubes'] = transfer_template_uuid
@@ -69,10 +71,9 @@ describe LabwareCreators::TubeFromTube do
                     body: json(:transfer_between_specific_tubes, destination_uuid: child_uuid))
     end
 
-    describe '#render' do
-      it 'should immediately redirect' do
-        expect(controller).to receive(:redirect_to_creator_child).with(subject).and_return(true)
-        subject.render(controller)
+    describe '#save!' do
+      it 'creates the child' do
+        subject.save!
         expect(subject.child.uuid).to eq(child_uuid)
         expect(creation_request).to have_been_made.once
         expect(transfer_request).to have_been_made.once

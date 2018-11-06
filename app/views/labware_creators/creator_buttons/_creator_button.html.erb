@@ -1,0 +1,15 @@
+<%= form_for [creator_button.parent, creator_button], as: creator_button.type do |f| %>
+  <%= f.hidden_field :purpose_uuid %>
+  <%= f.hidden_field :parent_uuid %>
+  <%= f.fields_for(:filters) do |filter| %>
+    <% (creator_button.filters[:request_types]||[]).each do |request_type_key| %>
+      <%= filter.fields_for :request_type_keys do |request_types_form|%>
+        <%= request_types_form.hidden_field nil, value: request_type_key  %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= f.submit "Add an empty #{creator_button.name} #{creator_button.type}",
+                 name:  nil,
+                 class: "create-#{creator_button.type}-button"
+  %>
+<% end %>

@@ -54,6 +54,8 @@ PF Lib:
   - 'PF_adapters_UDI_96_B'
   - 'PF_adapters_UDI_96_C'
   - 'PF_adapters_UDI_96_D'
+  - 'IDT for Illumina UDI v1'
+  - 'PF_adapters_UDI_96_B_ROWS'
   :parents:
   - PF Post Shear XP
   - PF End Prep

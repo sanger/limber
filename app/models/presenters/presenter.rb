@@ -9,12 +9,12 @@ module Presenters
       include Form
       include BarcodeLabelsHelper
 
-      class_attribute :labware_class, :summary_items
+      class_attribute :summary_items
 
       attr_accessor :api, :labware
 
       self.page = 'show'
-      self.attributes = %i[api labware]
+      #     self.attributes = %i[api labware]
 
       def csv
         purpose_config[:csv_template]
@@ -24,7 +24,7 @@ module Presenters
     delegate :state, :uuid, to: :labware
 
     def suggest_library_passing?
-      purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
+      (purpose_config[:suggest_library_pass_for] & passable_request_types).present?
     end
 
     def purpose_name
@@ -82,8 +82,6 @@ module Presenters
     def inspect
       "<#{self.class.name} labware:#{labware.uuid} ...>"
     end
-
-    def prepare; end
 
     private
 

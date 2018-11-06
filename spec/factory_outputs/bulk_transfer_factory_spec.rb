@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'bulk_transfer factory' do
+RSpec.describe 'bulk_transfer factory' do
   subject do
     json(
       :bulk_transfer,

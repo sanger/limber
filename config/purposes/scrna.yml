@@ -20,6 +20,9 @@ scRNA cDNA-XP:
   :input_plate: false
   :parents:
   - scRNA Stock
+  - GnT Stock
+  :expected_request_types:
+  - limber_scrna
 scRNA-384 cDNA-XP:
   :asset_type: plate
   :stock_plate: false
@@ -54,14 +57,15 @@ scRNA Lib PCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  warnings:
-    pcr_cycles_not_in:
-      - 8
   :parents:
   - scRNA End Prep
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
   :suggest_library_pass_for:
   - limber_scrna
 scRNA-384 Lib PCR:
@@ -73,9 +77,6 @@ scRNA-384 Lib PCR:
   :creator_class: LabwareCreators::TaggedPlate
   :label_template: plate_6mm_double
   :size: 384
-  warnings:
-    pcr_cycles_not_in:
-      - 8
   :parents:
   - scRNA-384 End Prep
   :tag_layout_templates:

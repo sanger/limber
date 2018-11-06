@@ -23,6 +23,7 @@ class Sibling
   def message
     return 'This tube is ready for pooling, find it, and scan it in above' if state == READY_STATE
     return 'Some requests still need to be progressed to appropriate tubes' if state == 'Not Present'
+
     "Must be #{READY_STATE.humanize} first"
   end
 

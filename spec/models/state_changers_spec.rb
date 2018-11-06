@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe StateChangers::DefaultStateChanger do
+RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
   let(:plate_uuid) { SecureRandom.uuid }

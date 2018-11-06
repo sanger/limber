@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Print new barcode labels
+# Pretty simple wrapper for print job, and incredibly un-opinionated, simply passes
+# the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
   def create
     @print_job = PrintJob.new(print_job_params)

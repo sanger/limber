@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SequencescapeSubmission do
+RSpec.describe SequencescapeSubmission do
   has_a_working_api
 
   subject { SequencescapeSubmission.new(api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid) }

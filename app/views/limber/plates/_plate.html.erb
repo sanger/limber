@@ -1,6 +1,6 @@
 <%# Used in inboxes %>
+<%= link_to(plate, id: "plate_#{plate.barcode.ean13}", class: "#{plate.role} list-group-item-action") do %>
 <li class="labware">
-  <%= link_to(plate, id: "plate_#{plate.barcode.ean13}", class: "#{plate.role} list-group-item-action") do %>
     <% if plate.priority > 0 %>
        <%= image_tag("icon_#{plate.priority}_flag.png", size: "64x64", class: 'pull-sm-right') %>
     <% end %>
@@ -16,5 +16,5 @@
         <dt>Primer Panel</dt><dd><%= plate.primer_panel.name %></dd>
       <% end %>
     </dl>
-  <% end -%>
 </li>
+<% end -%>

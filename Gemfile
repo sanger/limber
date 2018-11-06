@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# CAUTION: This is set to http while we resolve SSL issues. It should be set back to https ASAP
 source 'https://rubygems.org'
 
 gem 'rails'
@@ -10,23 +9,20 @@ gem 'inline_svg'
 gem 'exception_notification'
 gem 'rake'
 gem 'state_machines'
-gem 'webpacker', '~> 2.0'
+gem 'webpacker'
 
 # Used in the setting object, allows access by object and hash notation.
 gem 'hashie'
 
 # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
-gem 'json_api_client'
+gem 'json_api_client', github: 'sanger/json_api_client'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', '>= 0.3.3',
-    # Should be switched back to sanger + rails_4 for deployment
-    github: 'sanger/sequencescape-client-api',
-    branch: 'rails_4',
-    require: 'sequencescape'
+gem 'sequencescape-client-api', require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
+gem 'puma'
 gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
 
 # Bundle gems for the local environment. Make sure to
@@ -34,13 +30,15 @@ gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'de
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara' # Interface for integration tests
-  gem 'capybara-selenium'
+  gem 'capybara-selenium' # Browser driver for integration tests
   gem 'factory_bot' # Generate models and json easily in tests
   gem 'guard-rspec', require: false
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
+  gem 'simplecov', require: false
+  gem 'simplecov-json', require: false
   gem 'webmock'
 end
 
@@ -65,8 +63,4 @@ group :development do
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'travis'
-end
-
-group :deployment do
-  gem 'puma'
 end

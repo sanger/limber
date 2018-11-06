@@ -3,6 +3,12 @@
   padding: 10px;
   border-collapse: separate;
   border-radius: 0px 15px 15px 15px;
+  @extend .mx-auto;
+
+  .pool-id { display: none; }
+   &.pool-colours {
+    .pool-id { display: inline; }
+  }
 
   th {
     padding: 0;
@@ -28,14 +34,9 @@
       height:32px;
       margin-top: 2px;
       text-align: center;
-      color:#fff;
       display: inline-block;
       border: 2px $gray-800 solid;
       border-radius: 7px;
-    }
-
-    .aliquot.pending {
-      color: #000;
     }
 
     .aliquot:hover {
@@ -51,6 +52,8 @@
   padding: 5px;
   border-collapse: separate;
   font-size: 50%;
+
+  caption { font-size: 100%; }
 
   th.first-col {
     width: 15px;
@@ -71,10 +74,6 @@
 }
 
 @mixin labware-view {
-  .green             { background-color: $success; }
-  .red               { background-color: $danger; }
-  .blue              { background-color: $info; }
-  .orange            { background-color: $warning; }
   .unknown           { background-color: $secondary; }
   .pending           { background: none; }
   .started, .process_1, .process_2 { background-color: $info;    }

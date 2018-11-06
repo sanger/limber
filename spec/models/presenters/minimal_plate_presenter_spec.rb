@@ -4,16 +4,16 @@ require 'rails_helper'
 require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
-describe Presenters::MinimalPlatePresenter do
+RSpec.describe Presenters::MinimalPlatePresenter do
   has_a_working_api
 
   let(:labware) do
-    build :plate,
-          purpose_name: purpose_name,
-          state: state,
-          barcode_number: 1,
-          pool_sizes: [2, 2],
-          created_at: '2016-10-19 12:00:00 +0100'
+    create :v2_plate,
+           purpose_name: purpose_name,
+           state: state,
+           barcode_number: 1,
+           pool_sizes: [2, 2],
+           created_at: '2016-10-19 12:00:00 +0100'
   end
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -31,6 +31,11 @@ describe Presenters::MinimalPlatePresenter do
     ]
   end
 
+  before do
+    create :purpose_config, uuid: labware.purpose.uuid
+    create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
+  end
+
   subject(:presenter) do
     Presenters::MinimalPlatePresenter.new(
       api:     api,
@@ -40,9 +45,9 @@ describe Presenters::MinimalPlatePresenter do
 
   it 'returns label attributes' do
     expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                       bottom_left: 'DN 1',
-                       top_right: 'DN2',
-                       bottom_right: 'Limber Cherrypicked',
+                       bottom_left: 'DN1S',
+                       top_right: 'DN2T',
+                       bottom_right: 'WGS Limber example purpose',
                        barcode: '1220000001831' }
     expect(subject.label.attributes).to eq(expected_label)
   end
@@ -51,7 +56,7 @@ describe Presenters::MinimalPlatePresenter do
 
   context 'a plate with conflicting pools' do
     let(:labware) do
-      build :plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
+      create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
     end
 
     it 'reports as invalid' do

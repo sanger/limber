@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe PlateHelper do
+RSpec.describe PlateHelper do
   include PlateHelper
 
   let(:pool) do

@@ -156,7 +156,6 @@
 
       }
     });
-    $('#tagging-plate .aliquot').removeClass('green orange red');
     SCAPE.update_layout();
    // $('#plate_tag_plate_template_uuid').change(SCAPE.update_layout);
   });
