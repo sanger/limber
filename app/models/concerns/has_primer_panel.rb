@@ -3,9 +3,25 @@
 # Add support for displaying information about
 # primer panels
 module HasPrimerPanel
+  # If no primer panel has been specified
+  class NullPanel
+    def name
+      'UNSPECIFIED'
+    end
+
+    def program_name_for(_stage)
+      'UNKNOWN'
+    end
+
+    def program_duration_for(_stage)
+      'UNKNOWN'
+    end
+  end
+
   extend ActiveSupport::Concern
-  included do
-    delegate :primer_panel, to: :labware
+
+  def primer_panel
+    labware.primer_panel || NullPanel.new
   end
 
   #
@@ -32,7 +48,7 @@ module HasPrimerPanel
   # Human readable duration of the PCR program
   #
   #
-  # @return [String] Diration of the configured program, eg. 45 minutes
+  # @return [String] Duration of the configured program, eg. 45 minutes
   #
   def pcr_duration
     "#{primer_panel.program_duration_for(stage)} minutes"
