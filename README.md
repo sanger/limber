@@ -1,7 +1,7 @@
 Limber Pipeline Application
 =============================
 
-[![Build Status](https://travis-ci.org/radome/limber.svg?branch=test_openstack)](https://travis-ci.org/radome/limber)
+[![Build Status](https://travis-ci.org/sanger/limber.svg?branch=next_release)](https://travis-ci.org/sanger/limber)
 
 Description
 -----------
