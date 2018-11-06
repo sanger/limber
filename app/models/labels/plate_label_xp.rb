@@ -5,19 +5,19 @@ class Labels::PlateLabelXp < Labels::Base
   def attributes
     {
       top_left: date_today,
-      bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number}",
-      top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
-      bottom_right: "#{labware.label.prefix} #{labware.label.text}",
-      barcode: labware.human_barcode
+      bottom_left: labware.barcode.human,
+      top_right: labware.stock_plate&.barcode&.human,
+      bottom_right: [labware.role, labware.purpose.name].compact.join(' '),
+      barcode: labware.barcode.human
     }
   end
 
   def qc_attributes
     {
       top_left: date_today,
-      bottom_left: "#{labware.barcode.prefix} #{labware.barcode.number} QC",
-      top_right: "#{labware.stock_plate.barcode.prefix}#{labware.stock_plate.barcode.number}",
-      barcode: "#{labware.human_barcode}_QC"
+      bottom_left: "#{labware.barcode.human} QC",
+      top_right: labware.stock_plate&.barcode&.human,
+      barcode: "#{labware.barcode.human}_QC"
     }
   end
 

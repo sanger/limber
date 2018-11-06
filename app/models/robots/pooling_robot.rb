@@ -5,7 +5,7 @@ module Robots
     class Bed < Robot::Bed
       #    self.attributes = %i[api user_uuid purpose states label parents target_state robot]
 
-      attr_accessor :purpose, :states, :label, :parents, :target_state, :robot
+      attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
 
       delegate :api, :user_uuid, to: :robot
 

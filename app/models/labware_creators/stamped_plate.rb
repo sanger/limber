@@ -41,18 +41,16 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plate)
-      well_filter.filtered.map do |well, request|
-        request_hash(well, child_plate, request)
+      well_filter.filtered.map do |well, additional_parameters|
+        request_hash(well, child_plate, additional_parameters)
       end
     end
 
-    def request_hash(source_well, child_plate, request)
+    def request_hash(source_well, child_plate, additional_parameters)
       {
         'source_asset' => source_well.uuid,
         'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
-      }.tap do |options|
-        options['outer_request'] = request.uuid if request.present?
-      end
+      }.merge(additional_parameters)
     end
   end
 end

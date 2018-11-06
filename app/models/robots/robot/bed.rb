@@ -7,7 +7,7 @@ module Robots
     class BedError < StandardError; end
     # Our robot has beds/rack-spaces
     attr_reader :plate
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
 
     delegate :api, :user_uuid, to: :robot
 

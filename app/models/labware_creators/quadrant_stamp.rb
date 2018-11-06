@@ -55,7 +55,7 @@ module LabwareCreators
     end
 
     def transfer_material_from_parent!(child_uuid)
-      child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
+      child_plate = Sequencescape::Api::V2::Plate.find_by({ uuid: child_uuid }, includes: 'wells')
       api.transfer_request_collection.create!(
         user: user_uuid,
         transfer_requests: transfer_request_attributes(child_plate)

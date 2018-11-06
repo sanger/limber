@@ -23,17 +23,6 @@ GIT
   specs:
     sanger_barcode_format (0.1.1)
 
-GIT
-  remote: git://github.com/sanger/sequencescape-client-api.git
-  revision: 00cfdbe400a047b10a3d14c0c420704732946e85
-  branch: rails_4
-  specs:
-    sequencescape-client-api (0.3.5)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      i18n
-      yajl-ruby (>= 1.3.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -298,6 +287,11 @@ GEM
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
+    sequencescape-client-api (0.3.5)
+      activemodel (>= 4.0.0, < 5.2)
+      activesupport (>= 4.0.0, < 5.2)
+      i18n
+      yajl-ruby (>= 1.3.1)
     shellany (0.0.1)
     simplecov (0.15.0)
       docile (~> 1.1.0)
@@ -386,7 +380,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api (>= 0.3.4)!
+  sequencescape-client-api
   simplecov
   simplecov-json
   state_machines
@@ -397,4 +391,4 @@ DEPENDENCIES
   webpacker
 
 BUNDLED WITH
-   1.16.3
+   1.17.1
