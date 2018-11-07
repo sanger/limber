@@ -43,7 +43,7 @@ module Robots
       private :range
     end
 
-    self.attributes = %i[api user_uuid layout beds name destination_bed id]
+    attr_writer :destination_bed
 
     def verify(bed_contents, _robot_barcode = nil)
       valid_plates = Hash[bed_contents.map do |bed_id, plate_barcode|
@@ -64,6 +64,10 @@ module Robots
         end
       end
       { beds: valid_plates, valid: error_messages.empty?, message: formatted_message }
+    end
+
+    def bed_class(_bed)
+      Robots::PoolingRobot::Bed
     end
 
     def destination_bed
