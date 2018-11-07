@@ -1,5 +1,8 @@
 (function($, exports, undefined){
   "use strict";
+
+  if (exports.SCAPE === undefined) { exports.SCAPE = {}; }
+
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
   var WELLS_IN_COLUMN_MAJOR_ORDER = [
@@ -111,28 +114,26 @@
 
     SCAPE.calculatePreCapPools = function() {
       for (var plateIndex in SCAPE.plates){
-            var plate = SCAPE.plates[plateIndex];
-            if (plate!==undefined) { SCAPE.plates[plateIndex].preCapPools = SCAPE.preCapPools( SCAPE.plates[plateIndex] )}
-          }
+          var plate = SCAPE.plates[plateIndex];
+          if (plate!==undefined) { SCAPE.plates[plateIndex].preCapPools = SCAPE.preCapPools( SCAPE.plates[plateIndex] )}
+        }
       return SCAPE.totalPools() <= 96
     };
 
     SCAPE.preCapPools = function(plate){
-      var wells, failures, transfers = {};
+      var wells, transfers = {};
 
       for (var group in plate.preCapGroups) {
-        wells           = plate.preCapGroups[group].all_wells;
-        failures        = plate.preCapGroups[group].failures;
-        transfers[group] = SCAPE.preCapPool(wells, failures);
+        wells           = plate.preCapGroups[group];
+        transfers[group] = SCAPE.preCapPool(wells);
       }
 
       return transfers;
     };
 
-    SCAPE.preCapPool = function(sequencingPool, failed){
+    SCAPE.preCapPool = function(sequencingPool){
       var wells = [];
-      wells.push(sequencingPool.filter(function(w) { return failed.indexOf(w) == -1; }));
-
+      wells.push(sequencingPool);
       return { wells: wells };
     };
 

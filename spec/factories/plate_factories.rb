@@ -33,7 +33,7 @@ FactoryBot.define do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
           create well_factory, location: location,
-                               state: state,
+                               state: well_states[i] || state,
                                outer_request: outer_requests[i],
                                downstream_assets: transfer_targets[location],
                                uuid: well_uuid_result % location,
@@ -51,6 +51,7 @@ FactoryBot.define do
       transfer_targets { {} }
       size { 96 }
       include_submissions { false }
+      well_states { [state] * size }
     end
 
     sequence(:id) { |i| i }

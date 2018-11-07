@@ -29,9 +29,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
 
   before do
-    Settings.purposes = {
-      child_purpose_uuid => { name: child_purpose_name }
-    }
+    create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
     plate_request
     wells_request
   end
