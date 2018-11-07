@@ -19,8 +19,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     { wells: [
       :downstream_assets,
       {
-        requests_as_source: %w[request_type primer_panel],
-        aliquots: ['request.request_type', 'request.primer_panel', 'sample']
+        requests_as_source: %w[request_type primer_panel pre_capture_pool],
+        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
       }
     ] }
   ].freeze
