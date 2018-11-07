@@ -5,7 +5,7 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class
     # class_attribute :attributes
     # self.attributes = %i[api user_uuid layout beds name id verify_robot]
 
