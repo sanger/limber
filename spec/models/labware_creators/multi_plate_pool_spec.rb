@@ -40,7 +40,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  plate_uuid
+        parent_uuid: plate_uuid
       }
     end
 

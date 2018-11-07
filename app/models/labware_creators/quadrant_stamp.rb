@@ -36,9 +36,9 @@ module LabwareCreators
 
     def create_labware!
       plate_creation = api.pooled_plate_creation.create!(
-        parents:        parent_uuids,
-        child_purpose:  purpose_uuid,
-        user:           user_uuid
+        parents: parent_uuids,
+        child_purpose: purpose_uuid,
+        user: user_uuid
       )
 
       @child = plate_creation.child

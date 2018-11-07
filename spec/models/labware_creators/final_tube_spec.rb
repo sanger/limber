@@ -31,7 +31,7 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  parent_uuid,
+        parent_uuid: parent_uuid,
         user_uuid: user_uuid
       }
     end
@@ -79,8 +79,8 @@ RSpec.describe LabwareCreators::FinalTube do
           let(:form_attributes) do
             {
               purpose_uuid: child_purpose_uuid,
-              parent_uuid:  parent_uuid,
-              parents:  {
+              parent_uuid: parent_uuid,
+              parents: {
                 '3980000001795' => '1',
                 '1234567890123' => '1'
               },

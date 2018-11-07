@@ -41,7 +41,7 @@ RSpec.describe Presenters::PlatePresenter do
 
   subject(:presenter) do
     Presenters::PlatePresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

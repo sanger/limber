@@ -34,7 +34,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     let(:form_attributes) do
       {
         purpose_uuid: purpose_uuid,
-        parent_uuid:  parent_uuid
+        parent_uuid: parent_uuid
       }
     end
 
