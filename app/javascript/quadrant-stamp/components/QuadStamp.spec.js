@@ -3,7 +3,9 @@ import { shallowMount } from '@vue/test-utils'
 import QuadStamp from 'quadrant-stamp/components/QuadStamp.vue'
 import localVue from '_test_/support/base_vue'
 import { plateFactory, wellFactory, requestFactory } from '_test_/support/factories'
-import moxios from 'moxios'
+import flushPromises from 'flush-promises'
+
+import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
@@ -77,43 +79,39 @@ describe('QuadStamp', () => {
     expect(wrapper.vm.valid).toEqual(false)
   })
 
-  it('sends a post request when the button is clicked', (done) => {
-    moxios.withMock(function(){
-      const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 1 }) }
-      const wrapper = wrapperFactory()
-      wrapper.vm.updatePlate(1, plate)
+  it('sends a post request when the button is clicked', async () => {
+    let mock = new MockAdapter(localVue.prototype.$axios)
 
-      // Consider auto-selecting a single panel
-      wrapper.setData({ primerPanel: 'Test panel' })
+    const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 1 }) }
+    const wrapper = wrapperFactory()
+    wrapper.vm.updatePlate(1, plate)
 
-      const expectedPayload = { plate: {
-        purpose_uuid: 'test',
-        parent_uuid: 'plate_uuid',
-        transfers: [
-          { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } }
-        ]
-      }}
+    // Consider auto-selecting a single panel
+    wrapper.setData({ primerPanel: 'Test panel' })
 
-      mockLocation.href = null
+    const expectedPayload = { plate: {
+      parent_uuid: 'plate-uuid',
+      purpose_uuid: 'test',
+      transfers: [
+        { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } }
+      ]
+    }}
 
-      // Ideally we'd emit the event from the button component, but I'm having difficulty.
-      wrapper.vm.createPlate()
+    mockLocation.href = null
+    mock.onPost().reply((config) =>{
 
-      moxios.wait(function () {
-        let request = moxios.requests.mostRecent()
-        expect(request.url).toEqual('example/example')
-
-        request.respondWith({
-          status: 201,
-          response: { redirect: 'http://wwww.example.com' }
-        }).then(function() {
-          expect(mockLocation.href).toEqual('http://wwww.example.com')
-          done()
-        }).catch(()=>{
-          expect('This test').toEqual('should never be run')
-        })
-      })
+      expect(config.url).toEqual('example/example')
+      expect(config.data).toEqual(JSON.stringify(expectedPayload))
+      return [201, { redirect: 'http://wwww.example.com' }]
     })
+
+    // Ideally we'd emit the event from the button component, but I'm having difficulty.
+    wrapper.vm.createPlate()
+
+    await flushPromises()
+
+    expect(mockLocation.href).toEqual('http://wwww.example.com')
+
   })
 
   it('disables creation when there are no possible transfers', () => {

@@ -101,15 +101,16 @@
         return wellCoordinateToName([destinationColumn, destinationRow])
       },
       createPlate() {
+        let payload = { plate: {
+          parent_uuid: this.validPlates[0].plate.uuid,
+          purpose_uuid: this.purposeUuid,
+          transfers: this.transfers
+        }}
         this.$axios({
           method: 'post',
           url:this.targetUrl,
           headers: {'X-Requested-With': 'XMLHttpRequest'},
-          data: { plate: {
-            parent_uuid: this.validPlates[0].uuid,
-            purpose_uuid: this.purposeUuid,
-            transfers: this.transfers
-          }}
+          data: payload
         }).then((response)=>{
           // Ajax responses automatically follow redirects, which
           // would result in us receiving the full HTML for the child
