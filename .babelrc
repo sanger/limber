@@ -3,6 +3,9 @@
     ["@babel/env", {
       "modules": false,
       "targets": {
+        // Latest versions that run on WindowsXP
+        "chrome": "49",
+        "firefox": "52",
         "browsers": "> 1%"
       },
       "useBuiltIns": "usage",

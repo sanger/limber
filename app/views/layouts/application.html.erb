@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang='en'>
   <head>
-    <title>Limber</title>
+    <title>Limber<% if content_for?(:title) %> - <%= yield(:title) %><% end %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <%= csrf_meta_tag %>
 
     <%= stylesheet_link_tag "application" %>
     <%= stylesheet_link_tag "print", media: 'print' %>
@@ -15,8 +16,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" sizes="32x32" href="/icon32.png" />
     <link rel="icon" sizes="16x16" href="/icon16.png" />
-
-    <%= csrf_meta_tag %>
   </head>
   <body class='<%= environment %> <%= environment_type_class %> <%= logged_in_class %>'>
     <div id='app'>

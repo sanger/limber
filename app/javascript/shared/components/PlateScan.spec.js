@@ -2,19 +2,20 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import PlateScan from 'shared/components/PlateScan.vue'
+import { plateFactory } from '_test_/support/factories'
 
 // create an extended `Vue` constructor
 import localVue from '_test_/support/base_vue'
 
 describe('PlateScan', () => {
-
   const nullPlate = { data: null }
-  const goodPlate = { data: 'Plate' }
+  const goodPlate = { data: plateFactory() }
+  const badPlate = { data: plateFactory({numberOfColumns: 24, numberOfRows: 8}) }
 
   const mockApiFactory = function(promise) {
     return {
       where(options) {
-        this.filteredWith = options
+        this.whered = options
         return this
       },
       includes(options) {
@@ -29,7 +30,7 @@ describe('PlateScan', () => {
         return this.promise
       },
       promise: promise,
-      filteredWith: '',
+      whered: {},
       selected: [],
       included: []
     }
@@ -43,6 +44,8 @@ describe('PlateScan', () => {
         label: 'My Plate',
         description: 'Scan it in',
         plateApi: mockApi,
+        plateCols: 12,
+        plateRows: 8,
         includes: {wells: ['requests_as_source',{aliquots: 'request'}]}
       },
       localVue
@@ -74,7 +77,7 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(api.filteredWith).toEqual({ barcode: 'not a barcode' })
+    expect(api.whered).toEqual({ barcode: 'not a barcode' })
     expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find plate')
     expect(wrapper.emitted()).toEqual({
       change: [
@@ -115,14 +118,34 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(api.filteredWith).toEqual({ barcode: 'not a barcode' })
-    expect(api.selected).toEqual({plates: ['labware_barcode', 'uuid']})
+    expect(api.whered).toEqual({ barcode: 'not a barcode' })
+    expect(api.selected).toEqual({plates: ['labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns']})
     expect(api.included).toEqual({wells: ['requests_as_source',{aliquots: 'request'}]})
     expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', plate: null }],
-        [{ state: 'valid', plate: 'Plate' }]
+        [{ state: 'valid', plate: goodPlate.data }]
+      ]
+    })
+  })
+
+  it('is invalid if the plate is the wrong size', async () => {
+    const api = mockApiFactory(Promise.resolve(badPlate))
+    const wrapper = wrapperFactory(api)
+
+    wrapper.find('input').setValue('Good barcode')
+    wrapper.find('input').trigger('change')
+
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+    await flushPromises()
+
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('The plate should be 12×8 wells in size')
+    expect(wrapper.emitted()).toEqual({
+      change: [
+        [{ state: 'searching', plate: null }],
+        [{ state: 'invalid', plate: badPlate.data }]
       ]
     })
   })

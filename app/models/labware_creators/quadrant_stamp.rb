@@ -30,7 +30,9 @@ module LabwareCreators
 
     self.page = 'quadrant_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [{ transfers: [] }]
+    self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
+
+    validates :transfers, presence: true
 
     private
 

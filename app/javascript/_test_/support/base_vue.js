@@ -2,6 +2,7 @@
 // modules as the actual vue application
 
 import { createLocalVue } from '@vue/test-utils'
+import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
@@ -11,6 +12,8 @@ import Sidebar from 'shared/components/Sidebar.vue'
 const localVue = createLocalVue()
 // install plugins as normal
 localVue.use(BootstrapVue)
+
+localVue.prototype.$axios = axios
 
 localVue.component('lb-main-content', MainContent)
 localVue.component('lb-page', Page)

@@ -5,6 +5,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "autoprefixer": "^7.1.1",
+    "axios": "^0.18.0",
     "babel-loader": "8",
     "bootstrap-vue": "^2.0.0-rc.11",
     "coffee-loader": "^0.7.3",
@@ -25,9 +26,10 @@
     "rails-erb-loader": "^5.0.2",
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
+    "style-loader": "^0.23.1",
     "vue": "^2.3.4",
     "vue-loader": "^12.2.1",
+    "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.3.4",
     "webpack": "^3.0.0",
     "webpack-manifest-plugin": "^1.1.0",
@@ -45,6 +47,7 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.1.2",
     "karma-webpack": "^3.0.5",
+    "moxios": "^0.4.0",
     "webpack-dev-server": "^2.5.0"
   }
 }

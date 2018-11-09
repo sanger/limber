@@ -38,7 +38,9 @@
       label: { type: String, default: 'Plate'},
       description: { type: String },
       includes: { default: () => { return [] } },
-      selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid' ] } } }
+      selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] } } },
+      plateCols: { type: Number, default: 12 },
+      plateRows: { type: Number, default: 8 }
     },
     methods: {
       lookupPlate: function (_) {
@@ -68,8 +70,15 @@
           this.badState({ message: "Could not find plate" })
         } else {
           this.plate = plate
-          this.goodState({ message: "Great!" })
+          if (this.incorrectSize(plate)) {
+            this.badState({ message: `The plate should be ${this.plateCols}×${this.plateRows} wells in size` })
+          } else {
+            this.goodState({ message: "Great!" })
+          }
         }
+      },
+      incorrectSize: function(plate) {
+        return plate.numberOfColumns !== this.plateCols || plate.numberOfRows !== this.plateRows
       },
       badState: function(err) {
         this.state = 'invalid'

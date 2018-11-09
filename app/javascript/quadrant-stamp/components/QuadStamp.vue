@@ -2,6 +2,11 @@
   <lb-page>
     <lb-main-content>
       <b-card bg-variant="dark" text-variant="white">
+        <lb-plate-summary v-for="plate in plates"
+                         :state="plate.state"
+                         :pool-index="plate.index + 1"
+                         :key="plate.index"
+                         :plate="plate.plate"></lb-plate-summary>
         <lb-plate caption="New Plate" :rows="targetRows" :columns="targetColumns" :wells="targetWells"></lb-plate>
       </b-card>
     </lb-main-content>
@@ -13,7 +18,7 @@
                          :label="'Plate ' + i"
                          :key="i"
                          :includes="{wells: {'requests_as_source': 'primer_panel', aliquots: {'request': 'primer_panel'}}}"
-                         :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid' ],
+                         :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
                                      requests: [ 'primer_panel', 'uuid'],
                                      wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
                                      aliquots: ['request'] }"
@@ -24,9 +29,9 @@
                        :options="primerPanels"
                        size="lg"></b-form-radio-group>
         </b-form-group>
+        <b-button :disabled="!valid" variant="success" v-on:click="createPlate()">Create</b-button>
       </b-card>
     </lb-sidebar>
-    <b-alert>{{ transfers }}</b-alert>
   </lb-page>
 </template>
 
@@ -36,8 +41,10 @@
 <script>
 
   import Plate from 'shared/components/Plate'
+  import PlateSummary from './PlateSummary'
   import PlateScan from 'shared/components/PlateScan'
   import ApiModule from 'shared/api'
+  import buildArray from 'shared/buildArray'
 
   const wellNameToCoordinate = function(wellName) {
     let row = wellName.charCodeAt(0) - 65
@@ -58,8 +65,7 @@
   export default {
     name: 'QuadStamp',
     data () {
-      let plateArray = Array(this.sourcePlateNumber)
-      plateArray.fill({ state: 'empty', plate: null })
+      let plateArray = buildArray(this.sourcePlateNumber, (iteration) => { return { state: 'empty', plate: null, index: iteration } })
 
       return {
         Api: ApiModule({ baseUrl: this.sequencescapeApi }),
@@ -69,12 +75,15 @@
     },
     props: {
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+      purposeUuid: { type: String, required: true },
+      targetUrl: { type: String, required: true },
       targetRows: { type: Number, default: 16 },
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 },
       // Defaults assumes column orientated stamping.
       rowOffset: { type: Array, default: () =>{ return [0,1,0,1] } },
-      colOffset: { type: Array, default: () =>{ return [0,0,1,1] } }
+      colOffset: { type: Array, default: () =>{ return [0,0,1,1] } },
+      locationObj: { type: Object, default: location }
     },
     methods: {
       updatePlate(index, data) {
@@ -90,11 +99,40 @@
         let destinationRow = wellCoordinate[1] * 2 + this.rowOffset[quadrant]
         let destinationColumn = wellCoordinate[0] * 2 + this.colOffset[quadrant]
         return wellCoordinateToName([destinationColumn, destinationRow])
+      },
+      createPlate() {
+        this.$axios({
+          method: 'post',
+          url:this.targetUrl,
+          headers: {'X-Requested-With': 'XMLHttpRequest'},
+          data: { plate: {
+            parent_uuid: this.validPlates[0].uuid,
+            purpose_uuid: this.purposeUuid,
+            transfers: this.transfers
+          }}
+        }).then((response)=>{
+          // Ajax responses automatically follow redirects, which
+          // would result in us receiving the full HTML for the child
+          // plate here, which we'd then need to inject into the
+          // page, and update the history. Instead we don't redirect
+          // application/json requests, and redirect the user ourselves.
+          this.locationObj.href = response.data.redirect
+        }).catch((error)=>{
+          // Something has gone wrong
+          console.log(error)
+        })
       }
     },
     computed: {
+      valid() {
+        return this.unsuitablePlates.length === 0 && // None of the plates are invalid
+               this.transfers.length >= 1 // We have at least one transfer
+      },
       validPlates() {
         return this.plates.filter( plate => plate.state === 'valid' )
+      },
+      unsuitablePlates() {
+        return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
       },
       transfers() {
         let transferArray = []
@@ -142,7 +180,8 @@
     },
     components: {
       'lb-plate': Plate,
-      'lb-plate-scan': PlateScan
+      'lb-plate-scan': PlateScan,
+      'lb-plate-summary': PlateSummary
     }
   }
 </script>
