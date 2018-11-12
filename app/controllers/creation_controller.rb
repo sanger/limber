@@ -25,7 +25,12 @@ class CreationController < ApplicationController
     if @labware_creator.save
       flash.notice = 'New empty labware added to the system.'
       respond_to do |format|
-        format.json { render json: { redirect: redirection_path(@labware_creator) } }
+        format.json do
+          render json: {
+            redirect: redirection_path(@labware_creator),
+            message: 'Plate created, redirecting...'
+          }
+        end
         format.html { redirect_to redirection_path(@labware_creator) }
       end
     else

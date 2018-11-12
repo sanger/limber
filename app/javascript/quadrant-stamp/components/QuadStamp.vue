@@ -1,5 +1,6 @@
 <template>
   <lb-page>
+    <lb-loading-modal v-if="loading" :message="progressMessage"></lb-loading-modal>
     <lb-main-content>
       <b-card bg-variant="dark" text-variant="white">
         <lb-plate-summary v-for="plate in plates"
@@ -43,24 +44,10 @@
   import Plate from 'shared/components/Plate'
   import PlateSummary from './PlateSummary'
   import PlateScan from 'shared/components/PlateScan'
+  import LoadingModal from 'shared/components/LoadingModal'
   import ApiModule from 'shared/api'
   import buildArray from 'shared/buildArray'
-
-  const wellNameToCoordinate = function(wellName) {
-    let row = wellName.charCodeAt(0) - 65
-    let column = Number.parseInt(wellName.substring(1)) - 1
-    return [column, row]
-  }
-
-  const wellCoordinateToName = function(wellCoordinate) {
-    let column = wellCoordinate[0] + 1
-    let row = String.fromCharCode(wellCoordinate[1] + 65)
-    return `${row}${column}`
-  }
-
-  const requestsForWell = function(well) {
-    return [...well.requestsAsSource, ...well.aliquots.map(aliquot => aliquot.request)].filter(request => request)
-  }
+  import { wellNameToCoordinate, wellCoordinateToName, requestsForWell } from 'shared/wellHelpers'
 
   export default {
     name: 'QuadStamp',
@@ -70,7 +57,9 @@
       return {
         Api: ApiModule({ baseUrl: this.sequencescapeApi }),
         plates: plateArray,
-        primerPanel: null
+        primerPanel: null,
+        loading: false,
+        progressMessage: ''
       }
     },
     props: {
@@ -83,7 +72,7 @@
       // Defaults assumes column orientated stamping.
       rowOffset: { type: Array, default: () =>{ return [0,1,0,1] } },
       colOffset: { type: Array, default: () =>{ return [0,0,1,1] } },
-      locationObj: { type: Object, default: location }
+      locationObj: { type: Location, default: () => { location } }
     },
     methods: {
       updatePlate(index, data) {
@@ -101,6 +90,8 @@
         return wellCoordinateToName([destinationColumn, destinationRow])
       },
       createPlate() {
+        this.progressMessage = "Creating plate..."
+        this.loading = true
         let payload = { plate: {
           parent_uuid: this.validPlates[0].plate.uuid,
           purpose_uuid: this.purposeUuid,
@@ -117,10 +108,12 @@
           // plate here, which we'd then need to inject into the
           // page, and update the history. Instead we don't redirect
           // application/json requests, and redirect the user ourselves.
+          this.progressMessage = response.data.message
           this.locationObj.href = response.data.redirect
         }).catch((error)=>{
           // Something has gone wrong
           console.log(error)
+          this.loading = false
         })
       }
     },
@@ -182,7 +175,8 @@
     components: {
       'lb-plate': Plate,
       'lb-plate-scan': PlateScan,
-      'lb-plate-summary': PlateSummary
+      'lb-plate-summary': PlateSummary,
+      'lb-loading-modal': LoadingModal
     }
   }
 </script>

@@ -102,7 +102,7 @@ describe('QuadStamp', () => {
 
       expect(config.url).toEqual('example/example')
       expect(config.data).toEqual(JSON.stringify(expectedPayload))
-      return [201, { redirect: 'http://wwww.example.com' }]
+      return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
     })
 
     // Ideally we'd emit the event from the button component, but I'm having difficulty.
