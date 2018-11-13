@@ -17,7 +17,7 @@ class Labels::PlateLabelXp < Labels::Base
       top_left: date_today,
       bottom_left: "#{labware.barcode.human} QC",
       top_right: labware.stock_plate&.barcode&.human,
-      barcode: "#{labware.barcode.human}_QC"
+      barcode: "#{labware.barcode.human}-QC"
     }
   end
 
