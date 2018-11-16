@@ -42,8 +42,12 @@ module Presenters::ExtendedCsv
     [match[2].to_i, match[1]] # Order by column first
   end
 
+  def legacy_labware
+    api.plate.find(labware.uuid)
+  end
+
   def transfers_for_csv
-    labware.creation_transfers.map do |ct|
+    legacy_labware.creation_transfers.map do |ct|
       source_ean = ct.source.barcode.ean13
       source_barcode = "#{ct.source.barcode.prefix}#{ct.source.barcode.number}"
       source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
