@@ -94,7 +94,7 @@ RSpec.feature 'Viewing a plate', js: true do
   end
 
   feature 'with passed pools' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: 'passed', pool_sizes: [5] }
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

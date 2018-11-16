@@ -23,7 +23,7 @@ module PlateHelper
     current_plate.wells.each_with_object({}) do |well, pool_store|
       next unless well.passed?
 
-      well.active_requests.each do |request|
+      well.incomplete_requests.each do |request|
         next unless request.pre_capture_pool
 
         pool_store[request.pre_capture_pool.id] ||= []
