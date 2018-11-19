@@ -93,13 +93,3 @@ scRNA Lib Pool XP:
   :default_printer_type: :tube
   :parents:
   - scRNA Lib Pool
-scRNA Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - scRNA Lib Pool XP
-  - scRNA-384 Lib Pool XP

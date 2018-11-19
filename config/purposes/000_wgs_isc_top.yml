@@ -62,12 +62,3 @@ LB Lib Pool:
   :parents:
   - LB Lib PCR-XP
   - PF Lib XP2
-LB Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - LB Lib Pool
