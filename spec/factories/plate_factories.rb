@@ -21,7 +21,7 @@ FactoryBot.define do
           Array.new(size) do
             create request_factory,
                    pcr_cycles: pool_prc_cycles[index],
-                   state: library_state,
+                   state: library_state[index],
                    submission_id: index,
                    include_submissions: include_submissions,
                    order_id: index * 2,
@@ -45,7 +45,7 @@ FactoryBot.define do
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       pool_sizes []
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
-      library_state 'pending'
+      library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
       transfer_targets { {} }
