@@ -13,6 +13,13 @@
     <%= javascript_include_tag 'application'  %>
     <%= javascript_pack_tag 'application' %>
 
+    <% if Rails.application.config.disable_animations %>
+      <%= stylesheet_link_tag  'disable_animations' %>
+
+      <!-- Turn off animations in jQuery -->
+      <script>$.fx.off = true;</script>
+    <% end %>
+
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" sizes="32x32" href="/icon32.png" />
     <link rel="icon" sizes="16x16" href="/icon16.png" />
