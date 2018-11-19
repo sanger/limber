@@ -13,9 +13,13 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:pools) { 1 }
   let(:example_plate) do
-    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8],
+                            submission_pools_count: pools, purpose_name: 'Limber Cherrypicked', purpose_uuid: 'stock-plate-purpose-uuid'
   end
-  let(:old_api_example_plate) { json :stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools }
+  let(:old_api_example_plate) do
+    json :stock_plate, barcode_number: example_plate.labware_barcode.number,
+                       uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools
+  end
   let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid)        { 'tag-plate-uuid' }
@@ -42,7 +46,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   background do
     # Set-up the plate config
 
-    create :purpose_config, uuid: 'stock-plate-purpose-uuid'
+    create :purpose_config, uuid: 'stock-plate-purpose-uuid', name: 'Limber Cherrypicked'
     create :tagged_purpose_config,
            tag_layout_templates: acceptable_templates,
            parents: ['Limber Cherrypicked'],

@@ -26,6 +26,8 @@ RSpec.feature 'Multi plate pooling', js: true do
   let(:example_plate_2)   do
     create :v2_plate_for_pooling,
            barcode_number: 2,
+           pool_sizes: [2, 2],
+           library_state: %w[started passed],
            state: 'passed',
            uuid: plate_uuid_2,
            well_factory: :v2_tagged_well,
