@@ -1,6 +1,6 @@
 import buildArray from 'shared/buildArray'
 import { indexToName } from 'shared/wellHelpers'
-import wellFactory from '_test_/support/factories/well_factory'
+import wellFactory from 'test_support/factories/well_factory'
 
 const plateFactory = function(options = {}) {
   const { filledWells, wellOptions, ...plateOptions } = options

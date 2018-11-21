@@ -4120,7 +4120,7 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
-jasmine-core@^3.2.1:
+jasmine-core@^3.2.1, jasmine-core@^3.3:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.3.0.tgz#dea1cdc634bc93c7e0d4ad27185df30fa971b10e"
   integrity sha512-3/xSmG/d35hf80BEN66Y6g9Ca5l/Isdeg/j6zvbTYlTzeKinzmaTM4p9am5kYqOmE05D7s1t8FGjzdSnbUbceA==
@@ -4274,15 +4274,17 @@ karma-cli@^1.0.1:
   dependencies:
     resolve "^1.1.6"
 
-karma-jasmine@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.2.tgz#394f2b25ffb4a644b9ada6f22d443e2fd08886c3"
-  integrity sha1-OU8rJf+0pkS5rabyLUQ+L9CIhsM=
+karma-jasmine@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-2.0.1.tgz#26e3e31f2faf272dd80ebb0e1898914cc3a19763"
+  integrity sha512-iuC0hmr9b+SNn1DaUD2QEYtUxkS1J+bSJSn7ejdEexs7P8EYvA1CWkEdrDQ+8jVH3AgWlCNwjYsT1chjcNW9lA==
+  dependencies:
+    jasmine-core "^3.3"
 
-karma-webpack@^4.0.0-rc.2:
-  version "4.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/karma-webpack/-/karma-webpack-4.0.0-rc.2.tgz#4c194e94789842af7f0ffa0de77ee7715739c7c1"
-  integrity sha512-Wuiq/xFBsbJMsHhYy5SYXxSp7Q0b8uzAG8+Siuo56ntoi5GluPE5LK3Mzl2UtD4k1leFwL6IeIE6Q+tk4F6k9Q==
+karma-webpack@^4.0.0-rc.4:
+  version "4.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/karma-webpack/-/karma-webpack-4.0.0-rc.3.tgz#f7b43f43064ddf3db6e2f13749b3e98220794ba3"
+  integrity sha512-vpoET6ehBGMub74KnHPMZvMgvCZMzt24usF96oQ9QgGnmmurdbnlXQFatltox2LQS9LtZsrUa4pLRFB80VjTAw==
   dependencies:
     async "^2.0.0"
     loader-utils "^1.1.0"

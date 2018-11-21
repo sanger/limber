@@ -36,9 +36,6 @@
   </lb-page>
 </template>
 
-<style lang="scss" scoped>
-</style>
-
 <script>
 
   import Plate from 'shared/components/Plate'
@@ -72,7 +69,7 @@
       // Defaults assumes column orientated stamping.
       rowOffset: { type: Array, default: () =>{ return [0,1,0,1] } },
       colOffset: { type: Array, default: () =>{ return [0,0,1,1] } },
-      locationObj: { type: Location, default: () => { location } }
+      locationObj: { default: () => { location } }
     },
     methods: {
       updatePlate(index, data) {

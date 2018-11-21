@@ -2,10 +2,11 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import PlateScan from 'shared/components/PlateScan.vue'
-import { plateFactory } from '_test_/support/factories'
+import { plateFactory } from 'test_support/factories'
 
 // create an extended `Vue` constructor
-import localVue from '_test_/support/base_vue'
+
+import localVue from 'test_support/base_vue'
 
 describe('PlateScan', () => {
   const nullPlate = { data: null }

@@ -18,7 +18,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/javascript/**/*.spec.js'
+      { pattern: 'app/javascript/**/*.spec.js', watched: true }
     ],
 
 

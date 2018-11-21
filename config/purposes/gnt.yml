@@ -33,6 +33,7 @@ GnT Pico Lib PCR:
   :parents:
   - GnT Pico End Prep
 GnT MDA Norm:
+  :presenter_class: Presenters::UntaggedPlatePassingPresenter
   :asset_type: plate
   :parents:
   - GnT scDNA

@@ -1,8 +1,8 @@
-// Import the component being tested
+// // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import QuadStamp from 'quadrant-stamp/components/QuadStamp.vue'
-import localVue from '_test_/support/base_vue'
-import { plateFactory, wellFactory, requestFactory } from '_test_/support/factories'
+import QuadStamp from './QuadStamp.vue'
+import localVue from 'test_support/base_vue.js'
+import { plateFactory, wellFactory, requestFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'
