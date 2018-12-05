@@ -24,18 +24,18 @@ def build_config
   $stdout.print 'PMB url: '
   pmb = $stdin.gets.chomp
   {
-    sequencescape: url,
-    api_key: api,
-    pmb: pmb
+    'sequencescape' => url,
+    'api_key' => api,
+    'pmb' => pmb
   }
 end
 
 def run_environment(config)
-  sequencescape_url = URI.parse(config[:sequencescape])
+  sequencescape_url = URI.parse(config['sequencescape'])
   ENV['API_URL'] = "#{sequencescape_url}/api/1/"
   ENV['API2_URL'] = "#{sequencescape_url}/api/v2"
-  ENV['API_KEY'] = config[:api_key]
-  ENV['PMB_URI'] = config[:pmb]
+  ENV['API_KEY'] = config['api_key']
+  ENV['PMB_URI'] = config['pmb']
 end
 
 require 'yaml'
