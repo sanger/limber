@@ -69,7 +69,7 @@
       // Defaults assumes column orientated stamping.
       rowOffset: { type: Array, default: () =>{ return [0,1,0,1] } },
       colOffset: { type: Array, default: () =>{ return [0,0,1,1] } },
-      locationObj: { default: () => { location } }
+      locationObj: { default: () => { return location } }
     },
     methods: {
       updatePlate(index, data) {
