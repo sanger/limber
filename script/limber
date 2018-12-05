@@ -50,7 +50,7 @@ begin
   $stdout.puts 'Building configuration'
   $stdout.puts `bundle exec rake config:generate`
   $stdout.puts 'Running application'
-  $stdout.puts `bundle exec rails s`
+  exec('bundle exec rails s')
 rescue Errno::ENOENT
   attempts = (attempts || 0) + 1
   file = File.open(CONFIG_FILE, 'w')
