@@ -11,7 +11,7 @@ class Labels::TubeLabel < Labels::Base
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,
       round_label_bottom_line: labware.barcode.number,
-      barcode: labware.barcode.ean13 }
+      barcode: labware.barcode.machine }
   end
 
   def default_printer_type
