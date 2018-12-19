@@ -7,13 +7,14 @@ class Sibling
   # The state in which a sibling must be to allow pooling.
   READY_STATE = 'passed'
 
-  attr_reader :name, :uuid, :state, :barcode
+  attr_reader :name, :uuid, :state, :barcode, :sanger_barcode
 
   def initialize(options)
     if options.respond_to?(:[])
       @name = options['name']
       @uuid = options['uuid']
       @barcode = options['ean13_barcode']
+      @sanger_barcode = SBCF::SangerBarcode.from_machine(options['ean13_barcode'])
       @state = options['state']
     else
       missing_sibling
@@ -36,5 +37,6 @@ class Sibling
   def missing_sibling
     @name  = 'Other'
     @state = 'Not Present'
+    @sanger_barcode = 'Not Present'
   end
 end

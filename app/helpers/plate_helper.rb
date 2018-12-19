@@ -21,12 +21,13 @@ module PlateHelper
 
   def sorted_pre_cap_group_json
     current_plate.wells.each_with_object({}) do |well, pool_store|
-      well.active_requests.each do |request|
+      next unless well.passed?
+
+      well.incomplete_requests.each do |request|
         next unless request.pre_capture_pool
 
-        wa = []
-        pool_store[request.pre_capture_pool.id] ||= { 'wells' => wa, 'all_wells' => wa, 'failures' => [] }
-        pool_store[request.pre_capture_pool.id]['wells'] << well.location
+        pool_store[request.pre_capture_pool.id] ||= []
+        pool_store[request.pre_capture_pool.id] << well.location
       end
     end.to_json.html_safe
   end

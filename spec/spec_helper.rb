@@ -134,6 +134,9 @@ RSpec.configure do |config|
   config.include FeatureHelpers, type: :feature
 
   config.before(:suite) do
+    Rails.application.load_tasks
+    Rake::Task['assets:precompile'].invoke
+
     FactoryBot.find_definitions
     Settings.robots = {}
     Settings.transfer_templates = {

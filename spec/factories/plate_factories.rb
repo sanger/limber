@@ -21,7 +21,7 @@ FactoryBot.define do
           Array.new(size) do
             create request_factory,
                    pcr_cycles: pool_prc_cycles[index],
-                   state: library_state,
+                   state: library_state[index],
                    submission_id: index,
                    include_submissions: include_submissions,
                    order_id: index * 2,
@@ -33,7 +33,7 @@ FactoryBot.define do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
           create well_factory, location: location,
-                               state: state,
+                               state: well_states[i] || state,
                                outer_request: outer_requests[i],
                                downstream_assets: transfer_targets[location],
                                uuid: well_uuid_result % location,
@@ -45,12 +45,13 @@ FactoryBot.define do
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       pool_sizes []
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
-      library_state 'pending'
+      library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
       transfer_targets { {} }
       size 96
       include_submissions { false }
+      well_states { [state] * size }
     end
 
     sequence(:id) { |i| i }

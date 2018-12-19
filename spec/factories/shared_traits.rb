@@ -3,6 +3,8 @@
 require_relative '../support/json_renderers'
 
 FactoryBot.define do
+  sequence(:barcode_number) { |i| i + 9 } # Add 9 to the sequence to avoid clashes with a few fixed barcodes
+
   trait :api_object do
     transient do
       api_root 'http://example.com:3000/'
@@ -41,7 +43,7 @@ FactoryBot.define do
 
   trait :barcoded do
     transient do
-      sequence(:barcode_number) { |i| i }
+      barcode_number
       ean13 { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).machine_barcode.to_s }
     end
 
@@ -52,7 +54,7 @@ FactoryBot.define do
 
   trait :barcoded_v2 do
     transient do
-      sequence(:barcode_number) { |i| i }
+      barcode_number
       barcode_prefix 'DN'
       barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
     end

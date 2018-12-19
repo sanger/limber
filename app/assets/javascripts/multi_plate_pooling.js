@@ -1,34 +1,37 @@
 (function($, exports, undefined){
   "use strict";
+
+  if (exports.SCAPE === undefined) { exports.SCAPE = {}; }
+
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
   var WELLS_IN_COLUMN_MAJOR_ORDER = [
-      "A1",  "B1",  "C1",  "D1",  "E1",  "F1",  "G1",  "H1",
-      "A2",  "B2",  "C2",  "D2",  "E2",  "F2",  "G2",  "H2",
-      "A3",  "B3",  "C3",  "D3",  "E3",  "F3",  "G3",  "H3",
-      "A4",  "B4",  "C4",  "D4",  "E4",  "F4",  "G4",  "H4",
-      "A5",  "B5",  "C5",  "D5",  "E5",  "F5",  "G5",  "H5",
-      "A6",  "B6",  "C6",  "D6",  "E6",  "F6",  "G6",  "H6",
-      "A7",  "B7",  "C7",  "D7",  "E7",  "F7",  "G7",  "H7",
-      "A8",  "B8",  "C8",  "D8",  "E8",  "F8",  "G8",  "H8",
-      "A9",  "B9",  "C9",  "D9",  "E9",  "F9",  "G9",  "H9",
-      "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10",
-      "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11",
-      "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"
-    ]
+    'A1',  'B1',  'C1',  'D1',  'E1',  'F1',  'G1',  'H1',
+    'A2',  'B2',  'C2',  'D2',  'E2',  'F2',  'G2',  'H2',
+    'A3',  'B3',  'C3',  'D3',  'E3',  'F3',  'G3',  'H3',
+    'A4',  'B4',  'C4',  'D4',  'E4',  'F4',  'G4',  'H4',
+    'A5',  'B5',  'C5',  'D5',  'E5',  'F5',  'G5',  'H5',
+    'A6',  'B6',  'C6',  'D6',  'E6',  'F6',  'G6',  'H6',
+    'A7',  'B7',  'C7',  'D7',  'E7',  'F7',  'G7',  'H7',
+    'A8',  'B8',  'C8',  'D8',  'E8',  'F8',  'G8',  'H8',
+    'A9',  'B9',  'C9',  'D9',  'E9',  'F9',  'G9',  'H9',
+    'A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'G10', 'H10',
+    'A11', 'B11', 'C11', 'D11', 'E11', 'F11', 'G11', 'H11',
+    'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'G12', 'H12'
+  ]
 
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
-  var SOURCE_STATES = ["passed", "qc_complete"]
+  var SOURCE_STATES = ['passed', 'qc_complete']
 
-  $(function(event) {
+  $(function(_event) {
 
     if ($('#multi-plate-pooling-page').length === 0) { return };
 
     $.extend(SCAPE, {
       retrievePlate : function(plate) {
         plate.ajax = $.ajax({
-          dataType: "json",
+          dataType: 'json',
           url: '/search/',
           type: 'POST',
           data: 'plate_barcode='+plate.value,
@@ -48,7 +51,7 @@
 
     $('.plate-box').on('change', function() {
       // When we scan in a plate
-      if (this.value === "") {
+      if (this.value === '') {
         this.scanPlate();
       } else {
         this.waitPlate(); $('#create-labware').attr('disabled', 'disabled'); SCAPE.retrievePlate(this); };
@@ -111,33 +114,27 @@
 
     SCAPE.calculatePreCapPools = function() {
       for (var plateIndex in SCAPE.plates){
-            var plate = SCAPE.plates[plateIndex];
-            if (plate!==undefined) { SCAPE.plates[plateIndex].preCapPools = SCAPE.preCapPools( SCAPE.plates[plateIndex] )}
-          }
+          var plate = SCAPE.plates[plateIndex];
+          if (plate!==undefined) { SCAPE.plates[plateIndex].preCapPools = SCAPE.preCapPools( SCAPE.plates[plateIndex] )}
+        }
       return SCAPE.totalPools() <= 96
     };
 
     SCAPE.preCapPools = function(plate){
-      var wells, failures, transfers = {}, plexLevel;
+      var wells, transfers = {};
 
       for (var group in plate.preCapGroups) {
-        wells           = plate.preCapGroups[group].all_wells;
-        failures        = plate.preCapGroups[group].failures;
-        plexLevel       = plate.preCapGroups[group].pre_capture_plex_level
-        transfers[group] = SCAPE.preCapPool(wells, failures, plexLevel);
+        wells           = plate.preCapGroups[group];
+        transfers[group] = SCAPE.preCapPool(wells);
       }
 
       return transfers;
     };
 
-    SCAPE.preCapPool = function(sequencingPool, failed, plexLevel){
-      plexLevel = plexLevel || 8; // To stop an infinite loop if null or 0 slips through
+    SCAPE.preCapPool = function(sequencingPool){
       var wells = [];
-      for (var i =0; i < sequencingPool.length; i = i + plexLevel){
-        wells.push(sequencingPool.slice(i, i + plexLevel).filter(function(w) { return failed.indexOf(w) == -1; }));
-      }
-
-      return { plexLevel: plexLevel, wells: wells };
+      wells.push(sequencingPool);
+      return { wells: wells };
     };
 
     SCAPE.newAliquot = function(poolNumber, poolID, aliquotText){
@@ -170,6 +167,7 @@
 
       for (var i in plates) {
         if (plates[i]===undefined) {
+          // Nothing
         } else {
           var preCapPools = plates[i].preCapPools
           capPoolOffset += walkPreCapPools(preCapPools, function(preCapPool, poolNumber, seqPoolID, seqPoolIndex){
