@@ -12,8 +12,8 @@ FactoryBot.define do
 
     transient do
       well_count { number_of_rows * number_of_columns }
-      well_factory :v2_well
-      request_factory :library_request
+      well_factory { :v2_well }
+      request_factory { :library_request }
       well_uuid_result { "#{barcode_number}-well-%s" }
       outer_requests do
         request_index = -1
@@ -40,16 +40,16 @@ FactoryBot.define do
                                aliquot_count: outer_requests[i] ? 1 : 0
         end
       end
-      purpose_name 'example-purpose'
-      purpose_uuid 'example-purpose-uuid'
+      purpose_name { 'example-purpose' }
+      purpose_uuid { 'example-purpose-uuid' }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
-      pool_sizes []
+      pool_sizes { [] }
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate }
       ancestors { [stock_plate] }
       transfer_targets { {} }
-      size 96
+      size { 96 }
       include_submissions { false }
       well_states { [state] * size }
     end
@@ -58,9 +58,9 @@ FactoryBot.define do
     uuid { SecureRandom.uuid }
     number_of_rows { (((size / 6)**0.5) * 2).floor }
     number_of_columns { (((size / 6)**0.5) * 3).floor }
-    state 'pending'
-    created_at '2017-06-29T09:31:59.000+01:00'
-    updated_at '2017-06-29T09:31:59.000+01:00'
+    state { 'pending' }
+    created_at { '2017-06-29T09:31:59.000+01:00' }
+    updated_at { '2017-06-29T09:31:59.000+01:00' }
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |plate, evaluator|
@@ -78,65 +78,65 @@ FactoryBot.define do
 
     factory :v2_stock_plate do
       transient do
-        barcode_number 2
-        well_factory :v2_stock_well
-        purpose_name 'Limber Cherrypicked'
-        purpose_uuid 'stock-plate-purpose-uuid'
-        ancestors []
+        barcode_number { 2 }
+        well_factory { :v2_stock_well }
+        purpose_name { 'Limber Cherrypicked' }
+        purpose_uuid { 'stock-plate-purpose-uuid' }
+        ancestors { [] }
       end
     end
 
     factory :v2_plate_with_primer_panels do
       transient do
-        purpose_name 'Primer Panel example'
-        request_factory :gbs_library_request
+        purpose_name { 'Primer Panel example' }
+        request_factory { :gbs_library_request }
       end
     end
 
     factory :v2_plate_for_pooling do
       transient do
-        purpose_name 'Pooled example'
-        request_factory :isc_library_request
-        pool_sizes [2]
+        purpose_name { 'Pooled example' }
+        request_factory { :isc_library_request }
+        pool_sizes { [2] }
       end
     end
 
     factory :unpassed_plate do
-      pool_sizes [2, 2]
+      pool_sizes { [2, 2] }
     end
 
     factory :passed_plate do
       transient do
-        for_multiplexing true
-        pool_sizes [2, 2]
-        request_type 'limber_multiplexing'
-        request_factory :mx_request
+        for_multiplexing { true }
+        pool_sizes { [2, 2] }
+        request_type { 'limber_multiplexing' }
+        request_factory { :mx_request }
       end
     end
   end
 
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
-    json_root 'plate'
-    size 96
-    state 'pending'
+    json_root { 'plate' }
+    size { 96 }
+    state { 'pending' }
     created_at { Time.current.to_s }
     updated_at { Time.current.to_s }
-    priority 0
+    priority { 0 }
 
     transient do
-      barcode_prefix 'DN'
-      barcode_type 1
-      purpose_name 'example-purpose'
-      purpose_uuid 'example-purpose-uuid'
-      pool_sizes   []
-      empty_wells []
-      library_type 'Standard'
-      request_type 'Limber Library Creation'
-      stock_plate_barcode 2
+      barcode_prefix { 'DN' }
+      barcode_type { 1 }
+      purpose_name { 'example-purpose' }
+      purpose_uuid { 'example-purpose-uuid' }
+      pool_sizes   { [] }
+      empty_wells { [] }
+      library_type { 'Standard' }
+      request_type { 'Limber Library Creation' }
+      stock_plate_barcode { 2 }
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
-      for_multiplexing false
+      for_multiplexing { false }
       pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
-      pool_complete false
+      pool_complete { false }
     end
 
     with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
@@ -145,7 +145,7 @@ FactoryBot.define do
 
     has_pools_hash
 
-    pre_cap_groups({})
+    pre_cap_groups { {} }
 
     plate_purpose do
       {
@@ -168,8 +168,8 @@ FactoryBot.define do
     end
 
     factory :stock_plate do
-      purpose_name 'Limber Cherrypicked'
-      purpose_uuid 'stock-plate-purpose-uuid'
+      purpose_name { 'Limber Cherrypicked' }
+      purpose_uuid { 'stock-plate-purpose-uuid' }
       stock_plate { { barcode: barcode, uuid: uuid } }
 
       factory :stock_plate_with_metadata do
@@ -181,7 +181,7 @@ FactoryBot.define do
   trait :has_pools_hash do
     transient do
       extra_pool_info { {} }
-      empty_wells []
+      empty_wells { [] }
     end
     pools do
       wells = WellHelpers.column_order(size).dup

@@ -82,7 +82,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
                   body: '{"order":{"uuid":"order-uuid"}}')
     stub_api_post('submissions',
                   payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                  body:  json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
+                  body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
     stub_api_post('sub-uuid', 'submit')
   end
 

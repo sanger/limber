@@ -23,7 +23,7 @@ module ContractHelper
       \g<verb>\s+\g<path>\s+HTTP/1.1\g<eol>
       \g<headers>\g<eol>
       (\g<eol>\g<body>?)?
-    }mx
+    }mx.freeze
 
     def request(contract_name)
       contract(contract_name) do |file|

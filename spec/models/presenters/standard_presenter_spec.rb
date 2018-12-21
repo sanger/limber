@@ -27,7 +27,7 @@ RSpec.describe Presenters::StandardPresenter do
 
   subject do
     Presenters::StandardPresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

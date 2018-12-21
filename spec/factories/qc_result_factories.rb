@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :qc_result, class: Sequencescape::Api::V2::QcResult do
-    key 'molarity'
-    value '1.5'
-    units 'nM'
+    key { 'molarity' }
+    value { '1.5' }
+    units { 'nM' }
     created_at { Time.current }
 
     skip_create

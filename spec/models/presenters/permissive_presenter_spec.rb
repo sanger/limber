@@ -8,7 +8,7 @@ RSpec.describe Presenters::PermissivePresenter do
 
   subject do
     Presenters::PermissivePresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

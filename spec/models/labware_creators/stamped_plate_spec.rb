@@ -35,7 +35,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   let(:form_attributes) do
     {
       purpose_uuid: child_purpose_uuid,
-      parent_uuid:  parent_uuid,
+      parent_uuid: parent_uuid,
       user_uuid: user_uuid
     }
   end
@@ -145,7 +145,7 @@ RSpec.describe LabwareCreators::StampedPlate do
         let(:form_attributes) do
           {
             purpose_uuid: child_purpose_uuid,
-            parent_uuid:  parent_uuid,
+            parent_uuid: parent_uuid,
             user_uuid: user_uuid,
             filters: { request_type_keys: [request_type_b.key] }
           }
@@ -173,7 +173,7 @@ RSpec.describe LabwareCreators::StampedPlate do
         let(:form_attributes) do
           {
             purpose_uuid: child_purpose_uuid,
-            parent_uuid:  parent_uuid,
+            parent_uuid: parent_uuid,
             user_uuid: user_uuid
           }
         end
@@ -232,7 +232,7 @@ RSpec.describe LabwareCreators::StampedPlate do
         let(:form_attributes) do
           {
             purpose_uuid: child_purpose_uuid,
-            parent_uuid:  parent_uuid,
+            parent_uuid: parent_uuid,
             user_uuid: user_uuid
           }
         end

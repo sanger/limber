@@ -7,7 +7,7 @@
 # or black text has better contrast for a given colour.
 # https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
 class ColourConverter
-  HEX = /#([0-f]{2})([0-f]{2})([0-f]{2})/
+  HEX = /#([0-f]{2})([0-f]{2})([0-f]{2})/.freeze
 
   RED_MULTIPLIER = 0.2126
   GREEN_MULTIPLIER = 0.7152

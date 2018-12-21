@@ -7,31 +7,19 @@ LB Cherrypick:
   :presenter_class: Presenters::StockPlatePresenter
 LB Shear:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - LB Cherrypick
 LB Post Shear:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - LB Shear
 LB End Prep:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - LB Post Shear
   - LB cDNA XP
 LB Lib PCR:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   warnings:
@@ -54,9 +42,6 @@ LB Lib PCR:
   - LB End Prep
 LB Lib PCR-XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :suggest_library_pass_for:
@@ -77,12 +62,3 @@ LB Lib Pool:
   :parents:
   - LB Lib PCR-XP
   - PF Lib XP2
-LB Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - LB Lib Pool

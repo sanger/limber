@@ -44,7 +44,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  plate_uuid
+        parent_uuid: plate_uuid
       }
     end
 
@@ -174,7 +174,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
-          parent_uuid:  plate_uuid,
+          parent_uuid: plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
           tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid }
@@ -209,7 +209,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
-          parent_uuid:  plate_uuid,
+          parent_uuid: plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
           tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid },

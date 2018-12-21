@@ -42,13 +42,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                layout: 'bed',
                verify_robot: false,
                beds: {
-                 bed(1).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
-                 bed(9).barcode  => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
-                 bed(2).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
+                 bed(1).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
+                 bed(9).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
+                 bed(2).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
                  bed(10).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
-                 bed(3).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 3' },
+                 bed(3).barcode => { purpose: 'LB Lib PCR', states: ['passed'], label: 'Bed 3' },
                  bed(11).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
-                 bed(4).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 4' },
+                 bed(4).barcode => { purpose: 'LB Lib PCR', states: ['passed'], label: 'Bed 4' },
                  bed(12).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
                })
 
@@ -57,8 +57,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                layout: 'bed',
                verify_robot: false,
                beds: {
-                 bed(2).barcode  => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
-                 bed(7).barcode  => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 7', parent: bed(2).barcode, target_state: 'passed' }
+                 bed(2).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
+                 bed(7).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 7', parent: bed(2).barcode, target_state: 'passed' }
                })
 
   custom_robot('nx-8-lib-pcr-xp-to-isch-lib-pool',
@@ -131,13 +131,13 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     layout: 'bed',
     beds: {
       bed(1).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 1' },
-      bed(9).barcode   => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'started' },
-      bed(2).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 2' },
-      bed(10).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'started' },
-      bed(3).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 3' },
-      bed(11).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'started' },
-      bed(4).barcode   => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 4' },
-      bed(12).barcode  => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'started' }
+      bed(9).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'started' },
+      bed(2).barcode => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 2' },
+      bed(10).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'started' },
+      bed(3).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 3' },
+      bed(11).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'started' },
+      bed(4).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 4' },
+      bed(12).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'started' }
     }
   )
 

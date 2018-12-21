@@ -16,25 +16,16 @@ GnT scDNA:
   - limber_gnt_mda
 GnT Pico-XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - GnT scDNA
   :expected_request_types:
   - limber_gnt_picoplex
 GnT Pico End Prep:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - GnT Pico-XP
 GnT Pico Lib PCR:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :suggest_library_pass_for:
@@ -42,10 +33,8 @@ GnT Pico Lib PCR:
   :parents:
   - GnT Pico End Prep
 GnT MDA Norm:
+  :presenter_class: Presenters::UntaggedPlatePassingPresenter
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - GnT scDNA
   :expected_request_types:
@@ -70,13 +59,3 @@ GnT Pico Lib Pool XP:
   :default_printer_type: :tube
   :parents:
   - GnT Pico Lib Pool
-GnT Pico Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - GnT Pico Lib Pool XP
-

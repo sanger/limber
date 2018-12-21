@@ -31,5 +31,11 @@ module.exports = {
             "error",
             "never"
         ]
-    }
+    },
+    "overrides": [
+        {
+          "files": [ "**/*.spec.js" ],
+          "plugins": ["jasmine", "vue"]
+        }
+      ]
 };
