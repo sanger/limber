@@ -54,6 +54,7 @@ PF Lib XP2:
   :presenter_class: Presenters::StandardPresenter
   :suggest_library_pass_for:
   - limber_pcr_free
+  :label_template: plate_xp
   :parents:
   - PF Lib XP
   - PF Lib
