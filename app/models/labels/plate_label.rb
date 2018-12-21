@@ -7,7 +7,7 @@ class Labels::PlateLabel < Labels::Base
       bottom_left: labware.barcode.human,
       top_right: labware.stock_plate&.barcode&.human,
       bottom_right: [labware.role, labware.purpose.name].compact.join(' '),
-      barcode: labware.barcode.ean13
+      barcode: labware.barcode.machine
     }
   end
 
