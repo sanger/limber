@@ -71,7 +71,7 @@ namespace :pmb do
                'no_of_columns' => nil }
            ] }
        ] },
-     { 'name' => 'plate_6mm_double',
+     { 'name' => 'plate_6mm_double_code39',
        'label_type_id' => PMB::LabelType.find(name: 'plate - 6mm').first.id,
        'labels_attributes' => [
          { 'name' => 'main_label',
@@ -97,12 +97,17 @@ namespace :pmb do
              { 'x_origin' => '0210',
                'y_origin' => '0000',
                'field_name' => 'barcode',
-               'barcode_type' => '5',
+               'barcode_type' => 'B',
                'one_module_width' => '02',
                'height' => '0050',
-               'rotational_angle' => nil,
+               'rotational_angle' => '0',
                'one_cell_width' => nil,
-               'type_of_check_digit' => '2',
+               'type_of_check_digit' => '1',
+               'narrow_bar_width' => '01',
+               'narrow_space_width' => '01',
+               'wide_bar_width' => '03',
+               'wide_space_width' => '03',
+               'char_to_char_space_width' => '03',
                'bar_height' => nil,
                'no_of_columns' => nil }
            ] },

@@ -38,7 +38,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
 
   subject(:presenter) do
     Presenters::MinimalStockPlatePresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

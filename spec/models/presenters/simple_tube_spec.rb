@@ -7,7 +7,7 @@ RSpec.describe Presenters::SimpleTubePresenter do
 
   subject do
     Presenters::SimpleTubePresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

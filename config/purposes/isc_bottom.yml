@@ -14,34 +14,22 @@ LB Lib PrePool:
   - LB Lib PCR-XP
 LB Hyb:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :creator_class: LabwareCreators::BaitedPlate
   :parents:
   - LB Lib PrePool
 LB Cap Lib:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :parents:
   - LB Hyb
 LB Cap Lib PCR:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :parents:
   - LB Cap Lib
 LB Cap Lib PCR-XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :suggest_library_pass_for:
   - limber_isc
@@ -50,9 +38,6 @@ LB Cap Lib PCR-XP:
   - LB Cap Lib PCR
 LB Cap Lib Pool:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'

@@ -7,7 +7,7 @@ RSpec.describe Presenters::StockPlatePresenter do
 
   subject do
     Presenters::StockPlatePresenter.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

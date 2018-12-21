@@ -74,7 +74,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
     let!(:submission_request) do
       stub_api_post('submissions',
                     payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                    body:  json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
+                    body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
     end
 
     let!(:submission_submit) do

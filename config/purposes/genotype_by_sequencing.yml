@@ -4,20 +4,27 @@ GBS Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalStockPlatePresenter
-  :creator_class: LabwareCreators::QuadrantStamp
   :input_plate: true
   :size: 384
+GBS-96 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :presenter_class: Presenters::MinimalStockPlatePresenter
+  :input_plate: true
+  :size: 96
 GBS PCR1:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
-  :creator_class: LabwareCreators::PlateWithPrimerPanel
+  :creator_class: LabwareCreators::QuadrantStamp
   :size: 384
   :pcr_stage: 'pcr 1'
   :parents:
-    - GBS Stock
+    - GBS-96 Stock
+    - GnT MDA Norm
 GBS PCR2:
   :asset_type: plate
   :stock_plate: false

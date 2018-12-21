@@ -6,7 +6,6 @@ default: &default
   public_output_path: packs
 
   extensions:
-    - .coffee
     - .erb
     - .js
     - .jsx
@@ -23,6 +22,8 @@ default: &default
 
 development:
   <<: *default
+
+  compile: true
 
   dev_server:
     host: 0.0.0.0

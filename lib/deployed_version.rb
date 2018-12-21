@@ -1,25 +1,31 @@
 # frozen_string_literal: true
 
+require 'open3'
+
 module Deployed
   class RepoData
     def tag
-      @tag ||= read_file('TAG').strip
+      @tag ||= git_tag || read_file('TAG').strip.presence
     end
 
     def revision
-      @revision ||= read_file('REVISION').strip
+      @revision ||= git_rev || read_file('REVISION').strip.presence
     end
 
     def branch
-      @branch ||= read_file('BRANCH').strip
+      @branch ||= git_branch || read_file('BRANCH').strip.presence
     end
 
     def release
       @release ||= read_file('RELEASE').strip
     end
 
+    def release_url
+      @release_url ||= read_file('REPO').strip
+    end
+
     def revision_short
-      revision.slice 0..6
+      @revision_short ||= revision&.slice 0..6
     end
 
     def label
@@ -39,7 +45,7 @@ module Deployed
     end
 
     def version_hash
-      /\Arelease-(?<major>\d+)\.(?<minor>\d+)\.?(?<extra>\S*)\z/.match(label)
+      @version_hash ||= /\Arelease-(?<major>\d+)\.(?<minor>\d+)\.?(?<extra>\S*)\z/.match(label)
     end
 
     def version_label
@@ -52,8 +58,29 @@ module Deployed
 
     private
 
+    def git_tag
+      cmd = 'git tag -l --points-at HEAD --sort -version:refname | head -1'
+      @git_tag ||= execute_command(cmd)
+    end
+
+    def git_rev
+      cmd = 'git rev-parse HEAD'
+      @git_rev ||= execute_command(cmd)
+    end
+
+    def git_branch
+      cmd = 'git rev-parse --abbrev-ref HEAD'
+      @git_branch ||= execute_command(cmd)
+    end
+
     def version(rank)
       version_hash ? version_hash[rank] : 0
+    end
+
+    def execute_command(cmd)
+      _stdin, stdout, _stderr, _wait_thr = Open3.popen3(cmd)
+      res = stdout.gets
+      res&.strip
     end
 
     def read_file(filename)
@@ -64,12 +91,13 @@ module Deployed
   end
 
   ENVIRONMENT = Rails.env
+
   REPO_DATA = RepoData.new
 
   VERSION_ID = REPO_DATA.version_label
 
   APP_NAME = 'Limber'
-  RELEASE_NAME = REPO_DATA.release.presence || 'unknown_release'
+  RELEASE_NAME = REPO_DATA.release.presence || 'LOCAL'
 
   MAJOR = REPO_DATA.major
   MINOR = REPO_DATA.minor
@@ -78,7 +106,10 @@ module Deployed
   COMMIT = REPO_DATA.revision.presence || 'unknown_revision'
   ABBREV_COMMIT = REPO_DATA.revision_short.presence || 'unknown_revision'
 
-  VERSION_STRING = "#{APP_NAME} #{VERSION_ID} [#{ENVIRONMENT}] #{BRANCH}@#{ABBREV_COMMIT}"
+  VERSION_STRING = "#{APP_NAME} #{VERSION_ID} [#{ENVIRONMENT}]"
+  VERSION_COMMIT = "#{BRANCH}@#{ABBREV_COMMIT}"
+  REPO_URL       = REPO_DATA.release_url.presence || '#'
+  HOSTNAME       = Socket.gethostname
 
   require 'ostruct'
   DETAILS = OpenStruct.new(

@@ -30,15 +30,17 @@ module LabwareCreators
 
     self.page = 'quadrant_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [{ transfers: [] }]
+    self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
+
+    validates :transfers, presence: true
 
     private
 
     def create_labware!
       plate_creation = api.pooled_plate_creation.create!(
-        parents:        parent_uuids,
-        child_purpose:  purpose_uuid,
-        user:           user_uuid
+        parents: parent_uuids,
+        child_purpose: purpose_uuid,
+        user: user_uuid
       )
 
       @child = plate_creation.child

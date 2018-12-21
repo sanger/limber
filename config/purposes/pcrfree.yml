@@ -8,43 +8,28 @@ PF Cherrypicked:
   :presenter_class: Presenters::StockPlatePresenter
 PF Shear:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Cherrypicked
 PF Post Shear:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Shear
 PF Post Shear XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
 PF End Prep:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Post Shear
 PF Lib:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::PermissivePresenter
   :creator_class: LabwareCreators::TaggedPlate
@@ -61,20 +46,15 @@ PF Lib:
   - PF End Prep
 PF Lib XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
 PF Lib XP2:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :suggest_library_pass_for:
   - limber_pcr_free
+  :label_template: plate_xp
   :parents:
   - PF Lib XP
   - PF Lib

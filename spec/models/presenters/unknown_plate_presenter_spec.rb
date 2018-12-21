@@ -7,7 +7,7 @@ RSpec.describe Presenters::UnknownPlatePresenter do
 
   subject do
     described_class.new(
-      api:     api,
+      api: api,
       labware: labware
     )
   end

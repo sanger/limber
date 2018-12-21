@@ -4,11 +4,11 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
 import QuadStamp from './components/QuadStamp.vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
+import axios from 'axios'
 
 Vue.use(BootstrapVue)
 
@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
    # once the majority of our components are vue based.
    */
   if ( document.getElementById('quadrant-stamp-page') ) {
+    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    Vue.prototype.$axios = axios
     /* The files-list element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
     new Vue({

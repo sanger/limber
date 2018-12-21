@@ -26,7 +26,7 @@ RSpec.shared_context 'a tag plate creator' do
           user: user_uuid,
           target: tag_plate_uuid,
           purpose: child_purpose_uuid,
-          parent:  plate_uuid
+          parent: plate_uuid
         }
       },
       body: '{}' # We don't care
