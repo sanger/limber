@@ -158,8 +158,20 @@ const Api = function (options) {
         descendants: hasMany(),
         parents: hasMany(),
         children: hasMany(),
+        comments: hasMany(),
       },
       methods: {}
+    }),
+    Comment: ApplicationRecord.extend({
+      static: { jsonapiType: 'comments' },
+      attrs: {
+        id: attr(),
+        createdAt: attr(),
+        updatedAt: attr(),
+        description: attr(),
+        title: attr(),
+        user: belongsTo(),
+      }
     }),
     User: ApplicationRecord.extend({
       static: { jsonapiType: 'users' },
