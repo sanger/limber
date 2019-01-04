@@ -4,8 +4,6 @@ import Vue from 'vue'
 import AssetComments from './components/AssetComments.vue'
 import ApiModule from 'shared/api'
 
-console.log(ApiModule)
-
 if (process.env.NODE_ENV == 'test') {
   // Vue generates warning if we aren't in the production environment
   // These clutter up the console, but we don't want to turn them off
@@ -33,38 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
    # once the majority of our components are vue based.
    */
   if ( document.getElementById('asset-comments') ) {
+    let commentsStore = { comments: undefined }
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
     var app = new Vue({
       el: '#asset-comments',
-      render: h => h(AssetComments, { props: { comments: [
-      {
-        id: '1234',
-        title: null,
-        description: 'This is a comment wich is quite long, and provides lots of information to pay attention to because it has horrid run on scentances',
-        createdAt: "2017-08-31T11:18:16+01:00",
-        updatedAt: "2017-08-31T11:18:16+01:00",
-        user: {
-          id: '12',
-          login: 'js1',
-          firstName: 'John',
-          lastName: 'Smith'
-        }
-      },
-      {
-        id: '12345',
-        title: null,
-        description: 'This is also a comment',
-        createdAt: "2017-09-31T11:18:16+01:00",
-        updatedAt: "2017-09-31T11:18:16+01:00",
-        user: {
-          id: '13',
-          login: 'js2',
-          firstName: 'Jane',
-          lastName: 'Smythe'
-        }
-      }
-    ] } })
+      data: commentsStore,
+      render: h => h(AssetComments)
     });
+    console.log(commentsStore)
+    commentsStore.comments = []
   }
 })

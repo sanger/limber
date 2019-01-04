@@ -22,20 +22,13 @@ const formatDate = function(date) {
 
 export default {
   name: 'AssetComments',
-  data () {
-    return {}
-  },
-  props: {
-    comments: { type: Array, required: false }
-  },
   computed: {
     noComments() { return this.comments && this.comments.length === 0 },
-    inProgress() { return !this.comments }
+    inProgress() { return !this.comments },
+    comments() { return this.$root.$data.comments }
   },
   filters: {
     formatDate: formatDate
-  },
-  methods: {
   }
 }
 </script>
