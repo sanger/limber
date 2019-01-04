@@ -2,11 +2,20 @@
 import { shallowMount } from '@vue/test-utils'
 
 import AssetComments from './AssetComments.vue'
+import localVue from 'test_support/base_vue.js'
+
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('AssetComments', () => {
+
   const wrapperFactory = function(comments) {
-    return shallowMount(AssetComments, { propsData: { comments: comments } })
+    const parent = {
+      data() {
+        return { comments }
+      }
+    }
+
+    return shallowMount(AssetComments, { parentComponent: parent })
   }
 
   it('renders a list of comments', () => {
