@@ -2,6 +2,7 @@
 
 import Vue from 'vue'
 import AssetComments from './components/AssetComments.vue'
+import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import ApiModule from 'shared/api'
 
 if (process.env.NODE_ENV == 'test') {
@@ -34,10 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let commentsStore = { comments: undefined }
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
-    var app = new Vue({
+    new Vue({
       el: '#asset-comments',
       data: commentsStore,
       render: h => h(AssetComments)
+    });
+    new Vue({
+      el: '#asset-comments-counter',
+      data: commentsStore,
+      render: h => h(AssetCommentsCounter)
     });
     console.log(commentsStore)
     commentsStore.comments = []

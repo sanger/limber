@@ -2,7 +2,6 @@
 import { shallowMount } from '@vue/test-utils'
 
 import AssetComments from './AssetComments.vue'
-import localVue from 'test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -68,7 +67,4 @@ describe('AssetComments', () => {
     expect(wrapper.find('.comments-list').find('.spinner-dark').exists()).toBe(true)
   })
 
-  // it('includes the content', () => {
-  //   expect(wrapper.find('.content-main').text()).toBe('content')
-  // })
 })

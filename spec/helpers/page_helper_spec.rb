@@ -17,5 +17,9 @@ RSpec.describe PageHelper do
     it 'returns a spinner for nil counts' do
       expect(count_badge(nil)).to eq('<span class="badge badge-pill badge-secondary">...</span>')
     end
+
+    it 'lets us customise the id' do
+      expect(count_badge(0, 'test')).to eq('<span class="badge badge-pill badge-secondary" id="test">0</span>')
+    end
   end
 end
