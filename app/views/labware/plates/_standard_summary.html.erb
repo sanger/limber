@@ -34,5 +34,9 @@
     <%= render partial: 'plates/samples_tab', locals: { plate_presenter: presenter } %>
   </div>
   <div class="tab-pane" id='files_tab' role="tabpanel"><div id='files-list'></div></div>
-  <div class="tab-pane" id='comments_tab' role="tabpanel"><div id='asset-comments'></div></div>
+  <div class="tab-pane" id='comments_tab' role="tabpanel">
+    <div id='asset-comments' data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"
+                             data-asset-id="<%= presenter.id %>">
+    </div>
+  </div>
 </div>

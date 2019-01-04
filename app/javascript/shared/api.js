@@ -179,6 +179,8 @@ const Api = function (options) {
         id: attr(),
         uuid: attr(),
         login: attr(),
+        firstName: attr(),
+        lastName: attr(),
       },
       methods: {}
     }),

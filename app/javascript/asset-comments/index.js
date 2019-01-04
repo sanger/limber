@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
+import commentStoreFactory from './comment-store'
 import ApiModule from 'shared/api'
 
 if (process.env.NODE_ENV == 'test') {
@@ -31,21 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
    # In general it looks like this is something we should consider
    # once the majority of our components are vue based.
    */
-  if ( document.getElementById('asset-comments') ) {
-    let commentsStore = { comments: undefined }
+  const assetElem = document.getElementById('asset-comments')
+
+  if ( assetElem ) {
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
+    const plateApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Plate
+    const commentStore = commentStoreFactory(plateApi, assetElem.dataset.assetId)
+
     new Vue({
       el: '#asset-comments',
-      data: commentsStore,
+      data: commentStore,
       render: h => h(AssetComments)
-    });
+    })
+
     new Vue({
       el: '#asset-comments-counter',
-      data: commentsStore,
+      data: commentStore,
       render: h => h(AssetCommentsCounter)
-    });
-    console.log(commentsStore)
-    commentsStore.comments = []
+    })
+
+    commentStore.refreshComments()
   }
 })
