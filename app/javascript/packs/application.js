@@ -8,6 +8,6 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Currently setting up each component as its own mini vue app.
-require("file-list")
-require("asset-comments")
-require("quadrant-stamp")
+require('file-list')
+require('asset-comments')
+require('quadrant-stamp')

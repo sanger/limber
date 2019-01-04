@@ -23,8 +23,8 @@ describe('AssetCommentsCounter', () => {
         id: '1234',
         title: null,
         description: 'This is a comment',
-        createdAt: "2017-08-31T11:18:16+01:00",
-        updatedAt: "2017-08-31T11:18:16+01:00",
+        createdAt: '2017-08-31T11:18:16+01:00',
+        updatedAt: '2017-08-31T11:18:16+01:00',
         user: {
           id: '12',
           login: 'js1',
@@ -36,8 +36,8 @@ describe('AssetCommentsCounter', () => {
         id: '12345',
         title: null,
         description: 'This is also a comment',
-        createdAt: "2017-09-30T11:18:16+01:00",
-        updatedAt: "2017-09-30T11:18:16+01:00",
+        createdAt: '2017-09-30T11:18:16+01:00',
+        updatedAt: '2017-09-30T11:18:16+01:00',
         user: {
           id: '13',
           login: 'js2',
@@ -46,18 +46,21 @@ describe('AssetCommentsCounter', () => {
         }
       }
     ])
+
     expect(wrapper.find('.badge.badge-success').exists()).toBe(true)
     expect(wrapper.find('.badge.badge-success').text()).toContain('2')
   })
 
   it('renders a greyed out zero indicating no comments', () => {
     const wrapper = wrapperFactory([])
+
     expect(wrapper.find('.badge.badge-secondary').exists()).toBe(true)
     expect(wrapper.find('.badge.badge-secondary').text()).toContain('0')
   })
 
   it('renders greyed out dots indicating searching for comments', () => {
     const wrapper = shallowMount(AssetCommentsCounter)
+
     expect(wrapper.find('.badge.badge-secondary').exists()).toBe(true)
     expect(wrapper.find('.badge.badge-secondary').text()).toContain('...')
   })

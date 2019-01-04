@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var app = new Vue({
       el: '#files-list',
       render: h => h(FileList)
-    });
-    $('#files-tab-link').on('click',function() { app.$children[0].fetchData(); });
+    })
+    $('#files-tab-link').on('click',function() { app.$children[0].fetchData() })
   }
 })

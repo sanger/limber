@@ -1,38 +1,38 @@
 // // Import the component being tested
 import commentStoreFactory from './comment-store.js'
-import { plateFactory, wellFactory, requestFactory } from 'test_support/factories.js'
+import { plateFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
 
 describe('commentStore', () => {
 
   const uncommentedPlate = { data: plateFactory({ comments: [] }) }
   const commentedPlate = { data: plateFactory({ comments: [{
-        id: '1234',
-        title: null,
-        description: 'This is a comment',
-        createdAt: "2017-08-31T11:18:16+01:00",
-        updatedAt: "2017-08-31T11:18:16+01:00",
-        user: {
-          id: '12',
-          login: 'js1',
-          firstName: 'John',
-          lastName: 'Smith'
-        }
-      },
-      {
-        id: '12345',
-        title: null,
-        description: 'This is also a comment',
-        createdAt: "2017-09-30T11:18:16+01:00",
-        updatedAt: "2017-09-30T11:18:16+01:00",
-        user: {
-          id: '13',
-          login: 'js2',
-          firstName: 'Jane',
-          lastName: 'Smythe'
-        }
-      }]
-    })
+    id: '1234',
+    title: null,
+    description: 'This is a comment',
+    createdAt: '2017-08-31T11:18:16+01:00',
+    updatedAt: '2017-08-31T11:18:16+01:00',
+    user: {
+      id: '12',
+      login: 'js1',
+      firstName: 'John',
+      lastName: 'Smith'
+    }
+  },
+  {
+    id: '12345',
+    title: null,
+    description: 'This is also a comment',
+    createdAt: '2017-09-30T11:18:16+01:00',
+    updatedAt: '2017-09-30T11:18:16+01:00',
+    user: {
+      id: '13',
+      login: 'js2',
+      firstName: 'Jane',
+      lastName: 'Smythe'
+    }
+  }]
+  })
   }
   const mockApiFactory = function(promise) {
     return {

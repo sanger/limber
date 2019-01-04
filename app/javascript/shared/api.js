@@ -10,7 +10,7 @@
  * const Api = ApiModule(baseUrl: 'http://sequencescape.url/port')
  * var plate = Api.Plate.find('1')
  */
- const {
+const {
   JSORMBase,
   attr,
   belongsTo,

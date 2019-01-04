@@ -23,8 +23,8 @@ describe('AssetComments', () => {
         id: '1234',
         title: null,
         description: 'This is a comment',
-        createdAt: "2017-08-31T11:18:16+01:00",
-        updatedAt: "2017-08-31T11:18:16+01:00",
+        createdAt: '2017-08-31T11:18:16+01:00',
+        updatedAt: '2017-08-31T11:18:16+01:00',
         user: {
           id: '12',
           login: 'js1',
@@ -36,8 +36,8 @@ describe('AssetComments', () => {
         id: '12345',
         title: null,
         description: 'This is also a comment',
-        createdAt: "2017-09-30T11:18:16+01:00",
-        updatedAt: "2017-09-30T11:18:16+01:00",
+        createdAt: '2017-09-30T11:18:16+01:00',
+        updatedAt: '2017-09-30T11:18:16+01:00',
         user: {
           id: '13',
           login: 'js2',
@@ -46,6 +46,7 @@ describe('AssetComments', () => {
         }
       }
     ])
+
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').findAll('li').length).toBe(2)
     expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('This is a comment')
@@ -55,6 +56,7 @@ describe('AssetComments', () => {
 
   it('renders a message when there are no comments', () => {
     const wrapper = wrapperFactory([])
+
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').findAll('li').length).toBe(1)
     expect(wrapper.find('.comments-list').findAll('li.no-comment').length).toBe(1)
@@ -63,6 +65,7 @@ describe('AssetComments', () => {
 
   it('renders a spinner when comments are not loaded', () => {
     const wrapper = shallowMount(AssetComments)
+
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').find('.spinner-dark').exists()).toBe(true)
   })
