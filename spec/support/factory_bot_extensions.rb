@@ -23,8 +23,8 @@ module FactoryBot
     def with_has_many_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
-          send(association + '_count', 0)
-          send(association + '_actions', actions)
+          send(association + '_count') { 0 }
+          send(association + '_actions') { actions }
         end
       end
       names.each do |association|
@@ -43,8 +43,8 @@ module FactoryBot
     def with_belongs_to_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
-          send(association + '_uuid', "#{association}-uuid")
-          send(association + '_actions', actions)
+          send(association + '_uuid') { "#{association}-uuid" }
+          send(association + '_actions') { actions }
         end
       end
       names.each do |association|

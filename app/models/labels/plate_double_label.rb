@@ -5,7 +5,7 @@ class Labels::PlateDoubleLabel < Labels::Base
     {
       right_text: labware.stock_plate.barcode.human,
       left_text: labware.barcode.human,
-      barcode: labware.barcode.ean13
+      barcode: labware.barcode.machine
     }
   end
 

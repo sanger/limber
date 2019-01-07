@@ -1,0 +1,14 @@
+---
+# In separate file as shared between many pipelines
+LB Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - LB Lib Pool
+  - GnT Pico Lib Pool XP
+  - scRNA Lib Pool XP
+  - scRNA-384 Lib Pool XP

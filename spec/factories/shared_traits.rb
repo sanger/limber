@@ -7,7 +7,7 @@ FactoryBot.define do
 
   trait :api_object do
     transient do
-      api_root 'http://example.com:3000/'
+      api_root { 'http://example.com:3000/' }
 
       api do
         Sequencescape::Api.new(
@@ -16,13 +16,13 @@ FactoryBot.define do
         )
       end
 
-      resource_actions ['read']
-      named_actions []
+      resource_actions { ['read'] }
+      named_actions { [] }
       resource_url  { api_root + uuid }
     end
 
-    json_render JsonRenderer
-    json_root 'please define on factory'
+    json_render { JsonRenderer }
+    json_root { 'please define on factory' }
     uuid { SecureRandom.uuid }
 
     actions do
@@ -55,7 +55,7 @@ FactoryBot.define do
   trait :barcoded_v2 do
     transient do
       barcode_number
-      barcode_prefix 'DN'
+      barcode_prefix { 'DN' }
       barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
     end
 

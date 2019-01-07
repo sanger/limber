@@ -41,7 +41,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   let(:form_attributes) do
     {
       purpose_uuid: child_purpose_uuid,
-      parent_uuid:  parent_uuid,
+      parent_uuid: parent_uuid,
       user_uuid: user_uuid
     }
   end

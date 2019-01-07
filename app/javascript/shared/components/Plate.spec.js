@@ -6,7 +6,7 @@ import Plate from 'shared/components/Plate.vue'
 // use any test runner / assertion library combo you prefer
 describe('Plate', () => {
   const myCaption = 'Caption'
-  const wrapper = shallowMount(Plate, { propsData: { columns: 12, rows: 8, caption: myCaption } })
+  const wrapper = shallowMount(Plate, { propsData: { columns: 12, rows: 8, caption: myCaption, wells: { 'B3': {} } } })
 
   // Inspect the raw component options
   it('renders a plate', () => {
@@ -22,7 +22,7 @@ describe('Plate', () => {
   })
 
   it('uses the provided dimensions', () => {
-    expect(wrapper.find('table.plate-view').findAll('div.well').length).toBe(96)
+    expect(wrapper.find('table.plate-view').findAll('lb-well-stub').length).toBe(96)
   })
 
   it('Renders rows as letters', () => {

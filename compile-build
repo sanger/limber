@@ -11,7 +11,7 @@ git tag -l --points-at HEAD --sort -version:refname | head -1 > TAG
 git rev-parse --abbrev-ref HEAD > BRANCH
 echo 'Compiling tar.gz'
 tar \
-  --exclude='./*.swp' \
+  --exclude='*.swp' \
   --exclude='./.bundle' \
   --exclude='./.git' \
   --exclude='./.gitignore' \
@@ -19,10 +19,10 @@ tar \
   --exclude='./.rubocop*' \
   --exclude='./.tags' \
   --exclude='./.travis.yml' \
-  --exclude='./README.markdown' \
+  --exclude='./README*' \
   --exclude='./compile-build' \
   --exclude='./coverage' \
-  --exclude='./limber.sublime-project' \
+  --exclude='./*.sublime-project' \
   --exclude='./log/*' \
   --exclude='./node_modules' \
   --exclude='./spec' \

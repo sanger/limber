@@ -23,20 +23,20 @@ class CreationController < ApplicationController
     creator_params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(creator_params)
     if @labware_creator.save
+      flash.notice = 'New empty labware added to the system.'
       respond_to do |format|
-        format.html { redirect_to_creator_child(@labware_creator) }
+        format.json do
+          render json: {
+            redirect: redirection_path(@labware_creator),
+            message: 'Plate created, redirecting...'
+          }
+        end
+        format.html { redirect_to redirection_path(@labware_creator) }
       end
     else
       flash.now.alert = @labware_creator.errors.full_messages
       render @labware_creator.page
     end
-  end
-
-  def redirect_to_creator_child(creator)
-    redirect_to(
-      redirection_path(creator),
-      notice: 'New empty labware added to the system.'
-    )
   end
 
   def labware_creator(form_attributes)

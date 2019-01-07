@@ -15,9 +15,6 @@ scRNA-384 Stock:
   :size: 384
 scRNA cDNA-XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - scRNA Stock
   - GnT Stock
@@ -25,9 +22,6 @@ scRNA cDNA-XP:
   - limber_scrna
 scRNA-384 cDNA-XP:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::MinimalPlatePresenter
   :label_template: plate_6mm_double
   :size: 384
@@ -35,16 +29,10 @@ scRNA-384 cDNA-XP:
   - scRNA-384 Stock
 scRNA End Prep:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :parents:
   - scRNA cDNA-XP
 scRNA-384 End Prep:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::MinimalPlatePresenter
   :label_template: plate_6mm_double
   :size: 384
@@ -52,9 +40,6 @@ scRNA-384 End Prep:
   - scRNA-384 cDNA-XP
 scRNA Lib PCR:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :parents:
@@ -70,9 +55,6 @@ scRNA Lib PCR:
   - limber_scrna
 scRNA-384 Lib PCR:
   :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :creator_class: LabwareCreators::TaggedPlate
   :label_template: plate_6mm_double
@@ -111,13 +93,3 @@ scRNA Lib Pool XP:
   :default_printer_type: :tube
   :parents:
   - scRNA Lib Pool
-scRNA Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
-  :creator_class: LabwareCreators::FinalTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - scRNA Lib Pool XP
-  - scRNA-384 Lib Pool XP

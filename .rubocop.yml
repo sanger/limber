@@ -1,9 +1,10 @@
 inherit_from: .rubocop_todo.yml
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   Exclude:
     - node_modules/**/*
     - bin/**/*
+    - vendor/**/*
 Rails:
   Enabled: true
 # We're not actually using Rails methods here.

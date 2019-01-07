@@ -6,7 +6,7 @@ require_relative '../support/factory_bot_extensions'
 FactoryBot.define do
   factory :request, class: Sequencescape::Api::V2::Request, traits: [:uuid] do
     transient do
-      pcr_cycles 10
+      pcr_cycles { 10 }
       sequence(:submission_id) { |i| i }
       sequence(:order_id) { |i| i }
       include_submissions { false }
@@ -14,9 +14,9 @@ FactoryBot.define do
 
     skip_create
     sequence(:id, &:to_s)
-    role 'WGS'
-    priority 0
-    state 'pending'
+    role { 'WGS' }
+    priority { 0 }
+    state { 'pending' }
     options do
       {
         'pcr_cycles' => pcr_cycles,
@@ -26,8 +26,8 @@ FactoryBot.define do
       }
     end
     request_type { create :request_type }
-    primer_panel nil
-    pre_capture_pool nil
+    primer_panel { nil }
+    pre_capture_pool { nil }
     uuid { SecureRandom.uuid }
     submission do
       create :v2_submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
@@ -71,32 +71,36 @@ FactoryBot.define do
   factory :primer_panel, class: Sequencescape::Api::V2::PrimerPanel do
     skip_create
 
-    name 'example panel'
-    programs('pcr 1' => { 'name' => 'example program', 'duration' => 45 },
-             'pcr 2' => { 'name' => 'other program', 'duration' => 20 })
+    name { 'example panel' }
+    programs do
+      {
+        'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
+        'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
+      }
+    end
   end
 
   factory :pre_capture_pool, class: Sequencescape::Api::V2::PreCapturePool do
     skip_create
-    id 1
-    uuid 'pre-capture-pool'
+    id { 1 }
+    uuid { 'pre-capture-pool' }
   end
 
   factory :request_type, class: Sequencescape::Api::V2::RequestType do
     skip_create
-    name 'Request Type'
-    key 'request_type'
-    for_multiplexing false
+    name { 'Request Type' }
+    key { 'request_type' }
+    for_multiplexing { false }
 
     factory :library_request_type do
-      name 'Limber WGS'
-      key 'limber_wgs'
+      name { 'Limber WGS' }
+      key { 'limber_wgs' }
     end
 
     factory :mx_request_type do
-      name 'Limber Multiplexing'
-      key 'limber_multiplexing'
-      for_multiplexing true
+      name { 'Limber Multiplexing' }
+      key { 'limber_multiplexing' }
+      for_multiplexing { true }
     end
   end
 end
