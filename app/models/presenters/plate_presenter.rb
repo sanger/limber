@@ -111,6 +111,10 @@ class Presenters::PlatePresenter
 
   private
 
+  def libraries_passable?
+    tagged? && passable_request_types.present?
+  end
+
   def multiple_requests_per_well?
     wells.any?(&:multiple_requests?)
   end

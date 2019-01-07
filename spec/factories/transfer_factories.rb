@@ -2,12 +2,12 @@
 
 FactoryBot.define do
   factory :transfer, class: Sequencescape::Transfer, traits: [:api_object] do
-    json_root 'transfer'
+    json_root { 'transfer' }
 
     transient do
-      destination_uuid 'destination-uuid'
-      source_uuid 'source-uuid'
-      user_uuid 'user-uuid'
+      destination_uuid { 'destination-uuid' }
+      source_uuid { 'source-uuid' }
+      user_uuid { 'user-uuid' }
     end
 
     factory :transfer_between_tubes_by_submission do
@@ -24,7 +24,7 @@ FactoryBot.define do
 
     factory :transfer_to_mx_tubes_by_submission do
       transient do
-        target_tubes_count 2
+        target_tubes_count { 2 }
         source_wells { WellHelpers.column_order[0, target_tubes_count] }
       end
       source { associated :plate, uuid: source_uuid }
@@ -54,18 +54,18 @@ FactoryBot.define do
     end
 
     factory :transfer_collection do
-      size 2
+      size { 2 }
 
       transient do
-        json_root nil
-        resource_actions %w[read first last]
-        associated_on 'transfers_to_tubes'
+        json_root { nil }
+        resource_actions { %w[read first last] }
+        associated_on { 'transfers_to_tubes' }
         plate_uuid   { SecureRandom.uuid }
         # While resources can be paginated, wells wont be.
         # Furthermore, we trust the api gem to handle that side of things.
         resource_url { "#{api_root}#{plate_uuid}/#{associated_on}/1" }
-        uuid nil
-        transfer_factory :aliquot
+        uuid { nil }
+        transfer_factory { :aliquot }
       end
 
       transfers do

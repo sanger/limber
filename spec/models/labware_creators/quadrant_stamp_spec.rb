@@ -36,7 +36,7 @@ RSpec.describe LabwareCreators::QuadrantStamp do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  parent_uuid
+        parent_uuid: parent_uuid
       }
     end
 

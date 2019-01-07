@@ -6,16 +6,18 @@
 const webpack = require('webpack')
 const { basename, dirname, join, relative, resolve } = require('path')
 const { sync } = require('glob')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const ManifestPlugin = require('webpack-manifest-plugin')
 const extname = require('path-complete-extname')
 const { env, settings, output, loadersDir } = require('./configuration.js')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const extensionGlob = `**/*{${settings.extensions.join(',')}}*`
 const entryPath = join(settings.source_path, settings.source_entry_path)
 const packPaths = sync(join(entryPath, extensionGlob))
 
 module.exports = {
+  mode: 'development',
   entry: packPaths.reduce(
     (map, entry) => {
       const localMap = map
@@ -37,11 +39,12 @@ module.exports = {
 
   plugins: [
     new webpack.EnvironmentPlugin(JSON.parse(JSON.stringify(env))),
-    new ExtractTextPlugin(env.NODE_ENV === 'production' ? '[name]-[hash].css' : '[name].css'),
+    new MiniCssExtractPlugin(env.NODE_ENV === 'production' ? '[name]-[hash].css' : '[name].css'),
     new ManifestPlugin({
       publicPath: output.publicPath,
       writeToFileEmit: true
-    })
+    }),
+    new VueLoaderPlugin()
   ],
 
   resolve: {

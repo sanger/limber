@@ -45,7 +45,7 @@ module LabwareCreators
       {
         'source_asset' => source,
         'target_asset' => target,
-        'submission'   => submission
+        'submission' => submission
       }
     end
 

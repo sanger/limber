@@ -1,17 +1,22 @@
 {
   "presets": [
-    ["env", {
+    [
+      "@babel/preset-env",{
       "modules": false,
       "targets": {
-        "browsers": "> 1%",
-        "uglify": true
+        // Latest versions that run on WindowsXP
+        "chrome": 49,
+        "firefox": 52,
+        "browsers": "> 1%"
       },
-      "useBuiltIns": true
+      "shippedProposals": true,
+      "useBuiltIns": "usage",
+      "forceAllTransforms": true
     }]
   ],
 
   "plugins": [
-    "syntax-dynamic-import",
-    ["transform-class-properties", { "spec": true }]
+    "@babel/syntax-dynamic-import",
+    ["@babel/plugin-proposal-class-properties", { "spec": true }]
   ]
 }
