@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 namespace :application do
-  task setup: ['config:generate']
+  task deploy: ['config:generate']
 end
