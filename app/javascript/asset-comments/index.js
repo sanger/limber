@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
+import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
 import commentStoreFactory from './comment-store'
 import ApiModule from 'shared/api'
 
@@ -50,6 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
       el: '#asset-comments-counter',
       data: commentStore,
       render: h => h(AssetCommentsCounter)
+    })
+
+    new Vue({
+      el: '#asset-comments-add-form',
+      data: commentStore,
+      render: h => h(AssetCommentsAddForm)
     })
 
     commentStore.refreshComments()
