@@ -2,6 +2,8 @@
 import commentStoreFactory from './comment-store.js'
 import { plateFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
 
 describe('commentStore', () => {
 
@@ -59,7 +61,7 @@ describe('commentStore', () => {
 
   it('retrieves comments for an uncommented asset when prompted', async () => {
     let api = mockApiFactory(Promise.resolve(uncommentedPlate))
-    let commentStore = commentStoreFactory(api, '123')
+    let commentStore = commentStoreFactory(null, api, '123', 'user_id')
 
     commentStore.refreshComments()
 
@@ -73,7 +75,7 @@ describe('commentStore', () => {
 
   it('retrieves comments for a commented asset when prompted', async () => {
     let api = mockApiFactory(Promise.resolve(commentedPlate))
-    let commentStore = commentStoreFactory(api, '123')
+    let commentStore = commentStoreFactory(null, api, '123', 'user_id')
 
     commentStore.refreshComments()
 
@@ -83,5 +85,60 @@ describe('commentStore', () => {
     expect(api.found).toEqual('123')
     expect(commentStore.comments.length).toEqual(2)
 
+  })
+
+  it('retrieves comments after adding a new comment', async () => {
+    let api = mockApiFactory(Promise.resolve(commentedPlate))
+    let mock = new MockAdapter(axios)
+    let commentStore = commentStoreFactory(axios, api, '123', 'user_id')
+
+    expect(commentStore.comments).toEqual(undefined)
+
+    mock.onPost().reply((_config) =>{
+      return [201, {}]
+    })
+
+    commentStore.addComment('new description')
+
+    await flushPromises()
+
+    expect(commentStore.comments.length).toEqual(2)
+  })
+
+  it('posts comments to the sequencescape api', async () => {
+    let api = mockApiFactory(Promise.resolve(commentedPlate))
+    let mock = new MockAdapter(axios)
+    let commentStore = commentStoreFactory(axios, api, '123', 'user_id')
+
+    const expectedPayload = {
+      'data': {
+        'type': 'comments',
+        'attributes': {
+          'description': 'new description'
+        },
+        'relationships': {
+          'commentable': {
+            'data': { 'type': 'assets', 'id': '123' }
+          },
+          'user': {
+            'data': { 'type': 'users', 'id': 'user_id' }
+          }
+        }
+      }
+    }
+
+    mock.onPost().reply((request) =>{
+      // NB in practice the axios instance is configured to the sequencescape baseURL
+      // whereas the mock adapter doesn't expose this
+      expect(request.url).toEqual('comments')
+      expect(request.data).toEqual(JSON.stringify(expectedPayload))
+      return [201, {}]
+    })
+
+    commentStore.addComment('new description')
+
+    await flushPromises()
+
+    expect(mock.history.post.length).toBe(1);
   })
 })

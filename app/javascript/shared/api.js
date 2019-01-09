@@ -170,8 +170,10 @@ const Api = function (options) {
         updatedAt: attr(),
         description: attr(),
         title: attr(),
+        commentable: belongsTo(),
         user: belongsTo(),
-      }
+      },
+      methods: {}
     }),
     User: ApplicationRecord.extend({
       static: { jsonapiType: 'users' },

@@ -9,7 +9,10 @@ describe('AssetCommentsAddForm', () => {
   const wrapperFactory = function(comments) {
     const parent = {
       data() {
-        return { comments }
+        return {
+          comments,
+          addComment(newDescription) { this.commentAdded = newDescription }
+        }
       }
     }
 
@@ -17,9 +20,36 @@ describe('AssetCommentsAddForm', () => {
   }
 
   it('renders a form for adding comments', () => {
-    const wrapper = wrapperFactory([])
+    let wrapper = wrapperFactory([])
 
     expect(wrapper.find('.form-control').exists()).toBe(true)
     expect(wrapper.find('.btn.btn-success.btn-lg.btn-block').exists()).toBe(true)
+    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeTruthy()
+  })
+
+  it('enables the add comment submit button with valid input', () => {
+    let wrapper = wrapperFactory([])
+
+    wrapper.setData({ assetComment: 'Test comment' })
+
+    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeFalsy()
+  })
+
+  it('disables the add comment submit button when submission started', () => {
+    let wrapper = wrapperFactory([])
+
+    wrapper.setData({ assetComment: 'Test comment', isSubmitted: true })
+
+    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeTruthy()
+  })
+
+  it('submits a comment on clicking the submit button', () => {
+    let wrapper = wrapperFactory()
+
+    wrapper.setData({ assetComment: 'Test comment' })
+
+    wrapper.find('.btn').element.click()
+
+    expect(wrapper.vm.$root.$data.commentAdded).toEqual('Test comment')
   })
 })

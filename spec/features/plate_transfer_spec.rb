@@ -6,7 +6,7 @@ RSpec.feature 'Plate transfer', js: true do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
-  let(:user)              { json :user, uuid: user_uuid }
+  let(:user)              { create :user, uuid: user_uuid }
   let(:swipecard)         { 'abcdef' }
   let(:robot_barcode)     { 'robot_barcode' }
   let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }

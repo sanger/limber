@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.feature 'Charge and pass libraries', js: true do
   has_a_working_api
 
-  let(:user)           { json :user, uuid: user_uuid }
+  let(:user)           { create :user, uuid: user_uuid }
   let(:user_uuid)      { SecureRandom.uuid }
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }

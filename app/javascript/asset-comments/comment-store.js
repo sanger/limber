@@ -1,5 +1,6 @@
 // Shared object for retrieval of comments from SequenceScape API
-const commentStoreFactory = function(commentApi, assetId) {
+
+const commentStoreFactory = function(axiosInstance, commentApi, assetId, userId) {
   return {
     comments: undefined,
 
@@ -8,6 +9,32 @@ const commentStoreFactory = function(commentApi, assetId) {
       this.comments = (
         await commentApi.includes({ comments: 'user' }).find(assetId)
       ).data.comments
+      return true
+    },
+    async addComment(newDescription) {
+      let payload = { 'data': {
+        'type': 'comments',
+        'attributes': {
+          'description': newDescription
+        },
+        'relationships': {
+          'commentable': {
+            'data': { 'type': 'assets', 'id': assetId }
+          },
+          'user': {
+            'data': { 'type': 'users', 'id': userId }
+          }
+        }
+      }}
+
+      await axiosInstance({
+        method: 'post',
+        url:'comments',
+        data: payload
+      })
+
+      await this.refreshComments()
+
       return true
     }
   }

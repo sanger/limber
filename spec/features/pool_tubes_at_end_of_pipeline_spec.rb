@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.feature 'Pool tubes at end of pipeline', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { json :user, uuid: user_uuid }
+  let(:user)                  { create :user, uuid: user_uuid }
   let(:user_swipecard)        { 'abcdef' }
   let(:tube_barcode)          { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:sibling_barcode)       { '1234567890123' }

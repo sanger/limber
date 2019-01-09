@@ -6,6 +6,7 @@ import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
 import commentStoreFactory from './comment-store'
 import ApiModule from 'shared/api'
+import axios from 'axios'
 
 if (process.env.NODE_ENV == 'test') {
   // Vue generates warning if we aren't in the production environment
@@ -39,7 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
     const plateApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Plate
-    const commentStore = commentStoreFactory(plateApi, assetElem.dataset.assetId)
+    const userId = document.cookie.match(/; user_id=([^;]+)/)[1]
+    const axiosInstance = axios.create({
+      baseURL: assetElem.dataset.sequencescapeApi,
+      timeout: 10000,
+      headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
+    })
+    const commentStore = commentStoreFactory(axiosInstance, plateApi, assetElem.dataset.assetId, userId)
 
     new Vue({
       el: '#asset-comments',
