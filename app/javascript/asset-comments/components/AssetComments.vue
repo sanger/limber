@@ -1,6 +1,7 @@
 <template>
-  <ul class="comments-list list-group">
+  <ul class="comments-list list-group list-group-flush">
     <li v-for="comment in sortedComments" class="list-group-item">
+      <div class="mb-1"><strong>{{ comment.title }}</strong></div>
       <div class="mb-1" style="white-space: pre">{{ comment.description }}</div>
       <div class="d-flex w-100 justify-content-between text-muted ">
         <small class="user-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.login }})</small>

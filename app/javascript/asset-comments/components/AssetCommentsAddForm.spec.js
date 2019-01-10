@@ -11,12 +11,12 @@ describe('AssetCommentsAddForm', () => {
       data() {
         return {
           comments,
-          addComment(newDescription) { this.commentAdded = newDescription }
+          addComment(newTitle, newDescription) { this.commentAdded = 'Test comment' }
         }
       }
     }
 
-    return shallowMount(AssetCommentsAddForm, { parentComponent: parent })
+    return shallowMount(AssetCommentsAddForm, { parentComponent: parent, propsData: { commentTitle: 'Test title' } })
   }
 
   it('renders a form for adding comments', () => {
@@ -44,7 +44,7 @@ describe('AssetCommentsAddForm', () => {
   })
 
   it('submits a comment on clicking the submit button', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory([])
 
     wrapper.setData({ assetComment: 'Test comment' })
 

@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new Vue({
       el: '#asset-comments-add-form',
       data: commentStore,
-      render: h => h(AssetCommentsAddForm)
+      render (h) { return h(AssetCommentsAddForm, { props: this.$el.dataset }) }
     })
 
     commentStore.refreshComments()

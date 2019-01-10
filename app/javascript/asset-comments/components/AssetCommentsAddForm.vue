@@ -18,15 +18,18 @@
         inProgress: false,
       }
     },
+    props: {
+      commentTitle: { type: String, required: true }
+    },
     computed: {
       isDisabled() {
         return this.inProgress || this.assetComment === ''
-      }
+      },
     },
     methods: {
       async submit() {
         this.inProgress=true
-        await this.$root.$data.addComment(this.assetComment)
+        await this.$root.$data.addComment(this.commentTitle, this.assetComment)
         // clear and enable the add comment form
         this.assetComment=undefined
         this.inProgress=false

@@ -11,10 +11,11 @@ const commentStoreFactory = function(axiosInstance, commentApi, assetId, userId)
       ).data.comments
       return true
     },
-    async addComment(newDescription) {
+    async addComment(newTitle, newDescription) {
       let payload = { 'data': {
         'type': 'comments',
         'attributes': {
+          'title': newTitle,
           'description': newDescription
         },
         'relationships': {
