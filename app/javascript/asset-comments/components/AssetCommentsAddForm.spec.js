@@ -38,7 +38,7 @@ describe('AssetCommentsAddForm', () => {
   it('disables the add comment submit button when submission started', () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.setData({ assetComment: 'Test comment', isSubmitted: true })
+    wrapper.setData({ assetComment: 'Test comment', inProgress: true })
 
     expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeTruthy()
   })

@@ -1,7 +1,7 @@
 <template>
   <ul class="comments-list list-group">
-    <li v-for="comment in comments" class="list-group-item">
-      <div class="mb-1">{{ comment.description }}</div>
+    <li v-for="comment in sortedComments" class="list-group-item">
+      <div class="mb-1" style="white-space: pre">{{ comment.description }}</div>
       <div class="d-flex w-100 justify-content-between text-muted ">
         <small class="user-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.login }})</small>
         <small class="comment-date">{{ comment.createdAt | formatDate }}</small>
@@ -25,7 +25,14 @@ export default {
   computed: {
     noComments() { return this.comments && this.comments.length === 0 },
     inProgress() { return !this.comments },
-    comments() { return this.$root.$data.comments }
+    comments() { return this.$root.$data.comments },
+    sortedComments() {
+      if(this.comments) {
+        return this.comments.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt)
+        })
+      }
+    },
   },
   filters: {
     formatDate: formatDate
