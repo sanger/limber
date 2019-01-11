@@ -96,7 +96,7 @@ describe('commentStore', () => {
       return [201, {}]
     })
 
-    commentStore.addComment('new description')
+    commentStore.addComment('new title', 'new description')
 
     await flushPromises()
 
@@ -138,6 +138,6 @@ describe('commentStore', () => {
 
     await flushPromises()
 
-    expect(mock.history.post.length).toBe(1);
+    expect(mock.history.post.length).toBe(1)
   })
 })

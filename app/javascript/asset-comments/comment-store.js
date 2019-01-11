@@ -32,6 +32,13 @@ const commentStoreFactory = function(axiosInstance, commentApi, assetId, userId)
         method: 'post',
         url:'comments',
         data: payload
+      }).then((response)=>{
+        // TODO: what to do with response
+        this.refreshComments()
+      }).catch((error)=>{
+        // TODO: what to do with error
+        // console.log(error)
+        return false
       })
 
       await this.refreshComments()

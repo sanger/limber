@@ -1,5 +1,6 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import localVue from 'test_support/base_vue.js'
+import { mount } from '@vue/test-utils'
 
 import AssetCommentsAddForm from './AssetCommentsAddForm.vue'
 // Here are some Jasmine 2.0 tests, though you can
@@ -11,36 +12,46 @@ describe('AssetCommentsAddForm', () => {
       data() {
         return {
           comments,
-          addComment(newTitle, newDescription) { this.commentAdded = 'Test comment' }
+          addComment(newTitle, newDescription) { }
         }
       }
     }
 
-    return shallowMount(AssetCommentsAddForm, { parentComponent: parent, propsData: { commentTitle: 'Test title' } })
+    return mount(AssetCommentsAddForm, { localVue, parentComponent: parent, propsData: { commentTitle: 'Test title' } })
   }
+
+  it('correctly sets the state when created', () => {
+    let wrapper = wrapperFactory([])
+
+    expect(wrapper.vm.state).toBe('pending')
+  })
 
   it('renders a form for adding comments', () => {
     let wrapper = wrapperFactory([])
 
-    expect(wrapper.find('.form-control').exists()).toBe(true)
-    expect(wrapper.find('.btn.btn-success.btn-lg.btn-block').exists()).toBe(true)
-    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('textarea').exists()).toBe(true)
+    expect(wrapper.find('textarea').text()).toEqual('')
+    expect(wrapper.find('button').exists()).toBe(true)
+    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
   it('enables the add comment submit button with valid input', () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.setData({ assetComment: 'Test comment' })
+    wrapper.setData({ assetComment: 'Test comment', state: 'pending' })
 
-    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeFalsy()
+    expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
+    expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
-  it('disables the add comment submit button when submission started', () => {
+  it('disables the add comment submit button once submission has started', () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.setData({ assetComment: 'Test comment', inProgress: true })
+    wrapper.setData({ assetComment: 'Test comment', state: 'busy' })
 
-    expect(wrapper.find('.btn').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').text()).toEqual('Sending...')
   })
 
   it('submits a comment on clicking the submit button', () => {
@@ -48,8 +59,11 @@ describe('AssetCommentsAddForm', () => {
 
     wrapper.setData({ assetComment: 'Test comment' })
 
-    wrapper.find('.btn').element.click()
+    wrapper.find('button').element.click()
 
-    expect(wrapper.vm.$root.$data.commentAdded).toEqual('Test comment')
+    expect(wrapper.vm.state).toEqual('busy')
   })
+
+  // TODO: need a test for successful submission
+  // TODO: need a test for a failed submission
 })

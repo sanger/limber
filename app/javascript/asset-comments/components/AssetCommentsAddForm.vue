@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="form-group form-row">
-      <textarea maxlength="65535" class="form-control" type="text" id="asset_comment" name="asset_comment" v-model.trim="assetComment" placeholder="e.g. any special instructions or information" tabindex="1"/>
+      <b-form-textarea name="asset_comment_textarea" id="asset_comment_textarea" v-model.trim="assetComment" v-on:keypress="checkState()" placeholder="enter a new comment here..." :rows="2" :max-rows="5" maxlength="65535" tabindex="1"></b-form-textarea>
     </div>
-    <button class="btn btn-success btn-lg btn-block" v-on:click="submit" v-bind:disabled="isDisabled">Add comment</button>
+    <b-button name="asset_comment_submit_button" id="asset_comment_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
   </div>
 </template>
 
@@ -15,24 +15,60 @@
     data: function () {
       return {
         assetComment: '',
-        inProgress: false,
+        state: 'pending'
       }
     },
     props: {
       commentTitle: { type: String, required: true }
     },
     computed: {
-      isDisabled() {
-        return this.inProgress || this.assetComment === ''
+      buttonText() {
+        return {
+            'pending': 'Add Comment to Sequencescape',
+            'busy': 'Sending...',
+            'success': 'Comment successfully added',
+            'failure': 'Failed to add comment, retry?'
+        }[this.state]
       },
+      buttonStyle() {
+        return {
+          'pending': 'primary',
+          'busy': 'outline-primary',
+          'success': 'success',
+          'failure': 'danger'
+        }[this.state]
+      },
+      disabled() {
+        return {
+          'pending': this.isCommentInvalid(),
+          'busy': true,
+          'success': true,
+          'failure': false
+        }[this.state]
+      }
     },
     methods: {
       async submit() {
-        this.inProgress=true
-        await this.$root.$data.addComment(this.commentTitle, this.assetComment)
-        // clear and enable the add comment form
-        this.assetComment=undefined
-        this.inProgress=false
+        if(this.isCommentInvalid()) { return }
+        this.state = 'busy'
+        var successful = await this.$root.$data.addComment(this.commentTitle, this.assetComment)
+        if(successful) {
+          this.state = 'success'
+          this.assetComment = undefined
+        } else {
+          this.state = 'failure'
+        }
+      },
+      isCommentInvalid() {
+        if(this.assetComment === undefined || this.assetComment === '') {
+          return true
+        }
+        return false
+      },
+      checkState() {
+        if(this.state == 'success' && this.isCommentInvalid()) {
+          this.state = 'pending'
+        }
       }
     }
   }
