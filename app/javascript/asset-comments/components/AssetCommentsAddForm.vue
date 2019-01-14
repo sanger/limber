@@ -54,7 +54,7 @@
         var successful = await this.$root.$data.addComment(this.commentTitle, this.assetComment)
         if(successful) {
           this.state = 'success'
-          this.assetComment = undefined
+          this.assetComment = ''
         } else {
           this.state = 'failure'
         }
