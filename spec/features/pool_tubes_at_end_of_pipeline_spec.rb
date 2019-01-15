@@ -12,6 +12,7 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
   let(:tube_uuid)             { SecureRandom.uuid }
   let(:sibling_uuid) { 'sibling-tube-0' }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
+  let(:example_v2_tube)       { create(:v2_tube, uuid: tube_uuid, state: 'passed', barcode_number: 1, purpose_name: 'Example Purpose') }
   let(:example_tube)          { json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
   let(:transfer_template_uuid) { 'transfer-template-uuid' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
@@ -41,13 +42,13 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
                          uuid: child_purpose_uuid
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the tube
-    stub_asset_search(tube_barcode, example_tube)
     # We get the actual tube
+    stub_v2_tube(example_v2_tube)
+    # Creator uses the old tube
     stub_api_get(tube_uuid, body: example_tube)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
-    stub_api_get(multiplexed_library_tube_uuid, body: json(:multiplexed_library_tube))
+    stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
     transfer_request
     transfer_request_b
   end

@@ -7,10 +7,8 @@ RSpec.describe PlatesController, type: :controller do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_json) { json :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:v2_plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:wells_json) { json :well_collection }
-  let(:plate_request) { stub_api_get plate_uuid, body: plate_json }
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
   let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
   let(:user_uuid) { SecureRandom.uuid }
@@ -41,7 +39,6 @@ RSpec.describe PlatesController, type: :controller do
   describe '#update' do
     before do
       Settings.purposes['stock-plate-purpose-uuid'] = create :stock_plate_config
-      plate_request
     end
 
     let!(:state_change_request) do

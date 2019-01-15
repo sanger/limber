@@ -75,6 +75,15 @@ const Api = function (options) {
       },
       methods: {}
     }),
+    Asset: ApplicationRecord.extend({
+      static: { jsonapiType: 'assets' },
+      attrs: {
+        id: attr(),
+        uuid: attr(),
+        comments: hasMany()
+      },
+      methods: {}
+    }),
     Well: ApplicationRecord.extend({
       static: { jsonapiType: 'wells' },
       attrs: {
@@ -228,6 +237,7 @@ const Api = function (options) {
         samples: hasMany(),
         studies: hasMany(),
         projects: hasMany(),
+        comments: hasMany()
       },
       methods: {}
     }),

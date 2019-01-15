@@ -35,7 +35,7 @@ module Presenters
 
     def tag_sequences
       @tag_sequences ||= labware.aliquots.each_with_object([]) do |aliquot, tags|
-        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
+        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
       end
     end
 

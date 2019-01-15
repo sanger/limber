@@ -7,6 +7,7 @@ import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
 import commentStoreFactory from './comment-store'
 import ApiModule from 'shared/api'
 import axios from 'axios'
+import cookieJar from 'shared/cookieJar'
 
 if (process.env.NODE_ENV == 'test') {
   // Vue generates warning if we aren't in the production environment
@@ -35,12 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
    # once the majority of our components are vue based.
    */
   const assetElem = document.getElementById('asset-comments')
+  const missingUserIdError = `
+    Unfortunately Limber can't find your user id, which is required to make comments.
+    Click log out and swipe in again to resolve this.
+    If this problem occurs repeatedly, let us know.
+  `
 
   if ( assetElem ) {
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
-    const plateApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Plate
-    const userId = document.cookie.match(/; user_id=([^;]+)/)[1]
+    const plateApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Asset
+    const userId = cookieJar(document.cookie).user_id
     const axiosInstance = axios.create({
       baseURL: assetElem.dataset.sequencescapeApi,
       timeout: 10000,
@@ -60,11 +66,22 @@ document.addEventListener('DOMContentLoaded', () => {
       render: h => h(AssetCommentsCounter)
     })
 
-    new Vue({
-      el: '#asset-comments-add-form',
-      data: commentStore,
-      render: h => h(AssetCommentsAddForm)
-    })
+    // UserId is required to make comments, but will not be present in
+    // older session cookies. To avoid errors or confusion, we render
+    // a very basic vue component (essentially just an error message)
+    // if userId is missing
+    if (userId) {
+      new Vue({
+        el: '#asset-comments-add-form',
+        data: commentStore,
+        render: h => h(AssetCommentsAddForm)
+      })
+    } else {
+      new Vue({
+        el: '#asset-comments-add-form',
+        render: h => h('div', missingUserIdError)
+      })
+    }
 
     commentStore.refreshComments()
   }

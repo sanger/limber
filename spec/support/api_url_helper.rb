@@ -93,6 +93,19 @@ module ApiUrlHelper
       arguments = custom_includes ? [{ uuid: plate.uuid }, { includes: custom_includes }] : [{ uuid: plate.uuid }]
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*arguments).and_return(plate)
     end
+
+    # Builds the basic v2 tube finding query.
+    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+      # Stub to v1 api search here as well!
+      if stub_search
+        stub_asset_search(
+          tube.barcode.machine,
+          json(:tube, uuid: tube.uuid, purpose_name: tube.purpose.name, purpose_uuid: tube.purpose.uuid)
+        )
+      end
+      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    end
   end
   extend ClassMethods
 end
