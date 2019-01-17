@@ -13,14 +13,18 @@
 <script>
 
   import QcField from './QcField.vue'
-  import ApiModule from 'shared/api'
+  import axios from 'axios'
 
   export default {
     name: 'QcInformation',
     data () {
       return {
         qcResults: {},
-        Api: ApiModule({ baseUrl: this.sequencescapeApi }),
+        axiosInstance: axios.create({
+          baseURL: this.sequencescapeApi,
+          timeout: 10000,
+          headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
+        }),
         state: 'pending'
       }
     },
@@ -40,6 +44,16 @@
           if (result[1].value.trim() !== '') { results.push(result[1]) }
           return results
         }, [])
+      },
+      payload() {
+        return {
+          'data':{
+            'type':'qc_assays',
+            'attributes':{
+              'qc_results': this.filledQcResults
+            }
+          }
+        }
       },
       buttonText() {
         return {
@@ -63,16 +77,15 @@
     },
     methods: {
       updateResult(property, result) {
-        this.qcResults[property] = result
-      },
-      buildQcAssay() {
-        return new this.Api.QcAssay({
-          qcResults: this.filledQcResults
-        })
+        this.$set(this.qcResults, property, result)
       },
       submit() {
         this.state = 'busy'
-        this.buildQcAssay().save().then(
+        this.axiosInstance({
+          method: 'post',
+          url:'qc_assays',
+          data: this.payload
+        }).then(
           () => { this.state = 'success' },
           () => { this.state = 'failure' }
         )

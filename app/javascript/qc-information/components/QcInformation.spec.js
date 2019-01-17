@@ -1,6 +1,9 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import localVue from 'test_support/base_vue.js'
+import flushPromises from 'flush-promises'
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
 
 import QcInformation from './QcInformation.vue'
 // Here are some Jasmine 2.0 tests, though you can
@@ -32,19 +35,43 @@ describe('QcInformation', () => {
     let fullAttributes = { value: '1.5', assay_type: 'Volume Check', units: 'ul', key: 'volume', assay_version: 'manual' }
     let emptyAttributes = { value: '', assay_type: 'Estimated', units: 'nM', key: 'molarity', assay_version: 'manual' }
     wrapper.setData({ qcResults: { volume: fullAttributes, molarity: emptyAttributes } })
+
     expect(wrapper.vm.filledQcResults).toEqual([fullAttributes])
   })
 
-  it('submits a qc result on click', () => {
-    let wrapper = wrapperFactory()
-    let fullAttributes = { value: '1.5', assay_type: 'Volume Check', units: 'ul', key: 'volume', assay_version: 'manual' }
-    let emptyAttributes = { value: '', assay_type: 'Estimated', units: 'nM', key: 'molarity', assay_version: 'manual' }
+  it('submits a qc result on click', async () => {
+    const wrapper = wrapperFactory()
+    const fullAttributes = { value: '1.5', assay_type: 'Volume Check', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'test' }
+    const emptyAttributes = { value: '', assay_type: 'Estimated', units: 'nM', key: 'molarity', assay_version: 'manual', uuid: 'test' }
+    const originalQcAssay = wrapper.vm.qcAssay
+    const expectedPayload = {
+      'data':{
+        'type':'qc_assays',
+        'attributes':{
+          'qc_results':[
+            {'value':'1.5','assay_type':'Volume Check','units':'ul','key':'volume','assay_version':'manual','uuid':'test'}
+          ]
+        }
+      }
+    }
+
+    let mock = new MockAdapter(wrapper.vm.axiosInstance)
+
+    mock.onPost().reply((request) =>{
+      expect(request.url).toEqual('/qc_assays')
+      expect(request.data).toEqual(JSON.stringify(expectedPayload))
+      return [201, {}]
+    })
+
     wrapper.setData({ qcResults: { volume: fullAttributes, molarity: emptyAttributes } })
 
-    expect(wrapper.vm.qcAssay.qcResults).toEqual([fullAttributes])
-    spyOn(wrapper.vm.qcAssay, 'save')
     // Triggering events on bootstrap stuff is currently unnecessarily painful
     wrapper.vm.submit()
-    expect(wrapper.vm.qcAssay.save).toHaveBeenCalled()
+
+    await flushPromises()
+
+    expect(mock.history.post.length).toBe(1)
+
+    expect(wrapper.vm.buttonStyle).toEqual('success')
   })
 })
