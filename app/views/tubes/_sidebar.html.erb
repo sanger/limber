@@ -27,7 +27,7 @@
   <% end %>
 
   <%= card title: 'Adding a Comment' do %>
-    <div id="asset-comments-add-form"></div>
+    <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
   <% end %>
 
   <%= card title:'Other Actions', css_class: 'other-actions'  do %>

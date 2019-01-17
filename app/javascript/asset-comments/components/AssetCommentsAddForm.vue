@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-group form-row">
-      <b-form-textarea name="asset_comment_textarea" id="asset_comment_textarea" v-model.trim="assetComment" v-on:keypress="checkState()" placeholder="enter a new comment here..." :rows="2" :max-rows="5" maxlength="65535" tabindex="1"></b-form-textarea>
+      <b-form-textarea name="asset_comment_textarea" id="asset_comment_textarea" v-model="assetComment" v-on:keypress="checkState()" placeholder="enter a new comment here..." :rows="2" :max-rows="5" maxlength="65535" tabindex="1"></b-form-textarea>
     </div>
     <b-button name="asset_comment_submit_button" id="asset_comment_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
   </div>

@@ -41,11 +41,6 @@
           return results
         }, [])
       },
-      qcAssay() {
-        return new this.Api.QcAssay({
-          qcResults: this.filledQcResults
-        })
-      },
       buttonText() {
         return {
             'pending': 'Send to Sequencescape',
@@ -70,9 +65,14 @@
       updateResult(property, result) {
         this.qcResults[property] = result
       },
+      buildQcAssay() {
+        return new this.Api.QcAssay({
+          qcResults: this.filledQcResults
+        })
+      },
       submit() {
         this.state = 'busy'
-        this.qcAssay.save().then(
+        this.buildQcAssay().save().then(
           () => { this.state = 'success' },
           () => { this.state = 'failure' }
         )
