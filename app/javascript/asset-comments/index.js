@@ -1,6 +1,9 @@
 /* eslint no-console: 0 */
 
 import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
@@ -8,6 +11,8 @@ import commentStoreFactory from './comment-store'
 import ApiModule from 'shared/api'
 import axios from 'axios'
 import cookieJar from 'shared/cookieJar'
+
+Vue.use(BootstrapVue)
 
 if (process.env.NODE_ENV == 'test') {
   // Vue generates warning if we aren't in the production environment
@@ -74,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       new Vue({
         el: '#asset-comments-add-form',
         data: commentStore,
-        render: h => h(AssetCommentsAddForm)
+        render (h) { return h(AssetCommentsAddForm, { props: this.$el.dataset }) }
       })
     } else {
       new Vue({

@@ -36,8 +36,8 @@ describe('AssetComments', () => {
         id: '12345',
         title: null,
         description: 'This is also a comment',
-        createdAt: '2017-09-30T11:18:16+01:00',
-        updatedAt: '2017-09-30T11:18:16+01:00',
+        createdAt: '2017-09-30T12:18:16+01:00',
+        updatedAt: '2017-09-30T12:18:16+01:00',
         user: {
           id: '13',
           login: 'js2',
@@ -49,9 +49,13 @@ describe('AssetComments', () => {
 
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').findAll('li').length).toBe(2)
-    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('This is a comment')
-    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('John Smith (js1)')
-    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('31 August 2017, 11:18')
+    // checking sort of comments, should be re-ordered
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('This is also a comment')
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('Jane Smythe (js2)')
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[0].text()).toContain('30 September 2017, 12:18')
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[1].text()).toContain('This is a comment')
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[1].text()).toContain('John Smith (js1)')
+    expect(wrapper.find('.comments-list').findAll('li').wrappers[1].text()).toContain('31 August 2017, 11:18')
   })
 
   it('renders a message when there are no comments', () => {

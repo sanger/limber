@@ -10,7 +10,7 @@ describe('commentStore', () => {
   const uncommentedPlate = { data: plateFactory({ comments: [] }) }
   const commentedPlate = { data: plateFactory({ comments: [{
     id: '1234',
-    title: null,
+    title: 'This is a title',
     description: 'This is a comment',
     createdAt: '2017-08-31T11:18:16+01:00',
     updatedAt: '2017-08-31T11:18:16+01:00',
@@ -23,7 +23,7 @@ describe('commentStore', () => {
   },
   {
     id: '12345',
-    title: null,
+    title: 'This is also a title',
     description: 'This is also a comment',
     createdAt: '2017-09-30T11:18:16+01:00',
     updatedAt: '2017-09-30T11:18:16+01:00',
@@ -56,8 +56,6 @@ describe('commentStore', () => {
       included: []
     }
   }
-
-  // api.Plate.includes({ comments: 'user' }).find('23231887').then(function(result){ console.log(result) })
 
   it('retrieves comments for an uncommented asset when prompted', async () => {
     let api = mockApiFactory(Promise.resolve(uncommentedPlate))
@@ -98,7 +96,7 @@ describe('commentStore', () => {
       return [201, {}]
     })
 
-    commentStore.addComment('new description')
+    commentStore.addComment('new title', 'new description')
 
     await flushPromises()
 
@@ -114,6 +112,7 @@ describe('commentStore', () => {
       'data': {
         'type': 'comments',
         'attributes': {
+          'title': 'new title',
           'description': 'new description'
         },
         'relationships': {
@@ -135,10 +134,10 @@ describe('commentStore', () => {
       return [201, {}]
     })
 
-    commentStore.addComment('new description')
+    commentStore.addComment('new title', 'new description')
 
     await flushPromises()
 
-    expect(mock.history.post.length).toBe(1);
+    expect(mock.history.post.length).toBe(1)
   })
 })
