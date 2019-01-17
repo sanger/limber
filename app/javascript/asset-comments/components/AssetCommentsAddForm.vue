@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-group form-row">
-      <b-form-textarea name="asset_comment_textarea" id="asset_comment_textarea" v-model="assetComment" v-on:keypress="checkState()" placeholder="enter a new comment here..." :rows="2" :max-rows="5" maxlength="65535" tabindex="1"></b-form-textarea>
+      <b-form-textarea name="asset_comment_textarea" id="asset_comment_textarea" v-model="assetComment" placeholder="enter a new comment here..." :rows="2" :max-rows="5" maxlength="65535" tabindex="1"></b-form-textarea>
     </div>
     <b-button name="asset_comment_submit_button" id="asset_comment_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
   </div>
@@ -15,7 +15,8 @@
     data: function () {
       return {
         assetComment: '',
-        state: 'pending'
+        state: 'pending',
+        previous_success: null
       }
     },
     props: {
@@ -45,30 +46,33 @@
           'success': true,
           'failure': false
         }[this.state]
+      },
+      assetCommentTrimed() {
+        return this.assetComment.trim()
       }
     },
     methods: {
       async submit() {
         if(this.isCommentInvalid()) { return }
         this.state = 'busy'
-        var successful = await this.$root.$data.addComment(this.commentTitle, this.assetComment)
+        var successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimed)
         if(successful) {
           this.state = 'success'
           this.assetComment = ''
+          this.previous_success = true
         } else {
           this.state = 'failure'
+          this.previous_success = false
         }
       },
       isCommentInvalid() {
-        if(this.assetComment === undefined || this.assetComment === '') {
+        if(this.assetCommentTrimed === undefined || this.assetCommentTrimed === '') {
           return true
         }
-        return false
-      },
-      checkState() {
-        if(this.state == 'success' && this.isCommentInvalid()) {
+        if(this.previous_success != null && this.previous_success) {
           this.state = 'pending'
         }
+        return false
       }
     }
   }
