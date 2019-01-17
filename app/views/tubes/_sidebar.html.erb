@@ -2,6 +2,13 @@
   <%= render partial: 'tube_printing' %>
   <%= render(partial: 'labware/qc_data') %>
 
+  <%= card title: 'QC Information' do %>
+    <div id="qc-information"
+         data-asset-uuid="<%= @presenter.uuid %>"
+         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"></div>
+  <% end %>
+
+
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
       <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>

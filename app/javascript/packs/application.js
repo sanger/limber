@@ -10,4 +10,5 @@
 // Currently setting up each component as its own mini vue app.
 require('file-list')
 require('asset-comments')
+require('qc-information')
 require('quadrant-stamp')

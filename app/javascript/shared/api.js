@@ -214,6 +214,15 @@ const Api = function (options) {
       },
       methods: {}
     }),
+    QcAssay: ApplicationRecord.extend({
+      static: { jsonapiType: 'qc_assays' },
+      attrs: {
+        id: attr(),
+        lotNumber: attr(),
+        qcResults: attr()
+      },
+      methods: {}
+    }),
     RequestType: ApplicationRecord.extend({
       static: { jsonapiType: 'request_types' },
       attrs: {
