@@ -11,7 +11,6 @@ RSpec.describe SequencescapeSubmission do
   let(:template_uuid) { 'template-uuid' }
   let(:request_options) { { read_length: 150 } }
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { create :user, uuid: user_uuid }
 
   describe '#save' do
     let!(:order_request) do

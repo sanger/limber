@@ -6,7 +6,7 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }
-  let(:user)              { json :user, uuid: user_uuid }
+  let(:user)              { create :user, uuid: user_uuid }
   let(:user_swipecard)    { 'abcdef' }
 
   let(:parent_uuid) { 'example-plate-uuid' }
