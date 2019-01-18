@@ -7,7 +7,7 @@ FactoryBot.define do
     uuid { 'example-purpose-uuid' }
   end
 
-  factory :plate_purpose, class: Limber::PlatePurpose, traits: [:api_object] do
+  factory :plate_purpose, class: Sequencescape::PlatePurpose, traits: [:api_object] do
     name { 'Limber Example Purpose' }
     uuid { 'example-purpose-uuid' }
     json_root { 'plate_purpose' }

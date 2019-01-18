@@ -13,13 +13,13 @@ FactoryBot.define do
     factory :transfer_between_tubes_by_submission do
       source { associated :plate, uuid: source_uuid }
       destination { associated :multiplexed_library_tube, uuid: destination_uuid }
-      user { associated :user, uuid: user_uuid }
+      user { associated :v1_user, uuid: user_uuid }
     end
 
     factory :transfer_between_specific_tubes do
       source { associated :multiplexed_library_tube, uuid: source_uuid }
       destination { associated :multiplexed_library_tube, uuid: destination_uuid }
-      user { associated :user, uuid: user_uuid }
+      user { associated :v1_user, uuid: user_uuid }
     end
 
     factory :transfer_to_mx_tubes_by_submission do
@@ -28,7 +28,7 @@ FactoryBot.define do
         source_wells { WellHelpers.column_order[0, target_tubes_count] }
       end
       source { associated :plate, uuid: source_uuid }
-      user { associated :user, uuid: user_uuid }
+      user { associated :v1_user, uuid: user_uuid }
 
       # Transfers to tubes have a hash, which acts as a minimal representation
       # of the tubes and their source wells.

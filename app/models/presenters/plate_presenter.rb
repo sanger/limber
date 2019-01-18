@@ -109,6 +109,10 @@ class Presenters::PlatePresenter
     labware.wells_in_columns
   end
 
+  def comment_title
+    "#{human_barcode} - #{purpose_name}"
+  end
+
   private
 
   def libraries_passable?

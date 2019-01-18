@@ -29,18 +29,4 @@ class Limber::Plate::PrimerPanel
   def exists?
     @exists
   end
-
-  def program_name_for(step)
-    program_for(step).fetch('name', UNKNOWN)
-  end
-
-  def program_duration_for(step)
-    program_for(step).fetch('duration', UNKNOWN)
-  end
-
-  private
-
-  def program_for(step)
-    @programs.fetch(step, {})
-  end
 end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.feature 'Charge and pass libraries', js: true do
   has_a_working_api
 
-  let(:user)           { json :user, uuid: user_uuid }
+  let(:user)           { create :user, uuid: user_uuid }
   let(:user_uuid)      { SecureRandom.uuid }
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
@@ -24,18 +24,14 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    # We lookup the plate
-    stub_asset_search(labware_barcode, example_labware)
-    # We get the actual plate
-    stub_api_get(labware_uuid, body: example_labware)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
   end
 
   context 'plate with no submissions to be made' do
+    let(:labware_barcode) { example_plate_v2.labware_barcode.machine }
     let(:submissions) { ['pool-1-uuid', 'pool-2-uuid'] }
     let(:purpose_spec) { build :passable_plate }
-    let(:example_labware) { json :plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8] }
     let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8], include_submissions: true, well_factory: :v2_tagged_well }
 
     before do
@@ -58,7 +54,9 @@ RSpec.feature 'Charge and pass libraries', js: true do
       build :passable_tube,
             submission: { request_options: request_options, template_uuid: template_uuid }
     end
+    let(:labware_barcode) { example_tube_v2.labware_barcode.machine }
     let(:example_labware) { json :tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
+    let(:example_tube_v2) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
 
     let!(:order_request) do
       stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
@@ -69,6 +67,11 @@ RSpec.feature 'Charge and pass libraries', js: true do
                       user: user_uuid
                     } },
                     body: '{"order":{"uuid":"order-uuid"}}')
+    end
+
+    before do
+      stub_v2_tube(example_tube_v2)
+      stub_api_get(labware_uuid, body: example_labware)
     end
 
     let!(:submission_request) do

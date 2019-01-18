@@ -21,7 +21,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
-  let(:user)         { json :user, uuid: user_uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }

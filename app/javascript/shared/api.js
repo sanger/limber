@@ -10,7 +10,7 @@
  * const Api = ApiModule(baseUrl: 'http://sequencescape.url/port')
  * var plate = Api.Plate.find('1')
  */
- const {
+const {
   JSORMBase,
   attr,
   belongsTo,
@@ -72,6 +72,15 @@ const Api = function (options) {
       attrs: {
         id: attr(),
         uuid: attr(),
+      },
+      methods: {}
+    }),
+    Asset: ApplicationRecord.extend({
+      static: { jsonapiType: 'assets' },
+      attrs: {
+        id: attr(),
+        uuid: attr(),
+        comments: hasMany()
       },
       methods: {}
     }),
@@ -158,6 +167,20 @@ const Api = function (options) {
         descendants: hasMany(),
         parents: hasMany(),
         children: hasMany(),
+        comments: hasMany(),
+      },
+      methods: {}
+    }),
+    Comment: ApplicationRecord.extend({
+      static: { jsonapiType: 'comments' },
+      attrs: {
+        id: attr(),
+        createdAt: attr(),
+        updatedAt: attr(),
+        description: attr(),
+        title: attr(),
+        commentable: belongsTo(),
+        user: belongsTo(),
       },
       methods: {}
     }),
@@ -167,6 +190,8 @@ const Api = function (options) {
         id: attr(),
         uuid: attr(),
         login: attr(),
+        firstName: attr(),
+        lastName: attr(),
       },
       methods: {}
     }),
@@ -186,6 +211,15 @@ const Api = function (options) {
         name: attr(),
         costCode: attr(),
         uuid: attr(),
+      },
+      methods: {}
+    }),
+    QcAssay: ApplicationRecord.extend({
+      static: { jsonapiType: 'qc_assays' },
+      attrs: {
+        id: attr(),
+        lotNumber: attr(),
+        qcResults: attr()
       },
       methods: {}
     }),
@@ -212,6 +246,7 @@ const Api = function (options) {
         samples: hasMany(),
         studies: hasMany(),
         projects: hasMany(),
+        comments: hasMany()
       },
       methods: {}
     }),

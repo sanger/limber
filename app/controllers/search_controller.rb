@@ -75,17 +75,6 @@ class SearchController < ApplicationController
     raise exception, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end
 
-  def retrieve_parent
-    parent_plate = api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(barcode: params['barcode'])
-    respond_to do |format|
-      format.json { render json: { plate: { parent_plate_barcode: parent_plate.barcode.ean13 } } }
-    end
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    respond_to do |format|
-      format.json { render json: { 'general' => exception.message }, status: :not_found }
-    end
-  end
-
   private
 
   def qcable_barcode

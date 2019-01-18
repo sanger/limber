@@ -15,7 +15,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   subject { described_class.new(api, form_attributes) }
 
   let(:user_uuid)     { SecureRandom.uuid }
-  let(:user)          { json :user, uuid: user_uuid }
   let(:purpose_uuid)  { SecureRandom.uuid }
   let(:purpose)       { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)   { SecureRandom.uuid }

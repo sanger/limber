@@ -8,9 +8,47 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
 
+  has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+
+  has_many :aliquots
+
   has_one :purpose
+
+  DEFAULT_INCLUDES = [
+    :purpose
+  ].freeze
+
+  def self.find_by(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::Tube.includes(*includes).find(options).first
+  end
+
+  #
+  # Override the model used in form/URL helpers
+  # to allow us to treat old and new api the same
+  #
+  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube
+  #
+  def model_name
+    ::ActiveModel::Name.new(Limber::Tube, false)
+  end
+
+  # Currently us the uuid as our main identifier, might switch to human barcode soon
+  def to_param
+    uuid
+  end
 
   def barcode
     labware_barcode
+  end
+
+  def stock_plate(purpose_names: SearchHelper.stock_plate_names)
+    @stock_plate ||= ancestors.where(purpose_name: purpose_names).last
+  end
+
+  def human_barcode
+    labware_barcode.human
   end
 end
