@@ -14,6 +14,7 @@ module LabwareCreators
 
     self.page = 'baited_plate'
     self.aliquot_partial = 'baited_aliquot'
+    self.style_class = 'baited'
 
     delegate :number_of_columns, :number_of_rows, :size, to: :plate
 

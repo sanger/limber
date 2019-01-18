@@ -405,6 +405,6 @@
 .colour-384 { @include shade-aliquot(#863B60, #FFFFFF); }
 }
 
-.destination-plate, .source-plate {
+.destination-plate, .source-plate, .plate-baited {
   @extend .pool-colours
 }
