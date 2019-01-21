@@ -40,6 +40,12 @@ module LabwareCreators
     end
 
     def create_plate!
+      @child = api.pooled_plate_creation.create!(
+        child_purpose: purpose_uuid,
+        user: user_uuid,
+        parents: [parent_uuid, tag_plate.asset_uuid]
+      ).child
+
       transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
@@ -50,14 +56,6 @@ module LabwareCreators
         reason: 'Used in Library creation',
         target_state: 'exhausted'
       )
-
-      # Convert plate instead of creating it
-      @child = api.plate_conversion.create!(
-        target: tag_plate.asset_uuid,
-        purpose: purpose_uuid,
-        user: user_uuid,
-        parent: parent_uuid
-      ).target
 
       true
     end

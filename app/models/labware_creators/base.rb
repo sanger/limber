@@ -14,12 +14,12 @@ module LabwareCreators
     extend NestedValidation
 
     attr_reader :api
-    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :tag_layout
     attr_reader :child
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
-    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid tag_layout]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
