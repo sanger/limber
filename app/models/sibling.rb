@@ -10,12 +10,12 @@ class Sibling
   attr_reader :name, :uuid, :state, :barcode, :sanger_barcode
 
   def initialize(options)
-    if options.respond_to?(:[])
-      @name = options['name']
-      @uuid = options['uuid']
-      @barcode = options['ean13_barcode']
-      @sanger_barcode = SBCF::SangerBarcode.from_machine(options['ean13_barcode'])
-      @state = options['state']
+    if options.respond_to?(:fetch)
+      @name = options.fetch('name', 'UNKNOWN')
+      @uuid = options.fetch('uuid', nil)
+      @barcode = options.fetch('ean13_barcode', 'UNKNOWN')
+      @sanger_barcode = SBCF::SangerBarcode.from_machine(options.fetch('ean13_barcode', 'UNKNOWN'))
+      @state = options.fetch('state', 'UNKNOWN')
     else
       missing_sibling
     end
