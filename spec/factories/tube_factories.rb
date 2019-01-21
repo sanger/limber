@@ -80,18 +80,45 @@ FactoryBot.define do
 
   factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:barcoded_v2] do
     skip_create
+    sequence(:id, &:to_s)
     uuid { SecureRandom.uuid }
     name { 'My tube' }
     type { 'tubes' }
     state { 'passed' }
-
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
     purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+    created_at { '2017-06-29T09:31:59.000+01:00' }
+    updated_at { '2017-06-29T09:31:59.000+01:00' }
+
+    transient do
+      stock_plate { create :v2_stock_plate }
+      ancestors { [stock_plate] }
+      barcode_prefix { 'NT' }
+      library_state { 'pending' }
+      outer_request { create request_factory, state: library_state }
+      request_factory { :library_request }
+      aliquot_count { 2 }
+      aliquot_factory { :v2_tagged_aliquot }
+      aliquots { create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request }
+    end
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |asset, evaluator|
       RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+      ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
+
+      # Mock the behaviour of the search
+      # This is all a bit inelegant at the moment.
+      RSpec::Mocks.allow_message(ancestors_scope, :where) do |parameters|
+        evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
+      end
+      RSpec::Mocks.allow_message(asset, :ancestors).and_return(ancestors_scope)
+      RSpec::Mocks.allow_message(asset, :aliquots).and_return(evaluator.aliquots || [])
+    end
+
+    factory :v2_multiplexed_library_tube do
+      purpose_name { 'Example Purpose' }
     end
   end
 

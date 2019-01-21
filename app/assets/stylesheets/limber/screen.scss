@@ -183,6 +183,11 @@ dl.metadata, dl#samples-information {
   li.labware { @extend .list-group-item-action }
 }
 
+.no-comment {
+  @extend .list-group-item;
+  @extend .list-group-item-light;
+}
+
 .state-badge { @extend.badge; }
 .state-badge.pending { @extend.badge-warning; }
 .state-badge.started, .state-badge.process_1, .state-badge.process_2 { @extend.badge-info; }

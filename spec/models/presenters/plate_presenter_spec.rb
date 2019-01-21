@@ -76,6 +76,26 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 
+  context 'when PlateLabelXP is defined in the purpose settings' do
+    let(:label_class) { 'Labels::PlateLabelXp' }
+
+    it 'returns PlateDoubleLabel attributes when PlateDoubleLabel is defined in the purpose settings' do
+      expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+                         bottom_left: 'DN1S',
+                         top_right: 'DN2T',
+                         bottom_right: "WGS #{purpose_name}",
+                         barcode: 'DN1S' }
+      expect(presenter.label.attributes).to eq(expected_label)
+      expected_qc_attributes = {
+        top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+        bottom_left: 'DN1S QC',
+        top_right: 'DN2T',
+        barcode: 'DN1S-QC'
+      }
+      expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
+    end
+  end
+
   it_behaves_like 'a labware presenter'
 
   describe '#pools' do

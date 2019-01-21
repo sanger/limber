@@ -19,7 +19,7 @@ module Presenters
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
     # all presenters.
-    delegate :purpose, :state, to: :labware
+    delegate :purpose, :state, :human_barcode, to: :labware
 
     def label
       Labels::TubeLabel.new(labware)
@@ -35,8 +35,12 @@ module Presenters
 
     def tag_sequences
       @tag_sequences ||= labware.aliquots.each_with_object([]) do |aliquot, tags|
-        tags << [aliquot.tag.try(:oligo), aliquot.tag2.try(:oligo)]
+        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
       end
+    end
+
+    def comment_title
+      "#{human_barcode} - #{purpose_name}"
     end
 
     def sequencescape_submission
