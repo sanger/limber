@@ -174,13 +174,15 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     end
 
     context 'Providing simple options' do
+      let(:tag_plate_state) { 'available' }
+
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
           parent_uuid: plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
-          tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid },
+          tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid, state: tag_plate_state },
           tag_layout: {
             tag_group: 'tag-group-uuid',
             direction: 'column',
@@ -202,21 +204,89 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
       context 'on save' do
         Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
+        context 'with an available tag plate' do
+          let(:tag_plate_state) { 'available' }
 
-        it 'creates a tag plate' do
-          expect(subject.save).to be true
-          expect(plate_creation_request).to have_been_made.once
-          expect(transfer_creation_request).to have_been_made.once
-          # State change should be conditional on plate being 'available'
-          expect(state_change_tag_plate_request).to have_been_made.once
-          # This one will be VERY different
-          expect(tag_layout_creation_request).to have_been_made.once
+          it 'creates a tag plate' do
+            expect(subject.save).to be true
+            expect(plate_creation_request).to have_been_made.once
+            expect(transfer_creation_request).to have_been_made.once
+            expect(state_change_tag_plate_request).to have_been_made.once
+            # This one will be VERY different
+            expect(tag_layout_creation_request).to have_been_made.once
+          end
+
+          it 'has the correct child (and uuid)' do
+            expect(subject.save).to be true
+            # This will be our new plate
+            expect(subject.child.uuid).to eq(child_plate_uuid)
+          end
+
+          context 'when a user has exhausted the plate in another tab' do
+            let!(:state_change_tag_plate_request) do
+              stub_api_post(
+                'state_changes',
+                payload: {
+                  state_change: {
+                    user: user_uuid,
+                    target: tag_plate_uuid,
+                    reason: 'Used in Library creation',
+                    target_state: 'exhausted'
+                  }
+                },
+                status: 500,
+                body: '{"general":["No obvious transition from \"passed\" to \"passed\""]}'
+              )
+            end
+
+            it 'creates a tag plate' do
+              expect(subject.save).to be true
+              expect(plate_creation_request).to have_been_made.once
+              expect(transfer_creation_request).to have_been_made.once
+              expect(state_change_tag_plate_request).to have_been_made
+              # This one will be VERY different
+              expect(tag_layout_creation_request).to have_been_made.once
+            end
+          end
         end
 
-        it 'has the correct child (and uuid)' do
-          expect(subject.save).to be true
-          # This will be our new plate
-          expect(subject.child.uuid).to eq(child_plate_uuid)
+        context 'with an exhausted tag plate' do
+          let(:tag_plate_state) { 'exhausted' }
+
+          it 'creates a tag plate' do
+            expect(subject.save).to be true
+            expect(plate_creation_request).to have_been_made.once
+            expect(transfer_creation_request).to have_been_made.once
+            expect(state_change_tag_plate_request).not_to have_been_made
+            # This one will be VERY different
+            expect(tag_layout_creation_request).to have_been_made.once
+          end
+
+          it 'has the correct child (and uuid)' do
+            expect(subject.save).to be true
+            # This will be our new plate
+            expect(subject.child.uuid).to eq(child_plate_uuid)
+          end
+        end
+
+        context 'without a tag plate' do
+          let(:tag_plate_state) { '' }
+          let(:tag_plate_uuid) { '' }
+
+          it 'creates a tag plate' do
+            expect(subject.save).to be true
+            expect(plate_creation_request).to have_been_made.once
+            expect(transfer_creation_request).to have_been_made.once
+            expect(state_change_tag_plate_request).not_to have_been_made
+            # This one will be VERY different
+            expect(tag_layout_creation_request).to have_been_made.once
+          end
+
+          it 'has the correct child (and uuid)' do
+            expect(subject.save).to be true
+            # This will be our new plate
+            expect(subject.child.uuid).to eq(child_plate_uuid)
+          end
         end
       end
     end

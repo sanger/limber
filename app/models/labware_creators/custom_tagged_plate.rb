@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency './lib/repeated_state_change_error'
+
 module LabwareCreators
   # Duplicate of TaggedPlate Creator to allow configuration to be built independently
   # of behaviour.
@@ -24,14 +26,12 @@ module LabwareCreators
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
-    QcableObject = Struct.new(:asset_uuid, :template_uuid)
-
     def tag_plate=(params)
-      @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag_plate = OpenStruct.new(params)
     end
 
     def tag2_tube=(params)
-      @tag2_tube = QcableObject.new(params[:asset_uuid], params[:template_uuid])
+      @tag2_tube = OpenStruct.new(params)
     end
 
     def initialize(*args, &block)
@@ -50,12 +50,20 @@ module LabwareCreators
 
       yield(tag_plate.asset_uuid) if block_given?
 
-      api.state_change.create!(
-        user: user_uuid,
-        target: tag_plate.asset_uuid,
-        reason: 'Used in Library creation',
-        target_state: 'exhausted'
-      )
+      begin
+        unless tag_plate.asset_uuid.blank? || tag_plate.state == 'exhausted'
+          api.state_change.create!(
+            user: user_uuid,
+            target: tag_plate.asset_uuid,
+            reason: 'Used in Library creation',
+            target_state: 'exhausted'
+          )
+        end
+      rescue RepeatedStateChangeError => exception
+        # Plate is already exhausted, the user is probably processing two plates
+        # at the same time
+        Rails.logger.warn(exception.message)
+      end
 
       true
     end
