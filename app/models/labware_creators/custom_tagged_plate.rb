@@ -47,15 +47,15 @@ module LabwareCreators
 
       yield(@child.uuid) if block_given?
 
+      return true if tag_plate.asset_uuid.blank? || tag_plate.state == 'exhausted'
+
       begin
-        unless tag_plate.asset_uuid.blank? || tag_plate.state == 'exhausted'
-          api.state_change.create!(
-            user: user_uuid,
-            target: tag_plate.asset_uuid,
-            reason: 'Used in Library creation',
-            target_state: 'exhausted'
-          )
-        end
+        api.state_change.create!(
+          user: user_uuid,
+          target: tag_plate.asset_uuid,
+          reason: 'Used in Library creation',
+          target_state: 'exhausted'
+        )
       rescue RepeatedStateChangeError => exception
         # Plate is already exhausted, the user is probably processing two plates
         # at the same time
