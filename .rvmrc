@@ -1,3 +1,0 @@
-SUFFIX=''
-[ -f database_suffix ] && SUFFIX="-$( cat database_suffix )"
-rvm use $( cat .ruby-version )@limber${SUFFIX} --create

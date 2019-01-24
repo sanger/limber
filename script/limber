@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'uri'
+
 CONFIG_FILE = "#{ENV['HOME']}/.limber.environments.yml"
 
 if ARGV[0].nil?

@@ -17,6 +17,8 @@ header.limber-header {
   }
 }
 
+#app { margin-bottom: 100px; }
+
 #flashes {
   @extend .col-12;
 }
@@ -179,6 +181,11 @@ dl.metadata, dl#samples-information {
   li.state-cancelled { @extend .list-group-item-danger; }
   li.state-failed { @extend .list-group-item-danger; }
   li.labware { @extend .list-group-item-action }
+}
+
+.no-comment {
+  @extend .list-group-item;
+  @extend .list-group-item-light;
 }
 
 .state-badge { @extend.badge; }

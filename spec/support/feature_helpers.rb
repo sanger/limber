@@ -23,11 +23,7 @@ module FeatureHelpers
   end
 
   def stub_swipecard_search(swipecard, user)
-    stub_search_and_single_result(
-      'Find user by swipecard code',
-      { 'search' => { 'swipecard_code' => swipecard } },
-      user
-    )
+    allow(Sequencescape::Api::V2::User).to receive(:find).with(user_code: swipecard).and_return([user])
   end
 
   def stub_asset_search(barcode, asset)

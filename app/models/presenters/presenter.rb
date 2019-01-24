@@ -21,7 +21,7 @@ module Presenters
       end
     end
 
-    delegate :state, :uuid, to: :labware
+    delegate :state, :uuid, :id, to: :labware
 
     def suggest_library_passing?
       (purpose_config[:suggest_library_pass_for] & passable_request_types).present?

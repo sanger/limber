@@ -6,7 +6,7 @@ require_relative '../support/shared_tagging_examples'
 RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { json :user, uuid: user_uuid }
+  let(:user)                  { create :user, uuid: user_uuid }
   let(:user_swipecard)        { 'abcdef' }
   let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }

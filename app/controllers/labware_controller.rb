@@ -6,6 +6,8 @@ require 'csv'
 # show => Looks up the presenter for the giver purpose and renders the appropriate show page
 # update => Used to update the state of a plate/tube
 class LabwareController < ApplicationController
+  UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/.freeze
+
   before_action :locate_labware, only: :show
   before_action :find_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
@@ -51,6 +53,16 @@ class LabwareController < ApplicationController
 
   private
 
+  def search_param
+    { uuid: params[:id] }
+    # THis will allow us to switch to human barcodes in the url
+    # But currently causes a tonne of test failures, partly due to invalid uuids.
+    # case params[:id]
+    # when UUID then { uuid: params[:id] }
+    # else { barcode: params[:id] }
+    # end
+  end
+
   def unknown_type
     redirect_to(
       search_path,
@@ -63,7 +75,7 @@ class LabwareController < ApplicationController
   end
 
   def locate_labware
-    @labware ||= locate_labware_identified_by(params[:id])
+    @labware ||= locate_labware_identified_by_id
   end
 
   def find_printers

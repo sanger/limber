@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.feature 'Viewing a plate', js: true do
   has_a_working_api
 
-  let(:user)           { json :user }
+  let(:user)           { create :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }

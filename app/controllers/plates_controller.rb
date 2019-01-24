@@ -29,8 +29,8 @@ class PlatesController < LabwareController
 
   private
 
-  def locate_labware_identified_by(id)
-    Sequencescape::Api::V2::Plate.find_by(uuid: id) ||
+  def locate_labware_identified_by_id
+    Sequencescape::Api::V2::Plate.find_by(search_param) ||
       raise(ActionController::RoutingError, "Unknown resource #{id}")
   end
 end

@@ -10,14 +10,11 @@
   <% end %>
 
   <%= sidebar do %>
-    <%= card do %>
-      <h3 class='card-header'>Instructions</h3>
-      <div class='card-body'>
+    <%= card title: 'Instructions' do %>
         <p class='card-text'>Carefully check the bait layout against your worksheet.</p>
         <p class='card-text'>Click on 'Create plate' button.</p>
-      </div>
-      <div class='card-body'>
-        <ul id="key" class="list-group">
+
+        <ul id="key" class="list-group pool-colours">
           <%- @labware_creator.baits.each do |bait| -%>
               <li class="list-group-item">
                 <div class="tube-view">
@@ -32,7 +29,6 @@
           <%= f.hidden_field :parent_uuid, as: :hidden, value: @labware_creator.parent_uuid %>
           <%= f.submit'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
         <% end %>
-      </div>
     <% end %>
   <% end %>
 <% end %>

@@ -55,4 +55,17 @@ module PageHelper
   def state_badge(state)
     content_tag(:span, state.titleize, class: "state-badge #{state}")
   end
+
+  # eg. count_badge(0)
+  # <span class="badge badge-secondary">0</span>
+  # eg. count_badge(10)
+  # <span class="badge badge-primary">10</span>
+  def count_badge(count, badge_id = nil)
+    state = case count
+            when nil then 'secondary'
+            when 0 then 'secondary'
+            else 'primary'
+            end
+    content_tag(:span, count || '...', class: "badge badge-pill badge-#{state}", id: badge_id)
+  end
 end

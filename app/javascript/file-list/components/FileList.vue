@@ -4,6 +4,7 @@
 <a class="list-group-item" v-for="qc_file in qc_files" v-bind:href="'/qc_files/' + qc_file.uuid">
   {{qc_file.filename}} - {{ qc_file.created }}
 </a>
+<div v-if="noFiles" class="list-group-item">No files attached</div>
 </div>
 </template>
 
@@ -17,6 +18,9 @@ export default {
       qc_files: [],
       loading: true
     }
+  },
+  computed: {
+    noFiles() { return this.qc_files && this.qc_files.length === 0 && !this.loading }
   },
   methods: {
     fetchData: function () {

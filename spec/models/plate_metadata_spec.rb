@@ -13,7 +13,7 @@ RSpec.describe PlateMetadata do
 
   describe 'with api' do
     let(:user_uuid)                 { SecureRandom.uuid }
-    let(:user)                      { json :user, uuid: user_uuid }
+    let(:user)                      { json :v1_user, uuid: user_uuid }
     let(:plate_uuid)                { SecureRandom.uuid }
     let(:plate)                     { json :stock_plate, uuid: plate_uuid }
     let(:plate_with_metadata)       { json :stock_plate_with_metadata, uuid: plate_uuid }
