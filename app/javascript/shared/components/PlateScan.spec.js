@@ -9,25 +9,16 @@ import { plateFactory } from 'test_support/factories'
 import localVue from 'test_support/base_vue'
 
 describe('PlateScan', () => {
-  const nullPlate = { data: null }
-  const goodPlate = { data: plateFactory() }
-  const badPlate = { data: plateFactory({numberOfColumns: 24, numberOfRows: 8}) }
+  const nullPlate = { data: [] }
+  const goodPlate = { data: [plateFactory()] }
+  const badPlate = { data: [plateFactory({ number_of_columns: 24, number_of_rows: 8})] }
 
   const mockApiFactory = function(promise) {
     return {
-      where(options) {
-        this.whered = options
-        return this
-      },
-      includes(options) {
-        this.included = options
-        return this
-      },
-      select(options) {
-        this.selected = options
-        return this
-      },
-      first() {
+      findAll(resource, options) {
+        this.whered = options.filter
+        this.included = options.include
+        this.selected = options.select
         return this.promise
       },
       promise: promise,
@@ -44,7 +35,7 @@ describe('PlateScan', () => {
       propsData: {
         label: 'My Plate',
         description: 'Scan it in',
-        plateApi: mockApi,
+        api: mockApi,
         plateCols: 12,
         plateRows: 8,
         includes: {wells: ['requests_as_source',{aliquots: 'request'}]}
@@ -126,7 +117,7 @@ describe('PlateScan', () => {
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', plate: null }],
-        [{ state: 'valid', plate: goodPlate.data }]
+        [{ state: 'valid', plate: goodPlate.data[0] }]
       ]
     })
   })
@@ -146,7 +137,7 @@ describe('PlateScan', () => {
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', plate: null }],
-        [{ state: 'invalid', plate: badPlate.data }]
+        [{ state: 'invalid', plate: badPlate.data[0] }]
       ]
     })
   })

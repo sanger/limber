@@ -7,7 +7,7 @@ const wellFactory = function(options = {}) {
   const wellDefaults = {
     uuid: uuid,
     position: { name: 'A1' },
-    requestsAsSource: buildArray(1, (iteration) => requestFactory({ uuid: `${uuid}-source-request-${iteration}` })),
+    requests_as_source: buildArray(1, (iteration) => requestFactory({ uuid: `${uuid}-source-request-${iteration}` })),
     aliquots: [{ request: null }]
   }
   return {  ...wellDefaults, ...options }

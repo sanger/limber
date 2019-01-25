@@ -34,7 +34,8 @@
       }
     },
     props: {
-      plateApi: { required: true },
+      plateApi: { required: false },
+      api: { required: false },
       label: { type: String, default: 'Plate'},
       description: { type: String },
       includes: { default: () => { return [] } },
@@ -56,16 +57,16 @@
       async findPlate () {
         this.state = 'searching'
         const plate = (
-          await this.plateApi
-                    .includes(this.includes)
-                    .where({barcode: this.plateBarcode})
-                    .select(this.selects)
-                    .first()
-        ).data
+          await this.api.findAll('plate',{
+            include: this.includes,
+            filter: { barcode: this.plateBarcode },
+            select: this.selects
+          })
+        ).data[0]
         return plate
       },
       validatePlate: function (plate) {
-        if (plate === null) {
+        if (plate === undefined) {
           this.plate = null
           this.badState({ message: "Could not find plate" })
         } else {
@@ -78,7 +79,8 @@
         }
       },
       incorrectSize: function(plate) {
-        return plate.numberOfColumns !== this.plateCols || plate.numberOfRows !== this.plateRows
+        return plate.number_of_columns !== this.plateCols ||
+               plate.number_of_rows !== this.plateRows
       },
       badState: function(err) {
         this.state = 'invalid'
