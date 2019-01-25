@@ -4,8 +4,8 @@
       <div class="mb-1"><strong>{{ comment.title }}</strong></div>
       <div class="mb-1" style="white-space: pre">{{ comment.description }}</div>
       <div class="d-flex w-100 justify-content-between text-muted ">
-        <small class="user-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.login }})</small>
-        <small class="comment-date">{{ comment.createdAt | formatDate }}</small>
+        <small class="user-name">{{ comment.user.first_name }} {{ comment.user.last_name }} ({{ comment.user.login }})</small>
+        <small class="comment-date">{{ comment.created_at | formatDate }}</small>
       </div>
     </li>
     <li v-if="noComments" class="no-comment">No comments available</li>
@@ -30,7 +30,7 @@ export default {
     sortedComments() {
       if(this.comments) {
         return this.comments.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt)
+          return new Date(b.created_at) - new Date(a.created_at)
         })
       }
     },
