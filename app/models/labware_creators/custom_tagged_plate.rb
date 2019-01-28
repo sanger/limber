@@ -12,9 +12,9 @@ module LabwareCreators
     attr_reader :child, :tag_plate
     attr_accessor :tag_plate_barcode, :tag_layout
 
-    self.page = 'tagged_plate'
+    self.page = 'custom_tagged_plate'
     self.attributes += [
-      :tag_plate_barcode, :tag2_tube_barcode,
+      :tag_plate_barcode,
       {
         tag_plate: %i[asset_uuid template_uuid],
         tag_layout: %i[user plate tag_group tag2_group direction walking_by initial_tag substitutions tags_per_well]

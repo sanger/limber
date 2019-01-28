@@ -199,7 +199,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         expect(subject).to be_a LabwareCreators::CustomTaggedPlate
       end
 
-      it_behaves_like 'it has a custom page', 'tagged_plate'
+      it_behaves_like 'it has a custom page', 'custom_tagged_plate'
 
       context 'on save' do
         let!(:custom_tag_layout_creation_request) do
