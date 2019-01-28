@@ -8,8 +8,6 @@
 </template>
 
 <script>
-  import ApiModule from 'shared/api'
-
   export default {
     name: 'AssetCommentAddForm',
     data: function () {
