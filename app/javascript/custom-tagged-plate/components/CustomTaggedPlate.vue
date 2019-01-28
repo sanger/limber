@@ -1,7 +1,11 @@
-<template>
+<template v-if="state === 'searching'">
   <lb-page>
-    <lb-loading-modal v-if="loading" :message="progressMessage"></lb-loading-modal>
-    <lb-main-content v-else >
+    <lb-loading-modal :message="progressMessage"></lb-loading-modal>
+  </lb-page>
+</template>
+<template v-else>
+  <lb-page v-if="parentPlate">
+    <lb-main-content>
       <lb-plate :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-plate>
       <lb-custom-tagged-plate-details v-bind:childWells="childWells"></lb-custom-tagged-plate-details>
     </lb-main-content>
@@ -24,7 +28,8 @@
 
   import Plate from 'shared/components/Plate'
   import LoadingModal from 'shared/components/LoadingModal'
-
+  import devourApi from 'shared/devourApi'
+  import resources from 'shared/resources'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 
@@ -32,12 +37,10 @@
     name: 'CustomTaggedPlate',
     data () {
       return {
-        state: 'pending',
-        parentWells: null,
-        childWells: null,
-        numberOfColumns: 12,
-        numberOfRows: 8,
-        loading: false,
+        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+        state: 'searching',
+        parentPlate: null,
+        childWells: {},
         progressMessage: ''
       }
     },
@@ -48,65 +51,54 @@
       parentUuid: { type: String, required: true }
     },
     created: function () {
-      this.loading = true
       this.progressMessage = "Fetching parent plate details..."
-      this.getParentPlateDetails()
+      this.lookupParentPlate()
     },
     methods: {
-      getParentPlateDetails() {
-        console.log('in getParentPlateDetails')
-        // TODO: abstract out axios interaction to a separate module
-        this.$axios({
-          method: 'get',
-          url: '/plates?filter[uuid]=' + this.parentUuid + '&limit=1&include=wells.aliquots'
-        }).then(response => {
-            console.log('response:')
-            console.log(response.data)
-            this.progressMessage = response.data.message
-            this.parentWells = this.parsePlateResponseData(response.data)
-            // TODO keep parent plate wells separate from the child plate planned wells tag layout
-            // where should we initialise (and re-initialise) the child wells object?
-            // how do we pass this to the child components for manipulation/display?
-            this.initialiseChildPlateWells()
-            this.childWells = this.parentWells
-          })
-          // .then(() => {
-          //   console.log('success')
-          // })
-          .catch(error => {
-            console.log('error:')
-            console.log(error)
-          })
-          .finally(() => {
-            this.loading = false
-          })
-      },
-      parsePlateResponseData(data) {
-        console.log('in parsePlateResponseData')
-        this.numberOfRows    = data.data[0].attributes.number_of_rows
-        this.numberOfColumns = data.data[0].attributes.number_of_columns
-        var humanBarcode     = data.data[0].attributes.labware_barcode.human_barcode
-
-        var includedLen = data.included.length
-        var wells = {}
-        for (var i = 0; i <= data.included.length - 1; i++) {
-          if(data.included[i].type == 'wells') {
-            // attributes e.g.
-            // {uuid: "927bd9d6-b4f7-11e8-8d78-3c4a9275d6c8", name: "DN540251D:H12", position: {name: "H12"}, state: "passed"}
-            var wellPosn = data.included[i].attributes.position.name
-            wells[wellPosn] = { pool_index: 1 }
-          }
-          // else if(data.included[i].type == 'aliquots' {
-          //   // attributes e.g.
-          //   // {tag_oligo: null, tag_index: null, tag2_oligo: null, tag2_index: null, suboptimal: false}
-          //   var numAliquots = data.included[i].relationships.aliquots.data.length
-          //   console.log('num aliquots:' + numAliquots)
-          // }
+      lookupParentPlate: function (_) {
+        if (this.parentUuid !== '') {
+          console.log('uuid = ' + this.parentUuid)
+          this.findPlate()
+              .then(this.validateParentPlate)
+              .catch(() => {
+                console.log('in catch')
+                this.parentPlateInvalid()
+              })
+        } else {
+          console.log('in else')
+          this.parentPlateInvalid()
         }
-        // console.log('parsePlateResponseData wells:')
-        // console.log(wells)
-        return wells
+        console.log('end lookupParentPlate, state = ' + this.state)
       },
+      async findPlate () {
+        console.log('in findPlate')
+        this.state = 'searching'
+        const plate = (
+          await this.devourApi.findAll('plate',{
+            include: 'wells.aliquots',
+            filter: { uuid: this.parentUuid },
+            select: { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] }
+          })
+        ).data[0]
+        console.log('plate = ' + plate)
+        return plate
+      },
+      validateParentPlate: function (plate) {
+        if (plate === undefined) {
+          this.parentPlateInvalid()
+        } else {
+          this.parentPlate = plate
+          this.progressMessage = "Found parent plate details"
+          this.initialiseChildPlateWells()
+          this.state = 'loaded'
+        }
+      },
+      parentPlateInvalid() {
+        this.parentPlate = null
+        this.progressMessage = "Could not find parent plate details"
+        this.state = 'unavailable'
+      },
+
       initialiseChildPlateWells() {
         this.childWells = this.parentWells
       },
@@ -130,26 +122,46 @@
         console.log('submit called')
         this.state = 'busy'
         // TODO: details?
-      },
-      isSetupInvalid() {
-        console.log('isSetupInvalid called')
-        // TODO: details?
-        return false
       }
     },
     computed: {
+      numberOfRows() {
+        if(this.parentPlate === null) { return null }
+        return this.parentPlate.number_of_rows
+      },
+      numberOfColumns() {
+        if(this.parentPlate === null) { return null }
+        return this.parentPlate.number_of_columns
+      },
+      parentWells() {
+        if(this.parentPlate === null) { return {} }
+        var wells = {}
+        for (var i = 0; i <= this.parentPlate.wells.length - 1; i++) {
+            var wellPosn = this.parentPlate.wells[i].position.name
+            wells[wellPosn] = { pool_index: i }
+        }
+        console.log('parentWells:')
+        console.log(wells)
+        return wells
+      },
       createCaption() { return 'Modify the tag layout for the new plate using options on the right' },
       buttonText() {
         return {
-            'pending': 'Create new Tagged Plate in Sequencescape',
+            'loaded': 'Set up plate Tag layout...',
+            'updating': 'Set up plate Tag layout...',
+            'valid': 'Create new Custom Tagged Plate in Sequencescape',
+            'invalid': 'Set up plate Tag layout...',
             'busy': 'Sending...',
-            'success': 'Tagged plate successfully created',
-            'failure': 'Failed to create Tag Plate, retry?'
+            'success': 'Custom Tagged plate successfully created',
+            'failure': 'Failed to create Custom Tag Plate, retry?'
         }[this.state]
       },
       buttonStyle() {
         return {
-          'pending': 'primary',
+          'loaded': 'secondary',
+          'updating': 'secondary',
+          'valid': 'primary',
+          'invalid': 'danger',
           'busy': 'outline-primary',
           'success': 'success',
           'failure': 'danger'
@@ -157,7 +169,10 @@
       },
       disabled() {
         return {
-          'pending': this.isSetupInvalid(),
+          'loaded': true,
+          'updating': true,
+          'valid': false,
+          'invalid': true,
           'busy': true,
           'success': true,
           'failure': false

@@ -3,23 +3,24 @@
     <b-row class="form-group form-row">
       <!-- TODO requires v-if on state, if tag groups have been selected disable this scan box -->
       <!-- tag plate scan -->
-      <!-- <b-form-group label="Scan in the tag plate you wish to use"> -->
-<!--         <b-form-text name="tag_plate_barcode_scan" id="tag_plate_barcode_scan" v-model="tagPlateBarcode" placeholder="Scan the tag plate here..." maxlength="20" tabindex="1"></b-form-text> -->
-<!--           <lb-plate-scan :plate-api="Api.Plate"
-                         :label="'Tag Plate'"
-                         :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
-                                     requests: [ 'primer_panel', 'uuid'],
-                                     wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
-                                     aliquots: ['request'] }"
-                         v-on:change="updateTagPlate($event)"></lb-plate-scan> -->
       <b-col>
-        <b-form-input v-model="form.tagPlateBarcode"
-                      type="text"
-                      placeholder="Scan the tag plate here...">
-        </b-form-input>
+          <b-form-group label="Scan in the tag plate you wish to use">
+            <b-form-input v-model="form.tagPlateBarcode"
+                          type="text"
+                          placeholder="Scan the tag plate here...">
+            </b-form-input>
+            <!-- <lb-plate-scan v-for="i in sourcePlateNumber"
+                           :api="devourApi"
+                           :label="'Plate ' + i"
+                           :key="i"
+                           :includes="{wells: {'requests_as_source': 'primer_panel', aliquots: {'request': 'primer_panel'}}}"
+                           :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
+                                       requests: [ 'primer_panel', 'uuid'],
+                                       wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
+                                       aliquots: ['request'] }"
+                           v-on:change="updatePlate(i, $event)"></lb-plate-scan> -->
+        </b-form-group>
       </b-col>
-        <!-- <p>Tag plate Barcode: {{ tagPlateBarcode }}</p> -->
-      <!-- </b-form-group> -->
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
