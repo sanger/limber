@@ -7,7 +7,8 @@
           <b-form-group label="Scan in the tag plate you wish to use">
             <b-form-input v-model="form.tagPlateBarcode"
                           type="text"
-                          placeholder="Scan the tag plate here...">
+                          placeholder="Scan the tag plate here..."
+                          v-on:input="updateTagParams">
             </b-form-input>
             <!-- <lb-plate-scan v-for="i in sourcePlateNumber"
                            :api="devourApi"
@@ -32,7 +33,8 @@
                       label-for="tag1_group_selection">
           <b-form-select id="tag1_group_selection"
                         :options="tag1GroupOptions"
-                        v-model="form.tag1Group">
+                        v-model="form.tag1Group"
+                        v-on:input="updateTagParams">
           </b-form-select>
           <!-- alternate Tag group 1 label -->
           <!-- TODO -->
@@ -49,7 +51,8 @@
                       label-for="tag2_group_selection">
           <b-form-select id="tag2_group_selection"
                         :options="tag2GroupOptions"
-                        v-model="form.tag2Group">
+                        v-model="form.tag2Group"
+                        v-on:input="updateTagParams">
           </b-form-select>
           <!-- alternate Tag group 2 label -->
           <!-- TODO v-else on state -->
@@ -59,12 +62,13 @@
     <b-row class="form-group form-row">
       <b-col>
         <!-- by pool/plate seq/plate fixed select dropdown -->
-        <b-form-group id="by_options_group"
+        <b-form-group id="by_pool_plate_options_group"
                       label="By Pool/Plate Option:"
-                      label-for="by_options">
-          <b-form-select id="by_options"
+                      label-for="by_pool_plate_options">
+          <b-form-select id="by_pool_plate_options"
                         :options="byPoolPlateOptions"
-                        v-model="form.byPoolPlateOption">
+                        v-model="form.byPoolPlateOption"
+                        v-on:input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -75,7 +79,8 @@
                       label-for="by_rows_columns">
           <b-form-select id="by_rows_columns"
                         :options="byRowColOptions"
-                        v-model="form.byRowColOption">
+                        v-model="form.byRowColOption"
+                        v-on:input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -88,7 +93,8 @@
                       label-for="start_at_tag_options">
           <b-form-select id="start_at_tag_options"
                         :options="startAtTagOptions"
-                        v-model="form.startAtTagOption">
+                        v-model="form.startAtTagOption"
+                        v-on:input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -99,7 +105,8 @@
                       label-for="tags_per_well">
           <b-form-select id="tags_per_well"
                         :options="tagsPerWellOptions"
-                        v-model="form.tagsPerWellOption">
+                        v-model="form.tagsPerWellOption"
+                        v-on:input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -179,50 +186,17 @@
     created: function () {
     },
     computed: {
+
     },
+    // NB. event handlers must be in the methods section
     methods: {
-     //  watch: { 'thing': function() { //put your addThing code here, as you now have the thing variable set. } },
-     //  // TODO on changing anything in this form we want to trigger an update of the child plate wells
-     //  // NB we do not want to mutate any props in this component.
-     //  // TODO v-on:change appears to happen BEFORE the value is updated
-     //  changePlateOptions: function() {
-     //    console.log('in manipulation changeChildPlateWells, form values = ')
-     //    console.log('tagPlateBarcode = ' + this.form.tagPlateBarcode)
-     //    console.log('tag1Group = ' + this.form.tag1Group)
-     //    console.log('tag2Group = ' + this.form.tag2Group)
-     //    console.log('byPoolPlateOption = ' + this.form.byPoolPlateOption)
-     //    console.log('byRowColOption = ' + this.form.byRowColOption)
-     //    console.log('startAtTagOption = ' + this.form.startAtTagOption)
-     //    console.log('tagsPerWellOption = ' + this.form.tagsPerWellOption)
-     //    this.$emit('updateChildWells', this.form);
-     // }
+      updateTagParams(value) {
+        this.$emit('tagparamsupdated', this.form);
+      }
     },
     components: {
       // 'lb-plate-scan': PlateScan
-    },
-    watch: {
-     'form.byPoolPlateOption': function (newVal, oldVal) {
-        console.log('watched by pool newVal = ' + newVal)
-        console.log('watched by pool newVal = ' + oldVal)
-        this.$emit('updateChildWells', this.form)
-      }
-      // TODO add all other form fields?
     }
-    // ,
-    // watch: {
-    //   form: {
-    //     byPoolPlateOption: function(value) {
-    //       console.log('watched by pool value = ' + value)
-    //       console.log('tagPlateBarcode = ' + this.form.tagPlateBarcode)
-    //       console.log('tag1Group = ' + this.form.tag1Group)
-    //       console.log('tag2Group = ' + this.form.tag2Group)
-    //       console.log('byPoolPlateOption = ' + this.form.byPoolPlateOption)
-    //       console.log('byRowColOption = ' + this.form.byRowColOption)
-    //       console.log('startAtTagOption = ' + this.form.startAtTagOption)
-    //       console.log('tagsPerWellOption = ' + this.form.tagsPerWellOption)
-    //     }
-    //   }
-    // }
   }
 
 </script>

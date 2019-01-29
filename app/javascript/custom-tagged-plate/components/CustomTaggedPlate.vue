@@ -13,7 +13,7 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation></lb-custom-tagged-plate-manipulation>
+            <lb-custom-tagged-plate-manipulation @tagparamsupdated="tagParamsUpdated"></lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
               <b-button name="custom_tagged_plate_submit_button" id="custom_tagged_plate_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
             </div>
@@ -41,7 +41,8 @@
         state: 'searching',
         parentPlate: null,
         childWells: {},
-        progressMessage: ''
+        progressMessage: '',
+        byPoolPlateOption: ''
       }
     },
     props: {
@@ -108,20 +109,21 @@
         // called each time something in the manipulation component is changed
         // new version of childWells triggers a re-display in plate and details components
       },
-      updateChildWells(form) {
-        console.log('parent updateChildWells called, form values = ')
-        console.log('tagPlateBarcode = ' + form.tagPlateBarcode)
-        console.log('tag1Group = ' + form.tag1Group)
-        console.log('tag2Group = ' + form.tag2Group)
-        console.log('byPoolPlateOption = ' + form.byPoolPlateOption)
-        console.log('byRowColOption = ' + form.byRowColOption)
-        console.log('startAtTagOption = ' + form.startAtTagOption)
-        console.log('tagsPerWellOption = ' + form.tagsPerWellOption)
+      tagParamsUpdated(updatedform) {
+        console.log('in parent tagParamsUpdated called, updatedform values = ')
+        console.log('tagPlateBarcode = ' + updatedform.tagPlateBarcode)
+        console.log('tag1Group = ' + updatedform.tag1Group)
+        console.log('tag2Group = ' + updatedform.tag2Group)
+        console.log('byPoolPlateOption = ' + updatedform.byPoolPlateOption)
+        console.log('byRowColOption = ' + updatedform.byRowColOption)
+        console.log('startAtTagOption = ' + updatedform.startAtTagOption)
+        console.log('tagsPerWellOption = ' + updatedform.tagsPerWellOption)
+        // TODO store these updated values locally and trigger recalculateChildPlateWells
       },
       submit() {
         console.log('submit called')
         this.state = 'busy'
-        // TODO: details?
+        // TODO: submit new custom tagged plate creation to sequencescape with tags
       }
     },
     computed: {
