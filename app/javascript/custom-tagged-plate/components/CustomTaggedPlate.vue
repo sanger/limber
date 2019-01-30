@@ -160,28 +160,26 @@
       childWells: function () {
         const wells = {}
 
-        // TODO - work through parent wells to apply transformation e.g.
-        // plate.wells.forEach((well) => {
-        //   let request = this.requestFor(well)
-        //   if (request === undefined) { return }
-        // }
+        // initialise wells - displays which have aliquots
+        this.parentPlate.wells.forEach((well) => {
+          let wellPosn = well.position.name
+          wells[wellPosn] = { ... this.parentWells[wellPosn]}
+        })
+
         // TODO - split transformations out into functions (can be in seperate file imported) and call functions here.
+        // TODO - function for tag plate scanned
+        // TODO - function for tag group 1 selected
+        // TODO - function for tag group 2 selected
+        // TODO - function for by pool/plate seq/plate fixed selected
+        // TODO - function for by row/column selected
+        // TODO - function for start at index number selected
         if(this.form.byPoolPlateOption === 'by_plate_seq') {
           let index = 1
           this.parentPlate.wells.forEach((well) => {
             let wellPosn = well.position.name
-            wells[wellPosn] = { ... this.parentWells[wellPosn], tagIndex: index }
+            wells[wellPosn]['tagIndex'] = index
             index++
           })
-
-          // for (let irow = 0; irow < this.numberOfRows; irow++) {
-          //   for (let icol = 0; icol < this.numberOfColumns; icol++) {
-          //     let wellPosn = wellCoordinateToName([icol, irow])
-          //     wells[wellPosn] = { ... this.parentWells[wellPosn], tagIndex: index }
-          //     index++
-          //     console.log('well=' + wellPosn + ', content=' + JSON.stringify(wells[wellPosn]))
-          //   }
-          // }
         }
 
         return wells

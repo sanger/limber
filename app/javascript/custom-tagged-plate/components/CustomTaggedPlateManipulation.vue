@@ -4,22 +4,19 @@
       <!-- TODO requires v-if on state, if tag groups have been selected disable this scan box -->
       <!-- tag plate scan -->
       <b-col>
-          <b-form-group label="Scan in the tag plate you wish to use">
-            <b-form-input v-model="form.tagPlateBarcode"
-                          type="text"
-                          placeholder="Scan the tag plate here..."
-                          v-on:input="updateTagParams">
-            </b-form-input>
-            <!-- <lb-plate-scan v-for="i in sourcePlateNumber"
+          <b-form-group id="tag_plate_scan_group"
+                        label="Scan in the tag plate you wish to use here...">
+            <!-- TODO scan plate, should be a 'qcable ' in a state of 'available' or 'exhausted' -->
+            <!-- TODO we also need to warn if the tag plate layout template is not 'by plate' -->
+            <lb-plate-scan id="tag_plate_scan"
                            :api="devourApi"
-                           :label="'Plate ' + i"
-                           :key="i"
-                           :includes="{wells: {'requests_as_source': 'primer_panel', aliquots: {'request': 'primer_panel'}}}"
+                           :label="'Tag Plate'"
+                           :includes="{ wells: { aliquots: {'something': 'name'}}}"
                            :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
-                                       requests: [ 'primer_panel', 'uuid'],
-                                       wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
-                                       aliquots: ['request'] }"
-                           v-on:change="updatePlate(i, $event)"></lb-plate-scan> -->
+                                       wells: ['position', 'aliquots', 'uuid'],
+                                       aliquots: ['tag_oligo','tag2_oligo'] }"
+                           v-on:change="updatePlate($event)">
+            </lb-plate-scan>
         </b-form-group>
       </b-col>
     </b-row>
@@ -119,12 +116,16 @@
 </template>
 
 <script>
-  // import PlateScan from 'shared/components/PlateScan'
+  import devourApi from 'shared/devourApi'
+  import resources from 'shared/resources'
+  import PlateScan from 'shared/components/PlateScan'
 
   export default {
     name: 'CustomTaggedPlateManipulations',
     data () {
       return {
+        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+        tagPlate: null,
         form: {
           tagPlateBarcode: null,
           tag1Group: null,
@@ -190,12 +191,17 @@
     },
     // NB. event handlers must be in the methods section
     methods: {
+      updatePlate(data) {
+        console.log('in update plate, data = ' + JSON.stringify(data))
+        this.$set(this.tagPlate, {...data })
+      },
       updateTagParams(value) {
+        // TODO value is not used, is it needed?
         this.$emit('tagparamsupdated', this.form);
       }
     },
     components: {
-      // 'lb-plate-scan': PlateScan
+      'lb-plate-scan': PlateScan
     }
   }
 
