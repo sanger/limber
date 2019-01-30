@@ -20,112 +20,112 @@ describe('CustomTaggedPlate', () => {
     })
   }
 
-  const expectedResponse = {
-    data: [
-      {
-        id: 12345678,
-        type: 'plates',
-        attributes: {
-          uuid: 'e1e7a5ac-b4f9-11e8-9946-68b599768938',
-          name: 'Cherrypicked 12345678',
-          labware_barcode: {
-            human_barcode: 'DN12345678D'
-          },
-          number_of_rows: 8,
-          number_of_columns: 12,
-        },
-        relationships: {
-          wells: {
-            data: [
-              {
-                type: wells,
-                id: 23217063
-              },
-              {
-                type: wells,
-                id: 23217071
-              },
-              {
-                type: wells,
-                id: 23217079
-              }
-            ]
-          }
-        }
-      }
-    ],
-    included: [
-      {
-        id: 23217063,
-        type: 'wells',
-        attributes: {
-          position: {
-            name: 'A1'
-          },
-        },
-        relationships: {
-          aliquots: {
-            data: [
-              {
-                type: 'aliquots',
-                id: 24856155
-              }
-            ]
-          }
-        }
-      },
-      {
-        id: 23217071,
-        type: 'wells',
-        attributes: {
-          position: {
-            name: 'A2'
-          },
-        },
-        relationships: {
-          aliquots: {
-            data: [
-              {
-                type: 'aliquots',
-                id: 24856163
-              }
-            ]
-          }
-        }
-      },
-      {
-        id: 23217079,
-        type: 'wells',
-        attributes: {
-          position: {
-            name: 'A3'
-          },
-        },
-        relationships: {
-          aliquots: {
-            data: [
-              {
-                type: 'aliquots',
-                id: 24856171
-              }
-            ]
-          }
-        }
-      },
-      {
-        id: 24856155,
-        type: 'aliquots',
-       },
-      {
-        id: 24856163,
-        type: 'aliquots',
-      },
-      {
-        id: 24856171,
-        type: 'aliquots',
-      }
-    ]
-  }
+  // const expectedResponse = {
+  //   data: [
+  //     {
+  //       id: 12345678,
+  //       type: 'plates',
+  //       attributes: {
+  //         uuid: 'e1e7a5ac-b4f9-11e8-9946-68b599768938',
+  //         name: 'Cherrypicked 12345678',
+  //         labware_barcode: {
+  //           human_barcode: 'DN12345678D'
+  //         },
+  //         number_of_rows: 8,
+  //         number_of_columns: 12,
+  //       },
+  //       relationships: {
+  //         wells: {
+  //           data: [
+  //             {
+  //               type: wells,
+  //               id: 23217063
+  //             },
+  //             {
+  //               type: wells,
+  //               id: 23217071
+  //             },
+  //             {
+  //               type: wells,
+  //               id: 23217079
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   ],
+  //   included: [
+  //     {
+  //       id: 23217063,
+  //       type: 'wells',
+  //       attributes: {
+  //         position: {
+  //           name: 'A1'
+  //         },
+  //       },
+  //       relationships: {
+  //         aliquots: {
+  //           data: [
+  //             {
+  //               type: 'aliquots',
+  //               id: 24856155
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     },
+  //     {
+  //       id: 23217071,
+  //       type: 'wells',
+  //       attributes: {
+  //         position: {
+  //           name: 'A2'
+  //         },
+  //       },
+  //       relationships: {
+  //         aliquots: {
+  //           data: [
+  //             {
+  //               type: 'aliquots',
+  //               id: 24856163
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     },
+  //     {
+  //       id: 23217079,
+  //       type: 'wells',
+  //       attributes: {
+  //         position: {
+  //           name: 'A3'
+  //         },
+  //       },
+  //       relationships: {
+  //         aliquots: {
+  //           data: [
+  //             {
+  //               type: 'aliquots',
+  //               id: 24856171
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     },
+  //     {
+  //       id: 24856155,
+  //       type: 'aliquots',
+  //      },
+  //     {
+  //       id: 24856163,
+  //       type: 'aliquots',
+  //     },
+  //     {
+  //       id: 24856171,
+  //       type: 'aliquots',
+  //     }
+  //   ]
+  // }
 
   // it('renders a plate panel', async () => {
   //   let mock = new MockAdapter(localVue.prototype.$axios)

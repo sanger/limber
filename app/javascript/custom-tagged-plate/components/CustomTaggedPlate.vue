@@ -7,7 +7,7 @@
   <lb-page v-if="parentPlate">
     <lb-main-content>
       <lb-plate :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-plate>
-      <lb-custom-tagged-plate-details v-bind:childWells="childWells"></lb-custom-tagged-plate-details>
+      <lb-custom-tagged-plate-details></lb-custom-tagged-plate-details>
     </lb-main-content>
     <lb-sidebar>
       <b-container fluid>
@@ -32,6 +32,7 @@
   import resources from 'shared/resources'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
+  import { wellCoordinateToName } from 'shared/wellHelpers'
 
   export default {
     name: 'CustomTaggedPlate',
@@ -40,9 +41,17 @@
         devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         state: 'searching',
         parentPlate: null,
-        childWells: {},
         progressMessage: '',
-        byPoolPlateOption: ''
+        byPoolPlateOption: '',
+        form: {
+          tagPlateBarcode: null,
+          tag1Group: null,
+          tag2Group: null,
+          byPoolPlateOption: null,
+          byRowColOption: null,
+          startAtTagOption: 1,
+          tagsPerWellOption: 1
+        }
       }
     },
     props: {
@@ -90,7 +99,6 @@
         } else {
           this.parentPlate = plate
           this.progressMessage = "Found parent plate details"
-          this.initialiseChildPlateWells()
           this.state = 'loaded'
         }
       },
@@ -98,16 +106,6 @@
         this.parentPlate = null
         this.progressMessage = "Could not find parent plate details"
         this.state = 'unavailable'
-      },
-
-      initialiseChildPlateWells() {
-        this.childWells = this.parentWells
-      },
-      recalculateChildPlateWells() {
-        this.initialiseChildPlateWells()
-        // TODO takes values from manipulation component to recalculate child wells
-        // called each time something in the manipulation component is changed
-        // new version of childWells triggers a re-display in plate and details components
       },
       tagParamsUpdated(updatedform) {
         console.log('in parent tagParamsUpdated called, updatedform values = ')
@@ -118,7 +116,15 @@
         console.log('byRowColOption = ' + updatedform.byRowColOption)
         console.log('startAtTagOption = ' + updatedform.startAtTagOption)
         console.log('tagsPerWellOption = ' + updatedform.tagsPerWellOption)
+        this.form.tagPlateBarcode   = updatedform.tagPlateBarcode
+        this.form.tag1Group         = updatedform.tag1Group
+        this.form.tag2Group         = updatedform.tag2Group
+        this.form.byPoolPlateOption = updatedform.byPoolPlateOption
+        this.form.byRowColOption    = updatedform.byRowColOption
+        this.form.startAtTagOption  = updatedform.startAtTagOption
+        this.form.tagsPerWellOption = updatedform.tagsPerWellOption
         // TODO store these updated values locally and trigger recalculateChildPlateWells
+       // this.recalculateChildPlateWells()
       },
       submit() {
         console.log('submit called')
@@ -127,23 +133,57 @@
       }
     },
     computed: {
-      numberOfRows() {
+      numberOfRows: function () {
         if(this.parentPlate === null) { return null }
         return this.parentPlate.number_of_rows
       },
-      numberOfColumns() {
+      numberOfColumns: function () {
         if(this.parentPlate === null) { return null }
         return this.parentPlate.number_of_columns
       },
-      parentWells() {
+      parentWells: function () {
+        console.log('in computed parentWells')
         if(this.parentPlate === null) { return {} }
         var wells = {}
-        for (var i = 0; i <= this.parentPlate.wells.length - 1; i++) {
-            var wellPosn = this.parentPlate.wells[i].position.name
-            wells[wellPosn] = { pool_index: i }
-        }
+        // for (var i = 0; i <= this.parentPlate.wells.length - 1; i++) {
+        //     var wellPosn = this.parentPlate.wells[i].position.name
+        //     wells[wellPosn] = { pool_index: 20 }
+        // }
+        this.parentPlate.wells.forEach((well) => {
+          let wellPosn = well.position.name
+          wells[wellPosn] = { pool_index: 20 }
+        })
         console.log('parentWells:')
         console.log(wells)
+        return wells
+      },
+      childWells: function () {
+        const wells = {}
+
+        // TODO - work through parent wells to apply transformation e.g.
+        // plate.wells.forEach((well) => {
+        //   let request = this.requestFor(well)
+        //   if (request === undefined) { return }
+        // }
+        // TODO - split transformations out into functions (can be in seperate file imported) and call functions here.
+        if(this.form.byPoolPlateOption === 'by_plate_seq') {
+          let index = 1
+          this.parentPlate.wells.forEach((well) => {
+            let wellPosn = well.position.name
+            wells[wellPosn] = { ... this.parentWells[wellPosn], tagIndex: index }
+            index++
+          })
+
+          // for (let irow = 0; irow < this.numberOfRows; irow++) {
+          //   for (let icol = 0; icol < this.numberOfColumns; icol++) {
+          //     let wellPosn = wellCoordinateToName([icol, irow])
+          //     wells[wellPosn] = { ... this.parentWells[wellPosn], tagIndex: index }
+          //     index++
+          //     console.log('well=' + wellPosn + ', content=' + JSON.stringify(wells[wellPosn]))
+          //   }
+          // }
+        }
+
         return wells
       },
       createCaption() { return 'Modify the tag layout for the new plate using options on the right' },

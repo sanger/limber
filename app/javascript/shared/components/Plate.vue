@@ -11,7 +11,7 @@
       <tr v-for="row in rows">
         <th class="first-col">{{ row | toLetter }}</th>
         <td v-for="column in columns">
-          <lb-well v-bind="wellAt(row, column)"></lb-well>
+          <lb-well :well-name="wellName(row - 1, column - 1)" v-bind="wellAt(row - 1, column - 1)"></lb-well>
         </td>
       </tr>
     </tbody>
@@ -21,10 +21,7 @@
 <script>
 
   import Well from 'shared/components/Well'
-
-  const rowNumToLetter = function (value) {
-        return String.fromCharCode(value + 64)
-      }
+  import { wellCoordinateToName, rowNumToLetter } from 'shared/wellHelpers'
 
   export default {
     name: 'Plate',
@@ -42,7 +39,10 @@
     },
     methods: {
       wellAt: function (row, column) {
-        return this.wells[`${rowNumToLetter(row)}${column}`] || {}
+        return this.wells[wellCoordinateToName([column, row])] || {}
+      },
+      wellName: function (row, column) {
+        return wellCoordinateToName([column, row])
       }
     },
     components: {
