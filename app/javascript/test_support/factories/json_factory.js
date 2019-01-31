@@ -89,11 +89,10 @@ const buildMany = (associationName, associationValue) => {
 
 const buildOne = (associationName, associationValue) => {
   const { _factory = pluralize.singular(associationName), ...childAttributes } = associationValue
-  const childJson = jsonFactory(_factory, childAttributes).data
-  const { included: childIncluded = [], ... childData } = childJson
+  const { included = [], data } = jsonFactory(_factory, childAttributes)
   return {
-    relationData: { data: { id: childJson.id, type: childJson.type } },
-    includeData: [...childIncluded, childData]
+    relationData: { data: { id: data.id, type: data.type } },
+    includeData: [...included, data]
   }
 }
 
@@ -132,4 +131,25 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
   }
 }
 
-export default jsonFactory
+const jsonCollectionFactory = (factoryName, collectionAttributes, options = {}) => {
+  const type = resourceName(factoryName)
+  const url = `${dummyApiUrl}/${options.base || pluralize(type)}`
+  const links = {
+    first: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`,
+    last: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`
+  }
+
+  const collection = collectionAttributes.reduce(({ data, included }, userAttributes) => {
+    const json = jsonFactory(factoryName, userAttributes)
+    data.push(json.data)
+    included.push(...json.included)
+    return { data, included }
+  }, { data: [], included: [] })
+
+  return {
+    ...collection,
+    links
+  }
+}
+
+export { jsonFactory, jsonCollectionFactory }

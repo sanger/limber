@@ -4,35 +4,32 @@ import flushPromises from 'flush-promises'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import mockApi from 'test_support/mock_api'
-import { jsonFactory } from 'test_support/factories'
+import { jsonCollectionFactory } from 'test_support/factories'
 
 describe('commentStore', () => {
 
   const noComments = { data: [] }
-  const comments = { data: [
-    jsonFactory('comment',{
-      title: 'This is a title',
-      description: 'This is a comment',
-      created_at: '2017-08-31T11:18:16+01:00',
-      updated_at: '2017-08-31T11:18:16+01:00',
-      user: {
-        login: 'js1',
-        first_name: 'John',
-        last_name: 'Smith'
-      }
-    }).data,
-    jsonFactory('comment',{
-      title: 'This is also a title',
-      description: 'This is also a comment',
-      created_at: '2017-09-30T11:18:16+01:00',
-      updated_at: '2017-09-30T11:18:16+01:00',
-      user: {
-        login: 'js2',
-        first_name: 'Jane',
-        last_name: 'Smythe'
-      }
-    }).data
-  ]}
+  const comments = jsonCollectionFactory('comment',[{
+    title: 'This is a title',
+    description: 'This is a comment',
+    created_at: '2017-08-31T11:18:16+01:00',
+    updated_at: '2017-08-31T11:18:16+01:00',
+    user: {
+      login: 'js1',
+      first_name: 'John',
+      last_name: 'Smith'
+    }
+  },{
+    title: 'This is also a title',
+    description: 'This is also a comment',
+    created_at: '2017-09-30T11:18:16+01:00',
+    updated_at: '2017-09-30T11:18:16+01:00',
+    user: {
+      login: 'js2',
+      first_name: 'Jane',
+      last_name: 'Smythe'
+    }
+  }])
 
   const mockApiFactory = function(response) {
     let api = mockApi()

@@ -1,5 +1,5 @@
 // // Import the component being tested
-import jsonFactory from './json_factory'
+import { jsonFactory, jsonCollectionFactory } from './json_factory'
 
 describe('jsonFactory', () => {
   it('generates a default id', () =>{
@@ -218,6 +218,94 @@ describe('jsonFactory', () => {
           },
         }
       ]
+    })
+  })
+})
+
+describe('jsonCollectionFactory', () => {
+  // Using comments as a simple example
+  it('generates a collection without inlined data', () => {
+    const json = jsonCollectionFactory('comment', [
+      {
+        id: '124',
+        created_at: '2018-07-06T13:39:32+01:00',
+        updated_at: '2018-07-06T13:39:32+01:00'
+      },
+      {
+        id: '125',
+        title: 'Comment 2',
+        created_at: '2018-07-06T13:39:32+01:00',
+        updated_at: '2018-07-06T13:39:32+01:00'
+      }
+    ],
+    {
+      base: 'assets/123/comments'
+    })
+
+    expect(json).toEqual({
+      'data': [
+        {
+          'id': '124',
+          'type': 'comments',
+          'links': {
+            'self': 'http://www.example.com/comments/124'
+          },
+          'attributes': {
+            'title': 'Comment Title',
+            'description': 'This is a comment',
+            'created_at': '2018-07-06T13:39:32+01:00',
+            'updated_at': '2018-07-06T13:39:32+01:00'
+          },
+          'relationships': {
+            'user': {
+              'links': {
+                'self': 'http://www.example.com/comments/124/relationships/user',
+                'related': 'http://www.example.com/comments/124/user'
+              }
+            },
+            'commentable': {
+              'links': {
+                'self': 'http://www.example.com/comments/124/relationships/commentable',
+                'related': 'http://www.example.com/comments/124/commentable'
+              }
+            }
+          },
+        },
+        {
+          'id': '125',
+          'type': 'comments',
+          'links': {
+            'self': 'http://www.example.com/comments/125'
+          },
+          'attributes': {
+            'title': 'Comment 2',
+            'description': 'This is a comment',
+            'created_at': '2018-07-06T13:39:32+01:00',
+            'updated_at': '2018-07-06T13:39:32+01:00'
+          },
+          'relationships': {
+            'user': {
+              'links': {
+                'self': 'http://www.example.com/comments/125/relationships/user',
+                'related': 'http://www.example.com/comments/125/user'
+              }
+            },
+            'commentable': {
+              'links': {
+                'self': 'http://www.example.com/comments/125/relationships/commentable',
+                'related': 'http://www.example.com/comments/125/commentable'
+              }
+            }
+          },
+        }
+      ],
+      // In practice the include array doesn't appear when empty. I'm not replicating
+      // that behaviour here for reasons of keeping the code simple.
+      'included': [],
+      'links': {
+        'first': 'http://www.example.com/assets/123/comments?page%5Bnumber%5D=1&page%5Bsize%5D=100',
+        'last': 'http://www.example.com/assets/123/comments?page%5Bnumber%5D=1&page%5Bsize%5D=100'
+      }
     })
   })
 })
