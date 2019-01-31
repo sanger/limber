@@ -102,7 +102,6 @@ const buildOne = (associationName, associationValue) => {
  * Build a jsonApi representation of your resource
  * @param {string} resource - The resource type to construct or a factory
  * @param {object} attributes - Any custom attributes to override the defaults
- * @param {object} options - Additional options, especially those regarding relationships
  */
 const jsonFactory = (factoryName, userAttributes = {}) => {
   const factory = defaults[factoryName] || { attributes: {} }
@@ -127,9 +126,9 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
       type: pluralize(type),
       links,
       attributes,
-      relationships,
-      included
-    }
+      relationships
+    },
+    included
   }
 }
 

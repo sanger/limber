@@ -54,11 +54,11 @@ describe('jsonFactory', () => {
               'related': 'http://www.example.com/comments/123/commentable'
             }
           }
-        },
-        // In practice the include array doesn't appear when empty. I'm not replicating
-        // that behaviour here for reasons of keeping the code simple.
-        'included': []
-      }
+        }
+      },
+      // In practice the include array doesn't appear when empty. I'm not replicating
+      // that behaviour here for reasons of keeping the code simple.
+      'included': []
     })
   })
 
@@ -98,24 +98,24 @@ describe('jsonFactory', () => {
               'related': 'http://www.example.com/comments/123/commentable'
             }
           }
-        },
-        'included': [
-          {
-            'id': '456',
-            'type': 'users',
-            'links': {
-              'self': 'http://www.example.com/users/456'
-            },
-            'attributes': {
-              'uuid': userUuid,
-              'login': 'js',
-              'first_name': 'Jane',
-              'last_name': 'Smith'
-            },
-            'relationships': {}
-          }
-        ]
-      }
+        }
+      },
+      'included': [
+        {
+          'id': '456',
+          'type': 'users',
+          'links': {
+            'self': 'http://www.example.com/users/456'
+          },
+          'attributes': {
+            'uuid': userUuid,
+            'login': 'js',
+            'first_name': 'Jane',
+            'last_name': 'Smith'
+          },
+          'relationships': {}
+        }
+      ]
     })
   })
 
@@ -160,64 +160,64 @@ describe('jsonFactory', () => {
               {'id': '125', 'type': 'comments'}
             ]
           }
-        },
-        'included': [
-          {
-            'id': '124',
-            'type': 'comments',
-            'links': {
-              'self': 'http://www.example.com/comments/124'
-            },
-            'attributes': {
-              'title': 'Comment Title',
-              'description': 'This is a comment',
-              'created_at': '2018-07-06T13:39:32+01:00',
-              'updated_at': '2018-07-06T13:39:32+01:00'
-            },
-            'relationships': {
-              'user': {
-                'links': {
-                  'self': 'http://www.example.com/comments/124/relationships/user',
-                  'related': 'http://www.example.com/comments/124/user'
-                }
-              },
-              'commentable': {
-                'links': {
-                  'self': 'http://www.example.com/comments/124/relationships/commentable',
-                  'related': 'http://www.example.com/comments/124/commentable'
-                }
-              }
-            },
+        }
+      },
+      'included': [
+        {
+          'id': '124',
+          'type': 'comments',
+          'links': {
+            'self': 'http://www.example.com/comments/124'
           },
-          {
-            'id': '125',
-            'type': 'comments',
-            'links': {
-              'self': 'http://www.example.com/comments/125'
-            },
-            'attributes': {
-              'title': 'Comment 2',
-              'description': 'This is a comment',
-              'created_at': '2018-07-06T13:39:32+01:00',
-              'updated_at': '2018-07-06T13:39:32+01:00'
-            },
-            'relationships': {
-              'user': {
-                'links': {
-                  'self': 'http://www.example.com/comments/125/relationships/user',
-                  'related': 'http://www.example.com/comments/125/user'
-                }
-              },
-              'commentable': {
-                'links': {
-                  'self': 'http://www.example.com/comments/125/relationships/commentable',
-                  'related': 'http://www.example.com/comments/125/commentable'
-                }
+          'attributes': {
+            'title': 'Comment Title',
+            'description': 'This is a comment',
+            'created_at': '2018-07-06T13:39:32+01:00',
+            'updated_at': '2018-07-06T13:39:32+01:00'
+          },
+          'relationships': {
+            'user': {
+              'links': {
+                'self': 'http://www.example.com/comments/124/relationships/user',
+                'related': 'http://www.example.com/comments/124/user'
               }
             },
-          }
-        ]
-      }
+            'commentable': {
+              'links': {
+                'self': 'http://www.example.com/comments/124/relationships/commentable',
+                'related': 'http://www.example.com/comments/124/commentable'
+              }
+            }
+          },
+        },
+        {
+          'id': '125',
+          'type': 'comments',
+          'links': {
+            'self': 'http://www.example.com/comments/125'
+          },
+          'attributes': {
+            'title': 'Comment 2',
+            'description': 'This is a comment',
+            'created_at': '2018-07-06T13:39:32+01:00',
+            'updated_at': '2018-07-06T13:39:32+01:00'
+          },
+          'relationships': {
+            'user': {
+              'links': {
+                'self': 'http://www.example.com/comments/125/relationships/user',
+                'related': 'http://www.example.com/comments/125/user'
+              }
+            },
+            'commentable': {
+              'links': {
+                'self': 'http://www.example.com/comments/125/relationships/commentable',
+                'related': 'http://www.example.com/comments/125/commentable'
+              }
+            }
+          },
+        }
+      ]
     })
   })
 })
