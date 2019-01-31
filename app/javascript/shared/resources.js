@@ -193,7 +193,17 @@ const resources = [
   {
     "resource": "tag_layout_template",
     "attributes": {
-      "uuid": ""
+      "uuid": "",
+      "direction_algorithm": "",
+      "walking_algorithm": "",
+      "tag_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      },
+      "tag2_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      }
     },
     "options": {
     }

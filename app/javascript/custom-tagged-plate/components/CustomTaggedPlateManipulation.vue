@@ -6,15 +6,22 @@
       <b-col>
           <b-form-group id="tag_plate_scan_group"
                         label="Scan in the tag plate you wish to use here...">
-            <!-- TODO scan plate, should be a 'qcable ' in a state of 'available' or 'exhausted' -->
+            <!-- TODO scan plate, should in this case lookup a 'qcable' with barcode in a state of 'available' or 'exhausted' -->
+            <!-- possible qcable states 'failed','passed','exhausted','destroyed','created','available','pending','qc_in_progress' -->
+            <!-- qcable in ss has a with_barcode scope, qcable has a state and a lot, lot has a template (a tag_layout_template here),
+            tag_layout_template should have a tag_group and tag2_group, plus walking_ and direction_algorithm, tag_groups have tags,
+            tags have a tag_index (map_id) and aliquots, aliquots have a tag and tag2 -->
+
             <!-- TODO we also need to warn if the tag plate layout template is not 'by plate' -->
             <lb-plate-scan id="tag_plate_scan"
                            :api="devourApi"
                            :label="'Tag Plate'"
-                           :includes="{ wells: { aliquots: {'something': 'name'}}}"
-                           :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
-                                       wells: ['position', 'aliquots', 'uuid'],
-                                       aliquots: ['tag_oligo','tag2_oligo'] }"
+                           :plateType="'qcable'"
+                           :includes="{ lot: { templates: ['tag_group','tag2_group'] }}"
+                           :selects="{ qcables: [ 'state', 'lot' ],
+                                       lots: [ 'template' ],
+                                       tag_layout_template: [ 'tag_group', 'tag2_group', 'direction_algorithm', 'walking_algorithm' ],
+                                       tag_group: [ 'name' ] }"
                            v-on:change="updatePlate($event)">
             </lb-plate-scan>
         </b-form-group>
@@ -182,7 +189,6 @@
       }
     },
     props: {
-      // DO NOT MUTATE THESE IN THIS COMPONENT!
     },
     created: function () {
     },
@@ -194,6 +200,7 @@
       updatePlate(data) {
         console.log('in update plate, data = ' + JSON.stringify(data))
         this.$set(this.tagPlate, {...data })
+        console.log('in update plate, this.tagPlate = ' + JSON.stringify(this.tagPlate))
       },
       updateTagParams(value) {
         // TODO value is not used, is it needed?

@@ -38,6 +38,7 @@
       api: { required: false },
       label: { type: String, default: 'Plate'},
       description: { type: String },
+      plateType: { type: String, default: 'plate' },
       includes: { default: () => { return [] } },
       selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] } } },
       plateCols: { type: Number, default: 12 },
@@ -56,8 +57,9 @@
       },
       async findPlate () {
         this.state = 'searching'
+        console.log('this.plateType = ' + this.plateType)
         const plate = (
-          await this.api.findAll('plate',{
+          await this.api.findAll(this.plateType, {
             include: this.includes,
             filter: { barcode: this.plateBarcode },
             select: this.selects
