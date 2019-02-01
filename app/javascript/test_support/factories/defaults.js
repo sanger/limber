@@ -16,5 +16,11 @@ export default {
       first_name: 'Jane',
       last_name: 'Smith'
     }
+  },
+  plate: {
+    attributes: {
+      number_of_columns: 12,
+      number_of_rows: 8
+    }
   }
 }

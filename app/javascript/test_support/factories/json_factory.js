@@ -18,6 +18,7 @@ class InvalidFactory extends Error {
 const dummyApiUrl = 'http://www.example.com'
 // Returns the name of a resource for a given factory
 const resourceName = factoryName =>  defaults[factoryName] && defaults[factoryName].resource || factoryName
+const findFactory = factoryName => defaults[factoryName] || { attributes: {} }
 
 const nextIndex = counter(1)
 
@@ -89,23 +90,26 @@ const buildMany = (associationName, associationValue) => {
 
 const buildOne = (associationName, associationValue) => {
   const { _factory = pluralize.singular(associationName), ...childAttributes } = associationValue
-  const childJson = jsonFactory(_factory, childAttributes).data
-  const { included: childIncluded = [], ... childData } = childJson
+  const { included = [], data } = jsonFactory(_factory, childAttributes)
   return {
-    relationData: { data: { id: childJson.id, type: childJson.type } },
-    includeData: [...childIncluded, childData]
+    relationData: { data: { id: data.id, type: data.type } },
+    includeData: [...included, data]
   }
 }
 
+const attributesFactory = (factoryName, userAttributes = {}) => {
+  const factory = findFactory(factoryName)
+  const { id = nextIndex() } = userAttributes
+  return { ... globalDefaults(id), ... factory.attributes, ... userAttributes }
+}
 
 /**
  * Build a jsonApi representation of your resource
  * @param {string} resource - The resource type to construct or a factory
  * @param {object} attributes - Any custom attributes to override the defaults
- * @param {object} options - Additional options, especially those regarding relationships
  */
 const jsonFactory = (factoryName, userAttributes = {}) => {
-  const factory = defaults[factoryName] || { attributes: {} }
+  const factory = findFactory(factoryName)
   const type = resourceName(factoryName)
   const resource_config = new ResourceConfig(type)
 
@@ -127,10 +131,31 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
       type: pluralize(type),
       links,
       attributes,
-      relationships,
-      included
-    }
+      relationships
+    },
+    included
   }
 }
 
-export default jsonFactory
+const jsonCollectionFactory = (factoryName, collectionAttributes, options = {}) => {
+  const type = resourceName(factoryName)
+  const url = `${dummyApiUrl}/${options.base || pluralize(type)}`
+  const links = {
+    first: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`,
+    last: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`
+  }
+
+  const collection = collectionAttributes.reduce(({ data, included }, userAttributes) => {
+    const json = jsonFactory(factoryName, userAttributes)
+    data.push(json.data)
+    included.push(...json.included)
+    return { data, included }
+  }, { data: [], included: [] })
+
+  return {
+    ...collection,
+    links
+  }
+}
+
+export { jsonFactory, jsonCollectionFactory, attributesFactory }

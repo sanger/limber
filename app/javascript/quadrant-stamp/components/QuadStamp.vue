@@ -18,11 +18,11 @@
                          :api="devourApi"
                          :label="'Plate ' + i"
                          :key="i"
-                         :includes="{wells: {'requests_as_source': 'primer_panel', aliquots: {'request': 'primer_panel'}}}"
-                         :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
-                                     requests: [ 'primer_panel', 'uuid'],
-                                     wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
-                                     aliquots: ['request'] }"
+                         includes="wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel"
+                         :fields="{ plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
+                                     requests: 'primer_panel,uuid',
+                                     wells: 'position,requests_as_source,aliquots,uuid',
+                                     aliquots: 'request' }"
                          v-on:change="updatePlate(i, $event)"></lb-plate-scan>
         </b-form-group>
         <b-form-group label="Select a primer panel to process">
