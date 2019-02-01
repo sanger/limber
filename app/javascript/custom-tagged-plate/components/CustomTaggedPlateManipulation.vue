@@ -17,9 +17,9 @@
                            :api="devourApi"
                            :label="'Tag Plate'"
                            :plateType="'qcable'"
-                           :includes="{ lot: { templates: ['tag_group','tag2_group'] }}"
+                           :includes="{ lots: { templates: ['tag_group','tag2_group'] }}"
                            :selects="{ qcables: [ 'state', 'lot' ],
-                                       lots: [ 'template' ],
+                                       lot: [ 'template' ],
                                        tag_layout_template: [ 'tag_group', 'tag2_group', 'direction_algorithm', 'walking_algorithm' ],
                                        tag_group: [ 'name' ] }"
                            v-on:change="updatePlate($event)">
@@ -41,6 +41,12 @@
                         v-on:input="updateTagParams">
           </b-form-select>
           <!-- alternate Tag group 1 label -->
+          <b-form-input id="tag1_group_from_tag_plate"
+                        type="text"
+                        :state="true"
+                        :value="form.tag1GroupFromTagPlate"
+                        :disabled="true">
+          </b-form-input>
           <!-- TODO -->
         </b-form-group>
       </b-col>
@@ -59,6 +65,12 @@
                         v-on:input="updateTagParams">
           </b-form-select>
           <!-- alternate Tag group 2 label -->
+          <b-form-input id="tag2_group_from_tag_plate"
+                        type="text"
+                        :state="true"
+                        :value="form.tag2GroupFromTagPlate"
+                        :disabled="true">
+          </b-form-input>
           <!-- TODO v-else on state -->
         </b-form-group>
       </b-col>
@@ -123,15 +135,12 @@
 </template>
 
 <script>
-  import devourApi from 'shared/devourApi'
-  import resources from 'shared/resources'
   import PlateScan from 'shared/components/PlateScan'
 
   export default {
     name: 'CustomTaggedPlateManipulations',
     data () {
       return {
-        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         tagPlate: null,
         form: {
           tagPlateBarcode: null,
@@ -139,39 +148,50 @@
           tag2Group: null,
           byPoolPlateOption: 'by_pool',
           byRowColOption: 'by_rows',
-          startAtTagOption: 1,
-          tagsPerWellOption: 1
-        },
-        // TODO fetch these from database, values are the group ids? or the full oligo lists?
-        tag1GroupOptions: [
+          startAtTagOption: null,
+          tagsPerWellOption: null,
+          tag1GroupFromTagPlate: 'filled when a valid tag plate is scanned',
+          tag2GroupFromTagPlate: 'filled when a valid tag plate is scanned'
+        }
+      }
+    },
+    props: {
+      devourApi: { type: Object, required: true },
+      // TODO fetch these from database, values are the group ids? or the full oligo lists?
+      // tag_group -> name, tags
+      tag1GroupOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: 1, text: 'i7 From DB num 1' },
-          { value: 2, text: 'i7 From DB num 2' },
-          { value: 3, text: 'i7 From DB num 3' }
-        ],
-        // TODO fetch these from database
-        tag2GroupOptions: [
+          { value: 1, text: 'i7 example tag group 1' },
+          { value: 2, text: 'i7 example tag group 2' },
+          { value: 3, text: 'i7 example tag group 3' }
+        ]}
+      },
+      // TODO fetch these from database, same list as for tag_group (can pick two the same)
+      tag2GroupOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: 1, text: 'i5 From DB num 1' },
-          { value: 2, text: 'i5 From DB num 2' },
-          { value: 3, text: 'i5 From DB num 3' }
-        ],
-        // TODO check what values should be and what transform they do (see generic lims)
-        byPoolPlateOptions: [
+          { value: 1, text: 'i5 example tag group 1' },
+          { value: 2, text: 'i5 example tag group 2' },
+          { value: 3, text: 'i5 example tag group 3' }
+        ]}
+      },
+      // TODO check what values should be and what transform they do (see generic lims)
+      byPoolPlateOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select a by Pool/Plate Option...' },
           { value: 'by_pool', text: 'By Pool' },
           { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
           { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
-        ],
-        // TODO check what values should be and what transform they do (see generic lims)
-        byRowColOptions: [
+        ]}
+      },
+      // TODO check what values should be and what transform they do (see generic lims)
+      byRowColOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select a by Row/Column Option...' },
           { value: 'by_rows', text: 'By Rows' },
           { value: 'by_columns', text: 'By Columns' }
-        ],
-        // TODO this one needs to be dynamic based on calculations (see generic lims)
-        // TODO change to number field with max, min and step parameters
-        startAtTagOptions: [
+        ]}
+      },
+      // TODO this one needs to be dynamic based on calculations (see generic lims)
+      // TODO change to number field with max, min and step parameters
+      startAtTagOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select which tag index to start at...' },
           { value: 1, text: '1' },
           { value: 2, text: '2' },
@@ -179,28 +199,31 @@
           { value: 4, text: '4' },
           { value: 5, text: '5' },
           { value: 6, text: '6' }
-        ],
-        // TODO Tags per well should be fixed absed on plate purpose (mostly 1, chromium 4)
-        tagsPerWellOptions: [
+        ]}
+      },
+      // TODO Tags per well should be fixed absed on plate purpose (mostly 1, chromium 4)
+      tagsPerWellOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select how many tags per well...' },
           { value: 1, text: '1' },
           { value: 4, text: '4' }
-        ]
-      }
-    },
-    props: {
+        ]}
+      },
     },
     created: function () {
     },
     computed: {
-
     },
     // NB. event handlers must be in the methods section
     methods: {
       updatePlate(data) {
         console.log('in update plate, data = ' + JSON.stringify(data))
-        this.$set(this.tagPlate, {...data })
-        console.log('in update plate, this.tagPlate = ' + JSON.stringify(this.tagPlate))
+        if(data['plate'] !== null) {
+          this.$set(this.tagPlate, {...data })
+          console.log('in update plate, this.tagPlate = ' + JSON.stringify(this.tagPlate))
+        } else {
+          // this.$set(this.tagPlate, null)
+          console.log('in update plate, plate null')
+        }
       },
       updateTagParams(value) {
         // TODO value is not used, is it needed?

@@ -13,7 +13,10 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation @tagparamsupdated="tagParamsUpdated"></lb-custom-tagged-plate-manipulation>
+            <lb-custom-tagged-plate-manipulation :devourApi="devourApi"
+                                                 :startAtTagOptions="calcStartAtTagOptions"
+                                                 @tagparamsupdated="tagParamsUpdated">
+            </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
               <b-button name="custom_tagged_plate_submit_button" id="custom_tagged_plate_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
             </div>
@@ -42,7 +45,10 @@
         state: 'searching',
         parentPlate: null,
         progressMessage: '',
-        byPoolPlateOption: '',
+        startAtTagMin: 1,
+        startAtTagMax: 96,
+        startAtTagStep: 1,
+        startAtTagOptions: {},
         form: {
           tagPlateBarcode: null,
           tag1Group: null,
@@ -62,10 +68,12 @@
     },
     created: function () {
       this.progressMessage = "Fetching parent plate details..."
-      this.lookupParentPlate()
+      this.fetchParentPlate()
+      // this.progressMessage = "Fetching tag groups list..."
+      // this.fetchTagGroups()
     },
     methods: {
-      lookupParentPlate: function (_) {
+      fetchParentPlate: function (_) {
         if (this.parentUuid !== '') {
           console.log('uuid = ' + this.parentUuid)
           this.findPlate()
@@ -78,7 +86,7 @@
           console.log('in else')
           this.parentPlateInvalid()
         }
-        console.log('end lookupParentPlate, state = ' + this.state)
+        console.log('end fetchParentPlate, state = ' + this.state)
       },
       async findPlate () {
         console.log('in findPlate')
@@ -123,8 +131,6 @@
         this.form.byRowColOption    = updatedform.byRowColOption
         this.form.startAtTagOption  = updatedform.startAtTagOption
         this.form.tagsPerWellOption = updatedform.tagsPerWellOption
-        // TODO store these updated values locally and trigger recalculateChildPlateWells
-       // this.recalculateChildPlateWells()
       },
       submit() {
         console.log('submit called')
@@ -134,33 +140,24 @@
     },
     computed: {
       numberOfRows: function () {
-        if(this.parentPlate === null) { return null }
-        return this.parentPlate.number_of_rows
+        return this.parentPlate.number_of_rows || null
       },
       numberOfColumns: function () {
-        if(this.parentPlate === null) { return null }
-        return this.parentPlate.number_of_columns
+        return this.parentPlate.number_of_columns || null
       },
       parentWells: function () {
-        console.log('in computed parentWells')
         if(this.parentPlate === null) { return {} }
         var wells = {}
-        // for (var i = 0; i <= this.parentPlate.wells.length - 1; i++) {
-        //     var wellPosn = this.parentPlate.wells[i].position.name
-        //     wells[wellPosn] = { pool_index: 20 }
-        // }
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
           wells[wellPosn] = { pool_index: 20 }
         })
-        console.log('parentWells:')
-        console.log(wells)
         return wells
       },
       childWells: function () {
         const wells = {}
 
-        // initialise wells - displays which have aliquots
+        // first initialise wells to match the parent plate
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
           wells[wellPosn] = { ... this.parentWells[wellPosn]}
@@ -173,6 +170,8 @@
         // TODO - function for by pool/plate seq/plate fixed selected
         // TODO - function for by row/column selected
         // TODO - function for start at index number selected
+
+        // TODO delete this - just an example of triggering updates
         if(this.form.byPoolPlateOption === 'by_plate_seq') {
           let index = 1
           this.parentPlate.wells.forEach((well) => {
@@ -180,11 +179,28 @@
             wells[wellPosn]['tagIndex'] = index
             index++
           })
+          this.startAtTagMin = 4
+          this.startAtTagStep = 2
         }
 
         return wells
       },
-      createCaption() { return 'Modify the tag layout for the new plate using options on the right' },
+      createCaption: function () {
+        return 'Modify the tag layout for the new plate using options on the right'
+      },
+      calcStartAtTagOptions: function () {
+        // TODO calculate the min/max based on function changes
+        const arr = [
+          { value: null, text: 'Select which tag index to start at...' }
+        ]
+        const totalSteps = Math.floor((this.startAtTagMax - this.startAtTagMin)/this.startAtTagStep)
+        for (let i = 0; i <= totalSteps; i++ ) {
+          let v = i * this.startAtTagStep + this.startAtTagMin
+          arr.push({ value: v, text: '' + v})
+        }
+        console.log('in computed calcStartAtTagOptions, new value = ' + JSON.stringify(arr))
+        return arr
+      },
       buttonText() {
         return {
             'loaded': 'Set up plate Tag layout...',

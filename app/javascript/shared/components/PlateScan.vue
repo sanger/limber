@@ -34,7 +34,6 @@
       }
     },
     props: {
-      plateApi: { required: false },
       api: { required: false },
       label: { type: String, default: 'Plate'},
       description: { type: String },
