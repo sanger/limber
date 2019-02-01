@@ -18,7 +18,7 @@
                          :api="devourApi"
                          :label="'Plate ' + i"
                          :key="i"
-                         includes="wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel"
+                         includes="wells,wells.requests_as_sourcef,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel"
                          :fields="{ plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
                                      requests: 'primer_panel,uuid',
                                      wells: 'position,requests_as_source,aliquots,uuid',

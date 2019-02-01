@@ -51,7 +51,7 @@ const mockApi = function(resources = sequencescapeResources) {
 
       if (mockedRequest) {
         mockedRequest.called += 1
-        payload.req.adapter = function () { return Promise.resolve(mockedRequest.res) }
+        payload.req.adapter = function () { return mockedRequest.res }
       } else {
         // Stop things going further, otherwise we risk generating real traffic
         payload.req.adapter = function () { return Promise.reject({ 'message': 'unregistered request' }) }
@@ -59,10 +59,17 @@ const mockApi = function(resources = sequencescapeResources) {
       }
       return payload
     },
-    mockGet: (url, params, response, status = 200) => {
+    mockGet: (url, params, response) => {
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
-        res: { data: response, status }, // Response
+        res:  Promise.resolve({ data: response }), // Response
+        called: 0
+      })
+    },
+    mockFail: (url, params, response) => {
+      mockedRequests.unshift({
+        req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
+        res: Promise.reject({ data: response }), // Response
         called: 0
       })
     },
