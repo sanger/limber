@@ -34,12 +34,11 @@
       }
     },
     props: {
-      plateApi: { required: false },
       api: { required: false },
       label: { type: String, default: 'Plate'},
       description: { type: String },
-      includes: { default: () => { return [] } },
-      selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] } } },
+      includes: { default: () => { return '' } },
+      fields: { default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } } },
       plateCols: { type: Number, default: 12 },
       plateRows: { type: Number, default: 8 }
     },
@@ -48,7 +47,7 @@
         if (this.plateBarcode !== '') {
           this.findPlate()
               .then(this.validatePlate)
-              .catch(this.badState)
+              .catch(this.apiError)
         } else {
           this.plate = null
           this.state = 'empty'
@@ -56,14 +55,16 @@
       },
       async findPlate () {
         this.state = 'searching'
+        console.log(this.api)
         const plate = (
-          await this.api.findAll('plate',{
+          await this.api.findAll('plate', {
             include: this.includes,
             filter: { barcode: this.plateBarcode },
-            select: this.selects
+            fields: this.fields
           })
-        ).data[0]
-        return plate
+        )
+        console.log('RESP',plate)
+        return plate.data[0]
       },
       validatePlate: function (plate) {
         if (plate === undefined) {
@@ -82,6 +83,10 @@
         return plate.number_of_columns !== this.plateCols ||
                plate.number_of_rows !== this.plateRows
       },
+      apiError: function(err) {
+        const message = `${err[0].title}: ${err[0].detail}`
+        this.badState({ message })
+      },
       badState: function(err) {
         this.state = 'invalid'
         this.invalidFeedback = err.message
@@ -96,6 +101,7 @@
     },
     watch: {
       state: function() {
+        console.log('PLATE',this.plate)
         this.$emit('change', { plate: this.plate, state: this.state })
       }
     }

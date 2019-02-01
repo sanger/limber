@@ -18,6 +18,7 @@ class InvalidFactory extends Error {
 const dummyApiUrl = 'http://www.example.com'
 // Returns the name of a resource for a given factory
 const resourceName = factoryName =>  defaults[factoryName] && defaults[factoryName].resource || factoryName
+const findFactory = factoryName => defaults[factoryName] || { attributes: {} }
 
 const nextIndex = counter(1)
 
@@ -96,6 +97,11 @@ const buildOne = (associationName, associationValue) => {
   }
 }
 
+const attributesFactory = (factoryName, userAttributes = {}) => {
+  const factory = findFactory(factoryName)
+  const { id = nextIndex() } = userAttributes
+  return { ... globalDefaults(id), ... factory.attributes, ... userAttributes }
+}
 
 /**
  * Build a jsonApi representation of your resource
@@ -103,7 +109,7 @@ const buildOne = (associationName, associationValue) => {
  * @param {object} attributes - Any custom attributes to override the defaults
  */
 const jsonFactory = (factoryName, userAttributes = {}) => {
-  const factory = defaults[factoryName] || { attributes: {} }
+  const factory = findFactory(factoryName)
   const type = resourceName(factoryName)
   const resource_config = new ResourceConfig(type)
 
@@ -152,4 +158,4 @@ const jsonCollectionFactory = (factoryName, collectionAttributes, options = {}) 
   }
 }
 
-export { jsonFactory, jsonCollectionFactory }
+export { jsonFactory, jsonCollectionFactory, attributesFactory }
