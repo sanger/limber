@@ -22,12 +22,24 @@ PF Post Shear XP:
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
+PF-384 Post Shear XP:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :label_template: plate_6mm_double
+  :size: 384
 PF End Prep:
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Post Shear
+PF-384 End Prep:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - PF-384 Post Shear XP
 PF Lib:
   :asset_type: plate
   :default_printer_type: :plate_a
@@ -44,6 +56,21 @@ PF Lib:
   :parents:
   - PF Post Shear XP
   - PF End Prep
+PF-384 Lib:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :size: 384
+  :tag_layout_templates:
+  - 'PF_adapters_UDI_384_A'
+  - 'PF_adapters_UDI_384_B'
+  - 'PF_adapters_UDI_384_C'
+  - 'PF_adapters_UDI_384_D'
+  - 'IDT for Illumina UDI v1'
+  - 'PF_adapters_UDI_384_B_ROWS'
+  :parents:
+  - PF-384 End Prep
 PF Lib XP:
   :asset_type: plate
   :default_printer_type: :plate_a
@@ -57,4 +84,13 @@ PF Lib XP2:
   :label_template: plate_xp
   :parents:
   - PF Lib XP
-  - PF Lib
+PF-384 Lib XP2:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - PF-384 Lib XP
