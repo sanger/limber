@@ -56,8 +56,11 @@
       },
       async findPlate () {
         this.state = 'searching'
+<<<<<<< HEAD
         console.log('this.plateType = ' + this.plateType)
         console.log(this.api)
+=======
+>>>>>>> d2b02f96907c7c383122f89093557c3964a4fb4f
         const plate = (
           await this.api.findAll(this.plateType, {
             include: this.includes,
@@ -65,7 +68,6 @@
             fields: this.fields
           })
         )
-        console.log('RESP',plate)
         return plate.data[0]
       },
       validatePlate: function (plate) {
@@ -86,12 +88,18 @@
                plate.number_of_rows !== this.plateRows
       },
       apiError: function(err) {
-        const message = `${err[0].title}: ${err[0].detail}`
-        this.badState({ message })
+        if (!err) {
+          this.badState({message: 'Unknown error'})
+        } else if (err[0]) {
+          const message = `${err[0].title}: ${err[0].detail}`
+          this.badState({ message })
+        } else {
+          this.badState(err)
+        }
       },
       badState: function(err) {
         this.state = 'invalid'
-        this.invalidFeedback = err.message
+        this.invalidFeedback = err.message || 'Unknown error'
       },
       goodState: function(msg) {
         this.state = 'valid'
@@ -103,7 +111,6 @@
     },
     watch: {
       state: function() {
-        console.log('PLATE',this.plate)
         this.$emit('change', { plate: this.plate, state: this.state })
       }
     }
