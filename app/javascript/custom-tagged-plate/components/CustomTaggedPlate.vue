@@ -69,36 +69,36 @@
     created: function () {
       this.progressMessage = "Fetching parent plate details..."
       this.fetchParentPlate()
+
+      // TODO need pool information - submission ids of active requests out of wells (or of requests on aliquots)
+      // this.progressMessage = "Fetching pooling information..."
+      // this.fetchPoolingDetails()
+
+      // TODO need the tag groups list
       // this.progressMessage = "Fetching tag groups list..."
       // this.fetchTagGroups()
     },
     methods: {
       fetchParentPlate: function (_) {
         if (this.parentUuid !== '') {
-          console.log('uuid = ' + this.parentUuid)
           this.findPlate()
               .then(this.validateParentPlate)
               .catch(() => {
-                console.log('in catch')
                 this.parentPlateInvalid()
               })
         } else {
-          console.log('in else')
           this.parentPlateInvalid()
         }
-        console.log('end fetchParentPlate, state = ' + this.state)
       },
       async findPlate () {
-        console.log('in findPlate')
         this.state = 'searching'
         const plate = (
           await this.devourApi.findAll('plate',{
             include: 'wells.aliquots',
             filter: { uuid: this.parentUuid },
-            select: { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] }
+            fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
           })
         ).data[0]
-        console.log('plate = ' + plate)
         return plate
       },
       validateParentPlate: function (plate) {

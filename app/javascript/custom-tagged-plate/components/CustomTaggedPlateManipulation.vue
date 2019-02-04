@@ -17,11 +17,11 @@
                            :api="devourApi"
                            :label="'Tag Plate'"
                            :plateType="'qcable'"
-                           :includes="{ lots: { templates: ['tag_group','tag2_group'] }}"
-                           :selects="{ qcables: [ 'state', 'lot' ],
-                                       lot: [ 'template' ],
-                                       tag_layout_template: [ 'tag_group', 'tag2_group', 'direction_algorithm', 'walking_algorithm' ],
-                                       tag_group: [ 'name' ] }"
+                           includes="lot,lots.templates,lots.templates.tag_group,lots.templates.tag2_group"
+                           :fields="{ qcables: 'uuid,state,lot',
+                                       lots: 'uuid,template',
+                                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                                       tag_group: 'uuid,name' }"
                            v-on:change="updatePlate($event)">
             </lb-plate-scan>
         </b-form-group>
