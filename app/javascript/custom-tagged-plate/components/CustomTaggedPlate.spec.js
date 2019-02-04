@@ -20,7 +20,6 @@ describe('CustomTaggedPlate', () => {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         api: api.devour,
-        sequencescapeApi: sequencescapeApiUrl,
         purposeUuid: purposeUuid,
         targetUrl: targetUrl,
         parentUuid: plateUuid
@@ -33,7 +32,6 @@ describe('CustomTaggedPlate', () => {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         api: api.devour,
-        sequencescapeApi: sequencescapeApiUrl,
         purposeUuid: purposeUuid,
         targetUrl: targetUrl,
         parentUuid: 'not-a-valid-uuid'
@@ -191,29 +189,14 @@ it('is invalid if it can not find the parent plate', async () => {
     }, nullPlate)
     const wrapper = wrapperFactoryInvalidPlate(api)
 
-    wrapper.vm.fetchParentPlate()
-
+    expect(wrapper.vm.parentUuid).toBe('not-a-valid-uuid')
     expect(wrapper.vm.state).toBe('searching')
     expect(wrapper.vm.progressMessage).toBe('Fetching parent plate details...')
 
     await flushPromises()
 
-    expect(wrapper.vm.state).toBe('unavailable')
+    expect(wrapper.vm.state).toBe('invalid')
     expect(wrapper.vm.progressMessage).toBe('Could not find parent plate details')
-
-    // TODO what should vue component emit here?
-    // expect(wrapper.emitted()).toEqual({
-    //   change: [
-    //     [{ state: 'searching', plate: null }],
-    //     [{ state: 'unavailable', plate: null }]
-    //   ]
-    // })
-    // const events = wrapper.emitted()
-
-    // expect(events.change.length).toEqual(2)
-    // expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
-    // expect(events.change[1][0].state).toEqual('unavailable')
-    // expect(events.change[1][0].plate.uuid).toEqual(null)
   })
 
   // it('is invalid if there are api troubles', async () => {

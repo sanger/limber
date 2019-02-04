@@ -8,7 +8,8 @@ import CustomTaggedPlate from './components/CustomTaggedPlate.vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
-import axios from 'axios'
+import devourApi from 'shared/devourApi'
+import resources from 'shared/resources'
 
 Vue.use(BootstrapVue)
 
@@ -48,17 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
     /* The custom-tagged-plate-page element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
     // const assetApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Asset
-    const axiosInst = axios.create({
-      baseURL: assetElem.dataset.sequencescapeApi,
-      timeout: 10000,
-      headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
-    })
-    Vue.prototype.$axios = axiosInst
+    // const axiosInst = axios.create({
+    //   baseURL: assetElem.dataset.sequencescapeApi,
+    //   timeout: 10000,
+    //   headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
+    // })
+    // Vue.prototype.$axios = axiosInst
 
     // var data = {
     //   // assetApi: assetApi,
     //   axiosSequencescapeInstance: axiosSequencescapeInstance
     // }
+
+    const devApi = devourApi({ apiUrl: assetElem.dataset.sequencescapeApi }, resources)
+    Vue.prototype.$api = devApi
 
     new Vue({
       // Customized render function to pass in properties from our root element

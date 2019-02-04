@@ -1,12 +1,34 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
-
+import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
+import mockApi from 'test_support/mock_api'
+import localVue from 'test_support/base_vue.js'
+import flushPromises from 'flush-promises'
+
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('CustomTaggedPlateManipulation', () => {
-  // const myCaption = 'Caption'
-  const wrapper = shallowMount(CustomTaggedPlateManipulation, { propsData: {} })
+  const wrapperFactory = function(api = mockApi()) {
+    return mount(CustomTaggedPlateManipulation, {
+      propsData: {
+        devourApi: api.devour,
+      },
+      localVue
+    })
+  }
+
+  const nullPlate = { data: [] }
+  const api = mockApi()
+    api.mockGet('plates', {
+      filter: { barcode: 'somebarcode' },
+      include: { lots: ['templates', { templates: 'tag_group,tag2_group' }] },
+      fields: { qcables: 'uuid,state,lot',
+                lots: 'uuid,template',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                tag_group: 'uuid,name' }
+    }, nullPlate)
+
+  const wrapper = wrapperFactory(api)
 
   // Inspect the raw component options
   it('renders a tag plate scan component', () => {
@@ -45,18 +67,16 @@ describe('CustomTaggedPlateManipulation', () => {
   it('emits a call to the parent container on any change of the form data', () => {
     const emitted = wrapper.emitted()
 
-    wrapper.vm.form.byPoolPlateOption = 'by_plate_seq'
-    wrapper.vm.updateTagParams('')
+    expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
+
+    const input = wrapper.find('#by_pool_plate_options')
+    const option = input.find(`option[value="by_plate_seq"]`)
+    option.setSelected()
+    input.trigger('input')
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tagPlateBarcode":null,
-         "tag1Group":null,
-         "tag2Group":null,
-         "byPoolPlateOption":"by_plate_seq",
-         "byRowColOption":"by_rows",
-         "startAtTagOption":1,
-         "tagsPerWellOption":1}]
+      [{"tagPlateBarcode":null,"tag1Group":null,"tag2Group":null,"byPoolPlateOption":"by_plate_seq","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null,"tag1GroupFromTagPlate":"filled when a valid tag plate is scanned","tag2GroupFromTagPlate":"filled when a valid tag plate is scanned"}]
     )
   })
 })

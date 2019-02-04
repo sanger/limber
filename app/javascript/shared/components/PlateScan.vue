@@ -56,11 +56,7 @@
       },
       async findPlate () {
         this.state = 'searching'
-<<<<<<< HEAD
-        console.log('this.plateType = ' + this.plateType)
-        console.log(this.api)
-=======
->>>>>>> d2b02f96907c7c383122f89093557c3964a4fb4f
+        // console.log(this.api)
         const plate = (
           await this.api.findAll(this.plateType, {
             include: this.includes,

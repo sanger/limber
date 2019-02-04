@@ -14,14 +14,14 @@
 
             <!-- TODO we also need to warn if the tag plate layout template is not 'by plate' -->
             <lb-plate-scan id="tag_plate_scan"
-                           :api="devourApi"
+                           :api="api"
                            :label="'Tag Plate'"
                            :plateType="'qcable'"
                            includes="lot,lots.templates,lots.templates.tag_group,lots.templates.tag2_group"
                            :fields="{ qcables: 'uuid,state,lot',
-                                       lots: 'uuid,template',
-                                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
-                                       tag_group: 'uuid,name' }"
+                                      lots: 'uuid,template',
+                                      tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                                      tag_group: 'uuid,name' }"
                            v-on:change="updatePlate($event)">
             </lb-plate-scan>
         </b-form-group>
@@ -156,7 +156,7 @@
       }
     },
     props: {
-      devourApi: { type: Object, required: true },
+      api: { required: false },
       // TODO fetch these from database, values are the group ids? or the full oligo lists?
       // tag_group -> name, tags
       tag1GroupOptions: { type: Array, default: () =>{ return [

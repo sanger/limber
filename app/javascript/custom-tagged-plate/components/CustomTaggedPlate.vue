@@ -13,7 +13,7 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation :devourApi="devourApi"
+            <lb-custom-tagged-plate-manipulation :api="api"
                                                  :startAtTagOptions="calcStartAtTagOptions"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
@@ -31,8 +31,6 @@
 
   import Plate from 'shared/components/Plate'
   import LoadingModal from 'shared/components/LoadingModal'
-  import devourApi from 'shared/devourApi'
-  import resources from 'shared/resources'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
   import { wellCoordinateToName } from 'shared/wellHelpers'
@@ -41,7 +39,6 @@
     name: 'CustomTaggedPlate',
     data () {
       return {
-        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         state: 'searching',
         parentPlate: null,
         progressMessage: '',
@@ -61,7 +58,7 @@
       }
     },
     props: {
-      sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+      api: { required: false },
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true }
@@ -79,6 +76,7 @@
       // this.fetchTagGroups()
     },
     methods: {
+      // TODO split the parent plate lookup on uuid into a separate component
       fetchParentPlate: function (_) {
         if (this.parentUuid !== '') {
           this.findPlate()
@@ -92,28 +90,32 @@
       },
       async findPlate () {
         this.state = 'searching'
+        console.log('findPlate: this.parentUuid = ' + this.parentUuid)
         const plate = (
           await this.devourApi.findAll('plate',{
-            include: 'wells.aliquots',
+            includes: 'wells.aliquots',
             filter: { uuid: this.parentUuid },
             fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
           })
-        ).data[0]
-        return plate
+        )
+        return plate.data[0]
       },
       validateParentPlate: function (plate) {
         if (plate === undefined) {
+          console.log('validateParentPlate: plate undefined')
           this.parentPlateInvalid()
         } else {
           this.parentPlate = plate
+          console.log('validateParentPlate: found plate')
           this.progressMessage = "Found parent plate details"
           this.state = 'loaded'
         }
       },
       parentPlateInvalid() {
+        console.log('parentPlateInvalid: plate invalid')
         this.parentPlate = null
         this.progressMessage = "Could not find parent plate details"
-        this.state = 'unavailable'
+        this.state = 'invalid'
       },
       tagParamsUpdated(updatedform) {
         console.log('in parent tagParamsUpdated called, updatedform values = ')
