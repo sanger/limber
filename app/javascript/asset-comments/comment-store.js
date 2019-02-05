@@ -1,14 +1,14 @@
 // Shared object for retrieval of comments from SequenceScape API
 
-const commentStoreFactory = function(axiosInstance, commentApi, assetId, userId) {
+const commentStoreFactory = function(axiosInstance, devourApi, assetId, userId) {
   return {
     comments: undefined,
 
     async refreshComments() {
       this.comments = undefined
       this.comments = (
-        await commentApi.includes({ comments: 'user' }).find(assetId)
-      ).data.comments
+        await devourApi.one('asset', assetId).all('comment').get({ include: 'user' })
+      ).data
       return true
     },
     async addComment(newTitle, newDescription) {

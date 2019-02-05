@@ -6,6 +6,8 @@ require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
 RSpec.describe LabwareCreators::Base do
+  it_behaves_like 'it does not allow creation'
+
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 

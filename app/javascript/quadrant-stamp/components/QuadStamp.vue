@@ -15,14 +15,14 @@
       <b-card header="Add plates" header-tag="h3">
         <b-form-group label="Scan in the plates you wish to use">
           <lb-plate-scan v-for="i in sourcePlateNumber"
-                         :plate-api="Api.Plate"
+                         :api="devourApi"
                          :label="'Plate ' + i"
                          :key="i"
-                         :includes="{wells: {'requests_as_source': 'primer_panel', aliquots: {'request': 'primer_panel'}}}"
-                         :selects="{ plates: [ 'labware_barcode', 'wells', 'uuid', 'number_of_rows', 'number_of_columns' ],
-                                     requests: [ 'primer_panel', 'uuid'],
-                                     wells: ['position', 'requests_as_source', 'aliquots', 'uuid'],
-                                     aliquots: ['request'] }"
+                         includes="wells,wells.requests_as_sourcef,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel"
+                         :fields="{ plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
+                                     requests: 'primer_panel,uuid',
+                                     wells: 'position,requests_as_source,aliquots,uuid',
+                                     aliquots: 'request' }"
                          v-on:change="updatePlate(i, $event)"></lb-plate-scan>
         </b-form-group>
         <b-form-group label="Select a primer panel to process">
@@ -42,7 +42,8 @@
   import PlateSummary from './PlateSummary'
   import PlateScan from 'shared/components/PlateScan'
   import LoadingModal from 'shared/components/LoadingModal'
-  import ApiModule from 'shared/api'
+  import devourApi from 'shared/devourApi'
+  import resources from 'shared/resources'
   import buildArray from 'shared/buildArray'
   import { wellNameToCoordinate, wellCoordinateToName, requestsForWell } from 'shared/wellHelpers'
 
@@ -52,7 +53,7 @@
       let plateArray = buildArray(this.sourcePlateNumber, (iteration) => { return { state: 'empty', plate: null, index: iteration } })
 
       return {
-        Api: ApiModule({ baseUrl: this.sequencescapeApi }),
+        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         plates: plateArray,
         primerPanel: null,
         loading: false,
@@ -77,7 +78,7 @@
       },
       requestFor(well) {
         return requestsForWell(well).find((request) => {
-            return request.primerPanel && request.primerPanel.name === this.primerPanel
+            return request.primer_panel && request.primer_panel.name === this.primerPanel
         })
       },
       targetFor(quadrant, wellName) {

@@ -34,11 +34,11 @@
       }
     },
     props: {
-      plateApi: { required: true },
+      api: { required: false },
       label: { type: String, default: 'Plate'},
       description: { type: String },
-      includes: { default: () => { return [] } },
-      selects: { default: () => { return { plates: [ 'labware_barcode', 'uuid', 'number_of_rows', 'number_of_columns' ] } } },
+      includes: { default: () => { return '' } },
+      fields: { default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } } },
       plateCols: { type: Number, default: 12 },
       plateRows: { type: Number, default: 8 }
     },
@@ -47,7 +47,7 @@
         if (this.plateBarcode !== '') {
           this.findPlate()
               .then(this.validatePlate)
-              .catch(this.badState)
+              .catch(this.apiError)
         } else {
           this.plate = null
           this.state = 'empty'
@@ -56,16 +56,16 @@
       async findPlate () {
         this.state = 'searching'
         const plate = (
-          await this.plateApi
-                    .includes(this.includes)
-                    .where({barcode: this.plateBarcode})
-                    .select(this.selects)
-                    .first()
-        ).data
-        return plate
+          await this.api.findAll('plate', {
+            include: this.includes,
+            filter: { barcode: this.plateBarcode },
+            fields: this.fields
+          })
+        )
+        return plate.data[0]
       },
       validatePlate: function (plate) {
-        if (plate === null) {
+        if (plate === undefined) {
           this.plate = null
           this.badState({ message: "Could not find plate" })
         } else {
@@ -78,11 +78,22 @@
         }
       },
       incorrectSize: function(plate) {
-        return plate.numberOfColumns !== this.plateCols || plate.numberOfRows !== this.plateRows
+        return plate.number_of_columns !== this.plateCols ||
+               plate.number_of_rows !== this.plateRows
+      },
+      apiError: function(err) {
+        if (!err) {
+          this.badState({message: 'Unknown error'})
+        } else if (err[0]) {
+          const message = `${err[0].title}: ${err[0].detail}`
+          this.badState({ message })
+        } else {
+          this.badState(err)
+        }
       },
       badState: function(err) {
         this.state = 'invalid'
-        this.invalidFeedback = err.message
+        this.invalidFeedback = err.message || 'Unknown error'
       },
       goodState: function(msg) {
         this.state = 'valid'

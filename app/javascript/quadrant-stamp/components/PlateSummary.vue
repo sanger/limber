@@ -12,7 +12,7 @@
     props: {
       poolIndex: { default: null },
       state: { default: 'empty' },
-      plate: { default: { labwareBarcode: { human_barcode: '...' } } }
+      plate: { default: { labware_barcode: { human_barcode: '...' } } }
     },
     computed: {
       colourClass() {
@@ -23,7 +23,7 @@
       },
       barcode() {
         if (this.plate) {
-          return this.plate.labwareBarcode.human_barcode
+          return this.plate.labware_barcode.human_barcode
         } else {
           return ''
         }
