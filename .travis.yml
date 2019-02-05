@@ -3,6 +3,8 @@ language: ruby
 dist: xenial
 bundler_args: "--without deployment"
 sudo: required
+services:
+  - xvfb
 addons:
   apt:
     packages:
@@ -20,7 +22,6 @@ env:
   global:
   - TZ=Europe/London
   - PATH=$PATH:/usr/lib/chromium-browser/
-  - DISPLAY=:99.0
 install:
 - nvm install node
 - node -v
@@ -33,10 +34,10 @@ jobs:
   include:
   - stage: test
     name: Karma
-    script: "xvfb-run yarn karma start --single-run"
+    script: xvfb-run -a yarn karma start --single-run
   - name: RSpec
     script:
-    - xvfb-run bundle exec rspec
+    - xvfb-run -a bundle exec rspec
     - bundle exec rubocop
   - stage: build
     if: tag IS present
