@@ -13,15 +13,15 @@
             tags have a tag_index (map_id) and aliquots, aliquots have a tag and tag2 -->
 
             <!-- TODO we also need to warn if the tag plate layout template is not 'by plate' -->
+            <!-- NB. includes and fields lists must not contain spaces -->
             <lb-plate-scan id="tag_plate_scan"
                            :api="api"
                            :label="'Tag Plate'"
                            :plateType="'qcable'"
-                           includes="lot,lots.templates,lots.templates.tag_group,lots.templates.tag2_group"
-                           :fields="{ qcables: 'uuid,state,lot',
-                                      lots: 'uuid,template',
+                           includes="lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
+                           :fields="{ lots: 'uuid,tag_layout_template',
                                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
-                                      tag_group: 'uuid,name' }"
+                                      tag_groups: 'uuid,name,tags' }"
                            v-on:change="updatePlate($event)">
             </lb-plate-scan>
         </b-form-group>
@@ -216,7 +216,6 @@
     // NB. event handlers must be in the methods section
     methods: {
       updatePlate(data) {
-        console.log('in update plate, data = ' + JSON.stringify(data))
         if(data['plate'] !== null) {
           this.$set(this.tagPlate, {...data })
           console.log('in update plate, this.tagPlate = ' + JSON.stringify(this.tagPlate))

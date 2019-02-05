@@ -10,12 +10,14 @@ import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue'
 
 describe('PlateScan', () => {
-  const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
+  const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
   const nullPlate = { data: [] }
-  const goodPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid }])
-  const badPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid , number_of_columns: 24, number_of_rows: 8 }])
+  const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
+  const badPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid , number_of_columns: 24, number_of_rows: 8 }])
+  const goodQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available' }])
+  const badQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'qc_in_progress' }])
 
-  const wrapperFactory = function(api = mockApi()) {
+  const wrapperFactoryPlate = function(api = mockApi()) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
     return mount(PlateScan, {
@@ -25,20 +27,36 @@ describe('PlateScan', () => {
         api: api.devour,
         plateCols: 12,
         plateRows: 8,
-        includes: {wells: ['requests_as_source',{ aliquots: 'request' }]}
+        includes: { wells: ['requests_as_source',{ aliquots: 'request' }]}
+      },
+      localVue
+    })
+  }
+
+  const wrapperFactoryQcable = function(api = mockApi()) {
+    return mount(PlateScan, {
+      propsData: {
+        label: 'My Qcable',
+        description: 'Scan it in',
+        api: api.devour,
+        plateType: 'qcable',
+        includes: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
+        fields: { lots:'uuid,template',
+                  tag_layout_templates:'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                  tag_group:'uuid,name' }
       },
       localVue
     })
   }
 
   it('renders the provided label', () => {
-    const wrapper = wrapperFactory()
+    const wrapper = wrapperFactoryPlate()
 
     expect(wrapper.find('label').text()).toEqual('My Plate')
   })
 
   it('renders the provided description', () => {
-    const wrapper = wrapperFactory()
+    const wrapper = wrapperFactoryPlate()
 
     expect(wrapper.find('.text-muted').text()).toEqual('Scan it in')
   })
@@ -50,7 +68,7 @@ describe('PlateScan', () => {
       include: { wells: ['requests_as_source', { aliquots: 'request' }] },
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, nullPlate)
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('not a barcode')
     wrapper.find('input').trigger('change')
@@ -80,7 +98,7 @@ describe('PlateScan', () => {
       code: 500,
       status: 500
     }]})
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('Good barcode')
     wrapper.find('input').trigger('change')
@@ -103,7 +121,7 @@ describe('PlateScan', () => {
 
   it('is valid if it can find a plate', async () => {
     const api = mockApi()
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
       include: { wells: ['requests_as_source', { aliquots: 'request' }] },
@@ -118,19 +136,19 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
+    expect(wrapper.find('.valid-feedback').text()).toEqual('Valid!')
 
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
     expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
     expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].plate.uuid).toEqual(plateUuid)
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
   })
 
   it('is invalid if the plate is the wrong size', async () => {
     const api = mockApi()
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
       include: { wells: ['requests_as_source',{aliquots: 'request'}] },
@@ -151,7 +169,64 @@ describe('PlateScan', () => {
     expect(events.change.length).toEqual(2)
     expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
     expect(events.change[1][0].state).toEqual('invalid')
-    expect(events.change[1][0].plate.uuid).toEqual(plateUuid)
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
+  })
+
+  it('is valid if it can find a qcable in the correct state', async () => {
+    const api = mockApi()
+    const wrapper = wrapperFactoryQcable(api)
+
+    api.mockGet('qcables',{
+      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
+      filter: { barcode: 'DN12345' },
+      fields: { lots: 'uuid,template',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                tag_group: 'uuid,name' }
+    }, goodQcable)
+
+    wrapper.find('input').setValue('DN12345')
+    wrapper.find('input').trigger('change')
+
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+    await flushPromises()
+
+    expect(wrapper.find('.valid-feedback').text()).toEqual('Valid!')
+
+    const events = wrapper.emitted()
+
+    expect(events.change.length).toEqual(2)
+    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
+    expect(events.change[1][0].state).toEqual('valid')
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
+  })
+
+  it('is invalid if the qcable is not the correct state', async () => {
+    const api = mockApi()
+    const wrapper = wrapperFactoryQcable(api)
+
+    api.mockGet('qcables',{
+      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
+      filter: { barcode: 'Good barcode' },
+      fields: { lots: 'uuid,template',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                tag_group: 'uuid,name' }
+    }, badQcable)
+
+    wrapper.find('input').setValue('Good barcode')
+    wrapper.find('input').trigger('change')
+
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+    await flushPromises()
+
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should be in available or exhausted state')
+    const events = wrapper.emitted()
+
+    expect(events.change.length).toEqual(2)
+    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
+    expect(events.change[1][0].state).toEqual('invalid')
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
   })
 
 })

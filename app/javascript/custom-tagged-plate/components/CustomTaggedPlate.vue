@@ -13,7 +13,7 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation :api="api"
+            <lb-custom-tagged-plate-manipulation :api="this.$api"
                                                  :startAtTagOptions="calcStartAtTagOptions"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
@@ -58,7 +58,6 @@
       }
     },
     props: {
-      api: { required: false },
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true }
@@ -92,10 +91,9 @@
         this.state = 'searching'
         console.log('findPlate: this.parentUuid = ' + this.parentUuid)
         const plate = (
-          await this.devourApi.findAll('plate',{
-            includes: 'wells.aliquots',
-            filter: { uuid: this.parentUuid },
-            fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
+          await this.$api.findAll('plate',{
+            include: 'wells.aliquots',
+            filter: { uuid: this.parentUuid }
           })
         )
         return plate.data[0]
@@ -149,18 +147,21 @@
       },
       parentWells: function () {
         if(this.parentPlate === null) { return {} }
-        var wells = {}
+        let wells = {}
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
           wells[wellPosn] = { pool_index: 20 }
         })
+        console.log('parentWells = ' + wells)
         return wells
       },
       childWells: function () {
+        if (this.parentPlate.wells === null) { return {} }
         const wells = {}
 
         // first initialise wells to match the parent plate
         this.parentPlate.wells.forEach((well) => {
+          console.log('well = ' + well)
           let wellPosn = well.position.name
           wells[wellPosn] = { ... this.parentWells[wellPosn]}
         })
