@@ -14,8 +14,11 @@ describe('PlateScan', () => {
   const nullPlate = { data: [] }
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
   const badPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid , number_of_columns: 24, number_of_rows: 8 }])
-  const goodQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available' }])
-  const badQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'qc_in_progress' }])
+  const lotUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9b'
+  const tagLayoutUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9c'
+  const goodQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'wells of plate'}}}])
+  const badQcableWrongState = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'qc_in_progress', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'wells of plate'}}}])
+  const badQcableWrongWalkingBy = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'quadrants'}}}])
 
   const wrapperFactoryPlate = function(api = mockApi()) {
     // Not ideal using mount here, but having massive trouble
@@ -211,7 +214,7 @@ describe('PlateScan', () => {
       fields: { lots: 'uuid,template',
                 tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                 tag_group: 'uuid,name' }
-    }, badQcable)
+    }, badQcableWrongState)
 
     wrapper.find('input').setValue('Good barcode')
     wrapper.find('input').trigger('change')
@@ -221,6 +224,34 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should be in available or exhausted state')
+    const events = wrapper.emitted()
+
+    expect(events.change.length).toEqual(2)
+    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
+    expect(events.change[1][0].state).toEqual('invalid')
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
+  })
+
+  it('is invalid if the qcable does not have a walking by wells of plate', async () => {
+    const api = mockApi()
+    const wrapper = wrapperFactoryQcable(api)
+
+    api.mockGet('qcables',{
+      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
+      filter: { barcode: 'Good barcode' },
+      fields: { lots: 'uuid,template',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+                tag_group: 'uuid,name' }
+    }, badQcableWrongWalkingBy)
+
+    wrapper.find('input').setValue('Good barcode')
+    wrapper.find('input').trigger('change')
+
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+    await flushPromises()
+
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should have a walking by of wells by plate')
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)

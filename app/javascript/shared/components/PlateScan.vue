@@ -101,8 +101,13 @@
             console.log('qcable incorrect state')
             this.badState({ message: 'The tag plate should be in available or exhausted state' })
           } else {
-            console.log('qcable valid')
-            this.goodState({ message: 'Valid!' })
+            if(this.incorrectWalkingBy(plate)) {
+              console.log('qcable incorrect walking by')
+              this.badState({ message: 'The tag plate should have a walking by of wells by plate' })
+            } else {
+              console.log('qcable valid')
+              this.goodState({ message: 'Valid!' })
+            }
           }
         }
       },
@@ -115,6 +120,10 @@
         if(plate.state === 'available') { return false }
         if(plate.state === 'exhausted') { return false }
         return true
+      },
+      incorrectWalkingBy: function(plate) {
+        console.log('plate tag layout walking by = ' + plate.lot.tag_layout_template.walking_by)
+        return plate.lot.tag_layout_template.walking_by !== 'wells of plate'
       },
       apiError: function(err) {
         if (!err) {
