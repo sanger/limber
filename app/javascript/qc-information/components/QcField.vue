@@ -48,7 +48,7 @@
       dataType: { type: String, default: 'number' },
       assayTypes: { type: Array, default: () =>{ return ['Estimated'] } },
       fieldOptions: { type: Object, default: () => { return { step: 0.01, min: 0 } }},
-      assetUuid: { typw: String, required: true }
+      assetUuid: { type: String, required: true }
     },
     methods: {
       emitOnChange(_value) {
