@@ -42,7 +42,7 @@ describe('PlateScan', () => {
         plateType: 'qcable',
         includes: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
         fields: { lots:'uuid,template',
-                  tag_layout_templates:'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                  tag_layout_templates:'uuid,tag_group,tag2_group,direction,walking_by',
                   tag_group:'uuid,name' }
       },
       localVue
@@ -180,7 +180,7 @@ describe('PlateScan', () => {
       include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
       filter: { barcode: 'DN12345' },
       fields: { lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                 tag_group: 'uuid,name' }
     }, goodQcable)
 
@@ -209,7 +209,7 @@ describe('PlateScan', () => {
       include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
       filter: { barcode: 'Good barcode' },
       fields: { lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                 tag_group: 'uuid,name' }
     }, badQcable)
 
