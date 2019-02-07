@@ -1,19 +1,30 @@
-<template v-if="state === 'searching'">
-  <lb-page>
+<template>
+  <lb-page v-if="state === 'searching'">
     <lb-loading-modal :message="progressMessage"></lb-loading-modal>
+    <lb-parent-plate-lookup :api="devourApi"
+                            :assetUuid="parentUuid"
+                            :includes="'wells.aliquots'"
+                            @change="parentPlateLookupUpdated">
+    </lb-parent-plate-lookup>
   </lb-page>
-</template>
-<template v-else>
-  <lb-page v-if="parentPlate">
+  <lb-page v-else-if="state === 'parent_lookup_empty'">
+    <h4>Error:</h4>
+    <p>Parent plate lookup failed; plate uuid not supplied.</p>
+  </lb-page>
+  <lb-page v-else-if="state === 'parent_lookup_invalid'">
+    <h4>Error:</h4>
+    <p>Parent plate lookup failed; plate invalid.</p>
+  </lb-page>
+  <lb-page v-else>
     <lb-main-content>
-      <lb-plate :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-plate>
+      <lb-parent-plate-view :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-parent-plate-view>
       <lb-custom-tagged-plate-details></lb-custom-tagged-plate-details>
     </lb-main-content>
     <lb-sidebar>
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation :api="this.$api"
+            <lb-custom-tagged-plate-manipulation :api="devourApi"
                                                  :startAtTagOptions="calcStartAtTagOptions"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
@@ -30,18 +41,25 @@
 <script>
 
   import Plate from 'shared/components/Plate'
+  import AssetLookupByUuid from 'shared/components/AssetLookupByUuid'
   import LoadingModal from 'shared/components/LoadingModal'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
   import { wellCoordinateToName } from 'shared/wellHelpers'
+  import Vue from 'vue'
+  import devourApi from 'shared/devourApi'
+  import resources from 'shared/resources'
 
   export default {
     name: 'CustomTaggedPlate',
     data () {
       return {
+        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+        // loading: true,
         state: 'searching',
+        // assetLookupRet: null,
         parentPlate: null,
-        progressMessage: '',
+        progressMessage: 'Fetching parent plate details and tag groups...',
         startAtTagMin: 1,
         startAtTagMax: 96,
         startAtTagStep: 1,
@@ -58,13 +76,18 @@
       }
     },
     props: {
-      purposeUuid: { type: String, required: true },
-      targetUrl: { type: String, required: true },
+      sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+      // purposeUuid: { type: String, required: true },
+      // targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true }
     },
     created: function () {
-      this.progressMessage = "Fetching parent plate details..."
-      this.fetchParentPlate()
+      console.log('in parent created')
+      console.log('initial state = ', this.state)
+      console.log('initial progressMessage = ', this.progressMessage)
+      // this.loading = true
+      // this.progressMessage = "Fetching parent plate details and tag groups..."
+      // this.fetchParentPlate()
 
       // TODO need pool information - submission ids of active requests out of wells (or of requests on aliquots)
       // this.progressMessage = "Fetching pooling information..."
@@ -75,45 +98,81 @@
       // this.fetchTagGroups()
     },
     methods: {
-      // TODO split the parent plate lookup on uuid into a separate component
-      fetchParentPlate: function (_) {
-        if (this.parentUuid !== '') {
-          this.findPlate()
-              .then(this.validateParentPlate)
-              .catch(() => {
-                this.parentPlateInvalid()
-              })
+      // fetchParentPlate: function (_) {
+        // let Cmp = Vue.extend(AssetLookupByUuid)
+        // let assetLookup = new Cmp({propsData: { api: this.devourApi, assetUuid: this.parentUuid, includes: 'wells.aliquots' }})
+        // assetLookup.lookupAsset()
+
+        // on:change="updatePlate(i, $event)"
+        // console.log('after fetchParentPlate ret = ', this.assetLookupRet)
+      // },
+
+      // fetchParentPlate: function (_) {
+      //   console.log('parentUuid = ' + this.parentUuid)
+      //   if (this.parentUuid !== '') {
+      //     this.findPlate()
+      //         .then(this.validateParentPlate)
+      //         .catch((error) => {
+      //           console.log('fetchParentPlate in catch = ', error)
+      //           this.parentPlateInvalid()
+      //         })
+      //   } else {
+      //     console.log('parentUuid blank, cannot run find plate')
+      //     this.parentPlateInvalid()
+      //   }
+      // },
+      // async findPlate () {
+      //   this.state = 'searching'
+      //   console.log('findPlate: this.parentUuid = ' + this.parentUuid)
+      //   const plate = (
+      //     await this.$api.findAll('plate',{
+      //       include: 'wells.aliquots',
+      //       filter: { uuid: this.parentUuid }
+      //     })
+      //   )
+      //   console.log('in findPlate, plate = ' + JSON.stringify(plate))
+      //   console.log('in findPlate, plate.data[0] = ' + JSON.stringify(plate.data[0]))
+      //   return plate.data[0]
+      // },
+      // validateParentPlate: function (plate) {
+      //   if (plate === undefined) {
+      //     console.log('validateParentPlate: plate undefined')
+      //     this.parentPlateInvalid()
+      //   } else {
+      //     this.parentPlate = plate
+      //     console.log('validateParentPlate: found plate')
+      //     // TODO check these and change ?
+      //     this.progressMessage = "Found parent plate details"
+      //     this.state = 'loaded'
+      //   }
+      // },
+      // parentPlateInvalid() {
+      //   console.log('parentPlateInvalid: plate invalid')
+      //   this.parentPlate = null
+      //   this.progressMessage = "Could not find parent plate details"
+      //   this.state = 'invalid'
+      // },
+      parentPlateLookupUpdated(data) {
+        console.log('parentPlateLookupUpdated: data = ', data)
+        // data should look like: {asset: {…}, state: "loaded"}
+        if(data !== null) {
+          this.parentPlate = null
+          if(data['state'] === 'searching') {
+            return
+          } else {
+            if(data['state'] === 'loaded') {
+              // TODO more defensive checks here?
+              this.parentPlate = { ...data['asset']}
+              this.state = 'loaded'
+            } else if(data['state'] === 'empty') {
+              this.state = 'parent_lookup_empty'
+            } else if(data['state'] === 'invalid') {
+              this.state = 'parent_lookup_invalid'
+            }
+          }
         } else {
-          this.parentPlateInvalid()
+
         }
-      },
-      async findPlate () {
-        this.state = 'searching'
-        console.log('findPlate: this.parentUuid = ' + this.parentUuid)
-        const plate = (
-          await this.$api.findAll('plate',{
-            include: 'wells.aliquots',
-            filter: { uuid: this.parentUuid }
-          })
-        )
-        return plate.data[0]
-      },
-      validateParentPlate: function (plate) {
-        if (plate === undefined) {
-          console.log('validateParentPlate: plate undefined')
-          this.parentPlateInvalid()
-        } else {
-          this.parentPlate = plate
-          console.log('validateParentPlate: found plate')
-          this.progressMessage = "Found parent plate details"
-          this.state = 'loaded'
-        }
-      },
-      parentPlateInvalid() {
-        console.log('parentPlateInvalid: plate invalid')
-        this.parentPlate = null
-        this.progressMessage = "Could not find parent plate details"
-        this.state = 'invalid'
       },
       tagParamsUpdated(updatedform) {
         console.log('in parent tagParamsUpdated called, updatedform values = ')
@@ -240,7 +299,8 @@
     },
     components: {
       'lb-loading-modal': LoadingModal,
-      'lb-plate': Plate,
+      'lb-parent-plate-lookup': AssetLookupByUuid,
+      'lb-parent-plate-view': Plate,
       'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
       'lb-custom-tagged-plate-manipulation': CustomTaggedPlateManipulation
     }

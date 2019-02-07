@@ -20,7 +20,7 @@
                            :plateType="'qcable'"
                            includes="lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
                            :fields="{ lots: 'uuid,tag_layout_template',
-                                      tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+                                      tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                                       tag_groups: 'uuid,name,tags' }"
                            v-on:change="updatePlate($event)">
             </lb-plate-scan>
@@ -141,7 +141,7 @@
     name: 'CustomTaggedPlateManipulations',
     data () {
       return {
-        tagPlate: null,
+        tagPlate: {},
         form: {
           tagPlateBarcode: null,
           tag1Group: null,
@@ -216,8 +216,36 @@
     // NB. event handlers must be in the methods section
     methods: {
       updatePlate(data) {
+        // TODO split this data out to extract the tag plate info, the lot, the tag groups and set
+        // them to trigger the display of the tag group names in the GUI, and store the tags (indexes and oligos).
+        // should trigger the emit to update tag params and redraw of the main screen.
+
+        // data.plate.lot.tag_layout_template.id
+        // this.tagLayoutWalkingAlgorithm = data.plate.lot.tag_layout_template.walking_by // e.g.
+        // WALKING_ALGORITHMS = 'wells in pools', 'wells of plate', 'manual by pool', 'as group by plate', 'manual by plate', 'quadrants'
+
+        // this.tagLayoutDirectionAlgorithm = data.plate.lot.tag_layout_template.direction // e.g.
+        // DIRECTIONS = 'column','row','inverse column','inverse row,'column then row'
+
+        // this.tagGroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
+        // this.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
+
+        // this.tagGroupTagsFromScan = data.plate.lot.tag_layout_template.tag_group.tags
+        // this.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
+
+        // data.plate.lot.tag_layout_template.tag_group.tags.length
+        // data.plate.lot.tag_layout_template.tag_group.tags[0].index
+        // data.plate.lot.tag_layout_template.tag_group.tags[0].oligo
+
+
+        // TODO what if any of these are null?
+
+        // data looks like:
+        // {"id":"16157","type":"qcables","uuid":"15947e78-14dd-11e9-aac5-68b599768938","state":"available","lot":{"id":"167","type":"lots","uuid":"08f846b8-d2e8-11e8-b689-68b59976a384","tag_layout_template":{"id":"71","type":"tag_layout_templates","uuid":"41e210fa-70a8-11e8-a0f1-68b599768938","direction":"column","walking_by":"wells of plate","tag_group":{"id":"206","type":"tag_groups","uuid":"56362416-7093-11e8-8815-68b599768938","name":"IDT for Illumina i7 UDI v1","tags":[{"index":1,"oligo":"CCGCGGTT"},{"index":2,"oligo":"TTATAACC"},{"index":3,"oligo":"GGACTTGG"},{"index":4,"oligo":"AAGTCCAA"},{"index":5,"oligo":"ATCCACTG"},{"index":6,"oligo":"GCTTGTCA"},{"index":7,"oligo":"CAAGCTAG"},{"index":8,"oligo":"TGGATCGA"},{"index":9,"oligo":"AGTTCAGG"},{"index":10,"oligo":"GACCTGAA"},{"index":11,"oligo":"TCTCTACT"},{"index":12,"oligo":"CTCTCGTC"},{"index":13,"oligo":"CCAAGTCT"},{"index":14,"oligo":"TTGGACTC"},{"index":15,"oligo":"GGCTTAAG"},{"index":16,"oligo":"AATCCGGA"},{"index":17,"oligo":"TAATACAG"},{"index":18,"oligo":"CGGCGTGA"},{"index":19,"oligo":"ATGTAAGT"},{"index":20,"oligo":"GCACGGAC"},{"index":21,"oligo":"GGTACCTT"},{"index":22,"oligo":"AACGTTCC"},{"index":23,"oligo":"GCAGAATT"},{"index":24,"oligo":"ATGAGGCC"},{"index":25,"oligo":"ACTAAGAT"},{"index":26,"oligo":"GTCGGAGC"},{"index":27,"oligo":"CTTGGTAT"},{"index":28,"oligo":"TCCAACGC"},{"index":29,"oligo":"CCGTGAAG"},{"index":30,"oligo":"TTACAGGA"},{"index":31,"oligo":"GGCATTCT"},{"index":32,"oligo":"AATGCCTC"},{"index":33,"oligo":"TACCGAGG"},{"index":34,"oligo":"CGTTAGAA"},{"index":35,"oligo":"AGCCTCAT"},{"index":36,"oligo":"GATTCTGC"},{"index":37,"oligo":"TCGTAGTG"},{"index":38,"oligo":"CTACGACA"},{"index":39,"oligo":"TAAGTGGT"},{"index":40,"oligo":"CGGACAAC"},{"index":41,"oligo":"ATATGGAT"},{"index":42,"oligo":"GCGCAAGC"},{"index":43,"oligo":"AAGATACT"},{"index":44,"oligo":"GGAGCGTC"},{"index":45,"oligo":"ATGGCATG"},{"index":46,"oligo":"GCAATGCA"},{"index":47,"oligo":"GTTCCAAT"},{"index":48,"oligo":"ACCTTGGC"},{"index":49,"oligo":"ATATCTCG"},{"index":50,"oligo":"GCGCTCTA"},{"index":51,"oligo":"AACAGGTT"},{"index":52,"oligo":"GGTGAACC"},{"index":53,"oligo":"CAACAATG"},{"index":54,"oligo":"TGGTGGCA"},{"index":55,"oligo":"AGGCAGAG"},{"index":56,"oligo":"GAATGAGA"},{"index":57,"oligo":"TGCGGCGT"},{"index":58,"oligo":"CATAATAC"},{"index":59,"oligo":"GATCTATC"},{"index":60,"oligo":"AGCTCGCT"},{"index":61,"oligo":"CGGAACTG"},{"index":62,"oligo":"TAAGGTCA"},{"index":63,"oligo":"TTGCCTAG"},{"index":64,"oligo":"CCATTCGA"},{"index":65,"oligo":"ACACTAAG"},{"index":66,"oligo":"GTGTCGGA"},{"index":67,"oligo":"TTCCTGTT"},{"index":68,"oligo":"CCTTCACC"},{"index":69,"oligo":"GCCACAGG"},{"index":70,"oligo":"ATTGTGAA"},{"index":71,"oligo":"ACTCGTGT"},{"index":72,"oligo":"GTCTACAC"},{"index":73,"oligo":"CAATTAAC"},{"index":74,"oligo":"TGGCCGGT"},{"index":75,"oligo":"AGTACTCC"},{"index":76,"oligo":"GACGTCTT"},{"index":77,"oligo":"TGCGAGAC"},{"index":78,"oligo":"CATAGAGT"},{"index":79,"oligo":"ACAGGCGC"},{"index":80,"oligo":"GTGAATAT"},{"index":81,"oligo":"AACTGTAG"},{"index":82,"oligo":"GGTCACGA"},{"index":83,"oligo":"CTGCTTCC"},{"index":84,"oligo":"TCATCCTT"},{"index":85,"oligo":"AGGTTATA"},{"index":86,"oligo":"GAACCGCG"},{"index":87,"oligo":"CTCACCAA"},{"index":88,"oligo":"TCTGTTGG"},{"index":89,"oligo":"TATCGCAC"},{"index":90,"oligo":"CGCTATGT"},{"index":91,"oligo":"GTATGTTC"},{"index":92,"oligo":"ACGCACCT"},{"index":93,"oligo":"TACTCATA"},{"index":94,"oligo":"CGTCTGCG"},{"index":95,"oligo":"TCGATATC"},{"index":96,"oligo":"CTAGCGCT"}],"links":{"self":"http://localhost:3000/api/v2/tag_groups/206"}},"tag2_group":{"id":"207","type":"tag_groups","uuid":"b56d0b34-7093-11e8-a0e8-68b59976a384","name":"IDT for Illumina i5 UDI v1","tags":[{"index":1,"oligo":"AGCGCTAG"},{"index":2,"oligo":"GATATCGA"},{"index":3,"oligo":"CGCAGACG"},{"index":4,"oligo":"TATGAGTA"},{"index":5,"oligo":"AGGTGCGT"},{"index":6,"oligo":"GAACATAC"},{"index":7,"oligo":"ACATAGCG"},{"index":8,"oligo":"GTGCGATA"},{"index":9,"oligo":"CCAACAGA"},{"index":10,"oligo":"TTGGTGAG"},{"index":11,"oligo":"CGCGGTTC"},{"index":12,"oligo":"TATAACCT"},{"index":13,"oligo":"AAGGATGA"},{"index":14,"oligo":"GGAAGCAG"},{"index":15,"oligo":"TCGTGACC"},{"index":16,"oligo":"CTACAGTT"},{"index":17,"oligo":"ATATTCAC"},{"index":18,"oligo":"GCGCCTGT"},{"index":19,"oligo":"ACTCTATG"},{"index":20,"oligo":"GTCTCGCA"},{"index":21,"oligo":"AAGACGTC"},{"index":22,"oligo":"GGAGTACT"},{"index":23,"oligo":"ACCGGCCA"},{"index":24,"oligo":"GTTAATTG"},{"index":25,"oligo":"AACCGCGG"},{"index":26,"oligo":"GGTTATAA"},{"index":27,"oligo":"CCAAGTCC"},{"index":28,"oligo":"TTGGACTT"},{"index":29,"oligo":"CAGTGGAT"},{"index":30,"oligo":"TGACAAGC"},{"index":31,"oligo":"CTAGCTTG"},{"index":32,"oligo":"TCGATCCA"},{"index":33,"oligo":"CCTGAACT"},{"index":34,"oligo":"TTCAGGTC"},{"index":35,"oligo":"AGTAGAGA"},{"index":36,"oligo":"GACGAGAG"},{"index":37,"oligo":"AGACTTGG"},{"index":38,"oligo":"GAGTCCAA"},{"index":39,"oligo":"CTTAAGCC"},{"index":40,"oligo":"TCCGGATT"},{"index":41,"oligo":"CTGTATTA"},{"index":42,"oligo":"TCACGCCG"},{"index":43,"oligo":"ACTTACAT"},{"index":44,"oligo":"GTCCGTGC"},{"index":45,"oligo":"AAGGTACC"},{"index":46,"oligo":"GGAACGTT"},{"index":47,"oligo":"AATTCTGC"},{"index":48,"oligo":"GGCCTCAT"},{"index":49,"oligo":"ATCTTAGT"},{"index":50,"oligo":"GCTCCGAC"},{"index":51,"oligo":"ATACCAAG"},{"index":52,"oligo":"GCGTTGGA"},{"index":53,"oligo":"CTTCACGG"},{"index":54,"oligo":"TCCTGTAA"},{"index":55,"oligo":"AGAATGCC"},{"index":56,"oligo":"GAGGCATT"},{"index":57,"oligo":"CCTCGGTA"},{"index":58,"oligo":"TTCTAACG"},{"index":59,"oligo":"ATGAGGCT"},{"index":60,"oligo":"GCAGAATC"},{"index":61,"oligo":"CACTACGA"},{"index":62,"oligo":"TGTCGTAG"},{"index":63,"oligo":"ACCACTTA"},{"index":64,"oligo":"GTTGTCCG"},{"index":65,"oligo":"ATCCATAT"},{"index":66,"oligo":"GCTTGCGC"},{"index":67,"oligo":"AGTATCTT"},{"index":68,"oligo":"GACGCTCC"},{"index":69,"oligo":"CATGCCAT"},{"index":70,"oligo":"TGCATTGC"},{"index":71,"oligo":"ATTGGAAC"},{"index":72,"oligo":"GCCAAGGT"},{"index":73,"oligo":"CGAGATAT"},{"index":74,"oligo":"TAGAGCGC"},{"index":75,"oligo":"AACCTGTT"},{"index":76,"oligo":"GGTTCACC"},{"index":77,"oligo":"CATTGTTG"},{"index":78,"oligo":"TGCCACCA"},{"index":79,"oligo":"CTCTGCCT"},{"index":80,"oligo":"TCTCATTC"},{"index":81,"oligo":"ACGCCGCA"},{"index":82,"oligo":"GTATTATG"},{"index":83,"oligo":"GATAGATC"},{"index":84,"oligo":"AGCGAGCT"},{"index":85,"oligo":"CAGTTCCG"},{"index":86,"oligo":"TGACCTTA"},{"index":87,"oligo":"CTAGGCAA"},{"index":88,"oligo":"TCGAATGG"},{"index":89,"oligo":"CTTAGTGT"},{"index":90,"oligo":"TCCGACAC"},{"index":91,"oligo":"AACAGGAA"},{"index":92,"oligo":"GGTGAAGG"},{"index":93,"oligo":"CCTGTGGC"},{"index":94,"oligo":"TTCACAAT"},{"index":95,"oligo":"ACACGAGT"},{"index":96,"oligo":"GTGTAGAC"}],"links":{"self":"http://localhost:3000/api/v2/tag_groups/207"}},"links":{"self":"http://localhost:3000/api/v2/tag_layout_templates/71"}},"links":{"self":"http://localhost:3000/api/v2/lots/167"}},"asset":null,"links":{"self":"http://localhost:3000/api/v2/qcables/16157"}}
         if(data['plate'] !== null) {
-          this.$set(this.tagPlate, {...data })
+          // this.$set(this.tagPlate, data)
+          // this.tagPlate = { ...data }
+          //Cannot set reactive property on undefined, null, or primitive value: null
           console.log('in update plate, this.tagPlate = ' + JSON.stringify(this.tagPlate))
         } else {
           // this.$set(this.tagPlate, null)
