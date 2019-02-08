@@ -1,26 +1,23 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
+import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue'
 
-describe('AssetLookupByUuid', () => {
-  const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
-  const nullPlate = { data: [] }
-  const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
+describe('TagGroupsLookup', () => {
+  const goodTagGroups = jsonCollectionFactory('tag_groups', [{ id: '1', name: 'Tag Group 1', tags: [{ index: 1, oligo: 'CTAGCTAG' }, { index: 2, oligo: 'TTATACGA'}],
+                                                             { id: '2', name: 'Tag Group 2', tags: [{ index: 1, oligo: 'CCTTAAGG' }, { index: 2, oligo: 'AATTCGCA'}]
+                                                            }])
+  const nullTagGroups = { data: [] }
 
-  const wrapperFactoryPlate = function(api = mockApi()) {
+  const wrapperFactory = function(api = mockApi()) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
-    return mount(AssetLookupByUuid, {
+    return mount(TagGroupsLookup, {
       propsData: {
         api: api.devour,
-        assetUuid: assetUuid,
-        assetType: 'plate',
-        includes: '',
-        fields: {}
       },
       localVue
     })
@@ -29,13 +26,12 @@ describe('AssetLookupByUuid', () => {
   it('is invalid if it can not find a plate with the specified uuid', async () => {
     const api = mockApi()
 
-    api.mockGet('plates', {
-      include: '',
+    api.mockGet('tag_groups', {
       filter: { uuid: assetUuid },
       fields: {}
-    }, nullPlate)
+    }, nullTagGroups)
 
-    const wrapper = wrapperFactoryPlate(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.state).toEqual('searching')
 
@@ -53,7 +49,7 @@ describe('AssetLookupByUuid', () => {
   it('is invalid if there are api troubles', async () => {
     const api = mockApi()
 
-    api.mockFail('plates', {
+    api.mockFail('tag_groups', {
       include: '',
       filter: { uuid: assetUuid },
       fields: {}
@@ -64,7 +60,7 @@ describe('AssetLookupByUuid', () => {
       status: 500
     }]})
 
-    const wrapper = wrapperFactoryPlate(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.state).toEqual('searching')
 
@@ -82,13 +78,13 @@ describe('AssetLookupByUuid', () => {
   it('is valid if it can find a plate', async () => {
     const api = mockApi()
 
-    api.mockGet('plates',{
+    api.mockGet('tag_groups',{
       include: '',
       filter: { uuid: assetUuid },
       fields: {}
-    }, goodPlate)
+    }, goodTagGroups)
 
-    const wrapper = wrapperFactoryPlate(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.state).toEqual('searching')
 

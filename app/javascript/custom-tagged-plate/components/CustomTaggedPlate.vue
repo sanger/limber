@@ -1,26 +1,21 @@
 <template>
-  <lb-page v-if="state === 'searching'">
-    <lb-loading-modal :message="progressMessage"></lb-loading-modal>
+  <lb-page>
     <lb-parent-plate-lookup :api="devourApi"
                             :assetUuid="parentUuid"
                             :includes="'wells.aliquots'"
                             @change="parentPlateLookupUpdated">
     </lb-parent-plate-lookup>
-  </lb-page>
-  <lb-page v-else-if="state === 'parent_lookup_empty'">
-    <h4>Error:</h4>
-    <p>Parent plate lookup failed; plate uuid not supplied.</p>
-  </lb-page>
-  <lb-page v-else-if="state === 'parent_lookup_invalid'">
-    <h4>Error:</h4>
-    <p>Parent plate lookup failed; plate invalid.</p>
-  </lb-page>
-  <lb-page v-else>
-    <lb-main-content>
+    <lb-tag-groups-lookup :api="devourApi"
+                          @change="tagGroupsLookupUpdated">
+    </lb-tag-groups-lookup>
+    <lb-main-content v-if="parentPlate">
       <lb-parent-plate-view :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-parent-plate-view>
       <lb-custom-tagged-plate-details></lb-custom-tagged-plate-details>
     </lb-main-content>
-    <lb-sidebar>
+    <lb-main-content v-else>
+      <lb-loading-modal-plate :message="progressMessageParent" :key="1"></lb-loading-modal-plate>
+    </lb-main-content>
+    <lb-sidebar v-if="tagGroupsList">
       <b-container fluid>
         <b-row>
           <b-col>
@@ -35,6 +30,9 @@
         </b-row>
       </b-container>
     </lb-sidebar>
+    <lb-sidebar v-else>
+      <lb-loading-modal-tag-groups :message="progressMessageTags" :key="2"></lb-loading-modal-tag-groups>
+    </lb-sidebar>
   </lb-page>
 </template>
 
@@ -42,6 +40,7 @@
 
   import Plate from 'shared/components/Plate'
   import AssetLookupByUuid from 'shared/components/AssetLookupByUuid'
+  import TagGroupsLookup from 'shared/components/TagGroupsLookup'
   import LoadingModal from 'shared/components/LoadingModal'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
@@ -55,15 +54,16 @@
     data () {
       return {
         devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
-        // loading: true,
         state: 'searching',
-        // assetLookupRet: null,
         parentPlate: null,
-        progressMessage: 'Fetching parent plate details and tag groups...',
+        tagGroupsList: null,
+        progressMessageParent: 'Fetching parent plate details...',
+        progressMessageTags: 'Fetching tag groups...',
         startAtTagMin: 1,
         startAtTagMax: 96,
         startAtTagStep: 1,
         startAtTagOptions: {},
+        errorMessages: [],
         form: {
           tagPlateBarcode: null,
           tag1Group: null,
@@ -77,112 +77,53 @@
     },
     props: {
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
-      // purposeUuid: { type: String, required: true },
-      // targetUrl: { type: String, required: true },
+      purposeUuid: { type: String, required: true },
+      targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true }
     },
-    created: function () {
-      console.log('in parent created')
-      console.log('initial state = ', this.state)
-      console.log('initial progressMessage = ', this.progressMessage)
-      // this.loading = true
-      // this.progressMessage = "Fetching parent plate details and tag groups..."
-      // this.fetchParentPlate()
-
-      // TODO need pool information - submission ids of active requests out of wells (or of requests on aliquots)
-      // this.progressMessage = "Fetching pooling information..."
-      // this.fetchPoolingDetails()
-
-      // TODO need the tag groups list
-      // this.progressMessage = "Fetching tag groups list..."
-      // this.fetchTagGroups()
-    },
     methods: {
-      // fetchParentPlate: function (_) {
-        // let Cmp = Vue.extend(AssetLookupByUuid)
-        // let assetLookup = new Cmp({propsData: { api: this.devourApi, assetUuid: this.parentUuid, includes: 'wells.aliquots' }})
-        // assetLookup.lookupAsset()
-
-        // on:change="updatePlate(i, $event)"
-        // console.log('after fetchParentPlate ret = ', this.assetLookupRet)
-      // },
-
-      // fetchParentPlate: function (_) {
-      //   console.log('parentUuid = ' + this.parentUuid)
-      //   if (this.parentUuid !== '') {
-      //     this.findPlate()
-      //         .then(this.validateParentPlate)
-      //         .catch((error) => {
-      //           console.log('fetchParentPlate in catch = ', error)
-      //           this.parentPlateInvalid()
-      //         })
-      //   } else {
-      //     console.log('parentUuid blank, cannot run find plate')
-      //     this.parentPlateInvalid()
-      //   }
-      // },
-      // async findPlate () {
-      //   this.state = 'searching'
-      //   console.log('findPlate: this.parentUuid = ' + this.parentUuid)
-      //   const plate = (
-      //     await this.$api.findAll('plate',{
-      //       include: 'wells.aliquots',
-      //       filter: { uuid: this.parentUuid }
-      //     })
-      //   )
-      //   console.log('in findPlate, plate = ' + JSON.stringify(plate))
-      //   console.log('in findPlate, plate.data[0] = ' + JSON.stringify(plate.data[0]))
-      //   return plate.data[0]
-      // },
-      // validateParentPlate: function (plate) {
-      //   if (plate === undefined) {
-      //     console.log('validateParentPlate: plate undefined')
-      //     this.parentPlateInvalid()
-      //   } else {
-      //     this.parentPlate = plate
-      //     console.log('validateParentPlate: found plate')
-      //     // TODO check these and change ?
-      //     this.progressMessage = "Found parent plate details"
-      //     this.state = 'loaded'
-      //   }
-      // },
-      // parentPlateInvalid() {
-      //   console.log('parentPlateInvalid: plate invalid')
-      //   this.parentPlate = null
-      //   this.progressMessage = "Could not find parent plate details"
-      //   this.state = 'invalid'
-      // },
       parentPlateLookupUpdated(data) {
         console.log('parentPlateLookupUpdated: data = ', data)
-        // data should look like: {asset: {…}, state: "loaded"}
-        if(data !== null) {
-          this.parentPlate = null
+        this.parentPlate = null
+        if(data) {
+          console.log('parent lookup state = ', data['state'])
           if(data['state'] === 'searching') {
             return
           } else {
-            if(data['state'] === 'loaded') {
-              // TODO more defensive checks here?
+            if(data['state'] === 'valid') {
+              // TODO more defensive checks here? or in parent plate lookup validate
               this.parentPlate = { ...data['asset']}
               this.state = 'loaded'
-            } else if(data['state'] === 'empty') {
-              this.state = 'parent_lookup_empty'
-            } else if(data['state'] === 'invalid') {
-              this.state = 'parent_lookup_invalid'
+            } else {
+              this.errorMessages.push('Parent plate lookup error: ', data['state'])
+              this.state = 'failed'
             }
           }
         } else {
-
+          this.errorMessages.push('Parent plate lookup error: nothing returned')
+          this.state = 'failed'
+        }
+      },
+      tagGroupsLookupUpdated(data) {
+        this.tagGroupsList = null
+        if(data !== null) {
+          if(data['state'] === 'searching') {
+            return
+          } else if(data['state'] === 'valid') {
+            this.tagGroupsList = { ...data['tagGroupsList'] }
+            this.state = 'loaded'
+          } else {
+            this.errorMessages.push('Tag Groups lookup error: ', data['state'])
+            this.state = 'failed'
+          }
+        } else {
+          this.errorMessages.push('Tag Groups lookup error: returned data null')
+          this.state = 'failed'
         }
       },
       tagParamsUpdated(updatedform) {
-        console.log('in parent tagParamsUpdated called, updatedform values = ')
-        console.log('tagPlateBarcode = ' + updatedform.tagPlateBarcode)
-        console.log('tag1Group = ' + updatedform.tag1Group)
-        console.log('tag2Group = ' + updatedform.tag2Group)
-        console.log('byPoolPlateOption = ' + updatedform.byPoolPlateOption)
-        console.log('byRowColOption = ' + updatedform.byRowColOption)
-        console.log('startAtTagOption = ' + updatedform.startAtTagOption)
-        console.log('tagsPerWellOption = ' + updatedform.tagsPerWellOption)
+        console.log('tagParamsUpdated: called, updatedform values = ')
+        console.log(updatedform)
         this.form.tagPlateBarcode   = updatedform.tagPlateBarcode
         this.form.tag1Group         = updatedform.tag1Group
         this.form.tag2Group         = updatedform.tag2Group
@@ -195,6 +136,33 @@
         console.log('submit called')
         this.state = 'busy'
         // TODO: submit new custom tagged plate creation to sequencescape with tags
+
+        // see custom_tagged_plate_spec.rb context 'Providing simple solutions'
+        // substitutions { 1:2,5:8, etc } tag 1 for 2, 5 for 8 etc.
+
+        //   let(:form_attributes) do
+        //   {
+        //     purpose_uuid: child_purpose_uuid,
+        //     parent_uuid: plate_uuid,
+        //     user_uuid: user_uuid,
+        //     tag_plate_barcode: tag_plate_barcode,
+        //     tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid, state: tag_plate_state },
+        //     tag_layout: {
+        //       user: 'user-uuid',
+        //       tag_group: 'tag-group-uuid',
+        //       tag2_group: 'tag2-group-uuid',
+        //       direction: 'column',
+        //       walking_by: 'manual by plate',
+        //       initial_tag: '1',
+        //       substitutions: {},
+        //       tags_per_well: 1
+        //     }
+        //   }
+        // end
+
+        // it 'can be created' do
+        //   expect(subject).to be_a LabwareCreators::CustomTaggedPlate
+        // end
       }
     },
     computed: {
@@ -205,7 +173,7 @@
         return this.parentPlate.number_of_columns || null
       },
       parentWells: function () {
-        if(this.parentPlate === null) { return {} }
+        if(!this.parentPlate) { return {} }
         let wells = {}
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
@@ -215,9 +183,9 @@
         return wells
       },
       childWells: function () {
-        if (this.parentPlate.wells === null) { return {} }
+        if(!this.parentPlate) { return {} }
+        if(!this.parentPlate.wells) { return {} }
         const wells = {}
-
         // first initialise wells to match the parent plate
         this.parentPlate.wells.forEach((well) => {
           console.log('well = ' + well)
@@ -298,8 +266,10 @@
       },
     },
     components: {
-      'lb-loading-modal': LoadingModal,
+      'lb-loading-modal-plate': LoadingModal,
+      'lb-loading-modal-tag-groups': LoadingModal,
       'lb-parent-plate-lookup': AssetLookupByUuid,
+      'lb-tag-groups-lookup': TagGroupsLookup,
       'lb-parent-plate-view': Plate,
       'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
       'lb-custom-tagged-plate-manipulation': CustomTaggedPlateManipulation

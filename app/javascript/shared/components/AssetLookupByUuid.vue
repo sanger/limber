@@ -82,6 +82,7 @@
         this.$emit('change', { asset: this.asset, state: this.state })
       }
     },
+    // TODO can this be removed?
     render() {
     }
   }

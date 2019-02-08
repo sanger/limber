@@ -10,9 +10,9 @@ describe('CustomTaggedPlate', () => {
   const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
   const nullPlate = { data: [] }
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid }])
-  // const badPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid , number_of_columns: 24, number_of_rows: 8 }])
-  const goodTagGroups = jsonCollectionFactory('tag_group', [{ id: '1', name: 'Tag Group 1', tags: [{ index: 1, oligo: 'CTAGCTAG' }, { index: 2, oligo: 'TTATACGA'}] }])
-  const nullTagGroups = { data: [] }
+  // const badPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid }])
+  // const goodTagGroups = jsonCollectionFactory('tag_group', [{ id: '1', name: 'Tag Group 1', tags: [{ index: 1, oligo: 'CTAGCTAG' }, { index: 2, oligo: 'TTATACGA'}] }])
+  // const nullTagGroups = { data: [] }
 
   const wrapperFactorySearching = function(api = mockApi()) {
     return mount(CustomTaggedPlate, {
@@ -40,7 +40,7 @@ describe('CustomTaggedPlate', () => {
     })
   }
 
-  // it('renders a loading modal whilst searching for the parent and tag groups', () => {
+  // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
   // }
 
   // it('renders a plate panel', async () => {
