@@ -12,59 +12,165 @@ describe('CustomTaggedPlateManipulation', () => {
     return mount(CustomTaggedPlateManipulation, {
       propsData: {
         devourApi: api.devour,
+        tag1GroupOptions: [
+            { value: null, text: 'Please select an i7 Tag 1 group...' },
+            { value: 1, text: 'i7 example tag group 1' },
+            { value: 2, text: 'i7 example tag group 2' }
+        ],
+        tag2GroupOptions: [
+            { value: null, text: 'Please select an i5 Tag 2 group...' },
+            { value: 1, text: 'i5 example tag group 1' },
+            { value: 2, text: 'i5 example tag group 2' }
+        ],
+        byPoolPlateOptions: [
+            { value: null, text: 'Please select a by Pool/Plate Option...' },
+            { value: 'by_pool', text: 'By Pool' },
+            { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
+            { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
+        ],
+        byRowColOptions: [
+            { value: null, text: 'Select a by Row/Column Option...' },
+            { value: 'by_rows', text: 'By Rows' },
+            { value: 'by_columns', text: 'By Columns' }
+        ],
+        startAtTagOptions: [
+            { value: null, text: 'Select which tag index to start at...' },
+            { value: 1, text: '1' },
+            { value: 2, text: '2' },
+            { value: 3, text: '3' },
+            { value: 4, text: '4' }
+        ]
       },
       localVue
     })
   }
 
-  const nullPlate = { data: [] }
+  const nullQcable = { data: [] }
+  const goodQcableData = {
+    plate: {
+      id:"1",
+      state:"available",
+      lot:{
+        id:"1",
+        tag_layout_template:{
+          id:"1",
+          direction:"row",
+          walking_by:"wells of plate",
+          tag_group:{
+            id:"1",
+            name:"i7 example tag group 1",
+          },
+          tag2_group:{
+            id:"2",
+            name:"i5 example tag group 2",
+          }
+        }
+      }
+    },
+    state: 'valid'
+  }
   const api = mockApi()
-    api.mockGet('plates', {
+    api.mockGet('qcables', {
       filter: { barcode: 'somebarcode' },
       include: { lots: ['templates', { templates: 'tag_group,tag2_group' }] },
       fields: { qcables: 'uuid,state,lot',
                 lots: 'uuid,template',
                 tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
                 tag_group: 'uuid,name' }
-    }, nullPlate)
+    }, nullQcable)
 
-  const wrapper = wrapperFactory(api)
+  // const wrapper = wrapperFactory(api)
 
-  // Inspect the raw component options
   it('renders a tag plate scan component', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
   })
 
   it('renders a tag1 group select dropdown', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
   })
 
   it('renders a tag2 group select dropdown', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
   })
 
   it('renders a by pool or plate select dropdown', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
   })
 
   it('renders a by rows or columns select dropdown', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
   })
 
   it('renders a start at tag select number dropdown', () => {
+    let wrapper = wrapperFactory()
+
     expect(wrapper.find('#start_at_tag_options').exists()).toBe(true)
   })
 
   // it('renders a tags per well number based on the plate purpose', () => {
   // })
 
-  // it('renders tag group labels instead of selects when a tag plate is scanned', () => {
+  it('sets selected on and disables the tag group selects when a tag plate is scanned', () => {
+    let wrapper = wrapperFactory()
+
+    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
+    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
+
+    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
+    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
+
+    // mocking a successful return from a plate scan
+    wrapper.vm.tagPlateScanned(goodQcableData)
+
+    expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
+
+    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
+    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
+
+    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
+    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
+  })
+
+  it('updates tag1Group when a tag1Group is selected', () => {
+    let wrapper = wrapperFactory()
+
+    expect(wrapper.vm.form.tag1Group).toBe(null)
+
+    wrapper.find('#tag1_group_selection').element.value = 1
+    wrapper.find('#tag1_group_selection').trigger('change')
+
+    expect(wrapper.vm.form.tag1Group).toBe(1)
+  })
+
+  it('updates tag2Group when a tag2Group is selected', () => {
+    let wrapper = wrapperFactory()
+
+    expect(wrapper.vm.form.tag2Group).toBe(null)
+
+    wrapper.find('#tag2_group_selection').element.value = 1
+    wrapper.find('#tag2_group_selection').trigger('change')
+
+    expect(wrapper.vm.form.tag2Group).toBe(1)
+  })
+
+  // it('re-enables the tag group selects when the tag plate is cleared', () => {
   // })
 
   // it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
   // })
 
-  it('emits a call to the parent container on any change of the form data', () => {
+  it('emits a call to the parent container on a change of the form data', () => {
+    let wrapper = wrapperFactory()
     const emitted = wrapper.emitted()
 
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
@@ -76,7 +182,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tagPlateBarcode":null,"tag1Group":null,"tag2Group":null,"byPoolPlateOption":"by_plate_seq","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null,"tag1GroupFromTagPlate":"filled when a valid tag plate is scanned","tag2GroupFromTagPlate":"filled when a valid tag plate is scanned"}]
+      [{"tagPlateBarcode":null,"tag1Group":null,"tag2Group":null,"byPoolPlateOption":"by_plate_seq","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null}]
     )
   })
 })

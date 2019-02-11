@@ -58,9 +58,6 @@
       },
       async findPlate () {
         this.state = 'searching'
-        console.log(this.api)
-        console.log('includes = ' + JSON.stringify(this.includes))
-        console.log('fields = ' + JSON.stringify(this.fields))
         const plate = (
           await this.api.findAll(this.plateType, {
             include: this.includes,
@@ -68,44 +65,33 @@
             fields: this.fields
           })
         )
-        console.log('plate:')
-        console.log(JSON.stringify(plate))
-        console.log('plate.data[0]:')
-        console.log(JSON.stringify(plate.data[0]))
         return plate.data[0]
       },
       validatePlate: function (plate) {
         if (plate === undefined) {
-          console.log('plate undefined')
           this.plate = null
           this.badState({ message: 'Could not find plate' })
         } else {
           this.plate = plate
           if (this.incorrectSize(plate)) {
-            console.log('plate incorrect size')
             this.badState({ message: `The plate should be ${this.plateCols}×${this.plateRows} wells in size` })
           } else {
-            console.log('plate valid')
             this.goodState({ message: 'Valid!' })
           }
         }
       },
       validateQcable: function (plate) {
         if (plate === undefined) {
-          console.log('qcable undefined')
           this.plate = null
           this.badState({ message: 'Could not find plate' })
         } else {
           this.plate = plate
           if(this.incorrectState(plate)) {
-            console.log('qcable incorrect state')
             this.badState({ message: 'The tag plate should be in available or exhausted state' })
           } else {
             if(this.incorrectWalkingBy(plate)) {
-              console.log('qcable incorrect walking by')
               this.badState({ message: 'The tag plate should have a walking by of wells by plate' })
             } else {
-              console.log('qcable valid')
               this.goodState({ message: 'Valid!' })
             }
           }
@@ -116,36 +102,29 @@
                plate.number_of_rows !== this.plateRows
       },
       incorrectState: function(plate) {
-        console.log('plate state = ' + plate.state)
         if(plate.state === 'available') { return false }
         if(plate.state === 'exhausted') { return false }
         return true
       },
       incorrectWalkingBy: function(plate) {
-        console.log('plate tag layout walking by = ' + plate.lot.tag_layout_template.walking_by)
         return plate.lot.tag_layout_template.walking_by !== 'wells of plate'
       },
       apiError: function(err) {
         if (!err) {
-          console.log('unknown api error')
           this.badState({message: 'Unknown error'})
         } else if (err[0]) {
-          console.log('api error with msg')
           const message = `${err[0].title}: ${err[0].detail}`
           this.badState({ message })
         } else {
-          console.log('api error')
           this.badState(err)
         }
       },
       badState: function(err) {
         this.state = 'invalid'
-        console.log('setting invalid feedback')
         this.invalidFeedback = err.message || 'Unknown error'
       },
       goodState: function(msg) {
         this.state = 'valid'
-        console.log('setting valid feedback')
         this.validFeedback = "Valid!"
       }
     },

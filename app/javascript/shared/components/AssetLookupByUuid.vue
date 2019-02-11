@@ -34,10 +34,6 @@
       },
       async findAsset () {
         this.state = 'searching'
-        console.log('findAsset: this.assetUuid = ' + this.assetUuid)
-        console.log('findAsset: this.assetType = ' + this.assetType)
-        console.log('findAsset: this.includes = ' + this.includes)
-        console.log('findAsset: this.fields = ' + JSON.stringify(this.fields))
         const asset = (
           await this.api.findAll(this.assetType,{
             include: this.includes,
@@ -45,8 +41,6 @@
             fields: this.fields
           })
         )
-        console.log('findAsset: asset = ' + JSON.stringify(asset))
-        console.log('findAsset: asset.data[0] = ' + JSON.stringify(asset.data[0]))
         return asset.data[0]
       },
       validateAsset: function (asset) {

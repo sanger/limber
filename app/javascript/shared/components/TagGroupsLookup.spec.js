@@ -7,9 +7,34 @@ import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue'
 
 describe('TagGroupsLookup', () => {
-  const goodTagGroups = jsonCollectionFactory('tag_groups', [{ id: '1', name: 'Tag Group 1', tags: [{ index: 1, oligo: 'CTAGCTAG' }, { index: 2, oligo: 'TTATACGA'}],
-                                                             { id: '2', name: 'Tag Group 2', tags: [{ index: 1, oligo: 'CCTTAAGG' }, { index: 2, oligo: 'AATTCGCA'}]
-                                                            }])
+  const goodTagGroupsArray = [
+    {
+      id: '1',
+      name: 'Tag Group 1',
+      tags: [{
+        index: 1,
+        oligo: 'CTAGCTAG'
+      },
+      {
+        index: 2,
+        oligo: 'TTATACGA'
+      }
+      ]
+    },{
+      id: '2',
+      name: 'Tag Group 2',
+      tags: [{
+        index: 1,
+        oligo: 'CCTTAAGG'
+      },
+      {
+        index: 2,
+        oligo: 'AATTCGCA'
+      }
+      ]
+    }
+  ]
+  const goodTagGroups = jsonCollectionFactory('tag_group', goodTagGroupsArray)
   const nullTagGroups = { data: [] }
 
   const wrapperFactory = function(api = mockApi()) {
@@ -23,13 +48,10 @@ describe('TagGroupsLookup', () => {
     })
   }
 
-  it('is invalid if it can not find a plate with the specified uuid', async () => {
+  it('is invalid if it can not find any tag groups', async () => {
     const api = mockApi()
 
-    api.mockGet('tag_groups', {
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, nullTagGroups)
+    api.mockGet('tag_groups', {}, nullTagGroups)
 
     const wrapper = wrapperFactory(api)
 
@@ -37,11 +59,11 @@ describe('TagGroupsLookup', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.invalidFeedback).toEqual('Asset undefined')
+    expect(wrapper.vm.invalidFeedback).toEqual('No tag groups found')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', asset: null }],
-        [{ state: 'invalid', asset: null }]
+        [{ state: 'searching', tagGroupsList: null }],
+        [{ state: 'invalid', tagGroupsList: [] }]
       ]
     })
   })
@@ -49,16 +71,14 @@ describe('TagGroupsLookup', () => {
   it('is invalid if there are api troubles', async () => {
     const api = mockApi()
 
-    api.mockFail('tag_groups', {
-      include: '',
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, { 'errors': [{
-      title: 'Not good',
-      detail: 'Very not good',
-      code: 500,
-      status: 500
-    }]})
+    api.mockFail('tag_groups', {}, {
+      'errors': [{
+        title: 'Not good',
+        detail: 'Very not good',
+        code: 500,
+        status: 500
+      }]
+    })
 
     const wrapper = wrapperFactory(api)
 
@@ -69,20 +89,16 @@ describe('TagGroupsLookup', () => {
     expect(wrapper.vm.invalidFeedback).toEqual('Unknown Api error')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', asset: null }],
-        [{ state: 'invalid', asset: null }]
+        [{ state: 'searching', tagGroupsList: null }],
+        [{ state: 'invalid', tagGroupsList: null }]
       ]
     })
   })
 
-  it('is valid if it can find a plate', async () => {
+  it('is valid if it can find tag groups', async () => {
     const api = mockApi()
 
-    api.mockGet('tag_groups',{
-      include: '',
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, goodTagGroups)
+    api.mockGet('tag_groups',{}, goodTagGroups)
 
     const wrapper = wrapperFactory(api)
 
@@ -95,9 +111,9 @@ describe('TagGroupsLookup', () => {
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', asset: null }])
+    expect(events.change[0]).toEqual([{ state: 'searching', tagGroupsList: null }])
     expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].asset.uuid).toEqual(assetUuid)
+    expect(events.change[1][0].tagGroupsList).toEqual(goodTagGroupsArray)
   })
 
 })

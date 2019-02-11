@@ -20,7 +20,9 @@
         <b-row>
           <b-col>
             <lb-custom-tagged-plate-manipulation :api="devourApi"
-                                                 :startAtTagOptions="calcStartAtTagOptions"
+                                                 :tag1GroupOptions="compTag1GroupOptions"
+                                                 :tag2GroupOptions="compTag2GroupOptions"
+                                                 :startAtTagOptions="compStartAtTagOptions"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -66,8 +68,8 @@
         errorMessages: [],
         form: {
           tagPlateBarcode: null,
-          tag1Group: null,
-          tag2Group: null,
+          tag1GroupId: null,
+          tag2GroupId: null,
           byPoolPlateOption: null,
           byRowColOption: null,
           startAtTagOption: 1,
@@ -107,10 +109,11 @@
       tagGroupsLookupUpdated(data) {
         this.tagGroupsList = null
         if(data !== null) {
-          if(data['state'] === 'searching') {
+          if(data.state === 'searching') {
             return
-          } else if(data['state'] === 'valid') {
-            this.tagGroupsList = { ...data['tagGroupsList'] }
+          } else if(data.state === 'valid') {
+            this.tagGroupsList = { ...data.tagGroupsList }
+            console.log('this.tagGroupsList = ', this.tagGroupsList)
             this.state = 'loaded'
           } else {
             this.errorMessages.push('Tag Groups lookup error: ', data['state'])
@@ -125,8 +128,8 @@
         console.log('tagParamsUpdated: called, updatedform values = ')
         console.log(updatedform)
         this.form.tagPlateBarcode   = updatedform.tagPlateBarcode
-        this.form.tag1Group         = updatedform.tag1Group
-        this.form.tag2Group         = updatedform.tag2Group
+        this.form.tag1GroupId       = updatedform.tag1GroupId
+        this.form.tag2GroupId       = updatedform.tag2GroupId
         this.form.byPoolPlateOption = updatedform.byPoolPlateOption
         this.form.byRowColOption    = updatedform.byRowColOption
         this.form.startAtTagOption  = updatedform.startAtTagOption
@@ -218,7 +221,27 @@
       createCaption: function () {
         return 'Modify the tag layout for the new plate using options on the right'
       },
-      calcStartAtTagOptions: function () {
+      compTag1GroupOptions: function () {
+        if(!this.tagGroupsList || Object.keys(this.tagGroupsList).length === 0) { return null }
+        let options = this.coreTagGroupOptions.slice()
+        options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
+        return options
+      },
+      compTag2GroupOptions: function () {
+        if(!this.tagGroupsList || this.tagGroupsList.length === 0) { return null }
+        let options = this.coreTagGroupOptions.slice()
+        options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
+        return options
+      },
+      coreTagGroupOptions: function () {
+        let options = []
+        let tgs = Object.values(this.tagGroupsList)
+        tgs.forEach(function (tg) {
+          options.push({ value: tg.id, text: tg.name })
+        })
+        return options
+      },
+      compStartAtTagOptions: function () {
         // TODO calculate the min/max based on function changes
         const arr = [
           { value: null, text: 'Select which tag index to start at...' }
@@ -228,7 +251,7 @@
           let v = i * this.startAtTagStep + this.startAtTagMin
           arr.push({ value: v, text: '' + v})
         }
-        console.log('in computed calcStartAtTagOptions, new value = ' + JSON.stringify(arr))
+        console.log('in computed compStartAtTagOptions, new value = ' + JSON.stringify(arr))
         return arr
       },
       buttonText() {

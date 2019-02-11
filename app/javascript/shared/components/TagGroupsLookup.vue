@@ -28,8 +28,6 @@
           await this.api.findAll('tag_groups',{
           })
         )
-        console.log('findTagGroups: tagGroupsList = ' + JSON.stringify(tagGroupsList))
-        console.log('findTagGroups: tagGroupsList.data[0] = ' + JSON.stringify(tagGroupsList.data[0]))
         return tagGroupsList.data
       },
       validateTagGroups: function (tagGroupsList) {
@@ -38,7 +36,6 @@
           this.badState({ message: 'Tag groups list was undefined' })
         } else {
           if(tagGroupsList.length > 0) {
-            console.log('tagGroupsList.length = ', tagGroupsList.length)
             for (var i = 0; i < tagGroupsList.length; i++) {
               this.extractTagGroupInfo(tagGroupsList[i])
             }
@@ -65,7 +62,6 @@
       badState: function (err) {
         this.state = 'invalid'
         this.invalidFeedback = err.message || 'Unknown error'
-        console.log('tag groups bad state msg = ', err.message)
       },
       goodState: function (msg) {
         this.state = 'valid'
