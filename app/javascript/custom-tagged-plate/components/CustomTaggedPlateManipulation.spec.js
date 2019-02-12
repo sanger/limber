@@ -46,6 +46,7 @@ describe('CustomTaggedPlateManipulation', () => {
   }
 
   const nullQcable = { data: [] }
+  const emptyQcableData = { plate: null, state: "empty" }
   const goodQcableData = {
     plate: {
       id:"1",
@@ -79,40 +80,42 @@ describe('CustomTaggedPlateManipulation', () => {
                 tag_group: 'uuid,name' }
     }, nullQcable)
 
-  // const wrapper = wrapperFactory(api)
-
   it('renders a tag plate scan component', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
   })
 
   it('renders a tag1 group select dropdown', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
+    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
+    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
   })
 
   it('renders a tag2 group select dropdown', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
+    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
+    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
   })
 
   it('renders a by pool or plate select dropdown', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
   })
 
   it('renders a by rows or columns select dropdown', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
   })
 
   it('renders a start at tag select number dropdown', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#start_at_tag_options').exists()).toBe(true)
   })
@@ -120,16 +123,9 @@ describe('CustomTaggedPlateManipulation', () => {
   // it('renders a tags per well number based on the plate purpose', () => {
   // })
 
-  it('sets selected on and disables the tag group selects when a tag plate is scanned', () => {
-    let wrapper = wrapperFactory()
+  it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
+    let wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
-
-    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
-    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
-
-    // mocking a successful return from a plate scan
     wrapper.vm.tagPlateScanned(goodQcableData)
 
     expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
@@ -142,7 +138,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('updates tag1Group when a tag1Group is selected', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.form.tag1Group).toBe(null)
 
@@ -153,7 +149,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('updates tag2Group when a tag2Group is selected', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.form.tag2Group).toBe(null)
 
@@ -163,14 +159,45 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.vm.form.tag2Group).toBe(1)
   })
 
-  // it('re-enables the tag group selects when the tag plate is cleared', () => {
-  // })
+  it('re-enables the tag group selects when the tag plate is cleared', () => {
+    let wrapper = wrapperFactory(api)
 
-  // it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
-  // })
+    wrapper.vm.tagPlateScanned(goodQcableData)
+
+    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
+    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
+
+    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
+    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
+
+    wrapper.vm.tagPlateScanned(emptyQcableData)
+
+    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
+    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
+
+    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
+    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
+
+    expect(wrapper.vm.form.tag1Group).toEqual(null)
+    expect(wrapper.vm.form.tag2Group).toEqual(null)
+    expect(wrapper.vm.tagPlate).toEqual(null)
+  })
+
+  it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
+    let wrapper = wrapperFactory(api)
+
+    expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+    wrapper.find('#tag1_group_selection').element.value = 1
+    wrapper.find('#tag1_group_selection').trigger('change')
+
+    expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+
+    expect(wrapper.find('#plateScan').element.disabled).toBe(true)
+  })
 
   it('emits a call to the parent container on a change of the form data', () => {
-    let wrapper = wrapperFactory()
+    let wrapper = wrapperFactory(api)
     const emitted = wrapper.emitted()
 
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)

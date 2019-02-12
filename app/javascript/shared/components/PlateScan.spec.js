@@ -21,8 +21,6 @@ describe('PlateScan', () => {
   const badQcableWrongWalkingBy = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'quadrants'}}}])
 
   const wrapperFactoryPlate = function(api = mockApi()) {
-    // Not ideal using mount here, but having massive trouble
-    // triggering change events on unmounted components
     return mount(PlateScan, {
       propsData: {
         label: 'My Plate',
@@ -31,6 +29,21 @@ describe('PlateScan', () => {
         plateCols: 12,
         plateRows: 8,
         includes: { wells: ['requests_as_source',{ aliquots: 'request' }]}
+      },
+      localVue
+    })
+  }
+
+  const wrapperFactoryPlateDisabled = function(api = mockApi()) {
+    return mount(PlateScan, {
+      propsData: {
+        label: 'My Plate',
+        description: 'Scan it in',
+        api: api.devour,
+        plateCols: 12,
+        plateRows: 8,
+        includes: { wells: ['requests_as_source',{ aliquots: 'request' }]},
+        scanDisabled: true
       },
       localVue
     })
@@ -62,6 +75,12 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryPlate()
 
     expect(wrapper.find('.text-muted').text()).toEqual('Scan it in')
+  })
+
+  it('renders disabled if the disabled prop is set true', () => {
+    const wrapper = wrapperFactoryPlateDisabled()
+
+    expect(wrapper.find('#plateScan').element.disabled).toBe(true)
   })
 
   it('is invalid if it can not find a plate', async () => {

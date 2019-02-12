@@ -16,6 +16,7 @@
                   size="lg"
                   placeholder="Scan a plate"
                   v-on:change="lookupPlate"
+                  :disabled="scanDisabled"
                   >
     </b-form-input>
   </b-form-group>
@@ -41,7 +42,8 @@
       includes: { default: () => { return '' } },
       fields: { default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } } },
       plateCols: { type: Number, default: 12 },
-      plateRows: { type: Number, default: 8 }
+      plateRows: { type: Number, default: 8 },
+      scanDisabled: { type: Boolean, default: false }
     },
     methods: {
       lookupPlate: function (_) {

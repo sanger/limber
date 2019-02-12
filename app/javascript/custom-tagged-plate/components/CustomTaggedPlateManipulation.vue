@@ -10,6 +10,7 @@
                            :api="api"
                            :label="'Tag Plate'"
                            :plateType="'qcable'"
+                           :scanDisabled="tagPlateScanDisabled"
                            includes="lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
                            :fields="{ lots: 'uuid,tag_layout_template',
                                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
@@ -29,7 +30,8 @@
                         :options="tag1GroupOptions"
                         v-model="form.tag1Group"
                         :disabled="tagGroupsDisabled"
-                        @change="updateTagParams">
+                        @input="tagGroupInput"
+                        @change="tagGroupChanged">
           </b-form-select>
          </b-form-group>
       </b-col>
@@ -44,7 +46,8 @@
                         :options="tag2GroupOptions"
                         v-model="form.tag2Group"
                         :disabled="tagGroupsDisabled"
-                        @change="updateTagParams">
+                        @input="tagGroupInput"
+                        @change="tagGroupChanged">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -115,6 +118,8 @@
     data () {
       return {
         tagPlate: null,
+        tagPlateWasScanned: false,
+        tagPlateScanDisabled: false,
         form: {
           tagPlateBarcode: null,
           tag1Group: null,
@@ -177,6 +182,18 @@
     },
     // NB. event handlers must be in the methods section
     methods: {
+      updateTagPlateScanDisabled() {
+        if(this.tagPlateWasScanned) {
+          this.tagPlateScanDisabled = false
+        } else {
+          if(this.form.tag1Group || this.form.tag2Group) {
+            this.tagPlateScanDisabled = true
+          } else {
+            this.tagPlateScanDisabled = false
+          }
+        }
+        this.$emit('tagparamsupdated', this.form)
+      },
       tagPlateScanned(data) {
         // data.plate.lot.tag_layout_template.id
         // this.tagLayoutWalkingAlgorithm = data.plate.lot.tag_layout_template.walking_by // e.g.
@@ -185,38 +202,60 @@
         // this.tagLayoutDirectionAlgorithm = data.plate.lot.tag_layout_template.direction // e.g.
         // DIRECTIONS = 'column','row','inverse column','inverse row,'column then row'
 
-        // this.tagGroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
-        // this.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
+        // this.form.tag1GroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
+        // this.form.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
 
         // this.tagGroupTagsFromScan = data.plate.lot.tag_layout_template.tag_group.tags
-        // this.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
+        // this.form.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
 
         // data.plate.lot.tag_layout_template.tag_group.tags.length
         // data.plate.lot.tag_layout_template.tag_group.tags[0].index
         // data.plate.lot.tag_layout_template.tag_group.tags[0].oligo
 
         // N.B. There is an initial trigger to here happens when user clicks on the scan field (state 'searching', plate null).
-        // The PlateScan component displays the error messages for us, so we don't do anything for fail states.
-        console.log('tagPlateScanned: returned data = ', data)
+        // The PlateScan component displays the error messages for us
+        console.log('tagPlateScanned: returned data = ', JSON.stringify(data))
 
         if(data.state=== 'valid' && data.plate) {
-          this.tagPlate = { ...data.plate }
-
-          // set selected on tagGroup1 and 2 fields using tag group ids (N.B. possible one only is set)
-          this.form.tag1Group = null
-          this.form.tag2Group = null
-
-          if(data.plate.lot.tag_layout_template.tag_group.id) {
-            this.form.tag1Group = data.plate.lot.tag_layout_template.tag_group.id
-          }
-
-          if(data.plate.lot.tag_layout_template.tag2_group.id) {
-            this.form.tag2Group = data.plate.lot.tag_layout_template.tag2_group.id
-          }
+          this.validTagPlateScanned(data)
+        }
+        if(data.state=== 'empty' && !data.plate) {
+          this.emptyTagPlate()
         }
       },
+      validTagPlateScanned(data) {
+        this.tagPlate = { ...data.plate }
+        this.tagPlateWasScanned = true
+
+        if(data.plate.lot.tag_layout_template.tag_group.id) {
+          this.form.tag1Group = data.plate.lot.tag_layout_template.tag_group.id
+        } else {
+          this.form.tag1Group = null
+        }
+
+        if(data.plate.lot.tag_layout_template.tag2_group.id) {
+          this.form.tag2Group = data.plate.lot.tag_layout_template.tag2_group.id
+        } else {
+          this.form.tag2Group = null
+        }
+
+        this.updateTagPlateScanDisabled()
+      },
+      emptyTagPlate() {
+        this.tagPlate = null
+        this.form.tag1Group = null
+        this.form.tag2Group = null
+        this.updateTagPlateScanDisabled()
+      },
+      tagGroupChanged() {
+        this.tagPlateWasScanned = false
+      },
+      tagGroupInput() {
+        this.updateTagPlateScanDisabled()
+      },
       updateTagParams(_value) {
-        this.$emit('tagparamsupdated', this.form);
+        console.log('updateTagParams changed')
+        this.$emit('tagparamsupdated', this.form)
       }
     },
     components: {
