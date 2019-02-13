@@ -24,20 +24,21 @@
       },
       async findTagGroups () {
         this.state = 'searching'
-        const tagGroupsList = (
+        const tagGroupsFromDB = (
           await this.api.findAll('tag_groups',{
           })
         )
-        return tagGroupsList.data
+        return tagGroupsFromDB.data
       },
-      validateTagGroups: function (tagGroupsList) {
-        this.tagGroupsList = []
-        if (tagGroupsList === undefined) {
-          this.badState({ message: 'Tag groups list was undefined' })
+      validateTagGroups: function (tagGroupsFromDB) {
+        this.tagGroupsList = null
+        if (!tagGroupsFromDB) {
+          this.badState({ message: 'No tag groups list returned from database' })
         } else {
-          if(tagGroupsList.length > 0) {
-            for (var i = 0; i < tagGroupsList.length; i++) {
-              this.extractTagGroupInfo(tagGroupsList[i])
+          if(tagGroupsFromDB.length > 0) {
+            this.tagGroupsList = {}
+            for (var i = 0; i < tagGroupsFromDB.length; i++) {
+              this.extractTagGroupInfo(tagGroupsFromDB[i])
             }
             this.goodState({ message: 'Valid!'})
           } else {
@@ -45,9 +46,10 @@
           }
         }
       },
-      extractTagGroupInfo: function (tg) {
-        let modifiedTg = { 'id': tg.id, 'name': tg.name, 'tags': tg.tags }
-        this.tagGroupsList.push(modifiedTg)
+      extractTagGroupInfo: function (tagGroup) {
+        // sort tags ascending by index (map id)
+        let orderedTags = tagGroup.tags.sort(function(obj1, obj2) { return obj1.index - obj2.index })
+        this.tagGroupsList[tagGroup.id] = { 'id': tagGroup.id, 'name': tagGroup.name, 'tags': orderedTags }
       },
       apiError: function (err) {
         if (!err) {

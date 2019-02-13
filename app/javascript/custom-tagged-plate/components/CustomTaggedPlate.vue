@@ -166,6 +166,8 @@
         // it 'can be created' do
         //   expect(subject).to be_a LabwareCreators::CustomTaggedPlate
         // end
+
+        // TODO do we also need to set a scanned Tag Plate as 'exhausted' if it was 'available'? Yes.
       }
     },
     computed: {
@@ -182,39 +184,78 @@
           let wellPosn = well.position.name
           wells[wellPosn] = { pool_index: 20 }
         })
-        console.log('parentWells = ' + wells)
+        console.log('parentWells = ', wells)
         return wells
       },
       childWells: function () {
+        console.log('childWells: called')
         if(!this.parentPlate) { return {} }
         if(!this.parentPlate.wells) { return {} }
-        const wells = {}
+        let wells = {}
         // first initialise wells to match the parent plate
         this.parentPlate.wells.forEach((well) => {
-          console.log('well = ' + well)
+          console.log('childWells: well = ', well)
           let wellPosn = well.position.name
           wells[wellPosn] = { ... this.parentWells[wellPosn]}
         })
 
         // TODO - split transformations out into functions (can be in seperate file imported) and call functions here.
+        // each function based on form elements, if present
+
         // TODO - function for tag plate scanned
+        // do we need to check this?
+
         // TODO - function for tag group 1 selected
         // TODO - function for tag group 2 selected
+        // whether one or both tag groups are selected we need a function to fetch tags (indexes/oligos) from the group(s)
+        // this listing will be further modified by subsequent modifications
+
+        if(this.form.tag1GroupId) {
+          let tl = { 2:
+              { id: 2, name: 'tag group one', tags: [
+                { index: 1, oligo: 'CCTTAAGG'},
+                { index: 2, oligo: 'GGAATTGG'},
+                { index: 3, oligo: 'GGAATTGG'},
+                { index: 4, oligo: 'GGAATTGG'},
+                { index: 5, oligo: 'GGAATTGG'},
+                { index: 6, oligo: 'GGAATTGG'},
+              ]
+            }
+          }
+
+          let tagGroup = tl[2]
+          console.log('childWells: found tag group matching id = ', tagGroup)
+          if(tagGroup !== null) {
+            let tagsArray = tagGroup.tags
+            console.log('childWells: tagsArray = ', tagsArray)
+            this.parentPlate.wells.forEach((well, i) => {
+              let wellPosn = well.position.name
+              console.log('childWells: loop  = ', i)
+              // NB i is not the same as index number in tags list, tags are ordered by index in array
+              if(tagsArray[i]) {
+                console.log('childWells: setting ', wellPosn, ' to tag index ', tagsArray[i]['index'])
+                wells[wellPosn]['tagIndex'] = tagsArray[i]['index']
+              }
+            })
+          }
+        }
+
+        // let index = 1
+        // this.parentPlate.wells.forEach((well) => {
+        //   let wellPosn = well.position.name
+        //   // id, name, tags
+
+        //   wells[wellPosn]['tagIndex'] = index
+        //   index++
+        // })
+
         // TODO - function for by pool/plate seq/plate fixed selected
         // TODO - function for by row/column selected
         // TODO - function for start at index number selected
 
-        // TODO delete this - just an example of triggering updates
-        if(this.form.byPoolPlateOption === 'by_plate_seq') {
-          let index = 1
-          this.parentPlate.wells.forEach((well) => {
-            let wellPosn = well.position.name
-            wells[wellPosn]['tagIndex'] = index
-            index++
-          })
-          this.startAtTagMin = 4
-          this.startAtTagStep = 2
-        }
+        //   this.startAtTagMin = 4
+        //   this.startAtTagStep = 2
+        // }
 
         return wells
       },

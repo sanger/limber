@@ -28,7 +28,7 @@
                       label-for="tag1_group_selection">
           <b-form-select id="tag1_group_selection"
                         :options="tag1GroupOptions"
-                        v-model="form.tag1Group"
+                        v-model="form.tag1GroupId"
                         :disabled="tagGroupsDisabled"
                         @input="tagGroupInput"
                         @change="tagGroupChanged">
@@ -44,7 +44,7 @@
                       label-for="tag2_group_selection">
           <b-form-select id="tag2_group_selection"
                         :options="tag2GroupOptions"
-                        v-model="form.tag2Group"
+                        v-model="form.tag2GroupId"
                         :disabled="tagGroupsDisabled"
                         @input="tagGroupInput"
                         @change="tagGroupChanged">
@@ -122,8 +122,8 @@
         tagPlateScanDisabled: false,
         form: {
           tagPlateBarcode: null,
-          tag1Group: null,
-          tag2Group: null,
+          tag1GroupId: null,
+          tag2GroupId: null,
           byPoolPlateOption: 'by_pool',
           byRowColOption: 'by_rows',
           startAtTagOption: null,
@@ -186,7 +186,7 @@
         if(this.tagPlateWasScanned) {
           this.tagPlateScanDisabled = false
         } else {
-          if(this.form.tag1Group || this.form.tag2Group) {
+          if(this.form.tag1GroupId || this.form.tag2GroupId) {
             this.tagPlateScanDisabled = true
           } else {
             this.tagPlateScanDisabled = false
@@ -228,23 +228,23 @@
         this.tagPlateWasScanned = true
 
         if(data.plate.lot.tag_layout_template.tag_group.id) {
-          this.form.tag1Group = data.plate.lot.tag_layout_template.tag_group.id
+          this.form.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
         } else {
-          this.form.tag1Group = null
+          this.form.tag1GroupId = null
         }
 
         if(data.plate.lot.tag_layout_template.tag2_group.id) {
-          this.form.tag2Group = data.plate.lot.tag_layout_template.tag2_group.id
+          this.form.tag2GroupId = data.plate.lot.tag_layout_template.tag2_group.id
         } else {
-          this.form.tag2Group = null
+          this.form.tag2GroupId = null
         }
 
         this.updateTagPlateScanDisabled()
       },
       emptyTagPlate() {
         this.tagPlate = null
-        this.form.tag1Group = null
-        this.form.tag2Group = null
+        this.form.tag1GroupId = null
+        this.form.tag2GroupId = null
         this.updateTagPlateScanDisabled()
       },
       tagGroupChanged() {

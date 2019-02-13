@@ -7,34 +7,70 @@ import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue'
 
 describe('TagGroupsLookup', () => {
-  const goodTagGroupsArray = [
+  const goodTagGroupsFromDB = [
     {
-      id: '1',
-      name: 'Tag Group 1',
-      tags: [{
-        index: 1,
-        oligo: 'CTAGCTAG'
-      },
-      {
-        index: 2,
-        oligo: 'TTATACGA'
-      }
+      id: "1",
+      type: "tag_groups",
+      uuid: "89a03a32-c65d-11df-a908-00144f01a001",
+      name: "Tag Group 1",
+      tags: [
+        {
+          index: 1,
+          oligo: 'CTAGCTAG'
+        },
+        {
+          index: 2,
+          oligo: 'TTATACGA'
+        }
       ]
     },{
-      id: '2',
-      name: 'Tag Group 2',
-      tags: [{
-        index: 1,
-        oligo: 'CCTTAAGG'
-      },
-      {
-        index: 2,
-        oligo: 'AATTCGCA'
-      }
+      id: "2",
+      type: "tag_groups",
+      uuid: "89a03a32-c65d-11df-a908-00144f01a002",
+      name: "Tag Group 2",
+      tags: [
+        {
+          index: 2,
+          oligo: 'AATTCGCA'
+        },
+        {
+          index: 1,
+          oligo: 'CCTTAAGG'
+        }
       ]
     }
   ]
-  const goodTagGroups = jsonCollectionFactory('tag_group', goodTagGroupsArray)
+  const goodTagGroupsList = {
+    1: {
+      id: '1',
+      name: 'Tag Group 1',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CTAGCTAG'
+        },
+        {
+          index: 2,
+          oligo: 'TTATACGA'
+        }
+      ]
+    },
+    2: {
+      id: '2',
+      name: 'Tag Group 2',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CCTTAAGG'
+        },
+        {
+          index: 2,
+          oligo: 'AATTCGCA'
+        }
+      ]
+    }
+  }
+  const goodTagGroups = jsonCollectionFactory('tag_group', goodTagGroupsFromDB)
   const nullTagGroups = { data: [] }
 
   const wrapperFactory = function(api = mockApi()) {
@@ -63,7 +99,7 @@ describe('TagGroupsLookup', () => {
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', tagGroupsList: null }],
-        [{ state: 'invalid', tagGroupsList: [] }]
+        [{ state: 'invalid', tagGroupsList: null }]
       ]
     })
   })
@@ -95,7 +131,7 @@ describe('TagGroupsLookup', () => {
     })
   })
 
-  it('is valid if it can find tag groups', async () => {
+  it('is valid if it can find tag groups and sorts the tags in order of index', async () => {
     const api = mockApi()
 
     api.mockGet('tag_groups',{}, goodTagGroups)
@@ -113,7 +149,7 @@ describe('TagGroupsLookup', () => {
     expect(events.change.length).toEqual(2)
     expect(events.change[0]).toEqual([{ state: 'searching', tagGroupsList: null }])
     expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].tagGroupsList).toEqual(goodTagGroupsArray)
+    expect(events.change[1][0].tagGroupsList).toEqual(goodTagGroupsList)
   })
 
 })
