@@ -61,7 +61,7 @@
           <b-form-select id="by_pool_plate_options"
                         :options="byPoolPlateOptions"
                         v-model="form.byPoolPlateOption"
-                        @change="updateTagParams">
+                        @input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -73,7 +73,7 @@
           <b-form-select id="by_rows_columns"
                         :options="byRowColOptions"
                         v-model="form.byRowColOption"
-                        @change="updateTagParams">
+                        @input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -87,7 +87,7 @@
           <b-form-select id="start_at_tag_options"
                         :options="startAtTagOptions"
                         v-model="form.startAtTagOption"
-                        @change="updateTagParams">
+                        @input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -99,7 +99,7 @@
           <b-form-select id="tags_per_well"
                         :options="tagsPerWellOptions"
                         v-model="form.tagsPerWellOption"
-                        @change="updateTagParams">
+                        @input="updateTagParams">
           </b-form-select>
         </b-form-group>
       </b-col>
@@ -124,7 +124,7 @@
           tagPlateBarcode: null,
           tag1GroupId: null,
           tag2GroupId: null,
-          byPoolPlateOption: 'by_pool',
+          byPoolPlateOption: 'by_plate_seq',
           byRowColOption: 'by_rows',
           startAtTagOption: null,
           tagsPerWellOption: null
@@ -254,7 +254,6 @@
         this.updateTagPlateScanDisabled()
       },
       updateTagParams(_value) {
-        console.log('updateTagParams changed')
         this.$emit('tagparamsupdated', this.form)
       }
     },

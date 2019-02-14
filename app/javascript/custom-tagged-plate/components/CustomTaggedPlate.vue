@@ -2,7 +2,11 @@
   <lb-page>
     <lb-parent-plate-lookup :api="devourApi"
                             :assetUuid="parentUuid"
-                            :includes="'wells.aliquots'"
+                            includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission"
+                            :fields="{ wells: 'uuid,position,aliquots',
+                                      aliquots: 'request',
+                                      requests: 'uuid,submission',
+                                      submissions: 'uuid,name' }"
                             @change="parentPlateLookupUpdated">
     </lb-parent-plate-lookup>
     <lb-tag-groups-lookup :api="devourApi"
@@ -50,6 +54,7 @@
   import Vue from 'vue'
   import devourApi from 'shared/devourApi'
   import resources from 'shared/resources'
+  import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
 
   export default {
     name: 'CustomTaggedPlate',
@@ -180,6 +185,25 @@
       parentWells: function () {
         if(!this.parentPlate) { return {} }
         let wells = {}
+
+        // determine unique submissions by well
+        // store submission ids as array [142,122,331]
+        // use index + 1 of submission id in array as pool index
+
+        let submIds = []
+        this.parentPlate.wells.forEach((well) => {
+          let submId = well.aliquots[0].request.submission.id
+          console.log('submId = ', submId)
+          // what if not found?
+
+          // add to array of submission ids if not already present
+          if(!submId in submIds) {
+            submIds.push(submId)
+          }
+        })
+
+        console.log('submIds = ', submIds)
+
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
           wells[wellPosn] = { pool_index: 20 }
@@ -194,8 +218,9 @@
         let wells = {}
         // first initialise wells to match the parent plate
         this.parentPlate.wells.forEach((well) => {
-          console.log('childWells: well = ', well)
+          if(!well.aliquots[0]) { return } // do not include wells without aliquots
           let wellPosn = well.position.name
+          console.log('childWells: well at ', wellPosn, ' = ', JSON.stringify(well))
           wells[wellPosn] = { ... this.parentWells[wellPosn]}
         })
 
@@ -210,35 +235,35 @@
         // whether one or both tag groups are selected we need a function to fetch tags (indexes/oligos) from the group(s)
         // this listing will be further modified by subsequent modifications
 
-        if(this.form.tag1GroupId) {
-          let tl = { 2:
-              { id: 2, name: 'tag group one', tags: [
-                { index: 1, oligo: 'CCTTAAGG'},
-                { index: 2, oligo: 'GGAATTGG'},
-                { index: 3, oligo: 'GGAATTGG'},
-                { index: 4, oligo: 'GGAATTGG'},
-                { index: 5, oligo: 'GGAATTGG'},
-                { index: 6, oligo: 'GGAATTGG'},
-              ]
-            }
-          }
+        // if(this.form.tag1GroupId) {
+        //   let tl = { 2:
+        //       { id: 2, name: 'tag group one', tags: [
+        //         { index: 1, oligo: 'CCTTAAGG'},
+        //         { index: 2, oligo: 'GGAATTGG'},
+        //         { index: 3, oligo: 'GGAATTGG'},
+        //         { index: 4, oligo: 'GGAATTGG'},
+        //         { index: 5, oligo: 'GGAATTGG'},
+        //         { index: 6, oligo: 'GGAATTGG'},
+        //       ]
+        //     }
+        //   }
 
-          let tagGroup = tl[2]
-          console.log('childWells: found tag group matching id = ', tagGroup)
-          if(tagGroup !== null) {
-            let tagsArray = tagGroup.tags
-            console.log('childWells: tagsArray = ', tagsArray)
-            this.parentPlate.wells.forEach((well, i) => {
-              let wellPosn = well.position.name
-              console.log('childWells: loop  = ', i)
-              // NB i is not the same as index number in tags list, tags are ordered by index in array
-              if(tagsArray[i]) {
-                console.log('childWells: setting ', wellPosn, ' to tag index ', tagsArray[i]['index'])
-                wells[wellPosn]['tagIndex'] = tagsArray[i]['index']
-              }
-            })
-          }
-        }
+        //   let tagGroup = tl[2]
+        //   console.log('childWells: found tag group matching id = ', tagGroup)
+        //   if(tagGroup !== null) {
+        //     let tagsArray = tagGroup.tags
+        //     console.log('childWells: tagsArray = ', tagsArray)
+        //     this.parentPlate.wells.forEach((well, i) => {
+        //       let wellPosn = well.position.name
+        //       console.log('childWells: loop  = ', i)
+        //       // NB i is not the same as index number in tags list, tags are ordered by index in array
+        //       if(tagsArray[i]) {
+        //         console.log('childWells: setting ', wellPosn, ' to tag index ', tagsArray[i]['index'])
+        //         wells[wellPosn]['tagIndex'] = tagsArray[i]['index']
+        //       }
+        //     })
+        //   }
+        // }
 
         // let index = 1
         // this.parentPlate.wells.forEach((well) => {
@@ -257,7 +282,17 @@
         //   this.startAtTagStep = 2
         // }
 
-        return wells
+        if(!this.tagGroupsList) { return wells }
+
+        let tgGrp1 = this.tagGroupsList[this.form.tag1GroupId]
+        let tgGrp2 = this.tagGroupsList[this.form.tag2GroupId]
+        let walkingByOpt = this.form.byPoolPlateOption
+        let directionOpt = this.form.byRowColOption
+        let offset = this.form.startAtTagOption
+
+        let newWells = calculateTagLayout(wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset)
+
+        return newWells
       },
       createCaption: function () {
         return 'Modify the tag layout for the new plate using options on the right'

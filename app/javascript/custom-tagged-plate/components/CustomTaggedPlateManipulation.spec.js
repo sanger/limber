@@ -203,13 +203,13 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
 
     const input = wrapper.find('#by_pool_plate_options')
-    const option = input.find(`option[value="by_plate_seq"]`)
+    const option = input.find(`option[value="by_plate_fixed"]`)
     option.setSelected()
     input.trigger('input')
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tagPlateBarcode":null,"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_seq","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null}]
+      [{"tagPlateBarcode":null,"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null}]
     )
   })
 })
