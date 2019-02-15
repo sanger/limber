@@ -9,4 +9,13 @@ module Limber::TagLayoutTemplate::InInverseColumns
     end
   end
   private :group_wells_of_plate
+
+  # Returns the tag index for the primary tag
+  # That is the one laid out in columns with four copies of each
+  def primary_index(row, column, scale, height, width)
+    tag_col = (column / scale)
+    tag_row = (row / scale)
+    (height / scale) * (width / scale) -
+      (tag_row + (height / scale * tag_col)) - 1
+  end
 end
