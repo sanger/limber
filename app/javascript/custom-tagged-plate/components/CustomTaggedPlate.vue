@@ -206,7 +206,7 @@
 
         this.parentPlate.wells.forEach((well) => {
           let wellPosn = well.position.name
-          wells[wellPosn] = { pool_index: 20 }
+          wells[wellPosn] = { poolIndex: 20 }
         })
         console.log('parentWells = ', wells)
         return wells

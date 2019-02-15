@@ -210,20 +210,20 @@ describe('QuadStamp', () => {
     wrapper.setData({ primerPanel: 'Test panel' })
 
     expect(wrapper.vm.targetWells).toEqual({
-      'A1': { pool_index: 1 },
-      'C1': { pool_index: 1 },
-      'E1': { pool_index: 1 },
-      'G1': { pool_index: 1 },
-      'B1': { pool_index: 2 },
-      'D1': { pool_index: 2 },
-      'A2': { pool_index: 3 },
-      'C2': { pool_index: 3 },
-      'E2': { pool_index: 3 },
-      'B2': { pool_index: 4 },
-      'D2': { pool_index: 4 },
-      'F2': { pool_index: 4 },
-      'H2': { pool_index: 4 },
-      'J2': { pool_index: 4 }
+      'A1': { poolIndex: 1 },
+      'C1': { poolIndex: 1 },
+      'E1': { poolIndex: 1 },
+      'G1': { poolIndex: 1 },
+      'B1': { poolIndex: 2 },
+      'D1': { poolIndex: 2 },
+      'A2': { poolIndex: 3 },
+      'C2': { poolIndex: 3 },
+      'E2': { poolIndex: 3 },
+      'B2': { poolIndex: 4 },
+      'D2': { poolIndex: 4 },
+      'F2': { poolIndex: 4 },
+      'H2': { poolIndex: 4 },
+      'J2': { poolIndex: 4 }
     })
   })
 })

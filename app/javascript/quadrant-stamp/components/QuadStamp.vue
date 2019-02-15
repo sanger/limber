@@ -164,7 +164,7 @@
       },
       targetWells() {
         let deb = this.transfers.reduce((wells, transfer) =>{
-          wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
+          wells[transfer.new_target.location] = { poolIndex: transfer.pool_index }
           return wells
         }, {})
         return deb
