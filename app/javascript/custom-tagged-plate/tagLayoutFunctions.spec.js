@@ -229,7 +229,7 @@ describe('calculateTagLayout', () => {
   })
 
   it('builds the wells to tag index array for sequential plate by column where not enough tags', () => {
-    const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 4, 'B2': 5, 'C2': 6, 'A3': null, 'B3': null, 'C3': null, 'A4': null, 'C4': null }
+    const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 4, 'B2': 5, 'C2': 6, 'A3': -1, 'B3': -1, 'C3': -1, 'A4': -1, 'C4': -1 }
     const response = calculateTagLayout(inputWells, plateDims, tagGrpShort, null, 'by_plate_seq', 'by_columns', 0)
 
     expect(response).toEqual(outputWells)

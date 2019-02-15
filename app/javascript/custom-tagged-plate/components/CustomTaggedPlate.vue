@@ -246,7 +246,12 @@
 
         Object.keys(tagLayout).forEach(function (key) {
           newWells[key] = { ... parentWells[key]}
-          newWells[key]['tagIndex'] = tagLayout[key]
+          if(tagLayout[key] === -1) {
+            newWells[key]['tagIndex'] = 'X'
+            // TODO set plate invalid, cannot create
+          } else {
+            newWells[key]['tagIndex'] = tagLayout[key].toString()
+          }
         })
 
         return newWells
@@ -284,7 +289,7 @@
           let v = i * this.startAtTagStep + this.startAtTagMin
           arr.push({ value: v - 1, text: '' + v})
         }
-        console.log('in computed compOffsetTagsByOptions, new value = ' + JSON.stringify(arr))
+        // console.log('in computed compOffsetTagsByOptions, new value = ' + JSON.stringify(arr))
         return arr
       },
       buttonText() {

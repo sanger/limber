@@ -6,17 +6,17 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
     counters[well.poolIndex] = counter(offset)
   }
   const i = counters[well.poolIndex]()
-  if(!tags[i]) { return null }
+  if(!tags[i]) { return -1 }
   return tags[i].index
 }
 
 function byPlateSeq(well, tags, relIndex, _absIndex, offset, counters) {
-  if(!tags[relIndex + offset]) { return null }
+  if(!tags[relIndex + offset]) { return -1 }
   return tags[relIndex + offset].index
 }
 
 function byPlateFixed(well, tags, _relIndex, absIndex, offset, counters) {
-  if(!tags[absIndex + offset]) { return null }
+  if(!tags[absIndex + offset]) { return -1 }
   return tags[absIndex + offset].index
 }
 
