@@ -33,7 +33,7 @@ describe('CustomTaggedPlateManipulation', () => {
             { value: 'by_rows', text: 'By Rows' },
             { value: 'by_columns', text: 'By Columns' }
         ],
-        startAtTagOptions: [
+        offsetTagsByOptions: [
             { value: null, text: 'Select which tag index to start at...' },
             { value: 1, text: '1' },
             { value: 2, text: '2' },
@@ -114,10 +114,10 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
   })
 
-  it('renders a start at tag select number dropdown', () => {
+  it('renders an offset tags by select number dropdown', () => {
     let wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#start_at_tag_options').exists()).toBe(true)
+    expect(wrapper.find('#offset_tags_by_options').exists()).toBe(true)
   })
 
   // it('renders a tags per well number based on the plate purpose', () => {
@@ -209,7 +209,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tagPlateBarcode":null,"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","startAtTagOption":null,"tagsPerWellOption":null}]
+      [{"tagPlateBarcode":null,"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","offsetTagsByOption":null,"tagsPerWellOption":null}]
     )
   })
 })

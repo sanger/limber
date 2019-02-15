@@ -2,19 +2,21 @@ import { wellNameToCoordinate } from 'shared/wellHelpers'
 import counter from 'shared/counter'
 
 function byPool(well, tags, relIndex, _absIndex, offset, counters) {
-  if(!counters[well.poolId]) {
-    counters[well.poolId] = counter(0)
+  if(!counters[well.poolIndex]) {
+    counters[well.poolIndex] = counter(offset)
   }
-  const i = counters[well.poolId]()
-  console.log('well ' + well.position + ' has tag counter ' + i)
+  const i = counters[well.poolIndex]()
+  if(!tags[i]) { return null }
   return tags[i].index
 }
 
 function byPlateSeq(well, tags, relIndex, _absIndex, offset, counters) {
+  if(!tags[relIndex + offset]) { return null }
   return tags[relIndex + offset].index
 }
 
 function byPlateFixed(well, tags, _relIndex, absIndex, offset, counters) {
+  if(!tags[absIndex + offset]) { return null }
   return tags[absIndex + offset].index
 }
 
@@ -70,25 +72,35 @@ const directionFunctions = {
   'by_columns': byColumns
 }
 
-const calculateTagLayout = function (wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offsetOpt) {
-  console.log('calculateTagLayout: wells - ', wells)
-  console.log('calculateTagLayout: tgGrp1 - ', tgGrp1)
-  console.log('calculateTagLayout: tgGrp2 - ', tgGrp2)
-  console.log('calculateTagLayout: walkingByOpt - ', walkingByOpt)
-  console.log('calculateTagLayout: directionOpt - ', directionOpt)
-  console.log('calculateTagLayout: offsetOpt - ', offsetOpt)
+const calculateTagLayout = function (wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset = 0) {
+  if(!validParameters(wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset)) { return null }
 
-  if(!tgGrp1 && !tgGrp2) {
-    console.log('No tag groups input, returning wells unchanged')
-    return wells
-  }
-
-  const tags = tgGrp1.tags
+  const tags = extractTags(tgGrp1, tgGrp2)
   const counters = {}
 
   return directionFunctions[directionOpt](wells, plateDims, (well, relIndex, absIndex) => {
-    return walkingByFunctions[walkingByOpt](well, tags, relIndex, absIndex, offsetOpt, counters)
+    return walkingByFunctions[walkingByOpt](well, tags, relIndex, absIndex, offset, counters)
   })
+}
+
+const validParameters = function (wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset) {
+  if(!wells) { return false }
+  if(!plateDims) { return false }
+  if(!(plateDims.number_of_rows > 0 && plateDims.number_of_columns > 0)) { return false }
+  if(!(tgGrp1 || tgGrp2)) { return false }
+  if(tgGrp1 && !tgGrp1.tags) { return false }
+  if(tgGrp2 && !tgGrp2.tags) { return false }
+  if(tgGrp1 && !(tgGrp1.tags.length > 0)) { return false }
+  if(tgGrp2 && !(tgGrp2.tags.length > 0)) { return false }
+  if(!walkingByOpt) { return false }
+  if(!directionOpt) { return false }
+  return true
+}
+
+const extractTags = function(tgGrp1, tgGrp2) {
+  // key on i7 tags if available
+  if(tgGrp1) { return tgGrp1.tags }
+  if(tgGrp2) { return tgGrp2.tags }
 }
 
 export { calculateTagLayout }

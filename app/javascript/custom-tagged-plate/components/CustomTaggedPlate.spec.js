@@ -22,17 +22,17 @@ describe('CustomTaggedPlate', () => {
         state: 'searching',
         parentPlate: null,
         progressMessage: 'Fetching parent plate details and tag groups...',
-        // startAtTagMin: 1,
-        // startAtTagMax: 96,
-        // startAtTagStep: 1,
-        // startAtTagOptions: {},
+        // offsetTagsByMin: 1,
+        // offsetTagsByMax: 96,
+        // offsetTagsByStep: 1,
+        // offsetTagsByOptions: {},
         // form: {
         //   tagPlateBarcode: null,
         //   tag1Group: null,
         //   tag2Group: null,
         //   byPoolPlateOption: null,
         //   byRowColOption: null,
-        //   startAtTagOption: 1,
+        //   offsetTagsByOption: 1,
         //   tagsPerWellOption: 1
         // }
       },

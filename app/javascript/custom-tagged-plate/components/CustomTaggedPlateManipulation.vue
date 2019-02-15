@@ -81,12 +81,12 @@
     <b-row class="form-group form-row">
       <b-col>
         <!-- start at tag select dropdown -->
-        <b-form-group id="start_at_tag_group"
-                      label="Start at Tag number:"
-                      label-for="start_at_tag_options">
-          <b-form-select id="start_at_tag_options"
-                        :options="startAtTagOptions"
-                        v-model="form.startAtTagOption"
+        <b-form-group id="offset_tags_by_group"
+                      label="Offset tags by:"
+                      label-for="offset_tags_by_options">
+          <b-form-select id="offset_tags_by_options"
+                        :options="offsetTagsByOptions"
+                        v-model="form.offsetTagsByOption"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -126,7 +126,7 @@
           tag2GroupId: null,
           byPoolPlateOption: 'by_plate_seq',
           byRowColOption: 'by_rows',
-          startAtTagOption: null,
+          offsetTagsByOption: null,
           tagsPerWellOption: null
         }
       }
@@ -152,14 +152,14 @@
       },
       // TODO this one needs to be dynamic based on calculations (see generic lims)
       // TODO change to number field with max, min and step parameters
-      startAtTagOptions: { type: Array, default: () =>{ return [
+      offsetTagsByOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select which tag index to start at...' },
-          { value: 1, text: '1' },
-          { value: 2, text: '2' },
-          { value: 3, text: '3' },
-          { value: 4, text: '4' },
-          { value: 5, text: '5' },
-          { value: 6, text: '6' }
+          { value: 0, text: '1' },
+          { value: 1, text: '2' },
+          { value: 2, text: '3' },
+          { value: 3, text: '4' },
+          { value: 4, text: '5' },
+          { value: 5, text: '6' }
         ]}
       },
       // TODO Tags per well should be fixed absed on plate purpose (mostly 1, chromium 4)

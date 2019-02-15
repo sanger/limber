@@ -2,7 +2,7 @@
   <lb-page>
     <lb-parent-plate-lookup :api="devourApi"
                             :assetUuid="parentUuid"
-                            includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission"
+                            includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission"
                             :fields="{ wells: 'uuid,position,aliquots',
                                       aliquots: 'request',
                                       requests: 'uuid,submission',
@@ -26,7 +26,7 @@
             <lb-custom-tagged-plate-manipulation :api="devourApi"
                                                  :tag1GroupOptions="compTag1GroupOptions"
                                                  :tag2GroupOptions="compTag2GroupOptions"
-                                                 :startAtTagOptions="compStartAtTagOptions"
+                                                 :offsetTagsByOptions="compOffsetTagsByOptions"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -69,7 +69,7 @@
         startAtTagMin: 1,
         startAtTagMax: 96,
         startAtTagStep: 1,
-        startAtTagOptions: {},
+        offsetTagsByOptions: {},
         errorMessages: [],
         form: {
           tagPlateBarcode: null,
@@ -77,7 +77,7 @@
           tag2GroupId: null,
           byPoolPlateOption: null,
           byRowColOption: null,
-          startAtTagOption: 1,
+          offsetTagsByOption: 1,
           tagsPerWellOption: 1
         }
       }
@@ -90,10 +90,8 @@
     },
     methods: {
       parentPlateLookupUpdated(data) {
-        console.log('parentPlateLookupUpdated: data = ', data)
         this.parentPlate = null
         if(data) {
-          console.log('parent lookup state = ', data['state'])
           if(data['state'] === 'searching') {
             return
           } else {
@@ -118,7 +116,6 @@
             return
           } else if(data.state === 'valid') {
             this.tagGroupsList = { ...data.tagGroupsList }
-            console.log('this.tagGroupsList = ', this.tagGroupsList)
             this.state = 'loaded'
           } else {
             this.errorMessages.push('Tag Groups lookup error: ', data['state'])
@@ -130,14 +127,12 @@
         }
       },
       tagParamsUpdated(updatedform) {
-        console.log('tagParamsUpdated: called, updatedform values = ')
-        console.log(updatedform)
         this.form.tagPlateBarcode   = updatedform.tagPlateBarcode
         this.form.tag1GroupId       = updatedform.tag1GroupId
         this.form.tag2GroupId       = updatedform.tag2GroupId
         this.form.byPoolPlateOption = updatedform.byPoolPlateOption
         this.form.byRowColOption    = updatedform.byRowColOption
-        this.form.startAtTagOption  = updatedform.startAtTagOption
+        this.form.offsetTagsByOption  = updatedform.offsetTagsByOption
         this.form.tagsPerWellOption = updatedform.tagsPerWellOption
       },
       submit() {
@@ -185,112 +180,74 @@
       parentWells: function () {
         if(!this.parentPlate) { return {} }
         let wells = {}
-
-        // determine unique submissions by well
-        // store submission ids as array [142,122,331]
-        // use index + 1 of submission id in array as pool index
-
         let submIds = []
         this.parentPlate.wells.forEach((well) => {
-          let submId = well.aliquots[0].request.submission.id
-          console.log('submId = ', submId)
-          // what if not found?
+          const wellPosn = well.position.name
 
-          // add to array of submission ids if not already present
-          if(!submId in submIds) {
+          // check for no aliquots in well
+          if(!well.aliquots) {
+            wells[wellPosn] = { position: wellPosn, aliquotCount: 0, poolIndex: null }
+            return
+          }
+
+          let submId = null
+
+          if(well.requests_as_source) {
+            submId = well.requests_as_source[0].submission.id
+            // TODO loop through additional requests if any? do we take first submission id we find?
+          }
+
+          if(!submId) {
+            // backup method of getting to submission if primary route fails
+            submId = well.aliquots[0].request.submission.id
+            // TODO loop through additional aliquots if any? do we take first submission id we find?
+          }
+
+          if(!submId) {
+            console.log('Submission Id not found for well')
+            // TODO what to do here? error?
+            return
+          }
+
+          // add to array of unique submission ids if not already present
+          if(!submIds.includes(submId)) {
             submIds.push(submId)
           }
+
+          const wellPoolIndex = submIds.indexOf(submId) + 1
+
+          wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, poolIndex: wellPoolIndex }
         })
 
-        console.log('submIds = ', submIds)
-
-        this.parentPlate.wells.forEach((well) => {
-          let wellPosn = well.position.name
-          wells[wellPosn] = { poolIndex: 20 }
-        })
-        console.log('parentWells = ', wells)
         return wells
       },
       childWells: function () {
-        console.log('childWells: called')
         if(!this.parentPlate) { return {} }
         if(!this.parentPlate.wells) { return {} }
-        let wells = {}
-        // first initialise wells to match the parent plate
-        this.parentPlate.wells.forEach((well) => {
-          if(!well.aliquots[0]) { return } // do not include wells without aliquots
-          let wellPosn = well.position.name
-          console.log('childWells: well at ', wellPosn, ' = ', JSON.stringify(well))
-          wells[wellPosn] = { ... this.parentWells[wellPosn]}
+
+        if(!this.tagGroupsList) { return this.parentWells }
+        // TODO need error handling message here? valid first time for tag groups not to have been downloaded yet
+
+        const tgGrp1       = this.tagGroupsList[this.form.tag1GroupId]
+        const tgGrp2       = this.tagGroupsList[this.form.tag2GroupId]
+        const walkingByOpt = this.form.byPoolPlateOption
+        const directionOpt = this.form.byRowColOption
+        const offset       = this.form.offsetTagsByOption
+        const plateDims    = { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns }
+
+        let tagLayout = calculateTagLayout(Object.values(this.parentWells), plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset)
+
+        if(!tagLayout) { return this.parentWells }
+        // TODO need error handling message here? first time in valid to have no tags selected yet
+
+        let newWells = {}
+
+        const parentWells = this.parentWells
+
+        Object.keys(tagLayout).forEach(function (key) {
+          newWells[key] = { ... parentWells[key]}
+          newWells[key]['tagIndex'] = tagLayout[key]
         })
-
-        // TODO - split transformations out into functions (can be in seperate file imported) and call functions here.
-        // each function based on form elements, if present
-
-        // TODO - function for tag plate scanned
-        // do we need to check this?
-
-        // TODO - function for tag group 1 selected
-        // TODO - function for tag group 2 selected
-        // whether one or both tag groups are selected we need a function to fetch tags (indexes/oligos) from the group(s)
-        // this listing will be further modified by subsequent modifications
-
-        // if(this.form.tag1GroupId) {
-        //   let tl = { 2:
-        //       { id: 2, name: 'tag group one', tags: [
-        //         { index: 1, oligo: 'CCTTAAGG'},
-        //         { index: 2, oligo: 'GGAATTGG'},
-        //         { index: 3, oligo: 'GGAATTGG'},
-        //         { index: 4, oligo: 'GGAATTGG'},
-        //         { index: 5, oligo: 'GGAATTGG'},
-        //         { index: 6, oligo: 'GGAATTGG'},
-        //       ]
-        //     }
-        //   }
-
-        //   let tagGroup = tl[2]
-        //   console.log('childWells: found tag group matching id = ', tagGroup)
-        //   if(tagGroup !== null) {
-        //     let tagsArray = tagGroup.tags
-        //     console.log('childWells: tagsArray = ', tagsArray)
-        //     this.parentPlate.wells.forEach((well, i) => {
-        //       let wellPosn = well.position.name
-        //       console.log('childWells: loop  = ', i)
-        //       // NB i is not the same as index number in tags list, tags are ordered by index in array
-        //       if(tagsArray[i]) {
-        //         console.log('childWells: setting ', wellPosn, ' to tag index ', tagsArray[i]['index'])
-        //         wells[wellPosn]['tagIndex'] = tagsArray[i]['index']
-        //       }
-        //     })
-        //   }
-        // }
-
-        // let index = 1
-        // this.parentPlate.wells.forEach((well) => {
-        //   let wellPosn = well.position.name
-        //   // id, name, tags
-
-        //   wells[wellPosn]['tagIndex'] = index
-        //   index++
-        // })
-
-        // TODO - function for by pool/plate seq/plate fixed selected
-        // TODO - function for by row/column selected
-        // TODO - function for start at index number selected
-
-        //   this.startAtTagMin = 4
-        //   this.startAtTagStep = 2
-        // }
-
-        if(!this.tagGroupsList) { return wells }
-
-        let tgGrp1 = this.tagGroupsList[this.form.tag1GroupId]
-        let tgGrp2 = this.tagGroupsList[this.form.tag2GroupId]
-        let walkingByOpt = this.form.byPoolPlateOption
-        let directionOpt = this.form.byRowColOption
-        let offset = this.form.startAtTagOption
-
-        let newWells = calculateTagLayout(wells, plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset)
 
         return newWells
       },
@@ -317,7 +274,7 @@
         })
         return options
       },
-      compStartAtTagOptions: function () {
+      compOffsetTagsByOptions: function () {
         // TODO calculate the min/max based on function changes
         const arr = [
           { value: null, text: 'Select which tag index to start at...' }
@@ -325,9 +282,9 @@
         const totalSteps = Math.floor((this.startAtTagMax - this.startAtTagMin)/this.startAtTagStep)
         for (let i = 0; i <= totalSteps; i++ ) {
           let v = i * this.startAtTagStep + this.startAtTagMin
-          arr.push({ value: v, text: '' + v})
+          arr.push({ value: v - 1, text: '' + v})
         }
-        console.log('in computed compStartAtTagOptions, new value = ' + JSON.stringify(arr))
+        console.log('in computed compOffsetTagsByOptions, new value = ' + JSON.stringify(arr))
         return arr
       },
       buttonText() {
