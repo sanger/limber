@@ -28,7 +28,7 @@
                       label-for="tag1_group_selection">
           <b-form-select id="tag1_group_selection"
                         :options="tag1GroupOptions"
-                        v-model="form.tag1GroupId"
+                        v-model="tag1GroupId"
                         :disabled="tagGroupsDisabled"
                         @input="tagGroupInput"
                         @change="tagGroupChanged">
@@ -44,7 +44,7 @@
                       label-for="tag2_group_selection">
           <b-form-select id="tag2_group_selection"
                         :options="tag2GroupOptions"
-                        v-model="form.tag2GroupId"
+                        v-model="tag2GroupId"
                         :disabled="tagGroupsDisabled"
                         @input="tagGroupInput"
                         @change="tagGroupChanged">
@@ -60,7 +60,7 @@
                       label-for="by_pool_plate_options">
           <b-form-select id="by_pool_plate_options"
                         :options="byPoolPlateOptions"
-                        v-model="form.byPoolPlateOption"
+                        v-model="byPoolPlateOption"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -72,7 +72,7 @@
                       label-for="by_rows_columns">
           <b-form-select id="by_rows_columns"
                         :options="byRowColOptions"
-                        v-model="form.byRowColOption"
+                        v-model="byRowColOption"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -86,7 +86,7 @@
                       label-for="offset_tags_by_options">
           <b-form-select id="offset_tags_by_options"
                         :options="offsetTagsByOptions"
-                        v-model="form.offsetTagsByOption"
+                        v-model="offsetTagsByOption"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -98,7 +98,7 @@
                       label-for="tags_per_well">
           <b-form-select id="tags_per_well"
                         :options="tagsPerWellOptions"
-                        v-model="form.tagsPerWellOption"
+                        v-model="tagsPerWellOption"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -120,15 +120,12 @@
         tagPlate: null,
         tagPlateWasScanned: false,
         tagPlateScanDisabled: false,
-        form: {
-          tagPlateBarcode: null,
-          tag1GroupId: null,
-          tag2GroupId: null,
-          byPoolPlateOption: 'by_plate_seq',
-          byRowColOption: 'by_rows',
-          offsetTagsByOption: null,
-          tagsPerWellOption: null
-        }
+        tag1GroupId: null,
+        tag2GroupId: null,
+        byPoolPlateOption: 'by_plate_seq',
+        byRowColOption: 'by_rows',
+        offsetTagsByOption: null,
+        tagsPerWellOption: null
       }
     },
     props: {
@@ -186,13 +183,13 @@
         if(this.tagPlateWasScanned) {
           this.tagPlateScanDisabled = false
         } else {
-          if(this.form.tag1GroupId || this.form.tag2GroupId) {
+          if(this.tag1GroupId || this.tag2GroupId) {
             this.tagPlateScanDisabled = true
           } else {
             this.tagPlateScanDisabled = false
           }
         }
-        this.$emit('tagparamsupdated', this.form)
+        this.updateTagParams(null)
       },
       tagPlateScanned(data) {
         // data.plate.lot.tag_layout_template.id
@@ -202,11 +199,11 @@
         // this.tagLayoutDirectionAlgorithm = data.plate.lot.tag_layout_template.direction // e.g.
         // DIRECTIONS = 'column','row','inverse column','inverse row,'column then row'
 
-        // this.form.tag1GroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
-        // this.form.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
+        // this.tag1GroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
+        // this.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
 
         // this.tagGroupTagsFromScan = data.plate.lot.tag_layout_template.tag_group.tags
-        // this.form.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
+        // this.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
 
         // data.plate.lot.tag_layout_template.tag_group.tags.length
         // data.plate.lot.tag_layout_template.tag_group.tags[0].index
@@ -228,23 +225,23 @@
         this.tagPlateWasScanned = true
 
         if(data.plate.lot.tag_layout_template.tag_group.id) {
-          this.form.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
+          this.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
         } else {
-          this.form.tag1GroupId = null
+          this.tag1GroupId = null
         }
 
         if(data.plate.lot.tag_layout_template.tag2_group.id) {
-          this.form.tag2GroupId = data.plate.lot.tag_layout_template.tag2_group.id
+          this.tag2GroupId = data.plate.lot.tag_layout_template.tag2_group.id
         } else {
-          this.form.tag2GroupId = null
+          this.tag2GroupId = null
         }
 
         this.updateTagPlateScanDisabled()
       },
       emptyTagPlate() {
         this.tagPlate = null
-        this.form.tag1GroupId = null
-        this.form.tag2GroupId = null
+        this.tag1GroupId = null
+        this.tag2GroupId = null
         this.updateTagPlateScanDisabled()
       },
       tagGroupChanged() {
@@ -254,7 +251,14 @@
         this.updateTagPlateScanDisabled()
       },
       updateTagParams(_value) {
-        this.$emit('tagparamsupdated', this.form)
+        const updatedData = {
+          tag1GroupId: this.tag1GroupId,
+          tag2GroupId: this.tag2GroupId,
+          byPoolPlateOption: this.byPoolPlateOption,
+          byRowColOption: this.byRowColOption,
+          offsetTagsByOption: this.offsetTagsByOption
+        }
+        this.$emit('tagparamsupdated', updatedData)
       }
     },
     components: {

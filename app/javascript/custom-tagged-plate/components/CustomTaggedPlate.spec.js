@@ -39,7 +39,7 @@ describe('CustomTaggedPlate', () => {
         ],
         requests_as_source: [
           {
-            id: 1,
+            id: '1',
             submission: {
               id: '1',
               name:'Test 1 Submission Name',
@@ -66,7 +66,7 @@ describe('CustomTaggedPlate', () => {
         ],
         requests_as_source: [
           {
-            id: 1,
+            id: '1',
             submission: {
               id: '1',
               name:'Test 1 Submission Name',
@@ -76,7 +76,6 @@ describe('CustomTaggedPlate', () => {
       }
     ],
   }
-
   const goodParentPlateWithoutWellRequestsAsResource = {
     id: '1',
     uuid: plateUuid,
@@ -128,7 +127,6 @@ describe('CustomTaggedPlate', () => {
       }
     ],
   }
-
   const goodParentPlateWithPools = {
     uuid: plateUuid,
     name: 'Test Plate 123456',
@@ -187,7 +185,6 @@ describe('CustomTaggedPlate', () => {
       }
     ]
   }
-
   const goodTagGroupsList = {
     1: {
       id: '1',
@@ -218,7 +215,20 @@ describe('CustomTaggedPlate', () => {
       ]
     }
   }
-
+  const goodChildWells = {
+    A1: {
+      position: 'A1',
+      aliquotCount: 1,
+      tagIndex: '1',
+      poolIndex: 1
+    },
+    A2: {
+      position: 'A2',
+      aliquotCount: 1,
+      tagIndex: '2',
+      poolIndex: 1
+    }
+  }
   // const nullTagGroups = { data: [] }
 
 
@@ -308,7 +318,7 @@ describe('CustomTaggedPlate', () => {
     expect(wrapper.vm.numberOfColumns).toEqual(12)
   })
 
-  it('returns null for computed parent wells by default', () => {
+  it('returns empty object for computed parent wells by default', () => {
     const wrapper = wrapperFactory()
 
     expect(wrapper.vm.parentWells).toEqual({})
@@ -341,8 +351,31 @@ describe('CustomTaggedPlate', () => {
     expect(wrapper.vm.parentWells.A2.poolIndex).toBe(2)
   })
 
-  // childWells
-  // createdCaption
+  it('returns empty object for computed childWells if parent wells does not exist', () => {
+    const wrapper = wrapperFactory()
+
+    expect(wrapper.vm.childWells).toEqual({})
+  })
+
+  it('returns parent wells for computed childWells if tag group list is not set', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setData({ parentPlate: goodParentPlate})
+    expect(wrapper.vm.childWells).toEqual(wrapper.vm.parentWells)
+  })
+
+  it('returns valid wells object for computed childWells if all properties valid', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setData({ parentPlate: goodParentPlate })
+    wrapper.setData({ tagGroupsList: goodTagGroupsList })
+    wrapper.setData({ tag1GroupId: 1 })
+    wrapper.setData({ byPoolPlateOption: 'by_plate_seq' })
+    wrapper.setData({ byRowColOption: 'by_columns' })
+    wrapper.setData({ offsetTagsByOption: 0 })
+    expect(wrapper.vm.childWells).toEqual(goodChildWells)
+  })
+
   // compTag1GroupOptions
   // compTag2GroupOptions
   // coreTagGroupOptions
@@ -352,14 +385,16 @@ describe('CustomTaggedPlate', () => {
   // disabled
 
   // it('returns ?', () => {
-  //   cmp.setData({ dataName: "input value" });
-  //   expect(cmp.vm.computedName).toBe("result value");
+  //   const wrapper = wrapperFactory()
+  //   wrapper.setData({ dataName: "input value" })
+  //   expect(wrapper.vm.computedName).toBe("result value")
   // })
 
-  // it("returns differently ? if prop is set", () => {
-  //   cmp.setData({ dataName: "input value" });
-  //   cmp.setProps({ propName: true });
-  //   expect(cmp.vm.computedName).toBe("result value 2");
+  // it('returns differently ? if prop is set', () => {
+  //   const wrapper = wrapperFactory()
+  //   wrapper.setData({ dataName: "input value" })
+  //   wrapper.setProps({ propName: true })
+  //   expect(wrapper.vm.computedName).toBe("result value 2")
   // })
 
   // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {

@@ -140,23 +140,23 @@ describe('CustomTaggedPlateManipulation', () => {
   it('updates tag1GroupId when a tag 1 group is selected', () => {
     let wrapper = wrapperFactory(api)
 
-    expect(wrapper.vm.form.tag1GroupId).toBe(null)
+    expect(wrapper.vm.tag1GroupId).toBe(null)
 
     wrapper.find('#tag1_group_selection').element.value = 1
     wrapper.find('#tag1_group_selection').trigger('change')
 
-    expect(wrapper.vm.form.tag1GroupId).toBe(1)
+    expect(wrapper.vm.tag1GroupId).toBe(1)
   })
 
   it('updates tag2GroupId when a tag 2 group is selected', () => {
     let wrapper = wrapperFactory(api)
 
-    expect(wrapper.vm.form.tag2GroupId).toBe(null)
+    expect(wrapper.vm.tag2GroupId).toBe(null)
 
     wrapper.find('#tag2_group_selection').element.value = 1
     wrapper.find('#tag2_group_selection').trigger('change')
 
-    expect(wrapper.vm.form.tag2GroupId).toBe(1)
+    expect(wrapper.vm.tag2GroupId).toBe(1)
   })
 
   it('re-enables the tag group selects when the tag plate is cleared', () => {
@@ -178,8 +178,8 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
     expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
 
-    expect(wrapper.vm.form.tag1GroupId).toEqual(null)
-    expect(wrapper.vm.form.tag2GroupId).toEqual(null)
+    expect(wrapper.vm.tag1GroupId).toEqual(null)
+    expect(wrapper.vm.tag2GroupId).toEqual(null)
     expect(wrapper.vm.tagPlate).toEqual(null)
   })
 
@@ -209,7 +209,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tagPlateBarcode":null,"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","offsetTagsByOption":null,"tagsPerWellOption":null}]
+      [{"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","offsetTagsByOption":null}]
     )
   })
 })

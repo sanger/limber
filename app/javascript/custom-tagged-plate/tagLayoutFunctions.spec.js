@@ -17,7 +17,7 @@ describe('calculateTagLayout', () => {
     { position: 'C4', aliquotCount: 1, poolIndex: 1 }
   ]
 
-  const tagGrp1 = {
+  const inputTag1Group = {
     id: '1',
     name: 'Tag Group 1',
     tags: [
@@ -49,7 +49,7 @@ describe('calculateTagLayout', () => {
     ]
   }
 
-  const tagGrp2 = {
+  const inputTag2Group = {
     id: '2',
     name: 'Tag Group 2',
     tags: [
@@ -106,8 +106,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: null,
-      tgGrp2: null,
+      tag1Group: null,
+      tag2Group: null,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -121,8 +121,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: emptyTagGrp,
-      tgGrp2: null,
+      tag1Group: emptyTagGrp,
+      tag2Group: null,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -135,8 +135,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: null,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -149,8 +149,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: null,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -164,8 +164,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: invalidPlateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -178,8 +178,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -194,8 +194,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_rows',
       offset: 0
@@ -210,8 +210,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_fixed',
       direction: 'by_columns',
       offset: 0
@@ -226,8 +226,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_fixed',
       direction: 'by_rows',
       offset: 0
@@ -242,8 +242,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_pool',
       direction: 'by_columns',
       offset: 0
@@ -258,8 +258,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_pool',
       direction: 'by_rows',
       offset: 0
@@ -274,8 +274,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 4
@@ -290,8 +290,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_rows',
       offset: 4
@@ -306,8 +306,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_fixed',
       direction: 'by_columns',
       offset: 4
@@ -322,8 +322,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_fixed',
       direction: 'by_rows',
       offset: 4
@@ -338,8 +338,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_pool',
       direction: 'by_columns',
       offset: 4
@@ -354,8 +354,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrp1,
-      tgGrp2: tagGrp2,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_pool',
       direction: 'by_rows',
       offset: 4
@@ -370,8 +370,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: null,
-      tgGrp2: tagGrp2,
+      tag1Group: null,
+      tag2Group: inputTag2Group,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -386,8 +386,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrpNonConseq,
-      tgGrp2: null,
+      tag1Group: tagGrpNonConseq,
+      tag2Group: null,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0
@@ -402,8 +402,8 @@ describe('calculateTagLayout', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
-      tgGrp1: tagGrpShort,
-      tgGrp2: null,
+      tag1Group: tagGrpShort,
+      tag2Group: null,
       walkingBy: 'by_plate_seq',
       direction: 'by_columns',
       offset: 0

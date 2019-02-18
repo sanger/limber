@@ -81,7 +81,7 @@ const calculateTagLayout = function (data) {
     return null
   }
 
-  const tags = extractTags(data.tgGrp1, data.tgGrp2)
+  const tags = extractTags(data.tag1Group, data.tag2Group)
   const counters = {}
 
   return directionFunctions[data.direction](data.wells, data.plateDims, (well, relIndex, absIndex) => {
@@ -107,7 +107,7 @@ const validateParameters = function (data) {
   }
 
   if(!result) {
-    result = validateTagGroups(data.tgGrp1, data.tgGrp2)
+    result = validateTagGroups(data.tag1Group, data.tag2Group)
   }
 
   if(!result) {
@@ -151,26 +151,26 @@ const validatePlateDims = function(plateDims) {
   return result
 }
 
-const validateTagGroups = function(tgGrp1,tgGrp2) {
+const validateTagGroups = function(tag1Group,tag2Group) {
   let result
 
-  if(!(tgGrp1 || tgGrp2)) {
+  if(!(tag1Group || tag2Group)) {
     result = {
       message: 'Either tag group 1 or tag group 2 parameter not set'
     }
-  } else if(tgGrp1 && !tgGrp1.tags) {
+  } else if(tag1Group && !tag1Group.tags) {
     result = {
       message: 'Tag group 1 parameter contains no tags list'
     }
-  } else if(tgGrp2 && !tgGrp2.tags) {
+  } else if(tag2Group && !tag2Group.tags) {
     result = {
       message: 'Tag group 2 parameter contains no tags list'
     }
-  } else if(tgGrp1 && !(tgGrp1.tags.length > 0)) {
+  } else if(tag1Group && !(tag1Group.tags.length > 0)) {
     result = {
       message: 'Tag group 1 parameter tags list contains no tags'
     }
-  } else if(tgGrp2 && !(tgGrp2.tags.length > 0)) {
+  } else if(tag2Group && !(tag2Group.tags.length > 0)) {
     result = {
       message: 'Tag group 2 parameter tags list contains no tags'
     }
@@ -203,10 +203,10 @@ const validateDirection = function (direction) {
   return result
 }
 
-const extractTags = function(tgGrp1, tgGrp2) {
+const extractTags = function(tag1Group, tag2Group) {
   // key on i7 tags if available
-  if(tgGrp1) { return tgGrp1.tags }
-  if(tgGrp2) { return tgGrp2.tags }
+  if(tag1Group) { return tag1Group.tags }
+  if(tag2Group) { return tag2Group.tags }
 }
 
 export { calculateTagLayout }

@@ -13,7 +13,7 @@
                           @change="tagGroupsLookupUpdated">
     </lb-tag-groups-lookup>
     <lb-main-content v-if="parentPlate">
-      <lb-parent-plate-view :caption="createCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-parent-plate-view>
+      <lb-parent-plate-view :caption="plateViewCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-parent-plate-view>
       <lb-custom-tagged-plate-details></lb-custom-tagged-plate-details>
     </lb-main-content>
     <lb-main-content v-else>
@@ -61,6 +61,7 @@
     data () {
       return {
         devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+        plateViewCaption: 'Modify the tag layout for the new plate using options on the right',
         state: 'searching',
         parentPlate: null,
         tagGroupsList: null,
@@ -71,15 +72,12 @@
         startAtTagStep: 1,
         offsetTagsByOptions: {},
         errorMessages: [],
-        form: {
-          tagPlateBarcode: null,
-          tag1GroupId: null,
-          tag2GroupId: null,
-          byPoolPlateOption: null,
-          byRowColOption: null,
-          offsetTagsByOption: 1,
-          tagsPerWellOption: 1
-        }
+        tag1GroupId: null,
+        tag2GroupId: null,
+        byPoolPlateOption: null,
+        byRowColOption: null,
+        offsetTagsByOption: 0,
+        tagsPerWellOption: 1
       }
     },
     props: {
@@ -126,14 +124,12 @@
           this.state = 'failed'
         }
       },
-      tagParamsUpdated(updatedform) {
-        this.form.tagPlateBarcode   = updatedform.tagPlateBarcode
-        this.form.tag1GroupId       = updatedform.tag1GroupId
-        this.form.tag2GroupId       = updatedform.tag2GroupId
-        this.form.byPoolPlateOption = updatedform.byPoolPlateOption
-        this.form.byRowColOption    = updatedform.byRowColOption
-        this.form.offsetTagsByOption  = updatedform.offsetTagsByOption
-        this.form.tagsPerWellOption = updatedform.tagsPerWellOption
+      tagParamsUpdated(updatedFormData) {
+        this.tag1GroupId        = updatedFormData.tag1GroupId
+        this.tag2GroupId        = updatedFormData.tag2GroupId
+        this.byPoolPlateOption  = updatedFormData.byPoolPlateOption
+        this.byRowColOption     = updatedFormData.byRowColOption
+        this.offsetTagsByOption = updatedFormData.offsetTagsByOption
       },
       extractSubmissionIdFromWell(well) {
         let submId
@@ -152,6 +148,28 @@
         }
 
         return submId
+      },
+      applyTagIndexesToWells(parentWells, tagLayout) {
+        let invalidCount = 0
+        let childWells = {}
+
+        Object.keys(tagLayout).forEach(function (key) {
+          childWells[key] = { ... parentWells[key]}
+          if(tagLayout[key] === -1) {
+            childWells[key]['tagIndex'] = 'X'
+            invalidCount++
+          } else {
+            childWells[key]['tagIndex'] = tagLayout[key].toString()
+          }
+        })
+
+        if(invalidCount > 0) {
+          this.state = 'invalid'
+        } else {
+          this.state = 'valid'
+        }
+
+        return childWells
       },
       submit() {
         console.log('submit called')
@@ -242,50 +260,32 @@
         return wells
       },
       childWells: function () {
-        if(!this.parentPlate) { return {} }
-        if(!this.parentPlate.wells) { return {} }
-        if(!this.tagGroupsList) { return this.parentWells }
-        // TODO need error handling message here? valid first time for tag groups not to have been downloaded yet
-
-        const data = {
-          wells: Object.values(this.parentWells),
-          plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
-          tgGrp1: this.tagGroupsList[this.form.tag1GroupId],
-          tgGrp2: this.tagGroupsList[this.form.tag2GroupId],
-          walkingBy: this.form.byPoolPlateOption,
-          direction: this.form.byRowColOption,
-          offset: this.form.offsetTagsByOption
-        }
-
-        let tagLayout = calculateTagLayout(data)
-
-        if(!tagLayout) { return this.parentWells }
-        // TODO need error handling message here? first time in valid to have no tags selected yet
-
         let newWells = {}
-        let invalidCount = 0
+
         const parentWells = this.parentWells
 
-        Object.keys(tagLayout).forEach(function (key) {
-          newWells[key] = { ... parentWells[key]}
-          if(tagLayout[key] === -1) {
-            newWells[key]['tagIndex'] = 'X'
-            invalidCount++
-          } else {
-            newWells[key]['tagIndex'] = tagLayout[key].toString()
-          }
-        })
+        if(!parentWells || parentWells === {}) { return newWells }
 
-        if(invalidCount > 0) {
-          this.state = 'invalid'
-        } else {
-          this.state = 'valid'
+        if(this.tagGroupsList) {
+          const data = {
+            wells: Object.values(parentWells),
+            plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
+            tag1Group: this.tagGroupsList[this.tag1GroupId],
+            tag2Group: this.tagGroupsList[this.tag2GroupId],
+            walkingBy: this.byPoolPlateOption,
+            direction: this.byRowColOption,
+            offset: this.offsetTagsByOption
+          }
+
+          let tagLayout = calculateTagLayout(data)
+
+          if(tagLayout) {
+            return this.applyTagIndexesToWells(parentWells, tagLayout)
+          }
         }
 
-        return newWells
-      },
-      createCaption: function () {
-        return 'Modify the tag layout for the new plate using options on the right'
+        // TODO need error handling message here? valid first time for tag groups not to have been downloaded yet
+        return parentWells
       },
       compTag1GroupOptions: function () {
         if(!this.tagGroupsList || Object.keys(this.tagGroupsList).length === 0) { return null }
