@@ -184,8 +184,8 @@
         this.parentPlate.wells.forEach((well) => {
           const wellPosn = well.position.name
 
-          // check for no aliquots in well
           if(!well.aliquots) {
+            // no aliquots in well
             wells[wellPosn] = { position: wellPosn, aliquotCount: 0, poolIndex: null }
             return
           }
@@ -224,35 +224,43 @@
       childWells: function () {
         if(!this.parentPlate) { return {} }
         if(!this.parentPlate.wells) { return {} }
-
         if(!this.tagGroupsList) { return this.parentWells }
         // TODO need error handling message here? valid first time for tag groups not to have been downloaded yet
 
-        const tgGrp1       = this.tagGroupsList[this.form.tag1GroupId]
-        const tgGrp2       = this.tagGroupsList[this.form.tag2GroupId]
-        const walkingByOpt = this.form.byPoolPlateOption
-        const directionOpt = this.form.byRowColOption
-        const offset       = this.form.offsetTagsByOption
-        const plateDims    = { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns }
+        const data = {
+          wells: Object.values(this.parentWells),
+          plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
+          tgGrp1: this.tagGroupsList[this.form.tag1GroupId],
+          tgGrp2: this.tagGroupsList[this.form.tag2GroupId],
+          walkingBy: this.form.byPoolPlateOption,
+          direction: this.form.byRowColOption,
+          offset: this.form.offsetTagsByOption
+        }
 
-        let tagLayout = calculateTagLayout(Object.values(this.parentWells), plateDims, tgGrp1, tgGrp2, walkingByOpt, directionOpt, offset)
+        let tagLayout = calculateTagLayout(data)
 
         if(!tagLayout) { return this.parentWells }
         // TODO need error handling message here? first time in valid to have no tags selected yet
 
         let newWells = {}
-
+        let invalidCount = 0
         const parentWells = this.parentWells
 
         Object.keys(tagLayout).forEach(function (key) {
           newWells[key] = { ... parentWells[key]}
           if(tagLayout[key] === -1) {
             newWells[key]['tagIndex'] = 'X'
-            // TODO set plate invalid, cannot create
+            invalidCount++
           } else {
             newWells[key]['tagIndex'] = tagLayout[key].toString()
           }
         })
+
+        if(invalidCount > 0) {
+          this.state = invalid
+        } else {
+          this.state = valid
+        }
 
         return newWells
       },
