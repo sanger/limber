@@ -28,7 +28,7 @@ describe('Well', () => {
     expect(wrapperWithAliquot.find('span.aliquot.colour-2').exists()).toBe(true)
   })
 
-  const wrapperWithTagIndex =  shallowMount(Well, { propsData: { poolIndex: 1, tagIndex: 5 } })
+  const wrapperWithTagIndex =  shallowMount(Well, { propsData: { poolIndex: 1, tagIndex: '5' } })
 
   it('renders a well with tag index displayed', () => {
     expect(wrapperWithTagIndex.find('span.aliquot').text()).toBe('5')

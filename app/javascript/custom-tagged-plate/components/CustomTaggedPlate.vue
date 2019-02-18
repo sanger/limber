@@ -3,7 +3,7 @@
     <lb-parent-plate-lookup :api="devourApi"
                             :assetUuid="parentUuid"
                             includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission"
-                            :fields="{ wells: 'uuid,position,aliquots',
+                            :fields="{ wells: 'uuid,position,aliquots,requests_as_source',
                                       aliquots: 'request',
                                       requests: 'uuid,submission',
                                       submissions: 'uuid,name' }"
@@ -135,6 +135,24 @@
         this.form.offsetTagsByOption  = updatedform.offsetTagsByOption
         this.form.tagsPerWellOption = updatedform.tagsPerWellOption
       },
+      extractSubmissionIdFromWell(well) {
+        let submId
+
+        if(well.requests_as_source[0] && well.requests_as_source.submission) {
+          submId = well.requests_as_source[0].submission.id
+          // TODO loop through additional requests if any? do we take first submission id we find?
+        }
+
+        if(!submId) {
+          // backup method of getting to submission if primary route fails
+          if(well.aliquots[0] && well.aliquots[0].request && well.aliquots[0].request.submission) {
+            submId = well.aliquots[0].request.submission.id
+            // TODO loop through additional aliquots if any? do we take first submission id we find?
+          }
+        }
+
+        return submId
+      },
       submit() {
         console.log('submit called')
         this.state = 'busy'
@@ -172,50 +190,52 @@
     },
     computed: {
       numberOfRows: function () {
-        return this.parentPlate.number_of_rows || null
+        let numRows
+
+        if(this.parentPlate) {
+          numRows = this.parentPlate.number_of_rows
+        }
+
+        return numRows
       },
       numberOfColumns: function () {
-        return this.parentPlate.number_of_columns || null
+        let numCols
+
+        if(this.parentPlate) {
+          numCols = this.parentPlate.number_of_columns
+        }
+
+        return numCols
       },
       parentWells: function () {
-        if(!this.parentPlate) { return {} }
         let wells = {}
+
+        if(!this.parentPlate) {
+          return wells
+        }
+
         let submIds = []
         this.parentPlate.wells.forEach((well) => {
           const wellPosn = well.position.name
 
           if(!well.aliquots) {
-            // no aliquots in well
             wells[wellPosn] = { position: wellPosn, aliquotCount: 0, poolIndex: null }
             return
           }
 
-          let submId = null
-
-          if(well.requests_as_source) {
-            submId = well.requests_as_source[0].submission.id
-            // TODO loop through additional requests if any? do we take first submission id we find?
-          }
-
+          const submId = this.extractSubmissionIdFromWell(well)
           if(!submId) {
-            // backup method of getting to submission if primary route fails
-            submId = well.aliquots[0].request.submission.id
-            // TODO loop through additional aliquots if any? do we take first submission id we find?
-          }
-
-          if(!submId) {
-            console.log('Submission Id not found for well')
-            // TODO what to do here? error?
+            console.log('Error: Submission Id not found for well')
+            // TODO what to do here? error message? should not happen
+            wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, poolIndex: null }
             return
           }
 
-          // add to array of unique submission ids if not already present
           if(!submIds.includes(submId)) {
             submIds.push(submId)
           }
 
           const wellPoolIndex = submIds.indexOf(submId) + 1
-
           wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, poolIndex: wellPoolIndex }
         })
 
@@ -257,9 +277,9 @@
         })
 
         if(invalidCount > 0) {
-          this.state = invalid
+          this.state = 'invalid'
         } else {
-          this.state = valid
+          this.state = 'valid'
         }
 
         return newWells
