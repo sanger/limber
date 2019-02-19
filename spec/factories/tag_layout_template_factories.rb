@@ -36,6 +36,10 @@ FactoryBot.define do
     factory :tag_layout_template_by_quadrant do
       walking_by { 'quadrants' }
       direction { 'column then row' }
+
+      factory :tag_layout_template_by_quadrant_in_columns do
+        direction { 'column' }
+      end
     end
 
     factory :dual_index_tag_layout_template do
