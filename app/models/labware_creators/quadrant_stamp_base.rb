@@ -22,13 +22,12 @@ module LabwareCreators
   # |P2|P4|P2|P4|P2|P4|P1
   # |B1|B1|B2|B2|B3|B3|B4
   #
-  class QuadrantStamp < Base
+  class QuadrantStampBase < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
 
-    self.page = 'quadrant_stamp'
     self.aliquot_partial = 'standard_aliquot'
     self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
 
