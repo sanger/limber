@@ -10,7 +10,7 @@ module Limber::TagLayoutTemplate::InInverseRows
   end
 
   # Returns the tag index for the primary tag
-  # That is the one laid out in columns with four copies of each
+  # That is the one laid out in rows with four copies of each
   def primary_index(row, column, scale, height, width)
     tag_col = (column / scale)
     tag_row = (row / scale)
