@@ -7,6 +7,6 @@ class TubesController < LabwareController
 
   def locate_labware_identified_by_id
     Sequencescape::Api::V2::Tube.find_by(search_param) ||
-      raise(ActionController::RoutingError, "Unknown resource #{id}")
+      raise(ActionController::RoutingError, "Unknown resource #{search_param}")
   end
 end
