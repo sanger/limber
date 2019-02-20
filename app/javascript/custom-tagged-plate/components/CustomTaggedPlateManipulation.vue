@@ -59,8 +59,8 @@
                       label="By Pool/Plate Option:"
                       label-for="by_pool_plate_options">
           <b-form-select id="by_pool_plate_options"
-                        :options="byPoolPlateOptions"
-                        v-model="byPoolPlateOption"
+                        :options="walkingByOptions"
+                        v-model="walkingBy"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -71,8 +71,8 @@
                       label="By Rows/Columns:"
                       label-for="by_rows_columns">
           <b-form-select id="by_rows_columns"
-                        :options="byRowColOptions"
-                        v-model="byRowColOption"
+                        :options="directionOptions"
+                        v-model="direction"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -82,11 +82,12 @@
       <b-col>
         <!-- start at tag select dropdown -->
         <b-form-group id="offset_tags_by_group"
-                      label="Offset tags by:"
+                      label="Start at tag number (offset):"
                       label-for="offset_tags_by_options">
           <b-form-select id="offset_tags_by_options"
                         :options="offsetTagsByOptions"
                         v-model="offsetTagsByOption"
+                        :disabled="offsetDisabled"
                         @input="updateTagParams">
           </b-form-select>
         </b-form-group>
@@ -122,18 +123,21 @@
         tagPlateScanDisabled: false,
         tag1GroupId: null,
         tag2GroupId: null,
-        byPoolPlateOption: 'by_plate_seq',
-        byRowColOption: 'by_rows',
-        offsetTagsByOption: null,
-        tagsPerWellOption: null
+        walkingBy: 'by_plate_seq',
+        direction: 'by_rows',
+        tagsPerWellOption: null,
+        startAtTagMin: 1,
+        startAtTagMax: null,
+        startAtTagStep: 1,
+        offsetTagsByOption: null
       }
     },
     props: {
       api: { required: false },
-      tag1GroupOptions: { type: Array, required: true },
-      tag2GroupOptions: { type: Array, required: true },
+      tag1GroupOptions: { type: Array },
+      tag2GroupOptions: { type: Array },
       // TODO check what values should be and what transform they do (see generic lims)
-      byPoolPlateOptions: { type: Array, default: () =>{ return [
+      walkingByOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select a by Pool/Plate Option...' },
           { value: 'by_pool', text: 'By Pool' },
           { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
@@ -141,24 +145,14 @@
         ]}
       },
       // TODO check what values should be and what transform they do (see generic lims)
-      byRowColOptions: { type: Array, default: () =>{ return [
+      directionOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select a by Row/Column Option...' },
           { value: 'by_rows', text: 'By Rows' },
           { value: 'by_columns', text: 'By Columns' }
         ]}
       },
-      // TODO this one needs to be dynamic based on calculations (see generic lims)
-      // TODO change to number field with max, min and step parameters
-      offsetTagsByOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Select which tag index to start at...' },
-          { value: 0, text: '1' },
-          { value: 1, text: '2' },
-          { value: 2, text: '3' },
-          { value: 3, text: '4' },
-          { value: 4, text: '5' },
-          { value: 5, text: '6' }
-        ]}
-      },
+      numberOfTags: { type: Number, default: 0 },
+      numberOfTargetWells: { type: Number, default: 0 },
       // TODO Tags per well should be fixed absed on plate purpose (mostly 1, chromium 4)
       tagsPerWellOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select how many tags per well...' },
@@ -168,14 +162,6 @@
       },
     },
     created: function () {
-    },
-    computed: {
-      tagGroupsDisabled: function () {
-        if (typeof this.tagPlate != "undefined" && this.tagPlate !== null) {
-          return true
-        }
-        return false
-      }
     },
     // NB. event handlers must be in the methods section
     methods: {
@@ -192,27 +178,6 @@
         this.updateTagParams(null)
       },
       tagPlateScanned(data) {
-        // data.plate.lot.tag_layout_template.id
-        // this.tagLayoutWalkingAlgorithm = data.plate.lot.tag_layout_template.walking_by // e.g.
-        // WALKING_ALGORITHMS = 'wells in pools', 'wells of plate', 'manual by pool', 'as group by plate', 'manual by plate', 'quadrants'
-
-        // this.tagLayoutDirectionAlgorithm = data.plate.lot.tag_layout_template.direction // e.g.
-        // DIRECTIONS = 'column','row','inverse column','inverse row,'column then row'
-
-        // this.tag1GroupFromScan = data.plate.lot.tag_layout_template.tag_group.name
-        // this.tag2GroupFromScan = data.plate.lot.tag_layout_template.tag2_group.name
-
-        // this.tagGroupTagsFromScan = data.plate.lot.tag_layout_template.tag_group.tags
-        // this.tag2GroupTagsFromScan = data.plate.lot.tag_layout_template.tag2_group.tags
-
-        // data.plate.lot.tag_layout_template.tag_group.tags.length
-        // data.plate.lot.tag_layout_template.tag_group.tags[0].index
-        // data.plate.lot.tag_layout_template.tag_group.tags[0].oligo
-
-        // N.B. There is an initial trigger to here happens when user clicks on the scan field (state 'searching', plate null).
-        // The PlateScan component displays the error messages for us
-        console.log('tagPlateScanned: returned data = ', JSON.stringify(data))
-
         if(data.state=== 'valid' && data.plate) {
           this.validTagPlateScanned(data)
         }
@@ -254,11 +219,44 @@
         const updatedData = {
           tag1GroupId: this.tag1GroupId,
           tag2GroupId: this.tag2GroupId,
-          byPoolPlateOption: this.byPoolPlateOption,
-          byRowColOption: this.byRowColOption,
+          walkingBy: this.walkingBy,
+          direction: this.direction,
           offsetTagsByOption: this.offsetTagsByOption
         }
         this.$emit('tagparamsupdated', updatedData)
+      }
+    },
+    computed: {
+      tagGroupsDisabled: function () {
+        return (typeof this.tagPlate != "undefined" && this.tagPlate !== null)
+      },
+      offsetDisabled: function () {
+        return (this.offsetTagsByOptions[0].value === null)
+      },
+      offsetTagsByOptions: function () {
+        let options = []
+
+        if(this.numberOfTags === 0) {
+          options.push({ value: null, text: 'Select tags first..' })
+        } else if(this.numberOfTargetWells === 0) {
+          options.push({ value: null, text: 'No target wells found..' })
+        } else {
+          const startAtTagMax = this.numberOfTags - this.numberOfTargetWells + 1
+          if(startAtTagMax <= 0) {
+            options.push({ value: null, text: 'Not enough tags to enable offset..' })
+          } else if(startAtTagMax === 1) {
+            options.push({ value: 0, text: '1' })
+            this.offsetTagsByOption = 0
+          } else {
+            const totalSteps = Math.floor((startAtTagMax - this.startAtTagMin)/this.startAtTagStep)
+            for (let i = 0; i <= totalSteps; i++ ) {
+              let v = i * this.startAtTagStep + this.startAtTagMin
+              options.push({ value: v - 1, text: v.toString()})
+            }
+            this.offsetTagsByOption = 0
+          }
+        }
+        return options
       }
     },
     components: {

@@ -26,7 +26,8 @@
             <lb-custom-tagged-plate-manipulation :api="devourApi"
                                                  :tag1GroupOptions="compTag1GroupOptions"
                                                  :tag2GroupOptions="compTag2GroupOptions"
-                                                 :offsetTagsByOptions="compOffsetTagsByOptions"
+                                                 :numberOfTags="compNumberOfTags"
+                                                 :numberOfTargetWells="compNumberOfTargetWells"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -67,16 +68,12 @@
         tagGroupsList: null,
         progressMessageParent: 'Fetching parent plate details...',
         progressMessageTags: 'Fetching tag groups...',
-        startAtTagMin: 1,
-        startAtTagMax: 96,
-        startAtTagStep: 1,
-        offsetTagsByOptions: {},
         errorMessages: [],
         tag1GroupId: null,
         tag2GroupId: null,
-        byPoolPlateOption: null,
-        byRowColOption: null,
-        offsetTagsByOption: 0,
+        walkingBy: null,
+        direction: null,
+        offsetTagsByOption: null,
         tagsPerWellOption: 1
       }
     },
@@ -127,8 +124,8 @@
       tagParamsUpdated(updatedFormData) {
         this.tag1GroupId        = updatedFormData.tag1GroupId
         this.tag2GroupId        = updatedFormData.tag2GroupId
-        this.byPoolPlateOption  = updatedFormData.byPoolPlateOption
-        this.byRowColOption     = updatedFormData.byRowColOption
+        this.walkingBy  = updatedFormData.walkingBy
+        this.direction     = updatedFormData.direction
         this.offsetTagsByOption = updatedFormData.offsetTagsByOption
       },
       extractSubmissionIdFromWell(well) {
@@ -149,9 +146,10 @@
 
         return submId
       },
-      applyTagIndexesToWells(parentWells, tagLayout) {
+      applyTagIndexesToWells(tagLayout) {
         let invalidCount = 0
         let childWells = {}
+        const parentWells = this.parentWells
 
         Object.keys(tagLayout).forEach(function (key) {
           childWells[key] = { ... parentWells[key]}
@@ -170,6 +168,41 @@
         }
 
         return childWells
+      },
+      coreTagGroupOptions() {
+        let options = []
+
+        const tgs = Object.values(this.tagGroupsList)
+        tgs.forEach(function (tg) {
+          options.push({ value: tg.id, text: tg.name })
+        })
+
+        return options
+      },
+      calcNumTagsForPooledPlate() {
+        let numTargets = 0
+
+        const parentWells = this.parentWells
+
+        let poolTotals = {}
+        Object.keys(parentWells).forEach(function (key) {
+          let poolIndex = parentWells[key].poolIndex
+          poolTotals[poolIndex] = (poolTotals[poolIndex]+1) || 1
+        })
+        let poolTotalValues = Object.values(poolTotals)
+        numTargets = Math.max(...poolTotalValues)
+
+        return numTargets
+      },
+      calcNumTagsForSeqPlate() {
+        let numTargets = 0
+
+        const parentWells = this.parentWells
+        Object.keys(parentWells).forEach(function (key) {
+          if(parentWells[key].aliquotCount > 0) { numTargets++ }
+        })
+
+        return numTargets
       },
       submit() {
         console.log('submit called')
@@ -262,63 +295,80 @@
       childWells: function () {
         let newWells = {}
 
-        const parentWells = this.parentWells
+        if(this.parentWells && this.parentWells !== {}) {
+          if(this.tagGroupsList) {
+            const data = {
+              wells: Object.values(this.parentWells),
+              plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
+              tag1Group: this.tagGroupsList[this.tag1GroupId],
+              tag2Group: this.tagGroupsList[this.tag2GroupId],
+              walkingBy: this.walkingBy,
+              direction: this.direction,
+              offset: this.offsetTagsByOption
+            }
 
-        if(!parentWells || parentWells === {}) { return newWells }
+            let tagLayout = calculateTagLayout(data)
 
-        if(this.tagGroupsList) {
-          const data = {
-            wells: Object.values(parentWells),
-            plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
-            tag1Group: this.tagGroupsList[this.tag1GroupId],
-            tag2Group: this.tagGroupsList[this.tag2GroupId],
-            walkingBy: this.byPoolPlateOption,
-            direction: this.byRowColOption,
-            offset: this.offsetTagsByOption
-          }
-
-          let tagLayout = calculateTagLayout(data)
-
-          if(tagLayout) {
-            return this.applyTagIndexesToWells(parentWells, tagLayout)
+            if(tagLayout) {
+              newWells = this.applyTagIndexesToWells(tagLayout)
+            } else {
+              newWells = { ...this.parentWells }
+            }
+          } else {
+            newWells = { ...this.parentWells }
           }
         }
 
-        // TODO need error handling message here? valid first time for tag groups not to have been downloaded yet
-        return parentWells
+        return newWells
       },
       compTag1GroupOptions: function () {
-        if(!this.tagGroupsList || Object.keys(this.tagGroupsList).length === 0) { return null }
-        let options = this.coreTagGroupOptions.slice()
-        options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
+        let options = []
+
+        if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+          options = this.coreTagGroupOptions().slice()
+          options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
+        }
+
         return options
       },
       compTag2GroupOptions: function () {
-        if(!this.tagGroupsList || this.tagGroupsList.length === 0) { return null }
-        let options = this.coreTagGroupOptions.slice()
-        options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
-        return options
-      },
-      coreTagGroupOptions: function () {
         let options = []
-        let tgs = Object.values(this.tagGroupsList)
-        tgs.forEach(function (tg) {
-          options.push({ value: tg.id, text: tg.name })
-        })
+
+        if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+          options = this.coreTagGroupOptions().slice()
+          options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
+        }
+
         return options
       },
-      compOffsetTagsByOptions: function () {
-        // TODO calculate the min/max based on function changes
-        const arr = [
-          { value: null, text: 'Select which tag index to start at...' }
-        ]
-        const totalSteps = Math.floor((this.startAtTagMax - this.startAtTagMin)/this.startAtTagStep)
-        for (let i = 0; i <= totalSteps; i++ ) {
-          let v = i * this.startAtTagStep + this.startAtTagMin
-          arr.push({ value: v - 1, text: '' + v})
+      compNumberOfTags: function () {
+        let numTags = 0
+
+        if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+          if(this.tag1GroupId) {
+            const tag1Group = this.tagGroupsList[this.tag1GroupId]
+            numTags = Object.keys(tag1Group.tags).length
+          } else if(this.tag2GroupId) {
+            const tag2Group = this.tagGroupsList[this.tag2GroupId]
+            numTags = Object.keys(tag2Group.tags).length
+          }
         }
-        // console.log('in computed compOffsetTagsByOptions, new value = ' + JSON.stringify(arr))
-        return arr
+
+        return numTags
+      },
+      compNumberOfTargetWells: function () {
+        let numTargets = 0
+
+        if(this.parentWells) {
+          if(this.walkingBy === 'by_plate_seq') {
+            numTargets = this.calcNumTagsForSeqPlate()
+          } else if(this.walkingBy === 'by_plate_fixed') {
+            numTargets = Object.keys(this.parentWells).length
+          } else if(this.walkingBy === 'by_pool') {
+            numTargets = this.calcNumTagsForPooledPlate()
+          }
+        }
+        return numTargets
       },
       buttonText() {
         return {

@@ -205,6 +205,7 @@ const validateDirection = function (direction) {
 
 const extractTags = function(tag1Group, tag2Group) {
   // key on i7 tags if available
+  // TODO needs refactoring and a test
   if(tag1Group) { return tag1Group.tags }
   if(tag2Group) { return tag2Group.tags }
 }

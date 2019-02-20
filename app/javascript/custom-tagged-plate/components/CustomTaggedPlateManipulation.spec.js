@@ -22,13 +22,13 @@ describe('CustomTaggedPlateManipulation', () => {
             { value: 1, text: 'i5 example tag group 1' },
             { value: 2, text: 'i5 example tag group 2' }
         ],
-        byPoolPlateOptions: [
+        walkingByOptions: [
             { value: null, text: 'Please select a by Pool/Plate Option...' },
             { value: 'by_pool', text: 'By Pool' },
             { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
             { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
         ],
-        byRowColOptions: [
+        directionOptions: [
             { value: null, text: 'Select a by Row/Column Option...' },
             { value: 'by_rows', text: 'By Rows' },
             { value: 'by_columns', text: 'By Columns' }
@@ -209,7 +209,74 @@ describe('CustomTaggedPlateManipulation', () => {
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tag1GroupId":null,"tag2GroupId":null,"byPoolPlateOption":"by_plate_fixed","byRowColOption":"by_rows","offsetTagsByOption":null}]
+      [{"tag1GroupId":null,"tag2GroupId":null,"walkingBy":"by_plate_fixed","direction":"by_rows","offsetTagsByOption":null}]
     )
+  })
+
+  it('returns empty offset tags by options and disables the select when number of target wells is zero', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
+
+    const badOffsetOptions = [
+      { value: null, text: 'No target wells found..' }
+    ]
+
+    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
+    expect(wrapper.vm.offsetDisabled).toBe(true)
+  })
+
+  it('returns empty offset tags by options and disables the select when number of tags is zero', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setProps({ numberOfTags: 0 })
+
+    const badOffsetOptions = [
+      { value: null, text: 'Select tags first..' }
+    ]
+
+    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
+    expect(wrapper.vm.offsetDisabled).toBe(true)
+  })
+
+  it('returns empty offset tags by options and disables the select for an invalid combination', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setProps({ numberOfTags: 2, numberOfTargetWells: 3 })
+
+    const badOffsetOptions = [
+      { value: null, text: 'Not enough tags to enable offset..' }
+    ]
+
+    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
+    expect(wrapper.vm.offsetDisabled).toBe(true)
+  })
+
+  it('returns the correct computed offset tags by options when more tags than target wells', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setProps({ numberOfTags: 4, numberOfTargetWells: 2 })
+
+    const goodOffsetOptions = [
+      { value: 0, text: '1' },
+      { value: 1, text: '2' },
+      { value: 2, text: '3' }
+    ]
+
+    expect(wrapper.vm.offsetTagsByOptions).toEqual(goodOffsetOptions)
+    expect(wrapper.vm.offsetDisabled).toBe(false)
+  })
+
+  it('returns the correct computed offset tags by options when same number of tags as target wells', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setProps({ numberOfTags: 3, numberOfTargetWells: 3 })
+
+    const goodOffsetOptions = [
+      { value: 0, text: '1' }
+    ]
+
+    expect(wrapper.vm.offsetTagsByOptions).toEqual(goodOffsetOptions)
+    expect(wrapper.vm.offsetDisabled).toBe(false)
   })
 })
