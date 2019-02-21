@@ -211,252 +211,275 @@ describe('CustomTaggedPlate', () => {
     })
   }
 
-  // test computed properties
-  it('returns null for computed number of rows by default', () => {
-    const wrapper = wrapperFactory()
+  describe("#computed:", () => {
+    describe("numberOfRows:", () => {
+      it('returns null by default', () => {
+        const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.numberOfRows).toEqual(undefined)
-  })
+        expect(wrapper.vm.numberOfRows).toEqual(undefined)
+      })
 
-  it('returns number of rows from plate once parent plate has been set', () => {
-    const wrapper = wrapperFactory()
+      it('returns number of rows on parent plate', () => {
+        const wrapper = wrapperFactory()
 
-    wrapper.setData({ parentPlate: goodParentPlate })
+        wrapper.setData({ parentPlate: goodParentPlate })
 
-    expect(wrapper.vm.numberOfRows).toEqual(8)
-  })
-
-  it('returns null for computed number of columns by default', () => {
-    const wrapper = wrapperFactory()
-
-    expect(wrapper.vm.numberOfColumns).toEqual(undefined)
-  })
-
-  it('returns number of columns from plate once parent plate has been set', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ parentPlate: goodParentPlate })
-
-    expect(wrapper.vm.numberOfColumns).toEqual(12)
-  })
-
-  it('returns empty object for computed parent wells by default', () => {
-    const wrapper = wrapperFactory()
-
-    expect(wrapper.vm.parentWells).toEqual({})
-  })
-
-  it('returns wells from plate with pool indexes once parent plate has been set', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ parentPlate: goodParentPlate })
-
-    expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-    expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
-  })
-
-  it('sets well pool indexes when wells have aliquot requests but not requests as source', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ parentPlate: goodParentPlateWithoutWellRequestsAsResource })
-
-    expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-    expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
-  })
-
-  it('sets different well pool indexes if parent plate has multiple submissions set', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ parentPlate: goodParentPlateWithPools })
-
-    expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-    expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-    expect(wrapper.vm.parentWells.A2.poolIndex).toBe(2)
-    expect(wrapper.vm.parentWells.A3.poolIndex).toBe(2)
-    expect(wrapper.vm.parentWells.A4.poolIndex).toBe(2)
-  })
-
-  it('returns empty object for computed childWells if parent wells does not exist', () => {
-    const wrapper = wrapperFactory()
-
-    expect(wrapper.vm.childWells).toEqual({})
-  })
-
-  it('returns parent wells for computed childWells if tag group list is not set', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ parentPlate: goodParentPlate})
-
-    expect(wrapper.vm.childWells).toEqual(wrapper.vm.parentWells)
-  })
-
-  it('returns valid wells object for computed childWells if all properties valid', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({
-      parentPlate: goodParentPlate,
-      tagGroupsList: goodTagGroupsList,
-      tag1GroupId: 1,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
-      startAtTagNumber: 0
+        expect(wrapper.vm.numberOfRows).toEqual(8)
+      })
     })
 
-    expect(wrapper.vm.childWells).toEqual(goodChildWells)
-  })
+    describe("numberOfColumns:", () => {
+      it('returns null by default', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns empty object for computed tag 1 group options if tag groups list empty', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.numberOfColumns).toEqual(undefined)
+      })
 
-    expect(wrapper.vm.tag1GroupOptions).toEqual([])
-  })
+      it('returns number of columns on parent plate', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns valid list for computed tag 1 group options if tag groups list set', () => {
-    const wrapper = wrapperFactory()
+        wrapper.setData({ parentPlate: goodParentPlate })
 
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-    const goodTag1GroupOptions = [
-      { value: null, text: 'Please select an i7 Tag 1 group...' },
-      { value: '1', text: 'Tag Group 1' },
-      { value: '2', text: 'Tag Group 2' }
-    ]
-
-    expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
-  })
-
-  it('returns empty object for computed tag 2 group options if tag groups list empty', () => {
-    const wrapper = wrapperFactory()
-
-    expect(wrapper.vm.tag2GroupOptions).toEqual([])
-  })
-
-  it('returns valid list for computed tag 2 group options if tag groups list set', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-    const goodTag2GroupOptions = [
-      { value: null, text: 'Please select an i5 Tag 2 group...' },
-      { value: '1', text: 'Tag Group 1' },
-      { value: '2', text: 'Tag Group 2' }
-    ]
-
-    expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
-  })
-
-  it('returns the correct submit button text depending on state', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ state: 'valid' })
-
-    expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged Plate in Sequencescape')
-  })
-
-  it('returns the correct submit button style depending on state', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ state: 'valid' })
-
-    expect(wrapper.vm.buttonStyle).toEqual('primary')
-  })
-
-  it('disables the submit button depending on state', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ state: 'valid' })
-
-    expect(wrapper.vm.disabled).toBe(false)
-  })
-
-  it('returns zero for the computed number of tags if the tag group list is not set', () => {
-    const wrapper = wrapperFactory()
-
-    expect(wrapper.vm.numberOfTags).toBe(0)
-  })
-
-  it('returns zero for the computed number of tags if no tag group has been selected', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-    expect(wrapper.vm.numberOfTags).toBe(0)
-  })
-
-  it('returns the correct computed number of tags if a tag 1 group has been selected', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({
-      tagGroupsList: goodTagGroupsList,
-      tag1GroupId: 1
+        expect(wrapper.vm.numberOfColumns).toEqual(12)
+      })
     })
 
-    expect(wrapper.vm.numberOfTags).toBe(6)
-  })
+    describe("parentWells:", () => {
+      it('returns empty object by default', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns the correct computed number of tags if only tag 2 group has been selected', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.parentWells).toEqual({})
+      })
 
-    wrapper.setData({
-      tagGroupsList: goodTagGroupsList,
-      tag2GroupId: 2
+      it('returns wells from parent with pool indexes using requests as source', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlate: goodParentPlate })
+
+        expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
+      })
+
+      it('returns wells from parent with pool indexes using aliquot requests', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlate: goodParentPlateWithoutWellRequestsAsResource })
+
+        expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
+      })
+
+      it('returns wells from parent with pool indexes where multiple submissions set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlate: goodParentPlateWithPools })
+
+        expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(2)
+        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(2)
+        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(2)
+      })
     })
 
-    expect(wrapper.vm.numberOfTags).toBe(5)
-  })
+    describe("childWells:", () => {
+      it('returns empty object if parent wells does not exist', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns zero for the computed number of target wells if no parent plate exists', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.childWells).toEqual({})
+      })
 
-    wrapper.setData({ walkingBy: 'by_plate_seq' })
+      it('returns parent wells if tag group list is not set', () => {
+        const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.numberOfTargetWells).toBe(0)
-  })
+        wrapper.setData({ parentPlate: goodParentPlate})
 
-  it('returns zero for the computed number of target wells if no walking by is set', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.childWells).toEqual(wrapper.vm.parentWells)
+      })
 
-    wrapper.setData({ parentPlate: goodParentPlate })
+      it('returns valid wells object if all properties valid', () => {
+        const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.numberOfTargetWells).toBe(0)
-  })
+        wrapper.setData({
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'by_plate_seq',
+          direction: 'by_columns',
+          startAtTagNumber: 0
+        })
 
-  it('returns correct value for the computed number of target wells for a fixed plate', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setData({
-      parentPlate: goodParentPlate,
-      walkingBy: 'by_plate_fixed'
+        expect(wrapper.vm.childWells).toEqual(goodChildWells)
+      })
     })
 
-    expect(wrapper.vm.numberOfTargetWells).toBe(4)
-  })
+    describe("tag1GroupOptions:", () => {
+      it('returns empty array if tag groups list empty', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns correct value for the computed number of target wells for a plate by sequence', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.tag1GroupOptions).toEqual([])
+      })
 
-    wrapper.setData({
-      parentPlate: goodParentPlateSequential,
-      walkingBy: 'by_plate_seq'
+      it('returns valid array if tag groups list set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+        const goodTag1GroupOptions = [
+          { value: null, text: 'Please select an i7 Tag 1 group...' },
+          { value: '1', text: 'Tag Group 1' },
+          { value: '2', text: 'Tag Group 2' }
+        ]
+
+        expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
+      })
     })
 
-    expect(wrapper.vm.numberOfTargetWells).toBe(3)
-  })
+    describe("tag2GroupOptions:", () => {
+      it('returns empty array if tag groups list empty', () => {
+        const wrapper = wrapperFactory()
 
-  it('returns correct value for the computed number of target wells for a plate with pools', () => {
-    const wrapper = wrapperFactory()
+        expect(wrapper.vm.tag2GroupOptions).toEqual([])
+      })
 
-    wrapper.setData({
-      parentPlate: goodParentPlateWithPools,
-      walkingBy: 'by_pool'
+      it('returns valid array if tag groups list set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
+        const goodTag2GroupOptions = [
+          { value: null, text: 'Please select an i5 Tag 2 group...' },
+          { value: '1', text: 'Tag Group 1' },
+          { value: '2', text: 'Tag Group 2' }
+        ]
+
+        expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
+      })
     })
 
-    expect(wrapper.vm.numberOfTargetWells).toBe(3)
+    describe("buttonText:", () => {
+      it('returns the correct text depending on state', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ state: 'valid' })
+
+        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged Plate in Sequencescape')
+      })
+    })
+
+    describe("buttonStyle:", () => {
+      it('returns the correct style depending on state', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ state: 'valid' })
+
+        expect(wrapper.vm.buttonStyle).toEqual('primary')
+      })
+    })
+
+    describe("buttonDisabled:", () => {
+      it('disables the submit button depending on state', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ state: 'valid' })
+
+        expect(wrapper.vm.buttonDisabled).toBe(false)
+      })
+    })
+
+    describe("numberOfTags:", () => {
+      it('returns zero if the tag group list is not set', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.numberOfTags).toBe(0)
+      })
+
+      it('returns zero if no tag group has been selected', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
+        expect(wrapper.vm.numberOfTags).toBe(0)
+      })
+
+      it('returns the correct number if a tag 1 group has been selected', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1
+        })
+
+        expect(wrapper.vm.numberOfTags).toBe(6)
+      })
+
+      it('returns the correct cnumber if only tag 2 group has been selected', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tagGroupsList: goodTagGroupsList,
+          tag2GroupId: 2
+        })
+
+        expect(wrapper.vm.numberOfTags).toBe(5)
+      })
+    })
+
+    describe("numberOfTargetWells:", () => {
+      it('returns zero if no parent plate exists', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ walkingBy: 'by_plate_seq' })
+
+        expect(wrapper.vm.numberOfTargetWells).toBe(0)
+      })
+
+      it('returns zero if no walking by is set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlate: goodParentPlate })
+
+        expect(wrapper.vm.numberOfTargetWells).toBe(0)
+      })
+
+      it('returns correct value for a fixed plate', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlate: goodParentPlate,
+          walkingBy: 'by_plate_fixed'
+        })
+
+        expect(wrapper.vm.numberOfTargetWells).toBe(4)
+      })
+
+      it('returns correct value for a plate by sequence', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlate: goodParentPlateSequential,
+          walkingBy: 'by_plate_seq'
+        })
+
+        expect(wrapper.vm.numberOfTargetWells).toBe(3)
+      })
+
+      it('returns correct value for a plate with pools', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlate: goodParentPlateWithPools,
+          walkingBy: 'by_pool'
+        })
+
+        expect(wrapper.vm.numberOfTargetWells).toBe(3)
+      })
+    })
   })
 
   // it('returns ?', () => {

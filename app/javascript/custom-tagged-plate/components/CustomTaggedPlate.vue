@@ -31,7 +31,7 @@
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
-              <b-button name="custom_tagged_plate_submit_button" id="custom_tagged_plate_submit_button" :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">{{ buttonText }}</b-button>
+              <b-button name="custom_tagged_plate_submit_button" id="custom_tagged_plate_submit_button" :disabled="buttonDisabled" :variant="buttonStyle" size="lg" block @click="createPlate">{{ buttonText }}</b-button>
             </div>
           </b-col>
         </b-row>
@@ -204,9 +204,9 @@
 
         return numTargets
       },
-      submit() {
-        console.log('submit called')
+      createPlate() {
         this.state = 'busy'
+
         // TODO: submit new custom tagged plate creation to sequencescape with tags
 
         // see custom_tagged_plate_spec.rb context 'Providing simple solutions'
@@ -237,6 +237,35 @@
         // end
 
         // TODO do we also need to set a scanned Tag Plate as 'exhausted' if it was 'available'? Yes.
+
+
+
+
+        // this.progressMessage = "Creating plate..."
+        // this.loading = true
+        // let payload = { plate: {
+        //   parent_uuid: this.validPlates[0].plate.uuid,
+        //   purpose_uuid: this.purposeUuid,
+        //   transfers: this.transfers
+        // }}
+        // this.$axios({
+        //   method: 'post',
+        //   url:this.targetUrl,
+        //   headers: {'X-Requested-With': 'XMLHttpRequest'},
+        //   data: payload
+        // }).then((response)=>{
+        //   // Ajax responses automatically follow redirects, which
+        //   // would result in us receiving the full HTML for the child
+        //   // plate here, which we'd then need to inject into the
+        //   // page, and update the history. Instead we don't redirect
+        //   // application/json requests, and redirect the user ourselves.
+        //   this.progressMessage = response.data.message
+        //   this.locationObj.href = response.data.redirect
+        // }).catch((error)=>{
+        //   // Something has gone wrong
+        //   console.log(error)
+        //   this.loading = false
+        // })
       }
     },
     computed: {
@@ -395,7 +424,7 @@
           'failure': 'danger'
         }[this.state]
       },
-      disabled() {
+      buttonDisabled() {
         return {
           'loaded': true,
           'updating': true,

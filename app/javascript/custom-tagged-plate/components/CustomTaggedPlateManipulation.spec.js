@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
+import MockAdapter from 'axios-mock-adapter'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -80,314 +81,362 @@ describe('CustomTaggedPlateManipulation', () => {
     }
   }, nullQcable)
 
-  it('renders a tag plate scan component', () => {
-    const wrapper = wrapperFactory(api)
+  describe("#computed function tests:", () => {
+    describe("tagGroupsDisabled:", () => {
+      it('returns false if a tag plate has not been scanned', () => {
+        const wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
+        wrapper.setData({ tagPlate: null })
+
+        expect(wrapper.vm.tagGroupsDisabled).toBe(false)
+      })
+
+      it('returns true if a valid tag plate was scanned', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setData({ tagPlate: goodQcableData.plate })
+
+        expect(wrapper.vm.tagGroupsDisabled).toBe(true)
+      })
+    })
+
+    describe("startAtTagMax:", () => {
+      it('returns expected value if tags and target wells exist', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 5 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(1)
+        expect(wrapper.vm.startAtTagDisabled).toBe(true)
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('No spare tags..')
+      })
+
+      it('returns expected value if tags are in excess', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 5 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(6)
+        expect(wrapper.vm.startAtTagDisabled).toBe(false)
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('Enter an offset value..')
+      })
+
+      it('returns a negative number if there are not enough tags', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 10 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(-4)
+        expect(wrapper.vm.startAtTagDisabled).toBe(true)
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('Not enough tags..')
+      })
+
+      it('returns null if there are no tags', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 5 })
+
+        expect(wrapper.vm.startAtTagMax).toEqual(null)
+        expect(wrapper.vm.startAtTagDisabled).toBe(true)
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('Select tags first..')
+      })
+
+      it('returns null if there are no target wells', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
+
+        expect(wrapper.vm.startAtTagMax).toEqual(null)
+        expect(wrapper.vm.startAtTagDisabled).toBe(true)
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('No target wells found..')
+      })
+    })
+
+    describe("startAtTagState:", () => {
+      it('returns null if there is no start at tag number', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setData({ startAtTagNumber: null })
+
+        expect(wrapper.vm.startAtTagState).toEqual(null)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+      })
+
+      it('returns true if the entered number is valid', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagState).toBe(true)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('Valid')
+      })
+
+      it('returns false if the entered number is too high', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagState).toBe(false)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+      })
+
+      it('returns false if the entered number is too low', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagState).toBe(false)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+      })
+
+      it('returns false if the entered number is between steps', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagState).toBe(false)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+      })
+    })
+
+    describe("startAtTagInvalidFeedback:", () => {
+      it('returns empty string if the entered number is null', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setData({ startAtTagNumber: null })
+
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+      })
+
+      it('returns empty string if the max is not set', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 0 })
+        wrapper.setData({ startAtTagNumber: 1 })
+
+        expect(wrapper.vm.startAtTagMax).toEqual(null)
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+      })
+
+      it('returns empty string if the entered number is valid', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+      })
+
+      it('returns correctly if the entered number is too high', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be less than or equal to 10')
+      })
+
+      it('returns correctly if the entered number is too low', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be greater than or equal to 1')
+      })
+
+      it('returns correctly if the entered number is between steps', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(10)
+        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be divisible by 2')
+      })
+    })
   })
 
-  it('renders a tag1 group select dropdown', () => {
-    const wrapper = wrapperFactory(api)
+  describe("#rendering tests:", () => {
+    it('renders a tag plate scan component', () => {
+      const wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
-    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
+      expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
+    })
+
+    it('renders a tag1 group select dropdown', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
+      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
+      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
+    })
+
+    it('renders a tag2 group select dropdown', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
+      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
+      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
+    })
+
+    it('renders a by pool or plate select dropdown', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
+    })
+
+    it('renders a by rows or columns select dropdown', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
+    })
+
+    it('renders an offset tags by select number dropdown', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.find('#start_at_tag_input').exists()).toBe(true)
+    })
+
+    // TODO tags per well test
+    // it('renders a tags per well number based on the plate purpose', () => {
+    // })
   })
 
-  it('renders a tag2 group select dropdown', () => {
-    const wrapper = wrapperFactory(api)
+  describe("#integration tests:", () => {
+    it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
+      const wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
-    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
-    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
-  })
+      wrapper.vm.tagPlateScanned(goodQcableData)
 
-  it('renders a by pool or plate select dropdown', () => {
-    const wrapper = wrapperFactory(api)
+      expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
 
-    expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
-  })
+      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
+      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
 
-  it('renders a by rows or columns select dropdown', () => {
-    const wrapper = wrapperFactory(api)
+      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
+      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
+    })
 
-    expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
-  })
+    it('updates tag1GroupId when a tag 1 group is selected', () => {
+      const wrapper = wrapperFactory(api)
 
-  it('renders an offset tags by select number dropdown', () => {
-    const wrapper = wrapperFactory(api)
+      expect(wrapper.vm.tag1GroupId).toEqual(null)
 
-    expect(wrapper.find('#start_at_tag_input').exists()).toBe(true)
-  })
+      wrapper.find('#tag1_group_selection').element.value = 1
+      wrapper.find('#tag1_group_selection').trigger('change')
 
-  // TODO tags per well test
-  // it('renders a tags per well number based on the plate purpose', () => {
-  // })
+      expect(wrapper.vm.tag1GroupId).toBe(1)
+    })
 
-  it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
-    const wrapper = wrapperFactory(api)
+    it('updates tag2GroupId when a tag 2 group is selected', () => {
+      const wrapper = wrapperFactory(api)
 
-    wrapper.vm.tagPlateScanned(goodQcableData)
+      expect(wrapper.vm.tag2GroupId).toEqual(null)
 
-    expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
+      wrapper.find('#tag2_group_selection').element.value = 1
+      wrapper.find('#tag2_group_selection').trigger('change')
 
-    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
-    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
+      expect(wrapper.vm.tag2GroupId).toBe(1)
+    })
 
-    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
-    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
-  })
+    it('re-enables the tag group selects when the tag plate is cleared', () => {
+      const wrapper = wrapperFactory(api)
 
-  it('updates tag1GroupId when a tag 1 group is selected', () => {
-    const wrapper = wrapperFactory(api)
+      wrapper.vm.tagPlateScanned(goodQcableData)
 
-    expect(wrapper.vm.tag1GroupId).toEqual(null)
+      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
+      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
 
-    wrapper.find('#tag1_group_selection').element.value = 1
-    wrapper.find('#tag1_group_selection').trigger('change')
+      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
+      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
 
-    expect(wrapper.vm.tag1GroupId).toBe(1)
-  })
+      wrapper.vm.tagPlateScanned(emptyQcableData)
 
-  it('updates tag2GroupId when a tag 2 group is selected', () => {
-    const wrapper = wrapperFactory(api)
+      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
+      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
 
-    expect(wrapper.vm.tag2GroupId).toEqual(null)
+      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
+      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
 
-    wrapper.find('#tag2_group_selection').element.value = 1
-    wrapper.find('#tag2_group_selection').trigger('change')
+      expect(wrapper.vm.tag1GroupId).toEqual(null)
+      expect(wrapper.vm.tag2GroupId).toEqual(null)
+      expect(wrapper.vm.tagPlate).toEqual(null)
+    })
 
-    expect(wrapper.vm.tag2GroupId).toBe(1)
-  })
+    it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
+      const wrapper = wrapperFactory(api)
 
-  it('re-enables the tag group selects when the tag plate is cleared', () => {
-    const wrapper = wrapperFactory(api)
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
-    wrapper.vm.tagPlateScanned(goodQcableData)
+      wrapper.find('#tag1_group_selection').element.value = 1
+      wrapper.find('#tag1_group_selection').trigger('change')
 
-    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
-    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
 
-    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
-    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
+      expect(wrapper.find('#plateScan').element.disabled).toBe(true)
+    })
 
-    wrapper.vm.tagPlateScanned(emptyQcableData)
+    it('emits a call to the parent container on a change of the form data', () => {
+      const wrapper = wrapperFactory(api)
+      const emitted = wrapper.emitted()
 
-    expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-    expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
+      expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
 
-    expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
-    expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
+      const input = wrapper.find('#by_pool_plate_options')
+      const option = input.find('option[value="by_plate_fixed"]')
+      option.setSelected()
+      input.trigger('input')
 
-    expect(wrapper.vm.tag1GroupId).toEqual(null)
-    expect(wrapper.vm.tag2GroupId).toEqual(null)
-    expect(wrapper.vm.tagPlate).toEqual(null)
-  })
+      expect(emitted.tagparamsupdated.length).toBe(1)
+      expect(emitted.tagparamsupdated[0]).toEqual(
+        [{'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'by_plate_fixed','direction':'by_rows','startAtTagNumber':null}]
+      )
+    })
 
-  it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
-    const wrapper = wrapperFactory(api)
+    // it('sends a post request when the create plate button is clicked', async () => {
+    //   let mock = new MockAdapter(localVue.prototype.$axios)
 
-    expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+    //   const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
+    //   const wrapper = wrapperFactory()
+    //   wrapper.vm.updatePlate(1, plate)
 
-    wrapper.find('#tag1_group_selection').element.value = 1
-    wrapper.find('#tag1_group_selection').trigger('change')
+    //   // Consider auto-selecting a single panel
+    //   wrapper.setData({ primerPanel: 'Test panel' })
 
-    expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+    //   const expectedPayload = { plate: {
+    //     parent_uuid: 'plate-uuid',
+    //     purpose_uuid: 'test',
+    //     transfers: [
+    //       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } }
+    //     ]
+    //   }}
 
-    expect(wrapper.find('#plateScan').element.disabled).toBe(true)
-  })
+    //   mockLocation.href = null
+    //   mock.onPost().reply((config) =>{
 
-  it('emits a call to the parent container on a change of the form data', () => {
-    const wrapper = wrapperFactory(api)
-    const emitted = wrapper.emitted()
+    //     expect(config.url).toEqual('example/example')
+    //     expect(config.data).toEqual(JSON.stringify(expectedPayload))
+    //     return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
+    //   })
 
-    expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
+    //   // Ideally we'd emit the event from the button component, but I'm having difficulty.
+    //   wrapper.vm.createPlate()
 
-    const input = wrapper.find('#by_pool_plate_options')
-    const option = input.find('option[value="by_plate_fixed"]')
-    option.setSelected()
-    input.trigger('input')
+    //   await flushPromises()
 
-    expect(emitted.tagparamsupdated.length).toBe(1)
-    expect(emitted.tagparamsupdated[0]).toEqual(
-      [{'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'by_plate_fixed','direction':'by_rows','startAtTagNumber':null}]
-    )
-  })
-
-  it('sets the computed tag groups disabled to false if a tag plate has not been scanned', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setData({ tagPlate: null })
-
-    expect(wrapper.vm.tagGroupsDisabled).toBe(false)
-  })
-
-  it('sets the computed tag groups disabled to true if a valid tag plate was scanned', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setData({ tagPlate: goodQcableData.plate })
-
-    expect(wrapper.vm.tagGroupsDisabled).toBe(true)
-  })
-
-  it('sets the computed start at tag max to the expected value if tags and target wells exist', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 5 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(1)
-    expect(wrapper.vm.startAtTagDisabled).toBe(true)
-    expect(wrapper.vm.startAtTagPlaceholder).toBe('No spare tags..')
-  })
-
-  it('sets the computed start at tag max to the expected value if tags are in excess', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 5 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(6)
-    expect(wrapper.vm.startAtTagDisabled).toBe(false)
-    expect(wrapper.vm.startAtTagPlaceholder).toBe('Enter an offset value..')
-  })
-
-  it('sets the computed start at tag max to a negative number if there are not enough tags', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 10 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(-4)
-    expect(wrapper.vm.startAtTagDisabled).toBe(true)
-    expect(wrapper.vm.startAtTagPlaceholder).toBe('Not enough tags..')
-  })
-
-  it('sets the computed start at tag max to null if there are no tags', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 5 })
-
-    expect(wrapper.vm.startAtTagMax).toEqual(null)
-    expect(wrapper.vm.startAtTagDisabled).toBe(true)
-    expect(wrapper.vm.startAtTagPlaceholder).toBe('Select tags first..')
-  })
-
-  it('sets the computed start at tag max to null if there are no target wells', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
-
-    expect(wrapper.vm.startAtTagMax).toEqual(null)
-    expect(wrapper.vm.startAtTagDisabled).toBe(true)
-    expect(wrapper.vm.startAtTagPlaceholder).toBe('No target wells found..')
-  })
-
-  it('sets the computed start at tag state to null if there is no start at tag number', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setData({ startAtTagNumber: null })
-
-    expect(wrapper.vm.startAtTagState).toEqual(null)
-    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag state to true if the entered number is valid', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagState).toBe(true)
-    expect(wrapper.vm.startAtTagValidFeedback).toEqual('Valid')
-  })
-
-  it('sets the computed start at tag state to false if the entered number is too high', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagState).toBe(false)
-    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag state to false if the entered number is too low', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagState).toBe(false)
-    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag state to false if the entered number is between steps', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagState).toBe(false)
-    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag invalid feedback blank if the entered number is null', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setData({ startAtTagNumber: null })
-
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag invalid feedback blank if the max is not set', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 0 })
-    wrapper.setData({ startAtTagNumber: 1 })
-
-    expect(wrapper.vm.startAtTagMax).toEqual(null)
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag invalid feedback blank if the entered number is valid', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
-  })
-
-  it('sets the computed start at tag invalid feedback correctly if the entered number is too high', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be less than or equal to 10')
-  })
-
-  it('sets the computed start at tag invalid feedback correctly if the entered number is too low', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be greater than or equal to 1')
-  })
-
-  it('sets the computed start at tag invalid feedback correctly if the entered number is between steps', () => {
-    const wrapper = wrapperFactory(api)
-
-    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
-
-    expect(wrapper.vm.startAtTagMax).toBe(10)
-    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be divisible by 2')
+    //   expect(mockLocation.href).toEqual('http://wwww.example.com')
+    // })
   })
 })
