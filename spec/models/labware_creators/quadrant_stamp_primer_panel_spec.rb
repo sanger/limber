@@ -48,7 +48,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
     end
 
     it 'renders the "quadrant_stamp" page' do
-      expect(subject.page).to eq('quadrant_stamp_primer_panel')
+      expect(subject.page).to eq('quadrant_stamp')
     end
 
     it 'describes the purpose uuid' do

@@ -27,9 +27,12 @@ module LabwareCreators
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
+    class_attribute :filters
 
+    self.page = 'quadrant_stamp'
     self.aliquot_partial = 'standard_aliquot'
     self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
+    self.filters = 'null'
 
     validates :transfers, presence: true
 

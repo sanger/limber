@@ -2,6 +2,6 @@
 
 module LabwareCreators
   class QuadrantStampPrimerPanel < QuadrantStampBase
-    self.page = 'quadrant_stamp_primer_panel'
+    self.filters = 'primer_panel'
   end
 end
