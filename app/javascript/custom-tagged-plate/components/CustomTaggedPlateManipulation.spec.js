@@ -110,9 +110,10 @@ describe('CustomTaggedPlateManipulation', () => {
   it('renders an offset tags by select number dropdown', () => {
     const wrapper = wrapperFactory(api)
 
-    expect(wrapper.find('#offset_tags_by_options').exists()).toBe(true)
+    expect(wrapper.find('#start_at_tag_input').exists()).toBe(true)
   })
 
+  // TODO tags per well test
   // it('renders a tags per well number based on the plate purpose', () => {
   // })
 
@@ -133,7 +134,7 @@ describe('CustomTaggedPlateManipulation', () => {
   it('updates tag1GroupId when a tag 1 group is selected', () => {
     const wrapper = wrapperFactory(api)
 
-    expect(wrapper.vm.tag1GroupId).toBe(null)
+    expect(wrapper.vm.tag1GroupId).toEqual(null)
 
     wrapper.find('#tag1_group_selection').element.value = 1
     wrapper.find('#tag1_group_selection').trigger('change')
@@ -144,7 +145,7 @@ describe('CustomTaggedPlateManipulation', () => {
   it('updates tag2GroupId when a tag 2 group is selected', () => {
     const wrapper = wrapperFactory(api)
 
-    expect(wrapper.vm.tag2GroupId).toBe(null)
+    expect(wrapper.vm.tag2GroupId).toEqual(null)
 
     wrapper.find('#tag2_group_selection').element.value = 1
     wrapper.find('#tag2_group_selection').trigger('change')
@@ -252,23 +253,134 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.vm.startAtTagPlaceholder).toBe('Not enough tags..')
   })
 
-  it('sets the computed start at tag max to undefined if there are no tags', () => {
+  it('sets the computed start at tag max to null if there are no tags', () => {
     const wrapper = wrapperFactory(api)
 
     wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 5 })
 
-    expect(wrapper.vm.startAtTagMax).toBe(0)
+    expect(wrapper.vm.startAtTagMax).toEqual(null)
     expect(wrapper.vm.startAtTagDisabled).toBe(true)
     expect(wrapper.vm.startAtTagPlaceholder).toBe('Select tags first..')
   })
 
-  it('sets the computed start at tag max to undefined if there are no target wells', () => {
+  it('sets the computed start at tag max to null if there are no target wells', () => {
     const wrapper = wrapperFactory(api)
 
     wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
 
-    expect(wrapper.vm.startAtTagMax).toBe(0)
+    expect(wrapper.vm.startAtTagMax).toEqual(null)
     expect(wrapper.vm.startAtTagDisabled).toBe(true)
     expect(wrapper.vm.startAtTagPlaceholder).toBe('No target wells found..')
+  })
+
+  it('sets the computed start at tag state to null if there is no start at tag number', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setData({ startAtTagNumber: null })
+
+    expect(wrapper.vm.startAtTagState).toEqual(null)
+    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag state to true if the entered number is valid', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagState).toBe(true)
+    expect(wrapper.vm.startAtTagValidFeedback).toEqual('Valid')
+  })
+
+  it('sets the computed start at tag state to false if the entered number is too high', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagState).toBe(false)
+    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag state to false if the entered number is too low', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagState).toBe(false)
+    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag state to false if the entered number is between steps', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagState).toBe(false)
+    expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag invalid feedback blank if the entered number is null', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setData({ startAtTagNumber: null })
+
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag invalid feedback blank if the max is not set', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 0 })
+    wrapper.setData({ startAtTagNumber: 1 })
+
+    expect(wrapper.vm.startAtTagMax).toEqual(null)
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag invalid feedback blank if the entered number is valid', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+  })
+
+  it('sets the computed start at tag invalid feedback correctly if the entered number is too high', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be less than or equal to 10')
+  })
+
+  it('sets the computed start at tag invalid feedback correctly if the entered number is too low', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be greater than or equal to 1')
+  })
+
+  it('sets the computed start at tag invalid feedback correctly if the entered number is between steps', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
+    wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(10)
+    expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be divisible by 2')
   })
 })

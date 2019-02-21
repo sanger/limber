@@ -81,15 +81,23 @@
     <b-row class="form-group form-row">
       <b-col>
         <!-- start at tag select dropdown -->
-        <b-form-group id="offset_tags_by_group"
+        <b-form-group id="start_at_tag_group"
                       label="Start at tag number (offset):"
-                      label-for="offset_tags_by_options">
-          <b-form-select id="offset_tags_by_options"
-                        :options="offsetTagsByOptions"
-                        v-model="offsetTagsByOption"
-                        :disabled="offsetDisabled"
+                      label-for="start_at_tag_input"
+                      :invalid-feedback="startAtTagInvalidFeedback"
+                      :valid-feedback="startAtTagValidFeedback"
+                      :state="startAtTagState">
+          <b-form-input id="start_at_tag_input"
+                        type="number"
+                        :min="startAtTagMin"
+                        :max="startAtTagMax"
+                        :step="startAtTagStep"
+                        :placeholder="startAtTagPlaceholder"
+                        :state="startAtTagState"
+                        v-model="startAtTagNumber"
+                        :disabled="startAtTagDisabled"
                         @input="updateTagParams">
-          </b-form-select>
+          </b-form-input>
         </b-form-group>
       </b-col>
       <b-col>
@@ -231,7 +239,7 @@
         const numTargets = this.numberOfTargetWells
 
         if(numTags === 0 || numTargets === 0) {
-          return 0
+          return null
         }
         return numTags - numTargets + 1
       },
@@ -241,11 +249,13 @@
       startAtTagPlaceholder: function () {
         let phTxt
         const tagMax = this.startAtTagMax
+        const numTags = this.numberOfTags
+        const numTargets = this.numberOfTargetWells
 
         if(tagMax <= 0) {
-          if(this.numberOfTargetWells === 0) {
+          if(numTargets === 0) {
             phTxt = 'No target wells found..'
-          } else if(this.numberOfTags === 0) {
+          } else if(numTags === 0) {
             phTxt = 'Select tags first..'
           } else {
             phTxt = 'Not enough tags..'
@@ -258,6 +268,49 @@
 
         return phTxt
       },
+      startAtTagState() {
+        if(this.startAtTagNumber === null) { return null }
+
+        return ((this.startAtTagNumber >= this.startAtTagMin) &&
+                (this.startAtTagNumber <= this.startAtTagMax) &&
+                (this.startAtTagNumber % this.startAtTagStep === 0)) ? true : false
+      },
+      startAtTagInvalidFeedback() {
+        const startAt = this.startAtTagNumber
+
+        if(startAt === null) {
+          return ''
+        }
+
+        const tagMax = this.startAtTagMax
+
+        if(!tagMax) {
+          return ''
+        }
+
+        const tagMin = this.startAtTagMin
+        const tagStep = this.startAtTagStep
+
+        if(startAt < tagMin) {
+          return 'Start must be greater than or equal to ' + tagMin
+        }
+
+        if(startAt > tagMax) {
+          return 'Start must be less than or equal to ' + tagMax
+        }
+
+        if(startAt >= tagMin && startAt <= tagMax) {
+          if(startAt % tagStep !== 0) {
+            return 'Start must be divisible by ' + tagStep
+          }
+        }
+
+        return ''
+
+      },
+      startAtTagValidFeedback() {
+        return this.startAtTagState === true ? 'Valid' : ''
+      }
     },
     components: {
       'lb-plate-scan': PlateScan
@@ -265,3 +318,15 @@
   }
 
 </script>
+
+<style>
+  input:invalid+span:after {
+    content: '✖';
+    padding-left: 5px;
+  }
+
+  input:valid+span:after {
+    content: '✓';
+    padding-left: 5px;
+  }
+</style>

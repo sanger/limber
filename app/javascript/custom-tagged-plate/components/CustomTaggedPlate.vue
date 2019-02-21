@@ -127,7 +127,6 @@
         this.walkingBy        = updatedFormData.walkingBy
         this.direction        = updatedFormData.direction
         this.startAtTagNumber = updatedFormData.startAtTagNumber
-        console.log('tagParamsUpdated: data = ', JSON.stringify(updatedFormData))
       },
       extractSubmissionIdFromWell(well) {
         let submId
@@ -307,7 +306,6 @@
               direction: this.direction,
               startAtTagNumber: this.startAtTagNumber
             }
-            console.log('childWells: data = ', JSON.stringify(data))
 
             let tagLayout = calculateTagLayout(data)
 
