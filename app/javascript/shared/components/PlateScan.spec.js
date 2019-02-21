@@ -2,7 +2,7 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import PlateScan from 'shared/components/PlateScan.vue'
-import { jsonCollectionFactory, attributesFactory, devourFactory } from 'test_support/factories'
+import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 
 // create an extended `Vue` constructor
@@ -56,10 +56,12 @@ describe('PlateScan', () => {
         description: 'Scan it in',
         api: api.devour,
         plateType: 'qcable',
-        includes: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
-        fields: { lots:'uuid,template',
-                  tag_layout_templates:'uuid,tag_group,tag2_group,direction,walking_by',
-                  tag_group:'uuid,name' }
+        includes: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
+        fields: {
+          lots:'uuid,template',
+          tag_layout_templates:'uuid,tag_group,tag2_group,direction,walking_by',
+          tag_group:'uuid,name'
+        }
       },
       localVue
     })
@@ -186,6 +188,7 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(wrapper.find('.invalid-feedback').text()).toEqual('The plate should be 12×8 wells in size')
+
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
@@ -199,11 +202,15 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryQcable(api)
 
     api.mockGet('qcables',{
-      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
-      filter: { barcode: 'DN12345' },
-      fields: { lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-                tag_group: 'uuid,name' }
+      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
+      filter: {
+        barcode: 'DN12345'
+      },
+      fields: {
+        lots: 'uuid,template',
+        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+        tag_group: 'uuid,name'
+      }
     }, goodQcable)
 
     wrapper.find('input').setValue('DN12345')
@@ -228,11 +235,15 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryQcable(api)
 
     api.mockGet('qcables',{
-      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
-      filter: { barcode: 'Good barcode' },
-      fields: { lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-                tag_group: 'uuid,name' }
+      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
+      filter: {
+        barcode: 'Good barcode'
+      },
+      fields: {
+        lots: 'uuid,template',
+        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+        tag_group: 'uuid,name'
+      }
     }, badQcableWrongState)
 
     wrapper.find('input').setValue('Good barcode')
@@ -243,6 +254,7 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should be in available or exhausted state')
+
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
@@ -256,11 +268,15 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryQcable(api)
 
     api.mockGet('qcables',{
-      include: "lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group",
-      filter: { barcode: 'Good barcode' },
-      fields: { lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-                tag_group: 'uuid,name' }
+      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
+      filter: {
+        barcode: 'Good barcode'
+      },
+      fields: {
+        lots: 'uuid,template',
+        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+        tag_group: 'uuid,name'
+      }
     }, badQcableWrongWalkingBy)
 
     wrapper.find('input').setValue('Good barcode')
@@ -271,6 +287,7 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should have a walking by of wells by plate')
+
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)

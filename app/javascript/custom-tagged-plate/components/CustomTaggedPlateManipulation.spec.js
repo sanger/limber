@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
-import flushPromises from 'flush-promises'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -13,25 +12,25 @@ describe('CustomTaggedPlateManipulation', () => {
       propsData: {
         devourApi: api.devour,
         tag1GroupOptions: [
-            { value: null, text: 'Please select an i7 Tag 1 group...' },
-            { value: 1, text: 'i7 example tag group 1' },
-            { value: 2, text: 'i7 example tag group 2' }
+          { value: null, text: 'Please select an i7 Tag 1 group...' },
+          { value: 1, text: 'i7 example tag group 1' },
+          { value: 2, text: 'i7 example tag group 2' }
         ],
         tag2GroupOptions: [
-            { value: null, text: 'Please select an i5 Tag 2 group...' },
-            { value: 1, text: 'i5 example tag group 1' },
-            { value: 2, text: 'i5 example tag group 2' }
+          { value: null, text: 'Please select an i5 Tag 2 group...' },
+          { value: 1, text: 'i5 example tag group 1' },
+          { value: 2, text: 'i5 example tag group 2' }
         ],
         walkingByOptions: [
-            { value: null, text: 'Please select a by Pool/Plate Option...' },
-            { value: 'by_pool', text: 'By Pool' },
-            { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
-            { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
+          { value: null, text: 'Please select a by Pool/Plate Option...' },
+          { value: 'by_pool', text: 'By Pool' },
+          { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
+          { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
         ],
         directionOptions: [
-            { value: null, text: 'Select a by Row/Column Option...' },
-            { value: 'by_rows', text: 'By Rows' },
-            { value: 'by_columns', text: 'By Columns' }
+          { value: null, text: 'Select a by Row/Column Option...' },
+          { value: 'by_rows', text: 'By Rows' },
+          { value: 'by_columns', text: 'By Columns' }
         ]
       },
       localVue
@@ -39,24 +38,24 @@ describe('CustomTaggedPlateManipulation', () => {
   }
 
   const nullQcable = { data: [] }
-  const emptyQcableData = { plate: null, state: "empty" }
+  const emptyQcableData = { plate: null, state: 'empty' }
   const goodQcableData = {
     plate: {
-      id:"1",
-      state:"available",
+      id:'1',
+      state:'available',
       lot:{
-        id:"1",
+        id:'1',
         tag_layout_template:{
-          id:"1",
-          direction:"row",
-          walking_by:"wells of plate",
+          id:'1',
+          direction:'row',
+          walking_by:'wells of plate',
           tag_group:{
-            id:"1",
-            name:"i7 example tag group 1",
+            id:'1',
+            name:'i7 example tag group 1',
           },
           tag2_group:{
-            id:"2",
-            name:"i5 example tag group 2",
+            id:'2',
+            name:'i5 example tag group 2',
           }
         }
       }
@@ -64,14 +63,22 @@ describe('CustomTaggedPlateManipulation', () => {
     state: 'valid'
   }
   const api = mockApi()
-    api.mockGet('qcables', {
-      filter: { barcode: 'somebarcode' },
-      include: { lots: ['templates', { templates: 'tag_group,tag2_group' }] },
-      fields: { qcables: 'uuid,state,lot',
-                lots: 'uuid,template',
-                tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
-                tag_group: 'uuid,name' }
-    }, nullQcable)
+  api.mockGet('qcables', {
+    filter: {
+      barcode: 'somebarcode'
+    },
+    include: {
+      lots: ['templates', {
+        templates: 'tag_group,tag2_group'
+      }]
+    },
+    fields: {
+      qcables: 'uuid,state,lot',
+      lots: 'uuid,template',
+      tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
+      tag_group: 'uuid,name'
+    }
+  }, nullQcable)
 
   it('renders a tag plate scan component', () => {
     const wrapper = wrapperFactory(api)
@@ -197,13 +204,13 @@ describe('CustomTaggedPlateManipulation', () => {
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
 
     const input = wrapper.find('#by_pool_plate_options')
-    const option = input.find(`option[value="by_plate_fixed"]`)
+    const option = input.find('option[value="by_plate_fixed"]')
     option.setSelected()
     input.trigger('input')
 
-    expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
-    expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tag1GroupId":null,"tag2GroupId":null,"walkingBy":"by_plate_fixed","direction":"by_rows","startAtTagNumber":null}]
+    expect(emitted.tagparamsupdated.length).toBe(1)
+    expect(emitted.tagparamsupdated[0]).toEqual(
+      [{'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'by_plate_fixed','direction':'by_rows','startAtTagNumber':null}]
     )
   })
 

@@ -10,12 +10,12 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
   return tags[i].index
 }
 
-function byPlateSeq(well, tags, relIndex, _absIndex, offset, counters) {
+function byPlateSeq(well, tags, relIndex, _absIndex, offset, _counters) {
   if(!tags[relIndex + offset]) { return -1 }
   return tags[relIndex + offset].index
 }
 
-function byPlateFixed(well, tags, _relIndex, absIndex, offset, counters) {
+function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
   if(!tags[absIndex + offset]) { return -1 }
   return tags[absIndex + offset].index
 }

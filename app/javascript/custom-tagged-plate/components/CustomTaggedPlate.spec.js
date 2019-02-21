@@ -2,13 +2,9 @@
 import { shallowMount } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import localVue from 'test_support/base_vue.js'
-import { jsonCollectionFactory } from 'test_support/factories'
-import flushPromises from 'flush-promises'
-import mockApi from 'test_support/mock_api'
 
 describe('CustomTaggedPlate', () => {
   const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
-  const nullPlate = { data: [] }
   const goodParentPlate = {
     id: '1',
     uuid: plateUuid,
@@ -203,7 +199,7 @@ describe('CustomTaggedPlate', () => {
     }
   }
 
-  const wrapperFactory = function(api = mockApi()) {
+  const wrapperFactory = function() {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
@@ -226,6 +222,7 @@ describe('CustomTaggedPlate', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ parentPlate: goodParentPlate })
+
     expect(wrapper.vm.numberOfRows).toEqual(8)
   })
 
@@ -239,6 +236,7 @@ describe('CustomTaggedPlate', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ parentPlate: goodParentPlate })
+
     expect(wrapper.vm.numberOfColumns).toEqual(12)
   })
 
@@ -252,6 +250,7 @@ describe('CustomTaggedPlate', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ parentPlate: goodParentPlate })
+
     expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
     expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
     expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
@@ -263,6 +262,7 @@ describe('CustomTaggedPlate', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ parentPlate: goodParentPlateWithoutWellRequestsAsResource })
+
     expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
     expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
     expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
@@ -274,6 +274,7 @@ describe('CustomTaggedPlate', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ parentPlate: goodParentPlateWithPools })
+
     expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
     expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
     expect(wrapper.vm.parentWells.A2.poolIndex).toBe(2)
@@ -298,12 +299,15 @@ describe('CustomTaggedPlate', () => {
   it('returns valid wells object for computed childWells if all properties valid', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ parentPlate: goodParentPlate })
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-    wrapper.setData({ tag1GroupId: 1 })
-    wrapper.setData({ walkingBy: 'by_plate_seq' })
-    wrapper.setData({ direction: 'by_columns' })
-    wrapper.setData({ startAtTagNumber: 0 })
+    wrapper.setData({
+      parentPlate: goodParentPlate,
+      tagGroupsList: goodTagGroupsList,
+      tag1GroupId: 1,
+      walkingBy: 'by_plate_seq',
+      direction: 'by_columns',
+      startAtTagNumber: 0
+    })
+
     expect(wrapper.vm.childWells).toEqual(goodChildWells)
   })
 
@@ -322,6 +326,7 @@ describe('CustomTaggedPlate', () => {
       { value: '1', text: 'Tag Group 1' },
       { value: '2', text: 'Tag Group 2' }
     ]
+
     expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
   })
 
@@ -345,7 +350,7 @@ describe('CustomTaggedPlate', () => {
     expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
   })
 
-  it('returns the correct button text depending on state', () => {
+  it('returns the correct submit button text depending on state', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ state: 'valid' })
@@ -353,7 +358,7 @@ describe('CustomTaggedPlate', () => {
     expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged Plate in Sequencescape')
   })
 
-  it('returns the correct button style depending on state', () => {
+  it('returns the correct submit button style depending on state', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ state: 'valid' })
@@ -361,7 +366,7 @@ describe('CustomTaggedPlate', () => {
     expect(wrapper.vm.buttonStyle).toEqual('primary')
   })
 
-  it('returns the correct button text depending on state', () => {
+  it('disables the submit button depending on state', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ state: 'valid' })
@@ -386,8 +391,10 @@ describe('CustomTaggedPlate', () => {
   it('returns the correct computed number of tags if a tag 1 group has been selected', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-    wrapper.setData({ tag1GroupId: 1 })
+    wrapper.setData({
+      tagGroupsList: goodTagGroupsList,
+      tag1GroupId: 1
+    })
 
     expect(wrapper.vm.numberOfTags).toBe(6)
   })
@@ -395,8 +402,10 @@ describe('CustomTaggedPlate', () => {
   it('returns the correct computed number of tags if only tag 2 group has been selected', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ tagGroupsList: goodTagGroupsList })
-    wrapper.setData({ tag2GroupId: 2 })
+    wrapper.setData({
+      tagGroupsList: goodTagGroupsList,
+      tag2GroupId: 2
+    })
 
     expect(wrapper.vm.numberOfTags).toBe(5)
   })
@@ -420,8 +429,10 @@ describe('CustomTaggedPlate', () => {
   it('returns correct value for the computed number of target wells for a fixed plate', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ parentPlate: goodParentPlate })
-    wrapper.setData({ walkingBy: 'by_plate_fixed' })
+    wrapper.setData({
+      parentPlate: goodParentPlate,
+      walkingBy: 'by_plate_fixed'
+    })
 
     expect(wrapper.vm.numberOfTargetWells).toBe(4)
   })
@@ -429,8 +440,10 @@ describe('CustomTaggedPlate', () => {
   it('returns correct value for the computed number of target wells for a plate by sequence', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ parentPlate: goodParentPlateSequential })
-    wrapper.setData({ walkingBy: 'by_plate_seq' })
+    wrapper.setData({
+      parentPlate: goodParentPlateSequential,
+      walkingBy: 'by_plate_seq'
+    })
 
     expect(wrapper.vm.numberOfTargetWells).toBe(3)
   })
@@ -438,8 +451,10 @@ describe('CustomTaggedPlate', () => {
   it('returns correct value for the computed number of target wells for a plate with pools', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ parentPlate: goodParentPlateWithPools })
-    wrapper.setData({ walkingBy: 'by_pool' })
+    wrapper.setData({
+      parentPlate: goodParentPlateWithPools,
+      walkingBy: 'by_pool'
+    })
 
     expect(wrapper.vm.numberOfTargetWells).toBe(3)
   })
@@ -485,7 +500,7 @@ describe('CustomTaggedPlate', () => {
 
   // it('disables creation if tag clashes are disabled', () => {
 
-  // it('sends a post request when the button is clicked', async () => {
+  // it('sends a post request when the submit button is clicked', async () => {
 
 
 })

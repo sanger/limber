@@ -9,10 +9,10 @@ import localVue from 'test_support/base_vue'
 describe('TagGroupsLookup', () => {
   const goodTagGroupsFromDB = [
     {
-      id: "1",
-      type: "tag_groups",
-      uuid: "89a03a32-c65d-11df-a908-00144f01a001",
-      name: "Tag Group 1",
+      id: '1',
+      type: 'tag_groups',
+      uuid: '89a03a32-c65d-11df-a908-00144f01a001',
+      name: 'Tag Group 1',
       tags: [
         {
           index: 1,
@@ -24,10 +24,10 @@ describe('TagGroupsLookup', () => {
         }
       ]
     },{
-      id: "2",
-      type: "tag_groups",
-      uuid: "89a03a32-c65d-11df-a908-00144f01a002",
-      name: "Tag Group 2",
+      id: '2',
+      type: 'tag_groups',
+      uuid: '89a03a32-c65d-11df-a908-00144f01a002',
+      name: 'Tag Group 2',
       tags: [
         {
           index: 2,

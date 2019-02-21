@@ -1,5 +1,4 @@
 import { calculateTagLayout } from './tagLayoutFunctions'
-import { wellNameToCoordinate } from 'shared/wellHelpers'
 
 describe('calculateTagLayout', () => {
 
@@ -113,6 +112,7 @@ describe('calculateTagLayout', () => {
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
+
     expect(response).toEqual(null)
   })
 
@@ -128,6 +128,7 @@ describe('calculateTagLayout', () => {
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
+
     expect(response).toEqual(null)
   })
 
@@ -142,6 +143,7 @@ describe('calculateTagLayout', () => {
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
+
     expect(response).toEqual(null)
   })
 
@@ -156,6 +158,7 @@ describe('calculateTagLayout', () => {
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
+
     expect(response).toEqual(null)
   })
 
@@ -171,6 +174,7 @@ describe('calculateTagLayout', () => {
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
+
     expect(response).toEqual(null)
   })
 
@@ -382,7 +386,7 @@ describe('calculateTagLayout', () => {
     expect(response).toEqual(outputWells)
   })
 
-  it('builds the wells to tag index array for sequential plate by column', () => {
+  it('builds the wells to tag index array for sequential plate by column when some wells empty', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
