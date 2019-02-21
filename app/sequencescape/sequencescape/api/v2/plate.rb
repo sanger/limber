@@ -29,6 +29,10 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Plate.includes(*includes).find(options).first
   end
 
+  def self.find_all(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::Plate.includes(*includes).find(options).all
+  end
+
   #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same

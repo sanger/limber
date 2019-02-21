@@ -54,16 +54,19 @@ module ApiUrlHelper
     end
 
     def stub_api_modify(*components, action: :post, status: 201, body:, payload:)
-      stub_request(action, api_url_for(*components))
+      Array(body).reduce(
+        stub_request(action, api_url_for(*components))
         .with(
           headers: { 'Accept' => 'application/json', 'content-type' => 'application/json' },
           body: payload
         )
-        .to_return(
+      ) do |request, response|
+        request.to_return(
           status: status,
-          body: body,
+          body: response,
           headers: { 'content-type' => 'application/json' }
         )
+      end
     end
 
     def stub_api_put(*components, body:, payload:)

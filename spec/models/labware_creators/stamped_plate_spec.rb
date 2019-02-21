@@ -98,9 +98,9 @@ RSpec.describe LabwareCreators::StampedPlate do
     let(:transfer_requests) do
       WellHelpers.column_order(plate_size).each_with_index.map do |well_name, index|
         {
-          'source_asset' => "2-well-#{well_name}",
-          'target_asset' => "3-well-#{well_name}",
-          'outer_request' => "request-#{index}"
+          source_asset: "2-well-#{well_name}",
+          target_asset: "3-well-#{well_name}",
+          outer_request: "request-#{index}"
         }
       end
     end

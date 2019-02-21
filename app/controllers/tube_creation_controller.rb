@@ -9,7 +9,7 @@
 #           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class TubeCreationController < CreationController
   def redirection_path(form)
-    url_for(form.child)
+    url_for(form.redirection_target)
   end
 
   private
