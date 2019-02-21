@@ -13,12 +13,9 @@ RSpec.describe LabwareCreators::StampedPlate do
   has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
-  let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate_size) { 96 }
   let(:plate) { create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests }
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests }
-  let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -60,18 +57,6 @@ RSpec.describe LabwareCreators::StampedPlate do
                         user: user_uuid
                       } },
                       body: json(:plate_creation))
-      end
-
-      let!(:plate_request) do
-        stub_v2_plate(plate, stub_search: false)
-      end
-
-      let!(:child_plare_request) do
-        stub_v2_plate(child_plate, stub_search: false)
-      end
-
-      let!(:transfer_template_request) do
-        stub_api_get(transfer_template_uuid, body: transfer_template)
       end
 
       let!(:transfer_creation_request) do
