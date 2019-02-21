@@ -83,9 +83,13 @@ const calculateTagLayout = function (data) {
 
   const tags = extractTags(data.tag1Group, data.tag2Group)
   const counters = {}
+  let offset = 0
+  if(data.startAtTagNumber && data.startAtTagNumber > 0) {
+    offset = data.startAtTagNumber - 1
+  }
 
   return directionFunctions[data.direction](data.wells, data.plateDims, (well, relIndex, absIndex) => {
-    return walkingByFunctions[data.walkingBy](well, tags, relIndex, absIndex, data.offset, counters)
+    return walkingByFunctions[data.walkingBy](well, tags, relIndex, absIndex, offset, counters)
   })
 }
 
@@ -117,8 +121,6 @@ const validateParameters = function (data) {
   if(!result) {
     result = validateDirection(data.direction)
   }
-
-  // TODO validate offset here?
 
   return result
 }

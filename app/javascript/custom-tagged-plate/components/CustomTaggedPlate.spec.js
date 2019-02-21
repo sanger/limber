@@ -303,14 +303,14 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ tag1GroupId: 1 })
     wrapper.setData({ walkingBy: 'by_plate_seq' })
     wrapper.setData({ direction: 'by_columns' })
-    wrapper.setData({ offsetTagsByOption: 0 })
+    wrapper.setData({ startAtTagNumber: 0 })
     expect(wrapper.vm.childWells).toEqual(goodChildWells)
   })
 
   it('returns empty object for computed tag 1 group options if tag groups list empty', () => {
     const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.compTag1GroupOptions).toEqual([])
+    expect(wrapper.vm.tag1GroupOptions).toEqual([])
   })
 
   it('returns valid list for computed tag 1 group options if tag groups list set', () => {
@@ -322,13 +322,13 @@ describe('CustomTaggedPlate', () => {
       { value: '1', text: 'Tag Group 1' },
       { value: '2', text: 'Tag Group 2' }
     ]
-    expect(wrapper.vm.compTag1GroupOptions).toEqual(goodTag1GroupOptions)
+    expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
   })
 
   it('returns empty object for computed tag 2 group options if tag groups list empty', () => {
     const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.compTag2GroupOptions).toEqual([])
+    expect(wrapper.vm.tag2GroupOptions).toEqual([])
   })
 
   it('returns valid list for computed tag 2 group options if tag groups list set', () => {
@@ -342,7 +342,7 @@ describe('CustomTaggedPlate', () => {
       { value: '2', text: 'Tag Group 2' }
     ]
 
-    expect(wrapper.vm.compTag2GroupOptions).toEqual(goodTag2GroupOptions)
+    expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
   })
 
   it('returns the correct button text depending on state', () => {
@@ -372,7 +372,7 @@ describe('CustomTaggedPlate', () => {
   it('returns zero for the computed number of tags if the tag group list is not set', () => {
     const wrapper = wrapperFactory()
 
-    expect(wrapper.vm.compNumberOfTags).toBe(0)
+    expect(wrapper.vm.numberOfTags).toBe(0)
   })
 
   it('returns zero for the computed number of tags if no tag group has been selected', () => {
@@ -380,7 +380,7 @@ describe('CustomTaggedPlate', () => {
 
     wrapper.setData({ tagGroupsList: goodTagGroupsList })
 
-    expect(wrapper.vm.compNumberOfTags).toBe(0)
+    expect(wrapper.vm.numberOfTags).toBe(0)
   })
 
   it('returns the correct computed number of tags if a tag 1 group has been selected', () => {
@@ -389,7 +389,7 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ tagGroupsList: goodTagGroupsList })
     wrapper.setData({ tag1GroupId: 1 })
 
-    expect(wrapper.vm.compNumberOfTags).toBe(6)
+    expect(wrapper.vm.numberOfTags).toBe(6)
   })
 
   it('returns the correct computed number of tags if only tag 2 group has been selected', () => {
@@ -398,19 +398,15 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ tagGroupsList: goodTagGroupsList })
     wrapper.setData({ tag2GroupId: 2 })
 
-    expect(wrapper.vm.compNumberOfTags).toBe(5)
+    expect(wrapper.vm.numberOfTags).toBe(5)
   })
-
-
-
-
 
   it('returns zero for the computed number of target wells if no parent plate exists', () => {
     const wrapper = wrapperFactory()
 
     wrapper.setData({ walkingBy: 'by_plate_seq' })
 
-    expect(wrapper.vm.compNumberOfTargetWells).toBe(0)
+    expect(wrapper.vm.numberOfTargetWells).toBe(0)
   })
 
   it('returns zero for the computed number of target wells if no walking by is set', () => {
@@ -418,7 +414,7 @@ describe('CustomTaggedPlate', () => {
 
     wrapper.setData({ parentPlate: goodParentPlate })
 
-    expect(wrapper.vm.compNumberOfTargetWells).toBe(0)
+    expect(wrapper.vm.numberOfTargetWells).toBe(0)
   })
 
   it('returns correct value for the computed number of target wells for a fixed plate', () => {
@@ -427,7 +423,7 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ parentPlate: goodParentPlate })
     wrapper.setData({ walkingBy: 'by_plate_fixed' })
 
-    expect(wrapper.vm.compNumberOfTargetWells).toBe(4)
+    expect(wrapper.vm.numberOfTargetWells).toBe(4)
   })
 
   it('returns correct value for the computed number of target wells for a plate by sequence', () => {
@@ -436,7 +432,7 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ parentPlate: goodParentPlateSequential })
     wrapper.setData({ walkingBy: 'by_plate_seq' })
 
-    expect(wrapper.vm.compNumberOfTargetWells).toBe(3)
+    expect(wrapper.vm.numberOfTargetWells).toBe(3)
   })
 
   it('returns correct value for the computed number of target wells for a plate with pools', () => {
@@ -445,7 +441,7 @@ describe('CustomTaggedPlate', () => {
     wrapper.setData({ parentPlate: goodParentPlateWithPools })
     wrapper.setData({ walkingBy: 'by_pool' })
 
-    expect(wrapper.vm.compNumberOfTargetWells).toBe(3)
+    expect(wrapper.vm.numberOfTargetWells).toBe(3)
   })
 
   // it('returns ?', () => {

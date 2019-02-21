@@ -127,16 +127,15 @@
         direction: 'by_rows',
         tagsPerWellOption: null,
         startAtTagMin: 1,
-        startAtTagMax: null,
         startAtTagStep: 1,
-        offsetTagsByOption: null
+        startAtTagNumber: null
       }
     },
     props: {
       api: { required: false },
       tag1GroupOptions: { type: Array },
       tag2GroupOptions: { type: Array },
-      // TODO check what values should be and what transform they do (see generic lims)
+      // TODO change values to match sequencescape
       walkingByOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select a by Pool/Plate Option...' },
           { value: 'by_pool', text: 'By Pool' },
@@ -144,7 +143,7 @@
           { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
         ]}
       },
-      // TODO check what values should be and what transform they do (see generic lims)
+      // TODO change values to match sequencescape
       directionOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select a by Row/Column Option...' },
           { value: 'by_rows', text: 'By Rows' },
@@ -161,9 +160,6 @@
         ]}
       },
     },
-    created: function () {
-    },
-    // NB. event handlers must be in the methods section
     methods: {
       updateTagPlateScanDisabled() {
         if(this.tagPlateWasScanned) {
@@ -221,7 +217,7 @@
           tag2GroupId: this.tag2GroupId,
           walkingBy: this.walkingBy,
           direction: this.direction,
-          offsetTagsByOption: this.offsetTagsByOption
+          startAtTagNumber: this.startAtTagNumber
         }
         this.$emit('tagparamsupdated', updatedData)
       }
@@ -230,34 +226,38 @@
       tagGroupsDisabled: function () {
         return (typeof this.tagPlate != "undefined" && this.tagPlate !== null)
       },
-      offsetDisabled: function () {
-        return (this.offsetTagsByOptions[0].value === null)
-      },
-      offsetTagsByOptions: function () {
-        let options = []
+      startAtTagMax: function () {
+        const numTags = this.numberOfTags
+        const numTargets = this.numberOfTargetWells
 
-        if(this.numberOfTags === 0) {
-          options.push({ value: null, text: 'Select tags first..' })
-        } else if(this.numberOfTargetWells === 0) {
-          options.push({ value: null, text: 'No target wells found..' })
-        } else {
-          const startAtTagMax = this.numberOfTags - this.numberOfTargetWells + 1
-          if(startAtTagMax <= 0) {
-            options.push({ value: null, text: 'Not enough tags to enable offset..' })
-          } else if(startAtTagMax === 1) {
-            options.push({ value: 0, text: '1' })
-            this.offsetTagsByOption = 0
-          } else {
-            const totalSteps = Math.floor((startAtTagMax - this.startAtTagMin)/this.startAtTagStep)
-            for (let i = 0; i <= totalSteps; i++ ) {
-              let v = i * this.startAtTagStep + this.startAtTagMin
-              options.push({ value: v - 1, text: v.toString()})
-            }
-            this.offsetTagsByOption = 0
-          }
+        if(numTags === 0 || numTargets === 0) {
+          return 0
         }
-        return options
-      }
+        return numTags - numTargets + 1
+      },
+      startAtTagDisabled: function () {
+        return (!this.startAtTagMax || this.startAtTagMax <= 1)
+      },
+      startAtTagPlaceholder: function () {
+        let phTxt
+        const tagMax = this.startAtTagMax
+
+        if(tagMax <= 0) {
+          if(this.numberOfTargetWells === 0) {
+            phTxt = 'No target wells found..'
+          } else if(this.numberOfTags === 0) {
+            phTxt = 'Select tags first..'
+          } else {
+            phTxt = 'Not enough tags..'
+          }
+        } else if(tagMax === 1) {
+          phTxt = 'No spare tags..'
+        } else {
+          phTxt = 'Enter an offset value..'
+        }
+
+        return phTxt
+      },
     },
     components: {
       'lb-plate-scan': PlateScan

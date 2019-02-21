@@ -24,10 +24,10 @@
         <b-row>
           <b-col>
             <lb-custom-tagged-plate-manipulation :api="devourApi"
-                                                 :tag1GroupOptions="compTag1GroupOptions"
-                                                 :tag2GroupOptions="compTag2GroupOptions"
-                                                 :numberOfTags="compNumberOfTags"
-                                                 :numberOfTargetWells="compNumberOfTargetWells"
+                                                 :tag1GroupOptions="tag1GroupOptions"
+                                                 :tag2GroupOptions="tag2GroupOptions"
+                                                 :numberOfTags="numberOfTags"
+                                                 :numberOfTargetWells="numberOfTargetWells"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -73,7 +73,7 @@
         tag2GroupId: null,
         walkingBy: null,
         direction: null,
-        offsetTagsByOption: null,
+        startAtTagNumber: null,
         tagsPerWellOption: 1
       }
     },
@@ -122,11 +122,12 @@
         }
       },
       tagParamsUpdated(updatedFormData) {
-        this.tag1GroupId        = updatedFormData.tag1GroupId
-        this.tag2GroupId        = updatedFormData.tag2GroupId
-        this.walkingBy  = updatedFormData.walkingBy
-        this.direction     = updatedFormData.direction
-        this.offsetTagsByOption = updatedFormData.offsetTagsByOption
+        this.tag1GroupId      = updatedFormData.tag1GroupId
+        this.tag2GroupId      = updatedFormData.tag2GroupId
+        this.walkingBy        = updatedFormData.walkingBy
+        this.direction        = updatedFormData.direction
+        this.startAtTagNumber = updatedFormData.startAtTagNumber
+        console.log('tagParamsUpdated: data = ', JSON.stringify(updatedFormData))
       },
       extractSubmissionIdFromWell(well) {
         let submId
@@ -304,8 +305,9 @@
               tag2Group: this.tagGroupsList[this.tag2GroupId],
               walkingBy: this.walkingBy,
               direction: this.direction,
-              offset: this.offsetTagsByOption
+              startAtTagNumber: this.startAtTagNumber
             }
+            console.log('childWells: data = ', JSON.stringify(data))
 
             let tagLayout = calculateTagLayout(data)
 
@@ -321,7 +323,7 @@
 
         return newWells
       },
-      compTag1GroupOptions: function () {
+      tag1GroupOptions: function () {
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -331,7 +333,7 @@
 
         return options
       },
-      compTag2GroupOptions: function () {
+      tag2GroupOptions: function () {
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -341,22 +343,25 @@
 
         return options
       },
-      compNumberOfTags: function () {
+      numberOfTags: function () {
         let numTags = 0
+        const tagGrps = this.tagGroupsList
+        const tag1Id = this.tag1GroupId
+        const tag2Id = this.tag2GroupId
 
-        if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-          if(this.tag1GroupId) {
-            const tag1Group = this.tagGroupsList[this.tag1GroupId]
-            numTags = Object.keys(tag1Group.tags).length
-          } else if(this.tag2GroupId) {
-            const tag2Group = this.tagGroupsList[this.tag2GroupId]
-            numTags = Object.keys(tag2Group.tags).length
+        if(tagGrps && Object.keys(tagGrps).length > 0) {
+          if(tag1Id) {
+            const tag1Grp = tagGrps[tag1Id]
+            numTags = Object.keys(tag1Grp.tags).length
+          } else if(tag2Id) {
+            const tag2Grp = tagGrps[tag2Id]
+            numTags = Object.keys(tag2Grp.tags).length
           }
         }
 
         return numTags
       },
-      compNumberOfTargetWells: function () {
+      numberOfTargetWells: function () {
         let numTargets = 0
 
         if(this.parentWells) {

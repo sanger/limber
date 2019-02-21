@@ -32,13 +32,6 @@ describe('CustomTaggedPlateManipulation', () => {
             { value: null, text: 'Select a by Row/Column Option...' },
             { value: 'by_rows', text: 'By Rows' },
             { value: 'by_columns', text: 'By Columns' }
-        ],
-        offsetTagsByOptions: [
-            { value: null, text: 'Select which tag index to start at...' },
-            { value: 1, text: '1' },
-            { value: 2, text: '2' },
-            { value: 3, text: '3' },
-            { value: 4, text: '4' }
         ]
       },
       localVue
@@ -81,13 +74,13 @@ describe('CustomTaggedPlateManipulation', () => {
     }, nullQcable)
 
   it('renders a tag plate scan component', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
   })
 
   it('renders a tag1 group select dropdown', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
     expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
@@ -95,7 +88,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('renders a tag2 group select dropdown', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
     expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
@@ -103,19 +96,19 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('renders a by pool or plate select dropdown', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
   })
 
   it('renders a by rows or columns select dropdown', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
   })
 
   it('renders an offset tags by select number dropdown', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.find('#offset_tags_by_options').exists()).toBe(true)
   })
@@ -124,7 +117,7 @@ describe('CustomTaggedPlateManipulation', () => {
   // })
 
   it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     wrapper.vm.tagPlateScanned(goodQcableData)
 
@@ -138,7 +131,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('updates tag1GroupId when a tag 1 group is selected', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.tag1GroupId).toBe(null)
 
@@ -149,7 +142,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('updates tag2GroupId when a tag 2 group is selected', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.tag2GroupId).toBe(null)
 
@@ -160,7 +153,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('re-enables the tag group selects when the tag plate is cleared', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     wrapper.vm.tagPlateScanned(goodQcableData)
 
@@ -184,7 +177,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
 
     expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
@@ -197,7 +190,7 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   it('emits a call to the parent container on a change of the form data', () => {
-    let wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactory(api)
     const emitted = wrapper.emitted()
 
     expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
@@ -209,74 +202,73 @@ describe('CustomTaggedPlateManipulation', () => {
 
     expect(wrapper.emitted().tagparamsupdated.length).toBe(1)
     expect(wrapper.emitted().tagparamsupdated[0]).toEqual(
-      [{"tag1GroupId":null,"tag2GroupId":null,"walkingBy":"by_plate_fixed","direction":"by_rows","offsetTagsByOption":null}]
+      [{"tag1GroupId":null,"tag2GroupId":null,"walkingBy":"by_plate_fixed","direction":"by_rows","startAtTagNumber":null}]
     )
   })
 
-  it('returns empty offset tags by options and disables the select when number of target wells is zero', () => {
-    const wrapper = wrapperFactory()
+  it('sets the computed tag groups disabled to false if a tag plate has not been scanned', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setData({ tagPlate: null })
+
+    expect(wrapper.vm.tagGroupsDisabled).toBe(false)
+  })
+
+  it('sets the computed tag groups disabled to true if a valid tag plate was scanned', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setData({ tagPlate: goodQcableData.plate })
+
+    expect(wrapper.vm.tagGroupsDisabled).toBe(true)
+  })
+
+  it('sets the computed start at tag max to the expected value if tags and target wells exist', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 5 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(1)
+    expect(wrapper.vm.startAtTagDisabled).toBe(true)
+    expect(wrapper.vm.startAtTagPlaceholder).toBe('No spare tags..')
+  })
+
+  it('sets the computed start at tag max to the expected value if tags are in excess', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 5 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(6)
+    expect(wrapper.vm.startAtTagDisabled).toBe(false)
+    expect(wrapper.vm.startAtTagPlaceholder).toBe('Enter an offset value..')
+  })
+
+  it('sets the computed start at tag max to a negative number if there are not enough tags', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 10 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(-4)
+    expect(wrapper.vm.startAtTagDisabled).toBe(true)
+    expect(wrapper.vm.startAtTagPlaceholder).toBe('Not enough tags..')
+  })
+
+  it('sets the computed start at tag max to undefined if there are no tags', () => {
+    const wrapper = wrapperFactory(api)
+
+    wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 5 })
+
+    expect(wrapper.vm.startAtTagMax).toBe(0)
+    expect(wrapper.vm.startAtTagDisabled).toBe(true)
+    expect(wrapper.vm.startAtTagPlaceholder).toBe('Select tags first..')
+  })
+
+  it('sets the computed start at tag max to undefined if there are no target wells', () => {
+    const wrapper = wrapperFactory(api)
 
     wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
 
-    const badOffsetOptions = [
-      { value: null, text: 'No target wells found..' }
-    ]
-
-    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
-    expect(wrapper.vm.offsetDisabled).toBe(true)
-  })
-
-  it('returns empty offset tags by options and disables the select when number of tags is zero', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setProps({ numberOfTags: 0 })
-
-    const badOffsetOptions = [
-      { value: null, text: 'Select tags first..' }
-    ]
-
-    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
-    expect(wrapper.vm.offsetDisabled).toBe(true)
-  })
-
-  it('returns empty offset tags by options and disables the select for an invalid combination', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setProps({ numberOfTags: 2, numberOfTargetWells: 3 })
-
-    const badOffsetOptions = [
-      { value: null, text: 'Not enough tags to enable offset..' }
-    ]
-
-    expect(wrapper.vm.offsetTagsByOptions).toEqual(badOffsetOptions)
-    expect(wrapper.vm.offsetDisabled).toBe(true)
-  })
-
-  it('returns the correct computed offset tags by options when more tags than target wells', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setProps({ numberOfTags: 4, numberOfTargetWells: 2 })
-
-    const goodOffsetOptions = [
-      { value: 0, text: '1' },
-      { value: 1, text: '2' },
-      { value: 2, text: '3' }
-    ]
-
-    expect(wrapper.vm.offsetTagsByOptions).toEqual(goodOffsetOptions)
-    expect(wrapper.vm.offsetDisabled).toBe(false)
-  })
-
-  it('returns the correct computed offset tags by options when same number of tags as target wells', () => {
-    const wrapper = wrapperFactory()
-
-    wrapper.setProps({ numberOfTags: 3, numberOfTargetWells: 3 })
-
-    const goodOffsetOptions = [
-      { value: 0, text: '1' }
-    ]
-
-    expect(wrapper.vm.offsetTagsByOptions).toEqual(goodOffsetOptions)
-    expect(wrapper.vm.offsetDisabled).toBe(false)
+    expect(wrapper.vm.startAtTagMax).toBe(0)
+    expect(wrapper.vm.startAtTagDisabled).toBe(true)
+    expect(wrapper.vm.startAtTagPlaceholder).toBe('No target wells found..')
   })
 })
