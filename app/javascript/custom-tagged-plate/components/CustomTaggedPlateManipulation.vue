@@ -182,16 +182,16 @@
         this.updateTagParams(null)
       },
       tagPlateScanned(data) {
-        if(data.state=== 'valid' && data.plate) {
+        if(data.state === 'valid' && data.plate) {
           this.validTagPlateScanned(data)
-        }
-        if(data.state=== 'empty' && !data.plate) {
+        } else if(data.state === 'empty' && !data.plate) {
           this.emptyTagPlate()
         }
       },
       validTagPlateScanned(data) {
         this.tagPlate = { ...data.plate }
         this.tagPlateWasScanned = true
+        this.startAtTagNumber = null
 
         if(data.plate.lot.tag_layout_template.tag_group.id) {
           this.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
@@ -215,6 +215,7 @@
       },
       tagGroupChanged() {
         this.tagPlateWasScanned = false
+        this.startAtTagNumber = null
       },
       tagGroupInput() {
         this.updateTagPlateScanDisabled()
@@ -270,6 +271,7 @@
       },
       startAtTagState() {
         if(this.startAtTagNumber === null) { return null }
+        if(!this.startAtTagMax || this.startAtTagMax <= 1) { return null }
 
         return ((this.startAtTagNumber >= this.startAtTagMin) &&
                 (this.startAtTagNumber <= this.startAtTagMax) &&
@@ -277,32 +279,16 @@
       },
       startAtTagInvalidFeedback() {
         const startAt = this.startAtTagNumber
-
-        if(startAt === null) {
-          return ''
-        }
-
         const tagMax = this.startAtTagMax
-
-        if(!tagMax) {
-          return ''
-        }
-
         const tagMin = this.startAtTagMin
         const tagStep = this.startAtTagStep
 
-        if(startAt < tagMin) {
-          return 'Start must be greater than or equal to ' + tagMin
-        }
-
-        if(startAt > tagMax) {
-          return 'Start must be less than or equal to ' + tagMax
-        }
-
+        if(!tagMax || tagMax <= 1) { return '' }
+        if(startAt === null) { return '' }
+        if(startAt < tagMin) { return 'Start must be greater than or equal to ' + tagMin }
+        if(startAt > tagMax) { return 'Start must be less than or equal to ' + tagMax }
         if(startAt >= tagMin && startAt <= tagMax) {
-          if(startAt % tagStep !== 0) {
-            return 'Start must be divisible by ' + tagStep
-          }
+          if(startAt % tagStep !== 0) { return 'Start must be divisible by ' + tagStep }
         }
 
         return ''

@@ -482,48 +482,91 @@ describe('CustomTaggedPlate', () => {
     })
   })
 
-  // it('returns ?', () => {
-  //   const wrapper = wrapperFactory()
-  //   wrapper.setData({ dataName: "input value" })
-  //   expect(wrapper.vm.computedName).toBe("result value")
+  // describe("#rendering tests:", () => {
+    // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
+    // }
+
+    // it('renders a plate panel', async () => {
+    //   let mock = new MockAdapter(localVue.prototype.$axios)
+    //   mock.onGet('/plates?filter[uuid]=PARN_UUID_1234&limit=1&include=wells.aliquots').reply(200, {
+    //     expectedResponse
+    //   })
+
+    //   const wrapper = wrapperFactory()
+
+    //   await flushPromises()
+
+    //   expect(wrapper.find('table.plate-view').exists()).toBe(true)
+    // })
   // })
 
-  // it('returns differently ? if prop is set', () => {
-  //   const wrapper = wrapperFactory()
-  //   wrapper.setData({ dataName: "input value" })
-  //   wrapper.setProps({ propName: true })
-  //   expect(wrapper.vm.computedName).toBe("result value 2")
-  // })
+  describe("#integration tests:", () => {
+    // it('disables creation if there are no source plate sample wells', () => {
 
-  // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
-  // }
+    // it('sets the tag groups if a valid plate is scanned'), () => {
 
-  // it('renders a plate panel', async () => {
-  //   let mock = new MockAdapter(localVue.prototype.$axios)
-  //   mock.onGet('/plates?filter[uuid]=PARN_UUID_1234&limit=1&include=wells.aliquots').reply(200, {
-  //     expectedResponse
-  //   })
+    // it('disables the tag plate scan box if a tag group is chosen'), () => {
 
-  //   const wrapper = wrapperFactory()
+    // it('substitutes tags based on selections', () => {
 
-  //   await flushPromises()
+    // it('enables creation if valid tags are chosen', () => {
 
-  //   expect(wrapper.find('table.plate-view').exists()).toBe(true)
-  // })
+    // it('disables creation if tag clashes are disabled', () => {
 
-  // it('disables creation if there are no source plate sample wells', () => {
+    // it('sends a post request when the create plate button is clicked', async () => {
+    //   let mock = new MockAdapter(localVue.prototype.$axios)
 
-  // it('sets the tag groups if a valid plate is scanned'), () => {
+    //   // const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
 
-  // it('disables the tag plate scan box if a tag group is chosen'), () => {
+    //   const wrapper = wrapperFactory()
 
-  // it('substitutes tags based on selections', () => {
+    //   wrapper.setData({
+    //     key: 'value',
+    //     key: 'value',
+    //     key: 'value',
+    //     key: 'value',
+    //     key: 'value',
+    //   })
 
-  // it('enables creation if valid tags are chosen', () => {
+    //   const expectedPayload = {
+    //     plate: {
+    //       purpose_uuid: 'test',
+    //       parent_uuid: 'plate-uuid',
+    //       user_uuid: 'user-uuid',
+    //       tag_plate_barcode: 'TG12345678',
+    //       tag_plate: {
+    //         asset_uuid: 'tag-plate-uuid',
+    //         template_uuid: 'tag-template-uuid',
+    //         state: 'tag-plate-state'
+    //       },
+    //       tag_layout: {
+    //         user: 'user-uuid',
+    //         tag_group: 'tag-group-uuid',
+    //         tag2_group: 'tag2-group-uuid',
+    //         direction: 'column',
+    //         walking_by: 'manual by plate',
+    //         initial_tag: '1',
+    //         substitutions: {},
+    //         tags_per_well: 1
+    //       }
+    //     }
+    //   }
 
-  // it('disables creation if tag clashes are disabled', () => {
+    //   mockLocation.href = null
+    //   mock.onPost().reply((config) =>{
+    //     expect(config.url).toEqual('example/example')
+    //     expect(config.data).toEqual(JSON.stringify(expectedPayload))
+    //     return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
+    //   })
 
-  // it('sends a post request when the submit button is clicked', async () => {
+    //   //  wrapper.vm.createPlate()
+    //   wrapper.find('#custom_tagged_plate_submit_button').trigger('click')
+
+    //   await flushPromises()
+
+    //   expect(mockLocation.href).toEqual('http://wwww.example.com')
+    // })
 
 
+  })
 })

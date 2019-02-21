@@ -162,6 +162,16 @@ describe('CustomTaggedPlateManipulation', () => {
         expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
       })
 
+      it('returns null if the start at tag max is negative', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 20 })
+
+        expect(wrapper.vm.startAtTagMax).toBe(-9)
+        expect(wrapper.vm.startAtTagState).toEqual(null)
+        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+      })
+
       it('returns true if the entered number is valid', () => {
         const wrapper = wrapperFactory(api)
 
@@ -404,39 +414,5 @@ describe('CustomTaggedPlateManipulation', () => {
         [{'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'by_plate_fixed','direction':'by_rows','startAtTagNumber':null}]
       )
     })
-
-    // it('sends a post request when the create plate button is clicked', async () => {
-    //   let mock = new MockAdapter(localVue.prototype.$axios)
-
-    //   const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
-    //   const wrapper = wrapperFactory()
-    //   wrapper.vm.updatePlate(1, plate)
-
-    //   // Consider auto-selecting a single panel
-    //   wrapper.setData({ primerPanel: 'Test panel' })
-
-    //   const expectedPayload = { plate: {
-    //     parent_uuid: 'plate-uuid',
-    //     purpose_uuid: 'test',
-    //     transfers: [
-    //       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } }
-    //     ]
-    //   }}
-
-    //   mockLocation.href = null
-    //   mock.onPost().reply((config) =>{
-
-    //     expect(config.url).toEqual('example/example')
-    //     expect(config.data).toEqual(JSON.stringify(expectedPayload))
-    //     return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
-    //   })
-
-    //   // Ideally we'd emit the event from the button component, but I'm having difficulty.
-    //   wrapper.vm.createPlate()
-
-    //   await flushPromises()
-
-    //   expect(mockLocation.href).toEqual('http://wwww.example.com')
-    // })
   })
 })
