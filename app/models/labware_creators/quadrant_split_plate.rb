@@ -15,6 +15,10 @@ module LabwareCreators
       parent
     end
 
+    def anchor
+      'children_tab'
+    end
+
     private
 
     def create_labware!

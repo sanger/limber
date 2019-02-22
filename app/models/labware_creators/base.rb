@@ -88,6 +88,10 @@ module LabwareCreators
       child
     end
 
+    def anchor
+      'summary_tab'
+    end
+
     private
 
     def transfer_template

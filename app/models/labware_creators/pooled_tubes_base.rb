@@ -58,7 +58,7 @@ module LabwareCreators
     # to come up with a better solution.
     # 1) Redirect to the transfer/creation and list the tubes that way
     # 2) Once tube racks are implemented, we can redirect there.
-    def child
+    def redirection_target
       parent
     end
 
