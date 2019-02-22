@@ -107,8 +107,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: null,
       tag2Group: null,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
@@ -123,8 +123,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: emptyTagGrp,
       tag2Group: null,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
@@ -138,8 +138,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
@@ -153,8 +153,8 @@ describe('calculateTagLayout', () => {
       plateDims: null,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
@@ -169,8 +169,8 @@ describe('calculateTagLayout', () => {
       plateDims: invalidPlateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const response = calculateTagLayout(data)
@@ -184,8 +184,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 4, 'B2': 5, 'C2': 6, 'A3': 7, 'B3': 8, 'C3': 9, 'A4': 10, 'C4': 11 }
@@ -200,8 +200,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_rows',
+      walkingBy: 'manual by plate',
+      direction: 'row',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 5, 'C1': 8, 'A2': 2, 'B2': 6, 'C2': 9, 'A3': 3, 'B3': 7, 'C3': 10, 'A4': 4, 'C4': 11 }
@@ -216,8 +216,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_fixed',
-      direction: 'by_columns',
+      walkingBy: 'wells of plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 4, 'B2': 5, 'C2': 6, 'A3': 7, 'B3': 8, 'C3': 9, 'A4': 10, 'C4': 12 }
@@ -232,8 +232,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_fixed',
-      direction: 'by_rows',
+      walkingBy: 'wells of plate',
+      direction: 'row',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 5, 'C1': 9, 'A2': 2, 'B2': 6, 'C2': 10, 'A3': 3, 'B3': 7, 'C3': 11, 'A4': 4, 'C4': 12 }
@@ -248,8 +248,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_pool',
-      direction: 'by_columns',
+      walkingBy: 'wells in pools',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 1, 'B2': 4, 'C2': 2, 'A3': 5, 'B3': 6, 'C3': 7, 'A4': 8, 'C4': 9 }
@@ -264,8 +264,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_pool',
-      direction: 'by_rows',
+      walkingBy: 'wells in pools',
+      direction: 'row',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 4, 'C1': 7, 'A2': 1, 'B2': 5, 'C2': 2, 'A3': 2, 'B3': 6, 'C3': 8, 'A4': 3, 'C4': 9 }
@@ -280,8 +280,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 6, 'C1': 7, 'A2': 8, 'B2': 9, 'C2': 10, 'A3': 11, 'B3': 12, 'C3': 13, 'A4': 14, 'C4': 15 }
@@ -296,8 +296,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_rows',
+      walkingBy: 'manual by plate',
+      direction: 'row',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 9, 'C1': 12, 'A2': 6, 'B2': 10, 'C2': 13, 'A3': 7, 'B3': 11, 'C3': 14, 'A4': 8, 'C4': 15 }
@@ -312,8 +312,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_fixed',
-      direction: 'by_columns',
+      walkingBy: 'wells of plate',
+      direction: 'column',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 6, 'C1': 7, 'A2': 8, 'B2': 9, 'C2': 10, 'A3': 11, 'B3': 12, 'C3': 13, 'A4': 14, 'C4': 16 }
@@ -328,8 +328,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_fixed',
-      direction: 'by_rows',
+      walkingBy: 'wells of plate',
+      direction: 'row',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 9, 'C1': 13, 'A2': 6, 'B2': 10, 'C2': 14, 'A3': 7, 'B3': 11, 'C3': 15, 'A4': 8, 'C4': 16 }
@@ -344,8 +344,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_pool',
-      direction: 'by_columns',
+      walkingBy: 'wells in pools',
+      direction: 'column',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 6, 'C1': 7, 'A2': 5, 'B2': 8, 'C2': 6, 'A3': 9, 'B3': 10, 'C3': 11, 'A4': 12, 'C4': 13 }
@@ -360,8 +360,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_pool',
-      direction: 'by_rows',
+      walkingBy: 'wells in pools',
+      direction: 'row',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 8, 'C1': 11, 'A2': 5, 'B2': 9, 'C2': 6, 'A3': 6, 'B3': 10, 'C3': 12, 'A4': 7, 'C4': 13 }
@@ -376,8 +376,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: null,
       tag2Group: inputTag2Group,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 101, 'B1': 102, 'C1': 103, 'A2': 104, 'B2': 105, 'C2': 106, 'A3': 107, 'B3': 108, 'C3': 109, 'A4': 110, 'C4': 111 }
@@ -392,8 +392,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: tagGrpNonConseq,
       tag2Group: null,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 2, 'B1': 5, 'C1': 6, 'A2': 7, 'B2': 9, 'C2': 10, 'A3': 12, 'B3': 13, 'C3': 14, 'A4': 15, 'C4': 17 }
@@ -408,8 +408,8 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: tagGrpShort,
       tag2Group: null,
-      walkingBy: 'by_plate_seq',
-      direction: 'by_columns',
+      walkingBy: 'manual by plate',
+      direction: 'column',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 2, 'C1': 3, 'A2': 4, 'B2': 5, 'C2': 6, 'A3': -1, 'B3': -1, 'C3': -1, 'A4': -1, 'C4': -1 }

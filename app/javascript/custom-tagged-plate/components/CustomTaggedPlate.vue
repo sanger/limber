@@ -69,19 +69,22 @@
         progressMessageParent: 'Fetching parent plate details...',
         progressMessageTags: 'Fetching tag groups...',
         errorMessages: [],
+        tagPlate: null,
         tag1GroupId: null,
         tag2GroupId: null,
         walkingBy: null,
         direction: null,
         startAtTagNumber: null,
-        tagsPerWellOption: 1
+        tagSubstitutions: null, // { 1:2,5:8, etc }
+        tagsPerWell: null
       }
     },
     props: {
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
-      parentUuid: { type: String, required: true }
+      parentUuid: { type: String, required: true },
+      locationObj: { default: () => { return location } }
     },
     methods: {
       parentPlateLookupUpdated(data) {
@@ -122,6 +125,7 @@
         }
       },
       tagParamsUpdated(updatedFormData) {
+        this.tagPlate         = updatedFormData.tagPlate
         this.tag1GroupId      = updatedFormData.tag1GroupId
         this.tag2GroupId      = updatedFormData.tag2GroupId
         this.walkingBy        = updatedFormData.walkingBy
@@ -207,65 +211,59 @@
       createPlate() {
         this.state = 'busy'
 
-        // TODO: submit new custom tagged plate creation to sequencescape with tags
+        // TODO do we need to do some validations first?
+        // TODO check tag plate state gets updated to exhausted
 
-        // see custom_tagged_plate_spec.rb context 'Providing simple solutions'
-        // substitutions { 1:2,5:8, etc } tag 1 for 2, 5 for 8 etc.
+        let payload = {
+          plate: {
+            purpose_uuid: this.purposeUuid,
+            parent_uuid: this.parentUuid,
+            // user_uuid: '?', // from where?
+            tag_layout: {
+              // user: '?',  // from where?
+              tag_group: this.tag1GroupId, // uuid? or id?
+              tag2_group: this.tag2GroupId,
+              direction: this.direction, // needs to match sequencescape directions
+              walking_by: this.walkingBy, // meeds to match sequencescape walkingby
+              initial_tag: this.startAtTagNumber - 1, // initial tag is zero-based index of the tag within its group
+              substitutions: {}, // { 1:2,5:8, etc }
+              tags_per_well: 1 // from purpose 1 or 4
+            }
+          }
+        }
+        debugger
+        if(this.tagPlate) {
+          payload.plate.tag_plate_barcode = this.tagPlate.labware_barcode.human_barcode // (want human_ or machine_ or ean13_ barcode?)
+          payload.plate.tag_plate = {
+            asset_uuid: this.tagPlate.uuid,
+            template_uuid: this.tagPlate.lot.tag_layout_template.uuid,
+            state: this.tagPlate.state
+          }
+        }
+        console.log('createPlate: payload = ', JSON.stringify(payload))
 
-        //   let(:form_attributes) do
-        //   {
-        //     purpose_uuid: child_purpose_uuid,
-        //     parent_uuid: plate_uuid,
-        //     user_uuid: user_uuid,
-        //     tag_plate_barcode: tag_plate_barcode,
-        //     tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid, state: tag_plate_state },
-        //     tag_layout: {
-        //       user: 'user-uuid',
-        //       tag_group: 'tag-group-uuid',
-        //       tag2_group: 'tag2-group-uuid',
-        //       direction: 'column',
-        //       walking_by: 'manual by plate',
-        //       initial_tag: '1',
-        //       substitutions: {},
-        //       tags_per_well: 1
-        //     }
-        //   }
-        // end
+        this.$axios({
+          method: 'post',
+          url:this.targetUrl,
+          headers: {'X-Requested-With': 'XMLHttpRequest'},
+          data: payload
+        }).then((response)=>{
+          // Ajax responses automatically follow redirects, which
+          // would result in us receiving the full HTML for the child
+          // plate here, which we'd then need to inject into the
+          // page, and update the history. Instead we don't redirect
+          // application/json requests, and redirect the user ourselves.
 
-        // it 'can be created' do
-        //   expect(subject).to be_a LabwareCreators::CustomTaggedPlate
-        // end
-
-        // TODO do we also need to set a scanned Tag Plate as 'exhausted' if it was 'available'? Yes.
-
-
-
-
-        // this.progressMessage = "Creating plate..."
-        // this.loading = true
-        // let payload = { plate: {
-        //   parent_uuid: this.validPlates[0].plate.uuid,
-        //   purpose_uuid: this.purposeUuid,
-        //   transfers: this.transfers
-        // }}
-        // this.$axios({
-        //   method: 'post',
-        //   url:this.targetUrl,
-        //   headers: {'X-Requested-With': 'XMLHttpRequest'},
-        //   data: payload
-        // }).then((response)=>{
-        //   // Ajax responses automatically follow redirects, which
-        //   // would result in us receiving the full HTML for the child
-        //   // plate here, which we'd then need to inject into the
-        //   // page, and update the history. Instead we don't redirect
-        //   // application/json requests, and redirect the user ourselves.
-        //   this.progressMessage = response.data.message
-        //   this.locationObj.href = response.data.redirect
-        // }).catch((error)=>{
-        //   // Something has gone wrong
-        //   console.log(error)
-        //   this.loading = false
-        // })
+          // TODO
+          // this.progressMessage = response.data.message
+          console.log(response.data.message)
+          this.locationObj.href = response.data.redirect
+          this.state = 'success'
+        }).catch((error)=>{
+          // Something has gone wrong
+          console.log(error)
+          this.state = 'failure'
+        })
       }
     },
     computed: {
@@ -392,11 +390,11 @@
         let numTargets = 0
 
         if(this.parentWells) {
-          if(this.walkingBy === 'by_plate_seq') {
+          if(this.walkingBy === 'manual by plate') {
             numTargets = this.calcNumTagsForSeqPlate()
-          } else if(this.walkingBy === 'by_plate_fixed') {
+          } else if(this.walkingBy === 'wells of plate') {
             numTargets = Object.keys(this.parentWells).length
-          } else if(this.walkingBy === 'by_pool') {
+          } else if(this.walkingBy === 'wells in pools') {
             numTargets = this.calcNumTagsForPooledPlate()
           }
         }

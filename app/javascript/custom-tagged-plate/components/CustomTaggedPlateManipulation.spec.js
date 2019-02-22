@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
-import MockAdapter from 'axios-mock-adapter'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -24,14 +23,14 @@ describe('CustomTaggedPlateManipulation', () => {
         ],
         walkingByOptions: [
           { value: null, text: 'Please select a by Pool/Plate Option...' },
-          { value: 'by_pool', text: 'By Pool' },
-          { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
-          { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
+          { value: 'wells in pools', text: 'By Pool' },
+          { value: 'manual by plate', text: 'By Plate (Sequential)' },
+          { value: 'wells of plate', text: 'By Plate (Fixed)' }
         ],
         directionOptions: [
           { value: null, text: 'Select a by Row/Column Option...' },
-          { value: 'by_rows', text: 'By Rows' },
-          { value: 'by_columns', text: 'By Columns' }
+          { value: 'row', text: 'By Rows' },
+          { value: 'column', text: 'By Columns' }
         ]
       },
       localVue
@@ -43,6 +42,9 @@ describe('CustomTaggedPlateManipulation', () => {
   const goodQcableData = {
     plate: {
       id:'1',
+      labware_barcode: {
+        human_barcode: 'TG12345678'
+      },
       state:'available',
       lot:{
         id:'1',
@@ -81,8 +83,8 @@ describe('CustomTaggedPlateManipulation', () => {
     }
   }, nullQcable)
 
-  describe("#computed function tests:", () => {
-    describe("tagGroupsDisabled:", () => {
+  describe('#computed function tests:', () => {
+    describe('tagGroupsDisabled:', () => {
       it('returns false if a tag plate has not been scanned', () => {
         const wrapper = wrapperFactory(api)
 
@@ -100,7 +102,7 @@ describe('CustomTaggedPlateManipulation', () => {
       })
     })
 
-    describe("startAtTagMax:", () => {
+    describe('startAtTagMax:', () => {
       it('returns expected value if tags and target wells exist', () => {
         const wrapper = wrapperFactory(api)
 
@@ -152,7 +154,7 @@ describe('CustomTaggedPlateManipulation', () => {
       })
     })
 
-    describe("startAtTagState:", () => {
+    describe('startAtTagState:', () => {
       it('returns null if there is no start at tag number', () => {
         const wrapper = wrapperFactory(api)
 
@@ -217,7 +219,7 @@ describe('CustomTaggedPlateManipulation', () => {
       })
     })
 
-    describe("startAtTagInvalidFeedback:", () => {
+    describe('startAtTagInvalidFeedback:', () => {
       it('returns empty string if the entered number is null', () => {
         const wrapper = wrapperFactory(api)
 
@@ -278,7 +280,7 @@ describe('CustomTaggedPlateManipulation', () => {
     })
   })
 
-  describe("#rendering tests:", () => {
+  describe('#rendering tests:', () => {
     it('renders a tag plate scan component', () => {
       const wrapper = wrapperFactory(api)
 
@@ -301,16 +303,16 @@ describe('CustomTaggedPlateManipulation', () => {
       expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
     })
 
-    it('renders a by pool or plate select dropdown', () => {
+    it('renders a walking by select dropdown', () => {
       const wrapper = wrapperFactory(api)
 
-      expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
+      expect(wrapper.find('#walking_by_options').exists()).toBe(true)
     })
 
-    it('renders a by rows or columns select dropdown', () => {
+    it('renders a direction select dropdown', () => {
       const wrapper = wrapperFactory(api)
 
-      expect(wrapper.find('#by_rows_columns').exists()).toBe(true)
+      expect(wrapper.find('#direction_options').exists()).toBe(true)
     })
 
     it('renders an offset tags by select number dropdown', () => {
@@ -324,7 +326,7 @@ describe('CustomTaggedPlateManipulation', () => {
     // })
   })
 
-  describe("#integration tests:", () => {
+  describe('#integration tests:', () => {
     it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
       const wrapper = wrapperFactory(api)
 
@@ -402,16 +404,16 @@ describe('CustomTaggedPlateManipulation', () => {
       const wrapper = wrapperFactory(api)
       const emitted = wrapper.emitted()
 
-      expect(wrapper.find('#by_pool_plate_options').exists()).toBe(true)
+      expect(wrapper.find('#walking_by_options').exists()).toBe(true)
 
-      const input = wrapper.find('#by_pool_plate_options')
-      const option = input.find('option[value="by_plate_fixed"]')
+      const input = wrapper.find('#walking_by_options')
+      const option = input.find('option[value="wells of plate"]')
       option.setSelected()
       input.trigger('input')
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(
-        [{'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'by_plate_fixed','direction':'by_rows','startAtTagNumber':null}]
+        [{'tagPlate':null,'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'wells of plate','direction':'row','startAtTagNumber':null}]
       )
     })
   })

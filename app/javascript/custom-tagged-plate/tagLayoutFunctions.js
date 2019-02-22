@@ -63,13 +63,13 @@ function compareWellsByColumn(wellA, wellB) {
 }
 
 const walkingByFunctions = {
-  'by_pool': byPool,
-  'by_plate_seq': byPlateSeq,
-  'by_plate_fixed': byPlateFixed
+  'wells in pools': byPool,
+  'manual by plate': byPlateSeq,
+  'wells of plate': byPlateFixed
 }
 const directionFunctions = {
-  'by_rows': byRows,
-  'by_columns': byColumns
+  'row': byRows,
+  'column': byColumns
 }
 
 const calculateTagLayout = function (data) {

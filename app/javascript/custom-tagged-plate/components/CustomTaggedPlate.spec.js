@@ -2,6 +2,10 @@
 import { shallowMount } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import localVue from 'test_support/base_vue.js'
+import MockAdapter from 'axios-mock-adapter'
+import flushPromises from 'flush-promises'
+// import mockApi from 'test_support/mock_api'
+// import { jsonCollectionFactory } from 'test_support/factories'
 
 describe('CustomTaggedPlate', () => {
   const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
@@ -198,22 +202,52 @@ describe('CustomTaggedPlate', () => {
       poolIndex: 1
     }
   }
+  const goodQcableData = {
+    plate: {
+      id:'1',
+      uuid: 'tag-plate-uuid',
+      state:'available',
+      labware_barcode: {
+        human_barcode: 'TG12345678'
+      },
+      lot:{
+        id:'1',
+        tag_layout_template:{
+          id:'1',
+          uuid: 'tag-template-uuid',
+          direction:'row',
+          walking_by:'wells of plate',
+          tag_group:{
+            id:'1',
+            name:'i7 example tag group 1',
+          },
+          tag2_group:{
+            id:'2',
+            name:'i5 example tag group 2',
+          }
+        }
+      }
+    },
+    state: 'valid'
+  }
 
+  const mockLocation = {}
   const wrapperFactory = function() {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
         purposeUuid: '',
         targetUrl: '',
-        parentUuid: plateUuid
+        parentUuid: plateUuid,
+        locationObj: mockLocation
       },
       localVue
     })
   }
 
-  describe("#computed:", () => {
-    describe("numberOfRows:", () => {
-      it('returns null by default', () => {
+  describe('#computed:', () => {
+    describe('numberOfRows:', () => {
+      it('returns null rows by default', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.numberOfRows).toEqual(undefined)
@@ -228,8 +262,8 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("numberOfColumns:", () => {
-      it('returns null by default', () => {
+    describe('numberOfColumns:', () => {
+      it('returns null columns by default', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.numberOfColumns).toEqual(undefined)
@@ -244,7 +278,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("parentWells:", () => {
+    describe('parentWells:', () => {
       it('returns empty object by default', () => {
         const wrapper = wrapperFactory()
 
@@ -288,7 +322,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("childWells:", () => {
+    describe('childWells:', () => {
       it('returns empty object if parent wells does not exist', () => {
         const wrapper = wrapperFactory()
 
@@ -310,8 +344,8 @@ describe('CustomTaggedPlate', () => {
           parentPlate: goodParentPlate,
           tagGroupsList: goodTagGroupsList,
           tag1GroupId: 1,
-          walkingBy: 'by_plate_seq',
-          direction: 'by_columns',
+          walkingBy: 'manual by plate',
+          direction: 'column',
           startAtTagNumber: 0
         })
 
@@ -319,14 +353,14 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("tag1GroupOptions:", () => {
-      it('returns empty array if tag groups list empty', () => {
+    describe('tag1GroupOptions:', () => {
+      it('returns empty array for tag 1 groups if tag groups list empty', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.tag1GroupOptions).toEqual([])
       })
 
-      it('returns valid array if tag groups list set', () => {
+      it('returns valid array of tag 1 groups if tag groups list set', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({ tagGroupsList: goodTagGroupsList })
@@ -340,14 +374,14 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("tag2GroupOptions:", () => {
-      it('returns empty array if tag groups list empty', () => {
+    describe('tag2GroupOptions:', () => {
+      it('returns empty array for tag 2 groups if tag groups list empty', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.tag2GroupOptions).toEqual([])
       })
 
-      it('returns valid array if tag groups list set', () => {
+      it('returns valid array of tag 2 groups if tag groups list set', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({ tagGroupsList: goodTagGroupsList })
@@ -362,7 +396,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("buttonText:", () => {
+    describe('buttonText:', () => {
       it('returns the correct text depending on state', () => {
         const wrapper = wrapperFactory()
 
@@ -372,7 +406,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("buttonStyle:", () => {
+    describe('buttonStyle:', () => {
       it('returns the correct style depending on state', () => {
         const wrapper = wrapperFactory()
 
@@ -382,7 +416,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("buttonDisabled:", () => {
+    describe('buttonDisabled:', () => {
       it('disables the submit button depending on state', () => {
         const wrapper = wrapperFactory()
 
@@ -392,7 +426,7 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("numberOfTags:", () => {
+    describe('numberOfTags:', () => {
       it('returns zero if the tag group list is not set', () => {
         const wrapper = wrapperFactory()
 
@@ -430,11 +464,11 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe("numberOfTargetWells:", () => {
+    describe('numberOfTargetWells:', () => {
       it('returns zero if no parent plate exists', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ walkingBy: 'by_plate_seq' })
+        wrapper.setData({ walkingBy: 'manual by plate' })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(0)
       })
@@ -452,7 +486,7 @@ describe('CustomTaggedPlate', () => {
 
         wrapper.setData({
           parentPlate: goodParentPlate,
-          walkingBy: 'by_plate_fixed'
+          walkingBy: 'wells of plate'
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(4)
@@ -463,7 +497,7 @@ describe('CustomTaggedPlate', () => {
 
         wrapper.setData({
           parentPlate: goodParentPlateSequential,
-          walkingBy: 'by_plate_seq'
+          walkingBy: 'manual by plate'
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(3)
@@ -474,7 +508,7 @@ describe('CustomTaggedPlate', () => {
 
         wrapper.setData({
           parentPlate: goodParentPlateWithPools,
-          walkingBy: 'by_pool'
+          walkingBy: 'wells in pools'
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(3)
@@ -482,25 +516,25 @@ describe('CustomTaggedPlate', () => {
     })
   })
 
-  // describe("#rendering tests:", () => {
-    // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
-    // }
+  // describe('#rendering tests:', () => {
+  // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
+  // }
 
-    // it('renders a plate panel', async () => {
-    //   let mock = new MockAdapter(localVue.prototype.$axios)
-    //   mock.onGet('/plates?filter[uuid]=PARN_UUID_1234&limit=1&include=wells.aliquots').reply(200, {
-    //     expectedResponse
-    //   })
+  // it('renders a plate panel', async () => {
+  //   let mock = new MockAdapter(localVue.prototype.$axios)
+  //   mock.onGet('/plates?filter[uuid]=PARN_UUID_1234&limit=1&include=wells.aliquots').reply(200, {
+  //     expectedResponse
+  //   })
 
-    //   const wrapper = wrapperFactory()
+  //   const wrapper = wrapperFactory()
 
-    //   await flushPromises()
+  //   await flushPromises()
 
-    //   expect(wrapper.find('table.plate-view').exists()).toBe(true)
-    // })
+  //   expect(wrapper.find('table.plate-view').exists()).toBe(true)
+  // })
   // })
 
-  describe("#integration tests:", () => {
+  describe('#integration tests:', () => {
     // it('disables creation if there are no source plate sample wells', () => {
 
     // it('sets the tag groups if a valid plate is scanned'), () => {
@@ -513,60 +547,72 @@ describe('CustomTaggedPlate', () => {
 
     // it('disables creation if tag clashes are disabled', () => {
 
-    // it('sends a post request when the create plate button is clicked', async () => {
-    //   let mock = new MockAdapter(localVue.prototype.$axios)
+    it('sends a post request when the create plate button is clicked', async () => {
+      // const devourApi = mockApi()
 
-    //   // const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
+      // devourApi.mockGet('tag_groups',{}, goodTagGroups)
 
-    //   const wrapper = wrapperFactory()
+      let mock = new MockAdapter(localVue.prototype.$axios)
 
-    //   wrapper.setData({
-    //     key: 'value',
-    //     key: 'value',
-    //     key: 'value',
-    //     key: 'value',
-    //     key: 'value',
-    //   })
+      const wrapper = wrapperFactory()
 
-    //   const expectedPayload = {
-    //     plate: {
-    //       purpose_uuid: 'test',
-    //       parent_uuid: 'plate-uuid',
-    //       user_uuid: 'user-uuid',
-    //       tag_plate_barcode: 'TG12345678',
-    //       tag_plate: {
-    //         asset_uuid: 'tag-plate-uuid',
-    //         template_uuid: 'tag-template-uuid',
-    //         state: 'tag-plate-state'
-    //       },
-    //       tag_layout: {
-    //         user: 'user-uuid',
-    //         tag_group: 'tag-group-uuid',
-    //         tag2_group: 'tag2-group-uuid',
-    //         direction: 'column',
-    //         walking_by: 'manual by plate',
-    //         initial_tag: '1',
-    //         substitutions: {},
-    //         tags_per_well: 1
-    //       }
-    //     }
-    //   }
+      wrapper.setProps({
+        purposeUuid: 'purpose-uuid',
+        targetUrl: 'example/example',
+        parentUuid: 'parent-plate-uuid'
+      })
 
-    //   mockLocation.href = null
-    //   mock.onPost().reply((config) =>{
-    //     expect(config.url).toEqual('example/example')
-    //     expect(config.data).toEqual(JSON.stringify(expectedPayload))
-    //     return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
-    //   })
+      wrapper.setData({
+        tagPlate: goodQcableData.plate,
+        tag1GroupId: 1,
+        tag2GroupId: 2,
+        direction: 'column',
+        walkingBy: 'manual by plate',
+        startAtTagNumber: 1,
+        // { 1:2,5:8, etc }
+        tagSubstitutions: {},
+        // from purpose 1 or 4
+        tagsPerWell: 1
+      })
 
-    //   //  wrapper.vm.createPlate()
-    //   wrapper.find('#custom_tagged_plate_submit_button').trigger('click')
+      const expectedPayload = {
+        plate: {
+          purpose_uuid: 'purpose-uuid',
+          parent_uuid: 'parent-plate-uuid',
+          // user_uuid: 'user-uuid',
+          tag_layout: {
+            // user: 'user-uuid',
+            tag_group: 1,
+            tag2_group: 2,
+            direction: 'column',
+            walking_by: 'manual by plate',
+            initial_tag: 0,
+            substitutions: {},
+            tags_per_well: 1
+          },
+          tag_plate_barcode: 'TG12345678',
+          tag_plate: {
+            asset_uuid: 'tag-plate-uuid',
+            template_uuid: 'tag-template-uuid',
+            state: 'available'
+          }
+        }
+      }
 
-    //   await flushPromises()
+      mockLocation.href = null
+      mock.onPost().reply((config) =>{
+        expect(config.url).toEqual('example/example')
+        expect(config.data).toEqual(JSON.stringify(expectedPayload))
+        return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
+      })
 
-    //   expect(mockLocation.href).toEqual('http://wwww.example.com')
-    // })
+      // to click the button we need to mount rather than shallowMount, but then we run into issues with mocking other database calls
+      wrapper.vm.createPlate()
+      // wrapper.find('#custom_tagged_plate_submit_button').trigger('click')
 
+      await flushPromises()
 
+      expect(mockLocation.href).toEqual('http://wwww.example.com')
+    })
   })
 })

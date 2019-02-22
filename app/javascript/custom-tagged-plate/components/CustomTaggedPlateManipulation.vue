@@ -55,10 +55,10 @@
     <b-row class="form-group form-row">
       <b-col>
         <!-- by pool/plate seq/plate fixed select dropdown -->
-        <b-form-group id="by_pool_plate_options_group"
-                      label="By Pool/Plate Option:"
-                      label-for="by_pool_plate_options">
-          <b-form-select id="by_pool_plate_options"
+        <b-form-group id="walking_by_options_group"
+                      label="Walking By Options:"
+                      label-for="walking_by_options">
+          <b-form-select id="walking_by_options"
                         :options="walkingByOptions"
                         v-model="walkingBy"
                         @input="updateTagParams">
@@ -67,10 +67,10 @@
       </b-col>
       <b-col>
         <!-- in rows/columns select dropdown -->
-        <b-form-group id="by_rows_columns_group"
-                      label="By Rows/Columns:"
-                      label-for="by_rows_columns">
-          <b-form-select id="by_rows_columns"
+        <b-form-group id="direction_options_group"
+                      label="Directions Options:"
+                      label-for="direction_options">
+          <b-form-select id="direction_options"
                         :options="directionOptions"
                         v-model="direction"
                         @input="updateTagParams">
@@ -131,8 +131,8 @@
         tagPlateScanDisabled: false,
         tag1GroupId: null,
         tag2GroupId: null,
-        walkingBy: 'by_plate_seq',
-        direction: 'by_rows',
+        walkingBy: 'manual by plate',
+        direction: 'row',
         tagsPerWellOption: null,
         startAtTagMin: 1,
         startAtTagStep: 1,
@@ -146,16 +146,16 @@
       // TODO change values to match sequencescape
       walkingByOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Please select a by Pool/Plate Option...' },
-          { value: 'by_pool', text: 'By Pool' },
-          { value: 'by_plate_seq', text: 'By Plate (Sequential)' },
-          { value: 'by_plate_fixed', text: 'By Plate (Fixed)' }
+          { value: 'wells in pools', text: 'By Pool' },
+          { value: 'manual by plate', text: 'By Plate (Sequential)' },
+          { value: 'wells of plate', text: 'By Plate (Fixed)' }
         ]}
       },
       // TODO change values to match sequencescape
       directionOptions: { type: Array, default: () =>{ return [
           { value: null, text: 'Select a by Row/Column Option...' },
-          { value: 'by_rows', text: 'By Rows' },
-          { value: 'by_columns', text: 'By Columns' }
+          { value: 'row', text: 'By Rows' },
+          { value: 'column', text: 'By Columns' }
         ]}
       },
       numberOfTags: { type: Number, default: 0 },
@@ -222,6 +222,7 @@
       },
       updateTagParams(_value) {
         const updatedData = {
+          tagPlate: this.tagPlate,
           tag1GroupId: this.tag1GroupId,
           tag2GroupId: this.tag2GroupId,
           walkingBy: this.walkingBy,
