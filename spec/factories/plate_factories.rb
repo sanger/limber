@@ -35,7 +35,7 @@ FactoryBot.define do
           create well_factory, location: location,
                                state: well_states[i] || state,
                                outer_request: outer_requests[i],
-                               downstream_assets: transfer_targets[location],
+                               downstream_tubes: transfer_targets[location],
                                uuid: well_uuid_result % location,
                                aliquot_count: outer_requests[i] ? 1 : 0
         end

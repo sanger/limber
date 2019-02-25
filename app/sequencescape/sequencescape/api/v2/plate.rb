@@ -8,6 +8,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate' # Having issues with polymorphism, temporary class
+  has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube' # Having issues with polymorphism, temporary class
   has_one :purpose
 
   property :created_at, type: :time
@@ -16,8 +18,9 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
+    { child_plates: :purpose },
     { wells: [
-      :downstream_assets,
+      :downstream_tubes,
       {
         requests_as_source: %w[request_type primer_panel pre_capture_pool],
         aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]

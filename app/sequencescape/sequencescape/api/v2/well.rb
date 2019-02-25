@@ -5,6 +5,9 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :requests_as_target, class_name: 'Sequencescape::Api::V2::Request'
   has_many :downstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
+  has_many :downstream_tubes, class_name: 'Sequencescape::Api::V2::Tube'
+  has_many :downstream_wells, class_name: 'Sequencescape::Api::V2::Well'
+  has_many :downstream_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :aliquots
 
   def latest_concentration
@@ -93,9 +96,5 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def pool_id
     submission_ids.first
-  end
-
-  def downstream_tubes
-    downstream_assets.select(&:tube?)
   end
 end

@@ -1,11 +1,9 @@
 <% presenter.tubes_and_sources do |tubes_and_sources| %>
   <div class="tube-list">
-
-  <%= render partial: 'labware/pooled_tube',
-             collection: tubes_and_sources,
-             locals: { size: presenter.size },
-             as: :tube
-  %>
-
+    <%= render partial: 'labware/pooled_tube',
+               collection: tubes_and_sources,
+               locals: { size: presenter.size },
+               as: :tube
+    %>
   </div>
 <% end %>

@@ -40,7 +40,7 @@ FactoryBot.define do
       requests_as_source { [] }
       requests_as_target { [] }
       library_state { 'pending' }
-      downstream_assets { [] }
+      downstream_tubes { [] }
     end
 
     position { { 'name' => location } }
@@ -52,7 +52,7 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(well, :aliquots).and_return(evaluator.aliquots || [])
       RSpec::Mocks.allow_message(well, :requests_as_source).and_return(evaluator.requests_as_source || [])
       RSpec::Mocks.allow_message(well, :requests_as_target).and_return(evaluator.requests_as_target || [])
-      RSpec::Mocks.allow_message(well, :downstream_assets).and_return(evaluator.downstream_assets || [])
+      RSpec::Mocks.allow_message(well, :downstream_tubes).and_return(evaluator.downstream_tubes || [])
     end
 
     factory :v2_stock_well do

@@ -48,7 +48,7 @@ module Presenters
     end
 
     def well_failing_applicable?
-      well_failure_states.include?(state.to_sym)
+      allow_well_failure_in_states.include?(state.to_sym)
     end
 
     def summary
