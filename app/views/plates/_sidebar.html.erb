@@ -1,6 +1,6 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
-  <% presenter.control_tube_display do %>
+  <% presenter.tubes_and_sources do %>
     <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
 

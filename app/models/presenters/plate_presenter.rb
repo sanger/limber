@@ -41,6 +41,7 @@ class Presenters::PlatePresenter
 
   delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
   delegate :pool_index, to: :pools
+  delegate :tube_labels, to: :tubes_and_sources
 
   alias plate_to_walk labware
   # Purpose returns the plate or tube purpose of the labware.
@@ -66,23 +67,14 @@ class Presenters::PlatePresenter
     label_class.constantize.new(labware)
   end
 
-  def tube_labels
-    # Optimization: To avoid needing to load in the tube aliquots, we use the transfers into the
-    # tube to work out the pool size. This information is already available. Two values are different
-    # for ISC though. TODO: MUST RE-JIG
-    tubes_and_sources.map { |tube| Labels::TubeLabel.new(tube, pool_size: tube.pool_size) }
-  end
-
-  def control_tube_display
-    yield if labware.transfers_to_tubes?
-  end
-
   def labware_form_details(view)
     { url: view.limber_plate_path(labware), as: :plate }
   end
 
   def tubes_and_sources
     @tubes_and_sources ||= Presenters::TubesWithSources.build(wells: wells, pools: pools)
+    yield(@tubes_and_sources) if block_given? && @tubes_and_sources.tubes?
+    @tubes_and_sources
   end
 
   def csv_file_links

@@ -104,14 +104,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     purpose_names.include?(purpose.name)
   end
 
-  def tubes
-    wells.flat_map(&:downstream_tubes).uniq
-  end
-
-  def transfers_to_tubes?
-    tubes.present?
-  end
-
   def pcr_cycles
     active_requests.map(&:pcr_cycles).compact.uniq
   end
