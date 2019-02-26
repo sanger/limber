@@ -6,7 +6,7 @@
 # @author Genome Research Ltd.
 #
 class Limber::Plate < Sequencescape::Plate
-  delegate :number_of_pools, :pcr_cycles, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
+  delegate :number_of_pools, :library_type_name, :insert_size, :ready_for_automatic_pooling?,
            :ready_for_custom_pooling?, :submissions, :primer_panel,
            to: :pools_info
 
