@@ -4,7 +4,7 @@
       <b-col>
           <b-form-group id="tag_plate_scan_group"
                         label="Scan in the tag plate you wish to use here...">
-            <!-- TODO scan plate, should in this case lookup a 'qcable' with barcode in a state of 'available' or 'exhausted' -->
+            <!-- scan plate should in this case lookup a 'qcable' with barcode in a state of 'available' or 'exhausted' -->
             <!-- possible qcable states 'failed','passed','exhausted','destroyed','created','available','pending','qc_in_progress' -->
             <lb-plate-scan id="tag_plate_scan"
                            :api="api"

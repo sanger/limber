@@ -281,6 +281,12 @@ describe('CustomTaggedPlateManipulation', () => {
   })
 
   describe('#rendering tests:', () => {
+    it('renders a vue instance', () => {
+      const wrapper = wrapperFactory(api)
+
+      expect(wrapper.isVueInstance()).toBe(true)
+    })
+
     it('renders a tag plate scan component', () => {
       const wrapper = wrapperFactory(api)
 

@@ -1,9 +1,10 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import localVue from 'test_support/base_vue.js'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
+import Plate from 'shared/components/Plate'
 // import mockApi from 'test_support/mock_api'
 // import { jsonCollectionFactory } from 'test_support/factories'
 
@@ -516,23 +517,65 @@ describe('CustomTaggedPlate', () => {
     })
   })
 
-  // describe('#rendering tests:', () => {
-  // it('renders a loading modal whilst searching for the parent plate and tag groups', () => {
-  // }
+  describe('#rendering tests:', () => {
+    it('renders a vue instance', () => {
+      const wrapper = wrapperFactory()
 
-  // it('renders a plate panel', async () => {
-  //   let mock = new MockAdapter(localVue.prototype.$axios)
-  //   mock.onGet('/plates?filter[uuid]=PARN_UUID_1234&limit=1&include=wells.aliquots').reply(200, {
-  //     expectedResponse
-  //   })
+      expect(wrapper.isVueInstance()).toBe(true)
+    })
 
-  //   const wrapper = wrapperFactory()
+    // it('renders a loading modal whilst downloading the parent plate details', () => {
+    //   const wrapper = wrapperFactory()
 
-  //   await flushPromises()
+    //   wrapper.setData({ parentPlate: null })
 
-  //   expect(wrapper.find('table.plate-view').exists()).toBe(true)
-  // })
-  // })
+    //   expect(wrapper.find('span.modal-message').exists()).toBe(true)
+    // })
+
+    // it('renders a loading modal whilst downloading the tag groups', () => {
+    //   const wrapper = wrapperFactory()
+
+    //   wrapper.setData({ tagGroupsList: null })
+
+    //   expect(wrapper.find('span.modal-message').exists()).toBe(true)
+    // })
+
+    it('renders child components', async () => {
+      const wrapper = mount(CustomTaggedPlate, {
+        propsData: {
+          sequencescapeApi: 'http://localhost:3000/api/v2',
+          purposeUuid: '',
+          targetUrl: '',
+          parentUuid: plateUuid,
+          tagsPerWell: 1,
+          locationObj: mockLocation
+        },
+        stubs: {
+          'Plate': '<table class="plate-view"></table>',
+          'CustomTaggedPlateManipulation': '<fieldset class="b-form-group"></fieldset>'
+        },
+        localVue
+      })
+
+      wrapper.setData({
+        parentPlate: goodParentPlate,
+        tagGroupsList: goodTagGroupsList
+      })
+
+      expect(wrapper.find('table.plate-view').exists()).toBe(true)
+      expect(wrapper.find('fieldset.b-form-group').exists()).toBe(true)
+    })
+
+    it('renders a submit button', async () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
+      await flushPromises()
+
+      expect(wrapper.find('#custom_tagged_plate_submit_button').exists()).toBe(true)
+    })
+  })
 
   describe('#integration tests:', () => {
     // it('disables creation if there are no source plate sample wells', () => {
@@ -548,10 +591,6 @@ describe('CustomTaggedPlate', () => {
     // it('disables creation if tag clashes are disabled', () => {
 
     it('sends a post request when the create plate button is clicked', async () => {
-      // const devourApi = mockApi()
-
-      // devourApi.mockGet('tag_groups',{}, goodTagGroups)
-
       let mock = new MockAdapter(localVue.prototype.$axios)
 
       const wrapper = wrapperFactory()

@@ -94,7 +94,6 @@
             return
           } else {
             if(data['state'] === 'valid') {
-              // TODO more defensive checks here? or in parent plate lookup validate
               this.parentPlate = { ...data['asset']}
               this.state = 'loaded'
             } else {
