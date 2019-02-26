@@ -73,6 +73,17 @@ module LabwareCreators
       nil
     end
 
+    #
+    # The tags per well number.
+    # In most cases this will be the default 1 unless overriden in the purposes yml
+    # e.g. for Chromium plates in bespoke it is 4
+    #
+    # @return [<Number] The number of tags per well.
+    #
+    def tags_per_well
+      purpose_config.fetch(:tags_per_well, 1)
+    end
+
     private
 
     def transfer_hash

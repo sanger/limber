@@ -29,11 +29,20 @@ LBB Ligation Tagged:
   - LBB Cherrypick
   :expected_request_types:
   - limber_pcr_free_bespoke
+LBB Chromium Tagged:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :parents:
+  - LBB Cherrypick
+  :expected_request_types:
   - limber_chromium_bespoke
+  :tags_per_well: 4
 LBB Lib-XP:
   :asset_type: plate
   :parents:
   - LBB Ligation Tagged
+  - LBB Chromium Tagged
 LBB Lib Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

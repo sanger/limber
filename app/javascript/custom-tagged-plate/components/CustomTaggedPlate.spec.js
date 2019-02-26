@@ -155,6 +155,7 @@ describe('CustomTaggedPlate', () => {
   const goodTagGroupsList = {
     1: {
       id: '1',
+      uuid: 'tag-1-group-uuid',
       name: 'Tag Group 1',
       tags: [
         { index: 1, oligo: 'CTAGCTAG' },
@@ -167,6 +168,7 @@ describe('CustomTaggedPlate', () => {
     },
     2: {
       id: '2',
+      uuid: 'tag-2-group-uuid',
       name: 'Tag Group 2',
       tags: [
         { index: 1, oligo: 'CCTTAAGG' },
@@ -240,6 +242,7 @@ describe('CustomTaggedPlate', () => {
         purposeUuid: '',
         targetUrl: '',
         parentUuid: plateUuid,
+        tagsPerWell: 1,
         locationObj: mockLocation
       },
       localVue
@@ -598,20 +601,20 @@ describe('CustomTaggedPlate', () => {
       wrapper.setProps({
         purposeUuid: 'purpose-uuid',
         targetUrl: 'example/example',
-        parentUuid: 'parent-plate-uuid'
+        parentUuid: 'parent-plate-uuid',
+        tagsPerWell: 1
       })
 
       wrapper.setData({
         tagPlate: goodQcableData.plate,
+        tagGroupsList: goodTagGroupsList,
         tag1GroupId: 1,
         tag2GroupId: 2,
         direction: 'column',
         walkingBy: 'manual by plate',
         startAtTagNumber: 1,
         // { 1:2,5:8, etc }
-        tagSubstitutions: {},
-        // from purpose 1 or 4
-        tagsPerWell: 1
+        tagSubstitutions: {}
       })
 
       const expectedPayload = {
@@ -621,8 +624,8 @@ describe('CustomTaggedPlate', () => {
           // user_uuid: 'user-uuid',
           tag_layout: {
             // user: 'user-uuid',
-            tag_group: 1,
-            tag2_group: 2,
+            tag_group: 'tag-1-group-uuid',
+            tag2_group: 'tag-2-group-uuid',
             direction: 'column',
             walking_by: 'manual by plate',
             initial_tag: 0,
@@ -645,9 +648,8 @@ describe('CustomTaggedPlate', () => {
         return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
       })
 
-      // to click the button we need to mount rather than shallowMount, but then we run into issues with mocking other database calls
+      // to click the button we would need to mount rather than shallowMount, but then we run into issues with mocking other database calls
       wrapper.vm.createPlate()
-      // wrapper.find('#custom_tagged_plate_submit_button').trigger('click')
 
       await flushPromises()
 

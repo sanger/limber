@@ -105,11 +105,11 @@
         <b-form-group id="tags_per_well_group"
                       label="Tags per well:"
                       label-for="tags_per_well">
-          <b-form-select id="tags_per_well"
-                        :options="tagsPerWellOptions"
-                        v-model="tagsPerWellOption"
-                        @input="updateTagParams">
-          </b-form-select>
+          <b-form-input id="tags_per_well"
+                        type="number"
+                        v-model="tagsPerWell"
+                        :disabled="true">
+          </b-form-input>
         </b-form-group>
       </b-col>
     </b-row>
@@ -133,7 +133,6 @@
         tag2GroupId: null,
         walkingBy: 'manual by plate',
         direction: 'row',
-        tagsPerWellOption: null,
         startAtTagMin: 1,
         startAtTagStep: 1,
         startAtTagNumber: null
@@ -160,13 +159,7 @@
       },
       numberOfTags: { type: Number, default: 0 },
       numberOfTargetWells: { type: Number, default: 0 },
-      // TODO Tags per well should be fixed absed on plate purpose (mostly 1, chromium 4)
-      tagsPerWellOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Select how many tags per well...' },
-          { value: 1, text: '1' },
-          { value: 4, text: '4' }
-        ]}
-      },
+      tagsPerWell: { type: Number, default: 1 }
     },
     methods: {
       updateTagPlateScanDisabled() {

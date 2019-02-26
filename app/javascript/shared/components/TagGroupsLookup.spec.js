@@ -11,7 +11,7 @@ describe('TagGroupsLookup', () => {
     {
       id: '1',
       type: 'tag_groups',
-      uuid: '89a03a32-c65d-11df-a908-00144f01a001',
+      uuid: 'tag-1-group-uuid',
       name: 'Tag Group 1',
       tags: [
         {
@@ -26,7 +26,7 @@ describe('TagGroupsLookup', () => {
     },{
       id: '2',
       type: 'tag_groups',
-      uuid: '89a03a32-c65d-11df-a908-00144f01a002',
+      uuid: 'tag-2-group-uuid',
       name: 'Tag Group 2',
       tags: [
         {
@@ -43,6 +43,7 @@ describe('TagGroupsLookup', () => {
   const goodTagGroupsList = {
     1: {
       id: '1',
+      uuid: 'tag-1-group-uuid',
       name: 'Tag Group 1',
       tags: [
         {
@@ -57,6 +58,7 @@ describe('TagGroupsLookup', () => {
     },
     2: {
       id: '2',
+      uuid: 'tag-2-group-uuid',
       name: 'Tag Group 2',
       tags: [
         {

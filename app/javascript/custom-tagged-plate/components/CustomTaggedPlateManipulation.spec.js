@@ -1,5 +1,5 @@
 // Import the component being tested
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
@@ -31,7 +31,10 @@ describe('CustomTaggedPlateManipulation', () => {
           { value: null, text: 'Select a by Row/Column Option...' },
           { value: 'row', text: 'By Rows' },
           { value: 'column', text: 'By Columns' }
-        ]
+        ],
+        numberOfTags: 10,
+        numberOfTargetWells: 10,
+        tagsPerWell: 1
       },
       localVue
     })

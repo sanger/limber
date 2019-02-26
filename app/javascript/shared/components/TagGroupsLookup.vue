@@ -49,7 +49,7 @@
       extractTagGroupInfo: function (tagGroup) {
         // sort tags ascending by index (map id)
         let orderedTags = tagGroup.tags.sort(function(obj1, obj2) { return obj1.index - obj2.index })
-        this.tagGroupsList[tagGroup.id] = { 'id': tagGroup.id, 'name': tagGroup.name, 'tags': orderedTags }
+        this.tagGroupsList[tagGroup.id] = { 'id': tagGroup.id, 'uuid': tagGroup.uuid, 'name': tagGroup.name, 'tags': orderedTags }
       },
       apiError: function (err) {
         if (!err) {

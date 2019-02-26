@@ -28,6 +28,7 @@
                                                  :tag2GroupOptions="tag2GroupOptions"
                                                  :numberOfTags="numberOfTags"
                                                  :numberOfTargetWells="numberOfTargetWells"
+                                                 :tagsPerWell="tagsPerWell"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -75,8 +76,7 @@
         walkingBy: null,
         direction: null,
         startAtTagNumber: null,
-        tagSubstitutions: null, // { 1:2,5:8, etc }
-        tagsPerWell: null
+        tagSubstitutions: null // { 1:2,5:8, etc }
       }
     },
     props: {
@@ -84,6 +84,7 @@
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true },
+      tagsPerWell: { type: Number, required: true },
       locationObj: { default: () => { return location } }
     },
     methods: {
@@ -210,27 +211,23 @@
       createPlate() {
         this.state = 'busy'
 
-        // TODO do we need to do some validations first?
-        // TODO check tag plate state gets updated to exhausted
-
         let payload = {
           plate: {
             purpose_uuid: this.purposeUuid,
             parent_uuid: this.parentUuid,
-            // user_uuid: '?', // from where?
+            // TODO user_uuid: '?', // from where?
             tag_layout: {
-              // user: '?',  // from where?
-              tag_group: this.tag1GroupId, // uuid? or id?
-              tag2_group: this.tag2GroupId,
-              direction: this.direction, // needs to match sequencescape directions
-              walking_by: this.walkingBy, // meeds to match sequencescape walkingby
+              // TODO user: '?',  // from where?
+              tag_group: this.tagGroupsList[this.tag1GroupId].uuid,
+              tag2_group: this.tagGroupsList[this.tag2GroupId].uuid,
+              direction: this.direction,
+              walking_by: this.walkingBy,
               initial_tag: this.startAtTagNumber - 1, // initial tag is zero-based index of the tag within its group
               substitutions: {}, // { 1:2,5:8, etc }
-              tags_per_well: 1 // from purpose 1 or 4
+              tags_per_well: this.tagsPerWell
             }
           }
         }
-        debugger
         if(this.tagPlate) {
           payload.plate.tag_plate_barcode = this.tagPlate.labware_barcode.human_barcode // (want human_ or machine_ or ean13_ barcode?)
           payload.plate.tag_plate = {
