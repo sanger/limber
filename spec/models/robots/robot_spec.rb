@@ -28,11 +28,8 @@ RSpec.describe Robots::Robot do
   let(:metadata_uuid)               { SecureRandom.uuid }
   let(:custom_metadatum_collection) { json :custom_metdatum_collection, uuid: metadata_uuid }
 
-  let(:robot) { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
-
-  before(:each) do
-    Settings.robots[robot_id] = settings[:robots][robot_id]
-  end
+  let(:robot) { Robots::Robot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot_spec) { settings[:robots][robot_id] }
 
   describe '#verify' do
     subject { robot.verify(scanned_layout) }
@@ -41,7 +38,6 @@ RSpec.describe Robots::Robot do
       let(:robot_id) { 'robot_id' }
 
       before do
-        Settings.robots['robot_id'] = settings[:robots][:robot_id]
         Settings.purpose_uuids[source_purpose_name] = source_purpose_uuid
         Settings.purpose_uuids[target_purpose_name] = target_purpose_uuid
 
@@ -116,7 +112,6 @@ RSpec.describe Robots::Robot do
 
       before do
         Settings.purpose_uuids['Limber Cherrypicked'] = 'limber_cherrypicked_uuid'
-        Settings.robots['robot_id_2'] = settings[:robots][:robot_id_2]
         stub_asset_search('123', plate_json)
       end
 
@@ -205,7 +200,6 @@ RSpec.describe Robots::Robot do
     end
 
     before do
-      Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
       Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
       Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
       state_change_request

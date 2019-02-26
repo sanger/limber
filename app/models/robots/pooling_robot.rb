@@ -63,7 +63,7 @@ module Robots
           error(beds[bed_barcode], "Expected to contain #{expected_barcode} not #{scanned_barcode}") unless valid_plates[bed_barcode]
         end
       end
-      { beds: valid_plates, valid: error_messages.empty?, message: formatted_message }
+      Report.new(valid_plates, error_messages.empty?, formatted_message)
     end
 
     def bed_class(_bed)

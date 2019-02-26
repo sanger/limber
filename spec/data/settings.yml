@@ -90,5 +90,55 @@
           - started
         label: Bed 14
         target_state: passed
+  pooling_robot_id:
+    :name: Pooling Robot
+    :layout: bed
+    :beds:
+      'bed1_barcode':
+        :purpose: Parent Purpose
+        :states:
+        - passed
+        - qc_complete
+        :child: 'bed5_barcode'
+        :label: Bed 2
+      'bed2_barcode':
+        :purpose: Parent Purpose
+        :states:
+        - passed
+        - qc_complete
+        :child: 'bed5_barcode'
+        :label: Bed 5
+      'bed3_barcode':
+        :purpose: Parent Purpose
+        :states:
+        - passed
+        - qc_complete
+        :child: 'bed5_barcode'
+        :label: Bed 3
+      'bed4_barcode':
+        :purpose: Parent Purpose
+        :states:
+        - passed
+        - qc_complete
+        :child: 'bed5_barcode'
+        :label: Bed 6
+      'bed5_barcode':
+        :purpose: Child Purpose
+        :states:
+        - pending
+        - started
+        :parents:
+        - 'bed1_barcode'
+        - 'bed2_barcode'
+        - 'bed3_barcode'
+        - 'bed4_barcode'
+        - 'bed1_barcode'
+        - 'bed2_barcode'
+        - 'bed3_barcode'
+        - 'bed4_barcode'
+        :target_state: passed
+        :label: Bed 4
+    :destination_bed: 'bed5_barcode'
+    :class: Robots::PoolingRobot
 :locations: {}
 :qc_purposes: []
