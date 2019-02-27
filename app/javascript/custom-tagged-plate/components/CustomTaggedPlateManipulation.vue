@@ -212,8 +212,10 @@
     computed: {
       walkingByOptions: function () {
         if(this.tagsPerWell > 1) {
+          this.walkingBy = 'as group by plate'
           return [{ value: 'as group by plate', text: 'As Group By Plate' }]
         } else {
+          this.walkingBy = 'manual by plate'
           return [
             { value: null, text: 'Please select a by Walking By Option...' },
             { value: 'manual by pool', text: 'By Pool' },
@@ -223,6 +225,7 @@
         }
       },
       directionOptions: function () {
+        this.direction = 'row'
         return [
           { value: null, text: 'Please select a Direction Option...' },
           { value: 'row', text: 'By Rows' },

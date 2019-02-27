@@ -20,6 +20,11 @@ function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
   return tags[absIndex + offset].index
 }
 
+function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
+  if(!tags[relIndex + offset]) { return -1 }
+  return tags[relIndex + offset].index
+}
+
 function byRows(wells, plateDims, walker) {
   return wells.sort(compareWellsByRow).reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
@@ -83,7 +88,8 @@ function byInverseColumns(wells, plateDims, walker) {
 const walkingByFunctions = {
   'manual by pool': byPool,
   'manual by plate': byPlateSeq,
-  'wells of plate': byPlateFixed
+  'wells of plate': byPlateFixed,
+  'as group by plate': byGroupByPlate
 }
 const directionFunctions = {
   'row': byRows,
