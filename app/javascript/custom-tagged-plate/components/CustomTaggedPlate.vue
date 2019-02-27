@@ -329,33 +329,34 @@
         return wells
       },
       childWells: function () {
-        let newWells = {}
-
-        if(this.parentWells && this.parentWells !== {}) {
-          if(this.tagGroupsList) {
-            const data = {
-              wells: Object.values(this.parentWells),
-              plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
-              tag1Group: this.tagGroupsList[this.tag1GroupId],
-              tag2Group: this.tagGroupsList[this.tag2GroupId],
-              walkingBy: this.walkingBy,
-              direction: this.direction,
-              startAtTagNumber: this.startAtTagNumber
-            }
-
-            let tagLayout = calculateTagLayout(data)
-
-            if(tagLayout) {
-              newWells = this.applyTagIndexesToWells(tagLayout)
-            } else {
-              newWells = { ...this.parentWells }
-            }
-          } else {
-            newWells = { ...this.parentWells }
-          }
+        if(!this.parentWells || this.parentWells === {}) {
+          this.state = 'invalid'
+          return {}
         }
 
-        return newWells
+        if(!this.tagGroupsList || Object.keys(this.tagGroupsList).length === 0) {
+          this.state = 'invalid'
+          return { ...this.parentWells }
+        }
+
+        const data = {
+          wells: Object.values(this.parentWells),
+          plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
+          tag1Group: this.tagGroupsList[this.tag1GroupId],
+          tag2Group: this.tagGroupsList[this.tag2GroupId],
+          walkingBy: this.walkingBy,
+          direction: this.direction,
+          startAtTagNumber: this.startAtTagNumber
+        }
+
+        let tagLayout = calculateTagLayout(data)
+
+        if(tagLayout) {
+          return this.applyTagIndexesToWells(tagLayout)
+        }
+
+        this.state = 'invalid'
+        return { ...this.parentWells }
       },
       tag1GroupOptions: function () {
         let options = []

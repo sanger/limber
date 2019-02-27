@@ -138,7 +138,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
         expect(wrapper.vm.startAtTagMax).toBe(6)
         expect(wrapper.vm.startAtTagDisabled).toBe(false)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('Enter an offset value..')
+        expect(wrapper.vm.startAtTagPlaceholder).toBe('Select starting tag..')
       })
 
       it('returns a negative number if there are not enough tags', () => {

@@ -82,7 +82,7 @@
       <b-col>
         <!-- start at tag select dropdown -->
         <b-form-group id="start_at_tag_group"
-                      label="Start at tag number (offset):"
+                      label="Start at tag number:"
                       label-for="start_at_tag_input"
                       :invalid-feedback="startAtTagInvalidFeedback"
                       :valid-feedback="startAtTagValidFeedback"
@@ -266,37 +266,71 @@
         } else if(tagMax === 1) {
           phTxt = 'No spare tags..'
         } else {
-          phTxt = 'Enter an offset value..'
+          phTxt = 'Select starting tag..'
         }
 
         return phTxt
       },
-      startAtTagState() {
-        if(this.startAtTagNumber === null) { return null }
+      startAtTagState: function () {
+        if(this.startAtTagNumber === null || this.startAtTagNumber === undefined || this.startAtTagNumber === '') { return null }
         if(!this.startAtTagMax || this.startAtTagMax <= 1) { return null }
 
+        return this.startAtTagWithinLimits
+      },
+      startAtTagWithinLimits: function () {
         return ((this.startAtTagNumber >= this.startAtTagMin) &&
                 (this.startAtTagNumber <= this.startAtTagMax) &&
                 (this.startAtTagNumber % this.startAtTagStep === 0)) ? true : false
       },
-      startAtTagInvalidFeedback() {
-        const startAt = this.startAtTagNumber
-        const tagMax = this.startAtTagMax
-        const tagMin = this.startAtTagMin
-        const tagStep = this.startAtTagStep
+      startAtTagInvalidFeedback: function () {
+        if(!this.startAtTagMax || this.startAtTagMax <= 1) { return '' }
+        if(this.startAtTagNumber === null || this.startAtTagNumber === undefined || this.startAtTagNumber === '') { return '' }
 
-        if(!tagMax || tagMax <= 1) { return '' }
-        if(startAt === null) { return '' }
-        if(startAt < tagMin) { return 'Start must be greater than or equal to ' + tagMin }
-        if(startAt > tagMax) { return 'Start must be less than or equal to ' + tagMax }
-        if(startAt >= tagMin && startAt <= tagMax) {
-          if(startAt % tagStep !== 0) { return 'Start must be divisible by ' + tagStep }
-        }
+        let chk
+        chk = this.startAtTagCheckTooLow
+        if(!chk.valid) { return chk.message }
+
+        chk = this.startAtTagCheckTooHigh
+        if(!chk.valid) { return chk.message }
+
+        chk = this.startAtTagCheckStep
+        if(!chk.valid) { return chk.message }
 
         return ''
-
       },
-      startAtTagValidFeedback() {
+      startAtTagCheckTooLow: function () {
+        let ret = { valid: true, message: '' }
+
+        if(this.startAtTagNumber < this.startAtTagMin) {
+          ret.valid = false
+          ret.message = 'Start must be greater than or equal to ' + this.startAtTagMin
+        }
+
+        return ret
+      },
+      startAtTagCheckTooHigh: function () {
+        let ret = { valid: true, message: '' }
+
+        if(this.startAtTagNumber > this.startAtTagMax) {
+          ret.valid = false
+          ret.message = 'Start must be less than or equal to ' + this.startAtTagMax
+        }
+
+        return ret
+      },
+      startAtTagCheckStep: function () {
+        let ret = { valid: true, message: '' }
+
+        if(this.startAtTagNumber >= this.startAtTagMin && this.startAtTagNumber <= this.startAtTagMax) {
+          if(this.startAtTagNumber % this.startAtTagStep !== 0) {
+            ret.valid = false
+            ret.message = 'Start must be divisible by ' + this.startAtTagStep
+          }
+        }
+
+        return ret
+      },
+      startAtTagValidFeedback: function () {
         return this.startAtTagState === true ? 'Valid' : ''
       }
     },
