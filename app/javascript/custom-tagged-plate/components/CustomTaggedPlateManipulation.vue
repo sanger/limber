@@ -105,8 +105,8 @@
                       label="Tags per well:"
                       label-for="tags_per_well">
           <b-form-input id="tags_per_well"
-                        type="text"
-                        v-model="tagsPerWell"
+                        type="number"
+                        v-bind:value="tagsPerWell"
                         :disabled="true">
           </b-form-input>
         </b-form-group>
@@ -141,24 +141,9 @@
       api: { required: false },
       tag1GroupOptions: { type: Array },
       tag2GroupOptions: { type: Array },
-      walkingByOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Please select a by Walking By Option...' },
-          { value: 'manual by pool', text: 'By Pool' },
-          { value: 'manual by plate', text: 'By Plate (Sequential)' },
-          { value: 'wells of plate', text: 'By Plate (Fixed)' }
-        ]}
-      },
-      directionOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Please select a Direction Option...' },
-          { value: 'row', text: 'By Rows' },
-          { value: 'column', text: 'By Columns' },
-          { value: 'inverse row', text: 'By Inverse Rows' },
-          { value: 'inverse column', text: 'By Inverse Columns' }
-        ]}
-      },
       numberOfTags: { type: Number, default: 0 },
       numberOfTargetWells: { type: Number, default: 0 },
-      tagsPerWell: { type: String, default: '1' }
+      tagsPerWell: { type: Number, default: 1 }
     },
     methods: {
       updateTagPlateScanDisabled() {
@@ -225,6 +210,27 @@
       }
     },
     computed: {
+      walkingByOptions: function () {
+        if(this.tagsPerWell > 1) {
+          return [{ value: 'as group by plate', text: 'As Group By Plate' }]
+        } else {
+          return [
+            { value: null, text: 'Please select a by Walking By Option...' },
+            { value: 'manual by pool', text: 'By Pool' },
+            { value: 'manual by plate', text: 'By Plate (Sequential)' },
+            { value: 'wells of plate', text: 'By Plate (Fixed)' }
+          ]
+        }
+      },
+      directionOptions: function () {
+        return [
+          { value: null, text: 'Please select a Direction Option...' },
+          { value: 'row', text: 'By Rows' },
+          { value: 'column', text: 'By Columns' },
+          { value: 'inverse row', text: 'By Inverse Rows' },
+          { value: 'inverse column', text: 'By Inverse Columns' }
+        ]
+      },
       tagGroupsDisabled: function () {
         return (typeof this.tagPlate != "undefined" && this.tagPlate !== null)
       },

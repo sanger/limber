@@ -28,7 +28,7 @@
                                                  :tag2GroupOptions="tag2GroupOptions"
                                                  :numberOfTags="numberOfTags"
                                                  :numberOfTargetWells="numberOfTargetWells"
-                                                 :tagsPerWell="tagsPerWell"
+                                                 :tagsPerWell="tagsPerWellAsNumber"
                                                  @tagparamsupdated="tagParamsUpdated">
             </lb-custom-tagged-plate-manipulation>
             <div class="form-group form-row">
@@ -224,7 +224,7 @@
               walking_by: this.walkingBy,
               initial_tag: this.startAtTagNumber - 1, // initial tag is zero-based index of the tag within its group
               substitutions: {}, // { 1:2,5:8, etc }
-              tags_per_well: parseInt(this.tagsPerWell)
+              tags_per_well: this.tagsPerWellAsNumber
             }
           }
         }
@@ -280,6 +280,9 @@
         }
 
         return numCols
+      },
+      tagsPerWellAsNumber: function () {
+        return parseInt(this.tagsPerWell)
       },
       parentWells: function () {
         let wells = {}

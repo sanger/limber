@@ -21,22 +21,9 @@ describe('CustomTaggedPlateManipulation', () => {
           { value: 1, text: 'i5 example tag group 1' },
           { value: 2, text: 'i5 example tag group 2' }
         ],
-        walkingByOptions: [
-          { value: null, text: 'Please select a Walking By Option...' },
-          { value: 'manual by pool', text: 'By Pool' },
-          { value: 'manual by plate', text: 'By Plate (Sequential)' },
-          { value: 'wells of plate', text: 'By Plate (Fixed)' }
-        ],
-        directionOptions: [
-          { value: null, text: 'Select a Direction Option...' },
-          { value: 'row', text: 'By Rows' },
-          { value: 'column', text: 'By Columns' },
-          { value: 'inverse row', text: 'By Inverse Rows' },
-          { value: 'inverse column', text: 'By Inverse Columns' }
-        ],
         numberOfTags: 10,
         numberOfTargetWells: 10,
-        tagsPerWell: '1'
+        tagsPerWell: 1
       },
       localVue
     })
@@ -89,6 +76,32 @@ describe('CustomTaggedPlateManipulation', () => {
   }, nullQcable)
 
   describe('#computed function tests:', () => {
+    describe('walkingByOptions:', () => {
+      it('returns an array with the correct number of options for standard plates', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ tagsPerWell: 1 })
+
+        expect(wrapper.vm.walkingByOptions.length).toBe(4)
+      })
+
+      it('returns an array with the correct number of options for chromium plates', () => {
+        const wrapper = wrapperFactory(api)
+
+        wrapper.setProps({ tagsPerWell: 4 })
+
+        expect(wrapper.vm.walkingByOptions.length).toBe(1)
+      })
+    })
+
+    describe('directionOptions:', () => {
+      it('returns an array with the correct number of options', () => {
+        const wrapper = wrapperFactory(api)
+
+        expect(wrapper.vm.directionOptions.length).toBe(5)
+      })
+    })
+
     describe('tagGroupsDisabled:', () => {
       it('returns false if a tag plate has not been scanned', () => {
         const wrapper = wrapperFactory(api)

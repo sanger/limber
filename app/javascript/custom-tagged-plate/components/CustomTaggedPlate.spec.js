@@ -4,9 +4,6 @@ import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import localVue from 'test_support/base_vue.js'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
-import Plate from 'shared/components/Plate'
-// import mockApi from 'test_support/mock_api'
-// import { jsonCollectionFactory } from 'test_support/factories'
 
 describe('CustomTaggedPlate', () => {
   const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
@@ -279,6 +276,16 @@ describe('CustomTaggedPlate', () => {
         wrapper.setData({ parentPlate: goodParentPlate })
 
         expect(wrapper.vm.numberOfColumns).toEqual(12)
+      })
+    })
+
+    describe('tagsPerWellAsNumber:', () => {
+      it('returns a numeric version of the prop tags per well', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({ tagsPerWell: '4' })
+
+        expect(wrapper.vm.tagsPerWellAsNumber).toEqual(4)
       })
     })
 
