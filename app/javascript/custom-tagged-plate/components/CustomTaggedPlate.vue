@@ -208,6 +208,16 @@
 
         return numTargets
       },
+      calcNumTagsForGroupByPlate() {
+        let numTargets = 0
+
+        const parentWells = this.parentWells
+        Object.keys(parentWells).forEach(function (key) {
+          if(parentWells[key].aliquotCount > 0) { numTargets++ }
+        })
+
+        return numTargets
+      },
       createPlate() {
         this.state = 'busy'
 
@@ -395,6 +405,8 @@
             numTargets = Object.keys(this.parentWells).length
           } else if(this.walkingBy === 'manual by pool') {
             numTargets = this.calcNumTagsForPooledPlate()
+          } else if(this.walkingBy === 'as group by plate') {
+            numTargets = this.calcNumTagsForGroupByPlate()
           }
         }
         return numTargets
