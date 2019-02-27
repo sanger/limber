@@ -101,12 +101,11 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <!-- tags per well select dropdown -->
         <b-form-group id="tags_per_well_group"
                       label="Tags per well:"
                       label-for="tags_per_well">
           <b-form-input id="tags_per_well"
-                        type="number"
+                        type="text"
                         v-model="tagsPerWell"
                         :disabled="true">
           </b-form-input>
@@ -142,24 +141,24 @@
       api: { required: false },
       tag1GroupOptions: { type: Array },
       tag2GroupOptions: { type: Array },
-      // TODO change values to match sequencescape
       walkingByOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Please select a by Pool/Plate Option...' },
-          { value: 'wells in pools', text: 'By Pool' },
+          { value: null, text: 'Please select a by Walking By Option...' },
+          { value: 'manual by pool', text: 'By Pool' },
           { value: 'manual by plate', text: 'By Plate (Sequential)' },
           { value: 'wells of plate', text: 'By Plate (Fixed)' }
         ]}
       },
-      // TODO change values to match sequencescape
       directionOptions: { type: Array, default: () =>{ return [
-          { value: null, text: 'Select a by Row/Column Option...' },
+          { value: null, text: 'Please select a Direction Option...' },
           { value: 'row', text: 'By Rows' },
-          { value: 'column', text: 'By Columns' }
+          { value: 'column', text: 'By Columns' },
+          { value: 'inverse row', text: 'By Inverse Rows' },
+          { value: 'inverse column', text: 'By Inverse Columns' }
         ]}
       },
       numberOfTags: { type: Number, default: 0 },
       numberOfTargetWells: { type: Number, default: 0 },
-      tagsPerWell: { type: Number, default: 1 }
+      tagsPerWell: { type: String, default: '1' }
     },
     methods: {
       updateTagPlateScanDisabled() {

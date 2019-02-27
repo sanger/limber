@@ -242,13 +242,45 @@ describe('calculateTagLayout', () => {
     expect(response).toEqual(outputWells)
   })
 
+  it('builds the wells to tag index array for fixed plate by inverse column', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'wells of plate',
+      direction: 'inverse column',
+      startAtTagNumber: null
+    }
+    const outputWells = { 'A1': 12, 'B1': 11, 'C1': 10, 'A2':9, 'B2': 8, 'C2': 7, 'A3': 6, 'B3': 5, 'C3': 4, 'A4': 3, 'C4': 1 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for fixed plate by inverse row', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'wells of plate',
+      direction: 'inverse row',
+      startAtTagNumber: null
+    }
+    const outputWells = { 'A1': 12, 'B1': 8, 'C1': 4, 'A2': 11, 'B2': 7, 'C2': 3, 'A3': 10, 'B3': 6, 'C3': 2, 'A4': 9, 'C4': 1 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
   it('builds the wells to tag index array for by pool by column', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'wells in pools',
+      walkingBy: 'manual by pool',
       direction: 'column',
       startAtTagNumber: null
     }
@@ -264,11 +296,43 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'wells in pools',
+      walkingBy: 'manual by pool',
       direction: 'row',
       startAtTagNumber: null
     }
     const outputWells = { 'A1': 1, 'B1': 4, 'C1': 7, 'A2': 1, 'B2': 5, 'C2': 2, 'A3': 2, 'B3': 6, 'C3': 8, 'A4': 3, 'C4': 9 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for by pool by inverse column', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by pool',
+      direction: 'inverse column',
+      startAtTagNumber: null
+    }
+    const outputWells = { 'A1': 9, 'B1': 8, 'C1': 7, 'A2': 2, 'B2': 6, 'C2': 1, 'A3': 5, 'B3': 4, 'C3': 3, 'A4': 2, 'C4': 1 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for by pool by inverse row', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by pool',
+      direction: 'inverse row',
+      startAtTagNumber: null
+    }
+    const outputWells = { 'A1': 9, 'B1': 6, 'C1': 3, 'A2': 2, 'B2': 5, 'C2': 1, 'A3': 8, 'B3': 4, 'C3': 2, 'A4': 7, 'C4': 1 }
     const response = calculateTagLayout(data)
 
     expect(response).toEqual(outputWells)
@@ -306,6 +370,38 @@ describe('calculateTagLayout', () => {
     expect(response).toEqual(outputWells)
   })
 
+  it('builds the wells to tag index array for sequential plate by inverse column with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by plate',
+      direction: 'inverse column',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 15, 'B1': 14, 'C1': 13, 'A2': 12, 'B2': 11, 'C2': 10, 'A3': 9, 'B3': 8, 'C3': 7, 'A4': 6, 'C4': 5 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for sequential plate by inverse row with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by plate',
+      direction: 'inverse row',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 15, 'B1': 11, 'C1': 8, 'A2': 14, 'B2': 10, 'C2': 7, 'A3': 13, 'B3': 9, 'C3': 6, 'A4': 12, 'C4': 5 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
   it('builds the wells to tag index array for fixed plate by column with offset', () => {
     const data = {
       wells: inputWells,
@@ -338,13 +434,45 @@ describe('calculateTagLayout', () => {
     expect(response).toEqual(outputWells)
   })
 
+  it('builds the wells to tag index array for fixed plate by inverse column with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'wells of plate',
+      direction: 'inverse column',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 16, 'B1': 15, 'C1': 14, 'A2': 13, 'B2': 12, 'C2': 11, 'A3': 10, 'B3': 9, 'C3': 8, 'A4': 7, 'C4': 5 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for fixed plate by inverse row with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'wells of plate',
+      direction: 'inverse row',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 16, 'B1': 12, 'C1': 8, 'A2': 15, 'B2': 11, 'C2': 7, 'A3': 14, 'B3': 10, 'C3': 6, 'A4': 13, 'C4': 5 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
   it('builds the wells to tag index array for by pool by column with offset', () => {
     const data = {
       wells: inputWells,
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'wells in pools',
+      walkingBy: 'manual by pool',
       direction: 'column',
       startAtTagNumber: 5
     }
@@ -360,11 +488,43 @@ describe('calculateTagLayout', () => {
       plateDims: plateDims,
       tag1Group: inputTag1Group,
       tag2Group: inputTag2Group,
-      walkingBy: 'wells in pools',
+      walkingBy: 'manual by pool',
       direction: 'row',
       startAtTagNumber: 5
     }
     const outputWells = { 'A1': 5, 'B1': 8, 'C1': 11, 'A2': 5, 'B2': 9, 'C2': 6, 'A3': 6, 'B3': 10, 'C3': 12, 'A4': 7, 'C4': 13 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for by pool by inverse column with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by pool',
+      direction: 'inverse column',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 13, 'B1': 12, 'C1': 11, 'A2': 6, 'B2': 10, 'C2': 5, 'A3': 9, 'B3': 8, 'C3': 7, 'A4': 6, 'C4': 5 }
+    const response = calculateTagLayout(data)
+
+    expect(response).toEqual(outputWells)
+  })
+
+  it('builds the wells to tag index array for by pool by inverse row with offset', () => {
+    const data = {
+      wells: inputWells,
+      plateDims: plateDims,
+      tag1Group: inputTag1Group,
+      tag2Group: inputTag2Group,
+      walkingBy: 'manual by pool',
+      direction: 'inverse row',
+      startAtTagNumber: 5
+    }
+    const outputWells = { 'A1': 13, 'B1': 10, 'C1': 7, 'A2': 6, 'B2': 9, 'C2': 5, 'A3': 12, 'B3': 8, 'C3': 6, 'A4': 11, 'C4': 5 }
     const response = calculateTagLayout(data)
 
     expect(response).toEqual(outputWells)

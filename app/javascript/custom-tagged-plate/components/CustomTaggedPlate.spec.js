@@ -242,7 +242,7 @@ describe('CustomTaggedPlate', () => {
         purposeUuid: '',
         targetUrl: '',
         parentUuid: plateUuid,
-        tagsPerWell: 1,
+        tagsPerWell: '1',
         locationObj: mockLocation
       },
       localVue
@@ -512,7 +512,7 @@ describe('CustomTaggedPlate', () => {
 
         wrapper.setData({
           parentPlate: goodParentPlateWithPools,
-          walkingBy: 'wells in pools'
+          walkingBy: 'manual by pool'
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(3)
@@ -550,7 +550,7 @@ describe('CustomTaggedPlate', () => {
           purposeUuid: '',
           targetUrl: '',
           parentUuid: plateUuid,
-          tagsPerWell: 1,
+          tagsPerWell: '1',
           locationObj: mockLocation
         },
         stubs: {
@@ -602,7 +602,7 @@ describe('CustomTaggedPlate', () => {
         purposeUuid: 'purpose-uuid',
         targetUrl: 'example/example',
         parentUuid: 'parent-plate-uuid',
-        tagsPerWell: 1
+        tagsPerWell: '1'
       })
 
       wrapper.setData({

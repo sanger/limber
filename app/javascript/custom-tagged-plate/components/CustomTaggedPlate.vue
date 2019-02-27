@@ -84,7 +84,7 @@
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
       parentUuid: { type: String, required: true },
-      tagsPerWell: { type: Number, required: true },
+      tagsPerWell: { type: String, required: true },
       locationObj: { default: () => { return location } }
     },
     methods: {
@@ -224,7 +224,7 @@
               walking_by: this.walkingBy,
               initial_tag: this.startAtTagNumber - 1, // initial tag is zero-based index of the tag within its group
               substitutions: {}, // { 1:2,5:8, etc }
-              tags_per_well: this.tagsPerWell
+              tags_per_well: parseInt(this.tagsPerWell)
             }
           }
         }
@@ -292,7 +292,7 @@
         this.parentPlate.wells.forEach((well) => {
           const wellPosn = well.position.name
 
-          if(!well.aliquots) {
+          if(!well.aliquots || well.aliquots.length === 0) {
             wells[wellPosn] = { position: wellPosn, aliquotCount: 0, poolIndex: null }
             return
           }
@@ -390,7 +390,7 @@
             numTargets = this.calcNumTagsForSeqPlate()
           } else if(this.walkingBy === 'wells of plate') {
             numTargets = Object.keys(this.parentWells).length
-          } else if(this.walkingBy === 'wells in pools') {
+          } else if(this.walkingBy === 'manual by pool') {
             numTargets = this.calcNumTagsForPooledPlate()
           }
         }

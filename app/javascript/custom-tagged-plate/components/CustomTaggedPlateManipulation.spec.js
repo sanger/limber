@@ -22,19 +22,21 @@ describe('CustomTaggedPlateManipulation', () => {
           { value: 2, text: 'i5 example tag group 2' }
         ],
         walkingByOptions: [
-          { value: null, text: 'Please select a by Pool/Plate Option...' },
-          { value: 'wells in pools', text: 'By Pool' },
+          { value: null, text: 'Please select a Walking By Option...' },
+          { value: 'manual by pool', text: 'By Pool' },
           { value: 'manual by plate', text: 'By Plate (Sequential)' },
           { value: 'wells of plate', text: 'By Plate (Fixed)' }
         ],
         directionOptions: [
-          { value: null, text: 'Select a by Row/Column Option...' },
+          { value: null, text: 'Select a Direction Option...' },
           { value: 'row', text: 'By Rows' },
-          { value: 'column', text: 'By Columns' }
+          { value: 'column', text: 'By Columns' },
+          { value: 'inverse row', text: 'By Inverse Rows' },
+          { value: 'inverse column', text: 'By Inverse Columns' }
         ],
         numberOfTags: 10,
         numberOfTargetWells: 10,
-        tagsPerWell: 1
+        tagsPerWell: '1'
       },
       localVue
     })

@@ -41,6 +41,15 @@ function compareWellsByRow(wellA, wellB) {
   }
 }
 
+function byInverseRows(wells, plateDims, walker) {
+  return wells.sort(compareWellsByRow).reverse().reduce((acc, well, relIndex) => {
+    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
+    const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellCol + (plateDims.number_of_columns * wellRow)) - 1
+    acc[well.position] = walker(well, relIndex, absIndex)
+    return acc
+  }, {})
+}
+
 function byColumns(wells, plateDims, walker) {
   return wells.sort(compareWellsByColumn).reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
@@ -62,21 +71,32 @@ function compareWellsByColumn(wellA, wellB) {
   }
 }
 
+function byInverseColumns(wells, plateDims, walker) {
+  return wells.sort(compareWellsByColumn).reverse().reduce((acc, well, relIndex) => {
+    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
+    const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellRow + (plateDims.number_of_rows * wellCol)) - 1
+    acc[well.position] = walker(well, relIndex, absIndex)
+    return acc
+  }, {})
+}
+
 const walkingByFunctions = {
-  'wells in pools': byPool,
+  'manual by pool': byPool,
   'manual by plate': byPlateSeq,
   'wells of plate': byPlateFixed
 }
 const directionFunctions = {
   'row': byRows,
-  'column': byColumns
+  'column': byColumns,
+  'inverse row': byInverseRows,
+  'inverse column': byInverseColumns
 }
 
 const calculateTagLayout = function (data) {
   let validationResult = validateParameters(data)
 
   if(validationResult) {
-    // TODO error messages displayed where?
+    // TODO error messages displayed where? and some of these are valid first time in so are warnings
     console.log(validationResult.message)
     return null
   }
