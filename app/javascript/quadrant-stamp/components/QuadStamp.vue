@@ -75,7 +75,7 @@
     },
     methods: {
       updatePlate(index, data) {
-        this.$set(this.plates, index - 1, {...data, index: index -1 })
+        this.$set(this.plates, index - 1, {...data, index: index - 1 })
       },
       targetFor(quadrant, wellName) {
         let wellCoordinate = wellNameToCoordinate(wellName)
