@@ -7,7 +7,8 @@
                          :state="plate.state"
                          :pool-index="plate.index + 1"
                          :key="plate.index"
-                         :plate="plate.plate"></lb-plate-summary>
+                         :plate="plate.plate">
+        </lb-plate-summary>
         <lb-plate caption="New Plate" :rows="targetRows" :columns="targetColumns" :wells="targetWells"></lb-plate>
       </b-card>
     </lb-main-content>
@@ -18,44 +19,43 @@
                          :api="devourApi"
                          :label="'Plate ' + i"
                          :key="i"
-                         includes="wells,wells.requests_as_sourcef,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel"
-                         :fields="{ plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
-                                     requests: 'primer_panel,uuid',
-                                     wells: 'position,requests_as_source,aliquots,uuid',
-                                     aliquots: 'request' }"
-                         v-on:change="updatePlate(i, $event)"></lb-plate-scan>
+                         :includes="plateIncludes"
+                         :fields="plateFields"
+                         @change="updatePlate(i, $event)">
+          </lb-plate-scan>
         </b-form-group>
-        <b-form-group label="Select a primer panel to process">
-          <b-form-radio-group v-model="primerPanel"
-                       :options="primerPanels"
-                       size="lg"></b-form-radio-group>
-        </b-form-group>
-        <b-button :disabled="!valid" variant="success" v-on:click="createPlate()">Create</b-button>
+        <component :is="requestsFilter"
+                   :requestsWithPlates="requestsWithPlates"
+                   @change="requestsWithPlatesFiltered = $event">
+        </component>
+        <b-button :disabled="!valid" variant="success" @click="createPlate()">Create</b-button>
       </b-card>
     </lb-sidebar>
   </lb-page>
 </template>
 
 <script>
-
-  import Plate from 'shared/components/Plate'
   import PlateSummary from './PlateSummary'
+  import PrimerPanelFilter from './PrimerPanelFilter'
+  import NullFilter from './NullFilter'
+  import Plate from 'shared/components/Plate'
   import PlateScan from 'shared/components/PlateScan'
   import LoadingModal from 'shared/components/LoadingModal'
   import devourApi from 'shared/devourApi'
   import resources from 'shared/resources'
   import buildArray from 'shared/buildArray'
+  import requestIsActive from 'shared/requestHelpers'
   import { wellNameToCoordinate, wellCoordinateToName, requestsForWell } from 'shared/wellHelpers'
 
   export default {
     name: 'QuadStamp',
     data () {
-      let plateArray = buildArray(this.sourcePlateNumber, (iteration) => { return { state: 'empty', plate: null, index: iteration } })
-
+      let plateArray = buildArray(this.sourcePlateNumber, (iteration) => {
+        return { state: 'empty', plate: null, index: iteration } })
       return {
-        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         plates: plateArray,
-        primerPanel: null,
+        devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+        requestsWithPlatesFiltered: [],
         loading: false,
         progressMessage: ''
       }
@@ -64,6 +64,7 @@
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
+      requestFilters: { type: String, required: true },
       targetRows: { type: Number, default: 16 },
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 },
@@ -75,11 +76,6 @@
     methods: {
       updatePlate(index, data) {
         this.$set(this.plates, index - 1, {...data, index: index -1 })
-      },
-      requestFor(well) {
-        return requestsForWell(well).find((request) => {
-            return request.primer_panel && request.primer_panel.name === this.primerPanel
-        })
       },
       targetFor(quadrant, wellName) {
         let wellCoordinate = wellNameToCoordinate(wellName)
@@ -126,55 +122,85 @@
       unsuitablePlates() {
         return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
       },
+      requestsWithPlates() {
+        let requestsArray = []
+        this.validPlates.forEach((plateState) => {
+          plateState.plate.wells.forEach((well) => {
+            requestsForWell(well).forEach((request) => {
+              if (requestIsActive(request)) {
+                requestsArray.push({
+                  request: request,
+                  well: well,
+                  plateState: plateState
+                })
+              }
+            })
+          })
+        })
+        return requestsArray
+      },
       transfers() {
         let transferArray = []
-        this.validPlates.forEach((plateState) => {
-          let { plate, index } = plateState
-          plate.wells.forEach((well) => {
-            let request = this.requestFor(well)
-            if (request === undefined) { return }
-            let targetWell = this.targetFor(index, well.position.name)
-            transferArray.push({
-              source_plate: plate.uuid,
-              pool_index: index + 1,
-              source_asset: well.uuid,
-              outer_request: request.uuid,
-              new_target: { location: targetWell } }
-            )
-          })
+        this.requestsWithPlatesFiltered.forEach((requestWithPlate) => {
+          let { request, well, plateState } = requestWithPlate
+          if (request === undefined) { return }
+          let targetWell = this.targetFor(plateState.index, well.position.name)
+          transferArray.push({
+            source_plate: plateState.plate.uuid,
+            pool_index: plateState.index + 1,
+            source_asset: well.uuid,
+            outer_request: request.uuid,
+            new_target: { location: targetWell } }
+          )
         })
         return transferArray
       },
-      primerPanels() { // Returns the mutual primer panels
-        let primerPanels = null
-        this.validPlates.forEach((plateState) => {
-          let { plate, index } = plateState
-          plate.wells.forEach((well) => {
-            let wellRequests = requestsForWell(well).filter(request => request.primerPanel)
-            if (wellRequests.length === 0) { return } // If we have no requests, skip to the next well
-            let wellPrimerPanels = wellRequests.map(request => request.primerPanel.name )
-            if (primerPanels === null) {
-              primerPanels = wellPrimerPanels
-            } else {
-              primerPanels = primerPanels.filter(panel => wellPrimerPanels.includes(panel) )
-            }
-          })
-        })
-        return primerPanels || []
-      },
       targetWells() {
-        let deb = this.transfers.reduce((wells, transfer) =>{
+        let deb = this.transfers.reduce((wells, transfer) => {
           wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
           return wells
         }, {})
         return deb
+      },
+      requestsFilter() {
+        if (this.requestFilters === 'primer-panel') {
+          return 'lb-primer-panel-filter'
+        }
+        else {
+          return 'lb-null-filter'
+        }
+      },
+      plateIncludes() {
+        if (this.requestFilters === 'primer-panel') {
+          return 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel'
+        }
+        else {
+          return 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel'
+          //return 'wells,wells.requests_as_source,wells.aliquots'
+        }
+      },
+      plateFields() {
+        if (this.requestFilters === 'primer-panel') {
+          return { plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
+                   requests: 'primer_panel,uuid',
+                   wells: 'position,requests_as_source,aliquots,uuid',
+                   aliquots: 'request' }
+        }
+        else {
+          return { plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
+                   requests: 'uuid',
+                   wells: 'position,requests_as_source,aliquots,uuid',
+                   aliquots: 'request' }
+        }
       }
     },
     components: {
       'lb-plate': Plate,
       'lb-plate-scan': PlateScan,
       'lb-plate-summary': PlateSummary,
-      'lb-loading-modal': LoadingModal
+      'lb-loading-modal': LoadingModal,
+      'lb-primer-panel-filter': PrimerPanelFilter,
+      'lb-null-filter': NullFilter
     }
   }
 </script>
