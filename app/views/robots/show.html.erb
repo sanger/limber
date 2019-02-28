@@ -1,4 +1,4 @@
-<%= page(:"robot-verification-#{robot.layout}") do %>
+<%= page(:"robot-verification-bed") do %>
   <%= content do %>
     <%= card title: robot.name do %>
       <div id="robot-verification">
@@ -23,7 +23,7 @@
 
   <%= sidebar do %>
     <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
-      <%= render partial: robot.layout, locals: {robot: robot, form: form } %>
+      <%= render partial: 'bed', locals: {robot: robot, form: form } %>
       <%= submit_tag "Start the #{robot.name}",
         name: nil,
         class: "submit btn btn-lg btn-success btn-block",

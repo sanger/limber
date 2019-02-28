@@ -3,35 +3,32 @@
 module Robots
   class PoolingRobot < Robot
     class Bed < Robot::Bed
-      #    self.attributes = %i[api user_uuid purpose states label parents target_state robot]
-
-      attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
-
-      delegate :api, :user_uuid, to: :robot
-
-      def transition
-        return if target_state.nil? || plate.nil? # We have nothing to do
-
-        StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(next_state, "Robot #{robot.name} started")
-      end
+      attr_accessor :parents
 
       def next_state
         last_round? ? target_state : states[states.index(plate.state) + 1]
       end
 
       def last_round?
-        plate.creation_transfers.count <= range.max + 1
+        parent_plates.count <= range.max + 1
       end
 
       def each_parent
-        arrayed_transfers = plate.creation_transfers.to_a
         range.each do |i|
-          plate_barcode = if arrayed_transfers[i].present?
-                            SBCF::SangerBarcode.from_machine(arrayed_transfers[i].source.barcode.ean13)
+          plate_barcode = if parent_plates[i].present?
+                            SBCF::SangerBarcode.from_machine(parent_plates[i].barcode.machine)
                           else
                             SBCF::EmptyBarcode.new
                           end
           yield(parents[i], plate_barcode)
+        end
+      end
+
+      private
+
+      def parent_plates
+        @parent_plates ||= plate.wells_in_columns.each_with_object([]) do |well, plates|
+          plates << well.upstream_plates.first unless plates.include?(well.upstream_plates.first)
         end
       end
 
@@ -40,7 +37,6 @@ module Robots
         size = parents.count / states.count
         (size * round...size * (round + 1))
       end
-      private :range
     end
 
     attr_writer :destination_bed
@@ -66,7 +62,7 @@ module Robots
       Report.new(valid_plates, error_messages.empty?, formatted_message)
     end
 
-    def bed_class(_bed)
+    def bed_class
       Robots::PoolingRobot::Bed
     end
 

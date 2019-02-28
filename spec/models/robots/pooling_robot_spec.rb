@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Robots::PoolingRobot do
-  include FeatureHelpers
+  include RobotHelpers
 
   has_a_working_api
 
-  let(:settings)                    { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
-  let(:user_uuid)                   { SecureRandom.uuid }
-  let(:plate_uuid)                  { 'source-plate-uuid' }
-  let(:source_barcode)              { ean13(1) }
-  let(:source_purpose_name)         { 'Parent Purpose' }
-  let(:source_purpose_uuid)         { SecureRandom.uuid }
   let(:source_plate_attributes) do
     {
       uuid: plate_uuid,
@@ -23,28 +17,75 @@ RSpec.describe Robots::PoolingRobot do
     }
   end
 
-  let(:source_plate) { json :plate, source_plate_attributes }
-  let(:target_barcode)              { ean13(2) }
-  let(:target_purpose_name)         { 'Child Purpose' }
-  let(:target_purpose_uuid)         { SecureRandom.uuid }
-  let(:target_plate_uuid)           { 'target-plate-uuid' }
   let(:target_plate_attributes) do
     {
       uuid: target_plate_uuid,
       purpose_name: target_purpose_name,
       purpose_uuid: target_purpose_uuid,
-      barcode_number: 2
+      barcode_number: 2,
+      parents: target_plate_parents,
+      wells: wells
     }
   end
-  let(:target_plate)                { json :plate, target_plate_attributes }
-  let(:metadata_uuid)               { SecureRandom.uuid }
-  let(:custom_metadatum_collection) { json :custom_metdatum_collection, uuid: metadata_uuid }
+
+  let(:user_uuid)                   { SecureRandom.uuid }
+  let(:plate_uuid)                  { SecureRandom.uuid }
+  let(:target_plate_uuid) { SecureRandom.uuid }
+  let(:source_barcode)              { source_plate.human_barcode }
+  let(:source_barcode_alt)          { 'DN1S' }
+  let(:source_purpose_name)         { 'Parent Purpose' }
+  let(:source_purpose_uuid)         { SecureRandom.uuid }
+  let(:source_plate_state) { 'passed' }
+  let(:source_plate) do
+    create :v2_plate, source_plate_attributes
+  end
+  let(:target_barcode)              { target_plate.human_barcode }
+  let(:target_purpose_name)         { 'Child Purpose' }
+  let(:target_purpose_uuid)         { SecureRandom.uuid }
+  let(:target_plate) { create :v2_plate, target_plate_attributes }
+
+  let(:target_plate_parents) { [source_plate] }
+  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
+  let(:metadata) { { 'other_key' => 'value' } }
 
   let(:robot) { Robots::PoolingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
-  let(:robot_spec) { settings.dig(:robots, robot_id) }
+
+  let(:robot_spec) do
+    {
+      'name' => 'Pooling Robot',
+      'layout' => 'bed',
+      'beds' => {
+        'bed1_barcode' => {
+          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 2'
+        },
+        'bed2_barcode' => {
+          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 5'
+        },
+        'bed3_barcode' => {
+          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 3'
+        },
+        'bed4_barcode' => {
+          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 6'
+        },
+        'bed5_barcode' => {
+          'purpose' => 'Child Purpose', 'states' => %w[pending started],
+          'parents' => %w[bed1_barcode bed2_barcode bed3_barcode bed4_barcode bed1_barcode bed2_barcode bed3_barcode bed4_barcode],
+          'target_state' => 'passed', 'label' => 'Bed 4'
+        }
+      },
+      'destination_bed' => 'bed5_barcode',
+      'class' => 'Robots::PoolingRobot'
+    }
+  end
   let(:robot_id) { 'pooling_robot_id' }
 
-  let(:transfer_source_plates) { [associated(:plate, source_plate_attributes)] }
+  let(:transfer_source_plates) { [source_plate] }
+
+  let(:wells) do
+    %w[C1 D1].map do |location|
+      create :v2_well, location: location, upstream_plates: transfer_source_plates
+    end
+  end
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
@@ -57,8 +98,8 @@ RSpec.describe Robots::PoolingRobot do
                             associated_on: 'creation_transfers',
                             transfer_factory: :creation_transfer))
 
-    stub_asset_search(source_barcode, source_plate)
-    stub_asset_search(target_barcode, target_plate)
+    bed_plate_lookup(source_plate)
+    bed_plate_lookup(target_plate)
   end
 
   describe '#verify' do
@@ -66,8 +107,8 @@ RSpec.describe Robots::PoolingRobot do
 
     context 'a simple robot' do
       context 'with an unknown plate' do
-        before(:each) { stub_asset_search('dodgy_barcode', nil) }
-        let(:scanned_layout) { { settings[:robots][robot_id][:beds].keys.first => ['dodgy_barcode'] } }
+        before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
+        let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }
       end
@@ -86,7 +127,7 @@ RSpec.describe Robots::PoolingRobot do
         end
 
         context 'but unrelated plates' do
-          let(:transfer_source_plates) { [associated(:plate)] }
+          let(:transfer_source_plates) { [create(:v2_plate)] }
           it { is_expected.not_to be_valid }
         end
       end
@@ -102,12 +143,21 @@ RSpec.describe Robots::PoolingRobot do
           state: 'passed'
         }
       end
-      let(:source_barcode2) { ean13(3) }
-      let(:source_plate2) { json :plate, source_plate2_attributes }
-      let(:transfer_source_plates) { [associated(:plate, source_plate_attributes), associated(:plate, source_plate2_attributes)] }
+      let(:source_barcode2) { source_plate2.human_barcode }
+      let(:source_plate2) { create :v2_plate, source_plate2_attributes }
+      let(:transfer_source_plates) { [source_plate, source_plate2] }
+
+      let(:wells) do
+        %w[C1 D1].map do |location|
+          create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
+        end +
+          %w[A1 B1].map do |location|
+            create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]]
+          end
+      end
 
       before do
-        stub_asset_search(source_barcode2, source_plate2)
+        bed_plate_lookup(source_plate2)
       end
 
       context 'with a valid layout' do

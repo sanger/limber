@@ -44,6 +44,9 @@ FactoryBot.define do
       purpose_uuid { 'example-purpose-uuid' }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       pool_sizes { [] }
+      parents { [] }
+      children { [] }
+      descendants { [] }
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate }
@@ -52,6 +55,7 @@ FactoryBot.define do
       size { 96 }
       include_submissions { false }
       well_states { [state] * size }
+      custom_metadatum_collection { nil }
     end
 
     sequence(:id) { |i| i }
@@ -66,6 +70,7 @@ FactoryBot.define do
     after(:build) do |plate, evaluator|
       RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
       RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
+      RSpec::Mocks.allow_message(plate, :custom_metadatum_collection).and_return(evaluator.custom_metadatum_collection)
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
 
       # Mock the behaviour of the search
@@ -74,6 +79,7 @@ FactoryBot.define do
         evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
       end
       RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
+      RSpec::Mocks.allow_message(plate, :parents).and_return(evaluator.parents)
     end
 
     factory :v2_stock_plate do

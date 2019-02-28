@@ -6,10 +6,15 @@ module Robots
 
     class BedError < StandardError; end
     # Our robot has beds/rack-spaces
-    attr_reader :plate
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child, :barcodes
 
     delegate :api, :user_uuid, to: :robot
+    delegate :state, to: :plate, allow_nil: true, prefix: true
+
+    validates :barcodes, length: { maximum: 1, too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
+    validates :plate, presence: { message: ->(bed, _data) { "Could not find a plate with the barcode '#{bed.barcode}'." } }, if: :barcode
+    validate :correct_plate_purpose, if: :plate
+    validate :correct_plate_state, if: :plate
 
     def transitions?
       @target_state.present?
@@ -18,50 +23,34 @@ module Robots
     def transition
       return if target_state.nil? || plate.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.plate_purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
     end
 
     def purpose_labels
       purpose
     end
 
-    def valid?
-      if @barcode == :multiple
-        error('This bed has been scanned multiple times with different barcodes. Only once is expected.')
-      elsif plate.nil? # The bed is empty or untested
-        @barcode.nil? || error("Could not find a plate with the barcode #{@barcode}.")
-      elsif plate.plate_purpose.uuid != Settings.purpose_uuids[purpose]
-        error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is a #{plate.plate_purpose.name} not a #{purpose} plate.")
-      elsif !states.include?(plate.state) # The plate is in the wrong state
-        error("Plate #{plate.barcode.prefix}#{plate.barcode.number} is #{plate.state} when it should be #{states.join(', ')}.")
-      else
-        true
-      end
+    def barcode
+      @barcodes&.first
     end
 
     def load(barcodes)
-      barcodes = Array(barcodes).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
-      if barcodes.length > 1 # If we have multiple barcodes, just give up now.
-        @barcode = :multiple
-      else
-        @barcode = barcodes.first
-        begin
-          @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: @barcode) unless @barcode.nil?
-        rescue Sequencescape::Api::ResourceNotFound
-          @plate = nil
-        end
-      end
+      @barcodes = Array(barcodes).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
+      @plates = Sequencescape::Api::V2::Plate.find_all(barcode: @barcodes)
+    end
+
+    def plate
+      @plates&.first
     end
 
     def parent_plate
       return nil if recieving_labware.nil?
 
-      begin
-        api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(barcode: recieving_labware.barcode.ean13)
-      rescue Sequencescape::Api::ResourceNotFound
-        error("Labware #{recieving_labware.barcode.prefix}#{recieving_labware.barcode.number} doesn't seem to have a parent, and yet one was expected.")
-        nil
-      end
+      parent = plate.parents.first
+      return parent if parent
+
+      error("Labware #{recieving_labware.human_barcode} doesn't seem to have a parent, and yet one was expected.")
+      nil
     end
 
     alias recieving_labware plate
@@ -71,6 +60,18 @@ module Robots
     end
 
     private
+
+    def correct_plate_purpose
+      return true if plate.purpose.name == purpose
+
+      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose} plate.")
+    end
+
+    def correct_plate_state
+      return true if states.include?(plate.state)
+
+      error("Plate #{plate.human_barcode} is #{plate.state} when it should be #{states.join(', ')}.")
+    end
 
     def error(message)
       errors.add(:base, message)

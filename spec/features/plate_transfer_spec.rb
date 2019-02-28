@@ -3,21 +3,32 @@
 require 'rails_helper'
 
 RSpec.feature 'Plate transfer', js: true do
+  include RobotHelpers
+
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:user)              { create :user, uuid: user_uuid }
   let(:swipecard)         { 'abcdef' }
   let(:robot_barcode)     { 'robot_barcode' }
-  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
-  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:plate_barcode_1)   { 'DN1S' }
+  let(:plate_barcode_2)   { 'DN2T' }
   let(:plate_uuid)        { SecureRandom.uuid }
-  let(:example_plate)     { json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid' }
-  let(:example_plate_without_metadata) do
-    json :stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started'
+  let(:example_plate) do
+    create :v2_stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
   end
+  let(:example_plate_without_metadata) do
+    create :v2_stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started', barcode_number: 1
+  end
+  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' } }
   let(:example_plate_with_metadata) do
-    json :stock_plate_with_metadata, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started'
+    create :v2_stock_plate,
+           uuid: plate_uuid,
+           purpose_name: 'LB End Prep',
+           purpose_uuid: 'lb_end_prep_uuid',
+           state: 'started',
+           barcode_number: 1,
+           custom_metadatum_collection: custom_metadatum_collection
   end
   let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
 
@@ -61,9 +72,10 @@ RSpec.feature 'Plate transfer', js: true do
       .to receive(:verify)
       .and_return(beds: { '580000004838' => true, '580000014851' => true }, valid: true, message: '')
 
-    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    Settings.purposes['lb_end_prep_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-    stub_asset_search(plate_barcode_2, example_plate)
+    create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+
+    bed_plate_lookup(example_plate)
+    stub_v2_plate(example_plate)
 
     fill_in_swipecard(swipecard)
 
@@ -108,8 +120,8 @@ RSpec.feature 'Plate transfer', js: true do
   end
 
   scenario 'informs if the robot barcode is wrong' do
-    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_asset_search(plate_barcode_1, example_plate_without_metadata)
+    bed_plate_lookup(example_plate_without_metadata)
+    stub_v2_plate(example_plate_without_metadata)
 
     fill_in_swipecard(swipecard)
 
@@ -135,16 +147,8 @@ RSpec.feature 'Plate transfer', js: true do
   end
 
   scenario 'verifies robot barcode' do
-    Settings.purpose_uuids['LB End Prep'] = 'lb_end_prep_uuid'
-    stub_asset_search(plate_barcode_1, example_plate_with_metadata)
-    stub_api_get(
-      'custom_metadatum_collection-uuid',
-      body: json(
-        :custom_metadatum_collection,
-        metadata: { 'created_with_robot' => 'robot_barcode' },
-        uuid: 'custom_metadatum_collection-uuid'
-      )
-    )
+    bed_plate_lookup(example_plate_with_metadata)
+    stub_v2_plate(example_plate_with_metadata)
 
     fill_in_swipecard(swipecard)
 
