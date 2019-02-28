@@ -175,8 +175,7 @@
           return 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel'
         }
         else {
-          return 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel'
-          //return 'wells,wells.requests_as_source,wells.aliquots'
+          return 'wells,wells.requests_as_source,wells.aliquots'
         }
       },
       plateFields() {
