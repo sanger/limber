@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Plate transfer', js: true do
+RSpec.feature 'Plate transfer', js: true, robots: true do
   include RobotHelpers
 
   has_a_working_api

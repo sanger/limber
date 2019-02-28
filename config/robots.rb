@@ -28,7 +28,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo LB End Prep',
                verify_robot: true,
                beds: {
-                 bed(7).barcode => { purpose: 'LB End Prep', states: ['started'], label: 'Bed 7', target_state: 'passed' }
+                 bed(7).barcode => {
+                  purpose: 'LB End Prep',
+                  states: ['started'],
+                  label: 'Bed 7',
+                  target_state: 'passed' }
                })
 
   bravo_robot do
@@ -40,31 +44,77 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo LB Lib PCR => LB Lib PCR XP',
                verify_robot: false,
                beds: {
-                 bed(1).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
-                 bed(9).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'passed' },
-                 bed(2).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
-                 bed(10).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'passed' },
-                 bed(3).barcode => { purpose: 'LB Lib PCR', states: ['passed'], label: 'Bed 3' },
-                 bed(11).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'passed' },
-                 bed(4).barcode => { purpose: 'LB Lib PCR', states: ['passed'], label: 'Bed 4' },
-                 bed(12).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'passed' }
+                 bed(1).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 1' },
+                 bed(9).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 9',
+                  parent: bed(1).barcode,
+                  target_state: 'passed' },
+                 bed(2).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
+                 bed(10).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 10',
+                  parent: bed(2).barcode,
+                  target_state: 'passed' },
+                 bed(3).barcode => {
+                  purpose: 'LB Lib PCR',
+                  states: ['passed'],
+                  label: 'Bed 3' },
+                 bed(11).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 11',
+                  parent: bed(3).barcode,
+                  target_state: 'passed' },
+                 bed(4).barcode => {
+                  purpose: 'LB Lib PCR',
+                  states: ['passed'],
+                  label: 'Bed 4' },
+                 bed(12).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 12',
+                  parent: bed(4).barcode,
+                  target_state: 'passed' }
                })
 
   custom_robot('zephyr-lib-pcr-purification',
                name: 'Zephyr LB Lib PCR => LB Lib PCR XP',
                verify_robot: false,
                beds: {
-                 bed(2).barcode => { purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
-                 bed(7).barcode => { purpose: 'LB Lib PCR-XP', states: ['pending'], label: 'Bed 7', parent: bed(2).barcode, target_state: 'passed' }
+                 bed(2).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 2' },
+                 bed(7).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 7',
+                  parent: bed(2).barcode,
+                  target_state: 'passed' }
                })
 
   custom_robot('nx-8-lib-pcr-xp-to-isch-lib-pool',
                name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
                beds: {
-                 bed(2).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 2' },
-                 bed(5).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 5' },
-                 bed(3).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 3' },
-                 bed(6).barcode => { purpose: 'LB Lib PCR-XP', states: %w[passed qc_complete], child: bed(4).barcode, label: 'Bed 6' },
+                 bed(2).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: %w[passed qc_complete], child: bed(4).barcode,
+                  label: 'Bed 2' },
+                 bed(5).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: %w[passed qc_complete], child: bed(4).barcode,
+                  label: 'Bed 5' },
+                 bed(3).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: %w[passed qc_complete], child: bed(4).barcode,
+                  label: 'Bed 3' },
+                 bed(6).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: %w[passed qc_complete], child: bed(4).barcode,
+                  label: 'Bed 6' },
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
                    states: %w[pending started],
@@ -125,14 +175,44 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'nx-96-pf-post-shear-to-pf-post-shear-xp',
     name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
     beds: {
-      bed(1).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 1' },
-      bed(9).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 9', parent: bed(1).barcode, target_state: 'started' },
-      bed(2).barcode => { purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 2' },
-      bed(10).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 10', parent: bed(2).barcode, target_state: 'started' },
-      bed(3).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 3' },
-      bed(11).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 11', parent: bed(3).barcode, target_state: 'started' },
-      bed(4).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 4' },
-      bed(12).barcode => { purpose: 'PF Post Shear XP', states: ['pending'], label: 'Bed 12', parent: bed(4).barcode, target_state: 'started' }
+      bed(1).barcode => {
+        purpose: 'PF Post Shear',
+        states: ['passed'],
+        label: 'Bed 1' },
+      bed(9).barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['pending'],
+        label: 'Bed 9',
+        parent: bed(1).barcode,
+        target_state: 'started' },
+      bed(2).barcode => {
+        purpose: 'PF Post Shear',    states: ['passed'],  label: 'Bed 2' },
+      bed(10).barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['pending'],
+        label: 'Bed 10',
+        parent: bed(2).barcode,
+        target_state: 'started' },
+      bed(3).barcode => {
+        purpose: 'PF Post Shear',
+        states: ['passed'],
+        label: 'Bed 3' },
+      bed(11).barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['pending'],
+        label: 'Bed 11',
+        parent: bed(3).barcode,
+        target_state: 'started' },
+      bed(4).barcode => {
+        purpose: 'PF Post Shear',
+        states: ['passed'],
+        label: 'Bed 4' },
+      bed(12).barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['pending'],
+        label: 'Bed 12',
+        parent: bed(4).barcode,
+        target_state: 'started' }
     }
   )
 
@@ -150,14 +230,46 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'star-384-scrna-384-stock-to-scrna-384-cdna-xp',
     name: 'STAR-384 scRNA Stock => scRNA-384 cDNA-XP',
     beds: {
-      bed(12).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 12' },
-      bed(17).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 17', parent: bed(12).barcode, target_state: 'passed' },
-      bed(13).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 13' },
-      bed(18).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 18', parent: bed(13).barcode, target_state: 'passed' },
-      bed(14).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 14' },
-      bed(19).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 19', parent: bed(14).barcode, target_state: 'passed' },
-      bed(15).barcode => { purpose: 'scRNA-384 Stock', states: ['passed'], label: 'Bed 15' },
-      bed(20).barcode => { purpose: 'scRNA-384 cDNA-XP', states: ['pending'], label: 'Bed 20', parent: bed(15).barcode, target_state: 'passed' }
+      bed(12).barcode => {
+        purpose: 'scRNA-384 Stock',
+        states: ['passed'],
+        label: 'Bed 12' },
+      bed(17).barcode => {
+        purpose: 'scRNA-384 cDNA-XP',
+        states: ['pending'],
+        label: 'Bed 17',
+        parent: bed(12).barcode,
+        target_state: 'passed' },
+      bed(13).barcode => {
+        purpose: 'scRNA-384 Stock',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(18).barcode => {
+        purpose: 'scRNA-384 cDNA-XP',
+        states: ['pending'],
+        label: 'Bed 18',
+        parent: bed(13).barcode,
+        target_state: 'passed' },
+      bed(14).barcode => {
+        purpose: 'scRNA-384 Stock',
+        states: ['passed'],
+        label: 'Bed 14' },
+      bed(19).barcode => {
+        purpose: 'scRNA-384 cDNA-XP',
+        states: ['pending'],
+        label: 'Bed 19',
+        parent: bed(14).barcode,
+        target_state: 'passed' },
+      bed(15).barcode => {
+        purpose: 'scRNA-384 Stock',
+        states: ['passed'],
+        label: 'Bed 15' },
+      bed(20).barcode => {
+        purpose: 'scRNA-384 cDNA-XP',
+        states: ['pending'],
+        label: 'Bed 20',
+        parent: bed(15).barcode,
+        target_state: 'passed' }
     }
   )
 
@@ -175,14 +287,22 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo scDNA End Prep',
                verify_robot: true,
                beds: {
-                 bed(5).barcode => { purpose: 'scRNA End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+                 bed(5).barcode => {
+                  purpose: 'scRNA End Prep',
+                  states: ['started'],
+                  label: 'Bed 5',
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-scdna-384-end-prep',
                name: 'bravo scDNA-384 End Prep',
                verify_robot: true,
                beds: {
-                 bed(5).barcode => { purpose: 'scRNA-384 End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+                 bed(5).barcode => {
+                  purpose: 'scRNA-384 End Prep',
+                  states: ['started'],
+                  label: 'Bed 5',
+                  target_state: 'passed' }
                })
 
   bravo_robot do
@@ -199,8 +319,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-pf-post-shear-to-pf-end-prep',
     name: 'Bravo PF Post-Shear => PF End Prep',
     beds: {
-      bed(4).barcode => { purpose: 'PF Post Shear', states: ['passed'], label: 'Bed 4' },
-      car('1,4').barcode => { purpose: 'PF End Prep', states: ['pending'], label: 'Carousel 1,4', parent: bed(4).barcode, target_state: 'started' }
+      bed(4).barcode => {
+        purpose: 'PF Post Shear',
+        states: ['passed'],
+        label: 'Bed 4' },
+      car('1,4').barcode => {
+        purpose: 'PF End Prep',
+        states: ['pending'],
+        label: 'Carousel 1,4',
+        parent: bed(4).barcode,
+        target_state: 'started' }
     }
   )
 
@@ -208,7 +336,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-pf-end-prep',
     name: 'Bravo PF End Preparation',
     beds: {
-      bed(5).barcode => { purpose: 'PF End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+      bed(5).barcode => {
+        purpose: 'PF End Prep',
+        states: ['started'],
+        label: 'Bed 5',
+        target_state: 'passed' }
     }
   )
 
@@ -216,7 +348,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-pf-post-shear-xp-prep',
     name: 'Bravo PF Post Shear XP Preparation',
     beds: {
-      bed(5).barcode => { purpose: 'PF Post Shear XP', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+      bed(5).barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['started'],
+        label: 'Bed 5',
+        target_state: 'passed' }
     }
   )
 
@@ -224,9 +360,22 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-pf-post-shear-xp-to-pf-lib-xp',
     name: 'Bravo PF Post Shear XP to PF Lib XP',
     beds: {
-      car('1,3').barcode => { purpose: 'PF Post Shear XP', states: ['passed'], label: 'Carousel 1,3' },
-      bed(6).barcode => { purpose: 'PF Lib', states: ['pending'], label: 'Bed 6', target_state: 'passed', parent: car('1,3').barcode },
-      car('4,3').barcode => { purpose: 'PF Lib XP', states: ['pending'], label: 'Carousel 4,3', target_state: 'passed', parent: bed(6).barcode }
+      car('1,3').barcode => {
+        purpose: 'PF Post Shear XP',
+        states: ['passed'],
+        label: 'Carousel 1,3' },
+      bed(6).barcode => {
+        purpose: 'PF Lib',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'passed',
+        parent: car('1,3').barcode },
+      car('4,3').barcode => {
+        purpose: 'PF Lib XP',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        target_state: 'passed',
+        parent: bed(6).barcode }
     }
   )
 
@@ -234,9 +383,22 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-pf-end-prep-to-pf-lib-xp-2',
     name: 'Bravo PF End Prep to PF Lib XP2',
     beds: {
-      bed(5).barcode => { purpose: 'PF End Prep', states: ['passed'], label: 'Bed 5' },
-      bed(6).barcode => { purpose: 'PF Lib', states: ['pending'], label: 'Bed 6', target_state: 'passed', parent: bed(5).barcode },
-      car('4,3').barcode => { purpose: 'PF Lib XP2', states: ['pending'], label: 'Carousel 4,3', target_state: 'passed', parent: bed(6).barcode }
+      bed(5).barcode => {
+        purpose: 'PF End Prep',
+        states: ['passed'],
+        label: 'Bed 5' },
+      bed(6).barcode => {
+        purpose: 'PF Lib',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'passed',
+        parent: bed(5).barcode },
+      car('4,3').barcode => {
+        purpose: 'PF Lib XP2',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        target_state: 'passed',
+        parent: bed(6).barcode }
     }
   )
 
@@ -244,9 +406,21 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-mrna-capture-rnaag',
     name: 'Bravo mRNA capture RNAAG',
     beds: {
-      bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
-      bed(6).barcode => { purpose: 'LBR mRNA Cap', states: ['pending'], label: 'Bed 6', target_state: 'started', parent: bed(7).barcode },
-      car('2,3').barcode => { purpose: 'LBR Globin', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode }
+      bed(7).barcode => {
+        purpose: 'LBR Cherrypick',
+        states: ['passed'],
+        label: 'Bed 7' },
+      bed(6).barcode => {
+        purpose: 'LBR mRNA Cap',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'started',
+        parent: bed(7).barcode },
+      car('2,3').barcode => {
+        purpose: 'LBR Globin',
+        states: ['pending'],
+        label: 'Carousel 2,3',
+        parent: bed(6).barcode }
     }
   )
 
@@ -254,11 +428,31 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-mrna-capture-rnaa',
     name: 'Bravo mRNA capture RNAA',
     beds: {
-      bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
-      bed(6).barcode => { purpose: 'LBR mRNA Cap', states: ['pending'], label: 'Bed 6', target_state: 'started', parent: bed(7).barcode },
-      car('2,3').barcode => { purpose: 'LBR Frag', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode },
-      car('3,4').barcode => { purpose: 'LB cDNA', states: ['pending'], label: 'Carousel 3,4', parent: car('2,3').barcode },
-      car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
+      bed(7).barcode => {
+        purpose: 'LBR Cherrypick',
+        states: ['passed'],
+        label: 'Bed 7' },
+      bed(6).barcode => {
+        purpose: 'LBR mRNA Cap',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'started',
+        parent: bed(7).barcode },
+      car('2,3').barcode => {
+        purpose: 'LBR Frag',
+        states: ['pending'],
+        label: 'Carousel 2,3',
+        parent: bed(6).barcode },
+      car('3,4').barcode => {
+        purpose: 'LB cDNA',
+        states: ['pending'],
+        label: 'Carousel 3,4',
+        parent: car('2,3').barcode },
+      car('4,3').barcode => {
+        purpose: 'LB cDNA XP',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        parent: car('3,4').barcode }
     }
   )
 
@@ -266,9 +460,21 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-mrna-capture-rnaa-m',
     name: 'Bravo mRNA capture RNAA (modular)',
     beds: {
-      bed(7).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 7' },
-      bed(6).barcode => { purpose: 'LBR mRNA Cap', states: ['pending'], label: 'Bed 6', target_state: 'started', parent: bed(7).barcode },
-      car('2,3').barcode => { purpose: 'LBR Frag', states: ['pending'], label: 'Carousel 2,3', parent: bed(6).barcode }
+      bed(7).barcode => {
+        purpose: 'LBR Cherrypick',
+        states: ['passed'],
+        label: 'Bed 7' },
+      bed(6).barcode => {
+        purpose: 'LBR mRNA Cap',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'started',
+        parent: bed(7).barcode },
+      car('2,3').barcode => {
+        purpose: 'LBR Frag',
+        states: ['pending'],
+        label: 'Carousel 2,3',
+        parent: bed(6).barcode }
     }
   )
 
@@ -286,24 +492,48 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'Bravo LBR mRNA Cap',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR mRNA Cap', states: ['started'], label: 'Bed 8', target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR mRNA Cap',
+                  states: ['started'],
+                  label: 'Bed 8',
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-lbr-mrna-cap-globin',
                name: 'Bravo LBR mRNA Cap to LBR Globin',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR mRNA Cap', states: ['passed'], label: 'Bed 8' },
-                 car('2,3').barcode => { purpose: 'LBR Globin', states: ['pending'], label: 'Carousel 2,3', parent: bed(8).barcode, target_state: 'processed_1' }
+                 bed(8).barcode => {
+                  purpose: 'LBR mRNA Cap',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('2,3').barcode => {
+                  purpose: 'LBR Globin',
+                  states: ['pending'],
+                  label: 'Carousel 2,3',
+                  parent: bed(8).barcode,
+                  target_state: 'processed_1' }
                })
 
   custom_robot(
     'bravo-hyb-setup',
     name: 'Bravo Hyb Setup',
     beds: {
-      bed(6).barcode => { purpose: 'LBR Globin', states: ['processed_1'], label: 'Bed 6', target_state: 'processed_2' },
-      car('4,3').barcode => { purpose: 'LBR Globin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(6).barcode },
-      car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: car('4,3').barcode }
+      bed(6).barcode => {
+        purpose: 'LBR Globin',
+        states: ['processed_1'],
+        label: 'Bed 6',
+        target_state: 'processed_2' },
+      car('4,3').barcode => {
+        purpose: 'LBR Globin DNase',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        parent: bed(6).barcode },
+      car('4,4').barcode => {
+        purpose: 'LBR Frag cDNA',
+        states: ['pending'],
+        label: 'Carousel 4,4',
+        parent: car('4,3').barcode }
     }
   )
 
@@ -311,9 +541,20 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-ribo-hyb-setup',
     name: 'Bravo Ribo Hyb Setup',
     beds: {
-      bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' },
-      car('4,3').barcode => { purpose: 'LBR Ribo DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(6).barcode },
-      car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: car('4,3').barcode }
+      bed(6).barcode => {
+        purpose: 'LBR Cherrypick',
+        states: ['passed'],
+        label: 'Bed 6' },
+      car('4,3').barcode => {
+        purpose: 'LBR Ribo DNase',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        parent: bed(6).barcode },
+      car('4,4').barcode => {
+        purpose: 'LBR Frag cDNA',
+        states: ['pending'],
+        label: 'Carousel 4,4',
+        parent: car('4,3').barcode }
     }
   )
 
@@ -321,9 +562,20 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'bravo-riboglobin-hyb-setup',
     name: 'Bravo Ribo Globin Hyb Setup',
     beds: {
-      bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' },
-      car('4,3').barcode => { purpose: 'LBR RiboGlobin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(6).barcode },
-      car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: car('4,3').barcode }
+      bed(6).barcode => {
+        purpose: 'LBR Cherrypick',
+        states: ['passed'],
+        label: 'Bed 6' },
+      car('4,3').barcode => {
+        purpose: 'LBR RiboGlobin DNase',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        parent: bed(6).barcode },
+      car('4,4').barcode => {
+        purpose: 'LBR Frag cDNA',
+        states: ['pending'],
+        label: 'Carousel 4,4',
+        parent: car('4,3').barcode }
     }
   )
 
@@ -331,99 +583,188 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'Bravo Depletion Setup',
                verify_robot: true,
                beds: {
-                 bed(6).barcode => { purpose: 'LBR Globin', states: ['processed_2'], label: 'Bed 6', target_state: 'passed' }
+                 bed(6).barcode => {
+                  purpose: 'LBR Globin',
+                  states: ['processed_2'],
+                  label: 'Bed 6',
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-ribo-depletion-setup',
                name: 'Bravo Ribo Depletion Setup',
                verify_robot: true,
                beds: {
-                 bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' }
+                 bed(6).barcode => {
+                  purpose: 'LBR Cherrypick',
+                  states: ['passed'],
+                  label: 'Bed 6' }
                })
 
   custom_robot('bravo-riboglobin-depletion-setup',
                name: 'Bravo Ribo Globin Depletion Setup',
                verify_robot: true,
                beds: {
-                 bed(6).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 6' }
+                 bed(6).barcode => {
+                  purpose: 'LBR Cherrypick',
+                  states: ['passed'],
+                  label: 'Bed 6' }
                })
 
   custom_robot('bravo-globin-globin-dnase',
                name: 'Bravo Globin To Globin DNase',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Globin', states: ['passed'], label: 'Bed 8' },
-                 car('4,3').barcode => { purpose: 'LBR Globin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Globin',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,3').barcode => {
+                  purpose: 'LBR Globin DNase',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: bed(8).barcode,
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-ribo-dnase',
                name: 'Bravo Cherrypick To Ribo DNase',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 8' },
-                 car('4,3').barcode => { purpose: 'LBR Ribo DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Cherrypick',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,3').barcode => {
+                  purpose: 'LBR Ribo DNase',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: bed(8).barcode,
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-riboglobin-dnase',
                name: 'Bravo Cherrypick To Ribo Globin DNase',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Cherrypick', states: ['passed'], label: 'Bed 8' },
-                 car('4,3').barcode => { purpose: 'LBR RiboGlobin DNase', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Cherrypick',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,3').barcode => {
+                  purpose: 'LBR RiboGlobin DNase',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: bed(8).barcode,
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-lbr-globin-dnase-frag-cdna',
                name: 'Bravo LBR Globin DNase To LBR Frag cDNA',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Globin DNase', states: ['passed'], label: 'Bed 8' },
-                 car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Globin DNase',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,4').barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['pending'],
+                  label: 'Carousel 4,4',
+                  parent: bed(8).barcode,
+                  target_state: 'processed_1' }
                })
 
   custom_robot('bravo-lbr-ribo-dnase-frag-cdna',
                name: 'Bravo LBR Ribo DNase To LBR Frag cDNA',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Ribo DNase', states: ['passed'], label: 'Bed 8' },
-                 car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Ribo DNase',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,4').barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['pending'],
+                  label: 'Carousel 4,4',
+                  parent: bed(8).barcode,
+                  target_state: 'processed_1' }
                })
 
   custom_robot('bravo-lbr-riboglobin-dnase-frag-cdna',
                name: 'Bravo LBR Ribo Globin DNase To LBR Frag cDNA',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR RiboGlobin DNase', states: ['passed'], label: 'Bed 8' },
-                 car('4,4').barcode => { purpose: 'LBR Frag cDNA', states: ['pending'], label: 'Carousel 4,4', parent: bed(8).barcode, target_state: 'processed_1' }
+                 bed(8).barcode => {
+                  purpose: 'LBR RiboGlobin DNase',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,4').barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['pending'],
+                  label: 'Carousel 4,4',
+                  parent: bed(8).barcode,
+                  target_state: 'processed_1' }
                })
 
   custom_robot('bravo-strand-setup',
                name: 'Bravo Strand Setup',
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['processed_1'], label: 'Bed 8', target_state: 'processed_2' },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode }
+                 bed(8).barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['processed_1'],
+                  label: 'Bed 8',
+                  target_state: 'processed_2' },
+                 car('4,3').barcode => {
+                  purpose: 'LB cDNA XP',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: bed(8).barcode }
                })
 
   custom_robot('bravo-strand-setup-rnaa-m',
                name: 'Bravo Strand Setup RNAA (modular)',
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['passed'], label: 'Bed 8' },
-                 car('3,4').barcode => { purpose: 'LB cDNA', states: ['pending'], label: 'Carousel 3,4', parent: bed(8).barcode },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: car('3,4').barcode }
+                 bed(8).barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('3,4').barcode => {
+                  purpose: 'LB cDNA',
+                  states: ['pending'],
+                  label: 'Carousel 3,4',
+                  parent: bed(8).barcode },
+                 car('4,3').barcode => {
+                  purpose: 'LB cDNA XP',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: car('3,4').barcode }
                })
 
   custom_robot('bravo-second-strand-setup',
                name: 'Bravo Second Strand Setup',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['processed_2'], label: 'Bed 8', target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['processed_2'],
+                  label: 'Bed 8',
+                  target_state: 'passed' }
                })
 
   custom_robot('bravo-lbr-frag-lb-cdna-xp',
                name: 'Bravo LBR Frag To LB cDNA XP',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LBR Frag cDNA', states: ['passed'], label: 'Bed 8' },
-                 car('4,3').barcode => { purpose: 'LB cDNA XP', states: ['pending'], label: 'Carousel 4,3', parent: bed(8).barcode, target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LBR Frag cDNA',
+                  states: ['passed'],
+                  label: 'Bed 8' },
+                 car('4,3').barcode => {
+                  purpose: 'LB cDNA XP',
+                  states: ['pending'],
+                  label: 'Carousel 4,3',
+                  parent: bed(8).barcode,
+                  target_state: 'passed' }
                })
 
   bravo_robot do
@@ -440,7 +781,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'Bravo LB cDNA',
                verify_robot: true,
                beds: {
-                 bed(8).barcode => { purpose: 'LB cDNA', states: ['started'], label: 'Bed 8', target_state: 'passed' }
+                 bed(8).barcode => {
+                  purpose: 'LB cDNA',
+                  states: ['started'],
+                  label: 'Bed 8',
+                  target_state: 'passed' }
                })
 
   bravo_robot do
@@ -462,10 +807,26 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'mosquito-gbs-pcr1-to-gbs-pcr2',
     name: 'mosquito GBS PCR1 => GBS PCR2',
     beds: {
-      bed(1).barcode => { purpose: 'GBS PCR1', states: ['passed'], label: 'Bed 1' },
-      bed(2).barcode => { purpose: 'GBS PCR2', states: ['pending'], label: 'Bed 2', parent: bed(1).barcode, target_state: 'started' },
-      bed(4).barcode => { purpose: 'GBS PCR1', states: ['passed'], label: 'Bed 4' },
-      bed(5).barcode => { purpose: 'GBS PCR2', states: ['pending'], label: 'Bed 5', parent: bed(4).barcode, target_state: 'started' }
+      bed(1).barcode => {
+        purpose: 'GBS PCR1',
+        states: ['passed'],
+        label: 'Bed 1' },
+      bed(2).barcode => {
+        purpose: 'GBS PCR2',
+        states: ['pending'],
+        label: 'Bed 2',
+        parent: bed(1).barcode,
+        target_state: 'started' },
+      bed(4).barcode => {
+        purpose: 'GBS PCR1',
+        states: ['passed'],
+        label: 'Bed 4' },
+      bed(5).barcode => {
+        purpose: 'GBS PCR2',
+        states: ['pending'],
+        label: 'Bed 5',
+        parent: bed(4).barcode,
+        target_state: 'started' }
     }
   )
 
@@ -474,8 +835,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'hamilton-gnt-stock-to-gnt-scdna-stock',
     name: 'Hamilton GnT Stock => GnT scDNA and scRNA',
     beds: {
-      bed(3).barcode => { purpose: 'GnT Stock', states: ['passed'], label: 'Bed 1' },
-      bed(10).barcode => { purpose: 'GnT scDNA', states: ['pending'], label: 'Bed 10', parent: bed(3).barcode, target_state: 'started' }
+      bed(3).barcode => {
+        purpose: 'GnT Stock',
+        states: ['passed'],
+        label: 'Bed 1' },
+      bed(10).barcode => {
+        purpose: 'GnT scDNA',
+        states: ['pending'],
+        label: 'Bed 10',
+        parent: bed(3).barcode,
+        target_state: 'started' }
     }
   )
 
@@ -484,7 +853,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     name: 'Hamilton GnT scDNA',
     verify_robot: true,
     beds: {
-      bed(10).barcode => { purpose: 'GnT scDNA', states: ['started'], label: 'Bed 10', target_state: 'passed' }
+      bed(10).barcode => {
+        purpose: 'GnT scDNA',
+        states: ['started'],
+        label: 'Bed 10',
+        target_state: 'passed' }
     }
   )
 
@@ -497,7 +870,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo GnT Pico End Prep',
                verify_robot: true,
                beds: {
-                 bed(5).barcode => { purpose: 'GnT Pico End Prep', states: ['started'], label: 'Bed 5', target_state: 'passed' }
+                 bed(5).barcode => {
+                  purpose: 'GnT Pico End Prep',
+                  states: ['started'],
+                  label: 'Bed 5',
+                  target_state: 'passed' }
                })
 
   bravo_robot do

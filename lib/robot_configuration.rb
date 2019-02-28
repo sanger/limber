@@ -102,8 +102,16 @@ module RobotConfiguration
         name: name,
         verify_robot: verify_robot,
         beds: {
-          source_bed_barcode => { purpose: source_purpose, states: [source_bed_state],  label: source_bed_name },
-          target_bed_barcode => { purpose: target_purpose, states: [target_bed_state],  label: target_bed_name, parent: source_bed_barcode, target_state: target_state }
+          source_bed_barcode => {
+            purpose: source_purpose,
+            states: [source_bed_state],
+            label: source_bed_name },
+          target_bed_barcode => {
+            purpose: target_purpose,
+            states: [target_bed_state],
+            label: target_bed_name,
+            parent: source_bed_barcode,
+            target_state: target_state }
         }
       }
     end

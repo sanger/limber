@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::Robot do
+RSpec.describe Robots::Robot, robots: true do
   include RobotHelpers
   has_a_working_api
 
@@ -32,7 +32,7 @@ RSpec.describe Robots::Robot do
   let(:robot) { Robots::Robot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
 
   describe '#verify' do
-    subject { robot.verify(scanned_layout) }
+    subject { robot.verify(bed_plates: scanned_layout) }
 
     context 'a simple robot' do
       let(:robot_spec) do
@@ -196,14 +196,14 @@ RSpec.describe Robots::Robot do
         end
 
         it 'is invalid' do
-          expect(robot.verify('bed1_barcode' => [source_plate.human_barcode])[:valid]).to be_falsey
+          expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] })).not_to be_valid
         end
       end
 
       context 'without plate' do
         it 'is invalid' do
           bed_plate_lookup_with_barcode('dodgy_barcode', [])
-          expect(robot.verify('bed1_barcode' => ['dodgy_barcode'])[:valid]).to be_falsey
+          expect(robot.verify(bed_plates: { 'bed1_barcode' => ['dodgy_barcode'] })).not_to be_falsey
         end
       end
 
@@ -217,20 +217,20 @@ RSpec.describe Robots::Robot do
         end
 
         it "is invalid if the barcode isn't recorded" do
-          expect(robot.verify({ 'bed1_barcode' => [source_plate.human_barcode] }, 'robot_barcode')).not_to be_valid
+          expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).not_to be_valid
         end
 
         context 'if barcodes differ' do
           let(:metadata) { { 'other_key' => 'value', 'created_with_robot' => 'other_robot' } }
           it 'is invalid' do
-            expect(robot.verify({ 'bed1_barcode' => [source_plate.human_barcode] }, 'robot_barcode')).not_to be_valid
+            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).not_to be_valid
           end
         end
 
         context 'if barcodes match' do
           let(:metadata) { { 'other_key' => 'value', 'created_with_robot' => 'robot_barcode' } }
           it 'is valid' do
-            expect(robot.verify({ 'bed1_barcode' => [source_plate.human_barcode] }, 'robot_barcode')).to be_valid
+            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).to be_valid
           end
         end
       end

@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
-RSpec.describe RobotsController, type: :controller do
+RSpec.describe RobotsController, type: :controller, robots: true do
   include FeatureHelpers
   include RobotHelpers
 
@@ -49,7 +49,7 @@ RSpec.describe RobotsController, type: :controller do
     it 'adds robot barcode to plate metadata' do
       post :start,
            params: {
-             bed: {
+             bed_plates: {
                'bed1_barcode' => ['source_plate_barcode'],
                'bed2_barcode' => [plate.human_barcode]
              },
@@ -83,12 +83,12 @@ RSpec.describe RobotsController, type: :controller do
       bed_plate_lookup(source_plate)
       bed_plate_lookup(target_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with(
-        { 'bed1_barcode' => [source_plate.human_barcode], 'bed2_barcode' => [target_plate.human_barcode] },
-        'abc'
+        'bed_plates' => { 'bed1_barcode' => [source_plate.human_barcode], 'bed2_barcode' => [target_plate.human_barcode] },
+        'robot_barcode' => 'abc'
       )
       post :verify,
            params: {
-             beds: {
+             bed_plates: {
                'bed1_barcode' => [source_plate.human_barcode],
                'bed2_barcode' => [target_plate.human_barcode]
              },

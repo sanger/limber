@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PoolingRobot do
+RSpec.describe Robots::PoolingRobot, robots: true do
   include RobotHelpers
 
   has_a_working_api
@@ -103,7 +103,7 @@ RSpec.describe Robots::PoolingRobot do
   end
 
   describe '#verify' do
-    subject { robot.verify(scanned_layout) }
+    subject { robot.verify(bed_plates: scanned_layout) }
 
     context 'a simple robot' do
       context 'with an unknown plate' do

@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+module Robots::Bed
+  # Pooling beds can have multiple parents, and have additional methods to support this
+  class Pooling < Robots::Bed::Base
+    attr_accessor :parents
+
+    def each_parent
+      range.each do |i|
+        plate_barcode = if parent_plates[i].present?
+                          SBCF::SangerBarcode.from_machine(parent_plates[i].barcode.machine)
+                        else
+                          SBCF::EmptyBarcode.new
+                        end
+        yield(parents[i], plate_barcode)
+      end
+    end
+
+    private
+
+    def parent_plates
+      @parent_plates ||= plate.wells_in_columns.each_with_object([]) do |well, plates|
+        plates << well.upstream_plates.first unless plates.include?(well.upstream_plates.first)
+      end
+    end
+
+    def range
+      round = states.index(plate.state)
+      size = parents.count / states.count
+      (size * round...size * (round + 1))
+    end
+  end
+end

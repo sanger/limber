@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-module Robots
-  class Robot::Bed
+module Robots::Bed
+  # A bed is a barcoded area of a robot that can receive a plate.
+  class Base
     include Form
-
-    class BedError < StandardError; end
     # Our robot has beds/rack-spaces
     attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child, :barcodes
 
@@ -16,8 +15,12 @@ module Robots
     validate :correct_plate_purpose, if: :plate
     validate :correct_plate_state, if: :plate
 
+    def recognised?
+      true
+    end
+
     def transitions?
-      @target_state.present?
+      target_state.present?
     end
 
     def transition
@@ -35,7 +38,7 @@ module Robots
     end
 
     def load(barcodes)
-      @barcodes = Array(barcodes).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
+      @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @plates = Sequencescape::Api::V2::Plate.find_all(barcode: @barcodes)
     end
 
