@@ -44,16 +44,22 @@ module Robots
     end
 
     def parent_plate
-      return nil if recieving_labware.nil?
+      return nil if plate.nil?
 
       parent = plate.parents.first
       return parent if parent
 
-      error("Labware #{recieving_labware.human_barcode} doesn't seem to have a parent, and yet one was expected.")
+      error("Labware #{plate.human_barcode} doesn't seem to have a parent, and yet one was expected.")
       nil
     end
 
-    alias recieving_labware plate
+    def child_plates
+      return [] if plate.nil?
+
+      @child_plates ||= plate.wells_in_columns.each_with_object([]) do |well, plates|
+        plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
+      end
+    end
 
     def formatted_message
       "#{label} - #{errors.full_messages.join('; ')}"
