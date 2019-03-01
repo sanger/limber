@@ -43,17 +43,15 @@
   import LoadingModal from 'shared/components/LoadingModal'
   import devourApi from 'shared/devourApi'
   import resources from 'shared/resources'
-  import buildArray from 'shared/buildArray'
+  import builPlateObjs from 'shared/plateHelpers'
   import requestIsActive from 'shared/requestHelpers'
   import { wellNameToCoordinate, wellCoordinateToName, requestsForWell } from 'shared/wellHelpers'
 
   export default {
     name: 'QuadStamp',
     data () {
-      let plateArray = buildArray(this.sourcePlateNumber, (iteration) => {
-        return { state: 'empty', plate: null, index: iteration } })
       return {
-        plates: plateArray,
+        plates: builPlateObjs(this.sourcePlateNumber),
         devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         requestsWithPlatesFiltered: [],
         loading: false,
@@ -109,6 +107,39 @@
           console.log(error)
           this.loading = false
         })
+      },
+      requestsFromPlates(plateObjs) {
+        let requestsArray = []
+        plateObjs.forEach((plateObj) => {
+          plateObj.plate.wells.forEach((well) => {
+            requestsForWell(well).forEach((request) => {
+              if (requestIsActive(request)) {
+                requestsArray.push({
+                  request: request,
+                  well: well,
+                  plateObj: plateObj
+                })
+              }
+            })
+          })
+        })
+        return requestsArray
+      },
+      transfersFromRequests(requestsWithPlates) {
+        let transfersArray = []
+        requestsWithPlates.forEach((requestWithPlate) => {
+          let { request, well, plateObj } = requestWithPlate
+          if (request === undefined) { return }
+          let targetWell = this.targetFor(plateObj.index, well.position.name)
+          transfersArray.push({
+            source_plate: plateObj.plate.uuid,
+            pool_index: plateObj.index + 1,
+            source_asset: well.uuid,
+            outer_request: request.uuid,
+            new_target: { location: targetWell } }
+          )
+        })
+        return transfersArray
       }
     },
     computed: {
@@ -123,37 +154,10 @@
         return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
       },
       requestsWithPlates() {
-        let requestsArray = []
-        this.validPlates.forEach((plateState) => {
-          plateState.plate.wells.forEach((well) => {
-            requestsForWell(well).forEach((request) => {
-              if (requestIsActive(request)) {
-                requestsArray.push({
-                  request: request,
-                  well: well,
-                  plateState: plateState
-                })
-              }
-            })
-          })
-        })
-        return requestsArray
+        return this.requestsFromPlates(this.validPlates)
       },
       transfers() {
-        let transferArray = []
-        this.requestsWithPlatesFiltered.forEach((requestWithPlate) => {
-          let { request, well, plateState } = requestWithPlate
-          if (request === undefined) { return }
-          let targetWell = this.targetFor(plateState.index, well.position.name)
-          transferArray.push({
-            source_plate: plateState.plate.uuid,
-            pool_index: plateState.index + 1,
-            source_asset: well.uuid,
-            outer_request: request.uuid,
-            new_target: { location: targetWell } }
-          )
-        })
-        return transferArray
+        return this.transfersFromRequests(this.requestsWithPlatesFiltered)
       },
       targetWells() {
         let deb = this.transfers.reduce((wells, transfer) => {

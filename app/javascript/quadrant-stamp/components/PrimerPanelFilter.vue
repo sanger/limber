@@ -27,7 +27,7 @@
       primerPanels() { // Returns the mutual primer panels
         let primerPanelsByPlate = new Map()
         this.requestsWithPrimerPanel.forEach((requestWithPlate) => {
-          let plate_id = requestWithPlate.plateState.plate.id
+          let plate_id = requestWithPlate.plateObj.plate.id
           let primer_panel = requestWithPlate.request.primer_panel.name
           if (primerPanelsByPlate.has(plate_id)) {
             primerPanelsByPlate.get(plate_id).add(primer_panel)
