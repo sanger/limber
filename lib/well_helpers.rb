@@ -119,6 +119,6 @@ module WellHelpers
   # @return [Array<Integer>] An array of two integers indicating column and row. eg. [0, 2]
   #
   def self.well_coordinate(well)
-    [well[1..-1].to_i, well.getbyte(0) - 'A'.getbyte(0)]
+    [well[1..-1].to_i - 1, well.getbyte(0) - 'A'.getbyte(0)]
   end
 end

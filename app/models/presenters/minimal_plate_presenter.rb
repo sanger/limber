@@ -4,7 +4,7 @@ module Presenters
   class MinimalPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
     self.summary_partial = 'labware/plates/minimal_summary'
-    self.well_failure_states = []
+    self.allow_well_failure_in_states = []
 
     def number_of_wells
       size

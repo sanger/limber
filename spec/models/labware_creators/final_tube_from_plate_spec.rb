@@ -88,7 +88,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
 
     it 'redirects to the parent plate' do
       subject.save!
-      expect(subject.child.uuid).to eq(parent_uuid)
+      expect(subject.redirection_target.uuid).to eq(parent_uuid)
     end
   end
 end
