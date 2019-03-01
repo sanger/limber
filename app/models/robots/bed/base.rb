@@ -5,10 +5,12 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child, :barcodes
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
+    attr_writer :barcodes
 
     delegate :api, :user_uuid, to: :robot
     delegate :state, to: :plate, allow_nil: true, prefix: true
+    delegate :empty?, to: :barcodes
 
     validates :barcodes, length: { maximum: 1, too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
     validates :plate, presence: { message: ->(bed, _data) { "Could not find a plate with the barcode '#{bed.barcode}'." } }, if: :barcode
@@ -33,12 +35,17 @@ module Robots::Bed
       purpose
     end
 
+    def barcodes
+      @barcodes ||= []
+    end
+
     def barcode
-      @barcodes&.first
+      barcodes.first
     end
 
     def load(barcodes)
-      @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?) # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
+      # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
+      @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
       @plates = Sequencescape::Api::V2::Plate.find_all(barcode: @barcodes)
     end
 

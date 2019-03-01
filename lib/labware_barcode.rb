@@ -18,6 +18,12 @@ class LabwareBarcode
     extracted && extracted[:prefix]
   end
 
+  def sbcf
+    @sbcf ||= SBCF::SangerBarcode.from_human(@human)
+  end
+
+  delegate :=~, to: :sbcf
+
   private
 
   def extracted

@@ -6,19 +6,14 @@ module Robots
 
     def valid_relationships
       verified = {}
-      if destination_bed.barcode.blank?
+      if destination_bed.empty?
         # We don't even have a destination barcode
         verified[destination_bed_id] = false
         error(destination_bed, 'No destination plate barcode provided')
       elsif destination_bed.valid?
         # The destination bed is valid, so check its parents are correct
         destination_bed.each_parent do |bed_barcode, expected_barcode|
-          scanned_barcode = beds.fetch(bed_barcode).barcode
-          verified[bed_barcode] = expected_barcode =~ scanned_barcode
-          unless verified[bed_barcode]
-            error(beds[bed_barcode],
-                  "Expected to contain #{expected_barcode} not #{scanned_barcode}")
-          end
+          verified[bed_barcode] = validate_parent(bed_barcode, expected_barcode)
         end
       end
       verified
@@ -34,6 +29,16 @@ module Robots
 
     def destination_bed_id
       @destination_bed
+    end
+
+    private
+
+    def validate_parent(bed_barcode, expected_barcode)
+      parent_bed = beds.fetch(bed_barcode)
+      return true if expected_barcode =~ parent_bed.barcode
+
+      error(parent_bed, "Expected to contain #{expected_barcode} not #{parent_bed.barcode}")
+      false
     end
   end
 end

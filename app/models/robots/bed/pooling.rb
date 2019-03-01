@@ -8,7 +8,7 @@ module Robots::Bed
     def each_parent
       range.each do |i|
         plate_barcode = if parent_plates[i].present?
-                          SBCF::SangerBarcode.from_machine(parent_plates[i].barcode.machine)
+                          parent_plates[i].barcode
                         else
                           SBCF::EmptyBarcode.new
                         end
