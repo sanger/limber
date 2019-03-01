@@ -44,8 +44,8 @@
   import devourApi from 'shared/devourApi'
   import resources from 'shared/resources'
   import builPlateObjs from 'shared/plateHelpers'
-  import requestIsActive from 'shared/requestHelpers'
-  import { wellNameToCoordinate, wellCoordinateToName, requestsForWell } from 'shared/wellHelpers'
+  import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
+  import { wellNameToCoordinate, wellCoordinateToName } from 'shared/wellHelpers'
 
   export default {
     name: 'QuadStamp',
@@ -67,8 +67,8 @@
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 },
       // Defaults assumes column orientated stamping.
-      rowOffset: { type: Array, default: () =>{ return [0,1,0,1] } },
-      colOffset: { type: Array, default: () =>{ return [0,0,1,1] } },
+      rowOffset: { type: Array, default: () => { return [0,1,0,1] } },
+      colOffset: { type: Array, default: () => { return [0,0,1,1] } },
       locationObj: { default: () => { return location } }
     },
     methods: {
@@ -108,23 +108,6 @@
           this.loading = false
         })
       },
-      requestsFromPlates(plateObjs) {
-        let requestsArray = []
-        plateObjs.forEach((plateObj) => {
-          plateObj.plate.wells.forEach((well) => {
-            requestsForWell(well).forEach((request) => {
-              if (requestIsActive(request)) {
-                requestsArray.push({
-                  request: request,
-                  well: well,
-                  plateObj: plateObj
-                })
-              }
-            })
-          })
-        })
-        return requestsArray
-      },
       transfersFromRequests(requestsWithPlates) {
         let transfersArray = []
         requestsWithPlates.forEach((requestWithPlate) => {
@@ -154,7 +137,8 @@
         return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
       },
       requestsWithPlates() {
-        return this.requestsFromPlates(this.validPlates)
+        return requestsFromPlates(this.validPlates).filter((requestWithPlate) =>
+          requestIsActive(requestWithPlate.request))
       },
       transfers() {
         return this.transfersFromRequests(this.requestsWithPlatesFiltered)

@@ -21,19 +21,19 @@
     methods: {
       matchPrimerPanel(requestWithPlate) {
         return requestWithPlate.request.primer_panel.name === this.primerPanel
-      },
+      }
     },
     computed: {
       primerPanels() { // Returns the mutual primer panels
         let primerPanelsByPlate = new Map()
         this.requestsWithPrimerPanel.forEach((requestWithPlate) => {
-          let plate_id = requestWithPlate.plateObj.plate.id
+          let plate_uuid = requestWithPlate.plateObj.plate.uuid
           let primer_panel = requestWithPlate.request.primer_panel.name
-          if (primerPanelsByPlate.has(plate_id)) {
-            primerPanelsByPlate.get(plate_id).add(primer_panel)
+          if (primerPanelsByPlate.has(plate_uuid)) {
+            primerPanelsByPlate.get(plate_uuid).add(primer_panel)
           }
           else {
-            primerPanelsByPlate.set(plate_id, new Set([primer_panel]))
+            primerPanelsByPlate.set(plate_uuid, new Set([primer_panel]))
           }
         })
         if (primerPanelsByPlate.size === 0) { return [] }
@@ -58,14 +58,15 @@
         else {
           return ''
         }
+      },
+      filteredRequests() {
+        return this.requestsWithPrimerPanel.filter((requestWithPlate) =>
+          this.matchPrimerPanel(requestWithPlate))
       }
     },
     watch: {
       primerPanel: function() {
-        let requestsWithPlatesFiltered =
-          this.requestsWithPrimerPanel.filter((requestWithPlate) =>
-            this.matchPrimerPanel(requestWithPlate))
-        this.$emit('change', requestsWithPlatesFiltered)
+        this.$emit('change', this.filteredRequests)
       }
     }
   }
