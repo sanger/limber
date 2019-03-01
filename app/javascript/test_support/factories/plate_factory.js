@@ -13,14 +13,14 @@ const plateFactory = function(options = {}) {
     number_of_columns: 12,
     number_of_rows: 8,
     state: 'passed',
-    wells: buildArray(_filledWells||96, (interation) => wellFactory({
+    wells: buildArray(_filledWells || 96, (interation) => wellFactory({
       ...{
         uuid: `${uuid}-well-${interation}`,
         position: { name: indexToName(interation, 12, 8) } },
       ..._wellOptions
     }) )
   }
-  return { ... plateDefaults, ...(plateOptions || {}) }
+  return { ...plateDefaults, ...(plateOptions || {}) }
 }
 
 export default plateFactory

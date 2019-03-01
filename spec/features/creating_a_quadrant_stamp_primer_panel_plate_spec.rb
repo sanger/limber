@@ -89,7 +89,7 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     create :purpose_config, name: 'Primer Panel example', uuid: parent_purpose_uuid
     create :purpose_config,
-           creator_class: 'LabwareCreators::QuadrantStamp',
+           creator_class: 'LabwareCreators::QuadrantStampPrimerPanel',
            name: child_purpose_name,
            parents: ['Primer Panel example'],
            uuid: 'child-purpose-0'
