@@ -36,8 +36,8 @@ describe('QuadStamp', () => {
       requestFactory({primerPanel: {name: 'Common Panel'}}),
       requestFactory({primerPanel: {name: 'Shared Panel'}})
     ]
-    const wells1 = [ wellFactory({ requestsAsSource: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
-    const wells2 = [ wellFactory({ requestsAsSource: requestsAsSource2 }) ]
+    const wells1 = [ wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
+    const wells2 = [ wellFactory({ requests_as_source: requestsAsSource2 }) ]
     const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', wells: wells1 }) }
     const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', wells: wells2 }) }
     const wrapper = wrapperFactory()
@@ -57,8 +57,8 @@ describe('QuadStamp', () => {
 
   it('enables creation when there are all valid plates', () => {
     const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
-    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(1, plate2)
     // Consider auto-selecting a single panel
@@ -69,8 +69,8 @@ describe('QuadStamp', () => {
 
   it('disables creation when there are some invalid plates', () => {
     const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
-    const plate2 = { state: 'invalid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'invalid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(1, plate2)
     // Consider auto-selecting a single panel
@@ -82,7 +82,7 @@ describe('QuadStamp', () => {
   it('sends a post request when the button is clicked', async () => {
     let mock = new MockAdapter(localVue.prototype.$axios)
 
-    const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 1 }) }
+    const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate)
 
@@ -116,7 +116,7 @@ describe('QuadStamp', () => {
 
   it('disables creation when there are no possible transfers', () => {
     const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
 
     expect(wrapper.find('bbutton-stub').element.getAttribute('disabled')).toEqual('true')
@@ -124,11 +124,11 @@ describe('QuadStamp', () => {
 
   it('filters requests based on panel options', () => {
     const requestsAsSource1 = [
-      requestFactory({ uuid: 'other-request-1', primerPanel: {name: 'Common Panel'}}),
-      requestFactory({ uuid: 'target-request-1', primerPanel: {name: 'Distinct Panel'}})
+      requestFactory({ uuid: 'other-request-1', primer_panel: {name: 'Common Panel'}}),
+      requestFactory({ uuid: 'target-request-1', primer_panel: {name: 'Distinct Panel'}})
     ]
-    const requestsOnAliquot1 = requestFactory({ uuid: 'target-request-2', primerPanel: {name: 'Shared Panel'}})
-    const wells1 = [ wellFactory({ requestsAsSource: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
+    const requestsOnAliquot1 = requestFactory({ uuid: 'target-request-2', primer_panel: {name: 'Shared Panel'}})
+    const wells1 = [ wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
     const plate1 = { state: 'valid', plate: plateFactory({ wells: wells1 }) }
 
     const wrapper = wrapperFactory()
@@ -148,7 +148,7 @@ describe('QuadStamp', () => {
   })
 
   it('calculates transfers', () => {
-    const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', filledWells: 4 }) }
+    const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate)
 
@@ -164,10 +164,10 @@ describe('QuadStamp', () => {
   })
 
   it('handles multiple plates', () => {
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', filledWells: 4 }) }
-    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', filledWells: 2 }) }
-    const plate3 = { state: 'valid', plate: plateFactory({ uuid: 'plate-3-uuid', filledWells: 3 }) }
-    const plate4 = { state: 'valid', plate: plateFactory({ uuid: 'plate-4-uuid', filledWells: 5 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', _filledWells: 2 }) }
+    const plate3 = { state: 'valid', plate: plateFactory({ uuid: 'plate-3-uuid', _filledWells: 3 }) }
+    const plate4 = { state: 'valid', plate: plateFactory({ uuid: 'plate-4-uuid', _filledWells: 5 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(2, plate2)
@@ -196,10 +196,10 @@ describe('QuadStamp', () => {
   })
 
   it('passes on the layout', () => {
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', filledWells: 4 }) }
-    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', filledWells: 2 }) }
-    const plate3 = { state: 'valid', plate: plateFactory({ uuid: 'plate-3-uuid', filledWells: 3 }) }
-    const plate4 = { state: 'valid', plate: plateFactory({ uuid: 'plate-4-uuid', filledWells: 5 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', _filledWells: 2 }) }
+    const plate3 = { state: 'valid', plate: plateFactory({ uuid: 'plate-3-uuid', _filledWells: 3 }) }
+    const plate4 = { state: 'valid', plate: plateFactory({ uuid: 'plate-4-uuid', _filledWells: 5 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(2, plate2)
