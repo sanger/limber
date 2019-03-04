@@ -3,13 +3,13 @@
                 :label="label"
                 :label-cols="2"
                 label-size="lg"
-                label-for="plateScan"
+                :label-for="uid"
                 :description="description"
                 :state="state"
                 :invalid-feedback="invalidFeedback"
                 :valid-feedback="validFeedback"
                 v-bind:class="{ 'wait-plate': searching }">
-    <b-form-input id="plateScan"
+    <b-form-input :id="uid"
                   type="text"
                   v-model.trim="plateBarcode"
                   :state="state"
@@ -22,15 +22,23 @@
 </template>
 
 <script>
+
+  // Incrementing counter to ensure all instances of PlateScan
+  // have a unique id. Ensures labels correctly match up with
+  // fields
+  let uid = 0
+
   export default {
     name: 'PlateScan',
     data() {
+      uid += 1
       return {
         plateBarcode: '',
         plate: null,
         state: 'empty',
         invalidFeedback: '',
-        validFeedback: ''
+        validFeedback: '',
+        uid: `plate-scan-${uid}`
       }
     },
     props: {
