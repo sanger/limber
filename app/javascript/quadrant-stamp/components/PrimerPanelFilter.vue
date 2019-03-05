@@ -33,7 +33,7 @@
             primerPanelsByPlate.get(plate_id).add(primer_panel)
           }
           else {
-            primerPanelsByPlate.set(plate_uuid, new Set([primer_panel]))
+            primerPanelsByPlate.set(plate_id, new Set([primer_panel]))
           }
         })
         if (primerPanelsByPlate.size === 0) { return [] }
