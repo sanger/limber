@@ -25,19 +25,19 @@
     },
     computed: {
       primerPanels() { // Returns the mutual primer panels
-        let primerPanelsByPlate = new Map()
+        const primerPanelsByPlate = new Map()
         this.requestsWithPrimerPanel.forEach((requestWithPlate) => {
-          let plate_uuid = requestWithPlate.plateObj.plate.uuid
-          let primer_panel = requestWithPlate.request.primer_panel.name
-          if (primerPanelsByPlate.has(plate_uuid)) {
-            primerPanelsByPlate.get(plate_uuid).add(primer_panel)
+          const plate_id = requestWithPlate.plateObj.plate.id
+          const primer_panel = requestWithPlate.request.primer_panel.name
+          if (primerPanelsByPlate.has(plate_id)) {
+            primerPanelsByPlate.get(plate_id).add(primer_panel)
           }
           else {
             primerPanelsByPlate.set(plate_uuid, new Set([primer_panel]))
           }
         })
         if (primerPanelsByPlate.size === 0) { return [] }
-        let primerPanelsIterable =
+        const primerPanelsIterable =
           Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
             Array.from(accu.values()).filter(val => current.has(val)))
         return Array.from(primerPanelsIterable.values())
@@ -59,14 +59,13 @@
           return ''
         }
       },
-      filteredRequests() {
-        return this.requestsWithPrimerPanel.filter((requestWithPlate) =>
-          this.matchPrimerPanel(requestWithPlate))
+      requestsWithPlatesFiltered() {
+        return this.requestsWithPrimerPanel.filter(this.matchPrimerPanel)
       }
     },
     watch: {
-      primerPanel: function() {
-        this.$emit('change', this.filteredRequests)
+      requestsWithPlatesFiltered: function() {
+        this.$emit('change', this.requestsWithPlatesFiltered)
       }
     }
   }
