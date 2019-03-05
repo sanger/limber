@@ -1,5 +1,5 @@
 <template>
-  <div :class="['well', wellName]"><span v-if="poolIndex" :class="['aliquot', colourClass]">{{ tagIndex }}</span></div>
+  <div :class="['well', wellName]"><span v-if="poolIndex" :class="['aliquot', colourClass]" @click="onWellClicked">{{ tagIndex }}</span></div>
 </template>
 
 <script>
@@ -14,6 +14,11 @@
       colourClass() {
         if(this.tagIndex && this.tagIndex === 'X') { return `colour-172` }
         return `colour-${this.poolIndex}`
+      }
+    },
+    methods: {
+      onWellClicked() {
+        this.$emit('onwellclicked', this.wellName)
       }
     }
   }

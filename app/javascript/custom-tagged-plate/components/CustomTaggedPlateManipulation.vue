@@ -4,8 +4,6 @@
       <b-col>
           <b-form-group id="tag_plate_scan_group"
                         label="Scan in the tag plate you wish to use here...">
-            <!-- scan plate should in this case lookup a 'qcable' with barcode in a state of 'available' or 'exhausted' -->
-            <!-- possible qcable states 'failed','passed','exhausted','destroyed','created','available','pending','qc_in_progress' -->
             <lb-plate-scan id="tag_plate_scan"
                            :api="api"
                            :label="'Tag Plate'"
@@ -54,7 +52,6 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <!-- by pool/plate seq/plate fixed select dropdown -->
         <b-form-group id="walking_by_options_group"
                       label="Walking By Options:"
                       label-for="walking_by_options">
@@ -66,7 +63,6 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <!-- in rows/columns select dropdown -->
         <b-form-group id="direction_options_group"
                       label="Directions Options:"
                       label-for="direction_options">
@@ -80,7 +76,6 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <!-- start at tag select dropdown -->
         <b-form-group id="start_at_tag_group"
                       label="Start at tag number:"
                       label-for="start_at_tag_input"
@@ -112,9 +107,6 @@
         </b-form-group>
       </b-col>
     </b-row>
-
-    <!-- TODO tag replacement pallette -->
-
   </b-container>
 </template>
 

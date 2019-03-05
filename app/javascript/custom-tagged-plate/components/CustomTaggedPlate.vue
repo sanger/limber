@@ -13,8 +13,73 @@
                           @change="tagGroupsLookupUpdated">
     </lb-tag-groups-lookup>
     <lb-main-content v-if="parentPlate">
-      <lb-parent-plate-view :caption="plateViewCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells"></lb-parent-plate-view>
-      <lb-custom-tagged-plate-details></lb-custom-tagged-plate-details>
+      <lb-parent-plate-view :caption="plateViewCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells" @onwellclicked="onWellClicked"></lb-parent-plate-view>
+      <b-modal id="well_modal"
+               :title="'Well: ' + wellModalDetails.wellName"
+               v-model="isWellModalVisible"
+               @ok="handleWellModalOk"
+               @shown="handleWellModalShown">
+        <!-- if no aliquot in well can do nothing but show basic info -->
+        <!-- if no tag in well do what? allow tag substitution -->
+        <!-- if tag want to show any existing substitution and allow change (show original tag and sub tag in number input) -->
+        <!-- if tag but no substitution show empty subs tag number input -->
+        <!-- number input range is same as full number of tags list range -->
+        <!-- validations on Ok: -->
+        <!-- * valid tag number from range -->
+        <!-- * NB. can be same as original tag (to allow reset) -->
+        <!-- processes on Ok: -->
+        <!-- * update/new/remove substitution for the well key e.g. A1: { 1:5 } -->
+        <!-- * substitutions change should trigger update on childwells with new tag which should trigger update on plate view -->
+        <!-- * substitutions are prop in details panel so will trigger it to update -->
+        <!-- * computed tag clash checks are triggered by change in childwells and will highlight matching tags in plate and set state invalid -->
+
+        <form @submit.stop.prevent="handleWellModalSubmit">
+          <b-container fluid>
+            <b-row class="form-group form-row">
+              <b-col>
+                <b-form-group id="original_tag_number_group"
+                              label="Original tag:"
+                              label-for="original_tag_number_input"
+                              readonly="true">
+                  <b-form-input id="original_tag_number_input"
+                                type="number"
+                                v-bind:value="wellModalDetails.originalTag"
+                                readonly>
+                  </b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row class="form-group form-row">
+              <b-col>
+                <!-- TODO change max from numberOfTags to highest map id number -->
+                <!-- TODO change min from 1 to lowest map id number -->
+                <b-form-group id="substitute_tag_number_group"
+                              label="Substitute tag:"
+                              label-for="substitute_tag_number_input"
+                              :invalid-feedback="substituteTagInvalidFeedback"
+                              :valid-feedback="substituteTagValidFeedback"
+                              :state="substituteTagState">
+                  <b-form-input id="substitute_tag_number_input"
+                                type="number"
+                                min="1"
+                                :max="numberOfTags"
+                                step="1"
+                                placeholder="Enter tag number to substitute"
+                                :state="substituteTagState"
+                                v-model="wellSubstituteNumber"
+                                ref="focusThis">
+                  </b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-container>
+        </form>
+        <!-- TODO v-if messages show here e.g. do we have Tag Clash info? Or if No tag. -->
+      </b-modal>
+
+      <lb-custom-tagged-plate-details :tagSubstitutions="tagSubstitutions"
+                                      @removetagsubstitution="removeTagSubstitution">
+      </lb-custom-tagged-plate-details>
     </lb-main-content>
     <lb-main-content v-else>
       <lb-loading-modal-plate :message="progressMessageParent" :key="1"></lb-loading-modal-plate>
@@ -46,17 +111,17 @@
 
 <script>
 
-  import Plate from 'shared/components/Plate'
-  import AssetLookupByUuid from 'shared/components/AssetLookupByUuid'
-  import TagGroupsLookup from 'shared/components/TagGroupsLookup'
-  import LoadingModal from 'shared/components/LoadingModal'
+  import Plate from 'shared/components/Plate.vue'
+  import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
+  import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
+  import LoadingModal from 'shared/components/LoadingModal.vue'
   import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
   import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
-  import { wellCoordinateToName } from 'shared/wellHelpers'
+  import { wellCoordinateToName } from 'shared/wellHelpers.js'
   import Vue from 'vue'
   import devourApi from 'shared/devourApi'
   import resources from 'shared/resources'
-  import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
+  import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions.js'
 
   export default {
     name: 'CustomTaggedPlate',
@@ -76,7 +141,11 @@
         walkingBy: null,
         direction: null,
         startAtTagNumber: null,
-        tagSubstitutions: null // { 1:2,5:8, etc }
+        tagLayout: null,
+        tagSubstitutions: {}, // { 1:2, 5:8 etc}
+        isWellModalVisible: false,
+        wellModalDetails: {},
+        wellSubstituteNumber: null
       }
     },
     props: {
@@ -149,29 +218,6 @@
         }
 
         return submId
-      },
-      applyTagIndexesToWells(tagLayout) {
-        let invalidCount = 0
-        let childWells = {}
-        const parentWells = this.parentWells
-
-        Object.keys(tagLayout).forEach(function (key) {
-          childWells[key] = { ... parentWells[key]}
-          if(tagLayout[key] === -1) {
-            childWells[key]['tagIndex'] = 'X'
-            invalidCount++
-          } else {
-            childWells[key]['tagIndex'] = tagLayout[key].toString()
-          }
-        })
-
-        if(invalidCount > 0) {
-          this.state = 'invalid'
-        } else {
-          this.state = 'valid'
-        }
-
-        return childWells
       },
       coreTagGroupOptions() {
         let options = []
@@ -265,11 +311,87 @@
           console.log(response.data.message)
           this.locationObj.href = response.data.redirect
           this.state = 'success'
+          // TODO clear out stored info to reset page? does it forward to new plate?
         }).catch((error)=>{
           // Something has gone wrong
           console.log(error)
           this.state = 'failure'
         })
+      },
+      onWellClicked(wellName) {
+        console.log('Main got a click event from plate for well ', wellName)
+
+        // check if well has aliquot
+        if(this.childWells[wellName].aliquotCount === 0) {
+          console.log('no aliquots in well, not drawing modal')
+          return
+        }
+
+        // check well has a tag
+        if(!this.childWells[wellName].tagIndex) {
+          console.log('no tag in well, not drawing modal')
+          return
+        }
+
+        // TODO do we need flag for 'no tag present?' and display message in modal with no tag subs options?
+
+        const origTag = this.tagLayout[wellName]
+
+        this.wellModalDetails = {
+          wellName: wellName,
+          currentTag: this.childWells[wellName].tagIndex,
+          originalTag: origTag,
+          substitutionExists: false
+        }
+
+        this.wellSubstituteNumber = null
+
+        // check if already substituted and if so display that info
+        if(origTag in this.tagSubstitutions) {
+          this.wellModalDetails.substitutionExists = true
+          this.wellSubstituteNumber = this.tagSubstitutions[origTag]
+        }
+
+        this.isWellModalVisible = true
+      },
+      handleWellModalShown(e) {
+        this.$refs.focusThis.focus()
+      },
+      handleWellModalOk(evt) {
+        console.log('in handle well modal Ok')
+        // Prevent modal from closing unless conditions
+        evt.preventDefault()
+        // TODO this will not work for just messages e.g. empty well/no tags
+        if (!this.wellSubstituteNumber) {
+          alert('Please enter a tag to substitute then click Ok, or else cancel')
+        } else {
+          this.isWellModalVisible = false
+          this.handleWellModalSubmit()
+        }
+      },
+      handleWellModalSubmit() {
+        const origTag = this.wellModalDetails.originalTag
+
+        if(origTag in this.tagSubstitutions && origTag === this.wellSubstituteNumber) {
+          // being changed back to original, delete from object
+          delete this.tagSubstitutions.origTag
+        } else {
+          this.tagSubstitutions[origTag] = this.wellSubstituteNumber
+        }
+
+        // TODO having to create new object to trigger reactivity, why?
+        let newTagSubs = { ...this.tagSubstitutions }
+        this.tagSubstitutions = newTagSubs
+
+        // run tag clash checks to highlight problems (e.g. duplicate tags)
+        // this updates childWells tags with any tag clashes and clears rest
+        // sets state valid/invalid
+      },
+      removeTagSubstitution(origTagId) {
+        // TODO having to create new object to trigger reactivity, why?
+        let newTagSubs = { ...this.tagSubstitutions }
+        delete newTagSubs[origTagId]
+        this.tagSubstitutions = newTagSubs
       }
     },
     computed: {
@@ -328,7 +450,7 @@
 
         return wells
       },
-      childWells: function () {
+      childWells() {
         if(!this.parentWells || this.parentWells === {}) {
           this.state = 'invalid'
           return {}
@@ -349,16 +471,44 @@
           startAtTagNumber: this.startAtTagNumber
         }
 
-        let tagLayout = calculateTagLayout(data)
+        this.tagLayout = calculateTagLayout(data)
 
-        if(tagLayout) {
-          return this.applyTagIndexesToWells(tagLayout)
+        let cw = {}
+        if(this.tagLayout) {
+          // let invalidCount = 0
+
+          Object.keys(this.tagLayout).forEach((key) => {
+            cw[key] = { ...this.parentWells[key]}
+            if(this.tagLayout[key] === -1) {
+              cw[key]['tagIndex'] = 'X'
+              // invalidCount++
+            } else {
+              // check for tag substitution
+              const origTag = this.tagLayout[key]
+
+              if((Object.keys(this.tagSubstitutions).length > 0) && (this.tagSubstitutions.hasOwnProperty(origTag))) {
+                cw[key]['tagIndex'] = this.tagSubstitutions[origTag].toString()
+              } else {
+                cw[key]['tagIndex'] = this.tagLayout[key].toString()
+              }
+            }
+          })
+
+          // TODO move state determination to separate computed function
+          // if(invalidCount > 0) {
+          //   this.state = 'invalid'
+          // } else {
+          //   this.state = 'valid'
+          // }
+          // }
+          return cw
         }
 
+        // show copy of parent plate wells by default
         this.state = 'invalid'
         return { ...this.parentWells }
       },
-      tag1GroupOptions: function () {
+      tag1GroupOptions() {
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -368,7 +518,7 @@
 
         return options
       },
-      tag2GroupOptions: function () {
+      tag2GroupOptions() {
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -378,7 +528,7 @@
 
         return options
       },
-      numberOfTags: function () {
+      numberOfTags() {
         let numTags = 0
         const tagGrps = this.tagGroupsList
         const tag1Id = this.tag1GroupId
@@ -396,7 +546,7 @@
 
         return numTags
       },
-      numberOfTargetWells: function () {
+      numberOfTargetWells() {
         let numTargets = 0
 
         if(this.parentWells) {
@@ -411,6 +561,51 @@
           }
         }
         return numTargets
+      },
+      substituteTagState() {
+        // TODO change to number must exist in this.tagMapIds
+        return ((this.wellSubstituteNumber >= 1) &&
+                (this.wellSubstituteNumber <= this.numberOfTags)) ? true : false
+      },
+      substituteTagValidFeedback() {
+        return this.substituteTagState === true ? 'Valid' : ''
+      },
+      substituteTagInvalidFeedback() {
+        if(this.wellSubstituteNumber === null || this.wellSubstituteNumber === undefined || this.wellSubstituteNumber === '') { return '' }
+
+        // TODO change to:
+        // return this.substituteTagState === false ? 'Number does not match a tag map id' : ''
+
+        let chk
+        chk = this.substituteTagCheckTooLow
+        if(!chk.valid) { return chk.message }
+
+        chk = this.substituteTagCheckTooHigh
+        if(!chk.valid) { return chk.message }
+
+        return ''
+      },
+      // TODO remove
+      substituteTagCheckTooLow: function () {
+        let ret = { valid: true, message: '' }
+
+        if(this.wellSubstituteNumber < 1) {
+          ret.valid = false
+          ret.message = 'Tag number must be greater than or equal to 1'
+        }
+
+        return ret
+      },
+      // TODO remove
+      substituteTagCheckTooHigh: function () {
+        let ret = { valid: true, message: '' }
+
+        if(this.wellSubstituteNumber > this.numberOfTags) {
+          ret.valid = false
+          ret.message = 'Tag number must be less than or equal to ' + this.numberOfTags
+        }
+
+        return ret
       },
       buttonText() {
         return {

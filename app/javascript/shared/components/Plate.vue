@@ -11,7 +11,7 @@
       <tr v-for="row in rows">
         <th class="first-col">{{ row | toLetter }}</th>
         <td v-for="column in columns">
-          <lb-well :well-name="wellName(row - 1, column - 1)" v-bind="wellAt(row - 1, column - 1)"></lb-well>
+          <lb-well :well-name="wellName(row - 1, column - 1)" v-bind="wellAt(row - 1, column - 1)" @onwellclicked="onWellClicked"></lb-well>
         </td>
       </tr>
     </tbody>
@@ -43,6 +43,10 @@
       },
       wellName: function (row, column) {
         return wellCoordinateToName([column, row])
+      },
+      onWellClicked(wellName) {
+        console.log('Plate got a click event from well ', wellName)
+        this.$emit('onwellclicked', wellName)
       }
     },
     components: {
