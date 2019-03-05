@@ -19,3 +19,4 @@ REVISION
 /spec/examples.txt
 yarn-error.log
 .tern-project
+*.swn
