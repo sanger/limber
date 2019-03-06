@@ -14,25 +14,28 @@
     </lb-tag-groups-lookup>
     <lb-main-content v-if="parentPlate">
       <lb-parent-plate-view :caption="plateViewCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells" @onwellclicked="onWellClicked"></lb-parent-plate-view>
-      <b-modal id="well_modal"
-               :title="'Well: ' + wellModalDetails.wellName"
-               v-model="isWellModalVisible"
-               @ok="handleWellModalOk"
-               @shown="handleWellModalShown">
-        <!-- if no aliquot in well can do nothing but show basic info -->
-        <!-- if no tag in well do what? allow tag substitution -->
-        <!-- if tag want to show any existing substitution and allow change (show original tag and sub tag in number input) -->
-        <!-- if tag but no substitution show empty subs tag number input -->
-        <!-- number input range is same as full number of tags list range -->
-        <!-- validations on Ok: -->
-        <!-- * valid tag number from range -->
-        <!-- * NB. can be same as original tag (to allow reset) -->
-        <!-- processes on Ok: -->
-        <!-- * update/new/remove substitution for the well key e.g. A1: { 1:5 } -->
-        <!-- * substitutions change should trigger update on childwells with new tag which should trigger update on plate view -->
-        <!-- * substitutions are prop in details panel so will trigger it to update -->
-        <!-- * computed tag clash checks are triggered by change in childwells and will highlight matching tags in plate and set state invalid -->
-
+      <!-- if no aliquot in well can do nothing but show basic info -->
+      <!-- if no tag in well do what? allow tag substitution -->
+      <!-- if tag want to show any existing substitution and allow change (show original tag and sub tag in number input) -->
+      <!-- if tag but no substitution show empty subs tag number input -->
+      <!-- number input range is same as full number of tags list range -->
+      <!-- validations on Ok: -->
+      <!-- * valid tag number from range -->
+      <!-- * NB. can be same as original tag (to allow reset) -->
+      <!-- processes on Ok: -->
+      <!-- * update/new/remove substitution for the well key e.g. A1: { 1:5 } -->
+      <!-- * substitutions change should trigger update on childwells with new tag which should trigger update on plate view -->
+      <!-- * substitutions are prop in details panel so will trigger it to update -->
+      <!-- * computed tag clash checks are triggered by change in childwells and will highlight matching tags in plate and set state invalid -->
+      <!-- TODO change max from numberOfTags to highest map id number -->
+      <!-- TODO change min from 1 to lowest map id number -->
+      <!-- TODO v-if messages show here e.g. do we have Tag Clash info? Or if No tag. -->
+      <b-modal v-if="wellModalDetails"
+              id="well_modal"
+              :title="wellModalTitle"
+              v-model="isWellModalVisible"
+              @ok="handleWellModalOk"
+              @shown="handleWellModalShown">
         <form @submit.stop.prevent="handleWellModalSubmit">
           <b-container fluid>
             <b-row class="form-group form-row">
@@ -51,8 +54,6 @@
             </b-row>
             <b-row class="form-group form-row">
               <b-col>
-                <!-- TODO change max from numberOfTags to highest map id number -->
-                <!-- TODO change min from 1 to lowest map id number -->
                 <b-form-group id="substitute_tag_number_group"
                               label="Substitute tag:"
                               label-for="substitute_tag_number_input"
@@ -74,9 +75,7 @@
             </b-row>
           </b-container>
         </form>
-        <!-- TODO v-if messages show here e.g. do we have Tag Clash info? Or if No tag. -->
       </b-modal>
-
       <lb-custom-tagged-plate-details :tagSubstitutions="tagSubstitutions"
                                       @removetagsubstitution="removeTagSubstitution">
       </lb-custom-tagged-plate-details>
@@ -141,7 +140,6 @@
         walkingBy: null,
         direction: null,
         startAtTagNumber: null,
-        tagLayout: null,
         tagSubstitutions: {}, // { 1:2, 5:8 etc}
         isWellModalVisible: false,
         wellModalDetails: {},
@@ -319,19 +317,9 @@
         })
       },
       onWellClicked(wellName) {
-        console.log('Main got a click event from plate for well ', wellName)
+        if(this.childWells[wellName].aliquotCount === 0) { return }
 
-        // check if well has aliquot
-        if(this.childWells[wellName].aliquotCount === 0) {
-          console.log('no aliquots in well, not drawing modal')
-          return
-        }
-
-        // check well has a tag
-        if(!this.childWells[wellName].tagIndex) {
-          console.log('no tag in well, not drawing modal')
-          return
-        }
+        if(!this.childWells[wellName].tagIndex) { return }
 
         // TODO do we need flag for 'no tag present?' and display message in modal with no tag subs options?
 
@@ -358,7 +346,6 @@
         this.$refs.focusThis.focus()
       },
       handleWellModalOk(evt) {
-        console.log('in handle well modal Ok')
         // Prevent modal from closing unless conditions
         evt.preventDefault()
         // TODO this will not work for just messages e.g. empty well/no tags
@@ -396,25 +383,13 @@
     },
     computed: {
       numberOfRows: function () {
-        let numRows
-
-        if(this.parentPlate) {
-          numRows = this.parentPlate.number_of_rows
-        }
-
-        return numRows
+        return (this.parentPlate ? this.parentPlate.number_of_rows : null)
       },
       numberOfColumns: function () {
-        let numCols
-
-        if(this.parentPlate) {
-          numCols = this.parentPlate.number_of_columns
-        }
-
-        return numCols
+        return (this.parentPlate ? this.parentPlate.number_of_columns : null)
       },
       tagsPerWellAsNumber: function () {
-        return parseInt(this.tagsPerWell)
+        return (this.tagsPerWell ? parseInt(this.tagsPerWell) : null)
       },
       parentWells: function () {
         let wells = {}
@@ -450,63 +425,62 @@
 
         return wells
       },
-      childWells() {
-        if(!this.parentWells || this.parentWells === {}) {
-          this.state = 'invalid'
-          return {}
+      parentWellData() {
+        return (this.parentWells ? Object.values(this.parentWells) : null)
+      },
+      tag1Group() {
+        return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
+      },
+      tag2Group() {
+        return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
+      },
+      parentNumberOfRows() {
+        return (this.parentPlate ? this.parentPlate.number_of_rows : null)
+      },
+      parentNumberOfColumns() {
+        return (this.parentPlate ? this.parentPlate.number_of_columns : null)
+      },
+      plateDims() {
+        return {
+          number_of_rows: this.parentNumberOfRows,
+          number_of_columns: this.parentNumberOfColumns
         }
-
-        if(!this.tagGroupsList || Object.keys(this.tagGroupsList).length === 0) {
-          this.state = 'invalid'
-          return { ...this.parentWells }
-        }
-
+      },
+      tagLayout() {
         const data = {
-          wells: Object.values(this.parentWells),
-          plateDims: { number_of_rows: this.parentPlate.number_of_rows, number_of_columns: this.parentPlate.number_of_columns },
-          tag1Group: this.tagGroupsList[this.tag1GroupId],
-          tag2Group: this.tagGroupsList[this.tag2GroupId],
+          wells: this.parentWellData,
+          plateDims: this.plateDims,
+          tag1Group: this.tag1Group,
+          tag2Group: this.tag2Group,
           walkingBy: this.walkingBy,
           direction: this.direction,
           startAtTagNumber: this.startAtTagNumber
         }
 
-        this.tagLayout = calculateTagLayout(data)
-
-        let cw = {}
-        if(this.tagLayout) {
-          // let invalidCount = 0
-
-          Object.keys(this.tagLayout).forEach((key) => {
-            cw[key] = { ...this.parentWells[key]}
-            if(this.tagLayout[key] === -1) {
-              cw[key]['tagIndex'] = 'X'
-              // invalidCount++
-            } else {
-              // check for tag substitution
-              const origTag = this.tagLayout[key]
-
-              if((Object.keys(this.tagSubstitutions).length > 0) && (this.tagSubstitutions.hasOwnProperty(origTag))) {
-                cw[key]['tagIndex'] = this.tagSubstitutions[origTag].toString()
-              } else {
-                cw[key]['tagIndex'] = this.tagLayout[key].toString()
-              }
-            }
-          })
-
-          // TODO move state determination to separate computed function
-          // if(invalidCount > 0) {
-          //   this.state = 'invalid'
-          // } else {
-          //   this.state = 'valid'
-          // }
-          // }
-          return cw
+        return calculateTagLayout(data)
+      },
+      childWells() {
+        if(this.parentWells === {} || !this.tagLayout) {
+          return this.parentWells ? { ...this.parentWells } : {}
         }
 
-        // show copy of parent plate wells by default
-        this.state = 'invalid'
-        return { ...this.parentWells }
+        let cw = {}
+
+        Object.keys(this.tagLayout).forEach((wellName) => {
+          cw[wellName] = { ...this.parentWells[wellName]}
+          let tagIndx = 'X'
+          if(this.tagLayout[wellName] > 0) {
+            const origTagId = this.tagLayout[wellName]
+            tagIndx = origTagId.toString()
+            // check for tag substitution
+            if((Object.keys(this.tagSubstitutions).length > 0) && (this.tagSubstitutions.hasOwnProperty(origTagId))) {
+              tagIndx = this.tagSubstitutions[origTagId].toString()
+            }
+          }
+          cw[wellName]['tagIndex'] = tagIndx
+        })
+
+        return cw
       },
       tag1GroupOptions() {
         let options = []
@@ -561,6 +535,12 @@
           }
         }
         return numTargets
+      },
+      wellModalTitle() {
+        if(this.wellModalDetails.wellName) {
+          return 'Well: ' + this.wellModalDetails.wellName
+        }
+        return ''
       },
       substituteTagState() {
         // TODO change to number must exist in this.tagMapIds

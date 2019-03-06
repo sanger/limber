@@ -184,7 +184,7 @@ const validateTagGroups = function(tag1Group,tag2Group) {
 
   if(!(tag1Group || tag2Group)) {
     result = {
-      message: 'Either tag group 1 or tag group 2 parameter not set'
+      message: 'Niether tag group 1 or 2 parameters set'
     }
   } else if(tag1Group && !tag1Group.tags) {
     result = {

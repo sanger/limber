@@ -7,12 +7,12 @@
         <b-col>Substituted Tag Id</b-col>
         <b-col>Remove this substitution</b-col>
       </b-row>
-      <b-row v-for="(tagSubstitutionValue, tagSubstitutionKey) in tagSubstitutions">
-        <b-col>{{ tagSubstitutionKey }}</b-col>
-        <b-col>{{ tagSubstitutionValue }}</b-col>
+      <b-row v-for="(tagSubstitutionValue, tagSubstitutionKey) in tagSubstitutions" :key="tagSubstitutionKey">
+        <b-col :id="'original_tag_id_' + tagSubstitutionKey">{{ tagSubstitutionKey }}</b-col>
+        <b-col :id="'substituted_tag_id_' + tagSubstitutionKey">{{ tagSubstitutionValue }}</b-col>
         <b-col>
           <div class="form-group form-row">
-            <b-button :name="'remove_' + tagSubstitutionKey + '_button'" :id="'remove_' + tagSubstitutionKey + '_submit_button'" class="pb-2" size="sm" block @click="removeSubstitution(tagSubstitutionKey)">Remove</b-button>
+            <b-button :name="'remove_tag_id_' + tagSubstitutionKey + '_button'" :id="'remove_tag_id_' + tagSubstitutionKey + '_submit_button'" class="pb-2" size="sm" block @click="removeSubstitution(tagSubstitutionKey)">Remove</b-button>
           </div>
         </b-col>
       </b-row>

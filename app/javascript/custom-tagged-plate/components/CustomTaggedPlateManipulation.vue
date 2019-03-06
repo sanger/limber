@@ -323,7 +323,7 @@
         return ret
       },
       startAtTagValidFeedback: function () {
-        return this.startAtTagState === true ? 'Valid' : ''
+        return (this.startAtTagState ? 'Valid' : '')
       }
     },
     components: {

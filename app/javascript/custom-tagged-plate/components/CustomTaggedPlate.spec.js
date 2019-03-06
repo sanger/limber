@@ -248,10 +248,10 @@ describe('CustomTaggedPlate', () => {
 
   describe('#computed:', () => {
     describe('numberOfRows:', () => {
-      it('returns null rows by default', () => {
+      it('returns null by default', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.numberOfRows).toEqual(undefined)
+        expect(wrapper.vm.numberOfRows).toEqual(null)
       })
 
       it('returns number of rows on parent plate', () => {
@@ -264,10 +264,10 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('numberOfColumns:', () => {
-      it('returns null columns by default', () => {
+      it('returns null by default', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.numberOfColumns).toEqual(undefined)
+        expect(wrapper.vm.numberOfColumns).toEqual(null)
       })
 
       it('returns number of columns on parent plate', () => {
@@ -340,7 +340,7 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.childWells).toEqual({})
       })
 
-      it('returns parent wells if tag group list is not set', () => {
+      it('returns parent wells if no tag layout', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({ parentPlate: goodParentPlate})
@@ -356,8 +356,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsList: goodTagGroupsList,
           tag1GroupId: 1,
           walkingBy: 'manual by plate',
-          direction: 'column',
-          startAtTagNumber: 0
+          direction: 'column'
         })
 
         expect(wrapper.vm.childWells).toEqual(goodChildWells)
