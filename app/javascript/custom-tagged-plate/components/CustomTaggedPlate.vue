@@ -67,7 +67,7 @@
                                 step="1"
                                 placeholder="Enter tag number to substitute"
                                 :state="substituteTagState"
-                                v-model="wellSubstituteNumber"
+                                v-model="substituteTagId"
                                 ref="focusThis">
                   </b-form-input>
                 </b-form-group>
@@ -143,7 +143,7 @@
         tagSubstitutions: {}, // { 1:2, 5:8 etc}
         isWellModalVisible: false,
         wellModalDetails: {},
-        wellSubstituteNumber: null
+        substituteTagId: null
       }
     },
     props: {
@@ -332,12 +332,12 @@
           substitutionExists: false
         }
 
-        this.wellSubstituteNumber = null
+        this.substituteTagId = null
 
         // check if already substituted and if so display that info
         if(origTag in this.tagSubstitutions) {
           this.wellModalDetails.substitutionExists = true
-          this.wellSubstituteNumber = this.tagSubstitutions[origTag]
+          this.substituteTagId = this.tagSubstitutions[origTag]
         }
 
         this.isWellModalVisible = true
@@ -349,7 +349,7 @@
         // Prevent modal from closing unless conditions
         evt.preventDefault()
         // TODO this will not work for just messages e.g. empty well/no tags
-        if (!this.wellSubstituteNumber) {
+        if (!this.substituteTagId) {
           alert('Please enter a tag to substitute then click Ok, or else cancel')
         } else {
           this.isWellModalVisible = false
@@ -359,11 +359,11 @@
       handleWellModalSubmit() {
         const origTag = this.wellModalDetails.originalTag
 
-        if(origTag in this.tagSubstitutions && origTag === this.wellSubstituteNumber) {
+        if(origTag in this.tagSubstitutions && origTag === this.substituteTagId) {
           // being changed back to original, delete from object
           delete this.tagSubstitutions.origTag
         } else {
-          this.tagSubstitutions[origTag] = this.wellSubstituteNumber
+          this.tagSubstitutions[origTag] = this.substituteTagId
         }
 
         // TODO having to create new object to trigger reactivity, why?
@@ -544,14 +544,14 @@
       },
       substituteTagState() {
         // TODO change to number must exist in this.tagMapIds
-        return ((this.wellSubstituteNumber >= 1) &&
-                (this.wellSubstituteNumber <= this.numberOfTags)) ? true : false
+        return ((this.substituteTagId >= 1) &&
+                (this.substituteTagId <= this.numberOfTags)) ? true : false
       },
       substituteTagValidFeedback() {
         return this.substituteTagState === true ? 'Valid' : ''
       },
       substituteTagInvalidFeedback() {
-        if(this.wellSubstituteNumber === null || this.wellSubstituteNumber === undefined || this.wellSubstituteNumber === '') { return '' }
+        if(this.substituteTagId === null || this.substituteTagId === undefined || this.substituteTagId === '') { return '' }
 
         // TODO change to:
         // return this.substituteTagState === false ? 'Number does not match a tag map id' : ''
@@ -569,7 +569,7 @@
       substituteTagCheckTooLow: function () {
         let ret = { valid: true, message: '' }
 
-        if(this.wellSubstituteNumber < 1) {
+        if(this.substituteTagId < 1) {
           ret.valid = false
           ret.message = 'Tag number must be greater than or equal to 1'
         }
@@ -580,7 +580,7 @@
       substituteTagCheckTooHigh: function () {
         let ret = { valid: true, message: '' }
 
-        if(this.wellSubstituteNumber > this.numberOfTags) {
+        if(this.substituteTagId > this.numberOfTags) {
           ret.valid = false
           ret.message = 'Tag number must be less than or equal to ' + this.numberOfTags
         }
