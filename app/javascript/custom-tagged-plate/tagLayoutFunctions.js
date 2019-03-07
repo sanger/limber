@@ -6,23 +6,19 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
     counters[well.poolIndex] = counter(offset)
   }
   const i = counters[well.poolIndex]()
-  if(!tags[i]) { return -1 }
-  return tags[i].index
+  return (tags[i]) ? tags[i].index : -1
 }
 
 function byPlateSeq(well, tags, relIndex, _absIndex, offset, _counters) {
-  if(!tags[relIndex + offset]) { return -1 }
-  return tags[relIndex + offset].index
+  return (tags[relIndex + offset]) ? tags[relIndex + offset].index : -1
 }
 
 function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
-  if(!tags[absIndex + offset]) { return -1 }
-  return tags[absIndex + offset].index
+  return (tags[absIndex + offset]) ? tags[absIndex + offset].index : -1
 }
 
 function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
-  if(!tags[relIndex + offset]) { return -1 }
-  return tags[relIndex + offset].index
+  return (tags[relIndex + offset]) ? tags[relIndex + offset].index : -1
 }
 
 function byRows(wells, plateDims, walker) {
@@ -102,7 +98,7 @@ const calculateTagLayout = function (data) {
   let validationResult = validateParameters(data)
 
   if(validationResult) {
-    // TODO error messages displayed where? and some of these are valid first time in so are warnings
+    // TODO messages displayed where? some of these are valid first time
     console.log(validationResult.message)
     return null
   }
@@ -110,8 +106,8 @@ const calculateTagLayout = function (data) {
   const tags = extractTags(data.tag1Group, data.tag2Group)
   const counters = {}
   let offset = 0
-  if(data.startAtTagNumber && data.startAtTagNumber > 0) {
-    offset = data.startAtTagNumber - 1
+  if(data.offsetTagByNumber && data.offsetTagByNumber > 0) {
+    offset = data.offsetTagByNumber
   }
 
   return directionFunctions[data.direction](data.wells, data.plateDims, (well, relIndex, absIndex) => {
@@ -184,7 +180,7 @@ const validateTagGroups = function(tag1Group,tag2Group) {
 
   if(!(tag1Group || tag2Group)) {
     result = {
-      message: 'Niether tag group 1 or 2 parameters set'
+      message: 'Neither tag group 1 or 2 parameters set'
     }
   } else if(tag1Group && !tag1Group.tags) {
     result = {
@@ -233,9 +229,7 @@ const validateDirection = function (direction) {
 
 const extractTags = function(tag1Group, tag2Group) {
   // key on i7 tags if available
-  // TODO needs refactoring and a test
-  if(tag1Group) { return tag1Group.tags }
-  if(tag2Group) { return tag2Group.tags }
+  return (tag1Group) ? tag1Group.tags : tag2Group.tags
 }
 
 export { calculateTagLayout }

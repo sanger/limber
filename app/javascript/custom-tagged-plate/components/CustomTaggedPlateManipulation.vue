@@ -76,21 +76,21 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group id="start_at_tag_group"
-                      label="Start at tag number:"
-                      label-for="start_at_tag_input"
-                      :invalid-feedback="startAtTagInvalidFeedback"
-                      :valid-feedback="startAtTagValidFeedback"
-                      :state="startAtTagState">
-          <b-form-input id="start_at_tag_input"
+        <b-form-group id="offset_tags_by_group"
+                      label="Offset tags by:"
+                      label-for="offset_tags_by_input"
+                      :invalid-feedback="offsetTagByInvalidFeedback"
+                      :valid-feedback="offsetTagByValidFeedback"
+                      :state="offsetTagByState">
+          <b-form-input id="offset_tags_by_input"
                         type="number"
-                        :min="startAtTagMin"
-                        :max="startAtTagMax"
-                        :step="startAtTagStep"
-                        :placeholder="startAtTagPlaceholder"
-                        :state="startAtTagState"
-                        v-model="startAtTagNumber"
-                        :disabled="startAtTagDisabled"
+                        :min="offsetTagByMin"
+                        :max="offsetTagByMax"
+                        step="1"
+                        :placeholder="offsetTagByPlaceholder"
+                        :state="offsetTagByState"
+                        v-model="offsetTagByNumber"
+                        :disabled="offsetTagByDisabled"
                         @input="updateTagParams">
           </b-form-input>
         </b-form-group>
@@ -124,9 +124,8 @@
         tag2GroupId: null,
         walkingBy: 'manual by plate',
         direction: 'row',
-        startAtTagMin: 1,
-        startAtTagStep: 1,
-        startAtTagNumber: null
+        offsetTagByMin: 0,
+        offsetTagByNumber: 0
       }
     },
     props: {
@@ -160,7 +159,7 @@
       validTagPlateScanned(data) {
         this.tagPlate = { ...data.plate }
         this.tagPlateWasScanned = true
-        this.startAtTagNumber = null
+        this.offsetTagByNumber = 0
 
         if(data.plate.lot.tag_layout_template.tag_group.id) {
           this.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
@@ -184,7 +183,7 @@
       },
       tagGroupChanged() {
         this.tagPlateWasScanned = false
-        this.startAtTagNumber = null
+        this.offsetTagByNumber = 0
       },
       tagGroupInput() {
         this.updateTagPlateScanDisabled()
@@ -196,8 +195,9 @@
           tag2GroupId: this.tag2GroupId,
           walkingBy: this.walkingBy,
           direction: this.direction,
-          startAtTagNumber: this.startAtTagNumber
+          offsetTagByNumber: Number.parseInt(this.offsetTagByNumber)
         }
+
         this.$emit('tagparamsupdated', updatedData)
       }
     },
@@ -229,101 +229,67 @@
       tagGroupsDisabled: function () {
         return (typeof this.tagPlate != "undefined" && this.tagPlate !== null)
       },
-      startAtTagMax: function () {
-        const numTags = this.numberOfTags
-        const numTargets = this.numberOfTargetWells
-
-        if(numTags === 0 || numTargets === 0) {
+      offsetTagByMax: function () {
+        if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
           return null
         }
-        return numTags - numTargets + 1
+        return this.numberOfTags - this.numberOfTargetWells
       },
-      startAtTagDisabled: function () {
-        return (!this.startAtTagMax || this.startAtTagMax <= 1)
+      offsetTagByDisabled: function () {
+        return (!this.offsetTagByMax || this.offsetTagByMax <= 0)
       },
-      startAtTagPlaceholder: function () {
-        let phTxt
-        const tagMax = this.startAtTagMax
-        const numTags = this.numberOfTags
-        const numTargets = this.numberOfTargetWells
+      offsetTagByPlaceholder: function () {
+        if(this.numberOfTags === 0) { return 'Select tags first...' }
 
-        if(tagMax <= 0) {
-          if(numTargets === 0) {
-            phTxt = 'No target wells found..'
-          } else if(numTags === 0) {
-            phTxt = 'Select tags first..'
-          } else {
-            phTxt = 'Not enough tags..'
-          }
-        } else if(tagMax === 1) {
-          phTxt = 'No spare tags..'
-        } else {
-          phTxt = 'Select starting tag..'
-        }
+        if(this.numberOfTargetWells === 0) { return 'No target wells...' }
 
-        return phTxt
-      },
-      startAtTagState: function () {
-        if(this.startAtTagNumber === null || this.startAtTagNumber === undefined || this.startAtTagNumber === '') { return null }
-        if(!this.startAtTagMax || this.startAtTagMax <= 1) { return null }
+        if(this.offsetTagByMax < 0) { return 'Not enough tags...' }
 
-        return this.startAtTagWithinLimits
+        if(this.offsetTagByMax === 0) { return 'No spare tags...' }
+
+        return 'Enter offset number...'
       },
-      startAtTagWithinLimits: function () {
-        return ((this.startAtTagNumber >= this.startAtTagMin) &&
-                (this.startAtTagNumber <= this.startAtTagMax) &&
-                (this.startAtTagNumber % this.startAtTagStep === 0)) ? true : false
+      offsetTagByState: function () {
+        return (!this.offsetTagByMax || this.offsetTagByMax <= 0) ? null : this.offsetTagByWithinLimits
       },
-      startAtTagInvalidFeedback: function () {
-        if(!this.startAtTagMax || this.startAtTagMax <= 1) { return '' }
-        if(this.startAtTagNumber === null || this.startAtTagNumber === undefined || this.startAtTagNumber === '') { return '' }
+      offsetTagByWithinLimits: function () {
+        return ((this.offsetTagByNumber >= this.offsetTagByMin) &&
+                (this.offsetTagByNumber <= this.offsetTagByMax)) ? true : false
+      },
+      offsetTagByInvalidFeedback: function () {
+        if(!this.offsetTagByMax || this.offsetTagByMax <= 0) { return '' }
 
         let chk
-        chk = this.startAtTagCheckTooLow
+        chk = this.offsetTagByCheckTooLow
         if(!chk.valid) { return chk.message }
 
-        chk = this.startAtTagCheckTooHigh
-        if(!chk.valid) { return chk.message }
-
-        chk = this.startAtTagCheckStep
+        chk = this.offsetTagByCheckTooHigh
         if(!chk.valid) { return chk.message }
 
         return ''
       },
-      startAtTagCheckTooLow: function () {
+      offsetTagByCheckTooLow: function () {
         let ret = { valid: true, message: '' }
 
-        if(this.startAtTagNumber < this.startAtTagMin) {
+        if(this.offsetTagByNumber < this.offsetTagByMin) {
           ret.valid = false
-          ret.message = 'Start must be greater than or equal to ' + this.startAtTagMin
+          ret.message = 'Offset must be greater than or equal to ' + this.offsetTagByMin
         }
 
         return ret
       },
-      startAtTagCheckTooHigh: function () {
+      offsetTagByCheckTooHigh: function () {
         let ret = { valid: true, message: '' }
 
-        if(this.startAtTagNumber > this.startAtTagMax) {
+        if(this.offsetTagByNumber > this.offsetTagByMax) {
           ret.valid = false
-          ret.message = 'Start must be less than or equal to ' + this.startAtTagMax
+          ret.message = 'Offset must be less than or equal to ' + this.offsetTagByMax
         }
 
         return ret
       },
-      startAtTagCheckStep: function () {
-        let ret = { valid: true, message: '' }
-
-        if(this.startAtTagNumber >= this.startAtTagMin && this.startAtTagNumber <= this.startAtTagMax) {
-          if(this.startAtTagNumber % this.startAtTagStep !== 0) {
-            ret.valid = false
-            ret.message = 'Start must be divisible by ' + this.startAtTagStep
-          }
-        }
-
-        return ret
-      },
-      startAtTagValidFeedback: function () {
-        return (this.startAtTagState ? 'Valid' : '')
+      offsetTagByValidFeedback: function () {
+        return (this.offsetTagByState ? 'Valid' : '')
       }
     },
     components: {

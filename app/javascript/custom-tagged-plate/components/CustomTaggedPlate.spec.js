@@ -639,7 +639,7 @@ describe('CustomTaggedPlate', () => {
         tag2GroupId: 2,
         direction: 'column',
         walkingBy: 'manual by plate',
-        startAtTagNumber: 1,
+        offsetTagByNumber: 1,
         // { 1:2,5:8, etc }
         tagSubstitutions: {}
       })

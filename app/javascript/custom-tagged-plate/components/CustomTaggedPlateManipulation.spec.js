@@ -120,15 +120,15 @@ describe('CustomTaggedPlateManipulation', () => {
       })
     })
 
-    describe('startAtTagMax:', () => {
+    describe('offsetTagByMax:', () => {
       it('returns expected value if tags and target wells exist', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 5 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(1)
-        expect(wrapper.vm.startAtTagDisabled).toBe(true)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('No spare tags..')
+        expect(wrapper.vm.offsetTagByMax).toBe(0)
+        expect(wrapper.vm.offsetTagByDisabled).toBe(true)
+        expect(wrapper.vm.offsetTagByPlaceholder).toBe('No spare tags...')
       })
 
       it('returns expected value if tags are in excess', () => {
@@ -136,9 +136,9 @@ describe('CustomTaggedPlateManipulation', () => {
 
         wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 5 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(6)
-        expect(wrapper.vm.startAtTagDisabled).toBe(false)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('Select starting tag..')
+        expect(wrapper.vm.offsetTagByMax).toBe(5)
+        expect(wrapper.vm.offsetTagByDisabled).toBe(false)
+        expect(wrapper.vm.offsetTagByPlaceholder).toBe('Enter offset number...')
       })
 
       it('returns a negative number if there are not enough tags', () => {
@@ -146,9 +146,9 @@ describe('CustomTaggedPlateManipulation', () => {
 
         wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 10 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(-4)
-        expect(wrapper.vm.startAtTagDisabled).toBe(true)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('Not enough tags..')
+        expect(wrapper.vm.offsetTagByMax).toBe(-5)
+        expect(wrapper.vm.offsetTagByDisabled).toBe(true)
+        expect(wrapper.vm.offsetTagByPlaceholder).toBe('Not enough tags...')
       })
 
       it('returns null if there are no tags', () => {
@@ -156,9 +156,9 @@ describe('CustomTaggedPlateManipulation', () => {
 
         wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 5 })
 
-        expect(wrapper.vm.startAtTagMax).toEqual(null)
-        expect(wrapper.vm.startAtTagDisabled).toBe(true)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('Select tags first..')
+        expect(wrapper.vm.offsetTagByMax).toEqual(null)
+        expect(wrapper.vm.offsetTagByDisabled).toBe(true)
+        expect(wrapper.vm.offsetTagByPlaceholder).toBe('Select tags first...')
       })
 
       it('returns null if there are no target wells', () => {
@@ -166,20 +166,20 @@ describe('CustomTaggedPlateManipulation', () => {
 
         wrapper.setProps({ numberOfTags: 5, numberOfTargetWells: 0 })
 
-        expect(wrapper.vm.startAtTagMax).toEqual(null)
-        expect(wrapper.vm.startAtTagDisabled).toBe(true)
-        expect(wrapper.vm.startAtTagPlaceholder).toBe('No target wells found..')
+        expect(wrapper.vm.offsetTagByMax).toEqual(null)
+        expect(wrapper.vm.offsetTagByDisabled).toBe(true)
+        expect(wrapper.vm.offsetTagByPlaceholder).toBe('No target wells...')
       })
     })
 
-    describe('startAtTagState:', () => {
+    describe('offsetTagByState:', () => {
       it('returns null if there is no start at tag number', () => {
         const wrapper = wrapperFactory(api)
 
-        wrapper.setData({ startAtTagNumber: null })
+        wrapper.setData({ offsetTagByNumber: 0 })
 
-        expect(wrapper.vm.startAtTagState).toEqual(null)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByState).toEqual(null)
+        expect(wrapper.vm.offsetTagByValidFeedback).toEqual('')
       })
 
       it('returns null if the start at tag max is negative', () => {
@@ -187,113 +187,92 @@ describe('CustomTaggedPlateManipulation', () => {
 
         wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 20 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(-9)
-        expect(wrapper.vm.startAtTagState).toEqual(null)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByMax).toBe(-10)
+        expect(wrapper.vm.offsetTagByState).toEqual(null)
+        expect(wrapper.vm.offsetTagByValidFeedback).toEqual('')
       })
 
       it('returns true if the entered number is valid', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 5 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagState).toBe(true)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('Valid')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByState).toBe(true)
+        expect(wrapper.vm.offsetTagByValidFeedback).toEqual('Valid')
       })
 
       it('returns false if the entered number is too high', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 11 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagState).toBe(false)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByState).toBe(false)
+        expect(wrapper.vm.offsetTagByValidFeedback).toEqual('')
       })
 
       it('returns false if the entered number is too low', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 0 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagState).toBe(false)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
-      })
-
-      it('returns false if the entered number is between steps', () => {
-        const wrapper = wrapperFactory(api)
-
-        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
-
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagState).toBe(false)
-        expect(wrapper.vm.startAtTagValidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByState).toBe(false)
+        expect(wrapper.vm.offsetTagByValidFeedback).toEqual('')
       })
     })
 
-    describe('startAtTagInvalidFeedback:', () => {
+    describe('offsetTagByInvalidFeedback:', () => {
       it('returns empty string if the entered number is null', () => {
         const wrapper = wrapperFactory(api)
 
-        wrapper.setData({ startAtTagNumber: null })
+        wrapper.setData({ offsetTagByNumber: 0 })
 
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByInvalidFeedback).toEqual('')
       })
 
       it('returns empty string if the max is not set', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 0, numberOfTargetWells: 0 })
-        wrapper.setData({ startAtTagNumber: 1 })
+        wrapper.setData({ offsetTagByNumber: 1 })
 
-        expect(wrapper.vm.startAtTagMax).toEqual(null)
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByMax).toEqual(null)
+        expect(wrapper.vm.offsetTagByInvalidFeedback).toEqual('')
       })
 
       it('returns empty string if the entered number is valid', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 5 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 5 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByInvalidFeedback).toEqual('')
       })
 
       it('returns correctly if the entered number is too high', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 11 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 11 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be less than or equal to 10')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByInvalidFeedback).toEqual('Offset must be less than or equal to 9')
       })
 
       it('returns correctly if the entered number is too low', () => {
         const wrapper = wrapperFactory(api)
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 1, startAtTagNumber: 0 })
+        wrapper.setData({ offsetTagByMin: 1, offsetTagByNumber: 0 })
 
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be greater than or equal to 1')
-      })
-
-      it('returns correctly if the entered number is between steps', () => {
-        const wrapper = wrapperFactory(api)
-
-        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ startAtTagMin: 1, startAtTagStep: 2, startAtTagNumber: 3 })
-
-        expect(wrapper.vm.startAtTagMax).toBe(10)
-        expect(wrapper.vm.startAtTagInvalidFeedback).toEqual('Start must be divisible by 2')
+        expect(wrapper.vm.offsetTagByMax).toBe(9)
+        expect(wrapper.vm.offsetTagByInvalidFeedback).toEqual('Offset must be greater than or equal to 1')
       })
     })
   })
@@ -339,15 +318,11 @@ describe('CustomTaggedPlateManipulation', () => {
       expect(wrapper.find('#direction_options').exists()).toBe(true)
     })
 
-    it('renders an offset tags by select number dropdown', () => {
+    it('renders an offset tags by select number input', () => {
       const wrapper = wrapperFactory(api)
 
-      expect(wrapper.find('#start_at_tag_input').exists()).toBe(true)
+      expect(wrapper.find('#offset_tags_by_input').exists()).toBe(true)
     })
-
-    // TODO tags per well test
-    // it('renders a tags per well number based on the plate purpose', () => {
-    // })
   })
 
   describe('#integration tests:', () => {
@@ -437,7 +412,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(
-        [{'tagPlate':null,'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'wells of plate','direction':'row','startAtTagNumber':null}]
+        [{'tagPlate':null,'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'wells of plate','direction':'row','offsetTagByNumber':0}]
       )
     })
   })

@@ -139,7 +139,7 @@
         tag2GroupId: null,
         walkingBy: null,
         direction: null,
-        startAtTagNumber: null,
+        offsetTagByNumber: null,
         tagSubstitutions: {}, // { 1:2, 5:8 etc}
         isWellModalVisible: false,
         wellModalDetails: {},
@@ -197,7 +197,7 @@
         this.tag2GroupId      = updatedFormData.tag2GroupId
         this.walkingBy        = updatedFormData.walkingBy
         this.direction        = updatedFormData.direction
-        this.startAtTagNumber = updatedFormData.startAtTagNumber
+        this.offsetTagByNumber = updatedFormData.offsetTagByNumber
       },
       extractSubmissionIdFromWell(well) {
         let submId
@@ -276,7 +276,7 @@
               tag2_group: this.tagGroupsList[this.tag2GroupId].uuid,
               direction: this.direction,
               walking_by: this.walkingBy,
-              initial_tag: this.startAtTagNumber - 1, // initial tag is zero-based index of the tag within its group
+              initial_tag: this.offsetTagByNumber - 1, // initial tag is zero-based index of the tag within its group
               substitutions: {}, // { 1:2,5:8, etc }
               tags_per_well: this.tagsPerWellAsNumber
             }
@@ -389,7 +389,7 @@
         return (this.parentPlate ? this.parentPlate.number_of_columns : null)
       },
       tagsPerWellAsNumber: function () {
-        return (this.tagsPerWell ? parseInt(this.tagsPerWell) : null)
+        return (this.tagsPerWell ? Number.parseInt(this.tagsPerWell) : null)
       },
       parentWells: function () {
         let wells = {}
@@ -447,17 +447,17 @@
         }
       },
       tagLayout() {
-        const data = {
+        const inputData = {
           wells: this.parentWellData,
           plateDims: this.plateDims,
           tag1Group: this.tag1Group,
           tag2Group: this.tag2Group,
           walkingBy: this.walkingBy,
           direction: this.direction,
-          startAtTagNumber: this.startAtTagNumber
+          offsetTagByNumber: this.offsetTagByNumber
         }
 
-        return calculateTagLayout(data)
+        return calculateTagLayout(inputData)
       },
       childWells() {
         if(this.parentWells === {} || !this.tagLayout) {
