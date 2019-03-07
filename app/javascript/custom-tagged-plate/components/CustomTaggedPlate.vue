@@ -383,15 +383,20 @@
     },
     computed: {
       numberOfRows() {
+        this.parentPlate
         return (this.parentPlate ? this.parentPlate.number_of_rows : null)
       },
       numberOfColumns() {
+        this.parentPlate
         return (this.parentPlate ? this.parentPlate.number_of_columns : null)
       },
       tagsPerWellAsNumber() {
+        this.tagsPerWell
         return (this.tagsPerWell ? Number.parseInt(this.tagsPerWell) : null)
       },
       parentWells() {
+        this.parentPlate
+
         let wells = {}
 
         if(!this.parentPlate) {
@@ -426,18 +431,58 @@
         return wells
       },
       parentWellData() {
+        this.parentWells
         return (this.parentWells ? Object.values(this.parentWells) : null)
       },
+      // TODO why is this not set even when we have both params???
       tag1Group() {
+        this.tagGroupsList
+        this.tag1GroupId
         return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
       },
+      tag1GroupTags() {
+        this.tag1Group
+        return (this.tag1Group ? this.tag1Group.tags : null)
+      },
       tag2Group() {
+        this.tagGroupsList
+        this.tag2GroupId
         return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
       },
+      tag2GroupTags() {
+        this.tag2Group
+        return (this.tag2Group ? this.tag2Group.tags : null)
+      },
+      arrayTags() {
+        this.tag1GroupTags
+        this.tag2GroupTags
+        if(this.tag1GroupTags) {
+          return this.tag1GroupTags
+        }
+        if(this.tag2GroupTags) {
+          return this.tag2GroupTags
+        }
+        return null
+      },
+      tagMapIds() {
+        this.numberOfTags
+        this.arrayTags
+        if(this.numberOfTags === 0) { return null }
+
+        if(!this.arrayTags) { return null }
+
+        let arrayMapIds = []
+        for (var i = 0; i < this.arrayTags.length; i++) {
+          arrayMapIds.push(this.arrayTags[i].index)
+        }
+        return arrayMapIds
+      },
       parentNumberOfRows() {
+        this.parentPlate
         return (this.parentPlate ? this.parentPlate.number_of_rows : null)
       },
       parentNumberOfColumns() {
+        this.parentPlate
         return (this.parentPlate ? this.parentPlate.number_of_columns : null)
       },
       plateDims() {
@@ -460,6 +505,10 @@
         return calculateTagLayout(inputData)
       },
       childWells() {
+        this.parentWells
+        this.tagLayout
+        this.tagSubstitutions
+
         if(this.parentWells === {} || !this.tagLayout) {
           return this.parentWells ? { ...this.parentWells } : {}
         }
@@ -483,6 +532,8 @@
         return cw
       },
       tag1GroupOptions() {
+        this.tagGroupsList
+
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -493,6 +544,8 @@
         return options
       },
       tag2GroupOptions() {
+        this.tagGroupsList
+
         let options = []
 
         if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
@@ -503,18 +556,19 @@
         return options
       },
       numberOfTags() {
-        let numTags = 0
-        const tagGrps = this.tagGroupsList
-        const tag1Id = this.tag1GroupId
-        const tag2Id = this.tag2GroupId
+        this.tagGroupsList
+        this.tag1GroupId
+        this.tag2GroupId
+        this.tag1GroupTags
+        this.tag2GroupTags
 
-        if(tagGrps && Object.keys(tagGrps).length > 0) {
-          if(tag1Id) {
-            const tag1Grp = tagGrps[tag1Id]
-            numTags = Object.keys(tag1Grp.tags).length
-          } else if(tag2Id) {
-            const tag2Grp = tagGrps[tag2Id]
-            numTags = Object.keys(tag2Grp.tags).length
+        let numTags = 0
+
+        if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+          if(this.tag1GroupId) {
+            numTags = this.tag1GroupTags.length
+          } else if(this.tag2GroupId) {
+            numTags = this.tag2GroupTags.length
           }
         }
 
@@ -537,55 +591,21 @@
         return numTargets
       },
       wellModalTitle() {
-        if(this.wellModalDetails.wellName) {
-          return 'Well: ' + this.wellModalDetails.wellName
-        }
-        return ''
+        this.wellModalDetails
+        return ((this.wellModalDetails.wellName) ? 'Well: ' + this.wellModalDetails.wellName : '')
       },
       substituteTagState() {
-        // TODO change to number must exist in this.tagMapIds
-        return ((this.substituteTagId >= 1) &&
-                (this.substituteTagId <= this.numberOfTags)) ? true : false
+        this.tagMapIds
+        this.substituteTagId
+
+        if(!this.tagMapIds) { return false }
+        return (this.tagMapIds.includes(Number.parseInt(this.substituteTagId)) ? true : false)
       },
       substituteTagValidFeedback() {
-        return this.substituteTagState === true ? 'Valid' : ''
+        return (this.substituteTagState === true ? 'Valid' : '')
       },
       substituteTagInvalidFeedback() {
-        if(this.substituteTagId === null || this.substituteTagId === undefined || this.substituteTagId === '') { return '' }
-
-        // TODO change to:
-        // return this.substituteTagState === false ? 'Number does not match a tag map id' : ''
-
-        let chk
-        chk = this.substituteTagCheckTooLow
-        if(!chk.valid) { return chk.message }
-
-        chk = this.substituteTagCheckTooHigh
-        if(!chk.valid) { return chk.message }
-
-        return ''
-      },
-      // TODO remove
-      substituteTagCheckTooLow() {
-        let ret = { valid: true, message: '' }
-
-        if(this.substituteTagId < 1) {
-          ret.valid = false
-          ret.message = 'Tag number must be greater than or equal to 1'
-        }
-
-        return ret
-      },
-      // TODO remove
-      substituteTagCheckTooHigh() {
-        let ret = { valid: true, message: '' }
-
-        if(this.substituteTagId > this.numberOfTags) {
-          ret.valid = false
-          ret.message = 'Tag number must be less than or equal to ' + this.numberOfTags
-        }
-
-        return ret
+        return ((!this.substituteTagState) ? 'Number does not match a tag map id' : '')
       },
       buttonText() {
         return {

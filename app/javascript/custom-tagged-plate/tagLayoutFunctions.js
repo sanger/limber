@@ -6,19 +6,19 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
     counters[well.poolIndex] = counter(offset)
   }
   const i = counters[well.poolIndex]()
-  return (tags[i]) ? tags[i].index : -1
+  return ((tags[i]) ? tags[i].index : -1)
 }
 
 function byPlateSeq(well, tags, relIndex, _absIndex, offset, _counters) {
-  return (tags[relIndex + offset]) ? tags[relIndex + offset].index : -1
+  return ((tags[relIndex + offset]) ? tags[relIndex + offset].index : -1)
 }
 
 function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
-  return (tags[absIndex + offset]) ? tags[absIndex + offset].index : -1
+  return ((tags[absIndex + offset]) ? tags[absIndex + offset].index : -1)
 }
 
 function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
-  return (tags[relIndex + offset]) ? tags[relIndex + offset].index : -1
+  return ((tags[relIndex + offset]) ? tags[relIndex + offset].index : -1)
 }
 
 function byRows(wells, plateDims, walker) {
@@ -229,7 +229,7 @@ const validateDirection = function (direction) {
 
 const extractTags = function(tag1Group, tag2Group) {
   // key on i7 tags if available
-  return (tag1Group) ? tag1Group.tags : tag2Group.tags
+  return ((tag1Group) ? tag1Group.tags : tag2Group.tags)
 }
 
 export { calculateTagLayout }
