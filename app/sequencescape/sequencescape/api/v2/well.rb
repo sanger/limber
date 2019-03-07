@@ -29,6 +29,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     WellHelpers.well_coordinate(location)
   end
 
+  def quadrant_index
+    WellHelpers.well_quadrant(location)
+  end
+
   def location
     position['name']
   end

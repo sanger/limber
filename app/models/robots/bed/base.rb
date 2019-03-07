@@ -8,7 +8,7 @@ module Robots::Bed
     attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
     attr_writer :barcodes
 
-    delegate :api, :user_uuid, to: :robot
+    delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
     delegate :state, to: :plate, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
@@ -46,7 +46,7 @@ module Robots::Bed
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
-      @plates = Sequencescape::Api::V2::Plate.find_all(barcode: @barcodes)
+      @plates = Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
     end
 
     def plate
@@ -66,7 +66,7 @@ module Robots::Bed
     def child_plates
       return [] if plate.nil?
 
-      @child_plates ||= plate.wells_in_columns.each_with_object([]) do |well, plates|
+      @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
         plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
       end
     end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PoolingRobot, robots: true do
+RSpec.describe Robots::QuadrantRobot, robots: true do
   include RobotHelpers
 
   has_a_working_api
@@ -48,7 +48,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::PoolingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::QuadrantRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
 
   let(:robot_spec) do
     {
@@ -74,7 +74,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
         }
       },
       'destination_bed' => 'bed5_barcode',
-      'class' => 'Robots::PoolingRobot'
+      'class' => 'Robots::QuadrantRobot'
     }
   end
   let(:robot_id) { 'pooling_robot_id' }
@@ -148,10 +148,68 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[C1 D1].map do |location|
+        %w[B1 D1].map do |location|
           create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
         end +
-          %w[A1 B1].map do |location|
+          %w[A1 C1].map do |location|
+            create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]]
+          end
+      end
+
+      before do
+        bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }])
+      end
+
+      context 'with a valid layout' do
+        let(:scanned_layout) do
+          {
+            'bed1_barcode' => [source_barcode],
+            'bed2_barcode' => [source_barcode2],
+            'bed5_barcode' => [target_barcode]
+          }
+        end
+
+        context 'and related plates' do
+          it { is_expected.to be_valid }
+        end
+      end
+
+      context 'with source plates swapped' do
+        let(:scanned_layout) do
+          {
+            'bed1_barcode' => [source_barcode2],
+            'bed2_barcode' => [source_barcode],
+            'bed5_barcode' => [target_barcode]
+          }
+        end
+
+        context 'and related plates' do
+          it { is_expected.not_to be_valid }
+        end
+      end
+    end
+
+    context 'with multiple parents and awkward empty wells' do
+      # If the first well of eg. quadrant 1, is empty, we don't want to sort
+      # quadrant 2 first.
+      let(:source_plate2_attributes) do
+        {
+          uuid: plate_uuid,
+          barcode_number: 3,
+          purpose_name: source_purpose_name,
+          purpose_uuid: source_purpose_uuid,
+          state: 'passed'
+        }
+      end
+      let(:source_barcode2) { source_plate2.human_barcode }
+      let(:source_plate2) { create :v2_plate, source_plate2_attributes }
+      let(:transfer_source_plates) { [source_plate, source_plate2] }
+
+      let(:wells) do
+        %w[B1 D1].map do |location|
+          create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
+        end +
+          %w[C1].map do |location|
             create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]]
           end
       end

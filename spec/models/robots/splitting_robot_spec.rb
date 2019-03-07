@@ -78,13 +78,13 @@ RSpec.describe Robots::SplittingRobot, robots: true do
       end
 
       before do
-        bed_plate_lookup(source_plate)
-        bed_plate_lookup(target_plate_1)
-        bed_plate_lookup(target_plate_2)
+        bed_plate_lookup(source_plate, [:purpose, { wells: :downstream_plates }])
+        bed_plate_lookup(target_plate_1, [:purpose, { wells: :downstream_plates }])
+        bed_plate_lookup(target_plate_2, [:purpose, { wells: :downstream_plates }])
       end
 
       context 'with an unknown plate' do
-        before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
+        before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :downstream_plates }]) }
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }
@@ -163,7 +163,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
     before do
       create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
       state_change_request
-      bed_plate_lookup(plate)
+      bed_plate_lookup(plate, [:purpose, { wells: :downstream_plates }])
     end
 
     it 'performs transfer from started to passed' do

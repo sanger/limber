@@ -121,4 +121,16 @@ module WellHelpers
   def self.well_coordinate(well)
     [well[1..-1].to_i - 1, well.getbyte(0) - 'A'.getbyte(0)]
   end
+
+  #
+  # Converts a well name to its quadrant
+  #
+  # @param [String] well Name of the well. Eg. A3
+  #
+  # @return [Integer] The quadrant number eg. 1
+  #
+  def self.well_quadrant(well)
+    col, row = well_coordinate(well)
+    2 * (col % 2) + (row % 2)
+  end
 end

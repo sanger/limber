@@ -356,6 +356,36 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  custom_robot('hamilton-star-pf-post-shear-to-pf-post-shear-xp-384',
+               name: 'Hamilton STAR-384 PF-Post Shear => PF-384 Post Shear XP',
+               beds: {
+                 bed(12).barcode => {
+                  purpose: 'PF Post Shear',
+                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  label: 'Bed 12' },
+                 bed(13).barcode => {
+                  purpose: 'PF Post Shear',
+                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  label: 'Bed 13' },
+                 bed(14).barcode => {
+                  purpose: 'PF Post Shear',
+                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  label: 'Bed 14' },
+                 bed(15).barcode => {
+                  purpose: 'PF Post Shear',
+                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  label: 'Bed 15' },
+                 bed(18).barcode => {
+                   purpose: 'PF-384 Post Shear XP',
+                   states: %w[pending],
+                   parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
+                   target_state: 'passed',
+                   label: 'Bed 18'
+                 }
+               },
+               destination_bed: bed(18).barcode,
+               class: 'Robots::QuadrantRobot')
+
   custom_robot(
     'bravo-pf-post-shear-xp-to-pf-lib-xp',
     name: 'Bravo PF Post Shear XP to PF Lib XP',

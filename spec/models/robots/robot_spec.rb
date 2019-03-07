@@ -102,8 +102,7 @@ RSpec.describe Robots::Robot, robots: true do
 
         context 'and related plates' do
           before do
-            allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(barcode: [source_barcode, 'Other barcode'])
-                                                                      .and_return([source_plate])
+            bed_plate_lookup_with_barcode([source_barcode, 'Other barcode'], [source_plate])
           end
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to_not be_valid }

@@ -7,6 +7,10 @@ module Robots
   class SplittingRobot < Robots::Robot
     attr_writer :relationships
 
+    def plate_includes
+      [:purpose, { wells: :downstream_plates }]
+    end
+
     #
     # Returns a hash of bed barcodes and their valid state
     # Also adds any errors describing invalid bed states

@@ -4,6 +4,10 @@ module Robots
   class PoolingRobot < Robot
     attr_writer :destination_bed
 
+    def plate_includes
+      [:purpose, { wells: :upstream_plates }]
+    end
+
     def valid_relationships
       verified = {}
       if destination_bed.empty?

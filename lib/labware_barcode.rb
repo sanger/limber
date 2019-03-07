@@ -22,6 +22,10 @@ class LabwareBarcode
     @sbcf ||= SBCF::SangerBarcode.from_human(@human)
   end
 
+  def to_s
+    @human
+  end
+
   delegate :=~, to: :sbcf
 
   private

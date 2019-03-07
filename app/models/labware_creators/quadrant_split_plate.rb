@@ -47,8 +47,7 @@ module LabwareCreators
     end
 
     def request_hash(source_well, child_plates, additional_parameters)
-      col, row = source_well.coordinate
-      child_plate_index = 2 * (col % 2) + (row % 2)
+      child_plate_index = source_well.quadrant_index
       child_well_name = WellHelpers.well_name(row / 2, col / 2)
       {
         'source_asset' => source_well.uuid,

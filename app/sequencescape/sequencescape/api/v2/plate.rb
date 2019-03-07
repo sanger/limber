@@ -34,7 +34,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def self.find_all(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).find(options).all
+    Sequencescape::Api::V2::Plate.includes(*includes).where(options).all
   end
 
   #

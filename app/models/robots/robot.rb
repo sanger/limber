@@ -11,6 +11,14 @@ module Robots
 
     alias verify_robot? verify_robot
 
+    def plate_includes
+      %i[purpose parents]
+    end
+
+    def well_order
+      :coordinate
+    end
+
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
         bed.load(bed_settings[id]) if bed.transitions?

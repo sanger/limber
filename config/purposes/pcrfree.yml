@@ -18,7 +18,7 @@ PF Post Shear:
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Shear
-PF Post Shear XP:
+PF Post Shear XP: # This plate was previously tracked as part of the process
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
@@ -28,6 +28,8 @@ PF-384 Post Shear XP:
   :creator_class: LabwareCreators::QuadrantStamp
   :label_template: plate_6mm_double
   :size: 384
+  :parents:
+  - PF Post Shear
 PF End Prep:
   :asset_type: plate
   :default_printer_type: :plate_a
@@ -76,15 +78,6 @@ PF Lib XP:
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
-PF Lib XP2:
-  :asset_type: plate
-  :default_printer_type: :plate_a
-  :presenter_class: Presenters::StandardPresenter
-  :suggest_library_pass_for:
-  - limber_pcr_free
-  :label_template: plate_xp
-  :parents:
-  - PF Lib XP
 PF-384 Lib XP2:
   :asset_type: plate
   :label_template: plate_6mm_double
@@ -94,4 +87,23 @@ PF-384 Lib XP2:
   :label_template: plate_6mm_double
   :size: 384
   :parents:
-  - PF-384 Lib XP
+  - PF-384 Lib
+PF Lib XP2:
+  :asset_type: plate
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :label_template: plate_xp
+  :parents:
+  - PF Lib XP
+PF Lib Q-XP2:
+  :asset_type: plate
+  :default_printer_type: :plate_a
+  :creator_class: LabwareCreators::QuadrantSplitPlate
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :label_template: plate_xp
+  :parents:
+  - PF-384 Lib XP2
