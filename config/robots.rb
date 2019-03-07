@@ -433,6 +433,49 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot(
+    'bravo-pf-384-lib-xp2-to-pl-lib-xp2',
+    name: 'Bravo PF-384 Lib XP2 to PF-Lib Q-XP2',
+    beds: {
+      bed(5).barcode => {
+        purpose: 'PF-384 Lib XP2',
+        label: 'Bed 5',
+        states: ['passed']
+      },
+      bed(1).barcode => {
+        purpose: 'PF Lib Q-XP2',
+        label: 'Bed 1',
+        states: ['pending'],
+        target_state: 'passed'
+      },
+      bed(4).barcode => {
+        purpose: 'PF Lib Q-XP2',
+        label: 'Bed 4',
+        states: ['pending'],
+        target_state: 'passed'
+      },
+      bed(3).barcode => {
+        purpose: 'PF Lib Q-XP2',
+        label: 'Bed 3',
+        states: ['pending'],
+        target_state: 'passed'
+      },
+      bed(6).barcode => {
+        purpose: 'PF Lib Q-XP2',
+        label: 'Bed 6',
+        states: ['pending'],
+        target_state: 'passed'
+      }
+    },
+    relationships: [{
+        'type' => 'quad_stamp_out',
+        'options' => {
+          'parent' => bed(5).barcode,
+          'children' => [bed(1).barcode, bed(4).barcode, bed(3).barcode, bed(6).barcode]
+        }
+      }]
+  )
+
+  custom_robot(
     'bravo-mrna-capture-rnaag',
     name: 'Bravo mRNA capture RNAAG',
     beds: {

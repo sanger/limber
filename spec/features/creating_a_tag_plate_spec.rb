@@ -210,7 +210,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     feature 'and non matching scanned template' do
       let(:template_factory) { :dual_index_tag_layout_template }
       let(:tag_template_uuid) { 'unrecognised template' }
-      let(:tag_error) { 'Is not approved for use with this pipeline.' }
+      let(:tag_error) { 'It is not approved for use with this pipeline.' }
       it_behaves_like 'it rejects the candidate plate'
     end
   end

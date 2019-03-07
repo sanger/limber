@@ -22,10 +22,13 @@ module BarcodeLabelsHelper
   def useful_barcode(barcode)
     return 'Unknown' if barcode.nil?
 
-    if barcode.human == barcode.machine
-      barcode.human
+    # Support for old API
+    human_readable = barcode.try(:human) || "#{barcode.prefix}#{barcode.number}"
+
+    if human_readable == barcode.machine
+      human_readable
     else
-      "#{barcode.human} <em>#{barcode.machine}</em>".html_safe
+      "#{human_readable} <em>#{barcode.machine}</em>".html_safe
     end
   end
 end

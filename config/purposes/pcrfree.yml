@@ -66,12 +66,7 @@ PF-384 Lib:
   :creator_class: LabwareCreators::TaggedPlate
   :size: 384
   :tag_layout_templates:
-  - 'PF_adapters_UDI_384_A'
-  - 'PF_adapters_UDI_384_B'
-  - 'PF_adapters_UDI_384_C'
-  - 'PF_adapters_UDI_384_D'
-  - 'IDT for Illumina UDI v1'
-  - 'PF_adapters_UDI_384_B_ROWS'
+  - 'IDT for Illumina v1 - 384 Quadrant'
   :parents:
   - PF-384 End Prep
 PF Lib XP:
