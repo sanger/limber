@@ -202,7 +202,7 @@
       }
     },
     computed: {
-      walkingByOptions: function () {
+      walkingByOptions() {
         if(this.tagsPerWell > 1) {
           this.walkingBy = 'as group by plate'
           return [{ value: 'as group by plate', text: 'As Group By Plate' }]
@@ -216,7 +216,7 @@
           ]
         }
       },
-      directionOptions: function () {
+      directionOptions() {
         this.direction = 'row'
         return [
           { value: null, text: 'Please select a Direction Option...' },
@@ -226,19 +226,19 @@
           { value: 'inverse column', text: 'By Inverse Columns' }
         ]
       },
-      tagGroupsDisabled: function () {
+      tagGroupsDisabled() {
         return (typeof this.tagPlate != "undefined" && this.tagPlate !== null)
       },
-      offsetTagByMax: function () {
+      offsetTagByMax() {
         if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
           return null
         }
         return this.numberOfTags - this.numberOfTargetWells
       },
-      offsetTagByDisabled: function () {
+      offsetTagByDisabled() {
         return (!this.offsetTagByMax || this.offsetTagByMax <= 0)
       },
-      offsetTagByPlaceholder: function () {
+      offsetTagByPlaceholder() {
         if(this.numberOfTags === 0) { return 'Select tags first...' }
 
         if(this.numberOfTargetWells === 0) { return 'No target wells...' }
@@ -249,14 +249,14 @@
 
         return 'Enter offset number...'
       },
-      offsetTagByState: function () {
+      offsetTagByState() {
         return (!this.offsetTagByMax || this.offsetTagByMax <= 0) ? null : this.offsetTagByWithinLimits
       },
-      offsetTagByWithinLimits: function () {
+      offsetTagByWithinLimits() {
         return ((this.offsetTagByNumber >= this.offsetTagByMin) &&
                 (this.offsetTagByNumber <= this.offsetTagByMax)) ? true : false
       },
-      offsetTagByInvalidFeedback: function () {
+      offsetTagByInvalidFeedback() {
         if(!this.offsetTagByMax || this.offsetTagByMax <= 0) { return '' }
 
         let chk
@@ -268,7 +268,7 @@
 
         return ''
       },
-      offsetTagByCheckTooLow: function () {
+      offsetTagByCheckTooLow() {
         let ret = { valid: true, message: '' }
 
         if(this.offsetTagByNumber < this.offsetTagByMin) {
@@ -278,7 +278,7 @@
 
         return ret
       },
-      offsetTagByCheckTooHigh: function () {
+      offsetTagByCheckTooHigh() {
         let ret = { valid: true, message: '' }
 
         if(this.offsetTagByNumber > this.offsetTagByMax) {
@@ -288,7 +288,7 @@
 
         return ret
       },
-      offsetTagByValidFeedback: function () {
+      offsetTagByValidFeedback() {
         return (this.offsetTagByState ? 'Valid' : '')
       }
     },

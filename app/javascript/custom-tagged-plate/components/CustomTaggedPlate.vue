@@ -382,16 +382,16 @@
       }
     },
     computed: {
-      numberOfRows: function () {
+      numberOfRows() {
         return (this.parentPlate ? this.parentPlate.number_of_rows : null)
       },
-      numberOfColumns: function () {
+      numberOfColumns() {
         return (this.parentPlate ? this.parentPlate.number_of_columns : null)
       },
-      tagsPerWellAsNumber: function () {
+      tagsPerWellAsNumber() {
         return (this.tagsPerWell ? Number.parseInt(this.tagsPerWell) : null)
       },
-      parentWells: function () {
+      parentWells() {
         let wells = {}
 
         if(!this.parentPlate) {
@@ -566,7 +566,7 @@
         return ''
       },
       // TODO remove
-      substituteTagCheckTooLow: function () {
+      substituteTagCheckTooLow() {
         let ret = { valid: true, message: '' }
 
         if(this.substituteTagId < 1) {
@@ -577,7 +577,7 @@
         return ret
       },
       // TODO remove
-      substituteTagCheckTooHigh: function () {
+      substituteTagCheckTooHigh() {
         let ret = { valid: true, message: '' }
 
         if(this.substituteTagId > this.numberOfTags) {
