@@ -36,6 +36,7 @@
 
 <script>
   import PlateSummary from './PlateSummary'
+  import filterProps from './filterProps'
   import PrimerPanelFilter from './PrimerPanelFilter'
   import NullFilter from './NullFilter'
   import Plate from 'shared/components/Plate'
@@ -62,7 +63,7 @@
       sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
       purposeUuid: { type: String, required: true },
       targetUrl: { type: String, required: true },
-      requestFilters: { type: String, required: true },
+      requestFilter: { type: String, required: true },
       targetRows: { type: Number, default: 16 },
       targetColumns: { type: Number, default: 24 },
       sourcePlateNumber: { type: Number, default: 4 },
@@ -151,34 +152,13 @@
         return deb
       },
       requestsFilter() {
-        if (this.requestFilters === 'primer-panel') {
-          return 'lb-primer-panel-filter'
-        }
-        else {
-          return 'lb-null-filter'
-        }
+        return filterProps[this.requestFilter].requestsFilter
       },
       plateIncludes() {
-        if (this.requestFilters === 'primer-panel') {
-          return 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel'
-        }
-        else {
-          return 'wells,wells.requests_as_source,wells.aliquots.request'
-        }
+        return filterProps[this.requestFilter].plateIncludes
       },
       plateFields() {
-        if (this.requestFilters === 'primer-panel') {
-          return { plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
-                   requests: 'primer_panel,uuid',
-                   wells: 'position,requests_as_source,aliquots,uuid',
-                   aliquots: 'request' }
-        }
-        else {
-          return { plates: 'labware_barcode,wells,uuid,number_of_rows,number_of_columns',
-                   requests: 'uuid',
-                   wells: 'position,requests_as_source,aliquots,uuid',
-                   aliquots: 'request' }
-        }
+        return filterProps[this.requestFilter].plateFields
       }
     },
     components: {

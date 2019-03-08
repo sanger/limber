@@ -30,17 +30,20 @@
           const plate_id = requestWithPlate.plateObj.plate.id
           const primer_panel = requestWithPlate.request.primer_panel.name
           if (primerPanelsByPlate.has(plate_id)) {
-            primerPanelsByPlate.get(plate_id).add(primer_panel)
+            const primerPanelArray = primerPanelsByPlate.get(plate_id)
+            if (!primerPanelArray.includes(primer_panel)) {
+              primerPanelArray.push(primer_panel)
+            }
           }
           else {
-            primerPanelsByPlate.set(plate_id, new Set([primer_panel]))
+            primerPanelsByPlate.set(plate_id, [primer_panel])
           }
         })
         if (primerPanelsByPlate.size === 0) { return [] }
         const primerPanelsIterable =
           Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
-            Array.from(accu.values()).filter(val => current.has(val)))
-        return Array.from(primerPanelsIterable.values())
+            accu.filter(val => current.includes(val)))
+        return primerPanelsIterable
       },
       requestsWithPrimerPanel() {
         return this.requestsWithPlates.filter(requestWithPlate =>

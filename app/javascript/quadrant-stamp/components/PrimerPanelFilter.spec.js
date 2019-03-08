@@ -26,8 +26,8 @@ describe('PrimerPanelFilter', () => {
     ]
     const well1 = wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] })
     const well2 = wellFactory({ requests_as_source: requestsAsSource2 })
-    const plateObj1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', wells: [well1] }) }
-    const plateObj2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', wells: [well2] }) }
+    const plateObj1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', id: '1', wells: [well1] }) }
+    const plateObj2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', id: '2', wells: [well2] }) }
     const requests = requestsFromPlates([plateObj1, plateObj2])
     const wrapper = wrapperFactory(requests)
 
@@ -47,8 +47,8 @@ describe('PrimerPanelFilter', () => {
 
     wrapper.setData({ primerPanel: 'Distinct Panel' })
 
-    expect(wrapper.vm.filteredRequests).toEqual([
-      { request: requestsAsSource1[1],
+    expect(wrapper.vm.requestsWithPlatesFiltered).toEqual([
+      { request: request2,
         well: well1,
         plateObj: plateObj1
       }
@@ -56,7 +56,7 @@ describe('PrimerPanelFilter', () => {
 
     wrapper.setData({ primerPanel: 'Shared Panel' })
 
-    expect(wrapper.vm.filteredRequests).toEqual([
+    expect(wrapper.vm.requestsWithPlatesFiltered).toEqual([
       { request: requestsOnAliquot1,
         well: well1,
         plateObj: plateObj1
