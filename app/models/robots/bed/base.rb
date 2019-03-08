@@ -67,6 +67,8 @@ module Robots::Bed
       return [] if plate.nil?
 
       @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
+        next if well.downstream_plates.empty?
+
         plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
       end
     end

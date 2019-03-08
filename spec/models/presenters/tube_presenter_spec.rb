@@ -24,7 +24,7 @@ RSpec.describe Presenters::TubePresenter do
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
-      ['Barcode', 'NT6 <em>3980000006844</em>'],
+      ['Barcode', 'NT6T <em>3980000006844</em>'],
       ['Tube type', purpose_name],
       ['Current tube state', state],
       ['Input plate barcode', 'DN2T <em>1220000002845</em>'],

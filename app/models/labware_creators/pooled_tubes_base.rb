@@ -62,6 +62,10 @@ module LabwareCreators
       parent
     end
 
+    def anchor
+      'children_tab'
+    end
+
     private
 
     def tube_attributes

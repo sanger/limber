@@ -8,6 +8,9 @@
     <%= hidden_field_tag :labware_barcode, presenter.human_barcode %>
     <%= hidden_field_tag :state, transition.to %>
     <%= hidden_field_tag :reason, t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]) %>
-    <%= f.submit t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]), class: 'btn btn-lg btn-block btn-warning' %>
+    <%= f.submit t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]),
+        class: 'btn btn-lg btn-block btn-warning',
+        data: { disable_with: t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitioning]) }
+    %>
   <% end %>
 <% end %>

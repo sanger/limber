@@ -9,6 +9,14 @@ module Robots
 
     def load(_plate_barcodes); end
 
+    def plate
+      nil
+    end
+
+    def label
+      "Invalid bed: #{@barcode}"
+    end
+
     def formatted_message
       if valid_barcode?
         "Bed with barcode #{@barcode} is not expected to contain a tracked plate."

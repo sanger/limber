@@ -432,9 +432,48 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  bravo_robot transition_to: 'started' do
+    from 'PF-384 Post Shear XP', bed(4)
+    to 'PF-384 End Prep', car('1,4')
+  end
+
+  custom_robot('bravo-pf-384-end-prep',
+               name: 'Bravo PF-384 End Prep End Preparation',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                  purpose: 'PF-384 End Prep',
+                  states: ['started'],
+                  label: 'Bed 5',
+                  target_state: 'passed' }
+               })
+
+  custom_robot(
+    'bravo-pf-384-end-prep-to-pf-384-lib-xp-2',
+    name: 'Bravo PF-384 End Prep to PF-384 Lib XP2',
+    beds: {
+      bed(5).barcode => {
+        purpose: 'PF-384 End Prep',
+        states: ['passed'],
+        label: 'Bed 5' },
+      bed(6).barcode => {
+        purpose: 'PF-384 Lib',
+        states: ['pending'],
+        label: 'Bed 6',
+        target_state: 'passed',
+        parent: bed(5).barcode },
+      car('4,3').barcode => {
+        purpose: 'PF-384 Lib XP2',
+        states: ['pending'],
+        label: 'Carousel 4,3',
+        target_state: 'passed',
+        parent: bed(6).barcode }
+    }
+  )
+
   custom_robot(
     'bravo-pf-384-lib-xp2-to-pl-lib-xp2',
-    name: 'Bravo PF-384 Lib XP2 to PF-Lib Q-XP2',
+    name: 'Bravo PF-384 Lib XP2 => PF-Lib Q-XP2',
     beds: {
       bed(5).barcode => {
         purpose: 'PF-384 Lib XP2',
@@ -466,6 +505,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         target_state: 'passed'
       }
     },
+    class: 'Robots::SplittingRobot',
     relationships: [{
         'type' => 'quad_stamp_out',
         'options' => {

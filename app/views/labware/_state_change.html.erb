@@ -25,7 +25,7 @@
           <%= label_tag :customer_accepts_responsibility, 'Still charge customer' %>
           <%= check_box_tag :customer_accepts_responsibility, true, false %>
         </div>
-          <%= f.submit 'Change State', class: 'btn btn-lg btn-danger btn-block' %>
+          <%= f.submit 'Change State', class: 'btn btn-lg btn-danger btn-block', data: { disable_with: 'Changing state...' } %>
       </div>
     <% end %>
   <% end %>

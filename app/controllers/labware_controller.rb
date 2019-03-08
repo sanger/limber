@@ -66,7 +66,7 @@ class LabwareController < ApplicationController
   def unknown_type
     redirect_to(
       search_path,
-      error: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
+      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
     )
   end
 

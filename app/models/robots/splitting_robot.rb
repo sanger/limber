@@ -7,6 +7,10 @@ module Robots
   class SplittingRobot < Robots::Robot
     attr_writer :relationships
 
+    def well_order
+      :quadrant_index
+    end
+
     def plate_includes
       [:purpose, { wells: :downstream_plates }]
     end
@@ -17,9 +21,16 @@ module Robots
     #
     # @return [Hash<String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
+      raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
+
       @relationships.each_with_object({}) do |relationship, validations|
         parent_bed = relationship.dig('options', 'parent')
         child_beds = relationship.dig('options', 'children')
+
+        validations[parent_bed] = beds[parent_bed].child_plates.present?
+        error(beds[parent_bed], 'should not be empty.') if beds[parent_bed].empty?
+        error(beds[parent_bed], 'should have children.') if beds[parent_bed].child_plates.empty?
+
         expected_children = beds[parent_bed].child_plates
         expected_children.each_with_index do |expected_child, index|
           child_bed = child_beds[index]
