@@ -18,17 +18,30 @@
     },
     methods: {
       lookupTagGroups: function (_) {
-        this.findTagGroups()
+        this.state = 'searching'
+        this.findAllTagGroups()
             .then(this.validateTagGroups)
             .catch(this.apiError)
       },
-      async findTagGroups () {
-        this.state = 'searching'
-        const tagGroupsFromDB = (
-          await this.api.findAll('tag_groups',{
-          })
-        )
-        return tagGroupsFromDB.data
+      // TODO abstract out this method to helper function with name and size as parameters
+      async findAllTagGroups () {
+        let tagGroupsFromDB = []
+        let morePagesAvailable = true
+        let currentPage = 0
+
+        while(morePagesAvailable) {
+          currentPage++
+          const response = await this.api.findAll('tag_groups', {page: {number: currentPage, size: 150}})
+          const numTagGroups = response.data.length
+
+          if(response.data.length > 0) {
+            response.data.forEach(e => tagGroupsFromDB.unshift(e))
+          }
+          // use existence of next link to decide if more pages available
+          morePagesAvailable = (response.links.next)
+        }
+
+        return tagGroupsFromDB
       },
       validateTagGroups: function (tagGroupsFromDB) {
         this.tagGroupsList = null
