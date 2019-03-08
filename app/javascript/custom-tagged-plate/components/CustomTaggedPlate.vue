@@ -6,7 +6,7 @@
                             :fields="{ wells: 'uuid,position,aliquots,requests_as_source',
                                       aliquots: 'request',
                                       requests: 'uuid,submission',
-                                      submissions: 'uuid,name' }"
+                                      submissions: 'uuid,name,used_tags' }"
                             @change="parentPlateLookupUpdated">
     </lb-parent-plate-lookup>
     <lb-tag-groups-lookup :api="devourApi"
@@ -128,12 +128,14 @@
       return {
         devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
         plateViewCaption: 'Modify the tag layout for the new plate using options on the right',
-        state: 'searching',
+        parentPlateState: 'searching',
+        tagGroupsState: 'searching',
+        creationRequestInProgress: null,
+        creationRequestSuccessful: null,
         parentPlate: null,
         tagGroupsList: null,
         progressMessageParent: 'Fetching parent plate details...',
         progressMessageTags: 'Fetching tag groups...',
-        errorMessages: [],
         tagPlate: null,
         tag1GroupId: null,
         tag2GroupId: null,
@@ -141,6 +143,7 @@
         direction: null,
         offsetTagByNumber: null,
         tagSubstitutions: {}, // { 1:2, 5:8 etc}
+        tagClashes: {}, // { 'A1': [ 'B3', 'B7' ], 'A5': [ 'submission' ] },
         isWellModalVisible: false,
         wellModalDetails: {},
         substituteTagId: null
@@ -163,15 +166,15 @@
           } else {
             if(data['state'] === 'valid') {
               this.parentPlate = { ...data['asset']}
-              this.state = 'loaded'
+              this.parentPlateState = 'loaded'
             } else {
-              this.errorMessages.push('Parent plate lookup error: ', data['state'])
-              this.state = 'failed'
+              console.log('Parent plate lookup error: ', data['state'])
+              this.parentPlateState = 'failed'
             }
           }
         } else {
-          this.errorMessages.push('Parent plate lookup error: nothing returned')
-          this.state = 'failed'
+          console.log('Parent plate lookup error: nothing returned')
+          this.parentPlateState = 'failed'
         }
       },
       tagGroupsLookupUpdated(data) {
@@ -181,22 +184,22 @@
             return
           } else if(data.state === 'valid') {
             this.tagGroupsList = { ...data.tagGroupsList }
-            this.state = 'loaded'
+            this.tagGroupsState = 'loaded'
           } else {
-            this.errorMessages.push('Tag Groups lookup error: ', data['state'])
-            this.state = 'failed'
+            console.log('Tag Groups lookup error: ', data['state'])
+            this.tagGroupsState = 'failed'
           }
         } else {
-          this.errorMessages.push('Tag Groups lookup error: returned data null')
-          this.state = 'failed'
+          console.log('Tag Groups lookup error: returned data null')
+          this.tagGroupsState = 'failed'
         }
       },
       tagParamsUpdated(updatedFormData) {
-        this.tagPlate         = updatedFormData.tagPlate
-        this.tag1GroupId      = updatedFormData.tag1GroupId
-        this.tag2GroupId      = updatedFormData.tag2GroupId
-        this.walkingBy        = updatedFormData.walkingBy
-        this.direction        = updatedFormData.direction
+        this.tagPlate          = updatedFormData.tagPlate
+        this.tag1GroupId       = updatedFormData.tag1GroupId
+        this.tag2GroupId       = updatedFormData.tag2GroupId
+        this.walkingBy         = updatedFormData.walkingBy
+        this.direction         = updatedFormData.direction
         this.offsetTagByNumber = updatedFormData.offsetTagByNumber
       },
       extractSubmissionIdFromWell(well) {
@@ -263,7 +266,7 @@
         return numTargets
       },
       createPlate() {
-        this.state = 'busy'
+        this.creationRequestInProgress = true
 
         let payload = {
           plate: {
@@ -308,12 +311,14 @@
           // this.progressMessage = response.data.message
           console.log(response.data.message)
           this.locationObj.href = response.data.redirect
-          this.state = 'success'
+          this.creationRequestInProgress = false
+          this.creationRequestSuccessful = true
           // TODO clear out stored info to reset page? does it forward to new plate?
         }).catch((error)=>{
           // Something has gone wrong
           console.log(error)
-          this.state = 'failure'
+          this.creationRequestInProgress = false
+          this.creationRequestSuccessful = false
         })
       },
       onWellClicked(wellName) {
@@ -360,7 +365,7 @@
         const origTag = this.wellModalDetails.originalTag
 
         if(origTag in this.tagSubstitutions && origTag === this.substituteTagId) {
-          // being changed back to original, delete from object
+          // being changed back to original, delete from list
           delete this.tagSubstitutions.origTag
         } else {
           this.tagSubstitutions[origTag] = this.substituteTagId
@@ -382,6 +387,66 @@
       }
     },
     computed: {
+      loadingState() {
+        this.parentPlateState
+        this.tagGroupsState
+
+        if(this.parentPlateState === 'failed' || this.tagGroupsState === 'failed') {
+          return 'failed'
+        }
+        if(this.parentPlateState === 'searching' || this.tagGroupsState === 'searching') {
+          return 'searching'
+        }
+        if(this.parentPlateState === 'loaded' && this.tagGroupsState === 'loaded') {
+          return 'loaded'
+        }
+      },
+      tagsValid() {
+        this.loadingState
+        this.tagClashes
+        this.childWells
+
+        if(this.loadingState !== 'loaded') {
+          return false
+        }
+
+        // do not check for tag clashes if chromium
+        if(this.tagsPerWell !== 4 && Object.keys(this.tagClashes).length > 0) {
+          return false
+        }
+
+        // valid if all wells with aliquots have tags
+        let invalidCount = 0
+        Object.keys(this.childWells).forEach((wellName) => {
+          if(this.childWells[wellName].aliquotCount > 0) {
+            // TODO could set an invalid flag on childWell itself
+            if(!this.childWells[wellName].tagIndex || this.childWells[wellName].tagIndex === 'X') {
+              invalidCount++
+            }
+          }
+        })
+
+        if(invalidCount > 0) { console.log('tagsValid: invalid: tag indexes missing') }
+
+        return ((invalidCount > 0) ? false : true)
+      },
+      createButtonState() {
+        this.tagsValid
+        this.creationRequestInProgress
+        this.creationRequestSuccessful
+
+        if(!this.tagsValid) {
+          return 'setup'
+        } else if(this.creationRequestInProgress === null) {
+          return 'pending'
+        } else if(this.creationRequestInProgress) {
+          return 'busy'
+        } else if(this.creationRequestSuccessful) {
+          return 'success'
+        } else {
+          return 'failure'
+        }
+      },
       numberOfRows() {
         this.parentPlate
         return (this.parentPlate ? this.parentPlate.number_of_rows : null)
@@ -609,36 +674,30 @@
       },
       buttonText() {
         return {
-            'loaded': 'Set up plate Tag layout...',
-            'updating': 'Set up plate Tag layout...',
-            'valid': 'Create new Custom Tagged Plate in Sequencescape',
-            'invalid': 'Set up plate Tag layout...',
+            'setup': 'Set up plate Tag layout...',
+            'pending': 'Create new custom tag plate',
             'busy': 'Sending...',
             'success': 'Custom Tagged plate successfully created',
             'failure': 'Failed to create Custom Tag Plate, retry?'
-        }[this.state]
+        }[this.createButtonState]
       },
       buttonStyle() {
         return {
-          'loaded': 'secondary',
-          'updating': 'secondary',
-          'valid': 'primary',
-          'invalid': 'danger',
+          'setup': 'danger',
+          'pending': 'primary',
           'busy': 'outline-primary',
           'success': 'success',
           'failure': 'danger'
-        }[this.state]
+        }[this.createButtonState]
       },
       buttonDisabled() {
         return {
-          'loaded': true,
-          'updating': true,
-          'valid': false,
-          'invalid': true,
+          'setup': true,
+          'pending': false,
           'busy': true,
           'success': true,
           'failure': false
-        }[this.state]
+        }[this.createButtonState]
       },
     },
     components: {

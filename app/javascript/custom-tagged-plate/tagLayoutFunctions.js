@@ -99,7 +99,7 @@ const calculateTagLayout = function (data) {
 
   if(validationResult) {
     // TODO messages displayed where? some of these are valid first time
-    console.log(validationResult.message)
+    // console.log(validationResult.message)
     return null
   }
 
