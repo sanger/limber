@@ -21,7 +21,7 @@ describe('QuadStamp', () => {
         purposeUuid: 'test',
         targetUrl: 'example/example',
         locationObj: mockLocation,
-        requestFilters: 'null'
+        requestFilter: 'null'
       },
       localVue
     })

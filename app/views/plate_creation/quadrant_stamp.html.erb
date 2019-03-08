@@ -2,6 +2,6 @@
      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
      data-target-url="<%= limber_plate_children_path(@labware_creator.parent) %>"
-     data-request-filters="<%= @labware_creator.filters %>">
+     data-request-filter="<%= @labware_creator.request_filter %>">
   <div class="spinner-dark">Loading...</div>
 </div>

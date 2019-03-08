@@ -41,7 +41,7 @@
     "@vue/test-utils": "^1.0.0-beta.25",
     "axios-mock-adapter": "^1.15.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.14.1",
+    "eslint": "^5.15.1",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-vue": "^5.2.2",
     "jasmine-core": "^3.2.1",
