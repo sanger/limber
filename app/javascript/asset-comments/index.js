@@ -15,15 +15,6 @@ import resources from 'shared/resources'
 
 Vue.use(BootstrapVue)
 
-if (process.env.NODE_ENV == 'test') {
-  // Vue generates warning if we aren't in the production environment
-  // These clutter up the console, but we don't want to turn them off
-  // everywhere as they may be useful if we ever end up accidentally
-  // running production in development mode. Instead we turn them off
-  // explicitly
-  Vue.config.productionTip = false
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   /*
    * As we add more components to this page we should

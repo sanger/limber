@@ -3,7 +3,9 @@
     v-if="isEmpty"
     class="no-plate plate-summary"
   >
-    <div class="well" />No plate
+    <div class="well">
+&nbsp;
+    </div> No plate
   </div>
   <div
     v-else
@@ -20,9 +22,12 @@
 export default {
   name: 'PlateSummary',
   props: {
-    poolIndex: { default: null },
-    state: { default: 'empty' },
-    plate: { default: { labware_barcode: { human_barcode: '...' } } }
+    pool_index: { default: null, type: Number },
+    state: { default: 'empty', type: String },
+    plate: {
+      default() { return  { labware_barcode: { human_barcode: '...' } } },
+      type: Object
+    }
   },
   computed: {
     colourClass() {

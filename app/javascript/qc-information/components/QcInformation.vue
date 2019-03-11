@@ -30,13 +30,16 @@ export default {
     'lb-qc-field': QcField
   },
   props: {
-    qcFields: { default: () => {
-      return [
-        { name: 'volume', units: 'ul' },
-        { name: 'molarity', units: 'nM', assayTypes: ['Estimated', 'qPCR', 'Agilent Bioanalyser'] }
-      ] }
+    qcFields: {
+      default: () => {
+        return [
+          { name: 'volume', units: 'ul' },
+          { name: 'molarity', units: 'nM', assayTypes: ['Estimated', 'qPCR', 'Agilent Bioanalyser'] }
+        ]
+      },
+      type: Array
     },
-    assetUuid: { default: String, required: true },
+    assetUuid: { type: String, required: true },
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' }
   },
   data () {

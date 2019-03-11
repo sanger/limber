@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group">
+  <div class="list-group list-group-flush">
     <div
       v-if="loading"
       class="spinner-dark"
@@ -8,6 +8,7 @@
     </div>
     <a
       v-for="qc_file in qc_files"
+      :key="qc_file.uuid"
       class="list-group-item"
       :href="'/qc_files/' + qc_file.uuid"
     >

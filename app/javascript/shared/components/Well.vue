@@ -11,7 +11,7 @@
 export default {
   name: 'Well',
   props: {
-    poolIndex: { default: null }
+    pool_index: { default: null, type: Number }
   },
   computed: {
     colourClass() {

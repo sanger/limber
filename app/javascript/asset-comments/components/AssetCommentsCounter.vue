@@ -4,8 +4,6 @@
 
 <script>
 
-const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute:'2-digit' }
-
 export default {
   name: 'AssetComments',
   computed: {

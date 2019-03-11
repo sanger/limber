@@ -2,7 +2,7 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import PlateScan from 'shared/components/PlateScan.vue'
-import { jsonCollectionFactory, attributesFactory, devourFactory } from 'test_support/factories'
+import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 
 // create an extended `Vue` constructor
@@ -25,7 +25,7 @@ describe('PlateScan', () => {
         api: api.devour,
         plateCols: 12,
         plateRows: 8,
-        includes: {wells: ['requests_as_source',{ aliquots: 'request' }]}
+        includes: 'wells.requests_as_source,wells.aliquots.request'
       },
       localVue
     })
@@ -47,7 +47,7 @@ describe('PlateScan', () => {
     const api = mockApi()
     api.mockGet('plates', {
       filter: { barcode: 'not a barcode' },
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, nullPlate)
     const wrapper = wrapperFactory(api)
@@ -72,7 +72,7 @@ describe('PlateScan', () => {
     const api = mockApi()
     api.mockFail('plates', {
       filter: { barcode: 'Good barcode' },
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, { 'errors': [{
       title: 'Not good',
@@ -106,7 +106,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactory(api)
 
     api.mockGet('plates',{
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       filter: { barcode: 'DN12345' },
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, goodPlate)
@@ -133,7 +133,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactory(api)
 
     api.mockGet('plates',{
-      include: { wells: ['requests_as_source',{aliquots: 'request'}] },
+      include:  'wells.requests_as_source,wells.aliquots.request',
       filter: { barcode: 'Good barcode' },
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, badPlate)

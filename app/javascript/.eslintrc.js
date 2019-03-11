@@ -30,7 +30,20 @@ module.exports = {
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-unused-vars": [
+            "error", {
+                "vars": "all",
+                "args": "after-used",
+                "ignoreRestSiblings": false,
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        /* We need a proper logging solution, but until then: */
+        "no-console": ["error", { "allow": ["warn", "error", "log"] }],
+        // The API sends snake case stuff, and this lets us pass things straight
+        // through. Not a great compromise though.
+        "vue/prop-name-casing": ['off']
     },
     "overrides": [
         {

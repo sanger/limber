@@ -32,13 +32,15 @@ before_script:
 - bundle exec rails webpacker:verify_install
 jobs:
   include:
+  - name: Lint
+    script:
+    - bundle exec rubocop
+    - yarn lint
   - stage: test
     name: Karma
-    script: xvfb-run -a yarn karma start --single-run
+    script: xvfb-run -a yarn test
   - name: RSpec
-    script:
-    - xvfb-run -a bundle exec rspec
-    - bundle exec rubocop
+    script: xvfb-run -a bundle exec rspec
   - stage: build
     if: tag IS present
     name: Compile Build

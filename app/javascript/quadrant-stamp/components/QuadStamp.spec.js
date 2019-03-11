@@ -2,7 +2,7 @@
 import { shallowMount } from '@vue/test-utils'
 import QuadStamp from './QuadStamp.vue'
 import localVue from 'test_support/base_vue.js'
-import { plateFactory, wellFactory, requestFactory } from 'test_support/factories.js'
+import { plateFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'

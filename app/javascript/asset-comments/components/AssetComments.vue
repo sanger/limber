@@ -2,6 +2,7 @@
   <ul class="comments-list list-group list-group-flush">
     <li
       v-for="comment in sortedComments"
+      :key="comment.id"
       class="list-group-item"
     >
       <div class="mb-1">
@@ -52,9 +53,12 @@ export default {
     comments() { return this.$root.$data.comments },
     sortedComments() {
       if(this.comments) {
-        return this.comments.sort((a, b) => {
+        // Sort mutates the array, so we do a shallow copy before sorting
+        return [...this.comments].sort((a, b) => {
           return new Date(b.created_at) - new Date(a.created_at)
         })
+      } else {
+        return []
       }
     },
   }

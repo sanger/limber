@@ -4,17 +4,26 @@
     <thead>
       <tr>
         <th class="first-col" />
-        <th v-for="column in columns">
+        <th
+          v-for="column in columns"
+          :key="column"
+        >
           {{ column }}
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="row in rows">
+      <tr
+        v-for="row in rows"
+        :key="row"
+      >
         <th class="first-col">
           {{ row | toLetter }}
         </th>
-        <td v-for="column in columns">
+        <td
+          v-for="column in columns"
+          :key="column"
+        >
           <lb-well v-bind="wellAt(row, column)" />
         </td>
       </tr>
@@ -41,7 +50,7 @@ export default {
   props: {
     columns: { type: Number, default: 12 },
     rows: { type: Number, default: 8 },
-    caption: { type: String },
+    caption: { type: String, default: '' },
     wells: { type: Object, default: () => { return {} } }
   },
   computed: {

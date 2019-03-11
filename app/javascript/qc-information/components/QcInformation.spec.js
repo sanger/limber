@@ -2,7 +2,6 @@
 import { shallowMount } from '@vue/test-utils'
 import localVue from 'test_support/base_vue.js'
 import flushPromises from 'flush-promises'
-import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
 import QcInformation from './QcInformation.vue'
@@ -43,7 +42,6 @@ describe('QcInformation', () => {
     const wrapper = wrapperFactory()
     const fullAttributes = { value: '1.5', assay_type: 'Volume Check', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'test' }
     const emptyAttributes = { value: '', assay_type: 'Estimated', units: 'nM', key: 'molarity', assay_version: 'manual', uuid: 'test' }
-    const originalQcAssay = wrapper.vm.qcAssay
     const expectedPayload = {
       'data':{
         'type':'qc_assays',

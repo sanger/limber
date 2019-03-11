@@ -33,11 +33,14 @@ let uid = 0
 export default {
   name: 'PlateScan',
   props: {
-    api: { required: false },
+    api: { required: true, type: Object },
     label: { type: String, default: 'Plate'},
-    description: { type: String },
-    includes: { default: () => { return '' } },
-    fields: { default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } } },
+    description: { type: String, required: false, default: null },
+    includes: { default: () => { return '' }, type: String },
+    fields: {
+      default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } },
+      type: Object
+    },
     plateCols: { type: Number, default: 12 },
     plateRows: { type: Number, default: 8 }
   },
@@ -115,7 +118,7 @@ export default {
     },
     goodState: function(msg) {
       this.state = 'valid'
-      this.validFeedback = 'Great!'
+      this.validFeedback = msg.message || 'Great!'
     }
   }
 }
