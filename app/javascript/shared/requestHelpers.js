@@ -11,11 +11,11 @@ const requestsFromPlates = function(plateObjs) {
   plateObjs.forEach((plateObj) => {
     plateObj.plate.wells.forEach((well) => {
       requestsForWell(well).forEach((request) => {
-          requestsArray.push({
-            request: request,
-            well: well,
-            plateObj: plateObj
-          })
+        requestsArray.push({
+          request: request,
+          well: well,
+          plateObj: plateObj
+        })
       })
     })
   })
