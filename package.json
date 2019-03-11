@@ -53,5 +53,10 @@
     "karma-webpack": "^4.0.0-rc.3",
     "mini-css-extract-plugin": "^0.4.4",
     "webpack-dev-server": "^3.0.0"
+  },
+  "name": "limber",
+  "scripts": {
+    "lint": "eslint --ext .js --ext .vue app/javascript",
+    "test": "karma start --single-run"
   }
 }

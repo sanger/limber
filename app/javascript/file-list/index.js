@@ -12,7 +12,6 @@ if (process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
   /*
    * As we add more components to this page we should
