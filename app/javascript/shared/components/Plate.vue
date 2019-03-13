@@ -45,7 +45,6 @@
         return wellCoordinateToName([column, row])
       },
       onWellClicked(wellName) {
-        console.log('Plate got a click event from well ', wellName)
         this.$emit('onwellclicked', wellName)
       }
     },

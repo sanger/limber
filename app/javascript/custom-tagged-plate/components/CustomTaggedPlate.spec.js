@@ -231,6 +231,8 @@ describe('CustomTaggedPlate', () => {
     state: 'valid'
   }
 
+  const goodTagClashes = { 1: { wells: [], subsmission: true }, 4: { wells: [ 5 ], submission: false } }
+
   const mockLocation = {}
   const wrapperFactory = function() {
     return shallowMount(CustomTaggedPlate, {
@@ -247,6 +249,194 @@ describe('CustomTaggedPlate', () => {
   }
 
   describe('#computed:', () => {
+    describe('loadingState:', () => {
+      it('returns failed if parent plate lookup fails', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'failed', tagGroupsState: 'searching' })
+
+        expect(wrapper.vm.loadingState).toEqual('failed')
+      })
+
+      it('returns failed if tag groups lookup fails', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'failed' })
+
+        expect(wrapper.vm.loadingState).toEqual('failed')
+      })
+
+      it('returns searching if parent plate lookup is still running', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'loaded' })
+
+        expect(wrapper.vm.loadingState).toEqual('searching')
+      })
+
+      it('returns searching if tag groups lookup is still running', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'searching' })
+
+        expect(wrapper.vm.loadingState).toEqual('searching')
+      })
+
+      it('returns loaded if both parent and tag groups lookups are finished', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'loaded' })
+
+        expect(wrapper.vm.loadingState).toEqual('loaded')
+      })
+    })
+
+    describe('tagsValid:', () => {
+      it('returns false if loading has not completed', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'searching' })
+
+        expect(wrapper.vm.tagsValid).toEqual(false)
+      })
+
+      it('returns false if there are any tag clashes', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'loaded', tagClashes: goodTagClashes })
+
+        expect(wrapper.vm.tagsValid).toEqual(false)
+      })
+
+      it('returns false if any wells with aliquots do not contain a tag', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 4
+        })
+
+        expect(wrapper.vm.tagsValid).toEqual(false)
+      })
+
+      it('returns true if all aliquots contain valid tag indexes', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column'
+        })
+
+        expect(wrapper.vm.tagsValid).toEqual(true)
+      })
+    })
+
+    describe('createButtonState:', () => {
+      it('returns setup if tags are not valid', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 4
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('setup')
+      })
+
+      it('returns pending if tags are valid and creation not started', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column'
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('pending')
+      })
+
+      it('returns busy if tags are valid and creation in progress', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          creationRequestInProgress: true
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('busy')
+      })
+
+      it('returns success if creation was successful', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          creationRequestInProgress: false,
+          creationRequestSuccessful: true
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('success')
+      })
+
+      it('returns failure if creation was unsuccessful', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          creationRequestInProgress: false,
+          creationRequestSuccessful: false
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('failure')
+      })
+    })
+
     describe('numberOfRows:', () => {
       it('returns null by default', () => {
         const wrapper = wrapperFactory()
@@ -406,32 +596,24 @@ describe('CustomTaggedPlate', () => {
       })
     })
 
-    describe('buttonText:', () => {
+    describe('button text, style and disabled:', () => {
       it('returns the correct text depending on state', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ state: 'valid' })
+        wrapper.setData({
+          parentPlateState: 'loaded',
+          tagGroupsState: 'loaded',
+          tagClashes: {},
+          parentPlate: goodParentPlate,
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1,
+          walkingBy: 'manual by plate',
+          direction: 'column'
+        })
 
-        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged Plate in Sequencescape')
-      })
-    })
-
-    describe('buttonStyle:', () => {
-      it('returns the correct style depending on state', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ state: 'valid' })
-
+        expect(wrapper.vm.createButtonState).toEqual('pending')
+        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged plate in Sequencescape')
         expect(wrapper.vm.buttonStyle).toEqual('primary')
-      })
-    })
-
-    describe('buttonDisabled:', () => {
-      it('disables the submit button depending on state', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ state: 'valid' })
-
         expect(wrapper.vm.buttonDisabled).toBe(false)
       })
     })
@@ -639,8 +821,7 @@ describe('CustomTaggedPlate', () => {
         tag2GroupId: 2,
         direction: 'column',
         walkingBy: 'manual by plate',
-        offsetTagByNumber: 1,
-        // { 1:2,5:8, etc }
+        offsetTagsBy: 1,
         tagSubstitutions: {}
       })
 
@@ -648,18 +829,15 @@ describe('CustomTaggedPlate', () => {
         plate: {
           purpose_uuid: 'purpose-uuid',
           parent_uuid: 'parent-plate-uuid',
-          // user_uuid: 'user-uuid',
           tag_layout: {
-            // user: 'user-uuid',
             tag_group: 'tag-1-group-uuid',
             tag2_group: 'tag-2-group-uuid',
             direction: 'column',
             walking_by: 'manual by plate',
-            initial_tag: 0,
+            initial_tag: 1,
             substitutions: {},
             tags_per_well: 1
           },
-          tag_plate_barcode: 'TG12345678',
           tag_plate: {
             asset_uuid: 'tag-plate-uuid',
             template_uuid: 'tag-template-uuid',

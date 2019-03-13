@@ -120,15 +120,15 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
   end
 
   context 'On create' do
-    let(:tag_plate_barcode) { '1234567890' }
     let(:tag_plate_uuid) { 'tag-plate' }
     let(:tag_template_uuid) { 'tag-layout-template' }
     let(:child_plate_uuid) { SecureRandom.uuid }
+    let(:parents) { [plate_uuid, tag_plate_uuid] }
 
     let!(:plate_creation_request) do
       stub_api_post('pooled_plate_creations',
                     payload: { pooled_plate_creation: {
-                      parents: [plate_uuid, tag_plate_uuid],
+                      parents: parents,
                       child_purpose: child_purpose_uuid,
                       user: user_uuid
                     } },
@@ -180,7 +180,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           purpose_uuid: child_purpose_uuid,
           parent_uuid: plate_uuid,
           user_uuid: user_uuid,
-          tag_plate_barcode: tag_plate_barcode,
           tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid, state: tag_plate_state },
           tag_layout: {
             user: 'user-uuid',
@@ -213,7 +212,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
                             direction: 'column',
                             walking_by: 'manual by plate',
                             initial_tag: '1',
-                            substitutions: {},
                             tags_per_well: 1
                           }
                         })
@@ -266,7 +264,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         context 'with an exhausted tag plate' do
           let(:tag_plate_state) { 'exhausted' }
 
-          it 'creates a tag plate' do
+          it 'creates a tagged plate' do
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
             expect(transfer_creation_request).to have_been_made.once
@@ -285,6 +283,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         context 'without a tag plate' do
           let(:tag_plate_state) { '' }
           let(:tag_plate_uuid) { '' }
+          let(:parents) { [plate_uuid] }
 
           it 'creates a tag plate' do
             expect(subject.save).to be true

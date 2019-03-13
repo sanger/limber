@@ -106,8 +106,8 @@ const calculateTagLayout = function (data) {
   const tags = extractTags(data.tag1Group, data.tag2Group)
   const counters = {}
   let offset = 0
-  if(data.offsetTagByNumber && data.offsetTagByNumber > 0) {
-    offset = data.offsetTagByNumber
+  if(data.offsetTagsBy && data.offsetTagsBy > 0) {
+    offset = data.offsetTagsBy
   }
 
   return directionFunctions[data.direction](data.wells, data.plateDims, (well, relIndex, absIndex) => {

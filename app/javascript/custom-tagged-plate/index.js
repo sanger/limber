@@ -8,6 +8,7 @@ import CustomTaggedPlate from './components/CustomTaggedPlate.vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
+import axios from 'axios'
 
 Vue.use(BootstrapVue)
 
@@ -44,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const assetElem = document.getElementById('custom-tagged-plate-page')
 
   if ( assetElem ) {
+    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    Vue.prototype.$axios = axios
     /* The custom-tagged-plate-page element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
 

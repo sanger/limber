@@ -1,17 +1,5 @@
 <template>
   <lb-page>
-    <lb-parent-plate-lookup :api="devourApi"
-                            :assetUuid="parentUuid"
-                            includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission"
-                            :fields="{ wells: 'uuid,position,aliquots,requests_as_source',
-                                      aliquots: 'request',
-                                      requests: 'uuid,submission',
-                                      submissions: 'uuid,name,used_tags' }"
-                            @change="parentPlateLookupUpdated">
-    </lb-parent-plate-lookup>
-    <lb-tag-groups-lookup :api="devourApi"
-                          @change="tagGroupsLookupUpdated">
-    </lb-tag-groups-lookup>
     <lb-main-content v-if="parentPlate">
       <lb-parent-plate-view :caption="plateViewCaption" :rows="numberOfRows" :columns="numberOfColumns" :wells="childWells" @onwellclicked="onWellClicked"></lb-parent-plate-view>
       <!-- if no aliquot in well can do nothing but show basic info -->
@@ -82,6 +70,15 @@
     </lb-main-content>
     <lb-main-content v-else>
       <lb-loading-modal-plate :message="progressMessageParent" :key="1"></lb-loading-modal-plate>
+      <lb-parent-plate-lookup :api="devourApi"
+                            :assetUuid="parentUuid"
+                            includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission"
+                            :fields="{ wells: 'uuid,position,aliquots,requests_as_source',
+                                      aliquots: 'request',
+                                      requests: 'uuid,submission',
+                                      submissions: 'uuid,name,used_tags' }"
+                            @change="parentPlateLookupUpdated">
+    </lb-parent-plate-lookup>
     </lb-main-content>
     <lb-sidebar v-if="tagGroupsList">
       <b-container fluid>
@@ -104,6 +101,9 @@
     </lb-sidebar>
     <lb-sidebar v-else>
       <lb-loading-modal-tag-groups :message="progressMessageTags" :key="2"></lb-loading-modal-tag-groups>
+      <lb-tag-groups-lookup :api="devourApi"
+                          @change="tagGroupsLookupUpdated">
+    </lb-tag-groups-lookup>
     </lb-sidebar>
   </lb-page>
 </template>
@@ -141,7 +141,7 @@
         tag2GroupId: null,
         walkingBy: null,
         direction: null,
-        offsetTagByNumber: null,
+        offsetTagsBy: null,
         tagSubstitutions: {}, // { 1:2, 5:8 etc}
         tagClashes: {}, // { 'A1': [ 'B3', 'B7' ], 'A5': [ 'submission' ] },
         isWellModalVisible: false,
@@ -195,12 +195,12 @@
         }
       },
       tagParamsUpdated(updatedFormData) {
-        this.tagPlate          = updatedFormData.tagPlate
-        this.tag1GroupId       = updatedFormData.tag1GroupId
-        this.tag2GroupId       = updatedFormData.tag2GroupId
-        this.walkingBy         = updatedFormData.walkingBy
-        this.direction         = updatedFormData.direction
-        this.offsetTagByNumber = updatedFormData.offsetTagByNumber
+        this.tagPlate     = updatedFormData.tagPlate
+        this.tag1GroupId  = updatedFormData.tag1GroupId
+        this.tag2GroupId  = updatedFormData.tag2GroupId
+        this.walkingBy    = updatedFormData.walkingBy
+        this.direction    = updatedFormData.direction
+        this.offsetTagsBy = updatedFormData.offsetTagsBy
       },
       extractSubmissionIdFromWell(well) {
         let submId
@@ -272,28 +272,29 @@
           plate: {
             purpose_uuid: this.purposeUuid,
             parent_uuid: this.parentUuid,
-            // TODO user_uuid: '?', // from where?
             tag_layout: {
-              // TODO user: '?',  // from where?
-              tag_group: this.tagGroupsList[this.tag1GroupId].uuid,
-              tag2_group: this.tagGroupsList[this.tag2GroupId].uuid,
+              tag_group: this.tag1GroupUuid,
+              tag2_group: this.tag2GroupUuid,
               direction: this.direction,
               walking_by: this.walkingBy,
-              initial_tag: this.offsetTagByNumber - 1, // initial tag is zero-based index of the tag within its group
-              substitutions: {}, // { 1:2,5:8, etc }
+              initial_tag: this.offsetTagsBy, // initial tag is zero-based index of the tag within its group
+              substitutions: this.tagSubstitutions, // { 1:2,5:8, etc }
               tags_per_well: this.tagsPerWellAsNumber
+            },
+            tag_plate: {
+              asset_uuid: null,
+              template_uuid: null,
+              state: null
             }
           }
         }
         if(this.tagPlate) {
-          payload.plate.tag_plate_barcode = this.tagPlate.labware_barcode.human_barcode // (want human_ or machine_ or ean13_ barcode?)
           payload.plate.tag_plate = {
             asset_uuid: this.tagPlate.uuid,
             template_uuid: this.tagPlate.lot.tag_layout_template.uuid,
             state: this.tagPlate.state
           }
         }
-        console.log('createPlate: payload = ', JSON.stringify(payload))
 
         this.$axios({
           method: 'post',
@@ -307,9 +308,8 @@
           // page, and update the history. Instead we don't redirect
           // application/json requests, and redirect the user ourselves.
 
-          // TODO
+          // TODO progress spinner with message
           // this.progressMessage = response.data.message
-          console.log(response.data.message)
           this.locationObj.href = response.data.redirect
           this.creationRequestInProgress = false
           this.creationRequestSuccessful = true
@@ -351,7 +351,7 @@
         this.$refs.focusThis.focus()
       },
       handleWellModalOk(evt) {
-        // Prevent modal from closing unless conditions
+        // Prevent modal from closing unless conditions are met
         evt.preventDefault()
         // TODO this will not work for just messages e.g. empty well/no tags
         if (!this.substituteTagId) {
@@ -365,7 +365,7 @@
         const origTag = this.wellModalDetails.originalTag
 
         if(origTag in this.tagSubstitutions && origTag === this.substituteTagId) {
-          // being changed back to original, delete from list
+          // because we have changed back to original, delete the substitution from the list
           delete this.tagSubstitutions.origTag
         } else {
           this.tagSubstitutions[origTag] = this.substituteTagId
@@ -374,10 +374,6 @@
         // TODO having to create new object to trigger reactivity, why?
         let newTagSubs = { ...this.tagSubstitutions }
         this.tagSubstitutions = newTagSubs
-
-        // run tag clash checks to highlight problems (e.g. duplicate tags)
-        // this updates childWells tags with any tag clashes and clears rest
-        // sets state valid/invalid
       },
       removeTagSubstitution(origTagId) {
         // TODO having to create new object to trigger reactivity, why?
@@ -419,14 +415,12 @@
         let invalidCount = 0
         Object.keys(this.childWells).forEach((wellName) => {
           if(this.childWells[wellName].aliquotCount > 0) {
-            // TODO could set an invalid flag on childWell itself
+            // TODO could set an invalid flag on childWell itself§
             if(!this.childWells[wellName].tagIndex || this.childWells[wellName].tagIndex === 'X') {
               invalidCount++
             }
           }
         })
-
-        if(invalidCount > 0) { console.log('tagsValid: invalid: tag indexes missing') }
 
         return ((invalidCount > 0) ? false : true)
       },
@@ -499,11 +493,14 @@
         this.parentWells
         return (this.parentWells ? Object.values(this.parentWells) : null)
       },
-      // TODO why is this not set even when we have both params???
       tag1Group() {
         this.tagGroupsList
         this.tag1GroupId
         return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
+      },
+      tag1GroupUuid() {
+        this.tag1Group
+        return ((this.tag1Group) ? this.tag1Group.uuid : null)
       },
       tag1GroupTags() {
         this.tag1Group
@@ -513,6 +510,10 @@
         this.tagGroupsList
         this.tag2GroupId
         return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
+      },
+      tag2GroupUuid() {
+        this.tag2Group
+        return ((this.tag2Group) ? this.tag2Group.uuid : null)
       },
       tag2GroupTags() {
         this.tag2Group
@@ -564,7 +565,7 @@
           tag2Group: this.tag2Group,
           walkingBy: this.walkingBy,
           direction: this.direction,
-          offsetTagByNumber: this.offsetTagByNumber
+          offsetTagsBy: this.offsetTagsBy
         }
 
         return calculateTagLayout(inputData)
@@ -674,11 +675,11 @@
       },
       buttonText() {
         return {
-            'setup': 'Set up plate Tag layout...',
-            'pending': 'Create new custom tag plate',
+            'setup': 'Set up plate tag layout...',
+            'pending': 'Create new Custom Tagged plate in Sequencescape',
             'busy': 'Sending...',
             'success': 'Custom Tagged plate successfully created',
-            'failure': 'Failed to create Custom Tag Plate, retry?'
+            'failure': 'Failed to create Custom Tagged plate, retry?'
         }[this.createButtonState]
       },
       buttonStyle() {
