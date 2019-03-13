@@ -21,10 +21,6 @@ class Limber::Plate::Pool
     @pool_hash = pool_hash
   end
 
-  def pcr_cycles
-    @pool_hash.fetch('pcr_cycles', 'Not specified')
-  end
-
   def library_type_name
     @pool_hash.dig('library_type', 'name') || 'Unknown'
   end

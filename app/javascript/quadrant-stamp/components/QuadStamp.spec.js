@@ -2,7 +2,7 @@
 import { shallowMount } from '@vue/test-utils'
 import QuadStamp from './QuadStamp.vue'
 import localVue from 'test_support/base_vue.js'
-import { plateFactory, wellFactory, requestFactory } from 'test_support/factories.js'
+import { plateFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'
@@ -20,34 +20,12 @@ describe('QuadStamp', () => {
         sourcePlateNumber: 4,
         purposeUuid: 'test',
         targetUrl: 'example/example',
-        locationObj: mockLocation
+        locationObj: mockLocation,
+        requestFilter: 'null'
       },
       localVue
     })
   }
-
-  it('provides a list of filter options', () => {
-    const requestsAsSource1 = [
-      requestFactory({primerPanel: {name: 'Common Panel'}}),
-      requestFactory({primerPanel: {name: 'Distinct Panel'}})
-    ]
-    const requestsOnAliquot1 = requestFactory({primerPanel: {name: 'Shared Panel'}})
-    const requestsAsSource2 = [
-      requestFactory({primerPanel: {name: 'Common Panel'}}),
-      requestFactory({primerPanel: {name: 'Shared Panel'}})
-    ]
-    const wells1 = [ wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
-    const wells2 = [ wellFactory({ requests_as_source: requestsAsSource2 }) ]
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', wells: wells1 }) }
-    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', wells: wells2 }) }
-    const wrapper = wrapperFactory()
-
-    wrapper.vm.updatePlate(1, plate1)
-    wrapper.vm.updatePlate(2, plate2)
-
-    // Feels like we should have easier access to these properties
-    expect(wrapper.find('bformradiogroup-stub').vm.$attrs.options).toEqual(['Common Panel', 'Shared Panel'])
-  })
 
   it('disables creation if there are no plates', () => {
     const wrapper = wrapperFactory()
@@ -60,11 +38,19 @@ describe('QuadStamp', () => {
     const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
-    wrapper.vm.updatePlate(1, plate2)
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.vm.updatePlate(2, plate2)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.valid).toEqual(true)
+  })
+
+  it('disables creation when there are no possible transfers', () => {
+    const wrapper = wrapperFactory()
+
+    wrapper.setData({ requestsWithPlatesFiltered: [] })
+
+    expect(wrapper.find('bbutton-stub').element.getAttribute('disabled')).toEqual('true')
   })
 
   it('disables creation when there are some invalid plates', () => {
@@ -72,9 +58,9 @@ describe('QuadStamp', () => {
     const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     const plate2 = { state: 'invalid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
-    wrapper.vm.updatePlate(1, plate2)
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.vm.updatePlate(2, plate2)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.valid).toEqual(false)
   })
@@ -86,8 +72,7 @@ describe('QuadStamp', () => {
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate)
 
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     const expectedPayload = { plate: {
       parent_uuid: 'plate-uuid',
@@ -114,46 +99,12 @@ describe('QuadStamp', () => {
 
   })
 
-  it('disables creation when there are no possible transfers', () => {
-    const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
-    wrapper.vm.updatePlate(1, plate1)
-
-    expect(wrapper.find('bbutton-stub').element.getAttribute('disabled')).toEqual('true')
-  })
-
-  it('filters requests based on panel options', () => {
-    const requestsAsSource1 = [
-      requestFactory({ uuid: 'other-request-1', primer_panel: {name: 'Common Panel'}}),
-      requestFactory({ uuid: 'target-request-1', primer_panel: {name: 'Distinct Panel'}})
-    ]
-    const requestsOnAliquot1 = requestFactory({ uuid: 'target-request-2', primer_panel: {name: 'Shared Panel'}})
-    const wells1 = [ wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] }) ]
-    const plate1 = { state: 'valid', plate: plateFactory({ wells: wells1 }) }
-
-    const wrapper = wrapperFactory()
-
-    wrapper.vm.updatePlate(1, plate1)
-    wrapper.setData({ primerPanel: 'Distinct Panel' })
-
-    expect(wrapper.vm.transfers).toEqual([
-      { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'well-uuid', outer_request: 'target-request-1', new_target: { location: 'A1' } }
-    ])
-
-    wrapper.setData({ primerPanel: 'Shared Panel' })
-
-    expect(wrapper.vm.transfers).toEqual([
-      { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'well-uuid', outer_request: 'target-request-2', new_target: { location: 'A1' } }
-    ])
-  })
-
   it('calculates transfers', () => {
     const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate)
 
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.transfers).toEqual([
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
@@ -174,8 +125,7 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(3, plate3)
     wrapper.vm.updatePlate(4, plate4)
 
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.transfers).toEqual([
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-0', outer_request: 'plate-1-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
@@ -206,8 +156,7 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(3, plate3)
     wrapper.vm.updatePlate(4, plate4)
 
-    // Consider auto-selecting a single panel
-    wrapper.setData({ primerPanel: 'Test panel' })
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.targetWells).toEqual({
       'A1': { poolIndex: 1 },

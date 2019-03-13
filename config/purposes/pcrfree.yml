@@ -18,16 +18,31 @@ PF Post Shear:
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Shear
-PF Post Shear XP:
+PF Post Shear XP: # This plate was previously tracked as part of the process
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
+PF-384 Post Shear XP:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::QuadrantStamp
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - PF Post Shear
 PF End Prep:
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - PF Post Shear
+PF-384 End Prep:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - PF-384 Post Shear XP
 PF Lib:
   :asset_type: plate
   :default_printer_type: :plate_a
@@ -44,10 +59,30 @@ PF Lib:
   :parents:
   - PF Post Shear XP
   - PF End Prep
+PF-384 Lib:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :size: 384
+  :tag_layout_templates:
+  - 'IDT for Illumina v1 - 384 Quadrant'
+  :parents:
+  - PF-384 End Prep
 PF Lib XP:
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
+PF-384 Lib XP2:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - PF-384 Lib
 PF Lib XP2:
   :asset_type: plate
   :default_printer_type: :plate_a
@@ -57,4 +92,13 @@ PF Lib XP2:
   :label_template: plate_xp
   :parents:
   - PF Lib XP
-  - PF Lib
+PF Lib Q-XP2:
+  :asset_type: plate
+  :default_printer_type: :plate_a
+  :creator_class: LabwareCreators::QuadrantSplitPlate
+  :presenter_class: Presenters::StandardPresenter
+  :suggest_library_pass_for:
+  - limber_pcr_free
+  :label_template: plate_xp
+  :parents:
+  - PF-384 Lib XP2

@@ -9,21 +9,28 @@ module LabwareCreators
   class CustomPooledTubes::CsvFile::Row
     include ActiveModel::Validations
 
+    MISSING_SOURCE = 'is blank in %s but a destination has been specified. '\
+                     'Either supply a source, or remove the destination.'
+    MISSING_VOLUME = 'is blank in %s but a destination has been specified. '\
+                     'Either supply a positive volume, or remove the destination.'
+    NEGATIVE_VOLUME = 'is %%{value} in %s but a destination has been specified. '\
+                      'Either supply a positive volume, or remove the destination.'
+
     attr_reader :header, :source, :destination, :volume, :index
 
     validates :source,
               presence: {
-                message: ->(object, _data) { "is blank in #{object} but a destination has been specified. Either supply a source, or remove the destination." }
+                message: ->(object, _data) { MISSING_SOURCE % object }
               },
               unless: :empty?
 
     validates :volume,
               presence: {
-                message: ->(object, _data) { "is blank in #{object} but a destination has been specified. Either supply a positive volume, or remove the destination." }
+                message: ->(object, _data) { MISSING_VOLUME % object }
               },
               numericality: {
                 greater_than: 0,
-                message: ->(object, _data) { "is %{value} in #{object} but a destination has been specified. Either supply a positive volume, or remove the destination." }
+                message: ->(object, _data) { NEGATIVE_VOLUME % object }
               },
               unless: :empty?
 

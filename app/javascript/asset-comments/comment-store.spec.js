@@ -68,7 +68,7 @@ describe('commentStore', () => {
 
     expect(commentStore.comments).toEqual(undefined)
 
-    mock.onPost().reply((_config) =>{
+    mock.onPost().reply((_) =>{
       return [201, {}]
     })
 

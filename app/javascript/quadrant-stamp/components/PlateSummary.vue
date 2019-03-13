@@ -1,35 +1,50 @@
 <template>
-  <div v-if="isEmpty" class="no-plate plate-summary"><div class="well"> </div>No plate</div>
-  <div v-else class="a-plate plate-summary pool-colours">
-    <div class="well"><span :class="['aliquot', colourClass]"></span></div>{{ barcode }}
+  <div
+    v-if="isEmpty"
+    class="no-plate plate-summary"
+  >
+    <div class="well">
+      &nbsp;
+    </div> No plate
+  </div>
+  <div
+    v-else
+    class="a-plate plate-summary pool-colours"
+  >
+    <div class="well">
+      <span :class="['aliquot', colourClass]" />
+    </div>{{ barcode }}
   </div>
 </template>
 
 
 <script>
-  export default {
-    name: 'PlateSummary',
-    props: {
-      poolIndex: { default: null },
-      state: { default: 'empty' },
-      plate: { default: { labware_barcode: { human_barcode: '...' } } }
+export default {
+  name: 'PlateSummary',
+  props: {
+    pool_index: { default: null, type: Number },
+    state: { default: 'empty', type: String },
+    plate: {
+      default() { return  { labware_barcode: { human_barcode: '...' } } },
+      type: Object
+    }
+  },
+  computed: {
+    colourClass() {
+      return `colour-${this.poolIndex}`
     },
-    computed: {
-      colourClass() {
-        return `colour-${this.poolIndex}`
-      },
-      isEmpty() {
-        return this.plate === null
-      },
-      barcode() {
-        if (this.plate) {
-          return this.plate.labware_barcode.human_barcode
-        } else {
-          return ''
-        }
+    isEmpty() {
+      return this.plate === null
+    },
+    barcode() {
+      if (this.plate) {
+        return this.plate.labware_barcode.human_barcode
+      } else {
+        return ''
       }
     }
   }
+}
 </script>
 
 <style scoped lang="scss">

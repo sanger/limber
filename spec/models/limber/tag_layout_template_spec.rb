@@ -126,7 +126,6 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
   end
 
   context 'by quadrant' do
-    let(:template_factory) { :tag_layout_template_by_quadrant }
     let(:expected_layout) do
       {
         'A1' => [1,  1], 'A2' => [1,  1], 'A3' => [1,  5], 'A4' => [1, 5], 'A5' => [1,  9], 'A6' => [1,  9], 'A7' => [2, 13], 'A8' => [2, 13], 'A9' => [2, 17], 'A10' => [2, 17], 'A11' => [2, 21], 'A12' => [2, 21],
@@ -139,7 +138,14 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H1' => [1,  4], 'H2' => [1,  4], 'H3' => [1,  8], 'H4' => [1, 8], 'H5' => [1, 12], 'H6' => [1, 12], 'H7' => [2, 16], 'H8' => [2, 16], 'H9' => [2, 20], 'H10' => [2, 20], 'H11' => [2, 24], 'H12' => [2, 24]
       }
     end
-    it_behaves_like 'a tag layout'
+    context 'in columns then rows' do
+      let(:template_factory) { :tag_layout_template_by_quadrant }
+      it_behaves_like 'a tag layout'
+    end
+    context 'in columns' do
+      let(:template_factory) { :tag_layout_template_by_quadrant_in_columns }
+      it_behaves_like 'a tag layout'
+    end
   end
 
   context 'by quadrants on a partial plate' do

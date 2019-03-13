@@ -42,7 +42,7 @@ describe('PlateScan', () => {
         api: api.devour,
         plateCols: 12,
         plateRows: 8,
-        includes: { wells: ['requests_as_source',{ aliquots: 'request' }]},
+        includes: 'wells.requests_as_source,wells.aliquots.request',
         scanDisabled: true
       },
       localVue
@@ -89,7 +89,7 @@ describe('PlateScan', () => {
     const api = mockApi()
     api.mockGet('plates', {
       filter: { barcode: 'not a barcode' },
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, nullPlate)
     const wrapper = wrapperFactoryPlate(api)
@@ -114,7 +114,7 @@ describe('PlateScan', () => {
     const api = mockApi()
     api.mockFail('plates', {
       filter: { barcode: 'Good barcode' },
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, { 'errors': [{
       title: 'Not good',
@@ -148,7 +148,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
-      include: { wells: ['requests_as_source', { aliquots: 'request' }] },
+      include: 'wells.requests_as_source,wells.aliquots.request',
       filter: { barcode: 'DN12345' },
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, goodPlate)
@@ -175,7 +175,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
-      include: { wells: ['requests_as_source',{aliquots: 'request'}] },
+      include:  'wells.requests_as_source,wells.aliquots.request',
       filter: { barcode: 'Good barcode' },
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, badPlate)

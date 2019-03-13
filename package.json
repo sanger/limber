@@ -4,6 +4,7 @@
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@rails/webpacker": "^4.0.2",
     "autoprefixer": "^7.1.1",
     "axios": "^0.18.0",
     "babel-loader": "8",
@@ -28,10 +29,10 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.23.1",
     "uuid": "^3.3.2",
-    "vue": "^2.3.4",
+    "vue": "^2.6.8",
     "vue-loader": "^15.4.2",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.3.4",
+    "vue-template-compiler": "^2.6.8",
     "webpack": "^4.0.0",
     "webpack-cli": "^3.1.2",
     "webpack-manifest-plugin": "^2.0.0",
@@ -41,9 +42,9 @@
     "@vue/test-utils": "^1.0.0-beta.25",
     "axios-mock-adapter": "^1.15.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "5",
+    "eslint": "^5.15.1",
     "eslint-plugin-jasmine": "^2.10.1",
-    "eslint-plugin-vue": "^5.0.0-beta.3",
+    "eslint-plugin-vue": "^5.2.2",
     "jasmine-core": "^3.2.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -52,5 +53,10 @@
     "karma-webpack": "^4.0.0-rc.3",
     "mini-css-extract-plugin": "^0.4.4",
     "webpack-dev-server": "^3.0.0"
+  },
+  "name": "limber",
+  "scripts": {
+    "lint": "eslint --ext .js --ext .vue app/javascript",
+    "test": "karma start --single-run"
   }
 }

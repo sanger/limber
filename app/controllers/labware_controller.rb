@@ -33,7 +33,7 @@ class LabwareController < ApplicationController
   def update
     state_changer.move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
-    notice = +"Labware: #{params[:labware_ean13_barcode]} has been changed to a state of #{params[:state].titleize}."
+    notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
 
     respond_to do |format|
@@ -66,7 +66,7 @@ class LabwareController < ApplicationController
   def unknown_type
     redirect_to(
       search_path,
-      error: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
+      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
     )
   end
 

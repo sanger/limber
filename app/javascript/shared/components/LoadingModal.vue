@@ -1,21 +1,30 @@
 <!-- The progress modal covers the screen with a spinner and provides feedback -->
 
 <template>
-  <div class="modal-container" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="spinner text-white"></div>
+  <div
+    class="modal-container"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+    >
+      <div class="spinner text-white" />
       <span class="modal-message">{{ message }}</span>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'loadingModal',
-    props: {
-      message: { type: String, default: 'Please wait...' }
-    }
+export default {
+  name: 'LoadingModal',
+  props: {
+    message: { type: String, default: 'Please wait...' }
   }
+}
 </script>
 
 

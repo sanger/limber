@@ -29,10 +29,6 @@ module Presenters
       labware.aliquots.count
     end
 
-    def labware_form_details(view)
-      { url: view.limber_tube_path(labware), as: :tube }
-    end
-
     def tag_sequences
       @tag_sequences ||= labware.aliquots.each_with_object([]) do |aliquot, tags|
         tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
