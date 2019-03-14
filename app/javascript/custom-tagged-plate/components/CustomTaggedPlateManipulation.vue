@@ -32,7 +32,7 @@
           <b-form-select
             id="tag1_group_selection"
             v-model="tag1GroupId"
-            :options="tag1GroupOptions"
+            :options="tagOneGroupOptions"
             :disabled="tagGroupsDisabled"
             @input="tagGroupInput"
             @change="tagGroupChanged"
@@ -51,7 +51,7 @@
           <b-form-select
             id="tag2_group_selection"
             v-model="tag2GroupId"
-            :options="tag2GroupOptions"
+            :options="tagTwoGroupOptions"
             :disabled="tagGroupsDisabled"
             @input="tagGroupInput"
             @change="tagGroupChanged"
@@ -141,20 +141,23 @@ export default {
   },
   props: {
     api: { type: Object, required: true },
-    tag1GroupOptions: { type: Array, default: () => { return [] } },
-    tag2GroupOptions: { type: Array, default: () => { return [] } },
+    tagOneGroupOptions: { type: Array, default: () => { return [] } },
+    tagTwoGroupOptions: { type: Array, default: () => { return [] } },
     numberOfTags: { type: Number, default: () => { return 0 } },
     numberOfTargetWells: { type: Number, default: () => { return 0 } },
     tagsPerWell: { type: Number, default: () => { return 1 } },
   },
   data () {
+
+    const initalWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
+
     return {
       tagPlate: null,
       tagPlateWasScanned: false,
       tagPlateScanDisabled: false,
       tag1GroupId: null,
       tag2GroupId: null,
-      walkingBy: 'manual by plate',
+      walkingBy: initalWalkingBy,
       direction: 'row',
       offsetTagsByMin: 0,
       offsetTagsBy: 0
@@ -246,13 +249,6 @@ export default {
     },
     offsetTagsByValidFeedback() {
       return (this.offsetTagsByState ? 'Valid' : '')
-    }
-  },
-  created() {
-    if(this.tagsPerWell > 1) {
-      this.walkingBy = 'manual by plate'
-    } else {
-      this.walkingBy = 'as group by plate'
     }
   },
   methods: {

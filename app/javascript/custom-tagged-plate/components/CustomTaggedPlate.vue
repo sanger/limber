@@ -105,8 +105,8 @@
           <b-col>
             <lb-custom-tagged-plate-manipulation
               :api="devourApi"
-              :tag1group-options="tag1GroupOptions"
-              :tag2group-options="tag2GroupOptions"
+              :tag-one-group-options="tag1GroupOptions"
+              :tag-two-group-options="tag2GroupOptions"
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
               :tags-per-well="tagsPerWellAsNumber"
