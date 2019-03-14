@@ -87,7 +87,7 @@ describe('TagGroupsLookup', () => {
   it('is invalid if it can not find any tag groups', async () => {
     const api = mockApi()
 
-    api.mockGet('tag_groups', {"page":{"number":1,"size":150}}, noTagGroups)
+    api.mockGet('tag_groups', {'page':{'number':1,'size':150}}, noTagGroups)
 
     const wrapper = wrapperFactory(api)
 
@@ -107,7 +107,7 @@ describe('TagGroupsLookup', () => {
   it('is invalid if there are api troubles', async () => {
     const api = mockApi()
 
-    api.mockFail('tag_groups', {"page":{"number":1,"size":150}}, {
+    api.mockFail('tag_groups', {'page':{'number':1,'size':150}}, {
       'errors': [{
         title: 'Not good',
         detail: 'Very not good',
@@ -134,7 +134,7 @@ describe('TagGroupsLookup', () => {
   it('is valid if it can find tag groups and sorts the tags in order of index', async () => {
     const api = mockApi()
 
-    api.mockGet('tag_groups', {"page":{"number":1,"size":150}}, goodTagGroups)
+    api.mockGet('tag_groups', {'page':{'number':1,'size':150}}, goodTagGroups)
 
     const wrapper = wrapperFactory(api)
 

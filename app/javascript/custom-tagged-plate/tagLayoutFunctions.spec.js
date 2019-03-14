@@ -181,7 +181,7 @@ describe('calculateTagLayout', () => {
   })
 
   describe('sequential plate layouts: ', () => {
-    it('by column', () => {
+    it('sequential by column', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -197,7 +197,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row', () => {
+    it('sequential by row', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -213,7 +213,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column with offset', () => {
+    it('sequential by column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -229,7 +229,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row with offset', () => {
+    it('sequential by row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -245,7 +245,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse column with offset', () => {
+    it('sequential by inverse column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -261,7 +261,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse row with offset', () => {
+    it('sequential by inverse row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -277,7 +277,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column when no tag group 1', () => {
+    it('sequential by column when no tag group 1', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -293,7 +293,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column when some wells empty', () => {
+    it('sequential by column when some wells empty', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -309,7 +309,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column where not enough tags', () => {
+    it('sequential by column where not enough tags', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -327,7 +327,7 @@ describe('calculateTagLayout', () => {
   })
 
   describe('fixed plate layouts: ', () => {
-    it('by column', () => {
+    it('fixed by column', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -343,7 +343,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row', () => {
+    it('fixed by row', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -359,7 +359,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse column', () => {
+    it('fixed by inverse column', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -375,7 +375,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse row', () => {
+    it('fixed by inverse row', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -391,7 +391,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column with offset', () => {
+    it('fixed by column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -407,7 +407,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row with offset', () => {
+    it('fixed by row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -423,7 +423,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse column with offset', () => {
+    it('fixed by inverse column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -439,7 +439,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse row with offset', () => {
+    it('fixed by inverse row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -457,7 +457,7 @@ describe('calculateTagLayout', () => {
   })
 
   describe('pooled plate layouts: ', () => {
-    it('by column', () => {
+    it('pooled by column', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -473,7 +473,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row', () => {
+    it('pooled by row', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -489,7 +489,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse column', () => {
+    it('pooled by inverse column', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -505,7 +505,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse row', () => {
+    it('pooled by inverse row', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -521,7 +521,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by column with offset', () => {
+    it('pooled by column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -537,7 +537,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by row with offset', () => {
+    it('pooled by row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -553,7 +553,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse column with offset', () => {
+    it('pooled by inverse column with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -569,7 +569,7 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('by inverse row with offset', () => {
+    it('pooled by inverse row with offset', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,

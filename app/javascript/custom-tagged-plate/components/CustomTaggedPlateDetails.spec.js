@@ -9,7 +9,7 @@ describe('CustomTaggedPlateDetails', () => {
   const wrapperFactory = function() {
     return shallowMount(CustomTaggedPlateDetails, {
       propsData: {
-        tagSubstitutions: { "2": "5", "3": "6" }
+        tagSubstitutions: { '2': '5', '3': '6' }
       },
       localVue
     })
@@ -48,7 +48,7 @@ describe('CustomTaggedPlateDetails', () => {
       it('returns true if tag substitutions are present', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ tagSubstitutions: { "1":"2" } })
+        wrapper.setProps({ tagSubstitutions: { '1':'2' } })
 
         expect(wrapper.vm.hasTagSubstitutions).toBe(true)
       })
@@ -65,10 +65,10 @@ describe('CustomTaggedPlateDetails', () => {
       // const button = wrapper.find('#remove_tag_id_2_submit_button')
       // button.trigger('click')
       // cannot click button in test for some reason...
-      wrapper.vm.removeSubstitution("2")
+      wrapper.vm.removeSubstitution('2')
 
       expect(emitted.removetagsubstitution.length).toBe(1)
-      expect(emitted.removetagsubstitution[0]).toEqual(["2"])
+      expect(emitted.removetagsubstitution[0]).toEqual(['2'])
     })
   })
 })

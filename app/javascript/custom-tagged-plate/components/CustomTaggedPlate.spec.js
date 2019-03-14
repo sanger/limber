@@ -438,7 +438,7 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('numberOfRows:', () => {
-      it('returns null by default', () => {
+      it('returns null rows by default', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.numberOfRows).toEqual(null)
@@ -454,7 +454,7 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('numberOfColumns:', () => {
-      it('returns null by default', () => {
+      it('returns null columns by default', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.numberOfColumns).toEqual(null)
@@ -753,6 +753,7 @@ describe('CustomTaggedPlate', () => {
       })
 
       wrapper.vm.onWellClicked('A1')
+
       expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
       expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
       expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(true)
@@ -772,6 +773,7 @@ describe('CustomTaggedPlate', () => {
       })
 
       wrapper.vm.onWellClicked('A1')
+
       expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
       expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
       expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(true)
