@@ -25,7 +25,6 @@
           :key="column"
         >
           <lb-well
-            :well-name="wellName(row - 1, column - 1)"
             v-bind="wellAt(row, column)"
             @onwellclicked="onWellClicked"
           />
@@ -58,13 +57,10 @@ export default {
   },
   methods: {
     wellAt: function (row, column) {
-      return this.wells[wellCoordinateToName([column, row])] || {}
+      return this.wells[`${rowNumToLetter(row)}${column}`] || {}
     },
-    wellName: function (row, column) {
-      return wellCoordinateToName([column, row])
-    },
-    onWellClicked(wellName) {
-      this.$emit('onwellclicked', wellName)
+    onWellClicked(position) {
+      this.$emit('onwellclicked', position)
     }
   }
 }

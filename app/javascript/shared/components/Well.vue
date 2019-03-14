@@ -1,5 +1,5 @@
 <template>
-  <div :class="['well', wellName]">
+  <div :class="['well', position]">
     <span
       v-if="pool_index"
       :class="['aliquot', colourClass]"
@@ -12,7 +12,7 @@
 export default {
   name: 'Well',
   props: {
-    wellName: { type: String, default: null },
+    position: { type: String, default: null },
     pool_index: { type: Number, default: null },
     tagIndex: { type: String, default: null }
   },
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     onWellClicked() {
-      this.$emit('onwellclicked', this.wellName)
+      this.$emit('onwellclicked', this.position)
     }
   }
 }
