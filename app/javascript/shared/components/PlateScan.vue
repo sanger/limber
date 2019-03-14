@@ -44,7 +44,8 @@ export default {
     },
     plateCols: { type: Number, default: 12 },
     plateRows: { type: Number, default: 8 },
-    scanDisabled: { type: Boolean, default: false }
+    scanDisabled: { type: Boolean, default: false },
+    plateType: { type: String, default: 'plate' }
   },
   data() {
     uid += 1

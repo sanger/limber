@@ -2,10 +2,10 @@ import { wellNameToCoordinate } from 'shared/wellHelpers'
 import counter from 'shared/counter'
 
 function byPool(well, tags, relIndex, _absIndex, offset, counters) {
-  if(!counters[well.poolIndex]) {
-    counters[well.poolIndex] = counter(offset)
+  if(!counters[well.pool_index]) {
+    counters[well.pool_index] = counter(offset)
   }
-  const i = counters[well.poolIndex]()
+  const i = counters[well.pool_index]()
   return ((tags[i]) ? tags[i].index : -1)
 }
 

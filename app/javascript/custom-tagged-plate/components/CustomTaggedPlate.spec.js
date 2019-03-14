@@ -181,25 +181,25 @@ describe('CustomTaggedPlate', () => {
       position: 'A1',
       aliquotCount: 1,
       tagIndex: '1',
-      poolIndex: 1
+      pool_index: 1
     },
     A2: {
       position: 'A2',
       aliquotCount: 1,
       tagIndex: '2',
-      poolIndex: 1
+      pool_index: 1
     },
     A3: {
       position: 'A3',
       aliquotCount: 1,
       tagIndex: '3',
-      poolIndex: 1
+      pool_index: 1
     },
     A4: {
       position: 'A4',
       aliquotCount: 1,
       tagIndex: '4',
-      poolIndex: 1
+      pool_index: 1
     }
   }
   const goodQcableData = {
@@ -492,10 +492,10 @@ describe('CustomTaggedPlate', () => {
         wrapper.setData({ parentPlate: goodParentPlate })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes using aliquot requests', () => {
@@ -504,10 +504,10 @@ describe('CustomTaggedPlate', () => {
         wrapper.setData({ parentPlate: goodParentPlateWithoutWellRequestsAsResource })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(1)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes where multiple submissions set', () => {
@@ -516,10 +516,10 @@ describe('CustomTaggedPlate', () => {
         wrapper.setData({ parentPlate: goodParentPlateWithPools })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.poolIndex).toBe(1)
-        expect(wrapper.vm.parentWells.A2.poolIndex).toBe(2)
-        expect(wrapper.vm.parentWells.A3.poolIndex).toBe(2)
-        expect(wrapper.vm.parentWells.A4.poolIndex).toBe(2)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(2)
       })
     })
 

@@ -70,7 +70,6 @@ import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { wellNameToCoordinate, wellCoordinateToName } from 'shared/wellHelpers'
-
 export default {
   name: 'QuadStamp',
   components: {

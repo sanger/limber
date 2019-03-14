@@ -28,7 +28,7 @@ describe('PlateScan', () => {
         api: api.devour,
         plateCols: 12,
         plateRows: 8,
-        includes: { wells: ['requests_as_source',{ aliquots: 'request' }]}
+        includes: 'wells.requests_as_source,wells.aliquots.request'
       },
       localVue
     })
@@ -82,7 +82,7 @@ describe('PlateScan', () => {
   it('renders disabled if the disabled prop is set true', () => {
     const wrapper = wrapperFactoryPlateDisabled()
 
-    expect(wrapper.find('#plateScan').element.disabled).toBe(true)
+    expect(wrapper.find('input').element.disabled).toBe(true)
   })
 
   it('is invalid if it can not find a plate', async () => {
@@ -160,7 +160,7 @@ describe('PlateScan', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('.valid-feedback').text()).toEqual('Valid!')
+    expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
 
     const events = wrapper.emitted()
 

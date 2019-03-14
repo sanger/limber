@@ -10,7 +10,7 @@ describe('CustomTaggedPlateManipulation', () => {
   const wrapperFactory = function(api = mockApi()) {
     return mount(CustomTaggedPlateManipulation, {
       propsData: {
-        devourApi: api.devour,
+        api: api.devour,
         tag1GroupOptions: [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
           { value: 1, text: 'i7 example tag group 1' },
@@ -396,7 +396,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
 
-      expect(wrapper.find('#plateScan').element.disabled).toBe(true)
+      expect(wrapper.find('#tag_plate_scan').vm.scanDisabled).toBe(true)
     })
 
     it('emits a call to the parent container on a change of the form data', () => {

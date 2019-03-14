@@ -3,17 +3,17 @@ import { calculateTagLayout } from './tagLayoutFunctions'
 describe('calculateTagLayout', () => {
 
   const inputWells = [
-    { position: 'A1', aliquotCount: 1, poolIndex: 1 },
-    { position: 'B1', aliquotCount: 1, poolIndex: 1 },
-    { position: 'C1', aliquotCount: 1, poolIndex: 1 },
-    { position: 'A2', aliquotCount: 1, poolIndex: 2 },
-    { position: 'B2', aliquotCount: 1, poolIndex: 1 },
-    { position: 'C2', aliquotCount: 1, poolIndex: 2 },
-    { position: 'A3', aliquotCount: 1, poolIndex: 1 },
-    { position: 'B3', aliquotCount: 1, poolIndex: 1 },
-    { position: 'C3', aliquotCount: 1, poolIndex: 1 },
-    { position: 'A4', aliquotCount: 1, poolIndex: 1 },
-    { position: 'C4', aliquotCount: 1, poolIndex: 1 }
+    { position: 'A1', aliquotCount: 1, pool_index: 1 },
+    { position: 'B1', aliquotCount: 1, pool_index: 1 },
+    { position: 'C1', aliquotCount: 1, pool_index: 1 },
+    { position: 'A2', aliquotCount: 1, pool_index: 2 },
+    { position: 'B2', aliquotCount: 1, pool_index: 1 },
+    { position: 'C2', aliquotCount: 1, pool_index: 2 },
+    { position: 'A3', aliquotCount: 1, pool_index: 1 },
+    { position: 'B3', aliquotCount: 1, pool_index: 1 },
+    { position: 'C3', aliquotCount: 1, pool_index: 1 },
+    { position: 'A4', aliquotCount: 1, pool_index: 1 },
+    { position: 'C4', aliquotCount: 1, pool_index: 1 }
   ]
 
   const inputTag1Group = {

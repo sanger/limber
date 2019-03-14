@@ -237,7 +237,7 @@
 
         let poolTotals = {}
         Object.keys(parentWells).forEach(function (key) {
-          let poolIndex = parentWells[key].poolIndex
+          let poolIndex = parentWells[key].pool_index
           poolTotals[poolIndex] = (poolTotals[poolIndex]+1) || 1
         })
         let poolTotalValues = Object.values(poolTotals)
@@ -467,7 +467,7 @@
           const wellPosn = well.position.name
 
           if(!well.aliquots || well.aliquots.length === 0) {
-            wells[wellPosn] = { position: wellPosn, aliquotCount: 0, poolIndex: null }
+            wells[wellPosn] = { position: wellPosn, aliquotCount: 0, pool_index: null }
             return
           }
 
@@ -475,7 +475,7 @@
           if(!submId) {
             console.log('Error: Submission Id not found for well')
             // TODO what to do here? error message? should not happen
-            wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, poolIndex: null }
+            wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, pool_index: null }
             return
           }
 
@@ -484,7 +484,7 @@
           }
 
           const wellPoolIndex = submIds.indexOf(submId) + 1
-          wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, poolIndex: wellPoolIndex }
+          wells[wellPosn] = { position: wellPosn, aliquotCount: well.aliquots.length, pool_index: wellPoolIndex }
         })
 
         return wells

@@ -1,7 +1,7 @@
 <template>
   <div :class="['well', wellName]">
     <span
-      v-if="poolIndex"
+      v-if="pool_index"
       :class="['aliquot', colourClass]"
       @click="onWellClicked"
     >{{ tagIndex }}</span>
@@ -13,13 +13,13 @@ export default {
   name: 'Well',
   props: {
     wellName: { type: String, default: null },
-    poolIndex: { type: Number, default: null },
+    pool_index: { type: Number, default: null },
     tagIndex: { type: String, default: null }
   },
   computed: {
     colourClass() {
       if(this.tagIndex && this.tagIndex === 'X') { return 'colour-172' }
-      return `colour-${this.poolIndex}`
+      return `colour-${this.pool_index}`
     }
   },
   methods: {
