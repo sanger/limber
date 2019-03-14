@@ -11,12 +11,12 @@ describe('CustomTaggedPlateManipulation', () => {
     return mount(CustomTaggedPlateManipulation, {
       propsData: {
         api: api.devour,
-        tag1GroupOptions: [
+        tagOneGroupOptions: [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
           { value: 1, text: 'i7 example tag group 1' },
           { value: 2, text: 'i7 example tag group 2' }
         ],
-        tag2GroupOptions: [
+        tagTwoGroupOptions: [
           { value: null, text: 'Please select an i5 Tag 2 group...' },
           { value: 1, text: 'i5 example tag group 1' },
           { value: 2, text: 'i5 example tag group 2' }

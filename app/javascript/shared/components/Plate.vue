@@ -36,7 +36,7 @@
 
 <script>
 import Well from 'shared/components/Well'
-import { wellCoordinateToName, rowNumToLetter } from 'shared/wellHelpers'
+import { rowNumToLetter } from 'shared/wellHelpers'
 
 export default {
   name: 'Plate',

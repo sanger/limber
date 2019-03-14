@@ -34,9 +34,9 @@ describe('Well', () => {
     expect(wrapperWithTagIndex.find('span.aliquot').text()).toBe('5')
   })
 
-  const wrapperWithWellName =  shallowMount(Well, { propsData: { wellName: 'B3'} })
+  const wrapperWithPosition =  shallowMount(Well, { propsData: { position: 'B3'} })
 
   it('renders a well with tag name', () => {
-    expect(wrapperWithWellName.find('div.well.B3').exists()).toBe(true)
+    expect(wrapperWithPosition.find('div.well.B3').exists()).toBe(true)
   })
 })
