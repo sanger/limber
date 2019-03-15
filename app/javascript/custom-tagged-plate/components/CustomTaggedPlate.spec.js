@@ -247,53 +247,9 @@ describe('CustomTaggedPlate', () => {
   }
 
   describe('#computed:', () => {
-    describe('loadingState:', () => {
-      it('returns failed if parent plate lookup fails', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'failed', tagGroupsState: 'searching' })
-
-        expect(wrapper.vm.loadingState).toEqual('failed')
-      })
-
-      it('returns failed if tag groups lookup fails', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'failed' })
-
-        expect(wrapper.vm.loadingState).toEqual('failed')
-      })
-
-      it('returns searching if parent plate lookup is still running', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'loaded' })
-
-        expect(wrapper.vm.loadingState).toEqual('searching')
-      })
-
-      it('returns searching if tag groups lookup is still running', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'searching' })
-
-        expect(wrapper.vm.loadingState).toEqual('searching')
-      })
-
-      it('returns loaded if both parent and tag groups lookups are finished', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'loaded' })
-
-        expect(wrapper.vm.loadingState).toEqual('loaded')
-      })
-    })
-
     describe('tagsValid:', () => {
-      it('returns false if loading has not completed', () => {
+      it('returns false if no childWells', () => {
         const wrapper = wrapperFactory()
-
-        wrapper.setData({ parentPlateState: 'searching', tagGroupsState: 'searching' })
 
         expect(wrapper.vm.tagsValid).toEqual(false)
       })
@@ -301,7 +257,7 @@ describe('CustomTaggedPlate', () => {
       it('returns false if there are any tag clashes', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlateState: 'loaded', tagGroupsState: 'loaded', tagClashes: goodTagClashes })
+        wrapper.setData({ tagClashes: goodTagClashes })
 
         expect(wrapper.vm.tagsValid).toEqual(false)
       })
@@ -310,8 +266,6 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -327,8 +281,6 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -345,8 +297,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
+          loading: true,
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -362,8 +313,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
+          loading: false,
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -378,8 +328,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
+          loading: true,
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -395,8 +344,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
+          loading: false,
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -413,8 +361,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
+          loading: false,
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,
@@ -548,8 +495,6 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlateState: 'loaded',
-          tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
           tag1Group: goodTag1Group,

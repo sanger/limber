@@ -1,5 +1,9 @@
 <template>
   <lb-page>
+    <lb-loading-modal
+      v-if="loading"
+      :message="progressMessage"
+    />
     <lb-main-content v-if="parentPlate">
       <lb-parent-plate-view
         :caption="plateViewCaption"
@@ -84,10 +88,6 @@
       />
     </lb-main-content>
     <lb-main-content v-else>
-      <lb-loading-modal-plate
-        :key="1"
-        :message="progressMessageParent"
-      />
       <lb-parent-plate-lookup
         :api="devourApi"
         :asset-uuid="parentUuid"
@@ -144,8 +144,7 @@ import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions.js'
 export default {
   name: 'CustomTaggedPlate',
   components: {
-    'lb-loading-modal-plate': LoadingModal,
-    'lb-loading-modal-tag-groups': LoadingModal,
+    'lb-loading-modal': LoadingModal,
     'lb-parent-plate-lookup': AssetLookupByUuid,
     'lb-parent-plate-view': Plate,
     'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
@@ -161,15 +160,13 @@ export default {
   },
   data () {
     return {
+      loading: true,
+      progressMessage: 'Fetching parent details...',
+      parentPlate: null,
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
       plateViewCaption: 'Modify the tag layout for the new plate using options on the right',
-      parentPlateState: 'searching',
-      tagGroupsState: 'searching',
       creationRequestInProgress: null,
       creationRequestSuccessful: null,
-      parentPlate: null,
-      progressMessageParent: 'Fetching parent plate details...',
-      progressMessageTags: 'Fetching tag groups...',
       tagPlate: null,
       tag1Group: null,
       tag2Group: null,
@@ -184,37 +181,21 @@ export default {
     }
   },
   computed: {
-    loadingState() {
-      this.parentPlateState
-      this.tagGroupsState
-
-      if(this.parentPlateState === 'failed' || this.tagGroupsState === 'failed') {
-        return 'failed'
-      }
-      if(this.parentPlateState === 'loaded' && this.tagGroupsState === 'loaded') {
-        return 'loaded'
-      }
-      return 'searching'
-    },
     tagsValid() {
-      this.loadingState
-      this.tagClashes
       this.childWells
+      this.tagClashes
+      this.tagsPerWell
 
-      if(this.loadingState !== 'loaded') {
-        return false
-      }
+      if(Object.keys(this.childWells).length === 0) { return false }
 
-      // do not check for tag clashes if chromium
-      if(this.tagsPerWell !== 4 && Object.keys(this.tagClashes).length > 0) {
-        return false
-      }
+      // tag clash check (do not check if chromium)
+      if(this.tagsPerWell !== 4 && Object.keys(this.tagClashes).length > 0) { return false }
 
       // valid if all wells with aliquots have tags
       let invalidCount = 0
       Object.keys(this.childWells).forEach((wellName) => {
         if(this.childWells[wellName].aliquotCount > 0) {
-          // TODO could set an invalid flag on childWell itself§
+          // TODO change to use validity on well
           if(!this.childWells[wellName].tagIndex || this.childWells[wellName].tagIndex === 'X') {
             invalidCount++
           }
@@ -372,6 +353,7 @@ export default {
 
       Object.keys(this.tagLayout).forEach((wellName) => {
         cw[wellName] = { ...this.parentWells[wellName]}
+        // TODO change to add well validity: { valid: true, message: '' }
         let tagIndx = 'X'
         if(this.tagLayout[wellName] > 0) {
           const origTagId = this.tagLayout[wellName]
@@ -383,6 +365,8 @@ export default {
         }
         cw[wellName]['tagIndex'] = tagIndx
       })
+
+      // TODO check for tag clashes
 
       return cw
     },
@@ -471,15 +455,14 @@ export default {
         } else {
           if(data['state'] === 'valid') {
             this.parentPlate = { ...data['asset']}
-            this.parentPlateState = 'loaded'
           } else {
-            console.log('Parent plate lookup error: ', data['state'])
-            this.parentPlateState = 'failed'
+            this.progressMessage = 'Parent plate lookup error: ', data['state']
           }
+          this.loading = false
         }
       } else {
-        console.log('Parent plate lookup error: nothing returned')
-        this.parentPlateState = 'failed'
+        this.progressMessage = 'Parent plate lookup error: nothing returned'
+        this.loading = false
       }
     },
     tagParamsUpdated(updatedFormData) {
@@ -544,6 +527,8 @@ export default {
       return numTargets
     },
     createPlate() {
+      this.progressMessage = 'Creating plate...'
+      this.loading = true
       this.creationRequestInProgress = true
 
       let payload = {
@@ -586,14 +571,13 @@ export default {
         // page, and update the history. Instead we don't redirect
         // application/json requests, and redirect the user ourselves.
 
-        // TODO progress spinner with message
-        // this.progressMessage = response.data.message
+        this.progressMessage = response.data.message
         this.locationObj.href = response.data.redirect
         this.creationRequestInProgress = false
         this.creationRequestSuccessful = true
-        // TODO clear out stored info to reset page? does it forward to new plate?
       }).catch((error)=>{
         // Something has gone wrong
+        this.loading = false
         console.log(error)
         this.creationRequestInProgress = false
         this.creationRequestSuccessful = false
