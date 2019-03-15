@@ -99,14 +99,12 @@
         @change="parentPlateLookupUpdated"
       />
     </lb-main-content>
-    <lb-sidebar v-if="tagGroupsList">
+    <lb-sidebar>
       <b-container fluid>
         <b-row>
           <b-col>
             <lb-custom-tagged-plate-manipulation
               :api="devourApi"
-              :tag-one-group-options="tag1GroupOptions"
-              :tag-two-group-options="tag2GroupOptions"
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
               :tags-per-well="tagsPerWellAsNumber"
@@ -129,16 +127,6 @@
         </b-row>
       </b-container>
     </lb-sidebar>
-    <lb-sidebar v-else>
-      <lb-loading-modal-tag-groups
-        :key="2"
-        :message="progressMessageTags"
-      />
-      <lb-tag-groups-lookup
-        :api="devourApi"
-        @change="tagGroupsLookupUpdated"
-      />
-    </lb-sidebar>
   </lb-page>
 </template>
 
@@ -146,7 +134,6 @@
 
 import Plate from 'shared/components/Plate.vue'
 import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
-import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 import LoadingModal from 'shared/components/LoadingModal.vue'
 import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
@@ -160,7 +147,6 @@ export default {
     'lb-loading-modal-plate': LoadingModal,
     'lb-loading-modal-tag-groups': LoadingModal,
     'lb-parent-plate-lookup': AssetLookupByUuid,
-    'lb-tag-groups-lookup': TagGroupsLookup,
     'lb-parent-plate-view': Plate,
     'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
     'lb-custom-tagged-plate-manipulation': CustomTaggedPlateManipulation
@@ -182,12 +168,11 @@ export default {
       creationRequestInProgress: null,
       creationRequestSuccessful: null,
       parentPlate: null,
-      tagGroupsList: null,
       progressMessageParent: 'Fetching parent plate details...',
       progressMessageTags: 'Fetching tag groups...',
       tagPlate: null,
-      tag1GroupId: null,
-      tag2GroupId: null,
+      tag1Group: null,
+      tag2Group: null,
       walkingBy: null,
       direction: null,
       offsetTagsBy: null,
@@ -307,27 +292,17 @@ export default {
       this.parentWells
       return (this.parentWells ? Object.values(this.parentWells) : null)
     },
-    tag1Group() {
-      this.tagGroupsList
-      this.tag1GroupId
-      return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
-    },
     tag1GroupUuid() {
       this.tag1Group
       return ((this.tag1Group) ? this.tag1Group.uuid : null)
     },
-    tag1GroupTags() {
-      this.tag1Group
-      return (this.tag1Group ? this.tag1Group.tags : null)
-    },
-    tag2Group() {
-      this.tagGroupsList
-      this.tag2GroupId
-      return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
-    },
     tag2GroupUuid() {
       this.tag2Group
       return ((this.tag2Group) ? this.tag2Group.uuid : null)
+    },
+    tag1GroupTags() {
+      this.tag1Group
+      return (this.tag1Group ? this.tag1Group.tags : null)
     },
     tag2GroupTags() {
       this.tag2Group
@@ -411,45 +386,17 @@ export default {
 
       return cw
     },
-    tag1GroupOptions() {
-      this.tagGroupsList
-
-      let options = []
-
-      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-        options = this.coreTagGroupOptions().slice()
-        options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
-      }
-
-      return options
-    },
-    tag2GroupOptions() {
-      this.tagGroupsList
-
-      let options = []
-
-      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-        options = this.coreTagGroupOptions().slice()
-        options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
-      }
-
-      return options
-    },
+    // TODO needs work, check both have min number of tags
     numberOfTags() {
-      this.tagGroupsList
-      this.tag1GroupId
-      this.tag2GroupId
       this.tag1GroupTags
       this.tag2GroupTags
 
       let numTags = 0
 
-      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-        if(this.tag1GroupId) {
-          numTags = this.tag1GroupTags.length
-        } else if(this.tag2GroupId) {
-          numTags = this.tag2GroupTags.length
-        }
+      if(this.tag1GroupTags) {
+        numTags = this.tag1GroupTags.length
+      } else if(this.tag2GroupTags) {
+        numTags = this.tag2GroupTags.length
       }
 
       return numTags
@@ -535,27 +482,10 @@ export default {
         this.parentPlateState = 'failed'
       }
     },
-    tagGroupsLookupUpdated(data) {
-      this.tagGroupsList = null
-      if(data !== null) {
-        if(data.state === 'searching') {
-          return
-        } else if(data.state === 'valid') {
-          this.tagGroupsList = { ...data.tagGroupsList }
-          this.tagGroupsState = 'loaded'
-        } else {
-          console.log('Tag Groups lookup error: ', data['state'])
-          this.tagGroupsState = 'failed'
-        }
-      } else {
-        console.log('Tag Groups lookup error: returned data null')
-        this.tagGroupsState = 'failed'
-      }
-    },
     tagParamsUpdated(updatedFormData) {
       this.tagPlate     = updatedFormData.tagPlate
-      this.tag1GroupId  = updatedFormData.tag1GroupId
-      this.tag2GroupId  = updatedFormData.tag2GroupId
+      this.tag1Group    = updatedFormData.tag1Group
+      this.tag2Group    = updatedFormData.tag2Group
       this.walkingBy    = updatedFormData.walkingBy
       this.direction    = updatedFormData.direction
       this.offsetTagsBy = updatedFormData.offsetTagsBy
@@ -577,16 +507,6 @@ export default {
       }
 
       return submId
-    },
-    coreTagGroupOptions() {
-      let options = []
-
-      const tgs = Object.values(this.tagGroupsList)
-      tgs.forEach(function (tg) {
-        options.push({ value: tg.id, text: tg.name })
-      })
-
-      return options
     },
     calcNumTagsForPooledPlate() {
       let numTargets = 0
@@ -679,18 +599,16 @@ export default {
         this.creationRequestSuccessful = false
       })
     },
-    onWellClicked(wellName) {
-      if(this.childWells[wellName].aliquotCount === 0) { return }
+    onWellClicked(position, _validity) {
+      if(this.childWells[position].aliquotCount === 0) { return }
 
-      if(!this.childWells[wellName].tagIndex) { return }
+      if(!this.childWells[position].tagIndex) { return }
 
-      // TODO do we need flag for 'no tag present?' and display message in modal with no tag subs options?
-
-      const origTag = this.tagLayout[wellName]
+      const origTag = this.tagLayout[position]
 
       this.wellModalDetails = {
-        wellName: wellName,
-        currentTag: this.childWells[wellName].tagIndex,
+        wellName: position,
+        currentTag: this.childWells[position].tagIndex,
         originalTag: origTag,
         substitutionExists: false
       }

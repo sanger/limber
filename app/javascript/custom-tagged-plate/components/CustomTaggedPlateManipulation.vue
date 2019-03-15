@@ -1,5 +1,9 @@
 <template>
   <b-container fluid>
+    <lb-tag-groups-lookup
+      :api="api"
+      @change="tagGroupsLookupUpdated"
+    />
     <b-row class="form-group form-row">
       <b-col>
         <b-form-group
@@ -32,7 +36,7 @@
           <b-form-select
             id="tag1_group_selection"
             v-model="tag1GroupId"
-            :options="tagOneGroupOptions"
+            :options="tag1GroupOptions"
             :disabled="tagGroupsDisabled"
             @input="tagGroupInput"
             @change="tagGroupChanged"
@@ -51,7 +55,7 @@
           <b-form-select
             id="tag2_group_selection"
             v-model="tag2GroupId"
-            :options="tagTwoGroupOptions"
+            :options="tag2GroupOptions"
             :disabled="tagGroupsDisabled"
             @input="tagGroupInput"
             @change="tagGroupChanged"
@@ -133,16 +137,16 @@
 
 <script>
 import PlateScan from 'shared/components/PlateScan'
+import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 
 export default {
   name: 'CustomTaggedPlateManipulations',
   components: {
-    'lb-plate-scan': PlateScan
+    'lb-plate-scan': PlateScan,
+    'lb-tag-groups-lookup': TagGroupsLookup
   },
   props: {
     api: { type: Object, required: true },
-    tagOneGroupOptions: { type: Array, default: () => { return [] } },
-    tagTwoGroupOptions: { type: Array, default: () => { return [] } },
     numberOfTags: { type: Number, default: () => { return 0 } },
     numberOfTargetWells: { type: Number, default: () => { return 0 } },
     tagsPerWell: { type: Number, default: () => { return 1 } },
@@ -152,6 +156,7 @@ export default {
     const initalWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
 
     return {
+      tagGroupsList: null,
       tagPlate: null,
       tagPlateWasScanned: false,
       tagPlateScanDisabled: false,
@@ -249,9 +254,70 @@ export default {
     },
     offsetTagsByValidFeedback() {
       return (this.offsetTagsByState ? 'Valid' : '')
+    },
+    tag1Group() {
+      this.tagGroupsList
+      this.tag1GroupId
+      return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
+    },
+    tag2Group() {
+      this.tagGroupsList
+      this.tag2GroupId
+      return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
+    },
+    coreTagGroupOptions() {
+      let options = []
+
+      const tgs = Object.values(this.tagGroupsList)
+      tgs.forEach(function (tg) {
+        options.push({ value: tg.id, text: tg.name })
+      })
+
+      return options
+    },
+    tag1GroupOptions() {
+      this.tagGroupsList
+
+      let options = []
+
+      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+        options = this.coreTagGroupOptions.slice()
+        options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
+      }
+
+      return options
+    },
+    tag2GroupOptions() {
+      this.tagGroupsList
+
+      let options = []
+
+      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
+        options = this.coreTagGroupOptions.slice()
+        options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
+      }
+
+      return options
     }
   },
   methods: {
+    tagGroupsLookupUpdated(data) {
+      this.tagGroupsList = null
+      if(data !== null) {
+        if(data.state === 'searching') {
+          return
+        } else if(data.state === 'valid') {
+          this.tagGroupsList = { ...data.tagGroupsList }
+          // this.tagGroupsState = 'loaded'
+        } else {
+          console.log('Tag Groups lookup error: ', data['state'])
+          // this.tagGroupsState = 'failed'
+        }
+      } else {
+        console.log('Tag Groups lookup error: returned data null')
+        // this.tagGroupsState = 'failed'
+      }
+    },
     updateTagPlateScanDisabled() {
       if(this.tagPlateWasScanned) {
         this.tagPlateScanDisabled = false
@@ -306,8 +372,8 @@ export default {
     updateTagParams(_value) {
       const updatedData = {
         tagPlate: this.tagPlate,
-        tag1GroupId: this.tag1GroupId,
-        tag2GroupId: this.tag2GroupId,
+        tag1Group: this.tag1Group,
+        tag2Group: this.tag2Group,
         walkingBy: this.walkingBy,
         direction: this.direction,
         offsetTagsBy: Number.parseInt(this.offsetTagsBy)

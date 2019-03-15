@@ -149,32 +149,30 @@ describe('CustomTaggedPlate', () => {
       }
     ]
   }
-  const goodTagGroupsList = {
-    1: {
-      id: '1',
-      uuid: 'tag-1-group-uuid',
-      name: 'Tag Group 1',
-      tags: [
-        { index: 1, oligo: 'CTAGCTAG' },
-        { index: 2, oligo: 'TTATACGA' },
-        { index: 3, oligo: 'GTATACGA' },
-        { index: 4, oligo: 'ATATACGA' },
-        { index: 5, oligo: 'GGATACGA' },
-        { index: 6, oligo: 'AGATACGA' }
-      ]
-    },
-    2: {
-      id: '2',
-      uuid: 'tag-2-group-uuid',
-      name: 'Tag Group 2',
-      tags: [
-        { index: 1, oligo: 'CCTTAAGG' },
-        { index: 2, oligo: 'AATTCGCA' },
-        { index: 3, oligo: 'GGTTCGCA' },
-        { index: 4, oligo: 'TTTTCGCA' },
-        { index: 5, oligo: 'GCTTCGCA' }
-      ]
-    }
+  const goodTag1Group = {
+    id: '1',
+    uuid: 'tag-1-group-uuid',
+    name: 'Tag Group 1',
+    tags: [
+      { index: 1, oligo: 'CTAGCTAG' },
+      { index: 2, oligo: 'TTATACGA' },
+      { index: 3, oligo: 'GTATACGA' },
+      { index: 4, oligo: 'ATATACGA' },
+      { index: 5, oligo: 'GGATACGA' },
+      { index: 6, oligo: 'AGATACGA' }
+    ]
+  }
+  const goodTag2Group = {
+    id: '2',
+    uuid: 'tag-2-group-uuid',
+    name: 'Tag Group 2',
+    tags: [
+      { index: 1, oligo: 'CCTTAAGG' },
+      { index: 2, oligo: 'AATTCGCA' },
+      { index: 3, oligo: 'GGTTCGCA' },
+      { index: 4, oligo: 'TTTTCGCA' },
+      { index: 5, oligo: 'GCTTCGCA' }
+    ]
   }
   const goodChildWells = {
     A1: {
@@ -316,8 +314,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           offsetTagsBy: 4
@@ -334,8 +331,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -353,8 +349,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           offsetTagsBy: 4
@@ -371,8 +366,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -388,8 +382,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: true
@@ -406,8 +399,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
@@ -425,8 +417,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
@@ -543,56 +534,12 @@ describe('CustomTaggedPlate', () => {
 
         wrapper.setData({
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
 
         expect(wrapper.vm.childWells).toEqual(goodChildWells)
-      })
-    })
-
-    describe('tag1GroupOptions:', () => {
-      it('returns empty array for tag 1 groups if tag groups list empty', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual([])
-      })
-
-      it('returns valid array of tag 1 groups if tag groups list set', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
-        const goodTag1GroupOptions = [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
-        ]
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
-      })
-    })
-
-    describe('tag2GroupOptions:', () => {
-      it('returns empty array for tag 2 groups if tag groups list empty', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag2GroupOptions).toEqual([])
-      })
-
-      it('returns valid array of tag 2 groups if tag groups list set', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-        const goodTag2GroupOptions = [
-          { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
-        ]
-
-        expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
       })
     })
 
@@ -605,8 +552,7 @@ describe('CustomTaggedPlate', () => {
           tagGroupsState: 'loaded',
           tagClashes: {},
           parentPlate: goodParentPlate,
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1,
+          tag1Group: goodTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -619,16 +565,8 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('numberOfTags:', () => {
-      it('returns zero if the tag group list is not set', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.numberOfTags).toBe(0)
-      })
-
       it('returns zero if no tag group has been selected', () => {
         const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
 
         expect(wrapper.vm.numberOfTags).toBe(0)
       })
@@ -637,8 +575,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1
+          tag1Group: goodTag1Group
         })
 
         expect(wrapper.vm.numberOfTags).toBe(6)
@@ -648,8 +585,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tagGroupsList: goodTagGroupsList,
-          tag2GroupId: 2
+          tag2Group: goodTag2Group
         })
 
         expect(wrapper.vm.numberOfTags).toBe(5)
@@ -726,15 +662,14 @@ describe('CustomTaggedPlate', () => {
           locationObj: mockLocation
         },
         stubs: {
-          'Plate': '<table class="plate-view"></table>',
-          'CustomTaggedPlateManipulation': '<fieldset class="b-form-group"></fieldset>'
+          'lb-parent-plate-view': '<table class="plate-view"></table>',
+          'lb-custom-tagged-plate-manipulation': '<fieldset class="b-form-group"></fieldset>'
         },
         localVue
       })
 
       wrapper.setData({
-        parentPlate: goodParentPlate,
-        tagGroupsList: goodTagGroupsList
+        parentPlate: goodParentPlate
       })
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
@@ -746,13 +681,12 @@ describe('CustomTaggedPlate', () => {
 
       wrapper.setData({
         parentPlate: goodParentPlate,
-        tagGroupsList: goodTagGroupsList,
         walkingBy: 'wells of plate',
         direction: 'column',
-        tag1GroupId: 1
+        tag1Group: goodTag1Group
       })
 
-      wrapper.vm.onWellClicked('A1')
+      wrapper.vm.onWellClicked('A1', { valid: true, message: '' })
 
       expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
       expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
@@ -765,14 +699,13 @@ describe('CustomTaggedPlate', () => {
 
       wrapper.setData({
         parentPlate: goodParentPlate,
-        tagGroupsList: goodTagGroupsList,
         walkingBy: 'wells of plate',
         direction: 'column',
-        tag1GroupId: 1,
+        tag1Group: goodTag1Group,
         tagSubstitutions: { 1: 3 }
       })
 
-      wrapper.vm.onWellClicked('A1')
+      wrapper.vm.onWellClicked('A1', { valid: true, message: '' })
 
       expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
       expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
@@ -782,8 +715,6 @@ describe('CustomTaggedPlate', () => {
 
     it('renders a submit button', async () => {
       const wrapper = wrapperFactory()
-
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
 
       await flushPromises()
 
@@ -818,9 +749,8 @@ describe('CustomTaggedPlate', () => {
 
       wrapper.setData({
         tagPlate: goodQcableData.plate,
-        tagGroupsList: goodTagGroupsList,
-        tag1GroupId: 1,
-        tag2GroupId: 2,
+        tag1Group: goodTag1Group,
+        tag2Group: goodTag2Group,
         direction: 'column',
         walkingBy: 'manual by plate',
         offsetTagsBy: 1,

@@ -14,17 +14,17 @@ export default {
   props: {
     position: { type: String, default: null },
     pool_index: { type: Number, default: null },
-    tagIndex: { type: String, default: null }
+    tagIndex: { type: String, default: null },
+    validity: { type: Object, default: () => { return { valid: true, message: '' }} }
   },
   computed: {
     colourClass() {
-      if(this.tagIndex && this.tagIndex === 'X') { return 'colour-172' }
-      return `colour-${this.pool_index}`
+      return ((this.validity.valid) ? `colour-${this.pool_index}` : 'failed' )
     }
   },
   methods: {
     onWellClicked() {
-      this.$emit('onwellclicked', this.position)
+      this.$emit('onwellclicked', this.position, this.validity )
     }
   }
 }

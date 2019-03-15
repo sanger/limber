@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
+import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -11,19 +12,12 @@ describe('CustomTaggedPlateManipulation', () => {
     return mount(CustomTaggedPlateManipulation, {
       propsData: {
         api: api.devour,
-        tagOneGroupOptions: [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: 1, text: 'i7 example tag group 1' },
-          { value: 2, text: 'i7 example tag group 2' }
-        ],
-        tagTwoGroupOptions: [
-          { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: 1, text: 'i5 example tag group 1' },
-          { value: 2, text: 'i5 example tag group 2' }
-        ],
         numberOfTags: 10,
         numberOfTargetWells: 10,
         tagsPerWell: 1
+      },
+      stubs: {
+        'lb-tag-groups-lookup': true
       },
       localVue
     })
@@ -56,6 +50,38 @@ describe('CustomTaggedPlateManipulation', () => {
       }
     },
     state: 'valid'
+  }
+  const goodTagGroupsList = {
+    1: {
+      id: '1',
+      uuid: 'tag-1-group-uuid',
+      name: 'Tag Group 1',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CTAGCTAG'
+        },
+        {
+          index: 2,
+          oligo: 'TTATACGA'
+        }
+      ]
+    },
+    2: {
+      id: '2',
+      uuid: 'tag-2-group-uuid',
+      name: 'Tag Group 2',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CCTTAAGG'
+        },
+        {
+          index: 2,
+          oligo: 'AATTCGCA'
+        }
+      ]
+    }
   }
   const api = mockApi()
   api.mockGet('qcables', {
@@ -275,6 +301,50 @@ describe('CustomTaggedPlateManipulation', () => {
         expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Offset must be greater than or equal to 1')
       })
     })
+
+    describe('tag1GroupOptions:', () => {
+      it('returns empty array for tag 1 groups if tag groups list empty', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.tag1GroupOptions).toEqual([])
+      })
+
+      it('returns valid array of tag 1 groups if tag groups list set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
+        const goodTag1GroupOptions = [
+          { value: null, text: 'Please select an i7 Tag 1 group...' },
+          { value: '1', text: 'Tag Group 1' },
+          { value: '2', text: 'Tag Group 2' }
+        ]
+
+        expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
+      })
+    })
+
+    describe('tag2GroupOptions:', () => {
+      it('returns empty array for tag 2 groups if tag groups list empty', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.tag2GroupOptions).toEqual([])
+      })
+
+      it('returns valid array of tag 2 groups if tag groups list set', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
+        const goodTag2GroupOptions = [
+          { value: null, text: 'Please select an i5 Tag 2 group...' },
+          { value: '1', text: 'Tag Group 1' },
+          { value: '2', text: 'Tag Group 2' }
+        ]
+
+        expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
+      })
+    })
   })
 
   describe('#rendering tests:', () => {
@@ -329,6 +399,8 @@ describe('CustomTaggedPlateManipulation', () => {
     it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
       const wrapper = wrapperFactory(api)
 
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
       wrapper.vm.tagPlateScanned(goodQcableData)
 
       expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
@@ -343,27 +415,33 @@ describe('CustomTaggedPlateManipulation', () => {
     it('updates tag1GroupId when a tag 1 group is selected', () => {
       const wrapper = wrapperFactory(api)
 
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
       expect(wrapper.vm.tag1GroupId).toEqual(null)
 
-      wrapper.find('#tag1_group_selection').element.value = 1
+      wrapper.find('#tag1_group_selection').element.value = '1'
       wrapper.find('#tag1_group_selection').trigger('change')
 
-      expect(wrapper.vm.tag1GroupId).toBe(1)
+      expect(wrapper.vm.tag1GroupId).toBe('1')
     })
 
     it('updates tag2GroupId when a tag 2 group is selected', () => {
       const wrapper = wrapperFactory(api)
 
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
       expect(wrapper.vm.tag2GroupId).toEqual(null)
 
-      wrapper.find('#tag2_group_selection').element.value = 1
+      wrapper.find('#tag2_group_selection').element.value = '1'
       wrapper.find('#tag2_group_selection').trigger('change')
 
-      expect(wrapper.vm.tag2GroupId).toBe(1)
+      expect(wrapper.vm.tag2GroupId).toBe('1')
     })
 
     it('re-enables the tag group selects when the tag plate is cleared', () => {
       const wrapper = wrapperFactory(api)
+
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
 
       wrapper.vm.tagPlateScanned(goodQcableData)
 
@@ -389,6 +467,8 @@ describe('CustomTaggedPlateManipulation', () => {
     it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
       const wrapper = wrapperFactory(api)
 
+      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+
       expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
       wrapper.find('#tag1_group_selection').element.value = 1
@@ -412,7 +492,7 @@ describe('CustomTaggedPlateManipulation', () => {
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(
-        [{'tagPlate':null,'tag1GroupId':null,'tag2GroupId':null,'walkingBy':'wells of plate','direction':'row','offsetTagsBy':0}]
+        [{'tagPlate':null,'tag1Group':null,'tag2Group':null,'walkingBy':'wells of plate','direction':'row','offsetTagsBy':0}]
       )
     })
   })
