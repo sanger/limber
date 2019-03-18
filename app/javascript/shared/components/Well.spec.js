@@ -18,7 +18,8 @@ describe('Well', () => {
     propsData: {
       position: 'A1',
       pool_index: 2,
-      tagIndex: '10'
+      tagIndex: '10',
+      validity: { valid: true, message: '' }
     }
   })
 
@@ -44,7 +45,7 @@ describe('Well', () => {
 
     expect(emitted.onwellclicked.length).toBe(1)
     expect(emitted.onwellclicked[0]).toEqual(
-      [ 'A1', { 'valid': true, 'message': '' } ]
+      [ 'A1' ]
     )
   })
 

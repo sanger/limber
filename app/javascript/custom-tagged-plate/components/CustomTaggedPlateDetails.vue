@@ -48,7 +48,7 @@
 export default {
   name: 'CustomTaggedPlateDetails',
   props: {
-    tagSubstitutions: { type: Object, default: () => { return {} } },
+    tagSubstitutions: { type: Object, default: () => { return {} } }
   },
   data () {
     return {

@@ -34,11 +34,11 @@ describe('Plate', () => {
   it('emits a well clicked event', () => {
     const emitted = wrapper.emitted()
 
-    wrapper.vm.onWellClicked('A1', { valid: true, message: '' })
+    wrapper.vm.onWellClicked('A1')
 
     expect(emitted.onwellclicked.length).toBe(1)
     expect(emitted.onwellclicked[0]).toEqual(
-      [ 'A1', { 'valid': true, 'message': '' } ]
+      [ 'A1' ]
     )
   })
 })

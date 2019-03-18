@@ -179,25 +179,29 @@ describe('CustomTaggedPlate', () => {
       position: 'A1',
       aliquotCount: 1,
       tagIndex: '1',
-      pool_index: 1
+      pool_index: 1,
+      validity: { valid: true, message: '' }
     },
     A2: {
       position: 'A2',
       aliquotCount: 1,
       tagIndex: '2',
-      pool_index: 1
+      pool_index: 1,
+      validity: { valid: true, message: '' }
     },
     A3: {
       position: 'A3',
       aliquotCount: 1,
       tagIndex: '3',
-      pool_index: 1
+      pool_index: 1,
+      validity: { valid: true, message: '' }
     },
     A4: {
       position: 'A4',
       aliquotCount: 1,
       tagIndex: '4',
-      pool_index: 1
+      pool_index: 1,
+      validity: { valid: true, message: '' }
     }
   }
   const goodQcableData = {
@@ -619,43 +623,6 @@ describe('CustomTaggedPlate', () => {
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
       expect(wrapper.find('fieldset.b-form-group').exists()).toBe(true)
-    })
-
-    it('renders a well modal on clicking a well', () => {
-      const wrapper = wrapperFactory()
-
-      wrapper.setData({
-        parentPlate: goodParentPlate,
-        walkingBy: 'wells of plate',
-        direction: 'column',
-        tag1Group: goodTag1Group
-      })
-
-      wrapper.vm.onWellClicked('A1', { valid: true, message: '' })
-
-      expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
-      expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
-      expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(true)
-      expect(wrapper.vm.substituteTagId).toEqual(null)
-    })
-
-    it('renders a well modal on clicking a substituted well', () => {
-      const wrapper = wrapperFactory()
-
-      wrapper.setData({
-        parentPlate: goodParentPlate,
-        walkingBy: 'wells of plate',
-        direction: 'column',
-        tag1Group: goodTag1Group,
-        tagSubstitutions: { 1: 3 }
-      })
-
-      wrapper.vm.onWellClicked('A1', { valid: true, message: '' })
-
-      expect(wrapper.find('#original_tag_number_input').exists()).toBe(true)
-      expect(wrapper.vm.wellModalDetails.originalTag).toEqual(1)
-      expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(true)
-      expect(wrapper.vm.substituteTagId).toEqual(3)
     })
 
     it('renders a submit button', async () => {

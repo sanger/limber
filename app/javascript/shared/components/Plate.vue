@@ -59,8 +59,8 @@ export default {
     wellAt: function (row, column) {
       return this.wells[`${rowNumToLetter(row)}${column}`] || {}
     },
-    onWellClicked(position, validity) {
-      this.$emit('onwellclicked', position, validity)
+    onWellClicked(position) {
+      this.$emit('onwellclicked', position)
     }
   }
 }

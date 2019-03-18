@@ -156,7 +156,7 @@ export default {
     const initalWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
 
     return {
-      tagGroupsList: null,
+      tagGroupsList: {},
       tagPlate: null,
       tagPlateWasScanned: false,
       tagPlateScanDisabled: false,
@@ -256,66 +256,36 @@ export default {
       return (this.offsetTagsByState ? 'Valid' : '')
     },
     tag1Group() {
-      this.tagGroupsList
-      this.tag1GroupId
-      return ((this.tagGroupsList && this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
+      return ((this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
     },
     tag2Group() {
-      this.tagGroupsList
-      this.tag2GroupId
-      return ((this.tagGroupsList && this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
+      return ((this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
     },
     coreTagGroupOptions() {
-      let options = []
-
-      const tgs = Object.values(this.tagGroupsList)
-      tgs.forEach(function (tg) {
-        options.push({ value: tg.id, text: tg.name })
+      return Object.values(this.tagGroupsList).map(tagGroup => {
+        return { value: tagGroup.id, text: tagGroup.name }
       })
-
-      return options
     },
     tag1GroupOptions() {
-      this.tagGroupsList
-
-      let options = []
-
-      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-        options = this.coreTagGroupOptions.slice()
-        options.unshift({ value: null, text: 'Please select an i7 Tag 1 group...' })
-      }
-
-      return options
+      return [{ value: null, text: 'Please select an i7 Tag 1 group...' }].concat(this.coreTagGroupOptions.slice())
     },
     tag2GroupOptions() {
-      this.tagGroupsList
-
-      let options = []
-
-      if(this.tagGroupsList && Object.keys(this.tagGroupsList).length > 0) {
-        options = this.coreTagGroupOptions.slice()
-        options.unshift({ value: null, text: 'Please select an i5 Tag 2 group...' })
-      }
-
-      return options
+      return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     }
   },
   methods: {
     tagGroupsLookupUpdated(data) {
-      this.tagGroupsList = null
+      this.tagGroupsList = {}
       if(data !== null) {
         if(data.state === 'searching') {
           return
         } else if(data.state === 'valid') {
           this.tagGroupsList = { ...data.tagGroupsList }
-          // this.tagGroupsState = 'loaded'
         } else {
           console.log('Tag Groups lookup error: ', data['state'])
-          // this.tagGroupsState = 'failed'
         }
       } else {
         console.log('Tag Groups lookup error: returned data null')
-        // this.tagGroupsState = 'failed'
       }
     },
     updateTagPlateScanDisabled() {

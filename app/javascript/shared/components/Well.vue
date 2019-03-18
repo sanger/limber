@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     onWellClicked() {
-      this.$emit('onwellclicked', this.position, this.validity )
+      this.$emit('onwellclicked', this.position )
     }
   }
 }

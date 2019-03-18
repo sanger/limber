@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
-import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -306,7 +305,7 @@ describe('CustomTaggedPlateManipulation', () => {
       it('returns empty array for tag 1 groups if tag groups list empty', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.tag1GroupOptions).toEqual([])
+        expect(wrapper.vm.tag1GroupOptions).toEqual([{ value: null, text: 'Please select an i7 Tag 1 group...' }])
       })
 
       it('returns valid array of tag 1 groups if tag groups list set', () => {
@@ -328,7 +327,7 @@ describe('CustomTaggedPlateManipulation', () => {
       it('returns empty array for tag 2 groups if tag groups list empty', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.tag2GroupOptions).toEqual([])
+        expect(wrapper.vm.tag2GroupOptions).toEqual([{ value: null, text: 'Please select an i5 Tag 2 group...' }])
       })
 
       it('returns valid array of tag 2 groups if tag groups list set', () => {
