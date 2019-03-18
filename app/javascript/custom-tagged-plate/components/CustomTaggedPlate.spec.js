@@ -530,7 +530,7 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.numberOfTags).toBe(6)
       })
 
-      it('returns the correct cnumber if only tag 2 group has been selected', () => {
+      it('returns the correct number if only tag 2 group has been selected', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({

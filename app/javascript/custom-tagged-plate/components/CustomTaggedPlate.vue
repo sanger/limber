@@ -123,32 +123,7 @@ export default {
     }
   },
   computed: {
-    tagsValid() {
-      this.childWells
-      this.tagClashes
-      this.tagsPerWell
-
-      if(Object.keys(this.childWells).length === 0) { return false }
-
-      // tag clash check (do not check if chromium)
-      if(this.tagsPerWell !== 4 && Object.keys(this.tagClashes).length > 0) { return false }
-
-      // valid if all wells with aliquots have tags
-      let invalidCount = 0
-      Object.keys(this.childWells).forEach((position) => {
-        if(this.childWells[position].aliquotCount > 0) {
-          // TODO change to use validity on well
-          // if(!this.childWells[position].tagIndex ||
-          if(this.childWells[position].validity.valid === false) {
-            invalidCount++
-          }
-        }
-      })
-
-      return ((invalidCount > 0) ? false : true)
-    },
     createButtonState() {
-      this.tagsValid
       this.creationRequestInProgress
       this.creationRequestSuccessful
 
@@ -165,16 +140,13 @@ export default {
       }
     },
     numberOfRows() {
-      this.parentPlate
-      return (this.parentPlate ? this.parentPlate.number_of_rows : null)
+      return (this.parentPlate) ? this.parentPlate.number_of_rows : null
     },
     numberOfColumns() {
-      this.parentPlate
-      return (this.parentPlate ? this.parentPlate.number_of_columns : null)
+      return (this.parentPlate) ? this.parentPlate.number_of_columns : null
     },
     tagsPerWellAsNumber() {
-      this.tagsPerWell
-      return (this.tagsPerWell ? Number.parseInt(this.tagsPerWell) : null)
+      return Number.parseInt(this.tagsPerWell) || null
     },
     parentWells() {
       if(!this.parentPlate) { return {} }
@@ -209,21 +181,34 @@ export default {
       return wells
     },
     parentWellData() {
-      return (this.parentWells ? Object.values(this.parentWells) : null)
+      return Object.values(this.parentWells) || null
     },
     tag1GroupUuid() {
-      return ((this.tag1Group) ? this.tag1Group.uuid : null)
+      return this.tag1Group.uuid || null
     },
     tag2GroupUuid() {
-      return ((this.tag2Group) ? this.tag2Group.uuid : null)
+      return this.tag2Group.uuid || null
     },
     tag1GroupTags() {
-      return (this.tag1Group ? this.tag1Group.tags : null)
+      return this.tag1Group ? this.tag1Group.tags : []
     },
     tag2GroupTags() {
-      return (this.tag2Group ? this.tag2Group.tags : null)
+      return this.tag2Group ? this.tag2Group.tags : []
+    },
+    numberOfTag1GroupTags() {
+      return this.tag1GroupTags.length
+    },
+    numberOfTag2GroupTags() {
+      return this.tag2GroupTags.length
+    },
+    tag1GroupMapIds() {
+      return this.tag1GroupTags.map(a => a.index)
+    },
+    tag2GroupMapIds() {
+      return this.tag2GroupTags.map(a => a.index)
     },
     arrayTags() {
+      // TODO method only used in useableMapIds
       this.tag1GroupTags
       this.tag2GroupTags
       if(this.tag1GroupTags) {
@@ -234,7 +219,7 @@ export default {
       }
       return null
     },
-    tagMapIds() {
+    useableTagMapIds() {
       this.arrayTags
       if(this.numberOfTags === 0) { return null }
 
@@ -245,17 +230,22 @@ export default {
         arrayMapIds.push(this.arrayTags[i].index)
       }
       return arrayMapIds
-    },
-    parentNumberOfRows() {
-      return (this.parentPlate ? this.parentPlate.number_of_rows : null)
-    },
-    parentNumberOfColumns() {
-      return (this.parentPlate ? this.parentPlate.number_of_columns : null)
+
+      // TODO if only one tag group use it's map ids
+      // if(this.tag1GroupMapIds.length === 0 && this.tag2GroupMapIds.length === 0) {
+      //   return []
+      // }
+      // if(this.tag1GroupMapIds.length > this.tag2GroupMapIds.length) {
+      //   return this.tag1GroupMapIds.splice(0, this.tag2GroupMapIds.length)
+      // }
+
+      // TODO if both need to return min array of group 1 tags Math.min(5, 10)
+
     },
     plateDims() {
       return {
-        number_of_rows: this.parentNumberOfRows,
-        number_of_columns: this.parentNumberOfColumns
+        number_of_rows: this.numberOfRows,
+        number_of_columns: this.numberOfColumns
       }
     },
     tagLayout() {
@@ -302,17 +292,33 @@ export default {
 
       return cw
     },
-    // TODO needs work, check both have min number of tags
-    numberOfTags() {
-      this.tag1GroupTags
-      this.tag2GroupTags
+    hasChildWells() {
+      return (Object.keys(this.childWells).length > 0)
+    },
+    childWellsContainsInvalidWells() {
+      let invalidCount = 0
+      Object.keys(this.childWells).forEach((position) => {
+        if(this.childWells[position].aliquotCount > 0) {
+          if(this.childWells[position].validity.valid === false) {
+            invalidCount++
+          }
+        }
+      })
 
+      return ((invalidCount > 0) ? false : true)
+    },
+    // TODO needs work
+    numberOfTags() {
       let numTags = 0
 
-      if(this.tag1GroupTags) {
-        numTags = this.tag1GroupTags.length
-      } else if(this.tag2GroupTags) {
-        numTags = this.tag2GroupTags.length
+      if(this.numberOfTag1GroupTags > 0) {
+        if(this.numberOfTag2GroupTags > 0) {
+          numTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+        } else {
+          numTags = this.numberOfTag1GroupTags
+        }
+      } else if(this.numberOfTag2GroupTags > 0) {
+        numTags = this.numberOfTag2GroupTags
       }
 
       return numTags
@@ -332,6 +338,20 @@ export default {
         }
       }
       return numTargets
+    },
+    tagsValid() {
+      if(!this.hasChildWells) { return false }
+
+      if(this.hasTagClashes) { return false }
+
+      return this.childWellsContainsInvalidWells
+    },
+    hasTagClashes() {
+      // tag clashes check (do not check if chromium)
+      return (!this.isChromiumPlate && Object.keys(this.tagClashes).length > 0) ? true : false
+    },
+    isChromiumPlate() {
+      return (this.tagsPerWell === 4) ? true : false
     },
     buttonText() {
       return {
@@ -508,7 +528,7 @@ export default {
       this.wellModalDetails = {
         position: position,
         originalTag: origTag,
-        tagMapIds: this.tagMapIds,
+        tagMapIds: this.useableTagMapIds,
         validity: this.childWells[position].validity,
         existingSubstituteTagId: null
       }

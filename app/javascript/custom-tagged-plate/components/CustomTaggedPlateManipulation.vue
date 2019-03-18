@@ -153,7 +153,7 @@ export default {
   },
   data () {
 
-    const initalWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
+    const initialWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
 
     return {
       tagGroupsList: {},
@@ -162,10 +162,15 @@ export default {
       tagPlateScanDisabled: false,
       tag1GroupId: null,
       tag2GroupId: null,
-      walkingBy: initalWalkingBy,
+      walkingBy: initialWalkingBy,
       direction: 'row',
       offsetTagsByMin: 0,
-      offsetTagsBy: 0
+      offsetTagsBy: 0,
+      nullTagGroup: {
+        uuid: null,
+        name: 'No tag group selected',
+        tags: []
+      }
     }
   },
   computed: {
@@ -256,10 +261,10 @@ export default {
       return (this.offsetTagsByState ? 'Valid' : '')
     },
     tag1Group() {
-      return ((this.tag1GroupId) ? this.tagGroupsList[this.tag1GroupId] : null)
+      return this.tagGroupsList[this.tag1GroupId] || this.nullTagGroup
     },
     tag2Group() {
-      return ((this.tag2GroupId) ? this.tagGroupsList[this.tag2GroupId] : null)
+      return this.tagGroupsList[this.tag2GroupId] || this.nullTagGroup
     },
     coreTagGroupOptions() {
       return Object.values(this.tagGroupsList).map(tagGroup => {
@@ -275,17 +280,14 @@ export default {
   },
   methods: {
     tagGroupsLookupUpdated(data) {
-      this.tagGroupsList = {}
-      if(data !== null) {
-        if(data.state === 'searching') {
-          return
-        } else if(data.state === 'valid') {
-          this.tagGroupsList = { ...data.tagGroupsList }
-        } else {
-          console.log('Tag Groups lookup error: ', data['state'])
-        }
+      if(data === null) { return }
+
+      if(data.state === 'searching') {
+        return
+      } else if(data.state === 'valid') {
+        this.tagGroupsList = { ...data.tagGroupsList }
       } else {
-        console.log('Tag Groups lookup error: returned data null')
+        console.log('Tag Groups lookup error: ', data['state'])
       }
     },
     updateTagPlateScanDisabled() {

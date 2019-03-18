@@ -82,6 +82,24 @@ describe('CustomTaggedPlateManipulation', () => {
       ]
     }
   }
+  const expectedEmitted = [
+    {
+      tagPlate: null,
+      tag1Group: {
+        uuid: null,
+        name: 'No tag group selected',
+        tags: []
+      },
+      tag2Group: {
+        uuid: null,
+        name: 'No tag group selected',
+        tags: []
+      },
+      walkingBy: 'wells of plate',
+      direction: 'row',
+      offsetTagsBy: 0
+    }
+  ]
   const api = mockApi()
   api.mockGet('qcables', {
     filter: {
@@ -490,9 +508,7 @@ describe('CustomTaggedPlateManipulation', () => {
       input.trigger('input')
 
       expect(emitted.tagparamsupdated.length).toBe(1)
-      expect(emitted.tagparamsupdated[0]).toEqual(
-        [{'tagPlate':null,'tag1Group':null,'tag2Group':null,'walkingBy':'wells of plate','direction':'row','offsetTagsBy':0}]
-      )
+      expect(emitted.tagparamsupdated[0]).toEqual(expectedEmitted)
     })
   })
 })

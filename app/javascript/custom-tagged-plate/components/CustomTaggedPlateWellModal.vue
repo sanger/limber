@@ -90,15 +90,12 @@ export default {
       return (this.substituteTagId) ? Number.parseInt(this.substituteTagId) : null
     },
     state() {
-      console.log('state, substituteTagIdAsNumber = ', this.substituteTagIdAsNumber)
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
     validFeedback() {
-      console.log('validFeedback, state = ', this.state)
       return this.state === true ? 'Valid' : ''
     },
     invalidFeedback() {
-      console.log('invalidFeedback, state = ', this.state)
       return this.state === true ? '' : 'Number entered does not match a tag map id'
     },
   },
