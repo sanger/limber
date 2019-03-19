@@ -154,13 +154,13 @@ describe('CustomTaggedPlate', () => {
     uuid: 'tag-1-group-uuid',
     name: 'Tag Group 1',
     tags: [
-      { index: 1, oligo: 'CTAGCTAG' },
-      { index: 2, oligo: 'TTATACGA' },
-      { index: 3, oligo: 'GTATACGA' },
-      { index: 4, oligo: 'ATATACGA' },
-      { index: 5, oligo: 'GGATACGA' },
-      { index: 6, oligo: 'AGATACGA' },
-      { index: 7, oligo: 'TTAAGCAT' }
+      { index: 11, oligo: 'CTAGCTAG' },
+      { index: 12, oligo: 'TTATACGA' },
+      { index: 13, oligo: 'GTATACGA' },
+      { index: 14, oligo: 'ATATACGA' },
+      { index: 15, oligo: 'GGATACGA' },
+      { index: 16, oligo: 'AGATACGA' },
+      { index: 17, oligo: 'TTAAGCAT' }
     ]
   }
   const goodTag2Group = {
@@ -168,39 +168,54 @@ describe('CustomTaggedPlate', () => {
     uuid: 'tag-2-group-uuid',
     name: 'Tag Group 2',
     tags: [
-      { index: 1, oligo: 'CCTTAAGG' },
-      { index: 2, oligo: 'AATTCGCA' },
-      { index: 3, oligo: 'GGTTCGCA' },
-      { index: 4, oligo: 'TTTTCGCA' },
-      { index: 5, oligo: 'GCTTCGCA' }
+      { index: 21, oligo: 'CCTTAAGG' },
+      { index: 22, oligo: 'AATTCGCA' },
+      { index: 23, oligo: 'GGTTCGCA' },
+      { index: 24, oligo: 'TTTTCGCA' },
+      { index: 25, oligo: 'GCTTCGCA' }
+    ]
+  }
+  const goodTag2GroupLonger = {
+    id: '3',
+    uuid: 'tag-2-group-uuid',
+    name: 'Tag Group 2 longer',
+    tags: [
+      { index: 21, oligo: 'CCTTAAGG' },
+      { index: 22, oligo: 'AATTCGCA' },
+      { index: 23, oligo: 'GGTTCGCA' },
+      { index: 24, oligo: 'TTTTCGCA' },
+      { index: 25, oligo: 'ACTTCGCA' },
+      { index: 26, oligo: 'GTTTCGCA' },
+      { index: 27, oligo: 'CCTTCGCA' },
+      { index: 28, oligo: 'GCAGCGCA' },
     ]
   }
   const goodChildWells = {
     A1: {
       position: 'A1',
       aliquotCount: 1,
-      tagIndex: '1',
+      tagIndex: '11',
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A2: {
       position: 'A2',
       aliquotCount: 1,
-      tagIndex: '2',
+      tagIndex: '12',
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A3: {
       position: 'A3',
       aliquotCount: 1,
-      tagIndex: '3',
+      tagIndex: '13',
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A4: {
       position: 'A4',
       aliquotCount: 1,
-      tagIndex: '4',
+      tagIndex: '14',
       pool_index: 1,
       validity: { valid: true, message: '' }
     }
@@ -561,21 +576,46 @@ describe('CustomTaggedPlate', () => {
       })
 
       it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
+        const wrapper = wrapperFactory()
 
+        wrapper.setData({
+          tag1Group: goodTag1Group
+        })
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
       })
 
       it('returns an array of the tag 2 group map ids if only tag 2 group is selected', () => {
+        const wrapper = wrapperFactory()
 
-      })
+        wrapper.setData({
+          tag2Group: goodTag2Group
+        })
 
-      it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
-
+        expect(wrapper.vm.useableTagMapIds).toEqual([21,22,23,24,25])
       })
 
       it('returns a shortened array of the tag 1 group map ids if both groups are selected and tag group 2 is smaller', () => {
+        const wrapper = wrapperFactory()
 
+        wrapper.setData({
+          tag1Group: goodTag1Group,
+          tag2Group: goodTag2Group
+        })
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15])
       })
 
+      it('returns a full array of the tag 1 group map ids if both groups are selected and tag group 2 is longer', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tag1Group: goodTag1Group,
+          tag2Group: goodTag2GroupLonger
+        })
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
+      })
     })
 
     describe('numberOfTargetWells:', () => {
