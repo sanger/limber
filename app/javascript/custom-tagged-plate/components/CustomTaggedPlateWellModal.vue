@@ -1,8 +1,10 @@
 <template>
   <b-modal
     id="well_modal"
-    v-model="isWellModalVisible"
+    ref="wellModalRef"
     :title="wellModalTitle"
+    :ok-disabled="!state"
+    :ok-title="wellModalOkTitle"
     @ok="handleWellModalOk"
     @shown="handleWellModalShown"
   >
@@ -31,8 +33,8 @@
               id="substitute_tag_number_group"
               label="Substitute tag:"
               label-for="substitute_tag_number_input"
-              :invalid-feedback="invalidFeedback"
-              :valid-feedback="validFeedback"
+              invalid-feedback="Number entered does not match a tag map id"
+              valid-feedback="Great!"
               :state="state"
             >
               <b-form-input
@@ -74,8 +76,7 @@ export default {
           existingSubstituteTagId: null
         }
       }
-    },
-    isWellModalVisible: { type: Boolean, default: false },
+    }
   },
   data () {
     return {
@@ -92,29 +93,25 @@ export default {
     state() {
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
-    validFeedback() {
-      return this.state === true ? 'Valid' : ''
-    },
-    invalidFeedback() {
-      return this.state === true ? '' : 'Number entered does not match a tag map id'
-    },
+    // okDisabled() {
+    //   return (!this.state)
+    // },
+    wellModalOkTitle() {
+      return this.state ? 'Substitute Tag' : 'Enter a valid tag id...'
+    }
   },
   methods: {
+    show() {
+      this.$refs.wellModalRef.show()
+    },
+    hide() {
+      this.$refs.wellModalRef.hide()
+    },
     handleWellModalShown(_e) {
       this.substituteTagId = this.wellModalDetails.existingSubstituteTagId
       this.$refs.focusThis.focus()
     },
     handleWellModalOk(evt) {
-      // Prevent modal from closing unless conditions are met
-      evt.preventDefault()
-      // TODO this will not work for just messages e.g. empty well/no tags
-      if (!this.substituteTagId) {
-        alert('Please enter a tag to substitute then click Ok, or else cancel')
-      } else {
-        this.handleWellModalSubmit()
-      }
-    },
-    handleWellModalSubmit() {
       this.$emit('wellmodalsubtituteselected', this.substituteTagId )
       this.substituteTagId = null
     },

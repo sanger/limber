@@ -13,8 +13,8 @@
         @onwellclicked="onWellClicked"
       />
       <lb-well-modal
+        ref="wellModalCompRef"
         :well-modal-details="wellModalDetails"
-        :is-well-modal-visible="isWellModalVisible"
         @wellmodalsubtituteselected="wellModalSubtituteSelected"
       />
       <lb-custom-tagged-plate-details
@@ -112,7 +112,6 @@ export default {
       offsetTagsBy: null,
       tagSubstitutions: {}, // { 1:2, 5:8 etc}
       tagClashes: {}, // { 'A1': [ 'B3', 'B7' ], 'A5': [ 'submission' ] },
-      isWellModalVisible: false,
       wellModalDetails: {
         position: '',
         originalTag: null,
@@ -324,18 +323,20 @@ export default {
 
     // },
     useableTagMapIds() {
-      let tagMapIds = []
+      let tags = []
 
       if(this.numberOfTag1GroupTags > 0) {
         if(this.numberOfTag2GroupTags > 0) {
           const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
-          tagMapIds = this.tag1GroupTags.slice(0, numUseableTags)
+          tags = this.tag1GroupTags.slice(0, numUseableTags)
         } else {
-          tagMapIds = this.tag1GroupTags
+          tags = this.tag1GroupTags
         }
       } else if(this.numberOfTag2GroupTags > 0) {
-        tagMapIds = this.tag2GroupTags
+        tags = this.tag2GroupTags
       }
+
+      const tagMapIds = tags.map(a => a.index)
 
       return tagMapIds
     },
@@ -554,7 +555,7 @@ export default {
         this.wellModalDetails.existingSubstituteTagId = this.tagSubstitutions[origTag]
       }
 
-      this.isWellModalVisible = true
+      this.$refs.wellModalCompRef.show()
     },
     wellModalSubtituteSelected(substituteTagId) {
       const origTagId = this.wellModalDetails.originalTag
@@ -566,11 +567,8 @@ export default {
         this.$set(this.tagSubstitutions, origTagId, substituteTagId)
       }
 
-      this.isWellModalVisible = false
+      this.$refs.wellModalCompRef.hide()
     },
-    // wellModalCancelSelected() {
-    //   this.isWellModalVisible = false
-    // },
     removeTagSubstitution(origTagId) {
       this.$delete(this.tagSubstitutions, origTagId)
     }

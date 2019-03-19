@@ -90,44 +90,6 @@ describe('CustomTaggedPlateWellModal', () => {
         expect(wrapper.vm.state).toBe(true)
       })
     })
-
-    describe('validFeedback:', () => {
-      it('returns the correct valid feedback for a invalid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
-        wrapper.setData({ substituteTagId: '5' })
-
-        expect(wrapper.vm.validFeedback).toEqual('')
-      })
-
-      it('returns the correct valid feedback for a valid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ substituteTagId: '3' })
-
-        expect(wrapper.vm.validFeedback).toEqual('Valid')
-      })
-    })
-
-    describe('invalidFeedback:', () => {
-      it('returns the correct invalid feedback for a invalid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
-        wrapper.setData({ substituteTagId: '5' })
-
-        expect(wrapper.vm.invalidFeedback).toEqual('Number entered does not match a tag map id')
-      })
-
-      it('returns the correct invalid feedback for a valid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ substituteTagId: '3' })
-
-        expect(wrapper.vm.invalidFeedback).toEqual('')
-      })
-    })
   })
 
   describe('#integration tests', () => {
@@ -138,7 +100,7 @@ describe('CustomTaggedPlateWellModal', () => {
       wrapper.setData({ substituteTagId: '3' })
 
       // cannot click ok button in modal from here, plus cannot handle evt.preventDefault
-      wrapper.vm.handleWellModalSubmit()
+      wrapper.vm.handleWellModalOk()
 
       expect(emitted.wellmodalsubtituteselected.length).toBe(1)
       expect(emitted.wellmodalsubtituteselected[0]).toEqual(['3'])
