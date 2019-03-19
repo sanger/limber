@@ -108,7 +108,7 @@ export default {
       this.substituteTagId = this.wellModalDetails.existingSubstituteTagId
       this.$refs.focusThis.focus()
     },
-    handleWellModalOk(evt) {
+    handleWellModalOk(_evt) {
       this.$emit('wellmodalsubtituteselected', this.substituteTagIdAsNumber )
       this.substituteTagId = null
     },
