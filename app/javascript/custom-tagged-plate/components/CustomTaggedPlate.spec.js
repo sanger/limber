@@ -159,7 +159,8 @@ describe('CustomTaggedPlate', () => {
       { index: 3, oligo: 'GTATACGA' },
       { index: 4, oligo: 'ATATACGA' },
       { index: 5, oligo: 'GGATACGA' },
-      { index: 6, oligo: 'AGATACGA' }
+      { index: 6, oligo: 'AGATACGA' },
+      { index: 7, oligo: 'TTAAGCAT' }
     ]
   }
   const goodTag2Group = {
@@ -527,7 +528,7 @@ describe('CustomTaggedPlate', () => {
           tag1Group: goodTag1Group
         })
 
-        expect(wrapper.vm.numberOfTags).toBe(6)
+        expect(wrapper.vm.numberOfTags).toBe(7)
       })
 
       it('returns the correct number if only tag 2 group has been selected', () => {
@@ -539,6 +540,42 @@ describe('CustomTaggedPlate', () => {
 
         expect(wrapper.vm.numberOfTags).toBe(5)
       })
+
+      it('returns the correct number if tag 1 group has more tags than tag 2 group', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tag1Group: goodTag1Group,
+          tag2Group: goodTag2Group
+        })
+
+        expect(wrapper.vm.numberOfTags).toBe(5)
+      })
+    })
+
+    describe('useableTagMapIds:', () => {
+      it('returns an empty array if no tag groups have been selected', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([])
+      })
+
+      it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
+
+      })
+
+      it('returns an array of the tag 2 group map ids if only tag 2 group is selected', () => {
+
+      })
+
+      it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
+
+      })
+
+      it('returns a shortened array of the tag 1 group map ids if both groups are selected and tag group 2 is smaller', () => {
+
+      })
+
     })
 
     describe('numberOfTargetWells:', () => {

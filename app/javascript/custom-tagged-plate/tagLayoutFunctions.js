@@ -190,14 +190,6 @@ const validateTagGroups = function(tag1Group,tag2Group) {
     result = {
       message: 'Tag group 2 parameter contains no tags list'
     }
-  } else if(tag1Group && !(tag1Group.tags.length > 0)) {
-    result = {
-      message: 'Tag group 1 parameter tags list contains no tags'
-    }
-  } else if(tag2Group && !(tag2Group.tags.length > 0)) {
-    result = {
-      message: 'Tag group 2 parameter tags list contains no tags'
-    }
   }
 
   return result

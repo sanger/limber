@@ -207,41 +207,6 @@ export default {
     tag2GroupMapIds() {
       return this.tag2GroupTags.map(a => a.index)
     },
-    arrayTags() {
-      // TODO method only used in useableMapIds
-      this.tag1GroupTags
-      this.tag2GroupTags
-      if(this.tag1GroupTags) {
-        return this.tag1GroupTags
-      }
-      if(this.tag2GroupTags) {
-        return this.tag2GroupTags
-      }
-      return null
-    },
-    useableTagMapIds() {
-      this.arrayTags
-      if(this.numberOfTags === 0) { return null }
-
-      if(!this.arrayTags) { return null }
-
-      let arrayMapIds = []
-      for (var i = 0; i < this.arrayTags.length; i++) {
-        arrayMapIds.push(this.arrayTags[i].index)
-      }
-      return arrayMapIds
-
-      // TODO if only one tag group use it's map ids
-      // if(this.tag1GroupMapIds.length === 0 && this.tag2GroupMapIds.length === 0) {
-      //   return []
-      // }
-      // if(this.tag1GroupMapIds.length > this.tag2GroupMapIds.length) {
-      //   return this.tag1GroupMapIds.splice(0, this.tag2GroupMapIds.length)
-      // }
-
-      // TODO if both need to return min array of group 1 tags Math.min(5, 10)
-
-    },
     plateDims() {
       return {
         number_of_rows: this.numberOfRows,
@@ -307,21 +272,72 @@ export default {
 
       return ((invalidCount > 0) ? false : true)
     },
-    // TODO needs work
     numberOfTags() {
-      let numTags = 0
+      // let numTags = 0
+
+      // if(this.numberOfTag1GroupTags > 0) {
+      //   if(this.numberOfTag2GroupTags > 0) {
+      //     numTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+      //   } else {
+      //     numTags = this.numberOfTag1GroupTags
+      //   }
+      // } else if(this.numberOfTag2GroupTags > 0) {
+      //   numTags = this.numberOfTag2GroupTags
+      // }
+
+      // return numTags
+      return this.useableTagMapIds.length
+    },
+    // arrayTags() {
+    //   // TODO method only used in useableMapIds
+    //   this.tag1GroupTags
+    //   this.tag2GroupTags
+    //   if(this.tag1GroupTags) {
+    //     return this.tag1GroupTags
+    //   }
+    //   if(this.tag2GroupTags) {
+    //     return this.tag2GroupTags
+    //   }
+    //   return null
+    // },
+    // useableTagMapIds() {
+    //   this.arrayTags
+    //   if(this.numberOfTags === 0) { return null }
+
+    //   if(!this.arrayTags) { return null }
+
+    //   let arrayMapIds = []
+    //   for (var i = 0; i < this.arrayTags.length; i++) {
+    //     arrayMapIds.push(this.arrayTags[i].index)
+    //   }
+    //   return arrayMapIds
+
+    //   // TODO if only one tag group use it's map ids
+    //   // if(this.tag1GroupMapIds.length === 0 && this.tag2GroupMapIds.length === 0) {
+    //   //   return []
+    //   // }
+    //   // if(this.tag1GroupMapIds.length > this.tag2GroupMapIds.length) {
+    //   //   return this.tag1GroupMapIds.splice(0, this.tag2GroupMapIds.length)
+    //   // }
+
+    //   // TODO if both need to return min array of group 1 tags Math.min(5, 10)
+
+    // },
+    useableTagMapIds() {
+      let tagMapIds = []
 
       if(this.numberOfTag1GroupTags > 0) {
         if(this.numberOfTag2GroupTags > 0) {
-          numTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+          const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+          tagMapIds = this.tag1GroupTags.slice(0, numUseableTags)
         } else {
-          numTags = this.numberOfTag1GroupTags
+          tagMapIds = this.tag1GroupTags
         }
       } else if(this.numberOfTag2GroupTags > 0) {
-        numTags = this.numberOfTag2GroupTags
+        tagMapIds = this.tag2GroupTags
       }
 
-      return numTags
+      return tagMapIds
     },
     numberOfTargetWells() {
       let numTargets = 0
