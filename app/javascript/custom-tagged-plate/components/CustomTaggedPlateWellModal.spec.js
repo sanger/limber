@@ -103,7 +103,7 @@ describe('CustomTaggedPlateWellModal', () => {
       wrapper.vm.handleWellModalOk()
 
       expect(emitted.wellmodalsubtituteselected.length).toBe(1)
-      expect(emitted.wellmodalsubtituteselected[0]).toEqual(['3'])
+      expect(emitted.wellmodalsubtituteselected[0]).toEqual([3])
     })
   })
 })

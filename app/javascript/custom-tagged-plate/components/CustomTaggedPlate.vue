@@ -240,15 +240,15 @@ export default {
 
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
-        let tagIndx = 'X'
+        let tagIndx
         if(this.tagLayout[position] > 0) {
           const origTagId = this.tagLayout[position]
           // TODO remove need for tag index to be string
-          tagIndx = origTagId.toString()
+          tagIndx = origTagId
           // check for tag substitution
           if(this.tagSubstitutions.hasOwnProperty(origTagId)) {
             // TODO remove need for tag index to be string
-            tagIndx = this.tagSubstitutions[origTagId].toString()
+            tagIndx = this.tagSubstitutions[origTagId]
           }
           cw[position]['validity'] = { valid: true, message: '' }
         }

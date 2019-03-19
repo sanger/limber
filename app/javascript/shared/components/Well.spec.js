@@ -18,7 +18,7 @@ describe('Well', () => {
     propsData: {
       position: 'A1',
       pool_index: 2,
-      tagIndex: '10',
+      tagIndex: 10,
       validity: { valid: true, message: '' }
     }
   })
@@ -49,7 +49,7 @@ describe('Well', () => {
     )
   })
 
-  const wrapperWithTagIndex =  shallowMount(Well, { propsData: { pool_index: 1, tagIndex: '5' } })
+  const wrapperWithTagIndex =  shallowMount(Well, { propsData: { pool_index: 1, tagIndex: 5 } })
 
   it('renders a well with tag index displayed', () => {
     expect(wrapperWithTagIndex.find('span.aliquot').text()).toBe('5')

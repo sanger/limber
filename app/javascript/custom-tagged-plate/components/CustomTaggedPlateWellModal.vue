@@ -93,9 +93,6 @@ export default {
     state() {
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
-    // okDisabled() {
-    //   return (!this.state)
-    // },
     wellModalOkTitle() {
       return this.state ? 'Substitute Tag' : 'Enter a valid tag id...'
     }
@@ -112,7 +109,7 @@ export default {
       this.$refs.focusThis.focus()
     },
     handleWellModalOk(evt) {
-      this.$emit('wellmodalsubtituteselected', this.substituteTagId )
+      this.$emit('wellmodalsubtituteselected', this.substituteTagIdAsNumber )
       this.substituteTagId = null
     },
   }

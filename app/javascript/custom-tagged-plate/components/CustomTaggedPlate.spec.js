@@ -194,28 +194,28 @@ describe('CustomTaggedPlate', () => {
     A1: {
       position: 'A1',
       aliquotCount: 1,
-      tagIndex: '11',
+      tagIndex: 11,
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A2: {
       position: 'A2',
       aliquotCount: 1,
-      tagIndex: '12',
+      tagIndex: 12,
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A3: {
       position: 'A3',
       aliquotCount: 1,
-      tagIndex: '13',
+      tagIndex: 13,
       pool_index: 1,
       validity: { valid: true, message: '' }
     },
     A4: {
       position: 'A4',
       aliquotCount: 1,
-      tagIndex: '14',
+      tagIndex: 14,
       pool_index: 1,
       validity: { valid: true, message: '' }
     }

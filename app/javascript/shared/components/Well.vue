@@ -14,7 +14,7 @@ export default {
   props: {
     position: { type: String, default: null },
     pool_index: { type: Number, default: null },
-    tagIndex: { type: String, default: null },
+    tagIndex: { type: Number, default: null },
     validity: { type: Object, default: () => { return { valid: true, message: '' }} }
   },
   computed: {
