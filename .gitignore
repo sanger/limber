@@ -18,3 +18,4 @@ REVISION
 /coverage
 /spec/examples.txt
 yarn-error.log
+.tern-project
