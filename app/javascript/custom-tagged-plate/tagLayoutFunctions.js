@@ -6,19 +6,19 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
     counters[well.pool_index] = counter(offset)
   }
   const i = counters[well.pool_index]()
-  return ((tags[i]) ? tags[i].index : -1)
+  return tags[i] || -1
 }
 
 function byPlateSeq(well, tags, relIndex, _absIndex, offset, _counters) {
-  return ((tags[relIndex + offset]) ? tags[relIndex + offset].index : -1)
+  return tags[relIndex + offset] || -1
 }
 
 function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
-  return ((tags[absIndex + offset]) ? tags[absIndex + offset].index : -1)
+  return tags[absIndex + offset] || -1
 }
 
 function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
-  return ((tags[relIndex + offset]) ? tags[relIndex + offset].index : -1)
+  return tags[relIndex + offset] || -1
 }
 
 function byRows(wells, plateDims, walker) {
@@ -103,7 +103,7 @@ const calculateTagLayout = function (data) {
     return null
   }
 
-  const tags = extractTags(data.tag1Group, data.tag2Group)
+  const tags = data.tagMapIds
   const counters = {}
   let offset = 0
   if(data.offsetTagsBy && data.offsetTagsBy > 0) {
@@ -133,7 +133,7 @@ const validateParameters = function (data) {
   }
 
   if(!result) {
-    result = validateTagGroups(data.tag1Group, data.tag2Group)
+    result = validateTagMapIds(data.tagMapIds)
   }
 
   if(!result) {
@@ -175,20 +175,16 @@ const validatePlateDims = function(plateDims) {
   return result
 }
 
-const validateTagGroups = function(tag1Group,tag2Group) {
+const validateTagMapIds = function(tagMapIds) {
   let result
 
-  if(!(tag1Group || tag2Group)) {
+  if(!tagMapIds) {
     result = {
-      message: 'Neither tag group 1 or 2 parameters set'
+      message: 'Tag map ids parameter not set'
     }
-  } else if(tag1Group && !tag1Group.tags) {
+  } else if(tagMapIds.length <= 0) {
     result = {
-      message: 'Tag group 1 parameter contains no tags list'
-    }
-  } else if(tag2Group && !tag2Group.tags) {
-    result = {
-      message: 'Tag group 2 parameter contains no tags list'
+      message: 'Tag map ids contains no tag ids'
     }
   }
 
@@ -217,11 +213,6 @@ const validateDirection = function (direction) {
   }
 
   return result
-}
-
-const extractTags = function(tag1Group, tag2Group) {
-  // key on i7 tags if available
-  return ((tag1Group) ? tag1Group.tags : tag2Group.tags)
 }
 
 export { calculateTagLayout }

@@ -15,89 +15,10 @@ describe('calculateTagLayout', () => {
     { position: 'A4', aliquotCount: 1, pool_index: 1 },
     { position: 'C4', aliquotCount: 1, pool_index: 1 }
   ]
-
-  const inputTag1Group = {
-    id: '1',
-    name: 'Tag Group 1',
-    tags: [
-      { index: 1, oligo: 'ACTGAAAA' },
-      { index: 2, oligo: 'ACTGAAAT' },
-      { index: 3, oligo: 'ACTGAAAG' },
-      { index: 4, oligo: 'ACTGAAAC' },
-      { index: 5, oligo: 'ACTGAATA' },
-      { index: 6, oligo: 'ACTGAATG' },
-      { index: 7, oligo: 'ACTGAATC' },
-      { index: 8, oligo: 'ACTGAATT' },
-      { index: 9, oligo: 'ACTGAAGA' },
-      { index: 10, oligo: 'ACTGAAGT' },
-      { index: 11, oligo: 'ACTGAAGC' },
-      { index: 12, oligo: 'ACTGAAGG' },
-      { index: 13, oligo: 'CCTGAAGG' },
-      { index: 14, oligo: 'CCTGAAGG' },
-      { index: 15, oligo: 'CCTGAAGG' },
-      { index: 16, oligo: 'CCTGAAGG' },
-      { index: 17, oligo: 'CCTGAAGG' },
-      { index: 18, oligo: 'CCTGAAGG' },
-      { index: 19, oligo: 'CCTGAAGG' },
-      { index: 20, oligo: 'CCTGAAGG' },
-      { index: 21, oligo: 'CCTGAAGG' },
-      { index: 22, oligo: 'CCTGAAGG' },
-      { index: 23, oligo: 'CCTGAAGG' },
-      { index: 24, oligo: 'CCTGAAGG' }
-
-    ]
-  }
-
-  const inputTag2Group = {
-    id: '2',
-    name: 'Tag Group 2',
-    tags: [
-      { index: 101, oligo: 'GCTGAAAA' },
-      { index: 102, oligo: 'GCTGAAAT' },
-      { index: 103, oligo: 'GCTGAAAG' },
-      { index: 104, oligo: 'GCTGAAAC' },
-      { index: 105, oligo: 'GCTGAATA' },
-      { index: 106, oligo: 'GCTGAATG' },
-      { index: 107, oligo: 'GCTGAATC' },
-      { index: 108, oligo: 'GCTGAATT' },
-      { index: 109, oligo: 'GCTGAAGA' },
-      { index: 110, oligo: 'GCTGAAGT' },
-      { index: 111, oligo: 'GCTGAAGC' },
-      { index: 112, oligo: 'GCTGAAGG' }
-    ]
-  }
-
-  const tagGrpNonConseq = {
-    id: '3',
-    name: 'Tag Group 3',
-    tags: [
-      { index: 2, oligo: 'GCTGAAAA' },
-      { index: 5, oligo: 'GCTGAAAT' },
-      { index: 6, oligo: 'GCTGAAAG' },
-      { index: 7, oligo: 'GCTGAAAC' },
-      { index: 9, oligo: 'GCTGAATA' },
-      { index: 10, oligo: 'GCTGAATG' },
-      { index: 12, oligo: 'GCTGAATC' },
-      { index: 13, oligo: 'GCTGAATT' },
-      { index: 14, oligo: 'GCTGAAGA' },
-      { index: 15, oligo: 'GCTGAAGT' },
-      { index: 17, oligo: 'GCTGAAGC' },
-      { index: 18, oligo: 'GCTGAAGG' }
-    ]
-  }
-
-  const tagGrpShort = {
-    id: '4',
-    name: 'Tag Group 4',
-    tags: [
-      { index: 1, oligo: 'GCTGAAAA' },
-      { index: 2, oligo: 'GCTGAAAT' },
-      { index: 3, oligo: 'GCTGAAAG' },
-      { index: 4, oligo: 'GCTGAAAC' },
-      { index: 5, oligo: 'GCTGAATA' },
-      { index: 6, oligo: 'GCTGAATG' },
-    ]
-  }
+  const tagMapIdsStandard  = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 ]
+  const tagMapIdsNonConseq = [ 2,5,6,7,9,10,12,13,14,15,17,18 ]
+  const tagMapIdsShort     = [ 1,2,3,4,5,6 ]
+  const tagMapIdsEmpty     = []
 
   const plateDims = { number_of_rows: 3, number_of_columns: 4 }
 
@@ -106,8 +27,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: null,
-        tag2Group: null,
+        tagMapIds: null,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -117,13 +37,11 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(null)
     })
 
-    it('returns null if tag group contains no tags', () => {
-      const emptyTagGrp = { id: '3', name: 'Tag Group Empty', tags: []}
+    it('returns null if tag map ids is empty', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: emptyTagGrp,
-        tag2Group: null,
+        tagMapIds: tagMapIdsEmpty,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -137,8 +55,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: null,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -152,8 +69,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: null,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -168,8 +84,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: invalidPlateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -185,8 +100,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -201,8 +115,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'row',
         offsetTagsBy: 0
@@ -217,8 +130,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 4
@@ -233,8 +145,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'row',
         offsetTagsBy: 4
@@ -249,8 +160,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'inverse column',
         offsetTagsBy: 4
@@ -265,8 +175,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'inverse row',
         offsetTagsBy: 4
@@ -277,28 +186,11 @@ describe('calculateTagLayout', () => {
       expect(response).toEqual(outputWells)
     })
 
-    it('sequential by column when no tag group 1', () => {
-      const data = {
-        wells: inputWells,
-        plateDims: plateDims,
-        tag1Group: null,
-        tag2Group: inputTag2Group,
-        walkingBy: 'manual by plate',
-        direction: 'column',
-        offsetTagsBy: 0
-      }
-      const outputWells = { 'A1': 101, 'B1': 102, 'C1': 103, 'A2': 104, 'B2': 105, 'C2': 106, 'A3': 107, 'B3': 108, 'C3': 109, 'A4': 110, 'C4': 111 }
-      const response = calculateTagLayout(data)
-
-      expect(response).toEqual(outputWells)
-    })
-
     it('sequential by column when some wells empty', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: tagGrpNonConseq,
-        tag2Group: null,
+        tagMapIds: tagMapIdsNonConseq,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -313,8 +205,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: tagGrpShort,
-        tag2Group: null,
+        tagMapIds: tagMapIdsShort,
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -331,8 +222,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -347,8 +237,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'row',
         offsetTagsBy: 0
@@ -363,8 +252,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'inverse column',
         offsetTagsBy: 0
@@ -379,8 +267,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'inverse row',
         offsetTagsBy: 0
@@ -395,8 +282,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'column',
         offsetTagsBy: 4
@@ -411,8 +297,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'row',
         offsetTagsBy: 4
@@ -427,8 +312,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'inverse column',
         offsetTagsBy: 4
@@ -443,8 +327,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'wells of plate',
         direction: 'inverse row',
         offsetTagsBy: 4
@@ -461,8 +344,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'column',
         offsetTagsBy: 0
@@ -477,8 +359,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'row',
         offsetTagsBy: 0
@@ -493,8 +374,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'inverse column',
         offsetTagsBy: 0
@@ -509,8 +389,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'inverse row',
         offsetTagsBy: 0
@@ -525,8 +404,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'column',
         offsetTagsBy: 4
@@ -541,8 +419,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'row',
         offsetTagsBy: 4
@@ -557,8 +434,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'inverse column',
         offsetTagsBy: 4
@@ -573,8 +449,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by pool',
         direction: 'inverse row',
         offsetTagsBy: 4
@@ -591,8 +466,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'column',
         offsetTagsBy: 0
@@ -607,8 +481,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'row',
         offsetTagsBy: 0
@@ -623,8 +496,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'column',
         offsetTagsBy: 4
@@ -639,8 +511,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'row',
         offsetTagsBy: 4
@@ -655,8 +526,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'inverse column',
         offsetTagsBy: 4
@@ -671,8 +541,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tag1Group: inputTag1Group,
-        tag2Group: inputTag2Group,
+        tagMapIds: tagMapIdsStandard,
         walkingBy: 'as group by plate',
         direction: 'inverse row',
         offsetTagsBy: 4

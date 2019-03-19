@@ -649,7 +649,9 @@ describe('CustomTaggedPlate', () => {
         },
         stubs: {
           'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-custom-tagged-plate-manipulation': '<fieldset class="b-form-group"></fieldset>'
+          'lb-custom-tagged-plate-details': '<div class="plate-details"></div>',
+          'lb-custom-tagged-plate-manipulation': '<fieldset class="b-form-group"></fieldset>',
+          'lb-well-modal': '<div class="well-modal"></div>'
         },
         localVue
       })
@@ -660,6 +662,8 @@ describe('CustomTaggedPlate', () => {
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
       expect(wrapper.find('fieldset.b-form-group').exists()).toBe(true)
+      expect(wrapper.find('div.plate-details').exists()).toBe(true)
+      expect(wrapper.find('div.well-modal').exists()).toBe(true)
     })
 
     it('renders a submit button', async () => {

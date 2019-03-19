@@ -163,18 +163,22 @@ export default {
           validity: { valid: false, message: 'No tag id in this well' }
         }
 
-        if(well.aliquots) { wells[position]['aliquotCount'] = well.aliquots.length }
+        if(well.aliquots && well.aliquots.length > 0) {
+          wells[position]['aliquotCount'] = well.aliquots.length
 
-        const submId = this.extractSubmissionIdFromWell(well)
-        if(!submId) {
-          console.log('Error: Submission Id not found for well')
-          // TODO what to do here? error message? should not happen
-          return
+          const submId = this.extractSubmissionIdFromWell(well)
+          if(!submId) {
+            console.log('Error: Submission Id not found for well')
+            // TODO what to do here? should not happen
+            return
+          }
+
+          if(!submIds.includes(submId)) { submIds.push(submId) }
+
+          wells[position]['pool_index'] = submIds.indexOf(submId) + 1
+        } else {
+          wells[position]['validity'] = { valid: true, message: 'No aliquot in this well' }
         }
-
-        if(!submIds.includes(submId)) { submIds.push(submId) }
-
-        wells[position]['pool_index'] = submIds.indexOf(submId) + 1
       })
 
       return wells
@@ -216,8 +220,7 @@ export default {
       const inputData = {
         wells: this.parentWellData,
         plateDims: this.plateDims,
-        tag1Group: this.tag1Group,
-        tag2Group: this.tag2Group,
+        tagMapIds: this.useableTagMapIds,
         walkingBy: this.walkingBy,
         direction: this.direction,
         offsetTagsBy: this.offsetTagsBy
@@ -272,56 +275,8 @@ export default {
       return ((invalidCount > 0) ? false : true)
     },
     numberOfTags() {
-      // let numTags = 0
-
-      // if(this.numberOfTag1GroupTags > 0) {
-      //   if(this.numberOfTag2GroupTags > 0) {
-      //     numTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
-      //   } else {
-      //     numTags = this.numberOfTag1GroupTags
-      //   }
-      // } else if(this.numberOfTag2GroupTags > 0) {
-      //   numTags = this.numberOfTag2GroupTags
-      // }
-
-      // return numTags
       return this.useableTagMapIds.length
     },
-    // arrayTags() {
-    //   // TODO method only used in useableMapIds
-    //   this.tag1GroupTags
-    //   this.tag2GroupTags
-    //   if(this.tag1GroupTags) {
-    //     return this.tag1GroupTags
-    //   }
-    //   if(this.tag2GroupTags) {
-    //     return this.tag2GroupTags
-    //   }
-    //   return null
-    // },
-    // useableTagMapIds() {
-    //   this.arrayTags
-    //   if(this.numberOfTags === 0) { return null }
-
-    //   if(!this.arrayTags) { return null }
-
-    //   let arrayMapIds = []
-    //   for (var i = 0; i < this.arrayTags.length; i++) {
-    //     arrayMapIds.push(this.arrayTags[i].index)
-    //   }
-    //   return arrayMapIds
-
-    //   // TODO if only one tag group use it's map ids
-    //   // if(this.tag1GroupMapIds.length === 0 && this.tag2GroupMapIds.length === 0) {
-    //   //   return []
-    //   // }
-    //   // if(this.tag1GroupMapIds.length > this.tag2GroupMapIds.length) {
-    //   //   return this.tag1GroupMapIds.splice(0, this.tag2GroupMapIds.length)
-    //   // }
-
-    //   // TODO if both need to return min array of group 1 tags Math.min(5, 10)
-
-    // },
     useableTagMapIds() {
       let tags = []
 
