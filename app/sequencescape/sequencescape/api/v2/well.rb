@@ -17,6 +17,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     aliquots.flat_map(&:request).compact
   end
 
+  def in_progress_submission_uuids
+    requests_in_progress.flat_map(&:submission_uuid)
+  end
+
   def coordinate
     WellHelpers.well_coordinate(location)
   end
