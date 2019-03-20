@@ -42,6 +42,10 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
     relationships.submission.dig(:data, :id)
   end
 
+  def submission_uuid
+    submission&.uuid
+  end
+
   def order_id
     relationships.order.dig(:data, :id)
   end

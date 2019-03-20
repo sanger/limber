@@ -14,19 +14,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
 
-  DEFAULT_INCLUDES = [
-    :purpose,
-    { wells: [
-      :downstream_assets,
-      {
-        requests_as_source: %w[request_type primer_panel pre_capture_pool],
-        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
-      }
-    ] }
-  ].freeze
-
-  def self.find_by(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).find(options).first
+  def self.find_by(options)
+    Sequencescape::Api::V2.plate_for_presenter(options)
   end
 
   #
@@ -48,8 +37,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     @active_requests ||= wells.flat_map(&:active_requests)
   end
 
-  def submissions
-    active_requests.map { |request| request.submission&.uuid }.uniq
+  def in_progress_submission_uuids
+    wells.flat_map(&:in_progress_submission_uuids).uniq
   end
 
   def wells_in_columns

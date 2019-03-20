@@ -36,7 +36,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
     before do
       stub_v2_plate(example_plate_v2)
-      stub_v2_plate(example_plate_v2, custom_includes: 'wells.aliquots.request.submission')
+      stub_v2_plate(example_plate_v2, custom_query: [:plate_for_completion, example_plate_v2.uuid])
     end
 
     scenario 'charge and pass libraries' do
