@@ -19,7 +19,7 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_with_wells(uuid)
-    Plate.includes('wells').find(uuid).first
+    Plate.includes('wells').find(uuid: uuid).first
   end
 
   def self.plate_for_completion(uuid)
