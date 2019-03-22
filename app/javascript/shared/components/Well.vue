@@ -2,7 +2,7 @@
   <div :class="['well', position]">
     <span
       v-if="pool_index"
-      :class="['aliquot', colourClass]"
+      :class="['aliquot', colourClass, linethroughClass]"
       @click="onWellClicked"
     >{{ tagIndex }}</span>
   </div>
@@ -20,6 +20,9 @@ export default {
   computed: {
     colourClass() {
       return ((this.validity.valid) ? `colour-${this.pool_index}` : 'failed' )
+    },
+    linethroughClass() {
+      return ((this.validity.valid) ? '' : 'line-through' )
     }
   },
   methods: {
@@ -29,3 +32,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .line-through {
+    text-decoration: line-through;
+  }
+</style>

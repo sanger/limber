@@ -66,4 +66,8 @@ describe('Well', () => {
   it('colours the aliquot when invalid', () => {
     expect(wrapperWithFailure.find('span.aliquot.failed').exists()).toBe(true)
   })
+
+  it('puts a line thtough the aliquot tag index when invalid', () => {
+    expect(wrapperWithFailure.find('span.aliquot.line-through').exists()).toBe(true)
+  })
 })
