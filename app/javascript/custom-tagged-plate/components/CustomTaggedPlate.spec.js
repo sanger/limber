@@ -4,253 +4,21 @@ import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import localVue from 'test_support/base_vue.js'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
+import {
+  plateUuid,
+  exampleParent,
+  exampleParentTag1Only,
+  exampleParentWithoutWellRequestsAsResource,
+  exampleParentSequential,
+  exampleParentWithPools,
+  exampleTag1Group,
+  exampleTag2Group,
+  exampleTag2GroupLonger,
+  exampleChildWells,
+  exampleQcableData
+} from '../testData/tagClashFunctionsTestData.js'
 
 describe('CustomTaggedPlate', () => {
-  const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
-  const goodParentPlate = {
-    id: '1',
-    uuid: plateUuid,
-    name: 'Test Plate 123456',
-    labware_barcode: { human_barcode: 'DN123456D' },
-    state: 'passed',
-    number_of_rows: 8,
-    number_of_columns: 12,
-    wells: [
-      {
-        id: '1',
-        position: { name: 'A1' },
-        aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '1', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '2',
-        position: { name: 'A2' },
-        aliquots: [{ id: '2', request: { id: '2', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '2', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '3',
-        position: { name: 'A3' },
-        aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '3', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '4',
-        position: { name: 'A4' },
-        aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '4', submission: { id: '1', name:'Subm 1' }}]
-      }
-    ]
-  }
-  const goodParentPlateWithoutWellRequestsAsResource = {
-    id: '1',
-    uuid: plateUuid,
-    name: 'Test Plate 123456',
-    labware_barcode: { human_barcode: 'DN123456D' },
-    state: 'passed',
-    number_of_rows: 8,
-    number_of_columns: 12,
-    wells: [
-      {
-        id: '1',
-        position: { name: 'A1' },
-        aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: []
-      },
-      {
-        id: '2',
-        position: { name: 'A2' },
-        aliquots: [{ id: '2', request: { id: '2', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: []
-      },
-      {
-        id: '3',
-        position: { name: 'A3' },
-        aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: []
-      },
-      {
-        id: '4',
-        position: { name: 'A4' },
-        aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: []
-      }
-    ]
-  }
-  const goodParentPlateWithPools = {
-    uuid: plateUuid,
-    name: 'Test Plate 123456',
-    labware_barcode: {
-      human_barcode: 'DN123456D'
-    },
-    state: 'passed',
-    number_of_rows: 8,
-    number_of_columns: 12,
-    wells: [
-      {
-        id: '1',
-        position: { name: 'A1' },
-        aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '1', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '2',
-        position: { name: 'A2' },
-        aliquots: [{ id: '2', request: { id: '2', submission: { id: '2', name:'Subm 2' }}}],
-        requests_as_source: [{ id: '2', submission: { id: '2', name:'Subm 2' }}]
-      },
-      {
-        id: '3',
-        position: { name: 'A3' },
-        aliquots: [{ id: '3', request: { id: '3', submission: { id: '2', name:'Subm 2' }}}],
-        requests_as_source: [{ id: '3', submission: { id: '2', name:'Subm 2' }}]
-      },
-      {
-        id: '4',
-        position: { name: 'A4' },
-        aliquots: [{ id: '4', request: { id: '4', submission: { id: '2', name:'Subm 2' }}}],
-        requests_as_source: [{ id: '4', submission: { id: '2', name:'Subm 2' }}]
-      }
-
-    ]
-  }
-  const goodParentPlateSequential = {
-    id: '1',
-    uuid: plateUuid,
-    name: 'Test Plate 123456',
-    labware_barcode: { human_barcode: 'DN123456D' },
-    state: 'passed',
-    number_of_rows: 8,
-    number_of_columns: 12,
-    wells: [
-      {
-        id: '1',
-        position: { name: 'A1' },
-        aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '1', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '2',
-        position: { name: 'A2' },
-        aliquots: [],
-        requests_as_source: []
-      },
-      {
-        id: '3',
-        position: { name: 'A3' },
-        aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '3', submission: { id: '1', name:'Subm 1' }}]
-      },
-      {
-        id: '4',
-        position: { name: 'A4' },
-        aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1' }}}],
-        requests_as_source: [{ id: '4', submission: { id: '1', name:'Subm 1' }}]
-      }
-    ]
-  }
-  const goodTag1Group = {
-    id: '1',
-    uuid: 'tag-1-group-uuid',
-    name: 'Tag Group 1',
-    tags: [
-      { index: 11, oligo: 'CTAGCTAG' },
-      { index: 12, oligo: 'TTATACGA' },
-      { index: 13, oligo: 'GTATACGA' },
-      { index: 14, oligo: 'ATATACGA' },
-      { index: 15, oligo: 'GGATACGA' },
-      { index: 16, oligo: 'AGATACGA' },
-      { index: 17, oligo: 'TTAAGCAT' }
-    ]
-  }
-  const goodTag2Group = {
-    id: '2',
-    uuid: 'tag-2-group-uuid',
-    name: 'Tag Group 2',
-    tags: [
-      { index: 21, oligo: 'CCTTAAGG' },
-      { index: 22, oligo: 'AATTCGCA' },
-      { index: 23, oligo: 'GGTTCGCA' },
-      { index: 24, oligo: 'TTTTCGCA' },
-      { index: 25, oligo: 'GCTTCGCA' }
-    ]
-  }
-  const goodTag2GroupLonger = {
-    id: '3',
-    uuid: 'tag-2-group-uuid',
-    name: 'Tag Group 2 longer',
-    tags: [
-      { index: 21, oligo: 'CCTTAAGG' },
-      { index: 22, oligo: 'AATTCGCA' },
-      { index: 23, oligo: 'GGTTCGCA' },
-      { index: 24, oligo: 'TTTTCGCA' },
-      { index: 25, oligo: 'ACTTCGCA' },
-      { index: 26, oligo: 'GTTTCGCA' },
-      { index: 27, oligo: 'CCTTCGCA' },
-      { index: 28, oligo: 'GCAGCGCA' },
-    ]
-  }
-  const goodChildWells = {
-    A1: {
-      position: 'A1',
-      aliquotCount: 1,
-      tagIndex: 11,
-      pool_index: 1,
-      validity: { valid: true, message: '' }
-    },
-    A2: {
-      position: 'A2',
-      aliquotCount: 1,
-      tagIndex: 12,
-      pool_index: 1,
-      validity: { valid: true, message: '' }
-    },
-    A3: {
-      position: 'A3',
-      aliquotCount: 1,
-      tagIndex: 13,
-      pool_index: 1,
-      validity: { valid: true, message: '' }
-    },
-    A4: {
-      position: 'A4',
-      aliquotCount: 1,
-      tagIndex: 14,
-      pool_index: 1,
-      validity: { valid: true, message: '' }
-    }
-  }
-  const goodQcableData = {
-    plate: {
-      id:'1',
-      uuid: 'tag-plate-uuid',
-      state:'available',
-      labware_barcode: {
-        human_barcode: 'TG12345678'
-      },
-      lot:{
-        id:'1',
-        tag_layout_template:{
-          id:'1',
-          uuid: 'tag-template-uuid',
-          direction:'row',
-          walking_by:'wells of plate',
-          tag_group:{
-            id:'1',
-            name:'i7 example tag group 1',
-          },
-          tag2_group:{
-            id:'2',
-            name:'i5 example tag group 2',
-          }
-        }
-      }
-    },
-    state: 'valid'
-  }
-
-  const goodTagClashes = { 1: { wells: [], subsmission: true }, 4: { wells: [ 5 ], submission: false } }
-
   const mockLocation = {}
   const wrapperFactory = function() {
     return shallowMount(CustomTaggedPlate, {
@@ -274,21 +42,14 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.tagsValid).toEqual(false)
       })
 
-      it('returns false if there are any tag clashes', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagClashes: goodTagClashes })
-
-        expect(wrapper.vm.tagsValid).toEqual(false)
-      })
-
       it('returns false if any wells with aliquots do not contain a tag', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 1')
+
         wrapper.setData({
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           offsetTagsBy: 4
@@ -300,10 +61,11 @@ describe('CustomTaggedPlate', () => {
       it('returns true if all aliquots contain valid tag indexes', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 2')
+
         wrapper.setData({
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -316,11 +78,12 @@ describe('CustomTaggedPlate', () => {
       it('returns setup if tags are not valid', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 3')
+
         wrapper.setData({
           loading: true,
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           offsetTagsBy: 4
@@ -332,11 +95,12 @@ describe('CustomTaggedPlate', () => {
       it('returns pending if tags are valid and creation not started', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 4')
+
         wrapper.setData({
           loading: false,
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -347,11 +111,12 @@ describe('CustomTaggedPlate', () => {
       it('returns busy if tags are valid and creation in progress', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 5')
+
         wrapper.setData({
           loading: true,
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: true
@@ -363,11 +128,12 @@ describe('CustomTaggedPlate', () => {
       it('returns success if creation was successful', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 6')
+
         wrapper.setData({
           loading: false,
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
@@ -380,11 +146,12 @@ describe('CustomTaggedPlate', () => {
       it('returns failure if creation was unsuccessful', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 7')
+
         wrapper.setData({
           loading: false,
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
@@ -405,7 +172,7 @@ describe('CustomTaggedPlate', () => {
       it('returns number of rows on parent plate', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlate })
+        wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfRows).toEqual(8)
       })
@@ -421,7 +188,7 @@ describe('CustomTaggedPlate', () => {
       it('returns number of columns on parent plate', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlate })
+        wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfColumns).toEqual(12)
       })
@@ -447,7 +214,9 @@ describe('CustomTaggedPlate', () => {
       it('returns wells from parent with pool indexes using requests as source', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlate })
+        wrapper.setData({
+          parentPlate: exampleParent
+        })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
         expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
@@ -459,7 +228,9 @@ describe('CustomTaggedPlate', () => {
       it('returns wells from parent with pool indexes using aliquot requests', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlateWithoutWellRequestsAsResource })
+        wrapper.setData({
+          parentPlate: exampleParentWithoutWellRequestsAsResource
+        })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
         expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
@@ -471,11 +242,13 @@ describe('CustomTaggedPlate', () => {
       it('returns wells from parent with pool indexes where multiple submissions set', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlateWithPools })
+        wrapper.setData({
+          parentPlate: exampleParentWithPools
+        })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
         expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A2.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.pool_index).toBe(2)
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(2)
       })
@@ -491,7 +264,7 @@ describe('CustomTaggedPlate', () => {
       it('returns parent wells if no tag layout', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlate})
+        wrapper.setData({ parentPlate: exampleParent})
 
         expect(wrapper.vm.childWells).toEqual(wrapper.vm.parentWells)
       })
@@ -499,14 +272,16 @@ describe('CustomTaggedPlate', () => {
       it('returns valid wells object if all properties valid', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 8')
+
         wrapper.setData({
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
 
-        expect(wrapper.vm.childWells).toEqual(goodChildWells)
+        expect(wrapper.vm.childWells).toEqual(exampleChildWells)
       })
     })
 
@@ -514,10 +289,11 @@ describe('CustomTaggedPlate', () => {
       it('returns the correct text depending on state', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 9')
+
         wrapper.setData({
-          tagClashes: {},
-          parentPlate: goodParentPlate,
-          tag1Group: goodTag1Group,
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column'
         })
@@ -539,8 +315,10 @@ describe('CustomTaggedPlate', () => {
       it('returns the correct number if a tag 1 group has been selected', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 10')
+
         wrapper.setData({
-          tag1Group: goodTag1Group
+          tag1Group: exampleTag1Group
         })
 
         expect(wrapper.vm.numberOfTags).toBe(7)
@@ -549,22 +327,24 @@ describe('CustomTaggedPlate', () => {
       it('returns the correct number if only tag 2 group has been selected', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 11')
+
         wrapper.setData({
-          tag2Group: goodTag2Group
+          tag2Group: exampleTag2Group
         })
 
-        expect(wrapper.vm.numberOfTags).toBe(5)
+        expect(wrapper.vm.numberOfTags).toBe(6)
       })
 
       it('returns the correct number if tag 1 group has more tags than tag 2 group', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tag1Group: goodTag1Group,
-          tag2Group: goodTag2Group
+          tag1Group: exampleTag1Group,
+          tag2Group: exampleTag2Group
         })
 
-        expect(wrapper.vm.numberOfTags).toBe(5)
+        expect(wrapper.vm.numberOfTags).toBe(6)
       })
     })
 
@@ -578,8 +358,10 @@ describe('CustomTaggedPlate', () => {
       it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 12')
+
         wrapper.setData({
-          tag1Group: goodTag1Group
+          tag1Group: exampleTag1Group
         })
 
         expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
@@ -588,30 +370,32 @@ describe('CustomTaggedPlate', () => {
       it('returns an array of the tag 2 group map ids if only tag 2 group is selected', () => {
         const wrapper = wrapperFactory()
 
+        console.log('TEST 13')
+
         wrapper.setData({
-          tag2Group: goodTag2Group
+          tag2Group: exampleTag2Group
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([21,22,23,24,25])
+        expect(wrapper.vm.useableTagMapIds).toEqual([21,22,23,24,25,26])
       })
 
       it('returns a shortened array of the tag 1 group map ids if both groups are selected and tag group 2 is smaller', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tag1Group: goodTag1Group,
-          tag2Group: goodTag2Group
+          tag1Group: exampleTag1Group,
+          tag2Group: exampleTag2Group
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15])
+        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16])
       })
 
       it('returns a full array of the tag 1 group map ids if both groups are selected and tag group 2 is longer', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tag1Group: goodTag1Group,
-          tag2Group: goodTag2GroupLonger
+          tag1Group: exampleTag1Group,
+          tag2Group: exampleTag2GroupLonger
         })
 
         expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
@@ -630,7 +414,7 @@ describe('CustomTaggedPlate', () => {
       it('returns zero if no walking by is set', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: goodParentPlate })
+        wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(0)
       })
@@ -639,7 +423,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlate: goodParentPlate,
+          parentPlate: exampleParent,
           walkingBy: 'wells of plate'
         })
 
@@ -650,7 +434,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlate: goodParentPlateSequential,
+          parentPlate: exampleParentSequential,
           walkingBy: 'manual by plate'
         })
 
@@ -661,11 +445,11 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          parentPlate: goodParentPlateWithPools,
+          parentPlate: exampleParentWithPools,
           walkingBy: 'manual by pool'
         })
 
-        expect(wrapper.vm.numberOfTargetWells).toBe(3)
+        expect(wrapper.vm.numberOfTargetWells).toBe(2)
       })
     })
   })
@@ -697,7 +481,7 @@ describe('CustomTaggedPlate', () => {
       })
 
       wrapper.setData({
-        parentPlate: goodParentPlate
+        parentPlate: exampleParent
       })
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
@@ -728,6 +512,22 @@ describe('CustomTaggedPlate', () => {
 
     // it('disables creation if tag clashes are disabled', () => {
 
+    it('sets a childwell to invalid if there is a tag clash with the submission', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({
+        parentPlate: exampleParent,
+        tag1Group: exampleTag1Group,
+        tag2Group: exampleTag2Group,
+        direction: 'row',
+        walkingBy: 'wells of plate',
+        tagSubstitutions: { 14: 15 }
+      })
+
+      expect(wrapper.vm.childWells['A4'].validity.valid).toBe(false)
+      expect(wrapper.vm.childWells['A4'].validity.message).toBe('Tag clash with the following: submission')
+    })
+
     it('sends a post request when the create plate button is clicked', async () => {
       let mock = new MockAdapter(localVue.prototype.$axios)
 
@@ -741,9 +541,9 @@ describe('CustomTaggedPlate', () => {
       })
 
       wrapper.setData({
-        tagPlate: goodQcableData.plate,
-        tag1Group: goodTag1Group,
-        tag2Group: goodTag2Group,
+        tagPlate: exampleQcableData.plate,
+        tag1Group: exampleTag1Group,
+        tag2Group: exampleTag2Group,
         direction: 'column',
         walkingBy: 'manual by plate',
         offsetTagsBy: 1,

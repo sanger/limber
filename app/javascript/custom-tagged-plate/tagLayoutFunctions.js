@@ -159,7 +159,7 @@ const validateWells = function (wells) {
   return result
 }
 
-const validatePlateDims = function(plateDims) {
+const validatePlateDims = function (plateDims) {
   let result
 
   if(!plateDims) {
@@ -175,7 +175,7 @@ const validatePlateDims = function(plateDims) {
   return result
 }
 
-const validateTagMapIds = function(tagMapIds) {
+const validateTagMapIds = function (tagMapIds) {
   let result
 
   if(!tagMapIds) {

@@ -76,6 +76,7 @@ import CustomTaggedPlateWellModal from './CustomTaggedPlateWellModal.vue'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions.js'
+import { extractParentWellSubmissionDetails, extractParentUsedOligos, extractChildUsedOligos } from 'custom-tagged-plate/tagClashFunctions.js'
 
 export default {
   name: 'CustomTaggedPlate',
@@ -111,7 +112,6 @@ export default {
       direction: null,
       offsetTagsBy: null,
       tagSubstitutions: {}, // { 1:2, 5:8 etc}
-      tagClashes: {}, // { 'A1': [ 'B3', 'B7' ], 'A5': [ 'submission' ] },
       wellModalDetails: {
         position: '',
         originalTag: null,
@@ -151,7 +151,6 @@ export default {
       if(!this.parentPlate) { return {} }
 
       let wells = {}
-      let submIds = []
 
       this.parentPlate.wells.forEach((well) => {
         const position = well.position.name
@@ -159,25 +158,14 @@ export default {
         wells[position] = {
           position: position,
           aliquotCount: 0,
-          pool_index: null,
-          validity: { valid: false, message: 'No tag id in this well' }
+          validity: { valid: true, message: 'No aliquot in this well' }
         }
 
         if(well.aliquots && well.aliquots.length > 0) {
           wells[position]['aliquotCount'] = well.aliquots.length
-
-          const submId = this.extractSubmissionIdFromWell(well)
-          if(!submId) {
-            console.log('Error: Submission Id not found for well')
-            // TODO what to do here? should not happen
-            return
-          }
-
-          if(!submIds.includes(submId)) { submIds.push(submId) }
-
-          wells[position]['pool_index'] = submIds.indexOf(submId) + 1
-        } else {
-          wells[position]['validity'] = { valid: true, message: 'No aliquot in this well' }
+          wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
+          wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
+          wells[position]['validity'] = { valid: false, message: 'No tag id in this well' }
         }
       })
 
@@ -187,10 +175,10 @@ export default {
       return Object.values(this.parentWells) || null
     },
     tag1GroupUuid() {
-      return this.tag1Group.uuid || null
+      return this.tag1Group ? this.tag1Group.uuid : null
     },
     tag2GroupUuid() {
-      return this.tag2Group.uuid || null
+      return this.tag2Group ? this.tag2Group.uuid : null
     },
     tag1GroupTags() {
       return this.tag1Group ? this.tag1Group.tags : []
@@ -198,10 +186,10 @@ export default {
     tag2GroupTags() {
       return this.tag2Group ? this.tag2Group.tags : []
     },
-    numberOfTag1GroupTags() {
+    numTag1GroupTags() {
       return this.tag1GroupTags.length
     },
-    numberOfTag2GroupTags() {
+    numTag2GroupTags() {
       return this.tag2GroupTags.length
     },
     tag1GroupMapIds() {
@@ -209,6 +197,44 @@ export default {
     },
     tag2GroupMapIds() {
       return this.tag2GroupTags.map(a => a.index)
+    },
+    tag1GroupTagOligos() {
+      return this.tag1GroupTags.map(a => a.oligo)
+    },
+    tag2GroupTagOligos() {
+      return this.tag2GroupTags.map(a => a.oligo)
+    },
+    tagGroupOligoStrings() {
+      this.tag1GroupTags
+      this.tag2GroupTags
+
+      let tagOligoStrings = {}
+
+      if(this.numTag1GroupTags > 0) {
+        if(this.numTag2GroupTags > 0) {
+          const numUseableTags = Math.min(this.numTag1GroupTags, this.numTag2GroupTags)
+          for (var iBoth = 0; iBoth < numUseableTags; iBoth++) {
+            const tg1 = this.tag1GroupTags[iBoth]
+            const tg2 = this.tag2GroupTags[iBoth]
+            tagOligoStrings[tg1.index] = tg1.oligo + ':' + tg2.oligo
+          }
+        } else {
+          for (var i1 = 0; i1 < this.tag1GroupTags.length; i1++) {
+            const tg = this.tag1GroupTags[i1]
+            tagOligoStrings[tg.index] = tg.oligo
+          }
+        }
+      } else if(this.numTag2GroupTags > 0) {
+        for (var i2 = 0; i2 < this.tag2GroupTags.length; i2++) {
+          const tg = this.tag2GroupTags[i2]
+          tagOligoStrings[tg.index] = tg.oligo
+        }
+      }
+
+      // want: { map id : string, etc }
+      // { '1': 'GTACTATG:TTGGCCAA', '2': 'TTGGCCAA:TTAAACTG', etc }
+      console.log('tagGroupOligoStrings = ', tagOligoStrings)
+      return tagOligoStrings
     },
     plateDims() {
       return {
@@ -228,6 +254,15 @@ export default {
 
       return calculateTagLayout(inputData)
     },
+    parentWellSubmissionDetails() {
+      return extractParentWellSubmissionDetails(this.parentPlate)
+    },
+    parentUsedOligos() {
+      return extractParentUsedOligos(this.parentPlate)
+    },
+    childUsedOligos() {
+      return extractChildUsedOligos(this.parentUsedOligos, this.parentWellSubmissionDetails, this.tagLayout, this.tagSubstitutions, this.tagGroupOligoStrings)
+    },
     childWells() {
       this.tagLayout
       this.tagSubstitutions
@@ -238,22 +273,59 @@ export default {
 
       let cw = {}
 
+      console.log('CHILDWELLS: tagLayout = ', JSON.stringify(this.tagLayout))
+
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
-        let tagIndx
+
+        let tagMapId
         if(this.tagLayout[position] > 0) {
           const origTagId = this.tagLayout[position]
-          tagIndx = origTagId
+          tagMapId = origTagId
           // check for tag substitution
           if(this.tagSubstitutions.hasOwnProperty(origTagId)) {
-            tagIndx = this.tagSubstitutions[origTagId]
+            tagMapId = this.tagSubstitutions[origTagId]
           }
-          cw[position]['validity'] = { valid: true, message: '' }
+
+          console.log('CHILDWELLS: well position = ', position)
+          console.log('CHILDWELLS: tagMapId = ', tagMapId)
+          console.log('CHILDWELLS: is isChromiumPlate = ', this.isChromiumPlate)
+
+          if(!this.isChromiumPlate) {
+            // TODO check for tag clashes
+            const submId = this.parentWellSubmissionDetails[position]['subm_id']
+
+            console.log('CHILDWELLS: submId : ', submId)
+            // console.log('CHILDWELLS: tagGroupOligoStrings = ', JSON.stringify(this.tagGroupOligoStrings))
+
+            const oligoStr = this.tagGroupOligoStrings[tagMapId]
+
+            console.log('CHILDWELLS: oligoStr : ', oligoStr)
+
+            const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
+
+            console.log('CHILDWELLS: arrayOligoLocns : ', arrayOligoLocns)
+
+            // array should contain this position
+            // it may also contain additional well positions and/or submission (clashes)
+            const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
+
+            console.log('CHILDWELLS: filteredArrayOligoLocns : ', filteredArrayOligoLocns)
+
+            if(filteredArrayOligoLocns.length > 0) {
+              console.log('CHILDWELLS: found subm clash')
+              cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
+            } else {
+              console.log('CHILDWELLS: no clash')
+              cw[position]['validity'] = { valid: true, message: '' }
+            }
+
+          }
         }
-        cw[position]['tagIndex'] = tagIndx
+        cw[position]['tagIndex'] = tagMapId
       })
 
-      // TODO check for tag clashes
+      console.log('CHILDWELLS: childWells = ', JSON.stringify(cw))
 
       return cw
     },
@@ -272,26 +344,26 @@ export default {
 
       return ((invalidCount > 0) ? false : true)
     },
-    numberOfTags() {
-      return this.useableTagMapIds.length
-    },
     useableTagMapIds() {
       let tags = []
 
-      if(this.numberOfTag1GroupTags > 0) {
-        if(this.numberOfTag2GroupTags > 0) {
-          const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+      if(this.numTag1GroupTags > 0) {
+        if(this.numTag2GroupTags > 0) {
+          const numUseableTags = Math.min(this.numTag1GroupTags, this.numTag2GroupTags)
           tags = this.tag1GroupTags.slice(0, numUseableTags)
         } else {
           tags = this.tag1GroupTags
         }
-      } else if(this.numberOfTag2GroupTags > 0) {
+      } else if(this.numTag2GroupTags > 0) {
         tags = this.tag2GroupTags
       }
 
       const tagMapIds = tags.map(a => a.index)
 
       return tagMapIds
+    },
+    numberOfTags() {
+      return this.useableTagMapIds.length
     },
     numberOfTargetWells() {
       let numTargets = 0
@@ -312,13 +384,7 @@ export default {
     tagsValid() {
       if(!this.hasChildWells) { return false }
 
-      if(this.hasTagClashes) { return false }
-
       return this.childWellsContainsInvalidWells
-    },
-    hasTagClashes() {
-      // tag clashes check (do not check if chromium)
-      return (!this.isChromiumPlate && Object.keys(this.tagClashes).length > 0) ? true : false
     },
     isChromiumPlate() {
       return (this.tagsPerWell === 4) ? true : false
@@ -378,37 +444,18 @@ export default {
       this.direction    = updatedFormData.direction
       this.offsetTagsBy = updatedFormData.offsetTagsBy
     },
-    extractSubmissionIdFromWell(well) {
-      let submId
-
-      if(well.requests_as_source[0] && well.requests_as_source.submission) {
-        submId = well.requests_as_source[0].submission.id
-        // TODO loop through additional requests if any? do we take first submission id we find?
-      }
-
-      if(!submId) {
-        // backup method of getting to submission if primary route fails
-        if(well.aliquots[0] && well.aliquots[0].request && well.aliquots[0].request.submission) {
-          submId = well.aliquots[0].request.submission.id
-          // TODO loop through additional aliquots if any? do we take first submission id we find?
-        }
-      }
-
-      return submId
-    },
     calcNumTagsForPooledPlate() {
       let numTargets = 0
 
       const parentWells = this.parentWells
 
       let poolTotals = {}
-      Object.keys(parentWells).forEach(function (key) {
-        let poolIndex = parentWells[key].pool_index
+      Object.keys(parentWells).forEach(function (position) {
+        let poolIndex = parentWells[position].pool_index
         poolTotals[poolIndex] = (poolTotals[poolIndex]+1) || 1
       })
       let poolTotalValues = Object.values(poolTotals)
       numTargets = Math.max(...poolTotalValues)
-
       return numTargets
     },
     calcNumTagsForSeqPlate() {
