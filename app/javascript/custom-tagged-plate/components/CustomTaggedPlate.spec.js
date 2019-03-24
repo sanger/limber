@@ -474,13 +474,24 @@ describe('CustomTaggedPlate', () => {
   })
 
   describe('#integration tests:', () => {
-    // it('disables creation if there are no source plate sample wells', () => {
+    it('disallows tag substitutions for chromium plates', () => {
+      const wrapper = wrapperFactory()
 
-    // it('sets the tag groups if a valid plate is scanned'), () => {
+      wrapper.setProps({
+        tagsPerWell: '4'
+      })
 
-    // it('disables the tag plate scan box if a tag group is chosen'), () => {
+      wrapper.setData({
+        parentPlate: exampleParent,
+        tag1Group: exampleTag1Group,
+        tag2Group: exampleTag2Group,
+        direction: 'row',
+        walkingBy: 'wells of plate'
+      })
 
-    // it('substitutes tags based on selections', () => {
+      expect(wrapper.vm.isChromiumPlate).toBe(true)
+      expect(wrapper.vm.tagSubstitutionsAllowed).toBe(false)
+    })
 
     it('sets a childwell to invalid if there is a tag clash with the submission', () => {
       const wrapper = wrapperFactory()

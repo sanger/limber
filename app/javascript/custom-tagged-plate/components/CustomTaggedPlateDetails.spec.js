@@ -33,6 +33,17 @@ describe('CustomTaggedPlateDetails', () => {
       expect(wrapper.find('#substituted_tag_id_3').exists()).toBe(true)
       expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(true)
     })
+
+    it('renders different text if tag substitutions are disallowed', () => {
+      const wrapper = wrapperFactory()
+
+      expect(wrapper.find('#tag_substitutions_allowed').exists()).toBe(true)
+
+      wrapper.setProps({ tagSubstitutionsAllowed: false })
+
+      expect(wrapper.find('#tag_substitutions_allowed').exists()).toBe(false)
+      expect(wrapper.find('#tag_substitutions_disallowed').exists()).toBe(true)
+    })
   })
 
   describe('#computed function tests:', () => {

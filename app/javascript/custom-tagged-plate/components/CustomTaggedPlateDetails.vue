@@ -38,9 +38,18 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-container v-else>
-      <p>Click on tagged wells to add substitutions...</p>
-    </b-container>
+    <div
+      v-if="tagSubstitutionsAllowed"
+      id="tag_substitutions_allowed"
+    >
+      <p>Click on tagged wells to enter substitutions...</p>
+    </div>
+    <div
+      v-else
+      id="tag_substitutions_disallowed"
+    >
+      <p>No tag substitutions allowed for this plate type.</p>
+    </div>
   </div>
 </template>
 
@@ -48,6 +57,7 @@
 export default {
   name: 'CustomTaggedPlateDetails',
   props: {
+    tagSubstitutionsAllowed: { type: Boolean, default: true },
     tagSubstitutions: { type: Object, default: () => { return {} } }
   },
   data () {

@@ -19,6 +19,7 @@
       />
       <lb-custom-tagged-plate-details
         :tag-substitutions="tagSubstitutions"
+        :tag-substitutions-allowed="tagSubstitutionsAllowed"
         @removetagsubstitution="removeTagSubstitution"
       />
     </lb-main-content>
@@ -361,7 +362,10 @@ export default {
       return this.childWellsContainsInvalidWells
     },
     isChromiumPlate() {
-      return (this.tagsPerWell === 4) ? true : false
+      return (this.tagsPerWellAsNumber === 4) ? true : false
+    },
+    tagSubstitutionsAllowed() {
+      return !this.isChromiumPlate
     },
     buttonText() {
       return {
