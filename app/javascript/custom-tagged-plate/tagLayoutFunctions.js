@@ -98,8 +98,8 @@ const calculateTagLayout = function (data) {
   let validationResult = validateParameters(data)
 
   if(validationResult) {
-    // TODO messages displayed where? some of these are valid first time
-    // console.log(validationResult.message)
+    // TODO replace this with generic limber logging when available
+    // console.log('WARNING: tagLayoutFucntions: ', validationResult.message)
     return null
   }
 

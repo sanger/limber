@@ -45,8 +45,6 @@ describe('CustomTaggedPlate', () => {
       it('returns false if any wells with aliquots do not contain a tag', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 1')
-
         wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
@@ -60,8 +58,6 @@ describe('CustomTaggedPlate', () => {
 
       it('returns true if all aliquots contain valid tag indexes', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 2')
 
         wrapper.setData({
           parentPlate: exampleParentTag1Only,
@@ -78,8 +74,6 @@ describe('CustomTaggedPlate', () => {
       it('returns setup if tags are not valid', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 3')
-
         wrapper.setData({
           loading: true,
           parentPlate: exampleParentTag1Only,
@@ -95,8 +89,6 @@ describe('CustomTaggedPlate', () => {
       it('returns pending if tags are valid and creation not started', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 4')
-
         wrapper.setData({
           loading: false,
           parentPlate: exampleParentTag1Only,
@@ -110,8 +102,6 @@ describe('CustomTaggedPlate', () => {
 
       it('returns busy if tags are valid and creation in progress', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 5')
 
         wrapper.setData({
           loading: true,
@@ -128,8 +118,6 @@ describe('CustomTaggedPlate', () => {
       it('returns success if creation was successful', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 6')
-
         wrapper.setData({
           loading: false,
           parentPlate: exampleParentTag1Only,
@@ -145,8 +133,6 @@ describe('CustomTaggedPlate', () => {
 
       it('returns failure if creation was unsuccessful', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 7')
 
         wrapper.setData({
           loading: false,
@@ -272,8 +258,6 @@ describe('CustomTaggedPlate', () => {
       it('returns valid wells object if all properties valid', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 8')
-
         wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
@@ -288,8 +272,6 @@ describe('CustomTaggedPlate', () => {
     describe('button text, style and disabled:', () => {
       it('returns the correct text depending on state', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 9')
 
         wrapper.setData({
           parentPlate: exampleParentTag1Only,
@@ -315,8 +297,6 @@ describe('CustomTaggedPlate', () => {
       it('returns the correct number if a tag 1 group has been selected', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 10')
-
         wrapper.setData({
           tag1Group: exampleTag1Group
         })
@@ -326,8 +306,6 @@ describe('CustomTaggedPlate', () => {
 
       it('returns the correct number if only tag 2 group has been selected', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 11')
 
         wrapper.setData({
           tag2Group: exampleTag2Group
@@ -358,8 +336,6 @@ describe('CustomTaggedPlate', () => {
       it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
         const wrapper = wrapperFactory()
 
-        console.log('TEST 12')
-
         wrapper.setData({
           tag1Group: exampleTag1Group
         })
@@ -369,8 +345,6 @@ describe('CustomTaggedPlate', () => {
 
       it('returns an array of the tag 2 group map ids if only tag 2 group is selected', () => {
         const wrapper = wrapperFactory()
-
-        console.log('TEST 13')
 
         wrapper.setData({
           tag2Group: exampleTag2Group
@@ -508,10 +482,6 @@ describe('CustomTaggedPlate', () => {
 
     // it('substitutes tags based on selections', () => {
 
-    // it('enables creation if valid tags are chosen', () => {
-
-    // it('disables creation if tag clashes are disabled', () => {
-
     it('sets a childwell to invalid if there is a tag clash with the submission', () => {
       const wrapper = wrapperFactory()
 
@@ -526,6 +496,24 @@ describe('CustomTaggedPlate', () => {
 
       expect(wrapper.vm.childWells['A4'].validity.valid).toBe(false)
       expect(wrapper.vm.childWells['A4'].validity.message).toBe('Tag clash with the following: submission')
+    })
+
+    it('sets a childwell to invalid if there is a tag clash with another childwell', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({
+        parentPlate: exampleParent,
+        tag1Group: exampleTag1Group,
+        tag2Group: exampleTag2Group,
+        direction: 'row',
+        walkingBy: 'wells of plate',
+        tagSubstitutions: { 13: 11 }
+      })
+
+      expect(wrapper.vm.childWells['A1'].validity.valid).toBe(false)
+      expect(wrapper.vm.childWells['A1'].validity.message).toBe('Tag clash with the following: A3')
+      expect(wrapper.vm.childWells['A3'].validity.valid).toBe(false)
+      expect(wrapper.vm.childWells['A3'].validity.message).toBe('Tag clash with the following: A1')
     })
 
     it('sends a post request when the create plate button is clicked', async () => {

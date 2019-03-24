@@ -93,28 +93,28 @@ const exampleParentWithoutWellRequestsAsResource = {
       id: '1',
       position: { name: 'A1' },
       poolIndex: 1,
-      aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
+      aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}}],
       requests_as_source: []
     },
     {
       id: '2',
       position: { name: 'A2' },
       poolIndex: 1,
-      aliquots: [{ id: '2', request: { id: '2', submission: { id: '1', name:'Subm 1' }}}],
+      aliquots: [{ id: '2', request: { id: '2', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}}],
       requests_as_source: []
     },
     {
       id: '3',
       position: { name: 'A3' },
       poolIndex: 1,
-      aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1' }}}],
+      aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}}],
       requests_as_source: []
     },
     {
       id: '4',
       position: { name: 'A4' },
       poolIndex: 1,
-      aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1' }}}],
+      aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}}],
       requests_as_source: []
     }
   ]
@@ -134,7 +134,7 @@ const exampleParentSequential = {
       position: { name: 'A1' },
       poolIndex: 1,
       aliquots: [{ id: '1', request: { id: '1', submission: { id: '1', name:'Subm 1' }}}],
-      requests_as_source: [{ id: '1', submission: { id: '1', name:'Subm 1' }}]
+      requests_as_source: [{ id: '1', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}]
     },
     {
       id: '2',
@@ -147,14 +147,14 @@ const exampleParentSequential = {
       position: { name: 'A3' },
       poolIndex: 1,
       aliquots: [{ id: '3', request: { id: '3', submission: { id: '1', name:'Subm 1' }}}],
-      requests_as_source: [{ id: '3', submission: { id: '1', name:'Subm 1' }}]
+      requests_as_source: [{ id: '3', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}]
     },
     {
       id: '4',
       position: { name: 'A4' },
       poolIndex: 1,
       aliquots: [{ id: '4', request: { id: '4', submission: { id: '1', name:'Subm 1' }}}],
-      requests_as_source: [{ id: '4', submission: { id: '1', name:'Subm 1' }}]
+      requests_as_source: [{ id: '4', submission: { id: '1', name:'Subm 1', used_tags:[['AAAAAAAT','GGGGGGGT'],['TTTTTTTA','CCCCCCCA'],['AAAAAAAC','GGGGGGGC'],['TTTTTTTG','CCCCCCCG'],['AAAAAAAA','GGGGGGGA']] }}]
     }
   ]
 }

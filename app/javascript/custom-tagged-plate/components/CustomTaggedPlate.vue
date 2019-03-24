@@ -231,9 +231,6 @@ export default {
         }
       }
 
-      // want: { map id : string, etc }
-      // { '1': 'GTACTATG:TTGGCCAA', '2': 'TTGGCCAA:TTAAACTG', etc }
-      console.log('tagGroupOligoStrings = ', tagOligoStrings)
       return tagOligoStrings
     },
     plateDims() {
@@ -266,14 +263,15 @@ export default {
     childWells() {
       this.tagLayout
       this.tagSubstitutions
+      this.parentWellSubmissionDetails
+      this.parentUsedOligos
+      this.childUsedOligos
 
       if(this.parentWells === {} ) { return {} }
 
       if(!this.tagLayout) { return { ...this.parentWells } }
 
       let cw = {}
-
-      console.log('CHILDWELLS: tagLayout = ', JSON.stringify(this.tagLayout))
 
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
@@ -287,45 +285,21 @@ export default {
             tagMapId = this.tagSubstitutions[origTagId]
           }
 
-          console.log('CHILDWELLS: well position = ', position)
-          console.log('CHILDWELLS: tagMapId = ', tagMapId)
-          console.log('CHILDWELLS: is isChromiumPlate = ', this.isChromiumPlate)
-
           if(!this.isChromiumPlate) {
-            // TODO check for tag clashes
             const submId = this.parentWellSubmissionDetails[position]['subm_id']
-
-            console.log('CHILDWELLS: submId : ', submId)
-            // console.log('CHILDWELLS: tagGroupOligoStrings = ', JSON.stringify(this.tagGroupOligoStrings))
-
             const oligoStr = this.tagGroupOligoStrings[tagMapId]
-
-            console.log('CHILDWELLS: oligoStr : ', oligoStr)
-
             const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
-
-            console.log('CHILDWELLS: arrayOligoLocns : ', arrayOligoLocns)
-
-            // array should contain this position
-            // it may also contain additional well positions and/or submission (clashes)
             const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
 
-            console.log('CHILDWELLS: filteredArrayOligoLocns : ', filteredArrayOligoLocns)
-
             if(filteredArrayOligoLocns.length > 0) {
-              console.log('CHILDWELLS: found subm clash')
               cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
             } else {
-              console.log('CHILDWELLS: no clash')
               cw[position]['validity'] = { valid: true, message: '' }
             }
-
           }
         }
         cw[position]['tagIndex'] = tagMapId
       })
-
-      console.log('CHILDWELLS: childWells = ', JSON.stringify(cw))
 
       return cw
     },

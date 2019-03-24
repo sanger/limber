@@ -1,4 +1,6 @@
 function extractParentWellSubmissionDetails(parentPlate) {
+  if(!parentPlate) { return null }
+
   let submissionPoolIndexes = {}
   let parentWellSubmissionDetails = {}
   let poolIndex = 0
@@ -31,6 +33,8 @@ function extractParentWellSubmissionDetails(parentPlate) {
 }
 
 function extractParentUsedOligos(parentPlate) {
+  if(!parentPlate) { return null }
+
   let parentUsedOligos = {}
 
   parentPlate.wells.forEach((well) => {
@@ -57,6 +61,11 @@ function extractParentUsedOligos(parentPlate) {
 }
 
 function extractChildUsedOligos(parentUsedOligos, parentWellSubmissionDetails, tagLayout, tagSubstitutions, tagGroupOligoStrings) {
+  if(!parentUsedOligos) { return null }
+  if(!parentWellSubmissionDetails) { return null }
+  if(!tagLayout) { return null }
+  if(!tagGroupOligoStrings) { return null }
+
   let childUsedOligos = JSON.parse(JSON.stringify(parentUsedOligos))
 
   Object.keys(tagLayout).forEach((position) => {
@@ -67,7 +76,6 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmissionDetails, t
       tagMapId = tagSubstitutions[tagMapId]
     }
 
-    // now need oligo string for the tagMapId, how??
     const oligoStr = tagGroupOligoStrings[tagMapId]
     const submId = parentWellSubmissionDetails[position]['subm_id']
 
@@ -85,7 +93,7 @@ function extractSubmDetailsFromWell(well) {
   let submDetails = extractSubmDetailsFromRequestsAsSource(well)
 
   if(!submDetails.id) {
-    // backup method of getting to submission if primary route fails
+    // backup method of getting to submission via aliquots if primary route fails
     submDetails = extractSubmDetailsFromAliquots(well)
   }
 
@@ -95,11 +103,12 @@ function extractSubmDetailsFromWell(well) {
 function extractSubmDetailsFromRequestsAsSource(well) {
   let submDetails = { id: null, usedTags: [] }
 
+  // N.B. using first request, possibly should be checking others
   if(well.requests_as_source[0] && well.requests_as_source[0].submission) {
     submDetails.id = well.requests_as_source[0].submission.id
-
-    submDetails.usedTags = well.requests_as_source[0].submission.used_tags
-    // TODO loop through additional requests if any? do we take first submission id we find?
+    if(well.requests_as_source[0].submission.used_tags) {
+      submDetails.usedTags = well.requests_as_source[0].submission.used_tags
+    }
   }
 
   return submDetails
@@ -108,10 +117,12 @@ function extractSubmDetailsFromRequestsAsSource(well) {
 function extractSubmDetailsFromAliquots(well) {
   let submDetails = { id: null, usedTags: [] }
 
+  // N.B. using first aliquot, possibly should be checking others
   if(well.aliquots[0] && well.aliquots[0].request && well.aliquots[0].request.submission) {
     submDetails.id = well.aliquots[0].request.submission.id
-    submDetails.usedTags = well.aliquots[0].request.submission.used_tags
-    // TODO loop through additional aliquots if any? do we take first submission id we find?
+    if(well.aliquots[0].request.submission.used_tags) {
+      submDetails.usedTags = well.aliquots[0].request.submission.used_tags
+    }
   }
 
   return submDetails
