@@ -423,45 +423,58 @@ export default {
       this.offsetTagsBy = updatedFormData.offsetTagsBy
     },
     calcNumTagsForPooledPlate() {
-      let numTargets = 0
-
-      const parentWells = this.parentWells
-
       let poolTotals = {}
-      Object.keys(parentWells).forEach(function (position) {
-        let poolIndex = parentWells[position].pool_index
-        poolTotals[poolIndex] = (poolTotals[poolIndex]+1) || 1
+
+      Object.keys(this.parentWells).forEach((position) => {
+        const poolIndex = this.parentWells[position].pool_index
+        poolTotals[poolIndex] = (poolTotals[poolIndex] + 1) || 1
       })
-      let poolTotalValues = Object.values(poolTotals)
-      // return number for largest pool in plate
-      numTargets = Math.max(...poolTotalValues)
-      return numTargets
+
+      return Math.max.apply(Math, Object.values(poolTotals))
     },
     calcNumTagsForSeqPlate() {
       let numTargets = 0
 
-      const parentWells = this.parentWells
-      Object.keys(parentWells).forEach(function (key) {
-        if(parentWells[key].aliquotCount > 0) { numTargets++ }
+      Object.keys(this.parentWells).forEach((position) => {
+        if(this.parentWells[position].aliquotCount > 0) { numTargets++ }
       })
 
       return numTargets
     },
     calcNumTagsForGroupByPlate() {
-      let numTargets = 0
-
-      const parentWells = this.parentWells
-      Object.keys(parentWells).forEach(function (key) {
-        if(parentWells[key].aliquotCount > 0) { numTargets++ }
-      })
-
-      return numTargets
+      return this.calcNumTagsForSeqPlate()
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'
       this.loading = true
       this.creationRequestInProgress = true
 
+      let payload = this.createPlatePayload()
+
+      this.$axios({
+        method: 'post',
+        url:this.targetUrl,
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data: payload
+      }).then((response)=>{
+        // Ajax responses automatically follow redirects, which
+        // would result in us receiving the full HTML for the child
+        // plate here, which we'd then need to inject into the
+        // page, and update the history. Instead we don't redirect
+        // application/json requests, and redirect the user ourselves.
+        this.progressMessage = response.data.message
+        this.locationObj.href = response.data.redirect
+        this.creationRequestInProgress = false
+        this.creationRequestSuccessful = true
+      }).catch((error)=>{
+        // Something has gone wrong
+        this.loading = false
+        console.log(error)
+        this.creationRequestInProgress = false
+        this.creationRequestSuccessful = false
+      })
+    },
+    createPlatePayload() {
       let payload = {
         plate: {
           purpose_uuid: this.purposeUuid,
@@ -482,6 +495,8 @@ export default {
           }
         }
       }
+
+      // if the user scanned a tag plate
       if(this.tagPlate) {
         payload.plate.tag_plate = {
           asset_uuid: this.tagPlate.uuid,
@@ -490,34 +505,12 @@ export default {
         }
       }
 
-      this.$axios({
-        method: 'post',
-        url:this.targetUrl,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data: payload
-      }).then((response)=>{
-        // Ajax responses automatically follow redirects, which
-        // would result in us receiving the full HTML for the child
-        // plate here, which we'd then need to inject into the
-        // page, and update the history. Instead we don't redirect
-        // application/json requests, and redirect the user ourselves.
-
-        this.progressMessage = response.data.message
-        this.locationObj.href = response.data.redirect
-        this.creationRequestInProgress = false
-        this.creationRequestSuccessful = true
-      }).catch((error)=>{
-        // Something has gone wrong
-        this.loading = false
-        console.log(error)
-        this.creationRequestInProgress = false
-        this.creationRequestSuccessful = false
-      })
+      return payload
     },
     onWellClicked(position) {
       if(this.isWellValidForShowingModal(position)) {
         this.setUpWellModalDetails(position)
-        this.$refs.wellModalCompRef.show()
+        this.showWellModal()
       }
     },
     isWellValidForShowingModal(position) {
@@ -539,17 +532,23 @@ export default {
         this.wellModalDetails.existingSubstituteTagId = this.tagSubstitutions[originalTagMapId]
       }
     },
+    showWellModal() {
+      this.$refs.wellModalCompRef.show()
+    },
+    hideWellModal() {
+      this.$refs.wellModalCompRef.hide()
+    },
     wellModalSubtituteSelected(substituteTagId) {
       const originalTagMapId = this.wellModalDetails.originalTag
 
-      if(originalTagMapId in this.tagSubstitutions && originalTagMapId === substituteTagId) {
+      if((originalTagMapId in this.tagSubstitutions) && (originalTagMapId === substituteTagId)) {
         // because we have changed the tag id back to what it was originally, delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
         this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)
       }
 
-      this.$refs.wellModalCompRef.hide()
+      this.hideWellModal()
     },
     removeTagSubstitution(originalTagMapId) {
       this.$delete(this.tagSubstitutions, originalTagMapId)

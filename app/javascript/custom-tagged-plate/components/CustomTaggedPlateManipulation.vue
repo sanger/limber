@@ -208,32 +208,42 @@ export default {
       return (!this.offsetTagsByMax || this.offsetTagsByMax <= 0)
     },
     offsetTagsByPlaceholder() {
-      if(this.numberOfTags === 0) { return 'Select tags first...' }
+      let placeholder = 'Enter offset number...'
 
-      if(this.numberOfTargetWells === 0) { return 'No target wells...' }
+      if(this.numberOfTags === 0) {
+        placeholder = 'Select tags first...'
+      } else if(this.numberOfTargetWells === 0) {
+        placeholder = 'No target wells...'
+      } else if(this.offsetTagsByMax < 0) {
+        placeholder = 'Not enough tags...'
+      } else if(this.offsetTagsByMax === 0) {
+        placeholder = 'No spare tags...'
+      }
 
-      if(this.offsetTagsByMax < 0) { return 'Not enough tags...' }
-
-      if(this.offsetTagsByMax === 0) { return 'No spare tags...' }
-
-      return 'Enter offset number...'
+      return placeholder
+    },
+    isOffsetTagsByMaxValid() {
+      return (this.offsetTagsByMax && this.offsetTagsByMax > 0)
     },
     offsetTagsByState() {
-      return (!this.offsetTagsByMax || this.offsetTagsByMax <= 0) ? null : this.offsetTagsByWithinLimits
+      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : null
     },
-    offsetTagsByWithinLimits() {
+    isOffsetTagsByWithinLimits() {
       return ((this.offsetTagsBy >= this.offsetTagsByMin) &&
-                (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
+              (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
     },
     offsetTagsByInvalidFeedback() {
-      if(!this.offsetTagsByMax || this.offsetTagsByMax <= 0) { return '' }
+      if(this.isOffsetTagsByMaxValid) {
+        let isChkLow = this.offsetTagsByCheckTooLow
+        if(!isChkLow.valid) {
+          return isChkLow.message
+        }
 
-      let chk
-      chk = this.offsetTagsByCheckTooLow
-      if(!chk.valid) { return chk.message }
-
-      chk = this.offsetTagsByCheckTooHigh
-      if(!chk.valid) { return chk.message }
+        let isChkHigh = this.offsetTagsByCheckTooHigh
+        if(!isChkHigh.valid) {
+          return isChkHigh.message
+        }
+      }
 
       return ''
     },
@@ -258,7 +268,7 @@ export default {
       return ret
     },
     offsetTagsByValidFeedback() {
-      return (this.offsetTagsByState ? 'Valid' : '')
+      return this.offsetTagsByState ? 'Valid' : ''
     },
     tag1Group() {
       return this.tagGroupsList[this.tag1GroupId] || this.nullTagGroup
@@ -280,9 +290,7 @@ export default {
   },
   methods: {
     tagGroupsLookupUpdated(data) {
-      if(data === null) { return }
-
-      if(data.state === 'searching') {
+      if(!data || data.state === 'searching') {
         return
       } else if(data.state === 'valid') {
         this.tagGroupsList = { ...data.tagGroupsList }
@@ -303,25 +311,25 @@ export default {
       this.updateTagParams(null)
     },
     tagPlateScanned(data) {
-      if(data.state === 'valid' && data.plate) {
-        this.validTagPlateScanned(data)
+      if(data && (data.state === 'valid') && data.plate) {
+        this.extractTagGroupIds(data.plate)
       } else if(data.state === 'empty' && !data.plate) {
         this.emptyTagPlate()
       }
     },
-    validTagPlateScanned(data) {
-      this.tagPlate = { ...data.plate }
+    extractTagGroupIds(plate) {
+      this.tagPlate = { ...plate }
       this.tagPlateWasScanned = true
       this.offsetTagsBy = 0
 
-      if(data.plate.lot.tag_layout_template.tag_group.id) {
-        this.tag1GroupId = data.plate.lot.tag_layout_template.tag_group.id
+      if(plate.lot.tag_layout_template.tag_group.id) {
+        this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
       } else {
         this.tag1GroupId = null
       }
 
-      if(data.plate.lot.tag_layout_template.tag2_group.id) {
-        this.tag2GroupId = data.plate.lot.tag_layout_template.tag2_group.id
+      if(plate.lot.tag_layout_template.tag2_group.id) {
+        this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
       } else {
         this.tag2GroupId = null
       }
