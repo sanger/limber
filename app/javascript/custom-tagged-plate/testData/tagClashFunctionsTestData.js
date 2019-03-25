@@ -243,20 +243,6 @@ const exampleTag2GroupLonger = {
   ]
 }
 
-const exptWellSubmDetByPosn = {
-  'A1': { subm_id: '1', pool_index: 1 },
-  'A2': { subm_id: '1', pool_index: 1 },
-  'A3': { subm_id: '1', pool_index: 1 },
-  'A4': { subm_id: '1', pool_index: 1 },
-}
-
-const exptWellSubmDetByPosnForPools = {
-  'A1': { subm_id: '1', pool_index: 1 },
-  'A2': { subm_id: '1', pool_index: 1 },
-  'A3': { subm_id: '2', pool_index: 2 },
-  'A4': { subm_id: '2', pool_index: 2 },
-}
-
 const exampleTag1Oligos = { 11: 'CCCCAAAA', 12: 'CCCCTTTT', 13: 'CCCCGGGG', 14: 'CCCCAATT', 15: 'AAAAAAAA', 16: 'GACTTTTT', 17: 'CCCCAACC' }
 const exampleTag2Oligos = { 21: 'GGGGAAAA', 22: 'GGGGTTTT', 23: 'GGGGCCCC', 24: 'GGGGAATT', 25: 'GGGGGGGA', 26: 'CTGAAAAA' }
 const exampleTag1and2Oligos = { 11: 'CCCCAAAA:GGGGAAAA', 12: 'CCCCTTTT:GGGGTTTT', 13: 'CCCCGGGG:GGGGCCCC', 14: 'CCCCAATT:GGGGAATT', 15: 'AAAAAAAA:GGGGGGGA', 16: 'GACTTTTT:CTGAAAAA' }
@@ -325,4 +311,63 @@ const exampleQcableData = {
   state: 'valid'
 }
 
-export { plateUuid, exampleParent, exampleParentTag1Only, exampleParentWithoutWellRequestsAsResource, exampleParentSequential, exampleParentWithPools, exptWellSubmDetByPosn, exptWellSubmDetByPosnForPools, exampleTag1Group, exampleTag2Group, exampleTag2GroupLonger, exampleTag1Oligos, exampleTag2Oligos, exampleTag1and2Oligos, exampleChildWells, exampleQcableData }
+const exampleParentUsedOligos = {
+  '1': {
+    'AAAAAAAT:GGGGGGGT': [ 'submission' ],
+    'TTTTTTTA:CCCCCCCA': [ 'submission' ],
+    'AAAAAAAC:GGGGGGGC': [ 'submission' ],
+    'TTTTTTTG:CCCCCCCG': [ 'submission' ],
+    'AAAAAAAA:GGGGGGGA': [ 'submission' ]
+  }
+}
+
+const exampleParentWellSubmissionDetails = {
+  'A1': { subm_id: '1', pool_index: 1 },
+  'A2': { subm_id: '1', pool_index: 1 },
+  'A3': { subm_id: '1', pool_index: 1 },
+  'A4': { subm_id: '1', pool_index: 1 },
+}
+
+const exampleParentUsedOligosForPools = {
+  '1': {
+    'AAAAAAAT:GGGGGGGT': [ 'submission' ],
+    'TTTTTTTA:CCCCCCCA': [ 'submission' ],
+    'AAAAAAAC:GGGGGGGC': [ 'submission' ],
+    'TTTTTTTG:CCCCCCCG': [ 'submission' ],
+    'AAAAAAAA:GGGGGGGA': [ 'submission' ]
+  },
+  '2': {
+    'GACTAAAA:CTGATTTT': [ 'submission' ],
+    'GACTTTTT:CTGAAAAA': [ 'submission' ],
+    'GACTGGGG:CTGACCCC': [ 'submission' ],
+    'GACTCCCC:CTGAGGGG': [ 'submission' ]
+  }
+}
+
+const exampleParentWellSubmissionDetailsForPools = {
+  'A1': { subm_id: '1', pool_index: 1 },
+  'A2': { subm_id: '1', pool_index: 1 },
+  'A3': { subm_id: '2', pool_index: 2 },
+  'A4': { subm_id: '2', pool_index: 2 },
+}
+
+export {
+  plateUuid,
+  exampleParent,
+  exampleParentTag1Only,
+  exampleParentWithoutWellRequestsAsResource,
+  exampleParentSequential,
+  exampleParentWithPools,
+  exampleTag1Group,
+  exampleTag2Group,
+  exampleTag2GroupLonger,
+  exampleTag1Oligos,
+  exampleTag2Oligos,
+  exampleTag1and2Oligos,
+  exampleChildWells,
+  exampleQcableData,
+  exampleParentUsedOligos,
+  exampleParentWellSubmissionDetails,
+  exampleParentUsedOligosForPools,
+  exampleParentWellSubmissionDetailsForPools
+}
