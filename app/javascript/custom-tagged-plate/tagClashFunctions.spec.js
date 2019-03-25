@@ -11,6 +11,14 @@ import {
 } from './testData/tagClashFunctionsTestData.js'
 
 describe('extractParentWellSubmissionDetails', () => {
+  it('returns empty details object when there is no parent plate', () => {
+    const parentPlate = null
+
+    const response = extractParentWellSubmissionDetails(parentPlate)
+
+    expect(response).toEqual({})
+  })
+
   it('returns expected values by position for a parent with one submission', () => {
     const parentPlate = exampleParent
 
@@ -43,6 +51,14 @@ describe('extractParentWellSubmissionDetails', () => {
 })
 
 describe('extractParentUsedOligos', () => {
+  it('returns empty used oligos object when there is no parent plate', () => {
+    const parentPlate = null
+
+    const response = extractParentUsedOligos(parentPlate)
+
+    expect(response).toEqual({})
+  })
+
   it('returns expected values by submission id for a parent with one submission', () => {
     const parentPlate = exampleParent
 
@@ -88,6 +104,66 @@ describe('extractParentUsedOligos', () => {
 
 describe('extractChildUsedOligos', () => {
   describe('single submission', () => {
+    it('returns empty object if there is no parentUsedOligos', () => {
+      const parentUsedOligos = null
+      const parentWellSubmDets = exampleParentWellSubmissionDetails
+      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagSubs = {}
+      const tagGroupOligos = exampleTag1and2Oligos
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual({})
+    })
+
+    it('returns empty object if there is no parentWellSubmissionDetails', () => {
+      const parentUsedOligos = exampleParentUsedOligos
+      const parentWellSubmDets = null
+      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagSubs = {}
+      const tagGroupOligos = exampleTag1and2Oligos
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual({})
+    })
+
+    it('returns empty object if there is no tagLayout', () => {
+      const parentUsedOligos = exampleParentUsedOligos
+      const parentWellSubmDets = exampleParentWellSubmissionDetails
+      const tagLayout = null
+      const tagSubs = {}
+      const tagGroupOligos = exampleTag1and2Oligos
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual({})
+    })
+
+    it('returns empty object if there are no tagSubstitutions', () => {
+      const parentUsedOligos = exampleParentUsedOligos
+      const parentWellSubmDets = exampleParentWellSubmissionDetails
+      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagSubs = null
+      const tagGroupOligos = exampleTag1and2Oligos
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual({})
+    })
+
+    it('returns empty object if there are no tagGroupOligoStrings', () => {
+      const parentUsedOligos = exampleParentUsedOligos
+      const parentWellSubmDets = exampleParentWellSubmissionDetails
+      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagSubs = {}
+      const tagGroupOligos = null
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual({})
+    })
+
     it('returns expected values when there are no tag clashes', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails

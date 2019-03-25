@@ -1,5 +1,5 @@
 function extractParentWellSubmissionDetails(parentPlate) {
-  if(!parentPlate) { return null }
+  if(!parentPlate) { return {} }
 
   let submissionPoolIndexes = {}
   let parentWellSubmissionDetails = {}
@@ -33,7 +33,7 @@ function extractParentWellSubmissionDetails(parentPlate) {
 }
 
 function extractParentUsedOligos(parentPlate) {
-  if(!parentPlate) { return null }
+  if(!parentPlate) { return {} }
 
   let parentUsedOligos = {}
 
@@ -60,11 +60,8 @@ function extractParentUsedOligos(parentPlate) {
   return parentUsedOligos
 }
 
-function extractChildUsedOligos(parentUsedOligos, parentWellSubmissionDetails, tagLayout, tagSubstitutions, tagGroupOligoStrings) {
-  if(!parentUsedOligos) { return null }
-  if(!parentWellSubmissionDetails) { return null }
-  if(!tagLayout) { return null }
-  if(!tagGroupOligoStrings) { return null }
+function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos) {
+  if(!isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos)) { return {} }
 
   let childUsedOligos = JSON.parse(JSON.stringify(parentUsedOligos))
 
@@ -76,8 +73,8 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmissionDetails, t
       tagMapId = tagSubstitutions[tagMapId]
     }
 
-    const oligoStr = tagGroupOligoStrings[tagMapId]
-    const submId = parentWellSubmissionDetails[position]['subm_id']
+    const oligoStr = tagGroupOligos[tagMapId]
+    const submId = parentWellSubmDetails[position]['subm_id']
 
     if(oligoStr in childUsedOligos[submId]) {
       childUsedOligos[submId][oligoStr].push(position)
@@ -87,6 +84,18 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmissionDetails, t
   })
 
   return childUsedOligos
+}
+
+function isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos) {
+  let isValid = true
+
+  if(!parentUsedOligos) { isValid = false }
+  if(!parentWellSubmDetails) { isValid = false }
+  if(!tagLayout) { isValid = false }
+  if(!tagSubstitutions) { isValid = false }
+  if(!tagGroupOligos) { isValid = false }
+
+  return isValid
 }
 
 function extractSubmDetailsFromWell(well) {
