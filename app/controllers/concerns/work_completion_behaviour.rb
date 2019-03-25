@@ -14,7 +14,7 @@ module WorkCompletionBehaviour
     messages = Hash.new { |message_store, category| message_store[category] = [] }
     api.work_completion.create!(
       # Our pools keys are our submission uuids.
-      submissions: labware.submissions,
+      submissions: labware.in_progress_submission_uuids,
       target: labware.uuid,
       user: current_user_uuid
     )

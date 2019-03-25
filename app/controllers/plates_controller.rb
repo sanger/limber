@@ -30,7 +30,7 @@ class PlatesController < LabwareController
   private
 
   def locate_labware_identified_by_id
-    Sequencescape::Api::V2::Plate.find_by(search_param) ||
+    Sequencescape::Api::V2.plate_for_presenter(search_param) ||
       raise(ActionController::RoutingError, "Unknown resource #{id}")
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
     let(:work_completion) { json :work_completion }
 
     let!(:plate_get) do
-      stub_v2_plate(example_plate, stub_search: false, custom_includes: 'wells.aliquots.request.submission')
+      stub_v2_plate(example_plate, stub_search: false, custom_query: [:plate_for_completion, example_plate.uuid])
     end
     let!(:work_completion_creation) do
       stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
