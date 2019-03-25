@@ -23,8 +23,6 @@ describe('PlateScan', () => {
         label: 'My Plate',
         description: 'Scan it in',
         api: api.devour,
-        plateCols: 12,
-        plateRows: 8,
         includes: 'wells.requests_as_source,wells.aliquots.request'
       },
       localVue
@@ -63,7 +61,7 @@ describe('PlateScan', () => {
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', plate: null }],
-        [{ state: 'invalid', plate: null }]
+        [{ state: 'invalid', plate: undefined }]
       ]
     })
   })

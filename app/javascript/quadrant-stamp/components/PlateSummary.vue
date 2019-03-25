@@ -9,7 +9,7 @@
   </div>
   <div
     v-else
-    class="a-plate plate-summary pool-colours"
+    :class="['a-plate','plate-summary','pool-colours',state]"
   >
     <div class="well">
       <span :class="['aliquot', colourClass]" />
@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     colourClass() {
-      return `colour-${this.poolIndex}`
+      return `colour-${this.pool_index}`
     },
     isEmpty() {
       return this.plate === null
@@ -64,6 +64,10 @@ export default {
     background-color: #6c757d; // $gray-600
     border: 1px solid #6c757d;
     .well { background: #e9ecef; }
+  }
+  .a-plate.duplicate, .a-plate.invalid {
+    background-color: #d9534f;
+    border: 1px solid #ee1111;
   }
   .well {
     height:30px;
