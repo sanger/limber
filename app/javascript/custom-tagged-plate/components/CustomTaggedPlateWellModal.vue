@@ -10,7 +10,10 @@
   >
     <form @submit.stop.prevent="handleWellModalSubmit">
       <b-container fluid>
-        <b-row class="form-group form-row">
+        <b-row
+          v-if="wellModalDetails.originalTag"
+          class="form-group form-row"
+        >
           <b-col>
             <b-form-group
               id="original_tag_number_group"
@@ -27,7 +30,10 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="form-group form-row">
+        <b-row
+          v-if="wellModalDetails.tagMapIds.length > 0"
+          class="form-group form-row"
+        >
           <b-col>
             <b-form-group
               id="substitute_tag_number_group"
@@ -106,7 +112,9 @@ export default {
     },
     handleWellModalShown(_e) {
       this.substituteTagId = this.wellModalDetails.existingSubstituteTagId
-      this.$refs.focusThis.focus()
+      if(this.wellModalDetails.tagMapIds.length > 0) {
+        this.$refs.focusThis.focus()
+      }
     },
     handleWellModalOk(_evt) {
       this.$emit('wellmodalsubtituteselected', this.substituteTagIdAsNumber )

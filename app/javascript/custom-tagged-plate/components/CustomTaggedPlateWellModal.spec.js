@@ -61,6 +61,38 @@ describe('CustomTaggedPlateWellModal', () => {
       expect(wrapper.find('#well_error_message').exists()).toBe(true)
       expect(wrapper.find('#well_error_message').text()).toEqual('Tag clash with Submission')
     })
+
+    it('does not render originalTag if one is not provided', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setProps({
+        wellModalDetails: {
+          position: 'A1',
+          originalTag: null,
+          tagMapIds: [1,2,3],
+          validity: { valid: false, message: 'No tag in this well' },
+          existingSubstituteTagId: ''
+        }
+      })
+
+      expect(wrapper.find('#original_tag_number_input').exists()).toBe(false)
+    })
+
+    it('does not render substituteTagId if no tagMapIds are provided', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setProps({
+        wellModalDetails: {
+          position: 'A1',
+          originalTag: 1,
+          tagMapIds: [],
+          validity: { valid: false, message: 'No tag in this well' },
+          existingSubstituteTagId: ''
+        }
+      })
+
+      expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(false)
+    })
   })
 
   describe('#computed function tests:', () => {

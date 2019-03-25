@@ -100,7 +100,7 @@ const calculateTagLayout = function (data) {
   if(validationResult) {
     // TODO replace this with generic limber logging when available
     // console.log('WARNING: tagLayoutFucntions: ', validationResult.message)
-    return null
+    return []
   }
 
   const tags = data.tagMapIds

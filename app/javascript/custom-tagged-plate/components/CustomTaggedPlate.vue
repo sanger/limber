@@ -270,7 +270,7 @@ export default {
 
       if(this.parentWells === {} ) { return {} }
 
-      if(!this.tagLayout) { return { ...this.parentWells } }
+      if(this.tagLayout.length == 0) { return { ...this.parentWells } }
 
       let cw = {}
 
@@ -433,6 +433,7 @@ export default {
         poolTotals[poolIndex] = (poolTotals[poolIndex]+1) || 1
       })
       let poolTotalValues = Object.values(poolTotals)
+      // return number for largest pool in plate
       numTargets = Math.max(...poolTotalValues)
       return numTargets
     },
@@ -514,41 +515,44 @@ export default {
       })
     },
     onWellClicked(position) {
-      if(this.childWells[position].aliquotCount === 0) { return }
-
-      if(!this.childWells[position].tagIndex) { return }
-
-      const origTag = this.tagLayout[position]
+      if(this.isWellValidForShowingModal(position)) {
+        this.setUpWellModalDetails(position)
+        this.$refs.wellModalCompRef.show()
+      }
+    },
+    isWellValidForShowingModal(position) {
+      return (this.childWells[position].aliquotCount === 0) ? false : true
+    },
+    setUpWellModalDetails(position) {
+      const originalTagMapId = this.tagLayout[position]
 
       this.wellModalDetails = {
         position: position,
-        originalTag: origTag,
+        originalTag: originalTagMapId,
         tagMapIds: this.useableTagMapIds,
         validity: this.childWells[position].validity,
         existingSubstituteTagId: null
       }
 
       // check if well tag already substituted and if so display that tag id
-      if(origTag in this.tagSubstitutions) {
-        this.wellModalDetails.existingSubstituteTagId = this.tagSubstitutions[origTag]
+      if(originalTagMapId in this.tagSubstitutions) {
+        this.wellModalDetails.existingSubstituteTagId = this.tagSubstitutions[originalTagMapId]
       }
-
-      this.$refs.wellModalCompRef.show()
     },
     wellModalSubtituteSelected(substituteTagId) {
-      const origTagId = this.wellModalDetails.originalTag
+      const originalTagMapId = this.wellModalDetails.originalTag
 
-      if(origTagId in this.tagSubstitutions && origTagId === substituteTagId) {
+      if(originalTagMapId in this.tagSubstitutions && originalTagMapId === substituteTagId) {
         // because we have changed the tag id back to what it was originally, delete the substitution from the list
-        this.removeTagSubstitution(origTagId)
+        this.removeTagSubstitution(originalTagMapId)
       } else {
-        this.$set(this.tagSubstitutions, origTagId, substituteTagId)
+        this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)
       }
 
       this.$refs.wellModalCompRef.hide()
     },
-    removeTagSubstitution(origTagId) {
-      this.$delete(this.tagSubstitutions, origTagId)
+    removeTagSubstitution(originalTagMapId) {
+      this.$delete(this.tagSubstitutions, originalTagMapId)
     }
   }
 }
