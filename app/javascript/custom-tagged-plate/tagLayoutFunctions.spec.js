@@ -23,7 +23,7 @@ describe('calculateTagLayout', () => {
   const plateDims = { number_of_rows: 3, number_of_columns: 4 }
 
   describe('validations: ', () => {
-    it('returns empty array if no tag groups are supplied', () => {
+    it('returns empty object if no tag groups are supplied', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -34,10 +34,10 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual([])
+      expect(response).toEqual({})
     })
 
-    it('returns empty array if tag map ids is empty', () => {
+    it('returns empty object if tag map ids is empty', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
@@ -48,10 +48,10 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual([])
+      expect(response).toEqual({})
     })
 
-    it('returns empty array if no input wells are supplied', () => {
+    it('returns empty object if no input wells are supplied', () => {
       const data = {
         wells: null,
         plateDims: plateDims,
@@ -62,10 +62,10 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual([])
+      expect(response).toEqual({})
     })
 
-    it('returns empty array if no plate dimensions are supplied', () => {
+    it('returns empty object if no plate dimensions are supplied', () => {
       const data = {
         wells: inputWells,
         plateDims: null,
@@ -76,10 +76,10 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual([])
+      expect(response).toEqual({})
     })
 
-    it('returns empty array if invalid plate dimensions are supplied', () => {
+    it('returns empty object if invalid plate dimensions are supplied', () => {
       const invalidPlateDims = { number_of_rows: 0, number_of_columns: 4 }
       const data = {
         wells: inputWells,
@@ -91,7 +91,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual([])
+      expect(response).toEqual({})
     })
   })
 

@@ -69,9 +69,29 @@
 
 <script>
 
+/**
+ * Modal displayed to the user on clicking a tagged well on the plate, for them
+ * to enter a tag map id to substitute the tag currently in the well.
+ * It provides:
+ * - The well position e.g. A1
+ * - The original tag as determined by the tag layout and chosen layout
+ * manipulation options.
+ * - An input which shows the current substituted tag map id if one exists and
+ * allows the user to pick a new tag map id
+ * - An Ok button which triggers an emit of the substituted tag map id to the
+ * parent.
+ */
 export default {
   name: 'CustomTaggedPlateWellModal',
   props: {
+    // Holds all the details used by the well modal:
+    // - position : the well position e.g. A1
+    // - originalTag : the original tag map id as determined by the tag layout
+    // - tagMapIds : the list of valid tag map ids as determined by the tag
+    // groups chosen, used to validate the user entered substitute tag map id
+    // - validity : the current validity of the well, with message displayed
+    // if invalid e.g. 'tag clash with C8'
+    // - existingSubstituteTagId : the current substitute tag id
     wellModalDetails: {
       type: Object, default: () => {
         return {
@@ -86,7 +106,7 @@ export default {
   },
   data () {
     return {
-      substituteTagId: null
+      substituteTagId: null // the input substitute tag map id
     }
   },
   computed: {

@@ -1,3 +1,9 @@
+/**
+ * Extracts the submission ids from the parent plate and returns an object that
+ * contains submission id and pool index keyed by well position.
+ * Used when calculating parent and child well objects and when building the
+ * child used oligos object below.
+ */
 function extractParentWellSubmissionDetails(parentPlate) {
   if(!parentPlate) { return {} }
 
@@ -12,7 +18,7 @@ function extractParentWellSubmissionDetails(parentPlate) {
       const submDetails = extractSubmDetailsFromWell(well)
 
       if(!submDetails.id) {
-        console.log('TAG CLASH FUNCTIONS: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
+        console.log('Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
         // TODO what to do here? should not happen
         return
       }
@@ -32,6 +38,12 @@ function extractParentWellSubmissionDetails(parentPlate) {
   return parentWellSubmissionDetails
 }
 
+/**
+ * Extracts the oligo strings already used in other plates for the submissions
+ * present on the parent plate and returns an object that contains oligo
+ * strings keyed by submission id.
+ * Used when building the child used oligos object below.
+ */
 function extractParentUsedOligos(parentPlate) {
   if(!parentPlate) { return {} }
 
@@ -42,7 +54,7 @@ function extractParentUsedOligos(parentPlate) {
       const submDetails = extractSubmDetailsFromWell(well)
 
       if(!submDetails.id) {
-        console.log('TAG CLASH FUNCTIONS: extractParentUsedOligos: Error: Submission Id not found for well')
+        console.log('Tag clash functions: extractParentUsedOligos: Error: Submission Id not found for well')
         // TODO what to do here? should not happen
         return
       }
@@ -60,6 +72,14 @@ function extractParentUsedOligos(parentPlate) {
   return parentUsedOligos
 }
 
+
+/**
+ * Extracts the oligo strings the user has selected by their choice of tag
+ * groups, layout and submissions, then combines them with the parent plate
+ * used oligo object. The resulting object is keyed on submission id and oligo
+ * string to identify locations that oligo string has been used.
+ * Used to identify tag clashes when building the child wells object.
+ */
 function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos) {
   if(!isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos)) { return {} }
 

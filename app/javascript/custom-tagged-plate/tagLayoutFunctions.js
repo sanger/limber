@@ -94,13 +94,19 @@ const directionFunctions = {
   'inverse column': byInverseColumns
 }
 
+/**
+* Calculates the tag layout based on the user selections of tag group(s),
+* walking by, direction and tag offset and the parent plate wells and
+* dimensions.
+* Returns an object of well position to tag map ids e.g. {"A1":1,"A2":2, etc.}
+*/
 const calculateTagLayout = function (data) {
   let validationResult = validateParameters(data)
 
   if(validationResult) {
     // TODO replace this with generic limber logging when available
     // console.log('WARNING: tagLayoutFucntions: ', validationResult.message)
-    return []
+    return {}
   }
 
   const tags = data.tagMapIds

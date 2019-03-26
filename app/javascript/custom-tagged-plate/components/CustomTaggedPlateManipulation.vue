@@ -139,6 +139,20 @@
 import PlateScan from 'shared/components/PlateScan'
 import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 
+/**
+ * Allows the user to select tags and arrange their layout on the plate.
+ * They can either scan a tag plate or manually select one or two (if dual
+ * indexed) tag groups, then select various options to change how the tags
+ * are laid out on the plate.
+ * It provides:
+ * - A tag plate scan input field
+ * - Select dropdowns for manual selection of tag groups 1 and 2
+ * - Select dropdowns for walking by and direction choices for how the tags on
+ * the plate are laid out
+ * - An offset tags by input field for offsetting the layout by a number
+ * - Any change emits all modifiable elements to the parent for recalculation
+ * of the tag layout.
+ */
 export default {
   name: 'CustomTaggedPlateManipulations',
   components: {
@@ -146,30 +160,50 @@ export default {
     'lb-tag-groups-lookup': TagGroupsLookup
   },
   props: {
-    api: { type: Object, required: true },
-    numberOfTags: { type: Number, default: () => { return 0 } },
-    numberOfTargetWells: { type: Number, default: () => { return 0 } },
-    tagsPerWell: { type: Number, default: () => { return 1 } },
+    // A devour API object. eg. new devourClient(apiOptions)
+    // Passed through to the tag groups lookup and tag plate scan child
+    // components.
+    api: {
+      type: Object,
+      required: true
+    },
+    // The current number of useable tags, calculated by the parent component
+    // and used to determine tag offset limits.
+    numberOfTags: {
+      type: Number,
+      default: () => { return 0 }
+    },
+    // The number of target wells, calculated by the parent component and
+    // used to determine the tag offset limits.
+    numberOfTargetWells: {
+      type: Number,
+      default: () => { return 0 }
+    },
+    // The tags per well number, determined by the plate purpose and used here
+    // to determine what tag layout walking by options are available.
+    tagsPerWell: {
+      type: Number,
+      default: () => { return 1 }
+    },
   },
   data () {
-
     const initialWalkingBy = this.tagsPerWell > 1 ? 'as group by plate' : 'manual by plate'
 
     return {
-      tagGroupsList: {},
-      tagPlate: null,
-      tagPlateWasScanned: false,
-      tagPlateScanDisabled: false,
-      tag1GroupId: null,
-      tag2GroupId: null,
-      walkingBy: initialWalkingBy,
-      direction: 'row',
-      offsetTagsByMin: 0,
-      offsetTagsBy: 0,
-      nullTagGroup: {
-        uuid: null,
-        name: 'No tag group selected',
-        tags: []
+      tagGroupsList: {}, // holds the list of tag groups once retrieved
+      tagPlate: null, // holds the tag plate once scanned
+      tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
+      tagPlateScanDisabled: false, // flag to indicate the plate scan was disabled
+      tag1GroupId: null, // holds the id of tag group 1 once selected
+      tag2GroupId: null, // holds the id of tag group 2 once selected
+      walkingBy: initialWalkingBy, // holds the chosen tag layout walking by option
+      direction: 'row', // holds the chosen tag layout direction option
+      offsetTagsByMin: 0, // holds the tag offset minimum value
+      offsetTagsBy: 0, // holds the entered tag offset number
+      nullTagGroup: { // null tag group object used in place of a selected tag group
+        uuid: null, // uuid of the tag group
+        name: 'No tag group selected', // name of the tag group
+        tags: [] // array of tags in the tag group
       }
     }
   },

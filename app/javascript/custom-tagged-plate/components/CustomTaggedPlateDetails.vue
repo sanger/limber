@@ -54,10 +54,26 @@
 </template>
 
 <script>
+
+/**
+ * Displays a list of any tag substitutions the user has entered.
+ * Each row contains a remove button which triggers an emit of the selected
+ * tag substitution for the parent to act upon (delete from the list).
+ * It provides:
+ * - A row for each tag substitution in the supplied list showing:
+ *   - original tag map id
+ *   - substituted tag map id
+ *   - a remove button to indicate the row should be deleted (emits to parent)
+ */
 export default {
   name: 'CustomTaggedPlateDetails',
   props: {
-    tagSubstitutionsAllowed: { type: Boolean, default: true },
+    // a flag to indicate whether tag substitutions are allowed for this plate
+    tagSubstitutionsAllowed: {
+      type: Boolean,
+      default: true
+    },
+    // an object containing the tag map id substitutions e.g. { 2: 5, 8: 12 }
     tagSubstitutions: { type: Object, default: () => { return {} } }
   },
   data () {

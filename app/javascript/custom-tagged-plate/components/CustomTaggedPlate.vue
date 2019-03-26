@@ -79,6 +79,16 @@ import resources from 'shared/resources'
 import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions.js'
 import { extractParentWellSubmissionDetails, extractParentUsedOligos, extractChildUsedOligos } from 'custom-tagged-plate/tagClashFunctions.js'
 
+/**
+ * Provides a custom tagged plate setup view which allows a user to select and
+ * visually layout tags on a plate before creating the resulting new plate in
+ * sequencescape. It provides:
+ * - An abstract plate view displaying tag locations
+ * - A tag selection and manipulations panel
+ * - A clickable well interface for tag substitution selections
+ * - A tag substitutions list to detail and allow removal of substitutions
+ * - A plate creation button with visibility and text dependant on layout state
+ */
 export default {
   name: 'CustomTaggedPlate',
   components: {
@@ -90,35 +100,63 @@ export default {
     'lb-well-modal': CustomTaggedPlateWellModal
   },
   props: {
-    sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
-    purposeUuid: { type: String, required: true },
-    targetUrl: { type: String, required: true },
-    parentUuid: { type: String, required: true },
-    tagsPerWell: { type: String, required: true },
-    locationObj: { type: [Object, Location], default: () => { return location } }
+    sequencescapeApi: {
+      // Sequencescape V1 API for creation of the custom tagged plate
+      type: String,
+      default: 'http://localhost:3000/api/v2'
+    },
+    purposeUuid: {
+      // Plate purpose uuid for the custom tagged plate, used to identify which
+      // plate creator should be used
+      type: String,
+      required: true
+    },
+    targetUrl: {
+      // URL of the child plate being created, to which the user will be
+      // redirected after a successful plate creation. We use this rather than
+      // relying on the server to redirect automatically.
+      type: String,
+      required: true
+    },
+    parentUuid: {
+      // The uuid of the parent plate, used to lookup the parent plate details
+      // to build the abstract new plate to which the tags will be applied.
+      type: String,
+      required: true
+    },
+    tagsPerWell: {
+      // The tags per well number, derived from plate purpose and used to
+      // indicate whether we are dealing with a normal or Chromium plate.
+      type: String,
+      required: true
+    },
+    locationObj: {
+      // This is used to mock the browser location bar for testing purposes.
+      type: [Object, Location], default: () => { return location }
+    }
   },
   data () {
     return {
-      loading: true,
-      progressMessage: 'Fetching parent details...',
-      parentPlate: null,
-      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
-      plateViewCaption: 'Modify the tag layout for the new plate using options on the right',
-      creationRequestInProgress: null,
-      creationRequestSuccessful: null,
-      tagPlate: null,
-      tag1Group: null,
-      tag2Group: null,
-      walkingBy: null,
-      direction: null,
-      offsetTagsBy: null,
-      tagSubstitutions: {}, // { 1:2, 5:8 etc}
-      wellModalDetails: {
-        position: '',
-        originalTag: null,
-        tagMapIds: [],
-        validity: { valid: false, message: 'default'},
-        existingSubstituteTagId: null
+      loading: true, // tracks loading state for the page modal
+      progressMessage: 'Fetching parent details...', // holds message displayed by page modal
+      parentPlate: null, // the parent plate retrieved using the parentUuid prop
+      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources), // devour API object
+      plateViewCaption: 'Modify the tag layout for the new plate using options on the right', // caption for plate view
+      creationRequestInProgress: null, // flag to indicate plate creation underway
+      creationRequestSuccessful: null, // flag to indicate success of plate creation
+      tagPlate: null, // scanned tag plate
+      tag1Group: null, // selected tag 1 group
+      tag2Group: null, // selected tag 2 group
+      walkingBy: null, // tag layout walking by type
+      direction: null, // tag layout direction type
+      offsetTagsBy: null, // number to offset the tag layout by
+      tagSubstitutions: {}, // tag substitutions required e.g. { 1:2, 5:8 }
+      wellModalDetails: { // well modal details to be passed to the well modal child component
+        position: '', // well position on plate e.g. A1
+        originalTag: null, // original tag map id from layout
+        tagMapIds: [], // allowed tag map ids for substitutions
+        validity: { valid: false, message: 'default'}, // validity of this well
+        existingSubstituteTagId: null // current tag map id if the tag was already substituted
       }
     }
   },
@@ -270,7 +308,7 @@ export default {
 
       if(this.parentWells === {} ) { return {} }
 
-      if(this.tagLayout.length == 0) { return { ...this.parentWells } }
+      if(Object.keys(this.tagLayout).length === 0) { return { ...this.parentWells } }
 
       let cw = {}
 
@@ -453,7 +491,7 @@ export default {
 
       this.$axios({
         method: 'post',
-        url:this.targetUrl,
+        url: this.targetUrl,
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data: payload
       }).then((response)=>{
