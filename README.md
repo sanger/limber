@@ -2,6 +2,7 @@ Limber Pipeline Application
 =============================
 
 [![Build Status](https://travis-ci.org/sanger/limber.svg?branch=next_release)](https://travis-ci.org/sanger/limber)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/sanger/limber)
 
 Description
 -----------
