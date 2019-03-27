@@ -290,18 +290,22 @@ const exampleQcableData = {
     labware_barcode: {
       human_barcode: 'TG12345678'
     },
-    lot:{
+    asset: {
       id:'1',
-      tag_layout_template:{
+      uuid: 'asset-uuid'
+    },
+    lot: {
+      id:'1',
+      tag_layout_template: {
         id:'1',
         uuid: 'tag-template-uuid',
         direction:'row',
         walking_by:'wells of plate',
-        tag_group:{
+        tag_group: {
           id:'1',
           name:'i7 example tag group 1',
         },
-        tag2_group:{
+        tag2_group: {
           id:'2',
           name:'i5 example tag group 2',
         }

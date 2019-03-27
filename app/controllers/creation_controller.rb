@@ -38,6 +38,7 @@ class CreationController < ApplicationController
 
   def creation_failed(exception)
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
+    Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error))
 
     respond_to do |format|

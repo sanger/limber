@@ -116,7 +116,9 @@ const calculateTagLayout = function (data) {
     offset = data.offsetTagsBy
   }
 
-  return directionFunctions[data.direction](data.wells, data.plateDims, (well, relIndex, absIndex) => {
+  const filteredWells = data.wells.filter(well => well.aliquotCount > 0)
+
+  return directionFunctions[data.direction](filteredWells, data.plateDims, (well, relIndex, absIndex) => {
     return walkingByFunctions[data.walkingBy](well, tags, relIndex, absIndex, offset, counters)
   })
 }

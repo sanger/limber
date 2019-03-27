@@ -16,8 +16,9 @@
             :label="'Tag Plate'"
             :plate-type="'qcable'"
             :scan-disabled="tagPlateScanDisabled"
-            includes="lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
-            :fields="{ lots: 'uuid,tag_layout_template',
+            includes="asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
+            :fields="{ assets: 'uuid',
+                       lots: 'uuid,tag_layout_template',
                        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                        tag_groups: 'uuid,name,tags' }"
             @change="tagPlateScanned($event)"

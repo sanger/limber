@@ -13,6 +13,7 @@ describe('calculateTagLayout', () => {
     { position: 'B3', aliquotCount: 1, pool_index: 1 },
     { position: 'C3', aliquotCount: 1, pool_index: 1 },
     { position: 'A4', aliquotCount: 1, pool_index: 1 },
+    { position: 'B4', aliquotCount: 0 },
     { position: 'C4', aliquotCount: 1, pool_index: 1 }
   ]
   const tagMapIdsStandard  = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 ]

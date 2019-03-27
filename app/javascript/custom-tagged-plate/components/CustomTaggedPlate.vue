@@ -76,8 +76,9 @@ import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
 import CustomTaggedPlateWellModal from './CustomTaggedPlateWellModal.vue'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
-import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions.js'
-import { extractParentWellSubmissionDetails, extractParentUsedOligos, extractChildUsedOligos } from 'custom-tagged-plate/tagClashFunctions.js'
+import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
+import { extractParentWellSubmissionDetails, extractParentUsedOligos, extractChildUsedOligos } from 'custom-tagged-plate/tagClashFunctions'
+import valueConverter from 'shared/valueConverter'
 
 /**
  * Provides a custom tagged plate setup view which allows a user to select and
@@ -523,7 +524,7 @@ export default {
             direction: this.direction,
             walking_by: this.walkingBy,
             initial_tag: this.offsetTagsBy, // initial tag is zero-based index of the tag within its group
-            substitutions: this.tagSubstitutions, // { 1:2,5:8, etc }
+            substitutions: valueConverter(this.tagSubstitutions, value => value.toString()), // { '1':'2','5':'8', etc }
             tags_per_well: this.tagsPerWellAsNumber
           },
           tag_plate: {
@@ -537,7 +538,7 @@ export default {
       // if the user scanned a tag plate
       if(this.tagPlate) {
         payload.plate.tag_plate = {
-          asset_uuid: this.tagPlate.uuid,
+          asset_uuid: this.tagPlate.asset.uuid,
           template_uuid: this.tagPlate.lot.tag_layout_template.uuid,
           state: this.tagPlate.state
         }

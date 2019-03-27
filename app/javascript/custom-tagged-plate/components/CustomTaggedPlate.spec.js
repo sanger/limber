@@ -563,7 +563,7 @@ describe('CustomTaggedPlate', () => {
             tags_per_well: 1
           },
           tag_plate: {
-            asset_uuid: 'tag-plate-uuid',
+            asset_uuid: 'asset-uuid',
             template_uuid: 'tag-template-uuid',
             state: 'available'
           }
