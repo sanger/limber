@@ -408,7 +408,7 @@ export default {
     buttonText() {
       return {
         'setup': 'Set up plate tag layout...',
-        'pending': 'Create new Custom Tagged plate in Sequencescape',
+        'pending': 'Create new Custom Tagged plate',
         'busy': 'Sending...',
         'success': 'Custom Tagged plate successfully created',
         'failure': 'Failed to create Custom Tagged plate, retry?'

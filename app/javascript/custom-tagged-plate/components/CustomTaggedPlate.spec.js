@@ -281,7 +281,7 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(wrapper.vm.createButtonState).toEqual('pending')
-        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged plate in Sequencescape')
+        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged plate')
         expect(wrapper.vm.buttonStyle).toEqual('primary')
         expect(wrapper.vm.buttonDisabled).toBe(false)
       })
