@@ -26,6 +26,11 @@ describe('transfersLayouts', () => {
   const plateObj2 = { plate: plateFactory({ uuid: 'plate-2-uuid', id: '2', wells: [well2] }), index: 1 }
   const requests = requestsFromPlates([plateObj1, plateObj2])
 
+
+  it('throws an error if invalid layout is provided', () => {
+    expect(() => transfersFromRequests(requests, 'invalid')).toThrow('Invalid transfers layout name: invalid')
+  })
+
   it('creates the correct transfersFromRequests with sequential layout', () => {
     const transfersResults = transfersFromRequests(requests, 'sequential')
 
@@ -48,7 +53,7 @@ describe('transfersLayouts', () => {
   })
 
 
-  fit('creates the correct transfersFromRequests with quadrant layout', () => {
+  it('creates the correct transfersFromRequests with quadrant layout', () => {
     const transfersResults = transfersFromRequests(requests, 'quadrant')
 
     expect(transfersResults).toEqual([

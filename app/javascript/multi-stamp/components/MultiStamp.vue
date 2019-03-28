@@ -120,12 +120,7 @@ export default {
         requestIsActive(requestWithPlate.request))
     },
     transfers() {
-      try {
-        return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
-      }
-      catch(error) {
-        return []  // Placeholder
-      }
+      return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
     },
     targetWells() {
       let deb = this.transfers.reduce((wells, transfer) => {
