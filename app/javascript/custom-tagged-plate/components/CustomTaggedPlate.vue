@@ -325,17 +325,15 @@ export default {
             tagMapId = this.tagSubstitutions[origTagId]
           }
 
-          if(!this.isChromiumPlate) {
-            const submId = this.parentWellSubmissionDetails[position]['subm_id']
-            const oligoStr = this.tagGroupOligoStrings[tagMapId]
-            const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
-            const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
+          const submId = this.parentWellSubmissionDetails[position]['subm_id']
+          const oligoStr = this.tagGroupOligoStrings[tagMapId]
+          const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
+          const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
 
-            if(filteredArrayOligoLocns.length > 0) {
-              cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
-            } else {
-              cw[position]['validity'] = { valid: true, message: '' }
-            }
+          if(filteredArrayOligoLocns.length > 0) {
+            cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
+          } else {
+            cw[position]['validity'] = { valid: true, message: '' }
           }
         }
         cw[position]['tagIndex'] = tagMapId
@@ -401,7 +399,7 @@ export default {
       return this.childWellsContainsInvalidWells
     },
     isChromiumPlate() {
-      return (this.tagsPerWellAsNumber === 4) ? true : false
+      return (this.tagsPerWellAsNumber > 1) ? true : false
     },
     tagSubstitutionsAllowed() {
       return !this.isChromiumPlate
