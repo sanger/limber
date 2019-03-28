@@ -22,11 +22,12 @@ export default {
   computed: {
     primerPanels() { // Returns the mutual primer panels
       const primerPanelsByPlate = new Map()
-      this.requestsWithPrimerPanel.forEach((requestWithPlate) => {
-        const plate_id = requestWithPlate.plateObj.plate.id
-        const primer_panel = requestWithPlate.request.primer_panel.name
+      for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
+        let requestWithPlate = this.requestsWithPrimerPanel[i]
+        let plate_id = requestWithPlate.plateObj.plate.id
+        let primer_panel = requestWithPlate.request.primer_panel.name
         if (primerPanelsByPlate.has(plate_id)) {
-          const primerPanelArray = primerPanelsByPlate.get(plate_id)
+          let primerPanelArray = primerPanelsByPlate.get(plate_id)
           if (!primerPanelArray.includes(primer_panel)) {
             primerPanelArray.push(primer_panel)
           }
@@ -34,7 +35,7 @@ export default {
         else {
           primerPanelsByPlate.set(plate_id, [primer_panel])
         }
-      })
+      }
       if (primerPanelsByPlate.size === 0) { return [] }
       const primerPanelsIterable =
           Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
@@ -46,8 +47,8 @@ export default {
         requestWithPlate.request.primer_panel)
     },
     formLabel() {
-      let requests_len = this.requestsWithPrimerPanel.length
-      let primer_panels_len = this.primerPanels.length
+      const requests_len = this.requestsWithPrimerPanel.length
+      const primer_panels_len = this.primerPanels.length
       if (requests_len !== 0 && primer_panels_len !== 0) {
         return 'Select a primer panel to process'
       }

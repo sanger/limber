@@ -15,10 +15,10 @@ const plateFactory = function(options = {}) {
     number_of_columns: 12,
     number_of_rows: 8,
     state: 'passed',
-    wells: buildArray(_filledWells || 96, (interation) => wellFactory({
+    wells: buildArray(_filledWells || 96, (iteration) => wellFactory({
       ...{
-        uuid: `${uuid}-well-${interation}`,
-        position: { name: indexToName(interation, 12, 8) } },
+        uuid: `${uuid}-well-${iteration}`,
+        position: { name: indexToName(iteration, 8) } },
       ..._wellOptions
     }) )
   }

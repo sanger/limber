@@ -22,17 +22,26 @@ module LabwareCreators
   # |P2|P4|P2|P4|P2|P4|P1
   # |B1|B1|B2|B2|B3|B3|B4
   #
-  class QuadrantStampBase < Base
+  class MultiStamp < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
-    class_attribute :request_filter
+    class_attribute :request_filter, :transfers_layout, :target_rows, :target_columns, :source_plates
 
-    self.page = 'quadrant_stamp'
+    self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
+    self.attributes += [
+      { transfers: [
+          [:source_plate, :source_asset, :outer_request, { new_target: :location }]
+        ]
+      }
+    ]
     self.request_filter = 'null'
+    self.transfers_layout = 'null'
+    self.target_rows = 0
+    self.target_columns = 0
+    self.source_plates = 0
 
     validates :transfers, presence: true
 

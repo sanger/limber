@@ -69,10 +69,10 @@ import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
-import { wellNameToCoordinate, wellCoordinateToName } from 'shared/wellHelpers'
+import { transfersFromRequests } from 'shared/transfersLayouts'
 
 export default {
-  name: 'QuadStamp',
+  name: 'MultiStamp',
   components: {
     'lb-plate': Plate,
     'lb-plate-scan': PlateScan,
@@ -86,12 +86,10 @@ export default {
     purposeUuid: { type: String, required: true },
     targetUrl: { type: String, required: true },
     requestFilter: { type: String, required: true },
-    targetRows: { type: Number, default: 16 },
-    targetColumns: { type: Number, default: 24 },
-    sourcePlateNumber: { type: Number, default: 4 },
-    // Defaults assumes column orientated stamping.
-    rowOffset: { type: Array, default: () => { return [0,1,0,1] } },
-    colOffset: { type: Array, default: () => { return [0,0,1,1] } },
+    transfersLayout: { type: String, required: true },
+    targetRows: { type: String, required: true },
+    targetColumns: { type: String, required: true },
+    numberOfPlates: { type: String, required: true },
     locationObj: { default: () => { return location }, type: [Object, Location] }
   },
   data () {
@@ -104,6 +102,9 @@ export default {
     }
   },
   computed: {
+    sourcePlateNumber() {
+      return Number.parseInt(this.numberOfPlates)
+    },
     valid() {
       return this.unsuitablePlates.length === 0 && // None of the plates are invalid
                this.transfers.length >= 1 // We have at least one transfer
@@ -119,7 +120,12 @@ export default {
         requestIsActive(requestWithPlate.request))
     },
     transfers() {
-      return this.transfersFromRequests(this.requestsWithPlatesFiltered)
+      try {
+        return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
+      }
+      catch(error) {
+        return []  // Placeholder
+      }
     },
     targetWells() {
       let deb = this.transfers.reduce((wells, transfer) => {
@@ -141,12 +147,6 @@ export default {
   methods: {
     updatePlate(index, data) {
       this.$set(this.plates, index - 1, {...data, index: index - 1 })
-    },
-    targetFor(quadrant, wellName) {
-      let wellCoordinate = wellNameToCoordinate(wellName)
-      let destinationRow = wellCoordinate[1] * 2 + this.rowOffset[quadrant]
-      let destinationColumn = wellCoordinate[0] * 2 + this.colOffset[quadrant]
-      return wellCoordinateToName([destinationColumn, destinationRow])
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'
@@ -174,22 +174,6 @@ export default {
         console.log(error)
         this.loading = false
       })
-    },
-    transfersFromRequests(requestsWithPlates) {
-      let transfersArray = []
-      requestsWithPlates.forEach((requestWithPlate) => {
-        let { request, well, plateObj } = requestWithPlate
-        if (request === undefined) { return }
-        let targetWell = this.targetFor(plateObj.index, well.position.name)
-        transfersArray.push({
-          source_plate: plateObj.plate.uuid,
-          pool_index: plateObj.index + 1,
-          source_asset: well.uuid,
-          outer_request: request.uuid,
-          new_target: { location: targetWell } }
-        )
-      })
-      return transfersArray
     }
   }
 }

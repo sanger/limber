@@ -1,6 +1,6 @@
 // // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import QuadStamp from './QuadStamp.vue'
+import MultiStamp from './MultiStamp.vue'
 import localVue from 'test_support/base_vue.js'
 import { plateFactory } from 'test_support/factories.js'
 import flushPromises from 'flush-promises'
@@ -9,11 +9,11 @@ import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
-describe('QuadStamp', () => {
+describe('MultiStamp', () => {
   const wrapperFactory = function() {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
-    return shallowMount(QuadStamp, {
+    return shallowMount(MultiStamp, {
       propsData: {
         targetRows: 16,
         targetColumns: 24,
