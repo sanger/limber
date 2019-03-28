@@ -68,7 +68,7 @@
       validators: [
         new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
         new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
-        new validator(function(t) { return t.template.approved; }, 'Is not approved for use with this pipeline.'),
+        new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
         new validator(function(t) { return !(t.template.used && t.template.dual_index); }, 'This template has already been used.'),
         new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
         new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.')

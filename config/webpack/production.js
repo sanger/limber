@@ -14,19 +14,6 @@ module.exports = merge(sharedConfig, {
   stats: 'normal',
 
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({
-    //   minimize: true,
-    //   sourceMap: true,
-
-    //   compress: {
-    //     warnings: false
-    //   },
-
-    //   output: {
-    //     comments: false
-    //   }
-    // }),
-
     new CompressionPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',

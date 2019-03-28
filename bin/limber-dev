@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import subprocess
+import os
+import re
+from urllib import parse
+import yaml
+
+
+def read_config(config_file_path):
+    try:
+        with open(config_file_path, 'r') as f:
+            return yaml.load(f)
+    except ImportError as e:
+        print(str(e), file=sys.stderr)
+        return None
+    except FileNotFoundError:
+        return None
+
+
+def write_config(conf, config_file_path):
+    with open(config_file_path, 'a') as f:
+        yaml.dump(conf, f, default_flow_style=False)
+
+
+def build_config(environment):
+    print(f'No configuration for environment {environment} found.')
+    seq_url = input('Sequencescape URL: ')
+    api_key = input('Application API key: ')
+    pmb_url = input('PMB URL: ')
+
+    env_vars = {}
+    env_vars['sequencescape'] = seq_url.strip()
+    env_vars['api_key'] = api_key.strip()
+    env_vars['pmb'] = pmb_url.strip()
+    conf = {f'{environment}': env_vars}
+    return conf
+
+
+def set_env(env_conf):
+    seq_url = env_conf['sequencescape']
+    api_key = env_conf['api_key']
+    pmb_url = env_conf['pmb']
+    os.putenv('API_URL', parse.urljoin(seq_url, 'api/1/'))
+    os.putenv('API2_URL', parse.urljoin(seq_url, 'api/v2'))
+    os.putenv('PMB_URI', pmb_url)
+    os.putenv('API_KEY', api_key)
+
+
+def main(args):
+    config_file_path = os.path.abspath(os.path.expanduser(args.config_file))
+    conf = read_config(config_file_path)
+    if not conf.get(args.environment):
+        conf = build_config(args.environment)
+        write_config(conf, config_file_path)
+    set_env(conf[args.environment])
+    if not args.no_conf:
+        subprocess.check_call(['bundle', 'exec', 'rake', 'config:generate'])
+    try:
+        if re.match('c', args.command):
+            subprocess.run(['bundle', 'exec', 'rails', 'c'])
+        elif re.match('s', args.command):
+            subprocess.run(['bundle', 'exec', 'rails', 's'])
+    except KeyboardInterrupt:
+        print('Exiting Launcher')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Limber Dev setup and run script')
+    parser.add_argument('environment', help='Environment name')
+    parser.add_argument('command', choices='sc',
+                        help='c: enter rails console, s: start puma server')
+    parser.add_argument('-Q', '--no-conf', action='store_true',
+                        help='Do not run `rake config:generate`')
+    parser.add_argument('-f', '--config-file', default='~/.limber.environments.yml',
+                        help='Path to the YML configuration file')
+    args = parser.parse_args()
+
+    main(args)
+
+

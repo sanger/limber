@@ -18,7 +18,9 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
     let!(:plate_get) do
       stub_v2_plate(example_plate, stub_search: false, custom_query: [:plate_for_completion, example_plate.uuid])
     end
-    let!(:work_completion_creation) { stub_api_post('work_completions', payload: work_completion_request, body: work_completion) }
+    let!(:work_completion_creation) do
+      stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
+    end
 
     it 'creates work_completion' do
       post :create, params: { limber_plate_id: plate_uuid }, session: { user_uuid: user_uuid }

@@ -1,4 +1,4 @@
-<%= link_to limber_tube_path(tube.uuid), target: '_blank', class: 'list-group-item tube' do %>
+<%= link_to limber_tube_path(tube.uuid), target: '_blank', class: 'list-group-item tube-item' do %>
   <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg colour-<%= tube.pool_index %>">
     <%= inline_svg 'tube.svg' %>
   </div>

@@ -6,13 +6,13 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'Page'
-  }
+export default {
+  name: 'Page'
+}
 </script>

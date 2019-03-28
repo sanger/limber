@@ -52,7 +52,7 @@ RSpec.describe LabwareCreators::FinalTube do
       describe '#save' do
         it 'should be vaild' do
           expect(subject.save).to be true
-          expect(subject.child).to eq(controller: :tubes, action: :show, id: 'multiplexed-library-tube--uuid')
+          expect(subject.redirection_target.to_param).to eq('multiplexed-library-tube--uuid')
           expect(transfer_request).to have_been_made.once
         end
       end

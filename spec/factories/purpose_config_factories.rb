@@ -2,7 +2,11 @@
 
 FactoryBot.define do
   factory :purpose_config, class: Hash do
-    to_create { |instance, evaluator| Settings.purposes[evaluator.uuid] = instance }
+    to_create do |instance, evaluator|
+      Settings.purpose_uuids[evaluator.name] = evaluator.uuid
+      Settings.purposes[evaluator.uuid] = instance
+    end
+
     initialize_with { attributes }
 
     transient do

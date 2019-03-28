@@ -47,7 +47,11 @@ RSpec.feature 'Creating a plate with bait', js: true do
     # end of stubs for plate_creation baiting page
 
     # These stubs are required to create a new plate with baits
-    stub_api_post('plate_creations', body: json(:plate_creation), payload: { plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid } })
+    stub_api_post('plate_creations',
+                  body: json(:plate_creation),
+                  payload: {
+                    plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid }
+                  })
     stub_api_post('transfer_request_collections',
                   payload: { transfer_request_collection: {
                     user: user_uuid,

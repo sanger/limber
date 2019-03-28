@@ -5,6 +5,8 @@ module LabwareCreators
   # THe user may create an arbitrary number of tubes, with a
   # 1 or more wells in each. An individual well may contribute
   # to more than one tube.
+  # Layout is specified by uploading the same CSV which will be used to
+  # drive the robot.
   class CustomPooledTubes < PooledTubesBase
     include LabwareCreators::CustomPage
     include SupportParent::PlateReadyForCustomPoolingOnly

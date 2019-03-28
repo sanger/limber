@@ -26,7 +26,7 @@ module LabwareCreators
 
     # We pretend that we've added a new blank tube when we're actually
     # transfering to the tube on the original LibraryRequest
-    def child
+    def redirection_target
       @child_tube
     end
   end

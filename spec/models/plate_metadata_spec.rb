@@ -45,7 +45,7 @@ RSpec.describe PlateMetadata do
       plate_metadata = PlateMetadata.new(api: api, plate: 123, user: user_uuid, created_with_robot: 'robot_barcode')
       stub = stub_api_post('custom_metadatum_collections',
                            payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
-                           body: json(:custom_metadatum_collection))
+                           body: json(:v1_custom_metadatum_collection))
       plate_metadata.update
       expect(stub).to have_been_requested
     end
@@ -53,15 +53,15 @@ RSpec.describe PlateMetadata do
     it 'updates metadata' do
       stub_asset_search(123, plate_with_metadata)
 
-      metadata = ActiveSupport::JSON.decode(json(:custom_metadatum_collection))['custom_metadatum_collection']['metadata'].merge(created_with_robot: 'robot_barcode')
+      metadata = attributes_for(:v1_custom_metadatum_collection).fetch(:metadata,{}).merge(created_with_robot: 'robot_barcode')
 
       plate_metadata = PlateMetadata.new(api: api, plate: 123, user: user_uuid, created_with_robot: 'robot_barcode')
-      stub_api_get('custom_metadatum_collection-uuid', body: json(:custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid'))
+      stub_api_get('custom_metadatum_collection-uuid', body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid'))
       stub_api_get('user-uuid', body: user)
       stub_api_get('asset-uuid', body: plate_with_metadata)
       stub = stub_api_put('custom_metadatum_collection-uuid',
                           payload: { custom_metadatum_collection: { metadata: metadata } },
-                          body: json(:custom_metadatum_collection))
+                          body: json(:v1_custom_metadatum_collection))
       plate_metadata.update
       expect(stub).to have_been_requested
     end

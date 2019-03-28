@@ -1,0 +1,48 @@
+---
+LBB Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LBB Ligation:
+  :asset_type: plate
+  :parents:
+  - LBB Cherrypick
+  :expected_request_types:
+  - limber_pcr_bespoke
+LBB Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :parents:
+  - LBB Ligation
+LBB Lib PCR-XP:
+  :asset_type: plate
+  :parents:
+  - LBB Lib PCR
+LBB Ligation Tagged:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :parents:
+  - LBB Cherrypick
+  :expected_request_types:
+  - limber_pcr_free_bespoke
+  - limber_chromium_bespoke
+LBB Lib-XP:
+  :asset_type: plate
+  :parents:
+  - LBB Ligation Tagged
+LBB Lib Pool Stock:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - LBB Lib-XP
+  - LBB Lib PCR-XP
