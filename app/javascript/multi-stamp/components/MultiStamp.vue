@@ -18,8 +18,8 @@
         />
         <lb-plate
           caption="New Plate"
-          :rows="targetRows"
-          :columns="targetColumns"
+          :rows="targetRowsNumber"
+          :columns="targetColumnsNumber"
           :wells="targetWells"
         />
       </b-card>
@@ -89,12 +89,13 @@ export default {
     transfersLayout: { type: String, required: true },
     targetRows: { type: String, required: true },
     targetColumns: { type: String, required: true },
-    numberOfPlates: { type: String, required: true },
+    sourcePlates: { type: String, required: true },
     locationObj: { default: () => { return location }, type: [Object, Location] }
   },
   data () {
     return {
-      plates: builPlateObjs(this.sourcePlateNumber),
+      // Cannot use computed functions as data is invoked before
+      plates: builPlateObjs(Number.parseInt(this.sourcePlates)),
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
       requestsWithPlatesFiltered: [],
       loading: false,
@@ -103,7 +104,13 @@ export default {
   },
   computed: {
     sourcePlateNumber() {
-      return Number.parseInt(this.numberOfPlates)
+      return Number.parseInt(this.sourcePlates)
+    },
+    targetRowsNumber() {
+      return Number.parseInt(this.targetRows)
+    },
+    targetColumnsNumber() {
+      return Number.parseInt(this.targetColumns)
     },
     valid() {
       return this.unsuitablePlates.length === 0 && // None of the plates are invalid

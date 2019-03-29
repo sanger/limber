@@ -8,11 +8,11 @@ const quadrantOffsets = {
 }
 
 const quadrantTransfers = function(requestsWithPlates) {
-  let transfers = []
+  const transfers = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
-    let { request, well, plateObj } = requestsWithPlates[i]
+    const { request, well, plateObj } = requestsWithPlates[i]
     if (request === undefined) { continue }
-    let targetWell = quadrantTargetFor(
+    const targetWell = quadrantTargetFor(
       plateObj.index,
       well.position.name,
       quadrantOffsets.rowOffset,
@@ -30,9 +30,9 @@ const quadrantTransfers = function(requestsWithPlates) {
 }
 
 const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPlate) {
-  let platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
+  const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
   for (let i = 0; i < requestsWithPlates.length; i++) {
-    let { request, well, plateObj } = requestsWithPlates[i]
+    const { request, well, plateObj } = requestsWithPlates[i]
     if (request === undefined) { continue }
     platesMatrix[plateObj.index][nameToIndex(well.position.name, 8)] = requestsWithPlates[i]
   }
@@ -41,9 +41,9 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 
 const sequentialTransfers = function(requestsWithPlates) {
   const transferRequests = buildPlatesMatrix(requestsWithPlates, 10, 96).flat()
-  let transfers = new Array(transferRequests.length)
+  const transfers = new Array(transferRequests.length)
   for (let i = 0; i < transfers.length; i++) {
-    let requestWithPlate = transferRequests[i]
+    const requestWithPlate = transferRequests[i]
     transfers[i] = {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
@@ -65,9 +65,9 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
     throw `Invalid transfers layout name: ${transfersLayout}`
   }
   const transfers = transferFunction(requestsWithPlates)
-  let transfersArray = new Array(transfers.length)
+  const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfersArray.length; i++) {
-    let transfer = transfers[i]
+    const transfer = transfers[i]
     transfersArray[i] = {
       source_plate: transfer.plateObj.plate.uuid,
       pool_index: transfer.plateObj.index + 1,

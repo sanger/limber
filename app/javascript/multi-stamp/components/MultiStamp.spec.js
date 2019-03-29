@@ -15,13 +15,14 @@ describe('MultiStamp', () => {
     // triggering change events on unmounted components
     return shallowMount(MultiStamp, {
       propsData: {
-        targetRows: 16,
-        targetColumns: 24,
-        sourcePlateNumber: 4,
+        targetRows: '16',
+        targetColumns: '24',
+        sourcePlates: '4',
         purposeUuid: 'test',
+        requestFilter: 'null',
         targetUrl: 'example/example',
         locationObj: mockLocation,
-        requestFilter: 'null'
+        transfersLayout: 'quadrant'
       },
       localVue
     })
