@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
     create :purpose_config, name: child_purpose_name
     stub_v2_plate(parent, stub_search: false)
     stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells')
+    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do

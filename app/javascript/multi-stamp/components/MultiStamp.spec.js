@@ -36,8 +36,8 @@ describe('MultiStamp', () => {
 
   it('enables creation when there are all valid plates', () => {
     const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
-    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid-1', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid-2', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(2, plate2)
 
@@ -56,8 +56,8 @@ describe('MultiStamp', () => {
 
   it('disables creation when there are some invalid plates', () => {
     const wrapper = wrapperFactory()
-    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
-    const plate2 = { state: 'invalid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 4 }) }
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid-1', _filledWells: 4 }) }
+    const plate2 = { state: 'invalid', plate: plateFactory({ uuid: 'plate-uuid-2', _filledWells: 4 }) }
     wrapper.vm.updatePlate(1, plate1)
     wrapper.vm.updatePlate(2, plate2)
 
