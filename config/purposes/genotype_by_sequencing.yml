@@ -19,7 +19,7 @@ GBS PCR1:
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
-  :creator_class: LabwareCreators::QuadrantStamp
+  :creator_class: LabwareCreators::QuadrantStampPrimerPanel
   :size: 384
   :pcr_stage: 'pcr 1'
   :parents:

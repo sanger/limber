@@ -27,7 +27,7 @@ class RobotsController < ApplicationController
       @robot.beds.each_value do |bed|
         next unless bed.transitions? && bed.plate
 
-        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate, created_with_robot: params[:robot_barcode]).update
+        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate.barcode.machine, created_with_robot: params[:robot_barcode]).update
       end
     end
     respond_to do |format|
@@ -36,7 +36,7 @@ class RobotsController < ApplicationController
                     notice: "Robot #{@robot.name} has been started."
       end
     end
-  rescue Robots::Robot::Bed::BedError => exception
+  rescue Robots::Bed::BedError => exception
     # Our beds complained, nothing has happened.
     respond_to do |format|
       format.html { redirect_to robot_path(id: @robot.id), notice: "#{exception.message} No plates have been started." }
@@ -44,10 +44,14 @@ class RobotsController < ApplicationController
   end
 
   def verify
-    render(json: @robot.verify(stripped_beds, params[:robot_barcode]))
+    render(json: @robot.verify(robot_params))
   end
 
   private
+
+  def robot_params
+    params.permit(:robot_barcode, bed_plates: {})
+  end
 
   def find_robot
     @robot = Robots.find(
@@ -59,7 +63,7 @@ class RobotsController < ApplicationController
 
   def stripped_beds
     {}.tap do |stripped|
-      (params[:beds] || params[:bed] || {}).each do |k, v|
+      (params[:bed_plates] || {}).each do |k, v|
         stripped[k.strip] = stripped_plates(v)
       end
     end
@@ -73,9 +77,9 @@ class RobotsController < ApplicationController
   end
 
   def validate_beds
-    return true if params['bed'].present?
+    return true if params['bed_plates'].present?
 
-    redirect_to robot_path(id: robot.id), notice: "We didn't receive any bed information"
+    redirect_to robot_path(id: @robot.id), notice: "We didn't receive any bed information"
     false
   end
 end

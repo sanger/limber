@@ -49,7 +49,7 @@ module Deployed
     end
 
     def version_label
-      if major == 0 && minor == 0 && extra == 0
+      if major.zero? && minor.zero? && extra.zero?
         'WIP'
       else
         "#{major}.#{minor}.#{extra}"
@@ -113,7 +113,7 @@ module Deployed
 
   require 'ostruct'
   DETAILS = OpenStruct.new(
-    name: APP_NAME,
+    name: nil,
     version: VERSION_ID,
     environment: ENVIRONMENT
   )

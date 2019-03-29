@@ -19,7 +19,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
-  let(:barcode_string) { 'DN1 <em>1220000001831</em>' }
+  let(:barcode_string) { 'DN1S <em>1220000001831</em>' }
   let(:summary_tab) do
     [
       ['Barcode', barcode_string],

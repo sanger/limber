@@ -1,9 +1,10 @@
 const requestFactory = function(options = {}) {
   const requestDefaults = {
     uuid: 'request-uuid',
-    primerPanel: { name: 'Test panel' }
+    primer_panel: { name: 'Test panel' },
+    state: 'started'
   }
-  return { ... requestDefaults, ...options }
+  return { ...requestDefaults, ...options }
 }
 
 export default requestFactory

@@ -2,6 +2,8 @@ Limber Pipeline Application
 =============================
 
 [![Build Status](https://travis-ci.org/sanger/limber.svg?branch=next_release)](https://travis-ci.org/sanger/limber)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/sanger/limber)
+
 
 Description
 -----------
@@ -11,6 +13,20 @@ A flexible front end to plate bases pipelines in Sequencescape
 
 Running Specs
 -------------
+
+#### RSpec
+Ruby unit and feature tests:
+
+```
+    bundle exec rspec
+```
+
+#### Karma
+JavaScript unit tests:
+
+```
+    yarn karma start --single-run
+```
 
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:
 

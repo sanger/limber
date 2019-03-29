@@ -5,8 +5,9 @@
 module Sequencescape::Api::V2
   PLATE_PRESENTER_INCLUDES = [
     :purpose,
+    { child_plates: :purpose },
     { wells: [
-      :downstream_assets,
+      :downstream_tubes,
       {
         requests_as_source: %w[request_type primer_panel pre_capture_pool],
         aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
