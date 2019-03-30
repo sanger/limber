@@ -1,5 +1,8 @@
 <template>
-  <table :class="['plate-view', sizeClass, 'pool-colours']">
+  <table
+    id="plate"
+    :class="['plate-view', sizeClass, 'pool-colours']"
+  >
     <caption>{{ caption }}</caption>
     <thead>
       <tr>

@@ -1,12 +1,16 @@
 <template>
-  <div :class="['well', position]">
+  <div
+    :class="['well', position]"
+    :id="'well_' + position"
+  >
     <div
       v-if="pool_index"
+      :id="'aliquot_' + position"
       :class="['aliquot', colourClass ]"
     >
       <span
         v-for="(tagMapId, index) in tagMapIds"
-        :key="index"
+        :key="'tag_' + index"
         :class="[linethroughClass, 'tag']"
         @click="onWellClicked"
       >{{ tagMapIdDisplay(tagMapId) }}</span>
