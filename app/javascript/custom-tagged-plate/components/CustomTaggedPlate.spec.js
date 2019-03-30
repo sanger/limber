@@ -14,8 +14,8 @@ import {
   exampleTag1Group,
   exampleTag2Group,
   exampleTag2GroupLonger,
-  exampleChildWells,
-  exampleQcableData
+  exampleQcableData,
+  exampleTag1GroupChromium
 } from '../testData/tagClashFunctionsTestData.js'
 
 describe('CustomTaggedPlate', () => {
@@ -265,7 +265,94 @@ describe('CustomTaggedPlate', () => {
           direction: 'column'
         })
 
-        expect(wrapper.vm.childWells).toEqual(exampleChildWells)
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 11 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ 12 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ 13 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ 14 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns valid wells object for a chromium plate', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          tagsPerWell: 4
+        })
+
+        wrapper.setData({
+          parentPlate: exampleParent,
+          tag1Group: exampleTag1GroupChromium,
+          walkingBy: 'manual by plate',
+          direction: 'column'
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 1,2,3,4 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ 5,6,7,8 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ 9,10,11,12 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ 13,14,15,16 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
       })
     })
 

@@ -286,7 +286,8 @@ export default {
         tagMapIds: this.useableTagMapIds,
         walkingBy: this.walkingBy,
         direction: this.direction,
-        offsetTagsBy: this.offsetTagsBy
+        offsetTagsBy: this.offsetTagsBy,
+        tagsPerWell: this.tagsPerWell
       }
 
       return calculateTagLayout(inputData)
@@ -316,18 +317,27 @@ export default {
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
 
-        let tagMapId
-        if(this.tagLayout[position] > 0) {
-          const origTagId = this.tagLayout[position]
-          tagMapId = origTagId
-          // check for tag substitution
-          if(this.tagSubstitutions.hasOwnProperty(origTagId)) {
-            tagMapId = this.tagSubstitutions[origTagId]
+        let tagMapIds = []
+        if(this.tagLayout[position].length > 0) {
+          const submId = this.parentWellSubmissionDetails[position]['subm_id']
+
+          tagMapIds = this.tagLayout[position].slice(0)
+          let oligos = []
+
+          for (var i = 0; i < tagMapIds.length; i++) {
+            let tagMapId = tagMapIds[i]
+
+            // check for tag substitution
+            if(this.tagSubstitutions.hasOwnProperty(tagMapId)) {
+              tagMapId = this.tagSubstitutions[tagMapId]
+              tagMapIds[i] = tagMapId
+            }
+
+            oligos.push(this.tagGroupOligoStrings[tagMapId])
           }
 
-          const submId = this.parentWellSubmissionDetails[position]['subm_id']
-          const oligoStr = this.tagGroupOligoStrings[tagMapId]
-          const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
+          const oligosStr = oligos.join(':')
+          const arrayOligoLocns = this.childUsedOligos[submId][oligosStr]
           const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
 
           if(filteredArrayOligoLocns.length > 0) {
@@ -336,7 +346,7 @@ export default {
             cw[position]['validity'] = { valid: true, message: '' }
           }
         }
-        cw[position]['tagIndex'] = tagMapId
+        cw[position]['tagMapIds'] = tagMapIds
       })
 
       return cw
@@ -551,10 +561,10 @@ export default {
       }
     },
     isWellValidForShowingModal(position) {
-      return (this.childWells[position].aliquotCount === 0) ? false : true
+      return (this.isChromiumPlate || this.childWells[position].aliquotCount === 0) ? false : true
     },
     setUpWellModalDetails(position) {
-      const originalTagMapId = this.tagLayout[position]
+      const originalTagMapId = this.tagLayout[position][0]
 
       this.wellModalDetails = {
         position: position,
@@ -579,7 +589,8 @@ export default {
       const originalTagMapId = this.wellModalDetails.originalTag
 
       if((originalTagMapId in this.tagSubstitutions) && (originalTagMapId === substituteTagId)) {
-        // because we have changed the tag id back to what it was originally, delete the substitution from the list
+        // because we have changed the tag id back to what it was originally,
+        // delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
         this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)

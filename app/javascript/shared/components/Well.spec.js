@@ -4,35 +4,31 @@ import { shallowMount } from '@vue/test-utils'
 import Well from 'shared/components/Well.vue'
 
 describe('Well', () => {
-  const wrapper = shallowMount(Well, { propsData: { pool_index: null } })
+  const wrapperWithoutAliquot = shallowMount(Well, { propsData: { pool_index: null } })
 
   it('renders a well', () => {
-    expect(wrapper.find('div.well').exists()).toBe(true)
+    expect(wrapperWithoutAliquot.find('div.well').exists()).toBe(true)
   })
 
   it('does not render an aliquot', () => {
-    expect(wrapper.find('span.aliquot').exists()).toBe(false)
+    expect(wrapperWithoutAliquot.find('span.aliquot').exists()).toBe(false)
   })
 
   const wrapperWithAliquot = shallowMount(Well, {
     propsData: {
       position: 'A1',
       pool_index: 2,
-      tagIndex: 10,
+      tagMapIds: [ 10 ],
       validity: { valid: true, message: '' }
     }
   })
 
-  it('renders a well with aliquot', () => {
-    expect(wrapperWithAliquot.find('div.well').exists()).toBe(true)
-  })
-
-  it('renders an aliquot', () => {
-    expect(wrapperWithAliquot.find('span.aliquot').exists()).toBe(true)
+  it('renders a well with an aliquot', () => {
+    expect(wrapperWithAliquot.find('div.aliquot').exists()).toBe(true)
   })
 
   it('colours the aliquot', () => {
-    expect(wrapperWithAliquot.find('span.aliquot.colour-2').exists()).toBe(true)
+    expect(wrapperWithAliquot.find('div.aliquot.colour-2').exists()).toBe(true)
   })
 
   it('emits a well clicked event', () => {
@@ -49,10 +45,10 @@ describe('Well', () => {
     )
   })
 
-  const wrapperWithTagIndex =  shallowMount(Well, { propsData: { pool_index: 1, tagIndex: 5 } })
+  const wrapperWithTagMapIds =  shallowMount(Well, { propsData: { pool_index: 1, tagMapIds: [ 5 ] } })
 
-  it('renders a well with tag index displayed', () => {
-    expect(wrapperWithTagIndex.find('span.aliquot').text()).toBe('5')
+  it('renders a well with Tag Map Id displayed', () => {
+    expect(wrapperWithTagMapIds.find('span.tag').text()).toBe('5')
   })
 
   const wrapperWithPosition =  shallowMount(Well, { propsData: { position: 'B3'} })
@@ -61,13 +57,25 @@ describe('Well', () => {
     expect(wrapperWithPosition.find('div.well.B3').exists()).toBe(true)
   })
 
-  const wrapperWithFailure = shallowMount(Well, { propsData: { pool_index: 1, validity: { valid: false, message: 'Tag clash detected' } } })
+  const wrapperWithTagClash = shallowMount(Well, { propsData: { pool_index: 1, tagMapIds: [ 5 ], validity: { valid: false, message: 'Tag clash detected' } } })
 
   it('colours the aliquot when invalid', () => {
-    expect(wrapperWithFailure.find('span.aliquot.failed').exists()).toBe(true)
+    expect(wrapperWithTagClash.find('div.aliquot.failed').exists()).toBe(true)
   })
 
-  it('puts a line thtough the aliquot tag index when invalid', () => {
-    expect(wrapperWithFailure.find('span.aliquot.line-through').exists()).toBe(true)
+  it('puts a line through the aliquot Tag Map Id when invalid', () => {
+    expect(wrapperWithTagClash.find('span.tag.line-through').exists()).toBe(true)
+  })
+
+  const wrapperWithInvalidTag = shallowMount(Well, { propsData: { pool_index: 1, tagMapIds: [ -1 ], validity: { valid: false, message: 'No tag in this well' } } })
+
+  it('displays an x if the Tag Map Id is -1', () => {
+    expect(wrapperWithInvalidTag.find('span.tag').text()).toBe('x')
+  })
+
+  const wrapperWithMultipleAliquots = shallowMount(Well, { propsData: { pool_index: 1, tagMapIds: [ 1,2,3,4 ], validity: { valid: true, message: '' } } })
+
+  it('renders a well with multiple spans each with a Tag Map Id displayed', () => {
+    expect(wrapperWithMultipleAliquots.findAll('span.tag').length).toBe(4)
   })
 })

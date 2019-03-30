@@ -5,6 +5,8 @@ import {
   exampleTag1Oligos,
   exampleTag1and2Oligos,
   exampleParentUsedOligos,
+  exampleChromiumTag1Oligos,
+  exampleChromiumParentUsedOligos,
   exampleParentWellSubmissionDetails,
   exampleParentUsedOligosForPools,
   exampleParentWellSubmissionDetailsForPools
@@ -107,7 +109,7 @@ describe('extractChildUsedOligos', () => {
     it('returns empty object if there is no parentUsedOligos', () => {
       const parentUsedOligos = null
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -119,7 +121,7 @@ describe('extractChildUsedOligos', () => {
     it('returns empty object if there is no parentWellSubmissionDetails', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = null
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -143,7 +145,7 @@ describe('extractChildUsedOligos', () => {
     it('returns empty object if there are no tagSubstitutions', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = null
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -155,7 +157,7 @@ describe('extractChildUsedOligos', () => {
     it('returns empty object if there are no tagGroupOligoStrings', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = null
 
@@ -167,7 +169,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when there are no tag clashes', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -190,10 +192,41 @@ describe('extractChildUsedOligos', () => {
       expect(response).toEqual(exptSubmUsedTags)
     })
 
+    it('returns expected values for a chromium plate when there are no tag clashes', () => {
+      const parentUsedOligos = exampleChromiumParentUsedOligos
+      const parentWellSubmDets = exampleParentWellSubmissionDetails
+      const tagLayout = {
+        'A1': [ 1,2,3,4 ],
+        'A2': [ 5,6,7,8 ],
+        'A3': [ 9,10,11,12 ],
+        'A4': [ 13,14,15,16 ]
+      }
+      const tagSubs = {}
+      const tagGroupOligos = exampleChromiumTag1Oligos
+
+      const exptSubmUsedTags = {
+        '1': {
+          'AAAAAAAT:GGGGGGGT:TTTTTTTA:CCCCCCCA': [ 'submission' ],
+          'TTTTTTTA:CCCCCCCA:AAAAAAAT:GGGGGGGT': [ 'submission' ],
+          'AAAAAAAC:GGGGGGGC:TTTTTTTG:CCCCCCCG': [ 'submission' ],
+          'TTTTTTTG:CCCCCCCG:AAAAAAAC:GGGGGGGC': [ 'submission' ],
+          'AAAAAAAA:GGGGGGGA:TTTTTTAA:CCCCCCAA': [ 'submission' ],
+          'CCCCAAAA:CCCCTTTT:CCCCGGGG:CCCCAATT': [ 'A1' ],
+          'AAAAAAAA:AAAATTTT:AAAAGGGG:AAAACCCC': [ 'A2' ],
+          'GGGGAAAA:GGGGTTTT:GGGGGGGG:GGGGCCCC': [ 'A3' ],
+          'TTTTAAAA:TTTTTTTT:TTTTGGGG:TTTTCCCC': [ 'A4' ]
+        }
+      }
+
+      const response = extractChildUsedOligos(parentUsedOligos, parentWellSubmDets, tagLayout, tagSubs, tagGroupOligos)
+
+      expect(response).toEqual(exptSubmUsedTags)
+    })
+
     it('returns expected values when there are no tag clashes and only using tag group 1', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1Oligos
 
@@ -219,7 +252,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when there is a tag clash with the submission', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 15 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 15 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -244,7 +277,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when there are valid substitutions', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = { 12: 13, 13: 12 }
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -270,7 +303,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when clashes are caused by substitutions', () => {
       const parentUsedOligos = exampleParentUsedOligos
       const parentWellSubmDets = exampleParentWellSubmissionDetails
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = { 12: 15, 14: 11 }
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -296,7 +329,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values by submission id when there are no tag clashes', () => {
       const parentUsedOligosForPools = exampleParentUsedOligosForPools
       const parentWellSubmDetsForPools = exampleParentWellSubmissionDetailsForPools
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -329,7 +362,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when there is a tag clash with one submission', () => {
       const parentUsedOligosForPools = exampleParentUsedOligosForPools
       const parentWellSubmDetsForPools = exampleParentWellSubmissionDetailsForPools
-      const tagLayout = { 'A1': 15, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 15 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -361,7 +394,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values with tag clashes in multiple submissions', () => {
       const parentUsedOligosForPools = exampleParentUsedOligosForPools
       const parentWellSubmDetsForPools = exampleParentWellSubmissionDetailsForPools
-      const tagLayout = { 'A1': 15, 'A2': 12, 'A3': 16, 'A4': 14 }
+      const tagLayout = { 'A1': [ 15 ], 'A2': [ 12 ], 'A3': [ 16 ], 'A4': [ 14 ] }
       const tagSubs = {}
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -392,7 +425,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values by submission id when there are valid substitutions', () => {
       const parentUsedOligosForPools = exampleParentUsedOligosForPools
       const parentWellSubmDetsForPools = exampleParentWellSubmissionDetailsForPools
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = { 11: 14, 14: 11 }
       const tagGroupOligos = exampleTag1and2Oligos
 
@@ -425,7 +458,7 @@ describe('extractChildUsedOligos', () => {
     it('returns expected values when a substitution causes a clash', () => {
       const parentUsedOligosForPools = exampleParentUsedOligosForPools
       const parentWellSubmDetsForPools = exampleParentWellSubmissionDetailsForPools
-      const tagLayout = { 'A1': 11, 'A2': 12, 'A3': 13, 'A4': 14 }
+      const tagLayout = { 'A1': [ 11 ], 'A2': [ 12 ], 'A3': [ 13 ], 'A4': [ 14 ] }
       const tagSubs = { 11: 15, 13: 16 }
       const tagGroupOligos = exampleTag1and2Oligos
 

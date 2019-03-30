@@ -86,20 +86,27 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
   let childUsedOligos = JSON.parse(JSON.stringify(parentUsedOligos))
 
   Object.keys(tagLayout).forEach((position) => {
-    let tagMapId = tagLayout[position]
+    const submId = parentWellSubmDetails[position]['subm_id']
+    const tagMapIds = tagLayout[position]
+    let oligos = []
 
-    // check for tag substitution
-    if(tagSubstitutions.hasOwnProperty(tagMapId)) {
-      tagMapId = tagSubstitutions[tagMapId]
+    for (var i = 0; i < tagMapIds.length; i++) {
+      let tagMapId = tagMapIds[i]
+
+      // check for tag substitution
+      if(tagSubstitutions.hasOwnProperty(tagMapId)) {
+        tagMapId = tagSubstitutions[tagMapId]
+      }
+
+      oligos.push(tagGroupOligos[tagMapId])
     }
 
-    const oligoStr = tagGroupOligos[tagMapId]
-    const submId = parentWellSubmDetails[position]['subm_id']
+    const oligosStr = oligos.join(':')
 
-    if(oligoStr in childUsedOligos[submId]) {
-      childUsedOligos[submId][oligoStr].push(position)
+    if(oligosStr in childUsedOligos[submId]) {
+      childUsedOligos[submId][oligosStr].push(position)
     } else {
-      childUsedOligos[submId][oligoStr] = [ position ]
+      childUsedOligos[submId][oligosStr] = [ position ]
     }
   })
 
