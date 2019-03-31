@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="['well', position]"
     :id="'well_' + position"
+    :class="['well', position]"
   >
     <div
       v-if="pool_index"

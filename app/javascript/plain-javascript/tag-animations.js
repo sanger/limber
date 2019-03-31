@@ -21,5 +21,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
     animateTags(aliquots[aliquotIndex])
   }
 
-}, false);
+}, false)
 
