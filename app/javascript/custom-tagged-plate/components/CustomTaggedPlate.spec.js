@@ -35,14 +35,14 @@ describe('CustomTaggedPlate', () => {
   }
 
   describe('#computed:', () => {
-    describe('tagsValid:', () => {
-      it('returns false if no childWells', () => {
+    describe('isChildWellsValid:', () => {
+      it('returns false if there are no childWells', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.tagsValid).toEqual(false)
+        expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
-      it('returns false if any wells with aliquots do not contain a tag', () => {
+      it('returns false if any wells with aliquots are invalid', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
@@ -53,7 +53,7 @@ describe('CustomTaggedPlate', () => {
           offsetTagsBy: 4
         })
 
-        expect(wrapper.vm.tagsValid).toEqual(false)
+        expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
       it('returns true if all aliquots contain valid tag indexes', () => {
@@ -66,7 +66,7 @@ describe('CustomTaggedPlate', () => {
           direction: 'column'
         })
 
-        expect(wrapper.vm.tagsValid).toEqual(true)
+        expect(wrapper.vm.isChildWellsValid).toEqual(true)
       })
     })
 
@@ -303,6 +303,55 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.childWells).toEqual(expectedChildWells)
       })
 
+      it('returns invalid wells if not enough tags', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 6
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 17 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
       it('returns valid wells object for a chromium plate', () => {
         const wrapper = wrapperFactory()
 
@@ -349,6 +398,59 @@ describe('CustomTaggedPlate', () => {
             submId: '1',
             pool_index: 1,
             validity: { valid: true, message: '' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns invalid wells where multiple tags and not enough tags', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          tagsPerWell: 4
+        })
+
+        wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 1
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 15,16,17,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
           }
         }
 

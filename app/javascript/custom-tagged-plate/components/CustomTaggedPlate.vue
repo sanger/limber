@@ -166,7 +166,7 @@ export default {
       this.creationRequestInProgress
       this.creationRequestSuccessful
 
-      if(!this.tagsValid) {
+      if(!this.isChildWellsValid) {
         return 'setup'
       } else if(this.creationRequestInProgress === null) {
         return 'pending'
@@ -205,7 +205,7 @@ export default {
           wells[position]['aliquotCount'] = well.aliquots.length
           wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
           wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
-          wells[position]['validity'] = { valid: false, message: 'No tag id in this well' }
+          wells[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
         }
       })
 
@@ -303,47 +303,34 @@ export default {
     },
     childWells() {
       this.tagLayout
-      this.tagSubstitutions
-      this.parentWellSubmissionDetails
-      this.parentUsedOligos
-      this.childUsedOligos
+      this.tagSubstitutions // used for tag substitution check
+      this.childUsedOligos // used for tag clash check
 
       if(this.parentWells === {} ) { return {} }
-
       if(Object.keys(this.tagLayout).length === 0) { return { ...this.parentWells } }
 
       let cw = {}
-
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
 
         let tagMapIds = []
         if(this.tagLayout[position].length > 0) {
-          const submId = this.parentWellSubmissionDetails[position]['subm_id']
+          cw[position]['validity'] = { valid: true, message: '' }
+
+          const submId = cw[position]['submId']
 
           tagMapIds = this.tagLayout[position].slice(0)
-          let oligos = []
 
           for (var i = 0; i < tagMapIds.length; i++) {
-            let tagMapId = tagMapIds[i]
-
-            // check for tag substitution
-            if(this.tagSubstitutions.hasOwnProperty(tagMapId)) {
-              tagMapId = this.tagSubstitutions[tagMapId]
-              tagMapIds[i] = tagMapId
+            if(tagMapIds[i] === -1) {
+              cw[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
+            } else {
+              tagMapIds[i] = this.checkTagForSubstitution(tagMapIds[i])
             }
-
-            oligos.push(this.tagGroupOligoStrings[tagMapId])
           }
 
-          const oligosStr = oligos.join(':')
-          const arrayOligoLocns = this.childUsedOligos[submId][oligosStr]
-          const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
-
-          if(filteredArrayOligoLocns.length > 0) {
-            cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
-          } else {
-            cw[position]['validity'] = { valid: true, message: '' }
+          if(cw[position]['validity'].valid === true) {
+            cw[position]['validity'] = this.checkWellForTagClash(tagMapIds, submId, position)
           }
         }
         cw[position]['tagMapIds'] = tagMapIds
@@ -351,10 +338,9 @@ export default {
 
       return cw
     },
-    hasChildWells() {
-      return (Object.keys(this.childWells).length > 0)
-    },
-    childWellsContainsInvalidWells() {
+    isChildWellsValid() {
+      if(Object.keys(this.childWells).length === 0) { return false }
+
       let invalidCount = 0
       Object.keys(this.childWells).forEach((position) => {
         if(this.childWells[position].aliquotCount > 0) {
@@ -364,7 +350,7 @@ export default {
         }
       })
 
-      return ((invalidCount > 0) ? false : true)
+      return ((invalidCount === 0) ? true : false)
     },
     useableTagMapIds() {
       let tags = []
@@ -402,11 +388,6 @@ export default {
         }
       }
       return numTargets
-    },
-    tagsValid() {
-      if(!this.hasChildWells) { return false }
-
-      return this.childWellsContainsInvalidWells
     },
     isChromiumPlate() {
       return (this.tagsPerWellAsNumber > 1) ? true : false
@@ -490,6 +471,30 @@ export default {
     },
     calcNumTagsForGroupByPlate() {
       return this.calcNumTagsForSeqPlate()
+    },
+    checkTagForSubstitution(tagMapId) {
+      if(this.tagSubstitutions.hasOwnProperty(tagMapId)) {
+        tagMapId = this.tagSubstitutions[tagMapId]
+      }
+
+      return tagMapId
+    },
+    checkWellForTagClash(tagMapIds, submId, position) {
+      const str = tagMapIds.map(id => this.tagGroupOligoStrings[id]).join(':')
+      const arrayOligoLocns = this.childUsedOligos[submId][str]
+      const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
+
+      if(filteredArrayOligoLocns.length > 0) {
+        return {
+          valid: false,
+          message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')
+        }
+      }
+
+      return {
+        valid: true,
+        message: ''
+      }
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'
