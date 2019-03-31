@@ -39,7 +39,16 @@
       <b-container fluid>
         <b-row>
           <b-col>
+            <lb-tag-layout-manipulations-multiple
+              v-if="isMultipleTaggedPlate"
+              :api="devourApi"
+              :number-of-tags="numberOfTags"
+              :number-of-target-wells="numberOfTargetWells"
+              :tags-per-well="tagsPerWellAsNumber"
+              @tagparamsupdated="tagParamsUpdated"
+            />
             <lb-tag-layout-manipulations
+              v-else
               :api="devourApi"
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
@@ -73,6 +82,7 @@ import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
 import LoadingModal from 'shared/components/LoadingModal.vue'
 import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
+import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
 import WellModal from './WellModal.vue'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
@@ -98,6 +108,7 @@ export default {
     'lb-parent-plate-view': Plate,
     'lb-tag-substitution-details': TagSubstitutionDetails,
     'lb-tag-layout-manipulations': TagLayoutManipulations,
+    'lb-tag-layout-manipulations-multiple': TagLayoutManipulationsMultiple,
     'lb-well-modal': WellModal
   },
   props: {
@@ -389,11 +400,11 @@ export default {
       }
       return numTargets
     },
-    isChromiumPlate() {
+    isMultipleTaggedPlate() {
       return (this.tagsPerWellAsNumber > 1) ? true : false
     },
     tagSubstitutionsAllowed() {
-      return !this.isChromiumPlate
+      return !this.isMultipleTaggedPlate
     },
     buttonText() {
       return {
@@ -566,7 +577,7 @@ export default {
       }
     },
     isWellValidForShowingModal(position) {
-      return (this.isChromiumPlate || this.childWells[position].aliquotCount === 0) ? false : true
+      return (this.isMultipleTaggedPlate || this.childWells[position].aliquotCount === 0) ? false : true
     },
     setUpWellModalDetails(position) {
       const originalTagMapId = this.tagLayout[position][0]

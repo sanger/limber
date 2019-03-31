@@ -7,28 +7,6 @@
     <b-row class="form-group form-row">
       <b-col>
         <b-form-group
-          id="tag_plate_scan_group"
-          label="Scan in the tag plate you wish to use here..."
-        >
-          <lb-plate-scan
-            id="tag_plate_scan"
-            :api="api"
-            :label="'Tag Plate'"
-            :plate-type="'qcable'"
-            :scan-disabled="tagPlateScanDisabled"
-            includes="asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
-            :fields="{ assets: 'uuid',
-                       lots: 'uuid,tag_layout_template',
-                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-                       tag_groups: 'uuid,name,tags' }"
-            @change="tagPlateScanned($event)"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group
           id="tag1_group_selection_group"
           horizontal
           label="i7 Tag 1 Group:"
@@ -38,44 +16,25 @@
             id="tag1_group_selection"
             v-model="tag1GroupId"
             :options="tag1GroupOptions"
-            :disabled="tagGroupsDisabled"
-            @input="tagGroupInput"
             @change="tagGroupChanged"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group
-          id="tag2_group_selection_group"
-          horizontal
-          label="i5 Tag 2 Group:"
-          label-for="tag2_group_selection"
-        >
-          <b-form-select
-            id="tag2_group_selection"
-            v-model="tag2GroupId"
-            :options="tag2GroupOptions"
-            :disabled="tagGroupsDisabled"
-            @input="tagGroupInput"
-            @change="tagGroupChanged"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group
-          id="walking_by_options_group"
-          label="Walking By Options:"
-          label-for="walking_by_options"
-        >
-          <b-form-select
-            id="walking_by_options"
-            v-model="walkingBy"
-            :options="walkingByOptions"
             @input="updateTagParams"
+          />
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-row class="form-group form-row">
+      <b-col>
+        <!-- TODO label with one option -->
+        <b-form-group
+          id="walking_by_label_group"
+          label="Walking By Option:"
+          label-for="walking_by_label"
+        >
+          <b-form-input
+            id="walking_by_label"
+            type="text"
+            :value="walkingBy"
+            :disabled="true"
           />
         </b-form-group>
       </b-col>
@@ -137,27 +96,25 @@
 </template>
 
 <script>
-import PlateScan from 'shared/components/PlateScan'
 import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
- * They can either scan a tag plate or manually select one or two (if dual
- * indexed) tag groups, then select various options to change how the tags
- * are laid out on the plate.
+ * This version is for plates that contain multiple tags per well e.g. for
+ * Chromium plates.
+ * They manually select a tag group, then select various options to change
+ * how the tags are laid out on the plate.
  * It provides:
- * - A tag plate scan input field
- * - Select dropdowns for manual selection of tag groups 1 and 2
- * - Select dropdowns for walking by and direction choices for how the tags on
- * the plate are laid out
+ * - Select dropdown for manual selection of tag groups 1
+ * - Select dropdown for direction choices for how the tags on the plate are
+ * laid out
  * - An offset tags by input field for offsetting the layout by a number
  * - Any change emits all modifiable elements to the parent for recalculation
  * of the tag layout.
  */
 export default {
-  name: 'TagLayoutManipulations',
+  name: 'TagLayoutManipulationsMultiple',
   components: {
-    'lb-plate-scan': PlateScan,
     'lb-tag-groups-lookup': TagGroupsLookup
   },
   props: {
@@ -190,12 +147,8 @@ export default {
   data () {
     return {
       tagGroupsList: {}, // holds the list of tag groups once retrieved
-      tagPlate: null, // holds the tag plate once scanned
-      tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
-      tagPlateScanDisabled: false, // flag to indicate the plate scan was disabled
       tag1GroupId: null, // holds the id of tag group 1 once selected
-      tag2GroupId: null, // holds the id of tag group 2 once selected
-      walkingBy: 'manual by plate', // holds the chosen tag layout walking by option
+      walkingBy: 'as group by plate', // holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
       offsetTagsByMin: 0, // holds the tag offset minimum value
       offsetTagsBy: 0, // holds the entered tag offset number
@@ -207,14 +160,6 @@ export default {
     }
   },
   computed: {
-    walkingByOptions() {
-      return [
-        { value: null, text: 'Please select a by Walking By Option...' },
-        { value: 'manual by pool', text: 'By Pool' },
-        { value: 'manual by plate', text: 'By Plate (Sequential)' },
-        { value: 'wells of plate', text: 'By Plate (Fixed)' }
-      ]
-    },
     directionOptions() {
       return [
         { value: null, text: 'Please select a Direction Option...' },
@@ -223,9 +168,6 @@ export default {
         { value: 'inverse row', text: 'By Inverse Rows' },
         { value: 'inverse column', text: 'By Inverse Columns' }
       ]
-    },
-    tagGroupsDisabled() {
-      return (typeof this.tagPlate != 'undefined' && this.tagPlate !== null)
     },
     offsetTagsByMax() {
       if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
@@ -302,9 +244,6 @@ export default {
     tag1Group() {
       return this.tagGroupsList[this.tag1GroupId] || this.nullTagGroup
     },
-    tag2Group() {
-      return this.tagGroupsList[this.tag2GroupId] || this.nullTagGroup
-    },
     coreTagGroupOptions() {
       return Object.values(this.tagGroupsList).map(tagGroup => {
         return { value: tagGroup.id, text: tagGroup.name }
@@ -312,9 +251,6 @@ export default {
     },
     tag1GroupOptions() {
       return [{ value: null, text: 'Please select an i7 Tag 1 group...' }].concat(this.coreTagGroupOptions.slice())
-    },
-    tag2GroupOptions() {
-      return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     }
   },
   methods: {
@@ -327,28 +263,7 @@ export default {
         console.log('Tag Groups lookup error: ', data['state'])
       }
     },
-    updateTagPlateScanDisabled() {
-      if(this.tagPlateWasScanned) {
-        this.tagPlateScanDisabled = false
-      } else {
-        if(this.tag1GroupId || this.tag2GroupId) {
-          this.tagPlateScanDisabled = true
-        } else {
-          this.tagPlateScanDisabled = false
-        }
-      }
-      this.updateTagParams(null)
-    },
-    tagPlateScanned(data) {
-      if(data && (data.state === 'valid') && data.plate) {
-        this.extractTagGroupIds(data.plate)
-      } else if(data.state === 'empty' && !data.plate) {
-        this.emptyTagPlate()
-      }
-    },
     extractTagGroupIds(plate) {
-      this.tagPlate = { ...plate }
-      this.tagPlateWasScanned = true
       this.offsetTagsBy = 0
 
       if(plate.lot.tag_layout_template.tag_group.id) {
@@ -356,33 +271,15 @@ export default {
       } else {
         this.tag1GroupId = null
       }
-
-      if(plate.lot.tag_layout_template.tag2_group.id) {
-        this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
-      } else {
-        this.tag2GroupId = null
-      }
-
-      this.updateTagPlateScanDisabled()
-    },
-    emptyTagPlate() {
-      this.tagPlate = null
-      this.tag1GroupId = null
-      this.tag2GroupId = null
-      this.updateTagPlateScanDisabled()
     },
     tagGroupChanged() {
-      this.tagPlateWasScanned = false
       this.offsetTagsBy = 0
-    },
-    tagGroupInput() {
-      this.updateTagPlateScanDisabled()
     },
     updateTagParams(_value) {
       const updatedData = {
-        tagPlate: this.tagPlate,
+        tagPlate: null,
         tag1Group: this.tag1Group,
-        tag2Group: this.tag2Group,
+        tag2Group: this.nullTagGroup,
         walkingBy: this.walkingBy,
         direction: this.direction,
         offsetTagsBy: Number.parseInt(this.offsetTagsBy)

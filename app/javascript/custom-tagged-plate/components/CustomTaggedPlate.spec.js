@@ -624,7 +624,7 @@ describe('CustomTaggedPlate', () => {
       expect(wrapper.isVueInstance()).toBe(true)
     })
 
-    it('renders child components', async () => {
+    it('renders child components for single tag per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
@@ -636,8 +636,8 @@ describe('CustomTaggedPlate', () => {
         },
         stubs: {
           'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-tag-substitution-details': '<div class="plate-details"></div>',
-          'lb-tag-layout-manipulations': '<fieldset class="b-form-group"></fieldset>',
+          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
+          'lb-tag-layout-manipulations': '<div class="layout-manipulations"></div>',
           'lb-well-modal': '<div class="well-modal"></div>'
         },
         localVue
@@ -648,8 +648,37 @@ describe('CustomTaggedPlate', () => {
       })
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
-      expect(wrapper.find('fieldset.b-form-group').exists()).toBe(true)
-      expect(wrapper.find('div.plate-details').exists()).toBe(true)
+      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
+      expect(wrapper.find('div.layout-manipulations').exists()).toBe(true)
+      expect(wrapper.find('div.well-modal').exists()).toBe(true)
+    })
+
+    it('renders child components for multiple tags per well', async () => {
+      const wrapper = mount(CustomTaggedPlate, {
+        propsData: {
+          sequencescapeApi: 'http://localhost:3000/api/v2',
+          purposeUuid: '',
+          targetUrl: '',
+          parentUuid: plateUuid,
+          tagsPerWell: '4',
+          locationObj: mockLocation
+        },
+        stubs: {
+          'lb-parent-plate-view': '<table class="plate-view"></table>',
+          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
+          'lb-tag-layout-manipulations-multiple': '<div class="layout-manipulations-multiple"></div>',
+          'lb-well-modal': '<div class="well-modal"></div>'
+        },
+        localVue
+      })
+
+      wrapper.setData({
+        parentPlate: exampleParent
+      })
+
+      expect(wrapper.find('table.plate-view').exists()).toBe(true)
+      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
+      expect(wrapper.find('div.layout-manipulations-multiple').exists()).toBe(true)
       expect(wrapper.find('div.well-modal').exists()).toBe(true)
     })
 
@@ -678,7 +707,7 @@ describe('CustomTaggedPlate', () => {
         walkingBy: 'wells of plate'
       })
 
-      expect(wrapper.vm.isChromiumPlate).toBe(true)
+      expect(wrapper.vm.isMultipleTaggedPlate).toBe(true)
       expect(wrapper.vm.tagSubstitutionsAllowed).toBe(false)
     })
 
