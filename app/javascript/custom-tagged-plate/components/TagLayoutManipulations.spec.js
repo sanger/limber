@@ -1,14 +1,14 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
-import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
+import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
-describe('CustomTaggedPlateManipulation', () => {
+describe('TagLayoutManipulations', () => {
   const wrapperFactory = function(api = mockApi()) {
-    return mount(CustomTaggedPlateManipulation, {
+    return mount(TagLayoutManipulations, {
       propsData: {
         api: api.devour,
         numberOfTags: 10,

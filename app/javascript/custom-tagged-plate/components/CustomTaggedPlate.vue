@@ -17,7 +17,7 @@
         :well-modal-details="wellModalDetails"
         @wellmodalsubtituteselected="wellModalSubtituteSelected"
       />
-      <lb-custom-tagged-plate-details
+      <lb-tag-substitution-details
         :tag-substitutions="tagSubstitutions"
         :tag-substitutions-allowed="tagSubstitutionsAllowed"
         @removetagsubstitution="removeTagSubstitution"
@@ -39,7 +39,7 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation
+            <lb-tag-layout-manipulations
               :api="devourApi"
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
@@ -71,9 +71,9 @@
 import Plate from 'shared/components/Plate.vue'
 import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
 import LoadingModal from 'shared/components/LoadingModal.vue'
-import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
-import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
-import CustomTaggedPlateWellModal from './CustomTaggedPlateWellModal.vue'
+import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
+import TagLayoutManipulations from './TagLayoutManipulations.vue'
+import WellModal from './WellModal.vue'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
@@ -96,9 +96,9 @@ export default {
     'lb-loading-modal': LoadingModal,
     'lb-parent-plate-lookup': AssetLookupByUuid,
     'lb-parent-plate-view': Plate,
-    'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
-    'lb-custom-tagged-plate-manipulation': CustomTaggedPlateManipulation,
-    'lb-well-modal': CustomTaggedPlateWellModal
+    'lb-tag-substitution-details': TagSubstitutionDetails,
+    'lb-tag-layout-manipulations': TagLayoutManipulations,
+    'lb-well-modal': WellModal
   },
   props: {
     sequencescapeApi: {

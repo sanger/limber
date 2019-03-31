@@ -636,8 +636,8 @@ describe('CustomTaggedPlate', () => {
         },
         stubs: {
           'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-custom-tagged-plate-details': '<div class="plate-details"></div>',
-          'lb-custom-tagged-plate-manipulation': '<fieldset class="b-form-group"></fieldset>',
+          'lb-tag-substitution-details': '<div class="plate-details"></div>',
+          'lb-tag-layout-manipulations': '<fieldset class="b-form-group"></fieldset>',
           'lb-well-modal': '<div class="well-modal"></div>'
         },
         localVue

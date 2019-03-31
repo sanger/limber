@@ -1,13 +1,13 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import CustomTaggedPlateWellModal from './CustomTaggedPlateWellModal.vue'
+import WellModal from './WellModal.vue'
 import localVue from 'test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
-describe('CustomTaggedPlateWellModal', () => {
+describe('WellModal', () => {
   const wrapperFactory = function() {
-    return shallowMount(CustomTaggedPlateWellModal, {
+    return shallowMount(WellModal, {
       propsData: {
         wellModalDetails: {
           position: 'A1',

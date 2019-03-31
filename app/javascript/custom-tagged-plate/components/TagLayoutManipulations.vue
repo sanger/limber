@@ -155,7 +155,7 @@ import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
  * of the tag layout.
  */
 export default {
-  name: 'CustomTaggedPlateManipulations',
+  name: 'TagLayoutManipulations',
   components: {
     'lb-plate-scan': PlateScan,
     'lb-tag-groups-lookup': TagGroupsLookup
