@@ -16,7 +16,6 @@
             id="tag1_group_selection"
             v-model="tag1GroupId"
             :options="tag1GroupOptions"
-            @change="tagGroupChanged"
             @input="updateTagParams"
           />
         </b-form-group>
@@ -55,27 +54,14 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group
-          id="offset_tags_by_group"
-          label="Offset tags by:"
-          label-for="offset_tags_by_input"
-          :invalid-feedback="offsetTagsByInvalidFeedback"
-          :valid-feedback="offsetTagsByValidFeedback"
-          :state="offsetTagsByState"
-        >
-          <b-form-input
-            id="offset_tags_by_input"
-            v-model="offsetTagsBy"
-            type="number"
-            :min="offsetTagsByMin"
-            :max="offsetTagsByMax"
-            step="1"
-            :placeholder="offsetTagsByPlaceholder"
-            :state="offsetTagsByState"
-            :disabled="offsetTagsByDisabled"
-            @input="updateTagParams"
-          />
-        </b-form-group>
+        <lb-tag-offset
+          id="tag_offset_input"
+          ref="offsetTagsByComponent"
+          :number-of-tags="numberOfTags"
+          :number-of-target-wells="numberOfTargetWells"
+          :initial-offset-tags-by="initialOffsetTagsBy"
+          @tagoffsetchanged="tagOffsetChanged"
+        />
       </b-col>
       <b-col>
         <b-form-group
@@ -97,6 +83,7 @@
 
 <script>
 import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
+import TagOffset from './TagOffset.vue'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
@@ -115,7 +102,8 @@ import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 export default {
   name: 'TagLayoutManipulationsMultiple',
   components: {
-    'lb-tag-groups-lookup': TagGroupsLookup
+    'lb-tag-groups-lookup': TagGroupsLookup,
+    'lb-tag-offset': TagOffset
   },
   props: {
     // A devour API object. eg. new devourClient(apiOptions)
@@ -150,8 +138,8 @@ export default {
       tag1GroupId: null, // holds the id of tag group 1 once selected
       walkingBy: 'as group by plate', // holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
-      offsetTagsByMin: 0, // holds the tag offset minimum value
       offsetTagsBy: 0, // holds the entered tag offset number
+      initialOffsetTagsBy: 0, // holds the initial tag offset number
       nullTagGroup: { // null tag group object used in place of a selected tag group
         uuid: null, // uuid of the tag group
         name: 'No tag group selected', // name of the tag group
@@ -168,78 +156,6 @@ export default {
         { value: 'inverse row', text: 'By Inverse Rows' },
         { value: 'inverse column', text: 'By Inverse Columns' }
       ]
-    },
-    offsetTagsByMax() {
-      if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
-        return null
-      }
-      return this.numberOfTags - this.numberOfTargetWells
-    },
-    offsetTagsByDisabled() {
-      return (!this.offsetTagsByMax || this.offsetTagsByMax <= 0)
-    },
-    offsetTagsByPlaceholder() {
-      let placeholder = 'Enter offset number...'
-
-      if(this.numberOfTags === 0) {
-        placeholder = 'Select tags first...'
-      } else if(this.numberOfTargetWells === 0) {
-        placeholder = 'No target wells...'
-      } else if(this.offsetTagsByMax < 0) {
-        placeholder = 'Not enough tags...'
-      } else if(this.offsetTagsByMax === 0) {
-        placeholder = 'No spare tags...'
-      }
-
-      return placeholder
-    },
-    isOffsetTagsByMaxValid() {
-      return (this.offsetTagsByMax && this.offsetTagsByMax > 0)
-    },
-    offsetTagsByState() {
-      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : null
-    },
-    isOffsetTagsByWithinLimits() {
-      return ((this.offsetTagsBy >= this.offsetTagsByMin) &&
-              (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
-    },
-    offsetTagsByInvalidFeedback() {
-      if(this.isOffsetTagsByMaxValid) {
-        let isChkLow = this.offsetTagsByCheckTooLow
-        if(!isChkLow.valid) {
-          return isChkLow.message
-        }
-
-        let isChkHigh = this.offsetTagsByCheckTooHigh
-        if(!isChkHigh.valid) {
-          return isChkHigh.message
-        }
-      }
-
-      return ''
-    },
-    offsetTagsByCheckTooLow() {
-      let ret = { valid: true, message: '' }
-
-      if(this.offsetTagsBy < this.offsetTagsByMin) {
-        ret.valid = false
-        ret.message = 'Offset must be greater than or equal to ' + this.offsetTagsByMin
-      }
-
-      return ret
-    },
-    offsetTagsByCheckTooHigh() {
-      let ret = { valid: true, message: '' }
-
-      if(this.offsetTagsBy > this.offsetTagsByMax) {
-        ret.valid = false
-        ret.message = 'Offset must be less than or equal to ' + this.offsetTagsByMax
-      }
-
-      return ret
-    },
-    offsetTagsByValidFeedback() {
-      return this.offsetTagsByState ? 'Valid' : ''
     },
     tag1Group() {
       return this.tagGroupsList[this.tag1GroupId] || this.nullTagGroup
@@ -263,17 +179,9 @@ export default {
         console.log('Tag Groups lookup error: ', data['state'])
       }
     },
-    extractTagGroupIds(plate) {
-      this.offsetTagsBy = 0
-
-      if(plate.lot.tag_layout_template.tag_group.id) {
-        this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
-      } else {
-        this.tag1GroupId = null
-      }
-    },
-    tagGroupChanged() {
-      this.offsetTagsBy = 0
+    tagOffsetChanged(tagOffset) {
+      this.offsetTagsBy = tagOffset
+      this.updateTagParams(null)
     },
     updateTagParams(_value) {
       const updatedData = {
