@@ -23,6 +23,13 @@
 
 <script>
 
+/**
+ * Displays a tag offset input field.
+ * The user can enter a value which is validated and emitted to the parent.
+ * Validation is for guidance only and does not prevent emission.
+ * It provides:
+ * - A number input field with validation.
+ */
 export default {
   name: 'TagOffset',
   props: {
@@ -38,7 +45,7 @@ export default {
       type: Number,
       default: 0
     },
-    // The initial value of offset
+    // The initial value of the tag offset.
     initialOffsetTagsBy: {
       type: Number,
       default: 0
@@ -64,25 +71,8 @@ export default {
       return ((this.offsetTagsBy >= this.offsetTagsByMin) &&
               (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
     },
-    offsetTagsByCheckTooLow() {
-      let ret = { valid: true, message: '' }
-
-      if(this.offsetTagsBy < this.offsetTagsByMin) {
-        ret.valid = false
-        ret.message = 'Offset must be greater than or equal to ' + this.offsetTagsByMin
-      }
-
-      return ret
-    },
-    offsetTagsByCheckTooHigh() {
-      let ret = { valid: true, message: '' }
-
-      if(this.offsetTagsBy > this.offsetTagsByMax) {
-        ret.valid = false
-        ret.message = 'Offset must be less than or equal to ' + this.offsetTagsByMax
-      }
-
-      return ret
+    isOffsetTagsByTooHigh() {
+      return (this.offsetTagsBy > this.offsetTagsByMax)
     },
     offsetTagsByPlaceholder() {
       let placeholder = 'Enter offset number...'
@@ -100,21 +90,17 @@ export default {
       return placeholder
     },
     offsetTagsByState() {
-      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : null
+      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : false
     },
     offsetTagsByValidFeedback() {
       return this.offsetTagsByState ? 'Valid' : ''
     },
     offsetTagsByInvalidFeedback() {
-      if(this.isOffsetTagsByMaxValid) {
-        let isChkLow = this.offsetTagsByCheckTooLow
-        if(!isChkLow.valid) {
-          return isChkLow.message
-        }
-
-        let isChkHigh = this.offsetTagsByCheckTooHigh
-        if(!isChkHigh.valid) {
-          return isChkHigh.message
+      if(this.isOffsetTagsByMaxValid && this.isOffsetTagsByTooHigh) {
+        return 'Offset must be less than or equal to ' + this.offsetTagsByMax
+      } else {
+        if(!this.isOffsetTagsByWithinLimits && this.offsetTagsByMax < 0) {
+          return 'Not enough tags to fill wells with aliquots'
         }
       }
 

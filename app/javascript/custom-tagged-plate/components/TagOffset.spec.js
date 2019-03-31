@@ -64,22 +64,13 @@ describe('TagOffset', () => {
     })
 
     describe('offsetTagsByState:', () => {
-      it('returns null if there is no start at tag number', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ offsetTagsBy: 0 })
-
-        expect(wrapper.vm.offsetTagsByState).toEqual(null)
-        expect(wrapper.vm.offsetTagsByValidFeedback).toEqual('')
-      })
-
-      it('returns null if the start at tag max is negative', () => {
+      it('returns false if the start at tag max is negative', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 20 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(-10)
-        expect(wrapper.vm.offsetTagsByState).toEqual(null)
+        expect(wrapper.vm.offsetTagsByState).toEqual(false)
         expect(wrapper.vm.offsetTagsByValidFeedback).toEqual('')
       })
 
@@ -87,7 +78,7 @@ describe('TagOffset', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 5 })
+        wrapper.setData({ offsetTagsBy: 5 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(9)
         expect(wrapper.vm.offsetTagsByState).toBe(true)
@@ -98,18 +89,7 @@ describe('TagOffset', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 11 })
-
-        expect(wrapper.vm.offsetTagsByMax).toBe(9)
-        expect(wrapper.vm.offsetTagsByState).toBe(false)
-        expect(wrapper.vm.offsetTagsByValidFeedback).toEqual('')
-      })
-
-      it('returns false if the entered number is too low', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 0 })
+        wrapper.setData({ offsetTagsBy: 11 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(9)
         expect(wrapper.vm.offsetTagsByState).toBe(false)
@@ -140,7 +120,7 @@ describe('TagOffset', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 5 })
+        wrapper.setData({ offsetTagsBy: 5 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(9)
         expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('')
@@ -150,20 +130,20 @@ describe('TagOffset', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 11 })
+        wrapper.setData({ offsetTagsBy: 11 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(9)
         expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Offset must be less than or equal to 9')
       })
 
-      it('returns correctly if the entered number is too low', () => {
+      it('returns correctly if there are not enough tags to fill the plate', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ numberOfTags: 19, numberOfTargetWells: 10 })
-        wrapper.setData({ offsetTagsByMin: 1, offsetTagsBy: 0 })
+        wrapper.setProps({ numberOfTags: 10, numberOfTargetWells: 20 })
+        wrapper.setData({ offsetTagsBy: 0 })
 
-        expect(wrapper.vm.offsetTagsByMax).toBe(9)
-        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Offset must be greater than or equal to 1')
+        expect(wrapper.vm.offsetTagsByMax).toBe(-10)
+        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Not enough tags to fill wells with aliquots')
       })
     })
   })
