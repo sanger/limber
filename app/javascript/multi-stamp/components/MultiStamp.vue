@@ -46,6 +46,12 @@
           :requests-with-plates="requestsWithPlates"
           @change="requestsWithPlatesFiltered = $event"
         />
+        <b-alert
+          :show="transfersError !== ''"
+          variant="danger"
+        >
+          {{ transfersError }}
+        </b-alert>
         <b-button
           :disabled="!valid"
           variant="success"
@@ -115,8 +121,10 @@ export default {
       return Number.parseInt(this.targetColumns)
     },
     valid() {
-      return this.unsuitablePlates.length === 0 && // None of the plates are invalid
-               this.transfers.length >= 1 // We have at least one transfer
+      return this.unsuitablePlates.length === 0 // None of the plates are invalid
+             && this.validTransfers.length > 0 // We have at least one transfer
+             && this.overflownTransfers.length === 0 // No overflown transfers
+             && this.duplicatedTransfers.length === 0 // No duplicated transfers
     },
     validPlates() {
       return this.plates.filter( plate => plate.state === 'valid' )
@@ -131,8 +139,27 @@ export default {
     transfers() {
       return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
     },
+    validTransfers() {
+      return this.transfers.valid
+    },
+    duplicatedTransfers() {
+      return this.transfers.duplicated
+    },
+    overflownTransfers() {
+      return this.transfers.valid.slice(this.targetRowsNumber * this.targetColumnsNumber)
+    },
+    transfersError() {
+      const errorMessages = []
+      if (this.duplicatedTransfers.length > 0) {
+        errorMessages.push('Duplicated transfers')
+      }
+      if (this.overflownTransfers.length > 0) {
+        errorMessages.push('Overflown transfers')
+      }
+      return errorMessages.join(' and ')
+    },
     targetWells() {
-      let deb = this.transfers.reduce((wells, transfer) => {
+      let deb = this.validTransfers.reduce((wells, transfer) => {
         wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
         return wells
       }, {})
@@ -164,7 +191,7 @@ export default {
       let payload = { plate: {
         parent_uuid: this.validPlates[0].plate.uuid,
         purpose_uuid: this.purposeUuid,
-        transfers: this.transfers
+        transfers: this.validTransfers
       }}
       this.$axios({
         method: 'post',

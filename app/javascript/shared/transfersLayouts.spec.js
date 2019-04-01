@@ -34,7 +34,24 @@ describe('transfersLayouts', () => {
   it('creates the correct transfersFromRequests with sequential layout', () => {
     const transfersResults = transfersFromRequests(requests, 'sequential')
 
-    expect(transfersResults).toEqual([
+    expect(transfersResults.valid).toEqual([
+      {
+        source_plate: 'plate-1-uuid',
+        pool_index: 1,
+        source_asset: 'well-1-uuid',
+        outer_request: 'req-1-uuid',
+        new_target: { location: 'A1' }
+      },
+      {
+        source_plate: 'plate-2-uuid',
+        pool_index: 2,
+        source_asset: 'well-2-uuid',
+        outer_request: 'req-3-uuid',
+        new_target: { location: 'B1' }
+      }
+    ])
+
+    expect(transfersResults.duplicated).toEqual([
       {
         source_plate: 'plate-1-uuid',
         pool_index: 1,
@@ -56,7 +73,7 @@ describe('transfersLayouts', () => {
   it('creates the correct transfersFromRequests with quadrant layout', () => {
     const transfersResults = transfersFromRequests(requests, 'quadrant')
 
-    expect(transfersResults).toEqual([
+    expect(transfersResults.valid).toEqual([
       {
         source_plate: 'plate-1-uuid',
         pool_index: 1,
@@ -65,18 +82,21 @@ describe('transfersLayouts', () => {
         new_target: { location: 'A1' }
       },
       {
-        source_plate: 'plate-1-uuid',
-        pool_index: 1,
-        source_asset: 'well-1-uuid',
-        outer_request: 'req-2-uuid',
-        new_target: { location: 'A1' }
-      },
-      {
         source_plate: 'plate-2-uuid',
         pool_index: 2,
         source_asset: 'well-2-uuid',
         outer_request: 'req-3-uuid',
         new_target: { location: 'D3' }
+      }
+    ])
+
+    expect(transfersResults.duplicated).toEqual([
+      {
+        source_plate: 'plate-1-uuid',
+        pool_index: 1,
+        source_asset: 'well-1-uuid',
+        outer_request: 'req-2-uuid',
+        new_target: { location: 'A1' }
       },
       {
         source_plate: 'plate-2-uuid',

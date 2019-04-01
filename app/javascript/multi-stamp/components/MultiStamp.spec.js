@@ -107,7 +107,7 @@ describe('MultiStamp', () => {
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
-    expect(wrapper.vm.transfers).toEqual([
+    expect(wrapper.vm.transfers.valid).toEqual([
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-1', outer_request: 'plate-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-2', outer_request: 'plate-uuid-well-2-source-request-0', new_target: { location: 'E1' } },
@@ -128,7 +128,7 @@ describe('MultiStamp', () => {
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
-    expect(wrapper.vm.transfers).toEqual([
+    expect(wrapper.vm.transfers.valid).toEqual([
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-0', outer_request: 'plate-1-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-1', outer_request: 'plate-1-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-2', outer_request: 'plate-1-uuid-well-2-source-request-0', new_target: { location: 'E1' } },

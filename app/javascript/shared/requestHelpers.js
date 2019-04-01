@@ -15,7 +15,7 @@ const requestsFromPlates = function(plateObjs) {
       const well = wells[w]
       const requests = requestsForWell(well)
       for (let r = 0; r < requests.length; r++) {
-        // Create object for requestWithPlate
+        // TODO: Create object for requestWithPlate
         requestsArray.push({ request: requests[r], well: well, plateObj: plateObj })
       }
     }

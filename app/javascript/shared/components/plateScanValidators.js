@@ -58,7 +58,6 @@ const checkDuplicates = (plateList, currentIndex) => {
       return index !== currentIndex && // We're not looking at the current plate
         other && other.uuid === plate.uuid // But the uuid matches
     })
-
     if (duplicate) {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
     } else {

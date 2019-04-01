@@ -8,7 +8,9 @@ const quadrantOffsets = {
 }
 
 const quadrantTransfers = function(requestsWithPlates) {
-  const transfers = []
+  const transfersSet = new Set()
+  const validTransfers = []
+  const duplicatedTransfers = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
     if (request === undefined) { continue }
@@ -18,31 +20,44 @@ const quadrantTransfers = function(requestsWithPlates) {
       quadrantOffsets.rowOffset,
       quadrantOffsets.colOffset
     )
-    // Create an object for this (it adds targetWell)
-    transfers.push({
+    const transfer = {
       request: request,
       well: well,
       plateObj: plateObj,
       targetWell: targetWell
-    })
+    }
+    const transferStr = well.position.name + targetWell
+    if (transfersSet.has(transferStr)) {
+      duplicatedTransfers.push(transfer)
+    }
+    else {
+      transfersSet.add(transferStr)
+      validTransfers.push(transfer)
+    }
   }
-  return transfers
+  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
 const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPlate) {
   const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
+  const duplicatedRequests = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
     if (request === undefined) { continue }
-    platesMatrix[plateObj.index][nameToIndex(well.position.name, 8)] = requestsWithPlates[i]
+    const wellIndex = nameToIndex(well.position.name, 8)
+    if (platesMatrix[plateObj.index][wellIndex] === undefined) {
+      platesMatrix[plateObj.index][wellIndex] = requestsWithPlates[i]
+    }
+    else {
+      duplicatedRequests.push(requestsWithPlates[i])
+    }
   }
-  return platesMatrix
+  return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
 }
 
-const sequentialTransfers = function(requestsWithPlates) {
-  const transferRequests = buildPlatesMatrix(requestsWithPlates, 10, 96).flat()
+const buildSequentialTransfersArray = function(transferRequests) {
   const transfers = new Array(transferRequests.length)
-  for (let i = 0; i < transfers.length; i++) {
+  for (let i = 0; i < transferRequests.length; i++) {
     const requestWithPlate = transferRequests[i]
     transfers[i] = {
       request: requestWithPlate.request,
@@ -54,17 +69,20 @@ const sequentialTransfers = function(requestsWithPlates) {
   return transfers
 }
 
+const sequentialTransfers = function(requestsWithPlates) {
+  const { platesMatrix, duplicatedRequests } = buildPlatesMatrix(requestsWithPlates, 10, 96)
+  const transferRequests = platesMatrix.flat()
+  const validTransfers = buildSequentialTransfersArray(transferRequests)
+  const duplicatedTransfers = buildSequentialTransfersArray(duplicatedRequests)
+  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
+}
+
 const transferFunctions = {
   quadrant: quadrantTransfers,
   sequential: sequentialTransfers
 }
 
-const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
-  const transferFunction = transferFunctions[transfersLayout]
-  if (transferFunction === undefined) {
-    throw `Invalid transfers layout name: ${transfersLayout}`
-  }
-  const transfers = transferFunction(requestsWithPlates)
+const buildApiTransferArray = function(transfers) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfersArray.length; i++) {
     const transfer = transfers[i]
@@ -77,6 +95,17 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
     }
   }
   return transfersArray
+}
+
+const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
+  const transferFunction = transferFunctions[transfersLayout]
+  if (transferFunction === undefined) {
+    throw `Invalid transfers layout name: ${transfersLayout}`
+  }
+  const { validTransfers, duplicatedTransfers } = transferFunction(requestsWithPlates)
+  const validApiTransfers = buildApiTransferArray(validTransfers)
+  const duplicatedApiTransfers = buildApiTransferArray(duplicatedTransfers)
+  return { valid: validApiTransfers, duplicated: duplicatedApiTransfers }
 }
 
 export { transfersFromRequests }
