@@ -16,7 +16,7 @@ describe('TagLayoutManipulations', () => {
         tagsPerWell: 1
       },
       stubs: {
-        // 'lb-plate-scan': true,
+        'lb-plate-scan': true,
         'lb-tag-groups-lookup': true,
         'lb-tag-offset': true
       },
@@ -89,16 +89,12 @@ describe('TagLayoutManipulations', () => {
     filter: {
       barcode: 'somebarcode'
     },
-    include: {
-      lots: ['templates', {
-        templates: 'tag_group,tag2_group'
-      }]
-    },
+    include: 'asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
     fields: {
-      qcables: 'uuid,state,lot',
-      lots: 'uuid,template',
-      tag_layout_templates: 'uuid,tag_group,tag2_group,direction_algorithm,walking_algorithm',
-      tag_group: 'uuid,name'
+      assets: 'uuid',
+      lots: 'uuid,tag_layout_template',
+      tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+      tag_group: 'uuid,name,tags'
     }
   }, nullQcable)
 

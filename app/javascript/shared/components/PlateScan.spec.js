@@ -26,8 +26,6 @@ describe('PlateScan', () => {
         label: 'My Plate',
         description: 'Scan it in',
         api: api.devour,
-        plateCols: 12,
-        plateRows: 8,
         includes: 'wells.requests_as_source,wells.aliquots.request'
       },
       localVue
@@ -105,7 +103,7 @@ describe('PlateScan', () => {
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', plate: null }],
-        [{ state: 'invalid', plate: null }]
+        [{ state: 'invalid', plate: undefined }]
       ]
     })
   })
@@ -196,104 +194,4 @@ describe('PlateScan', () => {
     expect(events.change[1][0].state).toEqual('invalid')
     expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
   })
-
-  it('is valid if it can find a qcable in the correct state', async () => {
-    const api = mockApi()
-    const wrapper = wrapperFactoryQcable(api)
-
-    api.mockGet('qcables',{
-      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
-      filter: {
-        barcode: 'DN12345'
-      },
-      fields: {
-        lots: 'uuid,template',
-        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-        tag_group: 'uuid,name'
-      }
-    }, goodQcable)
-
-    wrapper.find('input').setValue('DN12345')
-    wrapper.find('input').trigger('change')
-
-    expect(wrapper.find('.wait-plate').exists()).toBe(true)
-
-    await flushPromises()
-
-    expect(wrapper.find('.valid-feedback').text()).toEqual('Valid!')
-
-    const events = wrapper.emitted()
-
-    expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
-    expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
-  })
-
-  it('is invalid if the qcable is not the correct state', async () => {
-    const api = mockApi()
-    const wrapper = wrapperFactoryQcable(api)
-
-    api.mockGet('qcables',{
-      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
-      filter: {
-        barcode: 'Good barcode'
-      },
-      fields: {
-        lots: 'uuid,template',
-        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-        tag_group: 'uuid,name'
-      }
-    }, badQcableWrongState)
-
-    wrapper.find('input').setValue('Good barcode')
-    wrapper.find('input').trigger('change')
-
-    expect(wrapper.find('.wait-plate').exists()).toBe(true)
-
-    await flushPromises()
-
-    expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should be in available or exhausted state')
-
-    const events = wrapper.emitted()
-
-    expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
-    expect(events.change[1][0].state).toEqual('invalid')
-    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
-  })
-
-  it('is invalid if the qcable does not have a walking by wells of plate', async () => {
-    const api = mockApi()
-    const wrapper = wrapperFactoryQcable(api)
-
-    api.mockGet('qcables',{
-      include: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
-      filter: {
-        barcode: 'Good barcode'
-      },
-      fields: {
-        lots: 'uuid,template',
-        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-        tag_group: 'uuid,name'
-      }
-    }, badQcableWrongWalkingBy)
-
-    wrapper.find('input').setValue('Good barcode')
-    wrapper.find('input').trigger('change')
-
-    expect(wrapper.find('.wait-plate').exists()).toBe(true)
-
-    await flushPromises()
-
-    expect(wrapper.find('.invalid-feedback').text()).toEqual('The tag plate should have a walking by of wells by plate')
-
-    const events = wrapper.emitted()
-
-    expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
-    expect(events.change[1][0].state).toEqual('invalid')
-    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
-  })
-
 })

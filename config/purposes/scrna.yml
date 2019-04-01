@@ -51,6 +51,8 @@ scRNA Lib PCR:
   - TS_pWGSB_UDI96
   - TS_pWGSC_UDI96
   - TS_pWGSD_UDI96
+  - TS_pWGSA_UDI96v2
+  - TSISC_UDI96
   :suggest_library_pass_for:
   - limber_scrna
 scRNA-384 Lib PCR:

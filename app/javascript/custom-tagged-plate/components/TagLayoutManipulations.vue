@@ -21,6 +21,7 @@
                        lots: 'uuid,tag_layout_template',
                        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
                        tag_groups: 'uuid,name,tags' }"
+            :validation="scanValidation()"
             @change="tagPlateScanned($event)"
           />
         </b-form-group>
@@ -127,6 +128,7 @@
 import PlateScan from 'shared/components/PlateScan'
 import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
 import TagOffset from './TagOffset.vue'
+import { checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
@@ -232,6 +234,11 @@ export default {
     },
     tag2GroupOptions() {
       return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
+    },
+    scanValidation() {
+      return () => {
+        return aggregate(checkState(['available','exhausted']), checkQCableWalkingBy(['wells of plate']))
+      }
     }
   },
   methods: {

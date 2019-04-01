@@ -13,7 +13,7 @@
           v-for="plate in plates"
           :key="plate.index"
           :state="plate.state"
-          :pool-index="plate.index + 1"
+          :pool_index="plate.index + 1"
           :plate="plate.plate"
         />
         <lb-plate
@@ -37,6 +37,7 @@
             :label="'Plate ' + i"
             :includes="plateIncludes"
             :fields="plateFields"
+            :validation="scanValidation(i-1)"
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
@@ -70,6 +71,8 @@ import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { wellNameToCoordinate, wellCoordinateToName } from 'shared/wellHelpers'
+import { checkSize, checkDuplicates, aggregate } from 'shared/components/plateScanValidators'
+
 export default {
   name: 'QuadStamp',
   components: {
@@ -135,6 +138,12 @@ export default {
     },
     plateFields() {
       return filterProps[this.requestFilter].plateFields
+    },
+    scanValidation() {
+      const currPlates = this.plates.map(plateItem => plateItem.plate)
+      return (index) => {
+        return aggregate(checkSize(12,8), checkDuplicates(currPlates, index))
+      }
     }
   },
   methods: {

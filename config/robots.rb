@@ -361,29 +361,29 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                beds: {
                  bed(12).barcode => {
                   purpose: 'PF Post Shear',
-                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  states: %w[passed qc_complete], child: bed(7).barcode,
                   label: 'Bed 12' },
                  bed(13).barcode => {
                   purpose: 'PF Post Shear',
-                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  states: %w[passed qc_complete], child: bed(7).barcode,
                   label: 'Bed 13' },
                  bed(14).barcode => {
                   purpose: 'PF Post Shear',
-                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  states: %w[passed qc_complete], child: bed(7).barcode,
                   label: 'Bed 14' },
                  bed(15).barcode => {
                   purpose: 'PF Post Shear',
-                  states: %w[passed qc_complete], child: bed(18).barcode,
+                  states: %w[passed qc_complete], child: bed(7).barcode,
                   label: 'Bed 15' },
-                 bed(18).barcode => {
+                 bed(7).barcode => {
                    purpose: 'PF-384 Post Shear XP',
                    states: %w[pending],
                    parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
                    target_state: 'passed',
-                   label: 'Bed 18'
+                   label: 'Bed 7'
                  }
                },
-               destination_bed: bed(18).barcode,
+               destination_bed: bed(7).barcode,
                class: 'Robots::QuadrantRobot')
 
   custom_robot(
