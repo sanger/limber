@@ -17,7 +17,7 @@
         :well-modal-details="wellModalDetails"
         @wellmodalsubtituteselected="wellModalSubtituteSelected"
       />
-      <lb-custom-tagged-plate-details
+      <lb-tag-substitution-details
         :tag-substitutions="tagSubstitutions"
         :tag-substitutions-allowed="tagSubstitutionsAllowed"
         @removetagsubstitution="removeTagSubstitution"
@@ -39,7 +39,16 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <lb-custom-tagged-plate-manipulation
+            <lb-tag-layout-manipulations-multiple
+              v-if="isMultipleTaggedPlate"
+              :api="devourApi"
+              :number-of-tags="numberOfTags"
+              :number-of-target-wells="numberOfTargetWells"
+              :tags-per-well="tagsPerWellAsNumber"
+              @tagparamsupdated="tagParamsUpdated"
+            />
+            <lb-tag-layout-manipulations
+              v-else
               :api="devourApi"
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
@@ -71,9 +80,10 @@
 import Plate from 'shared/components/Plate.vue'
 import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
 import LoadingModal from 'shared/components/LoadingModal.vue'
-import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
-import CustomTaggedPlateManipulation from './CustomTaggedPlateManipulation.vue'
-import CustomTaggedPlateWellModal from './CustomTaggedPlateWellModal.vue'
+import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
+import TagLayoutManipulations from './TagLayoutManipulations.vue'
+import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
+import WellModal from './WellModal.vue'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
@@ -96,9 +106,10 @@ export default {
     'lb-loading-modal': LoadingModal,
     'lb-parent-plate-lookup': AssetLookupByUuid,
     'lb-parent-plate-view': Plate,
-    'lb-custom-tagged-plate-details': CustomTaggedPlateDetails,
-    'lb-custom-tagged-plate-manipulation': CustomTaggedPlateManipulation,
-    'lb-well-modal': CustomTaggedPlateWellModal
+    'lb-tag-substitution-details': TagSubstitutionDetails,
+    'lb-tag-layout-manipulations': TagLayoutManipulations,
+    'lb-tag-layout-manipulations-multiple': TagLayoutManipulationsMultiple,
+    'lb-well-modal': WellModal
   },
   props: {
     sequencescapeApi: {
@@ -166,7 +177,7 @@ export default {
       this.creationRequestInProgress
       this.creationRequestSuccessful
 
-      if(!this.tagsValid) {
+      if(!this.isChildWellsValid) {
         return 'setup'
       } else if(this.creationRequestInProgress === null) {
         return 'pending'
@@ -205,7 +216,7 @@ export default {
           wells[position]['aliquotCount'] = well.aliquots.length
           wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
           wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
-          wells[position]['validity'] = { valid: false, message: 'No tag id in this well' }
+          wells[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
         }
       })
 
@@ -286,7 +297,8 @@ export default {
         tagMapIds: this.useableTagMapIds,
         walkingBy: this.walkingBy,
         direction: this.direction,
-        offsetTagsBy: this.offsetTagsBy
+        offsetTagsBy: this.offsetTagsBy,
+        tagsPerWell: this.tagsPerWell
       }
 
       return calculateTagLayout(inputData)
@@ -302,51 +314,44 @@ export default {
     },
     childWells() {
       this.tagLayout
-      this.tagSubstitutions
-      this.parentWellSubmissionDetails
-      this.parentUsedOligos
-      this.childUsedOligos
+      this.tagSubstitutions // used for tag substitution check
+      this.childUsedOligos // used for tag clash check
 
       if(this.parentWells === {} ) { return {} }
-
       if(Object.keys(this.tagLayout).length === 0) { return { ...this.parentWells } }
 
       let cw = {}
-
       Object.keys(this.tagLayout).forEach((position) => {
         cw[position] = { ...this.parentWells[position] }
 
-        let tagMapId
-        if(this.tagLayout[position] > 0) {
-          const origTagId = this.tagLayout[position]
-          tagMapId = origTagId
-          // check for tag substitution
-          if(this.tagSubstitutions.hasOwnProperty(origTagId)) {
-            tagMapId = this.tagSubstitutions[origTagId]
-          }
+        let tagMapIds = []
+        if(this.tagLayout[position].length > 0) {
+          cw[position]['validity'] = { valid: true, message: '' }
 
-          if(!this.isChromiumPlate) {
-            const submId = this.parentWellSubmissionDetails[position]['subm_id']
-            const oligoStr = this.tagGroupOligoStrings[tagMapId]
-            const arrayOligoLocns = this.childUsedOligos[submId][oligoStr]
-            const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
+          const submId = cw[position]['submId']
 
-            if(filteredArrayOligoLocns.length > 0) {
-              cw[position]['validity'] = { valid: false, message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')}
+          tagMapIds = this.tagLayout[position].slice(0)
+
+          for (var i = 0; i < tagMapIds.length; i++) {
+            if(tagMapIds[i] === -1) {
+              cw[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
             } else {
-              cw[position]['validity'] = { valid: true, message: '' }
+              tagMapIds[i] = this.checkTagForSubstitution(tagMapIds[i])
             }
           }
+
+          if(cw[position]['validity'].valid === true) {
+            cw[position]['validity'] = this.checkWellForTagClash(tagMapIds, submId, position)
+          }
         }
-        cw[position]['tagIndex'] = tagMapId
+        cw[position]['tagMapIds'] = tagMapIds
       })
 
       return cw
     },
-    hasChildWells() {
-      return (Object.keys(this.childWells).length > 0)
-    },
-    childWellsContainsInvalidWells() {
+    isChildWellsValid() {
+      if(Object.keys(this.childWells).length === 0) { return false }
+
       let invalidCount = 0
       Object.keys(this.childWells).forEach((position) => {
         if(this.childWells[position].aliquotCount > 0) {
@@ -356,7 +361,7 @@ export default {
         }
       })
 
-      return ((invalidCount > 0) ? false : true)
+      return ((invalidCount === 0) ? true : false)
     },
     useableTagMapIds() {
       let tags = []
@@ -395,16 +400,11 @@ export default {
       }
       return numTargets
     },
-    tagsValid() {
-      if(!this.hasChildWells) { return false }
-
-      return this.childWellsContainsInvalidWells
-    },
-    isChromiumPlate() {
-      return (this.tagsPerWellAsNumber === 4) ? true : false
+    isMultipleTaggedPlate() {
+      return (this.tagsPerWellAsNumber > 1) ? true : false
     },
     tagSubstitutionsAllowed() {
-      return !this.isChromiumPlate
+      return !this.isMultipleTaggedPlate
     },
     buttonText() {
       return {
@@ -483,6 +483,30 @@ export default {
     calcNumTagsForGroupByPlate() {
       return this.calcNumTagsForSeqPlate()
     },
+    checkTagForSubstitution(tagMapId) {
+      if(this.tagSubstitutions.hasOwnProperty(tagMapId)) {
+        tagMapId = this.tagSubstitutions[tagMapId]
+      }
+
+      return tagMapId
+    },
+    checkWellForTagClash(tagMapIds, submId, position) {
+      const str = tagMapIds.map(id => this.tagGroupOligoStrings[id]).join(':')
+      const arrayOligoLocns = this.childUsedOligos[submId][str]
+      const filteredArrayOligoLocns = arrayOligoLocns.filter(locn => locn !== position)
+
+      if(filteredArrayOligoLocns.length > 0) {
+        return {
+          valid: false,
+          message: 'Tag clash with the following: ' +  filteredArrayOligoLocns.join(', ')
+        }
+      }
+
+      return {
+        valid: true,
+        message: ''
+      }
+    },
     createPlate() {
       this.progressMessage = 'Creating plate...'
       this.loading = true
@@ -553,10 +577,10 @@ export default {
       }
     },
     isWellValidForShowingModal(position) {
-      return (this.childWells[position].aliquotCount === 0) ? false : true
+      return (this.isMultipleTaggedPlate || this.childWells[position].aliquotCount === 0) ? false : true
     },
     setUpWellModalDetails(position) {
-      const originalTagMapId = this.tagLayout[position]
+      const originalTagMapId = this.tagLayout[position][0]
 
       this.wellModalDetails = {
         position: position,
@@ -581,7 +605,8 @@ export default {
       const originalTagMapId = this.wellModalDetails.originalTag
 
       if((originalTagMapId in this.tagSubstitutions) && (originalTagMapId === substituteTagId)) {
-        // because we have changed the tag id back to what it was originally, delete the substitution from the list
+        // because we have changed the tag id back to what it was originally,
+        // delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
         this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)

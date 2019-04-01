@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if (plate && plate.dataset.animateTags) {
     // FInd all the aliquots in the plate
     const aliquots = plate.getElementsByClassName('aliquot')
-
+    
     // Walk over each one
     for (let aliquotIndex = 0; aliquotIndex < aliquots.length; aliquotIndex++) {
       // Ignoring those with only one tag
@@ -24,5 +24,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
       animateTags(aliquots[aliquotIndex])
     }
   }
-}, false);
+}, false)
+
 

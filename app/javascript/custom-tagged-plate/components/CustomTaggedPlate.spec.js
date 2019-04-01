@@ -14,8 +14,8 @@ import {
   exampleTag1Group,
   exampleTag2Group,
   exampleTag2GroupLonger,
-  exampleChildWells,
-  exampleQcableData
+  exampleQcableData,
+  exampleTag1GroupChromium
 } from '../testData/tagClashFunctionsTestData.js'
 
 describe('CustomTaggedPlate', () => {
@@ -35,14 +35,14 @@ describe('CustomTaggedPlate', () => {
   }
 
   describe('#computed:', () => {
-    describe('tagsValid:', () => {
-      it('returns false if no childWells', () => {
+    describe('isChildWellsValid:', () => {
+      it('returns false if there are no childWells', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.tagsValid).toEqual(false)
+        expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
-      it('returns false if any wells with aliquots do not contain a tag', () => {
+      it('returns false if any wells with aliquots are invalid', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
@@ -53,7 +53,7 @@ describe('CustomTaggedPlate', () => {
           offsetTagsBy: 4
         })
 
-        expect(wrapper.vm.tagsValid).toEqual(false)
+        expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
       it('returns true if all aliquots contain valid tag indexes', () => {
@@ -66,7 +66,7 @@ describe('CustomTaggedPlate', () => {
           direction: 'column'
         })
 
-        expect(wrapper.vm.tagsValid).toEqual(true)
+        expect(wrapper.vm.isChildWellsValid).toEqual(true)
       })
     })
 
@@ -265,7 +265,196 @@ describe('CustomTaggedPlate', () => {
           direction: 'column'
         })
 
-        expect(wrapper.vm.childWells).toEqual(exampleChildWells)
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 11 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ 12 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ 13 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ 14 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns invalid wells if not enough tags', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 6
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 17 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ -1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns valid wells object for a chromium plate', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          tagsPerWell: 4
+        })
+
+        wrapper.setData({
+          parentPlate: exampleParent,
+          tag1Group: exampleTag1GroupChromium,
+          walkingBy: 'manual by plate',
+          direction: 'column'
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 1,2,3,4 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ 5,6,7,8 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ 9,10,11,12 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ 13,14,15,16 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns invalid wells where multiple tags and not enough tags', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          tagsPerWell: 4
+        })
+
+        wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 1
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [ 15,16,17,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [ -1,-1,-1,-1 ],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: false, message: 'Missing tag ids for this well' }
+          }
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
       })
     })
 
@@ -435,7 +624,7 @@ describe('CustomTaggedPlate', () => {
       expect(wrapper.isVueInstance()).toBe(true)
     })
 
-    it('renders child components', async () => {
+    it('renders child components for single tag per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
@@ -447,8 +636,8 @@ describe('CustomTaggedPlate', () => {
         },
         stubs: {
           'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-custom-tagged-plate-details': '<div class="plate-details"></div>',
-          'lb-custom-tagged-plate-manipulation': '<fieldset class="b-form-group"></fieldset>',
+          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
+          'lb-tag-layout-manipulations': '<div class="layout-manipulations"></div>',
           'lb-well-modal': '<div class="well-modal"></div>'
         },
         localVue
@@ -459,8 +648,37 @@ describe('CustomTaggedPlate', () => {
       })
 
       expect(wrapper.find('table.plate-view').exists()).toBe(true)
-      expect(wrapper.find('fieldset.b-form-group').exists()).toBe(true)
-      expect(wrapper.find('div.plate-details').exists()).toBe(true)
+      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
+      expect(wrapper.find('div.layout-manipulations').exists()).toBe(true)
+      expect(wrapper.find('div.well-modal').exists()).toBe(true)
+    })
+
+    it('renders child components for multiple tags per well', async () => {
+      const wrapper = mount(CustomTaggedPlate, {
+        propsData: {
+          sequencescapeApi: 'http://localhost:3000/api/v2',
+          purposeUuid: '',
+          targetUrl: '',
+          parentUuid: plateUuid,
+          tagsPerWell: '4',
+          locationObj: mockLocation
+        },
+        stubs: {
+          'lb-parent-plate-view': '<table class="plate-view"></table>',
+          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
+          'lb-tag-layout-manipulations-multiple': '<div class="layout-manipulations-multiple"></div>',
+          'lb-well-modal': '<div class="well-modal"></div>'
+        },
+        localVue
+      })
+
+      wrapper.setData({
+        parentPlate: exampleParent
+      })
+
+      expect(wrapper.find('table.plate-view').exists()).toBe(true)
+      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
+      expect(wrapper.find('div.layout-manipulations-multiple').exists()).toBe(true)
       expect(wrapper.find('div.well-modal').exists()).toBe(true)
     })
 
@@ -489,7 +707,7 @@ describe('CustomTaggedPlate', () => {
         walkingBy: 'wells of plate'
       })
 
-      expect(wrapper.vm.isChromiumPlate).toBe(true)
+      expect(wrapper.vm.isMultipleTaggedPlate).toBe(true)
       expect(wrapper.vm.tagSubstitutionsAllowed).toBe(false)
     })
 

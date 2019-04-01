@@ -82,7 +82,7 @@
  * parent.
  */
 export default {
-  name: 'CustomTaggedPlateWellModal',
+  name: 'WellModal',
   props: {
     // Holds all the details used by the well modal:
     // - position : the well position e.g. A1

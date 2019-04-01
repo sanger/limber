@@ -1,20 +1,31 @@
 <template>
-  <div :class="['well', position]">
-    <span
+  <div
+    :id="'well_' + position"
+    :class="['well', position]"
+  >
+    <div
       v-if="pool_index"
-      :class="['aliquot', colourClass, linethroughClass]"
-      @click="onWellClicked"
-    >{{ tagIndex }}</span>
+      :id="'aliquot_' + position"
+      :class="['aliquot', colourClass ]"
+    >
+      <span
+        v-for="(tagMapId, index) in tagMapIds"
+        :key="'tag_' + index"
+        :class="[linethroughClass, 'tag']"
+        @click="onWellClicked"
+      >{{ tagMapIdDisplay(tagMapId) }}</span>
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'Well',
   props: {
     position: { type: String, default: null },
     pool_index: { type: Number, default: null },
-    tagIndex: { type: Number, default: null },
+    tagMapIds: { type: Array, default: () => { return [] } },
     validity: { type: Object, default: () => { return { valid: true, message: '' }} }
   },
   computed: {
@@ -28,6 +39,9 @@ export default {
   methods: {
     onWellClicked() {
       this.$emit('onwellclicked', this.position )
+    },
+    tagMapIdDisplay(tagMapId) {
+      return (tagMapId === -1) ? 'x' : tagMapId
     }
   }
 }
@@ -36,5 +50,13 @@ export default {
 <style scoped>
   .line-through {
     text-decoration: line-through;
+  }
+
+  .tag {
+    display: none;
+  }
+
+  .tag:first-child {
+    display: inline;
   }
 </style>

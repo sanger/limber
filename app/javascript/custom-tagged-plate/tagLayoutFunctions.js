@@ -21,11 +21,16 @@ function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
   return tags[relIndex + offset] || -1
 }
 
-function byRows(wells, plateDims, walker) {
+function byRows(wells, plateDims, tagsPerWell, walker) {
   return wells.sort(compareWellsByRow).reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
     const absIndex = wellCol + (plateDims.number_of_columns * wellRow)
-    acc[well.position] = walker(well, relIndex, absIndex)
+    acc[well.position] = []
+    let relIndexAdj = relIndex * tagsPerWell
+    for (var i = 0; i < tagsPerWell; i++) {
+      acc[well.position].push(walker(well, relIndexAdj, absIndex))
+      relIndexAdj++
+    }
     return acc
   }, {})
 }
@@ -42,20 +47,30 @@ function compareWellsByRow(wellA, wellB) {
   }
 }
 
-function byInverseRows(wells, plateDims, walker) {
+function byInverseRows(wells, plateDims, tagsPerWell, walker) {
   return wells.sort(compareWellsByRow).reverse().reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
     const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellCol + (plateDims.number_of_columns * wellRow)) - 1
-    acc[well.position] = walker(well, relIndex, absIndex)
+    acc[well.position] = []
+    let relIndexAdj = relIndex * tagsPerWell
+    for (var i = 0; i < tagsPerWell; i++) {
+      acc[well.position].push(walker(well, relIndexAdj, absIndex))
+      relIndexAdj++
+    }
     return acc
   }, {})
 }
 
-function byColumns(wells, plateDims, walker) {
+function byColumns(wells, plateDims, tagsPerWell, walker) {
   return wells.sort(compareWellsByColumn).reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
     const absIndex = wellRow + (plateDims.number_of_rows * wellCol)
-    acc[well.position] = walker(well, relIndex, absIndex)
+    acc[well.position] = []
+    let relIndexAdj = relIndex * tagsPerWell
+    for (var i = 0; i < tagsPerWell; i++) {
+      acc[well.position].push(walker(well, relIndexAdj, absIndex))
+      relIndexAdj++
+    }
     return acc
   }, {})
 }
@@ -72,11 +87,16 @@ function compareWellsByColumn(wellA, wellB) {
   }
 }
 
-function byInverseColumns(wells, plateDims, walker) {
+function byInverseColumns(wells, plateDims, tagsPerWell, walker) {
   return wells.sort(compareWellsByColumn).reverse().reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
     const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellRow + (plateDims.number_of_rows * wellCol)) - 1
-    acc[well.position] = walker(well, relIndex, absIndex)
+    acc[well.position] = []
+    let relIndexAdj = relIndex * tagsPerWell
+    for (var i = 0; i < tagsPerWell; i++) {
+      acc[well.position].push(walker(well, relIndexAdj, absIndex))
+      relIndexAdj++
+    }
     return acc
   }, {})
 }
@@ -113,12 +133,12 @@ const calculateTagLayout = function (data) {
   const counters = {}
   let offset = 0
   if(data.offsetTagsBy && data.offsetTagsBy > 0) {
-    offset = data.offsetTagsBy
+    offset = data.offsetTagsBy * data.tagsPerWell
   }
 
   const filteredWells = data.wells.filter(well => well.aliquotCount > 0)
 
-  return directionFunctions[data.direction](filteredWells, data.plateDims, (well, relIndex, absIndex) => {
+  return directionFunctions[data.direction](filteredWells, data.plateDims, data.tagsPerWell, (well, relIndex, absIndex) => {
     return walkingByFunctions[data.walkingBy](well, tags, relIndex, absIndex, offset, counters)
   })
 }
@@ -150,6 +170,10 @@ const validateParameters = function (data) {
 
   if(!result) {
     result = validateDirection(data.direction)
+  }
+
+  if(!result) {
+    result = validateTagsPerWell(data.tagsPerWell)
   }
 
   return result
@@ -217,6 +241,18 @@ const validateDirection = function (direction) {
   if(!direction) {
     result = {
       message: 'Direction parameter not set'
+    }
+  }
+
+  return result
+}
+
+const validateTagsPerWell = function (tagsPerWell) {
+  let result
+
+  if(!tagsPerWell || tagsPerWell <= 0) {
+    result = {
+      message: 'Tags per well parameter not set'
     }
   }
 

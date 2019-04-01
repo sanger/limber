@@ -66,7 +66,7 @@
  *   - a remove button to indicate the row should be deleted (emits to parent)
  */
 export default {
-  name: 'CustomTaggedPlateDetails',
+  name: 'TagSubstitutionDetails',
   props: {
     // a flag to indicate whether tag substitutions are allowed for this plate
     tagSubstitutionsAllowed: {
@@ -91,4 +91,5 @@ export default {
     }
   }
 }
+
 </script>

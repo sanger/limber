@@ -243,43 +243,75 @@ const exampleTag2GroupLonger = {
   ]
 }
 
-const exampleTag1Oligos = { 11: 'CCCCAAAA', 12: 'CCCCTTTT', 13: 'CCCCGGGG', 14: 'CCCCAATT', 15: 'AAAAAAAA', 16: 'GACTTTTT', 17: 'CCCCAACC' }
-const exampleTag2Oligos = { 21: 'GGGGAAAA', 22: 'GGGGTTTT', 23: 'GGGGCCCC', 24: 'GGGGAATT', 25: 'GGGGGGGA', 26: 'CTGAAAAA' }
-const exampleTag1and2Oligos = { 11: 'CCCCAAAA:GGGGAAAA', 12: 'CCCCTTTT:GGGGTTTT', 13: 'CCCCGGGG:GGGGCCCC', 14: 'CCCCAATT:GGGGAATT', 15: 'AAAAAAAA:GGGGGGGA', 16: 'GACTTTTT:CTGAAAAA' }
+const exampleTag1GroupChromium = {
+  id: '4',
+  uuid: 'tag-1-group-uuid',
+  name: 'Tag Group 1',
+  tags: [
+    { index: 1, oligo: 'CCCCAAAA' },
+    { index: 2, oligo: 'CCCCTTTT' },
+    { index: 3, oligo: 'CCCCGGGG' },
+    { index: 4, oligo: 'CCCCAATT' },
+    { index: 5, oligo: 'AAAAAAAA' },
+    { index: 6, oligo: 'AAAATTTT' },
+    { index: 7, oligo: 'AAAAGGGG' },
+    { index: 8, oligo: 'AAAACCCC' },
+    { index: 9, oligo: 'GGGGAAAA' },
+    { index: 10, oligo: 'GGGGTTTT' },
+    { index: 11, oligo: 'GGGGGGGG' },
+    { index: 12, oligo: 'GGGGCCCC' },
+    { index: 13, oligo: 'TTTTAAAA' },
+    { index: 14, oligo: 'TTTTTTTT' },
+    { index: 15, oligo: 'TTTTGGGG' },
+    { index: 16, oligo: 'TTTTCCCC' }
+  ]
+}
 
-const exampleChildWells = {
-  A1: {
-    position: 'A1',
-    aliquotCount: 1,
-    tagIndex: 11,
-    submId: '1',
-    pool_index: 1,
-    validity: { valid: true, message: '' }
-  },
-  A2: {
-    position: 'A2',
-    aliquotCount: 1,
-    tagIndex: 12,
-    submId: '1',
-    pool_index: 1,
-    validity: { valid: true, message: '' }
-  },
-  A3: {
-    position: 'A3',
-    aliquotCount: 1,
-    tagIndex: 13,
-    submId: '1',
-    pool_index: 1,
-    validity: { valid: true, message: '' }
-  },
-  A4: {
-    position: 'A4',
-    aliquotCount: 1,
-    tagIndex: 14,
-    submId: '1',
-    pool_index: 1,
-    validity: { valid: true, message: '' }
-  }
+const exampleTag1Oligos = {
+  11: 'CCCCAAAA',
+  12: 'CCCCTTTT',
+  13: 'CCCCGGGG',
+  14: 'CCCCAATT',
+  15: 'AAAAAAAA',
+  16: 'GACTTTTT',
+  17: 'CCCCAACC'
+}
+
+const exampleTag2Oligos = {
+  21: 'GGGGAAAA',
+  22: 'GGGGTTTT',
+  23: 'GGGGCCCC',
+  24: 'GGGGAATT',
+  25: 'GGGGGGGA',
+  26: 'CTGAAAAA'
+}
+
+const exampleTag1and2Oligos = {
+  11: 'CCCCAAAA:GGGGAAAA',
+  12: 'CCCCTTTT:GGGGTTTT',
+  13: 'CCCCGGGG:GGGGCCCC',
+  14: 'CCCCAATT:GGGGAATT',
+  15: 'AAAAAAAA:GGGGGGGA',
+  16: 'GACTTTTT:CTGAAAAA'
+}
+
+const exampleChromiumTag1Oligos = {
+  1: 'CCCCAAAA',
+  2: 'CCCCTTTT',
+  3: 'CCCCGGGG',
+  4: 'CCCCAATT',
+  5: 'AAAAAAAA',
+  6: 'AAAATTTT',
+  7: 'AAAAGGGG',
+  8: 'AAAACCCC',
+  9: 'GGGGAAAA',
+  10: 'GGGGTTTT',
+  11: 'GGGGGGGG',
+  12: 'GGGGCCCC',
+  13: 'TTTTAAAA',
+  14: 'TTTTTTTT',
+  15: 'TTTTGGGG',
+  16: 'TTTTCCCC'
 }
 
 const exampleQcableData = {
@@ -325,6 +357,16 @@ const exampleParentUsedOligos = {
   }
 }
 
+const exampleChromiumParentUsedOligos = {
+  '1': {
+    'AAAAAAAT:GGGGGGGT:TTTTTTTA:CCCCCCCA': [ 'submission' ],
+    'TTTTTTTA:CCCCCCCA:AAAAAAAT:GGGGGGGT': [ 'submission' ],
+    'AAAAAAAC:GGGGGGGC:TTTTTTTG:CCCCCCCG': [ 'submission' ],
+    'TTTTTTTG:CCCCCCCG:AAAAAAAC:GGGGGGGC': [ 'submission' ],
+    'AAAAAAAA:GGGGGGGA:TTTTTTAA:CCCCCCAA': [ 'submission' ]
+  }
+}
+
 const exampleParentWellSubmissionDetails = {
   'A1': { subm_id: '1', pool_index: 1 },
   'A2': { subm_id: '1', pool_index: 1 },
@@ -365,12 +407,14 @@ export {
   exampleTag1Group,
   exampleTag2Group,
   exampleTag2GroupLonger,
+  exampleTag1GroupChromium,
   exampleTag1Oligos,
   exampleTag2Oligos,
   exampleTag1and2Oligos,
-  exampleChildWells,
+  exampleChromiumTag1Oligos,
   exampleQcableData,
   exampleParentUsedOligos,
+  exampleChromiumParentUsedOligos,
   exampleParentWellSubmissionDetails,
   exampleParentUsedOligosForPools,
   exampleParentWellSubmissionDetailsForPools

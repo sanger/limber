@@ -1,0 +1,117 @@
+<template>
+  <b-form-group
+    id="offset_tags_by_group"
+    label="Offset tags by:"
+    label-for="offset_tags_by_input"
+    :invalid-feedback="offsetTagsByInvalidFeedback"
+    :valid-feedback="offsetTagsByValidFeedback"
+    :state="offsetTagsByState"
+  >
+    <b-form-input
+      id="offset_tags_by_input"
+      v-model="offsetTagsBy"
+      type="number"
+      :min="offsetTagsByMin"
+      :max="offsetTagsByMax"
+      step="1"
+      :placeholder="offsetTagsByPlaceholder"
+      :state="offsetTagsByState"
+      @input="offsetTagChanged"
+    />
+  </b-form-group>
+</template>
+
+<script>
+
+/**
+ * Displays a tag offset input field.
+ * The user can enter a value which is validated and emitted to the parent.
+ * Validation is for guidance only and does not prevent emission.
+ * It provides:
+ * - A number input field with validation.
+ */
+export default {
+  name: 'TagOffset',
+  props: {
+    // The current number of useable tags, calculated by the parent component
+    // and used to determine tag offset limits.
+    numberOfTags: {
+      type: Number,
+      default: 0
+    },
+    // The number of target wells, calculated by the parent component and
+    // used to determine the tag offset limits.
+    numberOfTargetWells: {
+      type: Number,
+      default: 0
+    },
+    // The initial value of the tag offset.
+    initialOffsetTagsBy: {
+      type: Number,
+      default: 0
+    }
+  },
+  data () {
+    return {
+      offsetTagsByMin: 0, // holds the tag offset minimum value
+      offsetTagsBy: this.initialOffsetTagsBy, // holds the entered tag offset number
+    }
+  },
+  computed: {
+    offsetTagsByMax() {
+      if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
+        return null
+      }
+      return this.numberOfTags - this.numberOfTargetWells
+    },
+    isOffsetTagsByMaxValid() {
+      return (this.offsetTagsByMax && this.offsetTagsByMax > 0)
+    },
+    isOffsetTagsByWithinLimits() {
+      return ((this.offsetTagsBy >= this.offsetTagsByMin) &&
+              (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
+    },
+    isOffsetTagsByTooHigh() {
+      return (this.offsetTagsBy > this.offsetTagsByMax)
+    },
+    offsetTagsByPlaceholder() {
+      let placeholder = 'Enter offset number...'
+
+      if(this.numberOfTags === 0) {
+        placeholder = 'Select tags first...'
+      } else if(this.numberOfTargetWells === 0) {
+        placeholder = 'No target wells...'
+      } else if(this.offsetTagsByMax < 0) {
+        placeholder = 'Not enough tags...'
+      } else if(this.offsetTagsByMax === 0) {
+        placeholder = 'No spare tags...'
+      }
+
+      return placeholder
+    },
+    offsetTagsByState() {
+      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : false
+    },
+    offsetTagsByValidFeedback() {
+      return this.offsetTagsByState ? 'Valid' : ''
+    },
+    offsetTagsByInvalidFeedback() {
+      if(this.isOffsetTagsByMaxValid && this.isOffsetTagsByTooHigh) {
+        return 'Offset must be less than or equal to ' + this.offsetTagsByMax
+      } else {
+        if(!this.isOffsetTagsByWithinLimits && this.offsetTagsByMax < 0) {
+          return 'Not enough tags to fill wells with aliquots'
+        }
+      }
+
+      return ''
+    }
+  },
+  methods: {
+    offsetTagChanged() {
+      this.$emit('tagoffsetchanged', this.offsetTagsBy)
+    }
+  }
+}
+
+</script>

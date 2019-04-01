@@ -1,13 +1,13 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import CustomTaggedPlateDetails from './CustomTaggedPlateDetails.vue'
+import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
 import localVue from 'test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
-describe('CustomTaggedPlateDetails', () => {
+describe('TagSubstitutionDetails', () => {
   const wrapperFactory = function() {
-    return shallowMount(CustomTaggedPlateDetails, {
+    return shallowMount(TagSubstitutionDetails, {
       propsData: {
         tagSubstitutions: { '2': '5', '3': '6' }
       },
