@@ -52,7 +52,6 @@ describe('AssetLookupByUuid', () => {
 
   it('is invalid if there are api troubles', async () => {
     const api = mockApi()
-
     api.mockFail('plates', {
       include: '',
       filter: { uuid: assetUuid },

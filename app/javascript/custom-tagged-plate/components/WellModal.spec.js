@@ -22,6 +22,67 @@ describe('WellModal', () => {
     })
   }
 
+  describe('#computed function tests:', () => {
+    describe('wellModalTitle:', () => {
+      it('returns the correct title', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.wellModalTitle).toEqual('Well: A1 - Tag Substitution')
+      })
+    })
+
+    describe('state:', () => {
+      it('returns the correct state for a invalid substitution', () => {
+        const wrapper = wrapperFactory()
+
+        const invalidEntryWellModalDetails = {
+          position: 'A1',
+          originalTag: 1,
+          tagMapIds: [1,2,3],
+          validity: { valid: true, message: '' },
+          existingSubstituteTagId: null
+        }
+
+        wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
+        wrapper.setData({ substituteTagId: '5' })
+
+        expect(wrapper.vm.state).toBe(false)
+      })
+
+      it('returns the correct state for a valid substitution', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ substituteTagId: '3' })
+
+        expect(wrapper.vm.state).toBe(true)
+      })
+    })
+
+    describe('feedback', () => {
+      it('returns the correct text when the value is blank', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.feedback).toEqual('')
+      })
+
+      it('returns the correct text when the value is a valid tag map id', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ substituteTagId: '3' })
+
+        expect(wrapper.vm.feedback).toEqual('Great!')
+      })
+
+      it('returns the correct text when the value is an invalid tag map id', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({ substituteTagId: '5' })
+
+        expect(wrapper.vm.feedback).toEqual('Number entered is not a valid tag map id')
+      })
+    })
+  })
+
   describe('#rendering tests', () => {
     it('renders a vue instance', () => {
       const wrapper = wrapperFactory()
@@ -84,43 +145,6 @@ describe('WellModal', () => {
       })
 
       expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(false)
-    })
-  })
-
-  describe('#computed function tests:', () => {
-    describe('wellModalTitle:', () => {
-      it('returns the correct title', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.wellModalTitle).toEqual('Well: A1')
-      })
-    })
-
-    describe('state:', () => {
-      it('returns the correct state for a invalid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        const invalidEntryWellModalDetails = {
-          position: 'A1',
-          originalTag: 1,
-          tagMapIds: [1,2,3],
-          validity: { valid: true, message: '' },
-          existingSubstituteTagId: null
-        }
-
-        wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
-        wrapper.setData({ substituteTagId: '5' })
-
-        expect(wrapper.vm.state).toBe(false)
-      })
-
-      it('returns the correct state for a valid substitution', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ substituteTagId: '3' })
-
-        expect(wrapper.vm.state).toBe(true)
-      })
     })
   })
 

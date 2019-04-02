@@ -4,7 +4,6 @@
     ref="wellModalRef"
     :title="wellModalTitle"
     :ok-disabled="!state"
-    :ok-title="wellModalOkTitle"
     @ok="handleWellModalOk"
     @shown="handleWellModalShown"
   >
@@ -39,8 +38,8 @@
               id="substitute_tag_number_group"
               label="Substitute tag:"
               label-for="substitute_tag_number_input"
-              invalid-feedback="Number entered does not match a tag map id"
-              valid-feedback="Great!"
+              :invalid-feedback="feedback"
+              :valid-feedback="feedback"
               :state="state"
             >
               <b-form-input
@@ -48,7 +47,7 @@
                 ref="focusThis"
                 v-model="substituteTagId"
                 type="number"
-                placeholder="Enter tag number to substitute"
+                placeholder="Enter a valid tag map id to substitute"
                 :state="state"
               />
             </b-form-group>
@@ -111,7 +110,7 @@ export default {
   },
   computed: {
     wellModalTitle() {
-      return ('Well: ' + this.wellModalDetails.position)
+      return ('Well: ' + this.wellModalDetails.position + ' - Tag Substitution')
     },
     substituteTagIdAsNumber() {
       return (this.substituteTagId) ? Number.parseInt(this.substituteTagId) : null
@@ -119,8 +118,9 @@ export default {
     state() {
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
-    wellModalOkTitle() {
-      return this.state ? 'Substitute Tag' : 'Enter a valid tag id...'
+    feedback(){
+      if(this.substituteTagId === null) { return '' }
+      return this.state ? 'Great!' : 'Number entered is not a valid tag map id'
     }
   },
   methods: {
@@ -131,7 +131,9 @@ export default {
       this.$refs.wellModalRef.hide()
     },
     handleWellModalShown(_e) {
-      this.substituteTagId = this.wellModalDetails.existingSubstituteTagId
+      if(this.wellModalDetails.existingSubstituteTagId) {
+        this.substituteTagId = this.wellModalDetails.existingSubstituteTagId.toString()
+      }
       if(this.wellModalDetails.tagMapIds.length > 0) {
         this.$refs.focusThis.focus()
       }
