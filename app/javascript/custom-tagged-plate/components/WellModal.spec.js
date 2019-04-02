@@ -22,22 +22,6 @@ describe('WellModal', () => {
     })
   }
 
-  const invalidEntryWellModalDetails = {
-    position: 'A1',
-    originalTag: 1,
-    tagMapIds: [1,2,3],
-    validity: { valid: true, message: '' },
-    existingSubstituteTagId: null
-  }
-
-  const tagClashWellModalDetails = {
-    position: 'A1',
-    originalTag: 1,
-    tagMapIds: [1,2,3],
-    validity: { valid: false, message: 'Tag clash with Submission' },
-    existingSubstituteTagId: null
-  }
-
   describe('#rendering tests', () => {
     it('renders a vue instance', () => {
       const wrapper = wrapperFactory()
@@ -55,6 +39,14 @@ describe('WellModal', () => {
 
     it('renders an invalid message if one is provided', () => {
       const wrapper = wrapperFactory()
+
+      const tagClashWellModalDetails = {
+        position: 'A1',
+        originalTag: 1,
+        tagMapIds: [1,2,3],
+        validity: { valid: false, message: 'Tag clash with Submission' },
+        existingSubstituteTagId: null
+      }
 
       wrapper.setProps({ wellModalDetails: tagClashWellModalDetails })
 
@@ -107,6 +99,14 @@ describe('WellModal', () => {
     describe('state:', () => {
       it('returns the correct state for a invalid substitution', () => {
         const wrapper = wrapperFactory()
+
+        const invalidEntryWellModalDetails = {
+          position: 'A1',
+          originalTag: 1,
+          tagMapIds: [1,2,3],
+          validity: { valid: true, message: '' },
+          existingSubstituteTagId: null
+        }
 
         wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
         wrapper.setData({ substituteTagId: '5' })

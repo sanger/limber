@@ -1,7 +1,6 @@
 import { calculateTagLayout } from './tagLayoutFunctions'
 
 describe('calculateTagLayout', () => {
-
   const inputWells = [
     { position: 'A1', aliquotCount: 1, pool_index: 1 },
     { position: 'B1', aliquotCount: 1, pool_index: 1 },
@@ -17,10 +16,6 @@ describe('calculateTagLayout', () => {
     { position: 'C4', aliquotCount: 1, pool_index: 1 }
   ]
   const tagMapIdsStandard  = Array.from(new Array(96), (x,i) => i + 1) // [1,2,..96]
-  const tagMapIdsNonConseq = [ 2,5,6,7,9,10,12,13,14,15,17,18 ]
-  const tagMapIdsShort     = [ 1,2,3,4,5,6 ]
-  const tagMapIdsEmpty     = []
-
   const plateDims = { number_of_rows: 3, number_of_columns: 4 }
 
   describe('validations: ', () => {
@@ -43,7 +38,7 @@ describe('calculateTagLayout', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tagMapIds: tagMapIdsEmpty,
+        tagMapIds: [],
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0,
@@ -85,10 +80,9 @@ describe('calculateTagLayout', () => {
     })
 
     it('returns empty object if invalid plate dimensions are supplied', () => {
-      const invalidPlateDims = { number_of_rows: 0, number_of_columns: 4 }
       const data = {
         wells: inputWells,
-        plateDims: invalidPlateDims,
+        plateDims: { number_of_rows: 0, number_of_columns: 4 },
         tagMapIds: tagMapIdsStandard,
         walkingBy: 'manual by plate',
         direction: 'column',
@@ -112,7 +106,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 2 ],
         'C1': [ 3 ],
@@ -127,7 +121,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('sequential by row', () => {
@@ -140,7 +134,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 5 ],
         'C1': [ 8 ],
@@ -155,7 +149,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('sequential by column with offset', () => {
@@ -168,7 +162,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 6 ],
         'C1': [ 7 ],
@@ -183,7 +177,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('sequential by row with offset', () => {
@@ -196,7 +190,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 9 ],
         'C1': [ 12 ],
@@ -211,7 +205,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('sequential by inverse column with offset', () => {
@@ -224,7 +218,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 15 ],
         'B1': [ 14 ],
         'C1': [ 13 ],
@@ -239,7 +233,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('sequential by inverse row with offset', () => {
@@ -252,7 +246,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 15 ],
         'B1': [ 11 ],
         'C1': [ 8 ],
@@ -267,20 +261,20 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
-    it('sequential by column when some wells empty', () => {
+    it('sequential by column with non-sequential tag map ids', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tagMapIds: tagMapIdsNonConseq,
+        tagMapIds: [ 2,5,6,7,9,10,12,13,14,15,17,18 ],
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 2 ],
         'B1': [ 5 ],
         'C1': [ 6 ],
@@ -295,20 +289,20 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
-    it('sequential by column where not enough tags', () => {
+    it('sequential by column where not enough tags available', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tagMapIds: tagMapIdsShort,
+        tagMapIds: [ 1,2,3,4,5,6 ],
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 2 ],
         'C1': [ 3 ],
@@ -323,7 +317,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
   })
 
@@ -338,7 +332,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 2 ],
         'C1': [ 3 ],
@@ -353,7 +347,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by row', () => {
@@ -366,7 +360,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 5 ],
         'C1': [ 9 ],
@@ -381,7 +375,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by inverse column', () => {
@@ -394,7 +388,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 12 ],
         'B1': [ 11 ],
         'C1': [ 10 ],
@@ -409,7 +403,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by inverse row', () => {
@@ -422,7 +416,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 12 ],
         'B1': [ 8 ],
         'C1': [ 4 ],
@@ -437,7 +431,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by column with offset', () => {
@@ -450,7 +444,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 6 ],
         'C1': [ 7 ],
@@ -465,7 +459,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by row with offset', () => {
@@ -478,7 +472,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 9 ],
         'C1': [ 13 ],
@@ -493,7 +487,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by inverse column with offset', () => {
@@ -506,7 +500,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 16 ],
         'B1': [ 15 ],
         'C1': [ 14 ],
@@ -521,7 +515,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('fixed by inverse row with offset', () => {
@@ -534,7 +528,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 16 ],
         'B1': [ 12 ],
         'C1': [ 8 ],
@@ -549,7 +543,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
   })
 
@@ -564,7 +558,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 2 ],
         'C1': [ 3 ],
@@ -579,7 +573,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by row', () => {
@@ -592,7 +586,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1 ],
         'B1': [ 4 ],
         'C1': [ 7 ],
@@ -607,7 +601,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by inverse column', () => {
@@ -620,7 +614,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 9 ],
         'B1': [ 8 ],
         'C1': [ 7 ],
@@ -635,7 +629,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by inverse row', () => {
@@ -648,7 +642,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 9 ],
         'B1': [ 6 ],
         'C1': [ 3 ],
@@ -663,7 +657,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by column with offset', () => {
@@ -676,7 +670,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 6 ],
         'C1': [ 7 ],
@@ -691,7 +685,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by row with offset', () => {
@@ -704,7 +698,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 5 ],
         'B1': [ 8 ],
         'C1': [ 11 ],
@@ -719,7 +713,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by inverse column with offset', () => {
@@ -732,7 +726,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 13 ],
         'B1': [ 12 ],
         'C1': [ 11 ],
@@ -747,7 +741,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('pooled by inverse row with offset', () => {
@@ -760,7 +754,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 1
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 13 ],
         'B1': [ 10 ],
         'C1': [ 7 ],
@@ -775,7 +769,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
   })
 
@@ -790,7 +784,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1,2,3,4 ],
         'B1': [ 5,6,7,8 ],
         'C1': [ 9,10,11,12 ],
@@ -806,7 +800,7 @@ describe('calculateTagLayout', () => {
 
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('by row', () => {
@@ -819,7 +813,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 0,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [1,2,3,4],
         'B1': [17,18,19,20],
         'C1': [29,30,31,32],
@@ -834,7 +828,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('by column with offset', () => {
@@ -847,7 +841,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 17,18,19,20 ],
         'B1': [ 21,22,23,24 ],
         'C1': [ 25,26,27,28 ],
@@ -862,7 +856,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('by row with offset', () => {
@@ -875,7 +869,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 17,18,19,20 ],
         'B1': [ 33,34,35,36 ],
         'C1': [ 45,46,47,48 ],
@@ -890,7 +884,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('by inverse column with offset', () => {
@@ -903,7 +897,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 57,58,59,60 ],
         'B1': [ 53,54,55,56 ],
         'C1': [ 49,50,51,52 ],
@@ -918,7 +912,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
     it('by inverse row with offset', () => {
@@ -931,7 +925,7 @@ describe('calculateTagLayout', () => {
         offsetTagsBy: 4,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 57,58,59,60 ],
         'B1': [ 41,42,43,44 ],
         'C1': [ 29,30,31,32 ],
@@ -946,20 +940,20 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
 
-    it('sequential by column where not enough tags available', () => {
+    it('sequential by column where multiple tags per well and not enough tags available', () => {
       const data = {
         wells: inputWells,
         plateDims: plateDims,
-        tagMapIds: tagMapIdsShort,
+        tagMapIds: [ 1,2,3,4,5,6 ],
         walkingBy: 'manual by plate',
         direction: 'column',
         offsetTagsBy: 0,
         tagsPerWell: 4
       }
-      const outputWells = {
+      const expectedOutputWells = {
         'A1': [ 1,2,3,4 ],
         'B1': [ 5,6,-1,-1 ],
         'C1': [ -1,-1,-1,-1 ],
@@ -974,7 +968,7 @@ describe('calculateTagLayout', () => {
       }
       const response = calculateTagLayout(data)
 
-      expect(response).toEqual(outputWells)
+      expect(response).toEqual(expectedOutputWells)
     })
   })
 })

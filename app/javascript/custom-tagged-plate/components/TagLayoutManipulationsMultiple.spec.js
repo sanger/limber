@@ -1,16 +1,19 @@
 // Import the component being tested
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
-import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
+import {
+  nullTagGroup,
+  exampleTagGroupsList
+} from '../testData/customTaggedPlateTestData.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulationsMultiple', () => {
-  const wrapperFactory = function(api = mockApi()) {
-    return mount(TagLayoutManipulationsMultiple, {
+  const wrapperFactory = function() {
+    return shallowMount(TagLayoutManipulationsMultiple, {
       propsData: {
-        api: api.devour,
+        api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
         tagsPerWell: 4
@@ -21,45 +24,6 @@ describe('TagLayoutManipulationsMultiple', () => {
       },
       localVue
     })
-  }
-
-  const goodTagGroupsList = {
-    1: {
-      id: '1',
-      uuid: 'tag-1-group-uuid',
-      name: 'Tag Group 1',
-      tags: [
-        {
-          index: 1,
-          oligo: 'CTAGCTAG'
-        },
-        {
-          index: 2,
-          oligo: 'TTATACGA'
-        }
-      ]
-    },
-    2: {
-      id: '2',
-      uuid: 'tag-2-group-uuid',
-      name: 'Tag Group 2',
-      tags: [
-        {
-          index: 1,
-          oligo: 'CCTTAAGG'
-        },
-        {
-          index: 2,
-          oligo: 'AATTCGCA'
-        }
-      ]
-    }
-  }
-
-  const nullTagGroup = {
-    uuid: null,
-    name: 'No tag group selected',
-    tags: []
   }
 
   describe('#computed function tests:', () => {
@@ -81,7 +45,7 @@ describe('TagLayoutManipulationsMultiple', () => {
       it('returns valid array of tag 1 groups if tag groups list set', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
         const goodTag1GroupOptions = [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
@@ -98,7 +62,7 @@ describe('TagLayoutManipulationsMultiple', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tagGroupsList: goodTagGroupsList,
+          tagGroupsList: exampleTagGroupsList,
           tag1GroupId: 1
         })
 
@@ -158,8 +122,6 @@ describe('TagLayoutManipulationsMultiple', () => {
       const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
-      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
     })
 
     it('renders a walking by label', () => {
@@ -176,24 +138,11 @@ describe('TagLayoutManipulationsMultiple', () => {
   })
 
   describe('#integration tests:', () => {
-    it('updates tag1GroupId when a tag 1 group is selected', () => {
-      const wrapper = wrapperFactory()
-
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-      expect(wrapper.vm.tag1GroupId).toEqual(null)
-
-      wrapper.find('#tag1_group_selection').element.value = '1'
-      wrapper.find('#tag1_group_selection').trigger('change') // TODO needed?
-
-      expect(wrapper.vm.tag1GroupId).toBe('1')
-    })
-
     it('emits a call to the parent container on a change of the form data', () => {
       const wrapper = wrapperFactory()
       const emitted = wrapper.emitted()
 
-      expect(wrapper.find('#direction_options').exists()).toBe(true)
+      wrapper.setData({ direction: 'row' })
 
       const expectedEmitted = [
         {
@@ -214,10 +163,9 @@ describe('TagLayoutManipulationsMultiple', () => {
         }
       ]
 
-      const input = wrapper.find('#direction_options')
-      const option = input.find('option[value="row"]')
-      option.setSelected()
-      input.trigger('input')
+      // NB. cannot interact with vue bootstrap components when wrapper is
+      // shallowMounted
+      wrapper.vm.updateTagParams()
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(expectedEmitted)

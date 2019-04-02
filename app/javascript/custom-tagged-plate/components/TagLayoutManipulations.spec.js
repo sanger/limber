@@ -294,7 +294,8 @@ describe('TagLayoutManipulations', () => {
         }
       ]
 
-      // NB. cannot interact with vue bootstrap components as would like
+      // NB. cannot interact with vue bootstrap components when wrapper is
+      // shallowMounted
       wrapper.vm.updateTagParams()
 
       expect(emitted.tagparamsupdated.length).toBe(1)
