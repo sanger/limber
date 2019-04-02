@@ -14,11 +14,6 @@ describe('PlateScan', () => {
   const nullPlate = { data: [] }
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
   const badPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid , number_of_columns: 24, number_of_rows: 8 }])
-  const lotUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9b'
-  const tagLayoutUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9c'
-  const goodQcable = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'wells of plate'}}}])
-  const badQcableWrongState = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'qc_in_progress', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'wells of plate'}}}])
-  const badQcableWrongWalkingBy = jsonCollectionFactory('qcable', [{ uuid: assetUuid , state: 'available', lot: { uuid: lotUuid, tag_layout_template: { uuid: tagLayoutUuid, direction: 'column', walking_by: 'quadrants'}}}])
 
   const wrapperFactoryPlate = function(api = mockApi()) {
     return mount(PlateScan, {
@@ -42,24 +37,6 @@ describe('PlateScan', () => {
         plateRows: 8,
         includes: 'wells.requests_as_source,wells.aliquots.request',
         scanDisabled: true
-      },
-      localVue
-    })
-  }
-
-  const wrapperFactoryQcable = function(api = mockApi()) {
-    return mount(PlateScan, {
-      propsData: {
-        label: 'My Qcable',
-        description: 'Scan it in',
-        api: api.devour,
-        plateType: 'qcable',
-        includes: 'lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
-        fields: {
-          lots:'uuid,template',
-          tag_layout_templates:'uuid,tag_group,tag2_group,direction,walking_by',
-          tag_group:'uuid,name'
-        }
       },
       localVue
     })

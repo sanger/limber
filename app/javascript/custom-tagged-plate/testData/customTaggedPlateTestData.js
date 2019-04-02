@@ -199,6 +199,12 @@ const exampleParentWithPools = {
   ]
 }
 
+const nullTagGroup = {
+  uuid: null,
+  name: 'No tag group selected',
+  tags: []
+}
+
 const exampleTag1Group = {
   id: '1',
   uuid: 'tag-1-group-uuid',
@@ -314,6 +320,8 @@ const exampleChromiumTag1Oligos = {
   16: 'TTTTCCCC'
 }
 
+const nullQcableData = { plate: null, state: 'empty' }
+
 const exampleQcableData = {
   plate: {
     id:'1',
@@ -397,6 +405,39 @@ const exampleParentWellSubmissionDetailsForPools = {
   'A4': { subm_id: '2', pool_index: 2 },
 }
 
+const exampleTagGroupsList = {
+  1: {
+    id: '1',
+    uuid: 'tag-1-group-uuid',
+    name: 'Tag Group 1',
+    tags: [
+      {
+        index: 1,
+        oligo: 'CTAGCTAG'
+      },
+      {
+        index: 2,
+        oligo: 'TTATACGA'
+      }
+    ]
+  },
+  2: {
+    id: '2',
+    uuid: 'tag-2-group-uuid',
+    name: 'Tag Group 2',
+    tags: [
+      {
+        index: 1,
+        oligo: 'CCTTAAGG'
+      },
+      {
+        index: 2,
+        oligo: 'AATTCGCA'
+      }
+    ]
+  }
+}
+
 export {
   plateUuid,
   exampleParent,
@@ -404,6 +445,8 @@ export {
   exampleParentWithoutWellRequestsAsResource,
   exampleParentSequential,
   exampleParentWithPools,
+  exampleTagGroupsList,
+  nullTagGroup,
   exampleTag1Group,
   exampleTag2Group,
   exampleTag2GroupLonger,
@@ -412,6 +455,7 @@ export {
   exampleTag2Oligos,
   exampleTag1and2Oligos,
   exampleChromiumTag1Oligos,
+  nullQcableData,
   exampleQcableData,
   exampleParentUsedOligos,
   exampleChromiumParentUsedOligos,

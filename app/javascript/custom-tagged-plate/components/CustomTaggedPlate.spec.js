@@ -16,7 +16,7 @@ import {
   exampleTag2GroupLonger,
   exampleQcableData,
   exampleTag1GroupChromium
-} from '../testData/tagClashFunctionsTestData.js'
+} from '../testData/customTaggedPlateTestData.js'
 
 describe('CustomTaggedPlate', () => {
   const mockLocation = {}

@@ -1,14 +1,20 @@
 // Import the component being tested
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
+import {
+  nullTagGroup,
+  nullQcableData,
+  exampleQcableData,
+  exampleTagGroupsList
+} from '../testData/customTaggedPlateTestData.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulations', () => {
   const wrapperFactory = function(api = mockApi()) {
-    return mount(TagLayoutManipulations, {
+    return shallowMount(TagLayoutManipulations, {
       propsData: {
         api: api.devour,
         numberOfTags: 10,
@@ -24,71 +30,6 @@ describe('TagLayoutManipulations', () => {
     })
   }
 
-  const nullQcable = { data: [] }
-  const emptyQcableData = { plate: null, state: 'empty' }
-  const goodQcableData = {
-    plate: {
-      id:'1',
-      labware_barcode: {
-        human_barcode: 'TG12345678'
-      },
-      state:'available',
-      lot:{
-        id:'1',
-        tag_layout_template:{
-          id:'1',
-          direction:'row',
-          walking_by:'wells of plate',
-          tag_group:{
-            id:'1',
-            name:'i7 example tag group 1',
-          },
-          tag2_group:{
-            id:'2',
-            name:'i5 example tag group 2',
-          }
-        }
-      }
-    },
-    state: 'valid'
-  }
-  const goodTagGroupsList = {
-    1: {
-      id: '1',
-      uuid: 'tag-1-group-uuid',
-      name: 'Tag Group 1',
-      tags: [
-        {
-          index: 1,
-          oligo: 'CTAGCTAG'
-        },
-        {
-          index: 2,
-          oligo: 'TTATACGA'
-        }
-      ]
-    },
-    2: {
-      id: '2',
-      uuid: 'tag-2-group-uuid',
-      name: 'Tag Group 2',
-      tags: [
-        {
-          index: 1,
-          oligo: 'CCTTAAGG'
-        },
-        {
-          index: 2,
-          oligo: 'AATTCGCA'
-        }
-      ]
-    }
-  }
-  const nullTagGroup = {
-    uuid: null,
-    name: 'No tag group selected',
-    tags: []
-  }
   const api = mockApi()
   api.mockGet('qcables', {
     filter: {
@@ -101,7 +42,7 @@ describe('TagLayoutManipulations', () => {
       tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
       tag_group: 'uuid,name,tags'
     }
-  }, nullQcable)
+  }, { data: [] })
 
   describe('#computed function tests:', () => {
     describe('walkingByOptions:', () => {
@@ -132,7 +73,7 @@ describe('TagLayoutManipulations', () => {
       it('returns true if a valid tag plate was scanned', () => {
         const wrapper = wrapperFactory(api)
 
-        wrapper.setData({ tagPlate: goodQcableData.plate })
+        wrapper.setData({ tagPlate: exampleQcableData.plate })
 
         expect(wrapper.vm.tagGroupsDisabled).toBe(true)
       })
@@ -148,7 +89,7 @@ describe('TagLayoutManipulations', () => {
       it('returns valid array of tag 1 groups if tag groups list set', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
         const goodTag1GroupOptions = [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
@@ -170,7 +111,7 @@ describe('TagLayoutManipulations', () => {
       it('returns valid array of tag 2 groups if tag groups list set', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ tagGroupsList: goodTagGroupsList })
+        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
         const goodTag2GroupOptions = [
           { value: null, text: 'Please select an i5 Tag 2 group...' },
@@ -187,8 +128,8 @@ describe('TagLayoutManipulations', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tagGroupsList: goodTagGroupsList,
-          tag1GroupId: 1
+          tagGroupsList: exampleTagGroupsList,
+          tag1GroupId: '1'
         })
 
         const expectedTagGroup = {
@@ -222,7 +163,7 @@ describe('TagLayoutManipulations', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({
-          tagGroupsList: goodTagGroupsList,
+          tagGroupsList: exampleTagGroupsList,
           tag2GroupId: 1
         })
 
@@ -270,16 +211,12 @@ describe('TagLayoutManipulations', () => {
       const wrapper = wrapperFactory(api)
 
       expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
-      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
     })
 
     it('renders a tag2 group select dropdown', () => {
       const wrapper = wrapperFactory(api)
 
       expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
-      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
-      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
     })
 
     it('renders a walking by select dropdown', () => {
@@ -299,65 +236,31 @@ describe('TagLayoutManipulations', () => {
     it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
       const wrapper = wrapperFactory(api)
 
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
-      wrapper.vm.tagPlateScanned(goodQcableData)
+      wrapper.vm.tagPlateScanned(exampleQcableData)
 
-      expect(wrapper.vm.tagPlate).toEqual(goodQcableData.plate)
+      expect(wrapper.vm.tagPlate).toEqual(exampleQcableData.plate)
 
-      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
-      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
-
-      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
-      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
-    })
-
-    it('updates tag1GroupId when a tag 1 group is selected', () => {
-      const wrapper = wrapperFactory(api)
-
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-      expect(wrapper.vm.tag1GroupId).toEqual(null)
-
-      wrapper.find('#tag1_group_selection').element.value = '1'
-      wrapper.find('#tag1_group_selection').trigger('change')
-
-      expect(wrapper.vm.tag1GroupId).toBe('1')
-    })
-
-    it('updates tag2GroupId when a tag 2 group is selected', () => {
-      const wrapper = wrapperFactory(api)
-
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
-
-      expect(wrapper.vm.tag2GroupId).toEqual(null)
-
-      wrapper.find('#tag2_group_selection').element.value = '1'
-      wrapper.find('#tag2_group_selection').trigger('change')
-
-      expect(wrapper.vm.tag2GroupId).toBe('1')
+      // NB cannot check the vue bootstrap elements directly with shallowMount
+      // wrapper
+      expect(wrapper.vm.tagGroupsDisabled).toBe(true)
     })
 
     it('re-enables the tag group selects when the tag plate is cleared', () => {
       const wrapper = wrapperFactory(api)
 
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
-      wrapper.vm.tagPlateScanned(goodQcableData)
+      wrapper.vm.tagPlateScanned(exampleQcableData)
 
-      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(true)
-      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(true)
+      // NB cannot check the vue bootstrap elements directly with shallowMount
+      // wrapper
+      expect(wrapper.vm.tagGroupsDisabled).toBe(true)
 
-      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('1')
-      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('2')
+      wrapper.vm.tagPlateScanned(nullQcableData)
 
-      wrapper.vm.tagPlateScanned(emptyQcableData)
-
-      expect(wrapper.find('#tag1_group_selection').element.disabled).toBe(false)
-      expect(wrapper.find('#tag2_group_selection').element.disabled).toBe(false)
-
-      expect(wrapper.find('#tag1_group_selection').element.value).toEqual('')
-      expect(wrapper.find('#tag2_group_selection').element.value).toEqual('')
+      expect(wrapper.vm.tagGroupsDisabled).toBe(false)
 
       expect(wrapper.vm.tag1GroupId).toEqual(null)
       expect(wrapper.vm.tag2GroupId).toEqual(null)
@@ -367,23 +270,25 @@ describe('TagLayoutManipulations', () => {
     it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
       const wrapper = wrapperFactory(api)
 
-      wrapper.setData({ tagGroupsList: goodTagGroupsList })
+      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
-      wrapper.find('#tag1_group_selection').element.value = 1
-      wrapper.find('#tag1_group_selection').trigger('change')
+      // NB cannot check the vue bootstrap elements directly with shallowMount
+      // wrapper
+      wrapper.setData({ tag1GroupId: 1 })
+
+      wrapper.vm.tagGroupChanged()
+      wrapper.vm.tagGroupInput()
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
-
-      expect(wrapper.find('#tag_plate_scan').vm.scanDisabled).toBe(true)
     })
 
     it('emits a call to the parent container on a change of the form data', () => {
       const wrapper = wrapperFactory(api)
       const emitted = wrapper.emitted()
 
-      expect(wrapper.find('#walking_by_options').exists()).toBe(true)
+      wrapper.setData({ walkingBy: 'manual by plate' })
 
       const expectedEmitted = [
         {
@@ -398,16 +303,14 @@ describe('TagLayoutManipulations', () => {
             name: 'No tag group selected',
             tags: []
           },
-          walkingBy: 'wells of plate',
+          walkingBy: 'manual by plate',
           direction: 'column',
           offsetTagsBy: 0
         }
       ]
 
-      const input = wrapper.find('#walking_by_options')
-      const option = input.find('option[value="wells of plate"]')
-      option.setSelected()
-      input.trigger('input')
+      // NB. cannot interact with vue bootstrap components as would like
+      wrapper.vm.updateTagParams()
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(expectedEmitted)

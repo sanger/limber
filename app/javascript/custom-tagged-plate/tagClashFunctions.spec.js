@@ -10,7 +10,7 @@ import {
   exampleParentWellSubmissionDetails,
   exampleParentUsedOligosForPools,
   exampleParentWellSubmissionDetailsForPools
-} from './testData/tagClashFunctionsTestData.js'
+} from './testData/customTaggedPlateTestData.js'
 
 describe('extractParentWellSubmissionDetails', () => {
   it('returns empty details object when there is no parent plate', () => {
