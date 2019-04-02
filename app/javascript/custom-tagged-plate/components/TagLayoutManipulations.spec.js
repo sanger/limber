@@ -1,7 +1,6 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
-import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue.js'
 import {
   nullTagGroup,
@@ -13,10 +12,10 @@ import {
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulations', () => {
-  const wrapperFactory = function(api = mockApi()) {
+  const wrapperFactory = function() {
     return shallowMount(TagLayoutManipulations, {
       propsData: {
-        api: api.devour,
+        api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
         tagsPerWell: 1
@@ -30,24 +29,10 @@ describe('TagLayoutManipulations', () => {
     })
   }
 
-  const api = mockApi()
-  api.mockGet('qcables', {
-    filter: {
-      barcode: 'somebarcode'
-    },
-    include: 'asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group',
-    fields: {
-      assets: 'uuid',
-      lots: 'uuid,tag_layout_template',
-      tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-      tag_group: 'uuid,name,tags'
-    }
-  }, { data: [] })
-
   describe('#computed function tests:', () => {
     describe('walkingByOptions:', () => {
       it('returns an array with the correct number of options for standard plates', () => {
-        const wrapper = wrapperFactory(api)
+        const wrapper = wrapperFactory()
 
         expect(wrapper.vm.walkingByOptions.length).toBe(4)
       })
@@ -55,7 +40,7 @@ describe('TagLayoutManipulations', () => {
 
     describe('directionOptions:', () => {
       it('returns an array with the correct number of options', () => {
-        const wrapper = wrapperFactory(api)
+        const wrapper = wrapperFactory()
 
         expect(wrapper.vm.directionOptions.length).toBe(5)
       })
@@ -63,7 +48,7 @@ describe('TagLayoutManipulations', () => {
 
     describe('tagGroupsDisabled:', () => {
       it('returns false if a tag plate has not been scanned', () => {
-        const wrapper = wrapperFactory(api)
+        const wrapper = wrapperFactory()
 
         wrapper.setData({ tagPlate: null })
 
@@ -71,7 +56,7 @@ describe('TagLayoutManipulations', () => {
       })
 
       it('returns true if a valid tag plate was scanned', () => {
-        const wrapper = wrapperFactory(api)
+        const wrapper = wrapperFactory()
 
         wrapper.setData({ tagPlate: exampleQcableData.plate })
 
@@ -196,37 +181,37 @@ describe('TagLayoutManipulations', () => {
 
   describe('#rendering tests:', () => {
     it('renders a vue instance', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.isVueInstance()).toBe(true)
     })
 
     it('renders a tag plate scan component', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
     })
 
     it('renders a tag1 group select dropdown', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
     })
 
     it('renders a tag2 group select dropdown', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
     })
 
     it('renders a walking by select dropdown', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.find('#walking_by_options').exists()).toBe(true)
     })
 
     it('renders a direction select dropdown', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       expect(wrapper.find('#direction_options').exists()).toBe(true)
     })
@@ -234,7 +219,7 @@ describe('TagLayoutManipulations', () => {
 
   describe('#integration tests:', () => {
     it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
@@ -248,7 +233,7 @@ describe('TagLayoutManipulations', () => {
     })
 
     it('re-enables the tag group selects when the tag plate is cleared', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
@@ -268,7 +253,7 @@ describe('TagLayoutManipulations', () => {
     })
 
     it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
 
       wrapper.setData({ tagGroupsList: exampleTagGroupsList })
 
@@ -285,7 +270,7 @@ describe('TagLayoutManipulations', () => {
     })
 
     it('emits a call to the parent container on a change of the form data', () => {
-      const wrapper = wrapperFactory(api)
+      const wrapper = wrapperFactory()
       const emitted = wrapper.emitted()
 
       wrapper.setData({ walkingBy: 'manual by plate' })
