@@ -36,35 +36,31 @@ describe('transfersLayouts', () => {
 
     expect(transfersResults.valid).toEqual([
       {
-        source_plate: 'plate-1-uuid',
-        pool_index: 1,
-        source_asset: 'well-1-uuid',
-        outer_request: 'req-1-uuid',
-        new_target: { location: 'A1' }
+        request: requests1[0],
+        well: well1,
+        plateObj: plateObj1,
+        targetWell: 'A1'
       },
       {
-        source_plate: 'plate-2-uuid',
-        pool_index: 2,
-        source_asset: 'well-2-uuid',
-        outer_request: 'req-3-uuid',
-        new_target: { location: 'B1' }
+        request: requests2[0],
+        well: well2,
+        plateObj: plateObj2,
+        targetWell: 'B1'
       }
     ])
 
     expect(transfersResults.duplicated).toEqual([
       {
-        source_plate: 'plate-1-uuid',
-        pool_index: 1,
-        source_asset: 'well-1-uuid',
-        outer_request: 'req-2-uuid',
-        new_target: { location: 'A1' }
+        request: requests1[1],
+        well: well1,
+        plateObj: plateObj1,
+        targetWell: 'A1'
       },
       {
-        source_plate: 'plate-2-uuid',
-        pool_index: 2,
-        source_asset: 'well-2-uuid',
-        outer_request: 'req-4-uuid',
-        new_target: { location: 'B1' }
+        request: requests2[1],
+        well: well2,
+        plateObj: plateObj2,
+        targetWell: 'B1'
       }
     ])
   })
@@ -75,35 +71,31 @@ describe('transfersLayouts', () => {
 
     expect(transfersResults.valid).toEqual([
       {
-        source_plate: 'plate-1-uuid',
-        pool_index: 1,
-        source_asset: 'well-1-uuid',
-        outer_request: 'req-1-uuid',
-        new_target: { location: 'A1' }
+        request: requests1[0],
+        well: well1,
+        plateObj: plateObj1,
+        targetWell: 'A1'
       },
       {
-        source_plate: 'plate-2-uuid',
-        pool_index: 2,
-        source_asset: 'well-2-uuid',
-        outer_request: 'req-3-uuid',
-        new_target: { location: 'D3' }
+        request: requests2[0],
+        well: well2,
+        plateObj: plateObj2,
+        targetWell: 'D3'
       }
     ])
 
     expect(transfersResults.duplicated).toEqual([
       {
-        source_plate: 'plate-1-uuid',
-        pool_index: 1,
-        source_asset: 'well-1-uuid',
-        outer_request: 'req-2-uuid',
-        new_target: { location: 'A1' }
+        request: requests1[1],
+        well: well1,
+        plateObj: plateObj1,
+        targetWell: 'A1'
       },
       {
-        source_plate: 'plate-2-uuid',
-        pool_index: 2,
-        source_asset: 'well-2-uuid',
-        outer_request: 'req-4-uuid',
-        new_target: { location: 'D3' }
+        request: requests2[1],
+        well: well2,
+        plateObj: plateObj2,
+        targetWell: 'D3'
       }
     ])
   })

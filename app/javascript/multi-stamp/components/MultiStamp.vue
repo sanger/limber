@@ -77,7 +77,7 @@ import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates, aggregate } from 'shared/components/plateScanValidators'
+import { checkSize, checkDuplicates, checkOverflows, aggregate } from 'shared/components/plateScanValidators'
 
 export default {
   name: 'MultiStamp',
@@ -146,7 +146,21 @@ export default {
       return this.transfers.duplicated
     },
     overflownTransfers() {
-      return this.transfers.valid.slice(this.targetRowsNumber * this.targetColumnsNumber)
+      return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
+    },
+    apiTransfers() {
+      const transfersArray = new Array(this.validTransfers.length)
+      for (let i = 0; i < this.validTransfers.length; i++) {
+        const transfer = this.validTransfers[i]
+        transfersArray[i] = {
+          source_plate: transfer.plateObj.plate.uuid,
+          pool_index: transfer.plateObj.index + 1,
+          source_asset: transfer.well.uuid,
+          outer_request: transfer.request.uuid,
+          new_target: { location: transfer.targetWell }
+        }
+      }
+      return transfersArray
     },
     transfersError() {
       const errorMessages = []
@@ -159,7 +173,7 @@ export default {
       return errorMessages.join(' and ')
     },
     targetWells() {
-      let deb = this.validTransfers.reduce((wells, transfer) => {
+      let deb = this.apiTransfers.reduce((wells, transfer) => {
         wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
         return wells
       }, {})
@@ -177,7 +191,11 @@ export default {
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)
       return (index) => {
-        return aggregate(checkSize(12,8), checkDuplicates(currPlates, index))
+        return aggregate(
+          checkSize(12, 8),
+          checkDuplicates(currPlates, index),
+          checkOverflows(this.overflownTransfers)
+        )
       }
     }
   },
@@ -191,14 +209,15 @@ export default {
       let payload = { plate: {
         parent_uuid: this.validPlates[0].plate.uuid,
         purpose_uuid: this.purposeUuid,
-        transfers: this.validTransfers
+        transfers: this.apiTransfers
       }}
+
       this.$axios({
         method: 'post',
         url:this.targetUrl,
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data: payload
-      }).then((response)=>{
+      }).then((response) => {
         // Ajax responses automatically follow redirects, which
         // would result in us receiving the full HTML for the child
         // plate here, which we'd then need to inject into the
@@ -206,7 +225,7 @@ export default {
         // application/json requests, and redirect the user ourselves.
         this.progressMessage = response.data.message
         this.locationObj.href = response.data.redirect
-      }).catch((error)=>{
+      }).catch((error) => {
         // Something has gone wrong
         console.log(error)
         this.loading = false

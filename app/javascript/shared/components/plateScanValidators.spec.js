@@ -1,5 +1,5 @@
 // // Import the component being tested
-import { checkSize, checkDuplicates, aggregate } from './plateScanValidators'
+import { checkSize, checkDuplicates, checkOverflows, aggregate } from './plateScanValidators'
 
 describe('aggregate', () => {
   const validFunction = (_) => { return { valid: true, message: 'Good' } }
@@ -66,5 +66,35 @@ describe('checkDuplicates', () => {
     expect(
       checkDuplicates([empty,plate2],0)(plate1)
     ).toEqual({ valid: true, message: 'Great!' })
+  })
+})
+
+describe('checkOverflows', () => {
+  it('passes when the plate is not the source of transfers that overflow the target', () => {
+    const plate = { uuid: 'plate-uuid-1' }
+    const other_plate = { uuid: 'plate-uuid-2' }
+    const overflownTransfers = [{
+      plateObj: { plate: other_plate }
+    }]
+
+    expect(
+      checkOverflows(overflownTransfers)(plate)
+    ).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it('fails when the plate is the source of transfers that overflow the target', () => {
+    const plate = { uuid: 'plate-uuid-1' }
+    const overflownTransfers = [{
+      plateObj: { plate: plate },
+      well: { position: { name: 'D11' } }
+    },
+    {
+      plateObj: { plate: plate },
+      well: { position: { name: 'D12' } }
+    }]
+
+    expect(
+      checkOverflows(overflownTransfers)(plate)
+    ).toEqual({ valid: false, message: 'Overflown wells: D11, D12' })
   })
 })

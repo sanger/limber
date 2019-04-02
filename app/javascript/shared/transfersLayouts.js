@@ -82,30 +82,13 @@ const transferFunctions = {
   sequential: sequentialTransfers
 }
 
-const buildApiTransferArray = function(transfers) {
-  const transfersArray = new Array(transfers.length)
-  for (let i = 0; i < transfersArray.length; i++) {
-    const transfer = transfers[i]
-    transfersArray[i] = {
-      source_plate: transfer.plateObj.plate.uuid,
-      pool_index: transfer.plateObj.index + 1,
-      source_asset: transfer.well.uuid,
-      outer_request: transfer.request.uuid,
-      new_target: { location: transfer.targetWell }
-    }
-  }
-  return transfersArray
-}
-
 const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
   const transferFunction = transferFunctions[transfersLayout]
   if (transferFunction === undefined) {
     throw `Invalid transfers layout name: ${transfersLayout}`
   }
   const { validTransfers, duplicatedTransfers } = transferFunction(requestsWithPlates)
-  const validApiTransfers = buildApiTransferArray(validTransfers)
-  const duplicatedApiTransfers = buildApiTransferArray(duplicatedTransfers)
-  return { valid: validApiTransfers, duplicated: duplicatedApiTransfers }
+  return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
 export { transfersFromRequests }
