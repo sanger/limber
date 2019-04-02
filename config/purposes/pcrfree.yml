@@ -69,7 +69,7 @@ PF-384 Lib:
   - 'IDT for Illumina v1 - 384 Quadrant'
   :parents:
   - PF-384 End Prep
-PF Lib XP:
+PF Lib XP: # This plate was previously tracked as part of the process
   :asset_type: plate
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StandardPresenter
@@ -92,6 +92,7 @@ PF Lib XP2:
   :label_template: plate_xp
   :parents:
   - PF Lib XP
+  - PF Lib
 PF Lib Q-XP2:
   :asset_type: plate
   :default_printer_type: :plate_a
