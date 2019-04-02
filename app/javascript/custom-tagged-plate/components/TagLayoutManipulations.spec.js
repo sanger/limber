@@ -84,6 +84,11 @@ describe('TagLayoutManipulations', () => {
       ]
     }
   }
+  const nullTagGroup = {
+    uuid: null,
+    name: 'No tag group selected',
+    tags: []
+  }
   const api = mockApi()
   api.mockGet('qcables', {
     filter: {
@@ -174,6 +179,76 @@ describe('TagLayoutManipulations', () => {
         ]
 
         expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
+      })
+    })
+
+    describe('tag1Group:', () => {
+      it('returns a valid tag 1 group if the id matches a group in the list', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tagGroupsList: goodTagGroupsList,
+          tag1GroupId: 1
+        })
+
+        const expectedTagGroup = {
+          id: '1',
+          uuid: 'tag-1-group-uuid',
+          name: 'Tag Group 1',
+          tags: [
+            {
+              index: 1,
+              oligo: 'CTAGCTAG'
+            },
+            {
+              index: 2,
+              oligo: 'TTATACGA'
+            }
+          ]
+        }
+
+        expect(wrapper.vm.tag1Group).toEqual(expectedTagGroup)
+      })
+
+      it('returns a null tag 1 group otherwise', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.tag1Group).toEqual(nullTagGroup)
+      })
+    })
+
+    describe('tag2Group:', () => {
+      it('returns a valid tag 2 group if the id matches a group in the list', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setData({
+          tagGroupsList: goodTagGroupsList,
+          tag2GroupId: 1
+        })
+
+        const expectedTagGroup = {
+          id: '1',
+          uuid: 'tag-1-group-uuid',
+          name: 'Tag Group 1',
+          tags: [
+            {
+              index: 1,
+              oligo: 'CTAGCTAG'
+            },
+            {
+              index: 2,
+              oligo: 'TTATACGA'
+            }
+          ]
+        }
+
+        expect(wrapper.vm.tag2Group).toEqual(expectedTagGroup)
+      })
+
+      it('returns a null tag 2 group otherwise', () => {
+        const wrapper = wrapperFactory()
+
+        expect(wrapper.vm.tag2Group).toEqual(nullTagGroup)
       })
     })
   })

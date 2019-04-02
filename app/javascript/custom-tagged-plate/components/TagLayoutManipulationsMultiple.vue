@@ -32,7 +32,7 @@
           <b-form-input
             id="walking_by_label"
             type="text"
-            :value="walkingBy"
+            :value="walkingByDisplayed"
             :disabled="true"
           />
         </b-form-group>
@@ -167,6 +167,9 @@ export default {
     },
     tag1GroupOptions() {
       return [{ value: null, text: 'Please select an i7 Tag 1 group...' }].concat(this.coreTagGroupOptions.slice())
+    },
+    walkingByDisplayed() {
+      return (this.walkingBy === 'as group by plate') ? 'Apply Multiple Tags' : this.walkingBy
     }
   },
   methods: {
