@@ -3,7 +3,7 @@
     id="well_modal"
     ref="wellModalRef"
     :title="wellModalTitle"
-    :ok-disabled="!state"
+    :ok-disabled="!wellModalState"
     @ok="handleWellModalOk"
     @shown="handleWellModalShown"
   >
@@ -38,9 +38,9 @@
               id="substitute_tag_number_group"
               label="Substitute tag:"
               label-for="substitute_tag_number_input"
-              :invalid-feedback="feedback"
-              :valid-feedback="feedback"
-              :state="state"
+              :invalid-feedback="wellModalInvalidFeedback"
+              valid-feedback="Great!"
+              :state="wellModalState"
             >
               <b-form-input
                 id="substitute_tag_number_input"
@@ -48,7 +48,7 @@
                 v-model="substituteTagId"
                 type="number"
                 placeholder="Enter a valid tag map id to substitute"
-                :state="state"
+                :state="wellModalState"
               />
             </b-form-group>
           </b-col>
@@ -105,7 +105,7 @@ export default {
   },
   data () {
     return {
-      substituteTagId: null // the input substitute tag map id
+      substituteTagId: null // the input substitute tag map id (input so string)
     }
   },
   computed: {
@@ -115,12 +115,14 @@ export default {
     substituteTagIdAsNumber() {
       return (this.substituteTagId) ? Number.parseInt(this.substituteTagId) : null
     },
-    state() {
+    wellModalState() {
+      if(this.wellModalDetails.tagMapIds.length === 0) { return null }
+      if(this.substituteTagId === null || this.substituteTagId === '') { return null }
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
-    feedback(){
+    wellModalInvalidFeedback(){
       if(this.substituteTagId === null) { return '' }
-      return this.state ? 'Great!' : 'Number entered is not a valid tag map id'
+      return this.wellModalState ? '' : 'Number entered is not a valid tag map id'
     }
   },
   methods: {

@@ -4,7 +4,7 @@
     label="Offset tags by:"
     label-for="offset_tags_by_input"
     :invalid-feedback="offsetTagsByInvalidFeedback"
-    :valid-feedback="offsetTagsByValidFeedback"
+    valid-feedback="Great!"
     :state="offsetTagsByState"
   >
     <b-form-input
@@ -44,20 +44,18 @@ export default {
     numberOfTargetWells: {
       type: Number,
       default: 0
-    },
-    // The initial value of the tag offset.
-    initialOffsetTagsBy: {
-      type: Number,
-      default: 0
     }
   },
   data () {
     return {
       offsetTagsByMin: 0, // holds the tag offset minimum value
-      offsetTagsBy: this.initialOffsetTagsBy, // holds the entered tag offset number
+      offsetTagsBy: '0', // holds the entered tag offset number (input so string)
     }
   },
   computed: {
+    offsetTagsByAsNumber() {
+      return Number.parseInt(this.offsetTagsBy)
+    },
     offsetTagsByMax() {
       if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
         return null
@@ -68,11 +66,11 @@ export default {
       return (this.offsetTagsByMax && this.offsetTagsByMax > 0)
     },
     isOffsetTagsByWithinLimits() {
-      return ((this.offsetTagsBy >= this.offsetTagsByMin) &&
-              (this.offsetTagsBy <= this.offsetTagsByMax)) ? true : false
+      return ((this.offsetTagsByAsNumber >= this.offsetTagsByMin) &&
+              (this.offsetTagsByAsNumber <= this.offsetTagsByMax)) ? true : false
     },
     isOffsetTagsByTooHigh() {
-      return (this.offsetTagsBy > this.offsetTagsByMax)
+      return (this.offsetTagsByAsNumber > this.offsetTagsByMax)
     },
     offsetTagsByPlaceholder() {
       let placeholder = 'Enter offset number...'
@@ -90,10 +88,9 @@ export default {
       return placeholder
     },
     offsetTagsByState() {
-      return (this.isOffsetTagsByMaxValid) ? this.isOffsetTagsByWithinLimits : false
-    },
-    offsetTagsByValidFeedback() {
-      return this.offsetTagsByState ? 'Valid' : ''
+      if(!this.isOffsetTagsByMaxValid) { return null }
+      if(this.offsetTagsBy === '' || this.offsetTagsBy === '0') { return null }
+      return this.isOffsetTagsByWithinLimits
     },
     offsetTagsByInvalidFeedback() {
       if(this.isOffsetTagsByMaxValid && this.isOffsetTagsByTooHigh) {
@@ -109,7 +106,7 @@ export default {
   },
   methods: {
     offsetTagChanged() {
-      this.$emit('tagoffsetchanged', this.offsetTagsBy)
+      this.$emit('tagoffsetchanged', this.offsetTagsByAsNumber)
     }
   }
 }

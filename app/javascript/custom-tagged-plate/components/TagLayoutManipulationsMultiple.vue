@@ -59,7 +59,6 @@
           ref="offsetTagsByComponent"
           :number-of-tags="numberOfTags"
           :number-of-target-wells="numberOfTargetWells"
-          :initial-offset-tags-by="initialOffsetTagsBy"
           @tagoffsetchanged="tagOffsetChanged"
         />
       </b-col>
@@ -139,7 +138,6 @@ export default {
       walkingBy: 'as group by plate', // holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
       offsetTagsBy: 0, // holds the entered tag offset number
-      initialOffsetTagsBy: 0, // holds the initial tag offset number
       nullTagGroup: { // null tag group object used in place of a selected tag group
         uuid: null, // uuid of the tag group
         name: 'No tag group selected', // name of the tag group
@@ -193,7 +191,7 @@ export default {
         tag2Group: this.nullTagGroup,
         walkingBy: this.walkingBy,
         direction: this.direction,
-        offsetTagsBy: Number.parseInt(this.offsetTagsBy)
+        offsetTagsBy: this.offsetTagsBy
       }
 
       this.$emit('tagparamsupdated', updatedData)

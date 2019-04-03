@@ -31,7 +31,24 @@ describe('WellModal', () => {
       })
     })
 
-    describe('state:', () => {
+    describe('wellModalState:', () => {
+      it('returns null if there are no tagMapIds', () => {
+        const wrapper = wrapperFactory()
+
+        const emptyWellModalDetails = {
+          position: 'A1',
+          originalTag: 1,
+          tagMapIds: [],
+          validity: { valid: true, message: '' },
+          existingSubstituteTagId: null
+        }
+
+        wrapper.setProps({ wellModalDetails: emptyWellModalDetails })
+        wrapper.setData({ substituteTagId: '5' })
+
+        expect(wrapper.vm.wellModalState).toBe(null)
+      })
+
       it('returns the correct state for a invalid substitution', () => {
         const wrapper = wrapperFactory()
 
@@ -46,7 +63,7 @@ describe('WellModal', () => {
         wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
         wrapper.setData({ substituteTagId: '5' })
 
-        expect(wrapper.vm.state).toBe(false)
+        expect(wrapper.vm.wellModalState).toBe(false)
       })
 
       it('returns the correct state for a valid substitution', () => {
@@ -54,15 +71,15 @@ describe('WellModal', () => {
 
         wrapper.setData({ substituteTagId: '3' })
 
-        expect(wrapper.vm.state).toBe(true)
+        expect(wrapper.vm.wellModalState).toBe(true)
       })
     })
 
-    describe('feedback', () => {
+    describe('wellModalInvalidFeedback', () => {
       it('returns the correct text when the value is blank', () => {
         const wrapper = wrapperFactory()
 
-        expect(wrapper.vm.feedback).toEqual('')
+        expect(wrapper.vm.wellModalInvalidFeedback).toEqual('')
       })
 
       it('returns the correct text when the value is a valid tag map id', () => {
@@ -70,7 +87,7 @@ describe('WellModal', () => {
 
         wrapper.setData({ substituteTagId: '3' })
 
-        expect(wrapper.vm.feedback).toEqual('Great!')
+        expect(wrapper.vm.wellModalInvalidFeedback).toEqual('')
       })
 
       it('returns the correct text when the value is an invalid tag map id', () => {
@@ -78,7 +95,7 @@ describe('WellModal', () => {
 
         wrapper.setData({ substituteTagId: '5' })
 
-        expect(wrapper.vm.feedback).toEqual('Number entered is not a valid tag map id')
+        expect(wrapper.vm.wellModalInvalidFeedback).toEqual('Number entered is not a valid tag map id')
       })
     })
   })
