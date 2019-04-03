@@ -150,6 +150,12 @@ describe('jsonFactory', () => {
           'uuid': uuid
         },
         'relationships': {
+          'custom_metadatum_collection': {
+            'links': {
+              'self': 'http://www.example.com/assets/123/relationships/custom_metadatum_collection',
+              'related': 'http://www.example.com/assets/123/custom_metadatum_collection'
+            }
+          },
           'comments': {
             'links': {
               'self': 'http://www.example.com/assets/123/relationships/comments',
