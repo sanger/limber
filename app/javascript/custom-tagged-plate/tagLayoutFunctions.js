@@ -1,7 +1,7 @@
 import { wellNameToCoordinate } from 'shared/wellHelpers'
 import counter from 'shared/counter'
 
-function byPool(well, tags, relIndex, _absIndex, offset, counters) {
+function byPool(well, tags, _relIndex, _absIndex, offset, counters) {
   if(!counters[well.pool_index]) {
     counters[well.pool_index] = counter(offset)
   }
@@ -9,35 +9,36 @@ function byPool(well, tags, relIndex, _absIndex, offset, counters) {
   return tags[i] || -1
 }
 
-function byPlateSeq(well, tags, relIndex, _absIndex, offset, _counters) {
+function byPlateSeq(_well, tags, relIndex, _absIndex, offset, _counters) {
   return tags[relIndex + offset] || -1
 }
 
-function byPlateFixed(well, tags, _relIndex, absIndex, offset, _counters) {
+function byPlateFixed(_well, tags, _relIndex, absIndex, offset, _counters) {
   return tags[absIndex + offset] || -1
 }
 
-function byGroupByPlate(well, tags, relIndex, _absIndex, offset, _counters) {
+function byGroupByPlate(_well, tags, relIndex, _absIndex, offset, _counters) {
   return tags[relIndex + offset] || -1
 }
 
-function byRows(wells, plateDims, tagsPerWell, walker) {
-  return wells.sort(compareWellsByRow).reduce((acc, well, relIndex) => {
-    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
-    const absIndex = wellCol + (plateDims.number_of_columns * wellRow)
-    acc[well.position] = []
-    let relIndexAdj = relIndex * tagsPerWell
-    for (var i = 0; i < tagsPerWell; i++) {
-      acc[well.position].push(walker(well, relIndexAdj, absIndex))
-      relIndexAdj++
-    }
-    return acc
-  }, {})
+function processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker) {
+  acc[well.position] = []
+  let relIndexAdj = relIndex * tagsPerWell
+  for (var i = 0; i < tagsPerWell; i++) {
+    acc[well.position].push(walker(well, relIndexAdj, absIndex))
+    relIndexAdj++
+  }
+  return acc
+}
+
+function retrieveWellCoords(wellA, wellB) {
+  const [ wellACol, wellARow ] = wellNameToCoordinate(wellA.position)
+  const [ wellBCol, wellBRow ] = wellNameToCoordinate(wellB.position)
+  return [ wellACol, wellARow, wellBCol, wellBRow ]
 }
 
 function compareWellsByRow(wellA, wellB) {
-  const [ wellACol, wellARow ] = wellNameToCoordinate(wellA.position)
-  const [ wellBCol, wellBRow ] = wellNameToCoordinate(wellB.position)
+  const [ wellACol, wellARow, wellBCol, wellBRow ] = retrieveWellCoords(wellA, wellB)
   if(wellARow > wellBRow) {
     return 1
   } else if(wellBRow > wellARow) {
@@ -47,37 +48,8 @@ function compareWellsByRow(wellA, wellB) {
   }
 }
 
-function byInverseRows(wells, plateDims, tagsPerWell, walker) {
-  return wells.sort(compareWellsByRow).reverse().reduce((acc, well, relIndex) => {
-    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
-    const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellCol + (plateDims.number_of_columns * wellRow)) - 1
-    acc[well.position] = []
-    let relIndexAdj = relIndex * tagsPerWell
-    for (var i = 0; i < tagsPerWell; i++) {
-      acc[well.position].push(walker(well, relIndexAdj, absIndex))
-      relIndexAdj++
-    }
-    return acc
-  }, {})
-}
-
-function byColumns(wells, plateDims, tagsPerWell, walker) {
-  return wells.sort(compareWellsByColumn).reduce((acc, well, relIndex) => {
-    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
-    const absIndex = wellRow + (plateDims.number_of_rows * wellCol)
-    acc[well.position] = []
-    let relIndexAdj = relIndex * tagsPerWell
-    for (var i = 0; i < tagsPerWell; i++) {
-      acc[well.position].push(walker(well, relIndexAdj, absIndex))
-      relIndexAdj++
-    }
-    return acc
-  }, {})
-}
-
 function compareWellsByColumn(wellA, wellB) {
-  const [ wellACol, wellARow ] = wellNameToCoordinate(wellA.position)
-  const [ wellBCol, wellBRow ] = wellNameToCoordinate(wellB.position)
+  const [ wellACol, wellARow, wellBCol, wellBRow ] = retrieveWellCoords(wellA, wellB)
   if(wellACol > wellBCol) {
     return 1
   } else if(wellBCol > wellACol) {
@@ -87,17 +59,35 @@ function compareWellsByColumn(wellA, wellB) {
   }
 }
 
+function byRows(wells, plateDims, tagsPerWell, walker) {
+  return wells.sort(compareWellsByRow).reduce((acc, well, relIndex) => {
+    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
+    const absIndex = wellCol + (plateDims.number_of_columns * wellRow)
+    return processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker)
+  }, {})
+}
+
+function byInverseRows(wells, plateDims, tagsPerWell, walker) {
+  return wells.sort(compareWellsByRow).reverse().reduce((acc, well, relIndex) => {
+    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
+    const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellCol + (plateDims.number_of_columns * wellRow)) - 1
+    return processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker)
+  }, {})
+}
+
+function byColumns(wells, plateDims, tagsPerWell, walker) {
+  return wells.sort(compareWellsByColumn).reduce((acc, well, relIndex) => {
+    const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
+    const absIndex = wellRow + (plateDims.number_of_rows * wellCol)
+    return processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker)
+  }, {})
+}
+
 function byInverseColumns(wells, plateDims, tagsPerWell, walker) {
   return wells.sort(compareWellsByColumn).reverse().reduce((acc, well, relIndex) => {
     const [ wellCol, wellRow ] = wellNameToCoordinate(well.position)
     const absIndex = (plateDims.number_of_columns * plateDims.number_of_rows) - (wellRow + (plateDims.number_of_rows * wellCol)) - 1
-    acc[well.position] = []
-    let relIndexAdj = relIndex * tagsPerWell
-    for (var i = 0; i < tagsPerWell; i++) {
-      acc[well.position].push(walker(well, relIndexAdj, absIndex))
-      relIndexAdj++
-    }
-    return acc
+    return processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker)
   }, {})
 }
 
