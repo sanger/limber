@@ -41,17 +41,22 @@
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
-        <component
-          :is="requestsFilter"
-          :requests-with-plates="requestsWithPlates"
-          @change="requestsWithPlatesFiltered = $event"
-        />
         <b-alert
           :show="transfersError !== ''"
           variant="danger"
         >
           {{ transfersError }}
         </b-alert>
+        <component
+          :is="requestsFilterComponent"
+          :requests-with-plates="requestsWithPlates"
+          @change="requestsWithPlatesFiltered = $event"
+        />
+        <component
+          :is="transfersCreatorComponent"
+          :valid-transfers="validTransfers"
+          @change="apiTransfers = $event"
+        />
         <b-button
           :disabled="!valid"
           variant="success"
@@ -69,12 +74,14 @@ import PlateSummary from './PlateSummary'
 import filterProps from './filterProps'
 import PrimerPanelFilter from './PrimerPanelFilter'
 import NullFilter from './NullFilter'
+import MultiStampTransfers from './MultiStampTransfers'
 import Plate from 'shared/components/Plate'
 import PlateScan from 'shared/components/PlateScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
+import transfersCreators from './transfersCreators'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
 import { checkSize, checkDuplicates, checkOverflows, aggregate } from 'shared/components/plateScanValidators'
@@ -87,13 +94,15 @@ export default {
     'lb-plate-summary': PlateSummary,
     'lb-loading-modal': LoadingModal,
     'lb-primer-panel-filter': PrimerPanelFilter,
-    'lb-null-filter': NullFilter
+    'lb-null-filter': NullFilter,
+    'lb-multi-stamp-transfers': MultiStampTransfers
   },
   props: {
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
     purposeUuid: { type: String, required: true },
     targetUrl: { type: String, required: true },
-    requestFilter: { type: String, required: true },
+    requestsFilter: { type: String, required: true },
+    transfersCreator: { type: String, required: true },
     transfersLayout: { type: String, required: true },
     targetRows: { type: String, required: true },
     targetColumns: { type: String, required: true },
@@ -106,6 +115,7 @@ export default {
       plates: builPlateObjs(Number.parseInt(this.sourcePlates)),
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
       requestsWithPlatesFiltered: [],
+      apiTransfers: [],
       loading: false,
       progressMessage: ''
     }
@@ -148,20 +158,6 @@ export default {
     overflownTransfers() {
       return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
     },
-    apiTransfers() {
-      const transfersArray = new Array(this.validTransfers.length)
-      for (let i = 0; i < this.validTransfers.length; i++) {
-        const transfer = this.validTransfers[i]
-        transfersArray[i] = {
-          source_plate: transfer.plateObj.plate.uuid,
-          pool_index: transfer.plateObj.index + 1,
-          source_asset: transfer.well.uuid,
-          outer_request: transfer.request.uuid,
-          new_target: { location: transfer.targetWell }
-        }
-      }
-      return transfersArray
-    },
     transfersError() {
       const errorMessages = []
       if (this.duplicatedTransfers.length > 0) {
@@ -172,21 +168,23 @@ export default {
       }
       return errorMessages.join(' and ')
     },
+    transfersCreatorComponent() {
+      return transfersCreators[this.transfersCreator]
+    },
     targetWells() {
-      let deb = this.apiTransfers.reduce((wells, transfer) => {
+      return this.apiTransfers.reduce((wells, transfer) => {
         wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
         return wells
       }, {})
-      return deb
     },
-    requestsFilter() {
-      return filterProps[this.requestFilter].requestsFilter
+    requestsFilterComponent() {
+      return filterProps[this.requestsFilter].requestsFilter
     },
     plateIncludes() {
-      return filterProps[this.requestFilter].plateIncludes
+      return filterProps[this.requestsFilter].plateIncludes
     },
     plateFields() {
-      return filterProps[this.requestFilter].plateFields
+      return filterProps[this.requestsFilter].plateFields
     },
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)

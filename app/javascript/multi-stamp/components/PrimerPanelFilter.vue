@@ -23,11 +23,11 @@ export default {
     primerPanels() { // Returns the mutual primer panels
       const primerPanelsByPlate = new Map()
       for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
-        let requestWithPlate = this.requestsWithPrimerPanel[i]
-        let plate_id = requestWithPlate.plateObj.plate.id
-        let primer_panel = requestWithPlate.request.primer_panel.name
+        const requestWithPlate = this.requestsWithPrimerPanel[i]
+        const plate_id = requestWithPlate.plateObj.plate.id
+        const primer_panel = requestWithPlate.request.primer_panel.name
         if (primerPanelsByPlate.has(plate_id)) {
-          let primerPanelArray = primerPanelsByPlate.get(plate_id)
+          const primerPanelArray = primerPanelsByPlate.get(plate_id)
           if (!primerPanelArray.includes(primer_panel)) {
             primerPanelArray.push(primer_panel)
           }

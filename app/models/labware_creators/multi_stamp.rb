@@ -27,23 +27,29 @@ module LabwareCreators
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
-    class_attribute :request_filter, :transfers_layout, :target_rows, :target_columns, :source_plates
+    class_attribute :request_filter, :transfers_layout, :transfers_creator, :transfers_attributes, :target_rows, :target_columns, :source_plates
 
     self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [
-      { transfers: [
-          [:source_plate, :source_asset, :outer_request, { new_target: :location }]
-        ]
-      }
-    ]
+    self.transfers_attributes = [:source_plate, :source_asset, :outer_request, { new_target: :location }]
     self.request_filter = 'null'
     self.transfers_layout = 'null'
+    self.transfers_creator = 'multi-stamp'
     self.target_rows = 0
     self.target_columns = 0
     self.source_plates = 0
 
     validates :transfers, presence: true
+
+    def initialize(*args)
+      self.attributes += [
+        { transfers: [
+            self.transfers_attributes
+          ]
+        }
+      ]
+      super(*args)
+    end
 
     private
 
