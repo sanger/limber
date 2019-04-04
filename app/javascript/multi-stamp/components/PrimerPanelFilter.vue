@@ -43,8 +43,13 @@ export default {
       return primerPanelsIterable
     },
     requestsWithPrimerPanel() {
-      return this.requestsWithPlates.filter(requestWithPlate =>
-        requestWithPlate.request.primer_panel)
+      const requestsArray = []
+      for (let i = 0; i < this.requestsWithPlates.length; i++) {
+        if (this.requestsWithPlates[i].request.primer_panel) {
+          requestsArray.push(this.requestsWithPlates[i])
+        }
+      }
+      return requestsArray
     },
     formLabel() {
       const requests_len = this.requestsWithPrimerPanel.length
@@ -60,17 +65,18 @@ export default {
       }
     },
     requestsWithPlatesFiltered() {
-      return this.requestsWithPrimerPanel.filter(this.matchPrimerPanel)
+      const requestsArray = []
+      for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
+        if (this.requestsWithPrimerPanel[i].request.primer_panel.name === this.primerPanel) {
+          requestsArray.push(this.requestsWithPrimerPanel[i])
+        }
+      }
+      return requestsArray
     }
   },
   watch: {
     requestsWithPlatesFiltered: function() {
       this.$emit('change', this.requestsWithPlatesFiltered)
-    }
-  },
-  methods: {
-    matchPrimerPanel(requestWithPlate) {
-      return requestWithPlate.request.primer_panel.name === this.primerPanel
     }
   }
 }
