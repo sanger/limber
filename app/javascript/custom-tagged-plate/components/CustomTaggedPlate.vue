@@ -5,6 +5,13 @@
       :message="progressMessage"
     />
     <lb-main-content v-if="parentPlate">
+      <div class="card-body">
+        <h2
+          id="plate-title"
+          class="card-title">{{ childPurposeName }}
+          <span class="state-badge pending">Pending</span>
+        </h2>
+      </div>
       <lb-parent-plate-view
         :caption="plateViewCaption"
         :rows="numberOfRows"
@@ -123,6 +130,11 @@ export default {
       type: String,
       required: true
     },
+    purposeName: {
+      // Plate purpose name for the custom tagged plate, used for display
+      type: String,
+      required: true
+    },
     targetUrl: {
       // URL of the child plate being created, to which the user will be
       // redirected after a successful plate creation. We use this rather than
@@ -197,6 +209,9 @@ export default {
     },
     tagsPerWellAsNumber() {
       return Number.parseInt(this.tagsPerWell) || null
+    },
+    childPurposeName() {
+      return this.purposeName
     },
     parentWells() {
       if(!this.parentPlate) { return {} }

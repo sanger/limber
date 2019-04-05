@@ -1,6 +1,7 @@
 <div id='custom-tagged-plate-page'
      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
+     data-purpose-name="<%= @labware_creator.purpose_name %>"
      data-target-url="<%= limber_plate_children_path(@labware_creator.parent) %>"
      data-parent-uuid="<%= @labware_creator.parent_uuid %>"
      data-tags-per-well="<%= @labware_creator.tags_per_well %>">
