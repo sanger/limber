@@ -102,6 +102,7 @@
           ref="offsetTagsByComponent"
           :number-of-tags="numberOfTags"
           :number-of-target-wells="numberOfTargetWells"
+          :tags-per-well="tagsPerWell"
           @tagoffsetchanged="tagOffsetChanged"
         />
       </b-col>
@@ -162,19 +163,19 @@ export default {
     // and used to determine tag offset limits.
     numberOfTags: {
       type: Number,
-      default: () => { return 0 }
+      default: 0
     },
     // The number of target wells, calculated by the parent component and
     // used to determine the tag offset limits.
     numberOfTargetWells: {
       type: Number,
-      default: () => { return 0 }
+      default: 0
     },
     // The tags per well number, determined by the plate purpose and used here
     // to determine what tag layout walking by options are available.
     tagsPerWell: {
       type: Number,
-      default: () => { return 1 }
+      default: 1
     },
   },
   data () {

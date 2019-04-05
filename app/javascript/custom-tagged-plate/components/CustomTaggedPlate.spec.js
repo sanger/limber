@@ -25,6 +25,7 @@ describe('CustomTaggedPlate', () => {
       propsData: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
         purposeUuid: '',
+        purposeName: 'Custom Tagged Plate',
         targetUrl: '',
         parentUuid: plateUuid,
         tagsPerWell: '1',
@@ -629,6 +630,7 @@ describe('CustomTaggedPlate', () => {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
           purposeUuid: '',
+          purposeName: 'Custom Tagged Plate',
           targetUrl: '',
           parentUuid: plateUuid,
           tagsPerWell: '1',
@@ -658,6 +660,7 @@ describe('CustomTaggedPlate', () => {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
           purposeUuid: '',
+          purposeName: 'Custom Tagged Plate',
           targetUrl: '',
           parentUuid: plateUuid,
           tagsPerWell: '4',

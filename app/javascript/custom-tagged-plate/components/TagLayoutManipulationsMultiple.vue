@@ -59,6 +59,7 @@
           ref="offsetTagsByComponent"
           :number-of-tags="numberOfTags"
           :number-of-target-wells="numberOfTargetWells"
+          :tags-per-well="tagsPerWell"
           @tagoffsetchanged="tagOffsetChanged"
         />
       </b-col>

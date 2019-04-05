@@ -44,6 +44,12 @@ export default {
     numberOfTargetWells: {
       type: Number,
       default: 0
+    },
+    // The tags per well number, determined by the plate purpose and used here
+    // to compute the offset maximum.
+    tagsPerWell: {
+      type: Number,
+      default: 1
     }
   },
   data () {
@@ -57,10 +63,11 @@ export default {
       return Number.parseInt(this.offsetTagsBy)
     },
     offsetTagsByMax() {
-      if(this.numberOfTags === 0 || this.numberOfTargetWells === 0) {
+      if(this.numberOfTags === 0 || this.numberOfTargetWells === 0 || this.tagsPerWell === 0) {
         return null
       }
-      return this.numberOfTags - this.numberOfTargetWells
+      const numTagsNeeded = this.numberOfTargetWells * this.tagsPerWell
+      return Math.floor((this.numberOfTags - numTagsNeeded) / this.tagsPerWell)
     },
     isOffsetTagsByMaxValid() {
       return (this.offsetTagsByMax && this.offsetTagsByMax > 0)

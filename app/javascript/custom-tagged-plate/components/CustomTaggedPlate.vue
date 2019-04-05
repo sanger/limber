@@ -8,7 +8,9 @@
       <div class="card-body">
         <h2
           id="plate-title"
-          class="card-title">{{ childPurposeName }}
+          class="card-title"
+        >
+          {{ childPurposeName }}
           <span class="state-badge pending">Pending</span>
         </h2>
       </div>
@@ -553,6 +555,12 @@ export default {
       })
     },
     createPlatePayload() {
+      // initial tag is zero-based index of tag within its tag group, and is equal to
+      // offset adjusted by the tags per well number
+      const initialTag = this.offsetTagsBy * this.tagsPerWell
+      // substitutions are strings e.g. { '1':'2','5':'8', etc }
+      const subsStrngs = valueConverter(this.tagSubstitutions, value => value.toString())
+
       let payload = {
         plate: {
           purpose_uuid: this.purposeUuid,
@@ -562,8 +570,8 @@ export default {
             tag2_group: this.tag2GroupUuid,
             direction: this.direction,
             walking_by: this.walkingBy,
-            initial_tag: this.offsetTagsBy, // initial tag is zero-based index of the tag within its group
-            substitutions: valueConverter(this.tagSubstitutions, value => value.toString()), // { '1':'2','5':'8', etc }
+            initial_tag: initialTag,
+            substitutions: subsStrngs,
             tags_per_well: this.tagsPerWellAsNumber
           },
           tag_plate: {

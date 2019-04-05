@@ -10,7 +10,8 @@ describe('TagOffset', () => {
     return shallowMount(TagOffset, {
       propsData: {
         numberOfTags: 5,
-        numberOfTargetWells: 5
+        numberOfTargetWells: 5,
+        tagsPerWell: 1
       },
       localVue
     })
@@ -18,7 +19,7 @@ describe('TagOffset', () => {
 
   describe('#computed function tests:', () => {
     describe('offsetTagsByMax:', () => {
-      it('returns expected value if tags and target wells exist', () => {
+      it('returns expected value when no spare tags', () => {
         const wrapper = wrapperFactory()
 
         expect(wrapper.vm.offsetTagsByMax).toBe(0)
@@ -34,7 +35,7 @@ describe('TagOffset', () => {
         expect(wrapper.vm.offsetTagsByPlaceholder).toBe('Enter offset number...')
       })
 
-      it('returns a negative number if there are not enough tags', () => {
+      it('returns a negative number when not enough tags', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setProps({ numberOfTargetWells: 10 })
@@ -59,6 +60,45 @@ describe('TagOffset', () => {
 
         expect(wrapper.vm.offsetTagsByMax).toEqual(null)
         expect(wrapper.vm.offsetTagsByPlaceholder).toBe('No target wells...')
+      })
+
+      it('returns expected value for multiple tagged plates when no tags spare', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          numberOfTags: 48,
+          numberOfTargetWells: 12,
+          tagsPerWell: 4
+        })
+
+        expect(wrapper.vm.offsetTagsByMax).toBe(0)
+        expect(wrapper.vm.offsetTagsByPlaceholder).toBe('No spare tags...')
+      })
+
+      it('returns expected value for multiple tagged plates when tags in excess', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          numberOfTags: 48,
+          numberOfTargetWells: 8,
+          tagsPerWell: 4
+        })
+
+        expect(wrapper.vm.offsetTagsByMax).toBe(4)
+        expect(wrapper.vm.offsetTagsByPlaceholder).toBe('Enter offset number...')
+      })
+
+      it('returns a negative value for multiple tagged plates when not enough tags', () => {
+        const wrapper = wrapperFactory()
+
+        wrapper.setProps({
+          numberOfTags: 48,
+          numberOfTargetWells: 20,
+          tagsPerWell: 4
+        })
+
+        expect(wrapper.vm.offsetTagsByMax).toBe(-8)
+        expect(wrapper.vm.offsetTagsByPlaceholder).toBe('Not enough tags...')
       })
     })
 
