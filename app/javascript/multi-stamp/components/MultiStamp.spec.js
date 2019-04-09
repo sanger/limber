@@ -19,10 +19,11 @@ describe('MultiStamp', () => {
         targetColumns: '24',
         sourcePlates: '4',
         purposeUuid: 'test',
-        requestFilter: 'null',
+        requestsFilter: 'null',
         targetUrl: 'example/example',
         locationObj: mockLocation,
         transfersLayout: 'quadrant',
+        transfersCreator: 'multi-stamp',
         ...options
       },
       localVue
@@ -43,6 +44,7 @@ describe('MultiStamp', () => {
     wrapper.vm.updatePlate(2, plate2)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.valid).toEqual(true)
   })
@@ -75,6 +77,7 @@ describe('MultiStamp', () => {
     wrapper.vm.updatePlate(1, plate)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     const expectedPayload = { plate: {
       parent_uuid: 'plate-uuid',
@@ -107,8 +110,9 @@ describe('MultiStamp', () => {
     wrapper.vm.updatePlate(1, plate)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
-    expect(wrapper.vm.apiTransfers).toEqual([
+    expect(wrapper.vm.apiTransfers()).toEqual([
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-1', outer_request: 'plate-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-2', outer_request: 'plate-uuid-well-2-source-request-0', new_target: { location: 'E1' } },
@@ -128,8 +132,9 @@ describe('MultiStamp', () => {
     wrapper.vm.updatePlate(4, plate4)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
-    expect(wrapper.vm.apiTransfers).toEqual([
+    expect(wrapper.vm.apiTransfers()).toEqual([
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-0', outer_request: 'plate-1-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-1', outer_request: 'plate-1-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-2', outer_request: 'plate-1-uuid-well-2-source-request-0', new_target: { location: 'E1' } },

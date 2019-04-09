@@ -1,4 +1,4 @@
-const baseTransferCreator = function(transfers, extraParams = (_) => {} ) {
+const baseTransferCreator = function(transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     transfersArray[i] = {
@@ -13,4 +13,4 @@ const baseTransferCreator = function(transfers, extraParams = (_) => {} ) {
   return transfersArray
 }
 
-export { baseTransferCreator }
+export default baseTransferCreator

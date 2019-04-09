@@ -138,7 +138,7 @@ export default {
              && this.validTransfers.length > 0 // We have at least one transfer
              && this.excessTransfers.length === 0 // No excess transfers
              && this.duplicatedTransfers.length === 0 // No duplicated transfers
-             && this.transfersCreatorComponent.isValid
+             && this.transfersCreatorObj.isValid
     },
     validPlates() {
       return this.plates.filter( plate => plate.state === 'valid' )
@@ -184,7 +184,9 @@ export default {
     targetWells() {
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
-        wells[this.validTransfers[i].targetWell] = this.validTransfers[i].plateObj.index + 1
+        wells[this.validTransfers[i].targetWell] = {
+          pool_index: this.validTransfers[i].plateObj.index + 1
+        }
       }
       return wells
     },
@@ -212,6 +214,9 @@ export default {
     updatePlate(index, data) {
       this.$set(this.plates, index - 1, {...data, index: index - 1 })
     },
+    apiTransfers() {
+      return baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+    },
     createPlate() {
       this.progressMessage = 'Creating plate...'
       this.loading = true
@@ -219,7 +224,7 @@ export default {
         plate: {
           parent_uuid: this.validPlates[0].plate.uuid,
           purpose_uuid: this.purposeUuid,
-          transfers: baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+          transfers: this.apiTransfers()
         }
       }
       this.$axios({
