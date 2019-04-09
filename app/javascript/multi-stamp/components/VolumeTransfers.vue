@@ -31,7 +31,7 @@ export default {
       }
     },
     isValid() {
-      return isNaN(Number.parseFloat(this.volume))
+      return !isNaN(Number.parseFloat(this.volume))
     }
   },
   watch: {
