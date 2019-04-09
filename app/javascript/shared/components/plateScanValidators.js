@@ -73,22 +73,22 @@ const checkDuplicates = (plateList, currentIndex) => {
   }
 }
 
-// Returns a validator that checks if wells in the scanned plate are
-// overflowing the target plate (i.e. the sum of valid transfers across scanned
+// Returns a validator that checks if there are wells in the scanned plate that
+// are in excess (i.e. the sum of valid transfers across scanned
 // plates is greater than the number of wells in the target plate).
-// It also returns the overfowing wells' position.
-// overflownTransfers: An array of transfers that cannot be included in the
+// It also returns the excess wells' position.
+// excessTransfers: An array of transfers that cannot be included in the
 //                     target plate as all the wells are already occupied.
-const checkOverflows = (overflownTransfers) => {
+const checkExcess = (excessTransfers) => {
   return (plate) => {
-    const overflownWells = []
-    for (let i = 0; i < overflownTransfers.length; i++) {
-      if (overflownTransfers[i].plateObj.plate.uuid === plate.uuid) {
-        overflownWells.push(overflownTransfers[i].well.position.name)
+    const excessWells = []
+    for (let i = 0; i < excessTransfers.length; i++) {
+      if (excessTransfers[i].plateObj.plate.uuid === plate.uuid) {
+        excessWells.push(excessTransfers[i].well.position.name)
       }
     }
-    if (overflownWells.length > 0) {
-      return { valid: false, message: 'Overflown wells: ' + overflownWells.join(', ') }
+    if (excessWells.length > 0) {
+      return { valid: false, message: 'Wells in excess: ' + excessWells.join(', ') }
     }
     else {
       return { valid: true, message: 'Great!' }
@@ -110,4 +110,4 @@ const aggregate = (...functions) => {
   }
 }
 
-export { checkSize, checkDuplicates, checkOverflows, aggregate }
+export { checkSize, checkDuplicates, checkExcess, aggregate }

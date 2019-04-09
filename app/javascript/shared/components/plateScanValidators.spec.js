@@ -1,5 +1,5 @@
 // // Import the component being tested
-import { checkSize, checkDuplicates, checkOverflows, aggregate } from './plateScanValidators'
+import { checkSize, checkDuplicates, checkExcess, aggregate } from './plateScanValidators'
 
 describe('aggregate', () => {
   const validFunction = (_) => { return { valid: true, message: 'Good' } }
@@ -69,22 +69,22 @@ describe('checkDuplicates', () => {
   })
 })
 
-describe('checkOverflows', () => {
-  it('passes when the plate is not the source of transfers that overflow the target', () => {
+describe('checkExcess', () => {
+  it('passes when the plate is not the source of excess transfers', () => {
     const plate = { uuid: 'plate-uuid-1' }
     const other_plate = { uuid: 'plate-uuid-2' }
-    const overflownTransfers = [{
+    const excessTransfers = [{
       plateObj: { plate: other_plate }
     }]
 
     expect(
-      checkOverflows(overflownTransfers)(plate)
+      checkExcess(excessTransfers)(plate)
     ).toEqual({ valid: true, message: 'Great!' })
   })
 
-  it('fails when the plate is the source of transfers that overflow the target', () => {
+  it('fails when the plate is the source of excess transfers', () => {
     const plate = { uuid: 'plate-uuid-1' }
-    const overflownTransfers = [{
+    const excessTransfers = [{
       plateObj: { plate: plate },
       well: { position: { name: 'D11' } }
     },
@@ -94,7 +94,7 @@ describe('checkOverflows', () => {
     }]
 
     expect(
-      checkOverflows(overflownTransfers)(plate)
-    ).toEqual({ valid: false, message: 'Overflown wells: D11, D12' })
+      checkExcess(excessTransfers)(plate)
+    ).toEqual({ valid: false, message: 'Wells in excess: D11, D12' })
   })
 })
