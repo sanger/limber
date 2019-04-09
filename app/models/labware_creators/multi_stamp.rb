@@ -42,7 +42,7 @@ module LabwareCreators
     validates :transfers, presence: true
 
     def initialize(*args)
-      self.attributes += [
+      self.class.attributes += [
         { transfers: [
             self.transfers_attributes
           ]
