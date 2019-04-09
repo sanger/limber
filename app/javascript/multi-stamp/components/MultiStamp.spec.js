@@ -186,19 +186,32 @@ describe('MultiStamp', () => {
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.duplicatedTransfers).toEqual([])
-    expect(wrapper.vm.overflownTransfers).toEqual([])
+    expect(wrapper.vm.excessTransfers).toEqual([])
     expect(wrapper.vm.transfersError).toEqual('')
   })
 
-  it('display "Overflown transfers" when too many transfers for the target are scanned', () => {
+  it('display "excess transfers" when too many transfers for the target are scanned', () => {
     const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
     const wrapper = wrapperFactory({ targetRows: '1', targetColumns: '1' })
     wrapper.vm.updatePlate(1, plate1)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
-    expect(wrapper.vm.overflownTransfers.length).toEqual(3)
-    expect(wrapper.vm.transfersError).toEqual('Overflown transfers')
+    expect(wrapper.vm.excessTransfers.length).toEqual(3)
+    expect(wrapper.vm.transfersError).toEqual('excess transfers')
+  })
+
+  it('display "excess transfers" when too many transfers for the target are scanned over multiple plates', () => {
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', _filledWells: 4 }) }
+    const wrapper = wrapperFactory({ targetRows: '2', targetColumns: '2' })
+    wrapper.vm.updatePlate(1, plate1)
+    wrapper.vm.updatePlate(2, plate2)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+
+    expect(wrapper.vm.excessTransfers.length).toEqual(4)
+    expect(wrapper.vm.transfersError).toEqual('excess transfers')
   })
 
   it('display "Duplicated transfers" when scanned plate contains duplicated requests', () => {

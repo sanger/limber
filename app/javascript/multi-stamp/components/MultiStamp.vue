@@ -86,7 +86,7 @@ import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates, checkOverflows, aggregate } from 'shared/components/plateScanValidators'
+import { checkSize, checkDuplicates, checkExcess, aggregate } from 'shared/components/plateScanValidators'
 
 export default {
   name: 'MultiStamp',
@@ -136,7 +136,7 @@ export default {
     valid() {
       return this.unsuitablePlates.length === 0 // None of the plates are invalid
              && this.validTransfers.length > 0 // We have at least one transfer
-             && this.overflownTransfers.length === 0 // No overflown transfers
+             && this.excessTransfers.length === 0 // No excess transfers
              && this.duplicatedTransfers.length === 0 // No duplicated transfers
              && this.transfersCreatorComponent.isValid
     },
@@ -165,7 +165,7 @@ export default {
     duplicatedTransfers() {
       return this.transfers.duplicated
     },
-    overflownTransfers() {
+    excessTransfers() {
       return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
     },
     transfersError() {
@@ -173,8 +173,8 @@ export default {
       if (this.duplicatedTransfers.length > 0) {
         errorMessages.push('Duplicated transfers')
       }
-      if (this.overflownTransfers.length > 0) {
-        errorMessages.push('Overflown transfers')
+      if (this.excessTransfers.length > 0) {
+        errorMessages.push('excess transfers')
       }
       return errorMessages.join(' and ')
     },
@@ -203,7 +203,7 @@ export default {
         return aggregate(
           checkSize(12, 8),
           checkDuplicates(currPlates, index),
-          checkOverflows(this.overflownTransfers)
+          checkExcess(this.excessTransfers)
         )
       }
     }
