@@ -55,7 +55,7 @@
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
-          @change="apiTransfers = $event"
+          @change="transfersCreatorObj = $event"
         />
         <b-button
           :disabled="!valid"
@@ -74,14 +74,16 @@ import PlateSummary from './PlateSummary'
 import filterProps from './filterProps'
 import PrimerPanelFilter from './PrimerPanelFilter'
 import NullFilter from './NullFilter'
+import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTransfers from './MultiStampTransfers'
+import VolumeTransfers from './VolumeTransfers'
+import baseTransferCreator from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
 import PlateScan from 'shared/components/PlateScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
-import transfersCreators from './transfersCreators'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
 import { checkSize, checkDuplicates, checkOverflows, aggregate } from 'shared/components/plateScanValidators'
@@ -95,7 +97,8 @@ export default {
     'lb-loading-modal': LoadingModal,
     'lb-primer-panel-filter': PrimerPanelFilter,
     'lb-null-filter': NullFilter,
-    'lb-multi-stamp-transfers': MultiStampTransfers
+    'lb-multi-stamp-transfers': MultiStampTransfers,
+    'lb-volume-transfers': VolumeTransfers
   },
   props: {
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
@@ -115,7 +118,7 @@ export default {
       plates: builPlateObjs(Number.parseInt(this.sourcePlates)),
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
       requestsWithPlatesFiltered: [],
-      apiTransfers: [],
+      transfersCreatorObj: {},
       loading: false,
       progressMessage: ''
     }
@@ -135,6 +138,7 @@ export default {
              && this.validTransfers.length > 0 // We have at least one transfer
              && this.overflownTransfers.length === 0 // No overflown transfers
              && this.duplicatedTransfers.length === 0 // No duplicated transfers
+             && this.transfersCreatorComponent.isValid
     },
     validPlates() {
       return this.plates.filter( plate => plate.state === 'valid' )
@@ -143,8 +147,14 @@ export default {
       return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
     },
     requestsWithPlates() {
-      return requestsFromPlates(this.validPlates).filter((requestWithPlate) =>
-        requestIsActive(requestWithPlate.request))
+      const requestsFromPlatesArray = requestsFromPlates(this.validPlates)
+      const requestsWithPlatesArray = []
+      for (let i = 0; i < requestsFromPlatesArray.length; i++) {
+        if (requestIsActive(requestsFromPlatesArray[i].request)) {
+          requestsWithPlatesArray.push(requestsFromPlatesArray[i])
+        }
+      }
+      return requestsWithPlatesArray
     },
     transfers() {
       return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
@@ -169,13 +179,14 @@ export default {
       return errorMessages.join(' and ')
     },
     transfersCreatorComponent() {
-      return transfersCreators[this.transfersCreator]
+      return transfersCreatorsComponentsMap[this.transfersCreator]
     },
     targetWells() {
-      return this.apiTransfers.reduce((wells, transfer) => {
-        wells[transfer.new_target.location] = { pool_index: transfer.pool_index }
-        return wells
-      }, {})
+      const wells = {}
+      for (let i = 0; i < this.validTransfers.length; i++) {
+        wells[this.validTransfers[i].targetWell] = this.validTransfers[i].plateObj.index + 1
+      }
+      return wells
     },
     requestsFilterComponent() {
       return filterProps[this.requestsFilter].requestsFilter
@@ -204,12 +215,13 @@ export default {
     createPlate() {
       this.progressMessage = 'Creating plate...'
       this.loading = true
-      let payload = { plate: {
-        parent_uuid: this.validPlates[0].plate.uuid,
-        purpose_uuid: this.purposeUuid,
-        transfers: this.apiTransfers
-      }}
-
+      let payload = {
+        plate: {
+          parent_uuid: this.validPlates[0].plate.uuid,
+          purpose_uuid: this.purposeUuid,
+          transfers: baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+        }
+      }
       this.$axios({
         method: 'post',
         url:this.targetUrl,
