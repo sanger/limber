@@ -44,7 +44,7 @@ module LabwareCreators
     def initialize(*args)
       self.class.attributes += [
         { transfers: [
-            self.transfers_attributes
+            transfers_attributes
           ]
         }
       ]
