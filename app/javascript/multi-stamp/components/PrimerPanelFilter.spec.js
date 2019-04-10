@@ -63,4 +63,23 @@ describe('PrimerPanelFilter', () => {
       }
     ])
   })
+
+  it('emits requestsWithPlatesFiltered', () => {
+    const request1 = requestFactory({ uuid: 'other-request-1', primer_panel: {name: 'Common Panel'}})
+    const request2 = requestFactory({ uuid: 'target-request-1', primer_panel: {name: 'Distinct Panel'}})
+    const requestsAsSource1 = [request1, request2]
+    const requestsOnAliquot1 = requestFactory({ uuid: 'target-request-2', primer_panel: {name: 'Shared Panel'}})
+    const well1 = wellFactory({ requests_as_source: requestsAsSource1, aliquots: [{request: requestsOnAliquot1}] })
+    const plateObj1 = { state: 'valid', plate: plateFactory({ wells: [well1] }) }
+    const requests = requestsFromPlates([plateObj1])
+    const wrapper = wrapperFactory(requests)
+
+    wrapper.setData({ primerPanel: 'Distinct Panel' })
+
+    expect(wrapper.emitted()).toEqual({
+      change: [[
+        wrapper.vm.requestsWithPlatesFiltered
+      ]]
+    })
+  })
 })
