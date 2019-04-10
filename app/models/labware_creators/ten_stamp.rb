@@ -13,7 +13,7 @@ module LabwareCreators
 
     def request_hash(transfer, *args)
       # We might want to add the 'volume' key into a nested hash called 'metadata'
-      super.merge({ 'volume' => transfer[:volume] })
+      super.merge('volume' => transfer[:volume])
     end
   end
 end
