@@ -8,5 +8,12 @@ module LabwareCreators
     self.target_rows = 8
     self.target_columns = 12
     self.source_plates = 10
+
+    private
+
+    def request_hash(transfer, *args)
+      # We might want to add the 'volume' key into a nested hash called 'metadata'
+      super.merge({ 'volume' => transfer[:volume] })
+    end
   end
 end
