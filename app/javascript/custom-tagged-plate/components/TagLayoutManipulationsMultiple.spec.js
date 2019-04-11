@@ -2,10 +2,6 @@
 import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
 import localVue from 'test_support/base_vue.js'
-import {
-  nullTagGroup,
-  exampleTagGroupsList
-} from '../testData/customTaggedPlateTestData.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -27,71 +23,6 @@ describe('TagLayoutManipulationsMultiple', () => {
   }
 
   describe('#computed function tests:', () => {
-    describe('directionOptions:', () => {
-      it('returns an array with the correct number of options', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.directionOptions.length).toBe(5)
-      })
-    })
-
-    describe('tag1GroupOptions:', () => {
-      it('returns empty array for tag 1 groups if tag groups list empty', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual([{ value: null, text: 'Please select an i7 Tag 1 group...' }])
-      })
-
-      it('returns valid array of tag 1 groups if tag groups list set', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
-
-        const goodTag1GroupOptions = [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
-        ]
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
-      })
-    })
-
-    describe('tag1Group:', () => {
-      it('returns a valid tag 1 group if the id matches a group in the list', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
-          tagGroupsList: exampleTagGroupsList,
-          tag1GroupId: 1
-        })
-
-        const expectedTagGroup = {
-          id: '1',
-          uuid: 'tag-1-group-uuid',
-          name: 'Tag Group 1',
-          tags: [
-            {
-              index: 1,
-              oligo: 'CTAGCTAG'
-            },
-            {
-              index: 2,
-              oligo: 'TTATACGA'
-            }
-          ]
-        }
-
-        expect(wrapper.vm.tag1Group).toEqual(expectedTagGroup)
-      })
-
-      it('returns a null tag 1 group otherwise', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag1Group).toEqual(nullTagGroup)
-      })
-    })
-
     describe('walkingByDisplayed:', () => {
       it('returns the correct text if walking by matches expected value', () => {
         const wrapper = wrapperFactory()

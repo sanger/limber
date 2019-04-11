@@ -3,7 +3,6 @@ import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import localVue from 'test_support/base_vue.js'
 import {
-  nullTagGroup,
   nullQcableData,
   exampleQcableData,
   exampleTagGroupsList
@@ -38,14 +37,6 @@ describe('TagLayoutManipulations', () => {
       })
     })
 
-    describe('directionOptions:', () => {
-      it('returns an array with the correct number of options', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.directionOptions.length).toBe(5)
-      })
-    })
-
     describe('tagGroupsDisabled:', () => {
       it('returns false if a tag plate has not been scanned', () => {
         const wrapper = wrapperFactory()
@@ -61,120 +52,6 @@ describe('TagLayoutManipulations', () => {
         wrapper.setData({ tagPlate: exampleQcableData.plate })
 
         expect(wrapper.vm.tagGroupsDisabled).toBe(true)
-      })
-    })
-
-    describe('tag1GroupOptions:', () => {
-      it('returns empty array for tag 1 groups if tag groups list empty', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual([{ value: null, text: 'Please select an i7 Tag 1 group...' }])
-      })
-
-      it('returns valid array of tag 1 groups if tag groups list set', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
-
-        const goodTag1GroupOptions = [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
-        ]
-
-        expect(wrapper.vm.tag1GroupOptions).toEqual(goodTag1GroupOptions)
-      })
-    })
-
-    describe('tag2GroupOptions:', () => {
-      it('returns empty array for tag 2 groups if tag groups list empty', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag2GroupOptions).toEqual([{ value: null, text: 'Please select an i5 Tag 2 group...' }])
-      })
-
-      it('returns valid array of tag 2 groups if tag groups list set', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ tagGroupsList: exampleTagGroupsList })
-
-        const goodTag2GroupOptions = [
-          { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
-        ]
-
-        expect(wrapper.vm.tag2GroupOptions).toEqual(goodTag2GroupOptions)
-      })
-    })
-
-    describe('tag1Group:', () => {
-      it('returns a valid tag 1 group if the id matches a group in the list', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
-          tagGroupsList: exampleTagGroupsList,
-          tag1GroupId: '1'
-        })
-
-        const expectedTagGroup = {
-          id: '1',
-          uuid: 'tag-1-group-uuid',
-          name: 'Tag Group 1',
-          tags: [
-            {
-              index: 1,
-              oligo: 'CTAGCTAG'
-            },
-            {
-              index: 2,
-              oligo: 'TTATACGA'
-            }
-          ]
-        }
-
-        expect(wrapper.vm.tag1Group).toEqual(expectedTagGroup)
-      })
-
-      it('returns a null tag 1 group otherwise', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag1Group).toEqual(nullTagGroup)
-      })
-    })
-
-    describe('tag2Group:', () => {
-      it('returns a valid tag 2 group if the id matches a group in the list', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
-          tagGroupsList: exampleTagGroupsList,
-          tag2GroupId: 1
-        })
-
-        const expectedTagGroup = {
-          id: '1',
-          uuid: 'tag-1-group-uuid',
-          name: 'Tag Group 1',
-          tags: [
-            {
-              index: 1,
-              oligo: 'CTAGCTAG'
-            },
-            {
-              index: 2,
-              oligo: 'TTATACGA'
-            }
-          ]
-        }
-
-        expect(wrapper.vm.tag2Group).toEqual(expectedTagGroup)
-      })
-
-      it('returns a null tag 2 group otherwise', () => {
-        const wrapper = wrapperFactory()
-
-        expect(wrapper.vm.tag2Group).toEqual(nullTagGroup)
       })
     })
   })
