@@ -105,7 +105,7 @@ export default {
       return this.validated.message
     },
     validatedPlate() {
-      if (this.plate === null ) {
+      if (this.plate === null) {
         return { state: 'empty', message: '' }
       } else if (this.plate === undefined) {
         return { state: 'invalid', message: 'Could not find plate' }

@@ -1,0 +1,6 @@
+TenX Test:
+  :asset_type: plate
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TenStamp
+
