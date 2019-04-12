@@ -41,7 +41,7 @@
 
 // Returns a validator which ensures the plate is of a particular size.
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
-const checkSize = (cols,rows) => {
+const checkSize = (cols, rows) => {
   return (plate) => {
     if (plate.number_of_columns !== cols || plate.number_of_rows !== rows) {
       return { valid: false, message: `The plate should be ${cols}×${rows} wells in size` }
@@ -59,13 +59,13 @@ const checkSize = (cols,rows) => {
 //            null to represent empty plate
 // currentIndex: The index of the plate we are currently scanning in the array.
 //               Excludes it for the check. (Zero indexed)
-const checkDuplicates = (plateList, currentIndex) => {
+const checkDuplicates = (plateList) => {
   return (plate) => {
-    const duplicate = plateList.some((other, index) => {
-      return index !== currentIndex && // We're not looking at the current plate
-        other && other.uuid === plate.uuid // But the uuid matches
-    })
-    if (duplicate) {
+    let occurrences = 0
+    for (let i = 0; i < plateList.length; i++) {
+      if (plateList[i] && plateList[i].uuid === plate.uuid) { occurrences++ }
+    }
+    if (occurrences > 1) {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
     } else {
       return { valid: true, message: 'Great!' }
@@ -102,12 +102,10 @@ const checkExcess = (excessTransfers) => {
 // error message.
 // eg. aggregate(checkSize(12,8),checkDuplicates(this.plates,0)) will return a
 // validator which checks both the size of the plate, and duplications.
-const aggregate = (...functions) => {
-  return (plate) => {
-    return functions.reduce((aggregate, validation) => {
-      return aggregate.valid ? validation(plate) : aggregate
-    }, { valid: true, message: 'Great!'})
-  }
+const aggregate = (validators, item) => {
+  return validators.reduce((aggregate, validator) => {
+    return aggregate.valid ? validator(item) : aggregate
+  }, { valid: true, message: 'Great!'})
 }
 
 export { checkSize, checkDuplicates, checkExcess, aggregate }

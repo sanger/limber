@@ -25,7 +25,7 @@
 
 <script>
 
-import { checkSize } from './plateScanValidators'
+import { checkSize, aggregate } from './plateScanValidators'
 
 // Incrementing counter to ensure all instances of PlateScan
 // have a unique id. Ensures labels correctly match up with
@@ -77,9 +77,9 @@ export default {
       default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } },
       type: Object
     },
-    validation: {
-      // A validation function. See plateScanValidators.js for examples and details
-      type: Function, default: checkSize(12,8)
+    validators: {
+      // An array of validators. See plateScanValidators.js for examples and details
+      type: Array, required: false, default: () => { return [checkSize(12, 8)] }
     }
   },
   data() {
@@ -110,13 +110,15 @@ export default {
       } else if (this.plate === undefined) {
         return { state: 'invalid', message: 'Could not find plate' }
       } else {
-        const result = this.validation(this.plate)
+        const result = aggregate(this.validators, this.plate)
+        // console.log('VALIDATE', this.plate.labware_barcode.human_barcode)
         return { state: boolToString[result.valid], message: result.message }
       }
     }
   },
   watch: {
     state() {
+      // console.log('EMIT', this.plate, this.state)
       this.$emit('change', { plate: this.plate, state: this.state })
     }
   },

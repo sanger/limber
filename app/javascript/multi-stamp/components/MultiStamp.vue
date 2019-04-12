@@ -37,7 +37,7 @@
             :label="'Plate ' + i"
             :includes="plateIncludes"
             :fields="plateFields"
-            :validation="scanValidation(i-1)"
+            :validators="scanValidation"
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
@@ -86,7 +86,7 @@ import resources from 'shared/resources'
 import builPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates, checkExcess, aggregate } from 'shared/components/plateScanValidators'
+import { checkSize, checkDuplicates, /* checkExcess */ } from 'shared/components/plateScanValidators'
 
 export default {
   name: 'MultiStamp',
@@ -201,13 +201,11 @@ export default {
     },
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)
-      return (index) => {
-        return aggregate(
-          checkSize(12, 8),
-          checkDuplicates(currPlates, index),
-          checkExcess(this.excessTransfers)
-        )
-      }
+      return [
+        checkSize(12, 8),
+        checkDuplicates(currPlates),
+        // checkExcess(this.excessTransfers)
+      ]
     }
   },
   methods: {
