@@ -6,12 +6,14 @@ const indexToName = function(index, numberOfRows) {
   return row + col
 }
 
+// Calculate well coordinates (starting at [0, 0] <= A1) from wellName.
 const wellNameToCoordinate = function(wellName) {
-  const row = wellName.charCodeAt(0) - 65
+  const row = wellName.toUpperCase().charCodeAt(0) - 65
   const column = Number.parseInt(wellName.substring(1)) - 1
   return [column, row]
 }
 
+// Calculate well name from wellCoordinate.
 const wellCoordinateToName = function(wellCoordinate) {
   const column = wellCoordinate[0] + 1
   const row = String.fromCharCode(wellCoordinate[1] + 65)

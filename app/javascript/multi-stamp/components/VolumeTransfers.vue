@@ -17,6 +17,9 @@
 </template>
 
 <script>
+
+// Transfers creator that return an extra parameter containing the volume to be
+// applied as an extra parameter to each transfer request
 export default {
   name: 'VolumeTransfers',
   data () {

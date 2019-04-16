@@ -43,31 +43,32 @@
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
 const checkSize = (cols, rows) => {
   return (plate) => {
-    if (plate.number_of_columns !== cols || plate.number_of_rows !== rows) {
+    if (!plate) {
+      return { valid: false, message: 'Plate not found' }
+    }
+    else if (plate.number_of_columns !== cols || plate.number_of_rows !== rows) {
       return { valid: false, message: `The plate should be ${cols}×${rows} wells in size` }
-    } else {
+    }
+    else {
       return { valid: true, message: 'Great!' }
     }
   }
 }
 
 // Returns a validator that ensures that the scanned item does not appear
-// multiple times in the list (based on UUID). The currentIndex is used to
-// exclude the plate from matching itself, while ensuring that validation can
-// take place before emitting the plate to its parent.
+// multiple times in the list (based on UUID).
 // plateList: An array of plates that have already been scanned. Can include
 //            null to represent empty plate
-// currentIndex: The index of the plate we are currently scanning in the array.
-//               Excludes it for the check. (Zero indexed)
 const checkDuplicates = (plateList) => {
   return (plate) => {
     let occurrences = 0
     for (let i = 0; i < plateList.length; i++) {
-      if (plateList[i] && plateList[i].uuid === plate.uuid) { occurrences++ }
+      if (plateList[i] && plate && plateList[i].uuid === plate.uuid) { occurrences++ }
     }
     if (occurrences > 1) {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
-    } else {
+    }
+    else {
       return { valid: true, message: 'Great!' }
     }
   }
@@ -83,7 +84,7 @@ const checkExcess = (excessTransfers) => {
   return (plate) => {
     const excessWells = []
     for (let i = 0; i < excessTransfers.length; i++) {
-      if (excessTransfers[i].plateObj.plate.uuid === plate.uuid) {
+      if (plate && excessTransfers[i].plateObj.plate.uuid === plate.uuid) {
         excessWells.push(excessTransfers[i].well.position.name)
       }
     }
@@ -96,12 +97,12 @@ const checkExcess = (excessTransfers) => {
   }
 }
 
-// Allows you to combine multiple validators together in a single validator.
-// Validators are evaluated from left to right, with lazy evaluation of the
-// failure.  As a result, the leftmost failing validator will determine the
-// error message.
-// eg. aggregate(checkSize(12,8),checkDuplicates(this.plates,0)) will return a
-// validator which checks both the size of the plate, and duplications.
+// Receives an array of validators and calls them in the order they appear on
+// the array.
+// As a result, the smallest indexed failing validator will determine the
+// error message and the remaining validators will be skipped.
+// eg. aggregate([checkSize(12, 8), checkDuplicates(this.plates, 0)], plate)
+// will return a validator which checks first the size of the plate, then duplications.
 const aggregate = (validators, item) => {
   return validators.reduce((aggregate, validator) => {
     return aggregate.valid ? validator(item) : aggregate

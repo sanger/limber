@@ -20,7 +20,11 @@ export default {
     }
   },
   computed: {
-    primerPanels() { // Returns the mutual primer panels
+    // Returns the mutual primer panels. Aggregates primer panel names by plate
+    // using a Map of Arrays, then reduces each array (corresponding to
+    // a single plate primer panle subset) returning only the primer panel
+    // names found in every plate.
+    primerPanels() {
       const primerPanelsByPlate = new Map()
       for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
         const requestWithPlate = this.requestsWithPrimerPanel[i]
@@ -64,6 +68,7 @@ export default {
         return ''
       }
     },
+    // Filters out the requests that don't have the selected primer panel
     requestsWithPlatesFiltered() {
       const requestsArray = []
       for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {

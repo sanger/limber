@@ -1,27 +1,6 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  #
-  # Handles the generation of 384 well plates from 1-4 96 well plates.
-  # Most the layout logic happens client side, and it should be possible
-  # to adapt this creator to support a range of layouts by pretty much just
-  # switching out the page/javascript
-  #
-  # Briefly, 96 well plates get stamped onto 384 plates in an interpolated pattern
-  # eg.
-  # +--+--+--+--+--+--+--~
-  # |P1|P3|P1|P3|P1|P3|P1
-  # |A1|A1|A2|A2|A3|A3|A4
-  # +--+--+--+--+--+--+--~
-  # |P2|P4|P2|P4|P2|P4|P1
-  # |A1|A1|A2|A2|A3|A3|A4
-  # +--+--+--+--+--+--+--~
-  # |P1|P3|P1|P3|P1|P3|P1
-  # |B1|B1|B2|B2|B3|B3|B4
-  # +--+--+--+--+--+--+--~
-  # |P2|P4|P2|P4|P2|P4|P1
-  # |B1|B1|B2|B2|B3|B3|B4
-  #
   class MultiStamp < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
