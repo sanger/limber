@@ -79,6 +79,7 @@ describe('TagGroupsLookup', () => {
     return mount(TagGroupsLookup, {
       propsData: {
         api: api.devour,
+        resourceName: 'tag_group'
       },
       localVue
     })
@@ -95,38 +96,10 @@ describe('TagGroupsLookup', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.invalidFeedback).toEqual('No tag groups found')
+    expect(wrapper.vm.feedback).toEqual('No results retrieved')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', tagGroupsList: null }],
-        [{ state: 'invalid', tagGroupsList: null }]
-      ]
-    })
-  })
-
-  it('is invalid if there are api troubles', async () => {
-    const api = mockApi()
-
-    api.mockFail('tag_groups', {'page':{'number':1,'size':150}}, {
-      'errors': [{
-        title: 'Not good',
-        detail: 'Very not good',
-        code: 500,
-        status: 500
-      }]
-    })
-
-    const wrapper = wrapperFactory(api)
-
-    expect(wrapper.vm.state).toEqual('searching')
-
-    await flushPromises()
-
-    expect(wrapper.vm.invalidFeedback).toEqual('Unknown Api error')
-    expect(wrapper.emitted()).toEqual({
-      change: [
-        [{ state: 'searching', tagGroupsList: null }],
-        [{ state: 'invalid', tagGroupsList: null }]
+        [{ state: 'invalid', results: {} }]
       ]
     })
   })
@@ -146,10 +119,8 @@ describe('TagGroupsLookup', () => {
 
     const events = wrapper.emitted()
 
-    expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', tagGroupsList: null }])
-    expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].tagGroupsList).toEqual(goodTagGroupsList)
+    expect(events.change.length).toEqual(1)
+    expect(events.change[0][0].state).toEqual('valid')
+    expect(events.change[0][0].results).toEqual(goodTagGroupsList)
   })
-
 })

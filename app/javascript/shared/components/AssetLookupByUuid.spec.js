@@ -12,15 +12,15 @@ describe('AssetLookupByUuid', () => {
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
 
   const wrapperFactoryPlate = function(api = mockApi()) {
-    // Not ideal using mount here, but having massive trouble
+    // Not ideal using mount here, but having trouble
     // triggering change events on unmounted components
     return mount(AssetLookupByUuid, {
       propsData: {
         api: api.devour,
-        assetUuid: assetUuid,
-        assetType: 'plate',
+        resourceName: 'plate',
         includes: '',
-        fields: {}
+        fields: {},
+        filter: { uuid: assetUuid }
       },
       localVue
     })
@@ -41,39 +41,10 @@ describe('AssetLookupByUuid', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.invalidFeedback).toEqual('Asset undefined')
+    expect(wrapper.vm.feedback).toEqual('No results retrieved')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', asset: null }],
-        [{ state: 'invalid', asset: null }]
-      ]
-    })
-  })
-
-  it('is invalid if there are api troubles', async () => {
-    const api = mockApi()
-    api.mockFail('plates', {
-      include: '',
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, { 'errors': [{
-      title: 'Not good',
-      detail: 'Very not good',
-      code: 500,
-      status: 500
-    }]})
-
-    const wrapper = wrapperFactoryPlate(api)
-
-    expect(wrapper.vm.state).toEqual('searching')
-
-    await flushPromises()
-
-    expect(wrapper.vm.invalidFeedback).toEqual('Unknown Api error')
-    expect(wrapper.emitted()).toEqual({
-      change: [
-        [{ state: 'searching', asset: null }],
-        [{ state: 'invalid', asset: null }]
+        [{ state: 'invalid', results: null }]
       ]
     })
   })
@@ -97,10 +68,8 @@ describe('AssetLookupByUuid', () => {
 
     const events = wrapper.emitted()
 
-    expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', asset: null }])
-    expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].asset.uuid).toEqual(assetUuid)
+    expect(events.change.length).toEqual(1)
+    expect(events.change[0][0].state).toEqual('valid')
+    expect(events.change[0][0].results.uuid).toEqual(assetUuid)
   })
-
 })

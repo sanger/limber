@@ -471,9 +471,9 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(wrapper.vm.createButtonState).toEqual('pending')
-        expect(wrapper.vm.buttonText).toEqual('Create new Custom Tagged plate')
-        expect(wrapper.vm.buttonStyle).toEqual('primary')
-        expect(wrapper.vm.buttonDisabled).toBe(false)
+        expect(wrapper.vm.createButtonText).toEqual('Create new Custom Tagged plate')
+        expect(wrapper.vm.createButtonStyle).toEqual('primary')
+        expect(wrapper.vm.createButtonDisabled).toBe(false)
       })
     })
 
@@ -637,6 +637,7 @@ describe('CustomTaggedPlate', () => {
           locationObj: mockLocation
         },
         stubs: {
+          'lb-parent-plate-lookup': '<div class="parent-plate-lookup"></div>',
           'lb-parent-plate-view': '<table class="plate-view"></table>',
           'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
           'lb-tag-layout-manipulations': '<div class="layout-manipulations"></div>',
@@ -667,6 +668,7 @@ describe('CustomTaggedPlate', () => {
           locationObj: mockLocation
         },
         stubs: {
+          'lb-parent-plate-lookup': '<div class="parent-plate-lookup"></div>',
           'lb-parent-plate-view': '<table class="plate-view"></table>',
           'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
           'lb-tag-layout-manipulations-multiple': '<div class="layout-manipulations-multiple"></div>',

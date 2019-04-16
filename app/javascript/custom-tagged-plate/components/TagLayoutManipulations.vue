@@ -2,7 +2,8 @@
   <b-container fluid>
     <lb-tag-groups-lookup
       :api="api"
-      @change="tagGroupsLookupUpdated"
+      resource-name="tag_group"
+      @change="tagGroupsLookupUpdated($event)"
     />
     <b-row class="form-group form-row">
       <b-col>
@@ -14,13 +15,10 @@
             id="tag_plate_scan"
             :api="api"
             :label="'Tag Plate'"
-            :plate-type="'qcable'"
+            plate-type="qcable"
             :scan-disabled="tagPlateScanDisabled"
-            includes="asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group"
-            :fields="{ assets: 'uuid',
-                       lots: 'uuid,tag_layout_template',
-                       tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-                       tag_groups: 'uuid,name,tags' }"
+            :includes="tagPlateLookupIncludes"
+            :fields="tagPlateLookupFields"
             :validation="scanValidation()"
             @change="tagPlateScanned($event)"
           />
@@ -102,6 +100,7 @@
           ref="offsetTagsByComponent"
           :number-of-tags="numberOfTags"
           :number-of-target-wells="numberOfTargetWells"
+          :tags-per-well="tagsPerWell"
           @tagoffsetchanged="tagOffsetChanged"
         />
       </b-col>
@@ -126,7 +125,7 @@
 <script>
 import PlateScan from 'shared/components/PlateScan'
 import { checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
-import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
+import TagLayout from 'custom-tagged-plate/components/mixins/tagLayout'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
@@ -156,6 +155,24 @@ export default {
     }
   },
   computed: {
+    scanValidation() {
+      return () => {
+        return aggregate(checkState(['available','exhausted']), checkQCableWalkingBy(['wells of plate']))
+      }
+    },
+    tagPlateLookupFields() {
+      return { assets: 'uuid',
+        lots: 'uuid,tag_layout_template',
+        tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
+        tag_groups: 'uuid,name,tags'
+      }
+    },
+    tagPlateLookupIncludes() {
+      return 'asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group'
+    },
+    tagGroupsDisabled() {
+      return (typeof this.tagPlate != 'undefined' && this.tagPlate !== null)
+    },
     walkingByOptions() {
       return [
         { value: null, text: 'Please select a by Walking By Option...' },
@@ -164,16 +181,46 @@ export default {
         { value: 'wells of plate', text: 'By Plate (Fixed)' }
       ]
     },
-    tagGroupsDisabled() {
-      return (typeof this.tagPlate != 'undefined' && this.tagPlate !== null)
-    },
-    scanValidation() {
-      return () => {
-        return aggregate(checkState(['available','exhausted']), checkQCableWalkingBy(['wells of plate']))
-      }
-    }
   },
   methods: {
+    emptyTagPlate() {
+      this.tagPlate = null
+      this.tag1GroupId = null
+      this.tag2GroupId = null
+      this.updateTagPlateScanDisabled()
+    },
+    extractTagGroupIds(plate) {
+      this.tagPlate = plate
+      this.tagPlateWasScanned = true
+      this.tag1GroupId = null
+      this.tag2GroupId = null
+
+      if(plate.lot && plate.lot.tag_layout_template) {
+        if(plate.lot.tag_layout_template.tag_group && plate.lot.tag_layout_template.tag_group.id) {
+          this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
+        }
+        if(plate.lot.tag_layout_template.tag2_group && plate.lot.tag_layout_template.tag2_group.id) {
+          this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
+        }
+      }
+
+      this.updateTagPlateScanDisabled()
+    },
+    tagGroupChanged() {
+      this.tagPlateWasScanned = false
+    },
+    tagGroupInput() {
+      this.updateTagPlateScanDisabled()
+    },
+    tagPlateScanned(data) {
+      if(data) {
+        if(data.state === 'valid' && data.plate) {
+          this.extractTagGroupIds(data.plate)
+        } else if(data.state === 'empty') {
+          this.emptyTagPlate()
+        }
+      }
+    },
     updateTagPlateScanDisabled() {
       if(this.tagPlateWasScanned) {
         this.tagPlateScanDisabled = false
@@ -185,43 +232,6 @@ export default {
         }
       }
       this.updateTagParams(null)
-    },
-    tagPlateScanned(data) {
-      if(data && (data.state === 'valid') && data.plate) {
-        this.extractTagGroupIds(data.plate)
-      } else if(data.state === 'empty' && !data.plate) {
-        this.emptyTagPlate()
-      }
-    },
-    extractTagGroupIds(plate) {
-      this.tagPlate = { ...plate }
-      this.tagPlateWasScanned = true
-
-      if(plate.lot.tag_layout_template.tag_group.id) {
-        this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
-      } else {
-        this.tag1GroupId = null
-      }
-
-      if(plate.lot.tag_layout_template.tag2_group.id) {
-        this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
-      } else {
-        this.tag2GroupId = null
-      }
-
-      this.updateTagPlateScanDisabled()
-    },
-    emptyTagPlate() {
-      this.tagPlate = null
-      this.tag1GroupId = null
-      this.tag2GroupId = null
-      this.updateTagPlateScanDisabled()
-    },
-    tagGroupChanged() {
-      this.tagPlateWasScanned = false
-    },
-    tagGroupInput() {
-      this.updateTagPlateScanDisabled()
     }
   }
 }

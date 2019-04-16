@@ -18,8 +18,8 @@ function extractParentWellSubmissionDetails(parentPlate) {
       const submDetails = extractSubmDetailsFromWell(well)
 
       if(!submDetails.id) {
+        // TODO replace this with generic limber logging when available
         console.log('Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
-        // TODO what to do here? should not happen
         return
       }
 
@@ -54,8 +54,8 @@ function extractParentUsedOligos(parentPlate) {
       const submDetails = extractSubmDetailsFromWell(well)
 
       if(!submDetails.id) {
+        // TODO replace this with generic limber logging when available
         console.log('Tag clash functions: extractParentUsedOligos: Error: Submission Id not found for well')
-        // TODO what to do here? should not happen
         return
       }
 

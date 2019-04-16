@@ -1,94 +1,66 @@
 
 <script>
+import DevourSelect from 'shared/components/mixins/devourSelect'
+import { hasExpectedProperties } from 'shared/devourApiValidators'
+
 export default {
   name: 'TagGroupsLookup',
+  mixins: [DevourSelect],
   props: {
-    api: { type: Object, required: true },
+    validation: {
+      // A validation function. see plateScanValidators.js for examples and details
+      // This overrides the property by the same name in the DevourSelect mixin.
+      type: Function,
+      required: false,
+      default: hasExpectedProperties(['id', 'uuid', 'name', 'tags'])
+    }
   },
   data() {
     return {
-      tagGroupsList: null,
-      state: 'empty',
-      invalidFeedback: '',
-      validFeedback: ''
     }
   },
-  watch: {
-    state: function() {
-      this.$emit('change', { tagGroupsList: this.tagGroupsList, state: this.state })
+  computed: {
+    // This overrides the computed by the same name from the DevourSelect mixin.
+    reformattedResults() {
+      let tagGroupsList = {}
+      const resultsLength = this.results.length
+      if(resultsLength > 0) {
+        this.results.forEach(function (currTagGroup) {
+          const orderedTags = currTagGroup.tags.sort(function(obj1, obj2) { return obj1.index - obj2.index })
+          tagGroupsList[currTagGroup.id] = {
+            'id': currTagGroup.id,
+            'uuid': currTagGroup.uuid,
+            'name': currTagGroup.name,
+            'tags': orderedTags
+          }
+        })
+      }
+      return tagGroupsList
     }
   },
-  created: function () {
-    this.lookupTagGroups()
+  created() {
+    this.performLookup()
   },
   methods: {
-    lookupTagGroups: function (_) {
-      this.state = 'searching'
-      this.findAllTagGroups()
-        .then(this.validateTagGroups)
-        .catch(this.apiError)
-    },
-    // TODO abstract out this method to helper function with name and size as parameters
-    async findAllTagGroups () {
-      let tagGroupsFromDB = []
+    // This overrides the method by the same name from the DevourSelect mixin.
+    async performFind() {
+      let tagGroupsArray = []
       let morePagesAvailable = true
       let currentPage = 0
 
       while(morePagesAvailable) {
         currentPage++
-        const response = await this.api.findAll('tag_groups', {page: {number: currentPage, size: 150}})
+        const response = await this.api.findAll(this.resourceName, { page: { number: currentPage, size: 150 }})
 
         if(response.data.length > 0) {
-          response.data.forEach(e => tagGroupsFromDB.unshift(e))
+          response.data.forEach(e => tagGroupsArray.unshift(e))
         }
-        // use existence of next link to decide if more pages available
+        // uses existence of next link to decide if more pages are available
         morePagesAvailable = (response.links.next)
       }
 
-      return tagGroupsFromDB
-    },
-    validateTagGroups: function (tagGroupsFromDB) {
-      this.tagGroupsList = null
-      if (!tagGroupsFromDB) {
-        this.badState({ message: 'No tag groups list returned from database' })
-      } else {
-        if(tagGroupsFromDB.length > 0) {
-          this.tagGroupsList = {}
-          for (var i = 0; i < tagGroupsFromDB.length; i++) {
-            this.extractTagGroupInfo(tagGroupsFromDB[i])
-          }
-          this.goodState({ message: 'Valid!'})
-        } else {
-          this.badState({ message: 'No tag groups found' })
-        }
-      }
-    },
-    extractTagGroupInfo: function (tagGroup) {
-      // sort tags ascending by index (map id)
-      let orderedTags = tagGroup.tags.sort(function(obj1, obj2) { return obj1.index - obj2.index })
-      this.tagGroupsList[tagGroup.id] = { 'id': tagGroup.id, 'uuid': tagGroup.uuid, 'name': tagGroup.name, 'tags': orderedTags }
-    },
-    apiError: function (err) {
-      if (!err) {
-        this.badState({ message: 'Unknown Api error' })
-      } else if (err[0]) {
-        const message = `${err[0].title}: ${err[0].detail}`
-        this.badState({ message })
-      } else {
-        this.badState(err)
-      }
-    },
-    badState: function (err) {
-      this.state = 'invalid'
-      this.invalidFeedback = err.message || 'Unknown error'
-    },
-    goodState: function (msg) {
-      this.state = 'valid'
-      this.validFeedback = msg || 'Valid!'
+      return tagGroupsArray
     }
-  },
-  render() {
-    return ''
   }
 }
 </script>

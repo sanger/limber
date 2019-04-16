@@ -115,7 +115,7 @@ const calculateTagLayout = function (data) {
 
   if(validationResult) {
     // TODO replace this with generic limber logging when available
-    // console.log('WARNING: tagLayoutFucntions: ', validationResult.message)
+    // console.log('WARNING: tagLayoutFunctions: ', validationResult.message)
     return {}
   }
 

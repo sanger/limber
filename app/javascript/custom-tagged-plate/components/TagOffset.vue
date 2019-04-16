@@ -66,6 +66,7 @@ export default {
       if(this.numberOfTags === 0 || this.numberOfTargetWells === 0 || this.tagsPerWell === 0) {
         return null
       }
+
       const numTagsNeeded = this.numberOfTargetWells * this.tagsPerWell
       return Math.floor((this.numberOfTags - numTagsNeeded) / this.tagsPerWell)
     },

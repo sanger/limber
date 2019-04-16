@@ -35,12 +35,10 @@
     <lb-main-content v-else>
       <lb-parent-plate-lookup
         :api="devourApi"
-        :asset-uuid="parentUuid"
-        includes="wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission"
-        :fields="{ wells: 'uuid,position,aliquots,requests_as_source',
-                   aliquots: 'request',
-                   requests: 'uuid,submission',
-                   submissions: 'uuid,name,used_tags' }"
+        resource-name="plate"
+        :includes="parentPlateLookupIncludes"
+        :fields="parentPlateLookupFields"
+        :filter="parentPlateLookupFilter"
         @change="parentPlateLookupUpdated"
       />
     </lb-main-content>
@@ -68,13 +66,13 @@
               <b-button
                 id="custom_tagged_plate_submit_button"
                 name="custom_tagged_plate_submit_button"
-                :disabled="buttonDisabled"
-                :variant="buttonStyle"
+                :disabled="createButtonDisabled"
+                :variant="createButtonStyle"
                 size="lg"
                 block
                 @click="createPlate"
               >
-                {{ buttonText }}
+                {{ createButtonText }}
               </b-button>
             </div>
           </b-col>
@@ -187,147 +185,8 @@ export default {
     }
   },
   computed: {
-    createButtonState() {
-      this.creationRequestInProgress
-      this.creationRequestSuccessful
-
-      if(!this.isChildWellsValid) {
-        return 'setup'
-      } else if(this.creationRequestInProgress === null) {
-        return 'pending'
-      } else if(this.creationRequestInProgress) {
-        return 'busy'
-      } else if(this.creationRequestSuccessful) {
-        return 'success'
-      } else {
-        return 'failure'
-      }
-    },
-    numberOfRows() {
-      return (this.parentPlate) ? this.parentPlate.number_of_rows : null
-    },
-    numberOfColumns() {
-      return (this.parentPlate) ? this.parentPlate.number_of_columns : null
-    },
-    tagsPerWellAsNumber() {
-      return Number.parseInt(this.tagsPerWell) || null
-    },
     childPurposeName() {
       return this.purposeName
-    },
-    parentWells() {
-      if(!this.parentPlate) { return {} }
-
-      let wells = {}
-
-      this.parentPlate.wells.forEach((well) => {
-        const position = well.position.name
-
-        wells[position] = {
-          position: position,
-          aliquotCount: 0,
-          validity: { valid: true, message: 'No aliquot in this well' }
-        }
-
-        if(well.aliquots && well.aliquots.length > 0) {
-          wells[position]['aliquotCount'] = well.aliquots.length
-          wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
-          wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
-          wells[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
-        }
-      })
-
-      return wells
-    },
-    parentWellData() {
-      return Object.values(this.parentWells) || null
-    },
-    tag1GroupUuid() {
-      return this.tag1Group ? this.tag1Group.uuid : null
-    },
-    tag2GroupUuid() {
-      return this.tag2Group ? this.tag2Group.uuid : null
-    },
-    tag1GroupTags() {
-      return this.tag1Group ? this.tag1Group.tags : []
-    },
-    tag2GroupTags() {
-      return this.tag2Group ? this.tag2Group.tags : []
-    },
-    numTag1GroupTags() {
-      return this.tag1GroupTags.length
-    },
-    numTag2GroupTags() {
-      return this.tag2GroupTags.length
-    },
-    tag1GroupMapIds() {
-      return this.tag1GroupTags.map(a => a.index)
-    },
-    tag2GroupMapIds() {
-      return this.tag2GroupTags.map(a => a.index)
-    },
-    tag1GroupTagOligos() {
-      return this.tag1GroupTags.map(a => a.oligo)
-    },
-    tag2GroupTagOligos() {
-      return this.tag2GroupTags.map(a => a.oligo)
-    },
-    tagGroupOligoStrings() {
-      this.tag1GroupTags
-      this.tag2GroupTags
-
-      let tagOligoStrings = {}
-
-      if(this.numTag1GroupTags > 0) {
-        if(this.numTag2GroupTags > 0) {
-          const numUseableTags = Math.min(this.numTag1GroupTags, this.numTag2GroupTags)
-          for (var iBoth = 0; iBoth < numUseableTags; iBoth++) {
-            const tg1 = this.tag1GroupTags[iBoth]
-            const tg2 = this.tag2GroupTags[iBoth]
-            tagOligoStrings[tg1.index] = tg1.oligo + ':' + tg2.oligo
-          }
-        } else {
-          for (var i1 = 0; i1 < this.tag1GroupTags.length; i1++) {
-            const tg = this.tag1GroupTags[i1]
-            tagOligoStrings[tg.index] = tg.oligo
-          }
-        }
-      } else if(this.numTag2GroupTags > 0) {
-        for (var i2 = 0; i2 < this.tag2GroupTags.length; i2++) {
-          const tg = this.tag2GroupTags[i2]
-          tagOligoStrings[tg.index] = tg.oligo
-        }
-      }
-
-      return tagOligoStrings
-    },
-    plateDims() {
-      return {
-        number_of_rows: this.numberOfRows,
-        number_of_columns: this.numberOfColumns
-      }
-    },
-    tagLayout() {
-      const inputData = {
-        wells: this.parentWellData,
-        plateDims: this.plateDims,
-        tagMapIds: this.useableTagMapIds,
-        walkingBy: this.walkingBy,
-        direction: this.direction,
-        offsetTagsBy: this.offsetTagsBy,
-        tagsPerWell: this.tagsPerWell
-      }
-
-      return calculateTagLayout(inputData)
-    },
-    parentWellSubmissionDetails() {
-      return extractParentWellSubmissionDetails(this.parentPlate)
-    },
-    parentUsedOligos() {
-      return extractParentUsedOligos(this.parentPlate)
-    },
-    childUsedOligos() {
-      return extractChildUsedOligos(this.parentUsedOligos, this.parentWellSubmissionDetails, this.tagLayout, this.tagSubstitutions, this.tagGroupOligoStrings)
     },
     childWells() {
       this.tagLayout
@@ -366,6 +225,52 @@ export default {
 
       return cw
     },
+    childUsedOligos() {
+      return extractChildUsedOligos(this.parentUsedOligos, this.parentWellSubmissionDetails, this.tagLayout, this.tagSubstitutions, this.tagGroupOligoStrings)
+    },
+    createButtonDisabled() {
+      return {
+        'setup': true,
+        'pending': false,
+        'busy': true,
+        'success': true,
+        'failure': false
+      }[this.createButtonState]
+    },
+    createButtonState() {
+      this.creationRequestInProgress
+      this.creationRequestSuccessful
+
+      if(!this.isChildWellsValid) {
+        return 'setup'
+      } else if(this.creationRequestInProgress === null) {
+        return 'pending'
+      } else if(this.creationRequestInProgress) {
+        return 'busy'
+      } else if(this.creationRequestSuccessful) {
+        return 'success'
+      } else {
+        return 'failure'
+      }
+    },
+    createButtonStyle() {
+      return {
+        'setup': 'danger',
+        'pending': 'primary',
+        'busy': 'outline-primary',
+        'success': 'success',
+        'failure': 'danger'
+      }[this.createButtonState]
+    },
+    createButtonText() {
+      return {
+        'setup': 'Set up plate tag layout...',
+        'pending': 'Create new Custom Tagged plate',
+        'busy': 'Sending...',
+        'success': 'Custom Tagged plate successfully created',
+        'failure': 'Failed to create Custom Tagged plate, retry?'
+      }[this.createButtonState]
+    },
     isChildWellsValid() {
       if(Object.keys(this.childWells).length === 0) { return false }
 
@@ -380,23 +285,20 @@ export default {
 
       return ((invalidCount === 0) ? true : false)
     },
-    useableTagMapIds() {
-      let tags = []
-
-      if(this.numTag1GroupTags > 0) {
-        if(this.numTag2GroupTags > 0) {
-          const numUseableTags = Math.min(this.numTag1GroupTags, this.numTag2GroupTags)
-          tags = this.tag1GroupTags.slice(0, numUseableTags)
-        } else {
-          tags = this.tag1GroupTags
-        }
-      } else if(this.numTag2GroupTags > 0) {
-        tags = this.tag2GroupTags
-      }
-
-      const tagMapIds = tags.map(a => a.index)
-
-      return tagMapIds
+    isMultipleTaggedPlate() {
+      return (this.tagsPerWellAsNumber > 1) ? true : false
+    },
+    numberOfColumns() {
+      return (this.parentPlate) ? this.parentPlate.number_of_columns : null
+    },
+    numberOfRows() {
+      return (this.parentPlate) ? this.parentPlate.number_of_rows : null
+    },
+    numberOfTag1GroupTags() {
+      return this.tag1GroupTags.length
+    },
+    numberOfTag2GroupTags() {
+      return this.tag2GroupTags.length
     },
     numberOfTags() {
       return this.useableTagMapIds.length
@@ -417,51 +319,161 @@ export default {
       }
       return numTargets
     },
-    isMultipleTaggedPlate() {
-      return (this.tagsPerWellAsNumber > 1) ? true : false
+    parentPlateLookupIncludes() {
+      return 'wells,wells.aliquots,wells.aliquots.request,wells.aliquots.request.submission,wells.requests_as_source,wells.requests_as_source.submission'
+    },
+    parentPlateLookupFields() {
+      return {
+        wells: 'uuid,position,aliquots,requests_as_source',
+        aliquots: 'request',
+        requests: 'uuid,submission',
+        submissions: 'uuid,name,used_tags'
+      }
+    },
+    parentPlateLookupFilter() {
+      return { uuid: this.parentUuid }
+    },
+    parentWells() {
+      if(!this.parentPlate) { return {} }
+
+      let wells = {}
+
+      this.parentPlate.wells.forEach((well) => {
+        const position = well.position.name
+
+        wells[position] = {
+          position: position,
+          aliquotCount: 0,
+          validity: { valid: true, message: 'No aliquot in this well' }
+        }
+
+        if(well.aliquots && well.aliquots.length > 0) {
+          wells[position]['aliquotCount'] = well.aliquots.length
+          wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
+          wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
+          wells[position]['validity'] = { valid: false, message: 'Missing tag ids for this well' }
+        }
+      })
+
+      return wells
+    },
+    parentWellData() {
+      return Object.values(this.parentWells) || null
+    },
+    parentWellSubmissionDetails() {
+      return extractParentWellSubmissionDetails(this.parentPlate)
+    },
+    parentUsedOligos() {
+      return extractParentUsedOligos(this.parentPlate)
+    },
+    plateDims() {
+      return {
+        number_of_rows: this.numberOfRows,
+        number_of_columns: this.numberOfColumns
+      }
+    },
+    tag1GroupMapIds() {
+      return this.tag1GroupTags.map(a => a.index)
+    },
+    tag1GroupTagOligos() {
+      return this.tag1GroupTags.map(a => a.oligo)
+    },
+    tag1GroupTags() {
+      return this.tag1Group ? this.tag1Group.tags : []
+    },
+    tag1GroupUuid() {
+      return this.tag1Group ? this.tag1Group.uuid : null
+    },
+    tag2GroupMapIds() {
+      return this.tag2GroupTags.map(a => a.index)
+    },
+    tag2GroupTagOligos() {
+      return this.tag2GroupTags.map(a => a.oligo)
+    },
+    tag2GroupTags() {
+      return this.tag2Group ? this.tag2Group.tags : []
+    },
+    tag2GroupUuid() {
+      return this.tag2Group ? this.tag2Group.uuid : null
+    },
+    tagGroupOligoStrings() {
+      this.tag1GroupTags
+      this.tag2GroupTags
+
+      let tagOligoStrings = {}
+
+      if(this.numberOfTag1GroupTags > 0) {
+        if(this.numberOfTag2GroupTags > 0) {
+          const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+          for (var iBoth = 0; iBoth < numUseableTags; iBoth++) {
+            const tg1 = this.tag1GroupTags[iBoth]
+            const tg2 = this.tag2GroupTags[iBoth]
+            tagOligoStrings[tg1.index] = tg1.oligo + ':' + tg2.oligo
+          }
+        } else {
+          for (var i1 = 0; i1 < this.tag1GroupTags.length; i1++) {
+            const tg = this.tag1GroupTags[i1]
+            tagOligoStrings[tg.index] = tg.oligo
+          }
+        }
+      } else if(this.numberOfTag2GroupTags > 0) {
+        for (var i2 = 0; i2 < this.tag2GroupTags.length; i2++) {
+          const tg = this.tag2GroupTags[i2]
+          tagOligoStrings[tg.index] = tg.oligo
+        }
+      }
+
+      return tagOligoStrings
+    },
+    tagLayout() {
+      const inputData = {
+        wells: this.parentWellData,
+        plateDims: this.plateDims,
+        tagMapIds: this.useableTagMapIds,
+        walkingBy: this.walkingBy,
+        direction: this.direction,
+        offsetTagsBy: this.offsetTagsBy,
+        tagsPerWell: this.tagsPerWell
+      }
+
+      return calculateTagLayout(inputData)
+    },
+    tagsPerWellAsNumber() {
+      return Number.parseInt(this.tagsPerWell) || null
     },
     tagSubstitutionsAllowed() {
       return !this.isMultipleTaggedPlate
     },
-    buttonText() {
-      return {
-        'setup': 'Set up plate tag layout...',
-        'pending': 'Create new Custom Tagged plate',
-        'busy': 'Sending...',
-        'success': 'Custom Tagged plate successfully created',
-        'failure': 'Failed to create Custom Tagged plate, retry?'
-      }[this.createButtonState]
-    },
-    buttonStyle() {
-      return {
-        'setup': 'danger',
-        'pending': 'primary',
-        'busy': 'outline-primary',
-        'success': 'success',
-        'failure': 'danger'
-      }[this.createButtonState]
-    },
-    buttonDisabled() {
-      return {
-        'setup': true,
-        'pending': false,
-        'busy': true,
-        'success': true,
-        'failure': false
-      }[this.createButtonState]
+    useableTagMapIds() {
+      let tags = []
+
+      if(this.numberOfTag1GroupTags > 0) {
+        if(this.numberOfTag2GroupTags > 0) {
+          const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
+          tags = this.tag1GroupTags.slice(0, numUseableTags)
+        } else {
+          tags = this.tag1GroupTags
+        }
+      } else if(this.numberOfTag2GroupTags > 0) {
+        tags = this.tag2GroupTags
+      }
+
+      const tagMapIds = tags.map(a => a.index)
+
+      return tagMapIds
     }
   },
   methods: {
     parentPlateLookupUpdated(data) {
       this.parentPlate = null
       if(data) {
-        if(data['state'] === 'searching') {
+        if(data.state === 'searching') {
           return
         } else {
-          if(data['state'] === 'valid') {
-            this.parentPlate = { ...data['asset']}
+          if(data.state === 'valid') {
+            this.parentPlate = { ...data.results }
           } else {
-            this.progressMessage = 'Parent plate lookup error: ', data['state']
+            this.progressMessage = 'Parent plate lookup error: ', data.state
           }
           this.loading = false
         }
@@ -549,6 +561,7 @@ export default {
       }).catch((error)=>{
         // Something has gone wrong
         this.loading = false
+        // TODO replace this with generic limber logging when available
         console.log(error)
         this.creationRequestInProgress = false
         this.creationRequestSuccessful = false

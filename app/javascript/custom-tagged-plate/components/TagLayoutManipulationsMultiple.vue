@@ -2,6 +2,7 @@
   <b-container fluid>
     <lb-tag-groups-lookup
       :api="api"
+      resource-name="tag_group"
       @change="tagGroupsLookupUpdated"
     />
     <b-row class="form-group form-row">
@@ -59,6 +60,7 @@
           ref="offsetTagsByComponent"
           :number-of-tags="numberOfTags"
           :number-of-target-wells="numberOfTargetWells"
+          :tags-per-well="tagsPerWell"
           @tagoffsetchanged="tagOffsetChanged"
         />
       </b-col>
@@ -82,7 +84,7 @@
 
 <script>
 
-import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
+import TagLayout from 'custom-tagged-plate/components/mixins/tagLayout'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
