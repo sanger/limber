@@ -7,9 +7,14 @@ en:
       transitions:
         passed: 'Manual Transfer'
         qc_complete: 'Mark QC Complete'
+      transitioning:
+        passed: 'Transferring...'
+        qc_complete: 'Completing QC...'
     pcr:
       transitions:
         passed: 'Perform PCR'
+      transitioning:
+        passed: 'Performing PCR'
   robots:
     instruction_summary:
       default: 'Bed verification'

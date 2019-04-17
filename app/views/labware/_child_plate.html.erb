@@ -1,0 +1,3 @@
+<%= link_to limber_plate_path(plate.uuid), target: '_blank', class: 'list-group-item plate-item' do %>
+  <%= plate.purpose.name %> - <%= plate.human_barcode %><%= state_badge(plate.state) %>
+<% end %>

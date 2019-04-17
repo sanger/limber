@@ -1,0 +1,8 @@
+<% presenter.child_plates do |child_plates| %>
+  <div class="plate-list">
+    <%= render partial: 'labware/child_plate',
+               collection: child_plates,
+               as: :plate
+    %>
+  </div>
+<% end %>

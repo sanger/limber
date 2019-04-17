@@ -6,7 +6,7 @@ class Limber::Tube < Sequencescape::Tube
   alias plate_purpose purpose
 
   # Mocked out for the time being
-  def submissions
+  def in_progress_submission_uuids
     []
   end
 

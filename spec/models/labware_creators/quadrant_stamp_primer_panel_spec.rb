@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # Up to four 96 well plates are transferred onto a single 384 well plate.
 # Filtering can be done via primer panel.
-RSpec.describe LabwareCreators::QuadrantStamp do
+RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api
@@ -29,7 +28,7 @@ RSpec.describe LabwareCreators::QuadrantStamp do
     create :purpose_config, name: child_purpose_name
     stub_v2_plate(parent, stub_search: false)
     stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells')
+    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do
@@ -41,11 +40,11 @@ RSpec.describe LabwareCreators::QuadrantStamp do
     end
 
     subject do
-      LabwareCreators::QuadrantStamp.new(api, form_attributes)
+      LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes)
     end
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::QuadrantStamp
+      expect(subject).to be_a LabwareCreators::QuadrantStampPrimerPanel
     end
 
     it 'renders the "quadrant_stamp" page' do
@@ -59,7 +58,7 @@ RSpec.describe LabwareCreators::QuadrantStamp do
 
   context 'on create' do
     subject do
-      LabwareCreators::QuadrantStamp.new(api, form_attributes.merge(user_uuid: user_uuid))
+      LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid))
     end
 
     let(:form_attributes) do
