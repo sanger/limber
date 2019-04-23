@@ -1,16 +1,19 @@
 <template>
   <b-container fluid>
     <b-row>
+      <b-col />
       <b-col>
-        <label for="input-volume">Volume (&#181;L):</label>
-      </b-col>
-      <b-col>
-        <b-input
-          id="input-volume"
-          v-model="volume"
-          type="number"
-          number="true"
-        />
+        <b-input-group
+          prepend="Volume"
+          append="&#181;L"
+        >
+          <b-input
+            id="input-volume"
+            v-model="volume"
+            type="number"
+            number="true"
+          />
+        </b-input-group>
       </b-col>
     </b-row>
   </b-container>
