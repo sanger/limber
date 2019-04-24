@@ -183,7 +183,7 @@ describe('MultiStamp', () => {
     })
   })
 
-  it('doesn not display an alert if no invalid transfers are present', () => {
+  it('does not display an alert if no invalid transfers are present', () => {
     const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updatePlate(1, plate1)
