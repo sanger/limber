@@ -37,4 +37,4 @@ const requestsForWell = function(well) {
   return [...well.requests_as_source, ...well.aliquots.map(aliquot => aliquot.request)].filter(request => request)
 }
 
-export { indexToName, nameToIndex, quadrantTargetFor, requestsForWell }
+export { indexToName, nameToIndex, wellNameToCoordinate, quadrantTargetFor, requestsForWell }
