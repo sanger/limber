@@ -11,4 +11,4 @@
 require('file-list')
 require('asset-comments')
 require('qc-information')
-require('quadrant-stamp')
+require('multi-stamp')

@@ -1,40 +1,34 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  #
-  # Handles the generation of 384 well plates from 1-4 96 well plates.
-  # Most the layout logic happens client side, and it should be possible
-  # to adapt this creator to support a range of layouts by pretty much just
-  # switching out the page/javascript
-  #
-  # Briefly, 96 well plates get stamped onto 384 plates in an interpolated pattern
-  # eg.
-  # +--+--+--+--+--+--+--~
-  # |P1|P3|P1|P3|P1|P3|P1
-  # |A1|A1|A2|A2|A3|A3|A4
-  # +--+--+--+--+--+--+--~
-  # |P2|P4|P2|P4|P2|P4|P1
-  # |A1|A1|A2|A2|A3|A3|A4
-  # +--+--+--+--+--+--+--~
-  # |P1|P3|P1|P3|P1|P3|P1
-  # |B1|B1|B2|B2|B3|B3|B4
-  # +--+--+--+--+--+--+--~
-  # |P2|P4|P2|P4|P2|P4|P1
-  # |B1|B1|B2|B2|B3|B3|B4
-  #
-  class QuadrantStampBase < Base
+  class MultiStamp < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
-    class_attribute :request_filter
+    class_attribute :request_filter, :transfers_layout, :transfers_creator, :transfers_attributes, :target_rows, :target_columns, :source_plates
 
-    self.page = 'quadrant_stamp'
+    self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
+    self.transfers_attributes = [:source_plate, :source_asset, :outer_request, { new_target: :location }]
     self.request_filter = 'null'
+    self.transfers_layout = 'null'
+    self.transfers_creator = 'multi-stamp'
+    self.target_rows = 0
+    self.target_columns = 0
+    self.source_plates = 0
 
     validates :transfers, presence: true
+
+    def initialize(*args)
+      self.class.attributes += [
+        { transfers: [
+            transfers_attributes
+          ]
+        }
+      ]
+      super(*args)
+    end
 
     private
 

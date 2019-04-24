@@ -1,27 +1,30 @@
 // // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import QuadStamp from './QuadStamp.vue'
+import MultiStamp from './MultiStamp.vue'
 import localVue from 'test_support/base_vue.js'
-import { plateFactory } from 'test_support/factories.js'
+import { plateFactory, wellFactory, requestFactory } from 'test_support/factories'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
-describe('QuadStamp', () => {
-  const wrapperFactory = function() {
+describe('MultiStamp', () => {
+  const wrapperFactory = function(options = {}) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
-    return shallowMount(QuadStamp, {
+    return shallowMount(MultiStamp, {
       propsData: {
-        targetRows: 16,
-        targetColumns: 24,
-        sourcePlateNumber: 4,
+        targetRows: '16',
+        targetColumns: '24',
+        sourcePlates: '4',
         purposeUuid: 'test',
+        requestsFilter: 'null',
         targetUrl: 'example/example',
         locationObj: mockLocation,
-        requestFilter: 'null'
+        transfersLayout: 'quadrant',
+        transfersCreator: 'multi-stamp',
+        ...options
       },
       localVue
     })
@@ -41,6 +44,7 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(2, plate2)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.valid).toEqual(true)
   })
@@ -73,6 +77,7 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(1, plate)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     const expectedPayload = { plate: {
       parent_uuid: 'plate-uuid',
@@ -105,8 +110,9 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(1, plate)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
-    expect(wrapper.vm.transfers).toEqual([
+    expect(wrapper.vm.apiTransfers()).toEqual([
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-0', outer_request: 'plate-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-1', outer_request: 'plate-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-uuid', pool_index: 1, source_asset: 'plate-uuid-well-2', outer_request: 'plate-uuid-well-2-source-request-0', new_target: { location: 'E1' } },
@@ -126,8 +132,9 @@ describe('QuadStamp', () => {
     wrapper.vm.updatePlate(4, plate4)
 
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+    wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
-    expect(wrapper.vm.transfers).toEqual([
+    expect(wrapper.vm.apiTransfers()).toEqual([
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-0', outer_request: 'plate-1-uuid-well-0-source-request-0', new_target: { location: 'A1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-1', outer_request: 'plate-1-uuid-well-1-source-request-0', new_target: { location: 'C1' } },
       { source_plate: 'plate-1-uuid', pool_index: 1, source_asset: 'plate-1-uuid-well-2', outer_request: 'plate-1-uuid-well-2-source-request-0', new_target: { location: 'E1' } },
@@ -174,5 +181,61 @@ describe('QuadStamp', () => {
       'H2': { pool_index: 4 },
       'J2': { pool_index: 4 }
     })
+  })
+
+  it('does not display an alert if no invalid transfers are present', () => {
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const wrapper = wrapperFactory()
+    wrapper.vm.updatePlate(1, plate1)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+
+    expect(wrapper.vm.duplicatedTransfers).toEqual([])
+    expect(wrapper.vm.excessTransfers).toEqual([])
+    expect(wrapper.vm.transfersError).toEqual('')
+  })
+
+  it('display "excess transfers" when too many transfers for the target are scanned', () => {
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const wrapper = wrapperFactory({ targetRows: '1', targetColumns: '1' })
+    wrapper.vm.updatePlate(1, plate1)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+
+    expect(wrapper.vm.excessTransfers.length).toEqual(3)
+    expect(wrapper.vm.transfersError).toEqual('excess transfers')
+  })
+
+  it('display "excess transfers" when too many transfers for the target are scanned over multiple plates', () => {
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
+    const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', _filledWells: 4 }) }
+    const wrapper = wrapperFactory({ targetRows: '2', targetColumns: '2' })
+    wrapper.vm.updatePlate(1, plate1)
+    wrapper.vm.updatePlate(2, plate2)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+
+    expect(wrapper.vm.excessTransfers.length).toEqual(4)
+    expect(wrapper.vm.transfersError).toEqual('excess transfers')
+  })
+
+  it('display "Duplicated transfers" when scanned plate contains duplicated requests', () => {
+    const requests1 = [
+      requestFactory({uuid: 'req-1-uuid'}),
+      requestFactory({uuid: 'req-2-uuid'})
+    ]
+    const well1 = wellFactory({
+      uuid: 'well-1-uuid',
+      requests_as_source: requests1,
+      position: { name: 'A1' }
+    })
+    const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', wells: [well1] }) }
+    const wrapper = wrapperFactory()
+    wrapper.vm.updatePlate(1, plate1)
+
+    wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
+
+    expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
+    expect(wrapper.vm.transfersError).toEqual('Duplicated transfers')
   })
 })
