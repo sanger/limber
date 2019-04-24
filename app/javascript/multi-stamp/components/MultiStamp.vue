@@ -101,25 +101,66 @@ export default {
     'lb-volume-transfers': VolumeTransfers
   },
   props: {
+    // Sequencescape API V2 URL
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+
+    // Limber plate purpose UUID
     purposeUuid: { type: String, required: true },
+
+    // Limber target Asset URL for posting the transfers
     targetUrl: { type: String, required: true },
+
+    // Name of the requests filter configuration to use. Requests filters takes
+    // an array of requests (requestsWithPlates) and return a filtered array
+    // (requestsWithPlatesFiltered).
+    // (See configurations in ./filterProps.js)
     requestsFilter: { type: String, required: true },
+
+    // Name of the transfers creator to use. Transfers Creators translates
+    // validTransfers into apiTransfers and potentially modify or add
+    // parameters to each transfer
+    // (See ./transfersCreatorsComponentsMap.js for components name mapping)
     transfersCreator: { type: String, required: true },
+
+    // Name of the transfers layout to use to determine the position of the
+    // destination asset (i.e. target well coordinates).
+    // (See ../../shared/transfersLayouts.js for details)
     transfersLayout: { type: String, required: true },
+
+    // Target asset number of rows
     targetRows: { type: String, required: true },
+
+    // Target asset number of columns
     targetColumns: { type: String, required: true },
+
+    // Number of source plates
     sourcePlates: { type: String, required: true },
+
+    // Object storing response's redirect URL
     locationObj: { default: () => { return location }, type: [Object, Location] }
   },
   data () {
     return {
-      // Cannot use computed functions as data is invoked before
+      // Array containing objects with scanned plates, their states and the
+      // index of the form input in which they were scanned.
+      // Note: Cannot use computed functions as data is invoked before
       plates: builPlateObjs(Number.parseInt(this.sourcePlates)),
+
+      // Devour API object to deserialise assets from sequencescape API.
+      // (See ../../shared/resources.js for details)
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+
+      // Array of filtered requestsWithPlates emitted by the request filter
       requestsWithPlatesFiltered: [],
+
+      // Object containing transfers creator's extraParam function and the
+      // state of the transfers (i.e. isValid)
       transfersCreatorObj: {},
+
+      // Flag for toggling loading screen
       loading: false,
+
+      // Message to be shown during loading screen
       progressMessage: ''
     }
   },
@@ -227,7 +268,7 @@ export default {
       }
       this.$axios({
         method: 'post',
-        url:this.targetUrl,
+        url: this.targetUrl,
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data: payload
       }).then((response) => {
