@@ -27,7 +27,11 @@ class RobotsController < ApplicationController
       @robot.beds.each_value do |bed|
         next unless bed.transitions? && bed.plate
 
-        PlateMetadata.new(api: api, user: current_user_uuid, plate: bed.plate.barcode.machine, created_with_robot: params[:robot_barcode]).update
+        PlateMetadata.new(
+          api: api,
+          user: current_user_uuid,
+          barcode: bed.plate.barcode.machine
+        ).update!({ created_with_robot: params[:robot_barcode] })
       end
     end
     respond_to do |format|

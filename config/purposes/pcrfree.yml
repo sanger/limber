@@ -26,6 +26,7 @@ PF-384 Post Shear XP:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
   :parents:

@@ -3,37 +3,33 @@
 class PlateMetadata
   include ActiveModel::Model
 
-  attr_reader :plate
-  attr_accessor :api, :created_with_robot, :user
+  attr_accessor :api, :user, :plate, :barcode
 
-  validates :api, :plate, :user, presence: true
+  validates :api, :user, :plate, presence: true
 
-  def initialize(attributes = {})
+  def initialize(params = {})
     super
-  end
-
-  def plate=(plate)
-    if plate.is_a? Sequencescape::Plate
-      @plate = plate
-    else
-      find_plate(plate)
+    if barcode.present?
+      @plate = find_plate(barcode, api)
     end
   end
 
-  def update
+  def update!(metadata)
     if plate.custom_metadatum_collection.uuid.present?
-      metadata = plate.custom_metadatum_collection.metadata
-      plate.custom_metadatum_collection.update!(metadata: metadata.merge(created_with_robot: created_with_robot))
+      current_metadata = plate.custom_metadatum_collection.metadata
+      plate.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata))
     else
-      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: { created_with_robot: created_with_robot })
+      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: metadata)
     end
+  end
+
+  def metadata
+    @plate.custom_metadatum_collection.metadata
   end
 
   private
 
-  def find_plate(plate_barcode)
-    @plate = api.search.find(Settings.searches['Find assets by barcode']).first(barcode: plate_barcode)
-  rescue Sequencescape::Api::ResourceNotFound
-    @plate = nil
+  def find_plate(plate_barcode, api)
+    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: plate_barcode)
   end
 end

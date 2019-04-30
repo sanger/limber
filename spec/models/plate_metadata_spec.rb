@@ -42,7 +42,11 @@ RSpec.describe PlateMetadata do
 
     it 'creates metadata' do
       stub_asset_search(123, plate)
-      plate_metadata = PlateMetadata.new(api: api, plate: 123, user: user_uuid, created_with_robot: 'robot_barcode')
+      plate_metadata = PlateMetadata.new(
+        api: api,
+        plate: 123,
+        user: user_uuid,
+        metadata: { created_with_robot: 'robot_barcode' })
       stub = stub_api_post('custom_metadatum_collections',
                            payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
                            body: json(:v1_custom_metadatum_collection))
@@ -55,7 +59,11 @@ RSpec.describe PlateMetadata do
 
       metadata = attributes_for(:v1_custom_metadatum_collection).fetch(:metadata,{}).merge(created_with_robot: 'robot_barcode')
 
-      plate_metadata = PlateMetadata.new(api: api, plate: 123, user: user_uuid, created_with_robot: 'robot_barcode')
+      plate_metadata = PlateMetadata.new(
+        api: api,
+        plate: 123,
+        user: user_uuid,
+        metadata: { created_with_robot: 'robot_barcode'})
       stub_api_get('custom_metadatum_collection-uuid', body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid'))
       stub_api_get('user-uuid', body: user)
       stub_api_get('asset-uuid', body: plate_with_metadata)

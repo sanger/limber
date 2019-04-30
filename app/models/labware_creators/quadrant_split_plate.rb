@@ -32,7 +32,7 @@ module LabwareCreators
     end
 
     def transfer_material_from_parent!(children_uuid)
-      children = Sequencescape::Api::V2::Plate.find_all({ uuid: children_uuid }, includes: ['wells'])
+      children = Sequencescape::Api::V2::Plate.find_all({ uuid: children_uuid }, includes: ['wells']).to_a
 
       api.transfer_request_collection.create!(
         user: user_uuid,
@@ -41,9 +41,31 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plates)
+      add_stock_barcode_metadata(child_plates)
       well_filter.filtered.map do |well, additional_parameters|
         request_hash(well, child_plates, additional_parameters)
       end
+    end
+
+    def add_stock_barcode_metadata(plates)
+      merger_plate = parent.ancestors.where(purpose_name: SearchHelper.merger_plate_names).first
+      metadata = PlateMetadata.new(api: api, barcode: merger_plate.barcode.machine).metadata
+      plates.each_with_index do |plate, index|
+        stock_barcode_metadata = stock_barcode_from_quadrant(index, metadata)
+        unless stock_barcode_metadata.nil?
+          PlateMetadata.new(
+            api: api,
+            user: user_uuid,
+            barcode: plate.barcode.machine
+          ).update!(stock_barcode_metadata)
+        end
+      end
+    end
+
+    def stock_barcode_from_quadrant(index, metadata)
+      metadata_hash = metadata || {}
+      stock_barcode = metadata_hash.fetch("stock_barcode_q#{index}", nil)
+      { stock_barcode: stock_barcode } unless stock_barcode.nil?
     end
 
     def request_hash(source_well, child_plates, additional_parameters)
