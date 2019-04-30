@@ -10,7 +10,7 @@ module LabwareCreators
 
     self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
-    self.transfers_attributes = [:source_plate, :source_asset, :outer_request, { new_target: :location }]
+    self.transfers_attributes = [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]
     self.request_filter = 'null'
     self.transfers_layout = 'null'
     self.transfers_creator = 'multi-stamp'
