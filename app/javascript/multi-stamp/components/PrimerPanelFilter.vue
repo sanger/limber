@@ -56,13 +56,17 @@ export default {
       return requestsArray
     },
     formLabel() {
-      const requests_len = this.requestsWithPrimerPanel.length
+      const all_requests_len = this.requestsWithPlates.length
+      const pp_requests_len = this.requestsWithPrimerPanel.length
       const primer_panels_len = this.primerPanels.length
-      if (requests_len !== 0 && primer_panels_len !== 0) {
+      if (pp_requests_len !== 0 && primer_panels_len !== 0) {
         return 'Select a primer panel to process'
       }
-      else if (requests_len !== 0 && primer_panels_len === 0) {
+      else if (pp_requests_len !== 0 && primer_panels_len === 0) {
         return 'No common primer panel found among scanned plates!'
+      }
+      else if (pp_requests_len === 0 && all_requests_len !== 0) {
+        return 'No primer panel found among scanned plates.'
       }
       else {
         return ''
