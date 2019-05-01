@@ -26,12 +26,18 @@ class RobotsController < ApplicationController
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
         next unless bed.transitions? && bed.plate
-
-        PlateMetadata.new(
-          api: api,
-          user: current_user_uuid,
-          barcode: bed.plate.barcode.machine
-        ).update!({ created_with_robot: params[:robot_barcode] })
+        plate_barcode = bed.plate.barcode.machine
+        begin
+          PlateMetadata.new(
+            api: api,
+            user: current_user_uuid,
+            barcode: plate_barcode
+          ).update!({ created_with_robot: params[:robot_barcode] })
+        rescue Sequencescape::Api::ResourceNotFound
+          respond_to do |format|
+            format.html { redirect_to robot_path(id: @robot.id), notice: "Plate #{plate_barcode} not found." }
+          end
+        end
       end
     end
     respond_to do |format|

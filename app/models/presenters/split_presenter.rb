@@ -23,7 +23,12 @@ module Presenters
     }
 
     def stock_plate_barcode
-      metadata = PlateMetadata.new(api: api, barcode: labware.barcode.machine).metadata
+      begin
+        metadata = PlateMetadata.new(api: api, barcode: labware.barcode.machine).metadata
+      rescue Sequencescape::Api::ResourceNotFound
+        errors.add(:barcodes, "could not be found #{labware.barcode.machine}. Cannot add Input Plate Metadata")
+        metadata = nil
+      end
       barcode = 'N/A'
       barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
       return barcode
