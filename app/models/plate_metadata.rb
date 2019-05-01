@@ -9,6 +9,9 @@ class PlateMetadata
 
   def initialize(params = {})
     super
+    unless api.present?
+      @api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
+    end
     if barcode.present?
       @plate = find_plate(barcode, api)
     end

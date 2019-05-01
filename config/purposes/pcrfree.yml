@@ -98,9 +98,9 @@ PF Lib Q-XP2:
   :asset_type: plate
   :default_printer_type: :plate_a
   :creator_class: LabwareCreators::QuadrantSplitPlate
-  :presenter_class: Presenters::StandardPresenter
+  :presenter_class: Presenters::SplitPresenter
   :suggest_library_pass_for:
   - limber_pcr_free
-  :label_template: plate_xp
+  :label_template: plate_split
   :parents:
   - PF-384 Lib XP2
