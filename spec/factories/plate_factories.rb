@@ -49,13 +49,14 @@ FactoryBot.define do
       descendants { [] }
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
       library_state { ['pending'] * pool_sizes.length }
-      stock_plate { create :v2_stock_plate }
+      stock_plate { create :v2_stock_plate_for_plate, barcode_number: is_stock ? barcode_number : 2 }
       ancestors { [stock_plate] }
       transfer_targets { {} }
       size { 96 }
       include_submissions { false }
       well_states { [state] * size }
       custom_metadatum_collection { nil }
+      is_stock { false }
     end
 
     sequence(:id) { |i| i }
@@ -71,6 +72,7 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
       RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
       RSpec::Mocks.allow_message(plate, :custom_metadatum_collection).and_return(evaluator.custom_metadatum_collection)
+      RSpec::Mocks.allow_message(plate, :stock_plate).and_return(evaluator.stock_plate)
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
 
       # Mock the behaviour of the search
@@ -89,6 +91,7 @@ FactoryBot.define do
         purpose_name { 'Limber Cherrypicked' }
         purpose_uuid { 'stock-plate-purpose-uuid' }
         ancestors { [] }
+        is_stock { true }
       end
     end
 
@@ -118,6 +121,21 @@ FactoryBot.define do
         request_type { 'limber_multiplexing' }
         request_factory { :mx_request }
       end
+    end
+  end
+
+  factory :v2_stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+    initialize_with do
+      Sequencescape::Api::V2::Plate.load(attributes)
+    end
+    skip_create
+
+    transient do
+      barcode_number { 2 }
+      well_factory { :v2_stock_well }
+      purpose_name { 'Limber Cherrypicked' }
+      purpose_uuid { 'stock-plate-purpose-uuid' }
+      ancestors { [] }
     end
   end
 
