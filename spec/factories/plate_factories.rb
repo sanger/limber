@@ -135,9 +135,14 @@ FactoryBot.define do
       well_factory { :v2_stock_well }
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
+      purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       ancestors { [] }
     end
-  end
+
+    after(:build) do |plate, evaluator|
+      RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
+    end
+   end
 
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root { 'plate' }
