@@ -179,28 +179,24 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
         stub_update_plate_metadata(child_plate_a.barcode.machine,
                                    child_plate_a_v1,
                                    user,
-                                   user_uuid,
                                    metadata: {
                                      stock_barcode: 'STOCK-BARCODE-0'
                                    })
         stub_update_plate_metadata(child_plate_b.barcode.machine,
                                    child_plate_b_v1,
                                    user,
-                                   user_uuid,
                                    metadata: {
                                      stock_barcode: 'STOCK-BARCODE-1'
                                    })
         stub_update_plate_metadata(child_plate_c.barcode.machine,
                                    child_plate_c_v1,
                                    user,
-                                   user_uuid,
                                    metadata: {
                                      stock_barcode: 'STOCK-BARCODE-2'
                                    })
         stub_update_plate_metadata(child_plate_d.barcode.machine,
                                    child_plate_d_v1,
                                    user,
-                                   user_uuid,
                                    metadata: {
                                      stock_barcode: 'STOCK-BARCODE-3'
                                    })

@@ -67,7 +67,7 @@ module FeatureHelpers
                              metadata: metadata))
   end
 
-  def stub_update_plate_metadata(barcode, plate_v1, user, user_uuid, metadata)
+  def stub_update_plate_metadata(barcode, plate_v1, user, metadata)
     stub_get_plate_metadata(barcode, plate_v1, metadata)
     stub_api_get('user-uuid', body: user)
     stub_api_get('asset-uuid', body: plate_v1)

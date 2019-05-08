@@ -5,11 +5,11 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase
   attr_accessor :stock_plate_barcode
 
   def attributes
-    super.merge({ top_right: stock_plate_barcode })
+    super.merge(top_right: stock_plate_barcode)
   end
 
   def qc_attributes
-    super.merge({ top_right: stock_plate_barcode })
+    super.merge(top_right: stock_plate_barcode)
   end
 
   def stock_plate_barcode

@@ -44,17 +44,17 @@ RSpec.describe PlateMetadata do
       stub = stub_create_plate_metadata(123, plate, plate_uuid, user_uuid, metadata)
 
       PlateMetadata.new(api: api, barcode: 123, user: user_uuid)
-        .update!(created_with_robot: 'robot_barcode')
+                   .update!(created_with_robot: 'robot_barcode')
       expect(stub).to have_been_requested
     end
 
     it 'updates metadata' do
       metadata = attributes_for(:v1_custom_metadatum_collection)
-        .fetch(:metadata, {}).merge(created_with_robot: 'robot_barcode')
-      stub = stub_update_plate_metadata(123, plate_with_metadata, user, user_uuid, metadata)
+                 .fetch(:metadata, {}).merge(created_with_robot: 'robot_barcode')
+      stub = stub_update_plate_metadata(123, plate_with_metadata, user, metadata)
 
       PlateMetadata.new(api: api, barcode: 123, user: user_uuid)
-        .update!(created_with_robot: 'robot_barcode')
+                   .update!(created_with_robot: 'robot_barcode')
       expect(stub).to have_been_requested
     end
   end

@@ -47,7 +47,7 @@ module LabwareCreators
       transfers.each do |transfer|
         target_well_location = transfer.dig(:new_target, :location)
         target_well_quadrant = WellHelpers.well_quadrant(target_well_location)
-        if source_plates_uuids[target_well_quadrant] == nil
+        if source_plates_uuids[target_well_quadrant].nil?
           source_plates_uuids[target_well_quadrant] = transfer[:source_plate]
         end
       end
@@ -57,11 +57,11 @@ module LabwareCreators
     def stock_barcodes_by_quadrant
       quadrants = {}
       source_plates_by_quadrant.each_with_index do |uuid, index|
-        unless uuid.nil?
-          source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: uuid)
-          stock_barcode = source_plate&.stock_plate&.barcode&.human
-          quadrants["stock_barcode_q#{index}".to_sym] = stock_barcode unless stock_barcode.nil?
-        end
+        next if uuid.nil?
+
+        source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: uuid)
+        stock_barcode = source_plate&.stock_plate&.barcode&.human
+        quadrants["stock_barcode_q#{index}".to_sym] = stock_barcode unless stock_barcode.nil?
       end
       quadrants
     end

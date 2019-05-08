@@ -26,6 +26,7 @@ class RobotsController < ApplicationController
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
         next unless bed.transitions? && bed.plate
+
         plate_barcode = bed.plate.barcode.machine
         begin
           PlateMetadata.new(

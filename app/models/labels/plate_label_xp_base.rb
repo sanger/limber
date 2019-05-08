@@ -2,7 +2,7 @@
 
 class Labels::PlateLabelXpBase < Labels::PlateLabelBase
   def attributes
-    super.merge({ barcode: labware.barcode.human })
+    super.merge(barcode: labware.barcode.human)
   end
 
   def qc_attributes

@@ -142,7 +142,7 @@ FactoryBot.define do
     after(:build) do |plate, evaluator|
       RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
     end
-   end
+  end
 
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root { 'plate' }
