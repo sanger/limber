@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import TagLayout from 'custom-tagged-plate/components/mixins/tagLayout'
+import TagLayout from './tagLayout.js'
 import {
   nullTagGroup,
   exampleTagGroupsList
