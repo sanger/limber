@@ -6,7 +6,7 @@ import {
   nullQcableData,
   exampleQcableData,
   exampleTagGroupsList
-} from '../testData/customTaggedPlateTestData.js'
+} from 'custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer

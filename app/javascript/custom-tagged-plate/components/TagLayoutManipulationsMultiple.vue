@@ -84,7 +84,7 @@
 
 <script>
 
-import TagLayout from './mixins/tagLayout.js'
+import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.
