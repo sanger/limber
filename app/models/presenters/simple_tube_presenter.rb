@@ -2,7 +2,6 @@
 
 module Presenters
   class SimpleTubePresenter < TubePresenter
-
     self.summary_items = {
       'Barcode' => :barcode,
       'Tube type' => :purpose_name,
@@ -60,7 +59,7 @@ module Presenters
 
     def stock_plate_barcode
       parent_plate = labware.parents.first
-      unless parent_plate.nil?
+      if parent_plate.present?
         stock_plate_barcode_from_metadata(parent_plate.barcode.machine)
       else
         'N/A'

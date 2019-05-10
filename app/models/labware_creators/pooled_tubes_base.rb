@@ -5,7 +5,8 @@ module LabwareCreators
   # into each tube.
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
-    attr_reader :tube_transfer, :child_stock_tubes, :metadata_stock_barcode
+    attr_reader :tube_transfer, :child_stock_tubes
+    attr_writer :metadata_stock_barcode
 
     def create_labware!
       @child_stock_tubes = create_child_stock_tubes
@@ -96,16 +97,14 @@ module LabwareCreators
       end
       metadata || {}
     end
-    #
+
     # Maps well locations to the corresponding uuid
     #
     # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
-    #
     def well_locations
       @well_locations ||= parent.wells.index_by(&:location)
     end
 
-    #
     # pools should return a hash of pools with the following minimal information
     # { 'unique-pool-identifier' => <Array of well locations> }
     #

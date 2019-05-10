@@ -95,7 +95,7 @@ module Presenters
       rescue Sequencescape::Api::ResourceNotFound
         metadata = nil
       end
-      unless metadata.nil?
+      if metadata.present?
         metadata.fetch('stock_barcode', barcode)
       else
         'N/A'
