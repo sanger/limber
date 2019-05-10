@@ -23,21 +23,11 @@ describe('TagLayoutManipulationsMultiple', () => {
   }
 
   describe('#computed function tests:', () => {
-    describe('walkingByDisplayed:', () => {
-      it('returns the correct text if walking by matches expected value', () => {
+    describe('walkingByOptions:', () => {
+      it('returns an array with the correct number of options', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ walkingBy: 'as group by plate' })
-
-        expect(wrapper.vm.walkingByDisplayed).toEqual('Apply Multiple Tags')
-      })
-
-      it('returns the correct text if walking by is any other value', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({ walkingBy: 'some value' })
-
-        expect(wrapper.vm.walkingByDisplayed).toEqual('some value')
+        expect(wrapper.vm.walkingByOptions.length).toBe(3)
       })
     })
   })
@@ -55,10 +45,10 @@ describe('TagLayoutManipulationsMultiple', () => {
       expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
     })
 
-    it('renders a walking by label', () => {
+    it('renders a walking by select dropdown', () => {
       const wrapper = wrapperFactory()
 
-      expect(wrapper.find('#walking_by_label').exists()).toBe(true)
+      expect(wrapper.find('#walking_by_options').exists()).toBe(true)
     })
 
     it('renders a direction select dropdown', () => {
@@ -88,7 +78,7 @@ describe('TagLayoutManipulationsMultiple', () => {
             name: 'No tag group selected',
             tags: []
           },
-          walkingBy: 'as group by plate',
+          walkingBy: 'as fixed group by plate',
           direction: 'row',
           offsetTagsBy: 0
         }

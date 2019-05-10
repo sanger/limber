@@ -21,12 +21,18 @@ function byGroupByPlate(_well, tags, relIndex, _absIndex, offset, _counters) {
   return tags[relIndex + offset] || -1
 }
 
+function byFixedGroupByPlate(_well, tags, _relIndex, absIndex, offset, _counters) {
+  return tags[absIndex + offset] || -1
+}
+
 function processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker) {
   acc[well.position] = []
+
   let relIndexAdj = relIndex * tagsPerWell
+  let absIndexAdj = absIndex * tagsPerWell
+
   for (var i = 0; i < tagsPerWell; i++) {
-    acc[well.position].push(walker(well, relIndexAdj, absIndex))
-    relIndexAdj++
+    acc[well.position].push(walker(well, relIndexAdj + i, absIndexAdj + i))
   }
   return acc
 }
@@ -95,7 +101,8 @@ const walkingByFunctions = {
   'manual by pool': byPool,
   'manual by plate': byPlateSeq,
   'wells of plate': byPlateFixed,
-  'as group by plate': byGroupByPlate
+  'as group by plate': byGroupByPlate,
+  'as fixed group by plate': byFixedGroupByPlate
 }
 const directionFunctions = {
   'row': byRows,

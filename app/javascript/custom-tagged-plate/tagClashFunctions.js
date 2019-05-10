@@ -139,12 +139,15 @@ function extractSubmDetailsFromWell(well) {
 function extractSubmDetailsFromRequestsAsSource(well) {
   let submDetails = { id: null, usedTags: [] }
 
-  // N.B. using first request, possibly should be checking others
-  if(well.requests_as_source[0] && well.requests_as_source[0].submission) {
-    submDetails.id = well.requests_as_source[0].submission.id
-    if(well.requests_as_source[0].submission.used_tags) {
-      submDetails.usedTags = well.requests_as_source[0].submission.used_tags
+  const requestsLen = well.requests_as_source.length
+  for (var i = 0; i < requestsLen; i++) {
+    if(well.requests_as_source[i] && well.requests_as_source[i].submission) {
+      submDetails.id = well.requests_as_source[i].submission.id
+      if(well.requests_as_source[i].submission.used_tags) {
+        submDetails.usedTags = well.requests_as_source[i].submission.used_tags
+      }
     }
+    if(submDetails.id != null) { break }
   }
 
   return submDetails
@@ -153,12 +156,15 @@ function extractSubmDetailsFromRequestsAsSource(well) {
 function extractSubmDetailsFromAliquots(well) {
   let submDetails = { id: null, usedTags: [] }
 
-  // N.B. using first aliquot, possibly should be checking others
-  if(well.aliquots[0] && well.aliquots[0].request && well.aliquots[0].request.submission) {
-    submDetails.id = well.aliquots[0].request.submission.id
-    if(well.aliquots[0].request.submission.used_tags) {
-      submDetails.usedTags = well.aliquots[0].request.submission.used_tags
+  const requestsLen = well.aliquots.length
+  for (var i = 0; i < requestsLen; i++) {
+    if(well.aliquots[i] && well.aliquots[i].request && well.aliquots[i].request.submission) {
+      submDetails.id = well.aliquots[i].request.submission.id
+      if(well.aliquots[i].request.submission.used_tags) {
+        submDetails.usedTags = well.aliquots[i].request.submission.used_tags
+      }
     }
+    if(submDetails.id != null) { break }
   }
 
   return submDetails

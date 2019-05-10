@@ -24,17 +24,16 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <!-- TODO label with one option -->
         <b-form-group
-          id="walking_by_label_group"
-          label="Walking By Option:"
-          label-for="walking_by_label"
+          id="walking_by_options_group"
+          label="Walking By Options:"
+          label-for="walking_by_options"
         >
-          <b-form-input
-            id="walking_by_label"
-            type="text"
-            :value="walkingByDisplayed"
-            :disabled="true"
+          <b-form-select
+            id="walking_by_options"
+            v-model="walkingBy"
+            :options="walkingByOptions"
+            @input="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -105,12 +104,16 @@ export default {
   mixins: [TagLayout],
   data () {
     return {
-      walkingBy: 'as group by plate', // holds the chosen tag layout walking by option
+      walkingBy: 'as fixed group by plate', // holds the chosen tag layout walking by option
     }
   },
   computed: {
-    walkingByDisplayed() {
-      return (this.walkingBy === 'as group by plate') ? 'Apply Multiple Tags' : this.walkingBy
+    walkingByOptions() {
+      return [
+        { value: null, text: 'Please select a by Walking By Option...' },
+        { value: 'as group by plate', text: 'Apply Multiple Tags (Sequential)' },
+        { value: 'as fixed group by plate', text: 'Apply Multiple Tags (Fixed)' }
+      ]
     }
   },
   methods: {

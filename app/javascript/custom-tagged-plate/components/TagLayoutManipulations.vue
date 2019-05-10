@@ -180,7 +180,7 @@ export default {
         { value: 'manual by plate', text: 'By Plate (Sequential)' },
         { value: 'wells of plate', text: 'By Plate (Fixed)' }
       ]
-    },
+    }
   },
   methods: {
     emptyTagPlate() {

@@ -773,7 +773,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('as multiple tags per well (e.g. chromium): ', () => {
+  describe('as multiple tags per well sequential (e.g. chromium): ', () => {
     it('by column', () => {
       const data = {
         wells: inputWells,
@@ -948,7 +948,206 @@ describe('calculateTagLayout', () => {
         wells: inputWells,
         plateDims: plateDims,
         tagMapIds: [ 1,2,3,4,5,6 ],
-        walkingBy: 'manual by plate',
+        walkingBy: 'as group by plate',
+        direction: 'column',
+        offsetTagsBy: 0,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 1,2,3,4 ],
+        'B1': [ 5,6,-1,-1 ],
+        'C1': [ -1,-1,-1,-1 ],
+        'A2': [ -1,-1,-1,-1 ],
+        'B2': [ -1,-1,-1,-1 ],
+        'C2': [ -1,-1,-1,-1 ],
+        'A3': [ -1,-1,-1,-1 ],
+        'B3': [ -1,-1,-1,-1 ],
+        'C3': [ -1,-1,-1,-1 ],
+        'A4': [ -1,-1,-1,-1 ],
+        'C4': [ -1,-1,-1,-1 ]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+  })
+
+  describe('as multiple tags per well fixed (e.g. chromium): ', () => {
+    it('by column fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'column',
+        offsetTagsBy: 0,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 1,2,3,4 ],
+        'B1': [ 5,6,7,8 ],
+        'C1': [ 9,10,11,12 ],
+        'A2': [ 13,14,15,16 ],
+        'B2': [ 17,18,19,20 ],
+        'C2': [ 21,22,23,24 ],
+        'A3': [ 25,26,27,28 ],
+        'B3': [ 29,30,31,32 ],
+        'C3': [ 33,34,35,36 ],
+        'A4': [ 37,38,39,40 ],
+        'C4': [ 45,46,47,48 ]
+      }
+
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by row fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'row',
+        offsetTagsBy: 0,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [1,2,3,4],
+        'B1': [17,18,19,20],
+        'C1': [33,34,35,36],
+        'A2': [5,6,7,8],
+        'B2': [21,22,23,24],
+        'C2': [37,38,39,40],
+        'A3': [9,10,11,12],
+        'B3': [25,26,27,28],
+        'C3': [41,42,43,44],
+        'A4': [13,14,15,16],
+        'C4': [45,46,47,48]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by column with offset fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'column',
+        offsetTagsBy: 4,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 17,18,19,20 ],
+        'B1': [ 21,22,23,24 ],
+        'C1': [ 25,26,27,28 ],
+        'A2': [ 29,30,31,32 ],
+        'B2': [ 33,34,35,36 ],
+        'C2': [ 37,38,39,40 ],
+        'A3': [ 41,42,43,44 ],
+        'B3': [ 45,46,47,48 ],
+        'C3': [ 49,50,51,52 ],
+        'A4': [ 53,54,55,56 ],
+        'C4': [ 61,62,63,64 ]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by row with offset fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'row',
+        offsetTagsBy: 4,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 17,18,19,20 ],
+        'B1': [ 33,34,35,36 ],
+        'C1': [ 49,50,51,52 ],
+        'A2': [ 21,22,23,24 ],
+        'B2': [ 37,38,39,40 ],
+        'C2': [ 53,54,55,56 ],
+        'A3': [ 25,26,27,28 ],
+        'B3': [ 41,42,43,44 ],
+        'C3': [ 57,58,59,60 ],
+        'A4': [ 29,30,31,32 ],
+        'C4': [ 61,62,63,64 ]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by inverse column with offset fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'inverse column',
+        offsetTagsBy: 4,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 61,62,63,64 ],
+        'B1': [ 57,58,59,60 ],
+        'C1': [ 53,54,55,56 ],
+        'A2': [ 49,50,51,52 ],
+        'B2': [ 45,46,47,48 ],
+        'C2': [ 41,42,43,44 ],
+        'A3': [ 37,38,39,40 ],
+        'B3': [ 33,34,35,36 ],
+        'C3': [ 29,30,31,32 ],
+        'A4': [ 25,26,27,28 ],
+        'C4': [ 17,18,19,20 ]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by inverse row with offset fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: tagMapIdsStandard,
+        walkingBy: 'as fixed group by plate',
+        direction: 'inverse row',
+        offsetTagsBy: 4,
+        tagsPerWell: 4
+      }
+      const expectedOutputWells = {
+        'A1': [ 61,62,63,64 ],
+        'B1': [ 45,46,47,48 ],
+        'C1': [ 29,30,31,32 ],
+        'A2': [ 57,58,59,60 ],
+        'B2': [ 41,42,43,44 ],
+        'C2': [ 25,26,27,28 ],
+        'A3': [ 53,54,55,56 ],
+        'B3': [ 37,38,39,40 ],
+        'C3': [ 21,22,23,24 ],
+        'A4': [ 49,50,51,52 ],
+        'C4': [ 17,18,19,20 ]
+      }
+      const response = calculateTagLayout(data)
+
+      expect(response).toEqual(expectedOutputWells)
+    })
+
+    it('by column and not enough tags available fixed', () => {
+      const data = {
+        wells: inputWells,
+        plateDims: plateDims,
+        tagMapIds: [ 1,2,3,4,5,6 ],
+        walkingBy: 'as fixed group by plate',
         direction: 'column',
         offsetTagsBy: 0,
         tagsPerWell: 4
