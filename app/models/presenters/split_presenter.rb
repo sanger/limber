@@ -16,22 +16,14 @@ module Presenters
       'Number of wells' => :number_of_wells,
       'Plate type' => :purpose_name,
       'Current plate state' => :state,
-      'Input plate barcode' => :stock_plate_barcode,
-      'Parent plate barcode' => :input_barcode,
+      'Input plate barcode' => :input_barcode,
+      'Stock plate barcode' => :stock_plate_barcode,
       'PCR Cycles' => :pcr_cycles,
       'Created on' => :created_on
     }
 
     def stock_plate_barcode
-      begin
-        metadata = PlateMetadata.new(api: api, barcode: labware.barcode.machine).metadata
-      rescue Sequencescape::Api::ResourceNotFound
-        errors.add(:barcodes, "could not be found #{labware.barcode.machine}. Cannot add Input Plate Metadata")
-        metadata = nil
-      end
-      barcode = 'N/A'
-      barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
-      return barcode
+      stock_plate_barcode_from_metadata(labware.barcode.machine)
     end
   end
 end

@@ -113,22 +113,22 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
            outer_requests: quad_d_requests)
   end
   let(:child_plate_a_v1) do
-    json(:stock_plate_with_metadata,
+    json(:plate_with_metadata,
          uuid: 'child-a-uuid',
          barcode_number: '3')
   end
   let(:child_plate_b_v1) do
-    json(:stock_plate_with_metadata,
+    json(:plate_with_metadata,
          uuid: 'child-b-uuid',
          barcode_number: '4')
   end
   let(:child_plate_c_v1) do
-    json(:stock_plate_with_metadata,
+    json(:plate_with_metadata,
          uuid: 'child-c-uuid',
          barcode_number: '5')
   end
   let(:child_plate_d_v1) do
-    json(:stock_plate_with_metadata,
+    json(:plate_with_metadata,
          uuid: 'child-d-uuid',
          barcode_number: '6')
   end
@@ -168,38 +168,40 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       setup do
         allow(SearchHelper).to receive(:merger_plate_names)
           .and_return(stock_purpose_name)
+
+        stub_api_get('user-uuid', body: user)
+
+        # This is a hack, but since I couldn't find a way to stub
+        # `custom_metadatum_collection` for a particular uuid that doesn't
+        # involve modifying the stubbing methods, I had to merge all the keys
+        # in one hash and use one single value.
+        merger_plate_metadata = {
+          stock_barcode_q0: 'STOCK-BARCODE-0',
+          stock_barcode_q1: 'STOCK-BARCODE-0',
+          stock_barcode_q2: 'STOCK-BARCODE-0',
+          stock_barcode_q3: 'STOCK-BARCODE-0',
+          stock_barcode:    'STOCK-BARCODE-0'
+        }
         stub_get_plate_metadata(stock_plate_v2.barcode.machine,
                                 stock_plate_v1,
-                                metadata: {
-                                  stock_barcode_q0: 'STOCK-BARCODE-0',
-                                  stock_barcode_q1: 'STOCK-BARCODE-1',
-                                  stock_barcode_q2: 'STOCK-BARCODE-2',
-                                  stock_barcode_q3: 'STOCK-BARCODE-3'
-                                })
-        stub_update_plate_metadata(child_plate_a.barcode.machine,
-                                   child_plate_a_v1,
-                                   user,
-                                   metadata: {
-                                     stock_barcode: 'STOCK-BARCODE-0'
-                                   })
-        stub_update_plate_metadata(child_plate_b.barcode.machine,
-                                   child_plate_b_v1,
-                                   user,
-                                   metadata: {
-                                     stock_barcode: 'STOCK-BARCODE-1'
-                                   })
-        stub_update_plate_metadata(child_plate_c.barcode.machine,
-                                   child_plate_c_v1,
-                                   user,
-                                   metadata: {
-                                     stock_barcode: 'STOCK-BARCODE-2'
-                                   })
-        stub_update_plate_metadata(child_plate_d.barcode.machine,
-                                   child_plate_d_v1,
-                                   user,
-                                   metadata: {
-                                     stock_barcode: 'STOCK-BARCODE-3'
-                                   })
+                                metadata: merger_plate_metadata)
+        stub_asset_search(child_plate_a.barcode.machine, child_plate_a_v1)
+        stub_asset_search(child_plate_b.barcode.machine, child_plate_b_v1)
+        stub_asset_search(child_plate_c.barcode.machine, child_plate_c_v1)
+        stub_asset_search(child_plate_d.barcode.machine, child_plate_d_v1)
+
+        stub_api_get('asset-uuid', body: child_plate_a_v1)
+        stub_api_get('asset-uuid', body: child_plate_b_v1)
+        stub_api_get('asset-uuid', body: child_plate_c_v1)
+        stub_api_get('asset-uuid', body: child_plate_d_v1)
+
+        stub_api_put('custom_metadatum_collection-uuid',
+                     payload: {
+                       custom_metadatum_collection: { metadata: merger_plate_metadata }
+                     },
+                     body: json(:v1_custom_metadatum_collection,
+                                uuid: 'custom_metadatum_collection-uuid',
+                                metadata: merger_plate_metadata))
       end
 
       let!(:plate_creation_request) do

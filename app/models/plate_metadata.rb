@@ -1,33 +1,38 @@
 # frozen_string_literal: true
 
 class PlateMetadata
-  include ActiveModel::Model
-
   attr_accessor :api, :user, :plate, :barcode
 
-  validates :api, :user, :plate, presence: true
-
   def initialize(params = {})
-    super
-    unless api.present?
-      @api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
-    end
+    @api = params.fetch(:api, nil)
+    @user = params.fetch(:user, nil)
+    @barcode = params.fetch(:barcode, nil)
     if barcode.present?
       @plate = find_plate(barcode, api)
+    else
+      @plate = params.fetch(:plate, nil)
+      raise ArgumentError, 'Parameters plate or barcode missing' if plate.nil?
     end
+    raise ArgumentError, 'Parameter api missing' unless api.present?
   end
 
   def update!(metadata)
     if plate.custom_metadatum_collection.uuid.present?
-      current_metadata = plate.custom_metadatum_collection.metadata
-      plate.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata))
+      current_metadata = plate.custom_metadatum_collection.metadata.symbolize_keys
+      plate.custom_metadatum_collection.update!(
+        metadata: current_metadata.merge(metadata.symbolize_keys)
+      )
     else
-      api.custom_metadatum_collection.create!(user: user, asset: plate.uuid, metadata: metadata)
+      api.custom_metadatum_collection.create!(
+        user: user, asset: plate.uuid, metadata: metadata.symbolize_keys
+      )
     end
   end
 
   def metadata
     @plate.custom_metadatum_collection.metadata
+  rescue URI::InvalidURIError
+    nil
   end
 
   private

@@ -88,5 +88,19 @@ module Presenters
     def purpose_config
       Settings.purposes.fetch(purpose.uuid, {})
     end
+
+    def stock_plate_barcode_from_metadata(plate_machine_barcode)
+      begin
+        metadata = PlateMetadata.new(api: api, barcode: plate_machine_barcode).metadata
+      rescue Sequencescape::Api::ResourceNotFound
+        metadata = nil
+      end
+      unless metadata.nil?
+        metadata.fetch('stock_barcode', barcode)
+      else
+        'N/A'
+      end
+    end
+
   end
 end

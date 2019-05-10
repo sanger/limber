@@ -196,6 +196,10 @@ FactoryBot.define do
       { uuid: sp[:uuid], barcode: sp[:barcode] }
     end
 
+    factory :plate_with_metadata do
+      with_belongs_to_associations 'custom_metadatum_collection'
+    end
+
     factory :stock_plate do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }

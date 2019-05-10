@@ -51,21 +51,18 @@ module LabwareCreators
       merger_plate = parent.ancestors.where(purpose_name: SearchHelper.merger_plate_names).first
       metadata = PlateMetadata.new(api: api, barcode: merger_plate.barcode.machine).metadata
       plates.each_with_index do |plate, index|
-        stock_barcode_metadata = stock_barcode_from_quadrant(index, metadata)
-        unless stock_barcode_metadata.nil?
-          PlateMetadata.new(
-            api: api,
-            user: user_uuid,
-            barcode: plate.barcode.machine
-          ).update!(stock_barcode_metadata)
-        end
+        stock_barcode = stock_barcode_from_quadrant(index, metadata) || "* #{plate.barcode.human}"
+        PlateMetadata.new(
+          api: api,
+          user: user_uuid,
+          barcode: plate.barcode.machine
+        ).update!(stock_barcode: stock_barcode)
       end
     end
 
     def stock_barcode_from_quadrant(index, metadata)
       metadata_hash = metadata || {}
-      stock_barcode = metadata_hash.fetch("stock_barcode_q#{index}", nil)
-      { stock_barcode: stock_barcode } unless stock_barcode.nil?
+      metadata_hash.fetch("stock_barcode_q#{index}", nil)
     end
 
     def request_hash(source_well, child_plates, additional_parameters)

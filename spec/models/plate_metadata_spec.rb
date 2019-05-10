@@ -14,29 +14,17 @@ RSpec.describe PlateMetadata do
 
     has_a_working_api
 
-    it 'is valid with a valid barcode and user' do
-      stub_asset_search(123, plate)
-      expect(PlateMetadata.new(api: api, barcode: 123, user: user_uuid)).to be_valid
-    end
-
-    it 'is not valid without a user' do
-      stub_asset_search(123, plate)
-      expect(PlateMetadata.new(api: api, barcode: 123)).to_not be_valid
-    end
-
-    it 'is not valid without a barcode' do
-      expect(PlateMetadata.new(api: api, user: user_uuid)).to_not be_valid
-    end
-
     it 'raises an exception if the barcode is invalid' do
       stub_asset_search(456, nil)
       expect { PlateMetadata.new(api: api, barcode: 456, user: user_uuid) }.to raise_error(Sequencescape::Api::ResourceNotFound)
     end
 
-    it 'can receive plate object as an argument' do
-      stub_api_get(plate_uuid, body: json(:plate))
-      plate = api.plate.find(plate_uuid)
-      expect(PlateMetadata.new(api: api, plate: plate, user: user_uuid)).to be_valid
+    it 'raises an exception if both plate and barcode are nil' do
+      expect { PlateMetadata.new(api: api) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises an exception if api is nil' do
+      expect { PlateMetadata.new(plate: plate) }.to raise_error(ArgumentError)
     end
 
     it 'creates metadata' do

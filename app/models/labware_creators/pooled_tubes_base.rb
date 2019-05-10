@@ -5,7 +5,7 @@ module LabwareCreators
   # into each tube.
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
-    attr_reader :tube_transfer, :child_stock_tubes
+    attr_reader :tube_transfer, :child_stock_tubes, :metadata_stock_barcode
 
     def create_labware!
       @child_stock_tubes = create_child_stock_tubes
@@ -80,9 +80,22 @@ module LabwareCreators
     end
 
     def stock_plate_barcode
-      "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+      legacy_barcode = "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+      metadata_stock_barcode || legacy_barcode
     end
 
+    def metadata_stock_barcode
+      @metadata_stock_barcode ||= parent_metadata.fetch('stock_barcode', nil)
+    end
+
+    def parent_metadata
+      if parent.is_a? Limber::Plate
+        metadata = PlateMetadata.new(api: api, plate: parent).metadata
+      else
+        metadata = PlateMetadata.new(api: api, barcode: parent.barcode.machine).metadata
+      end
+      metadata || {}
+    end
     #
     # Maps well locations to the corresponding uuid
     #

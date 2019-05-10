@@ -2,6 +2,16 @@
 
 module Presenters
   class SimpleTubePresenter < TubePresenter
+
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Tube type' => :purpose_name,
+      'Current tube state' => :state,
+      'Input plate barcode' => :input_barcode,
+      'Stock plate barcode' => :stock_plate_barcode,
+      'Created on' => :created_on
+    }
+
     state_machine :state, initial: :pending do
       event :start do
         transition pending: :started
@@ -46,6 +56,15 @@ module Presenters
 
     def active_request_types
       [:tube]
+    end
+
+    def stock_plate_barcode
+      parent_plate = labware.parents.first
+      unless parent_plate.nil?
+        stock_plate_barcode_from_metadata(parent_plate.barcode.machine)
+      else
+        'N/A'
+      end
     end
   end
 end
