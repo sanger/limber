@@ -138,14 +138,13 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       setup do
         stub_get_plate_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' })
         stub_api_post('specific_tube_creations',
-          payload: {
-            specific_tube_creation: creation_payload
-          },
-          body: json(:specific_tube_creation,
-                     uuid: tube_creation_request_uuid,
-                     children_count: 2,
-                     names: [child_1_name, child_2_name])
-        )
+                      payload: {
+                        specific_tube_creation: creation_payload
+                      },
+                      body: json(:specific_tube_creation,
+                                 uuid: tube_creation_request_uuid,
+                                 children_count: 2,
+                                 names: [child_1_name, child_2_name]))
       end
 
       it 'sets the correct tube name' do
