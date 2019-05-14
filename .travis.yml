@@ -23,7 +23,7 @@ env:
   - TZ=Europe/London
   - PATH=$PATH:/usr/lib/chromium-browser/
 install:
-- nvm install node
+- nvm install v11.14.0
 - node -v
 - npm i -g yarn
 - yarn
