@@ -83,7 +83,7 @@ import PlateScan from 'shared/components/PlateScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
-import builPlateObjs from 'shared/plateHelpers'
+import buildPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
 import { checkSize, checkDuplicates, /* checkExcess */ } from 'shared/components/plateScanValidators'
@@ -144,7 +144,7 @@ export default {
       // Array containing objects with scanned plates, their states and the
       // index of the form input in which they were scanned.
       // Note: Cannot use computed functions as data is invoked before
-      plates: builPlateObjs(Number.parseInt(this.sourcePlates)),
+      plates: buildPlateObjs(Number.parseInt(this.sourcePlates)),
 
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
