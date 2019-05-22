@@ -1,0 +1,10 @@
+<%= CSV.generate_line ['Workflow', 'Cherry Pick'], row_sep: "" %>
+<%# This is a picking file for a Hamilton robot to transfer the %>
+<%= CSV.generate_line ['Source Plate ID','Source Well','Destination Plate ID','Destination Well','Sample Vol'], row_sep: "" %>
+
+<% @plate.wells_in_columns.each do |well| %>
+  <%# For each well need to set it's parent plate barcode and well, and it's volume %>
+  <%# get transfer into well and its plate and well %>
+  <%# need to use an include(?) to get plate so not running many many queries %>
+  <%# CSV.generate_line [<parent barcode>, <parent well>, @plate.labware_barcode.human, well.position['name'], <well.volume>], row_sep: '' %>
+<% end %>
