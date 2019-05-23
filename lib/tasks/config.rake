@@ -21,7 +21,7 @@ namespace :config do
       HEREDOC
       exit 1
     end
-    label_templates = YAML.parse_file(Rails.root.join('config', 'label_templates.yml')).to_ruby
+    label_templates = YAML.load_file(Rails.root.join('config', 'label_templates.yml'))
 
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
@@ -32,8 +32,12 @@ namespace :config do
     purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
       next unless file.extname == '.yml'
 
-      YAML.parse_file(file).to_ruby.each do |name, options|
-        purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
+      begin
+        YAML.load_file(file)&.each do |name, options|
+          purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
+        end
+      rescue NoMethodError => _
+        STDERR.puts "Cannot parse file: #{file}"
       end
     end
 

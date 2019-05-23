@@ -1,4 +1,5 @@
 # # Test TenX plate purpose for SEQ-969 UAT only
+---
 # TenX Test:
 #   :asset_type: plate
 #   :default_printer_type: :plate_a
