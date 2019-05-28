@@ -80,31 +80,11 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    links = [
-      [
-        'Download Concentration CSV',
-        [
-          :limber_plate,
-          :export, {
-            id: 'concentrations',
-            limber_plate_id: human_barcode,
-            format: :csv
-          }
-        ]
-      ],
-      [
-        'Download Hamilton Aggregate Cherry Pick CSV',
-        [
-          :limber_plate,
-          :export,
-          {
-            id: 'hamilton_aggregate_cherry_pick',
-            limber_plate_id: human_barcode,
-            format: :csv
-          }
-        ]
-      ]
-    ]
+    links = []
+    purpose_links = purpose_config.file_links || []
+    purpose_links.each do |link|
+      links << [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
+    end
     links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
     links
   end

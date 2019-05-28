@@ -15,7 +15,8 @@ class Settings
       # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here
       # but the creates an immutable setting object that messes with tests.
       # Immutability is good here though, so we should probably fix that.
-      @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol]))
+      # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
+      @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol], [], true))
     rescue Errno::ENOENT
       star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)
