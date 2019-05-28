@@ -208,6 +208,22 @@ RSpec.describe Presenters::PlatePresenter do
       end
     end
 
+    context 'with a plate that has no links' do
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: []
+        )
+      end
+
+      it 'returns an empty array' do
+        expect(presenter.csv_file_links).to eq([])
+      end
+    end
+
     context 'with a plate that has multiple links' do
       before do
         create(

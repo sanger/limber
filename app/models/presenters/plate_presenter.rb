@@ -81,8 +81,7 @@ class Presenters::PlatePresenter
 
   def csv_file_links
     links = []
-    purpose_links = purpose_config.file_links || []
-    purpose_links.each do |link|
+    purpose_config.file_links.each do |link|
       links << [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
     end
     links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
