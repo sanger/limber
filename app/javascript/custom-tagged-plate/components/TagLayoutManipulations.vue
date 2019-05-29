@@ -151,7 +151,7 @@ export default {
     return {
       tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
       tagPlateScanDisabled: false, // flag to indicate the plate scan was disabled
-      walkingBy: 'manual by plate', // holds the chosen tag layout walking by option
+      walkingBy: 'wells of plate', // holds the chosen tag layout walking by option
     }
   },
   computed: {
