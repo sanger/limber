@@ -8,6 +8,11 @@ class ExportsController < ApplicationController
   before_action :locate_labware, only: :show
   rescue_from ActionView::MissingTemplate, with: :not_found
 
+  PLATE_INCLUDES = {
+    'concentrations' => 'wells.qc_results',
+    'hamilton_aggregate_cherry_pick' => 'wells.transfer_requests_as_target.source_asset'
+  }.freeze
+
   def show
     render params[:id]
   end
@@ -24,6 +29,10 @@ class ExportsController < ApplicationController
   end
 
   def locate_labware
-    @labware = @plate = Sequencescape::Api::V2::Plate.where(barcode: params[:limber_plate_id]).first
+    @labware = @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, params[:limber_plate_id])
+  end
+
+  def include_parameters
+    PLATE_INCLUDES[params[:id]] || 'wells'
   end
 end

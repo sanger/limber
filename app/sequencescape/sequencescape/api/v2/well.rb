@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
-  has_many :qc_results
+  has_many :qc_results, class_name: 'Sequencescape::Api::V2::QCResult'
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :requests_as_target, class_name: 'Sequencescape::Api::V2::Request'
   has_many :downstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
