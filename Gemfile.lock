@@ -195,7 +195,7 @@ GEM
     pry-byebug (3.6.0)
       byebug (~> 10.0)
       pry (~> 0.10)
-    puma (3.12.0)
+    puma (3.12.1)
     pusher-client (0.6.2)
       json
       websocket (~> 1.0)
@@ -402,4 +402,4 @@ DEPENDENCIES
   webpacker
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
