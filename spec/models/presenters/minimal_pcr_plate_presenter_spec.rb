@@ -21,12 +21,12 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
-      ['Barcode', 'DN1 <em>1220000001831</em>'],
+      ['Barcode', 'DN1S <em>1220000001831</em>'],
       ['Number of wells', 96],
       ['Plate type', purpose_name],
       ['Primer panel', 'example panel'],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN2 <em>1220000002845</em>'],
+      ['Input plate barcode', 'DN2T <em>1220000002845</em>'],
       ['PCR Cycles', '10'],
       ['Created on', '2016-10-19']
     ]

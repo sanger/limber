@@ -49,10 +49,10 @@ module Deployed
     end
 
     def version_label
-      if major == 0 && minor == 0 && extra == 0
-        'WIP'
-      else
+      if version_hash
         "#{major}.#{minor}.#{extra}"
+      else
+        'WIP'
       end
     end
 
@@ -74,7 +74,7 @@ module Deployed
     end
 
     def version(rank)
-      version_hash ? version_hash[rank] : 0
+      version_hash ? version_hash[rank] : '0' # String, as it matches what we'd get from the regex
     end
 
     def execute_command(cmd)
@@ -113,7 +113,7 @@ module Deployed
 
   require 'ostruct'
   DETAILS = OpenStruct.new(
-    name: APP_NAME,
+    name: nil,
     version: VERSION_ID,
     environment: ENVIRONMENT
   )

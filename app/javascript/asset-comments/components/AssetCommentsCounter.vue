@@ -4,8 +4,6 @@
 
 <script>
 
-const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute:'2-digit' };
-
 export default {
   name: 'AssetComments',
   computed: {
@@ -18,10 +16,10 @@ export default {
     },
     badgeClass() {
       if (this.comments && this.comments.length > 0) {
-         return 'badge-success'
-       } else {
-         return 'badge-secondary'
-       }
+        return 'badge-success'
+      } else {
+        return 'badge-secondary'
+      }
     },
     comments() { return this.$root.$data.comments }
   }

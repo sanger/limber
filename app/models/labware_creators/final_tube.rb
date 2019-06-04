@@ -27,12 +27,11 @@ module LabwareCreators
     end
 
     def create_labware!
-      success = []
       @all_tube_transfers = parents.map do |this_parent_uuid|
         transfer_template.create!(
           user: user_uuid,
           source: this_parent_uuid
-        ).tap { success << this_parent_uuid }
+        )
       end
       true
     end
@@ -42,16 +41,16 @@ module LabwareCreators
     end
 
     # We pretend that we've added a new blank tube when we're actually
-    # transfering to the tube on the original LibraryRequest
-    def child
+    # transferring to the tube on the original LibraryRequest
+    def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
       destination_uuids = all_tube_transfers.map do |tt|
         tt.destination.uuid
       end.uniq
-      # The client_api returns a 'barcoded asset' here, rather than a tube. By returning a has, url_for
-      # can find the correct controller.
-      return { controller: :tubes, action: :show, id: all_tube_transfers.first.destination.uuid } if destination_uuids.one?
+      # The client_api returns a 'barcoded asset' here, rather than a tube.
+      # We know that its a tube though, so wrap it in this useful tool
+      return TubeProxy.new(destination_uuids.first) if destination_uuids.one?
 
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'
     end

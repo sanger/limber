@@ -3,24 +3,26 @@ import { indexToName } from 'shared/wellHelpers'
 import wellFactory from 'test_support/factories/well_factory'
 
 const plateFactory = function(options = {}) {
-  const { filledWells, wellOptions, ...plateOptions } = options
+  const { _filledWells, _wellOptions, ...plateOptions } = options
   let uuid = plateOptions.uuid || 'plate-uuid'
+  let id = plateOptions.id || '1'
   // Bit inefficient, in that we generate wells even if we immediately override them
   const plateDefaults = {
     name: 'Plate DN1S',
     uuid: uuid,
-    labwareBarcode: { ean13_barcode: '1220542971784', human_barcode: 'DN1S', machine_barcode: '1220542971784' },
-    numberOfColumns: 12,
-    numberOfRows: 8,
+    id: id,
+    labware_barcode: { ean13_barcode: '1220542971784', human_barcode: 'DN1S', machine_barcode: '1220542971784' },
+    number_of_columns: 12,
+    number_of_rows: 8,
     state: 'passed',
-    wells: buildArray(filledWells||96, (interation) => wellFactory({
+    wells: buildArray(_filledWells || 96, (interation) => wellFactory({
       ...{
         uuid: `${uuid}-well-${interation}`,
         position: { name: indexToName(interation, 12, 8) } },
-      ...wellOptions
+      ..._wellOptions
     }) )
   }
-  return { ... plateDefaults, ...(plateOptions || {}) }
+  return { ...plateDefaults, ...(plateOptions || {}) }
 }
 
 export default plateFactory

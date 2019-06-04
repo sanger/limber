@@ -74,7 +74,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
     describe '#save!' do
       it 'creates the child' do
         subject.save!
-        expect(subject.child.uuid).to eq(child_uuid)
+        expect(subject.redirection_target.uuid).to eq(child_uuid)
         expect(creation_request).to have_been_made.once
         expect(transfer_request).to have_been_made.once
       end

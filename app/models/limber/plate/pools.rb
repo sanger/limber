@@ -32,10 +32,6 @@ class Limber::Plate::Pools
     @example_pool = @pools.first || Limber::Plate::Pool.new(nil, {})
   end
 
-  def pcr_cycles
-    @pcr_cycles ||= @pools.map(&:pcr_cycles).uniq
-  end
-
   # Plates are ready for pooling once we're in to the multiplex phase of the pipeline
   # This is indicated by the request type on the pools, and indicates that the plates
   # have been charged and passed.

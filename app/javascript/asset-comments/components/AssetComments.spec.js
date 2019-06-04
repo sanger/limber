@@ -23,26 +23,26 @@ describe('AssetComments', () => {
         id: '1234',
         title: null,
         description: 'This is a comment',
-        createdAt: '2017-08-31T11:18:16+01:00',
-        updatedAt: '2017-08-31T11:18:16+01:00',
+        created_at: '2017-08-31T11:18:16+01:00',
+        updated_at: '2017-08-31T11:18:16+01:00',
         user: {
           id: '12',
           login: 'js1',
-          firstName: 'John',
-          lastName: 'Smith'
+          first_name: 'John',
+          last_name: 'Smith'
         }
       },
       {
         id: '12345',
         title: null,
         description: 'This is also a comment',
-        createdAt: '2017-09-30T12:18:16+01:00',
-        updatedAt: '2017-09-30T12:18:16+01:00',
+        created_at: '2017-09-30T12:18:16+01:00',
+        updated_at: '2017-09-30T12:18:16+01:00',
         user: {
           id: '13',
           login: 'js2',
-          firstName: 'Jane',
-          lastName: 'Smythe'
+          first_name: 'Jane',
+          last_name: 'Smythe'
         }
       }
     ])

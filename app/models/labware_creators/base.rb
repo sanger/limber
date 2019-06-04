@@ -78,6 +78,29 @@ module LabwareCreators
       Settings.transfer_templates.fetch(transfer_template_name)
     end
 
+    #
+    # The object which we cant to redirect the user to after the creator
+    # has been saved. If you've created a single entity, this should probably
+    # be the child, so that's what we return by default
+    #
+    # @return [Object] Object that supports url_for(object)
+    def redirection_target
+      child
+    end
+
+    def anchor
+      'summary_tab'
+    end
+
+    #
+    # The name of the child purpose.
+    #
+    # @return [String] The purpose name
+    #
+    def purpose_name
+      purpose_config.name
+    end
+
     private
 
     def transfer_template

@@ -12,3 +12,7 @@ require('file-list')
 require('asset-comments')
 require('qc-information')
 require('quadrant-stamp')
+require('custom-tagged-plate')
+
+// Load simple javscripts
+require('plain-javascript/tag-animations')

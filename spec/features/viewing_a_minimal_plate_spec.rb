@@ -71,7 +71,13 @@ RSpec.feature 'Viewing a plate', js: true do
   end
 
   feature 'plates with 384 wells' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['passed'], size: 384, pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35] }
+    let(:example_plate) do
+      create :v2_stock_plate,
+             uuid: plate_uuid,
+             library_state: ['passed'],
+             size: 384,
+             pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35]
+    end
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
@@ -82,7 +88,12 @@ RSpec.feature 'Viewing a plate', js: true do
   end
 
   feature 'with transfers to tubes' do
-    let(:example_plate) { create :v2_plate, uuid: plate_uuid, transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) }, purpose_uuid: 'child-purpose-0' }
+    let(:example_plate) do
+      create :v2_plate,
+             uuid: plate_uuid,
+             transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) },
+             purpose_uuid: 'child-purpose-0'
+    end
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 

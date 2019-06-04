@@ -5,12 +5,12 @@
 -->
 <template>
   <div class="content-main">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'MainContent'
-  }
+export default {
+  name: 'MainContent'
+}
 </script>

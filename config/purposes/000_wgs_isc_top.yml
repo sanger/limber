@@ -38,6 +38,8 @@ LB Lib PCR:
   - TS_pWGSC_UDI96
   - TS_pWGSD_UDI96
   - TSRNAhWGS_UDI96
+  - TS_pWGSA_UDI96v2
+  - TSISC_UDI96
   :parents:
   - LB End Prep
 LB Lib PCR-XP:
@@ -62,3 +64,4 @@ LB Lib Pool:
   :parents:
   - LB Lib PCR-XP
   - PF Lib XP2
+  - PF Lib Q-XP2

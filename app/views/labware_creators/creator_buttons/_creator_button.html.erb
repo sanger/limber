@@ -10,6 +10,7 @@
   <% end %>
   <%= f.submit "Add an empty #{creator_button.name} #{creator_button.type}",
                  name:  nil,
-                 class: "create-#{creator_button.type}-button"
+                 class: "create-#{creator_button.type}-button",
+                 data: { disable_with: 'Creating...' }
   %>
 <% end %>

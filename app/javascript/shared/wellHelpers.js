@@ -17,7 +17,11 @@ const wellCoordinateToName = function(wellCoordinate) {
 }
 
 const requestsForWell = function(well) {
-  return [...well.requestsAsSource, ...well.aliquots.map(aliquot => aliquot.request)].filter(request => request)
+  return [...well.requests_as_source, ...well.aliquots.map(aliquot => aliquot.request)].filter(request => request)
 }
 
-export { indexToName, wellNameToCoordinate, wellCoordinateToName, requestsForWell }
+const rowNumToLetter = function (value) {
+  return String.fromCharCode(value + 64)
+}
+
+export { indexToName, wellNameToCoordinate, wellCoordinateToName, requestsForWell, rowNumToLetter }

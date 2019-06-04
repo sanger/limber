@@ -3,8 +3,9 @@
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
-RSpec.describe RobotsController, type: :controller do
+RSpec.describe RobotsController, type: :controller, robots: true do
   include FeatureHelpers
+  include RobotHelpers
 
   let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
 
@@ -13,7 +14,7 @@ RSpec.describe RobotsController, type: :controller do
 
     let(:user_uuid) { SecureRandom.uuid }
     let(:plate_uuid) { 'plate_uuid' }
-    let!(:plate)     { json :plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let!(:plate)     { create :v2_plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
     let!(:state_chage) do
       stub_api_post(
@@ -40,17 +41,17 @@ RSpec.describe RobotsController, type: :controller do
 
     setup do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      Settings.purpose_uuids['target_plate_purpose'] = 'target_plate_purpose_uuid'
-      Settings.purposes['target_plate_purpose_uuid'] = { state_changer_class: 'StateChangers::DefaultStateChanger' }
-      stub_asset_search('target_plate_barcode', plate)
+      create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+      stub_v2_plate(plate)
+      bed_plate_lookup(plate)
     end
 
     it 'adds robot barcode to plate metadata' do
       post :start,
            params: {
-             bed: {
+             bed_plates: {
                'bed1_barcode' => ['source_plate_barcode'],
-               'bed2_barcode' => ['target_plate_barcode']
+               'bed2_barcode' => [plate.human_barcode]
              },
              robot_barcode: 'robot_barcode',
              id: 'robot_id'
@@ -66,24 +67,30 @@ RSpec.describe RobotsController, type: :controller do
 
     let(:user_uuid) { SecureRandom.uuid }
     let(:target_plate_uuid) { 'plate_uuid' }
-    let!(:target_plate)     { json :plate, uuid: target_plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let!(:target_plate)     do
+      create :v2_plate,
+             uuid: target_plate_uuid,
+             purpose_name: 'target_plate_purpose',
+             purpose_uuid: 'target_plate_purpose_uuid',
+             parents: [source_plate]
+    end
 
     let(:source_plate_uuid) { 'plate_uuid' }
-    let!(:source_plate)     { json :plate, uuid: source_plate_uuid, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid' }
+    let!(:source_plate)     { create :v2_plate, uuid: source_plate_uuid, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid' }
 
     it 'verifies robot and beds' do
-      source_plate_barcode = JSON.parse(source_plate)['plate']['barcode']['ean13']
-      target_plate_barcode = JSON.parse(target_plate)['plate']['barcode']['ean13']
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      stub_asset_search(source_plate_barcode, source_plate)
-      stub_asset_search(target_plate_barcode, target_plate)
-      stub_search_and_single_result('Find source assets by destination asset barcode', { 'search' => { 'barcode' => target_plate_barcode } }, source_plate)
-      expect_any_instance_of(Robots::Robot).to receive(:verify).with({ 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_plate_barcode] }, 'abc')
+      bed_plate_lookup(source_plate)
+      bed_plate_lookup(target_plate)
+      expect_any_instance_of(Robots::Robot).to receive(:verify).with(
+        'bed_plates' => { 'bed1_barcode' => [source_plate.human_barcode], 'bed2_barcode' => [target_plate.human_barcode] },
+        'robot_barcode' => 'abc'
+      )
       post :verify,
            params: {
-             beds: {
-               'bed1_barcode' => [source_plate_barcode],
-               'bed2_barcode' => [target_plate_barcode]
+             bed_plates: {
+               'bed1_barcode' => [source_plate.human_barcode],
+               'bed2_barcode' => [target_plate.human_barcode]
              },
              robot_barcode: 'abc',
              id: 'robot_id'

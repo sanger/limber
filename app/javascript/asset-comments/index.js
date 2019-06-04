@@ -8,20 +8,12 @@ import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
 import commentStoreFactory from './comment-store'
-import ApiModule from 'shared/api'
 import axios from 'axios'
 import cookieJar from 'shared/cookieJar'
+import devourApi from 'shared/devourApi'
+import resources from 'shared/resources'
 
 Vue.use(BootstrapVue)
-
-if (process.env.NODE_ENV == 'test') {
-  // Vue generates warning if we aren't in the production environment
-  // These clutter up the console, but we don't want to turn them off
-  // everywhere as they may be useful if we ever end up accidentally
-  // running production in development mode. Instead we turn them off
-  // explicitly
-  Vue.config.productionTip = false
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   /*
@@ -50,14 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if ( assetElem ) {
     /* The asset-comments element isn't on all pages. So only initialize our
     * Vue app if we actually find it */
-    const plateApi = ApiModule({ baseUrl: assetElem.dataset.sequencescapeApi }).Asset
     const userId = cookieJar(document.cookie).user_id
+    const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
     const axiosInstance = axios.create({
-      baseURL: assetElem.dataset.sequencescapeApi,
+      baseURL: sequencescapeApiUrl,
       timeout: 10000,
       headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
     })
-    const commentStore = commentStoreFactory(axiosInstance, plateApi, assetElem.dataset.assetId, userId)
+
+    const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources)
+
+    const commentStore = commentStoreFactory(axiosInstance, api, assetElem.dataset.assetId, userId)
 
     new Vue({
       el: '#asset-comments',

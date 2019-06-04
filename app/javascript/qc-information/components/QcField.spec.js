@@ -22,18 +22,21 @@ describe('QcField', () => {
   // Inspect the raw component options
   it('renders a legend with the name', () => {
     let wrapper = wrapperFactory()
+
     expect(wrapper.find('legend').exists()).toBe(true)
     expect(wrapper.find('legend').text()).toBe('Volume')
   })
 
   it('renders the units', () => {
     let wrapper = wrapperFactory()
+
     expect(wrapper.find('.input-group-append').exists()).toBe(true)
     expect(wrapper.find('.input-group-append').text()).toBe('ul')
   })
 
   it('renders possible assay types', () => {
     let wrapper = wrapperFactory()
+
     expect(wrapper.find('select').exists()).toBe(true)
     expect(wrapper.find('select').findAll('option').at(0).text()).toBe('One')
     expect(wrapper.find('select').findAll('option').at(1).text()).toBe('Two')
@@ -43,6 +46,7 @@ describe('QcField', () => {
     let wrapper = wrapperFactory()
     wrapper.find('input').element.value = '1.5'
     wrapper.find('input').trigger('input')
+
     expect(wrapper.vm.value).toBe('1.5')
   })
 
@@ -50,6 +54,7 @@ describe('QcField', () => {
     let wrapper = wrapperFactory()
     wrapper.find('select').element.value = 'Two'
     wrapper.find('select').trigger('change')
+
     expect(wrapper.vm.assayType).toBe('Two')
   })
 
@@ -57,6 +62,7 @@ describe('QcField', () => {
     let wrapper = wrapperFactory()
     wrapper.find('input').setValue('1.5')
     wrapper.find('select').setValue('Two')
+
     expect(wrapper.emitted()).toEqual({
       change: [
         // The input event on the input field appears to trigger twice. This is pretty harmless, but
