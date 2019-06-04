@@ -92,6 +92,15 @@ module LabwareCreators
       'summary_tab'
     end
 
+    #
+    # The name of the child purpose.
+    #
+    # @return [String] The purpose name
+    #
+    def purpose_name
+      purpose_config.name
+    end
+
     private
 
     def transfer_template

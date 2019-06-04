@@ -23,19 +23,9 @@ class CreationController < ApplicationController
     creator_params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(creator_params)
     if @labware_creator.save
-      flash.notice = 'New empty labware added to the system.'
-      respond_to do |format|
-        format.json do
-          render json: {
-            redirect: redirection_path(@labware_creator),
-            message: 'Plate created, redirecting...'
-          }
-        end
-        format.html { redirect_to redirection_path(@labware_creator) }
-      end
+      create_success
     else
-      flash.now.alert = @labware_creator.errors.full_messages
-      render @labware_creator.page
+      create_failure
     end
   end
 
@@ -48,6 +38,7 @@ class CreationController < ApplicationController
 
   def creation_failed(exception)
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
+    Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error))
 
     respond_to do |format|
@@ -61,6 +52,34 @@ class CreationController < ApplicationController
   end
 
   private
+
+  def create_success
+    respond_to do |format|
+      format.json do
+        render json: {
+          redirect: redirection_path(@labware_creator),
+          message: 'Plate created, redirecting...'
+        }
+      end
+      format.html do
+        redirect_to redirection_path(@labware_creator),
+                    notice: 'New empty labware added to the system.'
+      end
+    end
+  end
+
+  def create_failure
+    respond_to do |format|
+      format.json do
+        render json: { message: @labware_creator.errors.full_messages },
+               status: :bad_request
+      end
+      format.html do
+        flash.now.alert = @labware_creator.errors.full_messages
+        render @labware_creator.page
+      end
+    end
+  end
 
   def permitted_attributes
     creator_class.attributes

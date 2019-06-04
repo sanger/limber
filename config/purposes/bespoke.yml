@@ -11,16 +11,14 @@ LBB Ligation:
   - LBB Cherrypick
   :expected_request_types:
   - limber_pcr_bespoke
-LBB Lib PCR:
+LBB Lib PCR-XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
   :parents:
   - LBB Ligation
-LBB Lib PCR-XP:
-  :asset_type: plate
-  :parents:
-  - LBB Lib PCR
+  :suggest_library_pass_for:
+  - limber_pcr_bespoke
 LBB Ligation Tagged:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
@@ -29,11 +27,23 @@ LBB Ligation Tagged:
   - LBB Cherrypick
   :expected_request_types:
   - limber_pcr_free_bespoke
+LBB Chromium Tagged:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :parents:
+  - LBB Cherrypick
+  :expected_request_types:
   - limber_chromium_bespoke
+  :tags_per_well: 4
 LBB Lib-XP:
   :asset_type: plate
   :parents:
   - LBB Ligation Tagged
+  - LBB Chromium Tagged
+  :suggest_library_pass_for:
+  - limber_pcr_free_bespoke
+  - limber_chromium_bespoke
 LBB Lib Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

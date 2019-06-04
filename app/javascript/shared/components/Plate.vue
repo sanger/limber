@@ -1,5 +1,8 @@
 <template>
-  <table :class="['plate-view', sizeClass, 'pool-colours']">
+  <table
+    id="plate"
+    :class="['plate-view', sizeClass, 'pool-colours']"
+  >
     <caption>{{ caption }}</caption>
     <thead>
       <tr>
@@ -24,7 +27,10 @@
           v-for="column in columns"
           :key="column"
         >
-          <lb-well v-bind="wellAt(row, column)" />
+          <lb-well
+            v-bind="wellAt(row, column)"
+            @onwellclicked="onWellClicked"
+          />
         </td>
       </tr>
     </tbody>
@@ -32,12 +38,8 @@
 </template>
 
 <script>
-
 import Well from 'shared/components/Well'
-
-const rowNumToLetter = function (value) {
-  return String.fromCharCode(value + 64)
-}
+import { rowNumToLetter } from 'shared/wellHelpers'
 
 export default {
   name: 'Plate',
@@ -59,6 +61,9 @@ export default {
   methods: {
     wellAt: function (row, column) {
       return this.wells[`${rowNumToLetter(row)}${column}`] || {}
+    },
+    onWellClicked(position) {
+      this.$emit('onwellclicked', position)
     }
   }
 }

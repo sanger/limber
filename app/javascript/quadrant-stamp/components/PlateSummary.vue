@@ -4,7 +4,7 @@
     class="no-plate plate-summary"
   >
     <div class="well">
-&nbsp;
+      &nbsp;
     </div> No plate
   </div>
   <div
