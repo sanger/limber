@@ -18,6 +18,7 @@
       :state="state"
       size="lg"
       placeholder="Scan a plate"
+      :disabled="scanDisabled"
       @change="lookupPlate"
     />
   </b-form-group>
@@ -31,9 +32,7 @@ import { checkSize, aggregate } from './plateScanValidators'
 // have a unique id. Ensures labels correctly match up with
 // fields
 let uid = 0
-
 const boolToString = { true: 'valid', false: 'invalid' }
-
 /**
  * Provides a labelled text input box which will automatically search for a resource
  * from the Sequencescape V2 API by barcode. It provides:
@@ -47,7 +46,7 @@ export default {
     api: {
       // A devour API object. eg. new devourClient(apiOptions)
       // In practice you probably want to use the helper in shared/devourApi
-      required: true, type: Object
+      type: Object, required: true
     },
     label: {
       // The label for the text field. Plate by default.
@@ -80,6 +79,14 @@ export default {
     validators: {
       // An array of validators. See plateScanValidators.js for examples and details
       type: Array, required: false, default: () => { return [checkSize(12, 8)] }
+    },
+    scanDisabled: {
+      // Used to disable the scan field.
+      type: Boolean, default: false
+    },
+    plateType: {
+      // Used to specify the type of 'plate' to find by barcode e.g. plate, qcable.
+      type: String, default: 'plate'
     }
   },
   data() {
@@ -135,7 +142,7 @@ export default {
     },
     async findPlate() {
       const plate = (
-        await this.api.findAll('plate', {
+        await this.api.findAll(this.plateType, {
           include: this.includes,
           filter: { barcode: this.plateBarcode },
           fields: this.fields
@@ -160,4 +167,3 @@ export default {
   }
 }
 </script>
-

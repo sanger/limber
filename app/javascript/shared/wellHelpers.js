@@ -37,4 +37,16 @@ const requestsForWell = function(well) {
   return [...well.requests_as_source, ...well.aliquots.map(aliquot => aliquot.request)].filter(request => request)
 }
 
-export { indexToName, nameToIndex, wellNameToCoordinate, quadrantTargetFor, requestsForWell }
+const rowNumToLetter = function (value) {
+  return String.fromCharCode(value + 64)
+}
+
+export {
+  indexToName,
+  nameToIndex,
+  wellNameToCoordinate,
+  quadrantTargetFor,
+  requestsForWell,
+  wellCoordinateToName,
+  rowNumToLetter
+}

@@ -1,5 +1,4 @@
-// // Import the component being tested
-import { checkSize, checkDuplicates, checkExcess, aggregate } from './plateScanValidators'
+import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
 
 describe('aggregate', () => {
   const validFunction = (_) => { return { valid: true, message: 'Good' } }
@@ -96,5 +95,63 @@ describe('checkExcess', () => {
     expect(
       checkExcess(excessTransfers)(plate)
     ).toEqual({ valid: false, message: 'Wells in excess: D11, D12' })
+  })
+})
+
+describe('checkState', () => {
+  it('passes if the state is in the allowed list', () => {
+    const plate = { state: 'available' }
+
+    expect(
+      checkState(['available', 'exhausted'],0)(plate)
+    ).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it('fails if the state is not in the allowed list', () => {
+    const plate = { state: 'destroyed' }
+
+    expect(
+      checkState(['available', 'exhausted'],0)(plate)
+    ).toEqual({ valid: false, message: 'Plate must have a state of: available or exhausted' })
+  })
+})
+
+describe('checkQCableWalkingBy', () => {
+  it('passes if the walking by is in the allowed list', () => {
+    const qcable = {
+      lot: {
+        tag_layout_template: {
+          walking_by: 'wells of plate'
+        }
+      }
+    }
+
+    expect(
+      checkQCableWalkingBy(['wells of plate'],0)(qcable)
+    ).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it('fails if the qcable does not contain a tag layout template', () => {
+    const qcable = {
+      lot: {}
+    }
+
+    expect(
+      checkQCableWalkingBy(['pool', 'plate sequential'],0)(qcable)
+    ).toEqual({ valid: false, message: 'QCable should have a tag layout template and walking by' })
+  })
+
+  it('fails if the walking by is not in the allowed list', () => {
+    const qcable = {
+      lot: {
+        tag_layout_template: {
+          walking_by: 'wells of plate'
+        }
+      }
+    }
+
+    expect(
+      checkQCableWalkingBy(['pool', 'plate sequential'],0)(qcable)
+    ).toEqual({ valid: false, message: 'QCable layout must have a walking by of: pool or plate sequential' })
   })
 })

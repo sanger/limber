@@ -97,6 +97,37 @@ const checkExcess = (excessTransfers) => {
   }
 }
 
+// Returns a validator that ensures the plate has a state that matches to the
+// supplied list of states. e.g. to check a plate has a state of 'available'
+// or 'exhausted':
+// checkState(['available', 'exhausted'])
+const checkState = (allowedStatesList) => {
+  return (plate) => {
+    if(!allowedStatesList.includes(plate.state)) {
+      return { valid: false, message: 'Plate must have a state of: ' + allowedStatesList.join(' or ') }
+    } else {
+      return { valid: true, message: 'Great!' }
+    }
+  }
+}
+
+// Returns a validator that ensures the QCable tag plate has a walking by that
+// matches the supplied walking by list. e.g. to check a QCable has a walking
+// by of 'wells of plate':
+// checkQCableWalkingBy(['wells of plate'])
+const checkQCableWalkingBy = (allowedWalkingByList) => {
+  return (qcable) => {
+    if(!qcable.lot || !qcable.lot.tag_layout_template || !qcable.lot.tag_layout_template.walking_by) {
+      return { valid: false, message: 'QCable should have a tag layout template and walking by' }
+    }
+    if(!allowedWalkingByList.includes(qcable.lot.tag_layout_template.walking_by)) {
+      return { valid: false, message: 'QCable layout must have a walking by of: ' + allowedWalkingByList.join(' or ') }
+    } else {
+      return { valid: true, message: 'Great!' }
+    }
+  }
+}
+
 // Receives an array of validators and calls them in the order they appear on
 // the array.
 // As a result, the smallest indexed failing validator will determine the
@@ -109,4 +140,4 @@ const aggregate = (validators, item) => {
   }, { valid: true, message: 'Great!'})
 }
 
-export { checkSize, checkDuplicates, checkExcess, aggregate }
+export { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy, aggregate }

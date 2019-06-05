@@ -10,19 +10,20 @@ module LabwareCreators
     include SupportParent::PlateOnly
 
     attr_reader :child, :tag_plate
-    attr_accessor :tag_plate_barcode, :tag_layout
+    attr_accessor :tag_layout
 
-    self.page = 'tagged_plate'
+    self.page = 'custom_tagged_plate'
     self.attributes += [
-      :tag_plate_barcode, :tag2_tube_barcode,
       {
-        tag_plate: %i[asset_uuid template_uuid],
-        tag_layout: %i[user plate tag_group tag2_group direction walking_by initial_tag substitutions tags_per_well]
+        tag_plate: %i[asset_uuid template_uuid state],
+        tag_layout: [
+          :user, :plate, :tag_group, :tag2_group, :direction, :walking_by, :initial_tag, :tags_per_well, { substitutions: {} }
+        ]
       }
     ]
     self.default_transfer_template_name = 'Custom pooling'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
+    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
@@ -40,7 +41,7 @@ module LabwareCreators
       @child = api.pooled_plate_creation.create!(
         child_purpose: purpose_uuid,
         user: user_uuid,
-        parents: [parent_uuid, tag_plate.asset_uuid]
+        parents: [parent_uuid, tag_plate.asset_uuid].reject(&:blank?)
       ).child
 
       transfer_material_from_parent!(@child.uuid)
@@ -73,7 +74,22 @@ module LabwareCreators
       nil
     end
 
+    #
+    # The tags per well number.
+    # In most cases this will be the default 1 unless overriden in the purposes yml
+    # e.g. for Chromium plates in bespoke it is 4
+    #
+    # @return [<Number] The number of tags per well.
+    #
+    def tags_per_well
+      purpose_config.fetch(:tags_per_well, 1)
+    end
+
     private
+
+    def tag_layout_attributes
+      tag_layout.reject { |_key, value| value.blank? }
+    end
 
     def transfer_hash
       WellHelpers.stamp_hash(parent.size)
@@ -85,7 +101,7 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        api.tag_layout.create!(tag_layout.merge(plate: plate_uuid))
+        api.tag_layout.create!(tag_layout_attributes.merge(plate: plate_uuid, user: user_uuid))
       end
     end
   end
