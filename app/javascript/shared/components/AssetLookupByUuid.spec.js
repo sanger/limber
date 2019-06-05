@@ -1,4 +1,3 @@
-// Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'

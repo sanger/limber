@@ -1,4 +1,3 @@
-// Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'

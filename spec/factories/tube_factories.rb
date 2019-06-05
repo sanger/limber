@@ -101,6 +101,7 @@ FactoryBot.define do
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
       aliquots { create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request }
+      parents { [] }
     end
 
     # Mock the relationships. Should probably handle this all a bit differently
@@ -115,6 +116,7 @@ FactoryBot.define do
       end
       RSpec::Mocks.allow_message(asset, :ancestors).and_return(ancestors_scope)
       RSpec::Mocks.allow_message(asset, :aliquots).and_return(evaluator.aliquots || [])
+      RSpec::Mocks.allow_message(asset, :parents).and_return(evaluator.parents)
     end
 
     factory :v2_multiplexed_library_tube do

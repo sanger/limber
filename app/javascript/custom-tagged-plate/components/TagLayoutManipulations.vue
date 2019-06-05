@@ -19,7 +19,7 @@
             :scan-disabled="tagPlateScanDisabled"
             :includes="tagPlateLookupIncludes"
             :fields="tagPlateLookupFields"
-            :validation="scanValidation()"
+            :validators="scanValidation"
             @change="tagPlateScanned($event)"
           />
         </b-form-group>
@@ -124,7 +124,7 @@
 
 <script>
 import PlateScan from 'shared/components/PlateScan'
-import { checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
+import { checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 
 /**
@@ -156,9 +156,10 @@ export default {
   },
   computed: {
     scanValidation() {
-      return () => {
-        return aggregate(checkState(['available','exhausted']), checkQCableWalkingBy(['wells of plate']))
-      }
+      return [
+        checkState(['available','exhausted']),
+        checkQCableWalkingBy(['wells of plate'])
+      ]
     },
     tagPlateLookupFields() {
       return { assets: 'uuid',

@@ -22,6 +22,7 @@ FactoryBot.define do
     label_class { 'Labels::PlateLabel' }
     printer_type { '96 Well Plate' }
     pmb_template { 'sqsc_96plate_label_template' }
+    file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
 
     factory :stock_plate_config do
       transient do
