@@ -17,3 +17,7 @@ plate_6mm_double:
 plate_xp:
   :label_class: Labels::PlateLabelXp
   :pmb_template: 'sqsc_96plate_label_template_code39'
+
+plate_split:
+  :label_class: Labels::PlateSplit
+  :pmb_template: 'sqsc_96plate_label_template_code39'

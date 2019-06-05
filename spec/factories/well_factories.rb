@@ -46,8 +46,10 @@ FactoryBot.define do
       upstream_tubes { [] }
       upstream_assets { [] }
       upstream_plates { [] }
+      plate_barcode { 'DN1S' }
     end
 
+    name { "#{plate_barcode}:#{location}" }
     position { { 'name' => location } }
     state { 'passed' }
     uuid { SecureRandom.uuid }
@@ -74,6 +76,20 @@ FactoryBot.define do
 
     factory :v2_tagged_well do
       transient { aliquot_factory { :v2_tagged_aliquot } }
+    end
+
+    factory :v2_well_with_transfer_requests do
+      transient do
+        transfer_request_as_source_target_asset { :v2_well }
+        transfer_requests_as_source { [create(:v2_transfer_request, source_asset: nil, target_asset: transfer_request_as_source_target_asset)] }
+        transfer_request_as_target_source_asset { :v2_well }
+        transfer_requests_as_target { [create(:v2_transfer_request, source_asset: transfer_request_as_target_source_asset, target_asset: nil)] }
+      end
+
+      after(:build) do |well, evaluator|
+        RSpec::Mocks.allow_message(well, :transfer_requests_as_source).and_return(evaluator.transfer_requests_as_source || [])
+        RSpec::Mocks.allow_message(well, :transfer_requests_as_target).and_return(evaluator.transfer_requests_as_target || [])
+      end
     end
   end
 

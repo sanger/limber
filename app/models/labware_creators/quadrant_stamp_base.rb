@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module LabwareCreators
+  # Basic quadrant stamp behaviour, applies no special request filters
+  # See MultiStamp for further documentation
   #
   # Handles the generation of 384 well plates from 1-4 96 well plates.
-  # Most the layout logic happens client side, and it should be possible
-  # to adapt this creator to support a range of layouts by pretty much just
-  # switching out the page/javascript
   #
   # Briefly, 96 well plates get stamped onto 384 plates in an interpolated pattern
   # eg.
@@ -22,62 +21,49 @@ module LabwareCreators
   # |P2|P4|P2|P4|P2|P4|P1
   # |B1|B1|B2|B2|B3|B3|B4
   #
-  class QuadrantStampBase < Base
-    include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
-
-    attr_accessor :transfers, :parents
-    class_attribute :request_filter
-
-    self.page = 'quadrant_stamp'
-    self.aliquot_partial = 'standard_aliquot'
-    self.attributes += [{ transfers: [[:source_plate, :source_asset, :outer_request, { new_target: :location }]] }]
-    self.request_filter = 'null'
-
-    validates :transfers, presence: true
+  # The transfers layout 'quadrant' descibed above is implemented client side.
+  #
+  class QuadrantStampBase < MultiStamp
+    self.transfers_layout = 'quadrant'
+    self.target_rows = 16
+    self.target_columns = 24
+    self.source_plates = 4
 
     private
 
     def create_labware!
-      plate_creation = api.pooled_plate_creation.create!(
-        parents: parent_uuids,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      )
-
-      @child = plate_creation.child
-
-      transfer_material_from_parent!(@child.uuid)
-
-      yield(@child) if block_given?
-      true
-    end
-
-    # Returns a list of parent plate uuids extracted from the transfers
-    def parent_uuids
-      transfers.map { |transfer| transfer[:source_plate] }.uniq
-    end
-
-    def transfer_material_from_parent!(child_uuid)
-      child_plate = Sequencescape::Api::V2.plate_with_wells(child_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(child_plate)
-      )
-    end
-
-    def transfer_request_attributes(child_plate)
-      transfers.map do |transfer|
-        request_hash(transfer, child_plate)
+      super do |child|
+        PlateMetadata.new(
+          api: api,
+          user: user_uuid,
+          plate: child
+        ).update!(stock_barcodes_by_quadrant)
+        yield(child) if block_given?
       end
     end
 
-    def request_hash(transfer, child_plate)
-      {
-        'source_asset' => transfer[:source_asset],
-        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
-        'outer_request' => transfer[:outer_request]
-      }
+    def source_plates_by_quadrant
+      source_plates_uuids = Array.new(4)
+      transfers.each do |transfer|
+        target_well_location = transfer.dig(:new_target, :location)
+        target_well_quadrant = WellHelpers.well_quadrant(target_well_location)
+        if source_plates_uuids[target_well_quadrant].nil?
+          source_plates_uuids[target_well_quadrant] = transfer[:source_plate]
+        end
+      end
+      source_plates_uuids
+    end
+
+    def stock_barcodes_by_quadrant
+      quadrants = {}
+      source_plates_by_quadrant.each_with_index do |uuid, index|
+        next if uuid.nil?
+
+        source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: uuid)
+        stock_barcode = source_plate&.stock_plate&.barcode&.human
+        quadrants["stock_barcode_q#{index}".to_sym] = stock_barcode unless stock_barcode.nil?
+      end
+      quadrants
     end
   end
 end

@@ -18,6 +18,7 @@
       :state="state"
       size="lg"
       placeholder="Scan a plate"
+      :disabled="scanDisabled"
       @change="lookupPlate"
     />
   </b-form-group>
@@ -25,15 +26,13 @@
 
 <script>
 
-import { checkSize } from './plateScanValidators'
+import { checkSize, aggregate } from './plateScanValidators'
 
 // Incrementing counter to ensure all instances of PlateScan
 // have a unique id. Ensures labels correctly match up with
 // fields
 let uid = 0
-
 const boolToString = { true: 'valid', false: 'invalid' }
-
 /**
  * Provides a labelled text input box which will automatically search for a resource
  * from the Sequencescape V2 API by barcode. It provides:
@@ -47,7 +46,7 @@ export default {
     api: {
       // A devour API object. eg. new devourClient(apiOptions)
       // In practice you probably want to use the helper in shared/devourApi
-      required: true, type: Object
+      type: Object, required: true
     },
     label: {
       // The label for the text field. Plate by default.
@@ -77,9 +76,17 @@ export default {
       default: () => { return { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' } },
       type: Object
     },
-    validation: {
-      // A validation function. See plateScanValidators.js for examples and details
-      type: Function, default: checkSize(12,8)
+    validators: {
+      // An array of validators. See plateScanValidators.js for examples and details
+      type: Array, required: false, default: () => { return [checkSize(12, 8)] }
+    },
+    scanDisabled: {
+      // Used to disable the scan field.
+      type: Boolean, default: false
+    },
+    plateType: {
+      // Used to specify the type of 'plate' to find by barcode e.g. plate, qcable.
+      type: String, default: 'plate'
     }
   },
   data() {
@@ -105,18 +112,20 @@ export default {
       return this.validated.message
     },
     validatedPlate() {
-      if (this.plate === null ) {
+      if (this.plate === null) {
         return { state: 'empty', message: '' }
       } else if (this.plate === undefined) {
         return { state: 'invalid', message: 'Could not find plate' }
       } else {
-        const result = this.validation(this.plate)
+        const result = aggregate(this.validators, this.plate)
+        // console.log('VALIDATE', this.plate.labware_barcode.human_barcode)
         return { state: boolToString[result.valid], message: result.message }
       }
     }
   },
   watch: {
     state() {
+      // console.log('EMIT', this.plate, this.state)
       this.$emit('change', { plate: this.plate, state: this.state })
     }
   },
@@ -133,7 +142,7 @@ export default {
     },
     async findPlate() {
       const plate = (
-        await this.api.findAll('plate', {
+        await this.api.findAll(this.plateType, {
           include: this.includes,
           filter: { barcode: this.plateBarcode },
           fields: this.fields
@@ -158,4 +167,3 @@ export default {
   }
 }
 </script>
-

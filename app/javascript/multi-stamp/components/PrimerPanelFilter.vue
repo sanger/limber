@@ -20,9 +20,14 @@ export default {
     }
   },
   computed: {
-    primerPanels() { // Returns the mutual primer panels
+    // Returns the mutual primer panels. Aggregates primer panel names by plate
+    // using a Map of Arrays, then reduces each array (corresponding to
+    // a single plate primer panle subset) returning only the primer panel
+    // names found in every plate.
+    primerPanels() {
       const primerPanelsByPlate = new Map()
-      this.requestsWithPrimerPanel.forEach((requestWithPlate) => {
+      for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
+        const requestWithPlate = this.requestsWithPrimerPanel[i]
         const plate_id = requestWithPlate.plateObj.plate.id
         const primer_panel = requestWithPlate.request.primer_panel.name
         if (primerPanelsByPlate.has(plate_id)) {
@@ -34,7 +39,7 @@ export default {
         else {
           primerPanelsByPlate.set(plate_id, [primer_panel])
         }
-      })
+      }
       if (primerPanelsByPlate.size === 0) { return [] }
       const primerPanelsIterable =
           Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
@@ -42,34 +47,45 @@ export default {
       return primerPanelsIterable
     },
     requestsWithPrimerPanel() {
-      return this.requestsWithPlates.filter(requestWithPlate =>
-        requestWithPlate.request.primer_panel)
+      const requestsArray = []
+      for (let i = 0; i < this.requestsWithPlates.length; i++) {
+        if (this.requestsWithPlates[i].request.primer_panel) {
+          requestsArray.push(this.requestsWithPlates[i])
+        }
+      }
+      return requestsArray
     },
     formLabel() {
-      let requests_len = this.requestsWithPrimerPanel.length
-      let primer_panels_len = this.primerPanels.length
-      if (requests_len !== 0 && primer_panels_len !== 0) {
+      const all_requests_len = this.requestsWithPlates.length
+      const pp_requests_len = this.requestsWithPrimerPanel.length
+      const primer_panels_len = this.primerPanels.length
+      if (pp_requests_len !== 0 && primer_panels_len !== 0) {
         return 'Select a primer panel to process'
       }
-      else if (requests_len !== 0 && primer_panels_len === 0) {
+      else if (pp_requests_len !== 0 && primer_panels_len === 0) {
         return 'No common primer panel found among scanned plates!'
+      }
+      else if (pp_requests_len === 0 && all_requests_len !== 0) {
+        return 'No primer panel found among scanned plates.'
       }
       else {
         return ''
       }
     },
+    // Filters out the requests that don't have the selected primer panel
     requestsWithPlatesFiltered() {
-      return this.requestsWithPrimerPanel.filter(this.matchPrimerPanel)
+      const requestsArray = []
+      for (let i = 0; i < this.requestsWithPrimerPanel.length; i++) {
+        if (this.requestsWithPrimerPanel[i].request.primer_panel.name === this.primerPanel) {
+          requestsArray.push(this.requestsWithPrimerPanel[i])
+        }
+      }
+      return requestsArray
     }
   },
   watch: {
     requestsWithPlatesFiltered: function() {
       this.$emit('change', this.requestsWithPlatesFiltered)
-    }
-  },
-  methods: {
-    matchPrimerPanel(requestWithPlate) {
-      return requestWithPlate.request.primer_panel.name === this.primerPanel
     }
   }
 }

@@ -4,7 +4,7 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import QuadStamp from './components/QuadStamp.vue'
+import MultiStamp from './components/MultiStamp.vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
    # In general it looks like this is something we should consider
    # once the majority of our components are vue based.
    */
-  if ( document.getElementById('quadrant-stamp-page') ) {
+  if ( document.getElementById('multi-stamp-page') ) {
     axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     Vue.prototype.$axios = axios
     /* The files-list element isn't on all pages. So only initialize our
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // navigation elements based on appropriateness
       // h in this case is Vue-shorthand for createElement
       // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-      render (h) { return h(QuadStamp, { props: this.$el.dataset }) }
-    }).$mount('#quadrant-stamp-page')
+      render (h) { return h(MultiStamp, { props: this.$el.dataset }) }
+    }).$mount('#multi-stamp-page')
   }
 })

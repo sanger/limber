@@ -42,6 +42,44 @@ module FeatureHelpers
     end
   end
 
+  def stub_get_plate_metadata(barcode, plate_v1, metadata = nil)
+    params = {
+      uuid: 'custom_metadatum_collection-uuid'
+    }
+    params.merge!(metadata) unless metadata.nil?
+    stub_asset_search(barcode, plate_v1)
+    stub_api_get('custom_metadatum_collection-uuid',
+                 body: json(:v1_custom_metadatum_collection, params))
+  end
+
+  def stub_create_plate_metadata(barcode, plate_v1, plate_uuid, user_uuid, metadata)
+    stub_asset_search(barcode, plate_v1)
+    stub_api_post('custom_metadatum_collections',
+                  payload: {
+                    custom_metadatum_collection: {
+                      user: user_uuid,
+                      asset: plate_uuid,
+                      metadata: metadata
+                    }
+                  },
+                  body: json(:v1_custom_metadatum_collection,
+                             uuid: 'custom_metadatum_collection-uuid',
+                             metadata: metadata))
+  end
+
+  def stub_update_plate_metadata(barcode, plate_v1, user, metadata)
+    stub_get_plate_metadata(barcode, plate_v1, metadata)
+    stub_api_get('user-uuid', body: user)
+    stub_api_get('asset-uuid', body: plate_v1)
+    stub_api_put('custom_metadatum_collection-uuid',
+                 payload: {
+                   custom_metadatum_collection: { metadata: metadata }
+                 },
+                 body: json(:v1_custom_metadatum_collection,
+                            uuid: 'custom_metadatum_collection-uuid',
+                            metadata: metadata))
+  end
+
   def fill_in_swipecard_and_barcode(swipecard, barcode)
     visit root_path
 

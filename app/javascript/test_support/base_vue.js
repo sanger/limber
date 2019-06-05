@@ -7,6 +7,7 @@ import BootstrapVue from 'bootstrap-vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
+import mockApi from 'test_support/mock_api'
 
 // create an extended `Vue` constructor
 const localVue = createLocalVue()
@@ -14,6 +15,7 @@ const localVue = createLocalVue()
 localVue.use(BootstrapVue)
 
 localVue.prototype.$axios = axios
+localVue.prototype.$api = mockApi()
 
 localVue.component('lb-main-content', MainContent)
 localVue.component('lb-page', Page)

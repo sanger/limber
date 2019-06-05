@@ -10,14 +10,12 @@ import mockApi from 'test_support/mock_api'
 import localVue from 'test_support/base_vue'
 
 describe('PlateScan', () => {
-  const plateUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
+  const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
   const nullPlate = { data: [] }
-  const goodPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid }])
-  const badPlate = jsonCollectionFactory('plate', [{ uuid: plateUuid , number_of_columns: 24, number_of_rows: 8 }])
+  const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
+  const badPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid , number_of_columns: 24, number_of_rows: 8 }])
 
-  const wrapperFactory = function(api = mockApi()) {
-    // Not ideal using mount here, but having massive trouble
-    // triggering change events on unmounted components
+  const wrapperFactoryPlate = function(api = mockApi()) {
     return mount(PlateScan, {
       propsData: {
         label: 'My Plate',
@@ -29,16 +27,37 @@ describe('PlateScan', () => {
     })
   }
 
+  const wrapperFactoryPlateDisabled = function(api = mockApi()) {
+    return mount(PlateScan, {
+      propsData: {
+        label: 'My Plate',
+        description: 'Scan it in',
+        api: api.devour,
+        plateCols: 12,
+        plateRows: 8,
+        includes: 'wells.requests_as_source,wells.aliquots.request',
+        scanDisabled: true
+      },
+      localVue
+    })
+  }
+
   it('renders the provided label', () => {
-    const wrapper = wrapperFactory()
+    const wrapper = wrapperFactoryPlate()
 
     expect(wrapper.find('label').text()).toEqual('My Plate')
   })
 
   it('renders the provided description', () => {
-    const wrapper = wrapperFactory()
+    const wrapper = wrapperFactoryPlate()
 
     expect(wrapper.find('.text-muted').text()).toEqual('Scan it in')
+  })
+
+  it('renders disabled if the disabled prop is set true', () => {
+    const wrapper = wrapperFactoryPlateDisabled()
+
+    expect(wrapper.find('input').element.disabled).toBe(true)
   })
 
   it('is invalid if it can not find a plate', async () => {
@@ -48,7 +67,7 @@ describe('PlateScan', () => {
       include: 'wells.requests_as_source,wells.aliquots.request',
       fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
     }, nullPlate)
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('not a barcode')
     wrapper.find('input').trigger('change')
@@ -78,7 +97,7 @@ describe('PlateScan', () => {
       code: 500,
       status: 500
     }]})
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('Good barcode')
     wrapper.find('input').trigger('change')
@@ -101,7 +120,7 @@ describe('PlateScan', () => {
 
   it('is valid if it can find a plate', async () => {
     const api = mockApi()
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
       include: 'wells.requests_as_source,wells.aliquots.request',
@@ -123,12 +142,12 @@ describe('PlateScan', () => {
     expect(events.change.length).toEqual(2)
     expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
     expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].plate.uuid).toEqual(plateUuid)
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
   })
 
   it('is invalid if the plate is the wrong size', async () => {
     const api = mockApi()
-    const wrapper = wrapperFactory(api)
+    const wrapper = wrapperFactoryPlate(api)
 
     api.mockGet('plates',{
       include:  'wells.requests_as_source,wells.aliquots.request',
@@ -144,12 +163,12 @@ describe('PlateScan', () => {
     await flushPromises()
 
     expect(wrapper.find('.invalid-feedback').text()).toEqual('The plate should be 12×8 wells in size')
+
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
     expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
     expect(events.change[1][0].state).toEqual('invalid')
-    expect(events.change[1][0].plate.uuid).toEqual(plateUuid)
+    expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
   })
-
 })

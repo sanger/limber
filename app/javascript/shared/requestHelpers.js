@@ -7,18 +7,18 @@ const requestIsActive = function(request) {
 }
 
 const requestsFromPlates = function(plateObjs) {
-  let requestsArray = []
-  plateObjs.forEach((plateObj) => {
-    plateObj.plate.wells.forEach((well) => {
-      requestsForWell(well).forEach((request) => {
-        requestsArray.push({
-          request: request,
-          well: well,
-          plateObj: plateObj
-        })
-      })
-    })
-  })
+  const requestsArray = []
+  for (let p = 0; p < plateObjs.length; p++) {
+    const plateObj = plateObjs[p]
+    const wells = plateObj.plate.wells
+    for (let w = 0; w < wells.length; w++) {
+      const well = wells[w]
+      const requests = requestsForWell(well)
+      for (let r = 0; r < requests.length; r++) {
+        requestsArray.push({ request: requests[r], well: well, plateObj: plateObj })
+      }
+    }
+  }
   return requestsArray
 }
 

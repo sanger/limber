@@ -30,4 +30,15 @@ describe('Plate', () => {
     expect(wrapper.find('tbody').findAll('th').at(1).text()).toBe('B')
     expect(wrapper.find('tbody').findAll('th').at(2).text()).toBe('C')
   })
+
+  it('emits a well clicked event', () => {
+    const emitted = wrapper.emitted()
+
+    wrapper.vm.onWellClicked('A1')
+
+    expect(emitted.onwellclicked.length).toBe(1)
+    expect(emitted.onwellclicked[0]).toEqual(
+      [ 'A1' ]
+    )
+  })
 })

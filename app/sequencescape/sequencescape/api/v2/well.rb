@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
-  has_many :qc_results
+  has_many :qc_results, class_name: 'Sequencescape::Api::V2::QCResult'
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :requests_as_target, class_name: 'Sequencescape::Api::V2::Request'
   has_many :downstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
@@ -13,7 +13,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   has_many :upstream_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_many :upstream_wells, class_name: 'Sequencescape::Api::V2::Well'
   has_many :upstream_plates, class_name: 'Sequencescape::Api::V2::Plate'
-  has_many :aliquots
+  has_many :aliquots, class_name: 'Sequencescape::Api::V2::Aliquot'
+
+  has_many :transfer_requests_as_source, class_name: 'Sequencescape::Api::V2::TransferRequest'
+  has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
 
   def latest_concentration
     qc_results.select { |qc| qc.key.casecmp('molarity').zero? }

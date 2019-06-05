@@ -943,6 +943,38 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  custom_robot(
+    'mosquito-gbs-96-stock-to-gbs-pcr1',
+    name: 'Mosquito GBS-96 Stock => GBS PCR1',
+    beds: {
+     bed(1).barcode => {
+      purpose: 'GBS-96 Stock',
+      states: %w[passed qc_complete], child: bed(5).barcode,
+      label: 'Bed 1' },
+     bed(2).barcode => {
+      purpose: 'GBS-96 Stock',
+      states: %w[passed qc_complete], child: bed(5).barcode,
+      label: 'Bed 2' },
+     bed(3).barcode => {
+      purpose: 'GBS-96 Stock',
+      states: %w[passed qc_complete], child: bed(5).barcode,
+      label: 'Bed 3' },
+     bed(4).barcode => {
+      purpose: 'GBS-96 Stock',
+      states: %w[passed qc_complete], child: bed(5).barcode,
+      label: 'Bed 4' },
+     bed(5).barcode => {
+       purpose: 'GBS PCR1',
+       states: %w[pending],
+       parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+       target_state: 'passed',
+       label: 'Bed 5'
+     }
+    },
+    destination_bed: bed(5).barcode,
+    class: 'Robots::QuadrantRobot'
+  )
+
   # GnT Stuff, might change a lot.
   custom_robot(
     'hamilton-gnt-stock-to-gnt-scdna-stock',

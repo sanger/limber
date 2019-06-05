@@ -9,6 +9,8 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesBySubmission do
+  include FeatureHelpers
+
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   subject do
@@ -16,11 +18,18 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
+
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)  { SecureRandom.uuid }
 
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5, for_multiplexing: true }
+  let(:parent_uuid)  { SecureRandom.uuid }
+  let(:parent) do
+    json :plate,
+         uuid: parent_uuid,
+         pool_sizes: [3, 6],
+         stock_plate_barcode: 5,
+         for_multiplexing: true
+  end
 
   let(:form_attributes) do
     {
@@ -35,6 +44,9 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
   context '#save!' do
     has_a_working_api
 
+    let(:child_1_name) { 'DN5 A1:C1' }
+    let(:child_2_name) { 'DN5 D1:A2' }
+
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)
@@ -46,7 +58,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
         user: user_uuid,
         parent: parent_uuid,
         child_purposes: [purpose_uuid, purpose_uuid],
-        tube_attributes: [{ name: 'DN5 A1:C1' }, { name: 'DN5 D1:A2' }]
+        tube_attributes: [{ name: child_1_name }, { name: child_2_name }]
       }
     end
 
@@ -58,13 +70,18 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
         payload: {
           specific_tube_creation: creation_payload
         },
-        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2, names: ['DN5 A1:C1', 'DN5 D1:A2'])
+        body: json(:specific_tube_creation,
+                   uuid: tube_creation_request_uuid,
+                   children_count: 2,
+                   names: [child_1_name, child_2_name])
       )
     end
 
     # Find out what tubes we've just made!
     let!(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:C1', 'DN5 D1:A2']))
+      stub_api_get(tube_creation_request_uuid, 'children',
+                   body: json(:tube_collection,
+                              names: [child_1_name, child_2_name]))
     end
 
     let(:transfer_requests) do
@@ -90,10 +107,52 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
                     body: '{}')
     end
 
-    it 'pools by submission' do
-      expect(subject.save!).to be_truthy
-      expect(tube_creation_request).to have_been_made.once
-      expect(transfer_creation_request).to have_been_made.once
+    context 'without parent metadata' do
+      it 'pools by submission' do
+        expect(subject.save!).to be_truthy
+        expect(tube_creation_request).to have_been_made.once
+        expect(transfer_creation_request).to have_been_made.once
+      end
+
+      it 'sets the correct tube name' do
+        expect(subject.save!).to be_truthy
+        expect(subject.child_stock_tubes.length).to eq(2)
+        expect(subject.child_stock_tubes).to have_key(child_1_name)
+        expect(subject.child_stock_tubes).to have_key(child_2_name)
+      end
+    end
+
+    context 'with parent metadata' do
+      let(:child_1_name) { 'DN6 A1:C1' }
+      let(:child_2_name) { 'DN6 D1:A2' }
+
+      let(:parent) do
+        json :plate_with_metadata,
+             uuid: parent_uuid,
+             pool_sizes: [3, 6],
+             barcode_number: 10,
+             stock_plate_barcode: 8,
+             for_multiplexing: true
+      end
+
+      setup do
+        stub_get_plate_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' })
+        stub_api_post('specific_tube_creations',
+                      payload: {
+                        specific_tube_creation: creation_payload
+                      },
+                      body: json(:specific_tube_creation,
+                                 uuid: tube_creation_request_uuid,
+                                 children_count: 2,
+                                 names: [child_1_name, child_2_name]))
+      end
+
+      it 'sets the correct tube name' do
+        expect(subject.save!).to be_truthy
+        expect(subject.child_stock_tubes.length).to eq(2)
+        expect(subject.child_stock_tubes).to have_key(child_1_name)
+        expect(subject.child_stock_tubes).to have_key(child_2_name)
+      end
     end
 
     context 'with a failed well' do
@@ -117,7 +176,13 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
     end
 
     context 'with previously passed requests' do
-      let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], pool_for_multiplexing: [true, false], stock_plate_barcode: 5 }
+      let(:parent) do
+        json :plate,
+             uuid: parent_uuid,
+             pool_sizes: [3, 6],
+             pool_for_multiplexing: [true, false],
+             stock_plate_barcode: 5
+      end
 
       let(:transfer_requests) do
         [
@@ -132,7 +197,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
           user: user_uuid,
           parent: parent_uuid,
           child_purposes: [purpose_uuid],
-          tube_attributes: [{ name: 'DN5 A1:C1' }]
+          tube_attributes: [{ name: child_1_name }]
         }
       end
 

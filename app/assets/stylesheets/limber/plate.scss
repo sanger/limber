@@ -37,6 +37,15 @@
       display: inline-block;
       border: 2px $gray-800 solid;
       border-radius: 7px;
+      font-size: small;
+
+      .tag {
+        display: none;
+      }
+
+      .tag:first-child {
+        display: inline;
+      }
     }
 
     .aliquot:hover {
