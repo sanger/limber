@@ -19,8 +19,17 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
 
   def latest_concentration
-    qc_results.select { |qc| qc.key.casecmp('molarity').zero? }
-              .select { |qc| qc.units.casecmp('nM').zero? }
+    latest_qc(key: 'concentration', units: 'ng/ul')
+  end
+
+  def latest_molarity
+    latest_qc(key: 'molarity', units: 'nM')
+  end
+
+  def latest_qc(key:, units:)
+    qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
+              .select { |qc| qc.key.casecmp(key).zero? }
+              .select { |qc| qc.units.casecmp(units).zero? }
               .max_by(&:created_at)
   end
 

@@ -11,15 +11,28 @@ RSpec.describe ExportsController, type: :controller do
     expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, plate_barcode).and_return(plate)
   end
 
-  context 'where template concentrations' do
+  context 'where template concentrations_ngul' do
     let(:includes) { 'wells.qc_results' }
 
-    it 'renders a concentrations.csv' do
-      get :show, params: { id: 'concentrations', limber_plate_id: plate_barcode }, as: :csv
+    it 'renders a concentrations_ngul.csv' do
+      get :show, params: { id: 'concentrations_ngul', limber_plate_id: plate_barcode }, as: :csv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('concentrations')
+      expect(response).to render_template('concentrations_ngul')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template concentrations_nM' do
+    let(:includes) { 'wells.qc_results' }
+
+    it 'renders a concentrations_nm.csv' do
+      get :show, params: { id: 'concentrations_nm', limber_plate_id: plate_barcode }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('concentrations_nm')
       assert_equal 'text/csv', @response.content_type
     end
   end
