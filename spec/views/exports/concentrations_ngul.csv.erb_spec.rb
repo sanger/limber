@@ -2,12 +2,14 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/concentrations.csv.erb' do
+RSpec.describe 'exports/concentrations_ngul.csv.erb' do
   context 'with a full plate' do
     has_a_working_api
 
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1)) }
-    let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1)) }
+    let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
+
+    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options)) }
+    let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options)) }
     let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
 
     before do
