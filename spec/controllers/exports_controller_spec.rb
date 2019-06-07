@@ -27,12 +27,12 @@ RSpec.describe ExportsController, type: :controller do
   context 'where template concentrations_nM' do
     let(:includes) { 'wells.qc_results' }
 
-    it 'renders a concentrations_nM.csv' do
-      get :show, params: { id: 'concentrations_nM', limber_plate_id: plate_barcode }, as: :csv
+    it 'renders a concentrations_nm.csv' do
+      get :show, params: { id: 'concentrations_nm', limber_plate_id: plate_barcode }, as: :csv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('concentrations_nM')
+      expect(response).to render_template('concentrations_nm')
       assert_equal 'text/csv', @response.content_type
     end
   end
