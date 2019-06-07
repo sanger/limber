@@ -74,7 +74,7 @@ class PurposeConfig
       options[:presenter] = 'Presenters::StandardPresenter'
       options[:creator] = 'LabwareCreators::StampedPlate'
       options[:label_class] = 'Labels::PlateLabel'
-      options[:file_links] = [{ name: 'Download Concentration CSV', id: 'concentrations' }]
+      options[:file_links] = [{ name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' }]
     end
 
     def register!

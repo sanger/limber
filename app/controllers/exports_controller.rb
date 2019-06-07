@@ -9,7 +9,8 @@ class ExportsController < ApplicationController
   rescue_from ActionView::MissingTemplate, with: :not_found
 
   PLATE_INCLUDES = {
-    'concentrations' => 'wells.qc_results',
+    'concentrations_ngul' => 'wells.qc_results',
+    'concentrations_nm' => 'wells.qc_results',
     'hamilton_aggregate_cherry_pick' => 'wells.transfer_requests_as_target.source_asset'
   }.freeze
 
