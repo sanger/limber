@@ -1,0 +1,64 @@
+# This configuration file is for the Bespoke Chromium Automated pipelines
+---
+LBC Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :default_printer_type: :plate_a
+LBC Aggregate:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TenStamp
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC Stock
+  - LBB Cherrypick
+LBC Cherrypick:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TenStamp
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC Aggregate
+LBC GEX Dil:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC Cherrypick
+LBC GEX Frag 2XP:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC GEX Dil
+LBC GEX LigXP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC GEX Frag 2XP
+  :tags_per_well: 4
+LBC GEX PCR 2XP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter # Q. do they want to see tags?
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :parents:
+  - LBC GEX LigXP
+  :suggest_library_pass_for:
+  - limber_chromium_bespoke
+LBC GEX Lib Pool Stock:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - LBC GEX PCR 2XP
