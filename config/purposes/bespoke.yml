@@ -9,6 +9,7 @@ LBB Ligation:
   :asset_type: plate
   :parents:
   - LBB Cherrypick
+  - LBC Cherrypick
   :expected_request_types:
   - limber_pcr_bespoke
 LBB Lib PCR-XP:

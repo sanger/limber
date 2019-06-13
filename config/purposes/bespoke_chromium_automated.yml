@@ -1,4 +1,9 @@
-# This configuration file is for the Bespoke Chromium Automated pipelines
+# This configuration file is for the Bespoke Chromium Aggregation and Bespoke
+# Chromium Automated pipelines.
+# LBC Stock plates are submitted to the Aggregation pipeline to be combined
+# through LBC Aggregate plates into LBC Cherrypick plates, and then the LBC
+# Cherrypick plates are subnitted to the Chromium Automated pipeline for library
+# preparation and sequencing.
 ---
 LBC Stock:
   :asset_type: plate
@@ -14,7 +19,6 @@ LBC Aggregate:
   :default_printer_type: :plate_a
   :parents:
   - LBC Stock
-  - LBB Cherrypick
 LBC Cherrypick:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
@@ -34,6 +38,7 @@ LBC GEX Dil:
   :default_printer_type: :plate_a
   :parents:
   - LBC Cherrypick
+  - LBB Cherrypick
 LBC GEX Frag 2XP:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
