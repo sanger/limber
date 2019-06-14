@@ -1037,7 +1037,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'GnT MDA Norm', car('2,3')
   end
 
-  # For Chromium 10x pipeline
+  # For Chromium 10x pipeline aggregation to cherrypick
   custom_robot('hamilton-lbc-aggregate-to-lbc-cherrypick',
                name: 'hamilton LBC Aggregate => LBC Cherrypick',
                beds: {
@@ -1112,4 +1112,23 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                },
                destination_bed: bed(13).barcode,
                class: 'Robots::PoolingRobot')
+
+  # For Chromium 10x pipeline cherrypick to dilution
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-gex-dil',
+    name: 'Hamilton LBC Cherrypick to LBC GEX Dil',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(1).barcode => {
+        purpose: 'LBC GEX Dil',
+        states: ['pending'],
+        label: 'Bed 1',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
 end
