@@ -146,7 +146,7 @@ GEM
     highline (1.7.10)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
-    inline_svg (1.4.0)
+    inline_svg (1.5.1)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     jaro_winkler (1.5.2)
