@@ -59,6 +59,7 @@ group :development do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
   gem 'web-console'
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
