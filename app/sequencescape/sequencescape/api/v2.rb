@@ -36,7 +36,7 @@ module Sequencescape::Api::V2
          .first
   end
 
-  def self.plate_with_custom_includes(include_params, plate_barcode)
-    Plate.includes(include_params).where(barcode: plate_barcode).first
+  def self.plate_with_custom_includes(include_params, uuid)
+    Plate.includes(include_params).find(uuid: uuid).first
   end
 end

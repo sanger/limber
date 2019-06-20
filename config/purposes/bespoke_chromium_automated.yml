@@ -34,11 +34,36 @@ LBC Cherrypick:
   - LBC Aggregate
 LBC GEX Dil:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
+  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :default_printer_type: :plate_a
+  # Currently both manual and automated Cherrypick plates are possible parents
+  # until we can use library type to restrict them.
   :parents:
   - LBC Cherrypick
   - LBB Cherrypick
+  :concentration_binning: {
+    source_volume: 10,
+    diluent_volume: 25,
+    bins: [
+      {
+        colour: 1,
+        cycles: 16,
+        max: 25
+      },
+      {
+        colour: 2,
+        cycles: 12,
+        min: 25,
+        max: 500
+      },
+      {
+        colour: 3,
+        cycles: 8,
+        min: 500
+      }
+    ]
+  }
 LBC GEX Frag 2XP:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter

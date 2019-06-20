@@ -23,6 +23,7 @@ FactoryBot.define do
     printer_type { '96 Well Plate' }
     pmb_template { 'sqsc_96plate_label_template' }
     file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
+    concentration_binning { {} }
 
     factory :stock_plate_config do
       transient do
@@ -52,6 +53,20 @@ FactoryBot.define do
       presenter_class { 'Presenters::PcrPresenter' }
       name { 'Tag Purpose' }
       tag_layout_templates { ['tag-layout-template'] }
+    end
+
+    factory :concentration_binning_purpose_config do
+      concentration_binning do
+        {
+          source_volume: 10,
+          diluent_volume: 25,
+          bins: [
+            { colour: 1, cycles: 16, max: 25 },
+            { colour: 2, cycles: 12, min: 25, max: 500 },
+            { colour: 3, cycles: 8, min: 500 }
+          ]
+        }
+      end
     end
 
     factory :tube_config do
