@@ -156,7 +156,7 @@ RSpec.describe Presenters::PlatePresenter do
   end
 
   context 'where the cycles matches the default' do
-    let(:warings) { { 'pcr_cycles_not_in' => ['10'] } }
+    let(:warnings) { { 'pcr_cycles_not_in' => ['10'] } }
 
     it 'reports as valid' do
       expect(presenter).to be_valid
@@ -188,6 +188,60 @@ RSpec.describe Presenters::PlatePresenter do
     it 'can return the tubes and sources' do
       expect(subject.tubes_and_sources.map(&:tube)).to eq([target_tube, target_tube2])
       expect(subject.tubes_and_sources.map(&:source_locations)).to eq([%w[A1 B1], ['C1']])
+    end
+  end
+
+  context 'returns csv links ' do
+    context 'with a default plate' do
+      let(:expected_default_csv_links) do
+        [
+          ['Download Concentration CSV', [:limber_plate, :export, {
+            format: :csv,
+            id: 'concentrations',
+            limber_plate_id: 'DN1S'
+          }]]
+        ]
+      end
+
+      it 'returns the expected csv links' do
+        expect(presenter.csv_file_links).to eq(expected_default_csv_links)
+      end
+    end
+
+    context 'with a plate that has no links' do
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: []
+        )
+      end
+
+      it 'returns an empty array' do
+        expect(presenter.csv_file_links).to eq([])
+      end
+    end
+
+    context 'with a plate that has multiple links' do
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: [
+            { name: 'First type CSV', id: 'first_csv_id' },
+            { name: 'Second type CSV', id: 'second_csv_id' },
+            { name: 'Third type CSV', id: 'third_csv_id' }
+          ]
+        )
+      end
+
+      it 'returns the expected number of links' do
+        expect(presenter.csv_file_links.length).to eq(3)
+      end
     end
   end
 end

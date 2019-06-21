@@ -19,7 +19,7 @@ module Robots::Bed
     private
 
     def parent_plates
-      @parent_plates ||= @parent_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
+      @parent_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
         next if well.upstream_plates.empty? || plates.include?(well.upstream_plates.first)
 
         plates << well.upstream_plates.first

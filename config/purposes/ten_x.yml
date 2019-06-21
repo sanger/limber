@@ -1,0 +1,13 @@
+# # Test TenX plate purpose for SEQ-969 UAT only
+---
+# TenX Test:
+#   :asset_type: plate
+#   :default_printer_type: :plate_a
+#   :presenter_class: Presenters::StandardPresenter
+#   :creator_class: LabwareCreators::TenStamp
+#   :file_links: [
+#     {
+#       name: 'Download Hamilton Aggregate Cherry Pick CSV',
+#       id: 'hamilton_aggregate_cherry_pick'
+#     }
+#   ]

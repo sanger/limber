@@ -39,6 +39,7 @@ class PurposeConfig
       state_changer_class: default_state_changer,
       default_printer_type: default_options[:printer],
       submission: submission_options,
+      file_links: default_options[:file_links] || [],
       label_class: print_option(:label_class),
       printer_type: print_option(:printer_type),
       pmb_template: print_option(:pmb_template)
@@ -73,6 +74,7 @@ class PurposeConfig
       options[:presenter] = 'Presenters::StandardPresenter'
       options[:creator] = 'LabwareCreators::StampedPlate'
       options[:label_class] = 'Labels::PlateLabel'
+      options[:file_links] = [{ name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' }]
     end
 
     def register!

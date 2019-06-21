@@ -9,6 +9,10 @@ module SearchHelper
     Settings.purposes.values.select(&:input_plate).map(&:name)
   end
 
+  def self.merger_plate_names
+    Settings.purposes.values.select(&:merger_plate).map(&:name)
+  end
+
   def purpose_options(type)
     Settings.purposes
             .select { |_uuid, settings| settings[:asset_type] == type }
