@@ -6,55 +6,46 @@ module LabwareCreators::ConcentrationBinning
 
   require 'bigdecimal'
 
+  # rubocop:disable Metrics/BlockLength
   class_methods do
-    # Calculates the well amounts when working with source (parent) plate.
-    def source_well_amounts(source_plate, binning_config)
-      well_amounts = {}
-      source_plate.wells.each do |well|
-        # concentration recorded is per microlitre, multiply by volume to get amount in well
-        well_amounts[well.location] = BigDecimal(well.latest_concentration.value * binning_config['source_volume'], 3).to_s
-      end
-      well_amounts # e.g. { 'A1': 23.1, etc. }
-    end
-
+    # Calculates the multiplication factor for the source (parent) plate
     def source_plate_multiplication_factor(binning_config)
       BigDecimal(binning_config['source_volume'], 3)
     end
 
+    # Calculates the multiplication factor for the destination (child) plate
     def dest_plate_multiplication_factor(binning_config)
-      BigDecimal(binning_config['source_volume'] + binning_config['diluent_volume'], 3)
+      BigDecimal(binning_config['source_volume'], 3) + BigDecimal(binning_config['diluent_volume'], 3)
     end
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
-    def well_amounts(plate, multiplication_factor)
-      well_amounts = {}
-      plate.wells.each do |well|
+    def compute_well_amounts(plate, multiplication_factor)
+      amnts = {}
+      plate.wells_in_columns.each do |well|
+        next if well.aliquots.blank?
+
         # concentration recorded is per microlitre, multiply by volume to get amount in well
-        well_amounts[well.location] = BigDecimal(well.latest_concentration.value * multiplication_factor, 3).to_s
+        amnt = BigDecimal(well.latest_concentration.value, 3) * BigDecimal(multiplication_factor, 3)
+        amnts[well.location] = amnt.to_s
       end
-      well_amounts # e.g. { 'A1': 23.1, etc. }
+      amnts # e.g. { 'A1': 23.1, etc. }
     end
 
     # Generates a hash of transfer requests for the binned wells.
     def compute_transfers(well_amounts, binning_config, number_of_rows, number_of_columns)
-      # puts "well_amounts = #{well_amounts}"
-      # puts "binning_config = #{binning_config}"
-      # puts "number_of_rows = #{number_of_rows}"
-      # puts "number_of_columns = #{number_of_columns}"
       bins = concentration_bins(well_amounts, binning_config)
-      # puts "bins = #{bins}"
       compression_reqd = compression_required?(bins, number_of_rows, number_of_columns)
-      # puts "compression_reqd = #{compression_reqd}"
       transfers_hash = build_transfers_hash(bins, number_of_rows, compression_reqd)
       transfers_hash # e.g. { 'A1': { dest_locn: 'B1', dest_amount: 23.1, dest_conc: 0.66 }  }
     end
 
-    # TODO: this is used on creating the destination plate to set qc_result concentrations for the wells
-    def destination_well_concentrations(transfers_hash)
-      # refactor the transfers hash for destinations
-      # find out what is required for a qc_assay (plate of wells) endpoint in sequencescape
-      # { 'A1': 0.66, 'B1': 0.27, etc. }
-      # write these to DB
+    # Refactor the transfers hash to give destination concentrations
+    def compute_destination_concentrations(transfers_hash)
+      dest_hash = {}
+      transfers_hash.each do |_source_well, dest_details|
+        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
+      end
+      dest_hash # e.g. { 'A1': 0.66, 'B1': 0.27, etc. }
     end
 
     # TODO: this is used on displaying the destination plate
@@ -62,7 +53,7 @@ module LabwareCreators::ConcentrationBinning
     # It needs to use the plate purpose binning config to work which bin each well is in and the colour.
     def generate_bin_colours_hash(dest_plate, binning_config)
       # well_amounts = {}
-      # dest_plate.wells.each |well|
+      # dest_plate.wells_in_columns.each |well|
       #   well_amount = well.latest_concentration.value * (binning_config['source_volume'].to_f + binning_config['diluent_volume'].to_f
       #   well_amounts[well.location] = well_amount
       # end
@@ -120,18 +111,13 @@ module LabwareCreators::ConcentrationBinning
 
     # Builds a hash of transfers, including destination concentration information.
     def build_transfers_hash(bins, number_of_rows, compression_reqd)
-      # puts "bins = #{bins}"
-      # puts "number_of_rows = #{number_of_rows}"
-      # puts "compression_reqd = #{compression_reqd}"
       transfers_hash = {}
       column = 0
       row = 0
       bins.each do |_bin_number, bin|
-        # puts "bin = #{bin}"
+        # TODO: we may want to sort the bin here, e.g. by concentration
         bin.each do |well|
-          # puts "well = #{well}"
           src_locn = well['locn']
-          # puts "src_locn = #{src_locn}"
           transfers_hash[src_locn] = {
             'dest_locn' => WellHelpers.well_name(row, column),
             'dest_amount' => well['amount'],
@@ -152,4 +138,5 @@ module LabwareCreators::ConcentrationBinning
       transfers_hash # e.g. { 'A1': { dest_locn: 'B1', dest_amount: 23.1, dest_conc: 0.66 }  }
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end

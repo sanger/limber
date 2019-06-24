@@ -6,18 +6,35 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
-  # TODO: uncomment
-  # it_behaves_like 'it only allows creation from plates'
-  # it_behaves_like 'it has no custom page'
+  it_behaves_like 'it only allows creation from plates'
+  it_behaves_like 'it has no custom page'
 
   has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
-  let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, value: 1.5)) }
-  let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, value: 56.0)) }
-  let(:well_c1) { create(:v2_well, position: { 'name' => 'C1' }, qc_results: create_list(:qc_result, 1, value: 3.5)) }
-  let(:well_d1) { create(:v2_well, position: { 'name' => 'D1' }, qc_results: create_list(:qc_result, 1, value: 1.8)) }
+
+  let(:well_a1) do
+    create(:v2_well,
+           position: { 'name' => 'A1' },
+           qc_results: create_list(:qc_result_concentration, 1, value: 1.5))
+  end
+  let(:well_b1) do
+    create(:v2_well,
+           position: { 'name' => 'B1' },
+           qc_results: create_list(:qc_result_concentration, 1, value: 56.0))
+  end
+  let(:well_c1) do
+    create(:v2_well,
+           position: { 'name' => 'C1' },
+           qc_results: create_list(:qc_result_concentration, 1, value: 3.5))
+  end
+  let(:well_d1) do
+    create(:v2_well,
+           position: { 'name' => 'D1' },
+           qc_results: create_list(:qc_result_concentration, 1, value: 1.8))
+  end
+
   let(:parent_plate) do
     create :v2_plate,
            uuid: parent_uuid,
@@ -26,6 +43,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
            wells: [well_a1, well_b1, well_c1, well_d1],
            outer_requests: requests
   end
+
   let(:child_plate) do
     create :v2_plate,
            uuid: 'child-uuid',
@@ -33,6 +51,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
            size: plate_size,
            outer_requests: requests
   end
+
   let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -43,25 +62,8 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   before do
     create :concentration_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(parent_plate, stub_search: false, custom_includes: ['qc_results'])
-    # +[{:includes=>["qc_results"], :uuid=>"example-plate-uuid"}]
+    stub_v2_plate(parent_plate, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results')
   end
-
-  # def stub_v2_plate(parent_plate, stub_search: true, custom_query: nil)
-  #     # Stub to v1 api search here as well!
-  #     if stub_search
-  #       stub_asset_search(
-  #         parent_plate.barcode.machine,
-  #         json(:parent_plate, uuid: parent_plate.uuid, purpose_name: parent_plate.purpose.name, purpose_uuid: parent_plate.purpose.uuid)
-  #       )
-  #     end
-
-  #     if custom_query
-  #       allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(parent_plate)
-  #     else
-  #       allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: parent_plate.uuid).and_return(parent_plate)
-  #     end
-  #   end
 
   let(:form_attributes) do
     {
@@ -80,9 +82,53 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       expect(subject).to be_a LabwareCreators::ConcentrationBinnedPlate
     end
 
-    # TODO: it 'fails validation if wells with aliquots are missing concentrations'
+    context 'wells missing concentration value' do
+      let(:well_e1) do
+        create(:v2_well,
+               position: { 'name' => 'D1' },
+               qc_results: {})
+      end
 
-    # TODO: it 'fails validation if binning configuration is not present'
+      let(:parent_plate) do
+        create :v2_plate,
+               uuid: parent_uuid,
+               barcode_number: '2',
+               size: plate_size,
+               wells: [well_a1, well_b1, well_c1, well_d1, well_e1],
+               outer_requests: requests
+      end
+
+      it 'fails validation' do
+        expect(subject).to_not be_valid
+      end
+    end
+
+    context 'missing binning configuration' do
+      before do
+        create :concentration_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name, concentration_binning: {}
+      end
+
+      it 'fails validation if binning configuration is not present' do
+        expect(subject).to_not be_valid
+      end
+    end
+
+    context 'no bins in binning configuration' do
+      before do
+        create :concentration_binning_purpose_config,
+               uuid: child_purpose_uuid,
+               name: child_purpose_name,
+               concentration_binning: {
+                 source_volume: 10,
+                 diluent_volume: 25,
+                 bins: []
+               }
+      end
+
+      it 'fails validation if binning configuration has not specified bins' do
+        expect(subject).to_not be_valid
+      end
+    end
   end
 
   context 'concentration binning' do
@@ -91,8 +137,10 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
 
     it 'calculates plate well amounts correctly' do
       expected_amounts = { 'A1' => '15.0', 'B1' => '560.0', 'C1' => '35.0', 'D1' => '18.0' }
+      mult_factor = subject.class.source_plate_multiplication_factor(subject.binning_config)
 
-      expect(subject.class.source_well_amounts(parent_plate, subject.binning_config)).to eq(expected_amounts)
+      expect(mult_factor).to eq(10.0)
+      expect(subject.class.compute_well_amounts(parent_plate, mult_factor)).to eq(expected_amounts)
     end
 
     context 'when generating transfers' do
@@ -177,6 +225,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         expect(subject.class.compute_transfers(well_amounts, subject.binning_config, num_rows, num_cols)).to eq(expd_transfers)
       end
 
+      # rubocop:disable Metrics/BlockLength
       it 'works when requiring compression due to numbers of wells' do
         well_amounts = {
           'A1' => '1.0', 'B1' => '1.0', 'C1' => '1.0', 'D1' => '1.0', 'E1' => '1.0', 'F1' => '1.0', 'G1' => '1.0', 'H1' => '1.0',
@@ -293,11 +342,12 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
 
         expect(subject.class.compute_transfers(well_amounts, subject.binning_config, num_rows, num_cols)).to eq(expd_transfers)
       end
+      # rubocop:enable Metrics/BlockLength
 
       it 'works when requiring compression due to number of occupied bins exceeding plate columns' do
         well_amounts = {
           'A1' => '1.0', 'B1' => '11.0', 'C1' => '21.0', 'D1' => '31.0', 'E1' => '41.0', 'F1' => '51.0', 'G1' => '61.0',
-          'H1' => '71.0','A2' => '81.0', 'B2' => '91.0', 'C2' => '101.0', 'D2' => '111.0', 'E2' => '121.0'
+          'H1' => '71.0', 'A2' => '81.0', 'B2' => '91.0', 'C2' => '101.0', 'D2' => '111.0', 'E2' => '121.0'
         }
         expd_transfers = {
           'A1' => { 'dest_locn' => 'A1', 'dest_amount' => '1.0', 'dest_conc' => '0.029' },
@@ -318,70 +368,94 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         expect(subject.class.compute_transfers(well_amounts, binning_config_large, num_rows, num_cols)).to eq(expd_transfers)
       end
     end
+
+    context 'when generating destination concentrations' do
+      it 'refactors the transfers hash correctly' do
+        transfers_hash = {
+          'A1' => { 'dest_locn' => 'A2', 'dest_amount' => 23.1, 'dest_conc' => 0.665 },
+          'B1' => { 'dest_locn' => 'A1', 'dest_amount' => 23.1, 'dest_conc' => 0.343 },
+          'C1' => { 'dest_locn' => 'A3', 'dest_amount' => 23.1, 'dest_conc' => 2.135 },
+          'D1' => { 'dest_locn' => 'B3', 'dest_amount' => 23.1, 'dest_conc' => 3.123 },
+          'E1' => { 'dest_locn' => 'C3', 'dest_amount' => 23.1, 'dest_conc' => 3.045 },
+          'F1' => { 'dest_locn' => 'B2', 'dest_amount' => 23.1, 'dest_conc' => 0.743 },
+          'G1' => { 'dest_locn' => 'C2', 'dest_amount' => 23.1, 'dest_conc' => 0.693 }
+        }
+        expected_dest_concs = {
+          'A2' => 0.665,
+          'A1' => 0.343,
+          'A3' => 2.135,
+          'B3' => 3.123,
+          'C3' => 3.045,
+          'B2' => 0.743,
+          'C2' => 0.693
+        }
+
+        expect(subject.class.compute_destination_concentrations(transfers_hash)).to eq(expected_dest_concs)
+      end
+    end
   end
 
+  shared_examples 'a concentration binned plate creator' do
+    describe '#save!' do
+      let!(:plate_creation_request) do
+        stub_api_post('plate_creations',
+                      payload: { plate_creation: {
+                        parent: parent_uuid,
+                        child_purpose: child_purpose_uuid,
+                        user: user_uuid
+                      } },
+                      body: json(:plate_creation))
+      end
 
+      let!(:transfer_creation_request) do
+        stub_api_post('transfer_request_collections',
+                      payload: { transfer_request_collection: {
+                        user: user_uuid,
+                        transfer_requests: transfer_requests
+                      } },
+                      body: '{}')
+      end
 
-  # shared_examples 'a stamped plate creator' do
-  #   describe '#save!' do
-  #     let!(:plate_creation_request) do
-  #       stub_api_post('plate_creations',
-  #                     payload: { plate_creation: {
-  #                       parent: parent_uuid,
-  #                       child_purpose: child_purpose_uuid,
-  #                       user: user_uuid
-  #                     } },
-  #                     body: json(:plate_creation))
-  #     end
+      it 'makes the expected requests' do
+        # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
+        expect(Sequencescape::Api::V2::QcAssay).to receive(:create).with("qc_results": dest_well_qc_attributes).and_return(true)
+        expect(subject.save!).to eq true
+        expect(plate_creation_request).to have_been_made
+        expect(transfer_creation_request).to have_been_made
+      end
+    end
+  end
 
-  #     let!(:transfer_creation_request) do
-  #       stub_api_post('transfer_request_collections',
-  #                     payload: { transfer_request_collection: {
-  #                       user: user_uuid,
-  #                       transfer_requests: transfer_requests
-  #                     } },
-  #                     body: '{}')
-  #     end
+  context '96 well plate' do
+    let(:transfer_requests) do
+      [
+        { 'source_asset' => well_a1.uuid, 'target_asset' => '3-well-A1', 'submission_id' => well_a1.submission_ids.first, 'volume' => 10 },
+        { 'source_asset' => well_b1.uuid, 'target_asset' => '3-well-A3', 'submission_id' => well_b1.submission_ids.first, 'volume' => 10 },
+        { 'source_asset' => well_c1.uuid, 'target_asset' => '3-well-A2', 'submission_id' => well_c1.submission_ids.first, 'volume' => 10 },
+        { 'source_asset' => well_d1.uuid, 'target_asset' => '3-well-B1', 'submission_id' => well_d1.submission_ids.first, 'volume' => 10 }
+      ]
+    end
 
-  #     it 'makes the expected requests' do
-  #       expect(subject.save!).to eq true
-  #       expect(plate_creation_request).to have_been_made
-  #       expect(transfer_creation_request).to have_been_made
-  #     end
-  #   end
-  # end
+    let(:dest_well_qc_attributes) do
+      [
+        { 'well_name' => 'A1', 'conc' => '0.429' },
+        { 'well_name' => 'B1', 'conc' => '0.514' },
+        { 'well_name' => 'A2', 'conc' => '1.0' },
+        { 'well_name' => 'A3', 'conc' => '16.0' }
+      ].each.map do |attribs|
+        {
+          'uuid' => 'child-uuid',
+          'well_location' => attribs['well_name'],
+          'key' => 'concentration',
+          'value' => attribs['conc'],
+          'units' => 'ng/ul',
+          'cv' => 0,
+          'assay_type' => 'Calculated',
+          'assay_version' => 'Binning'
+        }
+      end
+    end
 
-  # context '96 well plate' do
-  #   let(:plate_size) { 96 }
-
-  #   let(:transfer_requests) do
-  #     WellHelpers.column_order(plate_size).each_with_index.map do |well_name, index|
-  #       {
-  #         source_asset: "2-well-#{well_name}",
-  #         target_asset: "3-well-#{well_name}",
-  #         outer_request: "request-#{index}",
-  #         volume: 10
-  #       }
-  #     end
-  #   end
-
-  #   it_behaves_like 'a stamped plate creator'
-  # end
-
-  # context '384 well plate' do
-  #   let(:plate_size) { 384 }
-
-  #   let(:transfer_requests) do
-  #     WellHelpers.column_order(plate_size).each_with_index.map do |well_name, index|
-  #       {
-  #         source_asset: "2-well-#{well_name}",
-  #         target_asset: "3-well-#{well_name}",
-  #         outer_request: "request-#{index}",
-  #         volume: 10
-  #       }
-  #     end
-  #   end
-
-  #   it_behaves_like 'a stamped plate creator'
-  # end
+    it_behaves_like 'a concentration binned plate creator'
+  end
 end
