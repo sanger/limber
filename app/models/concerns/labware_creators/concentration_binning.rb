@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # Binning by well concentration (ug/ul)
+# These methods are used by the Concentration Binning Plate and Presenter classes to compute the bins and help when
+# displaying them.
 module LabwareCreators::ConcentrationBinning
   extend ActiveSupport::Concern
 
@@ -10,12 +12,12 @@ module LabwareCreators::ConcentrationBinning
   class_methods do
     # Calculates the multiplication factor for the source (parent) plate
     def source_plate_multiplication_factor(binning_config)
-      BigDecimal(binning_config['source_volume'], 3)
+      bd_value(binning_config['source_volume'])
     end
 
     # Calculates the multiplication factor for the destination (child) plate
     def dest_plate_multiplication_factor(binning_config)
-      BigDecimal(binning_config['source_volume'], 3) + BigDecimal(binning_config['diluent_volume'], 3)
+      bd_value(binning_config['source_volume']) + bd_value(binning_config['diluent_volume'])
     end
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
@@ -25,18 +27,17 @@ module LabwareCreators::ConcentrationBinning
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in well
-        amnt = BigDecimal(well.latest_concentration.value, 3) * BigDecimal(multiplication_factor, 3)
+        amnt = bd_value(well.latest_concentration.value) * bd_value(multiplication_factor)
         amnts[well.location] = amnt.to_s
       end
-      amnts # e.g. { 'A1': 23.1, etc. }
+      amnts
     end
 
     # Generates a hash of transfer requests for the binned wells.
     def compute_transfers(well_amounts, binning_config, number_of_rows, number_of_columns)
       bins = concentration_bins(well_amounts, binning_config)
       compression_reqd = compression_required?(bins, number_of_rows, number_of_columns)
-      transfers_hash = build_transfers_hash(bins, number_of_rows, compression_reqd)
-      transfers_hash # e.g. { 'A1': { dest_locn: 'B1', dest_amount: 23.1, dest_conc: 0.66 }  }
+      build_transfers_hash(bins, number_of_rows, compression_reqd)
     end
 
     # Refactor the transfers hash to give destination concentrations
@@ -45,57 +46,66 @@ module LabwareCreators::ConcentrationBinning
       transfers_hash.each do |_source_well, dest_details|
         dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
       end
-      dest_hash # e.g. { 'A1': 0.66, 'B1': 0.27, etc. }
+      dest_hash
     end
 
-    # TODO: this is used on displaying the destination plate
-    # It has the destination wells and their qc_result concentrations.
-    # It needs to use the plate purpose binning config to work which bin each well is in and the colour.
-    def generate_bin_colours_hash(dest_plate, binning_config)
-      # well_amounts = {}
-      # dest_plate.wells_in_columns.each |well|
-      #   well_amount = well.latest_concentration.value * (binning_config['source_volume'].to_f + binning_config['diluent_volume'].to_f
-      #   well_amounts[well.location] = well_amount
-      # end
-      # well_colours = {}
-      # well_amounts.each do |well_locn, amount|
-      #   binning_config['bins'].each do |bin_config|
-      #     bin_min = (bin_config['min'] || -1.0).to_f
-      #     bin_max = (bin_config['max'] || Float::INFINITY).to_f
+    # This is used by the plate presenter.
+    # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
+    # and number of PCR cycles.
+    def compute_presenter_bin_details(well_amounts, binning_config)
+      well_colours = {}
+      well_amounts.each do |well_locn, amount|
+        binning_config['bins'].each do |bin_config|
+          bin_min = bin_min(bin_config)
+          bin_max = bin_max(bin_config)
 
-      #     if amount > bin_min && amount <= bin_max
-      #       well_colours[well_locn] = bin_config['colour']
-      #       break
-      #     end
-      #   end
-      # end
-      # well_colours
+          next unless bd_value(amount) > bin_min && bd_value(amount) <= bin_max
+
+          well_colours[well_locn] = {
+            'colour' => bin_config['colour'],
+            'pcr_cycles' => bin_config['pcr_cycles']
+          }
+          break
+        end
+      end
+      well_colours
     end
 
     private
+
+    def bd_value(number)
+      BigDecimal(number, 3)
+    end
+
+    def bin_min(bin_config)
+      bd_value((bin_config['min'] || -1.0))
+    end
+
+    def bin_max(bin_config)
+      bd_value((bin_config['max'] || 'Infinity'))
+    end
 
     # Sorts well locations into bins based on their amounts and the binning configuration.
     def concentration_bins(well_amounts, binning_config)
       number_bins = binning_config['bins'].size
       bins = {}
-
       (1..number_bins).each { |bin_number| bins[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
-        amount_bd = BigDecimal(amount, 3)
-        source_vol_bd = BigDecimal(binning_config['source_volume'], 3)
-        diluent_vol_bd = BigDecimal(binning_config['diluent_volume'], 3)
+        amount_bd = bd_value(amount)
+        source_vol_bd = bd_value(binning_config['source_volume'])
+        diluent_vol_bd = bd_value(binning_config['diluent_volume'])
         dest_conc_bd = (amount_bd / (source_vol_bd + diluent_vol_bd)).round(3)
         binning_config['bins'].each_with_index do |bin_config, bin_index|
-          bin_min = BigDecimal((bin_config['min'] || -1.0), 3)
-          bin_max = BigDecimal((bin_config['max'] || 'Infinity'), 3)
+          bin_min = bin_min(bin_config)
+          bin_max = bin_max(bin_config)
 
-          if BigDecimal(amount, 3) > bin_min && BigDecimal(amount, 3) <= bin_max
-            bins[bin_index + 1] << { 'locn' => well_locn, 'amount' => amount.to_s, 'dest_conc' => dest_conc_bd.to_s }
-            break
-          end
+          next unless amount_bd > bin_min && amount_bd <= bin_max
+
+          bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
+          break
         end
       end
-      bins # e.g. { 1: [{ locn: 'A1', amount: 23.1, dest_conc: 0.66 },{  }, etc  ] }
+      bins
     end
 
     # Determines whether compression is required, or if we can start a new column per bin.
@@ -115,12 +125,12 @@ module LabwareCreators::ConcentrationBinning
       column = 0
       row = 0
       bins.each do |_bin_number, bin|
+        next if bin.length.zero?
         # TODO: we may want to sort the bin here, e.g. by concentration
         bin.each do |well|
           src_locn = well['locn']
           transfers_hash[src_locn] = {
             'dest_locn' => WellHelpers.well_name(row, column),
-            'dest_amount' => well['amount'],
             'dest_conc' => well['dest_conc']
           }
           if row == (number_of_rows - 1)
@@ -132,10 +142,10 @@ module LabwareCreators::ConcentrationBinning
         end
         unless compression_reqd
           row = 0
-          column += 1 unless bin.length.zero?
+          column += 1
         end
       end
-      transfers_hash # e.g. { 'A1': { dest_locn: 'B1', dest_amount: 23.1, dest_conc: 0.66 }  }
+      transfers_hash
     end
   end
   # rubocop:enable Metrics/BlockLength

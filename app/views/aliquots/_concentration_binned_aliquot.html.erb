@@ -1,0 +1,22 @@
+<div
+  id="aliquot_<%= id %>"
+  class="aliquot aliquot-pooled
+        <%= container.location %>
+        <%= container.state %>
+        <%= container.suboptimal? ? 'suboptimal' : '' %>
+        colour-<%= presenter.pool_index(container.pool_id) %>"
+  rel="<%= "details_#{id}" %>"
+  data-pool="<%= container.respond_to?(:pool_id) ? container.pool_id : '' %>">
+  <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
+</div>
+<div
+  id="aliquot_<%= id %>"
+  class="aliquot aliquot-binned
+        <%= container.location %>
+        <%= container.state %>
+        <%= container.suboptimal? ? 'suboptimal' : '' %>
+        colour-<%= presenter.bin_details[container.location]['colour'] %>"
+  rel="<%= "details_#{id}" %>"
+  data-pool="">
+  <span class="concentration-binning-id"><%= presenter.bin_details[container.location]['pcr_cycles'] %></span>
+</div>

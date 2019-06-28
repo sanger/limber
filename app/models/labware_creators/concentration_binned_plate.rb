@@ -20,18 +20,18 @@ module LabwareCreators
   # bins: [
   #   {
   #     colour: 1,
-  #     cycles: 16,
+  #     pcr_cycles: 16,
   #     max: 25
   #   },
   #   {
   #     colour: 2,
-  #     cycles: 12,
+  #     pcr_cycles: 12,
   #     min: 25,
   #     max: 500
   #   },
   #   {
   #     colour: 3,
-  #     cycles: 8,
+  #     pcr_cycles: 8,
   #     min: 500
   #   }
   # ]
