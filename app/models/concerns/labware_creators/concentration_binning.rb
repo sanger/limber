@@ -22,15 +22,13 @@ module LabwareCreators::ConcentrationBinning
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
     def compute_well_amounts(plate, multiplication_factor)
-      amnts = {}
-      plate.wells_in_columns.each do |well|
+      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in well
-        amnt = bd_value(well.latest_concentration.value) * bd_value(multiplication_factor)
-        amnts[well.location] = amnt.to_s
+        well_amount = bd_value(well.latest_concentration.value) * bd_value(multiplication_factor)
+        well_amounts[well.location] = well_amount.to_s
       end
-      amnts
     end
 
     # Generates a hash of transfer requests for the binned wells.
@@ -42,19 +40,16 @@ module LabwareCreators::ConcentrationBinning
 
     # Refactor the transfers hash to give destination concentrations
     def compute_destination_concentrations(transfers_hash)
-      dest_hash = {}
-      transfers_hash.each do |_source_well, dest_details|
+      transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
         dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
       end
-      dest_hash
     end
 
     # This is used by the plate presenter.
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
     # and number of PCR cycles.
     def compute_presenter_bin_details(well_amounts, binning_config)
-      well_colours = {}
-      well_amounts.each do |well_locn, amount|
+      well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
         binning_config['bins'].each do |bin_config|
           bin_min = bin_min(bin_config)
           bin_max = bin_max(bin_config)
@@ -68,7 +63,6 @@ module LabwareCreators::ConcentrationBinning
           break
         end
       end
-      well_colours
     end
 
     private
@@ -88,8 +82,7 @@ module LabwareCreators::ConcentrationBinning
     # Sorts well locations into bins based on their amounts and the binning configuration.
     def concentration_bins(well_amounts, binning_config)
       number_bins = binning_config['bins'].size
-      bins = {}
-      (1..number_bins).each { |bin_number| bins[bin_number] = [] }
+      bins = (1..number_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
         amount_bd = bd_value(amount)
         source_vol_bd = bd_value(binning_config['source_volume'])
@@ -121,11 +114,11 @@ module LabwareCreators::ConcentrationBinning
 
     # Builds a hash of transfers, including destination concentration information.
     def build_transfers_hash(bins, number_of_rows, compression_reqd)
-      transfers_hash = {}
       column = 0
       row = 0
-      bins.each do |_bin_number, bin|
+      bins.values.each_with_object({}) do |bin, transfers_hash|
         next if bin.length.zero?
+
         # TODO: we may want to sort the bin here, e.g. by concentration
         bin.each do |well|
           src_locn = well['locn']
@@ -145,7 +138,6 @@ module LabwareCreators::ConcentrationBinning
           column += 1
         end
       end
-      transfers_hash
     end
   end
   # rubocop:enable Metrics/BlockLength

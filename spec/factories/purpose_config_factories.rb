@@ -61,9 +61,9 @@ FactoryBot.define do
           source_volume: 10,
           diluent_volume: 25,
           bins: [
-            { colour: 1, cycles: 16, max: 25 },
-            { colour: 2, cycles: 12, min: 25, max: 500 },
-            { colour: 3, cycles: 8, min: 500 }
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 12, min: 25, max: 500 },
+            { colour: 3, pcr_cycles: 8, min: 500 }
           ]
         }
       end

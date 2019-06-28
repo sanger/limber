@@ -393,6 +393,20 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         expect(subject.class.compute_destination_concentrations(transfers_hash)).to eq(expected_dest_concs)
       end
     end
+
+    context 'when generating presenter bin details' do
+      it 'creates the correct information' do
+        well_amounts = { 'A1' => '15.0', 'B1' => '560.0', 'C1' => '35.0', 'D1' => '18.0' }
+        expected_details = {
+          'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
+          'B1' => { 'colour' => 3, 'pcr_cycles' => 8 },
+          'C1' => { 'colour' => 2, 'pcr_cycles' => 12 },
+          'D1' => { 'colour' => 1, 'pcr_cycles' => 16 }
+        }
+
+        expect(subject.class.compute_presenter_bin_details(well_amounts, subject.binning_config)).to eq(expected_details)
+      end
+    end
   end
 
   shared_examples 'a concentration binned plate creator' do

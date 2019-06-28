@@ -50,7 +50,7 @@ module LabwareCreators
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
   class ConcentrationBinnedPlate < StampedPlate
-    include LabwareCreators::ConcentrationBinning
+    include ConcentrationBinning
 
     validate :wells_with_aliquots_have_concentrations?
     validate :binning_configuration_valid?
@@ -109,7 +109,7 @@ module LabwareCreators
     end
 
     def destination_concentrations_hash
-      @destination_concentrations_hash ||= LabwareCreators::ConcentrationBinnedPlate.compute_destination_concentrations(transfer_hash)
+      @destination_concentrations_hash ||= ConcentrationBinnedPlate.compute_destination_concentrations(transfer_hash)
     end
 
     def dest_well_qc_attributes
@@ -117,9 +117,9 @@ module LabwareCreators
     end
 
     def compute_transfers_hash
-      multiplier = LabwareCreators::ConcentrationBinnedPlate.source_plate_multiplication_factor(binning_config)
-      amnts = LabwareCreators::ConcentrationBinnedPlate.compute_well_amounts(parent, multiplier)
-      LabwareCreators::ConcentrationBinnedPlate.compute_transfers(amnts, binning_config, parent.number_of_rows, parent.number_of_columns)
+      multiplier = ConcentrationBinnedPlate.source_plate_multiplication_factor(binning_config)
+      amnts = ConcentrationBinnedPlate.compute_well_amounts(parent, multiplier)
+      ConcentrationBinnedPlate.compute_transfers(amnts, binning_config, parent.number_of_rows, parent.number_of_columns)
     end
 
     def compute_dest_well_qc_assay_attributes
