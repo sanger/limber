@@ -5,6 +5,8 @@ module LabwareCreators
   # For each well on the source plate we use the concentration entered via
   # QuantHub to decide which bin and therefore which well the sample will be
   # transferred to on the destination plate.
+  # N.B. Concentrations uploaded to QuantHub and used in the binning config below
+  # need to be in ng/ul (nanograms per microlitre).
   # The binning parameters are retrieved from the plate purpose configuration.
   # The volume multiplier is applied to the concentration to give the total amount
   # of DNA/RNA in the well.
