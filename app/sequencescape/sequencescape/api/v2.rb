@@ -36,7 +36,7 @@ module Sequencescape::Api::V2
          .first
   end
 
-  def self.plate_with_custom_includes(include_params, uuid)
-    Plate.includes(include_params).find(uuid: uuid).first
+  def self.plate_with_custom_includes(include_params, search_params)
+    Plate.includes(include_params).find(search_params).first
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe ExportsController, type: :controller do
   let(:plate_barcode) { 'DN1S' }
 
   before do
-    expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, plate_barcode).and_return(plate)
+    expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, barcode: plate_barcode).and_return(plate)
   end
 
   context 'where template concentrations_ngul' do

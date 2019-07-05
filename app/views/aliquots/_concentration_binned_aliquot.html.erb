@@ -12,9 +12,6 @@
 <div
   id="aliquot_<%= id %>"
   class="aliquot aliquot-binned
-        <%= container.location %>
-        <%= container.state %>
-        <%= container.suboptimal? ? 'suboptimal' : '' %>
         colour-<%= presenter.bin_details[container.location]['colour'] %>"
   rel="<%= "details_#{id}" %>"
   data-pool="">

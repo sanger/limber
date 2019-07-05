@@ -64,7 +64,6 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
   let(:label_class) { 'Labels::PlateLabel' }
 
   before do
-    create(:concentration_binning_purpose_config, uuid: labware.purpose.uuid, warnings: warnings, label_class: label_class)
     stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results')
   end
 
@@ -75,37 +74,40 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
     )
   end
 
-  it_behaves_like 'a labware presenter'
+  context 'when binning configuration is missing' do
+    it 'throws an exception' do
+      expect { presenter.binning_config }.to raise_error(Exception)
+    end
+  end
 
-  context 'concentration binned plate display' do
-    it 'should create a key for the bins that will be displayed' do
-      expected_bins_key = [
-        {
-          'pcr_cycles' => 16,
-          'colour' => 1
-        },
-        {
-          'pcr_cycles' => 12,
-          'colour' => 2
-        },
-        {
-          'pcr_cycles' => 8,
-          'colour' => 3
-        }
-      ]
-
-      expect(presenter.bins_key).to eq(expected_bins_key)
+  context 'when binning configuration is present' do
+    before do
+      create(:concentration_binning_purpose_config, uuid: labware.purpose.uuid, warnings: warnings, label_class: label_class)
     end
 
-    it 'should create bin details which will be used to colour and annotate the well aliquots' do
-      expected_bin_details = {
-        'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
-        'A2' => { 'colour' => 2, 'pcr_cycles' => 12 },
-        'A3' => { 'colour' => 3, 'pcr_cycles' => 8 },
-        'B2' => { 'colour' => 2, 'pcr_cycles' => 12 }
-      }
+    it_behaves_like 'a labware presenter'
 
-      expect(presenter.bin_details).to eq(expected_bin_details)
+    context 'concentration binned plate display' do
+      it 'should create a key for the bins that will be displayed' do
+        expected_bins_key = [
+          { 'colour' => 1, 'max' => 25, 'pcr_cycles' => 16 },
+          { 'colour' => 2, 'max' => 500, 'min' => 25, 'pcr_cycles' => 12 },
+          { 'colour' => 3, 'min' => 500, 'pcr_cycles' => 8 }
+        ]
+
+        expect(presenter.bins_key).to eq(expected_bins_key)
+      end
+
+      it 'should create bin details which will be used to colour and annotate the well aliquots' do
+        expected_bin_details = {
+          'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
+          'A2' => { 'colour' => 2, 'pcr_cycles' => 12 },
+          'A3' => { 'colour' => 3, 'pcr_cycles' => 8 },
+          'B2' => { 'colour' => 2, 'pcr_cycles' => 12 }
+        }
+
+        expect(presenter.bin_details).to eq(expected_bin_details)
+      end
     end
   end
 end

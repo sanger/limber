@@ -8,26 +8,25 @@ module Presenters
   #
   class ConcentrationBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
-    include LabwareCreators::ConcentrationBinning
 
     self.summary_partial = 'labware/plates/concentration_binned_summary'
     self.aliquot_partial = 'concentration_binned_aliquot'
 
     def binning_config
-      purpose_config.fetch(:concentration_binning, {})
+      purpose_config.fetch(:concentration_binning)
+    end
+
+    def bin_calculator
+      @bin_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
     end
 
     def bins_key
-      binning_config.bins.map do |bin|
-        {
-          'pcr_cycles' => bin.pcr_cycles,
-          'colour' => bin.colour
-        }
-      end
+      bin_calculator.bins_template
     end
 
     def plate_with_qc_results
-      @plate_with_qc_results ||= Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', labware.uuid)
+      @plate_with_qc_results ||=
+        Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', uuid: labware.uuid)
     end
 
     def bin_details
@@ -37,9 +36,7 @@ module Presenters
     private
 
     def compute_bin_details
-      multiplier = LabwareCreators::ConcentrationBinnedPlate.dest_plate_multiplication_factor(binning_config)
-      well_amounts = LabwareCreators::ConcentrationBinnedPlate.compute_well_amounts(plate_with_qc_results, multiplier)
-      LabwareCreators::ConcentrationBinnedPlate.compute_presenter_bin_details(well_amounts, binning_config)
+      bin_calculator.compute_presenter_bin_details(plate_with_qc_results)
     end
   end
 end

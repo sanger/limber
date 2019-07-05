@@ -12,7 +12,7 @@ module LabwareCreators
   # of DNA/RNA in the well.
   # Wells in the bins are applied to the destination by column.
   # If there is enough space on the destination each new bin will start in a new
-  # column. Otherwise bins will run concurrently.
+  # column. Otherwise bins will run consecutively without gaps.
   # Colour and cycle information in the configuration is used by the plate
   # presenter to clearly display the bins and show keys.
   #
@@ -52,38 +52,19 @@ module LabwareCreators
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
   class ConcentrationBinnedPlate < StampedPlate
-    include ConcentrationBinning
-
     validate :wells_with_aliquots_have_concentrations?
-    validate :binning_configuration_valid?
 
     def parent
-      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', parent_uuid)
+      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', uuid: parent_uuid)
     end
 
     # Validate that any wells with aliquots have associated qc_result concentration values.
     def wells_with_aliquots_have_concentrations?
-      concs_missing = []
-      parent.wells.each do |well|
-        next if well.aliquots.blank?
-
-        concs_missing << well.location if well.latest_concentration.nil?
-      end
+      concs_missing = wells_with_missing_concs
       return if concs_missing.size.zero?
 
       msg = 'wells missing a concentration (have you uploaded concentrations via QuantHub?):'
       errors.add(:parent, "#{msg} #{concs_missing.join(', ')}")
-    end
-
-    # Validate that a binning configuration is available for this plate.
-    def binning_configuration_valid?
-      if binning_config.blank?
-        errors.add(:parent, 'Binning configuration not found!')
-      else
-        errors.add(:parent, 'Binning configuration missing source volume') if binning_config['source_volume'].blank?
-        errors.add(:parent, 'Binning configuration missing diluent volume') if binning_config['diluent_volume'].blank?
-        errors.add(:parent, 'Binning configuration missing bins') if binning_config['bins'].blank?
-      end
     end
 
     #
@@ -91,10 +72,22 @@ module LabwareCreators
     # This includes source volume, diluent volume and array of bins.
     # Each bin specifies the min/max amounts, number of PCR cycles and display colour.
     def binning_config
-      purpose_config.fetch(:concentration_binning, {})
+      purpose_config.fetch(:concentration_binning)
+    end
+
+    def bin_calculator
+      @bin_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
     end
 
     private
+
+    def wells_with_missing_concs
+      parent.wells.each_with_object([]) do |well, concs_missing|
+        next if well.aliquots.blank?
+
+        concs_missing << well.location if well.latest_concentration.nil?
+      end
+    end
 
     def request_hash(source_well, child_plate, additional_parameters)
       {
@@ -107,27 +100,24 @@ module LabwareCreators
     end
 
     def transfer_hash
-      @transfer_hash ||= compute_transfers_hash
+      @transfer_hash ||= compute_well_transfers
     end
 
     def destination_concentrations_hash
-      @destination_concentrations_hash ||= ConcentrationBinnedPlate.compute_destination_concentrations(transfer_hash)
+      @destination_concentrations_hash ||= bin_calculator.compute_destination_concentrations(transfer_hash)
     end
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||= compute_dest_well_qc_assay_attributes
     end
 
-    def compute_transfers_hash
-      multiplier = ConcentrationBinnedPlate.source_plate_multiplication_factor(binning_config)
-      amnts = ConcentrationBinnedPlate.compute_well_amounts(parent, multiplier)
-      ConcentrationBinnedPlate.compute_transfers(amnts, binning_config, parent.number_of_rows, parent.number_of_columns)
+    def compute_well_transfers
+      bin_calculator.compute_well_transfers(parent)
     end
 
     def compute_dest_well_qc_assay_attributes
-      well_qc_attributes = []
-      destination_concentrations_hash.each do |dest_locn, dest_conc|
-        well_qc_attributes << {
+      destination_concentrations_hash.map do |dest_locn, dest_conc|
+        {
           'uuid' => child.uuid,
           'well_location' => dest_locn,
           'key' => 'concentration',
@@ -138,7 +128,6 @@ module LabwareCreators
           'assay_version' => 'Binning'
         }
       end
-      well_qc_attributes
     end
 
     def after_transfer!
