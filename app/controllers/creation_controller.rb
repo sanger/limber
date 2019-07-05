@@ -69,6 +69,7 @@ class CreationController < ApplicationController
   end
 
   def create_failure
+    Rails.logger.error(@labware_creator.errors.full_messages)
     respond_to do |format|
       format.json do
         render json: { message: @labware_creator.errors.full_messages },
