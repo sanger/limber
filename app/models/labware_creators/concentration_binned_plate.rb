@@ -55,7 +55,10 @@ module LabwareCreators
     validate :wells_with_aliquots_have_concentrations?
 
     def parent
-      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', uuid: parent_uuid)
+      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(
+        'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type',
+        uuid: parent_uuid
+      )
     end
 
     # Validate that any wells with aliquots have associated qc_result concentration values.

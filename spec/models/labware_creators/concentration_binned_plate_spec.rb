@@ -61,7 +61,11 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   before do
     create :concentration_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(parent_plate, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results')
+    stub_v2_plate(
+      parent_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+    )
   end
 
   let(:form_attributes) do

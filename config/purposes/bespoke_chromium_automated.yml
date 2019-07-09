@@ -12,6 +12,8 @@ LBC Stock:
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
   :default_printer_type: :plate_a
+  :expected_request_types:
+    - limber_bespoke_aggregation
 LBC Aggregate:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
@@ -41,7 +43,8 @@ LBC GEX Dil:
   # until we can use library type to restrict them.
   :parents:
   - LBC Cherrypick
-  - LBB Cherrypick
+  :expected_request_types:
+  - limber_chromium_bespoke
   :concentration_binning: {
     source_volume: 10,
     diluent_volume: 25,
