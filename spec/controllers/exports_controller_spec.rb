@@ -37,15 +37,15 @@ RSpec.describe ExportsController, type: :controller do
     end
   end
 
-  context 'where template hamilton aggregate cherry pick' do
+  context 'where template hamilton aggregate cherrypick' do
     let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
 
-    it 'renders a hamilton_aggregate_cherry_pick.csv' do
-      get :show, params: { id: 'hamilton_aggregate_cherry_pick', limber_plate_id: 'DN1S' }, as: :csv
+    it 'renders a hamilton_aggregate_cherrypick.csv' do
+      get :show, params: { id: 'hamilton_aggregate_cherrypick', limber_plate_id: 'DN1S' }, as: :csv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_aggregate_cherry_pick')
+      expect(response).to render_template('hamilton_aggregate_cherrypick')
       assert_equal 'text/csv', @response.content_type
     end
   end

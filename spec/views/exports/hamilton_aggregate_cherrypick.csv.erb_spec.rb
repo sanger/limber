@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_aggregate_cherry_pick.csv.erb' do
+RSpec.describe 'exports/hamilton_aggregate_cherrypick.csv.erb' do
   context 'with a full plate' do
     has_a_working_api
 

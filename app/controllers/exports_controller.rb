@@ -11,7 +11,7 @@ class ExportsController < ApplicationController
   PLATE_INCLUDES = {
     'concentrations_ngul' => 'wells.qc_results',
     'concentrations_nm' => 'wells.qc_results',
-    'hamilton_aggregate_cherry_pick' => 'wells.transfer_requests_as_target.source_asset'
+    'hamilton_aggregate_cherrypick' => 'wells.transfer_requests_as_target.source_asset'
   }.freeze
 
   def show
