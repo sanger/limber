@@ -50,6 +50,19 @@ RSpec.describe ExportsController, type: :controller do
     end
   end
 
+  context 'where template hamilton cherrypick to sample dilution' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_cherrypick_to_sample_dilution.csv' do
+      get :show, params: { id: 'hamilton_cherrypick_to_sample_dilution', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_cherrypick_to_sample_dilution')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
   context 'where default' do
     let(:includes) { 'wells' }
 

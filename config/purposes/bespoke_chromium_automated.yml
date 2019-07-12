@@ -68,6 +68,8 @@ LBC 3pV3 GEX Dil:
     ]
   }
   :file_links:
+  - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
+    id: 'hamilton_cherrypick_to_sample_dilution'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
 LBC 3pV3 GEX Frag 2XP:
