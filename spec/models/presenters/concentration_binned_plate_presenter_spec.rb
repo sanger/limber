@@ -3,6 +3,7 @@
 require 'rails_helper'
 require 'presenters/concentration_binned_plate_presenter'
 require_relative 'shared_labware_presenter_examples'
+require 'bigdecimal'
 
 RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
   has_a_working_api
@@ -89,10 +90,11 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
     context 'concentration binned plate display' do
       it 'should create a key for the bins that will be displayed' do
+        # NB. contains min/max because just using bins template, but fields not needed in presentation
         expected_bins_key = [
-          { 'colour' => 1, 'max' => 25, 'pcr_cycles' => 16 },
-          { 'colour' => 2, 'max' => 500, 'min' => 25, 'pcr_cycles' => 12 },
-          { 'colour' => 3, 'min' => 500, 'pcr_cycles' => 8 }
+          { 'colour' => 1, 'max' => 0.25e2, 'min' => -0.1e1, 'pcr_cycles' => 16 },
+          { 'colour' => 2, 'max' => 0.5e3, 'min' => 0.25e2, 'pcr_cycles' => 12 },
+          { 'colour' => 3, 'max' => BigDecimal('Infinity'), 'min' => 0.5e3, 'pcr_cycles' => 8 }
         ]
 
         expect(presenter.bins_key).to eq(expected_bins_key)

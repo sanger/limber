@@ -58,9 +58,7 @@ module Utility
       well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
         bins_template.each do |bin_template|
           amount = to_bigdecimal(amount)
-          bin_min_value = bin_min(bin_template)
-          bin_max_value = bin_max(bin_template)
-          next unless amount > bin_min_value && amount <= bin_max_value
+          next unless amount > bin_template['min'] && amount <= bin_template['max']
 
           well_colours[well_locn] = {
             'colour' => bin_template['colour'],
@@ -79,7 +77,7 @@ module Utility
       well_amounts.each do |well_locn, amount|
         amount_bd = to_bigdecimal(amount)
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless amount_bd > bin_min(bin_template) && amount_bd <= bin_max(bin_template)
+          next unless amount_bd > bin_template['min'] && amount_bd <= bin_template['max']
 
           dest_conc_bd = (amount_bd / (source_volume + diluent_volume)).round(3)
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }

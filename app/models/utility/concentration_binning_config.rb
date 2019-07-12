@@ -39,7 +39,7 @@ module Utility
 
     # Returns the bins from the config ynl
     def bins_template
-      @config['bins']
+      @bins_template ||= configure_bins_template
     end
 
     # Returns the multiplication factor for the source (parent) plate
@@ -52,6 +52,8 @@ module Utility
       source_volume + diluent_volume
     end
 
+    private
+
     # Returns the bin minimum amount (ng) for a specific bin
     def bin_min(bin_template)
       to_bigdecimal((bin_template['min'] || -1.0))
@@ -60,6 +62,18 @@ module Utility
     # Returns the bin maximum amount (ng) for a specific bin
     def bin_max(bin_template)
       to_bigdecimal((bin_template['max'] || 'Infinity'))
+    end
+
+    # Returns an interpreted version of the bins configuration section with min max values
+    def configure_bins_template
+      @config['bins'].each_with_object([]) do |template, templates|
+        templates << {
+          'colour' => template.colour,
+          'pcr_cycles' => template.pcr_cycles,
+          'min' => bin_min(template),
+          'max' => bin_max(template)
+        }
+      end
     end
   end
 end

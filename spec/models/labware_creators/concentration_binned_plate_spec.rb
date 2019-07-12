@@ -85,7 +85,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       expect(subject).to be_a LabwareCreators::ConcentrationBinnedPlate
     end
 
-    context 'wells missing concentration value' do
+    context 'when wells are missing a concentration value' do
       let(:well_e1) do
         create(:v2_well,
                position: { 'name' => 'E1' },
