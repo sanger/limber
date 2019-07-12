@@ -34,7 +34,7 @@ LBC Cherrypick:
   :default_printer_type: :plate_a
   :parents:
   - LBC Aggregate
-LBC GEX Dil:
+LBC 3pV3 GEX Dil:
   :asset_type: plate
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
@@ -70,35 +70,35 @@ LBC GEX Dil:
   :file_links:
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-LBC GEX Frag 2XP:
+LBC 3pV3 GEX Frag 2XP:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
   :default_printer_type: :plate_a
   :parents:
-  - LBC GEX Dil
+  - LBC 3pV3 GEX Dil
   :file_links: []
-LBC GEX LigXP:
+LBC 3pV3 GEX LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
   :default_printer_type: :plate_a
   :parents:
-  - LBC GEX Frag 2XP
+  - LBC 3pV3 GEX Frag 2XP
   :tags_per_well: 4
   :file_links: []
-LBC GEX PCR 2XP:
+LBC 3pV3 GEX PCR 2XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :parents:
-  - LBC GEX LigXP
+  - LBC 3pV3 GEX LigXP
   :suggest_library_pass_for:
   - limber_chromium_bespoke
   :file_links:
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-LBC GEX Lib Pool Stock:
+LBC 3pV3 GLibPS:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
@@ -108,4 +108,4 @@ LBC GEX Lib Pool Stock:
   :expected_request_types:
   - limber_multiplexing
   :parents:
-  - LBC GEX PCR 2XP
+  - LBC 3pV3 GEX PCR 2XP

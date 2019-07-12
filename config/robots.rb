@@ -1115,15 +1115,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # For Chromium 10x pipeline cherrypick to dilution
   custom_robot(
-    'hamilton-lbc-cherrypick-to-lbc-gex-dil',
-    name: 'Hamilton LBC Cherrypick to LBC GEX Dil',
+    'hamilton-lbc-cherrypick-to-lbc-3pv3-gex-dil',
+    name: 'hamilton LBC Cherrypick => LBC 3pV3 GEX Dil',
     beds: {
       bed(13).barcode => {
         purpose: 'LBC Cherrypick',
         states: ['passed'],
         label: 'Bed 13' },
       bed(1).barcode => {
-        purpose: 'LBC GEX Dil',
+        purpose: 'LBC 3pV3 GEX Dil',
         states: ['pending'],
         label: 'Bed 1',
         target_state: 'passed',
