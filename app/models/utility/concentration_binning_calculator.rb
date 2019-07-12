@@ -15,7 +15,7 @@ module Utility
     end
 
     delegate :to_bigdecimal, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
-             :source_multiplication_factor, :dest_multiplication_factor, :bin_min, :bin_max, to: :config
+             :source_multiplication_factor, :dest_multiplication_factor, to: :config
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
     def compute_well_amounts(plate, multiplication_factor)
@@ -23,8 +23,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amount = to_bigdecimal(well.latest_concentration.value) * to_bigdecimal(multiplication_factor)
-        well_amounts[well.location] = well_amount.to_s
+        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * to_bigdecimal(multiplication_factor)
       end
     end
 
@@ -57,7 +56,6 @@ module Utility
     def compute_bin_details_by_well(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
         bins_template.each do |bin_template|
-          amount = to_bigdecimal(amount)
           next unless amount > bin_template['min'] && amount <= bin_template['max']
 
           well_colours[well_locn] = {
@@ -75,11 +73,10 @@ module Utility
     def concentration_bins(well_amounts)
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
-        amount_bd = to_bigdecimal(amount)
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless amount_bd > bin_template['min'] && amount_bd <= bin_template['max']
+          next unless amount > bin_template['min'] && amount <= bin_template['max']
 
-          dest_conc_bd = (amount_bd / (source_volume + diluent_volume)).round(3)
+          dest_conc_bd = (amount / (source_volume + diluent_volume)).round(3)
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
           break
         end
