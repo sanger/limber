@@ -7,6 +7,6 @@ FactoryBot.define do
     source_asset { create :v2_well }
     target_asset { create :v2_well }
     submission { create :v2_submission }
-    volume { 10 }
+    volume { 10.0 }
   end
 end
