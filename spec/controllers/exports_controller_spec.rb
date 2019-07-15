@@ -63,6 +63,32 @@ RSpec.describe ExportsController, type: :controller do
     end
   end
 
+  context 'where template hamilton gex dil to gex frag 2xp' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_gex_dil_to_gex_frag_2xp.csv' do
+      get :show, params: { id: 'hamilton_gex_dil_to_gex_frag_2xp', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_gex_dil_to_gex_frag_2xp')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton gex frag 2xp to gex ligxp' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_gex_frag_2xp_to_gex_ligxp.csv' do
+      get :show, params: { id: 'hamilton_gex_frag_2xp_to_gex_ligxp', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_gex_frag_2xp_to_gex_ligxp')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
   context 'where default' do
     let(:includes) { 'wells' }
 
