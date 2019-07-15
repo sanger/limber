@@ -1,0 +1,113 @@
+# This configuration file is for the Bespoke Chromium Aggregation and Bespoke
+# Chromium Automated pipelines.
+# LBC Stock plates are submitted to the Aggregation pipeline to be combined
+# through LBC Aggregate plates into LBC Cherrypick plates, and then the LBC
+# Cherrypick plates are subnitted to the Chromium Automated pipeline for library
+# preparation and sequencing.
+---
+LBC Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :default_printer_type: :plate_a
+  :expected_request_types:
+    - limber_bespoke_aggregation
+LBC Aggregate:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TenStamp
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC Stock
+  :file_links: []
+LBC Cherrypick:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TenStamp
+  :file_links:
+  - name: 'Download Hamilton Aggregate Cherrypick CSV'
+    id: 'hamilton_aggregate_cherrypick'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC Aggregate
+LBC 3pV3 GEX Dil:
+  :asset_type: plate
+  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :creator_class: LabwareCreators::ConcentrationBinnedPlate
+  :default_printer_type: :plate_a
+  # Currently both manual and automated Cherrypick plates are possible parents
+  # until we can use library type to restrict them.
+  :parents:
+  - LBC Cherrypick
+  :expected_request_types:
+  - limber_chromium_bespoke
+  :concentration_binning: {
+    source_volume: 10,
+    diluent_volume: 25,
+    bins: [
+      {
+        colour: 1,
+        pcr_cycles: 16,
+        max: 25
+      },
+      {
+        colour: 2,
+        pcr_cycles: 12,
+        min: 25,
+        max: 500
+      },
+      {
+        colour: 3,
+        pcr_cycles: 8,
+        min: 500
+      }
+    ]
+  }
+  :file_links:
+  - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
+    id: 'hamilton_cherrypick_to_sample_dilution'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC 3pV3 GEX Frag 2XP:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC 3pV3 GEX Dil
+  :file_links: []
+LBC 3pV3 GEX LigXP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :default_printer_type: :plate_a
+  :parents:
+  - LBC 3pV3 GEX Frag 2XP
+  :tags_per_well: 4
+  :file_links: []
+LBC 3pV3 GEX PCR 2XP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :parents:
+  - LBC 3pV3 GEX LigXP
+  :suggest_library_pass_for:
+  - limber_chromium_bespoke
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC 3pV3 GLibPS:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :expected_request_types:
+  - limber_multiplexing
+  :parents:
+  - LBC 3pV3 GEX PCR 2XP

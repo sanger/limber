@@ -7,7 +7,7 @@
 #   :creator_class: LabwareCreators::TenStamp
 #   :file_links: [
 #     {
-#       name: 'Download Hamilton Aggregate Cherry Pick CSV',
-#       id: 'hamilton_aggregate_cherry_pick'
+#       name: 'Download Hamilton Aggregate Cherrypick CSV',
+#       id: 'hamilton_aggregate_cherrypick'
 #     }
 #   ]

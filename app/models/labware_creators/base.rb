@@ -112,6 +112,7 @@ module LabwareCreators
       @child = plate_creation.child
       transfer_material_from_parent!(@child.uuid)
       yield(@child) if block_given?
+      after_transfer!
       true
     end
 
@@ -132,7 +133,7 @@ module LabwareCreators
       )
     end
 
-    # Over-ride in classes with custom transfers
+    # Override in classes with custom transfers
     def transfer_hash
       nil
     end
@@ -143,6 +144,11 @@ module LabwareCreators
 
     def purpose_config
       Settings.purposes.fetch(purpose_uuid, {})
+    end
+
+    # Override in classes that need to implement behaviour ater transfers
+    def after_transfer!
+      true
     end
   end
 end
