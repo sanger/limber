@@ -1131,4 +1131,42 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       }
     }
   )
+
+  # For Chromium 10x pipeline dilution to frag 2xp
+  custom_robot(
+    'hamilton-lbc-3pv3-gex-dil-to-lbc-3pv3-gex-frag-2xp',
+    name: 'hamilton LBC 3pV3 GEX Dil => LBC 3pV3 GEX Frag 2XP',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC 3pV3 GEX Dil',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC 3pV3 GEX Frag 2XP',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline frag 2xp to ligxp
+  custom_robot(
+    'hamilton-lbc-3pv3-gex-frag-2xp-to-lbc-3pv3-gex-ligxp',
+    name: 'hamilton LBC 3pV3 GEX Frag 2XP => LBC 3pV3 GEX LigXP',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC 3pV3 GEX Frag 2XP',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC 3pV3 GEX LigXP',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
 end
