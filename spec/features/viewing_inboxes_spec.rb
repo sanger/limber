@@ -20,7 +20,7 @@ RSpec.feature 'Viewing an inbox', js: true do
       'Find plates',
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
-        plate_purpose_uuids: ['uuid-1', 'uuid-2'],
+        plate_purpose_uuids: %w[uuid-1 uuid-2],
         show_my_plates_only: false, include_used: false,
         page: 1
       } },
@@ -30,7 +30,7 @@ RSpec.feature 'Viewing an inbox', js: true do
       'Find plates',
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
-        plate_purpose_uuids: ['uuid-1', 'uuid-2'],
+        plate_purpose_uuids: %w[uuid-1 uuid-2],
         show_my_plates_only: true, include_used: false,
         page: 1
       } },
@@ -40,7 +40,7 @@ RSpec.feature 'Viewing an inbox', js: true do
       'Find tubes',
       { 'search' => {
         states: %w[pending started passed qc_complete failed cancelled],
-        tube_purpose_uuids: ['uuid-3', 'uuid-4'],
+        tube_purpose_uuids: %w[uuid-3 uuid-4],
         include_used: false,
         page: 1
       } },
