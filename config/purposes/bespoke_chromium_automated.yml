@@ -78,7 +78,9 @@ LBC 3pV3 GEX Frag 2XP:
   :default_printer_type: :plate_a
   :parents:
   - LBC 3pV3 GEX Dil
-  :file_links: []
+  :file_links:
+  - name: 'Download Hamilton Dilution to Frag 2XP CSV'
+    id: 'hamilton_gex_dil_to_gex_frag_2xp'
 LBC 3pV3 GEX LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
@@ -87,7 +89,9 @@ LBC 3pV3 GEX LigXP:
   :parents:
   - LBC 3pV3 GEX Frag 2XP
   :tags_per_well: 4
-  :file_links: []
+  :file_links:
+  - name: 'Download Hamilton Frag 2XP to LigXP CSV'
+    id: 'hamilton_gex_frag_2xp_to_gex_ligxp'
 LBC 3pV3 GEX PCR 2XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
