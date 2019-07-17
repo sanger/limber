@@ -34,7 +34,7 @@ module Limber
     config.label_templates = config_for(:label_templates)
     config.disable_animations = false
 
-    config.logger = Logger.new(Rails.root.join("log", Rails.env + ".log"), 5, 10 * 1024 * 1024)
+    config.logger = Logger.new(Rails.root.join('log', Rails.env + '.log'), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new
   end
 end
