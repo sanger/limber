@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module Limber::TagLayoutTemplate::WalkQuadrants
+module Limber::TagLayoutTemplate::WalkCombinatorialSequential
   include Limber::TagLayoutTemplate::TagWalker
 end
