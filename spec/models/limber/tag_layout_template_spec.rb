@@ -31,6 +31,9 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
   end
 
   # rubocop:disable Metrics/LineLength
+  # rubocop:disable Layout/ExtraSpacing
+  # rubocop:disable Layout/IndentFirstHashElement
+  # rubocop:disable Layout/AlignHash
   # We mimic plate layout here, which seems preferable to arbitrary length limits.
   context 'by column' do
     let(:template_factory) { :tag_layout_template }
@@ -186,4 +189,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
     it_behaves_like 'a tag layout'
   end
   # rubocop:enable Metrics/LineLength
+  # rubocop:enable Layout/ExtraSpacing
+  # rubocop:enable Layout/IndentFirstHashElement
+  # rubocop:enable Layout/AlignHash
 end

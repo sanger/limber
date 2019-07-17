@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Generic walker behaviour
 module Limber::TagLayoutTemplate::TagWalker
   def generate_tag_layout(plate)
     tags = tag_ids
