@@ -3,7 +3,7 @@
 ---
 LBC TCR Dil 1:
   :asset_type: plate
-  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::FixedNormalisedPlate
   :parents:
   - LBC Cherrypick

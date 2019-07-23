@@ -3,7 +3,7 @@
 ---
 LBC 5p GEX Dil:
   :asset_type: plate
-  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::BinnedNormalisedPlate
   :parents:
   - LBC Cherrypick
