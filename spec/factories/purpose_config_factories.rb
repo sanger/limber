@@ -68,6 +68,29 @@ FactoryBot.define do
       end
     end
 
+    factory :fixed_normalisation_purpose_config do
+      fixed_normalisation do
+        {
+          source_volume_ul: 2,
+          diluent_volume_ul: 33
+        }
+      end
+    end
+
+    factory :binned_normalisation_purpose_config do
+      binned_normalisation do
+        {
+          target_amount_ng: 50,
+          target_volume_ul: 20,
+          minimum_source_volume_ul: 0.2,
+          bins: [
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 14, min: 25 }
+          ]
+        }
+      end
+    end
+
     factory :tube_config do
       asset_type { 'tube' }
       default_printer_type { :tube }
