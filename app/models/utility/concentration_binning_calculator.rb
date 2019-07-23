@@ -23,7 +23,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * to_bigdecimal(multiplication_factor)
+        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * multiplication_factor
       end
     end
 

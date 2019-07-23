@@ -1,3 +1,5 @@
+# This configuration file is for the manual Bespoke pipelines for the PCR, PCR Free and
+# Chromium 10X 3 prime version 2 library types.
 ---
 LBB Cherrypick:
   :asset_type: plate
@@ -35,6 +37,8 @@ LBB Chromium Tagged:
   - LBB Cherrypick
   :expected_request_types:
   - limber_chromium_bespoke
+  :expected_library_types:
+  - Chromium single cell 3 prime v2
   :tags_per_well: 4
 LBB Lib-XP:
   :asset_type: plate
