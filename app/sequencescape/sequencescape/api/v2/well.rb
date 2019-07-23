@@ -33,12 +33,14 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
               .max_by(&:created_at)
   end
 
-  def requests_in_progress
-    aliquots.flat_map(&:request).compact
+  def requests_in_progress(request_type_key: nil)
+    aliquots.map(&:request).compact.select do |r|
+      request_type_key.nil? || r.request_type_key == request_type_key
+    end
   end
 
-  def in_progress_submission_uuids
-    requests_in_progress.flat_map(&:submission_uuid)
+  def in_progress_submission_uuids(request_type_key: nil)
+    requests_in_progress(request_type_key: request_type_key).flat_map(&:submission_uuid)
   end
 
   def coordinate

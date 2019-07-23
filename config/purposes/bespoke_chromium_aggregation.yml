@@ -23,6 +23,8 @@ LBC Cherrypick:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TenStamp
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bespoke_aggregation'
   :file_links:
   - name: 'Download Hamilton Aggregate Cherrypick CSV'
     id: 'hamilton_aggregate_cherrypick'
