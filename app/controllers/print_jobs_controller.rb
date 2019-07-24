@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Print new barcode labels
+# Pretty simple wrapper for print job, and incredibly un-opinionated, simply passes
+# the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
   def create
     @print_job = PrintJob.new(print_job_params)
@@ -14,7 +17,7 @@ class PrintJobsController < ApplicationController
   private
 
   def print_job_params
-    params.require(:print_job).permit(:printer_name, :printer_type, :number_of_copies).tap do |permitted|
+    params.require(:print_job).permit(:printer_name, :label_template, :number_of_copies).tap do |permitted|
       # We want to permit ALL labels content, as it is an array of unstructured hashes.
       # While you can #permit arrays of 'scalars' you can't permit arrays of hashes.
       # While we COULD carefully define the current label structure, we gain nothing by doing so and make

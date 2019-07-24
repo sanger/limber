@@ -5,20 +5,14 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators::FinalTubeFromPlate do
+RSpec.describe LabwareCreators::FinalTubeFromPlate do
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   subject do
-    LabwareCreators::FinalTubeFromPlate.new(form_attributes)
-  end
-
-  # Set up our templates
-  before do
-    LabwareCreators::FinalTubeFromPlate.default_transfer_template_uuid = 'transfer-to-mx-tubes-on-submission'
+    LabwareCreators::FinalTubeFromPlate.new(api, form_attributes)
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
-  let(:user)         { json :user, uuid: user_uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
@@ -28,8 +22,7 @@ describe LabwareCreators::FinalTubeFromPlate do
     {
       user_uuid: user_uuid,
       purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid,
-      api: api
+      parent_uuid: parent_uuid
     }
   end
 
@@ -95,7 +88,7 @@ describe LabwareCreators::FinalTubeFromPlate do
 
     it 'redirects to the parent plate' do
       subject.save!
-      expect(subject.child.uuid).to eq(parent_uuid)
+      expect(subject.redirection_target.uuid).to eq(parent_uuid)
     end
   end
 end

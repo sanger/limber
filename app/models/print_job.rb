@@ -2,12 +2,15 @@
 
 class PrintJob
   include ActiveModel::Model
-  attr_accessor :labels, :printer_name, :printer_type, :number_of_copies
 
-  validates :printer_name, :printer_type, :number_of_copies, :labels, presence: true
+  attr_reader :number_of_copies
+  attr_accessor :labels, :printer_name, :label_template
+
+  validates :printer_name, :label_template, :number_of_copies, :labels, presence: true
 
   def execute
     return false unless valid?
+
     begin
       job = PMB::PrintJob.new(
         printer_name: printer_name,
@@ -33,9 +36,8 @@ class PrintJob
   private
 
   def label_template_id
-    label_template_name = Rails.configuration.label_templates.fetch(printer_type)
     # This isn't a rails finder; so we disable the cop.
-    PMB::LabelTemplate.where(name: label_template_name).first.id # rubocop:disable Rails/FindBy
+    PMB::LabelTemplate.where(name: label_template).first.id # rubocop:disable Rails/FindBy
   rescue JsonApiClient::Errors::ConnectionError
     errors.add(:pmb, 'PrintMyBarcode service is down')
   end

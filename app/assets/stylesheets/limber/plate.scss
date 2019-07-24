@@ -1,16 +1,21 @@
 .plate-view {
-  background-color: $gray;
+  background-color: $gray-600;
   padding: 10px;
   border-collapse: separate;
-  @include border-radius(15px);
-  @include border-top-left-radius(0);
+  border-radius: 0px 15px 15px 15px;
+  @extend .mx-auto;
+
+  .pool-id { display: none; }
+   &.pool-colours {
+    .pool-id { display: inline; }
+  }
 
   th {
     padding: 0;
     vertical-align: middle;
     text-align:     center;
     padding:0;
-    color: $gray-lightest;
+    color: $gray-100;
   }
 
   th.first-col {
@@ -22,21 +27,25 @@
     width:36px;
     text-align: center;
     overflow: hidden;
-    background: $gray-lighter;
+    background: $gray-200;
 
     .aliquot {
       width:32px;
       height:32px;
       margin-top: 2px;
       text-align: center;
-      color:#fff;
       display: inline-block;
-      border: 2px $gray-dark solid;
-      @include border-radius(7px);
-    }
+      border: 2px $gray-800 solid;
+      border-radius: 7px;
+      font-size: small;
 
-    .aliquot.pending {
-      color: #000;
+      .tag {
+        display: none;
+      }
+
+      .tag:first-child {
+        display: inline;
+      }
     }
 
     .aliquot:hover {
@@ -44,26 +53,43 @@
       cursor: pointer;
       @extend .selected-aliquot;
     }
+  }
+}
 
+.plate-view.plate-384 {
+  padding: 5px;
+  border-collapse: separate;
+  td, th { font-size: 50%; }
+
+
+  th.first-col {
+    width: 15px;
+  }
+
+  .well {
+    height:18px;
+    width:18px;
+
+    .aliquot {
+      width:16px;
+      height:16px;
+      margin-top: 1px;
+      border: 1px $gray-800 solid;
+      border-radius: 3px;
+    }
   }
 }
 
 @mixin labware-view {
-  .green             { background-color: $brand-success; }
-  .red               { background-color: $brand-danger; }
-  .blue              { background-color: $brand-info; }
-  .orange            { background-color: $brand-warning; }
-  .unknown           { background-color: $gray; }
-  .pending           {
-    background: none;
-  }
-  .started           { background-color: $brand-info;    }
-  .passed            { background-color: $brand-success; }
-  .qc_complete       { background-color: $brand-primary; }
-  .good              { background-color: $brand-success; } // Used on well failure page
-  .failed            { background-color: $brand-danger;  }
-  .cancelled         { background-color: $brand-danger;  }
-  .permanent-failure { background-color: $brand-danger;  }
+  .unknown           { background-color: $secondary; }
+  .pending           { background: none; }
+  .started, .process_1, .process_2 { background-color: $info;    }
+  .passed            { background-color: $success; }
+  .qc_complete       { background-color: $primary; }
+  .good              { background-color: $success; } // Used on well failure page
+  .failed            { background-color: $danger;  }
+  .cancelled         { background-color: $danger;  }
+  .permanent-failure { background-color: $danger;  }
 }
 
 .tube-view {
@@ -73,8 +99,8 @@
   text-align: center;
   overflow: hidden;
   border: 1px ridge rgba(5,19,40,0.1);
-  background: $gray-lighter;
-  @include border-radius(7px);
+  background: $gray-200;
+  border-radius: 7px;
 }
 .substitute-tag {
   @extend .aliquot;
@@ -87,7 +113,7 @@
 }
 
 .selected-aliquot {
-  border: 2px $gray-lightest solid;
+  border: 2px $gray-100 solid;
   position: relative;
 }
 

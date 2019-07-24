@@ -1,34 +1,40 @@
 # frozen_string_literal: true
 
+require_dependency 'limber/user'
+
+# Handles log in / log out
 class SessionsController < ApplicationController
   def create
-    set_user_by_swipecard!(params[:user_swipecard]) if params[:user_swipecard].present?
-    redirect_to :search, notice: 'Logged in'
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    redirect_to :search, alert: exception.message
+    self.user_swipecard = params.require(:user_swipecard)
+    if @current_user
+      redirect_to :search, notice: 'Logged in'
+    else
+      redirect_to :search, alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'
+    end
   end
 
   def destroy
     reset_session
     cookies[:user_name] = nil
+    cookies[:user_id] = nil
     redirect_to :search, notice: 'Logged out'
   end
 
   private
 
-  def set_user_by_swipecard!(card_id)
+  def user_swipecard=(card_id)
     @current_user = user_for_swipecard(card_id)
+    return if @current_user.nil?
+
     session[:user_uuid] = @current_user.uuid
     session[:user_name] = @current_user.name
     # Unlike the session cookie, this cookie is accessible
     # through javascript.
     cookies[:user_name] = @current_user.name
+    cookies[:user_id] = @current_user.id
   end
 
   def user_for_swipecard(card_id)
-    user_search = api.search.find(Settings.searches['Find user by swipecard code'])
-    user_search.first(swipecard_code: card_id)
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'
+    Sequencescape::Api::V2::User.find(user_code: card_id).first
   end
 end

@@ -2,7 +2,7 @@
 
 class AssociatedStrategy
   def initialize
-    @strategy = FactoryGirl.strategy_by_name(:attributes_for).new
+    @strategy = FactoryBot.strategy_by_name(:attributes_for).new
   end
 
   delegate :association, to: :@strategy
@@ -15,4 +15,4 @@ class AssociatedStrategy
   end
 end
 
-FactoryGirl.register_strategy(:associated, AssociatedStrategy)
+FactoryBot.register_strategy(:associated, AssociatedStrategy)

@@ -5,19 +5,15 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
-describe LabwareCreators::Base do
+RSpec.describe LabwareCreators::Base do
+  it_behaves_like 'it does not allow creation'
+
   let(:basic_purpose)  { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
-  it_behaves_like 'it only allows creation from plates'
-
   before do
-    Settings.purposes[basic_purpose] = {
-      form_class: 'LabwareCreators::Base'
-    }
-    Settings.purposes[tagged_purpose] = {
-      form_class: 'LabwareCreators::TaggedPlate'
-    }
+    Settings.purposes[basic_purpose] = { creator_class: 'LabwareCreators::Base' }
+    Settings.purposes[tagged_purpose] = { creator_class: 'LabwareCreators::TaggedPlate' }
   end
 
   context 'with a custom transfer-template' do
@@ -26,7 +22,7 @@ describe LabwareCreators::Base do
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
 
-    subject { LabwareCreators::Base.new(purpose_uuid: 'test-purpose') }
+    subject { LabwareCreators::Base.new(nil, purpose_uuid: 'test-purpose') }
 
     it 'can lookup form for another purpose' do
       expect(subject.transfer_template_uuid).to eq('custom-template-uuid')

@@ -9,7 +9,7 @@ Rails.application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
-  config.eager_load = false
+  config.eager_load = true
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -61,23 +61,23 @@ Rails.application.configure do
   config.admin_email          = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
-  config.disable_exception_notifier = true
+  config.api                                     = ActiveSupport::OrderedOptions.new
+  config.api.v1                                  = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options.namespace     = 'Limber'
+  config.api.v1.connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
+  config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
-  config.api_connection_options               = ActiveSupport::OrderedOptions.new
-  config.api_connection_options.namespace     = 'Limber'
-  config.api_connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
-  config.api_connection_options.authorisation = ENV.fetch('API_KEY', 'development')
+  config.api.v2                                  = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options.url           = ENV.fetch('API2_URL', 'http://localhost:3000/api/v2')
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project
   config.study_uuid = nil
   config.project_uuid = nil
   config.request_options = {
-    'read_length' => 11,
-    'fragment_size_required' => {
-      'from' => 100,
-      'to'   => 100
-    }
+    'read_length' => 11
   }
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end

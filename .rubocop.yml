@@ -1,19 +1,43 @@
 inherit_from: .rubocop_todo.yml
+require: rubocop-rails
 AllCops:
-  TargetRubyVersion: 2.3
-  Include:
-    - Rakefile
-    - config.ru
-    - lib/**/*.rake
+  TargetRubyVersion: 2.4
   Exclude:
     - node_modules/**/*
-    - bin/webpack
-    - bin/webpack-dev-server
-Style/VariableNumber:
-  Enabled: false
+    - bin/**/*
+    - vendor/**/*
 Rails:
   Enabled: true
+# We're not actually using Rails methods here.
+Rails/InverseOf:
+  Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+# Filter out all the DSLs
 Metrics/BlockLength:
+  ExcludedMethods:
+    - describe
+    - context
+    - background
+    - scenario
+    - namespace
+    - task
+    - included
+    - shared_context
+    - shared_examples
+    - state_machine
+    - configure
+    - draw
+    - feature
+    - subject
+    - let
+    - let!
+    - factory
+    - define
+    - guard
+    - transient
+    - it
   Exclude:
-    - spec/**/*
     - config/robots.rb

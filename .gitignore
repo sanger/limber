@@ -15,3 +15,8 @@ public/stylesheets/*.css
 release.tar.gz
 REVISION
 /vendor
+/coverage
+/spec/examples.txt
+yarn-error.log
+.tern-project
+*.swn

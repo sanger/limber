@@ -1,13 +1,13 @@
 <%= card title: 'Attach files', without_block: true do %>
-  <div class='card-block'>
-    <%= form_tag("#{@presenter.uuid}/qc_files/",:multipart=>true, :method=>'post', :authenticity_token=>true) do %>
+  <div class='card-body'>
+    <%= form_tag("#{@presenter.uuid}/qc_files/", multipart: true, method: 'post', authenticity_token: true) do %>
       <div>
         <label class="custom-file">
-          <input type="file" id="qc_file" name="qc_file"/>
+          <input type="file" id="qc_file" name="qc_file" required="true"/>
           <small id="fileHelp" class="form-text text-muted">Select a file above, then click upload. Uploaded files will appear in the files tab.</small>
         </label>
       </div>
-      <input type="submit" value="Upload" class="btn"/>
+      <input type="submit" value="Upload" class="btn-upload"/>
     <% end %>
   </div>
 <% end %>

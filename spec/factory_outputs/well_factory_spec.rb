@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'well factory' do
+RSpec.describe 'well factory' do
   subject do
     json(
       :well,
@@ -36,7 +36,8 @@ describe 'well factory' do
               "sample_id": "SAMA10"
             }
           },
-          "tag": {}
+          "tag": {},
+          "tag2": {}
         }],
         "location": "A1",
         "state": "pending"
@@ -50,7 +51,7 @@ describe 'well factory' do
 end
 
 # Has many collections behave somewhat differently. We use a separate factory to help ease the process.
-describe 'well_collection factory' do
+RSpec.describe 'well_collection factory' do
   subject do
     json(
       :well_collection,

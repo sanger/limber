@@ -1,18 +1,18 @@
 <div id="<%= panel_type.downcase.gsub(' ','-') %>-info" class="card">
   <div class='qc_validation_report'></div>
   <h3 class='card-header'><%= panel_type.titleize %> Information</h3>
-  <div class="card-block">
-  <dl class="row">
-    <dt class='col-sm-3'>Lot Number</dt>
-    <dd class="col-sm-9 lot-number">...</dd>
-    <dt class='col-sm-3'>Template</dt>
-    <dd class="col-sm-9 template">...</dd>
-    <dt class='col-sm-3'>State</dt>
-    <dd class="col-sm-9 state">...</dd>
-  </dl>
+  <div class="card-body">
+    <dl class="row">
+      <dt class='col-sm-3'>Lot Number</dt>
+      <dd class="col-sm-9 lot-number">...</dd>
+      <dt class='col-sm-3'>Template</dt>
+      <dd class="col-sm-9 template">...</dd>
+      <dt class='col-sm-3'>State</dt>
+      <dd class="col-sm-9 state">...</dd>
+    </dl>
   </div>
   <%= form.fields_for :"#{ panel_type.downcase.gsub(' ','_')}" do |qcable| %>
-    <%= qcable.hidden_field :asset_uuid,    required: true, class: 'asset_uuid' %>
-    <%= qcable.hidden_field :template_uuid, required: true, class: 'template_uuid' %>
+    <%= qcable.hidden_field :asset_uuid,    required: required, class: 'asset_uuid' %>
+    <%= qcable.hidden_field :template_uuid, required: required, class: 'template_uuid' %>
   <% end %>
 </div>

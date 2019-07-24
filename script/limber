@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'uri'
+
+CONFIG_FILE = "#{ENV['HOME']}/.limber.environments.yml"
+
+if ARGV[0].nil?
+  $stdout.puts <<-HELP
+    This script is to assit with automatically connecting limber remote environments
+
+    Usage:
+    ./script/limber environment
+  HELP
+  exit 1
+end
+
+environment = ARGV[0]
+
+def build_config
+  $stdout.puts 'No configuration for environment'
+  $stdout.print 'Sequencescape url: '
+  url = $stdin.gets.chomp
+  $stdout.print 'Application API key: '
+  api = $stdin.gets.chomp
+  $stdout.print 'PMB url: '
+  pmb = $stdin.gets.chomp
+  {
+    'sequencescape' => url,
+    'api_key' => api,
+    'pmb' => pmb
+  }
+end
+
+def run_environment(config)
+  sequencescape_url = URI.parse(config['sequencescape'])
+  ENV['API_URL'] = "#{sequencescape_url}/api/1/"
+  ENV['API2_URL'] = "#{sequencescape_url}/api/v2"
+  ENV['API_KEY'] = config['api_key']
+  ENV['PMB_URI'] = config['pmb']
+end
+
+require 'yaml'
+
+begin
+  file = File.open(CONFIG_FILE, 'r+')
+  config = YAML.safe_load(file) || {}
+  env_config = config[environment] ||= build_config
+  file.rewind
+  file.puts config.to_yaml
+  run_environment(env_config)
+  $stdout.puts 'Building configuration'
+  $stdout.puts `bundle exec rake config:generate`
+  $stdout.puts 'Running application'
+  exec('bundle exec rails s')
+rescue Errno::ENOENT
+  attempts = (attempts || 0) + 1
+  file = File.open(CONFIG_FILE, 'w')
+  file.close
+  retry unless attempts > 1
+  $stdout.puts 'Could not read or create configuration'
+ensure
+  file&.close
+end

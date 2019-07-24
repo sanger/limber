@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
+# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# update => Used to update the state of a plate/tube
 class TubesController < LabwareController
-  def locate_labware_identified_by(_id)
-    api.multiplexed_library_tube.find(params[:id])
-  end
+  private
 
-  def presenter_for(labware)
-    Presenters.lookup_for(labware).new(
-      api: api,
-      labware: labware
-    )
+  def locate_labware_identified_by_id
+    Sequencescape::Api::V2::Tube.find_by(search_param) ||
+      raise(ActionController::RoutingError, "Unknown resource #{search_param}")
   end
 end

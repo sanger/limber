@@ -7,11 +7,7 @@
 
     if ($('#robot-verification-bed').length === 0) { return };
 
-    $.ajaxSetup({
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      }
-    });
+    //= require lib/ajax_support
 
     var closeIcon = function() {
       return $(document.createElement('a')).
@@ -47,7 +43,7 @@
             text('Plate: '+plate)
           ).append(
             $(document.createElement('input')).
-            attr('type','hidden').attr('id','bed['+bed+']').attr('name','bed['+bed+'][]').
+            attr('type','hidden').attr('id','bed_plates['+bed+']').attr('name','bed_plates['+bed+'][]').
             val(plate)
           )
         );
@@ -133,7 +129,10 @@
           dataType: "json",
           url: window.location.pathname+'/verify',
           type: 'POST',
-          data: {"beds" : SCAPE.robot_beds, "robot_barcode" : SCAPE.robot_barcode },
+          data: {
+            bed_plates: SCAPE.robot_beds,
+            robot_barcode: SCAPE.robot_barcode
+          },
           success: function(data,status) { checkResponse(data); }
         }).fail(function(data,status) { SCAPE.message('The beds could not be validated. There may be network issues, or problems with Sequencescape.','danger'); fail(); });
     })

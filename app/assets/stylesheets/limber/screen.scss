@@ -1,9 +1,3 @@
-/// Compass Utils
-@import "compass/css3/box-shadow";
-@import "compass/typography/lists/horizontal-list";
-@import "compass/typography/links";
-@import "compass/css3/border-radius";
-@import "compass/css3/images";
 @import "colours";
 
 html {
@@ -15,8 +9,84 @@ body {
   margin-bottom: 50px;
 }
 
+header.limber-header {
+  nav {
+    @extend .navbar;
+    @extend .navbar-expand-md;
+    @extend .navbar-dark;
+  }
+}
+
+#app { margin-bottom: 100px; }
+
+#flashes {
+  @extend .col-12;
+}
+
+#plate-title, #tube-title, .card-header {
+  font-weight: 300;
+}
+
+.production {
+  header.limber-header {
+    nav {
+      @extend .bg-dark;
+    }
+    .environment { display: none; }
+  }
+}
+.nonproduction {
+  header.limber-header{
+    nav {
+      @extend .bg-danger;
+    }
+    .environment {
+      @extend .badge;
+      @extend .badge-light;
+      @extend .mr-2;
+    }
+  }
+}
+
+.tube-list, .plate-list {
+  @extend .list-group;
+  @extend .list-group-flush;
+  @extend .pool-colours;
+
+  .tube-item, .plate-item {
+    @extend .list-group-item;
+    @extend .justify-content-between;
+    @extend .d-flex;
+  }
+}
+
+button#btnGroupInboxes, button#btnGroupRobots {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .dropdown-toggle;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
+.btn-upload {
+  @extend .btn;
+  @extend .btn-success;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
+nav.inbox-list, nav.robots-list {
+  @extend .dropdown-menu;
+  @extend .btn-block;
+
+  a { @extend .dropdown-item };
+}
+
 /* New stuff */
-.limber-logo { font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter; }
+.limber-logo {
+  @extend .navbar-brand;
+  font-style: oblique; font-stretch: ultra-condensed; font-weight: lighter;
+}
 
 .logged_in {
   .logged_out_only { display: none; }
@@ -37,16 +107,51 @@ body {
 .qc_validation_report { .alert { margin-bottom: 0; } }
 
 // Bootstrap 4 doesn't seem to do this automatically
-.content-secondary, .content-main { padding-top: 20px; }
+.content-secondary, .content-main { @extend .mt-3; }
+
+.content-main {
+  @extend .col;
+}
+
+.content-secondary {
+  @extend .col;
+  .card {
+    @extend .mb-3;
+  }
+}
+
+.work-completion-button, .robots-button, .create-plate-button, .create-tube-button, .csv-link {
+  @extend .btn;
+  @extend .btn-lg;
+  @extend .btn-block;
+  @extend .mb-2;
+}
+
+.other-actions {
+  .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-secondary;}
+}
+.suggested-actions {
+  .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-success;}
+}
+.robots-button {
+  @extend .btn-primary;
+}
+
+.csv-link { @extend .btn-info; }
+
 
 #state-changer {
-  label { @include make-col(3); }
-  .custom-select { @include make-col(9); }
+  label { @extend .col-3; }
+  select {
+    @extend .custom-select;
+    @extend .col-9;
+  }
 }
 
 dl.metadata, dl#samples-information {
-  dt { @include make-col(3); }
-  dd { @include make-col(9); }
+  @extend .row;
+  dt { @extend .col-3; }
+  dd { @extend .col-9; }
 }
 
  dl#samples-information { @extend .row; }
@@ -65,6 +170,56 @@ dl.metadata, dl#samples-information {
   }
 }
 
+.inbox-results {
+  @extend .list-group;
+  li { @extend .list-group-item; }
+  li.state-pending { @extend .list-group-item-warning; }
+  li.state-started, li.state-process_1, li.state-process_2 { @extend .list-group-item-info; }
+  li.state-passed { @extend .list-group-item-success; }
+  // TODO: Update to primary when bootstrap updated
+  li.state-qc_completed { @extend .list-group-item-success; }
+  li.state-cancelled { @extend .list-group-item-danger; }
+  li.state-failed { @extend .list-group-item-danger; }
+  li.labware { @extend .list-group-item-action }
+}
+
+.no-comment {
+  @extend .list-group-item;
+  @extend .list-group-item-light;
+}
+
+.state-badge { @extend.badge; }
+.state-badge.pending { @extend.badge-warning; }
+.state-badge.started, .state-badge.process_1, .state-badge.process_2 { @extend.badge-info; }
+.state-badge.passed { @extend.badge-success; }
+.state-badge.qc_completed { @extend.badge-success }
+.state-badge.cancelled { @extend .list-group-item-danger; }
+.state-badge.failed { @extend .list-group-item-danger; }
+
+.flash {
+  @extend .row;
+  @extend .alert;
+}
+.flash-alert { @extend .alert-danger; }
+.flash-error { @extend .alert-danger; }
+.flash-notice { @extend .alert-success; }
+.flash-success { @extend .alert-success; }
+.flash-warning { @extend .alert-warning; }
+.flash-info { @extend .alert-info; }
+
+
+.labware {
+  dl {
+    @extend .list-inline;
+    dt { @extend .list-inline-item; }
+    dd { @extend .list-inline-item; }
+  }
+}
+
+.card {
+  .inbox-results { @extend .list-group-flush }
+}
+
 .other-actions {
   div[role=group] {
     @extend .btn-group;
@@ -80,7 +235,7 @@ dl.metadata, dl#samples-information {
   }
 
   div[role=group] + form { margin-top: 0.5rem; }
-  #plate-state { margin-top: 0.5rem; }
+  .custom-state-change { margin-top: 0.5rem; }
 
   button.fail-wells {
     @extend .btn-danger;
@@ -137,19 +292,19 @@ footer.version-info {
   /* Set the fixed height of the footer here */
   height: 50px;
   line-height: 50px; /* Vertically center the text there */
-  background-color: $gray-lightest;
+  background-color: $gray-100;
 }
 
 .asset-warnings {
-  @extend .card-block;
-  @extend .card-warning;
+  @extend .card-body;
+  @extend .bg-warning;
   @extend .text-white;
 
   h3 {
-    @extend .col-lg-2;
+    @extend .col-xl-3;
   }
   ul {
-    @extend .col-lg-10;
+    @extend .col-xl-9;
   }
 }
 
@@ -182,71 +337,6 @@ footer.version-info {
 .information {
   .total { font-weight: bold; }
 }
-
-.tooltip {
-  display:none;
-  background:transparent url(/images/black_arrow.png);
-  font-size:12px;
-  height:70px;
-  width:160px;
-  padding:25px;
-  color:#fff;
-}
-
-.tooltip.bottom {
-  background:url(/images/black_arrow_bottom.png);
-  padding-top:40px;
-  height:65px;
-}
-
-.tooltip.bottom {
-  background:url(/images/black_arrow_bottom.png);
-}
-
-/* the overlayed element */
-.aliquot-details {
-
-  /* must be initially hidden */
-  display:none;
-
-  /* place overlay on top of other elements */
-  z-index:10000;
-
-  /* styling */
-  @include background(linear-gradient(#353535,#0F0F0F));
-
-  width:600px;
-  min-height:400px;
-  border:3px solid #fff;
-  @include border-radius(5px);
-  /* CSS3 styling for latest browsers */
-  -moz-box-shadow:1px 1px 9px #000;
-  -webkit-box-shadow: 1px 1px 9px #000;
-}
-
-/* close button positioned on upper right corner */
-.aliquot-details .close {
-  /*Replace image with jquery-ui image*/
-  background-image: url(/images/close.png);
-  position:         absolute;
-  right:            -15px;
-  top:              -15px;
-  cursor:           pointer;
-  height:           35px;
-  width:            35px;
-}
-
-div.aliquot-details h3 {
-  color:     #55D8FF;
-  font-size: 15px;
-}
-
-.aliquot-details img {
-  position: absolute;
-  left:     15px;
-  top:      65px;
-}
-
 
 /* styling for elements inside overlay */
 .details {
@@ -284,13 +374,13 @@ table.form {
 }
 
 div.bad-plate {
-  @extend .has-danger;
+  @extend .is-invalid;
 
-  .form-control { @extend .form-control-danger; }
+  .form-control { @extend .is-invalid; }
 }
 
 div.wait-plate {
-  @extend .has-warning;
+  //@extend .has-warning;
   .form-control {
     background-repeat: no-repeat;
     background-position: center right 0.5625rem;
@@ -300,8 +390,8 @@ div.wait-plate {
 }
 
 div.good-plate {
-  @extend .has-success;
-  .form-control { @extend .form-control-success; }
+  @extend .is-valid;
+  .form-control { @extend .is-valid; }
 }
 
 .ui-field-contain label.bed-label {
@@ -342,30 +432,6 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 
 .ui-li-desc span.field-description {
     margin-left: 0.5em;
-}
-
-.ILA {
-  border-left: red 10px solid;
-}
-
-.PWGS {
-  border-left: green 10px solid;
-}
-
-.ISC {
-  border-left: yellow 10px solid;
-}
-
-.ReISC {
-  border-left: yellow 10px dashed;
-}
-
-.HSqX {
-  border-left: blue 10px solid;
-}
-
-.MWGS {
-  border-left: orange 10px solid;
 }
 
 .ui-field-contain label.plate-label {

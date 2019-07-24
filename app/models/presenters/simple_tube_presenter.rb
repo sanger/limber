@@ -2,12 +2,21 @@
 
 module Presenters
   class SimpleTubePresenter < TubePresenter
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Tube type' => :purpose_name,
+      'Current tube state' => :state,
+      'Input plate barcode' => :input_barcode,
+      'Stock plate barcode' => :stock_plate_barcode,
+      'Created on' => :created_on
+    }
+
     state_machine :state, initial: :pending do
       event :start do
         transition pending: :started
       end
 
-      event :take_default_path do
+      event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed
       end
 
@@ -25,18 +34,35 @@ module Presenters
 
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :started do
         include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
+      end
+
+      state :failed do
+        include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
+      end
+    end
 
-        def default_child_purpose
-          purpose.children.first
-        end
+    def active_request_types
+      [:tube]
+    end
+
+    def stock_plate_barcode
+      parent_plate = labware.parents.first
+      if parent_plate.present?
+        stock_plate_barcode_from_metadata(parent_plate.barcode.machine)
+      else
+        'N/A'
       end
     end
   end

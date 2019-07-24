@@ -2,16 +2,17 @@
 
 require 'rails_helper'
 
-feature 'Pool tubes at end of pipeline', js: true do
+RSpec.feature 'Pool tubes at end of pipeline', js: true do
   has_a_working_api
   let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { json :user, uuid: user_uuid }
+  let(:user)                  { create :user, uuid: user_uuid }
   let(:user_swipecard)        { 'abcdef' }
   let(:tube_barcode)          { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:sibling_barcode)       { '1234567890123' }
   let(:tube_uuid)             { SecureRandom.uuid }
   let(:sibling_uuid) { 'sibling-tube-0' }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
+  let(:example_v2_tube)       { create(:v2_tube, uuid: tube_uuid, state: 'passed', barcode_number: 1, purpose_name: 'Example Purpose') }
   let(:example_tube)          { json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
   let(:transfer_template_uuid) { 'transfer-template-uuid' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
@@ -30,24 +31,24 @@ feature 'Pool tubes at end of pipeline', js: true do
 
   # Setup stubs
   background do
-    Settings.transfer_templates['Transfer from tube to tube by submission'] = 'transfer-template-uuid'
+    Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
 
     # Set-up the tube config
-    Settings.purposes = {}
-    Settings.purposes['example-purpose-uuid'] = build :tube_config, name: 'Example Purpose'
-    Settings.purposes[child_purpose_uuid] = build :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
-                                                                name: 'Final Tube Purpose',
-                                                                form_class: 'LabwareCreators::FinalTube',
-                                                                parents: ['Example Purpose']
+    create :tube_config, name: 'Example Purpose', uuid: 'example-purpose-uuid'
+    create :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
+                         name: 'Final Tube Purpose',
+                         creator_class: 'LabwareCreators::FinalTube',
+                         parents: ['Example Purpose'],
+                         uuid: child_purpose_uuid
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
-    # We lookup the tube
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => tube_barcode } }, example_tube)
+    stub_swipecard_search(user_swipecard, user)
     # We get the actual tube
+    stub_v2_tube(example_v2_tube)
+    # Creator uses the old tube
     stub_api_get(tube_uuid, body: example_tube)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
-    stub_api_get(multiplexed_library_tube_uuid, body: json(:multiplexed_library_tube))
+    stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
     transfer_request
     transfer_request_b
   end
@@ -60,9 +61,9 @@ feature 'Pool tubes at end of pipeline', js: true do
       click_on('Add an empty Final Tube Purpose tube')
       expect(page).to have_text('Multi Tube pooling')
       expect(page).to have_button('Make Tube', disabled: true)
-      fill_in('Tube barcode', with: tube_barcode)
+      scan_in('Tube barcode', with: tube_barcode)
       find_field('Tube barcode').send_keys barcode_reader_key
-      fill_in('Tube barcode', with: sibling_barcode)
+      scan_in('Tube barcode', with: sibling_barcode)
       find_field('Tube barcode').send_keys barcode_reader_key
       click_on('Make Tube')
       expect(page).to have_content('New empty labware added to the system.')

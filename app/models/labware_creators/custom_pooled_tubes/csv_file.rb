@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/nested_validation'
+require 'csv'
 
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes'
@@ -10,8 +11,6 @@ module LabwareCreators
   class CustomPooledTubes::CsvFile
     include ActiveModel::Validations
     extend NestedValidation
-
-    attr_reader :header_row
 
     validate :correctly_parsed?
     validates :header_row, presence: true
@@ -23,7 +22,7 @@ module LabwareCreators
     def initialize(file)
       @data = CSV.parse(file.read)
       @parsed = true
-    rescue => e
+    rescue StandardError => e
       @data = []
       @parsed = false
       @parse_error = e.message
@@ -42,6 +41,7 @@ module LabwareCreators
 
     def correctly_parsed?
       return true if @parsed
+
       errors.add(:base, "Could not read csv: #{@parse_error}")
       false
     end
@@ -66,9 +66,11 @@ module LabwareCreators
 
     def generate_pools_hash
       return {} unless valid?
+
       pools = Hash.new { |hash, pool_name| hash[pool_name] = [] }
       transfers.each do |row|
         next if row.empty?
+
         pools[row.destination] << row.source
       end
       pools

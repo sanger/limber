@@ -6,7 +6,8 @@ module Validators
   # if a stock plate is stuck at pending, so performance is not critical
   class StockStateValidator < ActiveModel::Validator
     class Analyzer
-      attr_reader :filled_wells, :empty_wells, :duplicates
+      attr_reader :filled_wells, :empty_wells
+
       def initialize(labware)
         @labware = labware
         analyze_wells
@@ -49,9 +50,9 @@ module Validators
 
       def analyze_pools
         @well_pools = Hash.new { |h, i| h[i] = [] }
-        @labware.pools.each do |pool, pool_info|
-          pool_info.fetch('wells', []).each do |well|
-            @well_pools[well] << pool
+        @labware.pools.each do |pool|
+          pool.well_locations.each do |well|
+            @well_pools[well] << pool.id
           end
         end
       end

@@ -3,9 +3,7 @@
 (function($, exports, undefined){
   "use strict";
 
-  if (exports.SCAPE === undefined) {
-    exports.SCAPE = {};
-  }
+  if (exports.SCAPE === undefined) { exports.SCAPE = {}; }
 
    exports.SCAPE.message = function(message,status) {
       $('#validation_report').empty().append(

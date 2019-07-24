@@ -35,6 +35,7 @@ module LabwareCreators
         ]
       }
     ]
+
     private
 
     def create_labware!

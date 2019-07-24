@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
 module Robots
+  # Core robot class. Used when plates have a simple
+  # 1:1 parent child relationship.
   class Robot
     include Form
 
-    class_attribute :attributes
-    self.attributes = %i[api user_uuid layout beds name id verify_robot]
+    attr_reader :beds
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode
+
+    alias verify_robot? verify_robot
+
+    def plate_includes
+      %i[purpose parents]
+    end
+
+    def well_order
+      :coordinate
+    end
 
     def perform_transfer(bed_settings)
       beds.each do |id, bed|
@@ -33,65 +45,88 @@ module Robots
       error_messages.join(' ')
     end
 
-    def verify_robot?
-      verify_robot
+    def verify(params)
+      assign_attributes(params)
+      validation_report
     end
 
-    def verify(bed_contents, robot_barcode = nil)
-      verified = valid_plates(bed_contents).merge(valid_parents) { |_k, v1, v2| v1 && v2 }
-
-      if verify_robot? && beds.values.first.plate.present?
-        if beds.values.first.plate.custom_metadatum_collection.uuid.nil?
-          error_messages << 'Your plate is not on the right robot'
-          verified['robot'] = false
-        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
-          error_messages << 'Your plate is not on the right robot'
-          verified['robot'] = false
-        end
-      end
-
+    def validation_report
+      verified = valid_plates.merge(valid_relationships) { |_k, v1, v2| v1 && v2 }
+      verified['robot'] = valid_robot
       Report.new(verified, verified.values.all?, formatted_message)
     end
 
-    private
-
-    def valid_plates(bed_contents)
-      Hash[bed_contents.map do |bed_id, plate_barcode|
-        beds[bed_id].load(plate_barcode)
-        [bed_id, beds[bed_id].valid? || bed_error(beds[bed_id])]
-      end]
-    end
-
-    def valid_parents
-      Hash[parents_and_position do |parent, position|
-        next true if beds[position].plate.try(:uuid) == parent.try(:uuid)
-        message = if parent.present?
-                    "Should contain #{parent.barcode.prefix}#{parent.barcode.number}."
-                  else
-                    'Could not match labware with expected child.'
-                  end
-        error(beds[position], message)
-      end.compact]
-    end
-
     def beds=(new_beds)
-      beds = ActiveSupport::OrderedHash.new { |_beds, barcode| InvalidBed.new(barcode) }
+      beds = Hash.new { |store, barcode| store[barcode] = Robots::Bed::Invalid.new(barcode) }
       new_beds.each do |id, bed|
-        beds[id] = bed_class(bed).new(bed.merge(api: api, user_uuid: user_uuid, robot: self))
+        beds[id] = bed_class.new(bed.merge(robot: self))
       end
       @beds = beds
     end
 
-    def bed_class(_bed)
-      self.class::Bed
+    def bed_plates=(bed_plates)
+      bed_plates.each do |bed_barcode, plate_barcodes|
+        beds[bed_barcode.strip].load(plate_barcodes)
+      end
+    end
+
+    private
+
+    def valid_robot
+      if verify_robot? && beds.values.first.plate.present?
+        if beds.values.first.plate.custom_metadatum_collection.nil?
+          error_messages << 'Your plate is not on the right robot'
+          return false
+        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
+          error_messages << 'Your plate is not on the right robot'
+          return false
+        end
+      end
+      true
+    end
+
+    def valid_plates
+      beds.each_with_object({}) do |(bed_id, bed), states|
+        states[bed_id] = bed.valid? || bed_error(bed)
+      end
+    end
+
+    #
+    # Returns a hash of bed barcodes and their valid state
+    # Also adds any errors describing invalid bed states
+    #
+    # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
+    def valid_relationships
+      parents_and_position do |parent, position|
+        check_plate_identity(position, parent)
+      end.compact
+    end
+
+    def bed_class
+      Robots::Bed::Base
     end
 
     def parents_and_position
-      beds.map do |id, bed|
+      recognised_beds.transform_values do |bed|
         next if bed.parent.nil?
-        result = yield(bed.parent_plate, bed.parent)
-        [id, result]
+
+        yield(bed.parent_plate, bed.parent)
       end
+    end
+
+    def check_plate_identity(position, expected_plate)
+      return true if beds[position].plate.try(:uuid) == expected_plate.try(:uuid)
+
+      message = if expected_plate.present?
+                  "Should contain #{expected_plate.human_barcode}."
+                else
+                  'Could not match labware with expected child.'
+                end
+      error(beds[position], message)
+    end
+
+    def recognised_beds
+      beds.select { |_barcode, bed| bed.recognised? }
     end
   end
 end

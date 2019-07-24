@@ -2,7 +2,9 @@
 
 module Presenters
   class UnknownPlatePresenter < PlatePresenter
-    include Presenters::Statemachine
+    include Presenters::Statemachine::Shared
+    include Presenters::Statemachine::StateDoesNotAllowChildCreation
+    include Presenters::Statemachine::DoesNotAllowLibraryPassing
 
     validate :add_unknown_plate_warnings
 
@@ -10,20 +12,26 @@ module Presenters
       false
     end
 
+    def label
+      Labels::PlateLabel.new(labware)
+    end
+
     def add_unknown_plate_warnings
-      errors.add(:plate, "type '#{labware.purpose.name}' is not a limber plate. Perhaps you are using the wrong pipeline application?")
-    end
-
-    def control_state_change(&_block)
-      # You cannot change the state of the stock plate
-    end
-
-    def default_state_change(&_block)
-      # You cannot change the state of the stock plate
+      errors.add(:plate,
+                 "type '#{labware.purpose.name}' is not a limber plate. "\
+                 'Perhaps you are using the wrong pipeline application?')
     end
 
     def default_printer
       :plate_a
+    end
+
+    def control_state_change
+      # You cannot change the state of the unknown plate
+    end
+
+    def default_state_change
+      # You cannot change the state of the unknown plate
     end
   end
 end

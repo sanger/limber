@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
+# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# update => Used to update the state of a plate/tube
+# fail_wells => Updates the state of individual wells when failing
+# Note: Finds plates via the v2 api
 class PlatesController < LabwareController
-  module LabwareWrangler
-    def locate_labware_identified_by(id)
-      api.plate.find(id).tap(&:populate_wells_with_pool)
-    end
-  end
-
-  include PlatesController::LabwareWrangler
-
   before_action :check_for_current_user!, only: %i[update fail_wells]
 
   def fail_wells
@@ -27,14 +23,14 @@ class PlatesController < LabwareController
     end
   end
 
-  def presenter_for(labware)
-    Presenters.lookup_for(labware).new(
-      api:     api,
-      labware: labware
-    )
-  end
-
   def wells_to_fail
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
+  end
+
+  private
+
+  def locate_labware_identified_by_id
+    Sequencescape::Api::V2.plate_for_presenter(search_param) ||
+      raise(ActionController::RoutingError, "Unknown resource #{id}")
   end
 end

@@ -45,14 +45,20 @@ Rails.application.configure do
   # Legacy options
   config.admin_email          = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
-  config.disable_exception_notifier = true
 
-  config.api_connection_options               = ActiveSupport::OrderedOptions.new
-  config.api_connection_options.namespace     = 'Limber'
-  config.api_connection_options.url           = 'http://example.com:3000/'
-  config.api_connection_options.authorisation = 'testing'
+  config.api = ActiveSupport::OrderedOptions.new
+  config.api.v1 = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options.namespace     = 'Limber'
+  config.api.v1.connection_options.url           = 'http://example.com:3000/'
+  config.api.v1.connection_options.authorisation = 'testing'
+
+  config.api.v2 = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options.url           = 'http://example.com:3000/api/v2'
 
   config.pmb_uri = 'http://example.com:3002/v1/'
 
   config.assets.debug = true
+  config.disable_animations = true
 end

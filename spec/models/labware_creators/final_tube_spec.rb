@@ -5,14 +5,14 @@ require 'labware_creators/final_tube'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::FinalTube do
+RSpec.describe LabwareCreators::FinalTube do
   has_a_working_api
 
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
     subject do
-      LabwareCreators::FinalTube.new(form_attributes.merge(api: api))
+      LabwareCreators::FinalTube.new(api, form_attributes)
     end
 
     before do
@@ -31,7 +31,7 @@ describe LabwareCreators::FinalTube do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  parent_uuid,
+        parent_uuid: parent_uuid,
         user_uuid: user_uuid
       }
     end
@@ -49,11 +49,10 @@ describe LabwareCreators::FinalTube do
         transfer_request
       end
 
-      describe '#render' do
-        it 'should immediately redirect' do
-          expect(controller).to receive(:redirect_to_form_destination).with(subject).and_return(true)
-          subject.render(controller)
-          expect(subject.child).to eq(controller: :tubes, action: :show, id: 'multiplexed-library-tube--uuid')
+      describe '#save' do
+        it 'should be vaild' do
+          expect(subject.save).to be true
+          expect(subject.redirection_target.to_param).to eq('multiplexed-library-tube--uuid')
           expect(transfer_request).to have_been_made.once
         end
       end
@@ -63,10 +62,9 @@ describe LabwareCreators::FinalTube do
       context 'when all are passed' do
         let(:tube_json) { json(:tube_with_siblings, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
 
-        describe '#render' do
-          it 'should immediately render' do
-            expect(controller).to receive(:render).with('final_tube').and_return(true)
-            subject.render(controller)
+        describe '#save' do
+          it 'should return false' do
+            expect(subject.save).to be false
           end
         end
 
@@ -77,12 +75,12 @@ describe LabwareCreators::FinalTube do
           end
         end
 
-        describe '#save!' do
+        describe '#save' do
           let(:form_attributes) do
             {
               purpose_uuid: child_purpose_uuid,
-              parent_uuid:  parent_uuid,
-              parents:  {
+              parent_uuid: parent_uuid,
+              parents: {
                 '3980000001795' => '1',
                 '1234567890123' => '1'
               },
@@ -108,7 +106,8 @@ describe LabwareCreators::FinalTube do
           end
 
           it 'should create transfers per sibling' do
-            subject.save!
+            expect(subject).to be_valid
+            expect(subject.save).to be true
             expect(transfer_request).to have_been_made.once
             expect(transfer_request_b).to have_been_made.once
           end

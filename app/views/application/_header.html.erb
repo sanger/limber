@@ -1,9 +1,10 @@
-<nav class="navbar static-top navbar-toggleable-md navbar-dark bg-inverse navbar-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+<header class="limber-header">
+<nav>
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#headernavigation" aria-controls="headernavigation" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <%= link_to 'Limber', :root, class: 'navbar-brand limber-logo m-b-0'%>
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+  <%= link_to 'Limber', :root, class: 'limber-logo'%><span class="environment"><%= Rails.env %></span>
+  <div class="collapse navbar-collapse" id="headernavigation">
     <%= form_tag perform_search_path, class: 'plate-search-form form-inline', :'data-ajax' => 'false', method: 'post' do %>
       <%= label_tag :plate_barcode, 'Plate or Tube Barcode', class: 'sr-only' %>
       <%= text_field_tag :plate_barcode, params[:plate_barcode], class: 'plate-barcode form-control', placeholder: 'e.g. 1220012345855 or DN12345' %>
@@ -11,6 +12,12 @@
     <ul class="navbar-nav mr-auto mt-2 mt-md-0">
       <!-- No nav items -->
     </ul>
-    <span class='navbar-text float-sm-right navbar-dark text-white'>Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
+    <span class='navbar-text float-sm-right navbar-dark text-white'>
+      <% if logged_in? %>
+        Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
+      <% else %>
+        Not logged in
+      <% end %>
   </div>
 </nav>
+</header>

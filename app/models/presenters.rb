@@ -2,14 +2,15 @@
 
 module Presenters
   def self.lookup_for(labware)
-    presentation_classes = Settings.purposes[labware.plate_purpose.uuid]
+    presentation_classes = Settings.purposes[labware.purpose.uuid]
+
     if presentation_classes
       presentation_classes[:presenter_class].constantize
     else
-      case labware
-      when Limber::Plate then Presenters::UnknownPlatePresenter
-      else UnknownLabwareType
-      end
+      return Presenters::UnknownPlatePresenter if labware.plate?
+      return Presenters::UnknownTubePresenter if labware.tube?
+
+      raise UnknownLabwareType
     end
   end
 end

@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/qc_files_controller'
 
-describe QcFilesController, type: :controller do
+RSpec.describe QcFilesController, type: :controller do
   has_a_working_api
 
   describe '#show' do

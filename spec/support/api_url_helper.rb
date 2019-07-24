@@ -25,7 +25,7 @@ module ApiUrlHelper
     # @param [String] body: named_parameter reflecting the expected response JSON
     # @param [Int] status: the response status, defaults to 200
     # @return mocked_request
-    def stub_api_get(*components, status: 200, body:)
+    def stub_api_get(*components, status: 200, body: '{}')
       stub_request(:get, api_url_for(*components))
         .with(headers: { 'Accept' => 'application/json' })
         .to_return(
@@ -49,27 +49,76 @@ module ApiUrlHelper
     # @param [Hash] payload: the payload of the post request. Hash strongly recommended over raw json
     # @param [Int] status: the response status, defaults to 201
     # @return mocked_request
-    def stub_api_post(*components, status: 201, body:, payload:)
+    def stub_api_post(*components, status: 201, body: '{}', payload: {})
       stub_api_modify(*components, status: status, body: body, payload: payload)
     end
 
     def stub_api_modify(*components, action: :post, status: 201, body:, payload:)
-      stub_request(action, api_url_for(*components))
+      Array(body).reduce(
+        stub_request(action, api_url_for(*components))
         .with(
           headers: { 'Accept' => 'application/json', 'content-type' => 'application/json' },
           body: payload
         )
-        .to_return(
+      ) do |request, response|
+        request.to_return(
           status: status,
-          body: body,
+          body: response,
           headers: { 'content-type' => 'application/json' }
         )
+      end
     end
 
     def stub_api_put(*components, body:, payload:)
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
+
+    def stub_api_v2(klass, includes: nil, where:, first: nil, all: nil)
+      query_builder = "Sequencescape::Api::V2::#{klass}".constantize
+      expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
+      if all
+        expect(query_builder).to receive(:where).with(where).and_return(query_builder)
+        expect(query_builder).to receive(:all).and_return(all)
+      else
+        expect(query_builder).to receive(:find).with(where).and_return(JsonApiClient::ResultSet.new([first]))
+      end
+    end
+
+    # Builds the basic v2 plate finding query.
+    def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil)
+      # Stub to v1 api search here as well!
+      if stub_search
+        stub_asset_search(
+          plate.barcode.machine,
+          json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
+        )
+      end
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(plate)
+      elsif custom_includes
+        arguments = [custom_includes, { uuid: plate.uuid }]
+        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(*arguments).and_return(plate)
+      else
+        arguments = [{ uuid: plate.uuid }]
+        allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(*arguments).and_return(plate)
+      end
+    end
+
+    # Builds the basic v2 tube finding query.
+    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+      # Stub to v1 api search here as well!
+      if stub_search
+        stub_asset_search(
+          tube.barcode.machine,
+          json(:tube, uuid: tube.uuid, purpose_name: tube.purpose.name, purpose_uuid: tube.purpose.uuid)
+        )
+      end
+      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    end
   end
+  extend ClassMethods
 end
 
 RSpec.configure do |config|

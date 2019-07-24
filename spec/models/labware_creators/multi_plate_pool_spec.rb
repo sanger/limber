@@ -5,11 +5,12 @@ require 'labware_creators/base'
 require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
-# TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::MultiPlatePool do
+# Presents the user with a form allowing them to scan in up to four plates
+# which will then be pooled together according to pre-capture pools
+RSpec.describe LabwareCreators::MultiPlatePool do
   it_behaves_like 'it only allows creation from tagged plates'
 
-  has_a_working_api(times: :any)
+  has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
@@ -28,42 +29,29 @@ describe LabwareCreators::MultiPlatePool do
   let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
 
   before do
-    Settings.purposes = {
-      child_purpose_uuid => { name: child_purpose_name }
-    }
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
+    create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
     plate_request
     wells_request
-  end
-
-  it 'can be created' do
-    expect(subject).to be_a LabwareCreators::MultiPlatePool
   end
 
   context 'on new' do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  plate_uuid
+        parent_uuid: plate_uuid
       }
     end
 
     subject do
-      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api))
+      LabwareCreators::MultiPlatePool.new(api, form_attributes)
+    end
+
+    it 'can be created' do
+      expect(subject).to be_a LabwareCreators::MultiPlatePool
     end
 
     it 'renders the "multi_plate_pool" page' do
-      controller = CreationController.new
-      expect(controller).to receive(:render).with('multi_plate_pool')
-      subject.render(controller)
-    end
-
-    context 'with purpose mocks' do
-      it 'describes the child purpose' do
-        # TODO: This request is possibly unnecessary
-        stub_api_get(child_purpose_uuid, body: json(:plate_purpose, name: child_purpose_name))
-        expect(subject.child_purpose.name).to eq(child_purpose_name)
-      end
+      expect(subject.page).to eq('multi_plate_pool')
     end
 
     it 'describes the purpose uuid' do
@@ -73,7 +61,7 @@ describe LabwareCreators::MultiPlatePool do
 
   context 'on create' do
     subject do
-      LabwareCreators::MultiPlatePool.new(form_attributes.merge(api: api, user_uuid: user_uuid))
+      LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid))
     end
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
@@ -85,10 +73,6 @@ describe LabwareCreators::MultiPlatePool do
       {
         parent_uuid: plate_uuid,
         purpose_uuid: child_purpose_uuid,
-        '0' => plate_barcode,
-        '1' => plate_b_barcode,
-        '2' => '',
-        '3' => '',
         transfers: {
           plate_uuid => { 'A1' => 'A1', 'B1' => 'A1' },
           plate_b_uuid => { 'A1' => 'B1', 'B1' => 'B1' }

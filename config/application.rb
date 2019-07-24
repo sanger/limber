@@ -17,7 +17,9 @@ require 'rails'
 ].each do |railtie|
   begin
     require railtie.to_s
-  rescue LoadError
+  rescue LoadError # rubocop:disable Lint/HandleExceptions
+    # Do nothing. We're mimicking rails/all here, so
+    # use the same behaviour.
   end
 end
 # Require the gems listed in Gemfile, including any gems
@@ -30,5 +32,6 @@ module Limber
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.label_templates = config_for(:label_templates)
+    config.disable_animations = false
   end
 end

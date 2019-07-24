@@ -9,7 +9,11 @@
       "path": ".",
       "folder_exclude_patterns": [
         ".bundle",
-        "node_modules"
+        "node_modules",
+        "public/assets",
+        "public/packs",
+        "coverage",
+        "doc"
       ],
       "file_exclude_patterns":[
         "limber.sublime-workspace"
@@ -30,6 +34,9 @@
         "*.zip",
         "*.xls"
       ]
+    },
+    {
+      "path": "coverage"
     }
   ],
   // These settings will be applied to anyone working

@@ -1,0 +1,39 @@
+<%# This is a picking file for a Hamilton robot for plate to plate transfers %>
+<%= CSV.generate_line [
+                        'Workflow',
+                        'Cherry Pick'
+                      ],
+                      row_sep: ""
+%>
+<%= CSV.generate_line [
+                        'Source Plate ID',
+                        'Source Plate Well',
+                        'Destination Plate ID',
+                        'Destination Plate Well',
+                        'Sample Vol'
+                      ],
+                      row_sep: ""
+%>
+<%
+  rows_array = []
+  @plate.wells_in_columns.each do |well|
+    well.transfer_requests_as_target.each do |transfer_req|
+      # NB. Making assumption here that name field on asset is for a plate well
+      # and contains a plate barcode and well position e.g. DN12345678:A1
+      name_array = transfer_req.source_asset.name.split(':')
+      if name_array.length == 2
+        rows_array << [
+                        name_array[0],
+                        name_array[1],
+                        @plate.labware_barcode.human,
+                        well.position['name'],
+                        transfer_req.volume
+                      ]
+
+      end
+    end
+  end
+%>
+<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>

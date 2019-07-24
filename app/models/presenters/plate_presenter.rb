@@ -2,22 +2,19 @@
 
 require_dependency 'presenters/presenter'
 
+# Basic core presenter class for plates
 class Presenters::PlatePresenter
   include Presenters::Presenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
 
-  attr_accessor :api, :labware
-  self.attributes = %i[api labware]
+  class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
 
-  class_attribute :labware_class, :aliquot_partial
-  self.labware_class = :plate
-  self.aliquot_partial = 'labware/aliquot'
-
+  self.summary_partial = 'labware/plates/standard_summary'
+  self.aliquot_partial = 'standard_aliquot'
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
-  class_attribute :summary_items
   self.summary_items = {
     'Barcode' => :barcode,
     'Number of wells' => :number_of_wells,
@@ -27,39 +24,38 @@ class Presenters::PlatePresenter
     'PCR Cycles' => :pcr_cycles,
     'Created on' => :created_on
   }
-
-  # This is now generated dynamically by the LabwareHelper
-  class_attribute :tab_states
-
-  class_attribute :well_failure_states
-  self.well_failure_states = [:passed]
+  self.allow_well_failure_in_states = [:passed]
+  self.style_class = 'standard'
 
   # Note: Validation here is intended as a warning. Rather than strict validation
-  validates :pcr_cycles_specified, numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' }
+  validates :pcr_cycles_specified,
+            numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' },
+            unless: :multiple_requests_per_well?
 
   validates :pcr_cycles,
             inclusion: { in: ->(r) { r.expected_cycles },
                          message: 'differs from standard. %{value} cycles have been requested.' },
             if: :expected_cycles
 
-  validates_with Validators::SuboptimalValidator
   validates_with Validators::InProgressValidator
 
-  alias plate labware
-  alias plate_to_walk labware
+  delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
+  delegate :pool_index, to: :pools
+  delegate :tube_labels, to: :tubes_and_sources
 
-  delegate :tagged?, to: :labware
+  alias plate_to_walk labware
+  # Purpose returns the plate or tube purpose of the labware.
+  # Currently this needs to be specialised for tube or plate but in future
+  # both should use #purpose and we'll be able to share the same method for
+  # all presenters.
+  alias plate_purpose purpose
 
   def number_of_wells
-    "#{number_of_filled_wells}/#{total_number_of_wells}"
+    "#{number_of_filled_wells}/#{size}"
   end
 
   def pcr_cycles
-    if pcr_cycles_specified.zero?
-      'No pools specified'
-    else
-      cycles.to_sentence
-    end
+    pcr_cycles_specified.zero? ? 'No pools specified' : cycles.to_sentence
   end
 
   def expected_cycles
@@ -67,66 +63,65 @@ class Presenters::PlatePresenter
   end
 
   def label
-    Labels::PlateLabel.new(labware)
+    label_class = purpose_config.fetch(:label_class)
+    label_class.constantize.new(labware)
   end
 
-  def tube_labels
-    labware.tubes.map { |t| Labels::TubeLabel.new(t) }
+  def tubes_and_sources
+    @tubes_and_sources ||= Presenters::TubesWithSources.build(wells: wells, pools: pools)
+    yield(@tubes_and_sources) if block_given? && @tubes_and_sources.tubes?
+    @tubes_and_sources
   end
 
-  def suitable_labware
-    yield
-  end
-
-  def control_library_passing
-    yield if allow_library_passing? && !suggest_library_passing?
-  end
-
-  def control_suggested_library_passing
-    yield if allow_library_passing? && suggest_library_passing?
-  end
-
-  def suggest_library_passing?
-    purpose_config[:suggest_library_pass_for]&.include?(active_request_type)
-  end
-
-  def control_tube_display
-    yield if labware.transfers_to_tubes?
-  end
-
-  # Purpose returns the plate or tube purpose of the labware.
-  # Currently this needs to be specialised for tube or plate but in future
-  # both should use #purpose and we'll be able to share the same method for
-  # all presenters.
-  def purpose
-    labware.plate_purpose
-  end
-
-  def labware_form_details(view)
-    { url: view.limber_plate_path(labware), as: :plate }
-  end
-
-  def transfers
-    transfers = labware.creation_transfer.transfers
-    transfers.sort { |a, b| split_location(a.first) <=> split_location(b.first) }
+  def child_plates
+    labware.child_plates.tap do |child_plates|
+      yield child_plates if block_given? && child_plates.present?
+    end
   end
 
   def csv_file_links
-    [['', "#{Rails.application.routes.url_helpers.limber_plate_path(labware.uuid)}.csv"]]
+    links = []
+    if purpose_config.present? && purpose_config.file_links.present?
+      purpose_config.file_links.each do |link|
+        links << [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
+      end
+    end
+    links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
+    links
   end
 
   def filename(offset = nil)
     "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
   end
 
-  private
-
-  def number_of_filled_wells
-    plate.wells.count { |w| w.aliquots.present? }
+  def tag_sequences
+    @tag_sequences ||= wells.each_with_object([]) do |well, tags|
+      well.aliquots.each do |aliquot|
+        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
+      end
+    end
   end
 
-  def total_number_of_wells
-    plate.size
+  def wells
+    labware.wells_in_columns
+  end
+
+  def comment_title
+    "#{human_barcode} - #{purpose_name}"
+  end
+
+  private
+
+  def libraries_passable?
+    tagged? && passable_request_types.present?
+  end
+
+  def multiple_requests_per_well?
+    wells.any?(&:multiple_requests?)
+  end
+
+  def number_of_filled_wells
+    wells.count { |w| w.aliquots.present? }
   end
 
   def pcr_cycles_specified
@@ -134,18 +129,20 @@ class Presenters::PlatePresenter
   end
 
   def cycles
-    plate.pcr_cycles
+    labware.pcr_cycles
   end
 
-  # Split a location string into an array containing the row letter
-  # and the column number (as a integer) so that they can be sorted.
-  def split_location(location)
-    match = location.match(/^([A-H])(\d+)/)
-    [match[2].to_i, match[1]] # Order by column first
+  # Passable requests are those associated with aliquots,
+  # which have not yet been passed, failed or cancelled
+  def passable_request_types
+    wells.flat_map do |well|
+      well.requests_in_progress.select(&:passable?).map(&:request_type_key)
+    end
   end
 
-  def active_request_type
-    return :none if labware.pools.empty?
-    labware.pools.values.first['request_type']
+  def active_request_types
+    wells.flat_map do |well|
+      well.active_requests.map(&:request_type_key)
+    end
   end
 end

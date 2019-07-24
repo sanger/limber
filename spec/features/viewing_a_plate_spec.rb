@@ -2,62 +2,76 @@
 
 require 'rails_helper'
 
-feature 'Viewing a plate', js: true do
+RSpec.feature 'Viewing a plate', js: true do
   has_a_working_api
 
-  let(:user)           { json :user }
+  let(:user)           { create :user }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }
-  let(:example_plate)  { json :stock_plate, uuid: plate_uuid }
-  let(:example_passed_plate)  { json :stock_plate, uuid: plate_uuid, state: 'passed' }
-  let(:example_started_plate) { json :stock_plate, uuid: plate_uuid, state: 'started' }
-  let(:wells_collection) { json(:well_collection) }
+  let(:state) { 'pending' }
+  let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
+  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection, purpose_uuid: purpose_uuid }
+  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
   let(:default_tube_printer) { 'tube printer 1' }
+  let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }
 
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
-    Settings.purposes['child-purpose-0'] = build :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked']
+    purpose_config
+    create :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked'], uuid: 'child-purpose-0'
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
-    stub_search_and_single_result('Find user by swipecard code', { 'search' => { 'swipecard_code' => user_swipecard } }, user)
-    # We lookup the plate
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_plate)
+    stub_swipecard_search(user_swipecard, user)
     # We get the actual plate
-    stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: wells_collection)
+    stub_v2_plate(example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('pending')
+    expect(find('.state-badge')).to have_content('Pending')
+    find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
   end
 
-  scenario 'if a plate is passed creation of a child is allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_passed_plate)
-    stub_api_get(plate_uuid, body: example_passed_plate)
-    fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('passed')
-    expect(page).to have_button('Add an empty Child Purpose 0 plate')
+  context 'with a custom csv' do
+    let(:purpose_config) { create :purpose_config, csv_template: 'show_extended', uuid: purpose_uuid }
+    scenario 'of a recognised type' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_content('Pending')
+      find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
+      find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
+    end
   end
 
-  scenario 'if a plate is started creation of a child is not allowed' do
-    stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => plate_barcode } }, example_started_plate)
-    stub_api_get(plate_uuid, body: example_started_plate)
-    fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.badge')).to have_content('started')
-    expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+  context 'a passed plate' do
+    let(:state) { 'passed' }
+    scenario 'creation of a child is allowed' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_content('Passed')
+      expect(page).to have_button('Add an empty Child Purpose 0 plate')
+    end
+  end
+
+  context 'a started plate' do
+    let(:state) { 'started' }
+    scenario 'if a plate is started creation of a child is not allowed' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_content('Started')
+      expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+    end
   end
 
   feature 'with a suboptimal well' do
-    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+    let(:wells_collection) do
+      %w[A1 B1].map { |loc| create(:v2_well, state: state, location: loc, aliquot_factory: :v2_suboptimal_aliquot) }
+    end
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content('Wells contain suboptimal aliquots')
@@ -80,8 +94,7 @@ feature 'Viewing a plate', js: true do
   end
 
   feature 'with passed pools' do
-    let(:example_plate) { json :stock_plate, uuid: plate_uuid, pool_complete: true, pool_sizes: [5] }
-    let(:wells_collection) { json(:well_collection, aliquot_factory: :suboptimal_aliquot) }
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -92,8 +105,23 @@ feature 'Viewing a plate', js: true do
     end
   end
 
+  feature 'with a tagged plate' do
+    let(:purpose_config) { create :tagged_purpose_config, uuid: purpose_uuid }
+    let(:wells_collection) do
+      %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) }
+    end
+    scenario 'it shows tags' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('#aliquot_A1')).to have_content('1')
+    end
+  end
+
   feature 'with transfers to tubes' do
-    let(:example_plate) { json :plate, uuid: plate_uuid, transfers_to_tubes_count: 1, purpose_uuid: 'child-purpose-0' }
+    let(:example_plate) do
+      create :v2_plate, uuid: plate_uuid,
+                        transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) },
+                        purpose_uuid: 'child-purpose-0'
+    end
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 
@@ -119,10 +147,6 @@ feature 'Viewing a plate', js: true do
       } }
     end
 
-    before do
-      stub_api_get(plate_uuid, 'transfers_to_tubes', body: json(:transfer_collection))
-    end
-
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(page).to have_content('Print tube labels')
@@ -137,10 +161,10 @@ feature 'Viewing a plate', js: true do
         expect(page).to have_content('Print tube labels')
         select(barcode_printer, from: 'Barcode Printer')
 
-        job = instance_double('Print_job', execute: true)
-
-        expect(PrintJob).to receive(:new).and_return(job).twice
-
+        # So RSpec cautions against this as a code smell, but tbh it feels vastly better than the
+        # alternative in integration tests.
+        allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
+        stub_v2_plate(example_plate)
         click_on('Print Label')
       end
     end

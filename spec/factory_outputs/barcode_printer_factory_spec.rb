@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'barcode printer factory' do
+RSpec.describe 'barcode printer factory' do
   subject do
     json(
       :barcode_printer,

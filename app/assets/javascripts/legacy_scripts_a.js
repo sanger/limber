@@ -1,385 +1,101 @@
 (function($, exports, undefined){
-  "use strict";
+  'use strict'
 
-  //= require lib/keycodes
-
-  // Set up the SCAPE namespace
-  if (exports.SCAPE === undefined) {
-    exports.SCAPE = {};
-  }
-
-  $.extend($, {
-    cssToCamel: function(string) {
-      return string.replace(/-([a-z])/gi, function(s, group1) {
-        return group1.toUpperCase();
-      });
-    }
-  });
-
-
-  $.extend(SCAPE, {
-  //temporarily used until page ready event sorted... :(
-  //This is a copy of the template held in the tagging page.
-  tag_palette_template:
-    '<li class="ui-li ui-li-static ui-body-c">'+
-    '<div class="available-tag palette-tag"><%= tag_id %></div>&nbsp;&nbsp;Tag <%= tag_id %>'+
-    '</li>',
-
-  //temporarily used until page ready event sorted... :(
-  //This is a copy of the template held in the tagging page.
-  substitution_tag_template:
-    '<li class="ui-li ui-li-static ui-body-c" data-split-icon="delete">'+
-    '<div class="substitute-tag palette-tag"><%= original_tag_id %></div>&nbsp;&nbsp;Tag <%= original_tag_id %> replaced with Tag <%= replacement_tag_id %>&nbsp;&nbsp;<div class="available-tag palette-tag"><%= replacement_tag_id %></div>'+
-    '<input id="plate-substitutions-<%= original_tag_id %>" name="plate[substitutions][<%= original_tag_id %>]" type="hidden" value="<%= replacement_tag_id %>" />'+
-    '</li>',
-  animateWell: function() {
-    if ($(this).children().length < 2) { return; }
-    this.pos = 0;
-    this.slide = function() {
-      var scrollTo;
-      this.pos = (this.pos + 1) % $(this).children().length;
-      scrollTo = $(this).children()[this.pos].offsetTop-5;
-      $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
-    };
-    this.slide();
-  },
-
-  dim: function() {
-    $(this).fadeTo('fast', 0.2);
-    return this;
-  },
-
-    WELLS_IN_COLUMN_MAJOR_ORDER: [
-      "A1",  "B1",  "C1",  "D1",  "E1",  "F1",  "G1",  "H1",
-      "A2",  "B2",  "C2",  "D2",  "E2",  "F2",  "G2",  "H2",
-      "A3",  "B3",  "C3",  "D3",  "E3",  "F3",  "G3",  "H3",
-      "A4",  "B4",  "C4",  "D4",  "E4",  "F4",  "G4",  "H4",
-      "A5",  "B5",  "C5",  "D5",  "E5",  "F5",  "G5",  "H5",
-      "A6",  "B6",  "C6",  "D6",  "E6",  "F6",  "G6",  "H6",
-      "A7",  "B7",  "C7",  "D7",  "E7",  "F7",  "G7",  "H7",
-      "A8",  "B8",  "C8",  "D8",  "E8",  "F8",  "G8",  "H8",
-      "A9",  "B9",  "C9",  "D9",  "E9",  "F9",  "G9",  "H9",
-      "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10",
-      "A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11",
-      "A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"
-    ],
-
-
-    linkCallbacks: $.Callbacks(),
-
-    linkHandler: function(event){
-      var targetTab  = $(event.currentTarget).attr('rel');
-      var targetIds  = '#'+SCAPE.plate.tabViews[targetTab].join(', #');
-      var nonTargets = $('.scape-ui-block').not(targetIds);
-
-      nonTargets.fadeOut();
-      nonTargets.promise().done(function(){ $(targetIds).fadeIn(); });
-    },
-
-
-    StateMachine: function(delegateTarget, states){
-      var sm             = this;
-      var stateNames     = _.keys(states);
-      var stateCallbacks = {};
-      sm.delegateTarget  = $(delegateTarget);
-
-      var beforeCallback = function(event){
-        sm.delegateTarget.off();
-      };
-
-
-      var afterCallback = function(newState){
-        sm.currentState = newState;
-      };
-
-
-      var callbacks, otherStates;
-      for (var stateName in states){
-        otherStates = _.difference(stateNames, [stateName]);
-        callbacks = [
-          beforeCallback,
-          states[stateName].enter
-        ];
-
-        callbacks = callbacks.concat(otherStates.map(
-          function(otherStateName){
-            return function(){
-              if(sm.currentState === otherStateName)
-              return states[otherStateName].leave();
-            };
-        }
-        ));
-
-        callbacks = _.compact(callbacks).concat(afterCallback);
-
-        stateCallbacks[stateName] = $.Callbacks().add(callbacks);
-      }
-
-
-      sm.transitionTo = function(newState){
-        if (stateCallbacks[newState] === undefined) throw "Unknown State: " + newState;
-
-        stateCallbacks[newState].fire(newState, sm.delegateTarget);
-      };
-
-
-      sm.transitionLink = function(e){
-        var newState = $.cssToCamel($(e.currentTarget).attr('rel'));
-        sm.transitionTo(newState);
-      };
-    },
-
-
-  failWellToggleHandler:  function(event){
-    $(event.currentTarget).hide('fast', function(){
-      var failing = $(event.currentTarget).toggleClass('good failed').show().hasClass('failed');
-      $(event.currentTarget).find('input:hidden')[failing ? 'attr' : 'removeAttr']('checked', 'checked');
-    });
-  },
-
-
-  PlateViewModel: function(plate, plateElement, control) {
-    // Using the 'that' pattern...
-    // ...'that' refers to the object created by this constructor.
-    // ...'this' used in any of the functions will be set at runtime.
-    var that          = this;
-    that.plate        = plate;
-    that.plateElement = plateElement;
-    that.control      = control;
-
-
-    that.statusColour = function() {
-      that.plateElement.find('.aliquot').
-        addClass(that.plate.state);
-    };
-
-    that.well_index_by_row = function(well){
-      var row, col
-      row = well.charCodeAt(0)-65;
-      col = parseInt(well.slice(1));
-      return (row*12)+col
-    };
-
-    that.poolsArray = function(){
-      var poolsArray = _.toArray(that.plate.pools);
-      poolsArray = _.sortBy(poolsArray, function(pool){
-        return that.well_index_by_row(pool.wells[0]);
-      });
-
-      return poolsArray;
-    }();
-
-    that.colourPools = function() {
-
-      for (var i=0; i < that.poolsArray.length; i++){
-        var poolId = that.poolsArray[i].id;
-
-        that.plateElement.find('.aliquot[data-pool='+poolId+']').
-          addClass('colour-'+(i+1));
-      }
-
-    };
-
-    that.clearAliquotSelection = function(){
-      that.plateElement.
-        find('.aliquot').
-        removeClass('selected-aliquot dimmed');
-    };
-
-    that['summary-view'] = {
+  // Declared as var  rather than const due to issues with const in strict mode
+  // in the older versions of Chrome (34) used in the labs.
+  var PlateViewModel = function(plateElement) {
+    this['pools-view'] = {
       activate: function(){
-          that.statusColour();
-          that.colourPools();
-
-      },
-
-      deactivate: function(){}
-    };
-
-    that['pools-view'] = {
-      activate: function(){
-        $('#pools-information li').fadeIn('fast');
-        that.plateElement.find('.aliquot').
-          removeClass(that.plate.state).
-          removeClass('selected-aliquot dimmed');
-        that.colourPools();
+        $('#pools-information li').fadeIn('fast')
+        plateElement.addClass('pool-colours')
+        plateElement.find('.aliquot').
+          removeClass('selected-aliquot dimmed')
       },
 
       deactivate: function(){
-        that.plateElement.
+        plateElement.removeClass('pool-colours')
+        plateElement.
           find('.aliquot').
-          removeClass('selected-aliquot dimmed');
+          removeClass('selected-aliquot dimmed')
       }
-    };
+    }
 
-    that['samples-view'] = {
+    this['concentration-binned-view'] = {
       activate: function(){
-        that.statusColour();
+        plateElement.addClass('binning-colours')
       },
-      deactivate: function(){}
 
-    };
+      deactivate: function(){
+        plateElement.removeClass('binning-colours')
+      }
+    }
+  }
 
-    that['files-view'] = {
-      activate: function() { },
-      deactivate: function() { }
-    };
+  // Declared as var  rather than const due to issues with const in strict mode
+  // in the older versions of Chrome (34) used in the labs.
+  var limberPlateView = function(defaultTab) {
+    var plateElement = $(this)
 
+    var control = $('#plate-view-control')
 
-    that.sm = new StateMachine;
-    that.sm.add(that['summary-view']);
-    that.sm.add(that['pools-view']);
-    that.sm.add(that['samples-view']);
-    that.sm.add(that['files-view']);
+    var viewModel = new PlateViewModel(plateElement)
 
-    that['summary-view'].active();
-  },
-
-
-  limberPlateView: function(plate) {
-    var plateElement = $(this);
-
-    var control = $('#plate-view-control');
-
-    var viewModel = new SCAPE.PlateViewModel(plate, plateElement, control);
-
-    $('#plate-view-control a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      var viewName = e.target.dataset.plateView;
-      viewModel[viewName].active();
+    control.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var viewName = e.target.dataset.plateView
+      if (viewModel[viewName]) { viewModel[viewName].activate() }
     })
 
-    control.on('change', 'input:radio', function(event){
-      var viewName = $(event.currentTarget).val();
-      viewModel[viewName].active();
-    });
+    control.find('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
+      var viewName = e.target.dataset.plateView
+      if (viewModel[viewName]) { viewModel[viewName].deactivate() }
+    })
+
+    control.find('a[href="'+defaultTab+'"]').tab('show')
 
     plateElement.on('click', '.aliquot', function(event) {
-      var pool = $(event.currentTarget).data('pool');
+      var pool = $(event.currentTarget).data('pool')
 
-      viewModel['pools-view'].active();
+      control.find('a[data-plate-view="pools-view"]').tab('show')
 
       plateElement.
         find('.aliquot[data-pool!='+pool+']').
-        removeClass('selected-aliquot').addClass('dimmed');
+        removeClass('selected-aliquot').addClass('dimmed')
 
       plateElement.
         find('.aliquot[data-pool='+pool+']').
         addClass('selected-aliquot').
-        removeClass('dimmed');
+        removeClass('dimmed')
 
-        $('#pools-information li[data-pool!='+pool+']').
-          fadeOut('fast').
-          promise().
-          done(function(){
-            $('#pools-information li[data-pool='+pool+']').fadeIn('fast');
-        });
-
-
-
-    });
+      $('#pools-information li[data-pool!='+pool+']').
+        fadeOut('fast').
+        promise().
+        done(function(){
+          $('#pools-information li[data-pool='+pool+']').fadeIn('fast')
+        })
+    })
 
     // ...we will never break the chain...
-    return this;
+    return this
   }
 
-  });
-
   // Extend jQuery prototype...
-  $.extend($.fn, {
-    limberPlateView:    SCAPE.limberPlateView,
-    dim:                SCAPE.dim
-  });
+  $.extend($.fn, { limberPlateView:    limberPlateView })
+  $(function(_event) { $('#plate-show-page #plate').limberPlateView(window.location.hash) })
 
 
   // ########################################################################
   // # Page events....
-  $(document).on('pageinit', function(){
-    // Trap the carriage return sent by the swipecard reader
-    $(document).on("keydown", "input.card-id", function(e) {
-      var code=e.charCode || e.keyCode;
-      if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
-        $('input[data-type="search"], .plate-barcode').last().focus();
-        return false;
-      }
-
-    });
-
-    var myPlateButtonObserver = function(event){
-      if ($(event.currentTarget).val()) {
-          $('.show-my-plates-button').prop('disabled',true);
-      } else if ($('input.card-id').val()) {
-          $('.show-my-plates-button').prop('disabled',false);
-      }
-    };
-
-    $(document).on("keyup", ".plate-barcode", myPlateButtonObserver);
-    $(document).on("keyup", ".card-id", myPlateButtonObserver);
-
+  $(function(){
+    //= require lib/keycodes
     // Trap the carriage return sent by barcode scanner
-    $(document).on("keydown", ".plate-barcode", function(event) {
-      var code=event.charCode || event.keyCode;
+    $(document).on('keydown', '.plate-barcode', function(event) {
+      var code=event.charCode || event.keyCode
       // Check for carrage return (key code ENTER_KEYCODE)
       if ((code === ENTER_KEYCODE)||(code === TAB_KEYCODE)) {
-        // Check that the value is 13 characters long like a barcode
-        if ($(event.currentTarget).val().length === 13) {
-          $(event.currentTarget).closest('form').find('.show-my-plates').val(false);
-          $(event.currentTarget).closest('.plate-search-form').submit();
+        if ($(event.currentTarget).val().length > 0) {
+          $(event.currentTarget).closest('.plate-search-form').submit()
         }
       }
-    });
-
-    if ($('input.card-id').val()) {
-      $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-    }
-
-    // Change the colour of the title bar to show a user id
-    $(document).on('blur', 'input.card-id', function(event){
-      if ($(event.currentTarget).val()) {
-        $('.ui-header').removeClass('ui-bar-a').addClass('ui-bar-b');
-      } else {
-        $('.ui-header').removeClass('ui-bar-b').addClass('ui-bar-a');
-      }
-    });
-
-
-    // Fill in the plate barcode with the plate links barcode
-    $(document).on('click', ".plate-link", function(event) {
-      $('.plate-barcode').val($(event.currentTarget).attr('id').substr(6));
-      $('.show-my-plates').val(false);
-      $('.plate-search-form').submit();
-      return false;
-    });
-
-
-    // Disable submit buttons after first click...
-    $(document).on('submit', 'form', function(event){
-      $(event.currentTarget).find(':submit').
-        button('disable').
-        prev('.ui-btn-inner').
-        find('.ui-btn-text').
-        text('Working...');
-
-      return true;
-    });
-
-  });
-
-  $(document).bind('pageshow', function() {
-    $($('.ui-page-active form :input:visible')[0]).focus();
-  });
-
-  $(function(event) {
-    // Set up the plate element as an illuminaBPlate...
-    if ($('#plate-show-page').length === 0) { return };
-    $('#plate').limberPlateView(SCAPE.labware);
-  });
-
-  $(document).on('pageinit', function(){
-    SCAPE.linkCallbacks.add(SCAPE.linkHandler);
-
-    $(document).on('click','.navbar-link', SCAPE.linkCallbacks.fire);
-  });
-
-  //= require lib/status_collector
-
-})(jQuery, window);
+    })
+  })
+})(jQuery, window)

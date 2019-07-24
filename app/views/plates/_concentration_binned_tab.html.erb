@@ -1,0 +1,18 @@
+<div id="concentration-binning-information" class="card-body binning-colours">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>PCR cycles</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% plate_presenter.bins_key.each_with_index do |bin_key, bin_index| %>
+      <tr>
+        <th>Bin <%= bin_index + 1 %>:&nbsp;&nbsp;</th>
+        <td class="aliquot colour-<%= bin_key['colour'] %>" style="text-align: center;"><%= bin_key['pcr_cycles'] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

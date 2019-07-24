@@ -1,0 +1,97 @@
+---
+scRNA Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+scRNA-384 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::MinimalStockPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+scRNA cDNA-XP:
+  :asset_type: plate
+  :parents:
+  - scRNA Stock
+  - GnT Stock
+  :expected_request_types:
+  - limber_scrna
+scRNA-384 cDNA-XP:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - scRNA-384 Stock
+scRNA End Prep:
+  :asset_type: plate
+  :parents:
+  - scRNA cDNA-XP
+scRNA-384 End Prep:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - scRNA-384 cDNA-XP
+scRNA Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :parents:
+  - scRNA End Prep
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TS_pWGSA_UDI96v2
+  - TSISC_UDI96
+  :suggest_library_pass_for:
+  - limber_scrna
+scRNA-384 Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
+  :size: 384
+  :parents:
+  - scRNA-384 End Prep
+  :tag_layout_templates:
+  - '384sc'
+  - 'TSsc384'
+  :suggest_library_pass_for:
+  - limber_scrna
+scRNA Lib Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - scRNA Lib PCR
+scRNA-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - scRNA-384 Lib PCR
+scRNA Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - scRNA Lib Pool

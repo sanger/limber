@@ -18,14 +18,33 @@ module LabwareCreators::Tagging
     #
     # Returns hash of usable tag layout templates, and the tags assigned to
     # each well:
-    # eg. { "tag-layout-template-0"=>[["A1", [1, 1]], ["B1", [1, 2]]] }
-    # where { tag_template_uuid => [[well_name, [ pool_id, tag_id ]]] }
+    # eg. { "tag-layout-template-0"=>{tags: [["A1", [1, 1]], ["B1", [1, 2]]], dual_index: true } }
+    # where { tag_template_uuid => { tags: [[well_name, [ pool_id, tag_id ]]], dual_index: dual_index? } }
     # @return [Hash] Tag layouts and their tags
     #
-    def available
-      tag_layout_templates.each_with_object({}) do |layout, hash|
-        catch(:unacceptable_tag_layout) { hash[layout.uuid] = tags_by_column(layout) }
+    def list
+      @list ||= tag_layout_templates.each_with_object({}) do |layout, hash|
+        catch(:unacceptable_tag_layout) do
+          hash[layout.uuid] = {
+            tags: tags_by_column(layout),
+            dual_index: layout.dual_index?,
+            used: used.include?(layout.uuid),
+            approved: acceptable_template?(layout)
+          }
+        end
       end
+    end
+
+    def used
+      return [] if @plate.submission_pools.empty?
+
+      @used ||= @plate.submission_pools.each_with_object(Set.new) do |pool, set|
+        pool.used_tag_layout_templates.each { |used| set << used['uuid'] }
+      end
+    end
+
+    def used?
+      used.present?
     end
 
     private
@@ -56,13 +75,11 @@ module LabwareCreators::Tagging
 
     def tags_by_column(layout)
       swl = layout.generate_tag_layout(@plate)
-      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well) }
+      swl.to_a.sort_by { |well, _pool_info| WellHelpers.index_of(well, @plate.size) }
     end
 
     def tag_layout_templates
-      @api.tag_layout_template.all.map(&:coerce).select do |template|
-        acceptable_template?(template)
-      end
+      @api.tag_layout_template.all.map(&:coerce)
     end
   end
 end

@@ -2,48 +2,51 @@
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
        $.extend(SCAPE, {
-        tag_layouts:  <%= @creation_form.tag_groups.to_json.html_safe %>,
-        tag2s:  <%= @creation_form.tag2s.to_json.html_safe %>
+        tag_plates_list: <%= @labware_creator.tag_plates_list.to_json.html_safe %>,
+        tag_tubes_list: <%= @labware_creator.tag_tubes_list.to_json.html_safe %>,
+        dualRequired: <%= @labware_creator.requires_tag2? %>
        });
      })(window,jQuery);
   </script>
-  <% form_for(@creation_form, as: :plate, url: limber_plate_children_path(@creation_form.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">
-          <%= render partial: 'plates/plate', locals: { plate_presenter: @creation_form, id: 'tagging-plate' } %>
+          <%= render partial: 'plates/plate', locals: { plate_presenter: @labware_creator, id: 'tagging-plate' } %>
         </div>
-        <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag plate', :form=>f} %>
-        <% @creation_form.tag2_field do -%>
-          <%= render partial: 'plate_creation/tag_information_panel', locals: {panel_type: 'tag2 tube', :form=>f } %>
+        <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag plate', form: f, required: true } %>
+        <% @labware_creator.tag2_field do -%>
+          <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag2 tube', form: f, required: @labware_creator.tag_tubes_used? } %>
         <% end %>
       <% end %>
     <%- end -%>
 
     <%= sidebar do %>
-      <%= card title: 'Tag plate addition' do %>
-        <ol>
-          <% @creation_form.tag2_field do -%>
-            <li>Scan an tag 2 tube into 'Tag 2 tube barcode'.</li>
-          <% end %>
-          <li>Scan a target tag plate into 'Tag plate barcode'.</li>
-          <li>Confirm the details and ensure both are passed as valid.</li>
-          <li>Click 'Create plate'</li>
-          <li>This will link up the tag plate.</li>
-        </ol>
+      <%= card title: 'Tag plate addition', id: 'tag-help' do %>
+        <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
       <% end %>
 
       <%= card title:'Set up tags' do %>
         <%= f.hidden_field :purpose_uuid %>
         <%= f.hidden_field :parent_uuid %>
         <%= f.label :tag_plate_barcode %>
-        <%= f.text_field :tag_plate_barcode, data: {'info-panel'=>'tag-plate-info', 'qcable-type'=>'IDT Tags','approved-list'=>'tag_layouts'}, class: 'form-control' %>
-        <% @creation_form.tag2_field do -%>
-            <p><em>Available templates:</em> <%= @creation_form.tag2_names.join(', ') %></p>
+        <%= f.text_field :tag_plate_barcode,
+                         data: {
+                           'info-panel'=>'tag-plate-info',
+                           'qcable-type'=>'tag plate',
+                           'approved-list'=>'tag_plates_list',
+                           'dual-index' => @labware_creator.tag_plate_dual_index?
+                         },
+                         class: 'form-control', required: true %>
+        <% @labware_creator.tag2_field do -%>
+            <p><em>Available templates:</em> <%= @labware_creator.tag_tubes_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
-            <%= f.text_field :tag2_tube_barcode, data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'Tag 2 Tubes', 'approved-list'=>'tag2s'}, class: 'form-control' %>
+            <%= f.text_field :tag2_tube_barcode,
+                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag_tubes_list'},
+                             class: 'form-control', required: @labware_creator.tag_tubes_used? %>
         <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
+        <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
       <%- end -%>
     <%- end -%>
   <%- end -%>

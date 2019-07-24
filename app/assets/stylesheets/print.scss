@@ -4,10 +4,10 @@
 
 
 /// Compass Utils
-@import "compass/css3/border-radius";
 @import "limber_print/print-colours";
 
 #labware-well-failing { display: none; }
+.limber-header { display: none; }
 
 h1 {
   font-size:larger;
@@ -19,8 +19,7 @@ h1 {
   float:left;
   clear:left;
   margin: 5mm 0;
-  @include border-radius(15px);
-  @include border-top-left-radius(0);
+  border-radius: 0px 15px 15px 15px;
 }
 .well {
   width:5mm;
@@ -28,11 +27,11 @@ h1 {
   padding:0;
   margin:0;
   border:1px solid black;
-  @include border-radius(5mm);
+  border-radius: 5mm;
 }
 
 .aliquot {
-  @include border-radius(50%);
+  border-radius: 50%;
   width: 100%;
   height: 100%;
   margin: 0;

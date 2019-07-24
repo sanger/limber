@@ -1,46 +1,20 @@
 # frozen_string_literal: true
 
+# Involved in creation of plates
+# Controllers find the appropriate LabwareCreator specified by the purpose configuration
+# new => renders the form specified by the labware creator,
+#        This usually indicates that further information needs to be supplied by the user,
+#        or that we need to display an interstitial page
+# create => Use the specified labware creator to generate the resource. Will usually redirect
+#           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class PlateCreationController < CreationController
   def redirection_path(form)
-    limber_plate_path(form.child.uuid)
+    limber_plate_path(form.redirection_target.uuid, anchor: form.anchor)
   end
 
-  def new
-    @creation_form = create_form(params.merge(parent_uuid: params[:limber_plate_id]))
-    respond_to do |format|
-      format.html { @creation_form.render(self) }
-    end
-  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
-    Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
-    exception.backtrace.map(&Rails.logger.method(:error))
+  private
 
-    respond_to do |format|
-      format.html do
-        redirect_to(
-          limber_plate_path(@creation_form.parent),
-          alert: ["Cannot create the plate: #{exception.message}", *exception.resource.errors.full_messages]
-        )
-      end
-    end
-  end
-
-  def create
-    @creation_form = create_form(params[:plate])
-    @creation_form.save!
-    respond_to do |format|
-      format.html { redirect_to_form_destination(@creation_form) }
-    end
-  rescue Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid => exception
-    Rails.logger.error("Cannot create child plate of #{@creation_form.parent.uuid}")
-    exception.backtrace.map(&Rails.logger.method(:error))
-
-    respond_to do |format|
-      format.html do
-        redirect_to(
-          limber_plate_path(@creation_form.parent),
-          alert: "Cannot create the plate: #{exception.message}"
-        )
-      end
-    end
+  def creator_params
+    params.require(:plate)
   end
 end

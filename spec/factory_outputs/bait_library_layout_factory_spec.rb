@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'bait library layout factory' do
+RSpec.describe 'bait library layout factory' do
   subject do
     json(
       :bait_library_layout,

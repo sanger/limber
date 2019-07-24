@@ -1,12 +1,11 @@
-
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :tag2_layout_template, class: Sequencescape::Tag2LayoutTemplate, traits: [:api_object] do
-    json_root 'tag2_layout_template'
-    resource_actions %w[read create]
+    json_root { 'tag2_layout_template' }
+    resource_actions { %w[read create] }
 
-    name 'Test tag2 layout'
+    name { 'Test tag2 layout' }
 
     tag do
       {
@@ -17,13 +16,13 @@ FactoryGirl.define do
   end
 
   factory :tag2_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
-    size 2
+    size { 2 }
 
     transient do
-      json_root nil
-      resource_actions %w[read first last]
+      json_root { nil }
+      resource_actions { %w[read first last] }
       resource_url { 'tag2_layout_templates/1' }
-      uuid nil
+      uuid { nil }
     end
 
     tag2_layout_templates do

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'submission_pool factories' do
+RSpec.describe 'submission_pool factories' do
   describe 'basic' do
     subject do
       json(
@@ -25,7 +25,8 @@ describe 'submission_pool factories' do
         "submission_pools": [
           {
             "plates_in_submission": 1,
-            "used_tag2_layout_templates": []
+            "used_tag2_layout_templates": [],
+            "used_tag_layout_templates": []
           }
         ]
       })
@@ -58,7 +59,8 @@ describe 'submission_pool factories' do
         "submission_pools": [
           {
             "plates_in_submission": 2,
-            "used_tag2_layout_templates": []
+            "used_tag2_layout_templates": [],
+            "used_tag_layout_templates": []
           }
         ]
       })
@@ -74,7 +76,8 @@ describe 'submission_pool factories' do
       json(
         :dual_submission_pool_collection,
         plate_uuid: 'plate-uuid',
-        used_templates: [{ "uuid": 'used-tag2-template-uuid', "name": 'Used template' }]
+        used_tag2_templates: [{ "uuid": 'used-tag2-template-uuid', "name": 'Used template' }],
+        used_tag_templates: [{ "uuid": 'used-tag-template-uuid', "name": 'Used template' }]
       )
     end
 
@@ -92,7 +95,8 @@ describe 'submission_pool factories' do
         "submission_pools": [
           {
             "plates_in_submission": 2,
-            "used_tag2_layout_templates": [{"uuid": "used-tag2-template-uuid", "name": "Used template"}]
+            "used_tag2_layout_templates": [{"uuid": "used-tag2-template-uuid", "name": "Used template"}],
+            "used_tag_layout_templates": [{"uuid": "used-tag-template-uuid", "name": "Used template"}]
           }
         ]
       })

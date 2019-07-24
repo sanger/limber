@@ -3,21 +3,29 @@
 require_dependency 'presenters'
 module Presenters
   module Presenter
-    def self.included(base)
-      base.class_eval do
-        include Form
-        include BarcodeLabelsHelper
-        self.page = 'show'
+    extend ActiveSupport::Concern
 
-        def csv
-          purpose_config.fetch(:csv_template, 'show')
-        end
+    included do
+      include Form
+      include BarcodeLabelsHelper
+
+      class_attribute :summary_items
+
+      attr_accessor :api, :labware
+
+      self.page = 'show'
+      #     self.attributes = %i[api labware]
+
+      def csv
+        purpose_config[:csv_template]
       end
     end
 
-    delegate :state, :uuid, to: :labware
+    delegate :state, :uuid, :id, to: :labware
 
-    def save!; end
+    def suggest_library_passing?
+      (purpose_config[:suggest_library_pass_for] & passable_request_types).present?
+    end
 
     def purpose_name
       labware.purpose.name
@@ -40,12 +48,7 @@ module Presenters
     end
 
     def well_failing_applicable?
-      well_failure_states.include?(state.to_sym)
-    end
-
-    # To get rid!
-    def suitable_labware
-      yield
+      allow_well_failure_in_states.include?(state.to_sym)
     end
 
     def summary
@@ -85,5 +88,19 @@ module Presenters
     def purpose_config
       Settings.purposes.fetch(purpose.uuid, {})
     end
+
+    def stock_plate_barcode_from_metadata(plate_machine_barcode)
+      begin
+        metadata = PlateMetadata.new(api: api, barcode: plate_machine_barcode).metadata
+      rescue Sequencescape::Api::ResourceNotFound
+        metadata = nil
+      end
+      if metadata.present?
+        metadata.fetch('stock_barcode', barcode)
+      else
+        'N/A'
+      end
+    end
+
   end
 end

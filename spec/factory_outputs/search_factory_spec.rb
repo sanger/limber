@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'search factory' do
+RSpec.describe 'search factory' do
   subject do
     json(
       :search,

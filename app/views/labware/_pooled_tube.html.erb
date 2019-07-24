@@ -1,11 +1,11 @@
-<%= link_to limber_tube_path(tube.uuid), target: '_blank', class: 'list-group-item tube' do %>
-  <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg <%= pooling_colour(tube, tube.uuid) %> col-sm-2">
+<%= link_to limber_tube_path(tube.uuid), target: '_blank', class: 'list-group-item tube-item' do %>
+  <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg colour-<%= tube.pool_index %>">
     <%= inline_svg 'tube.svg' %>
   </div>
-  <dl class='metadata col-sm-10'>
-    <dt>Pool name</dt>    <dd> <%= tube.name %></dd>
-    <dt>Barcode</dt>      <dd> <%= useful_barcode(tube.barcode) %></dd>
-    <dt>Current state</dt><dd> <%= tube.state %></dd>
-    <dt>Source wells</dt> <dd> <%= WellHelpers.formatted_range(source) %></dd>
+  <dl class='metadata'>
+    <dt>Pool name</dt>    <dd><%= tube.name %></dd>
+    <dt>Barcode</dt>      <dd><%= useful_barcode(tube.barcode) %></dd>
+    <dt>Current state</dt><dd><%= tube.state %></dd>
+    <dt>Source wells</dt> <dd><%= WellHelpers.formatted_range(tube.source_locations, size) %></dd>
   </dl>
 <% end %>

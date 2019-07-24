@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
-require_relative '../support/factory_girl_extensions'
+require_relative '../support/factory_bot_extensions'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :bait_library_layout, class: Sequencescape::BaitLibraryLayout, traits: [:api_object] do
-    json_root 'bait_library_layout'
+    json_root { 'bait_library_layout' }
 
     with_belongs_to_associations 'plate'
 
     transient do
-      pools [
-        { size: 2, bait: 'Human all exon 50MB' },
-        { size: 2, bait: 'Mouse all exon' }
-      ]
+      pools do
+        [
+          { size: 2, bait: 'Human all exon 50MB' },
+          { size: 2, bait: 'Mouse all exon' }
+        ]
+      end
     end
 
     layout do

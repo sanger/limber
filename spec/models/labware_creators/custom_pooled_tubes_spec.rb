@@ -8,11 +8,11 @@ require_relative 'shared_examples'
 # Creates new tubes of the child purpose
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
-describe LabwareCreators::CustomPooledTubes, with: :uploader do
+RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   it_behaves_like 'it only allows creation from charged and passed plates'
 
   subject do
-    described_class.new(form_attributes.merge(api: api))
+    described_class.new(api, form_attributes)
   end
 
   it 'should have page' do
@@ -20,7 +20,6 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
-  let(:user)         { json :user, uuid: user_uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
@@ -34,7 +33,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
     let(:form_attributes) do
       {
         purpose_uuid: purpose_uuid,
-        parent_uuid:  parent_uuid
+        parent_uuid: parent_uuid
       }
     end
 
@@ -43,7 +42,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
     end
   end
 
-  context '#save!' do
+  context '#save' do
     has_a_working_api
 
     let(:file_content) do
@@ -141,7 +140,7 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
       let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
 
       it 'pools according to the file' do
-        expect(subject.save!).to be_truthy
+        expect(subject.save).to be_truthy
         expect(stub_qc_file_creation).to have_been_made.once
         expect(tube_creation_request).to have_been_made.once
         expect(transfer_creation_request).to have_been_made.once
@@ -151,9 +150,8 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
     context 'with an invalid file' do
       let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
 
-      it 'raises an exception' do
-        # Note: This really shouldn't be an exception, but need to make some other adjustments first.
-        expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+      it 'is false' do
+        expect(subject.save).to be false
       end
     end
 
@@ -161,9 +159,8 @@ describe LabwareCreators::CustomPooledTubes, with: :uploader do
       let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
       let(:wells_json) { json :well_collection, size: 8 }
 
-      it 'raises an exception' do
-        # Note: This really shouldn't be an exception, but need to make some other adjustments first.
-        expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+      it 'is false' do
+        expect(subject.save).to be false
       end
     end
   end

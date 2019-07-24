@@ -1,28 +1,26 @@
 <%= sidebar do %>
   <%= render partial: 'plate_printing' %>
-  <%= render(partial: 'labware/qc_data') %>
-  <% presenter.control_tube_display do %>
-      <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
+  <% presenter.tubes_and_sources do %>
+    <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
   <% end %>
 
-  <%= card title:'Suggested Actions' do %>
+  <%= render(partial: 'labware/qc_data') %>
+
+  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-success" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals: { presenter: presenter } %>
     <% end %>
 
     <% presenter.control_additional_creation do -%>
-      <% presenter.suggested_purposes do |uuid, name, type| %>
-        <%= render(partial: creation_partial_for(type), locals: { presenter: presenter, uuid: uuid, name: name }) %>
-      <% end %>
+      <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% end %>
 
-    <% presenter.csv_file_links.each do |link| %>
-      <%= link_to("Download Worksheet CSV #{link.first}", link.last, rel: "external", class: 'btn btn-info btn-lg btn-block') %>
+    <% @presenter.csv_file_links.each do |link_name, link_target| %>
+      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
     <% end %>
 
     <% if presenter.robot? %>
+      <h4 class="card-title mt-3">Robots</h4>
       <% presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
       <% end %>
@@ -31,50 +29,22 @@
     <% end %>
   <% end %>
 
+  <%= card title: 'Adding a Comment' do %>
+    <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
+  <% end %>
+
   <%= card title:'Other Actions', css_class: 'other-actions' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(presenter) %>
     <% end %>
 
-    <%= presenter.control_additional_creation do %>
-      <div role="group">
-        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Stamp other plates
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% presenter.compatible_plate_purposes do |uuid, name| %>
-          <%= form_tag new_limber_plate_child_path(presenter.labware.uuid), method: 'get' do %>
-            <%= hidden_field_tag :purpose_uuid, uuid %>
-            <%= submit_tag "Add an empty #{name} plate",
-              name: nil,
-              class: "submit dropdown-item create-plate-button btn"
-            %>
-          <% end %>
-        <% end %>
-        </div>
-      </div>
-      <div role="group">
-        <button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Create tubes
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <% presenter.compatible_tube_purposes do |uuid, name| %>
-          <%= form_tag new_limber_plate_tube_path(presenter.labware.uuid), method: 'get' do %>
-            <%= hidden_field_tag :purpose_uuid, uuid %>
-            <%= submit_tag "Add an empty #{name} tube",
-              name: nil,
-              class: "submit dropdown-item create-tube-button btn"
-            %>
-          <% end %>
-        <% end %>
-        </div>
-      </div>
+    <% presenter.control_additional_creation do %>
+      <%= render partial: 'creation_dropdown', locals: { resource_type: 'plates', resources: presenter.compatible_plate_purposes } %>
+      <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
     <% end %>
 
     <% presenter.control_library_passing do %>
-      <%= form_tag [presenter.labware, :work_completions] do |f| %>
-        <%= submit_tag "Charge and pass libraries", class: "btn btn-lg btn-block btn-secondary" %>
-      <% end %>
+      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
 
     <% if presenter.well_failing_applicable? %>

@@ -1,0 +1,77 @@
+---
+LB Lib PrePool:
+  :asset_type: plate
+  :stock_plate: false
+  :creator_class: LabwareCreators::MultiPlatePool
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :csv_template: 'show_extended'
+  :expected_request_types:
+  - limber_isc
+  - limber_reisc
+  :parents:
+  - LB Lib PCR-XP
+LB Hyb:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::BaitedPlate
+  :parents:
+  - LB Lib PrePool
+LB Cap Lib:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Hyb
+LB Cap Lib PCR:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :parents:
+  - LB Cap Lib
+LB Cap Lib PCR-XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :suggest_library_pass_for:
+  - limber_isc
+  - limber_reisc
+  :parents:
+  - LB Cap Lib PCR
+LB Cap Lib Pool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
+  :suggest_library_pass_for:
+  - limber_isc
+  - limber_reisc
+  :parents:
+  - LB Cap Lib PCR-XP
+Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - LB Cap Lib Pool
+LB Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :expected_request_types:
+  - :none
+  :parents:
+  - LB Lib PCR-XP
+LB Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+  :parents:
+  - LB Custom Pool

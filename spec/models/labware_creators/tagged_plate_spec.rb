@@ -6,17 +6,18 @@ require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-describe LabwareCreators::TaggedPlate do
+RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8] }
+  let(:pools) { 0 }
+  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
+  let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -31,20 +32,19 @@ describe LabwareCreators::TaggedPlate do
     Settings.purposes = {
       child_purpose_uuid => { name: child_purpose_name }
     }
-    LabwareCreators::Base.default_transfer_template_uuid = 'transfer-template-uuid'
     plate_request
     wells_request
   end
 
   subject do
-    LabwareCreators::TaggedPlate.new(form_attributes.merge(api: api))
+    LabwareCreators::TaggedPlate.new(api, form_attributes)
   end
 
   context 'on new' do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid:  plate_uuid
+        parent_uuid: plate_uuid
       }
     end
 
@@ -62,16 +62,8 @@ describe LabwareCreators::TaggedPlate do
       expect(subject).to be_a LabwareCreators::TaggedPlate
     end
 
-    context 'with purpose mocks' do
-      it 'describes the child purpose' do
-        # TODO: This request is possibly unnecessary
-        stub_api_get(child_purpose_uuid, body: json(:plate_purpose, name: child_purpose_name))
-        expect(subject.child_purpose.name).to eq(child_purpose_name)
-      end
-    end
-
     it 'describes the parent barcode' do
-      expect(subject.labware.barcode.ean13).to eq(plate_barcode)
+      expect(subject.parent.barcode.ean13).to eq(plate_barcode)
     end
 
     it 'describes the parent uuid' do
@@ -95,32 +87,56 @@ describe LabwareCreators::TaggedPlate do
       end
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
-        expect(subject.tag_groups).to eq('tag-layout-template-0' => layout_hash,
-                                         'tag-layout-template-1' => layout_hash)
+        expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
+                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true })
       end
     end
 
     context 'when a submission is split over multiple plates' do
-      let(:pool_json) do
-        json(:dual_submission_pool_collection,
-             used_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
-      end
+      let(:pools) { 1 }
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
-
-      it 'requires tag2' do
-        expect(subject.requires_tag2?).to be true
-      end
-
-      context 'with advertised tag2 templates' do
-        before do
-          stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
+      context 'and tubes have been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection,
+               used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
+        end
+        it 'requires tag2' do
+          expect(subject.requires_tag2?).to be true
         end
 
-        it 'describes only the unused tube' do
-          expect(subject.tag2s.keys).to eq(['tag2-layout-template-1'])
-          expect(subject.tag2_names).to eq(['Tag2 layout 1'])
+        context 'with advertised tag2 templates' do
+          before do
+            stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
+          end
+
+          it 'describes only the unused tube' do
+            expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
+                                                 'tag2-layout-template-1' => { dual_index: true, used: false, approved: true })
+            expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
+          end
+
+          it 'enforces use of tubes' do
+            expect(subject.acceptable_tag2_sources).to eq ['tube']
+          end
+        end
+      end
+      context 'and nothing has been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection)
+        end
+        it 'allows tubes or plates' do
+          expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
+        end
+      end
+      context 'and dual index plates have been used' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection,
+               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
+        end
+        it 'enforces use of plates' do
+          expect(subject.acceptable_tag2_sources).to eq ['plate']
         end
       end
     end
@@ -132,6 +148,10 @@ describe LabwareCreators::TaggedPlate do
 
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
+      end
+
+      it 'allows tubes or plates' do
+        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
       end
     end
   end
@@ -154,7 +174,7 @@ describe LabwareCreators::TaggedPlate do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
-          parent_uuid:  plate_uuid,
+          parent_uuid: plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
           tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid }
@@ -165,17 +185,13 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
-      context 'on save!' do
+      context 'on save' do
         Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
 
         it 'creates a tag plate' do
-          subject.save!
+          expect(subject.save).to be true
           expect(state_change_tag_plate_request).to have_been_made.once
           expect(plate_conversion_request).to have_been_made.once
           expect(transfer_creation_request).to have_been_made.once
@@ -183,7 +199,7 @@ describe LabwareCreators::TaggedPlate do
         end
 
         it 'has the correct child (and uuid)' do
-          subject.save!
+          expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)
         end
       end
@@ -193,7 +209,7 @@ describe LabwareCreators::TaggedPlate do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
-          parent_uuid:  plate_uuid,
+          parent_uuid: plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
           tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid },
@@ -206,11 +222,7 @@ describe LabwareCreators::TaggedPlate do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it 'renders the "tagged_plate" page' do
-        controller = CreationController.new
-        expect(controller).to receive(:render).with('tagged_plate')
-        subject.render(controller)
-      end
+      it_behaves_like 'it has a custom page', 'tagged_plate'
 
       context 'on save!' do
         include_context 'a tag plate creator with dual indexing'

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'state change factory' do
+RSpec.describe 'state change factory' do
   subject do
     json(
       :state_change,

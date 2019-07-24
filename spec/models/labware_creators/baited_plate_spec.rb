@@ -4,31 +4,39 @@ require 'spec_helper'
 require 'labware_creators/baited_plate'
 require_relative 'shared_examples'
 
-describe LabwareCreators::BaitedPlate do
+RSpec.describe LabwareCreators::BaitedPlate do
   it_behaves_like 'it only allows creation from plates'
 
   subject do
-    LabwareCreators::BaitedPlate.new(form_attributes)
-  end
-
-  before do
-    LabwareCreators::BaitedPlate.default_transfer_template_uuid = 'transfer-columns-uuid'
+    LabwareCreators::BaitedPlate.new(api, form_attributes)
   end
 
   let(:user_uuid)    { SecureRandom.uuid }
-  let(:user)         { json :user, uuid: user_uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
+  let(:parent_uuid)  { 'parent-uuid' }
+  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2' } }
+  let(:parent) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
+  let(:child) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
+  let(:transfer_template_uuid) { 'custom-pooling' }
+  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:form_attributes) do
     {
       user_uuid: user_uuid,
       purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid,
-      api: api
+      parent_uuid: parent_uuid
     }
+  end
+
+  let(:transfer_requests) do
+    WellHelpers.column_order(96)[0, 6].map do |well_name|
+      {
+        'source_asset' => "2-well-#{well_name}",
+        'target_asset' => "3-well-#{well_name}",
+        'submission_id' => '2'
+      }
+    end
   end
 
   it 'should have page' do
@@ -66,20 +74,16 @@ describe LabwareCreators::BaitedPlate do
                     body: json(:plate_creation))
     end
 
-    let!(:plate_request) do
-      stub_api_get(parent_uuid, body: parent)
-    end
-
-    let!(:transfer_template_request) do
-      stub_api_get('transfer-columns-uuid', body: json(:transfer_template))
+    before do
+      stub_v2_plate(parent, stub_search: false)
+      stub_v2_plate(child, stub_search: false)
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer-template-uuid',
-                    payload: { transfer: {
-                      destination: 'child-uuid',
-                      source: parent_uuid,
-                      user: user_uuid
+      stub_api_post('transfer_request_collections',
+                    payload: { transfer_request_collection: {
+                      user: user_uuid,
+                      transfer_requests: transfer_requests
                     } },
                     body: '{}')
     end

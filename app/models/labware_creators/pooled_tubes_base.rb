@@ -4,8 +4,9 @@ module LabwareCreators
   # Creates a new tube per submission, and transfers all the wells matching that submission
   # into each tube.
   class PooledTubesBase < Base
-    extend SupportParent::TaggedPlateOnly
+    include SupportParent::TaggedPlateOnly
     attr_reader :tube_transfer, :child_stock_tubes
+    attr_writer :metadata_stock_barcode
 
     def create_labware!
       @child_stock_tubes = create_child_stock_tubes
@@ -45,12 +46,8 @@ module LabwareCreators
       {
         'source_asset' => source,
         'target_asset' => target,
-        'submission'   => submission
+        'submission' => submission
       }
-    end
-
-    def parent
-      @parent ||= api.plate.find(parent_uuid)
     end
 
     def pool_uuids
@@ -62,8 +59,12 @@ module LabwareCreators
     # to come up with a better solution.
     # 1) Redirect to the transfer/creation and list the tubes that way
     # 2) Once tube racks are implemented, we can redirect there.
-    def child
+    def redirection_target
       parent
+    end
+
+    def anchor
+      'children_tab'
     end
 
     private
@@ -80,19 +81,30 @@ module LabwareCreators
     end
 
     def stock_plate_barcode
-      "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+      legacy_barcode = "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+      metadata_stock_barcode || legacy_barcode
     end
 
-    #
+    def metadata_stock_barcode
+      @metadata_stock_barcode ||= parent_metadata.fetch('stock_barcode', nil)
+    end
+
+    def parent_metadata
+      if parent.is_a? Limber::Plate
+        metadata = PlateMetadata.new(api: api, plate: parent).metadata
+      else
+        metadata = PlateMetadata.new(api: api, barcode: parent.barcode.machine).metadata
+      end
+      metadata || {}
+    end
+
     # Maps well locations to the corresponding uuid
     #
     # @return [Hash] Hash with well locations (eg. 'A1') as keys, and uuids as values
-    #
     def well_locations
       @well_locations ||= parent.wells.index_by(&:location)
     end
 
-    #
     # pools should return a hash of pools with the following minimal information
     # { 'unique-pool-identifier' => <Array of well locations> }
     #

@@ -1,10 +1,26 @@
 <template>
-<div class="list-group">
-<div class="spinner-dark" v-if="loading">Updating...</div>
-<a class="list-group-item" v-for="qc_file in qc_files" v-bind:href="'/qc_files/' + qc_file.uuid">
-  {{qc_file.filename}} - {{ qc_file.created }}
-</a>
-</div>
+  <div class="list-group list-group-flush">
+    <div
+      v-if="loading"
+      class="spinner-dark"
+    >
+      Updating...
+    </div>
+    <a
+      v-for="qc_file in qc_files"
+      :key="qc_file.uuid"
+      class="list-group-item"
+      :href="'/qc_files/' + qc_file.uuid"
+    >
+      {{ qc_file.filename }} - {{ qc_file.created }}
+    </a>
+    <div
+      v-if="noFiles"
+      class="list-group-item"
+    >
+      No files attached
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,17 +34,20 @@ export default {
       loading: true
     }
   },
+  computed: {
+    noFiles() { return this.qc_files && this.qc_files.length === 0 && !this.loading }
+  },
   methods: {
     fetchData: function () {
-      var self = this;
-      self.loading = true;
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', self.base_url);
+      var self = this
+      self.loading = true
+      var xhr = new XMLHttpRequest()
+      xhr.open('GET', self.base_url)
       xhr.onload = function () {
         self.qc_files = JSON.parse(xhr.responseText)['qc_files']
         self.loading = false
-      };
-      xhr.send();
+      }
+      xhr.send()
     }
   }
 }
