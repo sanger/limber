@@ -1113,7 +1113,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                destination_bed: bed(13).barcode,
                class: 'Robots::PoolingRobot')
 
-  # For Chromium 10x pipeline cherrypick to dilution
+  # For Chromium 10x pipeline cherrypick to 3pv3 dilution
   custom_robot(
     'hamilton-lbc-cherrypick-to-lbc-3pv3-gex-dil',
     name: 'hamilton LBC Cherrypick => LBC 3pV3 GEX Dil',
@@ -1132,7 +1132,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  # For Chromium 10x pipeline dilution to frag 2xp
+  # For Chromium 10x pipeline 3pv3 dilution to frag 2xp
   custom_robot(
     'hamilton-lbc-3pv3-gex-dil-to-lbc-3pv3-gex-frag-2xp',
     name: 'hamilton LBC 3pV3 GEX Dil => LBC 3pV3 GEX Frag 2XP',
@@ -1151,7 +1151,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  # For Chromium 10x pipeline frag 2xp to ligxp
+  # For Chromium 10x pipeline 3pv3 frag 2xp to ligxp
   custom_robot(
     'hamilton-lbc-3pv3-gex-frag-2xp-to-lbc-3pv3-gex-ligxp',
     name: 'hamilton LBC 3pV3 GEX Frag 2XP => LBC 3pV3 GEX LigXP',
@@ -1162,6 +1162,78 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 13' },
       bed(3).barcode => {
         purpose: 'LBC 3pV3 GEX LigXP',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline cherrypick to 5p VDJ dilution plates
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-5p-vdj-dil',
+    name: 'hamilton LBC Cherrypick => LBC 5p VDJ Dil',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13'
+      },
+      bed(3).barcode => {
+        purpose: 'LBC 5p GEX Dil',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      },
+      bed(4).barcode => {
+        purpose: 'LBC TCR Dil 1',
+        states: ['pending'],
+        label: 'Bed 4',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      },
+      bed(5).barcode => {
+        purpose: 'LBC BCR Dil 1',
+        states: ['pending'],
+        label: 'Bed 5',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline 5p dilution to frag 2xp
+  custom_robot(
+    'hamilton-lbc-5p-gex-dil-to-lbc-5p-gex-frag-2xp',
+    name: 'hamilton LBC 5p GEX Dil => LBC 5p GEX Frag 2XP',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC 5p GEX Dil',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC 5p GEX Frag 2XP',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline 5p frag 2xp to ligxp
+  custom_robot(
+    'hamilton-lbc-5p-gex-frag-2xp-to-lbc-5p-gex-ligxp',
+    name: 'hamilton LBC 5p GEX Frag 2XP => LBC 5p GEX LigXP',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC 5p GEX Frag 2XP',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC 5p GEX LigXP',
         states: ['pending'],
         label: 'Bed 3',
         target_state: 'passed',
