@@ -10,7 +10,7 @@ LBC TCR Dil 1:
   :expected_request_types:
   - limber_chromium_bespoke
   :expected_library_types:
-  - Chromium single cell BCR
+  - Chromium single cell TCR
   :fixed_normalisation:
   - source_volume_ul: 2
     diluent_volume_ul: 33
