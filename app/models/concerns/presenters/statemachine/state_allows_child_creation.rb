@@ -7,9 +7,11 @@ module Presenters::Statemachine
       yield
     end
 
-    def compatible_pipeline?(pipelines)
-      pipelines.nil? ||
-        (pipelines & active_request_types).present?
+    def matching_filters?(purpose_settings)
+      purpose_req_types = purpose_settings.expected_request_types
+      purpose_lib_types = purpose_settings.expected_library_types
+        ((purpose_req_types.nil? || (purpose_req_types & active_request_types).present?) &&
+        (purpose_lib_types.nil? || (purpose_lib_types & active_library_types).present?))
     end
 
     def suggested_purposes
@@ -27,7 +29,7 @@ module Presenters::Statemachine
     def suggested_purpose_options
       compatible_purposes.select do |_purpose_uuid, purpose_settings|
         purpose_settings.parents&.include?(labware.purpose.name) &&
-          compatible_pipeline?(purpose_settings.expected_request_types)
+          matching_filters?(purpose_settings)
       end
     end
 
@@ -46,7 +48,10 @@ module Presenters::Statemachine
           purpose_uuid: purpose_uuid,
           name: purpose_settings.name,
           type: purpose_settings.asset_type,
-          filters: { request_types: purpose_settings.expected_request_types }
+          filters: {
+            request_types: purpose_settings.expected_request_types,
+            library_types: purpose_settings.expected_library_types
+          }
         )
       end.force
     end

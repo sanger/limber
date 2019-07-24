@@ -145,4 +145,13 @@ class Presenters::PlatePresenter
       well.active_requests.map(&:request_type_key)
     end
   end
+
+  # Active requests may or may not have library types
+  def active_library_types
+    wells.flat_map do |well|
+      well.active_requests.each_with_object([]) do |req, library_type_names|
+        library_type_names << req.library_type unless req.library_type.nil?
+      end
+    end
+  end
 end
