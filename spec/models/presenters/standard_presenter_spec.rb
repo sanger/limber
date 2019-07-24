@@ -82,11 +82,11 @@ RSpec.describe Presenters::StandardPresenter do
       cpp = subject.compatible_plate_purposes
       expect(cpp).to be_an Array
       expect(cpp.length).to eq 4
-      expect(cpp.map(&:purpose_uuid)).to eq([
-                                              'child-purpose',
-                                              'child-purpose-2',
-                                              'other-purpose',
-                                              'other-purpose-2'
+      expect(cpp.map(&:purpose_uuid)).to eq(%w[
+                                              child-purpose
+                                              child-purpose-2
+                                              other-purpose
+                                              other-purpose-2
                                             ])
     end
 

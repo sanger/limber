@@ -19,6 +19,16 @@
           removeClass('selected-aliquot dimmed')
       }
     }
+
+    this['concentration-binned-view'] = {
+      activate: function(){
+        plateElement.addClass('binning-colours')
+      },
+
+      deactivate: function(){
+        plateElement.removeClass('binning-colours')
+      }
+    }
   }
 
   // Declared as var  rather than const due to issues with const in strict mode

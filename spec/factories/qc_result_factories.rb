@@ -8,5 +8,10 @@ FactoryBot.define do
     created_at { Time.current }
 
     skip_create
+
+    factory :qc_result_concentration do
+      key { 'concentration' }
+      units { 'ng/ul' }
+    end
   end
 end

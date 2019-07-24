@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_aggregate_cherry_pick.csv.erb' do
+RSpec.describe 'exports/hamilton_gex_dil_to_gex_frag_2xp.csv.erb' do
   context 'with a full plate' do
     has_a_working_api
 
@@ -20,10 +20,10 @@ RSpec.describe 'exports/hamilton_aggregate_cherry_pick.csv.erb' do
 
     let(:expected_content) do
       [
-        ['Workflow', 'Cherry Pick'],
-        ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well', 'Sample Vol'],
-        %w[DN1S A1 DN2T A1 10],
-        %w[DN1S B1 DN2T B1 10]
+        ['Workflow', '10X Post Repair Double SPRI'],
+        ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well'],
+        %w[DN1S A1 DN2T A1],
+        %w[DN1S B1 DN2T B1]
       ]
     end
 
