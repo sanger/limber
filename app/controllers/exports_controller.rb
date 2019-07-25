@@ -14,7 +14,10 @@ class ExportsController < ApplicationController
     'hamilton_aggregate_cherrypick' => 'wells.transfer_requests_as_target.source_asset',
     'hamilton_cherrypick_to_sample_dilution' => 'wells.transfer_requests_as_target.source_asset',
     'hamilton_gex_dil_to_gex_frag_2xp' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_gex_frag_2xp_to_gex_ligxp' => 'wells.transfer_requests_as_target.source_asset'
+    'hamilton_gex_frag_2xp_to_gex_ligxp' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_cherrypick_to_5p_gex_dilution' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_cherrypick_to_bcr_dilution1' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_cherrypick_to_tcr_dilution1' => 'wells.transfer_requests_as_target.source_asset'
 
   }.freeze
 
