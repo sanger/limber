@@ -1,5 +1,3 @@
-<%# This is a picking file for a Hamilton robot for plate to plate transfers %>
-<%# between a chromium cherrypick plate and the 3 prime v3 dilution plate. %>
 <%= CSV.generate_line [
                         'Workflow',
                         'Sample Dilution'
@@ -18,8 +16,8 @@
 %>
 <%
   purpose_config = Settings.purposes.fetch(@plate.purpose.uuid, {})
-  binning_config = purpose_config.fetch(:concentration_binning)
-  config = Utility::ConcentrationBinningConfig.new(binning_config)
+  fixed_normalisation_config = purpose_config.fetch(:fixed_normalisation)
+  config = Utility::FixedNormalisationConfig.new(fixed_normalisation_config)
   rows_array = []
   @plate.wells_in_columns.each do |well|
     well.transfer_requests_as_target.each do |transfer_req|
@@ -33,7 +31,7 @@
                         @plate.labware_barcode.human,
                         well.position['name'],
                         transfer_req.volume,
-                        config.diluent_volume
+                        config.diluent_volume_ul
                       ]
 
       end
