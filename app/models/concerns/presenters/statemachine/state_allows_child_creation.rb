@@ -10,8 +10,8 @@ module Presenters::Statemachine
     def matching_filters?(purpose_settings)
       purpose_req_types = purpose_settings.expected_request_types
       purpose_lib_types = purpose_settings.expected_library_types
-        ((purpose_req_types.nil? || (purpose_req_types & active_request_types).present?) &&
-        (purpose_lib_types.nil? || (purpose_lib_types & active_library_types).present?))
+      ((purpose_req_types.nil? || (purpose_req_types & active_request_types).present?) &&
+       (purpose_lib_types.nil? || (purpose_lib_types & active_library_types).present?))
     end
 
     def suggested_purposes
