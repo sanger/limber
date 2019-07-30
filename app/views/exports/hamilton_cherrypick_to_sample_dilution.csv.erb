@@ -32,7 +32,7 @@
                         name_array[1],
                         @plate.labware_barcode.human,
                         well.position['name'],
-                        transfer_req.volume,
+                        transfer_req.volume.round(2),
                         config.diluent_volume
                       ]
 
