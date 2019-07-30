@@ -10,8 +10,22 @@ RSpec.describe 'exports/hamilton_cherrypick_to_5p_gex_dilution.csv.erb' do
     let(:source_well_b1) { create(:v2_well, location: 'B1') }
     let(:source_labware) { create(:v2_plate, wells: [source_well_a1, source_well_b1], barcode_number: 1) }
 
-    let(:dest_well_a1) { create(:v2_well_with_transfer_requests, location: 'A1', transfer_request_as_target_source_asset: source_well_b1, plate_barcode: '2') }
-    let(:dest_well_b1) { create(:v2_well_with_transfer_requests, location: 'B1', transfer_request_as_target_source_asset: source_well_a1, plate_barcode: '2') }
+    let(:dest_well_a1) do
+      create(
+        :v2_well_with_transfer_requests,
+        location: 'A1',
+        transfer_request_as_target_source_asset: source_well_b1,
+        plate_barcode: '2'
+      )
+    end
+    let(:dest_well_b1) do
+      create(
+        :v2_well_with_transfer_requests,
+        location: 'B1',
+        transfer_request_as_target_source_asset: source_well_a1,
+        plate_barcode: '2'
+      )
+    end
     let(:dest_labware) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
 
     before do

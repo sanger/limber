@@ -12,9 +12,9 @@ LBC 3pV3 GEX Dil:
   :expected_library_types:
   - Chromium single cell 3 prime v3
   :concentration_binning:
-  - source_volume: 10
-    diluent_volume: 25
-    bins:
+    :source_volume: 10
+    :diluent_volume: 25
+    :bins:
     - colour: 1
       pcr_cycles: 16
       max: 25

@@ -1170,10 +1170,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  # For Chromium 10x pipeline cherrypick to 5p VDJ dilution plates
+  # For Chromium 10x pipeline cherrypick to 5p GEX Dil plate
   custom_robot(
-    'hamilton-lbc-cherrypick-to-lbc-5p-vdj-dil',
-    name: 'hamilton LBC Cherrypick => LBC 5p VDJ Dil',
+    'hamilton-lbc-cherrypick-to-lbc-5p-gex-dil',
+    name: 'hamilton LBC Cherrypick => LBC 5p GEX Dil',
     beds: {
       bed(13).barcode => {
         purpose: 'LBC Cherrypick',
@@ -1186,6 +1186,19 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 3',
         target_state: 'passed',
         parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline cherrypick to TCR Dil 1 plate
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-tcr-dil-1',
+    name: 'hamilton LBC Cherrypick => LBC TCR Dil 1',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13'
       },
       bed(4).barcode => {
         purpose: 'LBC TCR Dil 1',
@@ -1193,6 +1206,19 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 4',
         target_state: 'passed',
         parent: bed(13).barcode
+      }
+    }
+  )
+
+  # For Chromium 10x pipeline cherrypick to BCR Dil 1 plate
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-bcr-dil-1',
+    name: 'hamilton LBC Cherrypick => LBC BCR Dil 1',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13'
       },
       bed(5).barcode => {
         purpose: 'LBC BCR Dil 1',

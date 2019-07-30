@@ -12,19 +12,19 @@ LBC 5p GEX Dil:
   :expected_library_types:
   - Chromium single cell 5 prime
   :binned_normalisation:
-  - target_amount_ng: 50
-    target_volume_ul: 20
-    minimum_source_volume_ul: 0.2
-    bins:
+    :target_amount_ng: 50
+    :target_volume_ul: 20
+    :minimum_source_volume_ul: 0.2
+    :bins:
     - colour: 1
       pcr_cycles: 16
-      max: 25
+      max: 26
     - colour: 2
       pcr_cycles: 14
-      min: 25
+      min: 26
   :file_links:
   - name: 'Download Hamilton Cherrypick to 5 prime Dilution CSV'
-    id: 'hamilton_cherrypick_to_5_prime_dilution'
+    id: 'hamilton_cherrypick_to_5p_gex_dilution'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
 LBC 5p GEX Frag 2XP:

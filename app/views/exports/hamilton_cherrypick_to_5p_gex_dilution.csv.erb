@@ -19,14 +19,15 @@
 <%
   purpose_config = Settings.purposes.fetch(@plate.purpose.uuid, {})
   binned_norm_config = purpose_config.fetch(:binned_normalisation)
-  config = Utility::BinnedNormalsationConfig.new(binned_norm_config)
-  target_volume = config.target_volume_ul.to_f
+  config = Utility::BinnedNormalisationConfig.new(binned_norm_config)
+  target_volume = config.target_volume.to_f
   rows_array = []
   @plate.wells_in_columns.each do |well|
     well.transfer_requests_as_target.each do |transfer_req|
       # NB. Making assumption here that name field on asset is for a plate well
       # and contains a plate barcode and well position e.g. DN12345678:A1
       name_array = transfer_req.source_asset.name.split(':')
+      # Want volume displayed to 2 decimal places
       diluent_vol = (target_volume - transfer_req.volume.to_f).round(2)
       if name_array.length == 2
         rows_array << [

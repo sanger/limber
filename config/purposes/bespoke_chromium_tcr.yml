@@ -12,10 +12,10 @@ LBC TCR Dil 1:
   :expected_library_types:
   - Chromium single cell TCR
   :fixed_normalisation:
-  - source_volume_ul: 2
-    diluent_volume_ul: 33
+    :source_volume_ul: 2
+    :diluent_volume_ul: 33
   :file_links:
-  - name: 'Download Hamilton Cherrypick to ?? CSV'
-    id: 'hamilton_cherrypick_to_??'
+  - name: 'Download Hamilton Cherrypick to TCR Dilution 1 CSV'
+    id: 'hamilton_cherrypick_to_tcr_dilution1'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
