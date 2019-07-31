@@ -64,7 +64,8 @@ module LabwareCreators
     end
 
     def dest_well_qc_attributes
-      @dest_well_qc_attributes ||= binned_norm_calculator.construct_dest_well_qc_assay_attributes(child.uuid, transfer_hash)
+      @dest_well_qc_attributes ||=
+        binned_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Binned Normalisation', transfer_hash)
     end
 
     def compute_well_transfers

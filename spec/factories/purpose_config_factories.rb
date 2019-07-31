@@ -71,8 +71,8 @@ FactoryBot.define do
     factory :fixed_normalisation_purpose_config do
       fixed_normalisation do
         {
-          source_volume_ul: 2,
-          diluent_volume_ul: 33
+          source_volume: 2,
+          diluent_volume: 33
         }
       end
     end
@@ -81,8 +81,8 @@ FactoryBot.define do
       binned_normalisation do
         {
           target_amount_ng: 50,
-          target_volume_ul: 20,
-          minimum_source_volume_ul: 0.2,
+          target_volume: 20,
+          minimum_source_volume: 0.2,
           bins: [
             { colour: 1, pcr_cycles: 16, max: 25 },
             { colour: 2, pcr_cycles: 14, min: 25 }

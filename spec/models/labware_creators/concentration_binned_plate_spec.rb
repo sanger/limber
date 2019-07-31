@@ -553,14 +553,35 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     end
 
     context 'when generating presenter bin details' do
-      let(:well_amounts) do
-        {
-          'A1' => BigDecimal('15.0'),
-          'B1' => BigDecimal('560.0'),
-          'C1' => BigDecimal('35.0'),
-          'D1' => BigDecimal('18.0')
-        }
+      let(:well_a1) do
+        create(:v2_well,
+               position: { 'name' => 'A1' },
+               qc_results: create_list(:qc_result_concentration, 1, value: 0.2))
       end
+      let(:well_b1) do
+        create(:v2_well,
+               position: { 'name' => 'B1' },
+               qc_results: create_list(:qc_result_concentration, 1, value: 56.0))
+      end
+      let(:well_c1) do
+        create(:v2_well,
+               position: { 'name' => 'C1' },
+               qc_results: create_list(:qc_result_concentration, 1, value: 3.5))
+      end
+      let(:well_d1) do
+        create(:v2_well,
+               position: { 'name' => 'D1' },
+               qc_results: create_list(:qc_result_concentration, 1, value: 0.7))
+      end
+      let(:child_plate) do
+        create :v2_plate,
+               uuid: parent_uuid,
+               barcode_number: '3',
+               size: plate_size,
+               wells: [well_a1, well_b1, well_c1, well_d1],
+               outer_requests: requests
+      end
+
       let(:expected_bin_details) do
         {
           'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
@@ -571,7 +592,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       end
 
       it 'creates the correct information' do
-        expect(subject.bin_calculator.compute_bin_details_by_well(well_amounts))
+        expect(subject.bin_calculator.compute_presenter_bin_details(child_plate))
           .to eq(expected_bin_details)
       end
     end
@@ -653,7 +674,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
           'units' => 'ng/ul',
           'cv' => 0,
           'assay_type' => 'Calculated',
-          'assay_version' => 'Binning'
+          'assay_version' => 'Concentration Binning'
         }
       end
     end

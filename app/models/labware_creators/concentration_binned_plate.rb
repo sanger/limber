@@ -106,31 +106,13 @@ module LabwareCreators
       @transfer_hash ||= compute_well_transfers
     end
 
-    def destination_concentrations_hash
-      @destination_concentrations_hash ||= bin_calculator.compute_destination_concentrations(transfer_hash)
-    end
-
     def dest_well_qc_attributes
-      @dest_well_qc_attributes ||= compute_dest_well_qc_assay_attributes
+      @dest_well_qc_attributes ||=
+        bin_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Concentration Binning', transfer_hash)
     end
 
     def compute_well_transfers
       bin_calculator.compute_well_transfers(parent)
-    end
-
-    def compute_dest_well_qc_assay_attributes
-      destination_concentrations_hash.map do |dest_locn, dest_conc|
-        {
-          'uuid' => child.uuid,
-          'well_location' => dest_locn,
-          'key' => 'concentration',
-          'value' => dest_conc,
-          'units' => 'ng/ul',
-          'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Binning'
-        }
-      end
     end
 
     def after_transfer!

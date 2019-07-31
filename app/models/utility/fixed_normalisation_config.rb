@@ -24,12 +24,12 @@ module Utility
 
     # Returns source volume from the config ynl
     def source_volume
-      to_bigdecimal(@config['source_volume_ul'])
+      to_bigdecimal(@config['source_volume'])
     end
 
     # Returns diluent volume from the config ynl
     def diluent_volume
-      to_bigdecimal(@config['diluent_volume_ul'])
+      to_bigdecimal(@config['diluent_volume'])
     end
 
     # Returns the multiplication factor for the source (parent) plate

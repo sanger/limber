@@ -5,6 +5,7 @@ module Utility
   # Used by the Fixed Normalisation Plate class to handle ???
   class FixedNormalisationCalculator
     include ActiveModel::Model
+    include Utility::CommonCalculations
 
     attr_reader :config
 
@@ -19,23 +20,6 @@ module Utility
     def compute_well_transfers(parent_plate)
       well_amounts = compute_well_amounts(parent_plate, source_multiplication_factor)
       build_transfers_hash(well_amounts)
-    end
-
-    # Construct the qc assays array from the transfer hash
-    def construct_dest_well_qc_assay_attributes(child_uuid, transfer_hash)
-      dest_concs = compute_destination_concentrations(transfer_hash)
-      dest_concs.map do |dest_locn, dest_conc|
-        {
-          'uuid' => child_uuid,
-          'well_location' => dest_locn,
-          'key' => 'concentration',
-          'value' => dest_conc,
-          'units' => 'ng/ul',
-          'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Fixed Normalisation'
-        }
-      end
     end
 
     # Calculates the well amounts (ng) from the plate well concentrations and a volume multiplication factor.

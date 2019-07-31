@@ -550,8 +550,8 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         let(:binning_config_many_bins) do
           {
             target_amount_ng: 200,
-            target_volume_ul: 20,
-            minimum_source_volume_ul: 0.2,
+            target_volume: 20,
+            minimum_source_volume: 0.2,
             'bins' => [
               { 'colour' => 1, 'pcr_cycles' => 20, 'max' => 10 },
               { 'colour' => 2, 'pcr_cycles' => 19, 'min' => 10, 'max' => 20 },

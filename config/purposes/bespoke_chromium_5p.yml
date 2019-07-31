@@ -13,8 +13,8 @@ LBC 5p GEX Dil:
   - Chromium single cell 5 prime
   :binned_normalisation:
     :target_amount_ng: 50
-    :target_volume_ul: 20
-    :minimum_source_volume_ul: 0.2
+    :target_volume: 20
+    :minimum_source_volume: 0.2
     :bins:
     - colour: 1
       pcr_cycles: 16

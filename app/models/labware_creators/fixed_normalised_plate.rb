@@ -59,7 +59,8 @@ module LabwareCreators
     end
 
     def dest_well_qc_attributes
-      @dest_well_qc_attributes ||= fixed_norm_calculator.construct_dest_well_qc_assay_attributes(child.uuid, transfer_hash)
+      @dest_well_qc_attributes ||=
+        fixed_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Fixed Normalisation', transfer_hash)
     end
 
     def after_transfer!

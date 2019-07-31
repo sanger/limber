@@ -80,11 +80,8 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    links = []
-    if purpose_config.present? && purpose_config.file_links.present?
-      purpose_config.file_links.each do |link|
-        links << [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
-      end
+    links = purpose_config.fetch(:file_links, []).map do |link|
+      [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
     end
     links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
     links
@@ -141,17 +138,13 @@ class Presenters::PlatePresenter
   end
 
   def active_request_types
-    wells.flat_map do |well|
-      well.active_requests.map(&:request_type_key)
-    end
+    labware.active_requests.map(&:request_type_key)
   end
 
   # Active requests may or may not have library types
   def active_library_types
-    wells.flat_map do |well|
-      well.active_requests.each_with_object([]) do |req, library_type_names|
-        library_type_names << req.library_type unless req.library_type.nil?
-      end
+    labware.active_requests.each_with_object([]) do |req, library_type_names|
+      library_type_names << req.library_type unless req.library_type.nil?
     end
   end
 end

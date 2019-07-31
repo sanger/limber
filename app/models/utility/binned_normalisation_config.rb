@@ -29,12 +29,12 @@ module Utility
 
     # Returns target volume from the config ynl
     def target_volume
-      to_bigdecimal(@config['target_volume_ul'])
+      to_bigdecimal(@config['target_volume'])
     end
 
     # Returns minimum source volume from the config yml
     def minimum_source_volume
-      to_bigdecimal(@config['minimum_source_volume_ul'])
+      to_bigdecimal(@config['minimum_source_volume'])
     end
 
     # Returns number of distinct bins in the config ynl

@@ -7,6 +7,7 @@ module Utility
   # the bins on the child plate.
   class ConcentrationBinningCalculator
     include ActiveModel::Model
+    include Utility::CommonCalculations
 
     attr_reader :config
 
@@ -53,20 +54,6 @@ module Utility
       compute_bin_details_by_well(well_amounts)
     end
 
-    def compute_bin_details_by_well(well_amounts)
-      well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
-        bins_template.each do |bin_template|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
-
-          well_colours[well_locn] = {
-            'colour' => bin_template['colour'],
-            'pcr_cycles' => bin_template['pcr_cycles']
-          }
-          break
-        end
-      end
-    end
-
     private
 
     # Sorts well locations into bins based on their amounts and the binning configuration.
@@ -82,17 +69,6 @@ module Utility
         end
       end
       conc_bins
-    end
-
-    # Determines whether compression is required, or if we can start a new column per bin.
-    # This is preferred because the user is working in a special strip tube plate (part of reagent kit)
-    # which will be split to different PCR blocks to run for different numbers of cycles.
-    def compression_required?(bins, number_of_rows, number_of_columns)
-      columns_reqd = 0
-      bins.each do |_bin_number, bin|
-        columns_reqd += bin.length.fdiv(number_of_rows).ceil unless bin.length.zero?
-      end
-      columns_reqd > number_of_columns
     end
 
     # Builds a hash of transfers, including destination concentration information.

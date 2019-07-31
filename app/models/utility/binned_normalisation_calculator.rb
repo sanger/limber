@@ -7,6 +7,7 @@ module Utility
   # the bins on the child plate.
   class BinnedNormalisationCalculator
     include ActiveModel::Model
+    include Utility::CommonCalculations
 
     attr_reader :config
 
@@ -21,7 +22,7 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, details|
         next if well.aliquots.blank?
 
-        sample_conc = well_concentration(well)
+        sample_conc = to_bigdecimal(well.latest_concentration.value)
         vol_source_reqd = compute_vol_source_reqd(sample_conc).round(number_decimal_places)
         vol_diluent_reqd = (config.target_volume - vol_source_reqd).round(number_decimal_places)
         amount = (vol_source_reqd * sample_conc).round(number_decimal_places)
@@ -34,10 +35,6 @@ module Utility
           'dest_conc' => dest_conc
         }
       end
-    end
-
-    def well_concentration(well)
-      to_bigdecimal(well.latest_concentration.value)
     end
 
     def compute_vol_source_reqd(sample_conc)
@@ -58,32 +55,14 @@ module Utility
       build_transfers_hash(conc_bins, number_of_rows, compression_reqd)
     end
 
-    # Refactor the transfers hash to give destination concentrations
     def compute_destination_concentrations(transfer_hash)
       transfer_hash.values.each_with_object({}) do |dest_details, dest_hash|
         dest_hash[dest_details['dest_locn']] = dest_details['dest_conc'].to_f
       end
     end
 
-    def construct_dest_well_qc_assay_attributes(child_uuid, transfer_hash)
-      dest_concs = compute_destination_concentrations(transfer_hash)
-      dest_concs.map do |dest_locn, dest_conc|
-        {
-          'uuid' => child_uuid,
-          'well_location' => dest_locn,
-          'key' => 'concentration',
-          'value' => dest_conc,
-          'units' => 'ng/ul',
-          'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Binned Normalisation'
-        }
-      end
-    end
-
-    # This is used by the plate presenter.
-    # It uses the concentration in the well and the plate purpose config to work out the well bin colour
-    # and number of PCR cycles.
+    # Used by the plate presenter. Uses the concentration in the well and the plate purpose config
+    # to work out the well bin colour and number of PCR cycles.
     def compute_presenter_bin_details(plate)
       well_amounts = compute_well_amounts(plate)
       compute_bin_details_by_well(well_amounts)
@@ -104,17 +83,6 @@ module Utility
         end
       end
       conc_bins
-    end
-
-    # Determines whether compression is required, or if we can start a new column per bin.
-    # This is preferred because the user is working in a special strip tube plate (part of reagent kit)
-    # which will be split to different PCR blocks to run for different numbers of cycles.
-    def compression_required?(bins, number_of_rows, number_of_columns)
-      columns_reqd = 0
-      bins.each do |_bin_number, bin|
-        columns_reqd += bin.length.fdiv(number_of_rows).ceil unless bin.length.zero?
-      end
-      columns_reqd > number_of_columns
     end
 
     # Builds a hash of transfers, including destination concentration information.
@@ -153,20 +121,6 @@ module Utility
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
         well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * config.target_volume
-      end
-    end
-
-    def compute_bin_details_by_well(well_amounts)
-      well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
-        bins_template.each do |bin_template|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
-
-          well_colours[well_locn] = {
-            'colour' => bin_template['colour'],
-            'pcr_cycles' => bin_template['pcr_cycles']
-          }
-          break
-        end
       end
     end
   end
