@@ -6,7 +6,6 @@ sudo: required
 services:
   - xvfb
 addons:
-  chrome: stable
   apt:
     packages:
     - haveged
