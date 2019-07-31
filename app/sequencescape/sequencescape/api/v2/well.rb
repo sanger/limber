@@ -34,7 +34,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def requests_in_progress(request_type_key: nil)
-    aliquots.map(&:request).compact.select do |r|
+    aliquots.flat_map(&:request).compact.select do |r|
       request_type_key.nil? || r.request_type_key == request_type_key
     end
   end
