@@ -68,6 +68,11 @@ FactoryBot.define do
       end
     end
 
+    factory :aggregation_purpose_config do
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+    end
+
     factory :tube_config do
       asset_type { 'tube' }
       default_printer_type { :tube }

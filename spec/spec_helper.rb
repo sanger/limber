@@ -18,6 +18,8 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'webdrivers/chromedriver'
+Webdrivers::Chromedriver.update
 require 'factory_bot'
 require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
