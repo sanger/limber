@@ -42,6 +42,11 @@ FactoryBot.define do
       end
     end
 
+    factory :tag_layout_template_combinatorial_by_row do
+      walking_by { 'combinatorial sequential' }
+      direction { 'combinatorial by row' }
+    end
+
     factory :dual_index_tag_layout_template do
       tag2_group do
         {
