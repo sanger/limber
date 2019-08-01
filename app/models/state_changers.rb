@@ -43,4 +43,43 @@ module StateChangers
     (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
     details[:state_changer_class].constantize
   end
+
+  # Plate state changer to automatically complete specified work requests.
+  class AutomaticPlateStateChanger < DefaultStateChanger
+    def initialize(api, labware_uuid, user_uuid)
+      super
+    end
+
+    def v2_labware
+      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+    end
+
+    def purpose_uuid
+      @purpose_uuid ||= v2_labware.purpose.uuid
+    end
+
+    def purpose_config
+      @purpose_config ||= Settings.purposes[purpose_uuid]
+    end
+
+    def work_completion_request_type
+      @work_completion_request_type ||= purpose_config[:work_completion_request_type]
+    end
+
+    def move_to!(state, reason = nil, customer_accepts_responsibility = false)
+      super
+      complete_outstanding_requests
+    end
+
+    def complete_outstanding_requests
+      in_prog_submissions = v2_labware.in_progress_submission_uuids(request_type_key: work_completion_request_type)
+      return if in_prog_submissions.blank?
+
+      api.work_completion.create!(
+        submissions: in_prog_submissions,
+        target: v2_labware.uuid,
+        user: user_uuid
+      )
+    end
+  end
 end
