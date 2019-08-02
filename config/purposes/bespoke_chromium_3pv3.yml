@@ -25,6 +25,10 @@ LBC 3pV3 GEX Dil:
     - colour: 3
       pcr_cycles: 8
       min: 500
+      max: 1500
+    - colour: 4
+      pcr_cycles: 5
+      min: 1500
   :file_links:
   - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
     id: 'hamilton_cherrypick_to_sample_dilution'
