@@ -1,0 +1,15 @@
+---
+Limber Bespoke Chromium 5p:
+  :filters:
+    :request_type_keys:
+    - limber_chromium_bespoke
+    - limber_multiplexing
+    :library_type_names:
+    - Chromium single cell 5 prime
+  :relationships:
+    LBC Cherrypick: LBC 5p GEX Dil
+    LBC 5p GEX Dil: LBC 5p GEX Frag 2XP
+    LBC 5p GEX Frag 2XP: LBC 5p GEX LigXP
+    LBC 5p GEX LigXP: LBC 5p GEX PCR 2XP
+    LBC 5p GEX PCR 2XP: LBC 5p GLibPS
+    LBC 5p GLibPS:

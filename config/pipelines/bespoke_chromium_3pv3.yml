@@ -1,0 +1,15 @@
+---
+Limber Bespoke Chromium 3pv3:
+  :filters:
+    :request_type_keys:
+    - limber_chromium_bespoke
+    - limber_multiplexing
+    :library_type_names:
+    - Chromium single cell 3 prime v3
+  :relationships:
+    LBC Cherrypick: LBC 3pV3 GEX Dil
+    LBC 3pV3 GEX Dil: LBC 3pV3 GEX Frag 2XP
+    LBC 3pV3 GEX Frag 2XP: LBC 3pV3 GEX LigXP
+    LBC 3pV3 GEX LigXP: LBC 3pV3 GEX PCR 2XP
+    LBC 3pV3 GEX PCR 2XP: LBC 3pV3 GLibPS
+    LBC 3pV3 GLibPS: LB Lib Pool Norm

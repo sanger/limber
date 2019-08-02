@@ -1,0 +1,13 @@
+---
+Limber Bespoke Chromium 3pv2:
+  :filters:
+    :request_type_keys:
+    - limber_chromium_bespoke
+    - limber_multiplexing
+    :library_type_names:
+    - Chromium single cell 3 prime v2
+  :relationships:
+    LBB Cherrypick: LBB Chromium Tagged
+    LBB Chromium Tagged: LBB Lib-XP
+    LBB Lib-XP: LBB Lib Pool Stock
+    LBB Lib Pool Stock: LB Lib Pool Norm

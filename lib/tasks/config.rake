@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../purpose_config'
+require_relative '../pipeline_config'
 
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
@@ -16,11 +17,12 @@ namespace :config do
         Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
         The value should be listed in the api_applications table of the Sequencescape instance
         you are connecting to.
-        In development mode it is recommend that you set the key through the API_KEY environment
+        In development mode it is recommended that you set the key through the API_KEY environment
         variable. This reduces the risk of accidentally committing the key.
       HEREDOC
       exit 1
     end
+
     label_templates = YAML.load_file(Rails.root.join('config', 'label_templates.yml'))
 
     puts 'Fetching submission_templates...'
@@ -52,6 +54,30 @@ namespace :config do
     tracked_purposes = purpose_config.map do |config|
       all_purposes[config.name] ||= config.register!
     end
+
+    puts 'Preparing pipelines...'
+    # TODO: need methods to select all (with pages) for request and library types here and pass into pipeline config
+    # all_request_types = Sequencescape::Api::V2::RequestType.all.index_by(&:key)
+    # all_library_types = api_v2.library_type.all.index_by(&:name)
+    pipelines = Rails.root.join('config', 'pipelines').children.each_with_object([]) do |file, pipelines|
+      next unless file.extname == '.yml'
+
+      begin
+        YAML.load_file(file)&.each do |name, options|
+          # pipelines << PipelineConfig.load(name, options, all_purposes, all_request_types, all_library_types)
+          pipelines << PipelineConfig.load(name, options, all_purposes)
+        end
+      rescue NoMethodError => _
+        STDERR.puts "Cannot parse file: #{file}"
+      end
+    end
+
+    # Check for duplicates in pipelines configuration.
+    if pipelines.map(&:name).uniq!
+      dupes = pipelines.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
+      raise StandardError, "Duplicate pipeline config detected: #{dupes}"
+    end
+
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = {}.tap do |configuration|
@@ -88,6 +114,11 @@ namespace :config do
 
       configuration[:purpose_uuids] = tracked_purposes.each_with_object({}) do |purpose, store|
         store[purpose.name] = purpose.uuid
+      end
+
+      puts 'Preparing pipeline configs...'
+      configuration[:pipelines] = pipelines.each_with_object({}) do |pipeline, store|
+        store[pipeline.name] = pipeline.config
       end
 
       configuration[:robots] = ROBOT_CONFIG
