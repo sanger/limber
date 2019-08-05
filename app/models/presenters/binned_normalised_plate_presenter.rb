@@ -2,9 +2,9 @@
 
 module Presenters
   #
-  # The ConcentrationBinnedPlatePresenter is used for plates that have had
-  # concentration binning applied. It shows a view of the plate with colours
-  # and keys indicating the various bins.
+  # The BinnedNormalisedPlatePresenter is used for plates that have had
+  # concentration binning and normalisation applied. It shows a view of the
+  # plate with colours and keys indicating the various bins.
   #
   class BinnedNormalisedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
