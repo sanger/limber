@@ -1122,10 +1122,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         purpose: 'LBC Cherrypick',
         states: ['passed'],
         label: 'Bed 13' },
-      bed(1).barcode => {
+      bed(3).barcode => {
         purpose: 'LBC 3pV3 GEX Dil',
         states: ['pending'],
-        label: 'Bed 1',
+        label: 'Bed 3',
         target_state: 'passed',
         parent: bed(13).barcode
       }
