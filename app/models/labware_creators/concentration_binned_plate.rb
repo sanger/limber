@@ -52,25 +52,10 @@ module LabwareCreators
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
   class ConcentrationBinnedPlate < StampedPlate
+    include LabwareCreators::RequireWellsWithConcentrations
+
     validate :wells_with_aliquots_have_concentrations?
 
-    def parent
-      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(
-        'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type',
-        uuid: parent_uuid
-      )
-    end
-
-    # Validate that any wells with aliquots have associated qc_result concentration values.
-    def wells_with_aliquots_have_concentrations?
-      concs_missing = wells_with_missing_concs
-      return if concs_missing.size.zero?
-
-      msg = 'wells missing a concentration (have you uploaded concentrations via QuantHub?):'
-      errors.add(:parent, "#{msg} #{concs_missing.join(', ')}")
-    end
-
-    #
     # The binning configuration from the plate purpose.
     # This includes source volume, diluent volume and array of bins.
     # Each bin specifies the min/max amounts, number of PCR cycles and display colour.
@@ -83,14 +68,6 @@ module LabwareCreators
     end
 
     private
-
-    def wells_with_missing_concs
-      parent.wells.each_with_object([]) do |well, concs_missing|
-        next if well.aliquots.blank?
-
-        concs_missing << well.location if well.latest_concentration.nil?
-      end
-    end
 
     def request_hash(source_well, child_plate, additional_parameters)
       {
