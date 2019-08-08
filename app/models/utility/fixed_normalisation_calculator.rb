@@ -10,7 +10,7 @@ module Utility
     attr_reader :config
 
     def initialize(config)
-      @config = Utility::FixedNormalisationConfig.new(config)
+      @config = Utility::DilutionsConfig.new(config)
     end
 
     delegate :to_bigdecimal, :source_volume, :diluent_volume, :source_multiplication_factor,

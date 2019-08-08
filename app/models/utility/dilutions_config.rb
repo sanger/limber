@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Utility
-  # Handles the binned normalisation config functions.
-  class BinnedNormalisationConfig
+  # Handles the extraction of dilution configuration functions.
+  # Used by various dilution plate creators and their dilution calculators.
+  class DilutionsConfig
     include ActiveModel::Model
     require 'bigdecimal'
 
@@ -22,6 +23,16 @@ module Utility
       BigDecimal(s_number, number_decimal_places)
     end
 
+    # Returns source volume from the config ynl
+    def source_volume
+      to_bigdecimal(@config['source_volume'])
+    end
+
+    # Returns diluent volume from the config ynl
+    def diluent_volume
+      to_bigdecimal(@config['diluent_volume'])
+    end
+
     # Returns target amount in ng from the config ynl
     def target_amount
       to_bigdecimal(@config['target_amount_ng'])
@@ -35,6 +46,16 @@ module Utility
     # Returns minimum source volume from the config yml
     def minimum_source_volume
       to_bigdecimal(@config['minimum_source_volume'])
+    end
+
+    # Returns the multiplication factor for the source (parent) plate
+    def source_multiplication_factor
+      source_volume
+    end
+
+    # Returns the multiplication factor for the destination (child) plate
+    def dest_multiplication_factor
+      source_volume + diluent_volume
     end
 
     # Returns number of distinct bins in the config ynl

@@ -11,7 +11,7 @@ LBC 3pV3 GEX Dil:
   - limber_chromium_bespoke
   :expected_library_types:
   - Chromium single cell 3 prime v3
-  :concentration_binning:
+  :dilutions:
     :source_volume: 10
     :diluent_volume: 25
     :bins:

@@ -11,7 +11,7 @@ LBC 5p GEX Dil:
   - limber_chromium_bespoke
   :expected_library_types:
   - Chromium single cell 5 prime
-  :binned_normalisation:
+  :dilutions:
     :target_amount_ng: 50
     :target_volume: 20
     :minimum_source_volume: 0.2

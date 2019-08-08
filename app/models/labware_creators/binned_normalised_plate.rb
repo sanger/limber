@@ -18,13 +18,13 @@ module LabwareCreators
 
     validate :wells_with_aliquots_have_concentrations?
 
-    # The configuration from the plate purpose.
-    def binned_norm_config
-      purpose_config.fetch(:binned_normalisation)
-    end
+    # # The configuration from the plate purpose.
+    # def dilutions_config
+    #   purpose_config.fetch(:dilutions)
+    # end
 
-    def dilution_calculator
-      @dilution_calculator ||= Utility::BinnedNormalisationCalculator.new(binned_norm_config)
+    def dilutions_calculator
+      @dilutions_calculator ||= Utility::BinnedNormalisationCalculator.new(dilutions_config)
     end
 
     private
@@ -45,11 +45,11 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilutions_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers
-      dilution_calculator.compute_well_transfers(parent)
+      dilutions_calculator.compute_well_transfers(parent)
     end
 
     def after_transfer!

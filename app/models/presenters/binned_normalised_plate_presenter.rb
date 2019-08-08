@@ -14,16 +14,16 @@ module Presenters
     self.summary_partial = 'labware/plates/concentration_binned_summary'
     self.aliquot_partial = 'concentration_binned_aliquot'
 
-    def binned_normalisation_config
-      purpose_config.fetch(:binned_normalisation)
+    def dilutions_config
+      purpose_config.fetch(:dilutions)
     end
 
-    def binned_normalisation_calculator
-      @binned_normalisation_calculator ||= Utility::BinnedNormalisationCalculator.new(binned_normalisation_config)
+    def dilutions_calculator
+      @dilutions_calculator ||= Utility::BinnedNormalisationCalculator.new(dilutions_config)
     end
 
     def bins_key
-      binned_normalisation_calculator.bins_template
+      dilutions_calculator.bins_template
     end
 
     def plate_with_qc_results
@@ -38,7 +38,7 @@ module Presenters
     private
 
     def compute_bin_details
-      binned_normalisation_calculator.compute_presenter_bin_details(plate_with_qc_results)
+      dilutions_calculator.compute_presenter_bin_details(plate_with_qc_results)
     end
   end
 end

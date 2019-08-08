@@ -18,8 +18,8 @@
 %>
 <%
   purpose_config = Settings.purposes.fetch(@plate.purpose.uuid, {})
-  binning_config = purpose_config.fetch(:concentration_binning)
-  config = Utility::ConcentrationBinningConfig.new(binning_config)
+  dilutions_config = purpose_config.fetch(:dilutions)
+  config = Utility::DilutionsConfig.new(dilutions_config)
   rows_array = []
   @plate.wells_in_columns.each do |well|
     well.transfer_requests_as_target.each do |transfer_req|

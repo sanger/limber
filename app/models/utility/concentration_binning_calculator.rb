@@ -12,7 +12,7 @@ module Utility
     attr_reader :config
 
     def initialize(config)
-      @config = Utility::ConcentrationBinningConfig.new(config)
+      @config = Utility::DilutionsConfig.new(config)
     end
 
     delegate :to_bigdecimal, :source_volume, :diluent_volume, :number_of_bins, :bins_template,

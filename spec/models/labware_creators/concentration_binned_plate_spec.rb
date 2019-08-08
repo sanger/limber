@@ -111,8 +111,8 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   context 'concentration binning' do
     let(:num_rows) { 8 }
     let(:num_cols) { 12 }
-    let(:src_mult_fact) { subject.dilution_calculator.source_multiplication_factor }
-    let(:dest_mult_fact) { subject.dilution_calculator.dest_multiplication_factor }
+    let(:src_mult_fact) { subject.dilutions_calculator.source_multiplication_factor }
+    let(:dest_mult_fact) { subject.dilutions_calculator.dest_multiplication_factor }
 
     it 'calculates source multiplication factor correctly' do
       expect(src_mult_fact).to eq(10.0)
@@ -130,7 +130,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         'D1' => BigDecimal('18.0')
       }
 
-      expect(subject.dilution_calculator.compute_well_amounts(parent_plate, src_mult_fact))
+      expect(subject.dilutions_calculator.compute_well_amounts(parent_plate, src_mult_fact))
         .to eq(expected_amounts)
     end
 
@@ -154,7 +154,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.dilution_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
+          expect(subject.dilutions_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
             .to eq(expd_transfers_simple)
         end
       end
@@ -178,7 +178,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.dilution_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
+          expect(subject.dilutions_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
             .to eq(expd_transfers_same_bin)
         end
       end
@@ -238,7 +238,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.dilution_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
+          expect(subject.dilutions_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
             .to eq(expd_transfers_mult_cols)
         end
       end
@@ -446,7 +446,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.dilution_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
+          expect(subject.dilutions_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
             .to eq(expd_transfers_comp_many_wells)
         end
       end
@@ -510,13 +510,13 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
 
         before do
           create :concentration_binning_purpose_config,
-                 concentration_binning: binning_config_large,
+                 dilutions: binning_config_large,
                  uuid: child_purpose_uuid,
                  name: child_purpose_name
         end
 
         it 'works when requiring compression due to number of occupied bins exceeding plate columns' do
-          expect(subject.dilution_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
+          expect(subject.dilutions_calculator.compute_well_transfers_hash(well_amounts, num_rows, num_cols))
             .to eq(expd_transfers_comp_many_bins)
         end
       end
@@ -547,7 +547,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       end
 
       it 'refactors the transfers hash correctly' do
-        expect(subject.dilution_calculator.compute_destination_concentrations(transfers_hash))
+        expect(subject.dilutions_calculator.compute_destination_concentrations(transfers_hash))
           .to eq(expected_dest_concs)
       end
     end
@@ -592,7 +592,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       end
 
       it 'creates the correct information' do
-        expect(subject.dilution_calculator.compute_presenter_bin_details(child_plate))
+        expect(subject.dilutions_calculator.compute_presenter_bin_details(child_plate))
           .to eq(expected_bin_details)
       end
     end

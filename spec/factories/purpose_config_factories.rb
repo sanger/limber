@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     factory :concentration_binning_purpose_config do
-      concentration_binning do
+      dilutions do
         {
           source_volume: 10,
           diluent_volume: 25,
@@ -69,7 +69,7 @@ FactoryBot.define do
     end
 
     factory :fixed_normalisation_purpose_config do
-      fixed_normalisation do
+      dilutions do
         {
           source_volume: 2,
           diluent_volume: 33
@@ -78,7 +78,7 @@ FactoryBot.define do
     end
 
     factory :binned_normalisation_purpose_config do
-      binned_normalisation do
+      dilutions do
         {
           target_amount_ng: 50,
           target_volume: 20,

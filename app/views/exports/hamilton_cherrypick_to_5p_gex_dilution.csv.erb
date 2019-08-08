@@ -18,8 +18,8 @@
 %>
 <%
   purpose_config = Settings.purposes.fetch(@plate.purpose.uuid, {})
-  binned_norm_config = purpose_config.fetch(:binned_normalisation)
-  config = Utility::BinnedNormalisationConfig.new(binned_norm_config)
+  dilutions_config = purpose_config.fetch(:dilutions)
+  config = Utility::DilutionsConfig.new(dilutions_config)
   target_volume = config.target_volume.to_f
   rows_array = []
   @plate.wells_in_columns.each do |well|

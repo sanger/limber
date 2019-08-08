@@ -61,12 +61,12 @@ module LabwareCreators
     # The binning configuration from the plate purpose.
     # This includes source volume, diluent volume and array of bins.
     # Each bin specifies the min/max amounts, number of PCR cycles and display colour.
-    def binning_config
-      purpose_config.fetch(:concentration_binning)
-    end
+    # def dilutions_config
+    #   purpose_config.fetch(:dilutions)
+    # end
 
-    def dilution_calculator
-      @dilution_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
+    def dilutions_calculator
+      @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
     end
 
     private
@@ -77,7 +77,7 @@ module LabwareCreators
         'target_asset' => child_plate.wells.detect do |child_well|
           child_well.location == transfer_hash[source_well.location]['dest_locn']
         end&.uuid,
-        'volume' => binning_config['source_volume']
+        'volume' => dilutions_config['source_volume']
       }.merge(additional_parameters)
     end
 
@@ -87,11 +87,11 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilutions_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers
-      dilution_calculator.compute_well_transfers(parent)
+      dilutions_calculator.compute_well_transfers(parent)
     end
 
     def after_transfer!

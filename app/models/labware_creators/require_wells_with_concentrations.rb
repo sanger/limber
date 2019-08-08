@@ -9,6 +9,11 @@ module LabwareCreators::RequireWellsWithConcentrations
     @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)
   end
 
+  # The configuration from the plate purpose.
+  def dilutions_config
+    purpose_config.fetch(:dilutions)
+  end
+
   # Validation method that can be called to check that all wells with aliquots
   # have an associated qc_result concentration value.
   def wells_with_aliquots_have_concentrations?

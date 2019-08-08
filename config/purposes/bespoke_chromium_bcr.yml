@@ -11,7 +11,7 @@ LBC BCR Dil 1:
   - limber_chromium_bespoke
   :expected_library_types:
   - Chromium single cell BCR
-  :fixed_normalisation:
+  :dilutions:
     :source_volume: 2
     :diluent_volume: 33
   :file_links:

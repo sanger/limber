@@ -14,12 +14,12 @@ module LabwareCreators
 
     # The configuration from the plate purpose.
     # Contains source and diluent volumes used to calculate destination concentrations.
-    def fixed_normalisation_config
-      purpose_config.fetch(:fixed_normalisation)
-    end
+    # def dilutions_config
+    #   purpose_config.fetch(:dilutions)
+    # end
 
-    def dilution_calculator
-      @dilution_calculator ||= Utility::FixedNormalisationCalculator.new(fixed_normalisation_config)
+    def dilutions_calculator
+      @dilutions_calculator ||= Utility::FixedNormalisationCalculator.new(dilutions_config)
     end
 
     private
@@ -30,17 +30,17 @@ module LabwareCreators
         'target_asset' => child_plate.wells.detect do |child_well|
           child_well.location == transfer_hash[source_well.location]['dest_locn']
         end&.uuid,
-        'volume' => dilution_calculator.source_volume.to_s
+        'volume' => dilutions_calculator.source_volume.to_s
       }.merge(additional_parameters)
     end
 
     def transfer_hash
-      @transfer_hash ||= dilution_calculator.compute_well_transfers(parent)
+      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilutions_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def after_transfer!
