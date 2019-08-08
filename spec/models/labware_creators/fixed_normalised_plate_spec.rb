@@ -109,8 +109,8 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
   end
 
   context 'fixed normalisation' do
-    let(:src_mult_fact) { subject.fixed_norm_calculator.source_multiplication_factor }
-    let(:dest_mult_fact) { subject.fixed_norm_calculator.dest_multiplication_factor }
+    let(:src_mult_fact) { subject.dilution_calculator.source_multiplication_factor }
+    let(:dest_mult_fact) { subject.dilution_calculator.dest_multiplication_factor }
 
     it 'calculates source multiplication factor correctly' do
       expect(src_mult_fact).to eq(BigDecimal('2.0'))
@@ -128,7 +128,7 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
         'D1' => BigDecimal('3.6')
       }
 
-      expect(subject.fixed_norm_calculator.compute_well_amounts(parent_plate, src_mult_fact))
+      expect(subject.dilution_calculator.compute_well_amounts(parent_plate, src_mult_fact))
         .to eq(expected_amounts)
     end
 
@@ -143,7 +143,7 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
       end
 
       it 'creates the correct transfers' do
-        expect(subject.fixed_norm_calculator.compute_well_transfers(parent_plate))
+        expect(subject.dilution_calculator.compute_well_transfers(parent_plate))
           .to eq(expd_transfers)
       end
     end
@@ -173,7 +173,7 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
       end
 
       it 'refactors the transfers hash correctly' do
-        expect(subject.fixed_norm_calculator.compute_destination_concentrations(transfers_hash))
+        expect(subject.dilution_calculator.compute_destination_concentrations(transfers_hash))
           .to eq(expected_dest_concs)
       end
     end
@@ -218,25 +218,25 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
           'source_asset' => well_a1.uuid,
           'target_asset' => '3-well-A1',
           'submission_id' => well_a1.submission_ids.first,
-          'volume' => subject.fixed_norm_calculator.source_volume.to_s
+          'volume' => subject.dilution_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_b1.uuid,
           'target_asset' => '3-well-B1',
           'submission_id' => well_b1.submission_ids.first,
-          'volume' => subject.fixed_norm_calculator.source_volume.to_s
+          'volume' => subject.dilution_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_c1.uuid,
           'target_asset' => '3-well-C1',
           'submission_id' => well_c1.submission_ids.first,
-          'volume' => subject.fixed_norm_calculator.source_volume.to_s
+          'volume' => subject.dilution_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_d1.uuid,
           'target_asset' => '3-well-D1',
           'submission_id' => well_d1.submission_ids.first,
-          'volume' => subject.fixed_norm_calculator.source_volume.to_s
+          'volume' => subject.dilution_calculator.source_volume.to_s
         }
       ]
     end

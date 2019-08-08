@@ -124,7 +124,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
                   'amount_in_target' => BigDecimal('36.0'), 'dest_conc' => BigDecimal('1.8') }
       }
 
-      expect(subject.binned_norm_calculator.normalisation_details(parent_plate)).to eq(expected_norm_details)
+      expect(subject.dilution_calculator.normalisation_details(parent_plate)).to eq(expected_norm_details)
     end
 
     context 'when generating transfers' do
@@ -139,7 +139,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.binned_norm_calculator.compute_well_transfers(parent_plate))
+          expect(subject.dilution_calculator.compute_well_transfers(parent_plate))
             .to eq(expd_transfers_simple)
         end
       end
@@ -170,7 +170,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.binned_norm_calculator.compute_well_transfers(parent_plate))
+          expect(subject.dilution_calculator.compute_well_transfers(parent_plate))
             .to eq(expd_transfers_same_bin)
         end
       end
@@ -237,7 +237,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.binned_norm_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
+          expect(subject.dilution_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
             .to eq(expd_transfers_mult_cols)
         end
       end
@@ -541,7 +541,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.binned_norm_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
+          expect(subject.dilution_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
             .to eq(expd_transfers_comp_many_wells)
         end
       end
@@ -625,7 +625,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         end
 
         it 'works when requiring compression due to number of occupied bins exceeding plate columns' do
-          expect(subject.binned_norm_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
+          expect(subject.dilution_calculator.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
             .to eq(expd_transfers_comp_many_bins)
         end
       end
@@ -656,7 +656,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
       end
 
       it 'refactors the transfers hash correctly' do
-        expect(subject.binned_norm_calculator.compute_destination_concentrations(transfer_hash))
+        expect(subject.dilution_calculator.compute_destination_concentrations(transfer_hash))
           .to eq(expected_dest_concs)
       end
     end
@@ -701,7 +701,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
       end
 
       it 'creates the correct information' do
-        expect(subject.binned_norm_calculator.compute_presenter_bin_details(child_plate))
+        expect(subject.dilution_calculator.compute_presenter_bin_details(child_plate))
           .to eq(expected_bin_details)
       end
     end

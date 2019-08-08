@@ -18,8 +18,8 @@ module LabwareCreators
       purpose_config.fetch(:fixed_normalisation)
     end
 
-    def fixed_norm_calculator
-      @fixed_norm_calculator ||= Utility::FixedNormalisationCalculator.new(fixed_normalisation_config)
+    def dilution_calculator
+      @dilution_calculator ||= Utility::FixedNormalisationCalculator.new(fixed_normalisation_config)
     end
 
     private
@@ -30,17 +30,17 @@ module LabwareCreators
         'target_asset' => child_plate.wells.detect do |child_well|
           child_well.location == transfer_hash[source_well.location]['dest_locn']
         end&.uuid,
-        'volume' => fixed_norm_calculator.source_volume.to_s
+        'volume' => dilution_calculator.source_volume.to_s
       }.merge(additional_parameters)
     end
 
     def transfer_hash
-      @transfer_hash ||= fixed_norm_calculator.compute_well_transfers(parent)
+      @transfer_hash ||= dilution_calculator.compute_well_transfers(parent)
     end
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        fixed_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def after_transfer!

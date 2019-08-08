@@ -9,6 +9,8 @@ module Presenters
   class BinnedNormalisedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
+    PLATE_WITH_QC_RESULTS_INCLUDES = 'wells.aliquots,wells.qc_results'
+
     self.summary_partial = 'labware/plates/concentration_binned_summary'
     self.aliquot_partial = 'concentration_binned_aliquot'
 
@@ -26,7 +28,7 @@ module Presenters
 
     def plate_with_qc_results
       @plate_with_qc_results ||=
-        Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', uuid: labware.uuid)
+        Sequencescape::Api::V2.plate_with_custom_includes(PLATE_WITH_QC_RESULTS_INCLUDES, uuid: labware.uuid)
     end
 
     def bin_details

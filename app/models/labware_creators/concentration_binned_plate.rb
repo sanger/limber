@@ -65,8 +65,8 @@ module LabwareCreators
       purpose_config.fetch(:concentration_binning)
     end
 
-    def bin_calculator
-      @bin_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
+    def dilution_calculator
+      @dilution_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
     end
 
     private
@@ -87,11 +87,11 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        bin_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers
-      bin_calculator.compute_well_transfers(parent)
+      dilution_calculator.compute_well_transfers(parent)
     end
 
     def after_transfer!

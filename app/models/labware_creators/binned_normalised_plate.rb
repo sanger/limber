@@ -23,8 +23,8 @@ module LabwareCreators
       purpose_config.fetch(:binned_normalisation)
     end
 
-    def binned_norm_calculator
-      @binned_norm_calculator ||= Utility::BinnedNormalisationCalculator.new(binned_norm_config)
+    def dilution_calculator
+      @dilution_calculator ||= Utility::BinnedNormalisationCalculator.new(binned_norm_config)
     end
 
     private
@@ -45,11 +45,11 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        binned_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
+        dilution_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers
-      binned_norm_calculator.compute_well_transfers(parent)
+      dilution_calculator.compute_well_transfers(parent)
     end
 
     def after_transfer!
