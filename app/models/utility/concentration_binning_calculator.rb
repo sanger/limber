@@ -7,7 +7,7 @@ module Utility
   # the bins on the child plate.
   class ConcentrationBinningCalculator
     include ActiveModel::Model
-    include Utility::CommonCalculations
+    include Utility::CommonDilutionCalculations
 
     attr_reader :config
 

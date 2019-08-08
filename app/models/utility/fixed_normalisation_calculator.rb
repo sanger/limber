@@ -5,7 +5,7 @@ module Utility
   # Used by the Fixed Normalisation Plate class to handle ???
   class FixedNormalisationCalculator
     include ActiveModel::Model
-    include Utility::CommonCalculations
+    include Utility::CommonDilutionCalculations
 
     attr_reader :config
 

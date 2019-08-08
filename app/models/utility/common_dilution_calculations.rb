@@ -2,7 +2,7 @@
 
 module Utility
   # Holds common functions used in other calculators.
-  module CommonCalculations
+  module CommonDilutionCalculations
     # Constructs the qc_assays collection details for use when writing calculated concentrations
     # for the newly created child plate.
     def construct_dest_qc_assay_attributes(child_uuid, assay_version, transfer_hash)
