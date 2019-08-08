@@ -14,6 +14,8 @@ module LabwareCreators
   class BinnedNormalisedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
 
+    QC_ASSAY_VERSION = 'Binned Normalisation'
+
     validate :wells_with_aliquots_have_concentrations?
 
     # The configuration from the plate purpose.
@@ -43,7 +45,7 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        binned_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Binned Normalisation', transfer_hash)
+        binned_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers

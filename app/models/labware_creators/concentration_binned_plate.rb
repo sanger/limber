@@ -54,6 +54,8 @@ module LabwareCreators
   class ConcentrationBinnedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
 
+    QC_ASSAY_VERSION = 'Concentration Binning'
+
     validate :wells_with_aliquots_have_concentrations?
 
     # The binning configuration from the plate purpose.
@@ -85,7 +87,7 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        bin_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Concentration Binning', transfer_hash)
+        bin_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def compute_well_transfers

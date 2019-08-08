@@ -8,6 +8,8 @@ module LabwareCreators
   class FixedNormalisedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
 
+    QC_ASSAY_VERSION = 'Fixed Normalisation'
+
     validate :wells_with_aliquots_have_concentrations?
 
     # The configuration from the plate purpose.
@@ -38,7 +40,7 @@ module LabwareCreators
 
     def dest_well_qc_attributes
       @dest_well_qc_attributes ||=
-        fixed_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, 'Fixed Normalisation', transfer_hash)
+        fixed_norm_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
     end
 
     def after_transfer!
