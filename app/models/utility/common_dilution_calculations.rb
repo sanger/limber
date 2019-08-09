@@ -44,7 +44,7 @@ module Utility
     def compute_bin_details_by_well(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
         bins_template.each do |bin_template|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
+          next unless (bin_template['min']..bin_template['max']).cover?(amount)
 
           well_colours[well_locn] = {
             'colour' => bin_template['colour'],
