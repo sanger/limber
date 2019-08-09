@@ -40,10 +40,9 @@ module Utility
     end
 
     def compute_vol_source_reqd(sample_conc)
-      vol_source_reqd = config.target_amount / sample_conc
-      vol_source_reqd = config.minimum_source_volume if vol_source_reqd < config.minimum_source_volume
-      vol_source_reqd = config.target_volume if vol_source_reqd > config.target_volume
-      vol_source_reqd
+      # check calculated volume against minimum then maximum allowed volumes
+      min_checked_vol_reqd = [config.target_amount / sample_conc, config.minimum_source_volume].max
+      [min_checked_vol_reqd, config.target_volume].min
     end
 
     def compute_well_transfers(plate)
