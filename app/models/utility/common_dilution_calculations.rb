@@ -33,9 +33,8 @@ module Utility
     # This is preferred because the user is working in a special strip tube plate (part of reagent kit)
     # which will be split to different PCR blocks to run for different numbers of cycles.
     def compression_required?(bins, number_of_rows, number_of_columns)
-      columns_reqd = 0
-      bins.each do |_bin_number, bin|
-        columns_reqd += bin.length.fdiv(number_of_rows).ceil unless bin.length.zero?
+      columns_reqd = bins.sum do |_bin_number, bin|
+        bin.length.fdiv(number_of_rows).ceil
       end
       columns_reqd > number_of_columns
     end
