@@ -128,7 +128,7 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
         'D1' => BigDecimal('3.6')
       }
 
-      expect(subject.dilutions_calculator.compute_well_amounts(parent_plate, src_mult_fact))
+      expect(subject.dilutions_calculator.compute_well_amounts(parent_plate))
         .to eq(expected_amounts)
     end
 
