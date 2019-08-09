@@ -117,9 +117,9 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
         'A1' => { 'vol_source_reqd' => BigDecimal('20.0'), 'vol_diluent_reqd' => BigDecimal('0.0'),
                   'amount_in_target' => BigDecimal('20.0'), 'dest_conc' => BigDecimal('1.0') },
         'B1' => { 'vol_source_reqd' => BigDecimal('0.893'), 'vol_diluent_reqd' => BigDecimal('19.107'),
-                  'amount_in_target' => BigDecimal('50.008'), 'dest_conc' => BigDecimal('2.5') },
+                  'amount_in_target' => BigDecimal('50.0'), 'dest_conc' => BigDecimal('2.5') },
         'C1' => { 'vol_source_reqd' => BigDecimal('14.286'), 'vol_diluent_reqd' => BigDecimal('5.714'),
-                  'amount_in_target' => BigDecimal('50.001'), 'dest_conc' => BigDecimal('2.5') },
+                  'amount_in_target' => BigDecimal('50.0'), 'dest_conc' => BigDecimal('2.5') },
         'D1' => { 'vol_source_reqd' => BigDecimal('20.0'), 'vol_diluent_reqd' => BigDecimal('0.0'),
                   'amount_in_target' => BigDecimal('36.0'), 'dest_conc' => BigDecimal('1.8') }
       }

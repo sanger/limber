@@ -24,17 +24,17 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, details|
         next if well.aliquots.blank?
 
-        sample_conc = to_bigdecimal(well.latest_concentration.value)
-        vol_source_reqd = compute_vol_source_reqd(sample_conc).round(number_decimal_places)
-        vol_diluent_reqd = (config.target_volume - vol_source_reqd).round(number_decimal_places)
-        amount = (vol_source_reqd * sample_conc).round(number_decimal_places)
-        dest_conc = (amount / config.target_volume).round(number_decimal_places)
+        sample_conc      = to_bigdecimal(well.latest_concentration.value)
+        vol_source_reqd  = compute_vol_source_reqd(sample_conc)
+        vol_diluent_reqd = (config.target_volume - vol_source_reqd)
+        amount           = (vol_source_reqd * sample_conc)
+        dest_conc        = (amount / config.target_volume)
 
         details[well.location] = {
-          'vol_source_reqd' => vol_source_reqd,
-          'vol_diluent_reqd' => vol_diluent_reqd,
-          'amount_in_target' => amount,
-          'dest_conc' => dest_conc
+          'vol_source_reqd' => vol_source_reqd.round(number_decimal_places),
+          'vol_diluent_reqd' => vol_diluent_reqd.round(number_decimal_places),
+          'amount_in_target' => amount.round(number_decimal_places),
+          'dest_conc' => dest_conc.round(number_decimal_places)
         }
       end
     end
