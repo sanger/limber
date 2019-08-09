@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require 'bigdecimal'
+
 module Utility
   # Handles the extraction of dilution configuration functions.
   # Used by various dilution plate creators and their dilution calculators.
   class DilutionsConfig
     include ActiveModel::Model
-    require 'bigdecimal'
 
     attr_reader :config
 
