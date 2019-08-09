@@ -254,8 +254,8 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
           'value' => attribs['conc'],
           'units' => 'ng/ul',
           'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Fixed Normalisation'
+          'assay_type' => 'FixedNormalisationCalculator',
+          'assay_version' => 'v1.0'
         }
       end
     end

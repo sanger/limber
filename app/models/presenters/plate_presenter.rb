@@ -143,8 +143,6 @@ class Presenters::PlatePresenter
 
   # Active requests may or may not have library types
   def active_library_types
-    labware.active_requests.each_with_object([]) do |req, library_type_names|
-      library_type_names << req.library_type unless req.library_type.nil?
-    end
+    labware.active_requests.map(&:library_type).compact
   end
 end

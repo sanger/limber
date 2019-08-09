@@ -53,17 +53,9 @@ module LabwareCreators
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
   class ConcentrationBinnedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-
-    QC_ASSAY_VERSION = 'Concentration Binning'
+    include LabwareCreators::GenerateQCResults
 
     validate :wells_with_aliquots_have_concentrations?
-
-    # The binning configuration from the plate purpose.
-    # This includes source volume, diluent volume and array of bins.
-    # Each bin specifies the min/max amounts, number of PCR cycles and display colour.
-    # def dilutions_config
-    #   purpose_config.fetch(:dilutions)
-    # end
 
     def dilutions_calculator
       @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
@@ -77,7 +69,7 @@ module LabwareCreators
         'target_asset' => child_plate.wells.detect do |child_well|
           child_well.location == transfer_hash[source_well.location]['dest_locn']
         end&.uuid,
-        'volume' => dilutions_config['source_volume']
+        'volume' => dilutions_config['source_volume'].to_s
       }.merge(additional_parameters)
     end
 
@@ -85,19 +77,8 @@ module LabwareCreators
       @transfer_hash ||= compute_well_transfers
     end
 
-    def dest_well_qc_attributes
-      @dest_well_qc_attributes ||=
-        dilutions_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
-    end
-
     def compute_well_transfers
       dilutions_calculator.compute_well_transfers(parent)
-    end
-
-    def after_transfer!
-      Sequencescape::Api::V2::QcAssay.create(
-        qc_results: dest_well_qc_attributes
-      )
     end
   end
 end

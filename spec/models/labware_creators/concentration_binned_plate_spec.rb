@@ -637,25 +637,25 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
           'source_asset' => well_a1.uuid,
           'target_asset' => '3-well-A1',
           'submission_id' => well_a1.submission_ids.first,
-          'volume' => 10
+          'volume' => '10'
         },
         {
           'source_asset' => well_b1.uuid,
           'target_asset' => '3-well-A3',
           'submission_id' => well_b1.submission_ids.first,
-          'volume' => 10
+          'volume' => '10'
         },
         {
           'source_asset' => well_c1.uuid,
           'target_asset' => '3-well-A2',
           'submission_id' => well_c1.submission_ids.first,
-          'volume' => 10
+          'volume' => '10'
         },
         {
           'source_asset' => well_d1.uuid,
           'target_asset' => '3-well-B1',
           'submission_id' => well_d1.submission_ids.first,
-          'volume' => 10
+          'volume' => '10'
         }
       ]
     end
@@ -673,8 +673,8 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
           'value' => attribs['conc'],
           'units' => 'ng/ul',
           'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Concentration Binning'
+          'assay_type' => 'ConcentrationBinningCalculator',
+          'assay_version' => 'v1.0'
         }
       end
     end

@@ -13,15 +13,9 @@ module LabwareCreators
   # to further normalise the samples.
   class BinnedNormalisedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-
-    QC_ASSAY_VERSION = 'Binned Normalisation'
+    include LabwareCreators::GenerateQCResults
 
     validate :wells_with_aliquots_have_concentrations?
-
-    # # The configuration from the plate purpose.
-    # def dilutions_config
-    #   purpose_config.fetch(:dilutions)
-    # end
 
     def dilutions_calculator
       @dilutions_calculator ||= Utility::BinnedNormalisationCalculator.new(dilutions_config)
@@ -43,19 +37,8 @@ module LabwareCreators
       @transfer_hash ||= compute_well_transfers
     end
 
-    def dest_well_qc_attributes
-      @dest_well_qc_attributes ||=
-        dilutions_calculator.construct_dest_qc_assay_attributes(child.uuid, QC_ASSAY_VERSION, transfer_hash)
-    end
-
     def compute_well_transfers
       dilutions_calculator.compute_well_transfers(parent)
-    end
-
-    def after_transfer!
-      Sequencescape::Api::V2::QcAssay.create(
-        qc_results: dest_well_qc_attributes
-      )
     end
   end
 end

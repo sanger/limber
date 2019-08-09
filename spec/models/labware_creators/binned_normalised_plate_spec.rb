@@ -782,8 +782,8 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
           'value' => attribs['conc'],
           'units' => 'ng/ul',
           'cv' => 0,
-          'assay_type' => 'Calculated',
-          'assay_version' => 'Binned Normalisation'
+          'assay_type' => 'BinnedNormalisationCalculator',
+          'assay_version' => 'v1.0'
         }
       end
     end

@@ -2,6 +2,8 @@
 
 # Can be included in plate creators which require well aliquots to have concentrations
 module LabwareCreators::RequireWellsWithConcentrations
+  extend ActiveSupport::Concern
+
   PLATE_INCLUDES =
     'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
 

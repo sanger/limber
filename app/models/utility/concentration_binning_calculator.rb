@@ -9,6 +9,8 @@ module Utility
     include ActiveModel::Model
     include Utility::CommonDilutionCalculations
 
+    self.version = 'v1.0'
+
     attr_reader :config
 
     def initialize(config)
