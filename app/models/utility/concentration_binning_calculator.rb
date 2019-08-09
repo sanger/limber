@@ -42,7 +42,7 @@ module Utility
     end
 
     # Refactor the transfers hash to give destination concentrations
-    def compute_destination_concentrations(transfers_hash)
+    def extract_destination_concentrations(transfers_hash)
       transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
         dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
       end

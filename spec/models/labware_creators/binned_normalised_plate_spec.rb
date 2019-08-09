@@ -656,7 +656,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
       end
 
       it 'refactors the transfers hash correctly' do
-        expect(subject.dilutions_calculator.compute_destination_concentrations(transfer_hash))
+        expect(subject.dilutions_calculator.extract_destination_concentrations(transfer_hash))
           .to eq(expected_dest_concs)
       end
     end

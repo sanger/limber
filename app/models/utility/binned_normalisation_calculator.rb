@@ -56,7 +56,7 @@ module Utility
       build_transfers_hash(conc_bins, number_of_rows, compression_reqd)
     end
 
-    def compute_destination_concentrations(transfer_hash)
+    def extract_destination_concentrations(transfer_hash)
       transfer_hash.values.each_with_object({}) do |dest_details, dest_hash|
         dest_hash[dest_details['dest_locn']] = dest_details['dest_conc'].to_f
       end

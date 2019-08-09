@@ -547,7 +547,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       end
 
       it 'refactors the transfers hash correctly' do
-        expect(subject.dilutions_calculator.compute_destination_concentrations(transfers_hash))
+        expect(subject.dilutions_calculator.extract_destination_concentrations(transfers_hash))
           .to eq(expected_dest_concs)
       end
     end
