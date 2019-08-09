@@ -20,17 +20,17 @@ module Utility
 
     # Compute the well transfers hash from the parent plate
     def compute_well_transfers(parent_plate)
-      well_amounts = compute_well_amounts(parent_plate, source_multiplication_factor)
+      well_amounts = compute_well_amounts(parent_plate)
       build_transfers_hash(well_amounts)
     end
 
     # Calculates the well amounts (ng) from the plate well concentrations and a volume multiplication factor.
-    def compute_well_amounts(plate, multiplication_factor)
+    def compute_well_amounts(plate)
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
         # concentration recorded is ng per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * multiplication_factor
+        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * source_multiplication_factor
       end
     end
 
