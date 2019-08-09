@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Utility::BinnedNormalisationCalculator do
+RSpec.describe Utility::NormalisedBinningCalculator do
   context 'when computing values' do
-    subject { Utility::BinnedNormalisationCalculator.new(dilutions_config) }
+    subject { Utility::NormalisedBinningCalculator.new(dilutions_config) }
 
     let(:dilutions_config) do
       {

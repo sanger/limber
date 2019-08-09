@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/binned_normalised_plate_presenter'
+require 'presenters/normalised_binned_plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 require 'bigdecimal'
 
-RSpec.describe Presenters::BinnedNormalisedPlatePresenter do
+RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -70,7 +70,7 @@ RSpec.describe Presenters::BinnedNormalisedPlatePresenter do
   end
 
   subject(:presenter) do
-    Presenters::BinnedNormalisedPlatePresenter.new(
+    Presenters::NormalisedBinnedPlatePresenter.new(
       api: api,
       labware: labware
     )

@@ -5,7 +5,7 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 require 'bigdecimal'
 
-RSpec.describe LabwareCreators::BinnedNormalisedPlate do
+RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -78,12 +78,12 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
   end
 
   subject do
-    LabwareCreators::BinnedNormalisedPlate.new(api, form_attributes)
+    LabwareCreators::NormalisedBinnedPlate.new(api, form_attributes)
   end
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::BinnedNormalisedPlate
+      expect(subject).to be_a LabwareCreators::NormalisedBinnedPlate
     end
 
     context 'when wells are missing a concentration value' do
@@ -782,7 +782,7 @@ RSpec.describe LabwareCreators::BinnedNormalisedPlate do
           'value' => attribs['conc'],
           'units' => 'ng/ul',
           'cv' => 0,
-          'assay_type' => 'BinnedNormalisationCalculator',
+          'assay_type' => 'NormalisedBinningCalculator',
           'assay_version' => 'v1.0'
         }
       end

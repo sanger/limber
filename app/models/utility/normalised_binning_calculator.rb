@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Utility
-  # Handles the Computations for Binned Normalisation
-  # Used by the Binned Mormalised Plate and Presenter classes to handle the
+  # Handles the Computations for Normalised Binning
+  # Used by the Normalised Binned Plate and Presenter classes to handle the
   # normalisation, compute the bins and provide helpers on displaying
   # the bins on the child plate.
-  class BinnedNormalisationCalculator
+  class NormalisedBinningCalculator
     include ActiveModel::Model
     include Utility::CommonDilutionCalculations
 

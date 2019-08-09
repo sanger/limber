@@ -11,14 +11,14 @@ module LabwareCreators
   # Once the normalisation is calculated the target wells are arranged according to bins of
   # total amount present, and different numbers of pcr cycles assigned to each bin to attempt
   # to further normalise the samples.
-  class BinnedNormalisedPlate < StampedPlate
+  class NormalisedBinnedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
     include LabwareCreators::GenerateQCResults
 
     validate :wells_with_aliquots_have_concentrations?
 
     def dilutions_calculator
-      @dilutions_calculator ||= Utility::BinnedNormalisationCalculator.new(dilutions_config)
+      @dilutions_calculator ||= Utility::NormalisedBinningCalculator.new(dilutions_config)
     end
 
     private
