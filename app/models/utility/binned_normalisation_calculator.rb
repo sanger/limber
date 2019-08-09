@@ -71,13 +71,13 @@ module Utility
 
     private
 
-    # Sorts well locations into bins based on their amounts and the configuration values.
+    # Sorts well locations into bins based on their amounts.
     def concentration_bins(norm_details)
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       norm_details.each do |well_locn, details|
         amount = details['amount_in_target']
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
+          next unless (bin_template['min']..bin_template['max']).cover?(amount)
 
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'details' => details }
           break

@@ -17,7 +17,7 @@ module Utility
       @config = Utility::DilutionsConfig.new(config)
     end
 
-    delegate :to_bigdecimal, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
+    delegate :to_bigdecimal, :number_decimal_places, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
              :source_multiplication_factor, :dest_multiplication_factor, to: :config
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
@@ -63,9 +63,9 @@ module Utility
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
+          next unless (bin_template['min']..bin_template['max']).cover?(amount)
 
-          dest_conc_bd = (amount / (source_volume + diluent_volume)).round(3)
+          dest_conc_bd = (amount / (source_volume + diluent_volume)).round(config.number_decimal_places)
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
           break
         end

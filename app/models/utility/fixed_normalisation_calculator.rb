@@ -15,7 +15,7 @@ module Utility
       @config = Utility::DilutionsConfig.new(config)
     end
 
-    delegate :to_bigdecimal, :source_volume, :diluent_volume, :source_multiplication_factor,
+    delegate :to_bigdecimal, :number_decimal_places, :source_volume, :diluent_volume, :source_multiplication_factor,
              :dest_multiplication_factor, to: :config
 
     # Compute the well transfers hash from the parent plate
@@ -37,7 +37,7 @@ module Utility
     # Build the well transfers hash from the well amounts
     def build_transfers_hash(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
-        dest_conc_bd = (amount / dest_multiplication_factor).round(3)
+        dest_conc_bd = (amount / dest_multiplication_factor).round(config.number_decimal_places)
         transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
       end
     end
