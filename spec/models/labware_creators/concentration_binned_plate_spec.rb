@@ -3,7 +3,6 @@
 require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
-require 'bigdecimal'
 
 RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   it_behaves_like 'it only allows creation from plates'

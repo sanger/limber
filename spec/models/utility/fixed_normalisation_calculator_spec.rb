@@ -55,23 +55,23 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
     describe '#source_multiplication_factor' do
       it 'calculates value correctly' do
-        expect(subject.source_multiplication_factor).to eq(BigDecimal('2.0'))
+        expect(subject.source_multiplication_factor).to eq(2.0)
       end
     end
 
     describe '#dest_multiplication_factor' do
       it 'calculates value correctly' do
-        expect(subject.dest_multiplication_factor).to eq(BigDecimal('35.0'))
+        expect(subject.dest_multiplication_factor).to eq(35.0)
       end
     end
 
     describe '#compute_well_amounts' do
       it 'calculates plate well amounts correctly' do
         expected_amounts = {
-          'A1' => BigDecimal('3.0'),
-          'B1' => BigDecimal('112.0'),
-          'C1' => BigDecimal('7.0'),
-          'D1' => BigDecimal('3.6')
+          'A1' => 3.0,
+          'B1' => 112.0,
+          'C1' => 7.0,
+          'D1' => 3.6
         }
 
         expect(subject.compute_well_amounts(parent_plate)).to eq(expected_amounts)

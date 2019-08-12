@@ -15,7 +15,7 @@ module Utility
       @config = Utility::DilutionsConfig.new(config)
     end
 
-    delegate :to_bigdecimal, :number_decimal_places, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
+    delegate :number_decimal_places, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
              :source_multiplication_factor, :dest_multiplication_factor, to: :config
 
     # Constructs the qc_assays collection details for use when writing calculated concentrations

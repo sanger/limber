@@ -15,7 +15,7 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, details|
         next if well.aliquots.blank?
 
-        sample_conc      = to_bigdecimal(well.latest_concentration.value)
+        sample_conc      = well.latest_concentration.value
         vol_source_reqd  = compute_vol_source_reqd(sample_conc)
         vol_diluent_reqd = (config.target_volume - vol_source_reqd)
         amount           = (vol_source_reqd * sample_conc)
@@ -62,7 +62,7 @@ module Utility
       norm_details.each do |well_locn, details|
         amount = details['amount_in_target']
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless (bin_template['min']..bin_template['max']).cover?(amount)
+          next unless (config.bin_min(bin_template)..config.bin_max(bin_template)).cover?(amount)
 
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'details' => details }
           break
@@ -84,8 +84,8 @@ module Utility
           details = well['details']
           transfers_hash[src_locn] = {
             'dest_locn' => WellHelpers.well_name(row, column),
-            'dest_conc' => details['dest_conc'],
-            'volume' => details['vol_source_reqd']
+            'dest_conc' => details['dest_conc'].to_s,
+            'volume' => details['vol_source_reqd'].to_s
           }
           if row == (number_of_rows - 1)
             row = 0
@@ -106,7 +106,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * config.target_volume
+        well_amounts[well.location] = well.latest_concentration.value * config.target_volume
       end
     end
   end

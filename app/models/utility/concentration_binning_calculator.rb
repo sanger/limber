@@ -17,7 +17,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * multiplication_factor
+        well_amounts[well.location] = well.latest_concentration.value * multiplication_factor
       end
     end
 
@@ -47,10 +47,10 @@ module Utility
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless (bin_template['min']..bin_template['max']).cover?(amount)
+          next unless (config.bin_min(bin_template)..config.bin_max(bin_template)).cover?(amount)
 
-          dest_conc_bd = (amount / (source_volume + diluent_volume)).round(config.number_decimal_places)
-          conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
+          dest_conc = (amount / (source_volume + diluent_volume)).round(config.number_decimal_places)
+          conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc.to_s }
           break
         end
       end

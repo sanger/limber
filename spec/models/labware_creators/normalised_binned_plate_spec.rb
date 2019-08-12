@@ -3,7 +3,6 @@
 require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
-require 'bigdecimal'
 
 RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   it_behaves_like 'it only allows creation from plates'
@@ -171,10 +170,10 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
     end
     let(:dest_well_qc_attributes) do
       [
-        { 'well_name' => 'A1', 'conc' => 1.0 },
-        { 'well_name' => 'A2', 'conc' => 2.5 },
-        { 'well_name' => 'B2', 'conc' => 2.5 },
-        { 'well_name' => 'C2', 'conc' => 1.8 }
+        { 'well_name' => 'A1', 'conc' => '1.0' },
+        { 'well_name' => 'A2', 'conc' => '2.5' },
+        { 'well_name' => 'B2', 'conc' => '2.5' },
+        { 'well_name' => 'C2', 'conc' => '1.8' }
       ].each.map do |attribs|
         {
           'uuid' => 'child-uuid',

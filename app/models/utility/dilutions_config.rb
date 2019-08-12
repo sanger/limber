@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'bigdecimal'
-
 module Utility
   # Handles the extraction of dilution configuration functions.
   # Used by various dilution plate creators and their dilution calculators.
@@ -19,34 +17,29 @@ module Utility
       3
     end
 
-    # Converts the string number to a big decimal
-    def to_bigdecimal(s_number)
-      BigDecimal(s_number, number_decimal_places)
-    end
-
     # Returns source volume from the config ynl
     def source_volume
-      to_bigdecimal(@config['source_volume'])
+      @config['source_volume'].to_f
     end
 
     # Returns diluent volume from the config ynl
     def diluent_volume
-      to_bigdecimal(@config['diluent_volume'])
+      @config['diluent_volume'].to_f
     end
 
     # Returns target amount in ng from the config ynl
     def target_amount
-      to_bigdecimal(@config['target_amount_ng'])
+      @config['target_amount_ng'].to_f
     end
 
     # Returns target volume from the config ynl
     def target_volume
-      to_bigdecimal(@config['target_volume'])
+      @config['target_volume'].to_f
     end
 
     # Returns minimum source volume from the config yml
     def minimum_source_volume
-      to_bigdecimal(@config['minimum_source_volume'])
+      @config['minimum_source_volume'].to_f
     end
 
     # Returns the multiplication factor for the source (parent) plate
@@ -69,17 +62,17 @@ module Utility
       @bins_template ||= configure_bins_template
     end
 
-    private
-
     # Returns the bin minimum amount (ng) for a specific bin
     def bin_min(bin_template)
-      to_bigdecimal((bin_template['min'] || -1.0))
+      (bin_template['min'] || 0.0).to_f
     end
 
     # Returns the bin maximum amount (ng) for a specific bin
     def bin_max(bin_template)
-      to_bigdecimal((bin_template['max'] || 'Infinity'))
+      (bin_template['max'] || Float::INFINITY).to_f
     end
+
+    private
 
     # Returns an interpreted version of the bins configuration section with min max values
     def configure_bins_template

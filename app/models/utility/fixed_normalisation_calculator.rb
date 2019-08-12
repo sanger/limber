@@ -20,7 +20,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is ng per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * source_multiplication_factor
+        well_amounts[well.location] = well.latest_concentration.value * source_multiplication_factor
       end
     end
 
@@ -29,8 +29,8 @@ module Utility
     # Build the well transfers hash from the well amounts
     def build_transfers_hash(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
-        dest_conc_bd = (amount / dest_multiplication_factor).round(config.number_decimal_places)
-        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
+        dest_conc = (amount / dest_multiplication_factor).round(config.number_decimal_places)
+        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc.to_s }
       end
     end
   end
