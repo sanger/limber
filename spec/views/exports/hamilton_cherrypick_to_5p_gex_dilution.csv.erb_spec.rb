@@ -29,7 +29,7 @@ RSpec.describe 'exports/hamilton_cherrypick_to_5p_gex_dilution.csv.erb' do
     let(:dest_labware) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
 
     before do
-      create(:binned_normalisation_purpose_config, uuid: dest_labware.purpose.uuid)
+      create(:normalised_binning_purpose_config, uuid: dest_labware.purpose.uuid)
       assign(:plate, dest_labware)
     end
 

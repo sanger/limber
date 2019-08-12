@@ -60,7 +60,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    create :binned_normalisation_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
+    create :normalised_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
       parent_plate,
@@ -618,7 +618,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
         end
 
         before do
-          create :binned_normalisation_purpose_config,
+          create :normalised_binning_purpose_config,
                  dilutions: binning_config_many_bins,
                  uuid: child_purpose_uuid,
                  name: child_purpose_name

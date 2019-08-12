@@ -77,7 +77,7 @@ FactoryBot.define do
       end
     end
 
-    factory :binned_normalisation_purpose_config do
+    factory :normalised_binning_purpose_config do
       dilutions do
         {
           target_amount_ng: 50,
