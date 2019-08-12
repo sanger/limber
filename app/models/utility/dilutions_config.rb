@@ -85,8 +85,8 @@ module Utility
     def configure_bins_template
       @config['bins'].each_with_object([]) do |template, templates|
         templates << {
-          'colour' => template.colour,
-          'pcr_cycles' => template.pcr_cycles,
+          'colour' => template['colour'],
+          'pcr_cycles' => template['pcr_cycles'],
           'min' => bin_min(template),
           'max' => bin_max(template)
         }
