@@ -535,34 +535,51 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
       end
     end
 
-    describe '#extract_destination_concentrations' do
-      context 'when generating destination concentrations' do
-        let(:transfers_hash) do
+    describe '#construct_dest_qc_assay_attributes' do
+      let(:transfer_hash) do
+        {
+          'A1' => { 'dest_locn' => 'A2', 'dest_conc' => BigDecimal('0.665'), 'volume' => BigDecimal('20.0') },
+          'B1' => { 'dest_locn' => 'A1', 'dest_conc' => BigDecimal('0.343'), 'volume' => BigDecimal('20.0') },
+          'C1' => { 'dest_locn' => 'A3', 'dest_conc' => BigDecimal('2.135'), 'volume' => BigDecimal('20.0') }
+        }
+      end
+      let(:expected_attributes) do
+        [
           {
-            'A1' => { 'dest_locn' => 'A2', 'dest_conc' => 0.665 },
-            'B1' => { 'dest_locn' => 'A1', 'dest_conc' => 0.343 },
-            'C1' => { 'dest_locn' => 'A3', 'dest_conc' => 2.135 },
-            'D1' => { 'dest_locn' => 'B3', 'dest_conc' => 3.123 },
-            'E1' => { 'dest_locn' => 'C3', 'dest_conc' => 3.045 },
-            'F1' => { 'dest_locn' => 'B2', 'dest_conc' => 0.743 },
-            'G1' => { 'dest_locn' => 'C2', 'dest_conc' => 0.693 }
-          }
-        end
-        let(:expected_dest_concs) do
+            'uuid' => 'child_uuid',
+            'well_location' => 'A2',
+            'key' => 'concentration',
+            'value' => BigDecimal('0.665'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'ConcentrationBinningCalculator',
+            'assay_version' => assay_version
+          },
           {
-            'A2' => 0.665,
-            'A1' => 0.343,
-            'A3' => 2.135,
-            'B3' => 3.123,
-            'C3' => 3.045,
-            'B2' => 0.743,
-            'C2' => 0.693
+            'uuid' => 'child_uuid',
+            'well_location' => 'A1',
+            'key' => 'concentration',
+            'value' => BigDecimal('0.343'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'ConcentrationBinningCalculator',
+            'assay_version' => assay_version
+          },
+          {
+            'uuid' => 'child_uuid',
+            'well_location' => 'A3',
+            'key' => 'concentration',
+            'value' => BigDecimal('2.135'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'ConcentrationBinningCalculator',
+            'assay_version' => assay_version
           }
-        end
+        ]
+      end
 
-        it 'refactors the transfers hash correctly' do
-          expect(subject.extract_destination_concentrations(transfers_hash)).to eq(expected_dest_concs)
-        end
+      it 'creates the expected attibutes' do
+        expect(subject.construct_dest_qc_assay_attributes('child_uuid', transfer_hash)).to eq(expected_attributes)
       end
     end
 

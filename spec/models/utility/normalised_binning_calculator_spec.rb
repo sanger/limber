@@ -617,13 +617,13 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         end
         let(:expected_dest_concs) do
           {
-            'A2' => 0.665,
-            'A1' => 0.343,
-            'A3' => 2.135,
-            'B3' => 3.123,
-            'C3' => 3.045,
-            'B2' => 0.743,
-            'C2' => 0.693
+            'A2' => BigDecimal('0.665'),
+            'A1' => BigDecimal('0.343'),
+            'A3' => BigDecimal('2.135'),
+            'B3' => BigDecimal('3.123'),
+            'C3' => BigDecimal('3.045'),
+            'B2' => BigDecimal('0.743'),
+            'C2' => BigDecimal('0.693')
           }
         end
 

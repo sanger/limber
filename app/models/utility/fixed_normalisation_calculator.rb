@@ -2,7 +2,6 @@
 
 module Utility
   # Handles the Computations for Fixed Normalisation plate creation.
-  # Used by the Fixed Normalisation Plate class to handle ???
   class FixedNormalisationCalculator
     include ActiveModel::Model
     include Utility::CommonDilutionCalculations
@@ -33,6 +32,8 @@ module Utility
         well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * source_multiplication_factor
       end
     end
+
+    private
 
     # Build the well transfers hash from the well amounts
     def build_transfers_hash(well_amounts)
