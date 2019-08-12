@@ -2,6 +2,7 @@
 
 RSpec.describe Utility::NormalisedBinningCalculator do
   context 'when computing values for normalised binning' do
+    let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
     let(:num_rows) { 8 }
@@ -629,6 +630,54 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         it 'refactors the transfers hash correctly' do
           expect(subject.extract_destination_concentrations(transfer_hash)).to eq(expected_dest_concs)
         end
+      end
+    end
+
+    describe '#construct_dest_qc_assay_attributes' do
+      let(:transfer_hash) do
+        {
+          'A1' => { 'dest_locn' => 'A2', 'dest_conc' => BigDecimal('0.665'), 'volume' => BigDecimal('20.0') },
+          'B1' => { 'dest_locn' => 'A1', 'dest_conc' => BigDecimal('0.343'), 'volume' => BigDecimal('20.0') },
+          'C1' => { 'dest_locn' => 'A3', 'dest_conc' => BigDecimal('2.135'), 'volume' => BigDecimal('20.0') }
+        }
+      end
+      let(:expected_attributes) do
+        [
+          {
+            'uuid' => 'child_uuid',
+            'well_location' => 'A2',
+            'key' => 'concentration',
+            'value' => BigDecimal('0.665'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'NormalisedBinningCalculator',
+            'assay_version' => assay_version
+          },
+          {
+            'uuid' => 'child_uuid',
+            'well_location' => 'A1',
+            'key' => 'concentration',
+            'value' => BigDecimal('0.343'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'NormalisedBinningCalculator',
+            'assay_version' => assay_version
+          },
+          {
+            'uuid' => 'child_uuid',
+            'well_location' => 'A3',
+            'key' => 'concentration',
+            'value' => BigDecimal('2.135'),
+            'units' => 'ng/ul',
+            'cv' => 0,
+            'assay_type' => 'NormalisedBinningCalculator',
+            'assay_version' => assay_version
+          }
+        ]
+      end
+
+      it 'creates the expected attibutes' do
+        expect(subject.construct_dest_qc_assay_attributes('child_uuid', transfer_hash)).to eq(expected_attributes)
       end
     end
 
