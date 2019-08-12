@@ -8,15 +8,6 @@ module Utility
 
     self.version = 'v1.0'
 
-    attr_reader :config
-
-    def initialize(config)
-      @config = Utility::DilutionsConfig.new(config)
-    end
-
-    delegate :to_bigdecimal, :number_decimal_places, :source_volume, :diluent_volume, :source_multiplication_factor,
-             :dest_multiplication_factor, to: :config
-
     # Compute the well transfers hash from the parent plate
     def compute_well_transfers(parent_plate)
       well_amounts = compute_well_amounts(parent_plate)

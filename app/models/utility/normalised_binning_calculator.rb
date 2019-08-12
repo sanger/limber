@@ -11,15 +11,6 @@ module Utility
 
     self.version = 'v1.0'
 
-    attr_reader :config
-
-    def initialize(config)
-      @config = Utility::DilutionsConfig.new(config)
-    end
-
-    delegate :to_bigdecimal, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
-             :number_decimal_places, to: :config
-
     def normalisation_details(plate)
       plate.wells_in_columns.each_with_object({}) do |well, details|
         next if well.aliquots.blank?

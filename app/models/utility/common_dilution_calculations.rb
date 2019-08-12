@@ -9,6 +9,15 @@ module Utility
       class_attribute :version
     end
 
+    attr_reader :config
+
+    def initialize(config)
+      @config = Utility::DilutionsConfig.new(config)
+    end
+
+    delegate :to_bigdecimal, :number_decimal_places, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
+             :source_multiplication_factor, :dest_multiplication_factor, to: :config
+
     # Constructs the qc_assays collection details for use when writing calculated concentrations
     # for the newly created child plate.
     def construct_dest_qc_assay_attributes(child_uuid, transfer_hash)
