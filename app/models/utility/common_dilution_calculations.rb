@@ -27,6 +27,13 @@ module Utility
       end
     end
 
+    # Refactor the transfers hash to give destination concentrations
+    def extract_destination_concentrations(transfers_hash)
+      transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
+        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
+      end
+    end
+
     private
 
     # Determines whether compression is required, or if we can start a new column per bin.

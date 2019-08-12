@@ -41,12 +41,5 @@ module Utility
         transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
       end
     end
-
-    # Refactor the transfers hash to give destination well concentrations
-    def extract_destination_concentrations(transfers_hash)
-      transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
-        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
-      end
-    end
   end
 end

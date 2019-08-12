@@ -41,13 +41,6 @@ module Utility
       build_transfers_hash(conc_bins, number_of_rows, compression_reqd)
     end
 
-    # Refactor the transfers hash to give destination concentrations
-    def extract_destination_concentrations(transfers_hash)
-      transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
-        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
-      end
-    end
-
     # This is used by the plate presenter.
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
     # and number of PCR cycles.
