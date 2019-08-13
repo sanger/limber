@@ -74,11 +74,7 @@ module LabwareCreators
     end
 
     def transfer_hash
-      @transfer_hash ||= compute_well_transfers
-    end
-
-    def compute_well_transfers
-      dilutions_calculator.compute_well_transfers(parent)
+      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
   end
 end
