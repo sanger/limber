@@ -15,7 +15,7 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, details|
         next if well.aliquots.blank?
 
-        sample_conc      = well.latest_concentration.value
+        sample_conc      = well.latest_concentration.value.to_f
         vol_source_reqd  = compute_vol_source_reqd(sample_conc)
         vol_diluent_reqd = (config.target_volume - vol_source_reqd)
         amount           = (vol_source_reqd * sample_conc)
@@ -55,6 +55,15 @@ module Utility
     end
 
     private
+
+    def compute_well_amounts(plate)
+      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
+        next if well.aliquots.blank?
+
+        # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
+        well_amounts[well.location] = well.latest_concentration.value.to_f * config.target_volume
+      end
+    end
 
     # Sorts well locations into bins based on their amounts.
     def concentration_bins(norm_details)
@@ -98,15 +107,6 @@ module Utility
           row = 0
           column += 1
         end
-      end
-    end
-
-    def compute_well_amounts(plate)
-      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
-        next if well.aliquots.blank?
-
-        # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value * config.target_volume
       end
     end
   end
