@@ -17,15 +17,15 @@ LBC 3pV3 GEX Dil:
     :bins:
     - colour: 1
       pcr_cycles: 16
-      max: 25
+      max: 24
     - colour: 2
       pcr_cycles: 12
       min: 25
-      max: 500
+      max: 499
     - colour: 3
       pcr_cycles: 8
       min: 500
-      max: 1500
+      max: 1499
     - colour: 4
       pcr_cycles: 5
       min: 1500
