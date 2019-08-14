@@ -43,6 +43,65 @@ module Utility
       end
     end
 
+    # Handles deternination of next well location for bins
+    class Binner
+      attr_accessor :row, :column
+
+      def initialize(compression_reqd, number_of_rows)
+        @compression_reqd = compression_reqd
+        @number_of_rows = number_of_rows
+        @row = 0
+        @column = 0
+        validate_initial_arguments
+      end
+
+      # Work out what the next well location will be.
+      # This depends on whether we are in the last well of a bin, whether compression is required,
+      # and whether we are in the last row of the plate and will need to start a new column.
+      # NB. rows and columns are zero-based here.
+      # def next_well_location(cur_row, cur_column, index_within_bin, bin_size)
+      def next_well_location(index_within_bin, bin_size)
+        validate_next_well_arguments(index_within_bin, bin_size)
+
+        if index_within_bin == bin_size - 1
+          # last well in bin, so next well location depends on whether compression is required
+          @compression_reqd ? determine_next_available_location : reset_to_top_of_next_column
+        else
+          # there are more wells yet in this bin so continue
+          determine_next_available_location
+        end
+      end
+
+      private
+
+      def validate_initial_arguments
+        raise ArgumentError, 'compression_reqd should be a boolean' unless @compression_reqd.in? [true, false]
+
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+      end
+
+      def validate_next_well_arguments(index_within_bin, bin_size)
+        raise ArgumentError, 'index_within_bin must be 0 or greater' if index_within_bin.nil? || index_within_bin.negative?
+
+        raise ArgumentError, 'bin_size must be greater than 0' if bin_size.nil? || bin_size <= 0
+      end
+
+      # Next available location depends on whether we are in the last row on the plate.
+      def determine_next_available_location
+        if @row == (@number_of_rows - 1)
+          reset_to_top_of_next_column
+        else
+          @row += 1
+        end
+      end
+
+      # Reset location to top of the next column.
+      def reset_to_top_of_next_column
+        @row = 0
+        @column += 1
+      end
+    end
+
     private
 
     # Determines whether compression is required, or if we can start a new column per bin.

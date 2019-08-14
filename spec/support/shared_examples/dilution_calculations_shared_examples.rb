@@ -76,3 +76,43 @@ RSpec.shared_examples 'it extracts destination concentrations' do
     expect(subject.extract_destination_concentrations(transfer_hash)).to eq(expected_dest_concs)
   end
 end
+
+RSpec.shared_examples 'it throws exceptions from binner class' do
+  let(:compression_reqd) { false }
+  let(:number_of_rows) { 3 }
+  let(:binner) { Utility::ConcentrationBinningCalculator::Binner.new(compression_reqd, number_of_rows) }
+  let(:well_index) { 2 }
+  let(:bin_size) { 5 }
+
+  context 'when compression_reqd is invalid' do
+    let(:compression_reqd) { nil }
+
+    it 'throws an argument exception' do
+      expect { binner }.to raise_error(ArgumentError)
+    end
+  end
+
+  context 'when number_of_rows is invalid' do
+    let(:number_of_rows) { nil }
+
+    it 'throws an argument exception' do
+      expect { binner }.to raise_error(ArgumentError)
+    end
+  end
+
+  context 'when well_index is invalid' do
+    let(:well_index) { -1 }
+
+    it 'throws an argument exception' do
+      expect { binner.next_well_location(well_index, bin_size) }.to raise_error(ArgumentError)
+    end
+  end
+
+  context 'when bin_size is invalid' do
+    let(:bin_size) { -1 }
+
+    it 'throws an argument exception' do
+      expect { binner.next_well_location(well_index, bin_size) }.to raise_error(ArgumentError)
+    end
+  end
+end

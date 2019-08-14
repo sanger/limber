@@ -48,7 +48,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         'diluent_volume' => 25,
         'bins' => [
           { 'colour' => 1, 'pcr_cycles' => 16, 'max' => 25 },
-          { 'colour' => 2, 'pcr_cycles' => 12, 'min' => 25, 'max' => 500 },
+          { 'colour' => 2, 'pcr_cycles' => 12, 'min' => 26, 'max' => 499 },
           { 'colour' => 3, 'pcr_cycles' => 8, 'min' => 500 }
         ]
       }
@@ -228,6 +228,69 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
             'D3' => { 'dest_locn' => 'B4', 'dest_conc' => '0.743' },
             'E3' => { 'dest_locn' => 'C4', 'dest_conc' => '0.743' },
             'F3' => { 'dest_locn' => 'D4', 'dest_conc' => '0.743' }
+          }
+        end
+
+        it 'creates the correct transfers' do
+          expect(subject.compute_well_transfers_hash(well_amounts, num_rows, num_cols)).to eq(expd_transfers)
+        end
+      end
+
+      context 'when bins span complete columns' do
+        let(:well_amounts) do
+          {
+            'A1' => 501.0,
+            'B1' => 501.0,
+            'C1' => 501.0,
+            'D1' => 501.0,
+            'E1' => 501.0,
+            'F1' => 501.0,
+            'G1' => 501.0,
+            'H1' => 501.0,
+            'A2' => 26.0,
+            'B2' => 26.0,
+            'C2' => 26.0,
+            'D2' => 26.0,
+            'E2' => 26.0,
+            'F2' => 26.0,
+            'G2' => 26.0,
+            'H2' => 26.0,
+            'A3' => 1.0,
+            'B3' => 1.0,
+            'C3' => 1.0,
+            'D3' => 1.0,
+            'E3' => 1.0,
+            'F3' => 1.0,
+            'G3' => 1.0,
+            'H3' => 1.0
+          }
+        end
+        let(:expd_transfers) do
+          {
+            'A1' => { 'dest_locn' => 'A3', 'dest_conc' => '14.314' },
+            'B1' => { 'dest_locn' => 'B3', 'dest_conc' => '14.314' },
+            'C1' => { 'dest_locn' => 'C3', 'dest_conc' => '14.314' },
+            'D1' => { 'dest_locn' => 'D3', 'dest_conc' => '14.314' },
+            'E1' => { 'dest_locn' => 'E3', 'dest_conc' => '14.314' },
+            'F1' => { 'dest_locn' => 'F3', 'dest_conc' => '14.314' },
+            'G1' => { 'dest_locn' => 'G3', 'dest_conc' => '14.314' },
+            'H1' => { 'dest_locn' => 'H3', 'dest_conc' => '14.314' },
+            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '0.743' },
+            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '0.743' },
+            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '0.743' },
+            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '0.743' },
+            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '0.743' },
+            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '0.743' },
+            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.743' },
+            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.743' },
+            'A3' => { 'dest_locn' => 'A1', 'dest_conc' => '0.029' },
+            'B3' => { 'dest_locn' => 'B1', 'dest_conc' => '0.029' },
+            'C3' => { 'dest_locn' => 'C1', 'dest_conc' => '0.029' },
+            'D3' => { 'dest_locn' => 'D1', 'dest_conc' => '0.029' },
+            'E3' => { 'dest_locn' => 'E1', 'dest_conc' => '0.029' },
+            'F3' => { 'dest_locn' => 'F1', 'dest_conc' => '0.029' },
+            'G3' => { 'dest_locn' => 'G1', 'dest_conc' => '0.029' },
+            'H3' => { 'dest_locn' => 'H1', 'dest_conc' => '0.029' }
           }
         end
 
@@ -443,7 +506,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
       end
 
-      context 'with a large bin' do
+      context 'with a large number of bins' do
         let(:dilutions_config) do
           {
             'source_volume' => 10,
@@ -559,5 +622,11 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
       end
     end
+  end
+end
+
+RSpec.describe Utility::ConcentrationBinningCalculator::Binner do
+  context 'when calculating binned well locations' do
+    it_behaves_like 'it throws exceptions from binner class'
   end
 end

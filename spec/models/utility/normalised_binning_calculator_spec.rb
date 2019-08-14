@@ -222,6 +222,72 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         end
       end
 
+      context 'when bins span complete columns' do
+        let(:normalisation_details) do
+          {
+            'A1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'B1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'C1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'D1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'E1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'F1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'G1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+            'H1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
+                      'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
+
+            'A2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'B2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'C2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'D2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'E2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'F2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'G2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
+            'H2' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
+                      'amount_in_target' => 50.0, 'dest_conc' => 2.5 }
+          }
+        end
+        let(:expd_transfers) do
+          {
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+            'H1' => { 'dest_locn' => 'H1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+
+            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '2.5', 'volume' => '0.893' }
+          }
+        end
+
+        it 'creates the correct transfers' do
+          expect(subject.compute_well_transfers_hash(normalisation_details, num_rows, num_cols))
+            .to eq(expd_transfers)
+        end
+      end
+
       context 'when requiring compression due to numbers of wells' do
         let(:normalisation_details) do
           {
@@ -657,5 +723,11 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         end
       end
     end
+  end
+end
+
+RSpec.describe Utility::NormalisedBinningCalculator::Binner do
+  context 'when calculating binned well locations' do
+    it_behaves_like 'it throws exceptions from binner class'
   end
 end
