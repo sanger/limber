@@ -1200,10 +1200,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         states: ['passed'],
         label: 'Bed 13'
       },
-      bed(4).barcode => {
+      bed(3).barcode => {
         purpose: 'LBC TCR Dil 1',
         states: ['pending'],
-        label: 'Bed 4',
+        label: 'Bed 3',
         target_state: 'passed',
         parent: bed(13).barcode
       }
@@ -1220,10 +1220,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         states: ['passed'],
         label: 'Bed 13'
       },
-      bed(5).barcode => {
+      bed(3).barcode => {
         purpose: 'LBC BCR Dil 1',
         states: ['pending'],
-        label: 'Bed 5',
+        label: 'Bed 3',
         target_state: 'passed',
         parent: bed(13).barcode
       }
