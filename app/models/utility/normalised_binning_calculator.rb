@@ -71,7 +71,7 @@ module Utility
       norm_details.each do |well_locn, details|
         amount = details['amount_in_target']
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless (config.bin_min(bin_template)..config.bin_max(bin_template)).cover?(amount)
+          next unless (config.bin_min(bin_template)...config.bin_max(bin_template)).cover?(amount)
 
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'details' => details }
           break
