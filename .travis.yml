@@ -6,11 +6,9 @@ sudo: required
 services:
   - xvfb
 addons:
-  chrome: stable
   apt:
     packages:
     - haveged
-    - chromium-chromedriver
 cache:
   bundler: true
   directories:
@@ -38,6 +36,8 @@ jobs:
     name: Karma
     script: xvfb-run -a yarn test
   - name: RSpec
+    before_script:
+    - RAILS_ENV=test bundle exec rails webdrivers:chromedriver:update -r webdrivers
     script: xvfb-run -a bundle exec rspec
   - stage: build
     if: tag IS present

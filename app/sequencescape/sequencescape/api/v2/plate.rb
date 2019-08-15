@@ -44,8 +44,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     @active_requests ||= wells.flat_map(&:active_requests)
   end
 
-  def in_progress_submission_uuids
-    wells.flat_map(&:in_progress_submission_uuids).uniq
+  def in_progress_submission_uuids(request_type_key: nil)
+    wells.flat_map { |w| w.in_progress_submission_uuids(request_type_key: request_type_key) }.uniq
   end
 
   def wells_in_columns

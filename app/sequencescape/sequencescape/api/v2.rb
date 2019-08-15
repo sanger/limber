@@ -24,14 +24,7 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_for_completion(uuid)
-    Plate.includes('wells.aliquots.request.submission')
-         .select(
-           submissions: 'uuid',
-           plates: 'uuid,wells',
-           aliquots: 'request',
-           requests: 'submission',
-           wells: 'aliquots'
-         )
+    Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type')
          .find(uuid: uuid)
          .first
   end

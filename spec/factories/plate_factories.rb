@@ -122,6 +122,15 @@ FactoryBot.define do
         request_factory { :mx_request }
       end
     end
+
+    factory :v2_plate_for_aggregation do
+      transient do
+        purpose_name { 'Limber Bespoke Aggregation' }
+        request_factory { :aggregation_request }
+        include_submissions { true }
+        pool_sizes { [2, 2] }
+      end
+    end
   end
 
   factory :v2_stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
