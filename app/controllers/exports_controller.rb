@@ -11,7 +11,11 @@ class ExportsController < ApplicationController
   PLATE_INCLUDES = {
     'concentrations_ngul' => 'wells.qc_results',
     'concentrations_nm' => 'wells.qc_results',
-    'hamilton_aggregate_cherry_pick' => 'wells.transfer_requests_as_target.source_asset'
+    'hamilton_aggregate_cherrypick' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_cherrypick_to_sample_dilution' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_gex_dil_to_gex_frag_2xp' => 'wells.transfer_requests_as_target.source_asset',
+    'hamilton_gex_frag_2xp_to_gex_ligxp' => 'wells.transfer_requests_as_target.source_asset'
+
   }.freeze
 
   def show
@@ -30,7 +34,7 @@ class ExportsController < ApplicationController
   end
 
   def locate_labware
-    @labware = @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, params[:limber_plate_id])
+    @labware = @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, barcode: params[:limber_plate_id])
   end
 
   def include_parameters

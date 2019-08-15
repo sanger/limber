@@ -85,7 +85,7 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 plate finding query.
-    def stub_v2_plate(plate, stub_search: true, custom_query: nil)
+    def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil)
       # Stub to v1 api search here as well!
       if stub_search
         stub_asset_search(
@@ -96,8 +96,12 @@ module ApiUrlHelper
 
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(plate)
+      elsif custom_includes
+        arguments = [custom_includes, { uuid: plate.uuid }]
+        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(*arguments).and_return(plate)
       else
-        allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
+        arguments = [{ uuid: plate.uuid }]
+        allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(*arguments).and_return(plate)
       end
     end
 

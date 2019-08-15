@@ -54,6 +54,25 @@ FactoryBot.define do
       tag_layout_templates { ['tag-layout-template'] }
     end
 
+    factory :concentration_binning_purpose_config do
+      concentration_binning do
+        {
+          source_volume: 10,
+          diluent_volume: 25,
+          bins: [
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 12, min: 25, max: 500 },
+            { colour: 3, pcr_cycles: 8, min: 500 }
+          ]
+        }
+      end
+    end
+
+    factory :aggregation_purpose_config do
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+    end
+
     factory :tube_config do
       asset_type { 'tube' }
       default_printer_type { :tube }

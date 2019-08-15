@@ -38,5 +38,6 @@ Metrics/BlockLength:
     - define
     - guard
     - transient
+    - it
   Exclude:
     - config/robots.rb

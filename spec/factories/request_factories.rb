@@ -66,6 +66,10 @@ FactoryBot.define do
     factory :mx_request do
       request_type { create :mx_request_type }
     end
+
+    factory :aggregation_request do
+      request_type { create :aggregation_request_type }
+    end
   end
 
   factory :primer_panel, class: Sequencescape::Api::V2::PrimerPanel do
@@ -101,6 +105,11 @@ FactoryBot.define do
       name { 'Limber Multiplexing' }
       key { 'limber_multiplexing' }
       for_multiplexing { true }
+    end
+
+    factory :aggregation_request_type do
+      name { 'Limber Bespoke Aggregation' }
+      key { 'limber_bespoke_aggregation' }
     end
   end
 end
