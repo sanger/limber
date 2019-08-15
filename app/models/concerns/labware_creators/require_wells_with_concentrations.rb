@@ -20,7 +20,7 @@ module LabwareCreators::RequireWellsWithConcentrations
   # have an associated qc_result concentration value.
   def wells_with_aliquots_have_concentrations?
     concs_missing = wells_with_missing_concs
-    return if concs_missing.size.zero?
+    return if concs_missing.empty?
 
     msg = 'wells missing a concentration (have you uploaded concentrations via QuantHub?):'
     errors.add(:parent, "#{msg} #{concs_missing.join(', ')}")
