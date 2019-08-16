@@ -2,6 +2,7 @@
 
 require_relative '../purpose_config'
 require_relative '../pipeline_config'
+require_relative '../config_loader/purposes_loader'
 
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
@@ -31,53 +32,14 @@ namespace :config do
     puts 'Fetching purposes...'
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
-    purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
-      next unless file.extname == '.yml'
-
-      begin
-        YAML.load_file(file)&.each do |name, options|
-          purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
-        end
-      rescue NoMethodError => _
-        STDERR.puts "Cannot parse file: #{file}"
-      end
-    end
-
-    # Check for duplicates: We spread config over multiple files. If we have duplicates its going
-    # to result in strange behaviour. So lets blow up early.
-    if purpose_config.map(&:name).uniq!
-      dupes = purpose_config.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
-      raise StandardError, "Duplicate purpose config detected: #{dupes}"
+    purpose_config = ConfigLoader::PurposesLoader.new.config.map do |name, options|
+      PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
     end
 
     puts 'Preparing purposes...'
     tracked_purposes = purpose_config.map do |config|
       all_purposes[config.name] ||= config.register!
     end
-
-    puts 'Preparing pipelines...'
-    # TODO: need methods to select all (with pages) for request and library types here and pass into pipeline config
-    # all_request_types = Sequencescape::Api::V2::RequestType.all.index_by(&:key)
-    # all_library_types = api_v2.library_type.all.index_by(&:name)
-    pipelines = Rails.root.join('config', 'pipelines').children.each_with_object([]) do |file, pipelines|
-      next unless file.extname == '.yml'
-
-      begin
-        YAML.load_file(file)&.each do |name, options|
-          # pipelines << PipelineConfig.load(name, options, all_purposes, all_request_types, all_library_types)
-          pipelines << PipelineConfig.load(name, options, all_purposes)
-        end
-      rescue NoMethodError => _
-        STDERR.puts "Cannot parse file: #{file}"
-      end
-    end
-
-    # Check for duplicates in pipelines configuration.
-    if pipelines.map(&:name).uniq!
-      dupes = pipelines.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
-      raise StandardError, "Duplicate pipeline config detected: #{dupes}"
-    end
-
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = {}.tap do |configuration|
@@ -114,11 +76,6 @@ namespace :config do
 
       configuration[:purpose_uuids] = tracked_purposes.each_with_object({}) do |purpose, store|
         store[purpose.name] = purpose.uuid
-      end
-
-      puts 'Preparing pipeline configs...'
-      configuration[:pipelines] = pipelines.each_with_object({}) do |pipeline, store|
-        store[pipeline.name] = pipeline.config
       end
 
       configuration[:robots] = ROBOT_CONFIG

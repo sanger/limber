@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # This is used as part of a rake task, and will be run within a console.
-
 class PipelineConfig
   attr_reader :name, :options
   class_attribute :default_options
@@ -35,20 +34,19 @@ class PipelineConfig
     @all_purposes = all_purposes
   end
 
-
-# ---
-# Limber Bespoke Chromium 3pv2:
-#   :filters:
-#     :request_type_keys:
-#     - limber_chromium_bespoke
-#     - limber_multiplexing
-#     :library_type_names:
-#     - Chromium single cell 3 prime v2
-#   :relationships:
-#     LBB Cherrypick: LBB Chromium Tagged
-#     LBB Chromium Tagged: LBB Lib-XP
-#     LBB Lib-XP: LBB Lib Pool Stock
-#     LBB Lib Pool Stock: LB Lib Pool Norm
+  # ---
+  # Limber Bespoke Chromium 3pv2:
+  #   :filters:
+  #     :request_type_keys:
+  #     - limber_chromium_bespoke
+  #     - limber_multiplexing
+  #     :library_type_names:
+  #     - Chromium single cell 3 prime v2
+  #   :relationships:
+  #     LBB Cherrypick: LBB Chromium Tagged
+  #     LBB Chromium Tagged: LBB Lib-XP
+  #     LBB Lib-XP: LBB Lib Pool Stock
+  #     LBB Lib Pool Stock: LB Lib Pool Norm
 
   def config
     {
@@ -78,12 +76,8 @@ class PipelineConfig
     return default_options[:filters][:request_type_keys] if @options[:filters][:request_type_keys].nil?
 
     @options[:filters][:request_type_keys].each do |key|
-      binding.pry
-
       # TODO: better to use passed in list of all request types rather than individual selects here
-      if Sequencescape::Api::V2::RequestType.where(key: key).first.nil?
-        warn "WARN: Do not recognise request type key: #{key}"
-      end
+      warn "WARN: Do not recognise request type key: #{key}" if Sequencescape::Api::V2::RequestType.where(key: key).first.nil?
     end
   end
 
@@ -99,5 +93,4 @@ class PipelineConfig
   end
 
   # TODO: add relationships method here to check purposes used exist
-
 end
