@@ -29,7 +29,7 @@ module Utility
     # Build the well transfers hash from the well amounts
     def build_transfers_hash(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
-        dest_conc = (amount / dest_multiplication_factor).round(config.number_decimal_places)
+        dest_conc = (amount / dest_multiplication_factor)
         transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc.to_s }
       end
     end

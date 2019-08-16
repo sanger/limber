@@ -85,17 +85,17 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
 
     describe '#compute_well_transfers' do
       context 'for a simple example with few wells' do
-        let(:expd_transfers_simple) do
+        let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.429' },
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.42857142857142855' },
             'B1' => { 'dest_locn' => 'A3', 'dest_conc' => '16.0' },
             'C1' => { 'dest_locn' => 'A2', 'dest_conc' => '1.0' },
-            'D1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.514' }
+            'D1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.5142857142857142' }
           }
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers_simple)
+          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
         end
       end
 
@@ -115,7 +115,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
                  position: { 'name' => 'D1' },
                  qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
         end
-        let(:expd_transfers_same_bin) do
+        let(:expd_transfers) do
           {
             'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '1.0' },
             'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '1.0' },
@@ -125,7 +125,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers_same_bin)
+          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
         end
       end
     end
@@ -142,10 +142,10 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.429' },
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.42857142857142855' },
             'B1' => { 'dest_locn' => 'A3', 'dest_conc' => '16.0' },
             'C1' => { 'dest_locn' => 'A2', 'dest_conc' => '1.0' },
-            'D1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.514' }
+            'D1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.5142857142857142' }
           }
         end
 
@@ -165,10 +165,10 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.743' },
-            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.743' },
-            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.743' },
-            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.743' }
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.7428571428571429' },
+            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.7428571428571429' },
+            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.7428571428571429' },
+            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.7428571428571429' }
           }
         end
 
@@ -206,28 +206,28 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.029' },
-            'B1' => { 'dest_locn' => 'A2', 'dest_conc' => '0.743' },
-            'C1' => { 'dest_locn' => 'A5', 'dest_conc' => '14.314' },
-            'D1' => { 'dest_locn' => 'B2', 'dest_conc' => '0.743' },
-            'E1' => { 'dest_locn' => 'C2', 'dest_conc' => '0.743' },
-            'F1' => { 'dest_locn' => 'D2', 'dest_conc' => '0.743' },
-            'G1' => { 'dest_locn' => 'E2', 'dest_conc' => '0.743' },
-            'H1' => { 'dest_locn' => 'F2', 'dest_conc' => '0.743' },
-            'A2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.743' },
-            'B2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.743' },
-            'C2' => { 'dest_locn' => 'A3', 'dest_conc' => '0.743' },
-            'D2' => { 'dest_locn' => 'B3', 'dest_conc' => '0.743' },
-            'E2' => { 'dest_locn' => 'C3', 'dest_conc' => '0.743' },
-            'F2' => { 'dest_locn' => 'D3', 'dest_conc' => '0.743' },
-            'G2' => { 'dest_locn' => 'E3', 'dest_conc' => '0.743' },
-            'H2' => { 'dest_locn' => 'F3', 'dest_conc' => '0.743' },
-            'A3' => { 'dest_locn' => 'G3', 'dest_conc' => '0.743' },
-            'B3' => { 'dest_locn' => 'H3', 'dest_conc' => '0.743' },
-            'C3' => { 'dest_locn' => 'A4', 'dest_conc' => '0.743' },
-            'D3' => { 'dest_locn' => 'B4', 'dest_conc' => '0.743' },
-            'E3' => { 'dest_locn' => 'C4', 'dest_conc' => '0.743' },
-            'F3' => { 'dest_locn' => 'D4', 'dest_conc' => '0.743' }
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.02857142857142857' },
+            'B1' => { 'dest_locn' => 'A2', 'dest_conc' => '0.7428571428571429' },
+            'C1' => { 'dest_locn' => 'A5', 'dest_conc' => '14.314285714285715' },
+            'D1' => { 'dest_locn' => 'B2', 'dest_conc' => '0.7428571428571429' },
+            'E1' => { 'dest_locn' => 'C2', 'dest_conc' => '0.7428571428571429' },
+            'F1' => { 'dest_locn' => 'D2', 'dest_conc' => '0.7428571428571429' },
+            'G1' => { 'dest_locn' => 'E2', 'dest_conc' => '0.7428571428571429' },
+            'H1' => { 'dest_locn' => 'F2', 'dest_conc' => '0.7428571428571429' },
+            'A2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.7428571428571429' },
+            'B2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.7428571428571429' },
+            'C2' => { 'dest_locn' => 'A3', 'dest_conc' => '0.7428571428571429' },
+            'D2' => { 'dest_locn' => 'B3', 'dest_conc' => '0.7428571428571429' },
+            'E2' => { 'dest_locn' => 'C3', 'dest_conc' => '0.7428571428571429' },
+            'F2' => { 'dest_locn' => 'D3', 'dest_conc' => '0.7428571428571429' },
+            'G2' => { 'dest_locn' => 'E3', 'dest_conc' => '0.7428571428571429' },
+            'H2' => { 'dest_locn' => 'F3', 'dest_conc' => '0.7428571428571429' },
+            'A3' => { 'dest_locn' => 'G3', 'dest_conc' => '0.7428571428571429' },
+            'B3' => { 'dest_locn' => 'H3', 'dest_conc' => '0.7428571428571429' },
+            'C3' => { 'dest_locn' => 'A4', 'dest_conc' => '0.7428571428571429' },
+            'D3' => { 'dest_locn' => 'B4', 'dest_conc' => '0.7428571428571429' },
+            'E3' => { 'dest_locn' => 'C4', 'dest_conc' => '0.7428571428571429' },
+            'F3' => { 'dest_locn' => 'D4', 'dest_conc' => '0.7428571428571429' }
           }
         end
 
@@ -267,30 +267,30 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A3', 'dest_conc' => '14.314' },
-            'B1' => { 'dest_locn' => 'B3', 'dest_conc' => '14.314' },
-            'C1' => { 'dest_locn' => 'C3', 'dest_conc' => '14.314' },
-            'D1' => { 'dest_locn' => 'D3', 'dest_conc' => '14.314' },
-            'E1' => { 'dest_locn' => 'E3', 'dest_conc' => '14.314' },
-            'F1' => { 'dest_locn' => 'F3', 'dest_conc' => '14.314' },
-            'G1' => { 'dest_locn' => 'G3', 'dest_conc' => '14.314' },
-            'H1' => { 'dest_locn' => 'H3', 'dest_conc' => '14.314' },
-            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '0.743' },
-            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '0.743' },
-            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '0.743' },
-            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '0.743' },
-            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '0.743' },
-            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '0.743' },
-            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.743' },
-            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.743' },
-            'A3' => { 'dest_locn' => 'A1', 'dest_conc' => '0.029' },
-            'B3' => { 'dest_locn' => 'B1', 'dest_conc' => '0.029' },
-            'C3' => { 'dest_locn' => 'C1', 'dest_conc' => '0.029' },
-            'D3' => { 'dest_locn' => 'D1', 'dest_conc' => '0.029' },
-            'E3' => { 'dest_locn' => 'E1', 'dest_conc' => '0.029' },
-            'F3' => { 'dest_locn' => 'F1', 'dest_conc' => '0.029' },
-            'G3' => { 'dest_locn' => 'G1', 'dest_conc' => '0.029' },
-            'H3' => { 'dest_locn' => 'H1', 'dest_conc' => '0.029' }
+            'A1' => { 'dest_locn' => 'A3', 'dest_conc' => '14.314285714285715' },
+            'B1' => { 'dest_locn' => 'B3', 'dest_conc' => '14.314285714285715' },
+            'C1' => { 'dest_locn' => 'C3', 'dest_conc' => '14.314285714285715' },
+            'D1' => { 'dest_locn' => 'D3', 'dest_conc' => '14.314285714285715' },
+            'E1' => { 'dest_locn' => 'E3', 'dest_conc' => '14.314285714285715' },
+            'F1' => { 'dest_locn' => 'F3', 'dest_conc' => '14.314285714285715' },
+            'G1' => { 'dest_locn' => 'G3', 'dest_conc' => '14.314285714285715' },
+            'H1' => { 'dest_locn' => 'H3', 'dest_conc' => '14.314285714285715' },
+            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '0.7428571428571429' },
+            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '0.7428571428571429' },
+            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '0.7428571428571429' },
+            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '0.7428571428571429' },
+            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '0.7428571428571429' },
+            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '0.7428571428571429' },
+            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.7428571428571429' },
+            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.7428571428571429' },
+            'A3' => { 'dest_locn' => 'A1', 'dest_conc' => '0.02857142857142857' },
+            'B3' => { 'dest_locn' => 'B1', 'dest_conc' => '0.02857142857142857' },
+            'C3' => { 'dest_locn' => 'C1', 'dest_conc' => '0.02857142857142857' },
+            'D3' => { 'dest_locn' => 'D1', 'dest_conc' => '0.02857142857142857' },
+            'E3' => { 'dest_locn' => 'E1', 'dest_conc' => '0.02857142857142857' },
+            'F3' => { 'dest_locn' => 'F1', 'dest_conc' => '0.02857142857142857' },
+            'G3' => { 'dest_locn' => 'G1', 'dest_conc' => '0.02857142857142857' },
+            'H3' => { 'dest_locn' => 'H1', 'dest_conc' => '0.02857142857142857' }
           }
         end
 
@@ -302,102 +302,102 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
       context 'when requiring compression due to numbers of wells' do
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.029' },
-            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.029' },
-            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.029' },
-            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.029' },
-            'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '0.029' },
-            'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '0.029' },
-            'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '0.029' },
-            'H1' => { 'dest_locn' => 'H1', 'dest_conc' => '0.029' },
-            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '0.029' },
-            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '0.029' },
-            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '0.029' },
-            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '0.029' },
-            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '0.029' },
-            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '0.029' },
-            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.029' },
-            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.029' },
-            'A3' => { 'dest_locn' => 'A3', 'dest_conc' => '0.029' },
-            'B3' => { 'dest_locn' => 'B3', 'dest_conc' => '0.029' },
-            'C3' => { 'dest_locn' => 'C3', 'dest_conc' => '0.029' },
-            'D3' => { 'dest_locn' => 'D3', 'dest_conc' => '0.029' },
-            'E3' => { 'dest_locn' => 'E3', 'dest_conc' => '0.029' },
-            'F3' => { 'dest_locn' => 'F3', 'dest_conc' => '0.029' },
-            'G3' => { 'dest_locn' => 'G3', 'dest_conc' => '0.029' },
-            'H3' => { 'dest_locn' => 'H3', 'dest_conc' => '0.029' },
-            'A4' => { 'dest_locn' => 'A4', 'dest_conc' => '0.029' },
-            'B4' => { 'dest_locn' => 'B4', 'dest_conc' => '0.029' },
-            'C4' => { 'dest_locn' => 'C4', 'dest_conc' => '0.029' },
-            'D4' => { 'dest_locn' => 'D4', 'dest_conc' => '0.029' },
-            'E4' => { 'dest_locn' => 'E4', 'dest_conc' => '0.029' },
-            'F4' => { 'dest_locn' => 'F4', 'dest_conc' => '0.029' },
-            'G4' => { 'dest_locn' => 'G4', 'dest_conc' => '0.029' },
-            'H4' => { 'dest_locn' => 'H4', 'dest_conc' => '0.029' },
-            'A5' => { 'dest_locn' => 'A5', 'dest_conc' => '0.029' },
-            'B5' => { 'dest_locn' => 'B5', 'dest_conc' => '0.743' },
-            'C5' => { 'dest_locn' => 'C5', 'dest_conc' => '0.743' },
-            'D5' => { 'dest_locn' => 'D5', 'dest_conc' => '0.743' },
-            'E5' => { 'dest_locn' => 'E5', 'dest_conc' => '0.743' },
-            'F5' => { 'dest_locn' => 'F5', 'dest_conc' => '0.743' },
-            'G5' => { 'dest_locn' => 'G5', 'dest_conc' => '0.743' },
-            'H5' => { 'dest_locn' => 'H5', 'dest_conc' => '0.743' },
-            'A6' => { 'dest_locn' => 'A6', 'dest_conc' => '0.743' },
-            'B6' => { 'dest_locn' => 'B6', 'dest_conc' => '0.743' },
-            'C6' => { 'dest_locn' => 'C6', 'dest_conc' => '0.743' },
-            'D6' => { 'dest_locn' => 'D6', 'dest_conc' => '0.743' },
-            'E6' => { 'dest_locn' => 'E6', 'dest_conc' => '0.743' },
-            'F6' => { 'dest_locn' => 'F6', 'dest_conc' => '0.743' },
-            'G6' => { 'dest_locn' => 'G6', 'dest_conc' => '0.743' },
-            'H6' => { 'dest_locn' => 'H6', 'dest_conc' => '0.743' },
-            'A7' => { 'dest_locn' => 'A7', 'dest_conc' => '0.743' },
-            'B7' => { 'dest_locn' => 'B7', 'dest_conc' => '0.743' },
-            'C7' => { 'dest_locn' => 'C7', 'dest_conc' => '0.743' },
-            'D7' => { 'dest_locn' => 'D7', 'dest_conc' => '0.743' },
-            'E7' => { 'dest_locn' => 'E7', 'dest_conc' => '0.743' },
-            'F7' => { 'dest_locn' => 'F7', 'dest_conc' => '0.743' },
-            'G7' => { 'dest_locn' => 'G7', 'dest_conc' => '0.743' },
-            'H7' => { 'dest_locn' => 'H7', 'dest_conc' => '0.743' },
-            'A8' => { 'dest_locn' => 'A8', 'dest_conc' => '0.743' },
-            'B8' => { 'dest_locn' => 'B8', 'dest_conc' => '0.743' },
-            'C8' => { 'dest_locn' => 'C8', 'dest_conc' => '0.743' },
-            'D8' => { 'dest_locn' => 'D8', 'dest_conc' => '0.743' },
-            'E8' => { 'dest_locn' => 'E8', 'dest_conc' => '0.743' },
-            'F8' => { 'dest_locn' => 'F8', 'dest_conc' => '0.743' },
-            'G8' => { 'dest_locn' => 'G8', 'dest_conc' => '0.743' },
-            'H8' => { 'dest_locn' => 'H8', 'dest_conc' => '14.314' },
-            'A9' => { 'dest_locn' => 'A9', 'dest_conc' => '14.314' },
-            'B9' => { 'dest_locn' => 'B9', 'dest_conc' => '14.314' },
-            'C9' => { 'dest_locn' => 'C9', 'dest_conc' => '14.314' },
-            'D9' => { 'dest_locn' => 'D9', 'dest_conc' => '14.314' },
-            'E9' => { 'dest_locn' => 'E9', 'dest_conc' => '14.314' },
-            'F9' => { 'dest_locn' => 'F9', 'dest_conc' => '14.314' },
-            'G9' => { 'dest_locn' => 'G9', 'dest_conc' => '14.314' },
-            'H9' => { 'dest_locn' => 'H9', 'dest_conc' => '14.314' },
-            'A10' => { 'dest_locn' => 'A10', 'dest_conc' => '14.314' },
-            'B10' => { 'dest_locn' => 'B10', 'dest_conc' => '14.314' },
-            'C10' => { 'dest_locn' => 'C10', 'dest_conc' => '14.314' },
-            'D10' => { 'dest_locn' => 'D10', 'dest_conc' => '14.314' },
-            'E10' => { 'dest_locn' => 'E10', 'dest_conc' => '14.314' },
-            'F10' => { 'dest_locn' => 'F10', 'dest_conc' => '14.314' },
-            'G10' => { 'dest_locn' => 'G10', 'dest_conc' => '14.314' },
-            'H10' => { 'dest_locn' => 'H10', 'dest_conc' => '14.314' },
-            'A11' => { 'dest_locn' => 'A11', 'dest_conc' => '14.314' },
-            'B11' => { 'dest_locn' => 'B11', 'dest_conc' => '14.314' },
-            'C11' => { 'dest_locn' => 'C11', 'dest_conc' => '14.314' },
-            'D11' => { 'dest_locn' => 'D11', 'dest_conc' => '14.314' },
-            'E11' => { 'dest_locn' => 'E11', 'dest_conc' => '14.314' },
-            'F11' => { 'dest_locn' => 'F11', 'dest_conc' => '14.314' },
-            'G11' => { 'dest_locn' => 'G11', 'dest_conc' => '14.314' },
-            'H11' => { 'dest_locn' => 'H11', 'dest_conc' => '14.314' },
-            'A12' => { 'dest_locn' => 'A12', 'dest_conc' => '14.314' },
-            'B12' => { 'dest_locn' => 'B12', 'dest_conc' => '14.314' },
-            'C12' => { 'dest_locn' => 'C12', 'dest_conc' => '14.314' },
-            'D12' => { 'dest_locn' => 'D12', 'dest_conc' => '14.314' },
-            'E12' => { 'dest_locn' => 'E12', 'dest_conc' => '14.314' },
-            'F12' => { 'dest_locn' => 'F12', 'dest_conc' => '14.314' },
-            'G12' => { 'dest_locn' => 'G12', 'dest_conc' => '14.314' },
-            'H12' => { 'dest_locn' => 'H12', 'dest_conc' => '14.314' }
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.02857142857142857' },
+            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.02857142857142857' },
+            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.02857142857142857' },
+            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.02857142857142857' },
+            'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '0.02857142857142857' },
+            'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '0.02857142857142857' },
+            'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '0.02857142857142857' },
+            'H1' => { 'dest_locn' => 'H1', 'dest_conc' => '0.02857142857142857' },
+            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '0.02857142857142857' },
+            'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '0.02857142857142857' },
+            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '0.02857142857142857' },
+            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '0.02857142857142857' },
+            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '0.02857142857142857' },
+            'F2' => { 'dest_locn' => 'F2', 'dest_conc' => '0.02857142857142857' },
+            'G2' => { 'dest_locn' => 'G2', 'dest_conc' => '0.02857142857142857' },
+            'H2' => { 'dest_locn' => 'H2', 'dest_conc' => '0.02857142857142857' },
+            'A3' => { 'dest_locn' => 'A3', 'dest_conc' => '0.02857142857142857' },
+            'B3' => { 'dest_locn' => 'B3', 'dest_conc' => '0.02857142857142857' },
+            'C3' => { 'dest_locn' => 'C3', 'dest_conc' => '0.02857142857142857' },
+            'D3' => { 'dest_locn' => 'D3', 'dest_conc' => '0.02857142857142857' },
+            'E3' => { 'dest_locn' => 'E3', 'dest_conc' => '0.02857142857142857' },
+            'F3' => { 'dest_locn' => 'F3', 'dest_conc' => '0.02857142857142857' },
+            'G3' => { 'dest_locn' => 'G3', 'dest_conc' => '0.02857142857142857' },
+            'H3' => { 'dest_locn' => 'H3', 'dest_conc' => '0.02857142857142857' },
+            'A4' => { 'dest_locn' => 'A4', 'dest_conc' => '0.02857142857142857' },
+            'B4' => { 'dest_locn' => 'B4', 'dest_conc' => '0.02857142857142857' },
+            'C4' => { 'dest_locn' => 'C4', 'dest_conc' => '0.02857142857142857' },
+            'D4' => { 'dest_locn' => 'D4', 'dest_conc' => '0.02857142857142857' },
+            'E4' => { 'dest_locn' => 'E4', 'dest_conc' => '0.02857142857142857' },
+            'F4' => { 'dest_locn' => 'F4', 'dest_conc' => '0.02857142857142857' },
+            'G4' => { 'dest_locn' => 'G4', 'dest_conc' => '0.02857142857142857' },
+            'H4' => { 'dest_locn' => 'H4', 'dest_conc' => '0.02857142857142857' },
+            'A5' => { 'dest_locn' => 'A5', 'dest_conc' => '0.02857142857142857' },
+            'B5' => { 'dest_locn' => 'B5', 'dest_conc' => '0.7428571428571429' },
+            'C5' => { 'dest_locn' => 'C5', 'dest_conc' => '0.7428571428571429' },
+            'D5' => { 'dest_locn' => 'D5', 'dest_conc' => '0.7428571428571429' },
+            'E5' => { 'dest_locn' => 'E5', 'dest_conc' => '0.7428571428571429' },
+            'F5' => { 'dest_locn' => 'F5', 'dest_conc' => '0.7428571428571429' },
+            'G5' => { 'dest_locn' => 'G5', 'dest_conc' => '0.7428571428571429' },
+            'H5' => { 'dest_locn' => 'H5', 'dest_conc' => '0.7428571428571429' },
+            'A6' => { 'dest_locn' => 'A6', 'dest_conc' => '0.7428571428571429' },
+            'B6' => { 'dest_locn' => 'B6', 'dest_conc' => '0.7428571428571429' },
+            'C6' => { 'dest_locn' => 'C6', 'dest_conc' => '0.7428571428571429' },
+            'D6' => { 'dest_locn' => 'D6', 'dest_conc' => '0.7428571428571429' },
+            'E6' => { 'dest_locn' => 'E6', 'dest_conc' => '0.7428571428571429' },
+            'F6' => { 'dest_locn' => 'F6', 'dest_conc' => '0.7428571428571429' },
+            'G6' => { 'dest_locn' => 'G6', 'dest_conc' => '0.7428571428571429' },
+            'H6' => { 'dest_locn' => 'H6', 'dest_conc' => '0.7428571428571429' },
+            'A7' => { 'dest_locn' => 'A7', 'dest_conc' => '0.7428571428571429' },
+            'B7' => { 'dest_locn' => 'B7', 'dest_conc' => '0.7428571428571429' },
+            'C7' => { 'dest_locn' => 'C7', 'dest_conc' => '0.7428571428571429' },
+            'D7' => { 'dest_locn' => 'D7', 'dest_conc' => '0.7428571428571429' },
+            'E7' => { 'dest_locn' => 'E7', 'dest_conc' => '0.7428571428571429' },
+            'F7' => { 'dest_locn' => 'F7', 'dest_conc' => '0.7428571428571429' },
+            'G7' => { 'dest_locn' => 'G7', 'dest_conc' => '0.7428571428571429' },
+            'H7' => { 'dest_locn' => 'H7', 'dest_conc' => '0.7428571428571429' },
+            'A8' => { 'dest_locn' => 'A8', 'dest_conc' => '0.7428571428571429' },
+            'B8' => { 'dest_locn' => 'B8', 'dest_conc' => '0.7428571428571429' },
+            'C8' => { 'dest_locn' => 'C8', 'dest_conc' => '0.7428571428571429' },
+            'D8' => { 'dest_locn' => 'D8', 'dest_conc' => '0.7428571428571429' },
+            'E8' => { 'dest_locn' => 'E8', 'dest_conc' => '0.7428571428571429' },
+            'F8' => { 'dest_locn' => 'F8', 'dest_conc' => '0.7428571428571429' },
+            'G8' => { 'dest_locn' => 'G8', 'dest_conc' => '0.7428571428571429' },
+            'H8' => { 'dest_locn' => 'H8', 'dest_conc' => '14.314285714285715' },
+            'A9' => { 'dest_locn' => 'A9', 'dest_conc' => '14.314285714285715' },
+            'B9' => { 'dest_locn' => 'B9', 'dest_conc' => '14.314285714285715' },
+            'C9' => { 'dest_locn' => 'C9', 'dest_conc' => '14.314285714285715' },
+            'D9' => { 'dest_locn' => 'D9', 'dest_conc' => '14.314285714285715' },
+            'E9' => { 'dest_locn' => 'E9', 'dest_conc' => '14.314285714285715' },
+            'F9' => { 'dest_locn' => 'F9', 'dest_conc' => '14.314285714285715' },
+            'G9' => { 'dest_locn' => 'G9', 'dest_conc' => '14.314285714285715' },
+            'H9' => { 'dest_locn' => 'H9', 'dest_conc' => '14.314285714285715' },
+            'A10' => { 'dest_locn' => 'A10', 'dest_conc' => '14.314285714285715' },
+            'B10' => { 'dest_locn' => 'B10', 'dest_conc' => '14.314285714285715' },
+            'C10' => { 'dest_locn' => 'C10', 'dest_conc' => '14.314285714285715' },
+            'D10' => { 'dest_locn' => 'D10', 'dest_conc' => '14.314285714285715' },
+            'E10' => { 'dest_locn' => 'E10', 'dest_conc' => '14.314285714285715' },
+            'F10' => { 'dest_locn' => 'F10', 'dest_conc' => '14.314285714285715' },
+            'G10' => { 'dest_locn' => 'G10', 'dest_conc' => '14.314285714285715' },
+            'H10' => { 'dest_locn' => 'H10', 'dest_conc' => '14.314285714285715' },
+            'A11' => { 'dest_locn' => 'A11', 'dest_conc' => '14.314285714285715' },
+            'B11' => { 'dest_locn' => 'B11', 'dest_conc' => '14.314285714285715' },
+            'C11' => { 'dest_locn' => 'C11', 'dest_conc' => '14.314285714285715' },
+            'D11' => { 'dest_locn' => 'D11', 'dest_conc' => '14.314285714285715' },
+            'E11' => { 'dest_locn' => 'E11', 'dest_conc' => '14.314285714285715' },
+            'F11' => { 'dest_locn' => 'F11', 'dest_conc' => '14.314285714285715' },
+            'G11' => { 'dest_locn' => 'G11', 'dest_conc' => '14.314285714285715' },
+            'H11' => { 'dest_locn' => 'H11', 'dest_conc' => '14.314285714285715' },
+            'A12' => { 'dest_locn' => 'A12', 'dest_conc' => '14.314285714285715' },
+            'B12' => { 'dest_locn' => 'B12', 'dest_conc' => '14.314285714285715' },
+            'C12' => { 'dest_locn' => 'C12', 'dest_conc' => '14.314285714285715' },
+            'D12' => { 'dest_locn' => 'D12', 'dest_conc' => '14.314285714285715' },
+            'E12' => { 'dest_locn' => 'E12', 'dest_conc' => '14.314285714285715' },
+            'F12' => { 'dest_locn' => 'F12', 'dest_conc' => '14.314285714285715' },
+            'G12' => { 'dest_locn' => 'G12', 'dest_conc' => '14.314285714285715' },
+            'H12' => { 'dest_locn' => 'H12', 'dest_conc' => '14.314285714285715' }
           }
         end
         let(:well_amounts) do
@@ -547,19 +547,19 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.029' },
-            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.314' },
+            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.02857142857142857' },
+            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.3142857142857143' },
             'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.6' },
-            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.886' },
-            'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '1.171' },
-            'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '1.457' },
-            'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '1.743' },
-            'H1' => { 'dest_locn' => 'H1', 'dest_conc' => '2.029' },
-            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '2.314' },
+            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.8857142857142857' },
+            'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '1.1714285714285715' },
+            'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '1.457142857142857' },
+            'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '1.7428571428571429' },
+            'H1' => { 'dest_locn' => 'H1', 'dest_conc' => '2.0285714285714285' },
+            'A2' => { 'dest_locn' => 'A2', 'dest_conc' => '2.3142857142857145' },
             'B2' => { 'dest_locn' => 'B2', 'dest_conc' => '2.6' },
-            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '2.886' },
-            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '3.171' },
-            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '3.457' }
+            'C2' => { 'dest_locn' => 'C2', 'dest_conc' => '2.8857142857142857' },
+            'D2' => { 'dest_locn' => 'D2', 'dest_conc' => '3.1714285714285713' },
+            'E2' => { 'dest_locn' => 'E2', 'dest_conc' => '3.4571428571428573' }
           }
         end
 

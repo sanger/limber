@@ -47,9 +47,11 @@ module Utility
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless (config.bin_min(bin_template)...config.bin_max(bin_template)).cover?(amount)
+          next unless (bin_template['min']...bin_template['max']).cover?(amount)
 
-          dest_conc = (amount / (source_volume + diluent_volume)).round(config.number_decimal_places)
+          # NB. we do not round the destination concentration so the full number is written in the qc_results to avoid
+          # rounding errors causing the presenter to display some wells as being in different bins.
+          dest_conc = (amount / (source_volume + diluent_volume))
           conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc.to_s }
           break
         end

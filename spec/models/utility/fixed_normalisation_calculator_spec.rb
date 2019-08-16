@@ -81,10 +81,10 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     describe '#compute_well_transfers' do
       let(:expd_transfers) do
         {
-          'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.086' },
+          'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.08571428571428572' },
           'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '3.2' },
           'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.2' },
-          'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.103' }
+          'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.10285714285714286' }
         }
       end
 

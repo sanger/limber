@@ -170,8 +170,8 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     end
     let(:dest_well_qc_attributes) do
       [
-        { 'well_name' => 'A1', 'conc' => '0.429' },
-        { 'well_name' => 'B1', 'conc' => '0.514' },
+        { 'well_name' => 'A1', 'conc' => '0.42857142857142855' },
+        { 'well_name' => 'B1', 'conc' => '0.5142857142857142' },
         { 'well_name' => 'A2', 'conc' => '1.0' },
         { 'well_name' => 'A3', 'conc' => '16.0' }
       ].each.map do |attribs|
