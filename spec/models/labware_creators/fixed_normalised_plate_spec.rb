@@ -170,10 +170,10 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
     end
     let(:dest_well_qc_attributes) do
       [
-        { 'well_name' => 'A1', 'conc' => '0.086' },
+        { 'well_name' => 'A1', 'conc' => '0.08571428571428572' },
         { 'well_name' => 'B1', 'conc' => '3.2' },
         { 'well_name' => 'C1', 'conc' => '0.2' },
-        { 'well_name' => 'D1', 'conc' => '0.103' }
+        { 'well_name' => 'D1', 'conc' => '0.10285714285714286' }
       ].each.map do |attribs|
         {
           'uuid' => 'child-uuid',
