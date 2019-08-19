@@ -1,0 +1,14 @@
+---
+Limber GBS:
+  filters:
+    request_type_keys:
+    - limber_gbs
+  relationships:
+    GBS-96 Stock: GBS PCR1
+    GnT MDA Norm: GBS PCR1
+    GBS PCR1: GBS PCR2
+    GBS PCR2: GBS PCR2 Pool Stock
+    GBS PCR2 Pool Stock: GBS PCR Pool
+    GBS PCR Pool: GBS PCR Pool Selected
+    GBS PCR Pool Selected: GBS MiSeq Pool
+

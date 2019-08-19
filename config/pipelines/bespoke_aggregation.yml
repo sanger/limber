@@ -1,9 +1,9 @@
 ---
 Limber Bespoke Aggregation:
-  :filters:
-    :request_type_keys:
+  filters:
+    request_type_keys:
     - limber_bespoke_aggregation
-    :library_type_names: []
-  :relationships:
+    library_type_names: []
+  relationships:
     LBC Stock: LBC Aggregation
     LBC Aggregation: LBC Cherrypick

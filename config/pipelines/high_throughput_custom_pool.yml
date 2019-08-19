@@ -1,0 +1,8 @@
+---
+Limber ISC Custom Pool:
+  filters:
+    request_type_keys:
+    - :none
+  relationships:
+    LB Lib PCR-XP: LB Custom Pool
+    LB Custom Pool: LB Custom Pool Norm

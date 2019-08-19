@@ -1,10 +1,9 @@
 ---
 Limber Bespoke PCR:
-  :filters:
-    :request_type_keys:
+  filters:
+    request_type_keys:
     - limber_pcr_bespoke
-    - limber_multiplexing
-    :library_type_names:
+    library_type_names:
     - Manual Standard WGS (Plate)
     - ChIP-Seq Auto
     - TruSeq mRNA (RNA Seq)
@@ -16,8 +15,14 @@ Limber Bespoke PCR:
     - Ribozero RNA-seq (Bacterial)
     - Ribozero RNA-seq (HMR)
     - TraDIS
-  :relationships:
+  library_pass: LBB Lib PCR-XP
+  relationships:
     LBB Cherrypick: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
+Limber Bespoke PCR MX:
+  filters:
+    request_type_keys:
+    - limber_multiplexing
+  relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm

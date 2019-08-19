@@ -1,0 +1,17 @@
+---
+Limber RNA Poly A:
+  filters:
+    request_type_keys:
+    - limber_rnaa
+    library_type_names:
+    - RNA PolyA
+  library_pass: LB Lib PCR-XP
+  relationships:
+    LBR Cherrypick: LBR mRNA Cap
+    LBR mRNA Cap: LBR Frag
+    LBR Frag: LB cDNA
+    LB cDNA: LB cDNA XP
+    LB cDNA XP: LB End Prep
+    LB End Prep: LB Lib PCR
+    LB Lib PCR: LB Lib PCR-XP
+# Then feeds into the standard limber_multiplexing
