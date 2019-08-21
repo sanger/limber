@@ -7,6 +7,11 @@
         <%= request_types_form.hidden_field nil, value: request_type_key  %>
       <% end %>
     <% end %>
+    <% (creator_button.filters[:library_types]||[]).each do |library_type_name| %>
+      <%= filter.fields_for :library_type_names do |library_types_form|%>
+        <%= library_types_form.hidden_field nil, value: library_type_name  %>
+      <% end %>
+    <% end %>
   <% end %>
   <%= f.submit "Add an empty #{creator_button.name} #{creator_button.type}",
                  name:  nil,

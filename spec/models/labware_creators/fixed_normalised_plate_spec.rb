@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
 
-RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
+RSpec.describe LabwareCreators::FixedNormalisedPlate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -59,7 +59,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    create :concentration_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
+    create :fixed_normalisation_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
       parent_plate,
@@ -77,12 +77,12 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   end
 
   subject do
-    LabwareCreators::ConcentrationBinnedPlate.new(api, form_attributes)
+    LabwareCreators::FixedNormalisedPlate.new(api, form_attributes)
   end
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::ConcentrationBinnedPlate
+      expect(subject).to be_a LabwareCreators::FixedNormalisedPlate
     end
 
     context 'when wells are missing a concentration value' do
@@ -107,7 +107,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     end
   end
 
-  shared_examples 'a concentration binned plate creator' do
+  shared_examples 'a fixed normalisation plate creator' do
     describe '#save!' do
       let!(:plate_creation_request) do
         stub_api_post('plate_creations',
@@ -146,34 +146,34 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
           'source_asset' => well_a1.uuid,
           'target_asset' => '3-well-A1',
           'submission_id' => well_a1.submission_ids.first,
-          'volume' => '10'
+          'volume' => subject.dilutions_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_b1.uuid,
-          'target_asset' => '3-well-A3',
+          'target_asset' => '3-well-B1',
           'submission_id' => well_b1.submission_ids.first,
-          'volume' => '10'
+          'volume' => subject.dilutions_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_c1.uuid,
-          'target_asset' => '3-well-A2',
+          'target_asset' => '3-well-C1',
           'submission_id' => well_c1.submission_ids.first,
-          'volume' => '10'
+          'volume' => subject.dilutions_calculator.source_volume.to_s
         },
         {
           'source_asset' => well_d1.uuid,
-          'target_asset' => '3-well-B1',
+          'target_asset' => '3-well-D1',
           'submission_id' => well_d1.submission_ids.first,
-          'volume' => '10'
+          'volume' => subject.dilutions_calculator.source_volume.to_s
         }
       ]
     end
     let(:dest_well_qc_attributes) do
       [
-        { 'well_name' => 'A1', 'conc' => '0.42857142857142855' },
-        { 'well_name' => 'B1', 'conc' => '0.5142857142857142' },
-        { 'well_name' => 'A2', 'conc' => '1.0' },
-        { 'well_name' => 'A3', 'conc' => '16.0' }
+        { 'well_name' => 'A1', 'conc' => '0.08571428571428572' },
+        { 'well_name' => 'B1', 'conc' => '3.2' },
+        { 'well_name' => 'C1', 'conc' => '0.2' },
+        { 'well_name' => 'D1', 'conc' => '0.10285714285714286' }
       ].each.map do |attribs|
         {
           'uuid' => 'child-uuid',
@@ -182,12 +182,12 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
           'value' => attribs['conc'],
           'units' => 'ng/ul',
           'cv' => 0,
-          'assay_type' => 'ConcentrationBinningCalculator',
+          'assay_type' => 'FixedNormalisationCalculator',
           'assay_version' => 'v1.0'
         }
       end
     end
 
-    it_behaves_like 'a concentration binned plate creator'
+    it_behaves_like 'a fixed normalisation plate creator'
   end
 end

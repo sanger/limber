@@ -1,0 +1,21 @@
+# This configuration file is for the Bespoke Chromium Automated pipeline for VDJ option BCR
+# library type requests.
+---
+LBC BCR Dil 1:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::FixedNormalisedPlate
+  :parents:
+  - LBC Cherrypick
+  :expected_request_types:
+  - limber_chromium_bespoke
+  :expected_library_types:
+  - Chromium single cell BCR
+  :dilutions:
+    :source_volume: 2
+    :diluent_volume: 33
+  :file_links:
+  - name: 'Download Hamilton Cherrypick to BCR Dilution 1 CSV'
+    id: 'hamilton_cherrypick_to_bcr_dilution1'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul

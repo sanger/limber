@@ -12,7 +12,7 @@ class LabwareCreators::WellFilter
   # Indicates that the filter is unable to detect which request to use
   FilterError = Class.new(LabwareCreators::ResourceInvalid)
 
-  attr_accessor :transfer_failed, :request_type_keys, :creator
+  attr_accessor :transfer_failed, :request_type_keys, :library_type_names, :creator
 
   validate :well_transfers
 
@@ -28,10 +28,12 @@ class LabwareCreators::WellFilter
     return extract_submission(well) if well.requests_as_source.empty?
 
     filtered_requests = filter_by_request_type(requests)
-    if filtered_requests.count == 1
-      { 'outer_request' => filtered_requests.first.uuid }
+    filtered_requests_by_library_type = filter_requests_by_library_type(filtered_requests)
+
+    if filtered_requests_by_library_type.count == 1
+      { 'outer_request' => filtered_requests_by_library_type.first.uuid }
     else
-      errors.add(:base, "found #{filtered_requests.count} eligible requests for #{well.location}")
+      errors.add(:base, "found #{filtered_requests_by_library_type.count} eligible requests for #{well.location}")
     end
   end
 
@@ -42,6 +44,10 @@ class LabwareCreators::WellFilter
 
   def filter_by_request_type(requests)
     requests.select { |r| @request_type_keys.blank? || @request_type_keys.include?(r.request_type.key) }
+  end
+
+  def filter_requests_by_library_type(requests)
+    requests.select { |r| @library_type_names.blank? || @library_type_names.include?(r.library_type) }
   end
 
   def wells

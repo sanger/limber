@@ -2,11 +2,11 @@
 
 module Presenters
   #
-  # The ConcentrationBinnedPlatePresenter is used for plates that have had
-  # concentration binning applied. It shows a view of the plate with colours
-  # and keys indicating the various bins.
+  # The NormalisedBinnedPlatePresenter is used for plates that have had
+  # concentration binning and normalisation applied. It shows a view of the
+  # plate with colours and keys indicating the various bins.
   #
-  class ConcentrationBinnedPlatePresenter < PlatePresenter
+  class NormalisedBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
     PLATE_WITH_QC_RESULTS_INCLUDES = 'wells.aliquots,wells.qc_results'
@@ -19,7 +19,7 @@ module Presenters
     end
 
     def dilutions_calculator
-      @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
+      @dilutions_calculator ||= Utility::NormalisedBinningCalculator.new(dilutions_config)
     end
 
     def bins_key

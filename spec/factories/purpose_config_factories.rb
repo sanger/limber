@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     factory :concentration_binning_purpose_config do
-      concentration_binning do
+      dilutions do
         {
           source_volume: 10,
           diluent_volume: 25,
@@ -63,6 +63,29 @@ FactoryBot.define do
             { colour: 1, pcr_cycles: 16, max: 25 },
             { colour: 2, pcr_cycles: 12, min: 25, max: 500 },
             { colour: 3, pcr_cycles: 8, min: 500 }
+          ]
+        }
+      end
+    end
+
+    factory :fixed_normalisation_purpose_config do
+      dilutions do
+        {
+          source_volume: 2,
+          diluent_volume: 33
+        }
+      end
+    end
+
+    factory :normalised_binning_purpose_config do
+      dilutions do
+        {
+          target_amount_ng: 50,
+          target_volume: 20,
+          minimum_source_volume: 0.2,
+          bins: [
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 14, min: 25 }
           ]
         }
       end
