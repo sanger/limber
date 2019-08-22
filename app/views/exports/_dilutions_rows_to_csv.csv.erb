@@ -1,20 +1,7 @@
-<%# This is a picking file for a Hamilton robot for plate to plate transfers %>
-<%= CSV.generate_line [
-                        'Workflow',
-                        'Cherry Pick'
-                      ],
-                      row_sep: ""
-%>
-<%= CSV.generate_line [
-                        'Source Plate ID',
-                        'Source Plate Well',
-                        'Destination Plate ID',
-                        'Destination Plate Well',
-                        'Sample Vol'
-                      ],
-                      row_sep: ""
-%>
 <%
+  purpose_config = Settings.purposes.fetch(@plate.purpose.uuid, {})
+  dilutions_config = purpose_config.fetch(:dilutions)
+  config = Utility::DilutionsConfig.new(dilutions_config)
   rows_array = []
   @plate.wells_in_columns.each do |well|
     well.transfer_requests_as_target.each do |transfer_req|
@@ -27,9 +14,9 @@
                         name_array[1],
                         @plate.labware_barcode.human,
                         well.position['name'],
-                        transfer_req.volume.round(2)
+                        transfer_req.volume.round(2),
+                        config.diluent_volume
                       ]
-
       end
     end
   end

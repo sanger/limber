@@ -23,7 +23,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     [
       create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
       create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
-      create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
     ]
   end
 
@@ -92,7 +92,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
         create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
-        create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
     # We'll eventually add in a disambiguation page here
@@ -106,7 +106,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
   end
 
-  context 'with multiple requests and config' do
+  context 'with multiple requests and config with request type filter' do
     let(:child_purpose_config) do
       { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'], expected_request_types: ['rt_a'] }
     end
@@ -115,7 +115,33 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
         create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
-        create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      ]
+    end
+
+    scenario 'basic plate creation' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      plate_title = find('#plate-title')
+      expect(plate_title).to have_text('Limber Cherrypicked')
+      click_on('Add an empty Basic plate')
+      expect(page).to have_content('New empty labware added to the system.')
+    end
+  end
+
+  context 'with multiple requests and config with request and library type filters' do
+    let(:library_type_name) { 'LibTypeA' }
+    let(:child_purpose_config) do
+      { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'],
+        expected_request_types: ['rt_a'], expected_library_types: [library_type_name] }
+    end
+    let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name }
+    let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name }
+
+    let(:wells) do
+      [
+        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
