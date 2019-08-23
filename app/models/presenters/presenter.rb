@@ -24,7 +24,7 @@ module Presenters
     delegate :state, :uuid, :id, to: :labware
 
     def suggest_library_passing?
-      (purpose_config[:suggest_library_pass_for] & passable_request_types).present?
+      active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
     end
 
     def purpose_name
@@ -84,6 +84,10 @@ module Presenters
     end
 
     private
+
+    def active_pipelines
+      Settings.pipelines.active_pipelines_for(labware)
+    end
 
     def purpose_config
       Settings.purposes.fetch(purpose.uuid, {})

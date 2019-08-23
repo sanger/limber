@@ -41,4 +41,13 @@ class Pipeline
   def child_for(purpose)
     relationships[purpose]
   end
+
+  #
+  # Returns true if the pipeline suggest library passing for the given purpose
+  # @param purpose [String] The name of the purpose being queried
+  #
+  # @return [Boolean] True if it should suggest passing
+  def library_pass?(purpose)
+    Array(library_pass).include?(purpose)
+  end
 end
