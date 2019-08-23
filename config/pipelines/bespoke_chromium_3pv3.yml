@@ -3,7 +3,6 @@ Limber Bespoke Chromium 3pv3:
   filters:
     request_type_keys:
     - limber_chromium_bespoke
-    - limber_multiplexing
     library_type_names:
     - Chromium single cell 3 prime v3
   library_pass: LBC 3pV3 GEX PCR 2XP

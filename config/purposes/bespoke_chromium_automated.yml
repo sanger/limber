@@ -1,0 +1,93 @@
+# This configuration file is for the Bespoke Chromium Aggregation and Bespoke
+# Chromium Automated pipelines.
+# LBC Stock plates are submitted to the Aggregation pipeline to be combined
+# through LBC Aggregate plates into LBC Cherrypick plates, and then the LBC
+# Cherrypick plates are subnitted to the Chromium Automated pipeline for library
+# preparation and sequencing.
+---
+LBC Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LBC Aggregate:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :file_links: []
+LBC Cherrypick:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bespoke_aggregation'
+  :file_links:
+  - name: 'Download Hamilton Aggregate Cherrypick CSV'
+    id: 'hamilton_aggregate_cherrypick'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+  :default_printer_type: :plate_a
+LBC 3pV3 GEX Dil:
+  :asset_type: plate
+  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :creator_class: LabwareCreators::ConcentrationBinnedPlate
+  :concentration_binning: {
+    source_volume: 10,
+    diluent_volume: 25,
+    bins: [
+      {
+        colour: 1,
+        pcr_cycles: 16,
+        max: 25
+      },
+      {
+        colour: 2,
+        pcr_cycles: 12,
+        min: 25,
+        max: 500
+      },
+      {
+        colour: 3,
+        pcr_cycles: 8,
+        min: 500,
+        max: 1500
+      },
+      {
+        colour: 4,
+        pcr_cycles: 5,
+        min: 1500
+      }
+    ]
+  }
+  :file_links:
+  - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
+    id: 'hamilton_cherrypick_to_sample_dilution'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC 3pV3 GEX Frag 2XP:
+  :asset_type: plate
+  :file_links:
+  - name: 'Download Hamilton Dilution to Frag 2XP CSV'
+    id: 'hamilton_gex_dil_to_gex_frag_2xp'
+LBC 3pV3 GEX LigXP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 4
+  :file_links:
+  - name: 'Download Hamilton Frag 2XP to LigXP CSV'
+    id: 'hamilton_gex_frag_2xp_to_gex_ligxp'
+LBC 3pV3 GEX PCR 2XP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC 3pV3 GLibPS:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

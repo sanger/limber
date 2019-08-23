@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'config_loader/pipelines_loader'
+
 # This is used as part of a take task, and will be run within a console.
 # rubocop:disable Style/StderrPuts
 class Settings
@@ -30,4 +32,5 @@ class Settings
 end
 
 Settings.instance
+Settings.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
 # rubocop:enable Style/StderrPuts

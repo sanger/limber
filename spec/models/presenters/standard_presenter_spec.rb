@@ -54,14 +54,36 @@ RSpec.describe Presenters::StandardPresenter do
 
   context 'when passed' do
     before do
-      Settings.purposes = {
-        'child-purpose' => build(:purpose_config, name: 'Child purpose', parents: [purpose_name]),
-        'child-purpose-2' => build(:purpose_config, name: 'Child purpose 2', parents: [purpose_name], expected_request_types: ['limber_multiplexing']),
-        'other-purpose' => build(:purpose_config, name: 'Other purpose'),
-        'other-purpose-2' => build(:purpose_config, name: 'Other purpose 2', parents: [purpose_name], expected_request_types: ['other_type']),
-        'tube-purpose' => build(:tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate'),
-        'incompatible-tube-purpose' => build(:tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube')
-      }
+      Settings.pipelines = PipelineList.new(
+        'Pipeline' => {
+          'filters' => {},
+          'relationships' => {
+            purpose_name => 'Child purpose'
+          }
+        },
+        'Pipeline 2' => {
+          'filters' => {
+            'request_type_keys' => ['limber_multiplexing']
+          },
+          'relationships' => {
+            purpose_name => 'Child purpose 2'
+          }
+        },
+        'Pipeline 3' => {
+          'filters' => {
+            'request_type_keys' => ['other_type']
+          },
+          'relationships' => {
+            purpose_name => 'Other purpose 2'
+          }
+        }
+      )
+      create :purpose_config, name: 'Child purpose', uuid: 'child-purpose'
+      create :purpose_config, name: 'Child purpose 2', uuid: 'child-purpose-2'
+      create :purpose_config, name: 'Other purpose', uuid: 'other-purpose'
+      create :purpose_config, name: 'Other purpose 2', uuid: 'other-purpose-2'
+      create :tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate', uuid: 'tube-purpose'
+      create :tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube', uuid: 'incompatible-tube-purpose'
     end
 
     let(:state) { 'passed' }

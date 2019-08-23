@@ -136,13 +136,4 @@ class Presenters::PlatePresenter
       well.requests_in_progress.select(&:passable?).map(&:request_type_key)
     end
   end
-
-  def active_request_types
-    labware.active_requests.map(&:request_type_key)
-  end
-
-  # Active requests may or may not have library types
-  def active_library_types
-    labware.active_requests.map(&:library_type).compact
-  end
 end

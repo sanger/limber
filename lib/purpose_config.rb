@@ -100,10 +100,6 @@ class PurposeConfig
     }
   end
 
-  def parents
-    @options.fetch(:parents, []).map { |parent_name| store.fetch(parent_name).uuid }
-  end
-
   def print_option(option)
     @label_templates.fetch(@template_name.to_s, {}).fetch(option, default_options[option])
   end

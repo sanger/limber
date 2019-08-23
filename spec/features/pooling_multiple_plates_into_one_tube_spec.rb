@@ -78,7 +78,8 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid'
-    create :pooled_tube_from_plates_purpose_config, parents: ['example-purpose'], uuid: 'child-purpose-0'
+    create :pooled_tube_from_plates_purpose_config, uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'example-purpose' => 'Pool tube' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We'll look up both plates.

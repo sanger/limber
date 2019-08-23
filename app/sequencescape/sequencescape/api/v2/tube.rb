@@ -2,6 +2,7 @@
 
 # Tubes can be barcoded, but only have one receptacle for samples.
 class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
+  include Sequencescape::Api::V2::Shared::HasRequests
   self.tube = true
 
   property :created_at, type: :time
@@ -23,6 +24,11 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Tube.includes(*includes).find(options).first
+  end
+
+  # Dummied out for the moment. But no real reason not to add it to the API.
+  def requests_as_source
+    []
   end
 
   #

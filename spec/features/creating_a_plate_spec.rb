@@ -63,13 +63,14 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
   end
 
-  let(:child_purpose_config) { { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'] } }
+  let(:filters) { {} }
 
   # Setup stubs
   background do
     # Set-up the plate config
     create :purpose_config, uuid: example_plate.purpose.uuid
-    create(:purpose_config, child_purpose_config)
+    create(:purpose_config, name: child_purpose_name, uuid: 'child-purpose-0')
+    create(:pipeline, relationships: { 'Limber Cherrypicked' => child_purpose_name }, filters: filters)
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
@@ -107,10 +108,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   context 'with multiple requests and config with request type filter' do
-    let(:child_purpose_config) do
-      { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'], expected_request_types: ['rt_a'] }
-    end
-
+    let(:filters) { { request_type_keys: ['rt_a'] } }
     let(:wells) do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
@@ -130,10 +128,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
   context 'with multiple requests and config with request and library type filters' do
     let(:library_type_name) { 'LibTypeA' }
-    let(:child_purpose_config) do
-      { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'],
-        expected_request_types: ['rt_a'], expected_library_types: [library_type_name] }
-    end
+    let(:filters) { { 'request_type_keys' => ['rt_a'], 'library_type_names' => [library_type_name] } }
     let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name }
     let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name }
 

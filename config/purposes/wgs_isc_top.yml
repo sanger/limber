@@ -7,17 +7,10 @@ LB Cherrypick:
   :presenter_class: Presenters::StockPlatePresenter
 LB Shear:
   :asset_type: plate
-  :parents:
-  - LB Cherrypick
 LB Post Shear:
   :asset_type: plate
-  :parents:
-  - LB Shear
 LB End Prep:
   :asset_type: plate
-  :parents:
-  - LB Post Shear
-  - LB cDNA XP
 LB Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
@@ -40,8 +33,6 @@ LB Lib PCR:
   - TSRNAhWGS_UDI96
   - TS_pWGSA_UDI96v2
   - TSISC_UDI96
-  :parents:
-  - LB End Prep
 LB Lib PCR-XP:
   :asset_type: plate
   :default_printer_type: :plate_b
@@ -51,12 +42,6 @@ LB Lib PCR-XP:
     id: concentrations_nm
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-  :suggest_library_pass_for:
-  - limber_wgs
-  - limber_lcmb
-  - limber_rnaa
-  :parents:
-  - LB Lib PCR
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -64,9 +49,3 @@ LB Lib Pool:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :expected_request_types:
-  - limber_multiplexing
-  :parents:
-  - LB Lib PCR-XP
-  - PF Lib XP2
-  - PF Lib Q-XP2

@@ -7,13 +7,6 @@ module Presenters::Statemachine
       yield
     end
 
-    def matching_filters?(purpose_settings)
-      purpose_req_types = purpose_settings.expected_request_types
-      purpose_lib_types = purpose_settings.expected_library_types
-      ((purpose_req_types.nil? || (purpose_req_types & active_request_types).present?) &&
-       (purpose_lib_types.nil? || (purpose_lib_types & active_library_types).present?))
-    end
-
     def suggested_purposes
       construct_buttons(suggested_purpose_options)
     end
@@ -26,16 +19,10 @@ module Presenters::Statemachine
       construct_buttons(purposes_of_type('tube'))
     end
 
-    def suggested_purpose_options
-      compatible_purposes.select do |_purpose_uuid, purpose_settings|
-        purpose_settings.parents&.include?(labware.purpose.name) &&
-          matching_filters?(purpose_settings)
-      end
-    end
-
-    def compatible_purposes
-      Settings.purposes.lazy.select do |uuid, _purpose_settings|
-        LabwareCreators.class_for(uuid).support_parent?(labware)
+    # Eventually this will end up on our labware_creators/creations module
+    def purposes_of_type(type)
+      compatible_purposes.select do |_uuid, purpose|
+        purpose.asset_type == type
       end
     end
 
@@ -48,18 +35,31 @@ module Presenters::Statemachine
           purpose_uuid: purpose_uuid,
           name: purpose_settings.name,
           type: purpose_settings.asset_type,
-          filters: {
-            request_types: purpose_settings.expected_request_types,
-            library_types: purpose_settings.expected_library_types
-          }
+          filters: purpose_settings.filters || {}
         )
       end.force
     end
 
-    # Eventually this will end up on our labware_creators/creations module
-    def purposes_of_type(type)
-      compatible_purposes.select do |_uuid, purpose|
-        purpose.asset_type == type
+    def active_pipelines
+      Settings.pipelines.active_pipelines_for(labware)
+    end
+
+    # TODO: Refactor handling of purposes to tidy this up
+    def suggested_purpose_options
+      active_pipelines.lazy.map do |pipeline, _store|
+        child_name = pipeline.child_for(labware.purpose.name)
+        uuid, settings = compatible_purposes.detect do |_purpose_uuid, purpose_settings|
+          purpose_settings[:name] == child_name
+        end
+        next unless uuid
+
+        [uuid, settings.merge(filters: pipeline.filters)]
+      end.reject(&:nil?).uniq
+    end
+
+    def compatible_purposes
+      Settings.purposes.lazy.select do |uuid, _purpose_settings|
+        LabwareCreators.class_for(uuid).support_parent?(labware)
       end
     end
   end

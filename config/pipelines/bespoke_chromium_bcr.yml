@@ -1,0 +1,15 @@
+# WIP: Initial step of pipeline only
+---
+Limber Bespoke Chromium BCR:
+  filters:
+    request_type_keys:
+    - limber_chromium_bespoke
+    library_type_names:
+    - Chromium single cell 5 prime
+  relationships:
+    LBC Cherrypick: LBC 5p GEX Dil
+    LBC 5p GEX Dil: LBC 5p GEX Frag 2XP
+    LBC 5p GEX Frag 2XP: LBC 5p GEX LigXP
+    LBC 5p GEX LigXP: LBC 5p GEX PCR 2XP
+    LBC 5p GEX PCR 2XP: LBC 5p GLibPS
+    LBC 5p GLibPS: LB Lib Pool Norm

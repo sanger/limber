@@ -10,14 +10,10 @@ LBC Stock:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
-  :expected_request_types:
-    - limber_bespoke_aggregation
 LBC Aggregate:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TenStamp
-  :parents:
-  - LBC Stock
   :file_links: []
 LBC Cherrypick:
   :asset_type: plate
@@ -30,5 +26,3 @@ LBC Cherrypick:
     id: 'hamilton_aggregate_cherrypick'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-  :parents:
-  - LBC Aggregate

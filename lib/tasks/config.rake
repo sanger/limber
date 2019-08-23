@@ -7,7 +7,7 @@ require_relative '../config_loader/purposes_loader'
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
-  require Rails.root.join('config', 'robots')
+  require './config/robots'
 
   task generate: :environment do
     begin
@@ -43,20 +43,14 @@ namespace :config do
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = {}.tap do |configuration|
-      configuration[:large_insert_limit] = 250
-
-      configuration[:searches] = {}.tap do |searches|
-        puts 'Preparing searches ...'
-        api.search.all.each do |search|
-          searches[search.name] = search.uuid
-        end
+      puts 'Preparing searches ...'
+      configuration[:searches] = api.search.all.each_with_object({}) do |search, searches|
+        searches[search.name] = search.uuid
       end
 
-      configuration[:transfer_templates] = {}.tap do |transfer_templates|
-        puts 'Preparing transfer templates ...'
-        api.transfer_template.all.each do |transfer_template|
-          transfer_templates[transfer_template.name] = transfer_template.uuid
-        end
+      puts 'Preparing transfer templates ...'
+      configuration[:transfer_templates] = api.transfer_template.all.each_with_object({}) do |transfer_template, transfer_templates|
+        transfer_templates[transfer_template.name] = transfer_template.uuid
       end
 
       configuration[:printers] = {}.tap do |printers|
