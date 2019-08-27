@@ -11,9 +11,9 @@ addons:
     - haveged
 cache:
   bundler: true
+  yarn: true
   directories:
   - node_modules
-  yarn: true
 env:
   global:
   - TZ=Europe/London
