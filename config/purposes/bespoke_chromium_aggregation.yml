@@ -4,20 +4,12 @@
 # LBC Cherrypick plates can be submitted to various Chromium 10X automated
 # pipelines for library preparation.
 ---
-LBC Stock:
-  :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: true
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
 LBC Aggregate:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TenStamp
   :file_links: []
 LBC Cherrypick:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TenStamp
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bespoke_aggregation'
