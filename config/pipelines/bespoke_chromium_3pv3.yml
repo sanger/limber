@@ -1,21 +1,19 @@
 ---
-Limber Bespoke Chromium 3pv3:
+Bespoke Chromium 3pv3:
   filters:
-    request_type_keys:
-    - limber_chromium_bespoke
-    library_type_names:
-    - Chromium single cell 3 prime v3
+    request_type_key: limber_chromium_bespoke
+    library_type: Chromium single cell 3 prime v3
   library_pass: LBC 3pV3 GEX PCR 2XP
   relationships:
     LBC Cherrypick: LBC 3pV3 GEX Dil
     LBC 3pV3 GEX Dil: LBC 3pV3 GEX Frag 2XP
     LBC 3pV3 GEX Frag 2XP: LBC 3pV3 GEX LigXP
     LBC 3pV3 GEX LigXP: LBC 3pV3 GEX PCR 2XP
-Limber Bespoke Chromium 3pv3 MX:
+Bespoke Chromium 3pv3 MX:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
-    library_type_names:
+    library_type:
     - Chromium single cell 3 prime v3
   relationships:
     LBC 3pV3 GEX PCR 2XP: LBC 3pV3 GLibPS

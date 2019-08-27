@@ -1,9 +1,8 @@
 ---
-Limber High Throughput PCR Free 96:
+High Throughput PCR Free 96:
   filters:
-    request_type_keys:
-    - limber_pcr_free
-    library_type_names:
+    request_type_key: limber_pcr_free
+    library_type:
     - HiSeqX PCR free
     - DAFT-seq
   library_pass: PF Lib XP2
@@ -16,18 +15,18 @@ Limber High Throughput PCR Free 96:
     # Legacy Steps
     PF Post Shear XP: PF Lib
     PF Lib XP: PF Lib XP2
-Limber High Throughput PCR Free 96 MX:
+High Throughput PCR Free 96 MX:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
   relationships:
     PF Lib XP2: LB Lib Pool
     LB Lib Pool: LB Lib Pool Norm
-Limber High Throughput PCR Free 384:
+High Throughput PCR Free 384:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_pcr_free
-    library_type_names:
+    library_type:
     - PCR Free 384
   library_pass:
   - PF-384 Lib XP2
@@ -40,9 +39,9 @@ Limber High Throughput PCR Free 384:
     PF-384 End Prep: PF-384 Lib
     PF-384 Lib: PF-384 Lib XP2
     PF-384 Lib XP2: PF Lib Q-XP2
-Limber High Throughput PCR Free 384 MX:
+High Throughput PCR Free 384 MX:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
   relationships:
     PF-384 Lib XP2: PF Lib Q-XP2

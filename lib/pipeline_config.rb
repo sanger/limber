@@ -15,7 +15,7 @@ class PipelineConfig
   end
 
   self.default_options = {}.tap do |options|
-    options[:filters] = { request_type_keys: [], library_type_names: [] }
+    options[:filters] = { request_type_key: [], library_type: [] }
     # TODO: add relationships (decide on structure, may need arrays)
   end
 
@@ -37,10 +37,10 @@ class PipelineConfig
   # ---
   # Limber Bespoke Chromium 3pv2:
   #   :filters:
-  #     :request_type_keys:
+  #     :request_type_key:
   #     - limber_chromium_bespoke
   #     - limber_multiplexing
-  #     :library_type_names:
+  #     :library_type:
   #     - Chromium single cell 3 prime v2
   #   :relationships:
   #     LBB Cherrypick: LBB Chromium Tagged
@@ -67,26 +67,26 @@ class PipelineConfig
     return default_options[:filters] if @options[:filters].nil?
 
     {
-      request_type_keys: request_type_options,
-      library_type_names: library_type_options
+      request_type_key: request_type_options,
+      library_type: library_type_options
     }
   end
 
   def request_type_options
-    return default_options[:filters][:request_type_keys] if @options[:filters][:request_type_keys].nil?
+    return default_options[:filters][:request_type_key] if @options[:filters][:request_type_key].nil?
 
-    @options[:filters][:request_type_keys].each do |key|
+    @options[:filters][:request_type_key].each do |key|
       # TODO: better to use passed in list of all request types rather than individual selects here
       warn "WARN: Do not recognise request type key: #{key}" if Sequencescape::Api::V2::RequestType.where(key: key).first.nil?
     end
   end
 
   def library_type_options
-    return default_options[:filters][:library_type_names] if @options[:filters][:library_type_names].nil?
+    return default_options[:filters][:library_type] if @options[:filters][:library_type].nil?
 
     # TODO: check these in similar fashion to request types and warn if not matching
-    @options[:filters][:library_type_names]
-    # @options[:filters][:library_type_names].each do |name|
+    @options[:filters][:library_type]
+    # @options[:filters][:library_type].each do |name|
     #   # Sequencescape::Api::V2::RequestType.find
     #   warn "WARN: Do not recognise library type name: #{name}" if @all_library_types[name].nil?
     # end

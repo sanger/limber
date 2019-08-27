@@ -31,8 +31,13 @@ class Pipeline
   # @return [Boolean] returns true if labware meets the filter criteria
   def active_for?(labware)
     labware.active_requests.any? do |request|
-      (filters['request_type_keys'].blank? || filters['request_type_keys'].include?(request.request_type_key)) &&
-        (filters['library_type_names'].blank? || filters['library_type_names'].include?(request.library_type))
+      # For each attribute (eg. library_type) check that the matching property
+      # on request is included in the list of permitted values.
+      # @note Array() allows permitted values to be specified as either a singular
+      #       string, or an array. {link:https://ruby-doc.org/core-2.4.1/Kernel.html#method-i-Array}
+      filters.all? do |request_attribute, permitted_values|
+        Array(permitted_values).include? request.public_send(request_attribute)
+      end
     end
   end
 

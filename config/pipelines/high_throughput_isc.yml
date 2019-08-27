@@ -1,10 +1,10 @@
 ---
-Limber ISC:
+ISC:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_isc
     - limber_reisc # Typically reISC begins on LB Lib PCR-XP
-    library_type_names: # Taken from the library types on the above request types
+    library_type: # Taken from the library types on the above request types
     - Agilent Pulldown
     - Twist Pulldown
   library_pass:
@@ -22,9 +22,9 @@ Limber ISC:
     LB Cap Lib: LB Cap Lib PCR
     LB Cap Lib PCR: LB Cap Lib PCR-XP
     LB Cap Lib PCR-XP: LB Cap Lib Pool
-Limber ISC MX:
+ISC MX:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
   relationships:
     LB Cap Lib PCR-XP: LB Cap Lib Pool

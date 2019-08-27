@@ -1,10 +1,8 @@
 ---
-Limber RNA Poly A:
+RNA Poly A:
   filters:
-    request_type_keys:
-    - limber_rnaa
-    library_type_names:
-    - RNA PolyA
+    request_type_key: limber_rnaa
+    library_type: RNA PolyA
   library_pass: LB Lib PCR-XP
   relationships:
     LBR Cherrypick: LBR mRNA Cap

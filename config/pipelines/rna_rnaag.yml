@@ -1,10 +1,8 @@
 ---
-Limber RNA Poly A Globin:
+RNA Poly A Globin:
   filters:
-    request_type_keys:
-    - limber_rnaag
-    library_type_names:
-    - RNA Poly A Globin
+    request_type_key: limber_rnaag
+    library_type: RNA Poly A Globin
   library_pass: LB Lib PCR-XP
   relationships:
     LBR Cherrypick: LBR mRNA Cap

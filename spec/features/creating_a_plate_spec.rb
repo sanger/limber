@@ -108,7 +108,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   context 'with multiple requests and config with request type filter' do
-    let(:filters) { { request_type_keys: ['rt_a'] } }
+    let(:filters) { { request_type_key: ['rt_a'] } }
     let(:wells) do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
@@ -128,7 +128,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
   context 'with multiple requests and config with request and library type filters' do
     let(:library_type_name) { 'LibTypeA' }
-    let(:filters) { { 'request_type_keys' => ['rt_a'], 'library_type_names' => [library_type_name] } }
+    let(:filters) { { 'request_type_key' => ['rt_a'], 'library_type' => [library_type_name] } }
     let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name }
     let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name }
 

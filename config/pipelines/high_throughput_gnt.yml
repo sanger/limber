@@ -1,25 +1,24 @@
 ---
-Limber GnT Picoplex:
+GnT Picoplex:
   filters:
-    request_type_keys:
-    - limber_gnt_picoplex
+    request_type_key: limber_gnt_picoplex
   relationships:
     GnT Stock: GnT scDNA
     GnT scDNA: GnT Pico-XP
     GnT Pico-XP: GnT Pico End Prep
     GnT Pico End Prep: GnT Pico Lib PCR
   library_pass: GnT Pico Lib PCR
-Limber GnT Picoplex MX:
+GnT Picoplex MX:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
   relationships:
     GnT Pico Lib PCR: GnT Pico Lib Pool
     GnT Pico Lib Pool: GnT Pico Lib Pool XP
     GnT Pico Lib Pool XP: LB Lib Pool Norm
-Limber GnT MDA:
+GnT MDA:
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_gnt_mda
   relationships:
     GnT Stock: GnT scDNA

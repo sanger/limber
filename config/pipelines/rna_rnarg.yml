@@ -1,10 +1,8 @@
 ---
-Limber RNA Ribo Globin:
+RNA Ribo Globin:
   filters:
-    request_type_keys:
-    - limber_rnarg
-    library_type_names:
-    - RNA Ribo Globin
+    request_type_key: limber_rnarg
+    library_type: RNA Ribo Globin
   library_pass: LB Lib PCR-XP
   relationships:
     LBR Cherrypick: LBR RiboGlobin DNase

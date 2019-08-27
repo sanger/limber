@@ -1,11 +1,11 @@
 ---
 Limber WGS: # Top of the pipeline (Library Prep)
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_wgs
     - limber_lcmb
     - limber_rnaa
-    library_type_names:
+    library_type:
     - Standard
   library_pass: LB Lib PCR-XP
   relationships:
@@ -16,7 +16,7 @@ Limber WGS: # Top of the pipeline (Library Prep)
     LB Lib PCR: LB Lib PCR-XP
 Limber WGS MX: # Bottom of the pipeline (Pooling and normalization)
   filters:
-    request_type_keys:
+    request_type_key:
     - limber_multiplexing
   relationships:
     LB Lib PCR-XP: LB Lib Pool

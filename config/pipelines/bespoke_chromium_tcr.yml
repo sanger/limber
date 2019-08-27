@@ -1,11 +1,9 @@
 # WIP: Initial step of pipeline only
 ---
-Limber Bespoke Chromium TCR:
+Bespoke Chromium TCR:
   filters:
-    request_type_keys:
-    - limber_chromium_bespoke
-    library_type_names:
-    - Chromium single cell BCR
+    request_type_key: limber_chromium_bespoke
+    library_type: Chromium single cell BCR
   relationships:
     LBC Cherrypick: LBC BCR Dil 1
 

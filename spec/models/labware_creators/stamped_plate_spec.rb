@@ -146,7 +146,7 @@ RSpec.describe LabwareCreators::StampedPlate do
             purpose_uuid: child_purpose_uuid,
             parent_uuid: parent_uuid,
             user_uuid: user_uuid,
-            filters: { request_type_keys: [request_type_b.key] }
+            filters: { request_type_key: [request_type_b.key] }
           }
         end
 
@@ -178,7 +178,7 @@ RSpec.describe LabwareCreators::StampedPlate do
               purpose_uuid: child_purpose_uuid,
               parent_uuid: parent_uuid,
               user_uuid: user_uuid,
-              filters: { library_type_names: [lib_type_a] }
+              filters: { library_type: [lib_type_a] }
             }
           end
 
@@ -192,8 +192,8 @@ RSpec.describe LabwareCreators::StampedPlate do
               parent_uuid: parent_uuid,
               user_uuid: user_uuid,
               filters: {
-                request_type_keys: [request_type_b.key],
-                library_type_names: [lib_type_a]
+                request_type_key: [request_type_b.key],
+                library_type: [lib_type_a]
               }
             }
           end
@@ -207,7 +207,7 @@ RSpec.describe LabwareCreators::StampedPlate do
               purpose_uuid: child_purpose_uuid,
               parent_uuid: parent_uuid,
               user_uuid: user_uuid,
-              filters: { library_type_names: ['LibTypeB'] }
+              filters: { library_type: ['LibTypeB'] }
             }
           end
 
