@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'support/shared_examples/dilution_calculations_shared_examples'
 
 RSpec.describe Utility::NormalisedBinningCalculator do
