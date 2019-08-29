@@ -33,8 +33,14 @@ module Utility
     end
 
     def compute_vol_source_reqd(sample_conc)
-      # check calculated volume against minimum then maximum allowed volumes
+      # check calculated volume against minimum allowed volume
       min_checked_vol_reqd = [config.target_amount / sample_conc, config.minimum_source_volume].max
+      # we don't want the diluent volume to be below 1ul (robot restriction), so we have to round the source
+      # volume either to the maximum volume or to 1ul less than the maximum volume when in this range
+      if ((config.target_volume - 1.0)...config.target_volume).cover?(min_checked_vol_reqd)
+        min_checked_vol_reqd = min_checked_vol_reqd.round(half: :down)
+      end
+      # check calculated volume against maximum allowed volume
       [min_checked_vol_reqd, config.target_volume].min
     end
 

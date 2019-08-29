@@ -106,6 +106,50 @@ RSpec.describe Utility::NormalisedBinningCalculator do
           expect(subject.compute_vol_source_reqd(sample_conc)).to eq(0.2)
         end
       end
+
+      # conc would create a diluent vol of 0.1
+      context 'when sample concentration would create a diluent volume of less than 0.5' do
+        let(:sample_conc) { 2.5126 }
+
+        it 'rounds up the sample volume to the maximum and takes zero diluent' do
+          expect(subject.compute_vol_source_reqd(sample_conc)).to eq(20.0)
+        end
+      end
+
+      # conc would create a diluent vol of 0.5
+      context 'when sample concentration would create a diluent volume of exactly 0.5' do
+        let(:sample_conc) { 2.5641 }
+
+        it 'rounds up the sample volume to the maximum and takes zero diluent' do
+          expect(subject.compute_vol_source_reqd(sample_conc)).to eq(20.0)
+        end
+      end
+
+      # conc would create a diluent vol of 0.6
+      context 'when sample concentration would create a diluent volume of 0.6' do
+        let(:sample_conc) { 2.5773 }
+
+        it 'rounds down the sample volume and takes the minimum diluent of 1' do
+          expect(subject.compute_vol_source_reqd(sample_conc)).to eq(19.0)
+        end
+      end
+
+      # conc would create a diluent vol of 0.9
+      context 'when sample concentration would create a diluent volume of greater than 0.5 but less than 1.0' do
+        let(:sample_conc) { 2.6178 }
+
+        it 'rounds down the sample volume and takes the minimum diluent of 1' do
+          expect(subject.compute_vol_source_reqd(sample_conc)).to eq(19.0)
+        end
+      end
+
+      context 'when sample concentration would create a diluent volume greater than 1' do
+        let(:sample_conc) { 3.120 }
+
+        it 'does not round the sample volume required' do
+          expect(subject.compute_vol_source_reqd(sample_conc)).to eq(16.025641025641026)
+        end
+      end
     end
 
     describe '#compute_well_transfers' do
