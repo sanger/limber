@@ -19,7 +19,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_one :purpose
 
   DEFAULT_INCLUDES = [
-    :purpose
+    :purpose, 'aliquots.request.request_type'
   ].freeze
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)

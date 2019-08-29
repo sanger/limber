@@ -13,8 +13,6 @@ Bespoke Chromium 3pv3 MX:
   filters:
     request_type_key:
     - limber_multiplexing
-    library_type:
-    - Chromium single cell 3 prime v3
   relationships:
     LBC 3pV3 GEX PCR 2XP: LBC 3pV3 GLibPS
     LBC 3pV3 GLibPS: LB Lib Pool Norm

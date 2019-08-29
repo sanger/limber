@@ -14,8 +14,12 @@ class Pipeline
   attr_accessor :name
 
   # The filters that will be used to identify whether a plate belongs to a particular pipeline
+  # Keys should be attributes on request (eg. library_type) whereas values are either an array
+  # of acceptable values, or a single acceptable value
+  # @example
+  # pipeline.filters = { 'request_type_key' => 'library_request', 'library_type' => ['Stndard', 'Other'] }
   # @return [Hash] Filter options
-  attr_accessor :filters
+  attr_reader :filters
 
   # The plate types(s) for which to suggest library passing for this particular pipeline
   # @return [Array, String]
@@ -33,12 +37,15 @@ class Pipeline
     labware.active_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
       # on request is included in the list of permitted values.
-      # @note Array() allows permitted values to be specified as either a singular
-      #       string, or an array. {link:https://ruby-doc.org/core-2.4.1/Kernel.html#method-i-Array}
       filters.all? do |request_attribute, permitted_values|
-        Array(permitted_values).include? request.public_send(request_attribute)
+        permitted_values.include? request.public_send(request_attribute)
       end
     end
+  end
+
+  def filters=(filters)
+    # Convert any singlular values to an array to provide a consistent interface
+    @filters = filters.transform_values { |value| Array(value) }
   end
 
   # Returns the suggested child purpose for the provided parent
