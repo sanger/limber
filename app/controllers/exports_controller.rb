@@ -8,17 +8,26 @@ class ExportsController < ApplicationController
   before_action :locate_labware, only: :show
   rescue_from ActionView::MissingTemplate, with: :not_found
 
+  TRANSFER_INCLUDES = 'wells.transfer_requests_as_target.source_asset'
+
   PLATE_INCLUDES = {
     'concentrations_ngul' => 'wells.qc_results',
     'concentrations_nm' => 'wells.qc_results',
-    'hamilton_aggregate_cherrypick' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_cherrypick_to_sample_dilution' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_gex_dil_to_gex_frag_2xp' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_gex_frag_2xp_to_gex_ligxp' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_cherrypick_to_5p_gex_dilution' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_cherrypick_to_bcr_dilution1' => 'wells.transfer_requests_as_target.source_asset',
-    'hamilton_cherrypick_to_tcr_dilution1' => 'wells.transfer_requests_as_target.source_asset'
-
+    'hamilton_aggregate_cherrypick' => TRANSFER_INCLUDES,
+    'hamilton_cherrypick_to_sample_dilution' => TRANSFER_INCLUDES,
+    'hamilton_gex_dil_to_gex_frag_2xp' => TRANSFER_INCLUDES,
+    'hamilton_gex_frag_2xp_to_gex_ligxp' => TRANSFER_INCLUDES,
+    'hamilton_cherrypick_to_5p_gex_dilution' => TRANSFER_INCLUDES,
+    'hamilton_cherrypick_to_bcr_dilution1' => TRANSFER_INCLUDES,
+    'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' => TRANSFER_INCLUDES,
+    'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' => TRANSFER_INCLUDES,
+    'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' => TRANSFER_INCLUDES,
+    'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' => TRANSFER_INCLUDES,
+    'hamilton_cherrypick_to_tcr_dilution1' => TRANSFER_INCLUDES,
+    'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' => TRANSFER_INCLUDES,
+    'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' => TRANSFER_INCLUDES,
+    'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' => TRANSFER_INCLUDES,
+    'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' => TRANSFER_INCLUDES
   }.freeze
 
   def show

@@ -115,6 +115,58 @@ RSpec.describe ExportsController, type: :controller do
     end
   end
 
+  context 'where template hamilton lbc bcr dil 1 to lbc bcr enrich1 1xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc bcr dil 2 to lbc bcr post lig 1xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc bcr enrich1 1xspri to lbc bcr enrich2 2xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc bcr enrich2 2xspri to lbc bcr dil 2' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2.csv' do
+      get :show, params: { id: 'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
   context 'where template hamilton cherrypick to tcr dilution1' do
     let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
 
@@ -124,6 +176,58 @@ RSpec.describe ExportsController, type: :controller do
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
       expect(response).to render_template('hamilton_cherrypick_to_tcr_dilution1')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc tcr dil 1 to lbc tcr enrich1 1xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc tcr dil 2 to lbc tcr post lig 1xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc tcr enrich1 1xspri to lbc tcr enrich2 2xspri' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri.csv' do
+      get :show, params: { id: 'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri')
+      assert_equal 'text/csv', @response.content_type
+    end
+  end
+
+  context 'where template hamilton lbc tcr enrich2 2xspri to lbc tcr dil 2' do
+    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+
+    it 'renders a hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2.csv' do
+      get :show, params: { id: 'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2', limber_plate_id: 'DN1S' }, as: :csv
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
+      expect(response).to render_template('hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2')
       assert_equal 'text/csv', @response.content_type
     end
   end
