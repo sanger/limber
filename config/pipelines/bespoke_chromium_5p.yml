@@ -1,7 +1,7 @@
 ---
 Bespoke Chromium 5p:
   filters:
-    request_type_key: limber_multiplexing
+    request_type_key: limber_chromium_bespoke
     library_type: Chromium single cell 5 prime
   library_pass: LBC 5p GEX PCR 2XP
   relationships:

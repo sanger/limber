@@ -3,7 +3,7 @@
 Bespoke Chromium TCR:
   filters:
     request_type_key: limber_chromium_bespoke
-    library_type: Chromium single cell BCR
+    library_type: Chromium single cell TCR
   relationships:
-    LBC Cherrypick: LBC BCR Dil 1
+    LBC Cherrypick: LBC TCR Dil 1
 
