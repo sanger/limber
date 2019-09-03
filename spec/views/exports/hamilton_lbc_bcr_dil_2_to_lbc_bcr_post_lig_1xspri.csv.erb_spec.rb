@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_aggregate_cherrypick.csv.erb' do
+RSpec.describe 'exports/hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri.csv.erb' do
   context 'with a full plate' do
     has_a_working_api
 
@@ -14,7 +14,7 @@ RSpec.describe 'exports/hamilton_aggregate_cherrypick.csv.erb' do
       create(
         :v2_well_with_transfer_requests,
         location: 'A1',
-        transfer_request_as_target_source_asset: source_well_b1,
+        transfer_request_as_target_source_asset: source_well_a1,
         plate_barcode: '2'
       )
     end
@@ -22,7 +22,7 @@ RSpec.describe 'exports/hamilton_aggregate_cherrypick.csv.erb' do
       create(
         :v2_well_with_transfer_requests,
         location: 'B1',
-        transfer_request_as_target_source_asset: source_well_a1,
+        transfer_request_as_target_source_asset: source_well_b1,
         plate_barcode: '2'
       )
     end
@@ -34,10 +34,10 @@ RSpec.describe 'exports/hamilton_aggregate_cherrypick.csv.erb' do
 
     let(:expected_content) do
       [
-        ['Workflow', 'Cherry Pick'],
-        ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well', 'Sample Vol'],
-        %w[DN1S A1 DN2T B1 10.0],
-        %w[DN1S B1 DN2T A1 10.0]
+        ['Workflow', '10X Post Ligation Single SPRI'],
+        ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well'],
+        %w[DN1S A1 DN2T A1],
+        %w[DN1S B1 DN2T B1]
       ]
     end
 
