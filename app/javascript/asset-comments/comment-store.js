@@ -7,7 +7,7 @@ const commentStoreFactory = function(axiosInstance, devourApi, assetId, userId) 
     async refreshComments() {
       this.comments = undefined
       this.comments = (
-        await devourApi.one('asset', assetId).all('comment').get({ include: 'user' })
+        await devourApi.one('labware', assetId).all('comment').get({ include: 'user' })
       ).data
       return true
     },
@@ -20,7 +20,7 @@ const commentStoreFactory = function(axiosInstance, devourApi, assetId, userId) 
         },
         'relationships': {
           'commentable': {
-            'data': { 'type': 'assets', 'id': assetId }
+            'data': { 'type': 'labware', 'id': assetId }
           },
           'user': {
             'data': { 'type': 'users', 'id': userId }
