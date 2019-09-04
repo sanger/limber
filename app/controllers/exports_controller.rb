@@ -52,8 +52,12 @@ class ExportsController < ApplicationController
   }.freeze
 
   def show
-    @workflow = CSV_DETAILS[params[:id]]&.workflow
-    render CSV_DETAILS[params[:id]]&.csv
+    @workflow = csv_details.workflow
+    render csv_details.csv
+  end
+
+  def csv_details
+    CSV_DETAILS[params[:id]] || not_found
   end
 
   private
@@ -72,6 +76,6 @@ class ExportsController < ApplicationController
   end
 
   def include_parameters
-    CSV_DETAILS[params[:id]]&.plate_includes || 'wells'
+    csv_details.plate_includes || 'wells'
   end
 end
