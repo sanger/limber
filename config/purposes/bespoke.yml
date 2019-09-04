@@ -38,6 +38,7 @@ LBB Chromium Tagged:
   :expected_request_types:
   - limber_chromium_bespoke
   :expected_library_types:
+  - Chromium genome
   - Chromium single cell 3 prime v2
   :tags_per_well: 4
 LBB Lib-XP:
