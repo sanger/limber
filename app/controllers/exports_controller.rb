@@ -8,30 +8,52 @@ class ExportsController < ApplicationController
   before_action :locate_labware, only: :show
   rescue_from ActionView::MissingTemplate, with: :not_found
 
-  TRANSFER_INCLUDES = 'wells.transfer_requests_as_target.source_asset'
+  WELL_QC_INCLUDES = 'wells.qc_results'
+  WELL_SRC_ASSET_INCLUDES = 'wells.transfer_requests_as_target.source_asset'
 
-  PLATE_INCLUDES = {
-    'concentrations_ngul' => 'wells.qc_results',
-    'concentrations_nm' => 'wells.qc_results',
-    'hamilton_aggregate_cherrypick' => TRANSFER_INCLUDES,
-    'hamilton_cherrypick_to_sample_dilution' => TRANSFER_INCLUDES,
-    'hamilton_gex_dil_to_gex_frag_2xp' => TRANSFER_INCLUDES,
-    'hamilton_gex_frag_2xp_to_gex_ligxp' => TRANSFER_INCLUDES,
-    'hamilton_cherrypick_to_5p_gex_dilution' => TRANSFER_INCLUDES,
-    'hamilton_cherrypick_to_bcr_dilution1' => TRANSFER_INCLUDES,
-    'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' => TRANSFER_INCLUDES,
-    'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' => TRANSFER_INCLUDES,
-    'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' => TRANSFER_INCLUDES,
-    'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' => TRANSFER_INCLUDES,
-    'hamilton_cherrypick_to_tcr_dilution1' => TRANSFER_INCLUDES,
-    'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' => TRANSFER_INCLUDES,
-    'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' => TRANSFER_INCLUDES,
-    'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' => TRANSFER_INCLUDES,
-    'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' => TRANSFER_INCLUDES
+  CSVDetail = Struct.new(:csv, :plate_includes, :workflow) do
+  end
+
+  CSV_DETAILS = {
+    'concentrations_ngul' =>
+      CSVDetail.new('concentrations_ngul', WELL_QC_INCLUDES, nil),
+    'concentrations_nm' =>
+      CSVDetail.new('concentrations_nm', WELL_QC_INCLUDES, nil),
+    'hamilton_aggregate_cherrypick' =>
+      CSVDetail.new('hamilton_aggregate_cherrypick', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick'),
+    'hamilton_cherrypick_to_sample_dilution' =>
+      CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_gex_dil_to_gex_frag_2xp' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Repair Double SPRI'),
+    'hamilton_gex_frag_2xp_to_gex_ligxp' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Ligation Single SPRI'),
+    'hamilton_cherrypick_to_5p_gex_dilution' =>
+      CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_cherrypick_to_bcr_dilution1' =>
+      CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Single SPRI'),
+    'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 2 Double SPRI'),
+    'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' =>
+      CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Ligation Single SPRI'),
+    'hamilton_cherrypick_to_tcr_dilution1' =>
+      CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Single SPRI'),
+    'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 2 Double SPRI'),
+    'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' =>
+      CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
+    'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Ligation Single SPRI')
   }.freeze
 
   def show
-    render params[:id]
+    @workflow = CSV_DETAILS[params[:id]]&.workflow
+    render CSV_DETAILS[params[:id]]&.csv
   end
 
   private
@@ -50,6 +72,6 @@ class ExportsController < ApplicationController
   end
 
   def include_parameters
-    PLATE_INCLUDES[params[:id]] || 'wells'
+    CSV_DETAILS[params[:id]]&.plate_includes || 'wells'
   end
 end
