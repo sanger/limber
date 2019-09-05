@@ -8,6 +8,7 @@ class Presenters::PlatePresenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
+  include Presenters::CreationBehaviour
 
   class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
 

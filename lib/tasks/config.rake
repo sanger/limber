@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative '../purpose_config'
-require_relative '../pipeline_config'
 require_relative '../config_loader/purposes_loader'
 
 namespace :config do
