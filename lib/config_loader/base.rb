@@ -55,14 +55,16 @@ module ConfigLoader
         if latest_file.nil?
           warn "Cannot parse file: #{file}"
         else
-          duplicate_keys = store.keys & latest_file.keys
-          raise_clash(duplicate_keys) if duplicate_keys.present?
+          check_duplicates(store.keys, latest_file.keys)
           store.merge!(latest_file)
         end
       end
     end
 
-    def raise_clash(duplicate_keys)
+    def check_duplicates(stored_keys, new_keys)
+      duplicate_keys = stored_keys & new_keys
+      return if duplicate_keys.blank?
+
       raise StandardError, "Keys #{duplicate_keys} appear in multiple files in #{default_path}"
     end
   end
