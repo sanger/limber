@@ -5,12 +5,6 @@ LBC BCR Dil 1:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::FixedNormalisedPlate
-  :parents:
-  - LBC Cherrypick
-  :expected_request_types:
-  - limber_chromium_bespoke
-  :expected_library_types:
-  - Chromium single cell BCR
   :dilutions:
     :source_volume: 2
     :diluent_volume: 33

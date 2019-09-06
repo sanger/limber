@@ -46,12 +46,10 @@ RSpec.describe SearchController, type: :controller do
 
   context 'configured plates and tubes' do
     before do
-      Settings.purposes = {
-        'uuid-1' => build(:purpose_config),
-        'uuid-2' => build(:minimal_purpose_config),
-        'uuid-3' => build(:tube_config),
-        'uuid-4' => build(:tube_config)
-      }
+      create(:purpose_config, uuid: 'uuid-1')
+      create(:minimal_purpose_config, uuid: 'uuid-2')
+      create(:tube_config, uuid: 'uuid-3')
+      create(:tube_config, uuid: 'uuid-4')
     end
     let(:expected_search) do
       stub_search_and_multi_result(

@@ -4,7 +4,7 @@ RSpec.describe Presenters::PermissivePresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name }
+  let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
 
   subject do
     Presenters::PermissivePresenter.new(
@@ -14,10 +14,9 @@ RSpec.describe Presenters::PermissivePresenter do
   end
 
   before(:each) do
-    Settings.purposes = {
-      'child-purpose' => build(:purpose_config, parents: [purpose_name], name: 'Child purpose'),
-      'other-purpose' => build(:purpose_config, parents: [], name: 'Other purpose')
-    }
+    create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'
+    create :purpose_config, uuid: 'other-purpose', name: 'Other purpose'
+    create :pipeline, relationships: { purpose_name => 'Child purpose' }
   end
 
   context 'when pending' do

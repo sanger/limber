@@ -53,10 +53,6 @@ module Presenters
       end
     end
 
-    def active_request_types
-      [:tube]
-    end
-
     def stock_plate_barcode
       parent_plate = labware.parents.first
       if parent_plate.present?

@@ -26,16 +26,11 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:plate_request) { stub_api_get(parent_uuid, body: plate) }
-  let(:wells_request) { stub_api_get(parent_uuid, 'wells', body: wells) }
-
   before do
-    Settings.purposes = {
-      child_purpose_uuid => build(:templated_transfer_config, name: child_purpose_name)
-    }
+    create(:templated_transfer_config, name: child_purpose_name, uuid: child_purpose_uuid)
     Settings.transfer_templates[transfer_template_name] = transfer_template_uuid
-    plate_request
-    wells_request
+    stub_api_get(parent_uuid, body: plate)
+    stub_api_get(parent_uuid, 'wells', body: wells)
   end
 
   let(:form_attributes) do

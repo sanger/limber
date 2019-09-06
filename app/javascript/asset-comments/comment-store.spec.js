@@ -33,11 +33,11 @@ describe('commentStore', () => {
 
   const mockApiFactory = function(response) {
     let api = mockApi()
-    api.mockGet('assets/123/comments', {include: 'user'}, response)
+    api.mockGet('labware/123/comments', {include: 'user'}, response)
     return api.devour
   }
 
-  it('retrieves comments for an uncommented asset when prompted', async () => {
+  it('retrieves comments for an uncommented labware when prompted', async () => {
     let api = mockApiFactory(noComments)
     let commentStore = commentStoreFactory(null, api, '123', 'user_id')
 
@@ -49,7 +49,7 @@ describe('commentStore', () => {
 
   })
 
-  it('retrieves comments for a commented asset when prompted', async () => {
+  it('retrieves comments for a commented labware when prompted', async () => {
     let api = mockApiFactory(comments)
     let commentStore = commentStoreFactory(null, api, '123', 'user_id')
 
@@ -93,7 +93,7 @@ describe('commentStore', () => {
         },
         'relationships': {
           'commentable': {
-            'data': { 'type': 'assets', 'id': '123' }
+            'data': { 'type': 'labware', 'id': '123' }
           },
           'user': {
             'data': { 'type': 'users', 'id': 'user_id' }

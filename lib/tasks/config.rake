@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../purpose_config'
+require_relative '../config_loader/purposes_loader'
 
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
 
-  require Rails.root.join('config', 'robots')
+  require './config/robots'
 
   task generate: :environment do
     begin
@@ -16,11 +17,12 @@ namespace :config do
         Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
         The value should be listed in the api_applications table of the Sequencescape instance
         you are connecting to.
-        In development mode it is recommend that you set the key through the API_KEY environment
+        In development mode it is recommended that you set the key through the API_KEY environment
         variable. This reduces the risk of accidentally committing the key.
       HEREDOC
       exit 1
     end
+
     label_templates = YAML.load_file(Rails.root.join('config', 'label_templates.yml'))
 
     puts 'Fetching submission_templates...'
@@ -29,23 +31,8 @@ namespace :config do
     puts 'Fetching purposes...'
     all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
 
-    purpose_config = Rails.root.join('config', 'purposes').children.each_with_object([]) do |file, purposes|
-      next unless file.extname == '.yml'
-
-      begin
-        YAML.load_file(file)&.each do |name, options|
-          purposes << PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
-        end
-      rescue NoMethodError => _
-        STDERR.puts "Cannot parse file: #{file}"
-      end
-    end
-
-    # Check for duplicates: We spread config over multiple files. If we have duplicates its going
-    # to result in strange behaviour. So lets blow up early.
-    if purpose_config.map(&:name).uniq!
-      dupes = purpose_config.group_by(&:name).select { |_name, settings| settings.length > 1 }.keys
-      raise StandardError, "Duplicate purpose config detected: #{dupes}"
+    purpose_config = ConfigLoader::PurposesLoader.new.config.map do |name, options|
+      PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
     end
 
     puts 'Preparing purposes...'
@@ -55,20 +42,14 @@ namespace :config do
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = {}.tap do |configuration|
-      configuration[:large_insert_limit] = 250
-
-      configuration[:searches] = {}.tap do |searches|
-        puts 'Preparing searches ...'
-        api.search.all.each do |search|
-          searches[search.name] = search.uuid
-        end
+      puts 'Preparing searches ...'
+      configuration[:searches] = api.search.all.each_with_object({}) do |search, searches|
+        searches[search.name] = search.uuid
       end
 
-      configuration[:transfer_templates] = {}.tap do |transfer_templates|
-        puts 'Preparing transfer templates ...'
-        api.transfer_template.all.each do |transfer_template|
-          transfer_templates[transfer_template.name] = transfer_template.uuid
-        end
+      puts 'Preparing transfer templates ...'
+      configuration[:transfer_templates] = api.transfer_template.all.each_with_object({}) do |transfer_template, transfer_templates|
+        transfer_templates[transfer_template.name] = transfer_template.uuid
       end
 
       configuration[:printers] = {}.tap do |printers|

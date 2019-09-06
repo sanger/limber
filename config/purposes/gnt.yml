@@ -9,38 +9,17 @@ GnT scDNA:
   :asset_type: plate
   :cherrypickable_target: false
   :input_plate: false
-  :parents:
-  - GnT Stock
-  :expected_request_types:
-  - limber_gnt_picoplex
-  - limber_gnt_mda
 GnT Pico-XP:
   :asset_type: plate
-  :parents:
-  - GnT scDNA
-  :expected_request_types:
-  - limber_gnt_picoplex
 GnT Pico End Prep:
   :asset_type: plate
-  :parents:
-  - GnT Pico-XP
 GnT Pico Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  :suggest_library_pass_for:
-  - limber_gnt_picoplex
-  :parents:
-  - GnT Pico End Prep
 GnT MDA Norm:
   :presenter_class: Presenters::UntaggedPlatePassingPresenter
   :asset_type: plate
-  :parents:
-  - GnT scDNA
-  :expected_request_types:
-  - limber_gnt_mda
-  :suggest_library_pass_for:
-  - limber_gnt_mda
 GnT Pico Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -48,8 +27,6 @@ GnT Pico Lib Pool:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :parents:
-  - GnT Pico Lib PCR
 GnT Pico Lib Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -57,5 +34,3 @@ GnT Pico Lib Pool XP:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :parents:
-  - GnT Pico Lib Pool

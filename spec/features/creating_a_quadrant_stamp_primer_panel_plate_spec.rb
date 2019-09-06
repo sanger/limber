@@ -93,8 +93,8 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
     create :purpose_config,
            creator_class: 'LabwareCreators::QuadrantStampPrimerPanel',
            name: child_purpose_name,
-           parents: ['Primer Panel example'],
            uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Primer Panel example' => child_purpose_name }
     stub_swipecard_search(user_swipecard, user)
     stub_v2_plate(parent)
     stub_v2_plate(parent2)
