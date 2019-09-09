@@ -10,6 +10,7 @@ FactoryBot.define do
       sequence(:submission_id) { |i| i }
       sequence(:order_id) { |i| i }
       include_submissions { false }
+      library_type { 'Standard' }
     end
 
     skip_create
@@ -22,7 +23,7 @@ FactoryBot.define do
         'pcr_cycles' => pcr_cycles,
         'fragment_size_required_from' => 100,
         'fragment_size_required_to' => 200,
-        'library_type' => 'Standard'
+        'library_type' => library_type
       }
     end
     request_type { create :request_type }

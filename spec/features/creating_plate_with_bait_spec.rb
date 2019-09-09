@@ -31,8 +31,8 @@ RSpec.feature 'Creating a plate with bait', js: true do
     create :purpose_config, uuid: 'example-purpose-uuid'
     create :purpose_config, creator_class: 'LabwareCreators::BaitedPlate',
                             name: 'with-baits',
-                            parents: ['example-purpose'],
                             uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'example-purpose' => 'with-baits' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # These stubs are required to render plate show page

@@ -9,12 +9,8 @@ RSpec.describe LabwareCreators do
   let(:tagged_purpose) { 'dummy-purpose' }
 
   before do
-    Settings.purposes[basic_purpose] = {
-      creator_class: 'LabwareCreators::StampedPlate'
-    }
-    Settings.purposes[tagged_purpose] = {
-      creator_class: 'LabwareCreators::TaggedPlate'
-    }
+    create :purpose_config, creator_class: 'LabwareCreators::StampedPlate', uuid: basic_purpose
+    create :purpose_config, creator_class: 'LabwareCreators::TaggedPlate', uuid: tagged_purpose
   end
 
   it 'can lookup form for a given purpose' do

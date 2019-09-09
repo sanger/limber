@@ -125,6 +125,20 @@ RSpec.describe LabwareCreators::StampedPlate do
           create(:v2_stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
         ]
       end
+      let(:transfer_requests) do
+        [
+          {
+            'source_asset' => '2-well-A1',
+            'target_asset' => '3-well-A1',
+            'outer_request' => 'request-b'
+          },
+          {
+            'source_asset' => '2-well-B1',
+            'target_asset' => '3-well-B1',
+            'outer_request' => 'request-d'
+          }
+        ]
+      end
 
       context 'when a request_type is supplied' do
         let(:form_attributes) do
@@ -132,23 +146,8 @@ RSpec.describe LabwareCreators::StampedPlate do
             purpose_uuid: child_purpose_uuid,
             parent_uuid: parent_uuid,
             user_uuid: user_uuid,
-            filters: { request_type_keys: [request_type_b.key] }
+            filters: { request_type_key: [request_type_b.key] }
           }
-        end
-
-        let(:transfer_requests) do
-          [
-            {
-              'source_asset' => '2-well-A1',
-              'target_asset' => '3-well-A1',
-              'outer_request' => 'request-b'
-            },
-            {
-              'source_asset' => '2-well-B1',
-              'target_asset' => '3-well-B1',
-              'outer_request' => 'request-d'
-            }
-          ]
         end
 
         it_behaves_like 'a stamped plate creator'
@@ -163,23 +162,58 @@ RSpec.describe LabwareCreators::StampedPlate do
           }
         end
 
-        let(:transfer_requests) do
-          [
-            {
-              'source_asset' => '2-well-A1',
-              'target_asset' => '3-well-A1',
-              'outer_request' => 'request-b'
-            },
-            {
-              'source_asset' => '2-well-B1',
-              'target_asset' => '3-well-B1',
-              'outer_request' => 'request-d'
-            }
-          ]
-        end
-
         it 'raises an exception' do
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+        end
+      end
+
+      context 'when using library type filter' do
+        let(:lib_type_a) { 'LibTypeA' }
+        let(:request_b) { create :library_request, request_type: request_type_b, uuid: 'request-b', library_type: lib_type_a }
+        let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-d', library_type: lib_type_a }
+
+        context 'when a library type is supplied' do
+          let(:form_attributes) do
+            {
+              purpose_uuid: child_purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
+              filters: { library_type: [lib_type_a] }
+            }
+          end
+
+          it_behaves_like 'a stamped plate creator'
+        end
+
+        context 'when both request and library types are supplied' do
+          let(:form_attributes) do
+            {
+              purpose_uuid: child_purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
+              filters: {
+                request_type_key: [request_type_b.key],
+                library_type: [lib_type_a]
+              }
+            }
+          end
+
+          it_behaves_like 'a stamped plate creator'
+        end
+
+        context 'when a library type is supplied that does not match any request' do
+          let(:form_attributes) do
+            {
+              purpose_uuid: child_purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
+              filters: { library_type: ['LibTypeB'] }
+            }
+          end
+
+          it 'raises an exception' do
+            expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+          end
         end
       end
     end

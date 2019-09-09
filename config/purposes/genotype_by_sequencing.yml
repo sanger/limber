@@ -22,9 +22,6 @@ GBS PCR1:
   :creator_class: LabwareCreators::QuadrantStampPrimerPanel
   :size: 384
   :pcr_stage: 'pcr 1'
-  :parents:
-    - GBS-96 Stock
-    - GnT MDA Norm
 GBS PCR2:
   :asset_type: plate
   :stock_plate: false
@@ -39,53 +36,31 @@ GBS PCR2:
   :input_plate: false
   :size: 384
   :pcr_stage: 'pcr 2'
-  :parents:
-    - GBS PCR1
 GBS PCR2 Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
-  # V2
-  # This allows cross-plate cross-submission pooling
-  # Lab wise this works fine, but disrupts some of the large scale
-  # tracking, preventing us from passing requests, and extracting
-  # submission info reliably once things are pooled.
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
   :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - GBS PCR2
 GBS PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - GBS PCR2 Pool Stock
 GBS PCR Pool Selected:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
-  :parents:
-  - GBS PCR Pool
 GBS MiSeq Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubeNoQcPurpose
-  # V1
-  # :creator_class: LabwareCreators::TubeFromTube
-  # V2
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
   :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
   :submission:
     template_name: 'MiSeq for GBS'
     request_options:
       :read_length: 150
-  :parents:
-  - GBS PCR Pool Selected

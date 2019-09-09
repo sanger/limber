@@ -38,7 +38,7 @@ RSpec.describe PlatesController, type: :controller do
 
   describe '#update' do
     before do
-      Settings.purposes['stock-plate-purpose-uuid'] = create :stock_plate_config
+      create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
     end
 
     let!(:state_change_request) do

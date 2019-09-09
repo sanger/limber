@@ -1,0 +1,20 @@
+# This configuration file is for the Bespoke Chromium Aggregation pipeline.
+# LBC Stock plates are submitted to the Aggregation pipeline to be combined
+# through LBC Aggregate plates into LBC Cherrypick plates.
+# LBC Cherrypick plates can be submitted to various Chromium 10X automated
+# pipelines for library preparation.
+---
+LBC Aggregate:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :file_links: []
+LBC Cherrypick:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bespoke_aggregation'
+  :file_links:
+  - name: 'Download Hamilton Aggregate Cherrypick CSV'
+    id: 'hamilton_aggregate_cherrypick'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul

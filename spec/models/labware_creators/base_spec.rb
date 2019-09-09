@@ -12,13 +12,13 @@ RSpec.describe LabwareCreators::Base do
   let(:tagged_purpose) { 'dummy-purpose' }
 
   before do
-    Settings.purposes[basic_purpose] = { creator_class: 'LabwareCreators::Base' }
-    Settings.purposes[tagged_purpose] = { creator_class: 'LabwareCreators::TaggedPlate' }
+    create :purpose_config, uuid: basic_purpose, creator_class: 'LabwareCreators::Base'
+    create :purpose_config, uuid: tagged_purpose, creator_class: 'LabwareCreators::TaggedPlate'
   end
 
   context 'with a custom transfer-template' do
     before do
-      Settings.purposes['test-purpose'] = { transfer_template: 'Custom transfer template' }
+      create :purpose_config, transfer_template: 'Custom transfer template', uuid: 'test-purpose'
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
 

@@ -1,3 +1,5 @@
+# This configuration file is for the manual Bespoke pipelines for the PCR, PCR Free and
+# Chromium 10X 3 prime version 2 library types.
 ---
 LBB Cherrypick:
   :asset_type: plate
@@ -7,43 +9,21 @@ LBB Cherrypick:
   :presenter_class: Presenters::StockPlatePresenter
 LBB Ligation:
   :asset_type: plate
-  :parents:
-  - LBB Cherrypick
-  :expected_request_types:
-  - limber_pcr_bespoke
 LBB Lib PCR-XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :parents:
-  - LBB Ligation
-  :suggest_library_pass_for:
-  - limber_pcr_bespoke
 LBB Ligation Tagged:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :parents:
-  - LBB Cherrypick
-  :expected_request_types:
-  - limber_pcr_free_bespoke
 LBB Chromium Tagged:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :parents:
-  - LBB Cherrypick
-  :expected_request_types:
-  - limber_chromium_bespoke
   :tags_per_well: 4
 LBB Lib-XP:
   :asset_type: plate
-  :parents:
-  - LBB Ligation Tagged
-  - LBB Chromium Tagged
-  :suggest_library_pass_for:
-  - limber_pcr_free_bespoke
-  - limber_chromium_bespoke
 LBB Lib Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -51,8 +31,3 @@ LBB Lib Pool Stock:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :expected_request_types:
-  - limber_multiplexing
-  :parents:
-  - LBB Lib-XP
-  - LBB Lib PCR-XP

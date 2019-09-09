@@ -88,8 +88,8 @@ RSpec.feature 'Multi plate pooling', js: true do
     create :purpose_config,
            creator_class: 'LabwareCreators::MultiPlatePool',
            name: 'Pool Plate',
-           parents: ['Pooled example'],
            uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Pooled example' => 'Pool Plate' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_v2_plate(example_plate)

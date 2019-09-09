@@ -10,7 +10,7 @@ RSpec.feature 'Viewing a plate', js: true do
   let(:plate_barcode)  { example_plate.barcode.machine }
   let(:plate_uuid)     { SecureRandom.uuid }
   let(:plate_state) { 'pending' }
-  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state }
+  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state, pool_sizes: [3] }
   let(:default_tube_printer) { 'tube printer 1' }
 
   # Setup stubs
@@ -19,8 +19,8 @@ RSpec.feature 'Viewing a plate', js: true do
     create :minimal_purpose_config, uuid: 'stock-plate-purpose-uuid'
     create :minimal_purpose_config,
            uuid: 'child-purpose-0',
-           name: 'Child Purpose 0',
-           parents: ['Limber Cherrypicked']
+           name: 'Child Purpose 0'
+    create :pipeline, relationships: { 'Limber Cherrypicked' => 'Child Purpose 0' }
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
