@@ -2,9 +2,11 @@
   <%= f.hidden_field :purpose_uuid %>
   <%= f.hidden_field :parent_uuid %>
   <%= f.fields_for(:filters) do |filter| %>
-    <% (creator_button.filters[:request_types]||[]).each do |request_type_key| %>
-      <%= filter.fields_for :request_type_keys do |request_types_form|%>
-        <%= request_types_form.hidden_field nil, value: request_type_key  %>
+    <% creator_button.filters.each do |filter_key, filter_values| %>
+      <%= filter.fields_for filter_key do |request_types_form|%>
+        <% filter_values.each do |filter_value| %>
+          <%= request_types_form.hidden_field nil, value: filter_value  %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

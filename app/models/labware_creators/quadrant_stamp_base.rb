@@ -28,6 +28,13 @@ module LabwareCreators
     self.target_rows = 16
     self.target_columns = 24
     self.source_plates = 4
+    self.attributes += [
+      {
+        transfers: [
+          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]
+        ]
+      }
+    ]
 
     private
 

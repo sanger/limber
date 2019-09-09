@@ -45,12 +45,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   # Setup stubs
   background do
     # Set-up the plate config
-
     create :purpose_config, uuid: 'stock-plate-purpose-uuid', name: 'Limber Cherrypicked'
     create :tagged_purpose_config,
            tag_layout_templates: acceptable_templates,
-           parents: ['Limber Cherrypicked'],
            uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Limber Cherrypicked' => 'Tag Purpose' }
+
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We get the actual plate

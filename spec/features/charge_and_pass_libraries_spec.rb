@@ -19,9 +19,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
   # Setup stubs
   background do
-    # Set-up the plate config
-    Settings.purposes['example-purpose-uuid'] = purpose_spec
-
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -29,9 +26,12 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'plate with no submissions to be made' do
+    before do
+      create :passable_plate, uuid: 'example-purpose-uuid'
+    end
+
     let(:labware_barcode) { example_plate_v2.labware_barcode.machine }
     let(:submissions) { ['pool-1-uuid', 'pool-2-uuid'] }
-    let(:purpose_spec) { build :passable_plate }
     let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8], include_submissions: true, well_factory: :v2_tagged_well }
 
     before do
@@ -48,12 +48,13 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'tube with submissions to be made' do
+    before do
+      create :passable_tube,
+             submission: { request_options: request_options, template_uuid: template_uuid },
+             uuid: 'example-purpose-uuid'
+    end
     let(:submissions) { [] }
     let(:request_options) { { read_length: '150' } }
-    let(:purpose_spec) do
-      build :passable_tube,
-            submission: { request_options: request_options, template_uuid: template_uuid }
-    end
     let(:labware_barcode) { example_tube_v2.labware_barcode.machine }
     let(:example_labware) { json :tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
     let(:example_tube_v2) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }

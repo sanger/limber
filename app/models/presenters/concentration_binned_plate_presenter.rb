@@ -9,24 +9,26 @@ module Presenters
   class ConcentrationBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
+    PLATE_WITH_QC_RESULTS_INCLUDES = 'wells.aliquots,wells.qc_results'
+
     self.summary_partial = 'labware/plates/concentration_binned_summary'
     self.aliquot_partial = 'concentration_binned_aliquot'
 
-    def binning_config
-      purpose_config.fetch(:concentration_binning)
+    def dilutions_config
+      purpose_config.fetch(:dilutions)
     end
 
-    def bin_calculator
-      @bin_calculator ||= Utility::ConcentrationBinningCalculator.new(binning_config)
+    def dilutions_calculator
+      @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
     end
 
     def bins_key
-      bin_calculator.bins_template
+      dilutions_calculator.bins_template
     end
 
     def plate_with_qc_results
       @plate_with_qc_results ||=
-        Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots,wells.qc_results', uuid: labware.uuid)
+        Sequencescape::Api::V2.plate_with_custom_includes(PLATE_WITH_QC_RESULTS_INCLUDES, uuid: labware.uuid)
     end
 
     def bin_details
@@ -36,7 +38,7 @@ module Presenters
     private
 
     def compute_bin_details
-      bin_calculator.compute_presenter_bin_details(plate_with_qc_results)
+      dilutions_calculator.compute_presenter_bin_details(plate_with_qc_results)
     end
   end
 end

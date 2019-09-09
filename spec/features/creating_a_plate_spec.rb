@@ -23,7 +23,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     [
       create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
       create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
-      create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
     ]
   end
 
@@ -63,13 +63,14 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
   end
 
-  let(:child_purpose_config) { { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'] } }
+  let(:filters) { {} }
 
   # Setup stubs
   background do
     # Set-up the plate config
     create :purpose_config, uuid: example_plate.purpose.uuid
-    create(:purpose_config, child_purpose_config)
+    create(:purpose_config, name: child_purpose_name, uuid: 'child-purpose-0')
+    create(:pipeline, relationships: { 'Limber Cherrypicked' => child_purpose_name }, filters: filters)
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
@@ -92,7 +93,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
         create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
-        create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
     # We'll eventually add in a disambiguation page here
@@ -106,16 +107,36 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
   end
 
-  context 'with multiple requests and config' do
-    let(:child_purpose_config) do
-      { name: child_purpose_name, uuid: 'child-purpose-0', parents: ['Limber Cherrypicked'], expected_request_types: ['rt_a'] }
+  context 'with multiple requests and config with request type filter' do
+    let(:filters) { { request_type_key: ['rt_a'] } }
+    let(:wells) do
+      [
+        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      ]
     end
+
+    scenario 'basic plate creation' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      plate_title = find('#plate-title')
+      expect(plate_title).to have_text('Limber Cherrypicked')
+      click_on('Add an empty Basic plate')
+      expect(page).to have_content('New empty labware added to the system.')
+    end
+  end
+
+  context 'with multiple requests and config with request and library type filters' do
+    let(:library_type_name) { 'LibTypeA' }
+    let(:filters) { { 'request_type_key' => ['rt_a'], 'library_type' => [library_type_name] } }
+    let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name }
+    let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name }
 
     let(:wells) do
       [
         create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
         create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
-        create(:v2_stock_well, uuid: '6-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 

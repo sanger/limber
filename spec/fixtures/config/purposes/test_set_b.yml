@@ -1,0 +1,48 @@
+---
+LB Lib PrePool:
+  :asset_type: plate
+  :stock_plate: false
+  :creator_class: LabwareCreators::MultiPlatePool
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :csv_template: 'show_extended'
+LB Hyb:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::BaitedPlate
+LB Cap Lib:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+LB Cap Lib PCR:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+LB Cap Lib PCR-XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+LB Cap Lib Pool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
+Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LB Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LB Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube

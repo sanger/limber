@@ -7,15 +7,9 @@ module Utility
   # the bins on the child plate.
   class ConcentrationBinningCalculator
     include ActiveModel::Model
+    include Utility::CommonDilutionCalculations
 
-    attr_reader :config
-
-    def initialize(config)
-      @config = Utility::ConcentrationBinningConfig.new(config)
-    end
-
-    delegate :to_bigdecimal, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
-             :source_multiplication_factor, :dest_multiplication_factor, to: :config
+    self.version = 'v1.0'
 
     # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
     def compute_well_amounts(plate, multiplication_factor)
@@ -23,7 +17,7 @@ module Utility
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = to_bigdecimal(well.latest_concentration.value) * to_bigdecimal(multiplication_factor)
+        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
       end
     end
 
@@ -38,33 +32,12 @@ module Utility
       build_transfers_hash(conc_bins, number_of_rows, compression_reqd)
     end
 
-    # Refactor the transfers hash to give destination concentrations
-    def compute_destination_concentrations(transfers_hash)
-      transfers_hash.values.each_with_object({}) do |dest_details, dest_hash|
-        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
-      end
-    end
-
     # This is used by the plate presenter.
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
     # and number of PCR cycles.
     def compute_presenter_bin_details(plate)
       well_amounts = compute_well_amounts(plate, dest_multiplication_factor)
       compute_bin_details_by_well(well_amounts)
-    end
-
-    def compute_bin_details_by_well(well_amounts)
-      well_amounts.each_with_object({}) do |(well_locn, amount), well_colours|
-        bins_template.each do |bin_template|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
-
-          well_colours[well_locn] = {
-            'colour' => bin_template['colour'],
-            'pcr_cycles' => bin_template['pcr_cycles']
-          }
-          break
-        end
-      end
     end
 
     private
@@ -74,51 +47,35 @@ module Utility
       conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
       well_amounts.each do |well_locn, amount|
         bins_template.each_with_index do |bin_template, bin_index|
-          next unless amount > bin_template['min'] && amount <= bin_template['max']
+          next unless (bin_template['min']...bin_template['max']).cover?(amount)
 
-          dest_conc_bd = (amount / (source_volume + diluent_volume)).round(3)
-          conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc_bd.to_s }
+          # NB. we do not round the destination concentration so the full number is written in the qc_results to avoid
+          # rounding errors causing the presenter to display some wells as being in different bins.
+          dest_conc = (amount / (source_volume + diluent_volume))
+          conc_bins[bin_index + 1] << { 'locn' => well_locn, 'dest_conc' => dest_conc.to_s }
           break
         end
       end
       conc_bins
     end
 
-    # Determines whether compression is required, or if we can start a new column per bin.
-    # This is preferred because the user is working in a special strip tube plate (part of reagent kit)
-    # which will be split to different PCR blocks to run for different numbers of cycles.
-    def compression_required?(bins, number_of_rows, number_of_columns)
-      columns_reqd = 0
-      bins.each do |_bin_number, bin|
-        columns_reqd += bin.length.fdiv(number_of_rows).ceil unless bin.length.zero?
-      end
-      columns_reqd > number_of_columns
-    end
-
-    # Builds a hash of transfers, including destination concentration information.
+    # Build the transfers hash, cycling through the bins and their wells and locating them onto the
+    # child plate.
     def build_transfers_hash(bins, number_of_rows, compression_reqd)
-      column = 0
-      row = 0
-      bins.values.each_with_object({}) do |bin, transfers_hash|
+      binner = Binner.new(compression_reqd, number_of_rows)
+      bins.values.each_with_object({}).with_index do |(bin, transfers_hash), bin_index_within_bins|
         next if bin.length.zero?
 
         # TODO: we may want to sort the bin here, e.g. by concentration
-        bin.each do |well|
+        bin.each_with_index do |well, well_index_within_bin|
           src_locn = well['locn']
           transfers_hash[src_locn] = {
-            'dest_locn' => WellHelpers.well_name(row, column),
+            'dest_locn' => WellHelpers.well_name(binner.row, binner.column),
             'dest_conc' => well['dest_conc']
           }
-          if row == (number_of_rows - 1)
-            row = 0
-            column += 1
-          else
-            row += 1
-          end
-        end
-        unless compression_reqd
-          row = 0
-          column += 1
+          # work out what the next row and column will be
+          finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+          binner.next_well_location(well_index_within_bin, bin.size) unless finished
         end
       end
     end

@@ -1,0 +1,8 @@
+# WIP: Initial step of pipeline only
+---
+Bespoke Chromium BCR:
+  filters:
+    request_type_key: limber_chromium_bespoke
+    library_type: Chromium single cell BCR
+  relationships:
+    LBC Cherrypick: LBC BCR Dil 1

@@ -8,6 +8,7 @@ class Presenters::PlatePresenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
+  include Presenters::CreationBehaviour
 
   class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
 
@@ -80,11 +81,8 @@ class Presenters::PlatePresenter
   end
 
   def csv_file_links
-    links = []
-    if purpose_config.present? && purpose_config.file_links.present?
-      purpose_config.file_links.each do |link|
-        links << [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
-      end
+    links = purpose_config.fetch(:file_links, []).map do |link|
+      [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
     end
     links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
     links
@@ -137,12 +135,6 @@ class Presenters::PlatePresenter
   def passable_request_types
     wells.flat_map do |well|
       well.requests_in_progress.select(&:passable?).map(&:request_type_key)
-    end
-  end
-
-  def active_request_types
-    wells.flat_map do |well|
-      well.active_requests.map(&:request_type_key)
     end
   end
 end

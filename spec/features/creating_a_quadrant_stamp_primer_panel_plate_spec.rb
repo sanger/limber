@@ -85,18 +85,21 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
                   body: '{}')
   end
 
+  let(:parent1_plate_old_api) { json(:plate, barcode_number: '2', state: 'passed', uuid: parent_uuid) }
+
   background do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     create :purpose_config, name: 'Primer Panel example', uuid: parent_purpose_uuid
     create :purpose_config,
            creator_class: 'LabwareCreators::QuadrantStampPrimerPanel',
            name: child_purpose_name,
-           parents: ['Primer Panel example'],
            uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Primer Panel example' => child_purpose_name }
     stub_swipecard_search(user_swipecard, user)
     stub_v2_plate(parent)
     stub_v2_plate(parent2)
     stub_v2_plate(child_plate)
+    stub_api_get(parent.uuid, body: parent1_plate_old_api)
   end
 
   scenario 'creates multiple plates' do

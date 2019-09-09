@@ -80,10 +80,26 @@ FactoryBot.define do
 
     factory :v2_well_with_transfer_requests do
       transient do
+        transfer_request_as_source_volume { 10.0 }
         transfer_request_as_source_target_asset { :v2_well }
-        transfer_requests_as_source { [create(:v2_transfer_request, source_asset: nil, target_asset: transfer_request_as_source_target_asset)] }
+        transfer_requests_as_source do
+          [create(
+            :v2_transfer_request,
+            source_asset: nil,
+            target_asset: transfer_request_as_source_target_asset,
+            volume: transfer_request_as_source_volume
+          )]
+        end
+        transfer_request_as_target_volume { 10.0 }
         transfer_request_as_target_source_asset { :v2_well }
-        transfer_requests_as_target { [create(:v2_transfer_request, source_asset: transfer_request_as_target_source_asset, target_asset: nil)] }
+        transfer_requests_as_target do
+          [create(
+            :v2_transfer_request,
+            source_asset: transfer_request_as_target_source_asset,
+            target_asset: nil,
+            volume: transfer_request_as_target_volume
+          )]
+        end
       end
 
       after(:build) do |well, evaluator|

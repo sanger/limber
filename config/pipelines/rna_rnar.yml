@@ -1,0 +1,14 @@
+---
+RNA Ribo:
+  filters:
+    request_type_key: limber_rnar
+    library_type: RNA Ribo
+  library_pass: LB Lib PCR-XP
+  relationships:
+    LBR Cherrypick: LBR Ribo DNase
+    LBR Ribo DNase: LBR Frag cDNA
+    LBR Frag cDNA: LB cDNA XP
+    LB cDNA XP: LB End Prep
+    LB End Prep: LB Lib PCR
+    LB Lib PCR: LB Lib PCR-XP
+# Then feeds into the standard limber_multiplexing
