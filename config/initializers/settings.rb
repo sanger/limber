@@ -19,6 +19,8 @@ class Settings
       # Immutability is good here though, so we should probably fix that.
       # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
       @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol], [], true))
+      @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
+      @instance
     rescue Errno::ENOENT
       star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)
@@ -32,5 +34,4 @@ class Settings
 end
 
 Settings.instance
-Settings.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
 # rubocop:enable Style/StderrPuts
