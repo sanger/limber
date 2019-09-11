@@ -40,7 +40,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB Lib PCR', bed(6)
   end
 
-  custom_robot('lib-pcr-purification',
+  custom_robot('bravo-lib-pcr-purification',
                name: 'bravo LB Lib PCR => LB Lib PCR XP',
                verify_robot: false,
                beds: {
@@ -79,6 +79,28 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                   states: ['pending'],
                   label: 'Bed 12',
                   parent: bed(4).barcode,
+                  target_state: 'passed' }
+               })
+
+  custom_robot('star-96-lib-pcr-purification',
+               name: 'STAR-96 LB Lib PCR => LB Lib PCR-XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 7' },
+                 bed(9).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 9',
+                  parent: bed(7).barcode,
+                  target_state: 'passed' },
+                 bed(12).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 12' },
+                 bed(14).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 14',
+                  parent: bed(12).barcode,
                   target_state: 'passed' }
                })
 
@@ -145,6 +167,28 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     from 'LB Cap Lib PCR', bed(1)
     to 'LB Cap Lib PCR-XP', bed(9)
   end
+
+  custom_robot('star-96-post-cap-pcr-purification',
+               name: 'STAR-96 LB Cap Lib PCR => LB Cap Lib PCR-XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                 purpose: 'LB Cap Lib PCR',    states: ['passed'],  label: 'Bed 7' },
+                 bed(9).barcode => {
+                  purpose: 'LB Cap Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 9',
+                  parent: bed(7).barcode,
+                  target_state: 'passed' },
+                 bed(12).barcode => {
+                  purpose: 'LB Cap Lib PCR',    states: ['passed'],  label: 'Bed 12' },
+                 bed(14).barcode => {
+                  purpose: 'LB Cap Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 14',
+                  parent: bed(12).barcode,
+                  target_state: 'passed' }
+               })
 
   simple_robot('nx-8') do
     from 'LB Cap Lib PCR-XP', bed(4)
