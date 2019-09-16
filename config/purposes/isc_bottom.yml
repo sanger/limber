@@ -25,6 +25,13 @@ LB Cap Lib Pool:
   :default_printer_type: :plate_b
   :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'
+Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
 LB Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

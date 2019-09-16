@@ -28,5 +28,5 @@ ISC MX:
     - limber_multiplexing
   relationships:
     LB Cap Lib PCR-XP: LB Cap Lib Pool
-    LB Cap Lib Pool: LB Lib Pool Norm
+    LB Cap Lib Pool: Cap Lib Pool Norm
 
