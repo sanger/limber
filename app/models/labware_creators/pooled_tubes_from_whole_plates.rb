@@ -55,7 +55,7 @@ module LabwareCreators
     end
 
     def parents_suitable
-      missing_barcodes = barcodes - parents.map { |p| p.barcode.ean13 }
+      missing_barcodes = barcodes - parents.map { |p| p.barcode.machine }
       errors.add(:barcodes, "could not be found: #{missing_barcodes}") unless missing_barcodes.empty?
     end
 
