@@ -12,11 +12,11 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
-      ['Barcode', 'DN1S <em>1220000001831</em>'],
+      %w[Barcode DN1S],
       ['Number of wells', '4/96'],
       ['Plate type', purpose_name],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN2T <em>1220000002845</em>'],
+      ['Input plate barcode', 'DN2T'],
       ['PCR Cycles', '10'],
       ['Created on', '2019-06-10']
     ]
