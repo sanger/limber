@@ -67,6 +67,8 @@ LBC TCR Post PCR:
   :presenter_class: Presenters::StandardPresenter
   :parents:
   - LBC TCR Post Lig 1XSPRI
+  :suggest_library_pass_for:
+  - limber_chromium_bespoke
   :file_links:
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
