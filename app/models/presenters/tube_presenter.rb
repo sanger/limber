@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+# Basic core presenter for tubes
 module Presenters
   class TubePresenter
-    include Presenter
+    include Presenters::Presenter
     include Statemachine::Shared
+    include Presenters::CreationBehaviour
     include RobotControlled
 
     self.summary_items = {

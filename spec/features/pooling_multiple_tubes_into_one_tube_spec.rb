@@ -129,8 +129,9 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     create :tube_config, name: parent_purpose_name, uuid: 'example-purpose-uuid'
     create :pooled_tube_from_tubes_purpose_config,
            uuid: purpose_uuid,
-           parents: [parent_purpose_name],
+           name: 'Pool tube',
            submission: { template_uuid: template_uuid, options: { read_length: 150 } }
+    create :pipeline, relationships: { parent_purpose_name => 'Pool tube' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_v2_tube(example_v2_tube)

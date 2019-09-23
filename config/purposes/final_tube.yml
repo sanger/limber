@@ -7,13 +7,3 @@ LB Lib Pool Norm:
   :creator_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
-  :parents:
-  - LB Lib Pool
-  - GnT Pico Lib Pool XP
-  - scRNA Lib Pool XP
-  - scRNA-384 Lib Pool XP
-  - LBB Lib Pool Stock
-  - LBC 3pV3 GLibPS
-  - LBC 5p GLibPS
-  - LBC BCR LibPS
-  - LBC TCR LibPS

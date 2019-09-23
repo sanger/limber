@@ -8,6 +8,7 @@ class Presenters::PlatePresenter
   include PlateWalking
   include Presenters::RobotControlled
   include Presenters::ExtendedCsv
+  include Presenters::CreationBehaviour
 
   class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
 
@@ -135,14 +136,5 @@ class Presenters::PlatePresenter
     wells.flat_map do |well|
       well.requests_in_progress.select(&:passable?).map(&:request_type_key)
     end
-  end
-
-  def active_request_types
-    labware.active_requests.map(&:request_type_key)
-  end
-
-  # Active requests may or may not have library types
-  def active_library_types
-    labware.active_requests.map(&:library_type).compact
   end
 end

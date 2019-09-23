@@ -1,0 +1,32 @@
+---
+ISC:
+  filters:
+    request_type_key:
+    - limber_isc
+    - limber_reisc # Typically reISC begins on LB Lib PCR-XP
+    library_type: # Taken from the library types on the above request types
+    - Agilent Pulldown
+    - Twist Pulldown
+  library_pass:
+  - LB Cap Lib PCR-XP
+  - LB Cap Lib Pool
+  relationships:
+    LB Cherrypick: LB Shear
+    LB Shear: LB Post Shear
+    LB Post Shear: LB End Prep
+    LB End Prep: LB Lib PCR
+    LB Lib PCR: LB Lib PCR-XP
+    LB Lib PCR-XP: LB Lib PrePool
+    LB Lib PrePool: LB Hyb
+    LB Hyb: LB Cap Lib
+    LB Cap Lib: LB Cap Lib PCR
+    LB Cap Lib PCR: LB Cap Lib PCR-XP
+    LB Cap Lib PCR-XP: LB Cap Lib Pool
+ISC MX:
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    LB Cap Lib PCR-XP: LB Cap Lib Pool
+    LB Cap Lib Pool: Cap Lib Pool Norm
+

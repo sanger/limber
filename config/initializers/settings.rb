@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'config_loader/pipelines_loader'
+
 # This is used as part of a take task, and will be run within a console.
 # rubocop:disable Style/StderrPuts
 class Settings
@@ -17,6 +19,8 @@ class Settings
       # Immutability is good here though, so we should probably fix that.
       # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
       @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol], [], true))
+      @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
+      @instance
     rescue Errno::ENOENT
       star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)

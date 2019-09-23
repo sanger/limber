@@ -41,8 +41,8 @@ RSpec.feature 'Failing wells', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    Settings.purposes['stock-plate-purpose-uuid'] = build :purpose_config
-    Settings.purposes['child-purpose-0'] = build :purpose_config
+    create :purpose_config, uuid: 'stock-plate-purpose-uuid'
+    create :purpose_config, uuid: 'child-purpose-0'
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We get the actual plate
