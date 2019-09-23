@@ -29,7 +29,7 @@ RSpec.describe Presenters::FinalTubePresenter do
       ['Barcode', 'NT6T <em>3980000006844</em>'],
       ['Tube type', purpose_name],
       ['Current tube state', state],
-      ['Input plate barcode', 'DN2T <em>1220000002845</em>'],
+      ['Input plate barcode', 'DN2T'],
       ['Created on', '2016-10-19']
     ]
   end

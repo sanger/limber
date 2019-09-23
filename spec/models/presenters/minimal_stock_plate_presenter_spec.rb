@@ -19,7 +19,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
-  let(:barcode_string) { 'DN1S <em>1220000001831</em>' }
+  let(:barcode_string) { 'DN1S' }
   let(:summary_tab) do
     [
       ['Barcode', barcode_string],
@@ -48,7 +48,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
                        bottom_left: 'DN1S',
                        top_right: 'DN1S',
                        bottom_right: 'WGS Limber example purpose',
-                       barcode: '1220000001831' }
+                       barcode: 'DN1S' }
     expect(subject.label.attributes).to eq(expected_label)
   end
 

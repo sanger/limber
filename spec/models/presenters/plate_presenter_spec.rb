@@ -12,11 +12,11 @@ RSpec.describe Presenters::PlatePresenter do
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
-      ['Barcode', 'DN1S <em>1220000001831</em>'],
+      %w[Barcode DN1S],
       ['Number of wells', '96/96'],
       ['Plate type', purpose_name],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN2T <em>1220000002845</em>'],
+      ['Input plate barcode', 'DN2T'],
       ['PCR Cycles', '10'],
       ['Created on', '2016-10-19']
     ]
@@ -52,7 +52,7 @@ RSpec.describe Presenters::PlatePresenter do
                          bottom_left: 'DN1S',
                          top_right: 'DN2T',
                          bottom_right: "WGS #{purpose_name}",
-                         barcode: '1220000001831' }
+                         barcode: 'DN1S' }
       expect(presenter.label.attributes).to eq(expected_label)
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe Presenters::PlatePresenter do
       expected_label = {
         attributes: { right_text: 'DN2T',
                       left_text: 'DN1S',
-                      barcode: '1220000001831' },
+                      barcode: 'DN1S' },
         extra_attributes: { right_text: "DN2T WGS #{purpose_name}",
                             left_text: Time.zone.today.strftime('%e-%^b-%Y') }
       }
