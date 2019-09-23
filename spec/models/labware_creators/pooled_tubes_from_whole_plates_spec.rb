@@ -27,17 +27,17 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   let(:parent2_uuid)  { SecureRandom.uuid }
   let(:parent3_uuid)  { SecureRandom.uuid }
   let(:parent4_uuid)  { SecureRandom.uuid }
-  let(:parent) { associated :plate, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent)        { associated :plate, uuid: parent_uuid, barcode_number: 1 }
   let(:parent2)       { associated :plate, uuid: parent2_uuid, barcode_number: 2 }
   let(:parent3)       { associated :plate, uuid: parent3_uuid, barcode_number: 3 }
   let(:parent4)       { associated :plate, uuid: parent4_uuid, barcode_number: 4 }
 
   let(:barcodes) do
     [
-      SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s,
-      SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s,
-      SBCF::SangerBarcode.new(prefix: 'DN', number: 3).machine_barcode.to_s,
-      SBCF::SangerBarcode.new(prefix: 'DN', number: 4).machine_barcode.to_s
+      SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode,
+      SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode,
+      SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode,
+      SBCF::SangerBarcode.new(prefix: 'DN', number: 4).human_barcode
     ]
   end
 

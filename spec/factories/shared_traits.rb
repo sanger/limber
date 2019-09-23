@@ -45,10 +45,18 @@ FactoryBot.define do
     transient do
       barcode_number
       ean13 { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).machine_barcode.to_s }
+      human_barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).human_barcode }
     end
 
     barcode do
-      { 'ean13' => ean13, 'number' => barcode_number.to_s, 'prefix' => barcode_prefix, 'two_dimensional' => nil, 'type' => barcode_type }
+      {
+        'ean13' => ean13,
+        'number' => barcode_number.to_s,
+        'prefix' => barcode_prefix,
+        'two_dimensional' => nil,
+        'type' => barcode_type,
+        'machine' => human_barcode
+      }
     end
   end
 
@@ -62,7 +70,8 @@ FactoryBot.define do
     labware_barcode do
       {
         'ean13_barcode' => barcode.machine_barcode,
-        'human_barcode' => barcode.human_barcode
+        'human_barcode' => barcode.human_barcode,
+        'machine_barcode' => barcode.human_barcode # Mimics a code39 printed barcode
       }
     end
   end
