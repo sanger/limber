@@ -91,6 +91,16 @@ FactoryBot.define do
       end
     end
 
+    factory :concentration_normalisation_purpose_config do
+      dilutions do
+        {
+          target_amount_ng: 50,
+          target_volume: 20,
+          minimum_source_volume: 0.2
+        }
+      end
+    end
+
     factory :aggregation_purpose_config do
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
       work_completion_request_type { 'limber_bespoke_aggregation' }

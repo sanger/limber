@@ -38,8 +38,8 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
     create :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
                          name: 'Final Tube Purpose',
                          creator_class: 'LabwareCreators::FinalTube',
-                         parents: ['Example Purpose'],
                          uuid: child_purpose_uuid
+    create :pipeline, relationships: { 'Example Purpose' => 'Final Tube Purpose' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We get the actual tube

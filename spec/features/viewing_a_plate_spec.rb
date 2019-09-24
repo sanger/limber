@@ -20,7 +20,8 @@ RSpec.feature 'Viewing a plate', js: true do
   background do
     # Set-up the plate config
     purpose_config
-    create :purpose_config, name: 'Child Purpose 0', parents: ['Limber Cherrypicked'], uuid: 'child-purpose-0'
+    create :purpose_config, name: 'Child Purpose 0', uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Limber Cherrypicked' => 'Child Purpose 0' }
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user

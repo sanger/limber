@@ -1,9 +1,0 @@
-<%# This is a picking file for a Hamilton robot for plate to plate transfers %>
-<%= CSV.generate_line [
-                        'Workflow',
-                        '10X Post Repair Double SPRI'
-                      ],
-                      row_sep: ""
-%>
-<%= render(partial: 'plate_stamp_columns_header') %>
-<%= render(partial: 'plate_stamp_rows_to_csv', locals: { plate: @plate }) %>

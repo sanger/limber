@@ -18,9 +18,7 @@ RSpec.describe TubeCreationController, type: :controller do
 
   context 'for a tube with an automatic form' do
     setup do
-      Settings.purposes[child_purpose_uuid] = {
-        creator_class: 'LabwareCreators::PooledTubesBySubmission'
-      }
+      create :purpose_config, creator_class: 'LabwareCreators::PooledTubesBySubmission', uuid: child_purpose_uuid
     end
 
     describe '#new' do

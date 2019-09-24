@@ -5,12 +5,6 @@ LBC 3pV3 GEX Dil:
   :asset_type: plate
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
-  :parents:
-  - LBC Cherrypick
-  :expected_request_types:
-  - limber_chromium_bespoke
-  :expected_library_types:
-  - Chromium single cell 3 prime v3
   :dilutions:
     :source_volume: 10
     :diluent_volume: 25
@@ -36,9 +30,6 @@ LBC 3pV3 GEX Dil:
     id: concentrations_ngul
 LBC 3pV3 GEX Frag 2XP:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
-  :parents:
-  - LBC 3pV3 GEX Dil
   :file_links:
   - name: 'Download Hamilton Dilution to Frag 2XP CSV'
     id: 'hamilton_gex_dil_to_gex_frag_2xp'
@@ -46,8 +37,6 @@ LBC 3pV3 GEX LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :parents:
-  - LBC 3pV3 GEX Frag 2XP
   :tags_per_well: 4
   :file_links:
   - name: 'Download Hamilton Frag 2XP to LigXP CSV'
@@ -57,10 +46,6 @@ LBC 3pV3 GEX PCR 2XP:
   :presenter_class: Presenters::PcrPresenter
   :default_printer_type: :plate_b
   :label_template: plate_xp
-  :parents:
-  - LBC 3pV3 GEX LigXP
-  :suggest_library_pass_for:
-  - limber_chromium_bespoke
   :file_links:
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
@@ -71,7 +56,3 @@ LBC 3pV3 GLibPS:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :expected_request_types:
-  - limber_multiplexing
-  :parents:
-  - LBC 3pV3 GEX PCR 2XP

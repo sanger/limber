@@ -1,0 +1,40 @@
+---
+scRNA 96:
+  filters:
+    request_type_key: limber_scrna
+    library_type:
+    - scRNA
+    - GnT scRNA
+  library_pass: scRNA Lib PCR
+  relationships:
+    scRNA Stock: scRNA cDNA-XP
+    GnT Stock: scRNA cDNA-XP
+    scRNA cDNA-XP: scRNA End Prep
+    scRNA End Prep: scRNA Lib PCR
+scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    scRNA Lib PCR: scRNA Lib Pool
+    scRNA Lib Pool: scRNA Lib Pool XP
+    scRNA Lib Pool XP: LB Lib Pool Norm
+scRNA 384:
+  filters:
+    request_type_key:
+    - limber_scrna
+    library_type:
+    - scRNA
+    - GnT scRNA
+  library_pass: scRNA-384 Lib PCR
+  relationships:
+    scRNA-384 Stock: scRNA-384 cDNA-XP
+    scRNA-384 cDNA-XP: scRNA-384 End Prep
+    scRNA-384 End Prep: scRNA-384 Lib PCR
+scRNA 384 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    scRNA-384 Lib PCR: scRNA-384 Lib Pool XP
+    scRNA-384 Lib Pool XP: LB Lib Pool Norm

@@ -9,7 +9,7 @@ RSpec.feature 'Multi plate pooling', js: true do
   let(:user)              { create :user, uuid: user_uuid }
   let(:user_swipecard)    { 'abcdef' }
 
-  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
   let(:plate_uuid)        { 'plate-1-uuid' }
   let(:example_plate)     do
     create :v2_plate_for_pooling,
@@ -21,7 +21,7 @@ RSpec.feature 'Multi plate pooling', js: true do
            purpose_uuid: 'stock-plate-purpose-uuid'
   end
 
-  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
   let(:plate_uuid_2)      { 'plate-2-uuid' }
   let(:example_plate_2)   do
     create :v2_plate_for_pooling,
@@ -88,8 +88,8 @@ RSpec.feature 'Multi plate pooling', js: true do
     create :purpose_config,
            creator_class: 'LabwareCreators::MultiPlatePool',
            name: 'Pool Plate',
-           parents: ['Pooled example'],
            uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'Pooled example' => 'Pool Plate' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_v2_plate(example_plate)

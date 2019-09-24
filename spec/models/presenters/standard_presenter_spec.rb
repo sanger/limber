@@ -54,14 +54,17 @@ RSpec.describe Presenters::StandardPresenter do
 
   context 'when passed' do
     before do
-      Settings.purposes = {
-        'child-purpose' => build(:purpose_config, name: 'Child purpose', parents: [purpose_name]),
-        'child-purpose-2' => build(:purpose_config, name: 'Child purpose 2', parents: [purpose_name], expected_request_types: ['limber_multiplexing']),
-        'other-purpose' => build(:purpose_config, name: 'Other purpose'),
-        'other-purpose-2' => build(:purpose_config, name: 'Other purpose 2', parents: [purpose_name], expected_request_types: ['other_type']),
-        'tube-purpose' => build(:tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate'),
-        'incompatible-tube-purpose' => build(:tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube')
-      }
+      create :pipeline, relationships: { purpose_name => 'Child purpose' }
+      create :pipeline, relationships: { purpose_name => 'Child purpose 2' },
+                        filters: { 'request_type_key' => ['limber_multiplexing'] }
+      create :pipeline, relationships: { purpose_name => 'Other purpose 2' },
+                        filters: { 'request_type_key' => ['other_type'] }
+      create :purpose_config, name: 'Child purpose', uuid: 'child-purpose'
+      create :purpose_config, name: 'Child purpose 2', uuid: 'child-purpose-2'
+      create :purpose_config, name: 'Other purpose', uuid: 'other-purpose'
+      create :purpose_config, name: 'Other purpose 2', uuid: 'other-purpose-2'
+      create :tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate', uuid: 'tube-purpose'
+      create :tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube', uuid: 'incompatible-tube-purpose'
     end
 
     let(:state) { 'passed' }
@@ -115,7 +118,8 @@ RSpec.describe Presenters::StandardPresenter do
 
     describe '#control_library_passing' do
       before do
-        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+        create :pipeline, filters: { 'request_type_key' => suggest_passes }, library_pass: 'Example purpose'
+        create(:purpose_config, name: 'Example purpose', uuid: 'test-purpose')
       end
 
       context 'tagged' do
@@ -125,6 +129,7 @@ RSpec.describe Presenters::StandardPresenter do
           let(:state) { 'passed' }
 
           context 'when not suggested' do
+            let(:suggest_passes) { ['other_pipeline'] }
             it 'supports passing' do
               expect { |b| subject.control_library_passing(&b) }.to yield_control
             end
@@ -159,7 +164,8 @@ RSpec.describe Presenters::StandardPresenter do
     describe '#control_suggested_library_passing' do
       let(:aliquot_type) { :v2_tagged_aliquot }
       before do
-        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
       let(:suggest_passes) { ['limber_wgs'] }
       context 'and passed' do
@@ -199,7 +205,8 @@ RSpec.describe Presenters::StandardPresenter do
 
     describe '#control_library_passing' do
       before do
-        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
 
       context 'tagged' do
@@ -243,7 +250,8 @@ RSpec.describe Presenters::StandardPresenter do
     describe '#control_suggested_library_passing' do
       let(:aliquot_type) { :v2_tagged_aliquot }
       before do
-        create(:purpose_config, suggest_library_pass_for: suggest_passes, uuid: 'test-purpose')
+        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
       let(:suggest_passes) { ['limber_wgs'] }
       context 'and passed' do

@@ -10,12 +10,11 @@ RSpec.feature 'Viewing an inbox', js: true do
 
   background do
     stub_swipecard_search(user_swipecard, user)
-    Settings.purposes = {
-      'uuid-1' => build(:purpose_config),
-      'uuid-2' => build(:minimal_purpose_config),
-      'uuid-3' => build(:tube_config),
-      'uuid-4' => build(:tube_config)
-    }
+    create(:purpose_config, uuid: 'uuid-1')
+    create(:minimal_purpose_config, uuid: 'uuid-2')
+    create(:tube_config, uuid: 'uuid-3')
+    create(:tube_config, uuid: 'uuid-4')
+
     stub_search_and_multi_result(
       'Find plates',
       { 'search' => {

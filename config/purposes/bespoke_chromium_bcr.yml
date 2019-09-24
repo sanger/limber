@@ -3,14 +3,7 @@
 ---
 LBC BCR Dil 1:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::FixedNormalisedPlate
-  :parents:
-  - LBC Cherrypick
-  :expected_request_types:
-  - limber_chromium_bespoke
-  :expected_library_types:
-  - Chromium single cell BCR
   :dilutions:
     :source_volume: 2
     :diluent_volume: 33
@@ -19,3 +12,47 @@ LBC BCR Dil 1:
     id: 'hamilton_cherrypick_to_bcr_dilution1'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
+LBC BCR Enrich1 1XSPRI:
+  :asset_type: plate
+  :file_links:
+  - name: 'Download Hamilton BCR Dil 1 to BCR Enrich1 1XSPRI CSV'
+    id: 'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri'
+LBC BCR Enrich2 2XSPRI:
+  :asset_type: plate
+  :file_links:
+  - name: 'Download Hamilton BCR Enrich1 1XSPRI to BCR Enrich2 2XSPRI CSV'
+    id: 'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC BCR Dil 2:
+  :asset_type: plate
+  :creator_class: LabwareCreators::ConcentrationNormalisedPlate
+  :dilutions:
+    :target_amount_ng: 50
+    :target_volume: 20
+    :minimum_source_volume: 0.2
+  :file_links:
+  - name: 'Download Hamilton BCR Enrich2 2XSPRI to BCR Dil 2 CSV'
+    id: 'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC BCR Post Lig 1XSPRI:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 4
+  :file_links:
+  - name: 'Download Hamilton BCR Dil 2 to BCR Post Lig 1XSPRI CSV'
+    id: 'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri'
+LBC BCR Post PCR:
+  :asset_type: plate
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC BCR LibPS:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

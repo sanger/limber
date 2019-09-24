@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object barcoded] do
+  factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object ean13_barcoded] do
     json_root { 'multiplexed_library_tube' }
 
     transient do
@@ -31,7 +31,7 @@ FactoryBot.define do
     updated_at { Time.current }
     state { 'pending' }
 
-    factory :tube, class: Limber::Tube, traits: %i[api_object barcoded] do
+    factory :tube, class: Limber::Tube, traits: %i[api_object ean13_barcoded] do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }
@@ -49,12 +49,12 @@ FactoryBot.define do
         end
       end
 
-      factory :tube_without_siblings, traits: %i[api_object barcoded] do
+      factory :tube_without_siblings, traits: %i[api_object ean13_barcoded] do
         json_root { 'tube' }
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
       end
 
-      factory :tube_with_siblings, traits: %i[api_object barcoded] do
+      factory :tube_with_siblings, traits: %i[api_object ean13_barcoded] do
         json_root { 'tube' }
         transient do
           siblings_count { 1 }
@@ -78,7 +78,7 @@ FactoryBot.define do
     end
   end
 
-  factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:barcoded_v2] do
+  factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
     skip_create
     sequence(:id, &:to_s)
     uuid { SecureRandom.uuid }

@@ -40,7 +40,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     to 'LB Lib PCR', bed(6)
   end
 
-  custom_robot('lib-pcr-purification',
+  custom_robot('bravo-lib-pcr-purification',
                name: 'bravo LB Lib PCR => LB Lib PCR XP',
                verify_robot: false,
                beds: {
@@ -79,6 +79,28 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                   states: ['pending'],
                   label: 'Bed 12',
                   parent: bed(4).barcode,
+                  target_state: 'passed' }
+               })
+
+  custom_robot('star-96-lib-pcr-purification',
+               name: 'STAR-96 LB Lib PCR => LB Lib PCR-XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 7' },
+                 bed(9).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 9',
+                  parent: bed(7).barcode,
+                  target_state: 'passed' },
+                 bed(12).barcode => {
+                  purpose: 'LB Lib PCR',    states: ['passed'],  label: 'Bed 12' },
+                 bed(14).barcode => {
+                  purpose: 'LB Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 14',
+                  parent: bed(12).barcode,
                   target_state: 'passed' }
                })
 
@@ -145,6 +167,28 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     from 'LB Cap Lib PCR', bed(1)
     to 'LB Cap Lib PCR-XP', bed(9)
   end
+
+  custom_robot('star-96-post-cap-pcr-purification',
+               name: 'STAR-96 LB Cap Lib PCR => LB Cap Lib PCR-XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                 purpose: 'LB Cap Lib PCR',    states: ['passed'],  label: 'Bed 7' },
+                 bed(9).barcode => {
+                  purpose: 'LB Cap Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 9',
+                  parent: bed(7).barcode,
+                  target_state: 'passed' },
+                 bed(12).barcode => {
+                  purpose: 'LB Cap Lib PCR',    states: ['passed'],  label: 'Bed 12' },
+                 bed(14).barcode => {
+                  purpose: 'LB Cap Lib PCR-XP',
+                  states: ['pending'],
+                  label: 'Bed 14',
+                  parent: bed(12).barcode,
+                  target_state: 'passed' }
+               })
 
   simple_robot('nx-8') do
     from 'LB Cap Lib PCR-XP', bed(4)
@@ -1190,46 +1234,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  # For Chromium 10x pipeline cherrypick to TCR Dil 1 plate
-  custom_robot(
-    'hamilton-lbc-cherrypick-to-lbc-tcr-dil-1',
-    name: 'hamilton LBC Cherrypick => LBC TCR Dil 1',
-    beds: {
-      bed(13).barcode => {
-        purpose: 'LBC Cherrypick',
-        states: ['passed'],
-        label: 'Bed 13'
-      },
-      bed(3).barcode => {
-        purpose: 'LBC TCR Dil 1',
-        states: ['pending'],
-        label: 'Bed 3',
-        target_state: 'passed',
-        parent: bed(13).barcode
-      }
-    }
-  )
-
-  # For Chromium 10x pipeline cherrypick to BCR Dil 1 plate
-  custom_robot(
-    'hamilton-lbc-cherrypick-to-lbc-bcr-dil-1',
-    name: 'hamilton LBC Cherrypick => LBC BCR Dil 1',
-    beds: {
-      bed(13).barcode => {
-        purpose: 'LBC Cherrypick',
-        states: ['passed'],
-        label: 'Bed 13'
-      },
-      bed(3).barcode => {
-        purpose: 'LBC BCR Dil 1',
-        states: ['pending'],
-        label: 'Bed 3',
-        target_state: 'passed',
-        parent: bed(13).barcode
-      }
-    }
-  )
-
   # For Chromium 10x pipeline 5p dilution to frag 2xp
   custom_robot(
     'hamilton-lbc-5p-gex-dil-to-lbc-5p-gex-frag-2xp',
@@ -1260,6 +1264,190 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 13' },
       bed(3).barcode => {
         purpose: 'LBC 5p GEX LigXP',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # Robots for Chromium 10x pipeline 5p TCR route
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-tcr-dil-1',
+    name: 'hamilton LBC Cherrypick => LBC TCR Dil 1',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13'
+      },
+      bed(3).barcode => {
+        purpose: 'LBC TCR Dil 1',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-tcr-dil-1-to-lbc-tcr-enrich1-1xspri',
+    name: 'hamilton LBC TCR Dil 1 => LBC TCR Enrich1 1XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC TCR Dil 1',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC TCR Enrich1 1XSPRI',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-tcr-enrich1-1xspri-to-lbc-tcr-enrich2-2xspri',
+    name: 'hamilton LBC TCR Enrich1 1XSPRI => LBC TCR Enrich2 2XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC TCR Enrich1 1XSPRI',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC TCR Enrich2 2XSPRI',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-tcr-enrich2-2xspri-to-lbc-tcr-dil-2',
+    name: 'hamilton LBC TCR Enrich2 2XSPRI => LBC TCR Dil 2',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC TCR Enrich2 2XSPRI',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC TCR Dil 2',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-tcr-dil-2-to-lbc-tcr-post-lig-1xspri',
+    name: 'hamilton LBC TCR Dil 2 => LBC TCR Post Lig 1XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC TCR Dil 2',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC TCR Post Lig 1XSPRI',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  # Robots for Chromium 10x pipeline 5p BCR route
+  custom_robot(
+    'hamilton-lbc-cherrypick-to-lbc-bcr-dil-1',
+    name: 'hamilton LBC Cherrypick => LBC BCR Dil 1',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC Cherrypick',
+        states: ['passed'],
+        label: 'Bed 13'
+      },
+      bed(3).barcode => {
+        purpose: 'LBC BCR Dil 1',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-bcr-dil-1-to-lbc-bcr-enrich1-1xspri',
+    name: 'hamilton LBC BCR Dil 1 => LBC BCR Enrich1 1XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC BCR Dil 1',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC BCR Enrich1 1XSPRI',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-bcr-enrich1-1xspri-to-lbc-bcr-enrich2-2xspri',
+    name: 'hamilton LBC BCR Enrich1 1XSPRI => LBC BCR Enrich2 2XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC BCR Enrich1 1XSPRI',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC BCR Enrich2 2XSPRI',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-bcr-enrich2-2xspri-to-lbc-bcr-dil-2',
+    name: 'hamilton LBC BCR Enrich2 2XSPRI => LBC BCR Dil 2',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC BCR Enrich2 2XSPRI',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC BCR Dil 2',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'hamilton-lbc-bcr-dil-2-to-lbc-bcr-post-lig-1xspri',
+    name: 'hamilton LBC BCR Dil 2 => LBC BCR Post Lig 1XSPRI',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LBC BCR Dil 2',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LBC BCR Post Lig 1XSPRI',
         states: ['pending'],
         label: 'Bed 3',
         target_state: 'passed',

@@ -9,21 +9,21 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
   let(:user)              { create :user, uuid: user_uuid }
   let(:user_swipecard)    { 'abcdef' }
 
-  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
+  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
   let(:plate_uuid)        { 'plate-1' }
   let(:example_plate_args) { [:plate, barcode_number: 1, state: 'passed', uuid: plate_uuid] }
   let(:example_plate) { json(*example_plate_args) }
   let(:example_plate_new_api) { create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_listed) { associated(*example_plate_args) }
 
-  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
   let(:plate_uuid_2)      { 'plate-2' }
   let(:example_plate2_args) { [:plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2] }
 
   let(:example_plate_2) { create(:v2_plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2, well_factory: :v2_tagged_well, pool_sizes: [96]) }
   let(:example_plate_2_listed) { associated(*example_plate2_args) }
 
-  let(:plate_barcode_3)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).machine_barcode.to_s }
+  let(:plate_barcode_3)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
   let(:plate_uuid_3)      { 'plate-3' }
   let(:example_plate3_args) { [:plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3] }
 
@@ -78,7 +78,8 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid'
-    create :pooled_tube_from_plates_purpose_config, parents: ['example-purpose'], uuid: 'child-purpose-0'
+    create :pooled_tube_from_plates_purpose_config, uuid: 'child-purpose-0'
+    create :pipeline, relationships: { 'example-purpose' => 'Pool tube' }
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     # We'll look up both plates.

@@ -163,5 +163,6 @@ RSpec.configure do |config|
     Capybara.current_session.driver.resize_window(1400, 1400) if Capybara.current_session.driver.respond_to?(:resize_window)
     # Wipe out existing purposes
     Settings.purposes = {}
+    Settings.pipelines = PipelineList.new
   end
 end

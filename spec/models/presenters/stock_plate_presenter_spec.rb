@@ -12,7 +12,7 @@ RSpec.describe Presenters::StockPlatePresenter do
     )
   end
 
-  let(:barcode_string) { 'DN2T <em>1220000002845</em>' }
+  let(:barcode_string) { 'DN2T' }
 
   it_behaves_like 'a stock presenter'
 end

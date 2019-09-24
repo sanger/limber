@@ -4,127 +4,154 @@ require 'rails_helper'
 require './app/controllers/plates_controller'
 
 RSpec.describe ExportsController, type: :controller do
+  let(:well_qc_includes) { 'wells.qc_results' }
+  let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
   let(:plate) { create :v2_plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
 
-  before do
-    expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, barcode: plate_barcode).and_return(plate)
-  end
-
-  context 'where template concentrations_ngul' do
-    let(:includes) { 'wells.qc_results' }
-
-    it 'renders a concentrations_ngul.csv' do
-      get :show, params: { id: 'concentrations_ngul', limber_plate_id: plate_barcode }, as: :csv
+  RSpec.shared_examples 'a csv view' do
+    it 'renders the view' do
+      get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('concentrations_ngul')
+      expect(response).to render_template(expected_template)
       assert_equal 'text/csv', @response.content_type
     end
   end
 
-  context 'where template concentrations_nM' do
-    let(:includes) { 'wells.qc_results' }
+  RSpec.shared_examples 'a hamilton fixed volume dilutions view' do
+    let(:expected_template) { 'hamilton_fixed_volume_dilutions' }
 
-    it 'renders a concentrations_nm.csv' do
-      get :show, params: { id: 'concentrations_nm', limber_plate_id: plate_barcode }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('concentrations_nm')
-      assert_equal 'text/csv', @response.content_type
-    end
+    it_behaves_like 'a csv view'
   end
 
-  context 'where template hamilton aggregate cherrypick' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+  RSpec.shared_examples 'a hamilton variable volume dilutions view' do
+    let(:expected_template) { 'hamilton_variable_volume_dilutions' }
 
-    it 'renders a hamilton_aggregate_cherrypick.csv' do
-      get :show, params: { id: 'hamilton_aggregate_cherrypick', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_aggregate_cherrypick')
-      assert_equal 'text/csv', @response.content_type
-    end
+    it_behaves_like 'a csv view'
   end
 
-  context 'where template hamilton cherrypick to sample dilution' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+  RSpec.shared_examples 'a hamilton plate stamp view' do
+    let(:expected_template) { 'hamilton_plate_stamp' }
 
-    it 'renders a hamilton_cherrypick_to_sample_dilution.csv' do
-      get :show, params: { id: 'hamilton_cherrypick_to_sample_dilution', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_cherrypick_to_sample_dilution')
-      assert_equal 'text/csv', @response.content_type
-    end
+    it_behaves_like 'a csv view'
   end
 
-  context 'where template hamilton gex dil to gex frag 2xp' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
-
-    it 'renders a hamilton_gex_dil_to_gex_frag_2xp.csv' do
-      get :show, params: { id: 'hamilton_gex_dil_to_gex_frag_2xp', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_gex_dil_to_gex_frag_2xp')
-      assert_equal 'text/csv', @response.content_type
+  context 'on generating a csv' do
+    before do
+      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, barcode: plate_barcode).and_return(plate)
     end
-  end
 
-  context 'where template hamilton gex frag 2xp to gex ligxp' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+    context 'where csv id requested is concentrations_ngul.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'concentrations_ngul' }
+      let(:expected_template) { 'concentrations_ngul' }
 
-    it 'renders a hamilton_gex_frag_2xp_to_gex_ligxp.csv' do
-      get :show, params: { id: 'hamilton_gex_frag_2xp_to_gex_ligxp', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_gex_frag_2xp_to_gex_ligxp')
-      assert_equal 'text/csv', @response.content_type
+      it_behaves_like 'a csv view'
     end
-  end
 
-  context 'where template hamilton cherrypick to 5p gex dilution' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+    context 'where csv id requested is concentrations_nM.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'concentrations_nm' }
+      let(:expected_template) { 'concentrations_nm' }
 
-    it 'renders a hamilton_cherrypick_to_5p_gex_dilution.csv' do
-      get :show, params: { id: 'hamilton_cherrypick_to_5p_gex_dilution', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_cherrypick_to_5p_gex_dilution')
-      assert_equal 'text/csv', @response.content_type
+      it_behaves_like 'a csv view'
     end
-  end
 
-  context 'where template hamilton cherrypick to bcr dilution1' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+    context 'where template is for the hamilton robot' do
+      let(:includes) { well_src_asset_includes }
 
-    it 'renders a hamilton_cherrypick_to_bcr_dilution1.csv' do
-      get :show, params: { id: 'hamilton_cherrypick_to_bcr_dilution1', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_cherrypick_to_bcr_dilution1')
-      assert_equal 'text/csv', @response.content_type
-    end
-  end
+      context 'where csv id requested is hamilton_aggregate_cherrypick.csv' do
+        let(:csv_id) { 'hamilton_aggregate_cherrypick' }
+        let(:expected_template) { 'hamilton_aggregate_cherrypick' }
 
-  context 'where template hamilton cherrypick to tcr dilution1' do
-    let(:includes) { 'wells.transfer_requests_as_target.source_asset' }
+        it_behaves_like 'a csv view'
+      end
 
-    it 'renders a hamilton_cherrypick_to_tcr_dilution1.csv' do
-      get :show, params: { id: 'hamilton_cherrypick_to_tcr_dilution1', limber_plate_id: 'DN1S' }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
-      expect(response).to render_template('hamilton_cherrypick_to_tcr_dilution1')
-      assert_equal 'text/csv', @response.content_type
+      context 'where csv id requested is hamilton_cherrypick_to_sample_dilution.csv' do
+        let(:csv_id) { 'hamilton_cherrypick_to_sample_dilution' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_gex_dil_to_gex_frag_2xp.csv' do
+        let(:csv_id) { 'hamilton_gex_dil_to_gex_frag_2xp' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_gex_frag_2xp_to_gex_ligxp.csv' do
+        let(:csv_id) { 'hamilton_gex_frag_2xp_to_gex_ligxp' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_cherrypick_to_5p_gex_dilution.csv' do
+        let(:csv_id) { 'hamilton_cherrypick_to_5p_gex_dilution' }
+
+        it_behaves_like 'a hamilton variable volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_cherrypick_to_bcr_dilution1.csv' do
+        let(:csv_id) { 'hamilton_cherrypick_to_bcr_dilution1' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' }
+
+        it_behaves_like 'a hamilton variable volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_cherrypick_to_tcr_dilution1.csv' do
+        let(:csv_id) { 'hamilton_cherrypick_to_tcr_dilution1' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' }
+
+        it_behaves_like 'a hamilton variable volume dilutions view'
+      end
     end
   end
 
@@ -133,7 +160,7 @@ RSpec.describe ExportsController, type: :controller do
 
     it 'returns 404 with unknown templates' do
       expect do
-        get :show, params: { id: 'not_a_template', limber_plate_id: 'DN1S' }, as: :csv
+        get :show, params: { id: 'not_a_template', limber_plate_id: plate_barcode }, as: :csv
       end.to raise_error(ActionController::RoutingError, 'Unknown template not_a_template')
     end
   end
