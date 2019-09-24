@@ -44,11 +44,42 @@ FactoryBot.define do
   trait :barcoded do
     transient do
       barcode_number
-      ean13 { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number).machine_barcode.to_s }
+      barcode_object { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
+      ean13 { barcode_object.machine_barcode.to_s }
+      human_barcode { barcode_object.human_barcode }
+      machine_barcode { human_barcode }
     end
 
     barcode do
-      { 'ean13' => ean13, 'number' => barcode_number.to_s, 'prefix' => barcode_prefix, 'two_dimensional' => nil, 'type' => barcode_type }
+      {
+        'ean13' => ean13,
+        'number' => barcode_number.to_s,
+        'prefix' => barcode_prefix,
+        'two_dimensional' => nil,
+        'type' => barcode_type,
+        'machine' => human_barcode
+      }
+    end
+  end
+
+  trait :ean13_barcoded do
+    transient do
+      barcode_number
+      barcode_object { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
+      ean13 { barcode_object.machine_barcode.to_s }
+      human_barcode { barcode_object.human_barcode }
+      machine_barcode { human_barcode }
+    end
+
+    barcode do
+      {
+        'ean13' => ean13,
+        'number' => barcode_number.to_s,
+        'prefix' => barcode_prefix,
+        'two_dimensional' => nil,
+        'type' => barcode_type,
+        'machine' => ean13
+      }
     end
   end
 
@@ -61,8 +92,25 @@ FactoryBot.define do
 
     labware_barcode do
       {
-        'ean13_barcode' => barcode.machine_barcode,
-        'human_barcode' => barcode.human_barcode
+        'ean13_barcode' => barcode.machine_barcode.to_s,
+        'human_barcode' => barcode.human_barcode,
+        'machine_barcode' => barcode.human_barcode # Mimics a code39 printed barcode
+      }
+    end
+  end
+
+  trait :ean13_barcoded_v2 do
+    transient do
+      barcode_number
+      barcode_prefix { 'DN' }
+      barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
+    end
+
+    labware_barcode do
+      {
+        'ean13_barcode' => barcode.machine_barcode.to_s,
+        'human_barcode' => barcode.human_barcode,
+        'machine_barcode' => barcode.machine_barcode.to_s
       }
     end
   end

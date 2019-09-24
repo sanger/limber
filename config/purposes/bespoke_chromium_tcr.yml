@@ -3,7 +3,6 @@
 ---
 LBC TCR Dil 1:
   :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::FixedNormalisedPlate
   :dilutions:
     :source_volume: 2
@@ -13,3 +12,47 @@ LBC TCR Dil 1:
     id: 'hamilton_cherrypick_to_tcr_dilution1'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
+LBC TCR Enrich1 1XSPRI:
+  :asset_type: plate
+  :file_links:
+  - name: 'Download Hamilton TCR Dil 1 to TCR Enrich1 1XSPRI CSV'
+    id: 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri'
+LBC TCR Enrich2 2XSPRI:
+  :asset_type: plate
+  :file_links:
+  - name: 'Download Hamilton TCR Enrich1 1XSPRI to TCR Enrich2 2XSPRI CSV'
+    id: 'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC TCR Dil 2:
+  :asset_type: plate
+  :creator_class: LabwareCreators::ConcentrationNormalisedPlate
+  :dilutions:
+    :target_amount_ng: 50
+    :target_volume: 20
+    :minimum_source_volume: 0.2
+  :file_links:
+  - name: 'Download Hamilton TCR Enrich2 2XSPRI to TCR Dil 2 CSV'
+    id: 'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2'
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC TCR Post Lig 1XSPRI:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 4
+  :file_links:
+  - name: 'Download Hamilton TCR Dil 2 to TCR Post Lig 1XSPRI CSV'
+    id: 'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri'
+LBC TCR Post PCR:
+  :asset_type: plate
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+LBC TCR LibPS:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

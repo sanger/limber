@@ -4,5 +4,18 @@ Bespoke Chromium BCR:
   filters:
     request_type_key: limber_chromium_bespoke
     library_type: Chromium single cell BCR
+  library_pass: LBC BCR Post PCR
   relationships:
     LBC Cherrypick: LBC BCR Dil 1
+    LBC BCR Dil 1: LBC BCR Enrich1 1XSPRI
+    LBC BCR Enrich1 1XSPRI: LBC BCR Enrich2 2XSPRI
+    LBC BCR Enrich2 2XSPRI: LBC BCR Dil 2
+    LBC BCR Dil 2: LBC BCR Post Lig 1XSPRI
+    LBC BCR Post Lig 1XSPRI: LBC BCR Post PCR
+Bespoke Chromium BCR MX:
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    LBC BCR Post PCR: LBC BCR LibPS
+    LBC BCR LibPS: LB Lib Pool Norm

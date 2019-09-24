@@ -20,7 +20,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     end
     it 'has the correct values' do
       expect(plate.labware_barcode.human).to eq('DN12345U')
-      expect(plate.labware_barcode.machine).to eq('1220012345855')
+      expect(plate.labware_barcode.machine).to eq('DN12345U')
       # TODO: Remove this functionality
       expect(plate.labware_barcode.number).to eq('12345')
       expect(plate.labware_barcode.prefix).to eq('DN')

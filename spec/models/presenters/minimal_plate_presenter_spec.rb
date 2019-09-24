@@ -21,11 +21,11 @@ RSpec.describe Presenters::MinimalPlatePresenter do
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
-      ['Barcode', 'DN1S <em>1220000001831</em>'],
+      %w[Barcode DN1S],
       ['Number of wells', 96],
       ['Plate type', purpose_name],
       ['Current plate state', state],
-      ['Input plate barcode', 'DN2T <em>1220000002845</em>'],
+      ['Input plate barcode', 'DN2T'],
       ['PCR Cycles', '10'],
       ['Created on', '2016-10-19']
     ]
@@ -48,7 +48,7 @@ RSpec.describe Presenters::MinimalPlatePresenter do
                        bottom_left: 'DN1S',
                        top_right: 'DN2T',
                        bottom_right: 'WGS Limber example purpose',
-                       barcode: '1220000001831' }
+                       barcode: 'DN1S' }
     expect(subject.label.attributes).to eq(expected_label)
   end
 
