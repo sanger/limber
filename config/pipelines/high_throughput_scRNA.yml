@@ -21,10 +21,9 @@ scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
     scRNA Lib Pool XP: LB Lib Pool Norm
 scRNA 384:
   filters:
-    request_type_key:
-    - limber_scrna
+    request_type_key: limber_scrna
     library_type:
-    - scRNA
+    - scRNA 384
     - GnT scRNA
   library_pass: scRNA-384 Lib PCR
   relationships:
