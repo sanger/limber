@@ -19,17 +19,30 @@ module PlateHelper
     WellFailingPresenter.new(form, presenter)
   end
 
-  def sorted_pre_cap_group_json
-    current_plate.wells.each_with_object({}) do |well, pool_store|
+  # Returns an array of all pre-capture pools sorted in column order based on the first
+  # well in the pool.
+  # We rely on the fact that hashes maintain insert order, and walk the wells in column
+  # order. Each time we see a pre-capture pool for the first time, it gets inserted into the hash.
+  # This gets passed to our javascript via ajax.
+  # @note Javascript objects are not explicitly ordered, hence the need to pass an array here.
+  #
+  # @param current_plate [Sequencescape::Api::V2::Plate] The plate from which to extract the pre-cap pools
+  #
+  # @return [Array] An array of basic pool information
+  # @example Example output
+  #   [{ pool_id: '123', wells: ['A1','B1','D1'] }, { pool_id: '122', wells: ['C1','E1','F1'] }]
+  def sorted_pre_cap_pool_json(current_plate)
+    current_plate.wells_in_columns.each_with_object({}) do |well, pool_store|
       next unless well.passed?
 
       well.incomplete_requests.each do |request|
         next unless request.pre_capture_pool
 
-        pool_store[request.pre_capture_pool.id] ||= []
-        pool_store[request.pre_capture_pool.id] << well.location
+        pool_id = request.pre_capture_pool.id
+        pool_store[pool_id] ||= { pool_id: pool_id, wells: [] }
+        pool_store[pool_id][:wells] << well.location
       end
-    end.to_json.html_safe
+    end.values.to_json.html_safe
   end
 
   def pools_by_id(pools)
@@ -44,9 +57,5 @@ module PlateHelper
         end
       end
     end
-  end
-
-  def current_plate
-    (@labware_creator || @presenter).labware
   end
 end
