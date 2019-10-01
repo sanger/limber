@@ -5,13 +5,28 @@
 class PipelinesController < ApplicationController
   before_action :configure_api, except: :index
   def index
-    @nodes = Settings.purposes.map do |_uuid, purpose|
-      {
-        group: 'nodes',
-        data: { id: purpose[:name], type: purpose[:asset_type] }
-      }
+    respond_to do |format|
+      # If we're html, just render the template, we'll populate it by ajax
+      format.html { render :index }
+      format.json do
+        render json: {
+          elements: { nodes: calculate_nodes, edges: calculate_edges },
+          pipelines: calculate_pipelines
+        }
+      end
     end
-    @edges = Settings.pipelines.flat_map do |pl|
+  end
+
+  private
+
+  def calculate_pipelines
+    Settings.pipelines.map do |pl|
+      { name: pl.name, filters: pl.filters }
+    end
+  end
+
+  def calculate_edges
+    Settings.pipelines.flat_map do |pl|
       pl.relationships.map do |s, t|
         {
           group: 'edges',
@@ -19,18 +34,19 @@ class PipelinesController < ApplicationController
         }
       end
     end
-    @pipelines = Settings.pipelines.map do |pl|
-      { name: pl.name, filters: pl.filters }
-    end
+  end
 
-    respond_to do |format|
-      format.html { render :index }
-      format.json do
-        render json: {
-          elements: { nodes: @nodes, edges: @edges },
-          pipelines: @pipelines
+  def calculate_nodes
+    Settings.purposes.map do |_uuid, purpose|
+      {
+        group: 'nodes',
+        data: {
+          id: purpose[:name],
+          type: purpose[:asset_type],
+          input: purpose[:input_plate],
+          size: purpose[:size]
         }
-      end
+      }
     end
   end
 end
