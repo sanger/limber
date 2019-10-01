@@ -110,11 +110,8 @@ const renderPipelines = function(data) {
 
   data.pipelines.forEach((pipeline)=>{
     const item = document.createElement('li')
-    const icon = document.createElement('span')
-    icon.innerHTML = '+'
-    icon.style = 'color: ' + pipelineColours[pipeline.name] + ';'
+    item.style = 'border-left: solid 10px ' + pipelineColours[pipeline.name] + ';'
     item.innerHTML = pipeline.name
-    item.appendChild(icon)
     key.appendChild(item)
   })
 }

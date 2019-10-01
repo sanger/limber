@@ -20,6 +20,9 @@
   ul {
     @extend .list-group;
     @extend .list-group-flush;
+    max-height: 500px;
+    overflow-y: scroll;
+
     li {
       @extend .list-group-item;
       @extend .bg-dark;
