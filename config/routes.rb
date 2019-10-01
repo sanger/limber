@@ -56,5 +56,7 @@ Rails.application.routes.draw do
     match 'multiple',   action: 'multiple',   as: :print_multiple_labels
   end
 
+  resources :pipelines, only: :index
+
   root to: 'search#new'
 end
