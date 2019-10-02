@@ -68,6 +68,13 @@ button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn-block;
 }
 
+#btnPipelinesOverview {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
 .btn-upload {
   @extend .btn;
   @extend .btn-success;
