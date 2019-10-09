@@ -1,31 +1,35 @@
 #pipeline-graph {
   position: relative; width: 100%; height: 1000px;
-}
-#graph {
-  width: 100%;
-  height: 1000px;
-  display: block;
-  @extend .bg-dark;
-  @extend .text-white;
-}
-#key {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  @extend .bg-dark;
-  @extend .text-white;
-  @extend .small;
 
-  header { @extend .card-header; }
-  ul {
-    @extend .list-group;
-    @extend .list-group-flush;
-    max-height: 500px;
-    overflow-y: scroll;
+  #graph {
+    width: 100%;
+    height: 1000px;
+    display: block;
+    @extend .bg-dark;
+    @extend .text-white;
 
-    li {
-      @extend .list-group-item;
-      @extend .bg-dark;
-    }
   }
+
+  #key {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      @extend .bg-dark;
+      @extend .text-white;
+      @extend .small;
+
+      header { @extend .card-header; }
+      ul {
+        @extend .list-group;
+        @extend .list-group-flush;
+        max-height: 500px;
+        overflow-y: scroll;
+
+        li {
+          @extend .list-group-item;
+          @extend .bg-dark;
+        }
+      }
+    }
+
 }
