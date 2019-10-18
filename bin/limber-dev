@@ -17,7 +17,7 @@ def read_config(config_file_path):
         print(str(e), file=sys.stderr)
         return None
     except FileNotFoundError:
-        return None
+        return {}
 
 
 def write_config(conf, config_file_path):
