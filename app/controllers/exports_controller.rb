@@ -38,7 +38,7 @@ class ExportsController < ApplicationController
     'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' =>
       CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
     'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' =>
-      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Ligation Single SPRI'),
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Ligation SPRI'),
     'hamilton_cherrypick_to_tcr_dilution1' =>
       CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
     'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' =>
@@ -48,7 +48,7 @@ class ExportsController < ApplicationController
     'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' =>
       CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution'),
     'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' =>
-      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X Post Ligation Single SPRI')
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Ligation SPRI')
   }.freeze
 
   def show
