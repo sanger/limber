@@ -23,7 +23,15 @@ module LabwareCreators
 
     private
 
+    def transfer_request_attributes(child_plate)
+      well_filter.filtered.map do |well, additional_parameters|
+        request_hash(well, child_plate, additional_parameters)
+      end.compact
+    end
+
     def request_hash(source_well, child_plate, additional_parameters)
+      return unless transfer_hash.key?(source_well.location)
+
       {
         'source_asset' => source_well.uuid,
         'target_asset' => child_plate.wells.detect do |child_well|

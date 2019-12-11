@@ -41,7 +41,13 @@ module Utility
     #
     def normalisation_details(plate)
       plate.wells_in_columns.each_with_object({}) do |well, details|
+        # skip empty wells
         next if well.aliquots.blank?
+
+        # don't select wells that don't appear in the submission (i.e. automatic cherry pick)
+        next unless well.requests_as_source.any? do |req|
+          req.library_type == config.library_type && req.state == 'pending'
+        end
 
         sample_conc      = well.latest_concentration.value.to_f
         vol_source_reqd  = compute_vol_source_reqd(sample_conc)

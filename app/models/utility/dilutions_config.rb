@@ -17,22 +17,27 @@ module Utility
       3
     end
 
-    # Returns source volume from the config ynl
+    # Returns library type from the config yml
+    def library_type
+      @config['library_type']
+    end
+
+    # Returns source volume from the config yml
     def source_volume
       @config['source_volume'].to_f
     end
 
-    # Returns diluent volume from the config ynl
+    # Returns diluent volume from the config yml
     def diluent_volume
       @config['diluent_volume'].to_f
     end
 
-    # Returns target amount in ng from the config ynl
+    # Returns target amount in ng from the config yml
     def target_amount
       @config['target_amount_ng'].to_f
     end
 
-    # Returns target volume from the config ynl
+    # Returns target volume from the config yml
     def target_volume
       @config['target_volume'].to_f
     end
@@ -52,12 +57,12 @@ module Utility
       source_volume + diluent_volume
     end
 
-    # Returns number of distinct bins in the config ynl
+    # Returns number of distinct bins in the config yml
     def number_of_bins
       @config['bins'].size
     end
 
-    # Returns the bins from the config ynl
+    # Returns the bins from the config yml
     def bins_template
       @bins_template ||= configure_bins_template
     end

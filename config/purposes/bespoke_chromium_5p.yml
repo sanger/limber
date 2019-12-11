@@ -6,6 +6,7 @@ LBC 5p GEX Dil:
   :presenter_class: Presenters::NormalisedBinnedPlatePresenter
   :creator_class: LabwareCreators::NormalisedBinnedPlate
   :dilutions:
+    :library_type: 'Chromium single cell 5 prime'
     :target_amount_ng: 50
     :target_volume: 20
     :minimum_source_volume: 0.2
