@@ -16,6 +16,12 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
+        # don't select wells that don't appear in the submission (i.e. automatic cherry pick)
+        next unless well.requests_as_source.any? do |req|
+          # library type in request must match to that in purposes yml, and request state must be pending
+          req.library_type == config.library_type && req.state == 'pending'
+        end
+
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
         well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
       end

@@ -14,22 +14,26 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
     let(:well_a1) do
       create(:v2_well,
              position: { 'name' => 'A1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.5'))
+             qc_results: create_list(:qc_result_concentration, 1, value: '1.5'),
+             requests_as_source: [requests[0]])
     end
     let(:well_b1) do
       create(:v2_well,
              position: { 'name' => 'B1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '56.0'))
+             qc_results: create_list(:qc_result_concentration, 1, value: '56.0'),
+             requests_as_source: [requests[1]])
     end
     let(:well_c1) do
       create(:v2_well,
              position: { 'name' => 'C1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+             qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+             requests_as_source: [requests[2]])
     end
     let(:well_d1) do
       create(:v2_well,
              position: { 'name' => 'D1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.8'))
+             qc_results: create_list(:qc_result_concentration, 1, value: '1.8'),
+             requests_as_source: [requests[3]])
     end
 
     let(:parent_plate) do
@@ -41,10 +45,13 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
              outer_requests: requests
     end
 
-    let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
+    let(:library_type_name) { 'Test Library Type' }
+
+    let(:requests) { Array.new(4) { |i| create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name } }
 
     let(:dilutions_config) do
       {
+        'library_type' => library_type_name,
         'source_volume' => 10,
         'diluent_volume' => 25,
         'bins' => [
@@ -72,15 +79,40 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
     describe '#compute_well_amounts' do
       let(:src_mult_fact) { subject.source_multiplication_factor }
 
-      it 'calculates plate well amounts correctly' do
-        expected_amounts = {
-          'A1' => 15.0,
-          'B1' => 560.0,
-          'C1' => 35.0,
-          'D1' => 18.0
-        }
+      context 'for all wells in the parent plate' do
+        it 'calculates plate well amounts correctly' do
+          expected_amounts = {
+            'A1' => 15.0,
+            'B1' => 560.0,
+            'C1' => 35.0,
+            'D1' => 18.0
+          }
 
-        expect(subject.compute_well_amounts(parent_plate, src_mult_fact)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(parent_plate, src_mult_fact)).to eq(expected_amounts)
+        end
+      end
+
+      context 'for a partial submission' do
+        # set two wells to not have library requests
+        let(:well_a1) do
+          create(:v2_well,
+                 position: { 'name' => 'A1' },
+                 qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
+        end
+        let(:well_c1) do
+          create(:v2_well,
+                 position: { 'name' => 'C1' },
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+        end
+
+        it 'calculates plate well amounts correctly' do
+          expected_amounts = {
+            'B1' => 560.0,
+            'D1' => 18.0
+          }
+
+          expect(subject.compute_well_amounts(parent_plate, src_mult_fact)).to eq(expected_amounts)
+        end
       end
     end
 
@@ -100,21 +132,49 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         end
       end
 
+      context 'for a partial submission' do
+        # set two wells to not have library requests
+        let(:well_a1) do
+          create(:v2_well,
+                 position: { 'name' => 'A1' },
+                 qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
+        end
+        let(:well_c1) do
+          create(:v2_well,
+                 position: { 'name' => 'C1' },
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+        end
+
+        let(:expd_transfers) do
+          {
+            'B1' => { 'dest_locn' => 'A2', 'dest_conc' => '16.0' },
+            'D1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.5142857142857142' }
+          }
+        end
+
+        it 'creates the correct transfers' do
+          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
+        end
+      end
+
       context 'when all wells fall in the same bin' do
         let(:well_a1) do
           create(:v2_well,
                  position: { 'name' => 'A1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+             requests_as_source: [requests[0]])
         end
         let(:well_b1) do
           create(:v2_well,
                  position: { 'name' => 'B1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+             requests_as_source: [requests[1]])
         end
         let(:well_d1) do
           create(:v2_well,
                  position: { 'name' => 'D1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+             requests_as_source: [requests[3]])
         end
         let(:expd_transfers) do
           {
@@ -510,6 +570,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
       context 'with a large number of bins' do
         let(:dilutions_config) do
           {
+            'library_type' => library_type_name,
             'source_volume' => 10,
             'diluent_volume' => 25,
             'bins' => [
@@ -583,22 +644,26 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         let(:well_a1) do
           create(:v2_well,
                  position: { 'name' => 'A1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '0.2'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '0.2'),
+                 requests_as_source: [requests[0]])
         end
         let(:well_b1) do
           create(:v2_well,
                  position: { 'name' => 'B1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '56.0'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '56.0'),
+                 requests_as_source: [requests[1]])
         end
         let(:well_c1) do
           create(:v2_well,
                  position: { 'name' => 'C1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+                 requests_as_source: [requests[2]])
         end
         let(:well_d1) do
           create(:v2_well,
                  position: { 'name' => 'D1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '0.7'))
+                 qc_results: create_list(:qc_result_concentration, 1, value: '0.7'),
+                 requests_as_source: [requests[3]])
         end
         let(:child_plate) do
           create :v2_plate,
