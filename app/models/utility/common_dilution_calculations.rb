@@ -125,7 +125,6 @@ module Utility
       # This depends on whether we are in the last well of a bin, whether compression is required,
       # and whether we are in the last row of the plate and will need to start a new column.
       # NB. rows and columns are zero-based here.
-      # def next_well_location(cur_row, cur_column, index_within_bin, bin_size)
       #
       # @param index_within_bin [int] The index of the well within the current bin.
       # @param bin_size [int] The number of wells in the bin.
