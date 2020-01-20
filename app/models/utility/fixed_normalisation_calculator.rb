@@ -13,6 +13,12 @@ module Utility
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
+        # don't select wells that don't appear in the submission (i.e. automatic cherry pick)
+        next unless well.requests_as_source.any? do |req|
+          # library type in request must match to that in purposes yml, and request state must be pending
+          req.library_type == config.library_type && req.state == 'pending'
+        end
+
         # concentration recorded is ng per microlitre, multiply by volume to get amount in ng in well
         well_amounts[well.location] = well.latest_concentration.value.to_f * source_multiplication_factor
       end
@@ -21,16 +27,20 @@ module Utility
     # Compute the well transfers hash from the parent plate
     def compute_well_transfers(parent_plate)
       well_amounts = compute_well_amounts(parent_plate)
-      build_transfers_hash(well_amounts)
+      build_transfers_hash(well_amounts, parent_plate.number_of_rows)
     end
 
     private
 
     # Build the well transfers hash from the well amounts
-    def build_transfers_hash(well_amounts)
+    def build_transfers_hash(well_amounts, number_of_rows)
+      compressor = Compressor.new(number_of_rows)
+
       well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
         dest_conc = (amount / dest_multiplication_factor)
-        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => dest_conc.to_s }
+        transfers_hash[well_locn] = { 'dest_locn' => WellHelpers.well_name(compressor.row, compressor.column), 'dest_conc' => dest_conc.to_s }
+
+        compressor.next_well_location
       end
     end
   end

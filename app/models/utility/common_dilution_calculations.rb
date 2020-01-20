@@ -177,6 +177,62 @@ module Utility
       end
     end
 
+    #
+    # Class used by calculators that need to compress wells to top left.
+    # Handles the deternination of the next well location.
+    #
+    class Compressor
+      attr_accessor :row, :column
+
+      #
+      # Sets up an instance of the Compressor class for a plate.
+      #
+      # @param number_of_rows [int] Number of rows on the plate.
+      #
+      def initialize(number_of_rows)
+        @number_of_rows = number_of_rows
+        @row = 0
+        @column = 0
+        validate_initial_arguments
+      end
+
+      #
+      # Work out what the next well location will be.
+      # This depends on whether we are in the last row of the plate and will need to start a new column.
+      # NB. rows and columns are zero-based here.
+      #
+      # @return nothing Sets the next row and column in the Compressor instance.
+      #
+      def next_well_location()
+        determine_next_available_location
+      end
+
+      private
+
+      def validate_initial_arguments
+         raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+      end
+
+       #
+      # Next available location depends on whether we are in the last row on the plate.
+      #
+      def determine_next_available_location
+        if @row == (@number_of_rows - 1)
+          reset_to_top_of_next_column
+        else
+          @row += 1
+        end
+      end
+
+      #
+      # Reset location to top of the next column.
+      #
+      def reset_to_top_of_next_column
+        @row = 0
+        @column += 1
+      end
+    end
+
     private
 
     #
