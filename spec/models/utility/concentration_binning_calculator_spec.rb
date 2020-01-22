@@ -162,19 +162,19 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
           create(:v2_well,
                  position: { 'name' => 'A1' },
                  qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
-             requests_as_source: [requests[0]])
+                 requests_as_source: [requests[0]])
         end
         let(:well_b1) do
           create(:v2_well,
                  position: { 'name' => 'B1' },
                  qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
-             requests_as_source: [requests[1]])
+                 requests_as_source: [requests[1]])
         end
         let(:well_d1) do
           create(:v2_well,
                  position: { 'name' => 'D1' },
                  qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
-             requests_as_source: [requests[3]])
+                 requests_as_source: [requests[3]])
         end
         let(:expd_transfers) do
           {

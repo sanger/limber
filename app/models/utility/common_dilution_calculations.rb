@@ -203,17 +203,17 @@ module Utility
       #
       # @return nothing Sets the next row and column in the Compressor instance.
       #
-      def next_well_location()
+      def next_well_location
         determine_next_available_location
       end
 
       private
 
       def validate_initial_arguments
-         raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
       end
 
-       #
+      #
       # Next available location depends on whether we are in the last row on the plate.
       #
       def determine_next_available_location
