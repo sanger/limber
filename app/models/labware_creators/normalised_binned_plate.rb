@@ -16,12 +16,22 @@ module LabwareCreators
     include LabwareCreators::GenerateQCResults
 
     validate :wells_with_aliquots_have_concentrations?
+    validate :transfer_hash_present?
 
     def dilutions_calculator
       @dilutions_calculator ||= Utility::NormalisedBinningCalculator.new(dilutions_config)
     end
 
     private
+
+    # Validation to check we have identified wells to transfer.
+    # Plate must contain at least one well with a request for library preparation, in a state of pending.
+    def transfer_hash_present?
+      return if transfer_hash.present?
+
+      msg = 'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+      errors.add(:parent, msg)
+    end
 
     def transfer_request_attributes(child_plate)
       well_filter.filtered.map do |well, additional_parameters|

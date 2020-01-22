@@ -15,25 +15,29 @@ RSpec.describe Utility::NormalisedBinningCalculator do
       create(:v2_well,
              position: { 'name' => 'A1' },
              qc_results: create_list(:qc_result_concentration, 1, value: '1.0'),
-             requests_as_source: [requests[0]])
+             requests_as_source: [requests[0]],
+             outer_request: nil)
     end
     let(:well_b1) do
       create(:v2_well,
              position: { 'name' => 'B1' },
              qc_results: create_list(:qc_result_concentration, 1, value: '56.0'),
-             requests_as_source: [requests[1]])
+             requests_as_source: [requests[1]],
+             outer_request: nil)
     end
     let(:well_c1) do
       create(:v2_well,
              position: { 'name' => 'C1' },
              qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
-             requests_as_source: [requests[2]])
+             requests_as_source: [requests[2]],
+             outer_request: nil)
     end
     let(:well_d1) do
       create(:v2_well,
              position: { 'name' => 'D1' },
              qc_results: create_list(:qc_result_concentration, 1, value: '1.8'),
-             requests_as_source: [requests[3]])
+             requests_as_source: [requests[3]],
+             outer_request: nil)
     end
 
     let(:parent_plate) do
