@@ -39,10 +39,20 @@ module Utility
     end
 
     # This is used by the plate presenter.
+    def compute_well_amounts_for_presenter(plate, multiplication_factor)
+      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
+        next if well.aliquots.blank?
+
+        # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
+        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
+      end
+    end
+
+    # This is used by the plate presenter.
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
     # and number of PCR cycles.
     def compute_presenter_bin_details(plate)
-      well_amounts = compute_well_amounts(plate, dest_multiplication_factor)
+      well_amounts = compute_well_amounts_for_presenter(plate, dest_multiplication_factor)
       compute_bin_details_by_well(well_amounts)
     end
 
