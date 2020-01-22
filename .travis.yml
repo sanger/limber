@@ -10,7 +10,6 @@ addons:
     packages:
     - haveged
 cache:
-  bundler: true
   yarn: true
   directories:
   - node_modules
