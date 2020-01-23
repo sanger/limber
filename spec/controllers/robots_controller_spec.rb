@@ -7,7 +7,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
   include FeatureHelpers
   include RobotHelpers
 
-  let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
+  let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   describe '#start' do
     has_a_working_api
