@@ -8,7 +8,7 @@ RSpec.describe ConfigLoader::PipelinesLoader, type: :model, loader: true do
     described_class.new(directory: test_directory, files: selected_files)
   end
 
-  let(:test_directory) { Rails.root.join('spec', 'fixtures', 'config', 'pipelines') }
+  let(:test_directory) { Rails.root.join('spec/fixtures/config/pipelines') }
   let(:created_purposes) { ['Basic Plate', 'Other Plate', 'Type with creator'] }
 
   context 'with no files specified' do
