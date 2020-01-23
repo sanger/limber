@@ -10,6 +10,7 @@ addons:
     packages:
     - haveged
 cache:
+  bundler: true
   yarn: true
   directories:
   - node_modules
@@ -22,6 +23,7 @@ install:
 - node -v
 - npm i -g yarn
 - yarn
+- gem install bundler
 - bundle install
 before_script:
 - bundle exec rails webpacker:verify_install
