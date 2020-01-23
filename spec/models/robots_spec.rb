@@ -7,7 +7,7 @@ RSpec.describe Robots, robots: true do
 
   has_a_working_api
 
-  let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
+  let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   before { Settings.robots = settings[:robots] }
 

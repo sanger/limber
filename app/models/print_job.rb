@@ -25,7 +25,7 @@ class PrintJob
       end
     rescue JsonApiClient::Errors::ConnectionError
       errors.add(:pmb, 'PrintMyBarcode service is down')
-      return false
+      false
     end
   end
 
