@@ -17,7 +17,7 @@ require 'rails'
 ].each do |railtie|
   begin
     require railtie.to_s
-  rescue LoadError # rubocop:disable Lint/HandleExceptions
+  rescue LoadError # rubocop:disable Lint/SuppressedException
     # Do nothing. We're mimicking rails/all here, so
     # use the same behaviour.
   end
