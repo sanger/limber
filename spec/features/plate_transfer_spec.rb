@@ -30,7 +30,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
            barcode_number: 1,
            custom_metadatum_collection: custom_metadatum_collection
   end
-  let(:settings) { YAML.load_file(Rails.root.join('spec', 'data', 'settings.yml')).with_indifferent_access }
+  let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   # Setup stubs
   background do

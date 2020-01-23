@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :test_config do
-  task :generate do
+  task generate: :environment do
     settings = { searches: { 'Find something' => nil },
                  transfer_templates: { 'Transfer columns' => nil },
                  purposes: { 'purpose-uuid' => nil },
@@ -12,6 +12,6 @@ namespace :test_config do
                  label_templates:
                   { 'tube' => 'limber_tube_label_template',
                     'plate' => 'sqsc_96plate_label_template' } }
-    File.open(Rails.root.join('config', 'settings', 'test.yml'), 'w') { |f| f.write(settings.to_yaml) }
+    File.open(Rails.root.join('config/settings/test.yml'), 'w') { |f| f.write(settings.to_yaml) }
   end
 end
