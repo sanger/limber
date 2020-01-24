@@ -52,7 +52,7 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^2.0.0",
     "karma-webpack": "^4.0.0-rc.3",
-    "mini-css-extract-plugin": "^0.4.4",
+    "mini-css-extract-plugin": "^0.7.0",
     "webpack-dev-server": "^3.0.0"
   },
   "name": "limber",

@@ -5511,15 +5511,6 @@ mimic-response@^2.0.0:
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-2.0.0.tgz#996a51c60adf12cb8a87d7fb8ef24c2f3d5ebb46"
   integrity sha512-8ilDoEapqA4uQ3TwS0jakGONKXVJqpy+RpM+3b7pLdOjghCrEiGp9SRkFbUHAmZW9vdnrENWHjaweIoTIJExSQ==
 
-mini-css-extract-plugin@^0.4.4:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.5.tgz#c99e9e78d54f3fa775633aee5933aeaa4e80719a"
-  integrity sha512-dqBanNfktnp2hwL2YguV9Jh91PFX7gu7nRLs4TGsbAfAG6WOtlynFRYzwDwmmeSb5uIwHo9nx1ta0f7vAZVp2w==
-  dependencies:
-    loader-utils "^1.1.0"
-    schema-utils "^1.0.0"
-    webpack-sources "^1.1.0"
-
 mini-css-extract-plugin@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.7.0.tgz#5ba8290fbb4179a43dd27cca444ba150bee743a0"
