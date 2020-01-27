@@ -24,6 +24,11 @@ module LabwareCreators
 
     private
 
+    # use well filter variant that allows for partial submissions of a plate
+    def well_filter
+      @well_filter ||= WellFilterAllowingPartials.new(creator: self)
+    end
+
     # Validation to check we have identified wells to transfer.
     # Plate must contain at least one well with a request for library preparation, in a state of pending.
     def transfer_hash_present?
@@ -33,11 +38,12 @@ module LabwareCreators
       errors.add(:parent, msg)
     end
 
-    def transfer_request_attributes(child_plate)
-      well_filter.filtered.map do |well, additional_parameters|
-        request_hash(well, child_plate, additional_parameters)
-      end.compact
-    end
+    # Using compact as we don't neccessarily stamp the whole plate, it may have empty wells
+    # def transfer_request_attributes(child_plate)
+    #   well_filter.filtered.map do |well, additional_parameters|
+    #     request_hash(well, child_plate, additional_parameters)
+    #   end.compact
+    # end
 
     def request_hash(source_well, child_plate, additional_parameters)
       return unless transfer_hash.key?(source_well.location)

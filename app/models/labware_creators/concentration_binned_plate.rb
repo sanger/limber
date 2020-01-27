@@ -64,6 +64,10 @@ module LabwareCreators
 
     private
 
+    def well_filter
+      @well_filter ||= WellFilterAllowingPartials.new(creator: self)
+    end
+
     # Validation to check we have identified wells to transfer.
     # Plate must contain at least one well with a request for library preparation, in a state of pending.
     def transfer_hash_present?
