@@ -11,6 +11,8 @@ module LabwareCreators
   # Once the normalisation is calculated the target wells are arranged according to bins of
   # total amount present, and different numbers of pcr cycles assigned to each bin to attempt
   # to further normalise the samples.
+  # The library preparation Submission may only be for some of the wells on the plate. We use a well
+  # filter on library type to select only those wells that have a request for the required library type.
   class NormalisedBinnedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
     include LabwareCreators::GenerateQCResults
@@ -37,13 +39,6 @@ module LabwareCreators
       msg = 'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
       errors.add(:parent, msg)
     end
-
-    # Using compact as we don't neccessarily stamp the whole plate, it may have empty wells
-    # def transfer_request_attributes(child_plate)
-    #   well_filter.filtered.map do |well, additional_parameters|
-    #     request_hash(well, child_plate, additional_parameters)
-    #   end.compact
-    # end
 
     def request_hash(source_well, child_plate, additional_parameters)
       return unless transfer_hash.key?(source_well.location)
