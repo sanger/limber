@@ -14,6 +14,7 @@ Bespoke PCR:
     - Ribozero RNA-seq (Bacterial)
     - Ribozero RNA-seq (HMR)
     - TraDIS
+    - Chromium Visium
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation

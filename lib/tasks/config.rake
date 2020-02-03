@@ -23,7 +23,7 @@ namespace :config do
       exit 1
     end
 
-    label_templates = YAML.load_file(Rails.root.join('config', 'label_templates.yml'))
+    label_templates = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
