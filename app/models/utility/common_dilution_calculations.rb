@@ -99,7 +99,7 @@ module Utility
 
     #
     # Class used by calculators that perform binning of wells according to concentration.
-    # Handles the deternination of the next well location for bins.
+    # Handles the determination of the next well location for bins.
     #
     class Binner
       attr_accessor :row, :column
@@ -179,7 +179,7 @@ module Utility
 
     #
     # Class used by calculators that need to compress wells to top left.
-    # Handles the deternination of the next well location.
+    # Handles the determination of the next well location.
     #
     class Compressor
       attr_accessor :row, :column
