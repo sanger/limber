@@ -45,30 +45,32 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
     let(:library_type_name_a) { 'Library Type A' }
     let(:library_type_name_b) { 'Library Type B' }
 
+    let(:request_state_pending) { 'pending' }
+
     let(:request_a) do
       create :library_request,
-             state: 'pending',
+             state: request_state_pending,
              request_type: request_type_a,
              uuid: 'request-0',
              library_type: library_type_name_a
     end
     let(:request_b) do
       create :library_request,
-             state: 'pending',
+             state: request_state_pending,
              request_type: request_type_a,
              uuid: 'request-1',
              library_type: library_type_name_a
     end
     let(:request_c) do
       create :library_request,
-             state: 'pending',
+             state: request_state_pending,
              request_type: request_type_a,
              uuid: 'request-2',
              library_type: library_type_name_a
     end
     let(:request_d) do
       create :library_request,
-             state: 'pending',
+             state: request_state_pending,
              request_type: request_type_a,
              uuid: 'request-3',
              library_type: library_type_name_a
@@ -79,10 +81,34 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       stub_v2_plate(parent_plate, stub_search: false)
     end
 
+    context 'when a state filter is applied' do
+      context 'with a valid filter' do
+        let(:request_a) do
+          create :library_request,
+                 state: 'started',
+                 request_type: request_type_a,
+                 uuid: 'request-0',
+                 library_type: library_type_name_a
+        end
+
+        subject do
+          LabwareCreators::WellFilterAllowingPartials.new(
+            creator: labware_creator,
+            request_state: 'started'
+          )
+        end
+
+        it 'returns all the subset of wells' do
+          expect(subject.filtered.count).to eq(1)
+          expect(subject.errors.messages[:base].count).to eq(0)
+        end
+      end
+    end
+
     context 'with multiple different requests in a well' do
       let(:request_e) do
         create :library_request,
-               state: 'pending',
+               state: request_state_pending,
                request_type: request_type_b,
                uuid: 'request-4',
                library_type: library_type_name_b
