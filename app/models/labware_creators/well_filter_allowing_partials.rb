@@ -16,7 +16,7 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
   end
 
   def filter_requests(requests, well)
-    return extract_submission(well) if well.requests_as_source.empty?
+    return nil if well.requests_as_source.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)
     filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)

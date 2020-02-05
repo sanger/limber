@@ -10,16 +10,16 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
     let(:num_cols) { 12 }
 
     let(:well_a1) do
-      create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)
+      create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)
     end
     let(:well_b1) do
-      create(:v2_well, position: { 'name' => 'B1' }, requests_as_source: [request_b], outer_request: nil)
+      create(:v2_well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [request_b], outer_request: nil)
     end
     let(:well_c1) do
-      create(:v2_well, position: { 'name' => 'C1' }, requests_as_source: [request_c], outer_request: nil)
+      create(:v2_well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [request_c], outer_request: nil)
     end
     let(:well_d1) do
-      create(:v2_well, position: { 'name' => 'D1' }, requests_as_source: [request_d], outer_request: nil)
+      create(:v2_well, name: 'D1', position: { 'name' => 'D1' }, requests_as_source: [request_d], outer_request: nil)
     end
 
     let(:parent_plate) do
@@ -98,11 +98,38 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
           )
         end
 
-        it 'returns all the subset of wells' do
+        it 'returns the correct wells' do
           expect(subject.filtered.count).to eq(1)
+          expect(subject.filtered[0][0].name).to eq(well_a1.name)
           expect(subject.errors.messages[:base].count).to eq(0)
         end
       end
+    end
+
+    context 'when some wells have no requests' do
+      let(:well_b1) do
+        create(:v2_well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [], outer_request: nil)
+      end
+      let(:well_c1) do
+        create(:v2_well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [], outer_request: nil)
+      end
+
+      context 'with a valid filter for some wells' do
+        subject do
+          LabwareCreators::WellFilterAllowingPartials.new(
+            creator: labware_creator,
+            request_type_key: request_type_key_a
+          )
+        end
+
+        it 'returns the expected wells' do
+          expect(subject.filtered.count).to eq(2)
+          expect(subject.filtered[0][0].name).to eq(well_a1.name)
+          expect(subject.filtered[1][0].name).to eq(well_d1.name)
+          expect(subject.errors.messages[:base].count).to eq(0)
+        end
+      end
+
     end
 
     context 'with multiple different requests in a well' do
@@ -115,7 +142,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       let(:well_a1) do
-        create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [request_a, request_e], outer_request: nil)
+        create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a, request_e], outer_request: nil)
       end
 
       context 'with a valid filter for all wells' do
@@ -143,6 +170,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
         # this represents a partial submission of wells on the plate
         it 'returns the expected wells' do
           expect(subject.filtered.count).to eq(1)
+          expect(subject.filtered[0][0].name).to eq(well_a1.name)
           expect(subject.errors.messages[:base].count).to eq(0)
         end
       end
