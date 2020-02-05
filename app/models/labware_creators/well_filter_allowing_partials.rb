@@ -6,7 +6,6 @@
 # Also adds a check on request state.
 #
 class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
-
   attr_accessor :request_state
 
   private

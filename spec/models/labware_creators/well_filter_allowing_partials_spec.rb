@@ -129,7 +129,6 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
           expect(subject.errors.messages[:base].count).to eq(0)
         end
       end
-
     end
 
     context 'with multiple different requests in a well' do
