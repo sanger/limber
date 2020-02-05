@@ -11,24 +11,24 @@ module Utility
 
     self.version = 'v1.0'
 
-    # Calculates the well amounts from the plate well concentrations and a volume multiplication factor.
-    def compute_well_amounts(plate, multiplication_factor)
-      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
+    # Calculates the well amounts from the filtered well concentrations and a volume multiplication factor.
+    def compute_well_amounts(filtered_wells)
+      filtered_wells.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
-        # don't select wells that don't appear in the submission (i.e. automatic cherry pick)
-        next unless well.requests_as_source.any? do |req|
-          # library type in request must match to that in purposes yml, and request state must be pending
-          req.library_type == config.library_type && req.state == 'pending'
+        # check for well concentration value present
+        if well.latest_concentration.blank?
+          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+          next
         end
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
+        well_amounts[well.location] = well.latest_concentration.value.to_f * source_multiplication_factor
       end
     end
 
-    def compute_well_transfers(parent_plate)
-      well_amounts = compute_well_amounts(parent_plate, source_multiplication_factor)
+    def compute_well_transfers(parent_plate, filtered_wells)
+      well_amounts = compute_well_amounts(filtered_wells)
       compute_well_transfers_hash(well_amounts, parent_plate.number_of_rows, parent_plate.number_of_columns)
     end
 
@@ -39,12 +39,12 @@ module Utility
     end
 
     # This is used by the plate presenter.
-    def compute_well_amounts_for_presenter(plate, multiplication_factor)
+    def compute_well_amounts_for_presenter(plate)
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
+        well_amounts[well.location] = well.latest_concentration.value.to_f * dest_multiplication_factor
       end
     end
 
@@ -52,7 +52,7 @@ module Utility
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
     # and number of PCR cycles.
     def compute_presenter_bin_details(plate)
-      well_amounts = compute_well_amounts_for_presenter(plate, dest_multiplication_factor)
+      well_amounts = compute_well_amounts_for_presenter(plate)
       compute_bin_details_by_well(well_amounts)
     end
 

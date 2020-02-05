@@ -75,6 +75,8 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
     describe '#compute_well_amounts' do
       context 'for all wells in the parent plate' do
+        let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
+
         it 'calculates plate well amounts correctly' do
           expected_amounts = {
             'A1' => 3.0,
@@ -83,22 +85,12 @@ RSpec.describe Utility::FixedNormalisationCalculator do
             'D1' => 3.6
           }
 
-          expect(subject.compute_well_amounts(parent_plate)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
         end
       end
 
       context 'for a partial submission' do
-        # set two wells to not have library requests
-        let(:well_a1) do
-          create(:v2_well,
-                 position: { 'name' => 'A1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '1.5'))
-        end
-        let(:well_c1) do
-          create(:v2_well,
-                 position: { 'name' => 'C1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
-        end
+        let(:filtered_wells) { [well_b1, well_d1] }
 
         it 'calculates plate well amounts correctly' do
           expected_amounts = {
@@ -106,13 +98,15 @@ RSpec.describe Utility::FixedNormalisationCalculator do
             'D1' => 3.6
           }
 
-          expect(subject.compute_well_amounts(parent_plate)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
         end
       end
     end
 
     describe '#compute_well_transfers' do
       context 'for all wells in the parent plate' do
+        let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
+
         let(:expd_transfers) do
           {
             'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.08571428571428572' },
@@ -123,22 +117,13 @@ RSpec.describe Utility::FixedNormalisationCalculator do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
+          expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
+          expect(subject.errors.messages.empty?).to eq(true)
         end
       end
 
       context 'for a partial submission' do
-        # set two wells to not have library requests
-        let(:well_a1) do
-          create(:v2_well,
-                 position: { 'name' => 'A1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '1.5'))
-        end
-        let(:well_c1) do
-          create(:v2_well,
-                 position: { 'name' => 'C1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
-        end
+        let(:filtered_wells) { [well_b1, well_d1] }
 
         # it should compress wells to top left by column
         let(:expd_transfers) do
@@ -149,7 +134,8 @@ RSpec.describe Utility::FixedNormalisationCalculator do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
+          expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
+          expect(subject.errors.messages.empty?).to eq(true)
         end
       end
     end

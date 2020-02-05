@@ -6,7 +6,6 @@ LBC 3pV3 GEX Dil:
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:
-    :library_type: 'Chromium single cell 3 prime v3'
     :source_volume: 10
     :diluent_volume: 25
     :bins:

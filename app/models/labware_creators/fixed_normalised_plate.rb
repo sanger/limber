@@ -11,6 +11,7 @@ module LabwareCreators
 
     validate :wells_with_aliquots_have_concentrations?
     validate :transfer_hash_present?
+    validate :number_of_transfers_matches_number_of_filtered_wells?
 
     def dilutions_calculator
       @dilutions_calculator ||= Utility::FixedNormalisationCalculator.new(dilutions_config)
@@ -19,7 +20,13 @@ module LabwareCreators
     private
 
     def well_filter
-      @well_filter ||= WellFilterAllowingPartials.new(creator: self)
+      @well_filter ||= WellFilterAllowingPartials.new(creator: self, request_state: 'pending')
+    end
+
+    def filtered_wells
+      well_filter.filtered.each_with_object([]) do |well_filter_details, wells|
+        wells << well_filter_details[0]
+      end
     end
 
     # Validation to check we have identified wells to transfer.
@@ -28,6 +35,14 @@ module LabwareCreators
       return if transfer_hash.present?
 
       msg = 'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+      errors.add(:parent, msg)
+    end
+
+    # Validation to check number of filtered wells matches to final transfers hash produced
+    def number_of_transfers_matches_number_of_filtered_wells?
+      return if transfer_hash.length == filtered_wells.length
+
+      msg = 'Number of filtered wells does not match number of well transfers'
       errors.add(:parent, msg)
     end
 
@@ -42,7 +57,7 @@ module LabwareCreators
     end
 
     def transfer_hash
-      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
+      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent, filtered_wells)
     end
   end
 end

@@ -70,6 +70,8 @@ RSpec.describe Utility::NormalisedBinningCalculator do
 
     describe '#normalisation_details' do
       context 'for all wells in the parent plate' do
+        let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
+
         it 'calculates normalisation details correctly' do
           expected_norm_details = {
             'A1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
@@ -82,22 +84,12 @@ RSpec.describe Utility::NormalisedBinningCalculator do
                       'amount_in_target' => 36.0, 'dest_conc' => 1.8 }
           }
 
-          expect(subject.normalisation_details(parent_plate)).to eq(expected_norm_details)
+          expect(subject.normalisation_details(filtered_wells)).to eq(expected_norm_details)
         end
       end
 
       context 'for a partial submission' do
-        # set two wells to not have library requests
-        let(:well_a1) do
-          create(:v2_well,
-                 position: { 'name' => 'A1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
-        end
-        let(:well_c1) do
-          create(:v2_well,
-                 position: { 'name' => 'C1' },
-                 qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
-        end
+        let(:filtered_wells) { [well_b1, well_d1] }
 
         it 'calculates normalisation details correctly' do
           expected_norm_details = {
@@ -107,7 +99,7 @@ RSpec.describe Utility::NormalisedBinningCalculator do
                       'amount_in_target' => 36.0, 'dest_conc' => 1.8 }
           }
 
-          expect(subject.normalisation_details(parent_plate)).to eq(expected_norm_details)
+          expect(subject.normalisation_details(filtered_wells)).to eq(expected_norm_details)
         end
       end
     end
@@ -192,6 +184,8 @@ RSpec.describe Utility::NormalisedBinningCalculator do
 
     describe '#compute_well_transfers' do
       context 'for a simple example with few wells' do
+        let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
+
         let(:expd_transfers) do
           {
             'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '1.0', 'volume' => '20.0' },
@@ -202,7 +196,8 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
+          expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
+          expect(subject.errors.messages.empty?).to eq(true)
         end
       end
 
@@ -225,6 +220,9 @@ RSpec.describe Utility::NormalisedBinningCalculator do
                  qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
                  requests_as_source: [requests[3]])
         end
+
+        let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
+
         let(:expd_transfers) do
           {
             'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '2.5', 'volume' => '14.286' },
@@ -235,7 +233,8 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         end
 
         it 'creates the correct transfers' do
-          expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
+          expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
+          expect(subject.errors.messages.empty?).to eq(true)
         end
       end
     end

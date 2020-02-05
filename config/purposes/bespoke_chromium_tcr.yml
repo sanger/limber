@@ -5,7 +5,6 @@ LBC TCR Dil 1:
   :asset_type: plate
   :creator_class: LabwareCreators::FixedNormalisedPlate
   :dilutions:
-    :library_type: 'Chromium single cell TCR'
     :source_volume: 2
     :diluent_volume: 33
   :file_links:

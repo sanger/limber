@@ -15,19 +15,19 @@ module Utility
     # Creates a hash of well normalisation details for a plate used when generating
     # the well transfers and qc assays.
     #
-    # @param plate [Plate] The source plate being normalised.
+    # @param filtered_wells [Wells] The source wells being normalised.
     #
     # @return [hash] The well details hash containing calculated normalisation values.
     #
-    def normalisation_details(plate)
-      plate.wells_in_columns.each_with_object({}) do |well, details|
+    def normalisation_details(filtered_wells)
+      filtered_wells.each_with_object({}) do |well, details|
         # skip empty wells
         next if well.aliquots.blank?
 
-        # don't select wells that don't appear in the submission (i.e. automatic cherry pick)
-        next unless well.requests_as_source.any? do |req|
-          # library type in request must match to that in purposes yml, and request state must be pending
-          req.library_type == config.library_type && req.state == 'pending'
+        # check for well concentration value present
+        if well.latest_concentration.blank?
+          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+          next
         end
 
         sample_conc      = well.latest_concentration.value.to_f
@@ -48,9 +48,9 @@ module Utility
       end
     end
 
-    def compute_well_transfers(plate)
-      norm_details = normalisation_details(plate)
-      compute_well_transfers_hash(norm_details, plate.number_of_rows, plate.number_of_columns)
+    def compute_well_transfers(parent_plate, filtered_wells)
+      norm_details = normalisation_details(filtered_wells)
+      compute_well_transfers_hash(norm_details, parent_plate.number_of_rows, parent_plate.number_of_columns)
     end
 
     def compute_well_transfers_hash(norm_details, number_of_rows, number_of_columns)
@@ -62,13 +62,13 @@ module Utility
     # Used by the plate presenter. Uses the concentration in the well and the plate purpose config
     # to work out the well bin colour and number of PCR cycles.
     def compute_presenter_bin_details(plate)
-      well_amounts = compute_well_amounts(plate)
+      well_amounts = compute_well_amounts_for_presenter(plate)
       compute_bin_details_by_well(well_amounts)
     end
 
     private
 
-    def compute_well_amounts(plate)
+    def compute_well_amounts_for_presenter(plate)
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
