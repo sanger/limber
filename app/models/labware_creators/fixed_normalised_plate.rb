@@ -6,7 +6,6 @@ module LabwareCreators
   # Wells are stamped across without any rearrangements.
   # The child well concentrations are calculated and written as qc_results on the plate.
   class FixedNormalisedPlate < PartialStampedPlate
-
     def dilutions_calculator
       @dilutions_calculator ||= Utility::FixedNormalisationCalculator.new(dilutions_config)
     end

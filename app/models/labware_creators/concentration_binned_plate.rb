@@ -52,7 +52,6 @@ module LabwareCreators
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
   class ConcentrationBinnedPlate < PartialStampedPlate
-
     def dilutions_calculator
       @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
     end
