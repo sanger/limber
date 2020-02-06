@@ -156,25 +156,25 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     let(:transfer_requests) do
       [
         {
-          'volume' => '10',
+          'volume' => subject.dilutions_calculator.source_volume.to_s,
           'source_asset' => well_a1.uuid,
           'target_asset' => '3-well-A1',
           'outer_request' => requests[0].uuid
         },
         {
-          'volume' => '10',
+          'volume' => subject.dilutions_calculator.source_volume.to_s,
           'source_asset' => well_b1.uuid,
           'target_asset' => '3-well-A3',
           'outer_request' => requests[1].uuid
         },
         {
-          'volume' => '10',
+          'volume' => subject.dilutions_calculator.source_volume.to_s,
           'source_asset' => well_c1.uuid,
           'target_asset' => '3-well-A2',
           'outer_request' => requests[2].uuid
         },
         {
-          'volume' => '10',
+          'volume' => subject.dilutions_calculator.source_volume.to_s,
           'source_asset' => well_d1.uuid,
           'target_asset' => '3-well-B1',
           'outer_request' => requests[3].uuid
