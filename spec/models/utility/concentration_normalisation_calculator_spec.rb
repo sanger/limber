@@ -66,7 +66,7 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
                     'amount_in_target' => 36.0, 'dest_conc' => 1.8 }
         }
 
-        expect(subject.normalisation_details(parent_plate)).to eq(expected_norm_details)
+        expect(subject.normalisation_details(parent_plate.wells)).to eq(expected_norm_details)
       end
     end
 
