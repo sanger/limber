@@ -12,8 +12,11 @@ module Utility
     self.version = 'v1.0'
 
     # Calculates the well amounts from the filtered well concentrations and a volume multiplication factor.
-    def compute_well_amounts(filtered_wells)
-      filtered_wells.each_with_object({}) do |well, well_amounts|
+    # The multiplication factor is different depending on whether we are working with the parent plate or the diluted
+    # child plate.
+    def compute_well_amounts(wells, multiplication_factor)
+      # sort on well coordinate to ensure wells are in plate column order
+      wells.sort_by(&:coordinate).each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 
         # check for well concentration value present
@@ -23,12 +26,12 @@ module Utility
         end
 
         # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value.to_f * source_multiplication_factor
+        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
       end
     end
 
     def compute_well_transfers(parent_plate, filtered_wells)
-      well_amounts = compute_well_amounts(filtered_wells)
+      well_amounts = compute_well_amounts(filtered_wells, source_multiplication_factor)
       compute_well_transfers_hash(well_amounts, parent_plate.number_of_rows, parent_plate.number_of_columns)
     end
 
@@ -39,20 +42,10 @@ module Utility
     end
 
     # This is used by the plate presenter.
-    def compute_well_amounts_for_presenter(plate)
-      plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
-        next if well.aliquots.blank?
-
-        # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value.to_f * dest_multiplication_factor
-      end
-    end
-
-    # This is used by the plate presenter.
     # It uses the amount in the well and the plate purpose binning config to work out the well bin colour
-    # and number of PCR cycles.
+    # and number of PCR cycles. The multiplication factor takes into account the dilution performed on the samples.
     def compute_presenter_bin_details(plate)
-      well_amounts = compute_well_amounts_for_presenter(plate)
+      well_amounts = compute_well_amounts(plate.wells, dest_multiplication_factor)
       compute_bin_details_by_well(well_amounts)
     end
 

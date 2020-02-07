@@ -87,7 +87,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
             'D1' => 18.0
           }
 
-          expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells, subject.source_multiplication_factor)).to eq(expected_amounts)
         end
       end
 
@@ -100,7 +100,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
             'D1' => 18.0
           }
 
-          expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells, subject.source_multiplication_factor)).to eq(expected_amounts)
         end
       end
     end
