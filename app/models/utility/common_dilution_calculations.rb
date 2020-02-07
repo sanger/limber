@@ -31,6 +31,44 @@ module Utility
              :source_multiplication_factor, :dest_multiplication_factor, to: :config
 
     #
+    # Creates a hash of well normalisation details for a plate used when generating
+    # the well transfers and qc assays.
+    #
+    # @param wells [Wells] The source wells being normalised.
+    #
+    # @return [hash] The well details hash containing calculated normalisation values.
+    #
+    def normalisation_details(wells)
+      # sort on well coordinate to ensure wells are in plate column order
+      wells.sort_by(&:coordinate).each_with_object({}) do |well, details|
+        # skip empty wells
+        next if well.aliquots.blank?
+
+        # check for well concentration value present
+        if well.latest_concentration.blank?
+          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+          next
+        end
+
+        sample_conc      = well.latest_concentration.value.to_f
+        vol_source_reqd  = compute_vol_source_reqd(sample_conc)
+        vol_diluent_reqd = (config.target_volume - vol_source_reqd)
+        amount           = (vol_source_reqd * sample_conc)
+        dest_conc        = (amount / config.target_volume)
+
+        # NB. we do not round the destination concentration so the full number is written
+        # in the qc_results to avoid rounding errors causing the presenter to display some
+        # wells as being in different bins.
+        details[well.location] = {
+          'vol_source_reqd' => vol_source_reqd.round(number_decimal_places),
+          'vol_diluent_reqd' => vol_diluent_reqd.round(number_decimal_places),
+          'amount_in_target' => amount.round(number_decimal_places),
+          'dest_conc' => dest_conc
+        }
+      end
+    end
+
+    #
     # Computes the volume of source material required for normalisation based on the sample
     # concentration and attributes from the purpose configuration (target amount and volume,
     # minimum source volume).
