@@ -51,7 +51,6 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
 
     let(:dilutions_config) do
       {
-        'library_type' => library_type_name,
         'source_volume' => 10,
         'diluent_volume' => 25,
         'bins' => [
@@ -556,7 +555,6 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
       context 'with a large number of bins' do
         let(:dilutions_config) do
           {
-            'library_type' => library_type_name,
             'source_volume' => 10,
             'diluent_volume' => 25,
             'bins' => [

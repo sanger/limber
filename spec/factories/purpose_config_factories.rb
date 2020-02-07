@@ -55,13 +55,8 @@ FactoryBot.define do
     end
 
     factory :concentration_binning_purpose_config do
-      transient do
-        library_type_name { 'Test Library Type' }
-      end
-
       dilutions do
         {
-          library_type: library_type_name,
           source_volume: 10,
           diluent_volume: 25,
           bins: [
@@ -74,13 +69,8 @@ FactoryBot.define do
     end
 
     factory :fixed_normalisation_purpose_config do
-      transient do
-        library_type_name { 'Test Library Type' }
-      end
-
       dilutions do
         {
-          library_type: library_type_name,
           source_volume: 2,
           diluent_volume: 33
         }
@@ -88,13 +78,8 @@ FactoryBot.define do
     end
 
     factory :normalised_binning_purpose_config do
-      transient do
-        library_type_name { 'Test Library Type' }
-      end
-
       dilutions do
         {
-          library_type: library_type_name,
           target_amount_ng: 50,
           target_volume: 20,
           minimum_source_volume: 0.2,

@@ -51,7 +51,6 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
     let(:dilutions_config) do
       {
-        'library_type' => library_type_name,
         'source_volume' => 2,
         'diluent_volume' => 33
       }

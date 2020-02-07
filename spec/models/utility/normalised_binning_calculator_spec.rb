@@ -55,7 +55,6 @@ RSpec.describe Utility::NormalisedBinningCalculator do
 
     let(:dilutions_config) do
       {
-        'library_type' => library_type_name,
         'target_amount_ng' => 50,
         'target_volume' => 20,
         'minimum_source_volume' => 0.2,
@@ -680,7 +679,6 @@ RSpec.describe Utility::NormalisedBinningCalculator do
       context 'with many bins defined requiring compression' do
         let(:dilutions_config) do
           {
-            'library_type' => library_type_name,
             'target_amount_ng' => 200,
             'target_volume' => 20,
             'minimum_source_volume' => 0.2,
