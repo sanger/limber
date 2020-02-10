@@ -27,13 +27,13 @@ class LabwareCreators::WellFilter
   def filter_requests(requests, well)
     return extract_submission(well) if well.requests_as_source.empty?
 
-    filtered_requests = filter_by_request_type(requests)
-    filtered_requests_by_library_type = filter_requests_by_library_type(filtered_requests)
+    filtered_requests_by_rt = filter_by_request_type(requests)
+    filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)
 
-    if filtered_requests_by_library_type.count == 1
-      { 'outer_request' => filtered_requests_by_library_type.first.uuid }
+    if filtered_requests_by_lt.count == 1
+      { 'outer_request' => filtered_requests_by_lt.first.uuid }
     else
-      errors.add(:base, "found #{filtered_requests_by_library_type.count} eligible requests for #{well.location}")
+      errors.add(:base, "found #{filtered_requests_by_lt.count} eligible requests for #{well.location}")
     end
   end
 
@@ -46,7 +46,7 @@ class LabwareCreators::WellFilter
     requests.select { |r| @request_type_key.blank? || @request_type_key.include?(r.request_type.key) }
   end
 
-  def filter_requests_by_library_type(requests)
+  def filter_by_library_type(requests)
     requests.select { |r| @library_type.blank? || @library_type.include?(r.library_type) }
   end
 

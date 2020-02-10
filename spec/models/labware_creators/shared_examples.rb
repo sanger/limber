@@ -217,3 +217,35 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
     end
   end
 end
+
+RSpec.shared_examples 'a partial stamped plate creator' do
+  describe '#save!' do
+    let!(:plate_creation_request) do
+      stub_api_post('plate_creations',
+                    payload: { plate_creation: {
+                      parent: parent_uuid,
+                      child_purpose: child_purpose_uuid,
+                      user: user_uuid
+                    } },
+                    body: json(:plate_creation))
+    end
+
+    let!(:transfer_creation_request) do
+      stub_api_post('transfer_request_collections',
+                    payload: { transfer_request_collection: {
+                      user: user_uuid,
+                      transfer_requests: transfer_requests
+                    } },
+                    body: '{}')
+    end
+
+    it 'makes the expected requests' do
+      # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
+      expect(Sequencescape::Api::V2::QcAssay)
+        .to receive(:create).with("qc_results": dest_well_qc_attributes).and_return(true)
+      expect(subject.save!).to eq true
+      expect(plate_creation_request).to have_been_made
+      expect(transfer_creation_request).to have_been_made
+    end
+  end
+end

@@ -31,17 +31,24 @@ module Utility
              :source_multiplication_factor, :dest_multiplication_factor, to: :config
 
     #
-    # Used by calculators that have a normalisation process.
-    # Creates a hash of well normalisation details for a plate used later when generating
+    # Creates a hash of well normalisation details for a plate used when generating
     # the well transfers and qc assays.
     #
-    # @param plate [Plate] The source plate being normalised.
+    # @param wells [Wells] The source wells being normalised.
     #
     # @return [hash] The well details hash containing calculated normalisation values.
     #
-    def normalisation_details(plate)
-      plate.wells_in_columns.each_with_object({}) do |well, details|
+    def normalisation_details(wells)
+      # sort on well coordinate to ensure wells are in plate column order
+      wells.sort_by(&:coordinate).each_with_object({}) do |well, details|
+        # skip empty wells
         next if well.aliquots.blank?
+
+        # check for well concentration value present
+        if well.latest_concentration.blank?
+          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+          next
+        end
 
         sample_conc      = well.latest_concentration.value.to_f
         vol_source_reqd  = compute_vol_source_reqd(sample_conc)
@@ -130,7 +137,7 @@ module Utility
 
     #
     # Class used by calculators that perform binning of wells according to concentration.
-    # Handles the deternination of the next well location for bins.
+    # Handles the determination of the next well location for bins.
     #
     class Binner
       attr_accessor :row, :column
@@ -156,7 +163,6 @@ module Utility
       # This depends on whether we are in the last well of a bin, whether compression is required,
       # and whether we are in the last row of the plate and will need to start a new column.
       # NB. rows and columns are zero-based here.
-      # def next_well_location(cur_row, cur_column, index_within_bin, bin_size)
       #
       # @param index_within_bin [int] The index of the well within the current bin.
       # @param bin_size [int] The number of wells in the bin.
@@ -187,6 +193,62 @@ module Utility
         raise ArgumentError, 'index_within_bin must be 0 or greater' if index_within_bin.nil? || index_within_bin.negative?
 
         raise ArgumentError, 'bin_size must be greater than 0' if bin_size.nil? || bin_size <= 0
+      end
+
+      #
+      # Next available location depends on whether we are in the last row on the plate.
+      #
+      def determine_next_available_location
+        if @row == (@number_of_rows - 1)
+          reset_to_top_of_next_column
+        else
+          @row += 1
+        end
+      end
+
+      #
+      # Reset location to top of the next column.
+      #
+      def reset_to_top_of_next_column
+        @row = 0
+        @column += 1
+      end
+    end
+
+    #
+    # Class used by calculators that need to compress wells to top left.
+    # Handles the determination of the next well location.
+    #
+    class Compressor
+      attr_accessor :row, :column
+
+      #
+      # Sets up an instance of the Compressor class for a plate.
+      #
+      # @param number_of_rows [int] Number of rows on the plate.
+      #
+      def initialize(number_of_rows)
+        @number_of_rows = number_of_rows
+        @row = 0
+        @column = 0
+        validate_initial_arguments
+      end
+
+      #
+      # Work out what the next well location will be.
+      # This depends on whether we are in the last row of the plate and will need to start a new column.
+      # NB. rows and columns are zero-based here.
+      #
+      # @return nothing Sets the next row and column in the Compressor instance.
+      #
+      def next_well_location
+        determine_next_available_location
+      end
+
+      private
+
+      def validate_initial_arguments
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
       end
 
       #

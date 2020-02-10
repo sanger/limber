@@ -11,12 +11,9 @@ module LabwareCreators
   # Once the normalisation is calculated the target wells are arranged according to bins of
   # total amount present, and different numbers of pcr cycles assigned to each bin to attempt
   # to further normalise the samples.
-  class NormalisedBinnedPlate < StampedPlate
-    include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
-
-    validate :wells_with_aliquots_have_concentrations?
-
+  # The library preparation Submission may only be for some of the wells on the plate. We use a well
+  # filter on library type to select only those wells that have a request for the required library type.
+  class NormalisedBinnedPlate < PartialStampedPlate
     def dilutions_calculator
       @dilutions_calculator ||= Utility::NormalisedBinningCalculator.new(dilutions_config)
     end
@@ -24,6 +21,8 @@ module LabwareCreators
     private
 
     def request_hash(source_well, child_plate, additional_parameters)
+      return unless transfer_hash.key?(source_well.location)
+
       {
         'source_asset' => source_well.uuid,
         'target_asset' => child_plate.wells.detect do |child_well|
@@ -31,10 +30,6 @@ module LabwareCreators
         end&.uuid,
         'volume' => transfer_hash[source_well.location]['volume'].to_s
       }.merge(additional_parameters)
-    end
-
-    def transfer_hash
-      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
   end
 end

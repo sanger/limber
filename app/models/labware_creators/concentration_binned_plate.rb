@@ -51,30 +51,9 @@ module LabwareCreators
   # |E1| conc=33.7  x10=337 (bin 2)  |  |  |  |
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
-  class ConcentrationBinnedPlate < StampedPlate
-    include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
-
-    validate :wells_with_aliquots_have_concentrations?
-
+  class ConcentrationBinnedPlate < PartialStampedPlate
     def dilutions_calculator
       @dilutions_calculator ||= Utility::ConcentrationBinningCalculator.new(dilutions_config)
-    end
-
-    private
-
-    def request_hash(source_well, child_plate, additional_parameters)
-      {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect do |child_well|
-          child_well.location == transfer_hash[source_well.location]['dest_locn']
-        end&.uuid,
-        'volume' => dilutions_config['source_volume'].to_s
-      }.merge(additional_parameters)
-    end
-
-    def transfer_hash
-      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
   end
 end

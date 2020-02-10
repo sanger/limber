@@ -16,22 +16,30 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   let(:well_a1) do
     create(:v2_well,
            position: { 'name' => 'A1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 1.0))
+           qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+           requests_as_source: [requests[0]],
+           outer_request: nil)
   end
   let(:well_b1) do
     create(:v2_well,
            position: { 'name' => 'B1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 56.0))
+           qc_results: create_list(:qc_result_concentration, 1, value: 56.0),
+           requests_as_source: [requests[1]],
+           outer_request: nil)
   end
   let(:well_c1) do
     create(:v2_well,
            position: { 'name' => 'C1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 3.5))
+           qc_results: create_list(:qc_result_concentration, 1, value: 3.5),
+           requests_as_source: [requests[2]],
+           outer_request: nil)
   end
   let(:well_d1) do
     create(:v2_well,
            position: { 'name' => 'D1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 1.8))
+           qc_results: create_list(:qc_result_concentration, 1, value: 1.8),
+           requests_as_source: [requests[3]],
+           outer_request: nil)
   end
 
   let(:parent_plate) do
@@ -51,7 +59,9 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
            outer_requests: requests
   end
 
-  let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
+  let(:library_type_name) { 'Test Library Type' }
+
+  let(:requests) { Array.new(4) { |i| create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -59,7 +69,10 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    create :normalised_binning_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
+    create :normalised_binning_purpose_config,
+           uuid: child_purpose_uuid,
+           name: child_purpose_name,
+           library_type_name: library_type_name
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
       parent_plate,
@@ -107,64 +120,32 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
     end
   end
 
-  shared_examples 'a binned normalisation plate creator' do
-    describe '#save!' do
-      let!(:plate_creation_request) do
-        stub_api_post('plate_creations',
-                      payload: { plate_creation: {
-                        parent: parent_uuid,
-                        child_purpose: child_purpose_uuid,
-                        user: user_uuid
-                      } },
-                      body: json(:plate_creation))
-      end
-
-      let!(:transfer_creation_request) do
-        stub_api_post('transfer_request_collections',
-                      payload: { transfer_request_collection: {
-                        user: user_uuid,
-                        transfer_requests: transfer_requests
-                      } },
-                      body: '{}')
-      end
-
-      it 'makes the expected requests' do
-        # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
-        expect(Sequencescape::Api::V2::QcAssay)
-          .to receive(:create).with("qc_results": dest_well_qc_attributes).and_return(true)
-        expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
-      end
-    end
-  end
-
   context '96 well plate' do
     let(:transfer_requests) do
       [
         {
+          'volume' => '20.0',
           'source_asset' => well_a1.uuid,
           'target_asset' => '3-well-A1',
-          'submission_id' => well_a1.submission_ids.first,
-          'volume' => '20.0'
+          'outer_request' => requests[0].uuid
         },
         {
+          'volume' => '0.893',
           'source_asset' => well_b1.uuid,
           'target_asset' => '3-well-A2',
-          'submission_id' => well_b1.submission_ids.first,
-          'volume' => '0.893'
+          'outer_request' => requests[1].uuid
         },
         {
+          'volume' => '14.286',
           'source_asset' => well_c1.uuid,
           'target_asset' => '3-well-B2',
-          'submission_id' => well_c1.submission_ids.first,
-          'volume' => '14.286'
+          'outer_request' => requests[2].uuid
         },
         {
+          'volume' => '20.0',
           'source_asset' => well_d1.uuid,
           'target_asset' => '3-well-C2',
-          'submission_id' => well_d1.submission_ids.first,
-          'volume' => '20.0'
+          'outer_request' => requests[3].uuid
         }
       ]
     end
@@ -188,6 +169,6 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
       end
     end
 
-    it_behaves_like 'a binned normalisation plate creator'
+    it_behaves_like 'a partial stamped plate creator'
   end
 end
