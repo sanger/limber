@@ -1,0 +1,60 @@
+# This configuration file is for the plate and tube purposes required for the
+# high throughput Duplex-Seq pipeline
+---
+LDS Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LDS Stock XP:
+  :asset_type: plate
+LDS Frag:
+  :asset_type: plate
+LDS A-tail:
+  :asset_type: plate
+LDS Lig:
+  :asset_type: plate
+LDS AL Lib:
+  :asset_type: plate
+  :label_template: plate_lds_al_lib
+  :file_links:
+  - name: 'Download Hamilton AL Lib to QC1 CSV'
+    id: 'hamilton_al_lib_to_qc1'
+  - name: 'Download Concentration (nM) CSV for CASM'
+    id: 'duplex_seq_al_lib_concentrations'
+LDS AL Lib Dil:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrCyclesBinnedPresenter
+  :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  :file_links:
+  - name: 'Download Hamilton AL Lib to Dilution CSV'
+    id: 'hamilton_al_lib_to_dilution'
+LDS Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'Duplex-Seq Template 1 TBC'
+  - 'Duplex-Seq Template 2 TBC'
+LDS Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+  - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+    id: 'duplex_seq_pcr_xp_concentrations'
+LDS Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LDS Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
