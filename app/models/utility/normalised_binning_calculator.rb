@@ -11,9 +11,9 @@ module Utility
 
     self.version = 'v1.0'
 
-    def compute_well_transfers(plate)
-      norm_details = normalisation_details(plate)
-      compute_well_transfers_hash(norm_details, plate.number_of_rows, plate.number_of_columns)
+    def compute_well_transfers(parent_plate, filtered_wells)
+      norm_details = normalisation_details(filtered_wells)
+      compute_well_transfers_hash(norm_details, parent_plate.number_of_rows, parent_plate.number_of_columns)
     end
 
     def compute_well_transfers_hash(norm_details, number_of_rows, number_of_columns)
@@ -25,13 +25,13 @@ module Utility
     # Used by the plate presenter. Uses the concentration in the well and the plate purpose config
     # to work out the well bin colour and number of PCR cycles.
     def compute_presenter_bin_details(plate)
-      well_amounts = compute_well_amounts(plate)
+      well_amounts = compute_well_amounts_for_presenter(plate)
       compute_bin_details_by_well(well_amounts)
     end
 
     private
 
-    def compute_well_amounts(plate)
+    def compute_well_amounts_for_presenter(plate)
       plate.wells_in_columns.each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
 

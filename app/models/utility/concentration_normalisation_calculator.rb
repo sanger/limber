@@ -11,7 +11,7 @@ module Utility
     self.version = 'v1.0'
 
     def compute_well_transfers(plate)
-      norm_details = normalisation_details(plate)
+      norm_details = normalisation_details(plate.wells_in_columns)
       build_transfers_hash(norm_details)
     end
 
