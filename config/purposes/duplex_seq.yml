@@ -9,12 +9,6 @@ LDS Cherrypick:
   :presenter_class: Presenters::StockPlatePresenter
 LDS Stock XP:
   :asset_type: plate
-LDS Frag:
-  :asset_type: plate
-LDS A-tail:
-  :asset_type: plate
-LDS Lig:
-  :asset_type: plate
 LDS AL Lib:
   :asset_type: plate
   :label_template: plate_lds_al_lib
