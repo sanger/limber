@@ -6,10 +6,7 @@ Duplex Seq:
   library_pass: LDS Lib PCR XP
   relationships:
     LDS Cherrypick: LDS Stock XP
-    LDS Stock XP: LDS Frag
-    LDS Frag: LDS A-tail
-    LDS A-tail: LDS Lig
-    LDS Lig: LDS AL Lib
+    LDS Stock XP: LDS AL Lib
     LDS AL Lib: LDS AL Lib Dil
     LDS AL Lib Dil: LDS Lib PCR
     LDS Lib PCR: LDS Lib PCR XP
