@@ -1455,4 +1455,22 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
       }
     }
   )
+
+  custom_robot(
+    'hamilton-lds-al-lib-to-lds-al-lib-dil',
+    name: 'hamilton LDS Al Lib => LDS Al Lib Dil',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LDS Al Lib',
+        states: ['passed'],
+        label: 'Bed 13' },
+      bed(3).barcode => {
+        purpose: 'LDS Al Lib Dil',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
 end
