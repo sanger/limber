@@ -19,8 +19,8 @@ LDS AL Lib:
     id: 'duplex_seq_al_lib_concentrations_for_customer'
 LDS AL Lib Dil:
   :asset_type: plate
-  :presenter_class: Presenters::PcrCyclesBinnedPresenter
-  :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  # :presenter_class: Presenters::PcrCyclesBinnedPresenter
+  # :creator_class: LabwareCreators::PcrCyclesBinnedPlate
   :file_links:
   - name: 'Download Hamilton AL Lib to Dilution CSV'
     id: 'hamilton_al_lib_to_dilution'
