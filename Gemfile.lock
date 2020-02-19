@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/sanger/json_api_client.git
+  remote: https://github.com/sanger/json_api_client.git
   revision: abc4217f7d8266ac6c90d6db2427375e8078d90e
   specs:
     json_api_client (1.5.4a)
@@ -10,14 +10,14 @@ GIT
       faraday_middleware (~> 0.9)
 
 GIT
-  remote: git://github.com/sanger/pmb-client.git
+  remote: https://github.com/sanger/pmb-client.git
   revision: 016f151a3bde84448ed64e528259c3511282dcdb
   specs:
     pmb-client (0.1.0)
       json_api_client (~> 1.1)
 
 GIT
-  remote: git://github.com/sanger/sanger_barcode_format.git
+  remote: https://github.com/sanger/sanger_barcode_format.git
   revision: df3421bec461f46c965207636aba072771d02772
   branch: development
   specs:
@@ -238,6 +238,7 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     regexp_parser (1.6.0)
+    rexml (3.2.4)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -260,11 +261,12 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.79.0)
+    rubocop (0.80.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
       rainbow (>= 2.2.2, < 4.0)
+      rexml
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-rails (2.4.2)
