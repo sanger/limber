@@ -8,8 +8,15 @@
     <% label.extra_attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][extra_label][#{k}]", value: v %>
     <%end%>
-     <% label.qc_attributes.each do |k, v|%>
-      <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+    <% label.intermediate_attributes.each do |interm|%>
+      <% interm.each do |k, v|%>
+        <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+      <%end%>
+    <%end%>
+    <% label.qc_attributes.each do |qc_label|%>
+      <% qc_label.each do |k, v|%>
+        <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+      <%end%>
     <%end%>
   <% end %>
 

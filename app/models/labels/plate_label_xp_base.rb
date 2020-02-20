@@ -6,11 +6,13 @@ class Labels::PlateLabelXpBase < Labels::PlateLabelBase
   end
 
   def qc_attributes
-    {
-      top_left: date_today,
-      bottom_left: "#{labware.barcode.human} QC",
-      top_right: labware.stock_plate&.barcode&.human,
-      barcode: "#{labware.barcode.human}-QC"
-    }
+    [
+      {
+        top_left: date_today,
+        bottom_left: "#{labware.barcode.human} QC",
+        top_right: labware.stock_plate&.barcode&.human,
+        barcode: "#{labware.barcode.human}-QC"
+      }
+    ]
   end
 end
