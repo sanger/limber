@@ -8,15 +8,15 @@ RSpec.describe SearchHelper, type: :helper do
       %(
           LB Lib PCR-XP:
             :name: "LB Lib PCR-XP"
-            :asset_type: plate
+            :asset_type: "plate"
             :alternative_workline_identifier: true
           LB Lib Pool:
             :name: "LB Lib Pool"
-            :asset_type: tube
+            :asset_type: "tube"
       )
     end
     let(:data) do
-      YAML.safe_load(yaml).each_with_object({}) do |list, memo|
+      YAML.safe_load(yaml, [Symbol]).each_with_object({}) do |list, memo|
         k, v = list
         memo[k] = OpenStruct.new(v)
       end
