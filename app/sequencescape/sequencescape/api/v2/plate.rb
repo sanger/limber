@@ -85,11 +85,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def stock_plates(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plates ||= if stock_plate?
-                       [self]
-                     else
-                       ancestors.where(purpose_name: purpose_names)
-                     end
+    @stock_plates ||= stock_plate? ? [self] : ancestors.where(purpose_name: purpose_names)
   end
 
   def stock_plate
