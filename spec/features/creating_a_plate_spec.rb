@@ -10,6 +10,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   let(:user_swipecard)        { 'abcdef' }
   let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }
+  let(:another_plate_uuid)    { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:child_purpose_name)    { 'Basic' }
   let(:pools) { 1 }
@@ -30,6 +31,16 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   let(:example_plate) do
     create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', wells: wells, purpose_name: 'Limber Cherrypicked'
   end
+
+  let(:another_plate) do
+    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, state: 'passed', wells: wells, purpose_name: 'Limber Cherrypicked'
+  end
+
+  let(:alternative_plate) do
+    create :v2_stock_plate, barcode_number: 107, uuid: another_plate_uuid, state: 'passed', wells: wells, purpose_name: alternative_purpose_name
+  end
+
+  let(:alternative_purpose_name) { 'Alternative identifier plate' }
 
   let(:child_plate) do
     create :v2_plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
@@ -86,6 +97,71 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     expect(plate_title).to have_text('Limber Cherrypicked')
     click_on('Add an empty Basic plate')
     expect(page).to have_content('New empty labware added to the system.')
+  end
+
+  context 'when printing a label' do
+    let(:label_template_id) { 1 }
+    let(:label_templates) { [double('label_template', id: label_template_id)] }
+    let(:job) { double('job') }
+    let(:ancestors_scope) { double('ancestors_scope') }
+    before do
+      allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
+      allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
+      allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
+      allow(ancestors_scope).to receive(:where).with(purpose_name: [alternative_purpose_name]).and_return([alternative_plate])
+
+      allow(job).to receive(:save).and_return(true)
+      allow(PMB::PrintJob).to receive(:new) do |args|
+        @data_printed = args
+        job
+      end
+      allow(PMB::LabelTemplate).to receive(:where).and_return(label_templates)
+
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      plate_title = find('#plate-title')
+      expect(plate_title).to have_text('Limber Cherrypicked')
+    end
+    context 'when the plate has one stock plate' do
+      before do
+        click_on('Add an empty Basic plate')
+        expect(page).to have_content('New empty labware added to the system.')
+
+        click_on('Print Label')
+        expect(PMB::PrintJob).to have_received(:new)
+      end
+      let(:stock_plates) { [example_plate] }
+      it 'prints the stock plate in the top right of the label' do
+        first_label = @data_printed[:labels][:body][0]
+        expect(first_label['main_label']['top_right']).to eq(child_plate.stock_plate.barcode.human)
+      end
+    end
+
+    context 'when the plate has several stock plates' do
+      let(:stock_plates) { [another_plate, example_plate] }
+      before do
+        allow(SearchHelper).to receive(:alternative_workline_reference_names).and_return(alternatives)
+
+        click_on('Add an empty Basic plate')
+        expect(page).to have_content('New empty labware added to the system.')
+
+        click_on('Print Label')
+        expect(PMB::PrintJob).to have_received(:new)
+      end
+      context 'when there is not alternative workline_identifiers' do
+        let(:alternatives) { [] }
+        it 'prints the last stock plate in the top right of the label' do
+          first_label = @data_printed[:labels][:body][0]
+          expect(first_label['main_label']['top_right']).to eq(stock_plates.last.barcode.human)
+        end
+      end
+      context 'when there is alternative workline identifier' do
+        let(:alternatives) { [alternative_purpose_name] }
+        it 'prints the workline identifier' do
+          first_label = @data_printed[:labels][:body][0]
+          expect(first_label['main_label']['top_right']).to eq(alternative_plate.barcode.human)
+        end
+      end
+    end
   end
 
   context 'with multiple requests and no config' do

@@ -5,7 +5,7 @@ class Labels::PlateLabelBase < Labels::Base
     {
       top_left: date_today,
       bottom_left: labware.barcode.human,
-      top_right: labware.stock_plate&.barcode&.human,
+      top_right: workline_identifier,
       bottom_right: [labware.role, labware.purpose.name].compact.join(' '),
       barcode: labware.barcode.machine
     }

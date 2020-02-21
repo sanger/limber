@@ -84,12 +84,29 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     labware_barcode
   end
 
-  def stock_plate(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plate ||= if stock_plate?
-                       self
+  def stock_plates(purpose_names: SearchHelper.stock_plate_names)
+    @stock_plates ||= if stock_plate?
+                       [self]
                      else
-                       ancestors.where(purpose_name: purpose_names).last
+                       ancestors.where(purpose_name: purpose_names)
                      end
+  end
+
+  def stock_plate
+    stock_plates.last
+  end
+
+  def workline_identifier
+    workline_reference&.barcode&.human
+  end
+
+  def workline_reference
+    alternative_workline_identifier_purposes = SearchHelper.alternative_workline_reference_names
+    return stock_plate if alternative_workline_identifier_purposes.empty?
+    return nil unless stock_plates.count.positive?
+    return stock_plate if stock_plates.count == 1
+
+    ancestors.where(purpose_name: alternative_workline_identifier_purposes).last
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)

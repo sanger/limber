@@ -9,6 +9,10 @@ module SearchHelper
     Settings.purposes.values.select(&:input_plate).map(&:name)
   end
 
+  def self.alternative_workline_reference_names
+    Settings.purposes.values.select(&:alternative_workline_identifier).map(&:name)
+  end
+
   def self.merger_plate_names
     Settings.purposes.values.select(&:merger_plate).map(&:name)
   end
