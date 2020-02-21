@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
+# Plate label class to print off the QC and intermediate plates from the LDS Al Lib plate.
+# Very specific to this particular pipeline and plate purpose. Maybe if we get more like this
+# consider refactoring into something more flexible that can use configuration from the plate
+# purpose to determine what to print.
 class Labels::PlateLabelLdsAlLib < Labels::PlateLabelBase
   def attributes
     super.merge(barcode: labware.barcode.human)
   end
 
+  # rubocop:disable Metrics/AbcSize
   def intermediate_attributes
     [
       {
@@ -53,4 +58,5 @@ class Labels::PlateLabelLdsAlLib < Labels::PlateLabelBase
       }
     ]
   end
+  # rubocop:enable Metrics/AbcSize
 end
