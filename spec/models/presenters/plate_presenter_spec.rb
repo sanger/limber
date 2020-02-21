@@ -152,6 +152,7 @@ RSpec.describe Presenters::PlatePresenter do
         }
       ]
       expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
+      expect(presenter.label.intermediate_attributes).to eq(expected_intermediate_attributes)
     end
   end
 
