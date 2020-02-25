@@ -9,8 +9,12 @@ module SearchHelper
     Settings.purposes.values.select(&:input_plate).map(&:name)
   end
 
-  def self.alternative_workline_reference_names
-    Settings.purposes.values.select(&:alternative_workline_identifier).map(&:name)
+  def self.alternative_workline_reference_name(labware)
+    pipelines = Settings.pipelines.active_pipelines_for(labware)
+    names = pipelines.map(&:alternative_workline_identifier).compact.uniq
+    return nil if names.size > 1
+
+    names.first
   end
 
   def self.merger_plate_names

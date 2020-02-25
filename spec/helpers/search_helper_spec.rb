@@ -3,29 +3,42 @@
 require 'rails_helper'
 
 RSpec.describe SearchHelper, type: :helper do
-  context '#alternative_workline_reference_names' do
-    let(:yaml) do
-      %(
-          LB Lib PCR-XP:
-            :name: "LB Lib PCR-XP"
-            :asset_type: "plate"
-            :alternative_workline_identifier: true
-          LB Lib Pool:
-            :name: "LB Lib Pool"
-            :asset_type: "tube"
-      )
+  context '#alternative_workline_reference_name' do
+    let(:plate) { double('plate') }
+    before do
+      allow(Settings.pipelines).to receive(:active_pipelines_for).with(plate).and_return(pipelines)
     end
-    let(:data) do
-      YAML.safe_load(yaml, [Symbol]).each_with_object({}) do |list, memo|
-        k, v = list
-        memo[k] = OpenStruct.new(v)
+    context 'when no pipelines are found for the labware' do
+      let(:pipelines) { [] }
+      it 'returns nil' do
+        expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
       end
     end
-    before do
-      allow(Settings).to receive(:purposes).and_return(data)
-    end
-    it 'retuns the list of alternative workline reference names (purposes names that act as a reference)' do
-      expect(SearchHelper.alternative_workline_reference_names).to eq(['LB Lib PCR-XP'])
+    context 'when one or more pipelines are found' do
+      let(:p1) { build(:pipeline, alternative_workline_identifier: refer1) }
+      let(:p2) { build(:pipeline, alternative_workline_identifier: refer2) }
+      let(:pipelines) { [p1, p2] }
+      context 'when no references are found in any pipeline' do
+        let(:refer1) { nil }
+        let(:refer2) { nil }
+        it 'returns nil' do
+          expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
+        end
+      end
+      context 'when the same workline reference name is found' do
+        let(:refer1) { 'same' }
+        let(:refer2) { 'same' }
+        it 'returns that reference' do
+          expect(SearchHelper.alternative_workline_reference_name(plate)).to eq('same')
+        end
+      end
+      context 'when different workline references are found' do
+        let(:refer1) { 'same' }
+        let(:refer2) { 'different' }
+        it 'returns nil' do
+          expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
+        end
+      end
     end
   end
 end

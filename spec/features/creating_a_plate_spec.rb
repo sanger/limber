@@ -108,7 +108,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
-      allow(ancestors_scope).to receive(:where).with(purpose_name: [alternative_purpose_name]).and_return([alternative_plate])
+      allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_purpose_name).and_return([alternative_plate])
 
       allow(job).to receive(:save).and_return(true)
       allow(PMB::PrintJob).to receive(:new) do |args|
@@ -139,7 +139,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     context 'when the plate has several stock plates' do
       let(:stock_plates) { [another_plate, example_plate] }
       before do
-        allow(SearchHelper).to receive(:alternative_workline_reference_names).and_return(alternatives)
+        allow(SearchHelper).to receive(:alternative_workline_reference_name).with(child_plate).and_return(alternatives)
 
         click_on('Add an empty Basic plate')
         expect(page).to have_content('New empty labware added to the system.')
@@ -148,14 +148,14 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
         expect(PMB::PrintJob).to have_received(:new)
       end
       context 'when there is not alternative workline_identifiers' do
-        let(:alternatives) { [] }
+        let(:alternatives) { nil }
         it 'prints the last stock plate in the top right of the label' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(stock_plates.last.barcode.human)
         end
       end
       context 'when there is alternative workline identifier' do
-        let(:alternatives) { [alternative_purpose_name] }
+        let(:alternatives) { alternative_purpose_name }
         it 'prints the workline identifier' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(alternative_plate.barcode.human)

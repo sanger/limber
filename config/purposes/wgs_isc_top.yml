@@ -35,10 +35,6 @@ LB Lib PCR:
   - TSISC_UDI96
 LB Lib PCR-XP:
   :asset_type: plate
-  # This attribute (alternative_workline_identifier) defines this as an alternative labware that could be
-  # referred as a workline identifier in the barcode printed for our current plate barcode (that should be
-  # downstream) when it has more than one stock plates to choose from
-  :alternative_workline_identifier: true
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:

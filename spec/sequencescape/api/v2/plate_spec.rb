@@ -87,7 +87,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
       context 'when there are no alternative workline purpose references' do
         before do
-          allow(SearchHelper).to receive(:alternative_workline_reference_names).and_return([])
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(plate).and_return(nil)
           allow(ancestors_scope).to receive(:where).with(purpose_name: []).and_return([])
         end
         it 'returns the last stock plate' do
@@ -97,11 +97,11 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
       context 'when there is a list of alternative workline purpose references' do
         let(:alternative_workline_reference_plates) { create_list :v2_plate, 2 }
-        let(:alternative_workline_names) { ['Some other plate with some stuff inside'] }
+        let(:alternative_workline_name) { 'Some other plate with some stuff inside' }
 
         before do
-          allow(SearchHelper).to receive(:alternative_workline_reference_names).and_return(alternative_workline_names)
-          allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_workline_names).and_return(alternative_workline_reference_plates)
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(plate).and_return(alternative_workline_name)
+          allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_workline_name).and_return(alternative_workline_reference_plates)
         end
 
         it 'returns the last alternative workline reference' do
