@@ -65,4 +65,13 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   def suboptimal?
     aliquots.any?(&:suboptimal)
   end
+
+  def sanger_sample_id
+    # aliquots.first.sample returns list with one sample
+    aliquots.first.sample.first.sanger_sample_id
+  end
+
+  def supplier_name
+    aliquots.first.sample.first.sample_metadata.supplier_name
+  end
 end

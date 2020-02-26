@@ -191,7 +191,7 @@ FactoryBot.define do
     tag2_oligo { nil }
     tag2_index { nil }
     suboptimal { false }
-    sample { create :v2_sample }
+    sample { create_list :v2_sample, 1 }
 
     after(:build) do |aliquot, evaluator|
       RSpec::Mocks.allow_message(aliquot, :request).and_return(evaluator.request)
@@ -219,6 +219,7 @@ FactoryBot.define do
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
+    sample_metadata { create(:v2_sample_metadata) }
   end
 
   factory :sample, class: Sequencescape::Sample, traits: [:api_object] do
@@ -231,5 +232,10 @@ FactoryBot.define do
 
     reference { { 'genome' => 'reference_genome' } }
     sanger    { { 'name' => name, 'sample_id' => sample_id } }
+  end
+
+  factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do
+    skip_create
+    sequence(:supplier_name) { |i| "supplier name #{i}" }
   end
 end

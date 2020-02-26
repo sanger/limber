@@ -17,6 +17,8 @@ class ExportsController < ApplicationController
   CSV_DETAILS = {
     'concentrations_ngul' =>
       CSVDetail.new('concentrations_ngul', WELL_QC_INCLUDES, nil),
+    'duplex_seq_al_lib_concentrations_for_customer' =>
+      CSVDetail.new('duplex_seq_al_lib_concentrations_for_customer', WELL_QC_INCLUDES, nil),
     'concentrations_nm' =>
       CSVDetail.new('concentrations_nm', WELL_QC_INCLUDES, nil),
     'hamilton_aggregate_cherrypick' =>

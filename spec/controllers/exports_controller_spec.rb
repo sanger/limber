@@ -59,6 +59,14 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
+    context 'where csv id requested is duplex_seq_al_lib_concentrations_for_customer.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'duplex_seq_al_lib_concentrations_for_customer' }
+      let(:expected_template) { 'duplex_seq_al_lib_concentrations_for_customer' }
+
+      it_behaves_like 'a csv view'
+    end
+
     context 'where template is for the hamilton robot' do
       let(:includes) { well_src_asset_includes }
 
