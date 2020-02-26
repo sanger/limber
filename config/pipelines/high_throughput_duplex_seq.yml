@@ -1,0 +1,15 @@
+---
+Duplex Seq:
+  filters:
+    request_type_key: limber_duplex-seq
+    library_type: Duplex-Seq
+  library_pass: LDS Lib PCR XP
+  relationships:
+    LDS Stock: LDS Stock XP
+    LDS Cherrypick: LDS Stock XP
+    LDS Stock XP: LDS AL Lib
+    LDS AL Lib: LDS AL Lib Dil
+    LDS AL Lib Dil: LDS Lib PCR
+    LDS Lib PCR: LDS Lib PCR XP
+    LDS Lib PCR XP: LDS Custom Pool
+    LDS Custom Pool: LDS Custom Pool Norm
