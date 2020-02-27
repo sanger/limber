@@ -2,5 +2,5 @@
 
 <%= CSV.generate_line ['Well', 'Concentration (nM)', 'Sanger Sample Id', 'Supplier Sample Name', 'Input amount available (fmol)'], row_sep: "" %>
 <% @plate.wells_in_columns.each do |well| %>
-<%= CSV.generate_line [well.location, well.latest_molarity&.value, well.sanger_sample_id, well.supplier_name, well.latest_molarity&.value*25], row_sep: "" %>
+<%= CSV.generate_line [well.location, well.latest_molarity&.value, well.sanger_sample_id, well.supplier_name, well.input_amount_available], row_sep: "" %>
 <% end %>

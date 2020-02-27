@@ -28,6 +28,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def latest_qc(key:, units:)
+    # debugger
     qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
               .select { |qc| qc.key.casecmp(key).zero? }
               .select { |qc| qc.units.casecmp(units).zero? }
@@ -73,5 +74,12 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def supplier_name
     aliquots.first.sample.first.sample_metadata.supplier_name
+  end
+
+  def input_amount_available
+    molarity = latest_molarity&.value
+    return unless molarity
+
+    molarity * 25
   end
 end
