@@ -28,7 +28,6 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def latest_qc(key:, units:)
-    # debugger
     qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
               .select { |qc| qc.key.casecmp(key).zero? }
               .select { |qc| qc.units.casecmp(units).zero? }
@@ -52,7 +51,8 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def empty?
-    aliquots.blank?
+    aliquots.blank? || aliquots.empty?
+    # #<JsonApiClient::Query::Builder:0x007fe9d8921c78 @klass=Sequencescape::Api::V2::Aliquot, @requestor=#<JsonApiClient::Query::Requestor:0x007fe9d8921ca0 @klass=Sequencescape::Api::V2::Aliquot, @path="http://localhost:3000/api/v2/wells/3869/aliquots">, @primary_key=nil, @pagination_params={}, @path_params={}, @additional_params={}, @filters={}, @includes=[], @orders=[], @fields=[]>
   end
 
   def passed?
