@@ -11,7 +11,7 @@ namespace :config do
   task generate: :environment do
     begin
       api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
-    rescue Sequencescape::Api::UnauthenticatedError => _
+    rescue Sequencescape::Api::UnauthenticatedError => _e
       puts <<~HEREDOC
         Could not authenticate with the Sequencescape API
         Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
@@ -26,10 +26,14 @@ namespace :config do
     label_templates = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
-    submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
+    submission_templates = api.order_template.all.each_with_object({}) do |st, store|
+      store[st.name] = st.uuid
+    end
 
     puts 'Fetching purposes...'
-    all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
+    all_purposes = api.plate_purpose.all.index_by(&:name).merge(
+      api.tube_purpose.all.index_by(&:name)
+    )
 
     purpose_config = ConfigLoader::PurposesLoader.new.config.map do |name, options|
       PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
@@ -48,9 +52,11 @@ namespace :config do
       end
 
       puts 'Preparing transfer templates ...'
-      configuration[:transfer_templates] = api.transfer_template.all.each_with_object({}) do |transfer_template, transfer_templates|
+      all_templates = api.transfer_template.all
+      templates = all_templates.each_with_object({}) do |transfer_template, transfer_templates|
         transfer_templates[transfer_template.name] = transfer_template.uuid
       end
+      configuration[:transfer_templates] = templates
 
       configuration[:printers] = {}.tap do |printers|
         printers[:plate_a] = 'g316bc'
@@ -89,6 +95,7 @@ namespace :config do
       ].join("\n"))
       file.puts(CONFIG.to_yaml)
     end
+    puts "#{file_path} written successfully"
   end
 
   task default: :generate

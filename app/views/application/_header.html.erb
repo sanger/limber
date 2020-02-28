@@ -14,7 +14,7 @@
     </ul>
     <span class='navbar-text float-sm-right navbar-dark text-white'>
       <% if logged_in? %>
-        Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
+        Currently logged in as <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
       <% else %>
         Not logged in
       <% end %>
