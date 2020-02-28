@@ -16,8 +16,12 @@ class Labels::Base
     {}
   end
 
+  def intermediate_attributes
+    []
+  end
+
   def qc_attributes
-    {}
+    []
   end
 
   def date_today
