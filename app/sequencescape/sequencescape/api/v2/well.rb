@@ -67,7 +67,6 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def sanger_sample_id
-    # aliquots.first.sample returns list with one sample
     aliquots.first.sample.sanger_sample_id
   end
 
