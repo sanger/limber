@@ -191,7 +191,7 @@ FactoryBot.define do
     tag2_oligo { nil }
     tag2_index { nil }
     suboptimal { false }
-    sample { create_list :v2_sample, 1 }
+    sample { create :v2_sample }
 
     after(:build) do |aliquot, evaluator|
       RSpec::Mocks.allow_message(aliquot, :request).and_return(evaluator.request)
