@@ -22,6 +22,10 @@ ISC:
     LB Cap Lib: LB Cap Lib PCR
     LB Cap Lib PCR: LB Cap Lib PCR-XP
     LB Cap Lib PCR-XP: LB Cap Lib Pool
+  # This attribute (alternative_workline_identifier) defines this as an alternative labware that could be
+  # referred as a workline identifier in the barcode printed for our current plate barcode (that should be
+  # downstream) when it has more than one stock plates to choose from
+  alternative_workline_identifier: LB Lib PCR-XP
 ISC MX:
   filters:
     request_type_key:

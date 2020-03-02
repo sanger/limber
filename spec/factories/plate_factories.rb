@@ -4,6 +4,9 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  factory :unmocked_v2_plate, class: Sequencescape::Api::V2::Plate do
+  end
+
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
     initialize_with do
       Sequencescape::Api::V2::Plate.load(attributes)

@@ -28,6 +28,8 @@ class Labels::Base
     Time.zone.today.strftime('%e-%^b-%Y')
   end
 
+  delegate :workline_identifier, to: :labware
+
   def printer_type
     Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, default_printer_type)
   end
