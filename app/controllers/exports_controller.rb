@@ -9,6 +9,7 @@ class ExportsController < ApplicationController
   rescue_from ActionView::MissingTemplate, with: :not_found
 
   WELL_QC_INCLUDES = 'wells.qc_results'
+  WELL_QC_SAMPLE_INCLUDES = 'wells.qc_results,wells.aliquots.sample.sample_metadata'
   WELL_SRC_ASSET_INCLUDES = 'wells.transfer_requests_as_target.source_asset'
 
   CSVDetail = Struct.new(:csv, :plate_includes, :workflow) do
@@ -19,6 +20,8 @@ class ExportsController < ApplicationController
       CSVDetail.new('concentrations_ngul', WELL_QC_INCLUDES, nil),
     'concentrations_nm' =>
       CSVDetail.new('concentrations_nm', WELL_QC_INCLUDES, nil),
+    'duplex_seq_al_lib_concentrations_for_customer' =>
+      CSVDetail.new('duplex_seq_al_lib_concentrations_for_customer', WELL_QC_SAMPLE_INCLUDES, nil),
     'hamilton_aggregate_cherrypick' =>
       CSVDetail.new('hamilton_aggregate_cherrypick', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick'),
     'hamilton_cherrypick_to_sample_dilution' =>

@@ -2,7 +2,7 @@
 
 class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base
   belongs_to :request
-  belongs_to :sample
+  has_one :sample
 
   def tagged?
     tag_oligo.present? || tag2_oligo.present?
