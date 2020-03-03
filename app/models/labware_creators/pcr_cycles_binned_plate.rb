@@ -35,10 +35,11 @@ module LabwareCreators
 
     attr_accessor :file
 
-    # delegate :pools, to: :csv_file # TODO: what is this doing? what does the file look like?
+    # delegate method to return well values to csv file handler class
+    delegate :well_details, to: :csv_file
 
     validates :file, presence: true
-    validates_nested :csv_file, if: :file # TODO: what does this do?
+    validates_nested :csv_file, if: :file
     validate :wells_have_required_information?
 
     def save
@@ -46,7 +47,7 @@ module LabwareCreators
     end
 
     def wells_have_required_information?
-      # pools.values.flatten.uniq.each do |location|
+      # well_details.values.flatten.uniq.each do |location|
       #   well = well_locations[location]
       #   if well.nil? || well.aliquots.empty?
       #     errors.add(:csv_file, "includes empty well, #{location}")
@@ -54,6 +55,7 @@ module LabwareCreators
       #     errors.add(:csv_file, "includes pending well, #{location}")
       #   end
       # end
+      true
     end
 
     def dilutions_calculator
@@ -67,7 +69,7 @@ module LabwareCreators
     # Upload the csv file onto the plate
     #
     def upload_file
-      parent.qc_files.create_from_file!(file, 'robot_pooling_file.csv')
+      parent.qc_files.create_from_file!(file, 'duplex_seq_customer_file.csv')
     end
 
     def csv_file

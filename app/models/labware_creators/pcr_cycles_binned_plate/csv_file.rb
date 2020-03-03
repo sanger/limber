@@ -34,13 +34,13 @@ module LabwareCreators
     end
 
     #
-    # Extracts pool information from the uploaded csv file
+    # Extracts well details from the uploaded csv file
     #
-    # @return [Hash] eg. { '1' => { 'wells' => ['A1','B1','C1'] } }
+    # @return [Hash] eg. { 'A1' => { TODO: structure of this hash? }
     #
-    # def pools
-    #   @pools ||= generate_pools_hash
-    # end
+    def well_details
+      @well_details ||= generate_well_details_hash
+    end
 
     def correctly_parsed?
       return true if @parsed
@@ -67,16 +67,17 @@ module LabwareCreators
       correctly_parsed? && header_row.valid?
     end
 
-    # def generate_pools_hash
-    #   return {} unless valid?
+    def generate_well_details_hash
+      return {} unless valid?
 
-    #   pools = Hash.new { |hash, pool_name| hash[pool_name] = [] }
-    #   transfers.each do |row|
-    #     next if row.empty?
+      well_details = Hash.new { |hash, well_locn| hash[well_locn] = [] }
+      transfers.each do |row|
+        next if row.empty?
 
-    #     pools[row.destination] << row.source
-    #   end
-    #   pools
-    # end
+        well_details[row.well] << row.pcr_cycles
+      end
+      binding.pry
+      well_details
+    end
   end
 end
