@@ -76,7 +76,6 @@ module LabwareCreators
 
         well_details[row.well] << row.pcr_cycles
       end
-      binding.pry
       well_details
     end
   end
