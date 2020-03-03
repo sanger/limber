@@ -24,9 +24,9 @@ RSpec.describe 'exports/duplex_seq_al_lib_concentrations_for_customer.csv.erb' d
     [
       ['Plate Barcode', labware.barcode.human],
       [],
-      ['Well', 'Concentration (nM)', 'Sanger Sample Id', 'Supplier Sample Name', 'Input amount available (fmol)'],
-      ['A1', '1.5', well_a1_sanger_sample_id, well_a1_supplier_name, (1.5 * 25).to_s],
-      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, (1.5 * 25).to_s]
+      ['Well', 'Concentration (nM)', 'Sanger Sample Id', 'Supplier Sample Name', 'Input amount available (fmol)', 'Input amount desired', 'Sample volume', 'Diluent volume', 'PCR cycles', 'Submit for sequencing (Y/N)?', 'Sub-Pool', 'Coverage'],
+      ['A1', '1.5', well_a1_sanger_sample_id, well_a1_supplier_name, (1.5 * 25).to_s, nil, nil, nil, nil, nil, nil, nil],
+      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, (1.5 * 25).to_s, nil, nil, nil, nil, nil, nil, nil]
     ]
   end
 
