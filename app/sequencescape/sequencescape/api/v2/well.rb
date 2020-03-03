@@ -51,7 +51,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def empty?
-    aliquots.blank?
+    aliquots.blank? || aliquots.empty?
   end
 
   def passed?
@@ -64,5 +64,20 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
   def suboptimal?
     aliquots.any?(&:suboptimal)
+  end
+
+  def sanger_sample_id
+    aliquots.first.sample.sanger_sample_id
+  end
+
+  def supplier_name
+    aliquots.first.sample.sample_metadata.supplier_name
+  end
+
+  def input_amount_available
+    molarity = latest_molarity&.value
+    return unless molarity
+
+    molarity.to_f * 25
   end
 end

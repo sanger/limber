@@ -35,7 +35,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     ::ActiveModel::Name.new(Limber::Plate, false)
   end
 
-  # Currently us the uuid as our main identifier, might switch to human barcode soon
+  # Currently use the uuid as our main identifier, might switch to human barcode soon
   def to_param
     uuid
   end
