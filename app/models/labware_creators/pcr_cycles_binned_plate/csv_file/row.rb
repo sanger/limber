@@ -50,18 +50,18 @@ module LabwareCreators
       # We use %.to_i or .to_f to avoid converting nil to 0. This allows us to write less
       # confusing validation error messages.
 
-      @well_column = (row_data[source_column] || '').strip.upcase
-      @concentration_column = row_data[source_column]&.to_f
-      @sanger_sample_id_column = row_data[source_column]&.to_i
-      @supplier_sample_name_column = (row_data[source_column] || '').strip.upcase
-      @input_amount_available_column = row_data[source_column]&.to_f
-      @input_amount_desired_column = row_data[source_column]&.to_f
-      @sample_volume_column = row_data[source_column]&.to_f
-      @diluent_volume_column = row_data[source_column]&.to_f
-      @pcr_cycles_column = row_data[source_column]&.to_i
-      @submit_for_sequencing_column = (row_data[source_column] || '').strip.upcase # TODO: needs to be Y/N
-      @sub_pool_column = row_data[source_column]&.to_i
-      @coverage_column = row_data[source_column]&.to_f # TODO: clarify if decimal
+      @well = (row_data[well_column] || '').strip.upcase
+      @concentration = row_data[concentration_column]&.to_f
+      @sanger_sample_id = row_data[sanger_sample_id_column]&.to_i
+      @supplier_sample_name = (row_data[supplier_sample_name_column] || '').strip.upcase
+      @input_amount_available = row_data[input_amount_available_column]&.to_f
+      @input_amount_desired = row_data[input_amount_desired_column]&.to_f
+      @sample_volume = row_data[sample_volume_column]&.to_f
+      @diluent_volume = row_data[diluent_volume_column]&.to_f
+      @pcr_cycles = row_data[pcr_cycles_column]&.to_i
+      @submit_for_sequencing = (row_data[submit_for_sequencing_column] || '').strip.upcase # TODO: needs to be Y/N
+      @sub_pool = row_data[sub_pool_column]&.to_i
+      @coverage = row_data[coverage_column]&.to_f # TODO: clarify if decimal
     end
 
     def to_s
