@@ -9,7 +9,7 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase
   end
 
   def qc_attributes
-    super.merge(top_right: stock_plate_barcode)
+    super[0].merge(top_right: stock_plate_barcode)
   end
 
   def stock_plate_barcode

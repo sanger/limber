@@ -84,12 +84,27 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     labware_barcode
   end
 
-  def stock_plate(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plate ||= if stock_plate?
-                       self
-                     else
-                       ancestors.where(purpose_name: purpose_names).last
-                     end
+  def stock_plates(purpose_names: SearchHelper.stock_plate_names)
+    @stock_plates ||= stock_plate? ? [self] : ancestors.where(purpose_name: purpose_names)
+  end
+
+  def stock_plate
+    stock_plates.last
+  end
+
+  def workline_identifier
+    workline_reference&.barcode&.human
+  end
+
+  def workline_reference
+    alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
+    return stock_plate if alternative_workline_identifier_purpose.nil?
+    return nil unless stock_plates.count.positive?
+    return stock_plate if stock_plates.count == 1
+
+    # When there was more than one stock plate and we have an alternative workline identifier we
+    # will use that as the workline reference to print in the barcode label
+    ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)

@@ -5,12 +5,15 @@ class Labels::PlateLabelXpBase < Labels::PlateLabelBase
     super.merge(barcode: labware.barcode.human)
   end
 
+  # This method contains the information that will be printed in the label
   def qc_attributes
-    {
-      top_left: date_today,
-      bottom_left: "#{labware.barcode.human} QC",
-      top_right: labware.stock_plate&.barcode&.human,
-      barcode: "#{labware.barcode.human}-QC"
-    }
+    [
+      {
+        top_left: date_today,
+        bottom_left: "#{labware.barcode.human} QC",
+        top_right: workline_identifier,
+        barcode: "#{labware.barcode.human}-QC"
+      }
+    ]
   end
 end

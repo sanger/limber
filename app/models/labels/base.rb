@@ -16,13 +16,19 @@ class Labels::Base
     {}
   end
 
+  def intermediate_attributes
+    []
+  end
+
   def qc_attributes
-    {}
+    []
   end
 
   def date_today
     Time.zone.today.strftime('%e-%^b-%Y')
   end
+
+  delegate :workline_identifier, to: :labware
 
   def printer_type
     Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, default_printer_type)

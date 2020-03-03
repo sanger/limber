@@ -79,20 +79,80 @@ RSpec.describe Presenters::PlatePresenter do
   context 'when PlateLabelXP is defined in the purpose settings' do
     let(:label_class) { 'Labels::PlateLabelXp' }
 
-    it 'returns PlateDoubleLabel attributes when PlateDoubleLabel is defined in the purpose settings' do
+    it 'returns PlateLabelXP attributes when PlateLabelXP is defined in the purpose settings' do
       expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
                          bottom_left: 'DN1S',
                          top_right: 'DN2T',
                          bottom_right: "WGS #{purpose_name}",
                          barcode: 'DN1S' }
       expect(presenter.label.attributes).to eq(expected_label)
-      expected_qc_attributes = {
-        top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-        bottom_left: 'DN1S QC',
-        top_right: 'DN2T',
-        barcode: 'DN1S-QC'
-      }
+      expected_qc_attributes = [
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S QC',
+          top_right: 'DN2T',
+          barcode: 'DN1S-QC'
+        }
+      ]
       expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
+    end
+  end
+
+  context 'when PlateLabelLdsAlLib is defined in the purpose settings' do
+    let(:label_class) { 'Labels::PlateLabelLdsAlLib' }
+
+    it 'returns PlateLabelLdsAlLib attributes when PlateLabelLdsAlLib is defined in the purpose settings' do
+      expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+                         bottom_left: 'DN1S',
+                         top_right: 'DN2T',
+                         bottom_right: "WGS #{purpose_name}",
+                         barcode: 'DN1S' }
+      expect(presenter.label.attributes).to eq(expected_label)
+      expected_intermediate_attributes = [
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S',
+          top_right: 'DN2T',
+          bottom_right: 'WGS LDS Lig',
+          barcode: 'DN1S-LIG'
+        },
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S',
+          top_right: 'DN2T',
+          bottom_right: 'WGS LDS A-tail',
+          barcode: 'DN1S-ATL'
+        },
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S',
+          top_right: 'DN2T',
+          bottom_right: 'WGS LDS Frag',
+          barcode: 'DN1S-FRG'
+        }
+      ]
+      expected_qc_attributes = [
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S QC3',
+          top_right: 'DN2T',
+          barcode: 'DN1S-QC3'
+        },
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S QC2',
+          top_right: 'DN2T',
+          barcode: 'DN1S-QC2'
+        },
+        {
+          top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+          bottom_left: 'DN1S QC1',
+          top_right: 'DN2T',
+          barcode: 'DN1S-QC1'
+        }
+      ]
+      expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
+      expect(presenter.label.intermediate_attributes).to eq(expected_intermediate_attributes)
     end
   end
 

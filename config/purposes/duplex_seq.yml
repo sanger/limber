@@ -1,0 +1,63 @@
+# This configuration file is for the plate and tube purposes required for the
+# high throughput Duplex-Seq pipeline
+---
+LDS Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LDS Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LDS Stock XP:
+  :asset_type: plate
+LDS AL Lib:
+  :asset_type: plate
+  :label_template: plate_lds_al_lib
+  :file_links:
+  - name: 'Download Hamilton AL Lib to QC1 CSV'
+    id: 'hamilton_al_lib_to_qc1'
+  - name: 'Download Concentration (nM) CSV for Customer'
+    id: 'duplex_seq_al_lib_concentrations_for_customer'
+LDS AL Lib Dil:
+  :asset_type: plate
+  # :presenter_class: Presenters::PcrCyclesBinnedPresenter
+  # :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  :file_links:
+  - name: 'Download Hamilton AL Lib to Dilution CSV'
+    id: 'hamilton_al_lib_to_dilution'
+LDS Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'TS_pWGSA_UDI96'
+  - 'TS_pWGSB_UDI96'
+  - 'TS_pWGSC_UDI96'
+  - 'TS_pWGSD_UDI96'
+  - 'TS_RNAhWGS_UDI_96'
+LDS Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+  - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+    id: 'duplex_seq_pcr_xp_concentrations'
+LDS Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LDS Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
