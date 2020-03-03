@@ -26,7 +26,7 @@ LDS AL Lib:
 LDS AL Lib Dil:
   :asset_type: plate
   # :presenter_class: Presenters::PcrCyclesBinnedPresenter
-  # :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  :creator_class: LabwareCreators::PcrCyclesBinnedPlate
   :file_links:
   - name: 'Download Hamilton AL Lib to Dilution CSV'
     id: 'hamilton_al_lib_to_dilution'

@@ -30,7 +30,7 @@ module LabwareCreators
   class PcrCyclesBinnedPlate < PartialStampedPlate
     include LabwareCreators::CustomPage
 
-    self.page = 'custom_pooled_tubes' # TODO: how does this work? new page for uploading file? see custom_pooled_tubes directory in labware_creators
+    self.page = 'pcr_cycles_binned_plate' # TODO: how does this work? new page for uploading file? see custom_pooled_tubes directory in labware_creators
     self.attributes += [:file]
 
     attr_accessor :file
