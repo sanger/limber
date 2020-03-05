@@ -27,7 +27,8 @@ module LabwareCreators
   # |E1| pcr_cycles = 12 (bin 2)  |  |  |  |
   # +--+--+--~                    +--+--+--~
   # |G1| pcr_cycles = 12 (bin 2)  |  |  |  |
-  class PcrCyclesBinnedPlate < PartialStampedPlate
+  class PcrCyclesBinnedPlate < StampedPlate
+    # extend ActiveSupport::Concern # TODO: do we need this?
     include LabwareCreators::CustomPage
 
     self.page = 'pcr_cycles_binned_plate' # TODO: how does this work? new page for uploading file? see custom_pooled_tubes directory in labware_creators
@@ -41,6 +42,22 @@ module LabwareCreators
     validates :file, presence: true
     validates_nested :csv_file, if: :file
     validate :wells_have_required_information?
+
+    PLATE_INCLUDES =
+    'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+
+    def parent
+      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)
+    end
+
+    # Configurations from the plate purpose.
+    def csv_file_upload_config
+      @csv_file_upload_config ||= purpose_config.fetch(:csv_file_upload)
+    end
+
+    def dilutions_config
+      @dilutions_config ||= purpose_config.fetch(:dilutions)
+    end
 
     def save
       super && upload_file && true
@@ -62,7 +79,6 @@ module LabwareCreators
       @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(dilutions_config)
     end
 
-
     private
 
     #
@@ -73,7 +89,7 @@ module LabwareCreators
     end
 
     def csv_file
-      @csv_file ||= CsvFile.new(file)
+      @csv_file ||= CsvFile.new(file, csv_file_upload_config)
     end
   end
 end

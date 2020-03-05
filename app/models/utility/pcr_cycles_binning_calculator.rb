@@ -5,12 +5,17 @@ module Utility
   # Used by the PCR Cycles Binned Plate class to handle the binning processing.
   class PcrCyclesBinningCalculator
     include ActiveModel::Model
-    include Utility::CommonDilutionCalculations
 
-    self.version = 'v1.0'
+    # def initialize(config)
+    #   @config = Utility::PcrCyclesDilutionsConfig.new(config)
+    # end
 
-    def compute_well_transfers_hash(pcr_cycle_details, number_of_rows, number_of_columns)
-      pcr_cycle_bins = pcr_cycle_bins(pcr_cycle_details)
+    # TODO: do we need to pass in anything here? is any configuration required?
+    def initialize
+    end
+
+    def compute_well_transfers_hash(well_details, number_of_rows, number_of_columns)
+      pcr_cycle_bins = pcr_cycle_bins(well_details)
       compression_reqd = compression_required?(pcr_cycle_bins, number_of_rows, number_of_columns)
       build_transfers_hash(pcr_cycle_bins, number_of_rows, compression_reqd)
     end
@@ -33,19 +38,9 @@ module Utility
     # end
 
     # Sorts well locations into bins based on their number of pcr cycles.
-    def pcr_cycle_bins(pcr_cycle_details)
+    def pcr_cycle_bins(well_details)
       # TODO: Need to work out how many bins we have ( = distinct pcr_cycle values)
       # TODO: then cycle through adding wells to bins
-      # bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
-      # pcr_cycle_details.each do |well_locn, details|
-      #   bins_template.each_with_index do |bin_template, bin_index|
-      #     next unless (bin_template['min']...bin_template['max']).cover?(amount)
-
-      #     bins[bin_index + 1] << { 'locn' => well_locn, 'details' => details }
-      #     break
-      #   end
-      # end
-      # bins
     end
 
     # Build the transfers hash, cycling through the bins and their wells and locating them onto the
@@ -69,8 +64,5 @@ module Utility
         end
       end
     end
-
-
-
   end
 end
