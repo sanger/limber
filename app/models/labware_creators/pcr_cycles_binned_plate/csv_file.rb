@@ -13,19 +13,24 @@ module LabwareCreators
     extend NestedValidation
 
     validate :correctly_parsed?
-    validates :header_row, presence: true
-    validates_nested :header_row
+    validates :plate_barcode_header_row, presence: true
+    validates_nested :plate_barcode_header_row
+    validates :well_details_header_row, presence: true
+    validates_nested :well_details_header_row
     validates_nested :transfers, if: :correctly_formatted? # TODO: what is this for??
 
     delegate :well_column, :concentration_column, :sanger_sample_id_column,
     :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
     :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
-    :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :header_row
+    :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
 
-    def initialize(file)
+    # TODO: pass through parent plate barcode for validation
+    def initialize(file, config)
+      @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
       @data = CSV.parse(file.read)
       @parsed = true
     rescue StandardError => e
+      @config = nil
       @data = []
       @parsed = false
       @parse_error = e.message
@@ -49,32 +54,41 @@ module LabwareCreators
       false
     end
 
-    # Returns the contents of the header row
-    def header_row
-      @header_row ||= Header.new(@data[0]) if @data[0]
+    def plate_barcode_header_row
+      @plate_barcode_header_row ||= PlateBarcodeHeader.new(@data[0]) if @data[0]
+    end
+
+    # Returns the contents of the header row for the well detail columns
+    def well_details_header_row
+      @well_details_header_row ||= WellDetailsHeader.new(@data[2]) if @data[2]
     end
 
     private
 
     def transfers
-      @transfers ||= @data[1..-1].each_with_index.map do |row_data, index|
-        Row.new(header_row, index + 2, row_data)
+      @transfers ||= @data[3..-1].each_with_index.map do |row_data, index|
+        Row.new(@config, well_details_header_row, index + 2, row_data)
       end
     end
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && header_row.valid?
+      correctly_parsed? && plate_barcode_header_row.valid? && well_details_header_row.valid?
     end
 
     def generate_well_details_hash
       return {} unless valid?
 
-      well_details = Hash.new { |hash, well_locn| hash[well_locn] = [] }
+      well_details = Hash.new { |hash, well_locn| hash[well_locn] = {} }
       transfers.each do |row|
         next if row.empty?
 
-        well_details[row.well] << row.pcr_cycles
+        well_details[row.well]['sample_volume'] = row.sample_volume
+        well_details[row.well]['diluent_volume'] = row.diluent_volume
+        well_details[row.well]['pcr_cycles'] = row.pcr_cycles
+        well_details[row.well]['submit_for_sequencing'] = row.submit_for_sequencing
+        well_details[row.well]['sub_pool'] = row.sub_pool
+        well_details[row.well]['coverage'] = row.coverage
       end
       well_details
     end

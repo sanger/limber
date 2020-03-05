@@ -3,10 +3,10 @@
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
   #
-  # Class HeaderRow provides a simple wrapper for handling and validating
-  # individual CSV rows
+  # Class WellDetailsHeader provides a simple wrapper for handling and validating
+  # the plate barcode header row from the customer csv file
   #
-  class CustomPooledTubes::CsvFile::Header
+  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeader
     include ActiveModel::Validations
 
     # Return the index of the respective column.
@@ -40,12 +40,9 @@ module LabwareCreators
     validates :submit_for_sequencing_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :source_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :destination_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
 
     #
-    # Generates a header from the header row array
+    # Generates a well details header from the well details header row array
     #
     # @param [Array] row The array of fields extracted from the CSV file
     #
