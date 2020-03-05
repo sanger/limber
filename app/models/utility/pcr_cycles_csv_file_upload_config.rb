@@ -18,11 +18,11 @@ module Utility
       pcr_cycles_max: 'to_i',
       sub_pool_min: 'to_i',
       sub_pool_max: 'to_i'
-    }
+    }.freeze
 
     def initialize(csv_file_config)
       @csv_file_config = csv_file_config
-      CONFIG_VARIABLES.each do |k,v|
+      CONFIG_VARIABLES.each do |k, v|
         create_method(k) { @csv_file_config[k].send(v) }
       end
     end

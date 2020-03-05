@@ -44,7 +44,7 @@ module LabwareCreators
     validate :wells_have_required_information?
 
     PLATE_INCLUDES =
-    'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+      'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)

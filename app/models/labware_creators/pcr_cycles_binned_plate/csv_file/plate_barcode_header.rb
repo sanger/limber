@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Part of the Labware creator classes
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
   #
@@ -14,7 +15,7 @@ module LabwareCreators
     include ActiveModel::Validations
 
     # Return the index of the respective column.
-    attr_reader :plate_barcode_label_index, :plate_barcode
+    attr_reader :plate_barcode_label_index
 
     PLATE_BARCODE_LABEL_TEXT = 'Plate Barcode'
 

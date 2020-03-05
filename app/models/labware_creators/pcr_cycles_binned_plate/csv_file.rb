@@ -3,11 +3,16 @@
 require './lib/nested_validation'
 require 'csv'
 
+# Part of the Labware creator classes
 module LabwareCreators
   require_dependency 'labware_creators/pcr_cycles_binned_plate'
 
-  # Takes the user uploaded csv file and extracts the well information.
-  # Also validates the content of the CSV file.
+  #
+  # Takes the user uploaded csv file, validates the content and extracts the well information.
+  # This file will be downloaded from Limber based on the quantification results, then sent out
+  # to and filled in by the customer. It describes how to dilute and bin the samples together
+  # in the child dilution plate.
+  #
   class PcrCyclesBinnedPlate::CsvFile
     include ActiveModel::Validations
     extend NestedValidation
@@ -17,12 +22,12 @@ module LabwareCreators
     validates_nested :plate_barcode_header_row
     validates :well_details_header_row, presence: true
     validates_nested :well_details_header_row
-    validates_nested :transfers, if: :correctly_formatted? # TODO: what is this for??
+    validates_nested :transfers, if: :correctly_formatted?
 
     delegate :well_column, :concentration_column, :sanger_sample_id_column,
-    :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
-    :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
-    :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
+             :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
+             :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
+             :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
 
     # TODO: pass through parent plate barcode for validation
     def initialize(file, config)

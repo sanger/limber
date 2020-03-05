@@ -11,8 +11,7 @@ module Utility
     # end
 
     # TODO: do we need to pass in anything here? is any configuration required?
-    def initialize
-    end
+    def initialize; end
 
     def compute_well_transfers_hash(well_details, number_of_rows, number_of_columns)
       pcr_cycle_bins = pcr_cycle_bins(well_details)

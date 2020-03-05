@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Part of the Labware creator classes
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
   #
@@ -11,9 +12,9 @@ module LabwareCreators
 
     # Return the index of the respective column.
     attr_reader :well_column, :concentration_column, :sanger_sample_id_column,
-    :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
-    :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
-    :submit_for_sequencing_column, :sub_pool_column, :coverage_column
+                :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
+                :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
+                :submit_for_sequencing_column, :sub_pool_column, :coverage_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'

@@ -112,7 +112,7 @@ FactoryBot.define do
           diluent_volume_max: 50.0,
           pcr_cycles_min: 1,
           pcr_cycles_max: 20,
-          submit_for_sequencing_valid_values: ['Y', 'N'],
+          submit_for_sequencing_valid_values: %w[Y N],
           sub_pool_min: 1,
           sub_pool_max: 96
         }
