@@ -7,6 +7,12 @@ LB Lib PrePool:
   :input_plate: false
   :default_printer_type: :plate_b
   :csv_template: 'show_extended'
+  # This attribute (alternative_workline_identifier) defines this plate purpose
+  # as an alternative labware that could be referred as a workline identifier
+  # while printing the barcode for our current plate barcode. This could be apply
+  # to distinguish between different workflows for plates when all of them have in common
+  # the same stock plate (RT ticket #683047)
+  :alternative_workline_identifier: LB Lib PCR-XP
 LB Hyb:
   :asset_type: plate
   :default_printer_type: :plate_b
