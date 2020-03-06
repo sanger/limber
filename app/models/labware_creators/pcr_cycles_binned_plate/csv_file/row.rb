@@ -10,16 +10,21 @@ module LabwareCreators
   class PcrCyclesBinnedPlate::CsvFile::Row
     include ActiveModel::Validations
 
-    IN_RANGE = 'contains a value that is out of range (%s to %s), in well: %s'
-    SUB_POOL_NOT_BLANK = 'has a value when Submit for Sequencing is N, it should be empty, in well: %s'
-    SUBMIT_FOR_SEQ_INVALID = 'has an unrecogised value, should be Y or N, in well: %s'
-    COVERAGE_MISSING = 'is missing in %s but should be present when Submit for Sequencing is Y'
-    COVERAGE_NEGATIVE = 'is negative in %s but should be a positive value'
+    IN_RANGE = 'is empty or contains a value that is out of range (%s to %s), in %s'
+    SUB_POOL_NOT_BLANK = 'has a value when Submit for Sequencing is N, it should be empty, in %s'
+    SUBMIT_FOR_SEQ_INVALID = 'is empty or has an unrecogised value (should be Y or N), in %s'
+    COVERAGE_MISSING = 'is missing but should be present when Submit for Sequencing is Y, in %s'
+    COVERAGE_NEGATIVE = 'is negative but should be a positive value, in %s'
+    WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
 
     attr_reader :header, :index
 
-    validates :well, inclusion: { in: WellHelpers.column_order, message: "contains an invalid well name: '%{value}'" }
-
+    validates :well,
+              inclusion: {
+                in: WellHelpers.column_order,
+                message: ->(object, _data) { WELL_NOT_RECOGNISED % object }
+              },
+              unless: :empty?
     validate :input_amount_desired_within_expected_range?
     validate :sample_volume_within_expected_range?
     validate :diluent_volume_within_expected_range?
@@ -35,7 +40,6 @@ module LabwareCreators
                 message: ->(object, _data) { COVERAGE_NEGATIVE % object }
               },
               unless: -> { empty? || !submitting_for_sequencing? }
-
     delegate :well_column, :concentration_column, :sanger_sample_id_column,
              :supplier_sample_name_column, :input_amount_available_column,
              :input_amount_desired_column, :sample_volume_column, :diluent_volume_column,
@@ -103,9 +107,9 @@ module LabwareCreators
 
     def to_s
       if well.present?
-        "row #{index} [#{well}]"
+        "row #{index + 2} [#{well}]"
       else
-        "row #{index}"
+        "row #{index + 2}"
       end
     end
 
@@ -130,7 +134,7 @@ module LabwareCreators
 
       return true if %w[Y N].include? submit_for_sequencing
 
-      errors.add(submit_for_sequencing, format(SUBMIT_FOR_SEQ_INVALID, well))
+      errors.add('submit_for_sequencing', format(SUBMIT_FOR_SEQ_INVALID, to_s))
     end
 
     def sub_pool_within_expected_range?
@@ -143,7 +147,7 @@ module LabwareCreators
       return true if sub_pool.blank?
 
       # sub-pool is NOT blank and should be
-      errors.add(sub_pool, format(SUB_POOL_NOT_BLANK, well))
+      errors.add('sub_pool', format(SUB_POOL_NOT_BLANK, to_s))
       false
     end
 
@@ -160,14 +164,14 @@ module LabwareCreators
 
       result = (min..max).cover? field_value
       unless result
-        msg = format(IN_RANGE, min, max, well)
+        msg = format(IN_RANGE, min, max, to_s)
         errors.add(field_name, msg)
       end
       result
     end
 
     def empty?
-      sanger_sample_id.blank?
+      @row_data.empty? || sanger_sample_id.blank?
     end
   end
 end

@@ -30,12 +30,14 @@ module LabwareCreators
              :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
 
     # TODO: pass through parent plate barcode for validation
-    def initialize(file, config)
+    def initialize(file, config, parent_barcode)
       @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
+      @parent_barcode = parent_barcode
       @data = CSV.parse(file.read)
       @parsed = true
     rescue StandardError => e
       @config = nil
+      @parent_barcode = nil
       @data = []
       @parsed = false
       @parse_error = e.message
@@ -60,7 +62,7 @@ module LabwareCreators
     end
 
     def plate_barcode_header_row
-      @plate_barcode_header_row ||= PlateBarcodeHeader.new(@data[0]) if @data[0]
+      @plate_barcode_header_row ||= PlateBarcodeHeader.new(@parent_barcode, @data[0]) if @data[0]
     end
 
     # Returns the contents of the header row for the well detail columns

@@ -15,26 +15,31 @@ module LabwareCreators
     include ActiveModel::Validations
 
     # Return the index of the respective column.
-    attr_reader :plate_barcode_label_index
+    attr_reader :barcode_lbl_index
 
-    PLATE_BARCODE_LABEL_TEXT = 'Plate Barcode'
+    BARCODE_LABEL_TEXT = 'Plate Barcode'
+    BARCODE_NOT_MATCHING = 'The plate barcode in the file (%s) does not match the barcode of '\
+                           'the plate being uploaded to (%s), please check you have the correct file.'
 
-    validates :plate_barcode_label_index, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :barcode_lbl_index, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :plate_barcode, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validate :plate_barcode_matches_parent?
 
     #
     # Generates a plate barcode header from the plate barcode header row array
     #
     # @param [Array] row The array of fields extracted from the CSV file
     #
-    def initialize(row)
+    def initialize(parent_barcode, row)
+      @parent_barcode = parent_barcode
       @row = row || []
 
-      @plate_barcode_label_index = index_of_header(PLATE_BARCODE_LABEL_TEXT)
+      @barcode_lbl_index = index_of_header(BARCODE_LABEL_TEXT)
     end
 
     def plate_barcode
-      @plate_barcode = @row[@plate_barcode_label_index + 1] ||= nil
+      @plate_barcode =
+        @barcode_lbl_index.present? && @row[@barcode_lbl_index + 1].present? ? @row[@barcode_lbl_index + 1] : nil
     end
 
     #
@@ -44,6 +49,12 @@ module LabwareCreators
     #
     def to_s
       @row.join(',')
+    end
+
+    def plate_barcode_matches_parent?
+      return true if @parent_barcode == plate_barcode
+
+      errors.add('plate_barcode', format(BARCODE_NOT_MATCHING, plate_barcode, @parent_barcode))
     end
 
     private

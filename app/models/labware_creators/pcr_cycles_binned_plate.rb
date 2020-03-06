@@ -89,7 +89,7 @@ module LabwareCreators
     end
 
     def csv_file
-      @csv_file ||= CsvFile.new(file, csv_file_upload_config)
+      @csv_file ||= CsvFile.new(file, csv_file_upload_config, parent.human_barcode)
     end
   end
 end
