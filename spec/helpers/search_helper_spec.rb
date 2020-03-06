@@ -3,41 +3,60 @@
 require 'rails_helper'
 
 RSpec.describe SearchHelper, type: :helper do
+  let(:yaml) do
+    %(
+        Plate with holes:
+          :name: "Plate with holes"
+          :asset_type: "plate"
+
+        Plate with more holes:
+          :name: "Plate with more holes"
+          :asset_type: "plate"
+          :alternative_workline_identifier: Plate with holes
+    )
+  end
+
+  let(:data) do
+    YAML.safe_load(yaml, [Symbol]).each_with_object({}) do |list, memo|
+      k, v = list
+      memo[k] = OpenStruct.new(v)
+      memo
+    end
+  end
+
+  before do
+    allow(Settings).to receive(:purposes).and_return(data)
+  end
+
+  context '#purpose_config_for_purpose_name' do
+    it 'returns the purpose config from the purposes file' do
+      conf = SearchHelper.purpose_config_for_purpose_name('Plate with holes')
+      expect(conf[:name]).to eq('Plate with holes')
+    end
+    it 'returns nil if it cannot find the purpose' do
+      conf = SearchHelper.purpose_config_for_purpose_name('Plate without holes')
+      expect(conf).to be_nil
+    end
+  end
   context '#alternative_workline_reference_name' do
-    let(:plate) { double('plate') }
-    before do
-      allow(Settings.pipelines).to receive(:active_pipelines_for).with(plate).and_return(pipelines)
+    context 'when the plate purpose for my plate has alternative workline identifier' do
+      let(:plate) do
+        create :v2_plate, purpose_name: 'Plate with more holes'
+      end
+
+      it 'returns the configured reference purpose' do
+        ref = SearchHelper.alternative_workline_reference_name(plate)
+        expect(ref).to eq('Plate with holes')
+      end
     end
-    context 'when no pipelines are found for the labware' do
-      let(:pipelines) { [] }
+
+    context 'when the plate purpose for my plate does not have alternative' do
+      let(:plate) do
+        create :v2_plate, purpose_name: 'Plate with less holes'
+      end
       it 'returns nil' do
-        expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
-      end
-    end
-    context 'when one or more pipelines are found' do
-      let(:p1) { build(:pipeline, alternative_workline_identifier: refer1) }
-      let(:p2) { build(:pipeline, alternative_workline_identifier: refer2) }
-      let(:pipelines) { [p1, p2] }
-      context 'when no references are found in any pipeline' do
-        let(:refer1) { nil }
-        let(:refer2) { nil }
-        it 'returns nil' do
-          expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
-        end
-      end
-      context 'when the same workline reference name is found' do
-        let(:refer1) { 'same' }
-        let(:refer2) { 'same' }
-        it 'returns that reference' do
-          expect(SearchHelper.alternative_workline_reference_name(plate)).to eq('same')
-        end
-      end
-      context 'when different workline references are found' do
-        let(:refer1) { 'same' }
-        let(:refer2) { 'different' }
-        it 'returns nil' do
-          expect(SearchHelper.alternative_workline_reference_name(plate)).to be_nil
-        end
+        ref = SearchHelper.alternative_workline_reference_name(plate)
+        expect(ref).to eq(nil)
       end
     end
   end
