@@ -65,12 +65,12 @@ Rails.application.configure do
   config.api.v1                                  = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options.namespace     = 'Limber'
-  config.api.v1.connection_options.url           = ENV.fetch('API_URL', 'http://training.sequencescape.psd.sanger.ac.uk/api/1/')
-  config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'HLyiKARKEyN9I5IlL9eqnsXvauo=')
+  config.api.v1.connection_options.url           = ENV.fetch('API_URL', 'http://localhost:3000/api/1/')
+  config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
   config.api.v2                                  = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options.url           = ENV.fetch('API2_URL', 'http://training.sequencescape.psd.sanger.ac.uk/api/v2')
+  config.api.v2.connection_options.url           = ENV.fetch('API2_URL', 'http://localhost:3000/api/v2')
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project
@@ -79,5 +79,5 @@ Rails.application.configure do
   config.request_options = {
     'read_length' => 11
   }
-  config.pmb_uri = ENV.fetch('PMB_URI', 'http://dev.psd.sanger.ac.uk:7462/v1/')
+  config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end
