@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'support/shared_examples/dilution_calculations_shared_examples'
+require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::NormalisedBinningCalculator do
   context 'when computing values for normalised binning' do
