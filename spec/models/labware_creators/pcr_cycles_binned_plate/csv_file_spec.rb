@@ -4,7 +4,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   let(:purpose_config) { create :duplex_seq_customer_csv_file_upload_purpose_config }
   let(:csv_file_config) { purpose_config.fetch(:csv_file_upload) }
 
-  subject { described_class.new(file, csv_file_config, 'DN12345678H') }
+  subject { described_class.new(file, csv_file_config, 'DN2T') }
 
   context 'A valid file' do
     let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
@@ -19,18 +19,18 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       let(:expected_well_details) do
         {
           'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'A2' => { 'sample_volume' => 3.2, 'diluent_volume' => 26.8, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
           'B1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
+          'D1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
+          'E1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 30 },
+          'F1' => { 'sample_volume' => 4.0, 'diluent_volume' => 26.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
+          'H1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 30 },
+          'A2' => { 'sample_volume' => 3.2, 'diluent_volume' => 26.8, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
           'B2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
           'C2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
-          'D1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
           'D2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'E1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 30 },
           'E2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'F1' => { 'sample_volume' => 4.0, 'diluent_volume' => 26.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
           'F2' => { 'sample_volume' => 30.0, 'diluent_volume' => 0.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'N', 'sub_pool' => nil, 'coverage' => nil },
           'G2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 30 },
-          'H1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 30 },
           'H2' => { 'sample_volume' => 3.621, 'diluent_volume' => 27.353, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 }
         }
       end
@@ -152,7 +152,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'A parent plate barcode that does not match' do
-    subject { described_class.new(file, csv_file_config, 'DN33333333H') }
+    subject { described_class.new(file, csv_file_config, 'DN1S') }
 
     let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
 
@@ -164,8 +164,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       it 'reports the errors' do
         subject.valid?
         expect(subject.errors.full_messages).to include(
-          'Plate barcode header row plate barcode The plate barcode in the file (DN12345678H) does not match the '\
-          'barcode of the plate being uploaded to (DN33333333H), please check you have the correct file.'
+          'Plate barcode header row plate barcode The plate barcode in the file (DN2T) does not match the '\
+          'barcode of the plate being uploaded to (DN1S), please check you have the correct file.'
         )
       end
     end

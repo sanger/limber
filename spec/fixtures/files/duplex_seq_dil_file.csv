@@ -1,10 +1,10 @@
-Plate Barcode,DN12345678H
+Plate Barcode,DN2T
 
 Well,Concentration (nM),Sanger Sample Id,Supplier Sample Name,Input amount available (fmol),Input amount desired,Sample volume,Diluent volume,PCR cycles,Submit for sequencing (Y/N)?,Sub-Pool,Coverage
 A1,0.686,1,test_1,17.150000000000002,0.0,5.0,25.0,14,Y,1,15
 B1,0.623,2,test_2,15.575,50.0,5.0,25.0,14,Y,1,15
 C1,,,,,,,,,,
-D1,1.874,3,test_3,46.85,49.9,5.0,25.0,12,Y,2,15
+D1,1.874,3,test_3,46.85,49.9,5.0,25.0,16,Y,2,15
 E1,1.929,4,test_4,48.225,0.1,5.0,25.0,12,Y,1,30
 F1,1.700,5,test_5,42.5,50.0,4.0,26.0,12,Y,1,15
 H1,1.838,6,test_6,45.95,37.3,5.0,25.0,12,Y,2,30
