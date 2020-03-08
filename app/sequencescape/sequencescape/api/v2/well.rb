@@ -54,6 +54,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     aliquots.blank? || aliquots.empty?
   end
 
+  def pending?
+    state == 'pending'
+  end
+
   def passed?
     state == 'passed'
   end

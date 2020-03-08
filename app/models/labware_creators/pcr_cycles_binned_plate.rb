@@ -28,8 +28,10 @@ module LabwareCreators
   # +--+--+--~                    +--+--+--~
   # |G1| pcr_cycles = 12 (bin 2)  |  |  |  |
   class PcrCyclesBinnedPlate < StampedPlate
-    # extend ActiveSupport::Concern # TODO: do we need this?
     include LabwareCreators::CustomPage
+
+    MISSING_WELL_DETAIL = 'is missing a row for well %s, all wells with content must have a row in the uploaded file.'
+    PENDING_WELL = 'contains at least one pending well %s, the plate and all wells in it should be passed before creating the child plate.'
 
     self.page = 'pcr_cycles_binned_plate' # TODO: how does this work? new page for uploading file? see custom_pooled_tubes directory in labware_creators
     self.attributes += [:file]
@@ -50,6 +52,10 @@ module LabwareCreators
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)
     end
 
+    def parent_v1
+      @parent_v1 ||= api.plate.find(parent_uuid)
+    end
+
     # Configurations from the plate purpose.
     def csv_file_upload_config
       @csv_file_upload_config ||= purpose_config.fetch(:csv_file_upload)
@@ -60,36 +66,64 @@ module LabwareCreators
     end
 
     def save
+      # TODO: need to save well metadata
+      # NB. need the && true!!
       super && upload_file && true
     end
 
     def wells_have_required_information?
-      # well_details.values.flatten.uniq.each do |location|
-      #   well = well_locations[location]
-      #   if well.nil? || well.aliquots.empty?
-      #     errors.add(:csv_file, "includes empty well, #{location}")
-      #   elsif well.pending?
-      #     errors.add(:csv_file, "includes pending well, #{location}")
-      #   end
-      # end
-      true
+      filtered_wells.each do |well|
+        next if well.aliquots.empty?
+
+        well_detail = well_details[well.location]
+
+        if well_detail.nil?
+          errors.add(:csv_file, format(MISSING_WELL_DETAIL, well.location))
+        elsif well.pending?
+          errors.add(:csv_file, format(PENDING_WELL, well.location))
+        end
+      end
     end
 
     def dilutions_calculator
-      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(dilutions_config)
+      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(well_details)
     end
 
     private
 
-    #
-    # Upload the csv file onto the plate
-    #
-    def upload_file
-      parent.qc_files.create_from_file!(file, 'duplex_seq_customer_file.csv')
+    # Returns the parent wells selected to be taken forward.
+    def filtered_wells
+      well_filter.filtered.each_with_object([]) do |well_filter_details, wells|
+        wells << well_filter_details[0]
+      end
     end
 
+    #
+    # Upload the csv file onto the plate via api v1
+    #
+    def upload_file
+      parent_v1.qc_files.create_from_file!(file, 'duplex_seq_customer_file.csv')
+    end
+
+    # Create class that will parse and validate the uploaded file
     def csv_file
       @csv_file ||= CsvFile.new(file, csv_file_upload_config, parent.human_barcode)
+    end
+
+    # Override this method in sub-class if required.
+    def request_hash(source_well, child_plate, additional_parameters)
+      {
+        'source_asset' => source_well.uuid,
+        'target_asset' => child_plate.wells.detect do |child_well|
+          child_well.location == transfer_hash[source_well.location]['dest_locn']
+        end&.uuid,
+        'volume' => transfer_hash[source_well.location]['volume'].to_s
+      }.merge(additional_parameters)
+    end
+
+    # Uses the calculator to generate the hash of transfers to be performed on the parent plate
+    def transfer_hash
+      @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
   end
 end
