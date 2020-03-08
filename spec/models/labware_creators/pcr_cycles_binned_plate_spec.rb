@@ -123,8 +123,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            barcode_number: '2',
            size: plate_size,
            wells: [
-            well_a1, well_b1, well_d1, well_e1, well_f1, well_h1, well_a2,
-            well_b2, well_c2, well_d2, well_e2, well_f2, well_g2, well_h2
+             well_a1, well_b1, well_d1, well_e1, well_f1, well_h1, well_a2,
+             well_b2, well_c2, well_d2, well_e2, well_f2, well_g2, well_h2
            ],
            outer_requests: requests
   end

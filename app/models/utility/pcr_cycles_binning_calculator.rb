@@ -47,7 +47,7 @@ module Utility
 
     def calculate_bins
       bins = []
-      @well_details.each do |well_locn, details|
+      @well_details.each do |_well_locn, details|
         pcr_cycles = details['pcr_cycles']
         bins << pcr_cycles unless bins.include? pcr_cycles
       end
