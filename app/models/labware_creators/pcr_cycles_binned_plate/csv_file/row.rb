@@ -94,7 +94,7 @@ module LabwareCreators
     end
 
     def submitting_for_sequencing?
-      submit_for_sequencing.strip == 'Y'
+      submit_for_sequencing == 'Y'
     end
 
     def sub_pool
