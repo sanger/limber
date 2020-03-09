@@ -39,7 +39,7 @@ module LabwareCreators
 
     def plate_barcode
       @plate_barcode =
-        @barcode_lbl_index.present? && @row[@barcode_lbl_index + 1].present? ? @row[@barcode_lbl_index + 1] : nil
+        @barcode_lbl_index.present? && @row[@barcode_lbl_index + 1].present? ? @row[@barcode_lbl_index + 1].strip : nil
     end
 
     #

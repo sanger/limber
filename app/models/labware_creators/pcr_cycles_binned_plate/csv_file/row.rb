@@ -58,11 +58,11 @@ module LabwareCreators
     end
 
     def concentration
-      @row_data[concentration_column]&.to_f
+      @row_data[concentration_column]&.strip.to_f
     end
 
     def sanger_sample_id
-      @row_data[sanger_sample_id_column]&.to_i
+      @row_data[sanger_sample_id_column]&.strip.to_i
     end
 
     def supplier_sample_name
@@ -70,23 +70,23 @@ module LabwareCreators
     end
 
     def input_amount_available
-      @row_data[input_amount_available_column]&.to_f
+      @row_data[input_amount_available_column]&.strip.to_f
     end
 
     def input_amount_desired
-      @row_data[input_amount_desired_column]&.to_f
+      @row_data[input_amount_desired_column]&.strip.to_f
     end
 
     def sample_volume
-      @row_data[sample_volume_column]&.to_f
+      @row_data[sample_volume_column]&.strip.to_f
     end
 
     def diluent_volume
-      @row_data[diluent_volume_column]&.to_f
+      @row_data[diluent_volume_column]&.strip.to_f
     end
 
     def pcr_cycles
-      @row_data[pcr_cycles_column]&.to_i
+      @row_data[pcr_cycles_column]&.strip.to_i
     end
 
     def submit_for_sequencing
@@ -94,15 +94,15 @@ module LabwareCreators
     end
 
     def submitting_for_sequencing?
-      submit_for_sequencing == 'Y'
+      submit_for_sequencing.strip == 'Y'
     end
 
     def sub_pool
-      @row_data[sub_pool_column]&.to_i
+      @row_data[sub_pool_column]&.strip.to_i
     end
 
     def coverage
-      @row_data[coverage_column]&.to_i
+      @row_data[coverage_column]&.strip.to_i
     end
 
     def to_s
