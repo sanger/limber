@@ -75,13 +75,8 @@ module LabwareCreators
       filtered_wells.each do |well|
         next if well.aliquots.empty?
 
-        well_detail = well_details[well.location]
-
-        if well_detail.nil?
-          errors.add(:csv_file, format(MISSING_WELL_DETAIL, well.location))
-        elsif well.pending?
-          errors.add(:csv_file, format(PENDING_WELL, well.location))
-        end
+        errors.add(:csv_file, format(MISSING_WELL_DETAIL, well.location)) unless well_details.include? well.location
+        errors.add(:csv_file, format(PENDING_WELL, well.location)) if well.pending?
       end
     end
 

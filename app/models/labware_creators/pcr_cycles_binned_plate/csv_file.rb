@@ -86,18 +86,20 @@ module LabwareCreators
     def generate_well_details_hash
       return {} unless valid?
 
-      well_details = Hash.new { |hash, well_locn| hash[well_locn] = {} }
-      transfers.each do |row|
-        next if row.empty? || row[row.well].empty?
+      well_details_hash = {}
 
-        well_details[row.well]['sample_volume'] = row.sample_volume
-        well_details[row.well]['diluent_volume'] = row.diluent_volume
-        well_details[row.well]['pcr_cycles'] = row.pcr_cycles
-        well_details[row.well]['submit_for_sequencing'] = row.submit_for_sequencing
-        well_details[row.well]['sub_pool'] = row.sub_pool
-        well_details[row.well]['coverage'] = row.coverage
+      transfers.each do |row|
+        next if row.empty?
+
+        well_details_hash[row.well] = {}
+        well_details_hash[row.well]['sample_volume'] = row.sample_volume
+        well_details_hash[row.well]['diluent_volume'] = row.diluent_volume
+        well_details_hash[row.well]['pcr_cycles'] = row.pcr_cycles
+        well_details_hash[row.well]['submit_for_sequencing'] = row.submit_for_sequencing
+        well_details_hash[row.well]['sub_pool'] = row.sub_pool
+        well_details_hash[row.well]['coverage'] = row.coverage
       end
-      well_details
+      well_details_hash
     end
   end
 end
