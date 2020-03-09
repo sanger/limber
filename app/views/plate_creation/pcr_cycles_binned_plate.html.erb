@@ -2,9 +2,17 @@
   <%= content do %>
     <%= card title: 'Help' do %>
       <p>Upload the customer completed csv file describing your desired pcr cycles binning strategy. An example is shown below:</p>
-      <p>Please make sure you specify source and diluent volumes, number of pcr cycles, and whether the well should be submitted for sequencing (Y/N). If yes, you also need to supply Sub-Pool and Coverage values.</p>
+      <p>Please make sure there is a header row for the parent plate barcode, this barcode must match the plate from which the dilution plate is being created. Then leave a spacer row before the row column headings.
+      <p>Please also make sure you specify source and diluent volumes, number of pcr cycles, and whether the well should be submitted for sequencing (Y/N) for each well that has a sample. If sequencing, you also need to supply Sub-Pool and Coverage values.</p>
       <table class='table table-sm'>
         <thead>
+          <tr>
+            <th>Plate barcode</th>
+            <td>DN12345678A</td>
+          </tr>
+          <tr>
+            <td></td>
+          </tr>
           <tr>
             <th>Well</th>
             <th>Concentration (nM)</th>
