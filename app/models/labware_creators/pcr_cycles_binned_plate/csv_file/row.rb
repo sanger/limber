@@ -58,39 +58,39 @@ module LabwareCreators
     end
 
     def concentration
-      @row_data[concentration_column]&.strip.to_f
+      @row_data[concentration_column]&.strip&.to_f
     end
 
     def sanger_sample_id
-      @row_data[sanger_sample_id_column]&.strip.to_i
+      @row_data[sanger_sample_id_column]&.strip&.to_i
     end
 
     def supplier_sample_name
-      (@row_data[supplier_sample_name_column] || '').strip
+      (@row_data[supplier_sample_name_column])&.strip
     end
 
     def input_amount_available
-      @row_data[input_amount_available_column]&.strip.to_f
+      @row_data[input_amount_available_column]&.strip&.to_f
     end
 
     def input_amount_desired
-      @row_data[input_amount_desired_column]&.strip.to_f
+      @row_data[input_amount_desired_column]&.strip&.to_f
     end
 
     def sample_volume
-      @row_data[sample_volume_column]&.strip.to_f
+      @row_data[sample_volume_column]&.strip&.to_f
     end
 
     def diluent_volume
-      @row_data[diluent_volume_column]&.strip.to_f
+      @row_data[diluent_volume_column]&.strip&.to_f
     end
 
     def pcr_cycles
-      @row_data[pcr_cycles_column]&.strip.to_i
+      @row_data[pcr_cycles_column]&.strip&.to_i
     end
 
     def submit_for_sequencing
-      (@row_data[submit_for_sequencing_column] || '').strip.upcase
+      (@row_data[submit_for_sequencing_column])&.strip&.upcase
     end
 
     def submitting_for_sequencing?
@@ -98,11 +98,11 @@ module LabwareCreators
     end
 
     def sub_pool
-      @row_data[sub_pool_column]&.strip.to_i
+      @row_data[sub_pool_column]&.strip&.to_i
     end
 
     def coverage
-      @row_data[coverage_column]&.strip.to_i
+      @row_data[coverage_column]&.strip&.to_i
     end
 
     def to_s
@@ -171,7 +171,7 @@ module LabwareCreators
     end
 
     def empty?
-      @row_data.empty? || sanger_sample_id.blank?
+      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? # to do what if list of nils
     end
   end
 end

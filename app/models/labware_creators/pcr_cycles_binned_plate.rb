@@ -71,6 +71,24 @@ module LabwareCreators
       super && upload_file && true
     end
 
+    def after_transfer!
+      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: child.id)
+
+      fields_to_update = ['pcr_cycles', 'submit_for_sequencing', 'sub_pool', 'coverage']
+
+      child_wells_by_location = {}
+      child_v2.wells.each { |well| child_wells_by_location[well.location] = well }
+
+      well_details.each do |parent_location, details|
+        child_position = transfer_hash[parent_location]['dest_locn']
+        child_well = child_wells_by_location[child_position]
+
+        options = fields_to_update.each_with_object({}) { |field, obj| obj[field] = details[field] }
+
+        child_well.update_attributes(options)
+      end
+    end
+
     def wells_have_required_information?
       filtered_wells.each do |well|
         next if well.aliquots.empty?

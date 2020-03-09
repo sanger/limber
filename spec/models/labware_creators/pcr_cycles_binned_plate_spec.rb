@@ -131,9 +131,17 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
   let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
 
+  let(:child_plate_v1) { json :plate, uuid: child_uuid }
+
+  let(:child_uuid) { 'child-uuid' }
+
+  let(:stub_child_request) do
+    stub_api_get(child_uuid, body: child_plate_v1)
+  end
+
   let(:child_plate) do
     create :v2_plate,
-           uuid: 'child-uuid',
+           uuid: child_uuid,
            barcode_number: '3',
            size: plate_size,
            outer_requests: requests
@@ -202,6 +210,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
     before do
       stub_parent_request
+      stub_child_request
+
       create :duplex_seq_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
              name: child_purpose_name,
