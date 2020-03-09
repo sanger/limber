@@ -88,7 +88,7 @@ module LabwareCreators
 
       well_details = Hash.new { |hash, well_locn| hash[well_locn] = {} }
       transfers.each do |row|
-        next if row.empty?
+        next if row.empty? || row[row.well].empty?
 
         well_details[row.well]['sample_volume'] = row.sample_volume
         well_details[row.well]['diluent_volume'] = row.diluent_volume
