@@ -32,7 +32,6 @@
     "underscore": "^1.9.2",
     "uuid": "^3.3.2",
     "vue": "2.6.10",
-    "vue-html-to-paper": "^1.3.0",
     "vue-loader": "^15.4.2",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.8",
