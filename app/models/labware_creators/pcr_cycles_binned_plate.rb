@@ -74,7 +74,7 @@ module LabwareCreators
     def after_transfer!
       child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: child.id)
 
-      fields_to_update = ['pcr_cycles', 'submit_for_sequencing', 'sub_pool', 'coverage']
+      fields_to_update = %w[pcr_cycles submit_for_sequencing sub_pool coverage]
 
       child_wells_by_location = {}
       child_v2.wells.each { |well| child_wells_by_location[well.location] = well }
