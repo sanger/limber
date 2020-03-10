@@ -68,7 +68,7 @@ module LabwareCreators
 
     def parse_submit_for_sequencing
       @submit_for_sequencing_string = (@row_data[submit_for_sequencing_column])&.strip&.upcase
-      return @submit_for_sequencing_string == 'Y'
+      @submit_for_sequencing_string == 'Y'
     end
 
     def to_s
