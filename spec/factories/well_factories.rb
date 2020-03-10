@@ -53,6 +53,7 @@ FactoryBot.define do
     position { { 'name' => location } }
     state { 'passed' }
     uuid { SecureRandom.uuid }
+    pcr_cycles { 14 }
 
     after(:build) do |well, evaluator|
       RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results || [])
@@ -65,6 +66,7 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(well, :upstream_tubes).and_return(evaluator.upstream_tubes || [])
       RSpec::Mocks.allow_message(well, :upstream_assets).and_return(evaluator.upstream_assets || [])
       RSpec::Mocks.allow_message(well, :upstream_plates).and_return(evaluator.upstream_plates || [])
+      RSpec::Mocks.allow_message(well, :pcr_cycles).and_return(evaluator.pcr_cycles || [])
     end
 
     factory :v2_stock_well do

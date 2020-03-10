@@ -25,7 +25,7 @@ LDS AL Lib:
     id: 'duplex_seq_al_lib_concentrations_for_customer'
 LDS AL Lib Dil:
   :asset_type: plate
-  # :presenter_class: Presenters::PcrCyclesBinnedPresenter
+  :presenter_class: Presenters::PcrCyclesBinnedPlatePresenter
   :creator_class: LabwareCreators::PcrCyclesBinnedPlate
   :csv_file_upload:
     :input_amount_desired_min: 0.0

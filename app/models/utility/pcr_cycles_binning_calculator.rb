@@ -17,22 +17,39 @@ module Utility
       build_transfers_hash(bins_hash, parent_plate.number_of_rows, compression_reqd)
     end
 
-    # Used by the plate presenter. Uses the well metadata to work out the well bin colour and number of PCR cycles.
-    # def compute_presenter_bin_details(plate)
-    #   well_pcr_cycles = fetch_well_pcr_cycles_for_presenter(plate)
-    #   compute_bin_details_by_well(well_pcr_cycles)
-    # end
+    def presenter_bins_key
+      # fetch the array of bins as pcr cycles e.g. [16,14,12]
+      bins = calculate_bins
+
+      # dynamic number of bins so count the colours up from 1
+      colour_index = 1
+      bins.each_with_object([]) do |bin, templates|
+        templates << { 'colour' => colour_index, 'pcr_cycles' => bin }
+        colour_index += 1
+      end
+    end
+
+    def compute_presenter_bin_details
+      @well_details.each_with_object({}) do |(well_locn, well_detail), bin_dets|
+        presenter_bins_key.each do |bin|
+          next unless well_detail['pcr_cycles'] == bin['pcr_cycles']
+
+          bin_dets[well_locn] = { 'colour' => bin['colour'], 'pcr_cycles' => bin['pcr_cycles'] }
+        end
+      end
+    end
 
     private
 
-    # def fetch_well_pcr_cycles_for_presenter(plate)
-    #   plate.wells_in_columns.each_with_object({}) do |well, well_pcr_cycles|
-    #     next if well.aliquots.blank?
-
-    #     # fetch pcr cycles per well
-    #     well_pcr_cycles[well.location] = well.metadata.pcr_cycles # TODO: or should we store bin number in metadata too?
-    #   end
-    # end
+    def calculate_bins
+      bins = []
+      @well_details.each do |_well_locn, details|
+        pcr_cycles = details['pcr_cycles']
+        bins << pcr_cycles unless bins.include? pcr_cycles
+      end
+      # want pcr cycle bins in reverse order, highest first e.g. [16,14,12]
+      bins.sort.reverse
+    end
 
     # Sorts well locations into bins based on their number of pcr cycles.
     def pcr_cycle_bins
@@ -43,16 +60,6 @@ module Utility
         binned_wells[pcr_cycles_num] << { 'locn' => well_locn, 'sample_volume' => details['sample_volume'] }
       end
       binned_wells
-    end
-
-    def calculate_bins
-      bins = []
-      @well_details.each do |_well_locn, details|
-        pcr_cycles = details['pcr_cycles']
-        bins << pcr_cycles unless bins.include? pcr_cycles
-      end
-      # want pcr cycle bins in reverse order, highest first e.g. [16,14,12]
-      bins.sort.reverse
     end
 
     # Build the transfers hash, cycling through the bins and their wells and locating them onto the
