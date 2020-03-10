@@ -78,7 +78,7 @@ module LabwareCreators
       # retrieve child plate through v2 api, using uuid got through v1 api
       child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
-      fields_to_update = ['pcr_cycles', 'submit_for_sequencing', 'sub_pool', 'coverage']
+      fields_to_update = %w[pcr_cycles submit_for_sequencing sub_pool coverage]
 
       child_wells_by_location = {}
       child_v2.wells.each { |well| child_wells_by_location[well.location] = well }
