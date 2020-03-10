@@ -51,7 +51,7 @@ module LabwareCreators
     def initialize_supplied_fields
       @well                   = (@row_data[well_column] || '').strip.upcase
       @concentration          = @row_data[concentration_column]&.strip&.to_f
-      @sanger_sample_id       = @row_data[sanger_sample_id_column]&.strip&.to_i
+      @sanger_sample_id       = @row_data[sanger_sample_id_column]&.strip
       @supplier_sample_name   = (@row_data[supplier_sample_name_column])&.strip
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
     end
@@ -136,7 +136,7 @@ module LabwareCreators
     end
 
     def empty?
-      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? # to do what if list of nils
+      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank?
     end
   end
 end
