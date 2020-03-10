@@ -69,12 +69,12 @@ module LabwareCreators
     end
 
     def save
-      # TODO: need to save well metadata
       # NB. need the && true!!
       super && upload_file && true
     end
 
     def after_transfer!
+      # called as part of the 'super' call in the 'save' method
       # retrieve child plate through v2 api, using uuid got through v1 api
       child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 

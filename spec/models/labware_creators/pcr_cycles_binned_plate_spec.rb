@@ -208,6 +208,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       stub_api_get(child_uuid, body: child_plate_v1)
     end
 
+    let(:well_attributes_to_update) do
+      {"coverage"=>15, "pcr_cycles"=>14, "sub_pool"=>1, "submit_for_sequencing"=>"Y"}
+    end
+
     before do
       stub_parent_request
       # stub_child_request
@@ -234,11 +238,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         custom_includes: 'wells.aliquots'
       )
 
-      # stub_api_v2_post(
-      #   'Well',
-      #   {}
-      # )
-
       stub_upload_file_creation
     end
 
@@ -262,6 +261,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                       } },
                       body: json(:plate_creation))
       end
+
+      let!(:api_v2_post) { stub_api_v2_post('Well') }
 
       let(:transfer_requests) do
         [
@@ -365,10 +366,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
-      end
-
-      it 'makes the expected request to save information to the wells' do
-        expect(subject.save!).to eq true
       end
     end
   end
