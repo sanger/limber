@@ -45,11 +45,14 @@ module LabwareCreators
     validates_nested :csv_file, if: :file
     validate :wells_have_required_information?
 
-    PLATE_INCLUDES =
+    PARENT_PLATE_INCLUDES =
       'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
 
+    CHILD_PLATE_INCLUDES =
+      'wells.aliquots'
+
     def parent
-      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)
+      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
     end
 
     def parent_v1
@@ -72,7 +75,8 @@ module LabwareCreators
     end
 
     def after_transfer!
-      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: child.id)
+      # retrieve child plate through v2 api, using uuid got through v1 api
+      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
       fields_to_update = ['pcr_cycles', 'submit_for_sequencing', 'sub_pool', 'coverage']
 

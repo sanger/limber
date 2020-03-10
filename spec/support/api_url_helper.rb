@@ -84,6 +84,11 @@ module ApiUrlHelper
       end
     end
 
+    def stub_api_v2_post(klass, options)
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      allow_any_instance_of(receiving_class).to receive(:update_attributes).with(options).and_return(receiving_class.new) # To do : merge 'options' into correct well instance
+    end
+
     # Builds the basic v2 plate finding query.
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil)
       # Stub to v1 api search here as well!
