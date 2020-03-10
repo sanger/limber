@@ -33,7 +33,7 @@ module LabwareCreators
     validates :coverage,
               presence: { message: ->(object, _data) { COVERAGE_MISSING % object } },
               numericality: { greater_than: 0, message: ->(object, _data) { COVERAGE_NEGATIVE % object } },
-              unless: -> { empty? || !submitting_for_sequencing? }
+              unless: -> { empty? || !submit_for_sequencing }
     delegate :well_column, :concentration_column, :sanger_sample_id_column, :supplier_sample_name_column,
              :input_amount_available_column, :input_amount_desired_column, :sample_volume_column, :diluent_volume_column,
              :pcr_cycles_column, :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :header
@@ -61,13 +61,14 @@ module LabwareCreators
       @sample_volume          = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume         = @row_data[diluent_volume_column]&.strip&.to_f
       @pcr_cycles             = @row_data[pcr_cycles_column]&.strip&.to_i
-      @submit_for_sequencing  = (@row_data[submit_for_sequencing_column])&.strip&.upcase
+      @submit_for_sequencing  = parse_submit_for_sequencing
       @sub_pool               = @row_data[sub_pool_column]&.strip&.to_i
       @coverage               = @row_data[coverage_column]&.strip&.to_i
     end
 
-    def submitting_for_sequencing?
-      submit_for_sequencing == 'Y'
+    def parse_submit_for_sequencing
+      @submit_for_sequencing_string = (@row_data[submit_for_sequencing_column])&.strip&.upcase
+      @submit_for_sequencing_string == 'Y'
     end
 
     def to_s
@@ -97,7 +98,7 @@ module LabwareCreators
     def submit_for_sequencing_has_expected_value?
       return true if empty?
 
-      return true if %w[Y N].include? submit_for_sequencing
+      return true if %w[Y N].include? @submit_for_sequencing_string
 
       errors.add('submit_for_sequencing', format(SUBMIT_FOR_SEQ_INVALID, to_s))
     end
@@ -106,7 +107,7 @@ module LabwareCreators
       return true if empty?
 
       # check the value is within range when we do expect a value to be present
-      return in_range?('sub_pool', sub_pool, @row_config.sub_pool_min, @row_config.sub_pool_max) if submit_for_sequencing == 'Y'
+      return in_range?('sub_pool', sub_pool, @row_config.sub_pool_min, @row_config.sub_pool_max) if submit_for_sequencing
 
       # expect sub-pool field to be blank, possible mistake by user if not
       return true if sub_pool.blank?

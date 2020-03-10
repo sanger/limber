@@ -131,17 +131,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
   let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
 
-  let(:child_uuid) { 'child-uuid' }
-
   let(:child_plate) do
     create :v2_plate,
-           uuid: child_uuid,
+           uuid: 'child-uuid',
            barcode_number: '3',
            size: plate_size,
            outer_requests: requests
   end
-
-  let(:child_plate_v1) { json :plate, uuid: child_uuid }
 
   let(:library_type_name) { 'Test Library Type' }
 
@@ -204,13 +200,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       stub_api_get(parent_uuid, body: parent_plate_v1)
     end
 
-    let(:stub_child_request) do
-      stub_api_get(child_uuid, body: child_plate_v1)
-    end
-
     before do
       stub_parent_request
-      # stub_child_request
 
       create :duplex_seq_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
@@ -233,11 +224,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         stub_search: false,
         custom_includes: 'wells.aliquots'
       )
-
-      # stub_api_v2_post(
-      #   'Well',
-      #   {}
-      # )
 
       stub_upload_file_creation
     end
@@ -262,6 +248,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                       } },
                       body: json(:plate_creation))
       end
+
+      let!(:api_v2_post) { stub_api_v2_post('Well') }
 
       let(:transfer_requests) do
         [
@@ -365,10 +353,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
-      end
-
-      it 'makes the expected request to save information to the wells' do
-        expect(subject.save!).to eq true
       end
     end
   end
