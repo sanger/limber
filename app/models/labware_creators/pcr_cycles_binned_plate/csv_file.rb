@@ -29,7 +29,9 @@ module LabwareCreators
              :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
              :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
 
-    # TODO: pass through parent plate barcode for validation
+    #
+    # Passing in the file to be parsed, the configuration that holds validation range thresholds, and
+    # the parent plate barcode for validation that we are processing the correct file.
     def initialize(file, config, parent_barcode)
       @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
       @parent_barcode = parent_barcode
@@ -48,7 +50,8 @@ module LabwareCreators
     #
     # Extracts well details from the uploaded csv file
     #
-    # @return [Hash] eg. { 'A1' => { TODO: structure of this hash? }
+    # @return [Hash] eg. { 'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0,
+    # 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 }, etc. }
     #
     def well_details
       @well_details ||= generate_well_details_hash
@@ -83,6 +86,7 @@ module LabwareCreators
       correctly_parsed? && plate_barcode_header_row.valid? && well_details_header_row.valid?
     end
 
+    # Create the hash of well details from the file upload values
     def generate_well_details_hash
       return {} unless valid?
 
