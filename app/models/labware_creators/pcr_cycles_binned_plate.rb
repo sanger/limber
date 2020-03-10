@@ -89,7 +89,7 @@ module LabwareCreators
 
         options = fields_to_update.each_with_object({}) { |field, obj| obj[field] = details[field] }
 
-        child_well.update_attributes(options)
+        child_well.update(options)
       end
     end
 

@@ -208,10 +208,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       stub_api_get(child_uuid, body: child_plate_v1)
     end
 
-    let(:well_attributes_to_update) do
-      {"coverage"=>15, "pcr_cycles"=>14, "sub_pool"=>1, "submit_for_sequencing"=>"Y"}
-    end
-
     before do
       stub_parent_request
       # stub_child_request
