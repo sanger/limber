@@ -39,6 +39,12 @@ RSpec.describe ExportsController, type: :controller do
     it_behaves_like 'a csv view'
   end
 
+  RSpec.shared_examples 'a hamilton variable volume dilutions with well diluents view' do
+    let(:expected_template) { 'hamilton_variable_volume_dilutions_with_well_diluents' }
+
+    it_behaves_like 'a csv view'
+  end
+
   context 'on generating a csv' do
     before do
       expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, barcode: plate_barcode).and_return(plate)
@@ -162,10 +168,16 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton variable volume dilutions view'
       end
 
-      context 'where csv id requested is hamilton_al_lib_to_qc1.csv' do
-        let(:csv_id) { 'hamilton_al_lib_to_qc1' }
+      context 'where csv id requested is hamilton_lds_al_lib_to_qc1.csv' do
+        let(:csv_id) { 'hamilton_lds_al_lib_to_qc1' }
 
         it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lds_al_lib_to_lds_al_lib_dil.csv' do
+        let(:csv_id) { 'hamilton_lds_al_lib_to_lds_al_lib_dil' }
+
+        it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
       end
     end
   end
