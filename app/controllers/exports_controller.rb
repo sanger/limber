@@ -22,6 +22,8 @@ class ExportsController < ApplicationController
       CSVDetail.new('concentrations_nm', WELL_QC_INCLUDES, nil),
     'duplex_seq_al_lib_concentrations_for_customer' =>
       CSVDetail.new('duplex_seq_al_lib_concentrations_for_customer', WELL_QC_SAMPLE_INCLUDES, nil),
+    'duplex_seq_pcr_xp_concentrations_for_custom_pooling' =>
+      CSVDetail.new('duplex_seq_pcr_xp_concentrations_for_custom_pooling', WELL_QC_INCLUDES, nil),
     'hamilton_aggregate_cherrypick' =>
       CSVDetail.new('hamilton_aggregate_cherrypick', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick'),
     'hamilton_cherrypick_to_sample_dilution' =>
