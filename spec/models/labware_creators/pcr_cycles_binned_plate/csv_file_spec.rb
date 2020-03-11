@@ -18,20 +18,20 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     describe '#well_details' do
       let(:expected_well_details) do
         {
-          'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'B1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'D1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
-          'E1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 30 },
-          'F1' => { 'sample_volume' => 4.0, 'diluent_volume' => 26.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'H1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 30 },
-          'A2' => { 'sample_volume' => 3.2, 'diluent_volume' => 26.8, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'B2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
-          'C2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 2, 'coverage' => 15 },
-          'D2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'E2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 },
-          'F2' => { 'sample_volume' => 30.0, 'diluent_volume' => 0.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'N', 'sub_pool' => nil, 'coverage' => nil },
-          'G2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 30 },
-          'H2' => { 'sample_volume' => 3.621, 'diluent_volume' => 27.353, 'pcr_cycles' => 16, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 }
+          'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'B1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'D1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => true, 'sub_pool' => 2, 'coverage' => 15 },
+          'E1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 30 },
+          'F1' => { 'sample_volume' => 4.0, 'diluent_volume' => 26.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'H1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 2, 'coverage' => 30 },
+          'A2' => { 'sample_volume' => 3.2, 'diluent_volume' => 26.8, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'B2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 2, 'coverage' => 15 },
+          'C2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 2, 'coverage' => 15 },
+          'D2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 12, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'E2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 },
+          'F2' => { 'sample_volume' => 30.0, 'diluent_volume' => 0.0, 'pcr_cycles' => 16, 'submit_for_sequencing' => false, 'sub_pool' => nil, 'coverage' => nil },
+          'G2' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0, 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 30 },
+          'H2' => { 'sample_volume' => 3.621, 'diluent_volume' => 27.353, 'pcr_cycles' => 16, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 }
         }
       end
 
