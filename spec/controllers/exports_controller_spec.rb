@@ -161,6 +161,12 @@ RSpec.describe ExportsController, type: :controller do
 
         it_behaves_like 'a hamilton variable volume dilutions view'
       end
+
+      context 'where csv id requested is hamilton_al_lib_to_qc1.csv' do
+        let(:csv_id) { 'hamilton_al_lib_to_qc1' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
     end
   end
 
