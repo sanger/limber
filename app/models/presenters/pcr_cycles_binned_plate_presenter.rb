@@ -28,7 +28,7 @@ module Presenters
     end
 
     def bin_details
-      @bin_details ||= compute_bin_details
+      @bin_details ||= dilutions_calculator.compute_presenter_bin_details
     end
 
     private
@@ -41,10 +41,6 @@ module Presenters
 
         details[well.location] = { 'pcr_cycles' => well.attributes['pcr_cycles'] }
       end
-    end
-
-    def compute_bin_details
-      dilutions_calculator.compute_presenter_bin_details
     end
   end
 end
