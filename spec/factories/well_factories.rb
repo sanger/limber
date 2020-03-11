@@ -53,7 +53,11 @@ FactoryBot.define do
     position { { 'name' => location } }
     state { 'passed' }
     uuid { SecureRandom.uuid }
-    pcr_cycles { 14 }
+    diluent_volume { nil }
+    pcr_cycles { nil }
+    submit_for_sequencing { nil }
+    sub_pool { nil }
+    coveraga { nil }
 
     after(:build) do |well, evaluator|
       RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results || [])
