@@ -12,7 +12,7 @@ module LabwareCreators
 
     IN_RANGE = 'is empty or contains a value that is out of range (%s to %s), in %s'
     SUB_POOL_NOT_BLANK = 'has a value when Submit for Sequencing is N, it should be empty, in %s'
-    SUBMIT_FOR_SEQ_INVALID = 'is empty or has an unrecogised value (should be Y or N), in %s'
+    SUBMIT_FOR_SEQ_INVALID = 'is empty or has an unrecognised value (should be Y or N), in %s'
     COVERAGE_MISSING = 'is missing but should be present when Submit for Sequencing is Y, in %s'
     COVERAGE_NEGATIVE = 'is negative but should be a positive value, in %s'
     WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'

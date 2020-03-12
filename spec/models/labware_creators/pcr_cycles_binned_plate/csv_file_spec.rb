@@ -127,7 +127,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       end
 
       let(:row8_error) do
-        'Transfers submit for sequencing is empty or has an unrecogised value (should be Y or N), in row 9 [F1]'
+        'Transfers submit for sequencing is empty or has an unrecognised value (should be Y or N), in row 9 [F1]'
       end
 
       let(:row8_error2) do
