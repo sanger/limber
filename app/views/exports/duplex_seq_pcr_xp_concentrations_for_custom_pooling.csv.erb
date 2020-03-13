@@ -1,8 +1,9 @@
-<%= CSV.generate_line ['Well', 'Concentration (ng/µl)', 'Submit for sequencing (Y/N)?', 'Sub-Pool', 'Coverage'], row_sep: "" %>
-<% @plate.wells_in_columns.each do |well| %>
-  <% unless well.empty? %>
-    <% if well.attributes['submit_for_sequencing'] %>
-<%= CSV.generate_line [well.location, well.latest_concentration&.value, 'Y', well.attributes['sub_pool']&.to_i, well.attributes['coverage']&.to_i], row_sep: "" %>
+<%= CSV.generate_line ['Well', 'Concentration (ng/ul)', 'Submit for sequencing (Y/N)?', 'Sub-Pool', 'Coverage'], row_sep: "" %>
+<% @plate.wells_in_columns.each_with_index do |well, well_index| %>
+  <% unless well.empty? || @ancestor_plate.blank? %>
+    <% ancestor_well = @ancestor_plate.wells_in_columns[well_index] %>
+    <% if ancestor_well.attributes['submit_for_sequencing'] %>
+<%= CSV.generate_line [well.location, well.latest_concentration&.value, 'Y', ancestor_well.attributes['sub_pool']&.to_i, ancestor_well.attributes['coverage']&.to_i], row_sep: "" %>
     <% else %>
 <%= CSV.generate_line [well.location, well.latest_concentration&.value, 'N', nil, nil], row_sep: "" %>
     <% end %>
