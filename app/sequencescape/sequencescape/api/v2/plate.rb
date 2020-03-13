@@ -96,14 +96,15 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     workline_reference&.barcode&.human
   end
 
+  # This is the plate that will act as a reference in my workflow that will be
+  # printed in the label at the top_right field. It is the first stock by default,
+  # but in some cases we may want to display a different plate. To change the default
+  # selection from stock plate to other plate purpose, we have to modify the purposes.yml
+  # config file and add a workline_reference_identifier attribute with the purpose we want to select.
   def workline_reference
     alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
     return stock_plate if alternative_workline_identifier_purpose.nil?
-    return nil unless stock_plates.count.positive?
-    return stock_plate if stock_plates.count == 1
 
-    # When there was more than one stock plate and we have an alternative workline identifier we
-    # will use that as the workline reference to print in the barcode label
     ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
   end
 
