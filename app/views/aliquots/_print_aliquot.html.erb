@@ -1,0 +1,7 @@
+<div class="aliquot colour-<%= presenter.pool_or_subpool_index(container) %>">
+  <% container.aliquots.each do |aliquot| %>
+    <div><%= aliquot.sample.sanger_sample_id %><div>
+    <div><%= truncate(aliquot.sample.sample_metadata.sample_common_name, length: 20) %><div>
+    <div><%= presenter.subpool_of_well(container).bait_library_name.nil? ? 'n/a' : presenter.subpool_of_well(container).bait_library_name %><div>
+  <% end -%>
+</div>

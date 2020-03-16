@@ -23,11 +23,12 @@ module PlateHelper
   # We rely on the fact that hashes maintain insert order, and walk the wells in column
   # order. Each time we see a pre-capture pool for the first time, it gets inserted into the hash along with the
   # request Order id.
+  #
   # We then sort the pre-capture pool hashes within the array by their Order ids, to get the pools into the right
   # sequence. Requests are grouped into Orders, each pre-capture pool has a different Order relating to the asset group
   # name entered on the submission manifest. Asset groups are created in the sequence they are presented in the manifest.
   # (Pre-capture pools are not created sequentially in the same order as the asset groups on the manifest).
-  # This sorted array gets passed to our javascript via ajax.
+  # This sorted array gets passed to our Javascript via AJAX.
   # @note Javascript objects are not explicitly ordered, hence the need to pass an array here.
   #
   # @param current_plate [Sequencescape::Api::V2::Plate] The plate from which to extract the pre-cap pools

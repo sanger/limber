@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# show => Looks up the presenter for the given purpose and renders the appropriate show page
 # update => Used to update the state of a plate/tube
 # fail_wells => Updates the state of individual wells when failing
-# Note: Finds plates via the v2 api
+# NOTE: Finds plates via the SS v2 API
 class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells]
 

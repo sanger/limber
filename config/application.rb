@@ -36,5 +36,7 @@ module Limber
 
     config.logger = Logger.new(Rails.root.join('log', Rails.env + '.log'), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new
+
+    config.i18n.fallbacks = [I18n.default_locale]
   end
 end

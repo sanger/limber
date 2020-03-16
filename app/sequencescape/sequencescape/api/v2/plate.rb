@@ -139,6 +139,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   private
 
   def generate_pools
+    Rails.logger.debug("generate_pools()")
     Pools.new(wells_in_columns)
   end
 end

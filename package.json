@@ -29,6 +29,7 @@
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.23.1",
+    "underscore": "^1.9.2",
     "uuid": "^3.3.2",
     "vue": "2.6.10",
     "vue-loader": "^15.4.2",
@@ -52,6 +53,7 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^2.0.0",
     "karma-webpack": "^4.0.0-rc.3",
+    "markdown-toc": "^1.2.0",
     "mini-css-extract-plugin": "^0.7.0",
     "webpack-dev-server": "^3.0.0"
   },

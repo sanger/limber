@@ -3,12 +3,12 @@
 require 'csv'
 
 # Inherited by PlatesController and TubesController
-# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# show => Looks up the presenter for the given purpose and renders the appropriate show page
 # update => Used to update the state of a plate/tube
 class LabwareController < ApplicationController
   UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/.freeze
 
-  before_action :locate_labware, only: :show
+  before_action :locate_labware, only: [:show, :print_pools]
   before_action :find_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
@@ -16,6 +16,8 @@ class LabwareController < ApplicationController
 
   def show
     @presenter = presenter_for(@labware)
+    logger.debug("presenter: #{@presenter.class}")
+    logger.debug("pools: #{@presenter.pools.length}")
 
     response.headers['Vary'] = 'Accept'
     respond_to do |format|
@@ -26,6 +28,38 @@ class LabwareController < ApplicationController
         render @presenter.csv
         response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
       end
+      format.json {}
+    end
+  end
+
+  def print_pools
+    @presenter = presenter_for(@labware)
+
+    response.headers['Vary'] = 'Accept'
+    respond_to do |format|
+      format.html do
+        logger.debug(@presenter.pools)
+        logger.debug(@presenter.pools.length)
+        @presenter.pools.each do |pool|
+          logger.debug(pool.subpools.length)
+          logger.debug(pool.subpools.first.well_requests.first.request.inspect)
+          logger.debug(pool.subpools.first.well_requests.first.request.pre_capture_plex_level)
+          logger.debug(pool.subpools.first.well_requests.first.request.submission)
+        end
+        @presenter.wells_by_row.each do |row_label, row_wells|
+          logger.debug(row_label)
+          row_wells.each do |well|
+            logger.debug(well.inspect)
+            # logger.debug(well.methods - Object.methods)
+            logger.debug(@presenter.pool_or_subpool_index(well))
+            # break
+          end
+          # break
+        end
+        render @presenter.print_pools_page
+        # render inline: "test"
+      end
+      format.csv {}
       format.json {}
     end
   end
@@ -44,9 +78,9 @@ class LabwareController < ApplicationController
         )
       end
     end
-  rescue StateChangers::StateChangeError => exception
+  rescue StateChangers::StateChangeError => e
     respond_to do |format|
-      format.html { redirect_to(search_path, alert: exception.message) }
+      format.html { redirect_to(search_path, alert: e.message) }
       format.csv
     end
   end

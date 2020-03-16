@@ -9,7 +9,9 @@ class SessionsController < ApplicationController
     if @current_user
       redirect_to :search, notice: 'Logged in'
     else
-      redirect_to :search, alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'
+      redirect_to :search, alert: <<-FOO
+      Sorry, that swipecard could not be found. Please update your details in Sequencescape.
+      FOO
     end
   end
 

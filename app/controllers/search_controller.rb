@@ -40,8 +40,8 @@ class SearchController < ApplicationController
         redirect_to find_qcable(qcable_barcode)
       end
     end
-  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => exception
-    render json: { 'error' => exception.message }
+  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
+    render json: { 'error' => e.message }
   end
 
   def create
@@ -50,27 +50,27 @@ class SearchController < ApplicationController
     respond_to do |format|
       format.html { redirect_to find_labware(params[:plate_barcode]) }
     end
-  rescue StandardError => exception
+  rescue StandardError => e
     @search_results = []
-    flash[:error]   = exception.message
+    flash[:error]   = e.message
 
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
       format.html { render :new }
-      format.json { render json: { error: exception.message }, status: :not_found }
+      format.json { render json: { error: e.message }, status: :not_found }
     end
   end
 
   def find_labware(barcode)
     api.search.find(Settings.searches['Find assets by barcode']).first(barcode: barcode)
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, "Sorry, could not find labware with the barcode '#{barcode}'."
+  rescue Sequencescape::Api::ResourceNotFound => e
+    raise e, "Sorry, could not find labware with the barcode '#{barcode}'."
   end
 
   def find_qcable(barcode)
     api.search.find(Settings.searches['Find qcable by barcode']).first(barcode: barcode)
-  rescue Sequencescape::Api::ResourceNotFound => exception
-    raise exception, "Sorry, could not find qcable with the barcode '#{barcode}'."
+  rescue Sequencescape::Api::ResourceNotFound => e
+    raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end
 
   private
