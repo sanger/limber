@@ -34,12 +34,20 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
     options['library_type']
   end
 
+  def pre_capture_plex_level
+    options['pre_capture_plex_level']
+  end
+
   def fragment_size
     FragmentSize.new(options['fragment_size_required_from'], options['fragment_size_required_to'])
   end
 
   def submission_id
     relationships.submission.dig(:data, :id)
+  end
+
+  def submission
+    relationships.submission
   end
 
   def submission_uuid
@@ -50,8 +58,7 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
     relationships.order.dig(:data, :id)
   end
 
-  # Determines which requests get grouped together for the
-  # purposes of displaying pool information
+  # Determines which requests get grouped together for the purposes of displaying pool information
   def group_identifier
     pre_capture_pool&.id || order_id
   end

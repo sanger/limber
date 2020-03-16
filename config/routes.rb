@@ -27,6 +27,10 @@ Rails.application.routes.draw do
   resources :limber_qcables, controller: :tag_plates, only: [:show]
 
   resources :limber_plates, controller: :plates do
+    member do
+      get 'print_pools'
+    end
+
     resources :children, controller: :plate_creation
     resources :tubes,    controller: :tube_creation
     resources :qc_files

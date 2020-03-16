@@ -1,0 +1,45 @@
+<%= content_for(:title, @presenter.title) %>
+<%= page(:'plate-show-page', :'show-page') do %>
+  <%= content do %>
+    <h3><%= @presenter.barcode %></h3>
+    <table class="plate-view pool-colours plate-<%= @presenter.size %> plate-<%= @presenter.style_class %>">
+      <thead>
+        <tr>
+          <th class="first-col">&nbsp;</th>
+          <% 1.upto(@presenter.number_of_columns).each do |column_number| %>
+          <th><%= column_number %></th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @presenter.wells_by_row.each do |row_label, row_wells| %>
+        <tr>
+          <th class="first-col"><%= row_label %></th>
+          <% 1.upto(@presenter.number_of_columns) do |column| %>
+          <% well = row_wells[column - 1] %>
+          <td>
+            <% location = "#{row_label}#{column}" %>
+            <div id="<%= "well_#{location}" %>" class="well_print_friendly">
+              <% if well.try(:aliquots).present? -%>
+                <%= render partial: "aliquots/#{@presenter.print_aliquot_partial}", locals: { presenter: @presenter, id: well.location, container: well } %>
+              <% else %>
+                [empty]
+              <% end -%>
+            </div>
+          </td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div>
+      <h4>Lanes per pool</h4>
+      <% @presenter.pools_or_subpools.each do |pool_subpool| %>
+      <div>
+        <div class="aliquot colour-<%= pool_subpool.pool_index %> legend">&nbsp;</div><span><%= pool_subpool.number_of_lanes %></span>
+      </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

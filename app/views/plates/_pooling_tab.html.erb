@@ -1,6 +1,6 @@
 <ul id="pools-information" class="list-group list-group-flush">
   <li class='list-group-item'>
-    <div id="testing" data-id="<%= plate_presenter.pools.to_json %>"></div>
+    <a href="print_pools" class="btn btn-primary btn-lg" role="button" target="_blank">Print friendly version</a>
   </li>
   <% plate_presenter.pools.each do |pool| -%>
     <li data-pool="<%= pool.id %>" class='list-group-item'>

@@ -10,10 +10,11 @@ class Presenters::PlatePresenter
   include Presenters::ExtendedCsv
   include Presenters::CreationBehaviour
 
-  class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
+  class_attribute :aliquot_partial, :print_aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
 
   self.summary_partial = 'labware/plates/standard_summary'
   self.aliquot_partial = 'standard_aliquot'
+  self.print_aliquot_partial = 'print_aliquot'
   # summary_items is a hash of a label label, and a symbol representing the
   # method to call to get the value
   self.summary_items = {
@@ -41,7 +42,7 @@ class Presenters::PlatePresenter
   validates_with Validators::InProgressValidator
 
   delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
-  delegate :pool_index, to: :pools
+  delegate :pool_index, :pool, :pool_or_subpool_index, :subpool_of_well, :pools_or_subpools, to: :pools
   delegate :tube_labels, to: :tubes_and_sources
 
   alias plate_to_walk labware

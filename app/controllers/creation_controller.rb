@@ -14,6 +14,8 @@ class CreationController < ApplicationController
   def new
     params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(params.permit(permitted_attributes))
+    logger.debug("@labware_creator: #{@labware_creator.class}")
+
     respond_to do |format|
       format.html { render(@labware_creator.page) }
     end

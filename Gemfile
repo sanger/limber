@@ -38,6 +38,7 @@ group :development, :test do
   gem 'sass-rails'
   gem 'select2-rails'
   gem 'uglifier'
+  gem 'solargraph'
 end
 
 group :development do

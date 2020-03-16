@@ -15,6 +15,8 @@ module Presenters::Presenter
     self.page = 'show'
     #     self.attributes = %i[api labware]
 
+    self.print_pools_page = 'print_pools'
+
     def csv
       purpose_config[:csv_template]
     end

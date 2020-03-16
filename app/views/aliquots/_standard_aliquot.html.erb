@@ -7,5 +7,13 @@
         colour-<%= presenter.pool_index(container.pool_id) %>"
   rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool_id) ? container.pool_id : '' %>">
-  <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
+  <% if defined?(print_pools) && print_pools %>
+    <% container.aliquots.each do |aliquot| %>
+      <div><%= aliquot.sample.sanger_sample_id %><div>
+      <div><%= truncate(aliquot.sample.sample_metadata.sample_common_name, length: 20) %><div>
+      <div><%= presenter.pool(container.pool_id).bait_library_name.nil? ? 'n/a' : presenter.pool(container.pool_id).bait_library_name.nil %><div>
+    <% end -%>
+  <% else %>
+    <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
+  <% end %>
 </div>

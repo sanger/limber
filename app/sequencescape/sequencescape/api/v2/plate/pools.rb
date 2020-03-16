@@ -18,12 +18,11 @@ class Sequencescape::Api::V2::Plate::Pools
     end
   end
 
+  # Create a new Plate::Pools instance from the pool information
   #
-  # Create a new Pools from the pool information.
-  #
-  # @param [Hash] pools_hash  As provided by the pools hash in the plate json
-  #
+  # @param [Hash] wells  As provided by the pools hash in the plate JSON
   def initialize(wells)
+    @logger = Rails.logger
     @pools_hash = wells.each_with_object(self.class.pool_hash) do |well, pools_hash|
       well.active_requests.each do |request|
         pools_hash[request.submission_id].add_well_request(well, request)
@@ -59,7 +58,53 @@ class Sequencescape::Api::V2::Plate::Pools
     @pools_hash.values
   end
 
-  def pool_index(submission_id)
-    @pools_hash.fetch(submission_id, nil)&.pool_index
+  # Returns the index for the given pool ID in the pool hash or `nil` if not found.
+  #
+  # Confusingly, the pool ID _IS_ the submission ID.
+  #
+  # @param `pool_id` [Int] The ID of the pool to look for
+  def pool_index(pool_id)
+    @pools_hash.fetch(pool_id, nil)&.pool_index
+  end
+
+  def pools_or_subpools
+    if number_of_pools == 1 && @pools_hash.values[0].subpools.length > 1
+      return @pools_hash.values[0].subpools
+    end
+
+    pools
+  end
+
+  def pool(submission_id)
+    pool = @pools_hash.fetch(submission_id, nil)
+    @logger.debug(pool.subpools)
+
+    @pools_hash.fetch(submission_id, nil)
+  end
+
+  def subpool_of_well(well)
+    @logger.debug("subpool_of_well()")
+    pool = @pools_hash.fetch(well.pool_id, nil)
+
+    pool.subpool_of_well(well)
+  end
+
+  # Returns the index for the pool (in the pools hash) or subool (in the array of subpools) of the
+  # given well.
+  #
+  # If only one subpool exists for the pool, return the pool's index. If more than one subpool
+  # exists for the pool, return the subpool's index plus one (1) - this is for the colour class.
+  #
+  # @param `well` [Sequencescape::Api::V2::Well] the well of interest
+  # @return [Integer] the pool or subpool index
+  def pool_or_subpool_index(well)
+    @logger.debug("pool_or_subpool_index()")
+    pool = @pools_hash.fetch(well.pool_id, nil)
+
+    return pool unless (pool && pool.subpools.length > 1)
+
+    @logger.debug(pool.subpool_of_well(well))
+    @logger.debug(pool.subpools.find_index(pool.subpool_of_well(well)))
+    pool.subpools.find_index(pool.subpool_of_well(well)) + 1
   end
 end
