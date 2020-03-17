@@ -1,0 +1,12 @@
+---
+Heron-384:
+  filters:
+    request_type_key: limber_heron
+    library_type: Heron-384
+  library_pass: LHR-384 Lib PCR
+  relationships:
+    LHR Cherrypick: LHR-384 XP
+    LHR-384 XP: LHR-384 End Prep
+    LHR-384 End Prep: LHR-384 Lib PCR
+    LHR-384 Lib PCR: LHR-384 Lib Pool XP
+    LHR-384 Lib Pool XP: LB Lib Pool Norm
