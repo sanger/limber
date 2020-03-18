@@ -1504,39 +1504,37 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                destination_bed: bed(7).barcode,
                class: 'Robots::QuadrantRobot')
 
-    custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
-                  name: 'Bravo LHR End Prep => LHR Lib PCR',
-                  beds: {
-                    car('1,4').barcode => {
-                      purpose: 'LHR End Prep',
-                      states: ['passed'],
-                      label: 'Carousel 1,4'
-                    },
-                    bed(6).barcode => {
-                      purpose: 'LHR Lib PCR',
-                      states: ['pending'],
-                      label: 'Bed 6',
-                      target_state: 'passed',
-                      parent: car('1,4').barcode
-                    }
-                  }
-                )
-
-    custom_robot('bravo-lhr-384-end-prep-to-lhr-384-lib-pcr',
-                name: 'Bravo LHR-384 End Prep => LHR-384 Lib PCR',
-                beds: {
+  custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
+               name: 'Bravo LHR End Prep => LHR Lib PCR',
+               beds: {
                   car('1,4').barcode => {
-                    purpose: 'LHR-384 End Prep',
+                    purpose: 'LHR End Prep',
                     states: ['passed'],
                     label: 'Carousel 1,4'
                   },
                   bed(6).barcode => {
-                    purpose: 'LHR-384 Lib PCR',
+                    purpose: 'LHR Lib PCR',
                     states: ['pending'],
                     label: 'Bed 6',
                     target_state: 'passed',
                     parent: car('1,4').barcode
                   }
-                }
-              )
+                })
+
+  custom_robot('bravo-lhr-384-end-prep-to-lhr-384-lib-pcr',
+               name: 'Bravo LHR-384 End Prep => LHR-384 Lib PCR',
+               beds: {
+                 car('1,4').barcode => {
+                   purpose: 'LHR-384 End Prep',
+                   states: ['passed'],
+                   label: 'Carousel 1,4'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LHR-384 Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   target_state: 'passed',
+                   parent: car('1,4').barcode
+                 }
+               })
 end
