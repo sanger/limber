@@ -1503,8 +1503,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                },
                destination_bed: bed(7).barcode,
                class: 'Robots::QuadrantRobot')
-                
-    custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr'
+
+    custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
                   name: 'Bravo LHR End Prep => LHR Lib PCR',
                   beds: {
                     car('1,4').barcode => {
@@ -1521,8 +1521,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                     }
                   }
                 )
-    
-    custom_robot('bravo-lhr-384-end-prep-to-lhr-384-lib-pcr'
+
+    custom_robot('bravo-lhr-384-end-prep-to-lhr-384-lib-pcr',
                 name: 'Bravo LHR-384 End Prep => LHR-384 Lib PCR',
                 beds: {
                   car('1,4').barcode => {
