@@ -8,5 +8,10 @@ Heron-384:
     LHR Cherrypick: LHR-384 XP
     LHR-384 XP: LHR-384 End Prep
     LHR-384 End Prep: LHR-384 Lib PCR
+Heron 384 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
     LHR-384 Lib PCR: LHR-384 Lib Pool XP
     LHR-384 Lib Pool XP: LB Lib Pool Norm

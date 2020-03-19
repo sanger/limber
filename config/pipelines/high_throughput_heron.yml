@@ -8,6 +8,11 @@ Heron:
     LHR Cherrypick: LHR XP
     LHR XP: LHR End Prep
     LHR End Prep: LHR Lib PCR
+Heron 96 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
     LHR Lib PCR: LHR Lib Pool
     LHR Lib Pool: LHR Lib Pool XP
     LHR Lib Pool XP: LB Lib Pool Norm
