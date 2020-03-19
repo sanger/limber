@@ -1475,7 +1475,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot('hamilton-star-lhr-cherrypick-to-lhr-384-xp',
-               name: 'Hamilton STAR-384 LHR Cherrypick => LHR-384 XP',
+               name: 'Hamilton STAR LHR Cherrypick => LHR-384 XP',
                beds: {
                  bed(12).barcode => {
                   purpose: 'LHR Cherrypick',
