@@ -1537,4 +1537,49 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    parent: car('1,4').barcode
                  }
                })
+
+  custom_robot('nx-96-lhr-cherrypick-to-lhr-xp',
+               name: 'NX-96 LHR Cherrypick => LHR XP',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'LHR Cherrypick',
+                   states: ['passed'],
+                   label: 'Bed 1',
+                   child: bed(9).barcode,
+                   display_purpose: 'LHR PCR 1'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'LHR Cherrypick',
+                   states: ['passed'],
+                   label: 'Bed 2',
+                   child: bed(9).barcode,
+                   display_purpose: 'LHR PCR 2'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LHR Cherrypick',
+                   states: ['passed'],
+                   label: 'Bed 3',
+                   child: bed(11).barcode,
+                   display_purpose: 'LHR PCR 1'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LHR Cherrypick',
+                   states: ['passed'],
+                   label: 'Bed 4',
+                   child: bed(11).barcode,
+                   display_purpose: 'LHR PCR 2'
+                 },
+                 bed(9).barcode => {
+                   purpose: 'LHR XP',
+                   label: 'Bed 9',
+                   states: ['pending'],
+                   target_state: 'passed'
+                 },
+                 bed(11).barcode => {
+                   purpose: 'LHR XP',
+                   label: 'Bed 11',
+                   states: ['pending'],
+                   target_state: 'passed'
+                 }
+               })
 end
