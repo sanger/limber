@@ -1582,4 +1582,21 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  custom_robot('bravo-lhr-xp-to-lhr-end-prep',
+    name: 'Bravo LHR XP => LHR End Prep',
+    beds: { 
+        bed(7).barcode => {
+          purpose: 'LHR XP',
+          states: ['passed'],
+          label: 'Bed 7' },
+        bed(6).barcode => {
+          purpose: 'LHR End Prep',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(7).barcode
+        }
+      }
+    )
 end
