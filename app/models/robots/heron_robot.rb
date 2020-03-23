@@ -17,9 +17,8 @@ module Robots
           processed_plate_barcode = plate_barcode.split('-')[0]
         end
         beds[bed_barcode.strip].load([processed_plate_barcode])
+        beds[bed_barcode.strip].plate_barcode_suffix = plate_barcode.split('-')[1]
       end
-
-      # @raw_plate_barcode = plate_barcode
     end
 
   end
