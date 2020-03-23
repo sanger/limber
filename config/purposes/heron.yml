@@ -5,6 +5,7 @@ LHR Cherrypick:
   :cherrypickable_target: true
   :input_plate: true
   :default_printer_type: :plate_a
+  :label_template: plate_label_lhr_cherrypick
   :presenter_class: Presenters::StockPlatePresenter
 LHR XP:
   :asset_type: plate
