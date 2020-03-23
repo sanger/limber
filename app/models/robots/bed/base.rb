@@ -5,7 +5,7 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child, :display_purpose
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
@@ -32,7 +32,7 @@ module Robots::Bed
     end
 
     def purpose_labels
-      purpose
+      display_purpose || purpose
     end
 
     def barcodes

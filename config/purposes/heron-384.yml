@@ -1,0 +1,28 @@
+---
+LHR-384 XP:
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
+  :label_template: plate_6mm_double
+  :size: 384
+LHR-384 End Prep:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+LHR-384 Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
+  :size: 384
+  :tag_layout_templates:
+  - '384sc'
+  - 'TSsc384'
+LHR-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
