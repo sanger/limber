@@ -1546,40 +1546,51 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    states: ['passed'],
                    label: 'Bed 1',
                    child: bed(9).barcode,
-                   display_purpose: 'LHR PCR 1'
+                   display_purpose: 'LHR PCR 1',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP1'
                  },
                  bed(2).barcode => {
                    purpose: 'LHR Cherrypick',
                    states: ['passed'],
                    label: 'Bed 2',
                    child: bed(9).barcode,
-                   display_purpose: 'LHR PCR 2'
+                   display_purpose: 'LHR PCR 2',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP2'
                  },
                  bed(3).barcode => {
                    purpose: 'LHR Cherrypick',
                    states: ['passed'],
                    label: 'Bed 3',
                    child: bed(11).barcode,
-                   display_purpose: 'LHR PCR 1'
+                   display_purpose: 'LHR PCR 1',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP1'
                  },
                  bed(4).barcode => {
                    purpose: 'LHR Cherrypick',
                    states: ['passed'],
                    label: 'Bed 4',
                    child: bed(11).barcode,
-                   display_purpose: 'LHR PCR 2'
+                   display_purpose: 'LHR PCR 2',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP2'
                  },
                  bed(9).barcode => {
                    purpose: 'LHR XP',
                    label: 'Bed 9',
                    states: ['pending'],
-                   target_state: 'passed'
+                   target_state: 'passed',
+                   parents: [bed(1).barcode, bed(2).barcode]
                  },
                  bed(11).barcode => {
                    purpose: 'LHR XP',
                    label: 'Bed 11',
                    states: ['pending'],
-                   target_state: 'passed'
+                   target_state: 'passed',
+                   parents: [bed(3).barcode, bed(4).barcode]
                  }
-               })
+               },
+               class: 'Robots::HeronRobot')
 end

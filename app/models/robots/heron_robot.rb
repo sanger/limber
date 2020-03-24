@@ -1,11 +1,36 @@
 # frozen_string_literal: true
 
 module Robots
-  # TO DO: decide on name of class
-  # Takes 2 pairs of plates and pools them into 2 destination plates
-  # The source plates are not tracked plates, just barcodes, so the verification method has to be different
+  # Specific to Heron pipeline, sitting between 'LHR Cherrypick' plate and 'LHR XP' plate
+  # Actual robot program pools beds 1&2 (PCR plates) onto bed 9 (XP plate)
+  # and, optionally, beds 3&4 (PCR plates from second source Cherrypick plate) onto bed 11 (second XP plate)
+  # PCR plates are made from LHR Cherrypick, but not tracked in LIMS, just have barcodes printed
+  # Barcodes consist of LHR Cherrypick plate barcode followed by a suffix of -PP1 or -PP2
   class HeronRobot < Robot
-    # might need to override valid_plates and valid_relationships
-    # or, might get away with just creating a a new subclass of 'bed' for beds 1-4, to change the bed.valid? and other methods
+    def bed_plates=(bed_plates)
+      # strip the -PP1 / -PP2 suffix off, so existing method can verify that cherrypick plates exist
+      bed_plates.each do |bed_barcode, plate_barcodes|
+        plate_barcode = plate_barcodes.first
+
+        processed_plate_barcode = plate_barcode
+        if plate_barcode.include?('-PP')
+          processed_plate_barcode = plate_barcode.split('-')[0]
+          # save the suffix for validation in the bed class
+          beds[bed_barcode.strip].plate_barcode_suffix = plate_barcode.split('-')[1]
+        end
+        beds[bed_barcode.strip].load([processed_plate_barcode])
+      end
+    end
+
+    def parents_and_position
+      # overridden to deal with 2 parents
+      recognised_beds.transform_values do |bed|
+        next if bed.parents.blank?
+
+        bed.parents.all? do |parent|
+          yield(bed.parent_plate, parent)
+        end
+      end
+    end
   end
 end
