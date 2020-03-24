@@ -1474,36 +1474,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot('hamilton-star-lhr-cherrypick-to-lhr-384-xp',
-               name: 'Hamilton STAR-384 LHR Cherrypick => LHR-384 XP',
-               beds: {
-                 bed(12).barcode => {
-                  purpose: 'LHR Cherrypick',
-                  states: %w[passed qc_complete], child: bed(7).barcode,
-                  label: 'Bed 12' },
-                 bed(13).barcode => {
-                  purpose: 'LHR Cherrypick',
-                  states: %w[passed qc_complete], child: bed(7).barcode,
-                  label: 'Bed 13' },
-                 bed(14).barcode => {
-                  purpose: 'LHR Cherrypick',
-                  states: %w[passed qc_complete], child: bed(7).barcode,
-                  label: 'Bed 14' },
-                 bed(15).barcode => {
-                  purpose: 'LHR Cherrypick',
-                  states: %w[passed qc_complete], child: bed(7).barcode,
-                  label: 'Bed 15' },
-                 bed(7).barcode => {
-                   purpose: 'LHR-384 XP',
-                   states: %w[pending],
-                   parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
-                   target_state: 'passed',
-                   label: 'Bed 7'
-                 }
-               },
-               destination_bed: bed(7).barcode,
-               class: 'Robots::QuadrantRobot')
-
   custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
                name: 'Bravo LHR End Prep => LHR Lib PCR',
                beds: {
@@ -1520,23 +1490,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                     parent: car('1,4').barcode
                   }
                 })
-
-  custom_robot('bravo-lhr-384-end-prep-to-lhr-384-lib-pcr',
-               name: 'Bravo LHR-384 End Prep => LHR-384 Lib PCR',
-               beds: {
-                 car('1,4').barcode => {
-                   purpose: 'LHR-384 End Prep',
-                   states: ['passed'],
-                   label: 'Carousel 1,4'
-                 },
-                 bed(6).barcode => {
-                   purpose: 'LHR-384 Lib PCR',
-                   states: ['pending'],
-                   label: 'Bed 6',
-                   target_state: 'passed',
-                   parent: car('1,4').barcode
-                 }
-               })
 
   custom_robot('nx-96-lhr-cherrypick-to-lhr-xp',
                name: 'NX-96 LHR Cherrypick => LHR XP',
