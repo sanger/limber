@@ -32,6 +32,5 @@ module Robots
         end
       end
     end
-
   end
 end
