@@ -8,7 +8,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
   has_a_working_api
 
   let(:user_uuid)                   { SecureRandom.uuid }
-  
+
   # set up source plates
   let(:source_purpose_name)         { 'LHR Cherrypick' }
   let(:source_purpose_uuid)         { SecureRandom.uuid }
@@ -39,7 +39,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
   let(:source_barcode)              { source_plate.human_barcode }
   let(:source_2_barcode)            { source_plate.human_barcode }
-  
+
   # set up target plates
   let(:target_purpose_name)         { 'LHR XP' }
   let(:target_purpose_uuid)         { SecureRandom.uuid }
@@ -73,7 +73,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
   let(:target_barcode)              { target_plate.human_barcode }
   let(:target_2_barcode)            { target_plate_2.human_barcode }
-  
+
   # set up PCR plates (barcodes only, as plates are not tracked)
   let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human + '-PP1' }
   let(:bed_2_PCR_plate_barcode) { source_plate.barcode.human + '-PP2' }
@@ -87,23 +87,27 @@ RSpec.describe Robots::HeronRobot, robots: true do
       'layout' => 'bed',
       'beds' => {
         'bed1_barcode' => {
-          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 1', 'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
+          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 1',
+          'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
         },
         'bed2_barcode' => {
-          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 2', 'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
+          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 2',
+          'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
         },
         'bed3_barcode' => {
-          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 3', 'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
+          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 3',
+          'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
         },
         'bed4_barcode' => {
-          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 4', 'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
+          'purpose' => 'LHR Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 4',
+          'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
         },
         'bed9_barcode' => {
-          'purpose' => 'LHR XP', 'parents' => ['bed1_barcode', 'bed2_barcode'], 'states' => ['pending'], target_state: 'passed', 'label' => 'Bed 9'
+          'purpose' => 'LHR XP', 'parents' => %w[bed1_barcode bed2_barcode], 'states' => ['pending'], target_state: 'passed', 'label' => 'Bed 9'
         },
         'bed11_barcode' => {
-          'purpose' => 'LHR XP', 'parents' => ['bed3_barcode', 'bed4_barcode'], 'states' => ['pending'], target_state: 'passed', 'label' => 'Bed 11'
-        },
+          'purpose' => 'LHR XP', 'parents' => %w[bed3_barcode bed4_barcode], 'states' => ['pending'], target_state: 'passed', 'label' => 'Bed 11'
+        }
       },
       'class' => 'Robots::HeronRobot'
     }
@@ -128,11 +132,11 @@ RSpec.describe Robots::HeronRobot, robots: true do
     end
 
     context 'with beds 1&2 -> 9' do
-      let(:scanned_layout) {
-        {'bed1_barcode' => [bed_1_PCR_plate_barcode],
-        'bed2_barcode' => [bed_2_PCR_plate_barcode],
-        'bed9_barcode' => [target_barcode]}
-      }
+      let(:scanned_layout) do
+        { 'bed1_barcode' => [bed_1_PCR_plate_barcode],
+          'bed2_barcode' => [bed_2_PCR_plate_barcode],
+          'bed9_barcode' => [target_barcode] }
+      end
 
       it 'should be valid' do
         is_expected.to be_valid
@@ -140,14 +144,14 @@ RSpec.describe Robots::HeronRobot, robots: true do
     end
 
     context 'with all beds filled' do
-      let(:scanned_layout) {
-        {'bed1_barcode' => [bed_1_PCR_plate_barcode],
-        'bed2_barcode' => [bed_2_PCR_plate_barcode],
-        'bed9_barcode' => [target_barcode],
-        'bed3_barcode' => [bed_3_PCR_plate_barcode],
-        'bed4_barcode' => [bed_4_PCR_plate_barcode],
-        'bed11_barcode' => [target_2_barcode]}
-      }
+      let(:scanned_layout) do
+        { 'bed1_barcode' => [bed_1_PCR_plate_barcode],
+          'bed2_barcode' => [bed_2_PCR_plate_barcode],
+          'bed9_barcode' => [target_barcode],
+          'bed3_barcode' => [bed_3_PCR_plate_barcode],
+          'bed4_barcode' => [bed_4_PCR_plate_barcode],
+          'bed11_barcode' => [target_2_barcode] }
+      end
 
       it 'should be valid' do
         is_expected.to be_valid
@@ -195,11 +199,11 @@ RSpec.describe Robots::HeronRobot, robots: true do
     end
 
     context 'when beds 1&2 have different barcodes' do
-      let(:scanned_layout) {
-        {'bed1_barcode' => [bed_1_PCR_plate_barcode],
-        'bed2_barcode' => [bed_4_PCR_plate_barcode],
-        'bed9_barcode' => [target_barcode]}
-      }
+      let(:scanned_layout) do
+        { 'bed1_barcode' => [bed_1_PCR_plate_barcode],
+          'bed2_barcode' => [bed_4_PCR_plate_barcode],
+          'bed9_barcode' => [target_barcode] }
+      end
 
       it 'should not be valid' do
         is_expected.not_to be_valid
@@ -232,10 +236,11 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
     it 'performs transfer from started to passed' do
       robot.perform_transfer(
-        {'bed1_barcode' => [bed_1_PCR_plate_barcode],
+        'bed1_barcode' => [bed_1_PCR_plate_barcode],
         'bed2_barcode' => [bed_2_PCR_plate_barcode],
-        'bed9_barcode' => [target_barcode]})
-        
+        'bed9_barcode' => [target_barcode]
+      )
+
       expect(state_change_request).to have_been_requested
     end
   end
