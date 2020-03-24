@@ -30,8 +30,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
       purpose_name: target_purpose_name,
       purpose_uuid: target_purpose_uuid,
       barcode_number: 5678,
-      parents: target_plate_parents,
-      wells: wells
+      parents: target_plate_parents
     }
   end
 
@@ -40,8 +39,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
       purpose_name: target_purpose_name,
       purpose_uuid: target_purpose_uuid,
       barcode_number: 2222,
-      parents: target_plate_2_parents,
-      wells: wells
+      parents: target_plate_2_parents
     }
   end
 
@@ -72,18 +70,12 @@ RSpec.describe Robots::HeronRobot, robots: true do
   let(:target_plate_parents) { [source_plate] }
   let(:target_plate_2_parents) { [source_plate_2] }
 
-#   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
-#   let(:metadata) { { 'other_key' => 'value' } }
-
   let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
 
   let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human + '-PP1' }
   let(:bed_2_PCR_plate_barcode) { source_plate.barcode.human + '-PP2' }
   let(:bed_3_PCR_plate_barcode) { source_plate_2.barcode.human + '-PP1' }
   let(:bed_4_PCR_plate_barcode) { source_plate_2.barcode.human + '-PP2' }
-
-
-# 'bed1_barcode' => {"purpose"=>"LHR Cherrypick", "states"=>["passed"], "label"=>"Bed 1", "child"=>"580000009659", "display_purpose"=>"LHR PCR 1", "override_class"=>"Robots::Bed::Heron", "expected_plate_barcode_suffix"=>"PP1"}
 
   let(:robot_spec) do
     {
@@ -115,31 +107,9 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
   let(:robot_id) { 'nx-96-lhr-cherrypick-to-lhr-xp' }
 
-  let(:transfer_source_plates) { [source_plate] } # plural?
-
-  let(:wells) do
-    %w[C1 D1].map do |location|
-      create :v2_well, location: location, upstream_plates: transfer_source_plates
-    end
-  end
-
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
     create :purpose_config, uuid: target_purpose_uuid, name: target_purpose_name
-
-    # stub_api_get(target_plate_uuid, 'creation_transfers',
-    #              body: json(:creation_transfer_collection,
-    #                         destination: associated(:plate, target_plate_attributes),
-    #                         sources: transfer_source_plates,
-    #                         associated_on: 'creation_transfers',
-    #                         transfer_factory: :creation_transfer))
-
-    # bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
-    # bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
-
-
-    # bed_plate_lookup(source_plate)
-    # bed_plate_lookup(target_plate)
   end
 
   describe '#verify' do
@@ -152,10 +122,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
       bed_plate_lookup(target_plate_2)
     end
 
-    # TODO: beds 1&2 same barcode, 3&4 same barcode but different from 1&2
-    # TODO: beds 9&11 diff barcode from each other
-
-    context 'when the PCR plate barcode suffix is missing' do # TO DO - not implemented
+    context 'when the PCR plate barcode suffix is missing' do
       let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K'] } }
 
       it 'should not be valid' do
@@ -231,41 +198,39 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
       it 'should not be valid' do
         is_expected.not_to be_valid
-        # debugger
-        # expect(subject.message).to include "???"
+        expect(subject.message).to include "Bed 2: Should contain #{source_barcode}"
       end
     end
-
-  #  TODO: make tests more realistic with two beds to beds 9/11
-  #   context 'with a valid layout' do
-  #     let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode] } }
-  #   end
-
   end
 
-#   describe '#perform_transfer' do
-#     let(:state_change_request) do
-#       stub_api_post('state_changes',
-#                     payload: {
-#                       state_change: {
-#                         target_state: 'passed',
-#                         reason: 'Robot Pooling Robot started',
-#                         customer_accepts_responsibility: false,
-#                         target: target_plate_uuid,
-#                         user: user_uuid,
-#                         contents: nil
-#                       }
-#                     },
-#                     body: json(:state_change, target_state: 'passed'))
-#     end
+  describe '#perform_transfer' do
+    let(:state_change_request) do
+      stub_api_post('state_changes',
+                    payload: {
+                      state_change: {
+                        target_state: 'passed',
+                        reason: 'Robot NX-96 LHR Cherrypick => LHR XP started',
+                        customer_accepts_responsibility: false,
+                        target: target_plate.uuid,
+                        user: user_uuid,
+                        contents: nil
+                      }
+                    },
+                    body: json(:state_change, target_state: 'passed'))
+    end
 
-#     before do
-#       state_change_request
-#     end
+    before do
+      state_change_request
+      bed_plate_lookup(source_plate)
+      bed_plate_lookup(target_plate)
+    end
 
-#     it 'performs transfer from started to passed' do
-#       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
-#       expect(state_change_request).to have_been_requested
-#     end
-#   end
+    it 'performs transfer from started to passed' do
+      robot.perform_transfer(
+        {'bed1_barcode' => [bed_1_PCR_plate_barcode],
+        'bed2_barcode' => [bed_2_PCR_plate_barcode],
+        'bed9_barcode' => [target_barcode]})
+      expect(state_change_request).to have_been_requested
+    end
+  end
 end
