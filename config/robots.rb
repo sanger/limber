@@ -1581,13 +1581,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'LHR XP',
                    label: 'Bed 9',
                    states: ['pending'],
-                   target_state: 'passed'
+                   target_state: 'passed',
+                   parents: [bed(1).barcode, bed(2).barcode]
                  },
                  bed(11).barcode => {
                    purpose: 'LHR XP',
                    label: 'Bed 11',
                    states: ['pending'],
-                   target_state: 'passed'
+                   target_state: 'passed',
+                   parents: [bed(3).barcode, bed(4).barcode]
                  }
                },
                class: 'Robots::HeronRobot')

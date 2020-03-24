@@ -21,5 +21,14 @@ module Robots
       end
     end
 
+    def parents_and_position
+      recognised_beds.transform_values do |bed|
+        next unless bed.parents.present?
+        bed.parents.all? do |parent|
+          yield(bed.parent_plate, parent)
+        end
+      end
+    end
+
   end
 end
