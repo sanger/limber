@@ -25,7 +25,8 @@ module Robots
     def parents_and_position
       # overridden to deal with 2 parents
       recognised_beds.transform_values do |bed|
-        next unless bed.parents.present?
+        next if bed.parents.blank?
+
         bed.parents.all? do |parent|
           yield(bed.parent_plate, parent)
         end
