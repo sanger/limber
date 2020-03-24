@@ -44,15 +44,17 @@ RSpec.describe Robots::HeronRobot, robots: true do
   let(:target_purpose_name)         { 'LHR XP' }
   let(:target_purpose_uuid)         { SecureRandom.uuid }
   let(:target_plate) do
-    create :v2_plate, target_plate_attributes 
+    create :v2_plate, target_plate_attributes
   end
   # let(:target_plate_parents) { [source_plate] }
   # let(:target_plate_parent) { source_plate }
-  
+
 #   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
 #   let(:metadata) { { 'other_key' => 'value' } }
 
   let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
+
+  let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human } # TO DO: do the rest of these and use in the tests instead of hardcoded strings?
 
 # 'bed1_barcode' => {"purpose"=>"LHR Cherrypick", "states"=>["passed"], "label"=>"Bed 1", "child"=>"580000009659", "display_purpose"=>"LHR PCR 1", "override_class"=>"Robots::Bed::Heron", "expected_plate_barcode_suffix"=>"PP1"}
 
@@ -109,7 +111,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
     # bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
     # bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
 
-    
+
     # bed_plate_lookup(source_plate)
     # bed_plate_lookup(target_plate)
   end
@@ -117,14 +119,41 @@ RSpec.describe Robots::HeronRobot, robots: true do
   describe '#verify' do
     subject { robot.verify(bed_plates: scanned_layout) }
 
-    before do 
+    before do
       bed_plate_lookup(source_plate)
       bed_plate_lookup(target_plate)
     end
 
-    context 'with an known PCR plate' do
+    context 'with a known PCR plate' do
       let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K-PP1'] } }
-      
+
+      it 'should be valid' do
+        is_expected.to be_valid
+      end
+    end
+
+    context 'with beds 1&2 -> 9' do
+      let(:scanned_layout) {
+        {'bed1_barcode' => ['DN1234K-PP1'] ,
+        'bed2_barcode' => ['DN1234K-PP2'] ,
+        'bed9_barcode' => ['DN5678E']}
+      }
+
+      it 'should be valid' do
+        is_expected.to be_valid
+      end
+    end
+
+    context 'with all beds filled' do
+      let(:scanned_layout) {
+        {'bed1_barcode' => ['DN1234K-PP1'],
+        'bed2_barcode' => ['DN5678E-PP2'],
+        'bed9_barcode' => [target_plate.barcode],
+        'bed3_barcode' => ['DN1111K-PP1'],            # TO DO: stub calls for these barcodes
+        'bed4_barcode' => ['DN2222E-PP2'],            # TO DO: stub calls for these barcodes
+        'bed11_barcode' => [target_plate_2.barcode]}  # TO DO: set up this plate
+      }
+
       it 'should be valid' do
         is_expected.to be_valid
       end
@@ -132,19 +161,19 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
     context 'when the PCR plate barcode suffix is unknown for bed 1' do
       let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K-PPX'] } }
-      
+
       it 'should not be valid' do
         is_expected.not_to be_valid
-        expect(subject.message).to include 'Bed 1 - Expected plate barcode to end in the following suffix: PP1' 
+        expect(subject.message).to include 'Bed 1 - Expected plate barcode to end in the following suffix: PP1'
       end
     end
 
     context 'when the PCR plate barcode suffix is unknown for bed 2' do
       let(:scanned_layout) { { 'bed2_barcode' => ['DN1234K-PPX'] } }
-      
+
       it 'should not be valid' do
         is_expected.not_to be_valid
-        expect(subject.message).to include 'Bed 2 - Expected plate barcode to end in the following suffix: PP2' 
+        expect(subject.message).to include 'Bed 2 - Expected plate barcode to end in the following suffix: PP2'
       end
     end
 
@@ -154,7 +183,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
       end
 
       let(:scanned_layout) { { 'bed2_barcode' => ['DNxxxK-PP1'] } }
-      
+
       it 'should not be valid' do
         is_expected.not_to be_valid
         expect(subject.message).to include "Bed 2 - Plate Could not find a plate with the barcode 'DNxxxK'"
