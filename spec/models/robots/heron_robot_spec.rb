@@ -7,6 +7,12 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
   has_a_working_api
 
+  let(:user_uuid)                   { SecureRandom.uuid }
+  
+  # set up source plates
+  let(:source_purpose_name)         { 'LHR Cherrypick' }
+  let(:source_purpose_uuid)         { SecureRandom.uuid }
+
   let(:source_plate_attributes) do
     {
       barcode_number: 1234,
@@ -15,7 +21,6 @@ RSpec.describe Robots::HeronRobot, robots: true do
       state: 'passed'
     }
   end
-
   let(:source_plate_2_attributes) do
     {
       barcode_number: 1111,
@@ -25,6 +30,23 @@ RSpec.describe Robots::HeronRobot, robots: true do
     }
   end
 
+  let(:source_plate) do
+    create :v2_plate, source_plate_attributes
+  end
+  let(:source_plate_2) do
+    create :v2_plate, source_plate_2_attributes
+  end
+
+  let(:source_barcode)              { source_plate.human_barcode }
+  let(:source_2_barcode)            { source_plate.human_barcode }
+  
+  # set up target plates
+  let(:target_purpose_name)         { 'LHR XP' }
+  let(:target_purpose_uuid)         { SecureRandom.uuid }
+
+  let(:target_plate_parents) { [source_plate] }
+  let(:target_plate_2_parents) { [source_plate_2] }
+
   let(:target_plate_attributes) do
     {
       purpose_name: target_purpose_name,
@@ -33,7 +55,6 @@ RSpec.describe Robots::HeronRobot, robots: true do
       parents: target_plate_parents
     }
   end
-
   let(:target_plate_2_attributes) do
     {
       purpose_name: target_purpose_name,
@@ -43,40 +64,23 @@ RSpec.describe Robots::HeronRobot, robots: true do
     }
   end
 
-  let(:user_uuid)                   { SecureRandom.uuid }
-  let(:source_barcode)              { source_plate.human_barcode }
-  let(:source_2_barcode)            { source_plate.human_barcode }
-  let(:source_barcode_alt)          { 'DN1S' }
-  let(:source_purpose_name)         { 'LHR Cherrypick' }
-  let(:source_purpose_uuid)         { SecureRandom.uuid }
-  let(:source_plate_state)          { 'passed' }
-  let(:source_plate) do
-    create :v2_plate, source_plate_attributes
-  end
-  let(:source_plate_2) do
-    create :v2_plate, source_plate_2_attributes
-  end
-
-  let(:target_barcode)              { target_plate.human_barcode }
-  let(:target_2_barcode)            { target_plate_2.human_barcode }
-  let(:target_purpose_name)         { 'LHR XP' }
-  let(:target_purpose_uuid)         { SecureRandom.uuid }
   let(:target_plate) do
     create :v2_plate, target_plate_attributes
   end
   let(:target_plate_2) do
     create :v2_plate, target_plate_2_attributes
   end
-  let(:target_plate_parents) { [source_plate] }
-  let(:target_plate_2_parents) { [source_plate_2] }
 
-  let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
-
+  let(:target_barcode)              { target_plate.human_barcode }
+  let(:target_2_barcode)            { target_plate_2.human_barcode }
+  
+  # set up PCR plates (barcodes only, as plates are not tracked)
   let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human + '-PP1' }
   let(:bed_2_PCR_plate_barcode) { source_plate.barcode.human + '-PP2' }
   let(:bed_3_PCR_plate_barcode) { source_plate_2.barcode.human + '-PP1' }
   let(:bed_4_PCR_plate_barcode) { source_plate_2.barcode.human + '-PP2' }
 
+  # set up robot config
   let(:robot_spec) do
     {
       'name' => 'NX-96 LHR Cherrypick => LHR XP',
@@ -105,7 +109,8 @@ RSpec.describe Robots::HeronRobot, robots: true do
     }
   end
 
-  let(:robot_id) { 'nx-96-lhr-cherrypick-to-lhr-xp' }
+  # set up robot
+  let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
@@ -120,15 +125,6 @@ RSpec.describe Robots::HeronRobot, robots: true do
       bed_plate_lookup(source_plate_2)
       bed_plate_lookup(target_plate)
       bed_plate_lookup(target_plate_2)
-    end
-
-    context 'when the PCR plate barcode suffix is missing' do
-      let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K'] } }
-
-      it 'should not be valid' do
-        is_expected.not_to be_valid
-        expect(subject.message).to include 'Bed 1 - Expected plate barcode to end in the following suffix: PP1'
-      end
     end
 
     context 'with beds 1&2 -> 9' do
@@ -173,6 +169,15 @@ RSpec.describe Robots::HeronRobot, robots: true do
       it 'should not be valid' do
         is_expected.not_to be_valid
         expect(subject.message).to include 'Bed 2 - Expected plate barcode to end in the following suffix: PP2'
+      end
+    end
+
+    context 'when the PCR plate barcode suffix is missing' do
+      let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K'] } }
+
+      it 'should not be valid' do
+        is_expected.not_to be_valid
+        expect(subject.message).to include 'Bed 1 - Expected plate barcode to end in the following suffix: PP1'
       end
     end
 
@@ -230,6 +235,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
         {'bed1_barcode' => [bed_1_PCR_plate_barcode],
         'bed2_barcode' => [bed_2_PCR_plate_barcode],
         'bed9_barcode' => [target_barcode]})
+        
       expect(state_change_request).to have_been_requested
     end
   end
