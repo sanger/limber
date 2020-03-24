@@ -54,7 +54,9 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
   let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
 
-  let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human } # TO DO: do the rest of these and use in the tests instead of hardcoded strings?
+  let(:bed_1_PCR_plate_barcode) { source_plate.barcode.human + '-PP1' } # TO DO: do the rest of these and use in the tests instead of hardcoded strings?
+  let(:bed_2_PCR_plate_barcode) { source_plate.barcode.human + '-PP2' }
+
 
 # 'bed1_barcode' => {"purpose"=>"LHR Cherrypick", "states"=>["passed"], "label"=>"Bed 1", "child"=>"580000009659", "display_purpose"=>"LHR PCR 1", "override_class"=>"Robots::Bed::Heron", "expected_plate_barcode_suffix"=>"PP1"}
 
@@ -129,6 +131,15 @@ RSpec.describe Robots::HeronRobot, robots: true do
 
       it 'should be valid' do
         is_expected.to be_valid
+      end
+    end
+
+    context 'when the PCR plate barcode suffix is missing' do # TO DO - not implemented
+      let(:scanned_layout) { { 'bed1_barcode' => ['DN1234K'] } }
+
+      it 'should not be valid' do
+        is_expected.not_to be_valid
+        expect(subject.message).to include 'Bed 1 - Expected plate barcode to end in the following suffix: PP1'
       end
     end
 
