@@ -1582,7 +1582,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
-
+  # TODO: Confirm bed numbers
   custom_robot('bravo-lhr-xp-to-lhr-end-prep',
                name: 'Bravo LHR XP => LHR End Prep',
                beds: {
