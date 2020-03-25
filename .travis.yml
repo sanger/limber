@@ -53,3 +53,4 @@ jobs:
       on:
         tags: true
         repo: sanger/limber
+        branch: master
