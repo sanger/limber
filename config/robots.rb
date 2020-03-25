@@ -1474,23 +1474,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
-               name: 'Bravo LHR End Prep => LHR Lib PCR',
-               beds: {
-                  car('1,4').barcode => {
-                    purpose: 'LHR End Prep',
-                    states: ['passed'],
-                    label: 'Carousel 1,4'
-                  },
-                  bed(6).barcode => {
-                    purpose: 'LHR Lib PCR',
-                    states: ['pending'],
-                    label: 'Bed 6',
-                    target_state: 'passed',
-                    parent: car('1,4').barcode
-                  }
-                })
-
   custom_robot('nx-96-lhr-cherrypick-to-lhr-xp',
                name: 'NX-96 LHR Cherrypick => LHR XP',
                beds: {
