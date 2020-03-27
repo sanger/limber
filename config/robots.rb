@@ -1546,7 +1546,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  target_state: 'passed' }
                })
 
-  bravo_robot do
+  bravo_robot verify_robot: true do
     from 'LHR End Prep', car('1,4')
     to 'LHR Lib PCR', bed(6)
   end
