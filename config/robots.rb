@@ -1474,23 +1474,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot('bravo-lhr-end-prep-to-lhr-lib-pcr',
-               name: 'Bravo LHR End Prep => LHR Lib PCR',
-               beds: {
-                  car('1,4').barcode => {
-                    purpose: 'LHR End Prep',
-                    states: ['passed'],
-                    label: 'Carousel 1,4'
-                  },
-                  bed(6).barcode => {
-                    purpose: 'LHR Lib PCR',
-                    states: ['pending'],
-                    label: 'Bed 6',
-                    target_state: 'passed',
-                    parent: car('1,4').barcode
-                  }
-                })
-
   custom_robot('nx-96-lhr-cherrypick-to-lhr-xp',
                name: 'NX-96 LHR Cherrypick => LHR XP',
                beds: {
@@ -1547,20 +1530,24 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                },
                class: 'Robots::HeronRobot')
 
-  # TODO: Confirm bed numbers
-  custom_robot('bravo-lhr-xp-to-lhr-end-prep',
-               name: 'Bravo LHR XP => LHR End Prep',
+  bravo_robot transition_to: 'started' do
+    from 'LHR XP', bed(4)
+    to 'LHR End Prep', car('1,4')
+  end
+
+  custom_robot('bravo-lhr-end-prep',
+               name: 'bravo LHR End Prep',
+               verify_robot: true,
                beds: {
-                   bed(7).barcode => {
-                     purpose: 'LHR XP',
-                     states: ['passed'],
-                     label: 'Bed 7' },
-                   bed(6).barcode => {
-                     purpose: 'LHR End Prep',
-                     states: ['pending'],
-                     label: 'Bed 6',
-                     target_state: 'passed',
-                     parent: bed(7).barcode
-                   }
-                 })
+                 bed(7).barcode => {
+                 purpose: 'LHR End Prep',
+                 states: ['started'],
+                 label: 'Bed 7',
+                 target_state: 'passed' }
+               })
+
+  bravo_robot verify_robot: true do
+    from 'LHR End Prep', car('1,4')
+    to 'LHR Lib PCR', bed(6)
+  end
 end
