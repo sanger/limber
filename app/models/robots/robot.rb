@@ -7,9 +7,11 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode, :require_robot
 
     alias verify_robot? verify_robot
+
+    alias require_robot? require_robot
 
     def plate_includes
       %i[purpose parents]
@@ -74,6 +76,10 @@ module Robots
     private
 
     def valid_robot
+      if require_robot? && robot_barcode.blank?
+        error_messages << 'Please scan the robot barcode'
+        return false
+      end
       if verify_robot? && beds.values.first.plate.present?
         if beds.values.first.plate.custom_metadatum_collection.nil?
           error_messages << 'Your plate is not on the right robot'
