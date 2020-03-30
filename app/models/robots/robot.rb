@@ -7,9 +7,10 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode, :require_robot
 
     alias verify_robot? verify_robot
+    alias require_robot? require_robot
 
     def plate_includes
       %i[purpose parents]
@@ -74,16 +75,33 @@ module Robots
     private
 
     def valid_robot
-      if verify_robot? && beds.values.first.plate.present?
-        if beds.values.first.plate.custom_metadatum_collection.nil?
-          error_messages << 'Your plate is not on the right robot'
-          return false
-        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
-          error_messages << 'Your plate is not on the right robot'
-          return false
-        end
+      return false unless robot_present_if_required
+
+      return true unless verify_robot? && beds.values.first.plate.present?
+
+      if missing_custom_metadatum_collection || original_robot != robot_barcode
+        error_messages << 'Your plate is not on the right robot'
+        return false
       end
       true
+    end
+
+    def robot_present_if_required
+      if require_robot? && robot_barcode.blank?
+        error_messages << 'Please scan the robot barcode'
+        return false
+      end
+      true
+    end
+
+    def missing_custom_metadatum_collection
+      beds.values.first.plate.custom_metadatum_collection.nil?
+    end
+
+    def original_robot
+      return nil if missing_custom_metadatum_collection
+
+      beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot']
     end
 
     def valid_plates

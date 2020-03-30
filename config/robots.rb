@@ -1530,7 +1530,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                },
                class: 'Robots::HeronRobot')
 
-  bravo_robot transition_to: 'started' do
+  bravo_robot transition_to: 'started', require_robot: true do
     from 'LHR XP', bed(4)
     to 'LHR End Prep', car('1,4')
   end
