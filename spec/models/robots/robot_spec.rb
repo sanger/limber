@@ -256,15 +256,15 @@ RSpec.describe Robots::Robot, robots: true do
       bed_plate_lookup(source_plate)
     end
 
-    it "is invalid if the robot barcode isn't scanned - nil" do
+    it 'is invalid if the robot barcode is not scanned - nil' do
       expect(robot.verify(robot_barcode: nil)).not_to be_valid
     end
 
-    it "is invalid if the robot barcode isn't scanned - empty string" do
+    it 'is invalid if the robot barcode is not scanned - empty string' do
       expect(robot.verify(robot_barcode: '')).not_to be_valid
     end
 
-    it "is valid if the robot barcode is scanned" do
+    it 'is valid if the robot barcode is scanned' do
       expect(robot.verify(robot_barcode: 'robot_barcode')).to be_valid
     end
   end
