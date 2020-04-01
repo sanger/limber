@@ -2,7 +2,7 @@
 Heron:
   filters:
     request_type_key: limber_heron
-    library_type: Heron
+    library_type: PCR amplicon ligated adapters
   library_pass: LHR Lib PCR
   relationships:
     LHR RT: LHR XP
