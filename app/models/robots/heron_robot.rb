@@ -20,17 +20,7 @@ module Robots
         end
         beds[bed_barcode.strip].load([processed_plate_barcode])
       end
-    end
 
-    def parents_and_position
-      # overridden to deal with 2 parents
-      recognised_beds.transform_values do |bed|
-        next if bed.parents.blank?
-
-        bed.parents.all? do |parent|
-          yield(bed.parent_plate, parent)
-        end
-      end
     end
   end
 end
