@@ -1474,7 +1474,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot('nx-96-lhr-rt-cherrypick-to-lhr-xp',
+  custom_robot('nx-96-lhr-rt-to-lhr-xp',
                name: 'NX-96 LHR RT => LHR XP',
                beds: {
                  bed(1).barcode => {
