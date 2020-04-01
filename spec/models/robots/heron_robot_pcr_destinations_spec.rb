@@ -124,8 +124,7 @@ RSpec.describe Robots::HeronRobotPcrDestinations, robots: true do
       let(:scanned_layout) do
         { 'bed9_barcode' => [source_barcode],
           'bed4_barcode' => [bed_4_PCR_plate_barcode],
-          'bed6_barcode' => [bed_6_PCR_plate_barcode]
-        }
+          'bed6_barcode' => [bed_6_PCR_plate_barcode] }
       end
 
       it 'should be valid' do
@@ -142,7 +141,7 @@ RSpec.describe Robots::HeronRobotPcrDestinations, robots: true do
 
       it 'should not be valid' do
         is_expected.not_to be_valid
-        expect(subject.message).to include "The PCR plates must have the same barcode as the RT plate, plus a PP suffix."
+        expect(subject.message).to include 'The PCR plates must have the same barcode as the RT plate, plus a PP suffix.'
       end
     end
   end

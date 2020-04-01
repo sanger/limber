@@ -20,7 +20,6 @@ module Robots
         end
         beds[bed_barcode.strip].load([processed_plate_barcode])
       end
-
     end
   end
 end

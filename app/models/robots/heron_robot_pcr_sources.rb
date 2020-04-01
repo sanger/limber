@@ -7,7 +7,6 @@ module Robots
   # PCR plates are made from LHR RT, but not tracked in LIMS, just have barcodes printed
   # Barcodes consist of LHR RT plate barcode followed by a suffix of -PP1 or -PP2
   class HeronRobotPcrSources < HeronRobot
-
     def parents_and_position
       # overridden to deal with 2 parents
       recognised_beds.transform_values do |bed|
