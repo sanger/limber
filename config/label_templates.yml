@@ -26,6 +26,6 @@ plate_lds_al_lib:
   :label_class: Labels::PlateLabelLdsAlLib
   :pmb_template: 'sqsc_96plate_label_template_code39'
 
-plate_lhr_cherrypick:
-  :label_class: Labels::PlateLabelLhrCherrypick
+plate_lhr_rt:
+  :label_class: Labels::PlateLabelLhrRt
   :pmb_template: 'sqsc_96plate_label_template_code39'
