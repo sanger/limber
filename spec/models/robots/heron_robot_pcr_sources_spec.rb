@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::HeronRobot, robots: true do
+RSpec.describe Robots::HeronRobotPcrSources, robots: true do
   include RobotHelpers
 
   has_a_working_api
@@ -83,7 +83,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
   # set up robot config
   let(:robot_spec) do
     {
-      'name' => 'NX-96 LHR RT => LHR XP',
+      'name' => 'NX-96 LHR PCR 1 and 2 => LHR XP',
       'layout' => 'bed',
       'beds' => {
         'bed1_barcode' => {
@@ -109,12 +109,12 @@ RSpec.describe Robots::HeronRobot, robots: true do
           'purpose' => 'LHR XP', 'parents' => %w[bed3_barcode bed4_barcode], 'states' => ['pending'], target_state: 'passed', 'label' => 'Bed 11'
         }
       },
-      'class' => 'Robots::HeronRobot'
+      'class' => 'Robots::HeronRobotPcrSources'
     }
   end
 
   # set up robot
-  let(:robot) { Robots::HeronRobot.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
+  let(:robot) { Robots::HeronRobotPcrSources.new(robot_spec.merge('api': api, 'user_uuid': user_uuid)) }
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
@@ -218,7 +218,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
                     payload: {
                       state_change: {
                         target_state: 'passed',
-                        reason: 'Robot NX-96 LHR RT => LHR XP started',
+                        reason: 'Robot NX-96 LHR PCR 1 and 2 => LHR XP started',
                         customer_accepts_responsibility: false,
                         target: target_plate.uuid,
                         user: user_uuid,
