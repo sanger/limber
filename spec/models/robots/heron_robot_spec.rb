@@ -10,7 +10,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
   let(:user_uuid)                   { SecureRandom.uuid }
 
   # set up source plates
-  let(:source_purpose_name)         { 'LHR RT Cherrypick' }
+  let(:source_purpose_name)         { 'LHR RT' }
   let(:source_purpose_uuid)         { SecureRandom.uuid }
 
   let(:source_plate_attributes) do
@@ -83,23 +83,23 @@ RSpec.describe Robots::HeronRobot, robots: true do
   # set up robot config
   let(:robot_spec) do
     {
-      'name' => 'NX-96 LHR RT Cherrypick => LHR XP',
+      'name' => 'NX-96 LHR RT => LHR XP',
       'layout' => 'bed',
       'beds' => {
         'bed1_barcode' => {
-          'purpose' => 'LHR RT Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 1',
+          'purpose' => 'LHR RT', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 1',
           'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
         },
         'bed2_barcode' => {
-          'purpose' => 'LHR RT Cherrypick', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 2',
+          'purpose' => 'LHR RT', 'states' => ['passed'], 'child' => 'bed9_barcode', 'label' => 'Bed 2',
           'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
         },
         'bed3_barcode' => {
-          'purpose' => 'LHR RT Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 3',
+          'purpose' => 'LHR RT', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 3',
           'display_purpose' => 'LHR PCR 1', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP1'
         },
         'bed4_barcode' => {
-          'purpose' => 'LHR RT Cherrypick', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 4',
+          'purpose' => 'LHR RT', 'states' => ['passed'], 'child' => 'bed11_barcode', 'label' => 'Bed 4',
           'display_purpose' => 'LHR PCR 2', 'override_class' => 'Robots::Bed::Heron', 'expected_plate_barcode_suffix' => 'PP2'
         },
         'bed9_barcode' => {
@@ -218,7 +218,7 @@ RSpec.describe Robots::HeronRobot, robots: true do
                     payload: {
                       state_change: {
                         target_state: 'passed',
-                        reason: 'Robot NX-96 LHR RT Cherrypick => LHR XP started',
+                        reason: 'Robot NX-96 LHR RT => LHR XP started',
                         customer_accepts_responsibility: false,
                         target: target_plate.uuid,
                         user: user_uuid,

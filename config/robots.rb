@@ -1475,10 +1475,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot('nx-96-lhr-rt-cherrypick-to-lhr-xp',
-               name: 'NX-96 LHR RT Cherrypick => LHR XP',
+               name: 'NX-96 LHR RT => LHR XP',
                beds: {
                  bed(1).barcode => {
-                   purpose: 'LHR RT Cherrypick',
+                   purpose: 'LHR RT',
                    states: ['passed'],
                    label: 'Bed 1',
                    child: bed(9).barcode,
@@ -1487,7 +1487,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    expected_plate_barcode_suffix: 'PP1'
                  },
                  bed(2).barcode => {
-                   purpose: 'LHR RT Cherrypick',
+                   purpose: 'LHR RT',
                    states: ['passed'],
                    label: 'Bed 2',
                    child: bed(9).barcode,
@@ -1496,7 +1496,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    expected_plate_barcode_suffix: 'PP2'
                  },
                  bed(3).barcode => {
-                   purpose: 'LHR RT Cherrypick',
+                   purpose: 'LHR RT',
                    states: ['passed'],
                    label: 'Bed 3',
                    child: bed(11).barcode,
@@ -1505,7 +1505,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    expected_plate_barcode_suffix: 'PP1'
                  },
                  bed(4).barcode => {
-                   purpose: 'LHR RT Cherrypick',
+                   purpose: 'LHR RT',
                    states: ['passed'],
                    label: 'Bed 4',
                    child: bed(11).barcode,

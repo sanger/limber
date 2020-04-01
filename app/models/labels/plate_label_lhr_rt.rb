@@ -2,7 +2,7 @@
 
 # Plate label class to print off labels for the intermediate Primer Panel PCR plates 1 and 2.
 # Specific to the Heron pipeline.
-class Labels::PlateLabelLhrRtCherrypick < Labels::PlateLabelBase
+class Labels::PlateLabelLhrRt < Labels::PlateLabelBase
   def attributes
     super.merge(barcode: labware.barcode.human)
   end
