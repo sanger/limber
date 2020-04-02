@@ -31,6 +31,10 @@ class Pipeline
   # @return [Hash<String>] Hash of parent (key) and child (value) relationships
   attr_accessor :relationships
 
+  # Plate purpose that could be use as an alternative workline identifier in the barcode top right field
+  # when there are more than one ancestors that are Stock plates
+  attr_accessor :alternative_workline_identifier
+
   # Checks if a piece of labware meets the filter criteria for a pipeline
   # @return [Boolean] returns true if labware meets the filter criteria
   def active_for?(labware)

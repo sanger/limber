@@ -9,6 +9,17 @@ module SearchHelper
     Settings.purposes.values.select(&:input_plate).map(&:name)
   end
 
+  def self.purpose_config_for_purpose_name(purpose_name)
+    Settings.purposes.values.select { |obj| obj[:name] == purpose_name }.first
+  end
+
+  def self.alternative_workline_reference_name(labware)
+    conf = purpose_config_for_purpose_name(labware.purpose.name)
+    return nil if conf.nil?
+
+    conf.dig(:alternative_workline_identifier)
+  end
+
   def self.merger_plate_names
     Settings.purposes.values.select(&:merger_plate).map(&:name)
   end

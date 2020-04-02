@@ -35,7 +35,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     ::ActiveModel::Name.new(Limber::Plate, false)
   end
 
-  # Currently us the uuid as our main identifier, might switch to human barcode soon
+  # Currently use the uuid as our main identifier, might switch to human barcode soon
   def to_param
     uuid
   end
@@ -84,12 +84,28 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     labware_barcode
   end
 
-  def stock_plate(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plate ||= if stock_plate?
-                       self
-                     else
-                       ancestors.where(purpose_name: purpose_names).last
-                     end
+  def stock_plates(purpose_names: SearchHelper.stock_plate_names)
+    @stock_plates ||= stock_plate? ? [self] : ancestors.where(purpose_name: purpose_names)
+  end
+
+  def stock_plate
+    stock_plates.last
+  end
+
+  def workline_identifier
+    workline_reference&.barcode&.human
+  end
+
+  # This is the plate that will act as a reference in my workflow that will be
+  # printed in the label at the top_right field. It is the first stock by default,
+  # but in some cases we may want to display a different plate. To change the default
+  # selection from stock plate to other plate purpose, we have to modify the purposes.yml
+  # config file and add a workline_reference_identifier attribute with the purpose we want to select.
+  def workline_reference
+    alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
+    return stock_plate if alternative_workline_identifier_purpose.nil?
+
+    ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
