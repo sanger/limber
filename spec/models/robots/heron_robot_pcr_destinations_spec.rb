@@ -144,5 +144,19 @@ RSpec.describe Robots::HeronRobotPcrDestinations, robots: true do
         expect(subject.message).to include 'The PCR plates must have the same barcode as the RT plate, plus a PP suffix.'
       end
     end
+
+    context 'when PCR plates are the wrong way round' do
+      let(:scanned_layout) do
+        { 'bed9_barcode' => [source_barcode],
+          'bed4_barcode' => [bed_6_PCR_plate_barcode],
+          'bed6_barcode' => [bed_4_PCR_plate_barcode] }
+      end
+
+      it 'should not be valid' do
+        is_expected.not_to be_valid
+        expect(subject.message).to include 'Bed 4 - Expected plate barcode to end in the following suffix: PP1'
+        expect(subject.message).to include 'Bed 6 - Expected plate barcode to end in the following suffix: PP2'
+      end
+    end
   end
 end
