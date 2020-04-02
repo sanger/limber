@@ -167,7 +167,7 @@ RSpec.describe Robots::Robot, robots: true do
       end
     end
 
-    describe 'robot barcode' do
+    describe 'verify robot' do
       let(:robot_spec) do
         {
           'name' => 'robot_name',
@@ -233,6 +233,39 @@ RSpec.describe Robots::Robot, robots: true do
           end
         end
       end
+    end
+  end
+
+  describe 'require robot' do
+    let(:robot_spec) do
+      {
+        'name' => 'robot_name',
+        'verify_robot' => false,
+        'require_robot' => true,
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => 'Limber Cherrypicked',
+            'states' => ['passed'],
+            'label' => 'Bed 7'
+          }
+        }
+      }
+    end
+
+    before do
+      bed_plate_lookup(source_plate)
+    end
+
+    it 'is invalid if the robot barcode is not scanned - nil' do
+      expect(robot.verify(robot_barcode: nil)).not_to be_valid
+    end
+
+    it 'is invalid if the robot barcode is not scanned - empty string' do
+      expect(robot.verify(robot_barcode: '')).not_to be_valid
+    end
+
+    it 'is valid if the robot barcode is scanned' do
+      expect(robot.verify(robot_barcode: 'robot_barcode')).to be_valid
     end
   end
 
