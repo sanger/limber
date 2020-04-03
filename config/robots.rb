@@ -1474,8 +1474,35 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
-  custom_robot('nx-96-lhr-rt-to-lhr-xp',
-               name: 'NX-96 LHR RT => LHR XP',
+  custom_robot('bravo-lhr-rt-to-pcr-1-and-2',
+               name: 'Bravo LHR RT => LHR PCR 1 and 2',
+               beds: {
+                 bed(9).barcode => {
+                   purpose: 'LHR RT',
+                   states: ['passed'],
+                   label: 'Bed 9'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LHR RT',
+                   states: ['passed'],
+                   label: 'Bed 4',
+                   display_purpose: 'LHR PCR 1',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP1'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LHR RT',
+                   states: ['passed'],
+                   label: 'Bed 6',
+                   display_purpose: 'LHR PCR 2',
+                   override_class: 'Robots::Bed::Heron',
+                   expected_plate_barcode_suffix: 'PP2'
+                 }
+               },
+               class: 'Robots::HeronRobotPcrDestinations')
+
+  custom_robot('nx-96-lhr-pcr-1-and-2-lhr-xp',
+               name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
                beds: {
                  bed(1).barcode => {
                    purpose: 'LHR RT',
@@ -1528,7 +1555,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    parents: [bed(3).barcode, bed(4).barcode]
                  }
                },
-               class: 'Robots::HeronRobot')
+               class: 'Robots::HeronRobotPcrSources')
 
   bravo_robot transition_to: 'started', require_robot: true do
     from 'LHR XP', bed(4)
