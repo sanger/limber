@@ -1483,62 +1483,47 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    label: 'Bed 9'
                  },
                  bed(4).barcode => {
-                   purpose: 'LHR RT',
-                   states: ['passed'],
+                   purpose: 'LHR PCR 1',
+                   states: ['pending'],
                    label: 'Bed 4',
-                   display_purpose: 'LHR PCR 1',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP1'
+                   target_state: 'passed',
+                   parent: bed(9).barcode
                  },
                  bed(6).barcode => {
-                   purpose: 'LHR RT',
-                   states: ['passed'],
+                   purpose: 'LHR PCR 2',
+                   states: ['pending'],
                    label: 'Bed 6',
-                   display_purpose: 'LHR PCR 2',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP2'
+                   target_state: 'passed',
+                   parent: bed(9).barcode
                  }
-               },
-               class: 'Robots::HeronRobotPcrDestinations')
+               })
 
   custom_robot('nx-96-lhr-pcr-1-and-2-lhr-xp',
                name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
                beds: {
                  bed(1).barcode => {
-                   purpose: 'LHR RT',
+                   purpose: 'LHR PCR 1',
                    states: ['passed'],
                    label: 'Bed 1',
-                   child: bed(9).barcode,
-                   display_purpose: 'LHR PCR 1',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP1'
+                   child: bed(9).barcode
                  },
                  bed(2).barcode => {
-                   purpose: 'LHR RT',
+                   purpose: 'LHR PCR 2',
                    states: ['passed'],
                    label: 'Bed 2',
-                   child: bed(9).barcode,
-                   display_purpose: 'LHR PCR 2',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP2'
+                   child: bed(9).barcode
                  },
                  bed(3).barcode => {
-                   purpose: 'LHR RT',
+                   purpose: 'LHR PCR 1',
                    states: ['passed'],
                    label: 'Bed 3',
-                   child: bed(11).barcode,
-                   display_purpose: 'LHR PCR 1',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP1'
+                   child: bed(11).barcode
                  },
                  bed(4).barcode => {
-                   purpose: 'LHR RT',
+                   purpose: 'LHR PCR 2',
                    states: ['passed'],
                    label: 'Bed 4',
-                   child: bed(11).barcode,
-                   display_purpose: 'LHR PCR 2',
-                   override_class: 'Robots::Bed::Heron',
-                   expected_plate_barcode_suffix: 'PP2'
+                   child: bed(11).barcode
                  },
                  bed(9).barcode => {
                    purpose: 'LHR XP',
@@ -1554,8 +1539,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed',
                    parents: [bed(3).barcode, bed(4).barcode]
                  }
-               },
-               class: 'Robots::HeronRobotPcrSources')
+               })
 
   bravo_robot transition_to: 'started', require_robot: true do
     from 'LHR XP', bed(4)
