@@ -7,6 +7,10 @@ LHR RT:
   :default_printer_type: :plate_a
   :label_template: plate_lhr_rt
   :presenter_class: Presenters::StockPlatePresenter
+LHR PCR 1:
+  :asset_type: plate
+LHR PCR 2:
+  :asset_type: plate
 LHR XP:
   :asset_type: plate
 LHR End Prep:
