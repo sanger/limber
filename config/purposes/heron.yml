@@ -13,6 +13,7 @@ LHR PCR 2:
   :asset_type: plate
 LHR XP:
   :asset_type: plate
+  :creator_class: LabwareCreators::MergedPlate
 LHR End Prep:
   :asset_type: plate
 LHR Lib PCR:
