@@ -83,6 +83,7 @@ RSpec.describe LabwareCreators::MergedPlate do
       end
 
       it 'makes the expected requests' do
+        expect(subject.valid?).to eq true
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
@@ -128,6 +129,35 @@ RSpec.describe LabwareCreators::MergedPlate do
       let(:plate_size) { 384 }
 
       it_behaves_like 'a merged plate creator'
+    end
+  end
+
+  context 'with a mismatched pair of source plates' do
+    let(:different_requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 } }
+    let(:different_parent) { create :v2_plate }
+    let(:source_plate_3) { create :v2_plate, barcode_number: '4', size: plate_size, outer_requests: different_requests, parent: different_parent }
+
+    let(:form_attributes) do
+      {
+        purpose_uuid: child_purpose_uuid,
+        parent_uuid: parent_uuid,
+        user_uuid: user_uuid,
+        barcodes: [source_plate_1.barcode.machine, source_plate_3.barcode.machine]
+      }
+    end
+
+    before do
+      create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid, creator_class: 'LabwareCreators::MergedPlate')
+      stub_v2_plate(source_plate_3, stub_search: false)
+      allow(Sequencescape::Api::V2::Plate).to(
+        receive(:find_all)
+          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
+          .and_return([source_plate_1, source_plate_3])
+      )
+    end
+
+    it 'is invalid' do
+      expect(subject.valid?).to eq false
     end
   end
 end

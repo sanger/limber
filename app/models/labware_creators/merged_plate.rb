@@ -13,6 +13,7 @@ module LabwareCreators
     self.page = 'merged_plate'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
+    validate :source_plates_have_same_parent?
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
@@ -53,6 +54,14 @@ module LabwareCreators
         { barcode: barcodes },
         includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source'
       )
+    end
+
+    # Validation to check all source plates have the same parent
+    def source_plates_have_same_parent?
+      return if source_plates.map { |sp| sp.attributes['parent']['id'] }.uniq.size == 1
+
+      msg = 'The source plates have different parents, please check you have scanned the correct set of source plates.'
+      errors.add(:parent, msg)
     end
   end
 end
