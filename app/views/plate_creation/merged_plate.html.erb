@@ -1,7 +1,20 @@
 <%= page('merged-plate-page') do %>
   <%= content do %>
     <%= card id: 'main-content' do %>
-      <div>Placeholder</div>
+      <div>
+        <h3>Instructions</h3>
+        <p>This step merges multiple plates together into a destination plate.</p>
+        <p>This process expects all source plates to have the same parent plate i.e. a split has occurred.</p>
+        <p>Scan the source plate barcodes into the panel on the right of the screen (the order doesn't matter) and click <i>Merge Plates</i>.</p>
+        <p>Validations will check that the source plates have the same parent.</p>
+        <p><%= @labware_creator.help_text %></p>
+        <h4>Expected source plate types:</h4>
+        <p>These are the plate purposes of the source plates, which should be visible on the plate barcode labels.</p>
+        <% source_plate_purposes = @labware_creator.source_purposes %>
+        <% source_plate_purposes.each do |source_purpose| %>
+          <p><b><%= source_purpose %></b></p>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
   <%= sidebar do %>
@@ -9,7 +22,7 @@
       <div id="validation_report"></div>
       <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
-          <p>Scan in plates to combine.</p>
+          <p>Scan in the plates to be combined.</p>
         </div>
       </div>
       <div class="card-body">

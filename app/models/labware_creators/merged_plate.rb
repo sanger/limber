@@ -10,7 +10,6 @@ module LabwareCreators
     attr_accessor :barcodes
 
     self.attributes += [{ barcodes: [] }]
-
     self.page = 'merged_plate'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
@@ -19,6 +18,24 @@ module LabwareCreators
 
     def labware_wells
       source_plates.flat_map(&:wells)
+    end
+
+    #
+    # Returns the source plate purposes for use in the help view.
+    #
+    # @return [Array] Purpose name strings.
+    #
+    def source_purposes
+      Settings.purposes.dig(@purpose_uuid, :merged_plate).source_purposes
+    end
+
+    #
+    # Returns specific help text to display to the user for this specific use case.
+    #
+    # @return [String] Some descriptive text.
+    #
+    def help_text
+      Settings.purposes.dig(@purpose_uuid, :merged_plate).help_text
     end
 
     private
