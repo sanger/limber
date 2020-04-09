@@ -13,7 +13,9 @@ module LabwareCreators
     self.page = 'merged_plate'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
+    validate :all_source_barcodes_entered?
     validate :source_plates_have_same_parent?
+    validate :source_barcodes_are_different?
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
@@ -41,6 +43,11 @@ module LabwareCreators
 
     private
 
+    # removes empty strings from barcodes, for validation
+    def minimal_barcodes
+      barcodes.reject { |e| e.to_s.empty? }
+    end
+
     def create_plate_from_parent!
       api.pooled_plate_creation.create!(
         child_purpose: purpose_uuid,
@@ -51,9 +58,17 @@ module LabwareCreators
 
     def source_plates
       @source_plates ||= Sequencescape::Api::V2::Plate.find_all(
-        { barcode: barcodes },
+        { barcode: minimal_barcodes },
         includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source'
       )
+    end
+
+    # validation to check the number of barcodes scanned matches the number of expected purposes from the configuration
+    def all_source_barcodes_entered?
+      return if minimal_barcodes.size == source_purposes.size
+
+      msg = 'Please scan in all the required source plate barcodes.'
+      errors.add(:parent, msg)
     end
 
     # Validation to check all source plates have the same parent
@@ -61,6 +76,15 @@ module LabwareCreators
       return if source_plates.map { |sp| sp.attributes['parent']['id'] }.uniq.size == 1
 
       msg = 'The source plates have different parents, please check you have scanned the correct set of source plates.'
+      errors.add(:parent, msg)
+    end
+
+    # Validation to check the user hasn't scanned the same barcode multiple times
+    def source_barcodes_are_different?
+      duplicates = minimal_barcodes.select { |e| minimal_barcodes.count(e) > 1 }
+      return if duplicates.uniq.empty?
+
+      msg = 'The source plates should not have the same barcode, please check you scanned all the plates.'
       errors.add(:parent, msg)
     end
   end
