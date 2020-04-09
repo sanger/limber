@@ -16,6 +16,7 @@ module LabwareCreators
     validate :all_source_barcodes_entered?
     validate :source_plates_have_same_parent?
     validate :source_barcodes_are_different?
+    validate :source_plates_have_expected_purposes?
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
@@ -28,7 +29,7 @@ module LabwareCreators
     #
     # @return [Array] Purpose name strings.
     #
-    def source_purposes
+    def expected_source_purposes
       Settings.purposes.dig(@purpose_uuid, :merged_plate).source_purposes
     end
 
@@ -72,7 +73,7 @@ module LabwareCreators
 
     # validation to check the number of barcodes scanned matches the number of expected purposes from the configuration
     def all_source_barcodes_entered?
-      return if minimal_barcodes.size == source_purposes.size
+      return if minimal_barcodes.size == expected_source_purposes.size
 
       msg = 'Please scan in all the required source plate barcodes.'
       errors.add(:parent, msg)
@@ -92,6 +93,15 @@ module LabwareCreators
       return if duplicates.uniq.empty?
 
       msg = 'The source plates should not have the same barcode, please check you scanned all the plates.'
+      errors.add(:parent, msg)
+    end
+
+    # Validation to check the user hasn't accidently created multiple plates wirh the same purpose
+    def source_plates_have_expected_purposes?
+      actual_purposes = source_plates.map { |sp| sp.purpose[:name] }
+      return if actual_purposes.sort == expected_source_purposes.sort
+
+      msg = 'The source plates do not have the expected types, check whether the right set of plate types have been made.'
       errors.add(:parent, msg)
     end
   end

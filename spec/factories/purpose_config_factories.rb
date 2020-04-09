@@ -109,7 +109,7 @@ FactoryBot.define do
     factory :merged_plate_purpose_config do
       merged_plate do
         {
-          source_purposes: ['Purpose 1', 'Purpose 2'],
+          source_purposes: ['Source 1 Purpose', 'Source 2 Purpose'],
           help_text: 'Some specific help text.'
         }
       end
