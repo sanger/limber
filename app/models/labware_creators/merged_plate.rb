@@ -65,8 +65,7 @@ module LabwareCreators
 
     # Returns the attributes for a transfer request from
     # source_well to the same location on child_plate
-    # Unlike request_hash on StampedPlate sets the
-    # merge_equivalent_aliquots to true
+    # Unlike request_hash on StampedPlate sets the merge_equivalent_aliquots to true
     def request_hash(source_well, child_plate, additional_parameters)
       super.merge('merge_equivalent_aliquots' => true)
     end
