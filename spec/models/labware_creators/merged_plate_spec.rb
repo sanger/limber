@@ -21,9 +21,9 @@ RSpec.describe LabwareCreators::MergedPlate do
 
   let(:plate_includes) { 'purpose,parents,wells.aliquots.request,wells.requests_as_source' }
 
-  let(:shared_parent) { create :v2_plate }
-  let(:source_plate_1) { create :v2_plate, barcode_number: '2', size: plate_size, outer_requests: requests, parent: shared_parent }
-  let(:source_plate_2) { create :v2_plate, barcode_number: '3', size: plate_size, outer_requests: requests, parent: shared_parent }
+  let(:shared_parent) { create :v2_plate, barcode_number: '1', size: plate_size }
+  let(:source_plate_1) { create :v2_plate, barcode_number: '2', size: plate_size, outer_requests: requests, parents: [shared_parent] }
+  let(:source_plate_2) { create :v2_plate, barcode_number: '3', size: plate_size, outer_requests: requests, parents: [shared_parent] }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -137,7 +137,7 @@ RSpec.describe LabwareCreators::MergedPlate do
   context 'with a mismatched pair of source plates' do
     let(:different_requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 } }
     let(:different_parent) { create :v2_plate }
-    let(:source_plate_3) { create :v2_plate, barcode_number: '4', size: plate_size, outer_requests: different_requests, parent: different_parent }
+    let(:source_plate_3) { create :v2_plate, barcode_number: '4', size: plate_size, outer_requests: different_requests, parents: [different_parent] }
 
     let(:form_attributes) do
       {

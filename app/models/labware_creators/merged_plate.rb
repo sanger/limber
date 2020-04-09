@@ -80,7 +80,7 @@ module LabwareCreators
 
     # Validation to check all source plates have the same parent
     def source_plates_have_same_parent?
-      return if source_plates.map { |sp| sp.attributes['parent']['id'] }.uniq.size == 1
+      return if source_plates.map { |sp| sp.parents.map(&:id) }.flatten.uniq.one?
 
       msg = 'The source plates have different parents, please check you have scanned the correct set of source plates.'
       errors.add(:parent, msg)
