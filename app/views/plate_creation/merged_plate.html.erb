@@ -34,7 +34,7 @@
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
-        <% 2.times do |i| %>
+        <% @labware_creator.source_purposes.size.times do |i| %>
           <div class="plate-container scan-plate form-group row">
             <label for="plate[barcodes][<%= i %>]" class="plate-label col-2" >Source Plate <%= i+1 %></label>
             <input id="plate[barcodes][<%= i %>]" name="plate[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />

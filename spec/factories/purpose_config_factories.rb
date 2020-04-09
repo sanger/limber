@@ -106,6 +106,15 @@ FactoryBot.define do
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
+    factory :merged_plate_purpose_config do
+      merged_plate do
+        {
+          source_purposes: ['Purpose 1', 'Purpose 2'],
+          help_text: 'Some specific help text.'
+        }
+      end
+    end
+
     factory :tube_config do
       asset_type { 'tube' }
       default_printer_type { :tube }
