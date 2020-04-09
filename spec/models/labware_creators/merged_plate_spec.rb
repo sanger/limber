@@ -105,14 +105,16 @@ RSpec.describe LabwareCreators::MergedPlate do
         {
           'source_asset' => "2-well-#{well_name}",
           'target_asset' => "4-well-#{well_name}",
-          'submission_id' => '1'
+          'submission_id' => '1',
+          'merge_equivalent_aliquots' => true
         }
       end.concat(
         WellHelpers.column_order(plate_size).each_with_index.map do |well_name, _index|
           {
             'source_asset' => "3-well-#{well_name}",
             'target_asset' => "4-well-#{well_name}",
-            'submission_id' => '1'
+            'submission_id' => '1',
+            'merge_equivalent_aliquots' => true
           }
         end
       )
