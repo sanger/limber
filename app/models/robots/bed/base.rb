@@ -46,7 +46,11 @@ module Robots::Bed
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
-      @plates = Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
+      @plates = if @barcodes.present?
+                  Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
+                else
+                  []
+                end
     end
 
     def plate
