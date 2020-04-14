@@ -89,14 +89,13 @@ module LabwareCreators
 
     # Validation to check the user hasn't scanned the same barcode multiple times
     def source_barcodes_are_different?
-      duplicates = minimal_barcodes.select { |e| minimal_barcodes.count(e) > 1 }
-      return if duplicates.uniq.empty?
+      return unless minimal_barcodes.any? { |e| minimal_barcodes.count(e) > 1 }
 
       msg = 'The source plates should not have the same barcode, please check you scanned all the plates.'
       errors.add(:parent, msg)
     end
 
-    # Validation to check the user hasn't accidently created multiple plates wirh the same purpose
+    # Validation to check the user hasn't accidently created multiple plates with the same purpose
     def source_plates_have_expected_purposes?
       actual_purposes = source_plates.map { |sp| sp.purpose[:name] }
       return if actual_purposes.sort == expected_source_purposes.sort
