@@ -5,7 +5,7 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
@@ -19,6 +19,14 @@ module Robots::Bed
 
     def recognised?
       true
+    end
+
+    def parent=(parent_bed)
+      @parents = [parent_bed]
+    end
+
+    def parent
+      (@parents || []).first
     end
 
     def transitions?
@@ -57,14 +65,14 @@ module Robots::Bed
       @plates&.first
     end
 
-    def parent_plate
-      return nil if plate.nil?
+    def parent_plates
+      return [] if plate.nil?
 
-      parent = plate.parents.first
-      return parent if parent
+      parents = plate.parents
+      return parents if parents.present?
 
-      error("Labware #{plate.human_barcode} doesn't seem to have a parent, and yet one was expected.")
-      nil
+      error("Labware #{plate.human_barcode} doesn't seem to have any parents, and yet at least one was expected.")
+      []
     end
 
     def child_plates

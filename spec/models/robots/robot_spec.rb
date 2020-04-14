@@ -110,6 +110,131 @@ RSpec.describe Robots::Robot, robots: true do
       end
     end
 
+    context 'a robot with beds with multiple parents' do
+      let(:source_plate_2) do
+        create :v2_plate,
+               barcode_number: 3,
+               purpose_name: source_purpose_name,
+               state: source_plate_state
+      end
+      let(:source_2_barcode) { source_plate_2.human_barcode }
+      let(:target_plate_parents) { [source_plate, source_plate_2] }
+
+      let(:robot_spec) do
+        {
+          'name' => 'robot_name',
+          'beds' => {
+            'bed1_barcode' => {
+              'purpose' => 'Limber Cherrypicked',
+              'states' => ['passed'],
+              'label' => 'Bed 2'
+            },
+            'bed3_barcode' => {
+              'purpose' => 'Limber Cherrypicked',
+              'states' => ['passed'],
+              'label' => 'Bed 3'
+            },
+            'bed2_barcode' => {
+              'purpose' => 'target_plate_purpose',
+              'states' => ['pending'],
+              'label' => 'Bed 1',
+              'parents' => %w[bed1_barcode bed3_barcode],
+              'target_state' => 'passed'
+            },
+            'bed4_barcode' => {
+              'purpose' => 'Limber Cherrypicked',
+              'states' => ['passed'],
+              'label' => 'Bed 4'
+            },
+            'bed6_barcode' => {
+              'purpose' => 'Limber Cherrypicked',
+              'states' => ['passed'],
+              'label' => 'Bed 6'
+            },
+            'bed5_barcode' => {
+              'purpose' => 'target_plate_purpose',
+              'states' => ['pending'],
+              'label' => 'Bed 5',
+              'parents' => %w[bed4_barcode bed6_barcode],
+              'target_state' => 'passed'
+            }
+          }
+        }
+      end
+
+      before do
+        bed_plate_lookup(source_plate)
+        bed_plate_lookup(source_plate_2)
+        bed_plate_lookup(target_plate)
+      end
+
+      context 'with an unknown plate' do
+        before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
+        let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      context 'with a plate on an unknown bed' do
+        let(:scanned_layout) { { 'bed4_barcode' => [source_barcode] } }
+
+        it { is_expected.not_to be_valid }
+      end
+
+      context 'with only one parent scanned' do
+        let(:scanned_layout) do
+          {
+            'bed1_barcode' => [source_barcode],
+            'bed2_barcode' => [target_barcode]
+          }
+        end
+
+        it { is_expected.not_to be_valid }
+      end
+
+      context 'with a valid layout' do
+        let(:scanned_layout) do
+          {
+            'bed1_barcode' => [source_barcode],
+            'bed3_barcode' => [source_2_barcode],
+            'bed2_barcode' => [target_barcode]
+          }
+        end
+
+        context 'and related plates' do
+          let(:target_plate_parents) { [source_plate, source_plate_2] }
+          it { is_expected.to be_valid }
+
+          context 'but in the wrong state' do
+            let(:source_plate_state) { 'pending' }
+            it { is_expected.not_to be_valid }
+          end
+
+          context 'but of the wrong purpose' do
+            let(:source_purpose_name) { 'Invalid plate purpose' }
+            it { is_expected.not_to be_valid }
+          end
+        end
+
+        context 'but unrelated plates' do
+          let(:target_plate_parents) { [create(:v2_plate)] }
+          it { is_expected.not_to be_valid }
+        end
+      end
+
+      context 'with multiple scans' do
+        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] } }
+
+        context 'and related plates' do
+          before do
+            bed_plate_lookup_with_barcode([source_barcode, 'Other barcode'], [source_plate])
+          end
+          let(:target_plate_parents) { [source_plate] }
+          it { is_expected.to_not be_valid }
+        end
+      end
+    end
+
     context 'a robot with grandchildren' do
       let(:robot_spec) do
         {

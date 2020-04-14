@@ -1498,7 +1498,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
-  custom_robot('nx-96-lhr-pcr-1-and-2-lhr-xp',
+  custom_robot('nx-96-lhr-pcr-1-and-2-to-lhr-xp',
                name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
                beds: {
                  bed(1).barcode => {

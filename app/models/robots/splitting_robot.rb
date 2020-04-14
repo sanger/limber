@@ -34,7 +34,7 @@ module Robots
         expected_children = beds[parent_bed].child_plates
         expected_children.each_with_index do |expected_child, index|
           child_bed = child_beds[index]
-          validations[child_bed] = check_plate_identity(child_bed, expected_child)
+          validations[child_bed] = check_plate_identity(expected_child, child_bed)
         end
       end
     end
