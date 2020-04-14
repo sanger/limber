@@ -32,7 +32,7 @@ FactoryBot.define do
     end
   end
 
-  factory :barcode_printer_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :barcode_printer_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { tube_printer_size + plate_printer_size }
 
     transient do

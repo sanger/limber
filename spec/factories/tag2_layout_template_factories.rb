@@ -15,7 +15,7 @@ FactoryBot.define do
     end
   end
 
-  factory :tag2_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :tag2_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do

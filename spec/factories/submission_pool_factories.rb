@@ -3,9 +3,9 @@
 require_relative '../support/json_renderers'
 
 FactoryBot.define do
-  # Caution! You probably don't want this one! Submission pools
-  # are always accessed via their plate
-  factory :submission_pool_base, class: Sequencescape::SubmissionPool do
+  factory :submission_pool_base, class: Sequencescape::SubmissionPool, traits: [:api_simple_object] do
+    # Caution! You probably don't want this one! Submission pools
+    # are always accessed via their plate.
     plates_in_submission { 1 }
     used_tag2_layout_templates { [] }
     used_tag_layout_templates { [] }
@@ -15,7 +15,7 @@ FactoryBot.define do
     end
   end
 
-  factory :submission_pool_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :submission_pool_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 1 }
 
     transient do

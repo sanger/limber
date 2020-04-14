@@ -8,7 +8,7 @@ FactoryBot.define do
     size { 123 }
   end
 
-  factory :qc_files_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :qc_files_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 3 }
 
     transient do

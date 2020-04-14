@@ -4,12 +4,16 @@ require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
   factory :bait_library_layout, class: Sequencescape::BaitLibraryLayout, traits: [:api_object] do
+    # Generates a BaitLibraryLayout (API V1)
+
     json_root { 'bait_library_layout' }
 
     with_belongs_to_associations 'plate'
 
     transient do
       pools do
+        # Provide an array of pools, describing the number of wells in each
+        # and the associated bait library (by name)
         [
           { size: 2, bait: 'Human all exon 50MB' },
           { size: 2, bait: 'Mouse all exon' }

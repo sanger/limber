@@ -14,6 +14,7 @@ FactoryBot.define do
     end
 
     with_has_many_associations 'requests', 'qc_files', 'studies'
+    name { 'Tube' }
 
     purpose do
       {
@@ -124,7 +125,8 @@ FactoryBot.define do
     end
   end
 
-  factory :tube_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :tube_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
+    skip_create
     size { 2 }
 
     transient do

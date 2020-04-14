@@ -41,7 +41,7 @@ FactoryBot.define do
   end
 
   # Builds all the transfer templates we're going to actually be using.
-  factory :transfer_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :transfer_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { available_templates.length }
 
     transient do

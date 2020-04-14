@@ -5,6 +5,7 @@ require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
   factory :unmocked_v2_plate, class: Sequencescape::Api::V2::Plate do
+    skip_create
   end
 
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do

@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :tag_layout_template, class: Limber::TagLayoutTemplate, traits: [:api_object] do
+    skip_create
+
     json_root { 'tag_layout_template' }
     resource_actions { %w[read create] }
 
@@ -57,7 +59,7 @@ FactoryBot.define do
     end
   end
 
-  factory :tag_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :tag_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do

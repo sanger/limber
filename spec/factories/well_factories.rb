@@ -109,7 +109,7 @@ FactoryBot.define do
     end
   end
 
-  factory :well_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :well_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 96 }
 
     transient do
@@ -139,7 +139,7 @@ FactoryBot.define do
     end
   end
 
-  factory :aliquot, class: Sequencescape::Behaviour::Receptacle::Aliquot do
+  factory :aliquot, class: Sequencescape::Behaviour::Receptacle::Aliquot, traits: [:api_object] do
     bait_library { nil }
     insert_size { {} }
     tag { {} }
