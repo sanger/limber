@@ -1,0 +1,48 @@
+<%= page('merged-plate-page') do %>
+  <%= content do %>
+    <%= card id: 'main-content' do %>
+      <div>
+        <h3>Instructions</h3>
+        <p>This step merges multiple plates together into a destination plate.</p>
+        <p>This process expects all source plates to have the same parent plate i.e. a split has occurred.</p>
+        <p>Scan the source plate barcodes into the panel on the right of the screen (the order doesn't matter) and click <i>Merge Plates</i>.</p>
+        <p>Validations will check that the source plates have the same parent.</p>
+        <p><%= @labware_creator.help_text %></p>
+        <h4>Expected source plate types:</h4>
+        <p>These are the plate purposes of the source plates, which should be visible on the plate barcode labels.</p>
+        <% source_plate_purposes = @labware_creator.expected_source_purposes %>
+        <% source_plate_purposes.each do |source_purpose| %>
+          <p><b><%= source_purpose %></b></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'Scan plates to combine', without_block: true do %>
+      <div id="validation_report"></div>
+      <div id="add-plates-instructions-block" class="card-body" >
+        <div class="instructions">
+          <p>Scan in the plates to be combined.</p>
+        </div>
+      </div>
+      <div class="card-body">
+      <%= form_for(
+        @labware_creator,
+        url: limber_plate_children_path(@labware_creator.parent_uuid),
+        as: :plate,
+        html: { method: :post }) do |form| %>
+
+        <%= form.hidden_field :parent_uuid %>
+        <%= form.hidden_field :purpose_uuid %>
+        <% @labware_creator.expected_source_purposes.size.times do |i| %>
+          <div class="plate-container scan-plate form-group row">
+            <label for="plate[barcodes][<%= i %>]" class="plate-label col-2" >Source Plate <%= i+1 %></label>
+            <input id="plate[barcodes][<%= i %>]" name="plate[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
+          </div>
+        <% end %>
+        <%= form.submit 'Merge Plates', class: 'btn btn-success btn-lg', id: 'create-labware' %>
+      <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
