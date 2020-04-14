@@ -5,8 +5,7 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child, :display_purpose,
-                  :override_class, :parents
+    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
@@ -33,7 +32,7 @@ module Robots::Bed
     end
 
     def purpose_labels
-      display_purpose || purpose
+      purpose
     end
 
     def barcodes
@@ -47,11 +46,7 @@ module Robots::Bed
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
-      @plates = if @barcodes.present?
-                  Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
-                else
-                  []
-                end
+      @plates = Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
     end
 
     def plate

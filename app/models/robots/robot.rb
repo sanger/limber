@@ -60,8 +60,7 @@ module Robots
     def beds=(new_beds)
       beds = Hash.new { |store, barcode| store[barcode] = Robots::Bed::Invalid.new(barcode) }
       new_beds.each do |id, bed|
-        klass = bed['override_class']&.constantize || bed_class
-        beds[id] = klass.new(bed.merge(robot: self))
+        beds[id] = bed_class.new(bed.merge(robot: self))
       end
       @beds = beds
     end
