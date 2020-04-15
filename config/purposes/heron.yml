@@ -5,7 +5,6 @@ LHR RT:
   :cherrypickable_target: true
   :input_plate: true
   :default_printer_type: :plate_a
-  :label_template: plate_lhr_rt
   :presenter_class: Presenters::StockPlatePresenter
 LHR PCR 1:
   :asset_type: plate
