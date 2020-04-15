@@ -1,0 +1,49 @@
+---
+LHR-384 RT:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+  :size: 384
+LHR-384 PCR 1:
+  :asset_type: plate
+  :size: 384
+LHR-384 PCR 2:
+  :asset_type: plate
+  :size: 384
+LHR-384 cDNA:
+  :asset_type: plate
+  :creator_class: LabwareCreators::MergedPlate
+  :merged_plate:
+    source_purposes:
+    - 'LHR-384 PCR 1'
+    - 'LHR-384 PCR 2'
+    help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new cDNA plate.'
+  :size: 384
+LHR-384 XP:
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
+  :label_template: plate_6mm_double
+  :size: 384
+LHR-384 End Prep:
+  :asset_type: plate
+  :size: 384
+LHR-384 Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
+  :size: 384
+  :tag_layout_templates:
+  - '384sc'
+  - 'TSsc384'
+LHR-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

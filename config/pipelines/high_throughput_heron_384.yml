@@ -1,0 +1,30 @@
+---
+Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
+  filters:
+    request_type_key: limber_heron
+    library_type: PCR amplicon ligated adapters 384
+  library_pass: LHR-384 Lib PCR
+  relationships:
+    LHR RT: LHR PCR 1
+    LHR PCR 1: LHR-384 cDNA
+    LHR-384 cDNA: LHR-384 XP
+    LHR-384 XP: LHR-384 End Prep
+    LHR-384 End Prep: LHR-384 Lib PCR
+Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate
+  filters:
+    request_type_key: limber_heron
+    library_type: PCR amplicon ligated adapters 384
+  library_pass: LHR-384 Lib PCR
+  relationships:
+    LHR RT: LHR PCR 2
+    LHR PCR 2: LHR-384 cDNA
+    LHR-384 cDNA: LHR-384 XP
+    LHR-384 XP: LHR-384 End Prep
+    LHR-384 End Prep: LHR-384 Lib PCR
+Heron 384 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    LHR-384 Lib PCR: LHR-384 Lib Pool XP
+    LHR-384 Lib Pool XP: LB Lib Pool Norm
