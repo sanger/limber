@@ -41,24 +41,16 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   end
 
   let(:quad_a_requests) do
-    Array.new(child_plate_size) do |i|
-      create :library_request, state: 'started', submission_id: 1
-    end
+    create_list :library_request, parent_plate_size, state: 'started', submission_id: 1
   end
   let(:quad_b_requests) do
-    Array.new(child_plate_size) do |i|
-      create :library_request, state: 'started', submission_id: 2
-    end
+    create_list :library_request, parent_plate_size, state: 'started', submission_id: 2
   end
   let(:quad_c_requests) do
-    Array.new(child_plate_size) do |i|
-      create :library_request, state: 'started', submission_id: 3
-    end
+    create_list :library_request, parent_plate_size, state: 'started', submission_id: 3
   end
   let(:quad_d_requests) do
-    Array.new(child_plate_size) do |i|
-      create :library_request, state: 'started', submission_id: 4
-    end
+    create_list :library_request, parent_plate_size, state: 'started', submission_id: 4
   end
 
   let(:requests) do
