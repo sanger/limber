@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # V2 transfer request
   factory :v2_transfer_request, class: Sequencescape::Api::V2::TransferRequest do
     skip_create
 

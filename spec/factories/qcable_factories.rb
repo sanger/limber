@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 Qcable (Records the QC status of eg. a tag plate)
   factory :qcable, class: Limber::Qcable, traits: %i[api_object barcoded] do
     with_belongs_to_associations 'lot', 'qcable_creator', 'asset'
     json_root { 'qcable' }
@@ -12,11 +13,13 @@ FactoryBot.define do
       barcode_type { 1 }
     end
 
+    # API V1 tag plate qcable
     factory :tag_plate_qcable do
       transient do
         asset_uuid { 'tag-plate-uuid' }
       end
     end
+    # API V1 tag2 tube qcable
     factory :tag2_tube_qcable do
       transient do
         barcode_prefix { 'NT' }
@@ -25,6 +28,8 @@ FactoryBot.define do
     end
   end
 
+  # API V1 lot, associated with qcables and contains the information about
+  # what templates they are associated with
   factory :lot, class: Sequencescape::Lot, traits: [:api_object] do
     json_root { 'lot' }
     with_has_many_associations 'qcables'

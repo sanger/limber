@@ -3,6 +3,7 @@
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Simple V1 payload comming back from a state change
   factory :state_change, class: Sequencescape::StateChange, traits: [:api_object] do
     json_root { 'state_change' }
 

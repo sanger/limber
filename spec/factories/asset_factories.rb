@@ -4,12 +4,12 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Generates an api v2 tube with the Sequencescape::Api::V2::Asset class
+  # This is required to mimic the behaviour of the API gem when loading some
+  # polymorphic resources
   factory :v2_asset_tube, class: Sequencescape::Api::V2::Asset, traits: [:barcoded_v2] do
-    # Generates an api v2 tube with the Sequencescape::Api::V2::Asset class
-    # This is required to mimic the behaviour of the API gem when loading some
-    # polymorphic resources
     skip_create
-    uuid { SecureRandom.uuid }
+    uuid
     name { 'My tube' }
     type { 'tubes' }
     state { 'passed' }

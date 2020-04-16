@@ -5,13 +5,16 @@ require_relative '../support/json_renderers'
 FactoryBot.define do
   sequence(:barcode_number) { |i| i + 9 } # Add 9 to the sequence to avoid clashes with a few fixed barcodes
 
+  # Base trait for building V1 API classes, do not use directly, instead use
+  # :api_object or :api_simple_object
   trait :_api_object do
-    # Base trait for building V1 API classes, do not use directly, instead use
-    # :api_object or api_simple_object
     skip_create
-    transient do
-      api_root { 'http://example.com:3000/' }
 
+    transient do
+      api_root { 'http://example.com:3000/' } # The root of the Sequenbcescape API V1
+
+      # A Sequencescape::Api object
+      # @note Currently requires the root to be mocked with something like webmock
       api do
         Sequencescape::Api.new(
           url: api_root, cookie: nil,
@@ -20,24 +23,33 @@ FactoryBot.define do
       end
     end
 
+    # A class to handle JSON rendering (mimic an API response)
     json_render { JsonRenderer }
-    json_root { 'please define on factory' }
+
+    # The root of the returned JSON. Usually the class name in snake case
+    # Ideally we'd generate this from the class itself, but FactoryBot doesn't appear to
+    # expose sufficient introspection.
+    json_root { 'please define json_root on factory' }
   end
 
+  # Builds an API V1 object with uuids and appropriate actions
   trait :api_object do
-    # Builds an API V1 object with uuids and appropriate actions
     _api_object
 
     transient do
+      # A list of actions available on the resource
+      # Read only resources are usually just %w[read]
       resource_actions { ['read'] }
       named_actions { [] }
       resource_url  { api_root + uuid }
     end
 
-    uuid { SecureRandom.uuid }
+    uuid
     actions do
-      action = Hash[resource_actions.map { |action_name| [action_name, resource_url] }]
-      action.merge Hash[named_actions.map { |action_name| [action_name, resource_url + '/' + action_name] }]
+      {}.tap do |action|
+        resource_actions.each { |action_name| action[action_name] = resource_url }
+        named_actions.each { |action_name| action[action_name] = "#{resource_url}/#{action_name}" }
+      end
     end
 
     initialize_with do
@@ -45,8 +57,8 @@ FactoryBot.define do
     end
   end
 
+  # Used for API V1 objects which do NOT have a uuid (such as submission pool)
   trait :api_simple_object do
-    # Used for API V1 objects which do NOT have a uuid (such as submission pool)
     _api_object
 
     initialize_with do
@@ -54,18 +66,25 @@ FactoryBot.define do
     end
   end
 
+  # Adds a uuid attribute
   trait :uuid do
     uuid { SecureRandom.uuid }
   end
 
-  trait :barcoded do
+  # Base trait for barcode behaviour. Sets up shared behaviour. Use the other barcoded traits.
+  trait :_barcoded do
     transient do
+      barcode_prefix { 'DN' }
       barcode_number
       barcode_object { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
       ean13 { barcode_object.machine_barcode.to_s }
       human_barcode { barcode_object.human_barcode }
-      machine_barcode { human_barcode }
     end
+  end
+
+  # Add to API_V1 Factories to add a barcode
+  trait :barcoded do
+    _barcoded
 
     barcode do
       {
@@ -79,14 +98,9 @@ FactoryBot.define do
     end
   end
 
+  # Add to API_V1 Factories to add a legacy ean13 barcode
   trait :ean13_barcoded do
-    transient do
-      barcode_number
-      barcode_object { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
-      ean13 { barcode_object.machine_barcode.to_s }
-      human_barcode { barcode_object.human_barcode }
-      machine_barcode { human_barcode }
-    end
+    _barcoded
 
     barcode do
       {
@@ -100,34 +114,28 @@ FactoryBot.define do
     end
   end
 
+  # Add to API_V2 Factories to add a barcode
   trait :barcoded_v2 do
-    transient do
-      barcode_number
-      barcode_prefix { 'DN' }
-      barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
-    end
+    _barcoded
 
     labware_barcode do
       {
-        'ean13_barcode' => barcode.machine_barcode.to_s,
-        'human_barcode' => barcode.human_barcode,
-        'machine_barcode' => barcode.human_barcode # Mimics a code39 printed barcode
+        'ean13_barcode' => barcode_object.machine_barcode.to_s,
+        'human_barcode' => barcode_object.human_barcode,
+        'machine_barcode' => barcode_object.human_barcode # Mimics a code39 printed barcode
       }
     end
   end
 
+  # Add to API_V2 Factories to add a legacy ean13 barcode
   trait :ean13_barcoded_v2 do
-    transient do
-      barcode_number
-      barcode_prefix { 'DN' }
-      barcode { SBCF::SangerBarcode.new(prefix: barcode_prefix, number: barcode_number) }
-    end
+    _barcoded
 
     labware_barcode do
       {
-        'ean13_barcode' => barcode.machine_barcode.to_s,
-        'human_barcode' => barcode.human_barcode,
-        'machine_barcode' => barcode.machine_barcode.to_s
+        'ean13_barcode' => barcode_object.machine_barcode.to_s,
+        'human_barcode' => barcode_object.human_barcode,
+        'machine_barcode' => barcode_object.machine_barcode.to_s
       }
     end
   end

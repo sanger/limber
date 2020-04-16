@@ -21,7 +21,7 @@ RSpec.describe 'barcode printer factory' do
         "name": "tube printer",
         "active": true,
         "service": {
-          "url": "http://localhost:9998/barcode_service.wsdl"
+          "url": "DEPRECATED"
         },
         "type": {
           "name": "1D Tube",

@@ -8,21 +8,41 @@ FactoryBot.define do
     skip_create
   end
 
+  # General purpose factory used to create API V2 plates
+  # There is a lot of functionality in here, especially in the transients
+  # Setting up requests:
+  # request_factory - The factory to use for each request
+  # pool_sizes - determined the number of requests on the plate and how they pool
+  # outer_requests - More fine-grained controls if the above options aren't suitable
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+    skip_create
+
     initialize_with do
       Sequencescape::Api::V2::Plate.load(attributes)
     end
-    skip_create
 
     transient do
+      # The number of wells on the plate. Usualy calculated from
+      # the plate dimensions.
       well_count { number_of_rows * number_of_columns }
+      # The factory to use for wells on the plate
       well_factory { :v2_well }
+      # The factory to use for requests associated with the plate.
+      # For v2_plates this is associated with the aliquot, for v2_stock_plates
+      # these requests are comming from the wells themselves
       request_factory { :library_request }
+      # Wells have predictable 'uuids' in tests for example: DN12345-well-A1
+      # Overide this parameter if you wish to change this format.
       well_uuid_result { "#{barcode_number}-well-%s" }
+      # Built automatically by default (using the request_factory) and the information
+      # in pool sizes.
+      # This is an array of all requests associated with the plate.
+      # Generally you only need to overide this if you want fine control
+      # over the requests associated with a plate.
       outer_requests do
         request_index = -1
-        pool_sizes.each_with_index.flat_map do |size, index|
-          Array.new(size) do
+        pool_sizes.each_with_index.flat_map do |pool_size, index|
+          Array.new(pool_size) do
             create request_factory,
                    pcr_cycles: pool_prc_cycles[index],
                    state: library_state[index],
@@ -33,6 +53,10 @@ FactoryBot.define do
           end
         end
       end
+      # Constructs the wells for the plate. Constructs
+      # well_count wells using the factory specified in well_factory
+      # Sets requests on wells by pulling them off the outer_request array
+      # Wells without requests will be empty.
       wells do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
@@ -44,29 +68,44 @@ FactoryBot.define do
                                aliquot_count: outer_requests[i] ? 1 : 0
         end
       end
+      # Overide the purpose name
       purpose_name { 'example-purpose' }
+      # Overive the purpose uuid
       purpose_uuid { 'example-purpose-uuid' }
+      # The plate purpose
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+      # Sets up the pools on the plate. Used by outer_requests to work out which
+      # requests to build, and which pools (ie. submissions) to assign them to.
+      # eg pool_sizes [96] will result in a plate with one pool of 96 requests
+      #    pool_sizes [8,8,8] will result in three pools of 8 wells each.
       pool_sizes { [] }
       parents { [] }
       children { [] }
       descendants { [] }
+      # Array of pcr_cycles set up for each pool
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      # The state of the library request for each pool
       library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate_for_plate, barcode_number: is_stock ? barcode_number : 2 }
       ancestors { [stock_plate] }
       transfer_targets { {} }
+      # Sets the plate size
       size { 96 }
       include_submissions { false }
+      # Array of states for individual wells, used to overide plate state for, eg. failed wells
       well_states { [state] * size }
       custom_metadatum_collection { nil }
       is_stock { false }
     end
 
     sequence(:id) { |i| i }
-    uuid { SecureRandom.uuid }
+    uuid
+    # Number of rows is calculated from the size by default
     number_of_rows { (((size / 6)**0.5) * 2).floor }
+    # Number of columns is calculated from the size by default
     number_of_columns { (((size / 6)**0.5) * 3).floor }
+    # The state of the plate. Can overide for individual wells using
+    # well_states
     state { 'pending' }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
@@ -88,6 +127,11 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(plate, :parents).and_return(evaluator.parents)
     end
 
+    # Set up a stock plate. Changes:
+    # - The plate purpose
+    # - The well factory to v2_stock_well which sets requests comming out of the wells,
+    #   rather than on the aliquots
+    # - Sets is_stock to true, which ensures the stock_plate matches itself
     factory :v2_stock_plate do
       transient do
         barcode_number { 2 }
@@ -99,13 +143,19 @@ FactoryBot.define do
       end
     end
 
+    # Sets up a plate of GBS requests with configured primer panels
+    # Use pool_sizes to determine how many wells have requests
     factory :v2_plate_with_primer_panels do
+      initialize_with do
+        Sequencescape::Api::V2::Plate.load(attributes)
+      end
       transient do
         purpose_name { 'Primer Panel example' }
         request_factory { :gbs_library_request }
       end
     end
 
+    # Sets up a plate of 2 isd requests, complete with bait libraries
     factory :v2_plate_for_pooling do
       transient do
         purpose_name { 'Pooled example' }
@@ -114,10 +164,14 @@ FactoryBot.define do
       end
     end
 
+    # Sets up a basic plate with two pools of 2 requests
     factory :unpassed_plate do
       pool_sizes { [2, 2] }
     end
 
+    # Sets up a plate similar to Lib PCR XP plates
+    # in which the initial libraries have been created and passed
+    # and we are about to begin pooling
     factory :passed_plate do
       transient do
         for_multiplexing { true }
@@ -127,6 +181,8 @@ FactoryBot.define do
       end
     end
 
+    # Sets up a plate at the begining of the agregation process
+    # with two submissions of two requests each
     factory :v2_plate_for_aggregation do
       transient do
         purpose_name { 'Limber Bespoke Aggregation' }
@@ -137,6 +193,7 @@ FactoryBot.define do
     end
   end
 
+  # Dummy stock plate for the stock_plate association
   factory :v2_stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
     initialize_with do
       Sequencescape::Api::V2::Plate.load(attributes)
@@ -157,6 +214,7 @@ FactoryBot.define do
     end
   end
 
+  # Basic API v1 plate
   factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
     json_root { 'plate' }
     size { 96 }
@@ -224,6 +282,8 @@ FactoryBot.define do
     end
   end
 
+  # Adds the pools hash to v1 plates.
+  # This is mostly legacy now and is barely used.
   trait :has_pools_hash do
     transient do
       extra_pool_info { {} }

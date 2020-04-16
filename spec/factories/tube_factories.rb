@@ -32,12 +32,14 @@ FactoryBot.define do
     updated_at { Time.current }
     state { 'pending' }
 
-    factory :tube, class: Limber::Tube, traits: %i[api_object ean13_barcoded] do
+    factory :tube, class: Limber::Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }
 
-      transient { sample_count { 1 } }
+      transient do
+        sample_count { 1 }
+      end
 
       aliquots do
         Array.new(sample_count) do |i|
@@ -50,12 +52,12 @@ FactoryBot.define do
         end
       end
 
-      factory :tube_without_siblings, traits: %i[api_object ean13_barcoded] do
+      factory :tube_without_siblings do
         json_root { 'tube' }
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
       end
 
-      factory :tube_with_siblings, traits: %i[api_object ean13_barcoded] do
+      factory :tube_with_siblings do
         json_root { 'tube' }
         transient do
           siblings_count { 1 }

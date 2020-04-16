@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 tag layout template. The inheriting factories set up the patterns
+  # commonly seen by Limber
   factory :tag_layout_template, class: Limber::TagLayoutTemplate, traits: [:api_object] do
     skip_create
 
@@ -59,6 +61,7 @@ FactoryBot.define do
     end
   end
 
+  # API V1 index of tag lauout templates
   factory :tag_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
@@ -67,6 +70,7 @@ FactoryBot.define do
       resource_actions { %w[read first last] }
       resource_url { 'tag_layout_templates/1' }
       uuid { nil }
+      # Specifies which templates to generate
       template_factory { :tag_layout_template }
       direction { 'column' }
     end
