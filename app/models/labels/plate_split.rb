@@ -22,6 +22,6 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase
     metadata = PlateMetadata.new(api: api, barcode: labware.barcode.machine).metadata
     barcode = 'N/A'
     barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
-    return barcode
+    barcode
   end
 end

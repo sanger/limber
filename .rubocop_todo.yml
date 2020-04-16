@@ -113,22 +113,6 @@ Style/AccessModifierDeclarations:
     - 'app/models/state_changers.rb'
     - 'config/initializers/settings.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: braces, no_braces, context_dependent
-Style/BracesAroundHashParameters:
-  Exclude:
-    - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
-
-# # Offense count: 1
-# # Cop supports --auto-correct.
-# # Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# # SupportedStyles: assign_to_condition, assign_inside_condition
-# Style/ConditionalAssignment:
-#   Exclude:
-#     - 'app/models/labware_creators/pooled_tubes_base.rb'
-
 # Offense count: 92
 Style/Documentation:
   Exclude:
