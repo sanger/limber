@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Labels::PlateSplit < Labels::PlateLabelXpBase
-
-  attr_accessor :stock_plate_barcode
+  attr_writer :stock_plate_barcode
 
   def attributes
     super.merge(top_right: stock_plate_barcode)

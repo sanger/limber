@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Handles the clicking of the 'Charge and Pass Libraries' button for plates
+# @see WorkCompletionBehaviour::create
 class Plates::WorkCompletionsController < ApplicationController
   include WorkCompletionBehaviour
 

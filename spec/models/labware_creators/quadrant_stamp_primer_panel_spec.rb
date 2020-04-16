@@ -167,12 +167,11 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         stub_api_get('user-uuid', body: user)
         stub_api_get('asset-uuid', body: child_plate_v1)
 
-
         metadata = attributes_for(:v1_custom_metadatum_collection)
-          .fetch(:metadata, {}).merge({
-            stock_barcode_q0: stock_plate1.barcode.human,
-            stock_barcode_q1: stock_plate2.barcode.human
-          })
+                   .fetch(:metadata, {}).merge({
+                                                 stock_barcode_q0: stock_plate1.barcode.human,
+                                                 stock_barcode_q1: stock_plate2.barcode.human
+                                               })
 
         stub_api_put('custom_metadatum_collection-uuid',
                      payload: {

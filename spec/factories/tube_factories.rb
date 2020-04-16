@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 multiplexed library tube
   factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object ean13_barcoded] do
     json_root { 'multiplexed_library_tube' }
 
@@ -32,6 +33,7 @@ FactoryBot.define do
     updated_at { Time.current }
     state { 'pending' }
 
+    # API V1 tube
     factory :tube, class: Limber::Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
@@ -81,10 +83,11 @@ FactoryBot.define do
     end
   end
 
+  # API v2 tube
   factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
     skip_create
     sequence(:id, &:to_s)
-    uuid { SecureRandom.uuid }
+    uuid
     name { 'My tube' }
     type { 'tubes' }
     state { 'passed' }
@@ -154,12 +157,6 @@ FactoryBot.define do
       end
       children do
         Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count) }
-      end
-
-      factory :multi_study_multiplexed_library_tube_collection do
-        transient do
-          study_count { 2 }
-        end
       end
     end
   end

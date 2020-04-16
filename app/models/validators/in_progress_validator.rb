@@ -8,8 +8,8 @@ module Validators
       presenter.errors.add(
         :libraries,
         'on this plate have already been completed. '\
-        'Any further work conducted from this plate may run into issues at the end of the pipeline.')
+        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+      )
     end
   end
 end
-

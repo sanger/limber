@@ -91,11 +91,10 @@ module LabwareCreators
 
     def parent_metadata
       if parent.is_a? Limber::Plate
-        metadata = PlateMetadata.new(api: api, plate: parent).metadata
+        PlateMetadata.new(api: api, plate: parent).metadata
       else
-        metadata = PlateMetadata.new(api: api, barcode: parent.barcode.machine).metadata
-      end
-      metadata || {}
+        PlateMetadata.new(api: api, barcode: parent.barcode.machine).metadata
+      end || {}
     end
 
     # Maps well locations to the corresponding uuid
