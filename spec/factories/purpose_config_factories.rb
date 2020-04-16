@@ -123,6 +123,16 @@ FactoryBot.define do
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
+    # Configuration for a plate merge purpose
+    factory :merged_plate_purpose_config do
+      merged_plate do
+        {
+          source_purposes: ['Source 1 Purpose', 'Source 2 Purpose'],
+          help_text: 'Some specific help text.'
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
