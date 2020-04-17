@@ -1,13 +1,15 @@
 GIT
   remote: https://github.com/sanger/json_api_client.git
-  revision: abc4217f7d8266ac6c90d6db2427375e8078d90e
+  revision: a5b419c487ab604570fdfed7925fc2fafe2c6d02
+  branch: merge_upstream
   specs:
-    json_api_client (1.5.4a)
+    json_api_client (1.16.1a)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       addressable (~> 2.2)
       faraday (~> 0.15, >= 0.15.2)
       faraday_middleware (~> 0.9)
+      rack (>= 0.2)
 
 GIT
   remote: https://github.com/sanger/pmb-client.git
@@ -111,9 +113,9 @@ GEM
     execjs (2.7.0)
     factory_bot (5.1.2)
       activesupport (>= 4.2.0)
-    faraday (0.15.4)
+    faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.13.1)
+    faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.12.1)
     formatador (0.2.5)
@@ -198,7 +200,7 @@ GEM
     pusher-client (0.6.2)
       json
       websocket (~> 1.0)
-    rack (2.2.1)
+    rack (2.2.2)
     rack-mini-profiler (1.1.6)
       rack (>= 1.2.0)
     rack-proxy (0.6.5)
