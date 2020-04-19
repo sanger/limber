@@ -94,7 +94,6 @@ FactoryBot.define do
       include_submissions { false }
       # Array of states for individual wells, used to overide plate state for, eg. failed wells
       well_states { [state] * size }
-      custom_metadatum_collection { nil }
       is_stock { false }
     end
 
@@ -109,13 +108,16 @@ FactoryBot.define do
     state { 'pending' }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
+    custom_metadatum_collection { nil }
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |plate, evaluator|
-      RSpec::Mocks.allow_message(plate, :wells).and_return(evaluator.wells)
-      RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
-      RSpec::Mocks.allow_message(plate, :custom_metadatum_collection).and_return(evaluator.custom_metadatum_collection)
+      plate._cached_relationship(:wells) { evaluator.wells }
+      plate._cached_relationship(:purpose) { evaluator.purpose }
+      plate._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
+      # TODO: Tidy up this to reduce the mocking.
       RSpec::Mocks.allow_message(plate, :stock_plate).and_return(evaluator.stock_plate)
+
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
 
       # Mock the behaviour of the search
@@ -124,7 +126,7 @@ FactoryBot.define do
         evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
       end
       RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
-      RSpec::Mocks.allow_message(plate, :parents).and_return(evaluator.parents)
+      plate._cached_relationship(:parents) { evaluator.parents }
     end
 
     # Set up a stock plate. Changes:
@@ -210,7 +212,7 @@ FactoryBot.define do
     end
 
     after(:build) do |plate, evaluator|
-      RSpec::Mocks.allow_message(plate, :purpose).and_return(evaluator.purpose)
+      plate._cached_relationship(:purpose) { evaluator.purpose }
     end
   end
 

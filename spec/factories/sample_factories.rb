@@ -10,7 +10,7 @@ FactoryBot.define do
     sample_metadata { create(:v2_sample_metadata) }
 
     after(:build) do |sample, evaluator|
-      RSpec::Mocks.allow_message(sample, :sample_metadata).and_return(evaluator.sample_metadata)
+      sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }
     end
   end
 

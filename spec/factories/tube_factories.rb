@@ -112,7 +112,7 @@ FactoryBot.define do
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |asset, evaluator|
-      RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+      asset._cached_relationship(:purpose) { evaluator.purpose }
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
 
       # Mock the behaviour of the search
@@ -120,9 +120,9 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(ancestors_scope, :where) do |parameters|
         evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
       end
-      RSpec::Mocks.allow_message(asset, :ancestors).and_return(ancestors_scope)
-      RSpec::Mocks.allow_message(asset, :aliquots).and_return(evaluator.aliquots || [])
-      RSpec::Mocks.allow_message(asset, :parents).and_return(evaluator.parents)
+      asset._cached_relationship(:ancestors) { ancestors_scope }
+      asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
+      asset._cached_relationship(:parents) { evaluator.parents }
     end
 
     factory :v2_multiplexed_library_tube do

@@ -86,16 +86,16 @@ FactoryBot.define do
     uuid
 
     after(:build) do |well, evaluator|
-      RSpec::Mocks.allow_message(well, :qc_results).and_return(evaluator.qc_results || [])
-      RSpec::Mocks.allow_message(well, :aliquots).and_return(evaluator.aliquots || [])
-      RSpec::Mocks.allow_message(well, :requests_as_source).and_return(evaluator.requests_as_source || [])
-      RSpec::Mocks.allow_message(well, :requests_as_target).and_return(evaluator.requests_as_target || [])
-      RSpec::Mocks.allow_message(well, :downstream_tubes).and_return(evaluator.downstream_tubes || [])
-      RSpec::Mocks.allow_message(well, :downstream_assets).and_return(evaluator.downstream_assets || [])
-      RSpec::Mocks.allow_message(well, :downstream_plates).and_return(evaluator.downstream_plates || [])
-      RSpec::Mocks.allow_message(well, :upstream_tubes).and_return(evaluator.upstream_tubes || [])
-      RSpec::Mocks.allow_message(well, :upstream_assets).and_return(evaluator.upstream_assets || [])
-      RSpec::Mocks.allow_message(well, :upstream_plates).and_return(evaluator.upstream_plates || [])
+      well._cached_relationship(:qc_results) { evaluator.qc_results || [] }
+      well._cached_relationship(:aliquots) { evaluator.aliquots || [] }
+      well._cached_relationship(:requests_as_source) { evaluator.requests_as_source || [] }
+      well._cached_relationship(:requests_as_target) { evaluator.requests_as_target || [] }
+      well._cached_relationship(:downstream_tubes) { evaluator.downstream_tubes || [] }
+      well._cached_relationship(:downstream_assets) { evaluator.downstream_assets || [] }
+      well._cached_relationship(:downstream_plates) { evaluator.downstream_plates || [] }
+      well._cached_relationship(:upstream_tubes) { evaluator.upstream_tubes || [] }
+      well._cached_relationship(:upstream_assets) { evaluator.upstream_assets || [] }
+      well._cached_relationship(:upstream_plates) { evaluator.upstream_plates || [] }
     end
 
     # API v2 stock wells associate the outer requests with the well requests_as_source,
@@ -138,8 +138,8 @@ FactoryBot.define do
       end
 
       after(:build) do |well, evaluator|
-        RSpec::Mocks.allow_message(well, :transfer_requests_as_source).and_return(evaluator.transfer_requests_as_source || [])
-        RSpec::Mocks.allow_message(well, :transfer_requests_as_target).and_return(evaluator.transfer_requests_as_target || [])
+        well._cached_relationship(:transfer_requests_as_source) { evaluator.transfer_requests_as_source || [] }
+        well._cached_relationship(:transfer_requests_as_target) { evaluator.transfer_requests_as_target || [] }
       end
     end
   end
@@ -218,12 +218,15 @@ FactoryBot.define do
 
   # API V2 aliquot
   factory :v2_aliquot, class: Sequencescape::Api::V2::Aliquot do
+    initialize_with do
+      Sequencescape::Api::V2::Aliquot.load(attributes)
+    end
+
     transient do
       # State of the ongoing library request
       library_state { 'pending' }
       # Alias for request: The request set on the aliquot itself
       outer_request { create :library_request, state: library_state }
-      request { outer_request }
       well_location { 'A1' }
     end
 
@@ -233,10 +236,11 @@ FactoryBot.define do
     tag2_index { nil }
     suboptimal { false }
     sample { create :v2_sample }
+    request { outer_request }
 
     after(:build) do |aliquot, evaluator|
-      RSpec::Mocks.allow_message(aliquot, :request).and_return(evaluator.request)
-      RSpec::Mocks.allow_message(aliquot, :sample).and_return(evaluator.sample)
+      aliquot._cached_relationship(:request) { evaluator.request }
+      aliquot._cached_relationship(:sample) { evaluator.sample }
     end
 
     factory :v2_tagged_aliquot do

@@ -24,12 +24,14 @@ namespace :test do
 
         puts 'Linting factories...'
         starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
         begin
           FactoryBot.lint verbose: ENV['VERBOSE'].present?
         rescue FactoryBot::InvalidFactoryError => e
           puts e.message
           exit 1
         end
+
         complete = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         puts "Done in #{complete - starting}"
       end

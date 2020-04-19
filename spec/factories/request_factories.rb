@@ -17,6 +17,10 @@ FactoryBot.define do
       library_type { 'Standard' }
     end
 
+    initialize_with do
+      Sequencescape::Api::V2::Request.load(attributes)
+    end
+
     skip_create
     sequence(:id, &:to_s)
     role { 'WGS' }
@@ -33,7 +37,7 @@ FactoryBot.define do
     request_type { create :request_type }
     primer_panel { nil }
     pre_capture_pool { nil }
-    uuid { SecureRandom.uuid }
+    uuid
     submission do
       create :v2_submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
     end

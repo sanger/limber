@@ -20,7 +20,7 @@ FactoryBot.define do
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |asset, evaluator|
-      RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+      asset._cached_relationship(:purpose) { evaluator.purpose }
     end
   end
 end
