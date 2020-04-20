@@ -6,12 +6,15 @@ LHR-384 RT:
   :input_plate: true
   :default_printer_type: :plate_a
   :presenter_class: Presenters::StockPlatePresenter
+  :label_template: plate_6mm_double
   :size: 384
 LHR-384 PCR 1:
   :asset_type: plate
+  :label_template: plate_6mm_double
   :size: 384
 LHR-384 PCR 2:
   :asset_type: plate
+  :label_template: plate_6mm_double
   :size: 384
 LHR-384 cDNA:
   :asset_type: plate
@@ -21,15 +24,21 @@ LHR-384 cDNA:
     - 'LHR-384 PCR 1'
     - 'LHR-384 PCR 2'
     help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new cDNA plate.'
+  :label_template: plate_6mm_double
   :size: 384
 LHR-384 XP:
   :asset_type: plate
-  :creator_class: LabwareCreators::QuadrantStamp
   :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
 LHR-384 End Prep:
   :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+LHR-384 AL Lib:
+  :asset_type: plate
+  :label_template: plate_6mm_double
   :size: 384
 LHR-384 Lib PCR:
   :asset_type: plate
@@ -38,7 +47,6 @@ LHR-384 Lib PCR:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - '384sc'
   - 'TSsc384'
 LHR-384 Lib Pool XP:
   :asset_type: tube
