@@ -1608,6 +1608,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
+  # allows for up to four pairs of plates to be processed simultaneously
   custom_robot('hamilton-lhr-384-cdna-to-lhr-384-xp',
                name: 'hamilton LHR-384 cDNA => LHR-384 XP',
                beds: {
@@ -1621,6 +1622,42 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    states: ['pending'],
                    label: 'Bed 17',
                    parent: bed(12).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 13'
+                 },
+                 bed(18).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 18',
+                   parent: bed(13).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 14'
+                 },
+                 bed(19).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 19',
+                   parent: bed(14).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(15).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 15'
+                 },
+                 bed(20).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 20',
+                   parent: bed(15).barcode,
                    target_state: 'passed'
                  }
                })
