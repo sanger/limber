@@ -194,7 +194,7 @@ FactoryBot.define do
       end
     end
 
-    # Sets up a plate at the begining of the agregation process
+    # Sets up a plate at the beginning of the aggregation process
     # with two submissions of two requests each
     factory :v2_plate_for_aggregation do
       transient do
