@@ -139,7 +139,7 @@ FactoryBot.define do
       plate._cached_relationship(:parents) { evaluator.parents }
     end
 
-    # Set up a stock plate. Changed behaviour relative to stock plate:
+    # Set up a stock plate. Changed behaviour relative to standard plate:
     # - The plate purpose
     # - The well factory to v2_stock_well which sets requests coming out of the wells,
     #   rather than on the aliquots
