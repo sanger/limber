@@ -112,7 +112,7 @@ FactoryBot.define do
 
     # Set up the relationships.
     # json_client_api handles assigning of relationship information in a frustrating manner
-    # which isn't ameanable to setting up objects for testing. Instead it tends to strip
+    # which isn't amenable to setting up objects for testing. Instead it tends to strip
     # the attributes off the associated records, leaving just a type and an id. This is not
     # useful if you want to use this data later.
     # Even more frustratingly is that if you attempt to bypass this and set the attribute directly
@@ -139,7 +139,7 @@ FactoryBot.define do
       plate._cached_relationship(:parents) { evaluator.parents }
     end
 
-    # Set up a stock plate. Changes:
+    # Set up a stock plate. Changed behaviour relative to stock plate:
     # - The plate purpose
     # - The well factory to v2_stock_well which sets requests coming out of the wells,
     #   rather than on the aliquots
