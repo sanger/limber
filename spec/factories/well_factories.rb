@@ -68,7 +68,7 @@ FactoryBot.define do
       library_state { 'pending' }
 
       # Set up relationships downstream
-      # In Sequencesacape world these are all populated via the
+      # In Sequencescape world these are all populated via the
       # transfer requests
       downstream_tubes { [] }
       downstream_assets { [] }
