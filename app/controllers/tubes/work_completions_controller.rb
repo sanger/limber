@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Handles the clicking of the 'Charge and Pass Libraries' button for plates
+# Handles the clicking of the 'Charge and Pass Libraries' button for tubes
 # @see WorkCompletionBehaviour::create
 class Tubes::WorkCompletionsController < ApplicationController
   include WorkCompletionBehaviour
