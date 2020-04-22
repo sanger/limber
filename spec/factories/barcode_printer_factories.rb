@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  # Build an API v1 barcode printer. YOu probably want to use: plate_barcode_printer or
+  # Build an API v1 barcode printer. You probably want to use: plate_barcode_printer or
   # tube_barcode_printer instead
   factory :barcode_printer, class: Sequencescape::BarcodePrinter, traits: [:api_object] do
     json_root { 'barcode_printer' }
