@@ -11,7 +11,7 @@ FactoryBot.define do
     skip_create
 
     transient do
-      api_root { 'http://example.com:3000/' } # The root of the Sequenbcescape API V1
+      api_root { 'http://example.com:3000/' } # The root of the Sequencescape API V1
 
       # A Sequencescape::Api object
       # @note Currently requires the root to be mocked with something like webmock

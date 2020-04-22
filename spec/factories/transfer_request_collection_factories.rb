@@ -2,14 +2,14 @@
 
 FactoryBot.define do
   # API V1 collection of multiple transfer requests
-  # This allows easy creation of multiple transfers between arbitary receptacles
+  # This allows easy creation of multiple transfers between arbitrary receptacles
   factory :transfer_request_collection, class: Sequencescape::TransferRequestCollection, traits: [:api_object] do
     json_root { 'transfer_request_collection' }
 
     transient do
       # The number of transfers to create (Will be generated in column order for wells)
       transfer_count { 2 }
-      # Number of diffent targets expected. For example, setting this to 1 will result in
+      # Number of different targets expected. For example, setting this to 1 will result in
       # transfers into a single target, wheas setting it to the same as transfer count will
       # result in lots of 1 to 1 transfers. Between this you'll get multiple different pools
       number_of_targets { 1 }

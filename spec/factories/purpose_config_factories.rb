@@ -116,7 +116,7 @@ FactoryBot.define do
       end
     end
 
-    # Configuration for an agregation plate
+    # Configuration for an aggregation plate
     factory :aggregation_purpose_config do
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
       creator_class { 'LabwareCreators::TenStamp' }

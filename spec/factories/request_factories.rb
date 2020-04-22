@@ -11,7 +11,7 @@ FactoryBot.define do
       pcr_cycles { 10 }
       sequence(:submission_id) { |i| i }
       sequence(:order_id) { |i| i }
-      # Specifies that submision information should be included in the model
+      # Specifies that submission information should be included in the model
       # as though it had been requested via the API.
       include_submissions { false }
       library_type { 'Standard' }
@@ -69,7 +69,7 @@ FactoryBot.define do
         primer_panel
       end
 
-      # Library request with bait libray information
+      # Library request with bait library information
       factory :isc_library_request do
         pre_capture_pool
       end
