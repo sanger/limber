@@ -82,7 +82,7 @@ FactoryBot.define do
     end
 
     # Aggregation request, representing the transfer of many plates onto
-    # one at the begining of the process
+    # one at the beginning of the process
     factory :aggregation_request do
       request_type { create :aggregation_request_type }
     end
