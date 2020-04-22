@@ -1,14 +1,25 @@
 ---
-Heron:
+Heron 96 A: # Heron 96-well pipeline specific to PCR 1 plate
   filters:
     request_type_key: limber_heron
     library_type: PCR amplicon ligated adapters
   library_pass: LHR Lib PCR
   relationships:
-    LHR RT: LHR XP
+    LHR RT: LHR PCR 1
+    LHR PCR 1: LHR XP
     LHR XP: LHR End Prep
     LHR End Prep: LHR Lib PCR
-Heron 96 MX: # Bottom of the pipeline (Pooling and normalization)
+Heron 96 B: # Heron 96-well pipeline specific to PCR 2 plate
+  filters:
+    request_type_key: limber_heron
+    library_type: PCR amplicon ligated adapters
+  library_pass: LHR Lib PCR
+  relationships:
+    LHR RT: LHR PCR 2
+    LHR PCR 2: LHR XP
+    LHR XP: LHR End Prep
+    LHR End Prep: LHR Lib PCR
+Heron 96 MX: # Sequencing preparation part of the pipeline (Pooling and normalization)
   filters:
     request_type_key:
     - limber_multiplexing
