@@ -141,7 +141,7 @@ FactoryBot.define do
 
     # Set up a stock plate. Changes:
     # - The plate purpose
-    # - The well factory to v2_stock_well which sets requests comming out of the wells,
+    # - The well factory to v2_stock_well which sets requests coming out of the wells,
     #   rather than on the aliquots
     # - Sets is_stock to true, which ensures the stock_plate matches itself
     factory :v2_stock_plate do
