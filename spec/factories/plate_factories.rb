@@ -167,7 +167,8 @@ FactoryBot.define do
       end
     end
 
-    # Sets up a plate of 2 isd requests, complete with bait libraries
+    # Sets up a plate of 2 ISC (Indexed Sequence Capture) requests
+    # complete with bait libraries
     factory :v2_plate_for_pooling do
       transient do
         purpose_name { 'Pooled example' }
