@@ -29,7 +29,7 @@ FactoryBot.define do
       well_factory { :v2_well }
       # The factory to use for requests associated with the plate.
       # For v2_plates this is associated with the aliquot, for v2_stock_plates
-      # these requests are comming from the wells themselves
+      # these requests are coming from the wells themselves
       request_factory { :library_request }
       # Wells have predictable 'uuids' in tests for example: DN12345-well-A1
       # Overide this parameter if you wish to change this format.
