@@ -48,7 +48,7 @@ LHR-384 Lib PCR:
   :size: 384
   :tag_layout_templates:
   - 'TSsc384'
-LHR-384 Lib Pool XP:
+LHR-384 Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
