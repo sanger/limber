@@ -1833,10 +1833,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                verify_robot: true,
                beds: {
                  bed(5).barcode => {
-                 purpose: 'LHR-384 End Prep',
-                 states: ['started'],
-                 label: 'Bed 5',
-                 target_state: 'passed' }
+                   purpose: 'LHR-384 End Prep',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
                })
 
   custom_robot('bravo-setup-lhr-384-al-lib',
@@ -1844,10 +1845,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                verify_robot: true,
                beds: {
                  bed(5).barcode => {
-                 purpose: 'LHR-384 AL Lib',
-                 states: ['started'],
-                 label: 'Bed 5',
-                 target_state: 'passed' }
+                   purpose: 'LHR-384 AL Lib',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
                })
 
   custom_robot('bravo-lhr-384-al-lib-to-lhr-384-lib-pcr',
