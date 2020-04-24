@@ -1704,4 +1704,167 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     from 'LHR End Prep', car('1,4')
     to 'LHR Lib PCR', bed(6)
   end
+
+  custom_robot('bravo-lhr-384-rt-to-lhr-384-pcr-1-and-2',
+               name: 'bravo LHR-384 RT => LHR-384 PCR 1 and 2',
+               beds: {
+                 bed(9).barcode => {
+                   purpose: 'LHR-384 RT',
+                   states: ['passed'],
+                   label: 'Bed 9'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LHR-384 PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 4',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LHR-384 PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 }
+               })
+
+  custom_robot('mosquito-lhr-384-pcr-1-and-2-to-lhr-384-cdna',
+               name: 'mosquito LHR-384 PCR 1 and 2 => LHR-384 cDNA',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'LHR-384 PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 1'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'LHR-384 PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 2'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['pending'],
+                   label: 'Bed 4',
+                   parents: [bed(1).barcode, bed(2).barcode],
+                   target_state: 'passed'
+                 }
+               })
+
+  # allows for up to four pairs of plates to be processed simultaneously
+  custom_robot('hamilton-lhr-384-cdna-to-lhr-384-xp',
+               name: 'hamilton LHR-384 cDNA => LHR-384 XP',
+               beds: {
+                 bed(12).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 12'
+                 },
+                 bed(17).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 17',
+                   parent: bed(12).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 13'
+                 },
+                 bed(18).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 18',
+                   parent: bed(13).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 14'
+                 },
+                 bed(19).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 19',
+                   parent: bed(14).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(15).barcode => {
+                   purpose: 'LHR-384 cDNA',
+                   states: ['passed'],
+                   label: 'Bed 15'
+                 },
+                 bed(20).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['pending'],
+                   label: 'Bed 20',
+                   parent: bed(15).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-setup-lhr-384-xp-to-lhr-384-end-prep-to-lhr-384-al-lib',
+               name: 'bravo Setup LHR-384 XP, End Prep and AL Lib',
+               require_robot: true,
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'LHR-384 XP',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 car('1,4').barcode => {
+                   purpose: 'LHR-384 End Prep',
+                   states: ['pending'],
+                   label: 'Carousel 1,4',
+                   target_state: 'started'
+                 },
+                 car('3,5').barcode => {
+                   purpose: 'LHR-384 AL Lib',
+                   states: ['pending'],
+                   label: 'Carousel 3,5',
+                   target_state: 'started'
+                 }
+               })
+
+  custom_robot('bravo-lhr-384-end-prep',
+               name: 'bravo LHR-384 End Prep',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                 purpose: 'LHR-384 End Prep',
+                 states: ['started'],
+                 label: 'Bed 5',
+                 target_state: 'passed' }
+               })
+
+  custom_robot('bravo-setup-lhr-384-al-lib',
+               name: 'bravo Setup Library PCR LHR-384 AL Lib',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                 purpose: 'LHR-384 AL Lib',
+                 states: ['started'],
+                 label: 'Bed 5',
+                 target_state: 'passed' }
+               })
+
+  custom_robot('bravo-lhr-384-al-lib-to-lhr-384-lib-pcr',
+               name: 'bravo Library PCR LHR-384 AL Lib => LHR-384 Lib PCR',
+               verify_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'LHR-384 AL Lib',
+                   states: ['passed'],
+                   label: 'Bed 7'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LHR-384 Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
 end
