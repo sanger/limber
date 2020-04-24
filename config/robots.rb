@@ -1697,7 +1697,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                })
 
   custom_robot('bravo-setup-lhr-384-al-lib',
-               name: 'bravo Setup Library PCR LHR-384 AL Lib',
+               name: 'bravo Setup Library LHR-384 AL Lib',
                verify_robot: true,
                beds: {
                  bed(5).barcode => {

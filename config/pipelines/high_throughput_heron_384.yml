@@ -23,5 +23,5 @@ Heron 384 MX: # Bottom of the pipeline (Pooling and normalization)
     request_type_key:
     - limber_multiplexing
   relationships:
-    LHR-384 Lib PCR: LHR-384 Lib Pool XP
-    LHR-384 Lib Pool XP: LB Lib Pool Norm
+    LHR-384 Lib PCR: LHR-384 Pool XP
+    LHR-384 Pool XP: LB Lib Pool Norm
