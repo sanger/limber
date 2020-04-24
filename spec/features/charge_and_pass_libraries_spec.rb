@@ -27,7 +27,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
   context 'plate with no submissions to be made' do
     before do
-      create :passable_plate, uuid: 'example-purpose-uuid'
+      create :purpose_config, uuid: 'example-purpose-uuid'
     end
 
     let(:labware_barcode) { example_plate_v2.labware_barcode.machine }

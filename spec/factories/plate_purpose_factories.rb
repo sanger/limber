@@ -1,31 +1,36 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # Basic v2 Plate Purpose
   factory :v2_purpose, class: Sequencescape::Api::V2::Purpose, traits: [:barcoded_v2] do
     skip_create
     name { 'Limber Example Purpose' }
     uuid { 'example-purpose-uuid' }
   end
 
+  # Basic V1 Plate Purpose
   factory :plate_purpose, class: Sequencescape::PlatePurpose, traits: [:api_object] do
     name { 'Limber Example Purpose' }
     uuid { 'example-purpose-uuid' }
     json_root { 'plate_purpose' }
     with_has_many_associations 'plates', 'children'
 
+    # Basic V1 Stock Plate Purpose
     factory :stock_plate_purpose do
       name { 'Limber Cherrypicked' }
       uuid { 'stock-plate-purpose-uuid' }
     end
   end
 
+  # Basic V1 Tube Purpose
   factory :tube_purpose, class: Sequencescape::TubePurpose, traits: [:api_object] do
     name { 'Limber Example Purpose' }
     json_root { 'tube_purpose' }
     with_has_many_associations 'tubes', 'children'
   end
 
-  factory :plate_purpose_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  # API V1 list of plate purposes as though from api.plate_purpose.all
+  factory :plate_purpose_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do

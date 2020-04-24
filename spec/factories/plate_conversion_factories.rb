@@ -3,6 +3,7 @@
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Generate a V1 API PlateConversion with minimal data
   factory :plate_conversion, class: Sequencescape::PlateConversion, traits: [:api_object] do
     json_root { 'plate_conversion' }
 

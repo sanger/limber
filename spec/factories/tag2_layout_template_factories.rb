@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API v1 Tag2 layout templates to handle the tag2 tubes. These have mostly been replaced
+  # by UDI plates which contain both tags
   factory :tag2_layout_template, class: Sequencescape::Tag2LayoutTemplate, traits: [:api_object] do
     json_root { 'tag2_layout_template' }
     resource_actions { %w[read create] }
@@ -15,7 +17,8 @@ FactoryBot.define do
     end
   end
 
-  factory :tag2_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  # A collection of tag2 layout templates, to support limber retrieving all registered templates
+  factory :tag2_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do

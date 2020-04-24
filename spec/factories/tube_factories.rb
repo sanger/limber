@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 multiplexed library tube
   factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object ean13_barcoded] do
     json_root { 'multiplexed_library_tube' }
 
@@ -14,6 +15,7 @@ FactoryBot.define do
     end
 
     with_has_many_associations 'requests', 'qc_files', 'studies'
+    name { 'Tube' }
 
     purpose do
       {
@@ -31,12 +33,15 @@ FactoryBot.define do
     updated_at { Time.current }
     state { 'pending' }
 
-    factory :tube, class: Limber::Tube, traits: %i[api_object ean13_barcoded] do
+    # API V1 tube
+    factory :tube, class: Limber::Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }
 
-      transient { sample_count { 1 } }
+      transient do
+        sample_count { 1 }
+      end
 
       aliquots do
         Array.new(sample_count) do |i|
@@ -49,12 +54,12 @@ FactoryBot.define do
         end
       end
 
-      factory :tube_without_siblings, traits: %i[api_object ean13_barcoded] do
+      factory :tube_without_siblings do
         json_root { 'tube' }
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
       end
 
-      factory :tube_with_siblings, traits: %i[api_object ean13_barcoded] do
+      factory :tube_with_siblings do
         json_root { 'tube' }
         transient do
           siblings_count { 1 }
@@ -78,10 +83,11 @@ FactoryBot.define do
     end
   end
 
+  # API v2 tube
   factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
     skip_create
     sequence(:id, &:to_s)
-    uuid { SecureRandom.uuid }
+    uuid
     name { 'My tube' }
     type { 'tubes' }
     state { 'passed' }
@@ -106,7 +112,7 @@ FactoryBot.define do
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |asset, evaluator|
-      RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+      asset._cached_relationship(:purpose) { evaluator.purpose }
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
 
       # Mock the behaviour of the search
@@ -114,9 +120,9 @@ FactoryBot.define do
       RSpec::Mocks.allow_message(ancestors_scope, :where) do |parameters|
         evaluator.ancestors.select { |a| parameters[:purpose_name].include?(a.purpose.name) }
       end
-      RSpec::Mocks.allow_message(asset, :ancestors).and_return(ancestors_scope)
-      RSpec::Mocks.allow_message(asset, :aliquots).and_return(evaluator.aliquots || [])
-      RSpec::Mocks.allow_message(asset, :parents).and_return(evaluator.parents)
+      asset._cached_relationship(:ancestors) { ancestors_scope }
+      asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
+      asset._cached_relationship(:parents) { evaluator.parents }
     end
 
     factory :v2_multiplexed_library_tube do
@@ -124,7 +130,8 @@ FactoryBot.define do
     end
   end
 
-  factory :tube_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  factory :tube_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
+    skip_create
     size { 2 }
 
     transient do
@@ -150,12 +157,6 @@ FactoryBot.define do
       end
       children do
         Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count) }
-      end
-
-      factory :multi_study_multiplexed_library_tube_collection do
-        transient do
-          study_count { 2 }
-        end
       end
     end
   end

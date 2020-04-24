@@ -3,6 +3,8 @@
 class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
   FragmentSize = Struct.new(:from, :to)
 
+  has_one :submission
+
   delegate :for_multiplexing, to: :request_type
   delegate :key, to: :request_type, prefix: true
 

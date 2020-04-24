@@ -4,9 +4,12 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Generates an api v2 tube with the Sequencescape::Api::V2::Asset class
+  # This is required to mimic the behaviour of the API gem when loading some
+  # polymorphic resources
   factory :v2_asset_tube, class: Sequencescape::Api::V2::Asset, traits: [:barcoded_v2] do
     skip_create
-    uuid { SecureRandom.uuid }
+    uuid
     name { 'My tube' }
     type { 'tubes' }
     state { 'passed' }
@@ -17,19 +20,7 @@ FactoryBot.define do
 
     # Mock the relationships. Should probably handle this all a bit differently
     after(:build) do |asset, evaluator|
-      RSpec::Mocks.allow_message(asset, :purpose).and_return(evaluator.purpose)
+      asset._cached_relationship(:purpose) { evaluator.purpose }
     end
-  end
-
-  factory :v2_asset_well, class: Sequencescape::Api::V2::Asset do
-    skip_create
-    type { 'wells' }
-
-    transient do
-      location { 'A1' }
-    end
-
-    position { { 'name' => location } }
-    state { 'passed' }
   end
 end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Labels::PlateSplit < Labels::PlateLabelXpBase
-
-  attr_accessor :stock_plate_barcode
+  attr_writer :stock_plate_barcode
 
   def attributes
     super.merge(top_right: stock_plate_barcode)
@@ -23,6 +22,6 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase
     metadata = PlateMetadata.new(api: api, barcode: labware.barcode.machine).metadata
     barcode = 'N/A'
     barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
-    return barcode
+    barcode
   end
 end
