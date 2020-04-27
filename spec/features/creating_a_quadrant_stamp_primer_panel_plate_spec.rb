@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a quadrant stamp plate', js: true do
+RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
   has_a_working_api
 
   let(:user_uuid)         { SecureRandom.uuid }
@@ -13,12 +13,11 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
   let(:parent2_uuid) { 'example-plate2-uuid' }
   let(:parent_purpose_uuid) { 'parent-purpose' }
   let(:child_uuid) { 'child-uuid' }
-  let(:requests) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
-  let(:requests2) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
   let(:parent) do
     create :v2_plate_with_primer_panels,
            barcode_number: '2', uuid: parent_uuid,
-           outer_requests: requests, well_count: 10,
+           pool_sizes: [10],
+           well_count: 10,
            purpose_uuid: parent_purpose_uuid, state: 'passed',
            purpose_name: 'Primer Panel example'
   end
@@ -26,7 +25,8 @@ RSpec.feature 'Creating a quadrant stamp plate', js: true do
   let(:parent2) do
     create :v2_plate_with_primer_panels,
            barcode_number: '3', uuid: parent2_uuid,
-           outer_requests: requests2, well_count: 10,
+           pool_sizes: [10],
+           well_count: 10,
            purpose_uuid: parent_purpose_uuid, state: 'passed',
            purpose_name: 'Primer Panel example'
   end

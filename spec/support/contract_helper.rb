@@ -51,6 +51,12 @@ module ContractHelper
       spec.after(:each)  { builder.send(:validate_request_and_response_called, self) }
     end
 
+    def setup_request_and_response_mock
+      stub_request(@http_verb, @url)
+        .with(@conditions)
+        .to_return(@content)
+    end
+
     private
 
     def contract(contract_name)
@@ -62,10 +68,6 @@ module ContractHelper
         path.pop
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"
-    end
-
-    def setup_request_and_response_mock
-      stub_request(@http_verb, @url).with(@conditions).to_return(@content)
     end
 
     def validate_request_and_response_called(scope)

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # Builds a config hash as though loaded from config/purposes/*.yml
+  # Using create automatically registers it in the Settings object
   factory :purpose_config, class: Hash do
     to_create do |instance, evaluator|
       Settings.purpose_uuids[evaluator.name] = evaluator.uuid
@@ -24,6 +26,7 @@ FactoryBot.define do
     pmb_template { 'sqsc_96plate_label_template' }
     file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
 
+    # Sets up a stock plate configuration
     factory :stock_plate_config do
       transient do
         uuid { 'stock-plate-purpose-uuid' }
@@ -35,18 +38,19 @@ FactoryBot.define do
       input_plate { true }
     end
 
-    factory :passable_plate do
-      suggest_library_pass_for { ['Limber Library Creation'] }
-    end
-
+    # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }
     end
 
+    # Sets up a config with a transfer_template configured
+    # eg. LB Cap Lib Pool plate
     factory :templated_transfer_config do
+      creator_class { 'LabwareCreators::PlateWithTemplate' }
       transfer_template { 'Pool wells based on submission' }
     end
 
+    # Sets up a purpose with a tagged plate creator
     factory :tagged_purpose_config do
       creator_class { 'LabwareCreators::TaggedPlate' }
       presenter_class { 'Presenters::PcrPresenter' }
@@ -54,7 +58,10 @@ FactoryBot.define do
       tag_layout_templates { ['tag-layout-template'] }
     end
 
+    # Sets up the configuration required for a Concentration Binned plate
     factory :concentration_binning_purpose_config do
+      presenter_class { 'Presenters::ConcentrationBinnedPlatePresenter' }
+      creator_class { 'LabwareCreators::ConcentrationBinnedPlate' }
       dilutions do
         {
           source_volume: 10,
@@ -68,7 +75,9 @@ FactoryBot.define do
       end
     end
 
+    # Sets up the configuration required for a Normalized plate
     factory :fixed_normalisation_purpose_config do
+      creator_class { 'LabwareCreators::FixedNormalisedPlate' }
       dilutions do
         {
           source_volume: 2,
@@ -77,7 +86,11 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a normalized and binned plate purpose
     factory :normalised_binning_purpose_config do
+      creator_class { 'LabwareCreators::NormalisedBinnedPlate' }
+      presenter_class { 'Presenters::NormalisedBinnedPlatePresenter' }
+
       dilutions do
         {
           target_amount_ng: 50,
@@ -91,7 +104,9 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a ConcentrationNormalisedPlate
     factory :concentration_normalisation_purpose_config do
+      creator_class { 'LabwareCreators::ConcentrationNormalisedPlate' }
       dilutions do
         {
           target_amount_ng: 50,
@@ -101,11 +116,14 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for an aggregation plate
     factory :aggregation_purpose_config do
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      creator_class { 'LabwareCreators::TenStamp' }
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
+    # Configuration for a plate merge purpose
     factory :merged_plate_purpose_config do
       merged_plate do
         {
@@ -115,21 +133,24 @@ FactoryBot.define do
       end
     end
 
+    # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
       default_printer_type { :tube }
       presenter_class { 'Presenters::SimpleTubePresenter' }
 
+      # Config for the final tube in a pipeline
       factory :passable_tube do
         presenter_class { 'Presenters::FinalTubePresenter' }
-        suggest_library_pass_for { ['Limber Library Creation'] }
       end
 
+      # Sets up the configuration for tubes in which whole plates are pooled
       factory :pooled_tube_from_plates_purpose_config do
         name { 'Pool tube' }
         creator_class { 'LabwareCreators::PooledTubesFromWholePlates' }
       end
 
+      # Sets up the configuration for tubes in which multiple tubes are pooled
       factory :pooled_tube_from_tubes_purpose_config do
         name { 'Pool tube' }
         creator_class { 'LabwareCreators::PooledTubesFromWholeTubes' }

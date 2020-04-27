@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 JSON description of QC file
   factory :qc_file, class: Sequencescape::QcFile, traits: [:api_object] do
     json_root { 'qc_file' }
     filename { 'file.txt' }
@@ -8,7 +9,8 @@ FactoryBot.define do
     size { 123 }
   end
 
-  factory :qc_files_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  # A list of QC files on a plate
+  factory :qc_files_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 3 }
 
     transient do
