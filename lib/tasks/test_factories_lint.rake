@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require './spec/support/contract_helper.rb'
-require 'pry'
-
 namespace :test do
   namespace :factories do
     desc 'Lint the factories'
     task lint: :environment do
       require 'webmock'
+      require './spec/support/contract_helper.rb'
+
       include WebMock::API
 
       WebMock.enable!
