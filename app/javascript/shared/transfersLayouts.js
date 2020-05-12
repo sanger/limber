@@ -28,7 +28,7 @@ const quadrantOffsets = {
 // For eaach request, the target well is calculated using quadrantTargetFor
 // function with quadrantOffsets.
 //
-// Resulting plate eg.
+// Resulting plate eg. where P1-4 is Plate 1-4
 // +--+--+--+--+--+--+--~
 // |P1|P3|P1|P3|P1|P3|P1
 // |A1|A1|A2|A2|A3|A3|A4
