@@ -11,9 +11,9 @@
   }
 
   .control-type {
-    display: inline;
     font-weight: 500;
     font-size: 25px;
+    line-height: 25px;
   }
    &.pool-colours {
     .control-type { display: none; }
@@ -90,6 +90,7 @@
 
   .control-type {
     font-size: 16px;
+    line-height: 13px;
   }
 }
 

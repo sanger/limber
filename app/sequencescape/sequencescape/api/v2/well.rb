@@ -80,4 +80,15 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
     molarity.to_f * 25
   end
+
+  def temp_control_display
+    return nil unless aliquots[0].sample.control_type
+
+    case aliquots[0].sample.control_type
+    when 'positive'
+    '+'
+    when 'negative'
+    '-'
+    end
+  end
 end
