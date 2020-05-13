@@ -10,6 +10,11 @@
     .pool-id { display: inline; }
   }
 
+  .control-type { display: inline; }
+   &.pool-colours {
+     .control-type { display: none; }
+  }
+
   th {
     padding: 0;
     vertical-align: middle;
