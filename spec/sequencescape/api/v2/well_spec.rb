@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::Well do
-
   describe '#contains_control?' do
     let(:well) { create :v2_well }
 
