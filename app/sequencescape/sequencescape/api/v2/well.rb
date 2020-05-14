@@ -82,7 +82,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
   end
 
   def contains_control?
-    return true if aliquots[0]&.sample&.control_type
+    return true if aliquots[0]&.sample&.control
 
     false
   end
@@ -95,6 +95,8 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
       '+'
     when 'negative'
       '-'
+    else
+      'c' # control of unspecified type
     end
   end
 end
