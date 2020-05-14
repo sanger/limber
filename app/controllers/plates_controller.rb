@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# show => Looks up the presenter for the giver purpose and renders the appropriate show page
+# show => Looks up the presenter for the given purpose and renders the appropriate show page
 # update => Used to update the state of a plate/tube
 # fail_wells => Updates the state of individual wells when failing
 # Note: Finds plates via the v2 api

@@ -188,7 +188,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     end
   end
 
-  feature 'with no configure templates' do
+  feature 'with no configured templates' do
     let(:acceptable_templates) { nil }
     let(:templates) { json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory) }
     let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
