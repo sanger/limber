@@ -8,7 +8,7 @@
   rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool_id) ? container.pool_id : '' %>">
   <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
-  <% if container.contains_control? %>
+  <% if container.respond_to?(:contains_control?) && container.contains_control? %>
     <div class="control-type">
       <%= container.control_info_formatted %>
     </div>
