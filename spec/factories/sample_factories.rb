@@ -8,6 +8,8 @@ FactoryBot.define do
     skip_create
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
+    control { false }
+    control_type { nil }
 
     after(:build) do |sample, evaluator|
       sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }
