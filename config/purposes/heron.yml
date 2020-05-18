@@ -13,11 +13,15 @@ LHR PCR 2:
 LHR XP:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
+  :label_template: plate_xp
   :merged_plate:
     source_purposes:
     - 'LHR PCR 1'
     - 'LHR PCR 2'
     help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new XP plate.'
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
 LHR End Prep:
   :asset_type: plate
 LHR Lib PCR:
