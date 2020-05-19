@@ -80,4 +80,23 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
 
     molarity.to_f * 25
   end
+
+  def contains_control?
+    return true if aliquots[0]&.sample&.control
+
+    false
+  end
+
+  def control_info_formatted
+    return nil unless contains_control?
+
+    case aliquots[0].sample.control_type
+    when 'positive'
+      '+'
+    when 'negative'
+      '-'
+    else
+      'c' # control of unspecified type
+    end
+  end
 end
