@@ -1,26 +1,5 @@
 # frozen_string_literal: true
 
-class Labels::PlateDoubleLabel < Labels::Base
-  def attributes
-    {
-      right_text: workline_identifier,
-      left_text: labware.barcode.human,
-      barcode: labware.barcode.machine
-    }
-  end
-
-  def extra_attributes
-    {
-      right_text: "#{workline_identifier} #{labware.role} #{labware.purpose.name}",
-      left_text: date_today
-    }
-  end
-
-  def default_printer_type
-    default_printer_type_for(:plate_double)
-  end
-
-  def default_label_template
-    default_label_template_for(:plate_double)
-  end
+# Prints the labels for a 384 well plates
+class Labels::PlateDoubleLabel < Labels::PlateDoubleLabelBase
 end
