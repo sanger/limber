@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Prints labels for 384-well plates
 class Labels::PlateDoubleLabel < Labels::Base
   def attributes
     {
