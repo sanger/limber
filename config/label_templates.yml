@@ -14,6 +14,11 @@ plate_6mm_double:
   :printer_type: '384 Well Plate Double'
   :pmb_template: 'plate_6mm_double_code39'
 
+plate_6mm_double_qc:
+  :label_class: Labels::PlateDoubleLabelQc
+  :printer_type: '384 Well Plate Double'
+  :pmb_template: 'plate_6mm_double_code39'
+
 plate_xp:
   :label_class: Labels::PlateLabelXp
   :pmb_template: 'sqsc_96plate_label_template_code39'

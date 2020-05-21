@@ -29,8 +29,11 @@ LHR-384 cDNA:
 LHR-384 XP:
   :asset_type: plate
   :merger_plate: true
-  :label_template: plate_6mm_double
+  :label_template: plate_6mm_double_qc
   :size: 384
+  :file_links:
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
 LHR-384 End Prep:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
