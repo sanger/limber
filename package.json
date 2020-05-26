@@ -6,7 +6,7 @@
     "@babel/preset-env": "^7.0.0",
     "@rails/webpacker": "^4.0.2",
     "autoprefixer": "^7.1.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-loader": "8",
     "bootstrap-vue": "^2.0.0-rc.11",
     "compression-webpack-plugin": "^0.4.0",
