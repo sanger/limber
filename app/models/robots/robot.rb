@@ -106,8 +106,8 @@ module Robots
     end
 
     def valid_plates
-      beds.each_with_object({}) do |(bed_id, bed), states|
-        states[bed_id] = bed.valid? || bed_error(bed)
+      beds.transform_values do |bed|
+        bed.valid? || bed_error(bed)
       end
     end
 

@@ -15,6 +15,7 @@ module LabwareCreators
     self.attributes += [{ parents: {} }]
 
     attr_reader :all_tube_transfers
+
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
     validate :custom_input_expected, unless: :no_pooling_required?
 

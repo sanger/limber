@@ -6,6 +6,7 @@
 
 class PurposeConfig
   attr_reader :name, :options, :store, :api
+
   class_attribute :default_state_changer, :default_options
 
   self.default_state_changer = 'StateChangers::DefaultStateChanger'

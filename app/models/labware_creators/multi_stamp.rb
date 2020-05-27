@@ -6,6 +6,7 @@ module LabwareCreators
     include SupportParent::PlateOnly
 
     attr_accessor :transfers, :parents
+
     class_attribute :request_filter, :transfers_layout, :transfers_creator, :target_rows, :target_columns, :source_plates
 
     self.page = 'multi_stamp'
