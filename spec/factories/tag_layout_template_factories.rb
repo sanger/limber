@@ -21,7 +21,9 @@ FactoryBot.define do
     tag_group do
       {
         'name' => 'Tag group 1',
-        'tags' => (1..size).each_with_object({}) { |i, hash| hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+        'tags' => (1..size).each_with_object({}) do |i, hash|
+                    hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+                  end
       }
     end
 
@@ -55,7 +57,9 @@ FactoryBot.define do
       tag2_group do
         {
           'name' => 'Tag group 2',
-          'tags' => (1..size).each_with_object({}) { |i, hash| hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+          'tags' => (1..size).each_with_object({}) do |i, hash|
+                      hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+                    end
         }
       end
     end

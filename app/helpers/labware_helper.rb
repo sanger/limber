@@ -17,7 +17,9 @@ module LabwareHelper
       return 'failed' if FAILED_STATES.include?(args.first) # First argument is always the well
 
       @colours  ||= Hash.new { |h, k| h[k] = STANDARD_COLOURS.dup }
-      @rotating ||= Hash.new { |h, k| h[k] = @colours[name].rotate!.last } # Go for last as it was first before the rotate
+      @rotating ||= Hash.new do |h, k|
+        h[k] = @colours[name].rotate!.last
+      end # Go for last as it was first before the rotate
       @rotating[block.call(*args)]
     end
   end

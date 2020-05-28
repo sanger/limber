@@ -14,7 +14,9 @@ RSpec.describe RobotsController, type: :controller, robots: true do
 
     let(:user_uuid) { SecureRandom.uuid }
     let(:plate_uuid) { 'plate_uuid' }
-    let!(:plate)     { create :v2_plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let!(:plate)     do
+      create :v2_plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid'
+    end
 
     let!(:state_chage) do
       stub_api_post(
@@ -35,7 +37,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
 
     let!(:metadata_request) do
       stub_api_post('custom_metadatum_collections',
-                    payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } },
+                    payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid,
+                                                              metadata: { created_with_robot: 'robot_barcode' } } },
                     body: json(:custom_metadatum_collection))
     end
 
@@ -76,14 +79,17 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     let(:source_plate_uuid) { 'plate_uuid' }
-    let!(:source_plate)     { create :v2_plate, uuid: source_plate_uuid, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid' }
+    let!(:source_plate)     do
+      create :v2_plate, uuid: source_plate_uuid, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
+    end
 
     it 'verifies robot and beds' do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
       bed_plate_lookup(source_plate)
       bed_plate_lookup(target_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with(
-        'bed_plates' => { 'bed1_barcode' => [source_plate.human_barcode], 'bed2_barcode' => [target_plate.human_barcode] },
+        'bed_plates' => { 'bed1_barcode' => [source_plate.human_barcode],
+                          'bed2_barcode' => [target_plate.human_barcode] },
         'robot_barcode' => 'abc'
       )
       post :verify,

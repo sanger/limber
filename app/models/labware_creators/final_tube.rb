@@ -97,7 +97,8 @@ module LabwareCreators
       siblings.each do |s|
         next if val_barcodes.delete(s.barcode)
 
-        errors.add(:base, "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+        errors.add(:base,
+                   "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
         valid = false
       end
       return valid if val_barcodes.empty?

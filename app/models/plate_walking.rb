@@ -8,7 +8,8 @@ module PlateWalking
   class Walker
     class Location
       def initialize(alphanumeric_location)
-        (match = /^([A-Z])(\d+)$/.match(alphanumeric_location)) || raise(StandardError, "Invalid well location #{alphanumeric_location.inspect}")
+        (match = /^([A-Z])(\d+)$/.match(alphanumeric_location)) || raise(StandardError,
+                                                                         "Invalid well location #{alphanumeric_location.inspect}")
         @row = match[1]
         @column = match[2].to_i
       end

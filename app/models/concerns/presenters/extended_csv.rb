@@ -53,7 +53,9 @@ module Presenters::ExtendedCsv
       source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
       destination_ean = ct.destination.barcode.ean13
       destination_barcode = "#{ct.destination.barcode.prefix}#{ct.destination.barcode.number}"
-      transfers = ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
+      transfers = ct.transfers.reverse_merge(all_wells).sort do |a, b|
+        split_location(a.first) <=> split_location(b.first)
+      end
       {
         source_ean: source_ean,
         source_barcode: source_barcode,

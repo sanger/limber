@@ -12,7 +12,8 @@ module Presenters
     end
 
     def add_unknown_plate_warnings
-      errors.add(:plate, "type '#{labware.purpose.name}' is not a limber tube. Perhaps you are using the wrong pipeline application?")
+      errors.add(:plate,
+                 "type '#{labware.purpose.name}' is not a limber tube. Perhaps you are using the wrong pipeline application?")
     end
 
     def control_state_change

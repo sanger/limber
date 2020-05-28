@@ -32,7 +32,8 @@ module RobotConfiguration
     end
 
     def bravo_robot(transition_to: 'passed', verify_robot: false, require_robot: false, &block)
-      simple_robot('bravo', transition_to: transition_to, verify_robot: verify_robot, require_robot: require_robot, &block)
+      simple_robot('bravo', transition_to: transition_to, verify_robot: verify_robot, require_robot: require_robot,
+                   &block)
     end
 
     def simple_robot(type, transition_to: 'passed', verify_robot: false, require_robot: false, &block)

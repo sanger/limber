@@ -77,9 +77,15 @@ module Validators
       elsif analyzer.no_samples?
         presenter.errors.add(:plate, 'has no samples. Did the cherry-pick complete successfully?')
       else
-        presenter.errors.add(:plate, "has multiple submissions on: #{analyzer.duplicates.to_sentence}") if analyzer.duplicates?
+        if analyzer.duplicates?
+          presenter.errors.add(:plate,
+                               "has multiple submissions on: #{analyzer.duplicates.to_sentence}")
+        end
         presenter.errors.add(:plate, "has no submissions on: #{analyzer.missing.to_sentence}") if analyzer.missing?
-        presenter.errors.add(:plate, "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}") if analyzer.empty_wells_with_requests?
+        if analyzer.empty_wells_with_requests?
+          presenter.errors.add(:plate,
+                               "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}")
+        end
       end
     end
   end

@@ -186,11 +186,15 @@ module Utility
       def validate_initial_arguments
         raise ArgumentError, 'compression_reqd should be a boolean' unless @compression_reqd.in? [true, false]
 
-        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+        if @number_of_rows.nil? || @number_of_rows <= 0
+          raise ArgumentError, 'number_of_rows should be greater than zero'
+        end
       end
 
       def validate_next_well_arguments(index_within_bin, bin_size)
-        raise ArgumentError, 'index_within_bin must be 0 or greater' if index_within_bin.nil? || index_within_bin.negative?
+        if index_within_bin.nil? || index_within_bin.negative?
+          raise ArgumentError, 'index_within_bin must be 0 or greater'
+        end
 
         raise ArgumentError, 'bin_size must be greater than 0' if bin_size.nil? || bin_size <= 0
       end
@@ -248,7 +252,9 @@ module Utility
       private
 
       def validate_initial_arguments
-        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+        if @number_of_rows.nil? || @number_of_rows <= 0
+          raise ArgumentError, 'number_of_rows should be greater than zero'
+        end
       end
 
       #

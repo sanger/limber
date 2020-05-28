@@ -227,8 +227,10 @@ RSpec.describe Presenters::PlatePresenter do
     let(:request_d) { create :library_request, pcr_cycles: 2 }
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d])
+        create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1,
+                               requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1,
+                               requests_as_source: [request_c, request_d])
       ]
     end
 

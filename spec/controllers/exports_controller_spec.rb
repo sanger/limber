@@ -41,7 +41,8 @@ RSpec.describe ExportsController, type: :controller do
 
   context 'on generating a csv' do
     before do
-      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes, barcode: plate_barcode).and_return(plate)
+      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes,
+                                                                                  barcode: plate_barcode).and_return(plate)
     end
 
     context 'where csv id requested is concentrations_ngul.csv' do

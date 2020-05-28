@@ -56,16 +56,20 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       'layout' => 'bed',
       'beds' => {
         'bed1_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 2'
+          'purpose' => 'Parent Purpose', 'states' => %w[passed
+                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 2'
         },
         'bed2_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 5'
+          'purpose' => 'Parent Purpose', 'states' => %w[passed
+                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 5'
         },
         'bed3_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 3'
+          'purpose' => 'Parent Purpose', 'states' => %w[passed
+                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 3'
         },
         'bed4_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 6'
+          'purpose' => 'Parent Purpose', 'states' => %w[passed
+                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 6'
         },
         'bed5_barcode' => {
           'purpose' => 'Child Purpose', 'states' => %w[pending started],

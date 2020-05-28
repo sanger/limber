@@ -39,14 +39,18 @@ FactoryBot.define do
     end
 
     submission_pools do
-      Array.new(pool_count) { associated(:submission_pool_base, used_tag2_layout_templates: used_tag2_templates, used_tag_layout_templates: used_tag_templates) }
+      Array.new(pool_count) do
+        associated(:submission_pool_base, used_tag2_layout_templates: used_tag2_templates,
+                                          used_tag_layout_templates: used_tag_templates)
+      end
     end
 
     # Generates a submission pool with two plates
     factory :dual_submission_pool_collection do
       submission_pools do
         Array.new(pool_count) do
-          associated(:dual_submission_pool_base, used_tag2_layout_templates: used_tag2_templates, used_tag_layout_templates: used_tag_templates)
+          associated(:dual_submission_pool_base, used_tag2_layout_templates: used_tag2_templates,
+                                                 used_tag_layout_templates: used_tag_templates)
         end
       end
     end

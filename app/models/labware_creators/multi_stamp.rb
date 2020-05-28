@@ -59,7 +59,9 @@ module LabwareCreators
     def request_hash(transfer, child_plate)
       {
         'source_asset' => transfer[:source_asset],
-        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
+        'target_asset' => child_plate.wells.detect do |child_well|
+                            child_well.location == transfer.dig(:new_target, :location)
+                          end&.uuid,
         'outer_request' => transfer[:outer_request]
       }
     end

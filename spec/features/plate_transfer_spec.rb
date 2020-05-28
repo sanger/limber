@@ -20,7 +20,9 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   let(:example_plate_without_metadata) do
     create :v2_stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started', barcode_number: 1
   end
-  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' } }
+  let(:custom_metadatum_collection) do
+    create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' }
+  end
   let(:example_plate_with_metadata) do
     create :v2_stock_plate,
            uuid: plate_uuid,
@@ -46,7 +48,8 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   end
 
   let(:payload) do
-    { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid, metadata: { created_with_robot: 'robot_barcode' } } }
+    { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid,
+                                     metadata: { created_with_robot: 'robot_barcode' } } }
   end
 
   let(:stub_custom_metdatum_collections_post) do
