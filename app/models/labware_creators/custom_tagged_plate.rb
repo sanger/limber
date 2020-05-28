@@ -37,7 +37,8 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    def create_plate!
+    # rubocop:todo Metrics/MethodLength
+    def create_plate! # rubocop:todo Metrics/AbcSize
       @child = api.pooled_plate_creation.create!(
         child_purpose: purpose_uuid,
         user: user_uuid,
@@ -57,14 +58,15 @@ module LabwareCreators
           reason: 'Used in Library creation',
           target_state: 'exhausted'
         )
-      rescue RepeatedStateChangeError => exception
+      rescue RepeatedStateChangeError => e
         # Plate is already exhausted, the user is probably processing two plates
         # at the same time
-        Rails.logger.warn(exception.message)
+        Rails.logger.warn(e.message)
       end
 
       true
     end
+    # rubocop:enable Metrics/MethodLength
 
     def requires_tag2?
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }

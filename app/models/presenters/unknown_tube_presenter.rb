@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class UnknownTubePresenter < TubePresenter
+  class UnknownTubePresenter < TubePresenter # rubocop:todo Style/Documentation
     include Presenters::Statemachine::Standard
     include Statemachine::DoesNotAllowLibraryPassing
 

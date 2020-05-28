@@ -14,7 +14,7 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
     requests.select { |r| @request_state.blank? || @request_state.include?(r.state) }
   end
 
-  def filter_requests(requests, well)
+  def filter_requests(requests, well) # rubocop:todo Metrics/MethodLength
     return nil if well.requests_as_source.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)

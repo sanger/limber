@@ -36,7 +36,7 @@ module Robots::Bed
       target_state.present?
     end
 
-    def transition
+    def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || plate.nil? # We have nothing to do
 
       StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,
@@ -79,7 +79,7 @@ module Robots::Bed
       []
     end
 
-    def child_plates
+    def child_plates # rubocop:todo Metrics/AbcSize
       return [] if plate.nil?
 
       @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LabwareCreators
+module LabwareCreators # rubocop:todo Style/Documentation
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
   #
   # Class CsvRow provides a simple wrapper for handling and validating
@@ -34,7 +34,7 @@ module LabwareCreators
               },
               unless: :empty?
 
-    validates :source, inclusion: { in: WellHelpers.column_order, message: "contains an invalid well name: '%{value}'" }
+    validates :source, inclusion: { in: WellHelpers.column_order, message: "contains an invalid well name: '%{value}'" } # rubocop:todo Style/FormatStringToken
 
     delegate :source_column, :destination_column, :volume_column, to: :header
 

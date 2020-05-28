@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate
+class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate # rubocop:todo Style/Documentation
   # Performs the coercion of this instance so that it behaves appropriately given the direction
   # and walking algorithm information.
   def coerce
     extend("limber/tag_layout_template/in_#{direction.gsub(/\s+/, '_')}s".camelize.constantize)
     extend("limber/tag_layout_template/walk_#{walking_by.gsub(/\s+/, '_')}".camelize.constantize)
-  rescue NameError => exception
-    Rails.logger.warn("Unrecognised layout options: #{exception.message}")
+  rescue NameError => e
+    Rails.logger.warn("Unrecognised layout options: #{e.message}")
     extend Unsupported
   ensure
     self

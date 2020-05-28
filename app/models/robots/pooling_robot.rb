@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Robots
-  class PoolingRobot < Robot
+  class PoolingRobot < Robot # rubocop:todo Style/Documentation
     attr_writer :destination_bed
 
     def plate_includes

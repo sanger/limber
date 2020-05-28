@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LabwareCreators
+module LabwareCreators # rubocop:todo Style/Documentation
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
   #
   # Class HeaderRow provides a simple wrapper for handling and validating

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LabwareCreators
+module LabwareCreators # rubocop:todo Style/Documentation
   # Raised on validation errors. We should return false instead if these are
   # user error.
   class ResourceInvalid < StandardError

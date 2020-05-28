@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class MultiStamp < Base
+  class MultiStamp < Base # rubocop:todo Style/Documentation
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 

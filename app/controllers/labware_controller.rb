@@ -14,7 +14,8 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
-  def show
+  # rubocop:todo Metrics/MethodLength
+  def show # rubocop:todo Metrics/AbcSize
     @presenter = presenter_for(@labware)
 
     response.headers['Vary'] = 'Accept'
@@ -24,15 +25,13 @@ class LabwareController < ApplicationController
       end
       format.csv do
         render @presenter.csv
-        if @presenter.filename
-          response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}"
-        end
+        response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
       end
       format.json {}
     end
   end
 
-  def update
+  def update # rubocop:todo Metrics/AbcSize
     state_changer.move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
 
     notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
@@ -46,12 +45,13 @@ class LabwareController < ApplicationController
         )
       end
     end
-  rescue StateChangers::StateChangeError => exception
+  rescue StateChangers::StateChangeError => e
     respond_to do |format|
-      format.html { redirect_to(search_path, alert: exception.message) }
+      format.html { redirect_to(search_path, alert: e.message) }
       format.csv
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -76,9 +76,11 @@ class LabwareController < ApplicationController
     state_changer_for(params[:purpose_uuid], params[:id])
   end
 
+  # rubocop:todo Naming/MemoizedInstanceVariableName
   def locate_labware
     @labware ||= locate_labware_identified_by_id
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def find_printers
     @printers = api.barcode_printer.all

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Validators
-  class InProgressValidator < ActiveModel::Validator
+  class InProgressValidator < ActiveModel::Validator # rubocop:todo Style/Documentation
     def validate(presenter)
       return true unless presenter.labware.any_complete_requests?
 

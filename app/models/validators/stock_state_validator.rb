@@ -5,7 +5,7 @@ module Validators
   # them to provide more feedback to the user. It only gets used
   # if a stock plate is stuck at pending, so performance is not critical
   class StockStateValidator < ActiveModel::Validator
-    class Analyzer
+    class Analyzer # rubocop:todo Style/Documentation
       attr_reader :filled_wells, :empty_wells
 
       def initialize(labware)
@@ -70,7 +70,8 @@ module Validators
       end
     end
 
-    def validate(presenter)
+    # rubocop:todo Metrics/MethodLength
+    def validate(presenter) # rubocop:todo Metrics/AbcSize
       analyzer = Analyzer.new(presenter.labware)
       if analyzer.no_submission?
         presenter.errors.add(:plate, 'has no requests. Please check that your submission built correctly.')
@@ -88,5 +89,6 @@ module Validators
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

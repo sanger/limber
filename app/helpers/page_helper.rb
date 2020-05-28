@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PageHelper
+module PageHelper # rubocop:todo Style/Documentation
   def flash_messages
     render(partial: 'application/flash_messages')
   end

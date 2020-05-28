@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module ApplicationHelper
-  module DeploymentInfo
+module ApplicationHelper # rubocop:todo Style/Documentation
+  module DeploymentInfo # rubocop:todo Style/Documentation
     begin
       require './lib/deployed_version'
     rescue LoadError

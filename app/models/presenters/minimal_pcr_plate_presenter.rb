@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class MinimalPcrPlatePresenter < MinimalPlatePresenter
+  class MinimalPcrPlatePresenter < MinimalPlatePresenter # rubocop:todo Style/Documentation
     include HasPrimerPanel
     self.summary_partial = 'labware/plates/pcr_summary'
     self.state_transition_name_scope = :pcr

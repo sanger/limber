@@ -38,7 +38,8 @@ module Utility
     #
     # @return [hash] The well details hash containing calculated normalisation values.
     #
-    def normalisation_details(wells)
+    # rubocop:todo Metrics/MethodLength
+    def normalisation_details(wells) # rubocop:todo Metrics/AbcSize
       # sort on well coordinate to ensure wells are in plate column order
       wells.sort_by(&:coordinate).each_with_object({}) do |well, details|
         # skip empty wells
@@ -67,6 +68,7 @@ module Utility
         }
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     #
     # Computes the volume of source material required for normalisation based on the sample
@@ -79,7 +81,7 @@ module Utility
     #
     # @return [float] The volume of the source required in ul.
     #
-    def compute_vol_source_reqd(sample_conc)
+    def compute_vol_source_reqd(sample_conc) # rubocop:todo Metrics/AbcSize
       calculated_raw_volume = config.target_amount / sample_conc
 
       # adjust the calculated volume to the maximum permissible for samples with very weak concentrations
@@ -106,7 +108,7 @@ module Utility
     #
     # @return [array] An array of qc assay details for the child plate, ready to send via Api to sequencescape.
     #
-    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash)
+    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash) # rubocop:todo Metrics/MethodLength
       dest_concs = extract_destination_concentrations(transfer_hash)
       dest_concs.map do |dest_locn, dest_conc|
         {
@@ -186,15 +188,11 @@ module Utility
       def validate_initial_arguments
         raise ArgumentError, 'compression_reqd should be a boolean' unless @compression_reqd.in? [true, false]
 
-        if @number_of_rows.nil? || @number_of_rows <= 0
-          raise ArgumentError, 'number_of_rows should be greater than zero'
-        end
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
       end
 
       def validate_next_well_arguments(index_within_bin, bin_size)
-        if index_within_bin.nil? || index_within_bin.negative?
-          raise ArgumentError, 'index_within_bin must be 0 or greater'
-        end
+        raise ArgumentError, 'index_within_bin must be 0 or greater' if index_within_bin.nil? || index_within_bin.negative?
 
         raise ArgumentError, 'bin_size must be greater than 0' if bin_size.nil? || bin_size <= 0
       end
@@ -252,9 +250,7 @@ module Utility
       private
 
       def validate_initial_arguments
-        if @number_of_rows.nil? || @number_of_rows <= 0
-          raise ArgumentError, 'number_of_rows should be greater than zero'
-        end
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
       end
 
       #

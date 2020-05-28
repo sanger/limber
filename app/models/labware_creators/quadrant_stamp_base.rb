@@ -54,9 +54,7 @@ module LabwareCreators
       transfers.each do |transfer|
         target_well_location = transfer.dig(:new_target, :location)
         target_well_quadrant = WellHelpers.well_quadrant(target_well_location)
-        if source_plates_uuids[target_well_quadrant].nil?
-          source_plates_uuids[target_well_quadrant] = transfer[:source_plate]
-        end
+        source_plates_uuids[target_well_quadrant] = transfer[:source_plate] if source_plates_uuids[target_well_quadrant].nil?
       end
       source_plates_uuids
     end

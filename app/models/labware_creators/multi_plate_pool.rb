@@ -16,7 +16,7 @@ module LabwareCreators
 
     private
 
-    def create_labware!
+    def create_labware! # rubocop:todo Metrics/MethodLength
       plate_creation = api.pooled_plate_creation.create!(
         parents: transfers.keys,
         child_purpose: purpose_uuid,

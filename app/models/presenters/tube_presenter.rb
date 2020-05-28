@@ -2,7 +2,7 @@
 
 # Basic core presenter for tubes
 module Presenters
-  class TubePresenter
+  class TubePresenter # rubocop:todo Style/Documentation
     include Presenters::Presenter
     include Statemachine::Shared
     include Presenters::CreationBehaviour

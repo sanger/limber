@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PrintJob
+class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
@@ -8,7 +8,7 @@ class PrintJob
 
   validates :printer_name, :label_template, :number_of_copies, :labels, presence: true
 
-  def execute
+  def execute # rubocop:todo Metrics/MethodLength
     return false unless valid?
 
     begin
@@ -37,7 +37,7 @@ class PrintJob
 
   def label_template_id
     # This isn't a rails finder; so we disable the cop.
-    PMB::LabelTemplate.where(name: label_template).first.id # rubocop:disable Rails/FindBy
+    PMB::LabelTemplate.where(name: label_template).first.id
   rescue JsonApiClient::Errors::ConnectionError
     errors.add(:pmb, 'PrintMyBarcode service is down')
   end

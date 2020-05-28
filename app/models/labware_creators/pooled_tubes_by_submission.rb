@@ -7,11 +7,13 @@ module LabwareCreators
     include SupportParent::PlateReadyForPoolingOnly
 
     def pools
+      # rubocop:todo Style/MultilineBlockChain
       @pools ||= parent.pools.select do |_submission_id, pool_info|
                    pool_info['for_multiplexing']
                  end.transform_values do |hash|
         hash.fetch('wells', []).select { |location| pick?(location) }
       end
+      # rubocop:enable Style/MultilineBlockChain
     end
 
     def pick?(location)

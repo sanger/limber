@@ -4,7 +4,7 @@
 module RobotConfiguration
   BedOrCar = Struct.new(:barcode, :name)
 
-  module BedHelpers
+  module BedHelpers # rubocop:todo Style/Documentation
     def bed(number)
       barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
       ean13 = barcode.machine_barcode.to_s
@@ -19,7 +19,7 @@ module RobotConfiguration
     end
   end
 
-  class Register
+  class Register # rubocop:todo Style/Documentation
     include BedHelpers
     def self.configure(&block)
       register = new
@@ -51,7 +51,7 @@ module RobotConfiguration
     end
   end
 
-  class Simple
+  class Simple # rubocop:todo Style/Documentation
     include BedHelpers
     attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot, :require_robot
 
@@ -99,7 +99,7 @@ module RobotConfiguration
       "#{type} #{source_purpose} to #{target_purpose}".parameterize
     end
 
-    def configuration
+    def configuration # rubocop:todo Metrics/MethodLength
       {
         name: name,
         verify_robot: verify_robot,

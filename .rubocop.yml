@@ -1,4 +1,3 @@
-inherit_from: .rubocop_todo.yml
 require: rubocop-rails
 AllCops:
   TargetRubyVersion: 2.4
@@ -12,6 +11,8 @@ Rails:
 Rails/InverseOf:
   Enabled: false
 Rails/HasManyOrHasOneDependent:
+  Enabled: false
+Rails/FindBy:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -41,6 +42,12 @@ Metrics/BlockLength:
     - it
   Exclude:
     - config/robots.rb
+
+# Ideally we want to get this down a bit more. 120 would be nice, 80 is overkill
+# Although the above line is exactly 80 characters. That wasn't intentional.
+Layout/LineLength:
+  Max: 161
+
 
 # Pending Cops
 # For more information: https://docs.rubocop.org/en/latest/versioning/

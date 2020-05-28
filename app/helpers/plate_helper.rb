@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module PlateHelper
-  class WellFailingPresenter < BasicObject
+module PlateHelper # rubocop:todo Style/Documentation
+  class WellFailingPresenter < BasicObject # rubocop:todo Style/Documentation
     def initialize(form, presenter)
-      @form = form
-      @_presenter = presenter
+      @form = form # rubocop:todo Rails/HelperInstanceVariable
+      @_presenter = presenter # rubocop:todo Rails/HelperInstanceVariable
     end
 
     def aliquot_partial
@@ -38,7 +38,8 @@ module PlateHelper
   #    { pool_id: 123, order_id: 401, wells: ['A1','B1','D1'] },
   #    { pool_id: 122, order_id: 402, wells: ['C1','E1','F1'] }
   #   ]
-  def sorted_pre_cap_pool_json(current_plate)
+  # rubocop:todo Metrics/MethodLength
+  def sorted_pre_cap_pool_json(current_plate) # rubocop:todo Metrics/AbcSize
     unsorted = current_plate.wells_in_columns.each_with_object({}) do |well, pool_store|
       next unless well.passed?
 
@@ -52,13 +53,16 @@ module PlateHelper
     end.values
     # sort the pool hashes by Order id
     sorted = unsorted.sort_by { |k| k[:order_id] }
-    sorted.to_json.html_safe
+    sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
+  # rubocop:enable Metrics/MethodLength
 
-  def pools_by_id(pools)
+  def pools_by_id(pools) # rubocop:todo Metrics/AbcSize
+    # rubocop:todo Style/MultilineBlockChain
     pools_by_position = pools.transform_values do |value|
       WellHelpers.sort_in_column_order(value['wells']).first
     end.sort_by { |_k, v| WellHelpers.well_coordinate(v) }.map.with_index { |v, i| [v.first, i + 1] }.to_h
+    # rubocop:enable Style/MultilineBlockChain
 
     {}.tap do |h|
       pools.each do |key, value|

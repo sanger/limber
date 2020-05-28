@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SearchHelper
+module SearchHelper # rubocop:todo Style/Documentation
   def stock_plate_uuids
     Settings.purposes.select { |_uuid, config| config.input_plate }.keys
   end

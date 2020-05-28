@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::PlateLabelXpBase < Labels::PlateLabelBase
+class Labels::PlateLabelXpBase < Labels::PlateLabelBase # rubocop:todo Style/Documentation
   def attributes
     super.merge(barcode: labware.barcode.human)
   end

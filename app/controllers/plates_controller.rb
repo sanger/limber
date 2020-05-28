@@ -5,9 +5,10 @@
 # fail_wells => Updates the state of individual wells when failing
 # Note: Finds plates via the v2 api
 class PlatesController < LabwareController
-  before_action :check_for_current_user!, only: %i[update fail_wells]
+  before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
 
-  def fail_wells
+  # rubocop:todo Metrics/MethodLength
+  def fail_wells # rubocop:todo Metrics/AbcSize
     if wells_to_fail.empty?
       redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to fail')
     else
@@ -22,6 +23,7 @@ class PlatesController < LabwareController
       redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been failed')
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def wells_to_fail
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
