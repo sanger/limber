@@ -37,7 +37,7 @@ RSpec.describe PrintJobsController, type: :controller do
       request.env['HTTP_REFERER'] = root_path
 
       post :create, params: { print_job: { printer_name: 'tube_printer', label_template: 'limber_tube_label_template',
-                                           labels: [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }],
+                                           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
                                            number_of_copies: 1 } },
                     format: :json
       assert assigns(:print_job)
