@@ -2,7 +2,7 @@
   "dependencies": {
     "@rails/webpacker": "^5.1.1",
     "autoprefixer": "^7.1.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-loader": "8",
     "bootstrap-vue": "^2.0.0-rc.11",
     "compression-webpack-plugin": "^0.4.0",
@@ -41,7 +41,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.15.1",
     "eslint-plugin-jasmine": "^2.10.1",
-    "eslint-plugin-vue": "^5.2.2",
+    "eslint-plugin-vue": "^5.2.3",
     "jasmine-core": "^3.2.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
