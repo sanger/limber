@@ -11,7 +11,7 @@
             id="input-volume"
             v-model="volume"
             type="number"
-            number="true"
+            number=true
           />
         </b-input-group>
       </b-col>
