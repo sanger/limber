@@ -15,7 +15,10 @@ Heron 96 A: # Heron 96-well pipeline specific to PCR 1 plate
 Heron 96 B: # Heron 96-well pipeline specific to PCR 2 plate
   filters:
     request_type_key: limber_heron
-    library_type: PCR amplicon ligated adapters
+    library_type:
+    - PCR amplicon ligated adapters
+    - Sanger_artic_v3_96
+    - Sanger_artic_v4_96
   library_pass: LHR Lib PCR
   relationships:
     LHR RT: LHR PCR 2
