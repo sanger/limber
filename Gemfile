@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
+gem 'bootsnap'
 gem 'inline_svg'
 
 gem 'exception_notification'

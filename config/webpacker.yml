@@ -71,6 +71,7 @@ development:
     disable_host_check: true
     use_local_ip: false
     quiet: false
+    pretty: false
     headers:
       'Access-Control-Allow-Origin': '*'
     watch_options:
@@ -78,7 +79,7 @@ development:
 
 test:
   <<: *default
-
+  compile: true
   public_output_path: packs-test
 
 production:

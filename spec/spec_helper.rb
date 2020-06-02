@@ -139,6 +139,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rails.application.load_tasks
+
     Rake::Task['assets:precompile'].invoke
 
     FactoryBot.find_definitions
