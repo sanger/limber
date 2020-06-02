@@ -70,7 +70,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('not a barcode')
-    wrapper.find('input').trigger('change')
+    await wrapper.find('input').trigger('change')
 
     expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
@@ -100,7 +100,7 @@ describe('PlateScan', () => {
     const wrapper = wrapperFactoryPlate(api)
 
     wrapper.find('input').setValue('Good barcode')
-    wrapper.find('input').trigger('change')
+    await wrapper.find('input').trigger('change')
 
     expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
@@ -129,7 +129,7 @@ describe('PlateScan', () => {
     }, goodPlate)
 
     wrapper.find('input').setValue('DN12345')
-    wrapper.find('input').trigger('change')
+    await wrapper.find('input').trigger('change')
 
     expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
@@ -156,7 +156,7 @@ describe('PlateScan', () => {
     }, badPlate)
 
     wrapper.find('input').setValue('Good barcode')
-    wrapper.find('input').trigger('change')
+    await wrapper.find('input').trigger('change')
 
     expect(wrapper.find('.wait-plate').exists()).toBe(true)
 

@@ -203,12 +203,6 @@ describe('TagOffset', () => {
   })
 
   describe('#rendering tests:', () => {
-    it('renders a vue instance', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.isVueInstance()).toBe(true)
-    })
-
     it('renders an offset tags by select number input', () => {
       const wrapper = wrapperFactory()
 

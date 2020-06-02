@@ -4,7 +4,7 @@
     "autoprefixer": "^7.1.1",
     "axios": "^0.18.1",
     "babel-loader": "8",
-    "bootstrap-vue": "^2.0.0-rc.11",
+    "bootstrap-vue": "^2.0.0",
     "compression-webpack-plugin": "^0.4.0",
     "css-loader": "^0.28.4",
     "cytoscape": "^3.10.1",
