@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@rails/webpacker": "5.1.1",
-    "axios": "^0.18.1",
+    "axios": "^0.19.2",
     "bootstrap-vue": "^2.0.0",
     "cytoscape": "^3.10.1",
     "devour-client": "^2.0.15",

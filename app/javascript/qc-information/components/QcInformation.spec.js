@@ -56,7 +56,7 @@ describe('QcInformation', () => {
     let mock = new MockAdapter(wrapper.vm.axiosInstance)
 
     mock.onPost().reply((request) =>{
-      expect(request.url).toEqual(request.baseURL + '/qc_assays')
+      expect(request.url).toEqual('qc_assays')
       expect(request.data).toEqual(JSON.stringify(expectedPayload))
       return [201, {}]
     })
