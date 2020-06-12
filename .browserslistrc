@@ -1,1 +1,4 @@
-defaults
+current node
+chrome >= 49
+firefox >= 52
+> 1%
