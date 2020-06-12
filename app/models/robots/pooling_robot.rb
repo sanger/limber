@@ -39,7 +39,8 @@ module Robots
 
     def validate_parent(bed_barcode, expected_barcode)
       parent_bed = beds.fetch(bed_barcode)
-      return true if expected_barcode =~ parent_bed.barcode
+      # This is *not* a regular expression.
+      return true if expected_barcode =~ parent_bed.barcode # rubocop:disable Performance/RegexpMatch
 
       error(parent_bed, "Expected to contain #{expected_barcode} not #{parent_bed.barcode}")
       false

@@ -10,7 +10,7 @@ module SearchHelper # rubocop:todo Style/Documentation
   end
 
   def self.purpose_config_for_purpose_name(purpose_name)
-    Settings.purposes.values.select { |obj| obj[:name] == purpose_name }.first
+    Settings.purposes.values.find { |obj| obj[:name] == purpose_name }
   end
 
   def self.alternative_workline_reference_name(labware)
