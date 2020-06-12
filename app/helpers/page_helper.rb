@@ -6,7 +6,7 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   def grouping(_data_role, options = {}, &block)
-    content_tag(:div, options, &block)
+    tag.div(options, &block)
   end
   private :grouping
 
@@ -17,7 +17,7 @@ module PageHelper # rubocop:todo Style/Documentation
       if prevent_row
         concat yield
       else
-        concat content_tag(:div, class: 'row', &block)
+        concat tag.div(class: 'row', &block)
       end
     end
   end
@@ -33,12 +33,12 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)
-    content_tag(:div, class: "card #{css_class}", id: id) do
-      concat content_tag(:h3, title, class: 'card-header') if title
+    tag.div(class: "card #{css_class}", id: id) do
+      concat tag.h3(title, class: 'card-header') if title
       if without_block
         yield
       else
-        concat content_tag(:div, class: 'card-body', &block)
+        concat tag.div(class: 'card-body', &block)
       end
     end
   end
@@ -47,13 +47,13 @@ module PageHelper # rubocop:todo Style/Documentation
     options[:class] ||= +''
     options[:class] << ' jumbotron'
     options[:id] = jumbotron_id
-    content_tag(:div, options, &block)
+    tag.div(options, &block)
   end
 
   # eg. state_badge('pending')
   # <span class="state-badge-pending">Pending</span>
   def state_badge(state)
-    content_tag(:span, state.titleize, class: "state-badge #{state}")
+    tag.span(state.titleize, class: "state-badge #{state}")
   end
 
   # eg. count_badge(0)
@@ -66,6 +66,6 @@ module PageHelper # rubocop:todo Style/Documentation
             when 0 then 'secondary'
             else 'primary'
             end
-    content_tag(:span, count || '...', class: "badge badge-pill badge-#{state}", id: badge_id)
+    tag.span(count || '...', class: "badge badge-pill badge-#{state}", id: badge_id)
   end
 end
