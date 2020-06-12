@@ -3,7 +3,7 @@
 require './lib/nested_validation'
 require 'csv'
 
-module LabwareCreators
+module LabwareCreators # rubocop:todo Style/Documentation
   require_dependency 'labware_creators/custom_pooled_tubes'
 
   # Takes the user uploaded csv file and extracts the pool information

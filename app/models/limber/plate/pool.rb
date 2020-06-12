@@ -9,6 +9,7 @@
 class Limber::Plate::Pool
   # The uuid of the submission associated with the pool
   attr_reader :submission_uuid
+
   #
   # Create a new Pools from the pool information.
   #

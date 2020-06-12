@@ -7,7 +7,7 @@ class Labels::PlateDoubleLabelQc < Labels::PlateDoubleLabel
   end
 
   # Prints an additional QC plate label
-  def qc_attributes
+  def qc_attributes # rubocop:todo Metrics/MethodLength
     [
       {
         right_text: workline_identifier,

@@ -17,10 +17,14 @@ RSpec.describe Presenters::StandardPresenter do
   end
   let(:wells) do
     [
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 2), aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1), aliquots: create_list(aliquot_type, 1))
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
+                       aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
+                       aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 2),
+                       aliquots: create_list(aliquot_type, 1)),
+      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
+                       aliquots: create_list(aliquot_type, 1))
     ]
   end
   let(:suggest_passes) { nil }
@@ -109,10 +113,14 @@ RSpec.describe Presenters::StandardPresenter do
   context 'before passing' do
     let(:wells) do
       [
-        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [], aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started')))
+        create(:v2_well, requests_as_source: [],
+                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [],
+                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [],
+                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
+        create(:v2_well, requests_as_source: [],
+                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started')))
       ]
     end
 

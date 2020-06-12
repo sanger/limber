@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WellHelpers
+module WellHelpers # rubocop:todo Style/Documentation
   COLUMNS_RANGE = {
     96 => (1..12).freeze,
     384 => (1..24).freeze

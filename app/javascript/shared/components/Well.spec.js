@@ -73,22 +73,26 @@ describe('Well', () => {
     expect(wrapperWithInvalidTag.find('span.tag').text()).toEqual('x')
   })
 
-  it('renders a well with multiple Tag Map Ids displayed according to the value of tagIndex', () => {
+  it('renders a well with multiple Tag Map Ids displayed according to the value of tagIndex', async () => {
     const wrapperWithMultipleAliquots = shallowMount(Well, { propsData: { pool_index: 1, tagMapIds: [ 1,2,3,4 ], validity: { valid: true, message: '' } } })
 
     wrapperWithMultipleAliquots.setData({ tagIndex: 0 })
+    await wrapperWithMultipleAliquots.vm.$nextTick()
 
     expect(wrapperWithMultipleAliquots.find('span.tag').text()).toEqual('1')
 
     wrapperWithMultipleAliquots.setData({ tagIndex: 1 })
+    await wrapperWithMultipleAliquots.vm.$nextTick()
 
     expect(wrapperWithMultipleAliquots.find('span.tag').text()).toEqual('2')
 
     wrapperWithMultipleAliquots.setData({ tagIndex: 2 })
+    await wrapperWithMultipleAliquots.vm.$nextTick()
 
     expect(wrapperWithMultipleAliquots.find('span.tag').text()).toEqual('3')
 
     wrapperWithMultipleAliquots.setData({ tagIndex: 3 })
+    await wrapperWithMultipleAliquots.vm.$nextTick()
 
     expect(wrapperWithMultipleAliquots.find('span.tag').text()).toEqual('4')
   })

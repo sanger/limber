@@ -141,7 +141,8 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       let(:well_a1) do
-        create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a, request_e], outer_request: nil)
+        create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a, request_e],
+                         outer_request: nil)
       end
 
       context 'with a valid filter for all wells' do

@@ -12,8 +12,12 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
   let(:tube_uuid)             { SecureRandom.uuid }
   let(:sibling_uuid) { 'sibling-tube-0' }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:example_v2_tube)       { create(:v2_tube, uuid: tube_uuid, state: 'passed', barcode_number: 1, purpose_name: 'Example Purpose') }
-  let(:example_tube)          { json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
+  let(:example_v2_tube)       do
+    create(:v2_tube, uuid: tube_uuid, state: 'passed', barcode_number: 1, purpose_name: 'Example Purpose')
+  end
+  let(:example_tube) do
+    json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1)
+  end
   let(:transfer_template_uuid) { 'transfer-template-uuid' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube-uuid' }

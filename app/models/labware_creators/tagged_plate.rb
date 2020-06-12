@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < Base
+  class TaggedPlate < Base # rubocop:todo Style/Documentation
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
@@ -37,7 +37,8 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    def create_plate!
+    # rubocop:todo Metrics/MethodLength
+    def create_plate! # rubocop:todo Metrics/AbcSize
       transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
@@ -59,6 +60,7 @@ module LabwareCreators
 
       true
     end
+    # rubocop:enable Metrics/MethodLength
 
     def requires_tag2?
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
@@ -118,7 +120,8 @@ module LabwareCreators
       @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, labware)
     end
 
-    def create_labware!
+    # rubocop:todo Metrics/MethodLength
+    def create_labware! # rubocop:todo Metrics/AbcSize
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,
@@ -141,5 +144,6 @@ module LabwareCreators
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

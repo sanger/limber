@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
+class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   self.plate = true
   has_many :wells
   has_many :samples

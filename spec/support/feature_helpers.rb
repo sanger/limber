@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module FeatureHelpers
-  def stub_search_and_single_result(search, query, result = nil)
+module FeatureHelpers # rubocop:todo Metrics/ModuleLength
+  def stub_search_and_single_result(search, query, result = nil) # rubocop:todo Metrics/MethodLength
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
@@ -19,14 +19,15 @@ module FeatureHelpers
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
-    stub_api_post(search_uuid, 'all', status: 301, payload: query, body: { size: result.length, searches: result }.to_json)
+    stub_api_post(search_uuid, 'all', status: 301, payload: query,
+                                      body: { size: result.length, searches: result }.to_json)
   end
 
   def stub_swipecard_search(swipecard, user)
     allow(Sequencescape::Api::V2::User).to receive(:find).with(user_code: swipecard).and_return([user])
   end
 
-  def stub_asset_search(barcode, asset)
+  def stub_asset_search(barcode, asset) # rubocop:todo Metrics/MethodLength
     if asset.is_a?(Array)
       stub_search_and_multi_result(
         'Find assets by barcode',
@@ -52,7 +53,7 @@ module FeatureHelpers
                  body: json(:v1_custom_metadatum_collection, params))
   end
 
-  def stub_create_plate_metadata(barcode, plate_v1, plate_uuid, user_uuid, metadata)
+  def stub_create_plate_metadata(barcode, plate_v1, plate_uuid, user_uuid, metadata) # rubocop:todo Metrics/MethodLength
     stub_asset_search(barcode, plate_v1)
     stub_api_post('custom_metadatum_collections',
                   payload: {

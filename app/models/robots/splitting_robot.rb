@@ -20,7 +20,8 @@ module Robots
     # Also adds any errors describing invalid bed states
     #
     # @return [Hash<String => Boolean>] Hash of boolean indexed by bed barcode
-    def valid_relationships
+    # rubocop:todo Metrics/MethodLength
+    def valid_relationships # rubocop:todo Metrics/AbcSize
       raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
 
       @relationships.each_with_object({}) do |relationship, validations|
@@ -38,5 +39,6 @@ module Robots
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

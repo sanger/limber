@@ -15,6 +15,7 @@ module LabwareCreators
     self.attributes += [{ parents: {} }]
 
     attr_reader :all_tube_transfers
+
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
     validate :custom_input_expected, unless: :no_pooling_required?
 
@@ -90,13 +91,14 @@ module LabwareCreators
       @barcodes.present?
     end
 
-    def all_parents_and_only_parents?
+    def all_parents_and_only_parents? # rubocop:todo Metrics/MethodLength
       val_barcodes = @barcodes.dup
       valid = true
       siblings.each do |s|
         next if val_barcodes.delete(s.barcode)
 
-        errors.add(:base, "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+        errors.add(:base,
+                   "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
         valid = false
       end
       return valid if val_barcodes.empty?

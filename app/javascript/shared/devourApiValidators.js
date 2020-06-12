@@ -6,7 +6,7 @@ const hasExpectedProperties = (expectedProperties) => {
         const expectedPropertiesLength = expectedProperties.length
         for (var propIndex = 0; propIndex < expectedPropertiesLength; propIndex++) {
           const expectedPropertyName = expectedProperties[propIndex]
-          if(!currTagGroup.hasOwnProperty(expectedPropertyName)) {
+          if (!Object.prototype.hasOwnProperty.call(currTagGroup, expectedPropertyName)) {
             return { valid: false, message: 'Results objects do not contain expected properties' }
           }
         }

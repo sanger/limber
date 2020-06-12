@@ -24,7 +24,7 @@ module Presenters::CreationBehaviour
     end
   end
 
-  def construct_buttons(scope)
+  def construct_buttons(scope) # rubocop:todo Metrics/MethodLength
     scope.map do |purpose_uuid, purpose_settings|
       LabwareCreators.class_for(purpose_uuid).creator_button(
         creator: LabwareCreators.class_for(purpose_uuid),

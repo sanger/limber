@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module StateChangers
+module StateChangers # rubocop:todo Style/Documentation
   class StateChangeError < StandardError; end
 
-  class DefaultStateChanger
+  class DefaultStateChanger # rubocop:todo Style/Documentation
     attr_reader :labware_uuid, :api
     private :api
     attr_reader :user_uuid

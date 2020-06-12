@@ -2,7 +2,7 @@
 
 require_dependency 'presenters/statemachine'
 module Presenters::Statemachine
-  module Permissive
+  module Permissive # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
     included do
       include Shared

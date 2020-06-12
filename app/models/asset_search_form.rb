@@ -28,9 +28,11 @@ class AssetSearchForm
     @page || 1
   end
 
+  # rubocop:todo Naming/MemoizedInstanceVariableName
   def total_pages
     @total_page ||= (total_results || 0) / PER_PAGE
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def each_page
     1.upto(total_pages) do |page_number|

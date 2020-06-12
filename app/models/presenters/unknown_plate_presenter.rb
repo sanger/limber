@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class UnknownPlatePresenter < PlatePresenter
+  class UnknownPlatePresenter < PlatePresenter # rubocop:todo Style/Documentation
     include Presenters::Statemachine::Shared
     include Presenters::Statemachine::StateDoesNotAllowChildCreation
     include Presenters::Statemachine::DoesNotAllowLibraryPassing

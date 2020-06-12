@@ -159,7 +159,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
                    states: %w[pending started],
-                   parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode, bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
+                   parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode, bed(2).barcode,
+                             bed(5).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed',
                    label: 'Bed 4'
                  }

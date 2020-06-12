@@ -513,7 +513,7 @@ export default {
       return this.calcNumTagsForSeqPlate()
     },
     checkTagForSubstitution(tagMapId) {
-      if(this.tagSubstitutions.hasOwnProperty(tagMapId)) {
+      if(Object.prototype.hasOwnProperty.call(this.tagSubstitutions,tagMapId)) {
         tagMapId = this.tagSubstitutions[tagMapId]
       }
 

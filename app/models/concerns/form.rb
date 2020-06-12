@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Form
+module Form # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
   included do
     include ActiveModel::Model

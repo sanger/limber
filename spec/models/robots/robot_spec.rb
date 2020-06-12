@@ -98,7 +98,9 @@ RSpec.describe Robots::Robot, robots: true do
       end
 
       context 'with multiple scans' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] } }
+        let(:scanned_layout) do
+          { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
+        end
 
         context 'and related plates' do
           before do
@@ -223,7 +225,9 @@ RSpec.describe Robots::Robot, robots: true do
       end
 
       context 'with multiple scans' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] } }
+        let(:scanned_layout) do
+          { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
+        end
 
         context 'and related plates' do
           before do
@@ -341,20 +345,23 @@ RSpec.describe Robots::Robot, robots: true do
         end
 
         it "is invalid if the barcode isn't recorded" do
-          expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).not_to be_valid
+          expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] },
+                              robot_barcode: 'robot_barcode')).not_to be_valid
         end
 
         context 'if barcodes differ' do
           let(:metadata) { { 'other_key' => 'value', 'created_with_robot' => 'other_robot' } }
           it 'is invalid' do
-            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).not_to be_valid
+            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] },
+                                robot_barcode: 'robot_barcode')).not_to be_valid
           end
         end
 
         context 'if barcodes match' do
           let(:metadata) { { 'other_key' => 'value', 'created_with_robot' => 'robot_barcode' } }
           it 'is valid' do
-            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] }, robot_barcode: 'robot_barcode')).to be_valid
+            expect(robot.verify(bed_plates: { 'bed1_barcode' => [source_plate.human_barcode] },
+                                robot_barcode: 'robot_barcode')).to be_valid
           end
         end
       end

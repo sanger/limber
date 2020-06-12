@@ -23,7 +23,7 @@
 # client side.
 
 module LabwareCreators
-  class TenStamp < MultiStamp
+  class TenStamp < MultiStamp # rubocop:todo Style/Documentation
     self.transfers_layout = 'sequential'
     self.transfers_creator = 'with-volume'
     self.attributes += [

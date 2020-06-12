@@ -12,8 +12,11 @@ module Robots::Bed
     delegate :state, to: :plate, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
-    validates :barcodes, length: { maximum: 1, too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
-    validates :plate, presence: { message: ->(bed, _data) { "Could not find a plate with the barcode '#{bed.barcode}'." } }, if: :barcode
+    validates :barcodes, length: { maximum: 1,
+                                   too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
+    validates :plate, presence: { message: lambda { |bed, _data|
+                                             "Could not find a plate with the barcode '#{bed.barcode}'."
+                                           } }, if: :barcode
     validate :correct_plate_purpose, if: :plate
     validate :correct_plate_state, if: :plate
 
@@ -33,10 +36,11 @@ module Robots::Bed
       target_state.present?
     end
 
-    def transition
+    def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || plate.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,
+                                                                                            "Robot #{robot.name} started")
     end
 
     def purpose_labels
@@ -75,7 +79,7 @@ module Robots::Bed
       []
     end
 
-    def child_plates
+    def child_plates # rubocop:todo Metrics/AbcSize
       return [] if plate.nil?
 
       @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|

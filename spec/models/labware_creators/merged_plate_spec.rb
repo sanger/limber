@@ -90,7 +90,8 @@ RSpec.describe LabwareCreators::MergedPlate do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
           receive(:find_all)
-            .with({ barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] }, includes: plate_includes)
+            .with({ barcode: [source_plate_1.barcode.machine,
+                              source_plate_2.barcode.machine] }, includes: plate_includes)
             .and_return([source_plate_1, source_plate_2])
         )
       end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators::Tagging
-  class TagCollection
+  class TagCollection # rubocop:todo Style/Documentation
     #
     # Create a tag collection
     #

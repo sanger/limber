@@ -6,7 +6,7 @@
 # only the requests with a primer panel selected by the user.
 
 module LabwareCreators
-  class QuadrantStampPrimerPanel < QuadrantStampBase
+  class QuadrantStampPrimerPanel < QuadrantStampBase # rubocop:todo Style/Documentation
     self.request_filter = 'primer-panel'
   end
 end

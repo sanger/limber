@@ -17,7 +17,7 @@ require 'rails'
 ].each do |railtie|
   begin
     require railtie.to_s
-  rescue LoadError # rubocop:disable Lint/SuppressedException
+  rescue LoadError
     # Do nothing. We're mimicking rails/all here, so
     # use the same behaviour.
   end
@@ -27,7 +27,7 @@ end
 Bundler.require(*Rails.groups)
 
 module Limber
-  class Application < Rails::Application
+  class Application < Rails::Application # rubocop:todo Style/Documentation
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

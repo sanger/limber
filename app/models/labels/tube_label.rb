@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::TubeLabel < Labels::Base
+class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
   def attributes
     # we have to remove first two characters from name (normally it is 'DN'),
     # because otherwise we will lose important information about wells

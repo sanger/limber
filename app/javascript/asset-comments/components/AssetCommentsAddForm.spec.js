@@ -38,46 +38,56 @@ describe('AssetCommentsAddForm', () => {
     expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
-  it('enables the add comment submit button with valid input', () => {
+  it('enables the add comment submit button with valid input', async () => {
     let wrapper = wrapperFactory([])
 
     wrapper.setData({ assetComment: 'Test comment', state: 'pending' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
-  it('disables the add comment submit button once submission has started', () => {
+  it('disables the add comment submit button once submission has started', async () => {
     let wrapper = wrapperFactory([])
 
     wrapper.setData({ assetComment: 'Test comment', state: 'busy' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Sending...')
   })
 
-  it('shows a success message on the button if adding was successful', () => {
+  it('shows a success message on the button if adding was successful', async () => {
     let wrapper = wrapperFactory([])
 
     wrapper.setData({ state: 'success' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Comment successfully added')
   })
 
-  it('shows a failure message on the button if adding was unsuccessful', () => {
+  it('shows a failure message on the button if adding was unsuccessful', async () => {
     let wrapper = wrapperFactory([])
 
     wrapper.setData({ state: 'failure' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Failed to add comment, retry?')
   })
 
-  it('submits a comment via the comment store object on clicking the submit button', () => {
+  it('submits a comment via the comment store object on clicking the submit button', async () => {
     let wrapper = wrapperFactory([])
 
     wrapper.setData({ assetComment: 'Test comment' })
+
+    await wrapper.vm.$nextTick()
 
     spyOn(wrapper.vm.$parent, 'addComment')
 

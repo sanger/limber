@@ -16,7 +16,9 @@ RSpec.describe PlateMetadata do
 
     it 'raises an exception if the barcode is invalid' do
       stub_asset_search(456, nil)
-      expect { PlateMetadata.new(api: api, barcode: 456, user: user_uuid) }.to raise_error(Sequencescape::Api::ResourceNotFound)
+      expect do
+        PlateMetadata.new(api: api, barcode: 456, user: user_uuid)
+      end.to raise_error(Sequencescape::Api::ResourceNotFound)
     end
 
     it 'raises an exception if both plate and barcode are nil' do

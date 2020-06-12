@@ -167,8 +167,10 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   context 'with multiple requests and no config' do
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
+                               requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
+                               requests_as_source: [request_c, request_d]),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
@@ -187,8 +189,10 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:filters) { { request_type_key: ['rt_a'] } }
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
+                               requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
+                               requests_as_source: [request_c, request_d]),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
@@ -205,13 +209,19 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   context 'with multiple requests and config with request and library type filters' do
     let(:library_type_name) { 'LibTypeA' }
     let(:filters) { { 'request_type_key' => ['rt_a'], 'library_type' => [library_type_name] } }
-    let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name }
-    let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name }
+    let(:request_a) do
+      create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name
+    end
+    let(:request_c) do
+      create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name
+    end
 
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
+                               requests_as_source: [request_a, request_b]),
+        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
+                               requests_as_source: [request_c, request_d]),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end

@@ -25,7 +25,7 @@ module ContractHelper
       (\g<eol>\g<body>?)?
     }mx.freeze
 
-    def request(contract_name)
+    def request(contract_name) # rubocop:todo Metrics/AbcSize
       contract(contract_name) do |file|
         match = REQUEST_REGEXP.match(file.read) ||
                 raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")

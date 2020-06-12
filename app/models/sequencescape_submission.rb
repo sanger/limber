@@ -40,7 +40,8 @@ class SequencescapeSubmission
 
   private
 
-  def generate_submissions
+  # rubocop:todo Metrics/MethodLength
+  def generate_submissions # rubocop:todo Metrics/AbcSize
     order = submission_template.orders.create!(
       assets: assets,
       request_options: request_options,
@@ -54,13 +55,14 @@ class SequencescapeSubmission
 
     submission.submit!
     true
-  rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => exception
-    errors.add(:sequencescape_connection, /.+\[([^\]]+)\]/.match(exception.message)[1])
+  rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => e
+    errors.add(:sequencescape_connection, /.+\[([^\]]+)\]/.match(e.message)[1])
     false
-  rescue Sequencescape::Api::ResourceInvalid => exception
-    errors.add(:submission, exception.resource.errors.full_messages.join('; '))
+  rescue Sequencescape::Api::ResourceInvalid => e
+    errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
+  # rubocop:enable Metrics/MethodLength
 
   def submission_template
     api.order_template.find(template_uuid)

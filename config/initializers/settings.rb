@@ -11,7 +11,7 @@ class Settings
     end
     private :configuration_filename
 
-    def instance
+    def instance # rubocop:todo Metrics/AbcSize
       return @instance if @instance.present?
 
       # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here

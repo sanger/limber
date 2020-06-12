@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators::SupportParent
-  module PlateReadyForPoolingOnly
+  module PlateReadyForPoolingOnly # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
     class_methods do
       def support_parent?(parent)

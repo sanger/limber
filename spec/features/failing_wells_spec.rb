@@ -19,7 +19,9 @@ RSpec.feature 'Failing wells', js: true do
       create(:v2_well, location: 'A3', state: 'passed')
     ]
   end
-  let(:example_plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells }
+  let(:example_plate) do
+    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
+  end
 
   let!(:state_change_request) do
     stub_api_post(
@@ -51,7 +53,8 @@ RSpec.feature 'Failing wells', js: true do
       stub_v2_plate(example_plate)
     end
     # stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
+    stub_api_get(plate_uuid, 'wells',
+                 body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 

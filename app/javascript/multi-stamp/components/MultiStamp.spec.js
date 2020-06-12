@@ -54,7 +54,7 @@ describe('MultiStamp', () => {
 
     wrapper.setData({ requestsWithPlatesFiltered: [] })
 
-    expect(wrapper.find('bbutton-stub').element.getAttribute('disabled')).toEqual('true')
+    expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
   })
 
   it('disables creation when there are some invalid plates', () => {

@@ -37,12 +37,14 @@ module LabwareCreators
 
     private
 
+    # rubocop:todo Naming/MemoizedInstanceVariableName
     def transfer_into_existing_tubes!
       @transfer ||= transfer_template.create!(
         user: user_uuid,
         source: parent_uuid
       )
     end
+    # rubocop:enable Naming/MemoizedInstanceVariableName
 
     def pass_tubes!
       raise StandardError, 'Tubes cannot be passed before transfer' if @transfer.nil?

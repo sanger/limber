@@ -1,12 +1,11 @@
 <template>
   <b-form-group
-    horizontal
     :label="label"
     :label-cols="2"
     label-size="lg"
     :label-for="uid"
     :description="description"
-    :state="state"
+    :state="formState"
     :invalid-feedback="feedback"
     :valid-feedback="feedback"
     :class="{ 'wait-plate': searching }"
@@ -15,7 +14,7 @@
       :id="uid"
       v-model.trim="plateBarcode"
       type="text"
-      :state="state"
+      :state="formState"
       size="lg"
       placeholder="Scan a plate"
       :disabled="scanDisabled"
@@ -101,6 +100,11 @@ export default {
   computed: {
     searching() { return this.apiActivity.state === 'searching' }, // The API is in progress
     state() { return this.validated.state }, // Overall state, eg. valid, invalid, empty
+    formState() {
+      return {
+        'valid': true, 'invalid': false
+      }[this.state] || null
+    },
     validated() {
       if (this.apiActivity.state === 'valid') {
         return this.validatedPlate

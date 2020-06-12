@@ -35,7 +35,9 @@ RSpec.feature 'Multi plate pooling', js: true do
   end
 
   let(:child_plate_uuid) { SecureRandom.uuid }
-  let(:child_plate) { create :v2_plate, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool Plate', uuid: child_plate_uuid, barcode_number: 3 }
+  let(:child_plate) do
+    create :v2_plate, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool Plate', uuid: child_plate_uuid, barcode_number: 3
+  end
 
   let!(:pooled_plate_creation_request) do
     stub_api_post(

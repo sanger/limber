@@ -5,6 +5,7 @@
 # initialization.
 class PipelineList
   attr_reader :list
+
   delegate_missing_to :list
 
   def initialize(list = {})

@@ -19,7 +19,8 @@ FactoryBot.define do
 
     aliquots do
       Array.new(sample_count) do |i|
-        associated(aliquot_factory, sample_name: "sample_#{location}_#{i}", sample_id: "SAM#{location}#{i}", sample_uuid: "example-sample-uuid-#{i}")
+        associated(aliquot_factory, sample_name: "sample_#{location}_#{i}", sample_id: "SAM#{location}#{i}",
+                                    sample_uuid: "example-sample-uuid-#{i}")
       end
     end
 
@@ -169,7 +170,8 @@ FactoryBot.define do
           associated(:empty_well, location: location, uuid: "example-well-uuid-#{i}")
         else
           state = custom_state[location] || default_state
-          associated(:well, location: location, uuid: "example-well-uuid-#{i}", state: state, aliquot_factory: aliquot_factory)
+          associated(:well, location: location, uuid: "example-well-uuid-#{i}", state: state,
+                            aliquot_factory: aliquot_factory)
         end
       end
     end

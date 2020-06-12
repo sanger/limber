@@ -20,7 +20,8 @@ module FactoryBot
     # comments { { "size" => comments_count, "actions" => { "read" => resource_url + '/comments' } } }
     # @param [*String] names 1 or more association names
     # @return [nil] nil
-    def with_has_many_associations(*names, actions: ['read'])
+    # rubocop:todo Metrics/MethodLength
+    def with_has_many_associations(*names, actions: ['read']) # rubocop:todo Metrics/AbcSize
       transient do
         names.each do |association|
           send(association + '_count') { 0 }
@@ -39,8 +40,10 @@ module FactoryBot
       end
       nil
     end
+    # rubocop:enable Metrics/MethodLength
 
-    def with_belongs_to_associations(*names, actions: ['read'])
+    # rubocop:todo Metrics/MethodLength
+    def with_belongs_to_associations(*names, actions: ['read']) # rubocop:todo Metrics/AbcSize
       transient do
         names.each do |association|
           send(association + '_uuid') { "#{association}-uuid" }
@@ -59,5 +62,6 @@ module FactoryBot
       end
       nil
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
