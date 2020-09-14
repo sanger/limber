@@ -1,0 +1,48 @@
+---
+LTHR-384 RT:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 PCR 1:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 PCR 2:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 Lib PCR 1:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 Lib PCR 2:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :label_template: plate_6mm_double
+  :size: 384
+  :tag_layout_templates:
+  - 'TSsc384'
+LTHR-384 Lib PCR pool:
+  :asset_type: plate
+  :creator_class: LabwareCreators::MergedPlate
+  :merged_plate:
+    source_purposes:
+    - 'LHR-384 PCR 1'
+    - 'LHR-384 PCR 2'
+    help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
