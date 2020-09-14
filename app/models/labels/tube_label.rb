@@ -29,7 +29,7 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
   end
 
   def second_line
-    pools_size = @options.fetch(:pool_size, labware.aliquots.count)
+    pools_size = @options[:pool_size] || labware.aliquots.count
     "#{labware.barcode.number}, P#{pools_size}"
   end
 end
