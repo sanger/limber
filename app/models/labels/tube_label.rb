@@ -25,10 +25,11 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
   private
 
   def first_line
-    labware.name[2..-1] if labware.name.present?
+    labware.name[2..] if labware.name.present?
   end
 
   def second_line
-    labware.barcode.number.to_s + ', P' + (@options[:pool_size] || labware.aliquots.count).to_s
+    pools_size = @options.fetch(:pool_size, labware.aliquots.count)
+    "#{labware.barcode.number}, P#{pools_size}"
   end
 end
