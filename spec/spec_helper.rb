@@ -34,6 +34,7 @@ require 'csv'
 
 begin
   require 'pry'
+  require 'ruby_jard'
 rescue LoadError
   # We don't have pry. We're probably on Travis.
   nil
