@@ -26,7 +26,7 @@ module WorkCompletionBehaviour
       if ss.save
         messages[:notice] << 'Your submissions have been made and should be built shortly.'
       else
-        messages[:alert] = ss.errors.full_messages
+        messages[:alert] = truncate_flash(ss.errors.full_messages)
       end
     end
     redirect_to labware, messages

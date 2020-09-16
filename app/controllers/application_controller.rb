@@ -10,6 +10,7 @@ require_dependency 'well_helpers'
 class ApplicationController < ActionController::Base
   include Sequencescape::Api::Rails::ApplicationController
   include SessionHelper
+  include FlashTruncation
 
   def api_connection_options
     Limber::Application.config.api.v1.connection_options.dup
