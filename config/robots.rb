@@ -1945,4 +1945,25 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+  custom_robot('bravo-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-pool',
+               name: 'bravo LTHR-384 Lib PCR 1 and 2 => Heron LTHR-384 Lib PCR pool',
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 6'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['pending'],
+                   label: 'Bed 8',
+                   parents: [bed(4).barcode, bed(6).barcode],
+                   target_state: 'passed'
+                 }
+               })
 end

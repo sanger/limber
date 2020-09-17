@@ -21,6 +21,8 @@ LTHR-384 Lib PCR 1:
   :creator_class: LabwareCreators::TaggedPlate
   :label_template: plate_6mm_double
   :size: 384
+  :tag_layout_templates:
+  - 'TSsc384'
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -34,8 +36,8 @@ LTHR-384 Lib PCR pool:
   :creator_class: LabwareCreators::MergedPlate
   :merged_plate:
     source_purposes:
-    - 'LHR-384 PCR 1'
-    - 'LHR-384 PCR 2'
+    - 'LTHR-384 Lib PCR 1'
+    - 'LTHR-384 Lib PCR 2'
     help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
   :label_template: plate_6mm_double
   :size: 384

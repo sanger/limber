@@ -1,8 +1,8 @@
 ---
 Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
   filters:
-    request_type_key: limber_heron_lthr_384
-    library_type: Heron LTHR-384
+    request_type_key: limber_heron_lthr
+    library_type: PCR amplicon tailed adapters 384
   library_pass: LTHR-384 Lib PCR pool
   relationships:
     LTHR-384 RT: LTHR-384 PCR 1
@@ -10,8 +10,8 @@ Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
     LTHR-384 Lib PCR 1: LTHR-384 Lib PCR pool
 Heron-384 Tailed B:
   filters:
-    request_type_key: limber_heron_lthr_384
-    library_type: Heron LTHR-384
+    request_type_key: limber_heron_lthr
+    library_type: PCR amplicon tailed adapters 384
   library_pass: LTHR-384 Lib PCR pool
   relationships:
     LTHR-384 RT: LTHR-384 PCR 2
