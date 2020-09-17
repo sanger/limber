@@ -6,15 +6,14 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
-    attr_reader :child
-    attr_accessor :barcodes
+    attr_reader :child, :barcodes, :minimal_barcodes
 
     self.attributes += [{ barcodes: [] }]
     self.page = 'merged_plate'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
     validate :all_source_barcodes_entered?
-    validate :source_plates_have_same_parent?
+    validate :source_plates_can_be_merged?
     validate :source_barcodes_are_different?
     validate :source_plates_have_expected_purposes?
 
@@ -42,12 +41,13 @@ module LabwareCreators
       Settings.purposes.dig(@purpose_uuid, :merged_plate).help_text
     end
 
-    private
-
-    # removes empty strings from barcodes, for validation
-    def minimal_barcodes
-      barcodes.reject { |e| e.to_s.empty? }
+    def barcodes=(barcodes)
+      @barcodes = barcodes
+      # Removes empty strings from barcodes, for validation and strips off whitespace
+      @minimal_barcodes = barcodes.reject(&:blank?).map(&:strip)
     end
+
+    private
 
     def create_plate_from_parent!
       api.pooled_plate_creation.create!(
@@ -76,32 +76,70 @@ module LabwareCreators
       return if minimal_barcodes.size == expected_source_purposes.size
 
       msg = 'Please scan in all the required source plate barcodes.'
-      errors.add(:parent, msg)
+      errors.add(:base, msg)
     end
 
-    # Validation to check all source plates have the same parent
-    def source_plates_have_same_parent?
-      return if source_plates.map { |sp| sp.parents.map(&:id) }.flatten.uniq.one?
+    # Validation to check all source plates can be merged.
+    # Currently we allow this is there is a maximum of one request associated with each well
+    # Theoretically we can allow merging of plates with two distinct requests, as long as they have two
+    # different tag sets. See #merge_index for details
+    def source_plates_can_be_merged?
+      expected_merges = expected_merges(source_plates)
 
-      msg = 'The source plates have different parents, please check you have scanned the correct set of source plates.'
-      errors.add(:parent, msg)
+      return unless expected_merges.values.any? { |v| v.uniq.many? }
+
+      errors.add(:source_plates, 'have different requests and can not be merged, '\
+                                 'please check you have scanned the correct set of source plates.')
+    end
+
+    #
+    # Build up a hash of all merges that we expect to resolve
+    #
+    # @param [Array] source_plates Array of {Sequencescape::Api::V2::Plate} to be merged
+    #
+    # @return [Hash] Hash of each well/tag combination as a key, with an array of associated aliquots information
+    #                [request_id, suboptimal]
+    #                @example { 'A1' => ['1', false] }
+    #
+    def expected_merges(source_plates)
+      # Given the small set size, arrays are actually faster here than sets
+      merges = Hash.new { |h, i| h[i] = [] }
+      source_plates.each do |plate|
+        plate.each_well_and_aliquot do |well, aliquot|
+          merges[merge_index(well, aliquot)] << aliquot.equivalent_attributes
+        end
+      end
+      merges
+    end
+
+    # All aliquots with the same merge_index should be capable of being merged.
+    # Currently with is restricted to *all* aliquots in the same well location.
+    # If this was changed to:
+    # ```
+    #  [well.position, aliquot.tag_pair]
+    # ```
+    # it would allow merging of plates for different requests, as long as their
+    # tag groups are different. This functionality is currently disabled to prevent
+    # it being used accidentally.
+    def merge_index(well, _aliquot)
+      well.position
     end
 
     # Validation to check the user hasn't scanned the same barcode multiple times
     def source_barcodes_are_different?
       return unless minimal_barcodes.any? { |e| minimal_barcodes.count(e) > 1 }
 
-      msg = 'The source plates should not have the same barcode, please check you scanned all the plates.'
-      errors.add(:parent, msg)
+      msg = 'should not have the same barcode, please check you scanned all the plates.'
+      errors.add(:source_plates, msg)
     end
 
-    # Validation to check the user hasn't accidently created multiple plates with the same purpose
+    # Validation to check the user hasn't accidentally created multiple plates with the same purpose
     def source_plates_have_expected_purposes?
       actual_purposes = source_plates.map { |sp| sp.purpose[:name] }
       return if actual_purposes.sort == expected_source_purposes.sort
 
-      msg = 'The source plates do not have the expected types, check whether the right set of plate types have been made.'
-      errors.add(:parent, msg)
+      msg = 'do not have the expected types, check whether the right set of plate types have been made.'
+      errors.add(:source_plates, msg)
     end
   end
 end

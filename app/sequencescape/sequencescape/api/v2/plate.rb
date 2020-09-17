@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   self.plate = true
   has_many :wells
@@ -136,9 +137,18 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
     wells.map(&:priority).max || 0
   end
 
+  def each_well_and_aliquot
+    wells.each do |well|
+      well.aliquots.each do |aliquot|
+        yield well, aliquot
+      end
+    end
+  end
+
   private
 
   def generate_pools
     Pools.new(wells_in_columns)
   end
 end
+# rubocop:enable Metrics/ClassLength
