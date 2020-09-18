@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
-class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
+# A plate from sequencescape via the V2 API
+class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
+  include Sequencescape::Api::V2::Shared::HasRequests
+
   self.plate = true
   has_many :wells
   has_many :samples
@@ -41,12 +43,20 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
     uuid
   end
 
+  # @note JG 17/09/2020
+  # Active requests are determined on a per-well level
+  # This is to maintain pre-existing behaviour. What this means:
+  # In progress requests (those not passed or failed) take precedence over
+  # those which are passed/failed.
+  # Currently: This happens on a per-well level, which means if well A1
+  # only has completed requests, and yet B1 has in-progress requests out of
+  # it, then both A1s completed requests, and B1s in progress requests will
+  # be listed.
+  # Alternatively: Remove this and even a single in progress request for
+  # any well will take precedence. In theory this probably makes more sense
+  # but in practice we tend to operate on the plate as a whole.
   def active_requests
     @active_requests ||= wells.flat_map(&:active_requests)
-  end
-
-  def in_progress_submission_uuids(request_type_key: nil)
-    wells.flat_map { |w| w.in_progress_submission_uuids(request_type_key: request_type_key) }.uniq
   end
 
   def wells_in_columns
@@ -62,15 +72,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
   end
 
   def ready_for_automatic_pooling?
-    active_requests.any?(&:for_multiplexing)
+    for_multiplexing
   end
 
   def ready_for_custom_pooling?
     any_complete_requests? || ready_for_automatic_pooling?
-  end
-
-  def any_complete_requests?
-    active_requests.any?(&:passed?)
   end
 
   def size
@@ -113,10 +119,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
     purpose_names.include?(purpose.name)
   end
 
-  def pcr_cycles
-    active_requests.map(&:pcr_cycles).compact.uniq
-  end
-
   def primer_panels
     active_requests.map(&:primer_panel).compact.uniq
   end
@@ -129,14 +131,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
     @pools ||= generate_pools
   end
 
-  def role
-    wells.detect(&:role)&.role
-  end
-
-  def priority
-    wells.map(&:priority).max || 0
-  end
-
   def each_well_and_aliquot
     wells.each do |well|
       well.aliquots.each do |aliquot|
@@ -147,8 +141,15 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base # rubocop:tod
 
   private
 
+  def aliquots
+    wells.flat_map(&:aliquots)
+  end
+
+  def requests_as_source
+    wells.flat_map(&:requests_as_source)
+  end
+
   def generate_pools
     Pools.new(wells_in_columns)
   end
 end
-# rubocop:enable Metrics/ClassLength
