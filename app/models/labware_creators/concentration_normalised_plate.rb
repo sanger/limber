@@ -22,7 +22,7 @@ module LabwareCreators
 
     private
 
-    def request_hash(source_well, child_plate, additional_parameters) # rubocop:todo Metrics/AbcSize
+    def request_hash(source_well, child_plate, additional_parameters)
       {
         'source_asset' => source_well.uuid,
         'target_asset' => child_plate.wells.detect do |child_well|

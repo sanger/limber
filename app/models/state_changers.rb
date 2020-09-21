@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
-module StateChangers # rubocop:todo Style/Documentation
+# A State changer is responsible for transitioning the state of a plate, or
+# individual wells.
+module StateChangers
   class StateChangeError < StandardError; end
 
-  class DefaultStateChanger # rubocop:todo Style/Documentation
-    attr_reader :labware_uuid, :api
+  # The Default State changer is used by the vast majority of plates. It creates
+  # a simple StateChange record in Sequencescape, specifying the new 'target-state'
+  # As a result, Sequencescape will attempt to transition the entire plate, or the
+  # specified wells.
+  class DefaultStateChanger
+    attr_reader :labware_uuid, :api, :user_uuid
     private :api
-    attr_reader :user_uuid
 
     FILTER_FAILS_ON = ['qc_complete'].freeze
 
@@ -16,6 +21,7 @@ module StateChangers # rubocop:todo Style/Documentation
       @user_uuid = user_uuid
     end
 
+    # rubocop:todo Style/OptionalBooleanParameter
     def move_to!(state, reason = nil, customer_accepts_responsibility = false)
       state_details = {
         target: labware_uuid,
@@ -27,6 +33,7 @@ module StateChangers # rubocop:todo Style/Documentation
       }
       api.state_change.create!(state_details)
     end
+    # rubocop:enable Style/OptionalBooleanParameter
 
     def contents_for(target_state)
       return nil unless FILTER_FAILS_ON.include?(target_state)
@@ -46,10 +53,6 @@ module StateChangers # rubocop:todo Style/Documentation
 
   # Plate state changer to automatically complete specified work requests.
   class AutomaticPlateStateChanger < DefaultStateChanger
-    def initialize(api, labware_uuid, user_uuid)
-      super
-    end
-
     def v2_labware
       @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
@@ -66,10 +69,12 @@ module StateChangers # rubocop:todo Style/Documentation
       @work_completion_request_type ||= purpose_config[:work_completion_request_type]
     end
 
+    # rubocop:todo Style/OptionalBooleanParameter
     def move_to!(state, reason = nil, customer_accepts_responsibility = false)
       super
       complete_outstanding_requests
     end
+    # rubocop:enable Style/OptionalBooleanParameter
 
     def complete_outstanding_requests
       in_prog_submissions = v2_labware.in_progress_submission_uuids(request_type_key: work_completion_request_type)

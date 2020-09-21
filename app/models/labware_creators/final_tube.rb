@@ -19,8 +19,8 @@ module LabwareCreators
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
     validate :custom_input_expected, unless: :no_pooling_required?
 
-    def each_sibling
-      siblings.each { |s| yield s }
+    def each_sibling(&block)
+      siblings.each(&block)
     end
 
     def all_ready?

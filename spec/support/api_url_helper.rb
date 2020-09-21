@@ -53,7 +53,7 @@ module ApiUrlHelper
       stub_api_modify(*components, status: status, body: body, payload: payload)
     end
 
-    def stub_api_modify(*components, action: :post, status: 201, body:, payload:) # rubocop:todo Metrics/MethodLength
+    def stub_api_modify(*components, body:, payload:, action: :post, status: 201) # rubocop:todo Metrics/MethodLength
       Array(body).reduce(
         stub_request(action, api_url_for(*components))
         .with(
@@ -73,7 +73,7 @@ module ApiUrlHelper
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
 
-    def stub_api_v2(klass, includes: nil, where:, first: nil, all: nil) # rubocop:todo Metrics/AbcSize
+    def stub_api_v2(klass, where:, includes: nil, first: nil, all: nil) # rubocop:todo Metrics/AbcSize
       query_builder = "Sequencescape::Api::V2::#{klass}".constantize
       expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
       if all
@@ -108,7 +108,7 @@ module ApiUrlHelper
     # rubocop:enable Metrics/MethodLength
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false) # rubocop:todo Metrics/AbcSize
+    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       # Stub to v1 api search here as well!
       if stub_search
         stub_asset_search(

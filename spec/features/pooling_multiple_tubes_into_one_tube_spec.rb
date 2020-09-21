@@ -20,11 +20,11 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:tube_uuid)           { SecureRandom.uuid }
   let(:parent_purpose_name) { 'example-purpose' }
   let(:example_tube_args) do
-    [:tube, barcode_number: 1,
-            state: 'passed',
-            uuid: tube_uuid,
-            purpose_name: parent_purpose_name,
-            aliquots: aliquot_set_1]
+    [:tube, { barcode_number: 1,
+              state: 'passed',
+              uuid: tube_uuid,
+              purpose_name: parent_purpose_name,
+              aliquots: aliquot_set_1 }]
   end
   let(:stock_plate_purpose_name) { 'Stock Plate Purpose' }
   let(:stock_plate) { create :v2_stock_plate, purpose_name: stock_plate_purpose_name }
@@ -43,10 +43,10 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2)    { SecureRandom.uuid }
   let(:example_tube2_args) do
-    [:tube, barcode_number: 2,
-            state: 'passed',
-            uuid: tube_uuid_2,
-            aliquots: aliquot_set_2]
+    [:tube, { barcode_number: 2,
+              state: 'passed',
+              uuid: tube_uuid_2,
+              aliquots: aliquot_set_2 }]
   end
   let(:example_tube_2) { json(*example_tube2_args) }
   let(:example_v2_tube2) do

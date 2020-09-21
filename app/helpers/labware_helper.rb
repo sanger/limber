@@ -16,8 +16,8 @@ module LabwareHelper # rubocop:todo Style/Documentation
     define_method(:"#{name}_colour") do |*args|
       return 'failed' if FAILED_STATES.include?(args.first) # First argument is always the well
 
-      @colours  ||= Hash.new { |h, k| h[k] = STANDARD_COLOURS.dup } # rubocop:todo Rails/HelperInstanceVariable
-      @rotating ||= Hash.new do |h, k| # rubocop:todo Rails/HelperInstanceVariable
+      @colours  ||= Hash.new { |h, k| h[k] = STANDARD_COLOURS.dup }
+      @rotating ||= Hash.new do |h, k|
         h[k] = @colours[name].rotate!.last # rubocop:todo Rails/HelperInstanceVariable
       end
       @rotating[block.call(*args)] # rubocop:todo Rails/HelperInstanceVariable

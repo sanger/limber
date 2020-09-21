@@ -55,6 +55,7 @@ module RobotConfiguration
     include BedHelpers
     attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot, :require_robot
 
+    # rubocop:todo Style/OptionalBooleanParameter
     def initialize(type, target_state = 'passed', verify_robot = false, require_robot = false, &block)
       @verify_robot = verify_robot
       @require_robot = require_robot
@@ -62,6 +63,7 @@ module RobotConfiguration
       @target_state = target_state
       instance_eval(&block) if block
     end
+    # rubocop:enable Style/OptionalBooleanParameter
 
     def from(source_purpose, bed, state = 'passed')
       @source_purpose = source_purpose

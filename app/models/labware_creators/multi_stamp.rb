@@ -39,7 +39,7 @@ module LabwareCreators
 
     # Returns a list of parent plate uuids extracted from the transfers
     def parent_uuids
-      transfers.map { |transfer| transfer[:source_plate] }.uniq
+      transfers.pluck(:source_plate).uniq
     end
 
     def transfer_material_from_parent!(child_uuid)

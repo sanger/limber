@@ -68,4 +68,7 @@ group :development do
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'travis'
+  # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
+  # with jard
+  gem 'ruby_jard'
 end
