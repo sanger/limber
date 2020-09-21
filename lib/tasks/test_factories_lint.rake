@@ -5,7 +5,7 @@ namespace :test do
     desc 'Lint the factories'
     task lint: :environment do
       require 'webmock'
-      require './spec/support/contract_helper.rb'
+      require './spec/support/contract_helper'
 
       include WebMock::API
 

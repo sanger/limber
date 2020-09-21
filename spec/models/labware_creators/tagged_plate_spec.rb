@@ -154,6 +154,22 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
       end
     end
+
+    context 'when a submission is not split over multiple plates but a plate has been recorded' do
+      before do
+        stub_api_get(plate_uuid, 'submission_pools',
+                     body: json(:submission_pool_collection,
+                                used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]))
+      end
+
+      it 'does not require tag2' do
+        expect(subject.requires_tag2?).to be false
+      end
+
+      it 'allows tubes or plates' do
+        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
+      end
+    end
   end
 
   context 'On create' do

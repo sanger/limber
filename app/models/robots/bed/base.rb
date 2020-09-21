@@ -79,7 +79,7 @@ module Robots::Bed
       []
     end
 
-    def child_plates # rubocop:todo Metrics/AbcSize
+    def child_plates
       return [] if plate.nil?
 
       @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|

@@ -52,8 +52,8 @@ Rails.application.routes.draw do
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
-    match 'individual', action: 'individual', as: :print_individual_label
-    match 'multiple',   action: 'multiple',   as: :print_multiple_labels
+    get 'individual', action: 'individual', as: :print_individual_label
+    get 'multiple', action: 'multiple', as: :print_multiple_labels
   end
 
   resources :pipelines, only: :index

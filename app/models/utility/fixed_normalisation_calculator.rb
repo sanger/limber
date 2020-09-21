@@ -9,7 +9,7 @@ module Utility
     self.version = 'v1.0'
 
     # Calculates the well amounts (ng) from the well concentrations and a volume multiplication factor.
-    def compute_well_amounts(wells) # rubocop:todo Metrics/AbcSize
+    def compute_well_amounts(wells)
       # sort on well coordinate to ensure wells are in plate column order
       wells.sort_by(&:coordinate).each_with_object({}) do |well, well_amounts|
         next if well.aliquots.blank?
