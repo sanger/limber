@@ -149,7 +149,7 @@ FactoryBot.define do
     end
 
     children do
-      Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i]) }
+      Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i]) }
     end
 
     factory :single_study_multiplexed_library_tube_collection do
@@ -159,7 +159,7 @@ FactoryBot.define do
       end
       children do
         Array.new(size) do |i|
-          associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count)
+          associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count)
         end
       end
     end

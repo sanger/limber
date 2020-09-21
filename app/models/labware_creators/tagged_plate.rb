@@ -91,9 +91,20 @@ module LabwareCreators
       acceptable_tag2_sources.include?('tube')
     end
 
+    #
+    # Indicates if a UDI tag plate is permitted/required
+    # UDI plates are:
+    # Required if part of a pool already using UDI plates
+    # Forbidden if part of a pool using tubes
+    # Permitted, but not required in all other cases
+    #
+    # @return [<Boolean] false: UDI plates are forbidden
+    #                    true: UDI plates are required
+    #                    nil: UDI plates are permitted, but not required
+    #
     def tag_plate_dual_index?
       return false if tag_tubes_used?
-      return true if tag_plates_used?
+      return true if tag_plates_used? && requires_tag2?
 
       nil
     end

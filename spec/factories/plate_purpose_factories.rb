@@ -45,7 +45,7 @@ FactoryBot.define do
 
     plate_purposes do
       Array.new(size) do |i|
-        associated(:plate_purpose, name: 'Child Purpose ' + i.to_s, uuid: 'child-purpose-' + i.to_s)
+        associated(:plate_purpose, name: "Child Purpose #{i}", uuid: "child-purpose-#{i}")
       end
     end
   end

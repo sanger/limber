@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Limber::TagLayoutTemplate::WalkWellsOfPlate # rubocop:todo Style/Documentation
-  def generate_tag_layout(plate)
+  def generate_tag_layout(plate) # rubocop:todo Metrics/AbcSize
     tagged_wells = {}
     tags = tag_ids
     groups = group_wells_of_plate(plate)

@@ -33,7 +33,7 @@ class PurposeConfig # rubocop:todo Style/Documentation
   end
 
   # rubocop:todo Metrics/MethodLength
-  def config # rubocop:todo Metrics/AbcSize
+  def config
     {
       name: name,
       creator_class: default_options[:creator],

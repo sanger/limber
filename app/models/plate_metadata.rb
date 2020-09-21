@@ -3,7 +3,7 @@
 class PlateMetadata # rubocop:todo Style/Documentation
   attr_accessor :api, :user, :plate, :barcode
 
-  def initialize(params = {}) # rubocop:todo Metrics/AbcSize
+  def initialize(params = {})
     @api = params.fetch(:api, nil)
     @user = params.fetch(:user, nil)
     @barcode = params.fetch(:barcode, nil)

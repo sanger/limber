@@ -81,7 +81,7 @@ module Utility
     #
     # @return [float] The volume of the source required in ul.
     #
-    def compute_vol_source_reqd(sample_conc) # rubocop:todo Metrics/AbcSize
+    def compute_vol_source_reqd(sample_conc)
       calculated_raw_volume = config.target_amount / sample_conc
 
       # adjust the calculated volume to the maximum permissible for samples with very weak concentrations

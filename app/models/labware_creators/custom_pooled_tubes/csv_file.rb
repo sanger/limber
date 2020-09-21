@@ -54,7 +54,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     private
 
     def transfers
-      @transfers ||= @data[1..-1].each_with_index.map do |row_data, index|
+      @transfers ||= @data[1..].each_with_index.map do |row_data, index|
         Row.new(header_row, index + 2, row_data)
       end
     end

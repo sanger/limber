@@ -17,7 +17,7 @@ module SearchHelper # rubocop:todo Style/Documentation
     conf = purpose_config_for_purpose_name(labware.purpose.name)
     return nil if conf.nil?
 
-    conf.dig(:alternative_workline_identifier)
+    conf[:alternative_workline_identifier]
   end
 
   def self.merger_plate_names

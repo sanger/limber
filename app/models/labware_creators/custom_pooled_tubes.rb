@@ -26,7 +26,7 @@ module LabwareCreators
       super && upload_file && true
     end
 
-    def wells_occupied? # rubocop:todo Metrics/AbcSize
+    def wells_occupied?
       pools.values.flatten.uniq.each do |location|
         well = well_locations[location]
         if well.nil? || well.aliquots.empty?

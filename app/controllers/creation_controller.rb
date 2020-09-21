@@ -46,7 +46,7 @@ class CreationController < ApplicationController
       format.html do
         redirect_back(
           fallback_location: url_for(@labware_creator.parent),
-          alert: ['Cannot create the next piece of labware:', *exception.resource.errors.full_messages]
+          alert: truncate_flash(['Cannot create the next piece of labware:', *exception.resource.errors.full_messages])
         )
       end
     end
