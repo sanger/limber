@@ -80,7 +80,16 @@ module LabwareCreators
     end
 
     # Validation to check all source plates can be merged.
-    # Currently we allow this is there is a maximum of one request associated with each well
+    # Currently we allow this if there is a maximum of one request associated with each well.
+    # One library request covers both forks of the process, and is recorded on the aliquots, thus
+    # if two aliquots are associated with the same request, they are part of the same process and can be
+    # merged. Behind the scenes Sequencescape also checks a number of other attributes, such as
+    # library_type and primer_panel_id, but as these are both set by the request, we can be pretty
+    # confident that they'll match in this case.
+    # The suboptimal flag is also included in the check, as this is exposed via the API, and forms
+    # part of Sequencescape's de-duplication. In most cases this will be identical, however can differ
+    # if users begin processing plates while the qc report is still running.
+    # @see Sequencescape::Api::V2::Aliquot#equivalent_attributes for more information
     # Theoretically we can allow merging of plates with two distinct requests, as long as they have two
     # different tag sets. See #merge_index for details
     def source_plates_can_be_merged?
@@ -88,7 +97,7 @@ module LabwareCreators
 
       return unless expected_merges.values.any? { |v| v.uniq.many? }
 
-      errors.add(:source_plates, 'have different requests and can not be merged, '\
+      errors.add(:source_plates, 'have different requests or suboptimal status and can not be merged, '\
                                  'please check you have scanned the correct set of source plates.')
     end
 
@@ -99,7 +108,7 @@ module LabwareCreators
     #
     # @return [Hash] Hash of each well/tag combination as a key, with an array of associated aliquots information
     #                [request_id, suboptimal]
-    #                @example { 'A1' => ['1', false] }
+    #                @example { 'A1' => [['1', false],['1', false]] }
     #
     def expected_merges(source_plates)
       # Given the small set size, arrays are actually faster here than sets
@@ -113,7 +122,7 @@ module LabwareCreators
     end
 
     # All aliquots with the same merge_index should be capable of being merged.
-    # Currently with is restricted to *all* aliquots in the same well location.
+    # Currently this is restricted to *all* aliquots in the same well location.
     # If this was changed to:
     # ```
     #  [well.position, aliquot.tag_pair]
