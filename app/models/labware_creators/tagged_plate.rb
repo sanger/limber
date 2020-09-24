@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class TaggedPlate < Base # rubocop:todo Style/Documentation
+  # Handles transfer of material into a pre-existing tag plate, created via
+  # Gatekeeper. It performs a few actions:
+  # 1) Updates the state of the tag plate to flag the resource as exhausted
+  #    (Tag plates delegate their state to the qcable)
+  # 2) Converts the tag plate to a new plate purpose
+  # 3) Transfers the material from the parent, into the converted tag plate (Now the child)
+  # 4) Applies the tag template that was associated with the tag plate
+  class TaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
@@ -84,7 +91,6 @@ module LabwareCreators
 
     def tag2_field
       yield if allow_tag_tube?
-      nil
     end
 
     def allow_tag_tube?
@@ -136,7 +142,8 @@ module LabwareCreators
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,
-          user: user_uuid
+          user: user_uuid,
+          enforce_uniqueness: requires_tag2?
         )
 
         if tag2_tube_barcode.present?
