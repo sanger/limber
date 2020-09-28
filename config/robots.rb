@@ -1900,29 +1900,29 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   custom_robot('mosquito-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-1-and-2',
                name: 'Mosquito LV LTHR-384 PCR 1 and 2 => LTHR-384 Lib PCR 1 and 2',
                beds: {
-                 bed(1).barcode => {
+                 bed(2).barcode => {
                    purpose: 'LTHR-384 PCR 1',
                    states: ['passed'],
-                   label: 'Bed 1'
-                 },
-                 bed(3).barcode => {
-                   purpose: 'LTHR-384 PCR 2',
-                   states: ['passed'],
-                   label: 'Bed 3'
-                 },
-                 bed(2).barcode => {
-                   purpose: 'LTHR-384 Lib PCR 1',
-                   states: ['pending'],
-                   label: 'Bed 2',
-                   target_state: 'passed',
-                   parent: bed(1).barcode
+                   label: 'Bed 2'
                  },
                  bed(4).barcode => {
+                   purpose: 'LTHR-384 PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 3',
+                   target_state: 'passed',
+                   parent: bed(2).barcode
+                 },
+                 bed(5).barcode => {
                    purpose: 'LTHR-384 Lib PCR 2',
                    states: ['pending'],
-                   label: 'Bed 4',
+                   label: 'Bed 5',
                    target_state: 'passed',
-                   parent: bed(3).barcode
+                   parent: bed(4).barcode
                  }
                })
 
