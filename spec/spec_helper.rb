@@ -198,6 +198,6 @@ RSpec.configure do |config|
         csv << [factory, 'UNUSED', 0, 0, 0]
       end
     end
-    puts '📊 Output factory statistics to tmp/factories.csv'
+    puts "\n📊 Output factory statistics to tmp/factories.csv"
   end
 end
