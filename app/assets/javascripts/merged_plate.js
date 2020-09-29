@@ -1,6 +1,8 @@
 (function($, exports, undefined){
   'use strict'
 
+  //= require lib/keycodes
+
   $(function(_event) {
     // If we are not on the multi-plate pooling page, don't set anything up.
     if ($('#merged-plate-page').length === 0) { return }
