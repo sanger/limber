@@ -42,7 +42,11 @@
             <p><em>Available templates:</em> <%= @labware_creator.tag_tubes_names.join(', ') %></p>
             <%= f.label :tag2_tube_barcode %>
             <%= f.text_field :tag2_tube_barcode,
-                             data: {'info-panel'=>'tag2-tube-info', 'qcable-type'=>'tag tube', 'approved-list'=>'tag_tubes_list'},
+                             data: {
+                               'info-panel'=>'tag2-tube-info',
+                               'qcable-type'=>'tag tube',
+                               'approved-list'=>'tag_tubes_list'
+                               },
                              class: 'form-control', required: @labware_creator.tag_tubes_used? %>
         <% end -%>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>

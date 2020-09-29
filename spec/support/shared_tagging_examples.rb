@@ -52,6 +52,7 @@ RSpec.shared_context 'a tag plate creator' do
   end
 
   let(:tag_layout_template) { json(:tag_layout_template, uuid: tag_template_uuid) }
+  let(:enforce_uniqueness) { true }
 
   let!(:tag_layout_creation_request) do
     stub_api_get(tag_template_uuid, body: tag_layout_template)
@@ -60,7 +61,8 @@ RSpec.shared_context 'a tag plate creator' do
       payload: {
         tag_layout: {
           plate: tag_plate_uuid,
-          user: user_uuid
+          user: user_uuid,
+          enforce_uniqueness: enforce_uniqueness
         }
       },
       body: '{}'
