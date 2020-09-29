@@ -35,8 +35,13 @@
         <%= form.hidden_field :purpose_uuid %>
         <% @labware_creator.expected_source_purposes.size.times do |i| %>
           <div class="plate-container scan-plate form-group row">
-            <label for="plate[barcodes][<%= i %>]" class="plate-label col-2" >Source Plate <%= i+1 %></label>
-            <input id="plate[barcodes][<%= i %>]" name="plate[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
+            <label for="plate[barcodes][<%= i %>]"
+                   class="plate-label col-md-2" >Source Plate <%= i+1 %></label>
+            <input type="text"
+                   id="plate[barcodes][<%= i %>]"
+                   name="plate[barcodes][]"
+                   class="form-control col-md-8"
+                   required="required"/>
           </div>
         <% end %>
         <%= form.submit 'Merge Plates', class: 'btn btn-success btn-lg', id: 'create-labware' %>

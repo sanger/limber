@@ -180,7 +180,9 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
-    include_context 'a tag plate creator'
+    include_context 'a tag plate creator' do
+      let(:enforce_uniqueness) { false }
+    end
 
     before do
       stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
