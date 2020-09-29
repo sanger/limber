@@ -20,7 +20,7 @@ en:
       default: 'Bed verification'
     instructions:
       default: >
-        <ul><li>Place your plates onto the robot accroding to the layout specified above.</li>
+        <ul><li>Place your plates onto the robot according to the layout specified above.</li>
         <li>Click 'Scan bed' and use the barcode scanner to scan one of the beds occupied by a tracked plate.</li>
         <li>Next scan the plate on the corresponding bed.</li>
         <li>Continue to scan each occupied bed, followed by its plate in turn.</li>
