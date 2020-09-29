@@ -6,7 +6,7 @@
     "cytoscape": "^3.16.0",
     "devour-client": "^2.0.15",
     "flush-promises": "^1.0.0",
-    "karma-sourcemap-loader": "^0.3.7",
+    "karma-sourcemap-loader": "^0.3.8",
     "pluralize": "^7.0.0",
     "vue": "2.6.11",
     "vue-loader": "^15.9.2",
