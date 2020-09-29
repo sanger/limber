@@ -2,7 +2,7 @@
   "dependencies": {
     "@rails/webpacker": "5.1.1",
     "axios": "^0.19.2",
-    "bootstrap-vue": "^2.0.0",
+    "bootstrap-vue": "^2.17.3",
     "cytoscape": "^3.16.0",
     "devour-client": "^2.0.15",
     "flush-promises": "^1.0.0",
