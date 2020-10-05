@@ -619,12 +619,6 @@ describe('CustomTaggedPlate', () => {
   })
 
   describe('#rendering tests:', () => {
-    it('renders a vue instance', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.isVueInstance()).toBe(true)
-    })
-
     it('renders child components for single tag per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
         propsData: {
@@ -637,11 +631,11 @@ describe('CustomTaggedPlate', () => {
           locationObj: mockLocation
         },
         stubs: {
-          'lb-parent-plate-lookup': '<div class="parent-plate-lookup"></div>',
-          'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
-          'lb-tag-layout-manipulations': '<div class="layout-manipulations"></div>',
-          'lb-well-modal': '<div class="well-modal"></div>'
+          'lb-parent-plate-lookup': true,
+          'lb-parent-plate-view': true,
+          'lb-tag-substitution-details': true,
+          'lb-tag-layout-manipulations': true,
+          'lb-well-modal': true
         },
         localVue
       })
@@ -650,10 +644,12 @@ describe('CustomTaggedPlate', () => {
         parentPlate: exampleParent
       })
 
-      expect(wrapper.find('table.plate-view').exists()).toBe(true)
-      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
-      expect(wrapper.find('div.layout-manipulations').exists()).toBe(true)
-      expect(wrapper.find('div.well-modal').exists()).toBe(true)
+      await localVue.nextTick()
+
+      expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
 
     it('renders child components for multiple tags per well', async () => {
@@ -668,11 +664,11 @@ describe('CustomTaggedPlate', () => {
           locationObj: mockLocation
         },
         stubs: {
-          'lb-parent-plate-lookup': '<div class="parent-plate-lookup"></div>',
-          'lb-parent-plate-view': '<table class="plate-view"></table>',
-          'lb-tag-substitution-details': '<div class="tag_substitutions"></div>',
-          'lb-tag-layout-manipulations-multiple': '<div class="layout-manipulations-multiple"></div>',
-          'lb-well-modal': '<div class="well-modal"></div>'
+          'lb-parent-plate-lookup': true,
+          'lb-parent-plate-view': true,
+          'lb-tag-substitution-details': true,
+          'lb-tag-layout-manipulations-multiple': true,
+          'lb-well-modal': true
         },
         localVue
       })
@@ -681,10 +677,12 @@ describe('CustomTaggedPlate', () => {
         parentPlate: exampleParent
       })
 
-      expect(wrapper.find('table.plate-view').exists()).toBe(true)
-      expect(wrapper.find('div.tag_substitutions').exists()).toBe(true)
-      expect(wrapper.find('div.layout-manipulations-multiple').exists()).toBe(true)
-      expect(wrapper.find('div.well-modal').exists()).toBe(true)
+      await localVue.nextTick()
+
+      expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-layout-manipulations-multiple-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
 
     it('renders a submit button', async () => {

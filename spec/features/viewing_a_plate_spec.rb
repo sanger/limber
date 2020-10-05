@@ -11,7 +11,9 @@ RSpec.feature 'Viewing a plate', js: true do
   let(:plate_uuid)     { SecureRandom.uuid }
   let(:state) { 'pending' }
   let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
-  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection, purpose_uuid: purpose_uuid }
+  let(:example_plate) do
+    create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection, purpose_uuid: purpose_uuid
+  end
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
   let(:default_tube_printer) { 'tube printer 1' }
   let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }

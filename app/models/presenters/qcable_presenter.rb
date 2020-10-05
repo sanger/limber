@@ -3,7 +3,7 @@
 module Presenters
   # Used for tag plates / tag 2 tubes. Rendered with default to_json behaviour.
   class QcablePresenter
-    def initialize(qcable)
+    def initialize(qcable) # rubocop:todo Metrics/AbcSize
       @uuid = qcable.uuid
       @tag_layout = qcable.lot.template_name
       @asset_uuid = qcable.asset.uuid

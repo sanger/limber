@@ -20,3 +20,10 @@ REVISION
 yarn-error.log
 .tern-project
 *.swn
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

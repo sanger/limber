@@ -106,8 +106,8 @@ module Robots
     end
 
     def valid_plates
-      beds.each_with_object({}) do |(bed_id, bed), states|
-        states[bed_id] = bed.valid? || bed_error(bed)
+      beds.transform_values do |bed|
+        bed.valid? || bed_error(bed)
       end
     end
 
@@ -142,7 +142,7 @@ module Robots
     # @param expected_plates [Array] An array of expected plates
     # @param position [String] The barcode of the bed expected to contain the plates
     # @return [Boolean] True if valid, false otherwise
-    def check_plate_identity(expected_plates, position)
+    def check_plate_identity(expected_plates, position) # rubocop:todo Metrics/AbcSize
       expected_uuids = expected_plates.map(&:uuid)
       # We haven't scanned a plate, and no scanned plates are expected
       return true if expected_uuids.empty? && beds[position].plate.nil?

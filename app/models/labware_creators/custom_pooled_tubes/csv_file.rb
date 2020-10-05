@@ -3,7 +3,7 @@
 require './lib/nested_validation'
 require 'csv'
 
-module LabwareCreators
+module LabwareCreators # rubocop:todo Style/Documentation
   require_dependency 'labware_creators/custom_pooled_tubes'
 
   # Takes the user uploaded csv file and extracts the pool information
@@ -54,7 +54,7 @@ module LabwareCreators
     private
 
     def transfers
-      @transfers ||= @data[1..-1].each_with_index.map do |row_data, index|
+      @transfers ||= @data[1..].each_with_index.map do |row_data, index|
         Row.new(header_row, index + 2, row_data)
       end
     end

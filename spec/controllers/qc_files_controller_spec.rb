@@ -74,9 +74,12 @@ RSpec.describe QcFilesController, type: :controller do
     let(:expected_response) do
       {
         'qc_files' => [
-          { 'filename' => 'file0.txt', 'size' => 123, 'uuid' => 'example-file-uuid-0', 'created' => 'June 29, 2017 09:31' },
-          { 'filename' => 'file1.txt', 'size' => 123, 'uuid' => 'example-file-uuid-1', 'created' => 'June 29, 2017 09:31' },
-          { 'filename' => 'file2.txt', 'size' => 123, 'uuid' => 'example-file-uuid-2', 'created' => 'June 29, 2017 09:31' }
+          { 'filename' => 'file0.txt', 'size' => 123, 'uuid' => 'example-file-uuid-0',
+            'created' => 'June 29, 2017 09:31' },
+          { 'filename' => 'file1.txt', 'size' => 123, 'uuid' => 'example-file-uuid-1',
+            'created' => 'June 29, 2017 09:31' },
+          { 'filename' => 'file2.txt', 'size' => 123, 'uuid' => 'example-file-uuid-2',
+            'created' => 'June 29, 2017 09:31' }
         ]
       }
     end

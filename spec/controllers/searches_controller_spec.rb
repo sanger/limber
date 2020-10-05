@@ -91,7 +91,8 @@ RSpec.describe SearchController, type: :controller do
 
         it 'finds specified plates' do
           expected_search
-          get :ongoing_plates, params: { ongoing_plate: { purposes: ['uuid-1'], show_my_plates_only: '1', include_used: '1' } }
+          get :ongoing_plates, params: { ongoing_plate: { purposes: ['uuid-1'], show_my_plates_only: '1',
+                                                          include_used: '1' } }
           expect(expected_search).to have_been_made.once
           expect(response).to have_http_status(:ok)
         end

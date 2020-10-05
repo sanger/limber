@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module LabwareCreators
+  # Handles transfer of material into a pre-existing tag plate, created via
+  # Gatekeeper. It performs a few actions:
+  # 1) Updates the state of the tag plate to flag the resource as exhausted
+  #    (Tag plates delegate their state to the qcable)
+  # 2) Converts the tag plate to a new plate purpose
+  # 3) Transfers the material from the parent, into the converted tag plate (Now the child)
+  # 4) Applies the tag template that was associated with the tag plate
   class TaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
@@ -37,7 +44,8 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    def create_plate!
+    # rubocop:todo Metrics/MethodLength
+    def create_plate! # rubocop:todo Metrics/AbcSize
       transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
@@ -59,6 +67,7 @@ module LabwareCreators
 
       true
     end
+    # rubocop:enable Metrics/MethodLength
 
     def requires_tag2?
       parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
@@ -82,16 +91,26 @@ module LabwareCreators
 
     def tag2_field
       yield if allow_tag_tube?
-      nil
     end
 
     def allow_tag_tube?
       acceptable_tag2_sources.include?('tube')
     end
 
+    #
+    # Indicates if a UDI tag plate is permitted/required
+    # UDI plates are:
+    # Required if part of a pool already using UDI plates
+    # Forbidden if part of a pool using tubes
+    # Permitted, but not required in all other cases
+    #
+    # @return [<Boolean] false: UDI plates are forbidden
+    #                    true: UDI plates are required
+    #                    nil: UDI plates are permitted, but not required
+    #
     def tag_plate_dual_index?
       return false if tag_tubes_used?
-      return true if tag_plates_used?
+      return true if tag_plates_used? && requires_tag2?
 
       nil
     end
@@ -118,11 +137,13 @@ module LabwareCreators
       @tag_tubes ||= LabwareCreators::Tagging::Tag2Collection.new(api, labware)
     end
 
-    def create_labware!
+    # rubocop:todo Metrics/MethodLength
+    def create_labware! # rubocop:todo Metrics/AbcSize
       create_plate! do |plate_uuid|
         api.tag_layout_template.find(tag_plate.template_uuid).create!(
           plate: plate_uuid,
-          user: user_uuid
+          user: user_uuid,
+          enforce_uniqueness: requires_tag2?
         )
 
         if tag2_tube_barcode.present?
@@ -141,5 +162,6 @@ module LabwareCreators
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

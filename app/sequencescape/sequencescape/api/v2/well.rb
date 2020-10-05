@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
+class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   include Sequencescape::Api::V2::Shared::HasRequests
   has_many :qc_results
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'

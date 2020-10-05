@@ -10,8 +10,14 @@ RSpec.feature 'Creating a plate with bait', js: true do
   let(:plate_barcode)         { example_plate.barcode.machine }
   let(:plate_uuid)            { SecureRandom.uuid }
   let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:requests) { Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' } }
-  let(:example_plate) { create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests }
+  let(:requests) do
+    Array.new(6) do |i|
+      create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2'
+    end
+  end
+  let(:example_plate) do
+    create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests
+  end
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
@@ -43,7 +49,8 @@ RSpec.feature 'Creating a plate with bait', js: true do
     # end of stubs for plate show page
 
     # These stubs are required to render plate_creation baiting page
-    stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: plate_uuid, user: user_uuid } })
+    stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout),
+                                                     payload: { bait_library_layout: { plate: plate_uuid, user: user_uuid } })
     # end of stubs for plate_creation baiting page
 
     # These stubs are required to create a new plate with baits
@@ -58,7 +65,8 @@ RSpec.feature 'Creating a plate with bait', js: true do
                     transfer_requests: transfer_requests
                   } },
                   body: '{}')
-    stub_api_post('bait_library_layouts', body: json(:bait_library_layout), payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
+    stub_api_post('bait_library_layouts', body: json(:bait_library_layout),
+                                          payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
     # end of stubs for creating a new plate with baits
     # Stub the requests for the next plate page
     stub_v2_plate(child_plate)

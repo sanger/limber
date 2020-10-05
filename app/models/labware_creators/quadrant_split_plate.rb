@@ -47,7 +47,7 @@ module LabwareCreators
       end
     end
 
-    def add_stock_barcode_metadata(plates)
+    def add_stock_barcode_metadata(plates) # rubocop:todo Metrics/AbcSize
       merger_plate = parent.ancestors.where(purpose_name: SearchHelper.merger_plate_names).first
       metadata = PlateMetadata.new(api: api, barcode: merger_plate.barcode.machine).metadata
       plates.each_with_index do |plate, index|
@@ -71,7 +71,9 @@ module LabwareCreators
       child_well_name = WellHelpers.well_name(row / 2, col / 2)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => child_plates[child_plate_index].wells.detect { |child_well| child_well.location == child_well_name }&.uuid
+        'target_asset' => child_plates[child_plate_index].wells.detect do |child_well|
+                            child_well.location == child_well_name
+                          end&.uuid
       }.merge(additional_parameters)
     end
   end

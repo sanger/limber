@@ -6,6 +6,7 @@ module TestFormClass
     include LabwareCreators::CustomPage
 
     attr_reader :params
+
     def initialize(params)
       @params = params
       @saved = false

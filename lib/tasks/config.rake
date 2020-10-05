@@ -11,7 +11,7 @@ namespace :config do
   task generate: :environment do
     begin
       api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
-    rescue Sequencescape::Api::UnauthenticatedError => _
+    rescue Sequencescape::Api::UnauthenticatedError => _e
       puts <<~HEREDOC
         Could not authenticate with the Sequencescape API
         Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
@@ -41,7 +41,7 @@ namespace :config do
     end
 
     # Build the configuration file based on the server we are connected to.
-    CONFIG = {}.tap do |configuration|
+    CONFIG = {}.tap do |configuration| # rubocop:todo Metrics/BlockLength
       puts 'Preparing searches ...'
       configuration[:searches] = api.search.all.each_with_object({}) do |search, searches|
         searches[search.name] = search.uuid

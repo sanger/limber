@@ -106,7 +106,9 @@ FactoryBot.define do
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
-      aliquots { create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request }
+      aliquots do
+        create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request
+      end
       parents { [] }
     end
 
@@ -147,7 +149,7 @@ FactoryBot.define do
     end
 
     children do
-      Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i]) }
+      Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i]) }
     end
 
     factory :single_study_multiplexed_library_tube_collection do
@@ -156,7 +158,9 @@ FactoryBot.define do
         study_count { 1 }
       end
       children do
-        Array.new(size) { |i| associated(tube_factory, uuid: 'tube-' + i.to_s, name: names[i], study_count: study_count) }
+        Array.new(size) do |i|
+          associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count)
+        end
       end
     end
   end

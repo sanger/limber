@@ -10,7 +10,7 @@ class RepeatedStateChangeError < Sequencescape::Api::ConnectionFactory::Actions:
 
   def self.repeated_state_change_error?(exception)
     error = JSON.parse(exception.message).dig('general', 0)
-    match_data = /\ANo obvious transition from \"([^\"]+)\" to \"([^\"]+)\"\z/.match(error)
+    match_data = /\ANo obvious transition from "([^"]+)" to "([^"]+)"\z/.match(error)
     (match_data || false) &&
       match_data[1] == match_data[2]
   end

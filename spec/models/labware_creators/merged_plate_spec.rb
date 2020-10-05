@@ -90,7 +90,8 @@ RSpec.describe LabwareCreators::MergedPlate do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
           receive(:find_all)
-            .with({ barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] }, includes: plate_includes)
+            .with({ barcode: [source_plate_1.barcode.machine,
+                              source_plate_2.barcode.machine] }, includes: plate_includes)
             .and_return([source_plate_1, source_plate_2])
         )
       end
@@ -170,7 +171,7 @@ RSpec.describe LabwareCreators::MergedPlate do
     end
   end
 
-  context 'with source plates from different parents' do
+  context 'with source plates from different parents and requests' do
     let(:different_requests) do
       Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 }
     end
@@ -209,9 +210,49 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
     end
 
-    it 'is invalid' do
-      expect(subject.valid?).to eq false
+    it { is_expected.not_to be_valid }
+  end
+
+  context 'with source plates from different parents but same requests' do
+    let(:different_requests) do
+      Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 }
     end
+    let(:different_parent) { create :v2_plate }
+    let(:source_plate_3) do
+      create :v2_plate,
+             barcode_number: '4',
+             size: plate_size,
+             outer_requests: requests,
+             parents: [different_parent],
+             purpose: source_purpose_2
+    end
+
+    let(:form_attributes) do
+      {
+        purpose_uuid: child_purpose_uuid,
+        parent_uuid: parent_uuid,
+        user_uuid: user_uuid,
+        barcodes: [source_plate_1.barcode.machine, source_plate_3.barcode.machine]
+      }
+    end
+
+    before do
+      create(
+        :merged_plate_purpose_config,
+        name: child_purpose_name,
+        uuid: child_purpose_uuid,
+        creator_class: 'LabwareCreators::MergedPlate',
+        source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
+      )
+      stub_v2_plate(source_plate_3, stub_search: false)
+      allow(Sequencescape::Api::V2::Plate).to(
+        receive(:find_all)
+          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
+          .and_return([source_plate_1, source_plate_3])
+      )
+    end
+
+    it { is_expected.to be_valid }
   end
 
   context 'with a missing barcode' do

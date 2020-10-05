@@ -1,0 +1,46 @@
+---
+LTHR RT:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LTHR PCR 1:
+  :asset_type: plate
+LTHR PCR 2:
+  :asset_type: plate
+LTHR Lib PCR 1:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TS_pWGSA_UDI96v2
+LTHR Lib PCR 2:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TS_pWGSA_UDI96v2
+LTHR Lib PCR pool:
+  :asset_type: plate
+  :creator_class: LabwareCreators::MergedPlate
+  :merged_plate:
+    source_purposes:
+    - 'LTHR Lib PCR 1'
+    - 'LTHR Lib PCR 2'
+    help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
+LTHR Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

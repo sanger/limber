@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Presenters
+module Presenters # rubocop:todo Style/Documentation
   def self.lookup_for(labware)
     presentation_classes = Settings.purposes[labware.purpose.uuid]
 

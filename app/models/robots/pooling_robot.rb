@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Robots
-  class PoolingRobot < Robot
+  class PoolingRobot < Robot # rubocop:todo Style/Documentation
     attr_writer :destination_bed
 
     def plate_includes
@@ -39,7 +39,8 @@ module Robots
 
     def validate_parent(bed_barcode, expected_barcode)
       parent_bed = beds.fetch(bed_barcode)
-      return true if expected_barcode =~ parent_bed.barcode
+      # This is *not* a regular expression.
+      return true if expected_barcode =~ parent_bed.barcode # rubocop:disable Performance/RegexpMatch
 
       error(parent_bed, "Expected to contain #{expected_barcode} not #{parent_bed.barcode}")
       false

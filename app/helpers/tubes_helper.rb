@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-module TubesHelper
+module TubesHelper # rubocop:todo Style/Documentation
 end

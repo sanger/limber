@@ -34,6 +34,7 @@ require 'csv'
 
 begin
   require 'pry'
+  require 'ruby_jard'
 rescue LoadError
   # We don't have pry. We're probably on Travis.
   nil
@@ -139,6 +140,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rails.application.load_tasks
+
     Rake::Task['assets:precompile'].invoke
 
     FactoryBot.find_definitions
@@ -161,7 +163,10 @@ RSpec.configure do |config|
     # Unfortunately this means the library, not the animal.
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
-    Capybara.current_session.driver.resize_window(1400, 1400) if Capybara.current_session.driver.respond_to?(:resize_window)
+    if Capybara.current_session.driver.respond_to?(:resize_window)
+      Capybara.current_session.driver.resize_window(1400,
+                                                    1400)
+    end
     # Wipe out existing purposes
     Settings.purposes = {}
     Settings.pipelines = PipelineList.new
@@ -193,6 +198,6 @@ RSpec.configure do |config|
         csv << [factory, 'UNUSED', 0, 0, 0]
       end
     end
-    puts '📊 Output factory statistics to tmp/factories.csv'
+    puts "\n📊 Output factory statistics to tmp/factories.csv"
   end
 end

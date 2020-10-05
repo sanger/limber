@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-module PlateWalking
+module PlateWalking # rubocop:todo Style/Documentation
   def wells_by_row
     Walker.new(plate_to_walk, plate_to_walk.wells)
   end
 
-  class Walker
-    class Location
+  class Walker # rubocop:todo Style/Documentation
+    class Location # rubocop:todo Style/Documentation
       def initialize(alphanumeric_location)
-        (match = /^([A-Z])(\d+)$/.match(alphanumeric_location)) || raise(StandardError, "Invalid well location #{alphanumeric_location.inspect}")
+        (match = /^([A-Z])(\d+)$/.match(alphanumeric_location)) || raise(StandardError,
+                                                                         "Invalid well location #{alphanumeric_location.inspect}")
         @row = match[1]
         @column = match[2].to_i
       end

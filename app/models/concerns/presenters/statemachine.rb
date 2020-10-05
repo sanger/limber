@@ -3,7 +3,7 @@
 module Presenters::Statemachine
   # State transitions are common across all of the statemachines.
   module StateTransitions
-    def self.inject(base)
+    def self.inject(base) # rubocop:todo Metrics/MethodLength
       base.instance_eval do
         event :take_default_path, human_name: 'Manual Transfer' do
           transition pending: :passed

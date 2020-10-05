@@ -35,7 +35,7 @@ class Presenters::PlatePresenter
 
   validates :pcr_cycles,
             inclusion: { in: ->(r) { r.expected_cycles },
-                         message: 'differs from standard. %{value} cycles have been requested.' },
+                         message: 'differs from standard. %{value} cycles have been requested.' }, # rubocop:todo Style/FormatStringToken
             if: :expected_cycles
 
   validates_with Validators::InProgressValidator

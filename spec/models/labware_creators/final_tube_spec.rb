@@ -60,7 +60,9 @@ RSpec.describe LabwareCreators::FinalTube do
 
     context 'with a parent tube with siblings' do
       context 'when all are passed' do
-        let(:tube_json) { json(:tube_with_siblings, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
+        let(:tube_json) do
+          json(:tube_with_siblings, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1)
+        end
 
         describe '#save' do
           it 'should return false' do

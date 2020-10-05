@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::Base
+class Labels::Base # rubocop:todo Style/Documentation
   attr_reader :labware
 
   #

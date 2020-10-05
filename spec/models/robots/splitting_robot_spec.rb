@@ -97,7 +97,10 @@ RSpec.describe Robots::SplittingRobot, robots: true do
       end
 
       context 'with a valid layout' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_1], 'bed3_barcode' => [target_barcode_2] } }
+        let(:scanned_layout) do
+          { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_1],
+            'bed3_barcode' => [target_barcode_2] }
+        end
 
         context 'and related plates' do
           it { is_expected.to be_valid }
@@ -110,7 +113,10 @@ RSpec.describe Robots::SplittingRobot, robots: true do
       end
 
       context 'with plates in the wrong order' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_2], 'bed3_barcode' => [target_barcode_1] } }
+        let(:scanned_layout) do
+          { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_2],
+            'bed3_barcode' => [target_barcode_1] }
+        end
 
         context 'and related plates' do
           it { is_expected.not_to be_valid }

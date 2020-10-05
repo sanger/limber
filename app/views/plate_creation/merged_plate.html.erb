@@ -4,9 +4,8 @@
       <div>
         <h3>Instructions</h3>
         <p>This step merges multiple plates together into a destination plate.</p>
-        <p>This process expects all source plates to have the same parent plate i.e. a split has occurred.</p>
+        <p>This process checks that the source plates are compatible and can be merged together.</p>
         <p>Scan the source plate barcodes into the panel on the right of the screen (the order doesn't matter) and click <i>Merge Plates</i>.</p>
-        <p>Validations will check that the source plates have the same parent.</p>
         <p><%= @labware_creator.help_text %></p>
         <h4>Expected source plate types:</h4>
         <p>These are the plate purposes of the source plates, which should be visible on the plate barcode labels.</p>
@@ -36,8 +35,13 @@
         <%= form.hidden_field :purpose_uuid %>
         <% @labware_creator.expected_source_purposes.size.times do |i| %>
           <div class="plate-container scan-plate form-group row">
-            <label for="plate[barcodes][<%= i %>]" class="plate-label col-2" >Source Plate <%= i+1 %></label>
-            <input id="plate[barcodes][<%= i %>]" name="plate[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> />
+            <label for="plate[barcodes][<%= i %>]"
+                   class="plate-label col-md-2" >Source Plate <%= i+1 %></label>
+            <input type="text"
+                   id="plate[barcodes][<%= i %>]"
+                   name="plate[barcodes][]"
+                   class="form-control col-md-8"
+                   required="required"/>
           </div>
         <% end %>
         <%= form.submit 'Merge Plates', class: 'btn btn-success btn-lg', id: 'create-labware' %>

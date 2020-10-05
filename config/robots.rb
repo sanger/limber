@@ -159,7 +159,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(4).barcode => {
                    purpose: 'LB Lib PrePool',
                    states: %w[pending started],
-                   parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode, bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
+                   parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode, bed(2).barcode,
+                             bed(5).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed',
                    label: 'Bed 4'
                  }
@@ -1866,6 +1867,160 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    states: ['pending'],
                    label: 'Bed 6',
                    parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  # Heron LTHR 384 Pipeline
+
+  custom_robot('bravo-lthr-384-rt-to-lthr-384-pcr-1-and-2',
+               name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
+               beds: {
+                 bed(9).barcode => {
+                   purpose: 'LTHR-384 RT',
+                   states: ['passed'],
+                   label: 'Bed 9'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LTHR-384 PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 4',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR-384 PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 }
+               })
+
+  custom_robot('mosquito-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-1-and-2',
+               name: 'Mosquito LV LTHR-384 PCR 1 and 2 => LTHR-384 Lib PCR 1 and 2',
+               beds: {
+                 bed(2).barcode => {
+                   purpose: 'LTHR-384 PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 2'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LTHR-384 PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 3',
+                   target_state: 'passed',
+                   parent: bed(2).barcode
+                 },
+                 bed(5).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 5',
+                   target_state: 'passed',
+                   parent: bed(4).barcode
+                 }
+               })
+
+  custom_robot('bravo-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-pool',
+               name: 'bravo LTHR-384 Lib PCR 1 and 2 => LTHR-384 Lib PCR pool',
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 6'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['pending'],
+                   label: 'Bed 8',
+                   parents: [bed(4).barcode, bed(6).barcode],
+                   target_state: 'passed'
+                 }
+               })
+
+  # Heron LTHR 96 Pipeline
+
+  custom_robot('bravo-lthr-96-rt-to-lthr-96-pcr-1-and-2',
+               name: 'bravo LTHR RT => LTHR PCR 1 and 2',
+               beds: {
+                 bed(9).barcode => {
+                   purpose: 'LTHR RT',
+                   states: ['passed'],
+                   label: 'Bed 9'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LTHR PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 4',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   target_state: 'passed',
+                   parent: bed(9).barcode
+                 }
+               })
+
+  custom_robot('mosquito-lthr-96-pcr-1-and-2-to-lthr-96-lib-pcr-1-and-2',
+               name: 'Mosquito LV LTHR PCR 1 and 2 => LTHR Lib PCR 1 and 2',
+               beds: {
+                 bed(2).barcode => {
+                   purpose: 'LTHR PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 2'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LTHR PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR Lib PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 3',
+                   target_state: 'passed',
+                   parent: bed(2).barcode
+                 },
+                 bed(5).barcode => {
+                   purpose: 'LTHR Lib PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 5',
+                   target_state: 'passed',
+                   parent: bed(4).barcode
+                 }
+               })
+
+  custom_robot('bravo-lthr-96-pcr-1-and-2-to-lthr-96-lib-pcr-pool',
+               name: 'bravo LTHR Lib PCR 1 and 2 => Heron LTHR Lib PCR pool',
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'LTHR Lib PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR Lib PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 6'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'LTHR Lib PCR pool',
+                   states: ['pending'],
+                   label: 'Bed 8',
+                   parents: [bed(4).barcode, bed(6).barcode],
                    target_state: 'passed'
                  }
                })

@@ -32,7 +32,10 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
     let(:labware_barcode) { example_plate_v2.labware_barcode.machine }
     let(:submissions) { ['pool-1-uuid', 'pool-2-uuid'] }
-    let(:example_plate_v2) { create :v2_plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8, 8], include_submissions: true, well_factory: :v2_tagged_well }
+    let(:example_plate_v2) do
+      create :v2_plate, uuid: labware_uuid, state: 'passed', pool_sizes: [8,
+                                                                          8], include_submissions: true, well_factory: :v2_tagged_well
+    end
 
     before do
       stub_v2_plate(example_plate_v2)

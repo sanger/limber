@@ -32,7 +32,7 @@ describe('WellModal', () => {
     })
 
     describe('wellModalState:', () => {
-      it('returns null if there are no tagMapIds', () => {
+      it('returns null if there are no tagMapIds', async () => {
         const wrapper = wrapperFactory()
 
         const emptyWellModalDetails = {
@@ -45,6 +45,8 @@ describe('WellModal', () => {
 
         wrapper.setProps({ wellModalDetails: emptyWellModalDetails })
         wrapper.setData({ substituteTagId: '5' })
+
+        await wrapper.vm.$nextTick()
 
         expect(wrapper.vm.wellModalState).toBe(null)
       })
@@ -101,12 +103,6 @@ describe('WellModal', () => {
   })
 
   describe('#rendering tests', () => {
-    it('renders a vue instance', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.isVueInstance()).toBe(true)
-    })
-
     it('renders appropriate fields', () => {
       const wrapper = wrapperFactory()
 
@@ -115,7 +111,7 @@ describe('WellModal', () => {
       expect(wrapper.find('#well_error_message').exists()).toBe(false)
     })
 
-    it('renders an invalid message if one is provided', () => {
+    it('renders an invalid message if one is provided', async () => {
       const wrapper = wrapperFactory()
 
       const tagClashWellModalDetails = {
@@ -128,11 +124,13 @@ describe('WellModal', () => {
 
       wrapper.setProps({ wellModalDetails: tagClashWellModalDetails })
 
+      await localVue.nextTick()
+
       expect(wrapper.find('#well_error_message').exists()).toBe(true)
       expect(wrapper.find('#well_error_message').text()).toEqual('Tag clash with Submission')
     })
 
-    it('does not render originalTag if one is not provided', () => {
+    it('does not render originalTag if one is not provided', async () => {
       const wrapper = wrapperFactory()
 
       wrapper.setProps({
@@ -145,10 +143,12 @@ describe('WellModal', () => {
         }
       })
 
+      await wrapper.vm.$nextTick()
+
       expect(wrapper.find('#original_tag_number_input').exists()).toBe(false)
     })
 
-    it('does not render substituteTagId if no tagMapIds are provided', () => {
+    it('does not render substituteTagId if no tagMapIds are provided', async () => {
       const wrapper = wrapperFactory()
 
       wrapper.setProps({
@@ -160,6 +160,8 @@ describe('WellModal', () => {
           existingSubstituteTagId: ''
         }
       })
+
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('#substitute_tag_number_input').exists()).toBe(false)
     })

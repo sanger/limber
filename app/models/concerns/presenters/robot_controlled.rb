@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  module RobotControlled
+  module RobotControlled # rubocop:todo Style/Documentation
     def each_robot
       suitable_robots.each { |key, config| yield(key, config[:name]) }
     end

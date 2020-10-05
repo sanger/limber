@@ -19,8 +19,14 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   let(:purpose)      { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)  { SecureRandom.uuid }
   let(:plate_size)   { 384 }
-  let(:requests) { Array.new(plate_size) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2' } }
-  let(:parent)   { create :v2_plate_with_primer_panels, barcode_number: '2', uuid: parent_uuid, size: plate_size, outer_requests: requests }
+  let(:requests) do
+    Array.new(plate_size) do |i|
+      create :gbs_library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2'
+    end
+  end
+  let(:parent) do
+    create :v2_plate_with_primer_panels, barcode_number: '2', uuid: parent_uuid, size: plate_size, outer_requests: requests
+  end
   let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) do

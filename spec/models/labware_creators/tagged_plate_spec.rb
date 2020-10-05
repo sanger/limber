@@ -86,7 +86,8 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
-                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true })
+                                              'tag-layout-template-1' => { tags: layout_hash, used: false,
+                                                                           dual_index: false, approved: true })
       end
     end
 
@@ -111,7 +112,8 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
           it 'describes only the unused tube' do
             expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
-                                                 'tag2-layout-template-1' => { dual_index: true, used: false, approved: true })
+                                                 'tag2-layout-template-1' => { dual_index: true, used: false,
+                                                                               approved: true })
             expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
           end
 
@@ -152,6 +154,22 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
       end
     end
+
+    context 'when a submission is not split over multiple plates but a plate has been recorded' do
+      before do
+        stub_api_get(plate_uuid, 'submission_pools',
+                     body: json(:submission_pool_collection,
+                                used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]))
+      end
+
+      it 'does not require tag2' do
+        expect(subject.requires_tag2?).to be false
+      end
+
+      it 'allows tubes or plates' do
+        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
+      end
+    end
   end
 
   context 'On create' do
@@ -162,7 +180,9 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
-    include_context 'a tag plate creator'
+    include_context 'a tag plate creator' do
+      let(:enforce_uniqueness) { false }
+    end
 
     before do
       stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))

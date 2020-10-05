@@ -156,7 +156,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   shared_examples 'a quad-split plate creator' do
     describe '#save!' do
-      setup do
+      setup do # rubocop:todo Metrics/BlockLength
         allow(SearchHelper).to receive(:merger_plate_names)
           .and_return(stock_purpose_name)
 

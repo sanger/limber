@@ -31,8 +31,7 @@ describe('PrimerPanelFilter', () => {
     const requests = requestsFromPlates([plateObj1, plateObj2])
     const wrapper = wrapperFactory(requests)
 
-    // Feels like we should have easier access to these properties
-    expect(wrapper.find('bformradiogroup-stub').vm.$attrs.options).toEqual(['Common Panel', 'Shared Panel'])
+    expect(wrapper.find('b-form-radio-group-stub').vm.options).toEqual(['Common Panel', 'Shared Panel'])
   })
 
   it('filters requests based on panel options', () => {
@@ -64,7 +63,7 @@ describe('PrimerPanelFilter', () => {
     ])
   })
 
-  it('emits requestsWithPlatesFiltered', () => {
+  it('emits requestsWithPlatesFiltered', async () => {
     const request1 = requestFactory({ uuid: 'other-request-1', primer_panel: {name: 'Common Panel'}})
     const request2 = requestFactory({ uuid: 'target-request-1', primer_panel: {name: 'Distinct Panel'}})
     const requestsAsSource1 = [request1, request2]
@@ -75,6 +74,8 @@ describe('PrimerPanelFilter', () => {
     const wrapper = wrapperFactory(requests)
 
     wrapper.setData({ primerPanel: 'Distinct Panel' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted()).toEqual({
       change: [[

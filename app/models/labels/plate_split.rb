@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::PlateSplit < Labels::PlateLabelXpBase
+class Labels::PlateSplit < Labels::PlateLabelXpBase # rubocop:todo Style/Documentation
   attr_writer :stock_plate_barcode
 
   def attributes
