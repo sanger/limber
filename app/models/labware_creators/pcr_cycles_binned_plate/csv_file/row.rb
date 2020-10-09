@@ -38,25 +38,21 @@ module LabwareCreators
              :input_amount_available_column, :input_amount_desired_column, :sample_volume_column, :diluent_volume_column,
              :pcr_cycles_column, :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :header
 
+    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
       @row_config = row_config
       @header = header
       @index = index
       @row_data = row_data
 
-      initialize_supplied_fields
-      initialize_customer_fields
-    end
-
-    def initialize_supplied_fields
+      # initialize supplied fields
       @well                   = (@row_data[well_column] || '').strip.upcase
       @concentration          = @row_data[concentration_column]&.strip&.to_f
       @sanger_sample_id       = @row_data[sanger_sample_id_column]&.strip
       @supplier_sample_name   = (@row_data[supplier_sample_name_column])&.strip
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
-    end
 
-    def initialize_customer_fields
+      # initialize customer fields
       @input_amount_desired            = @row_data[input_amount_desired_column]&.strip&.to_f
       @sample_volume                   = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume                  = @row_data[diluent_volume_column]&.strip&.to_f
@@ -65,6 +61,7 @@ module LabwareCreators
       @sub_pool                        = @row_data[sub_pool_column]&.strip&.to_i
       @coverage                        = @row_data[coverage_column]&.strip&.to_i
     end
+    # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
 
     def submit_for_sequencing?
       @submit_for_sequencing ||= (@submit_for_sequencing_as_string == 'Y')
