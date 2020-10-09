@@ -68,16 +68,24 @@ module Utility
       binner = Binner.new(compression_reqd, number_of_rows)
       bins.values.each_with_object({}).with_index do |(bin, transfers_hash), bin_index_within_bins|
         bin.each_with_index do |well, well_index_within_bin|
-          src_locn = well['locn']
-          transfers_hash[src_locn] = {
-            'dest_locn' => WellHelpers.well_name(binner.row, binner.column),
-            'volume' => well['sample_volume'].to_s
-          }
-          # work out what the next row and column will be
-          finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
-          binner.next_well_location(well_index_within_bin, bin.size) unless finished
+          build_transfers_well(binner, transfers_hash, well)
+          binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
         end
       end
+    end
+
+    def build_transfers_well(binner, transfers_hash, well)
+      src_locn = well['locn']
+      transfers_hash[src_locn] = {
+        'dest_locn' => WellHelpers.well_name(binner.row, binner.column),
+        'volume' => well['sample_volume'].to_s
+      }
+    end
+
+    # work out what the next row and column will be
+    def binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
+      finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+      binner.next_well_location(well_index_within_bin, bin.size) unless finished
     end
   end
 end
