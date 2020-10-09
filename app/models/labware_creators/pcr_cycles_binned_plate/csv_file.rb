@@ -33,18 +33,26 @@ module LabwareCreators
     # Passing in the file to be parsed, the configuration that holds validation range thresholds, and
     # the parent plate barcode for validation that we are processing the correct file.
     def initialize(file, config, parent_barcode)
+      initialize_variables(file, config, parent_barcode)
+    rescue StandardError => e
+      reset_variables
+      @parse_error = e.message
+    ensure
+      file.rewind
+    end
+
+    def initialize_variables(file, config, parent_barcode)
       @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
       @parent_barcode = parent_barcode
       @data = CSV.parse(file.read)
       @parsed = true
-    rescue StandardError => e
+    end
+
+    def reset_variables
       @config = nil
       @parent_barcode = nil
       @data = []
       @parsed = false
-      @parse_error = e.message
-    ensure
-      file.rewind
     end
 
     #
