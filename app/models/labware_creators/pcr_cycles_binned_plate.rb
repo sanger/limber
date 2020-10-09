@@ -78,19 +78,22 @@ module LabwareCreators
       # retrieve child plate through v2 api, using uuid got through v1 api
       child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
+      # update fields on each well with various metadata
       fields_to_update = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage]
 
-      child_wells_by_location = {}
-      child_v2.wells.each { |well| child_wells_by_location[well.location] = well }
+      child_wells_by_location = child_v2.wells.index_by(&:location)
 
       well_details.each do |parent_location, details|
         child_position = transfer_hash[parent_location]['dest_locn']
         child_well = child_wells_by_location[child_position]
 
-        options = fields_to_update.each_with_object({}) { |field, obj| obj[field] = details[field] }
-
-        child_well.update(options)
+        update_well_with_metadata(child_well, details, fields_to_update)
       end
+    end
+
+    def update_well_with_metadata(well, metadata, fields_to_update)
+      options = fields_to_update.each_with_object({}) { |field, obj| obj[field] = metadata[field] }
+      well.update(options)
     end
 
     def wells_have_required_information?
