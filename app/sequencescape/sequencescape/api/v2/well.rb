@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
+class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   include Sequencescape::Api::V2::Shared::HasRequests
   has_many :qc_results
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
@@ -83,5 +83,24 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base
     return unless molarity
 
     molarity.to_f * 25
+  end
+
+  def contains_control?
+    return true if aliquots[0]&.sample&.control
+
+    false
+  end
+
+  def control_info_formatted
+    return nil unless contains_control?
+
+    case aliquots[0].sample.control_type
+    when 'positive'
+      '+'
+    when 'negative'
+      '-'
+    else
+      'c' # control of unspecified type
+    end
   end
 end

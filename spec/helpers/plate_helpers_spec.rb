@@ -77,7 +77,9 @@ RSpec.describe PlateHelper do
       ]
     end
 
-    let(:plate_for_precap) { build :v2_plate_for_pooling, state: 'passed', pool_sizes: [8], outer_requests: outer_requests }
+    let(:plate_for_precap) do
+      build :v2_plate_for_pooling, state: 'passed', pool_sizes: [8], outer_requests: outer_requests
+    end
 
     let(:expected_result) do
       [

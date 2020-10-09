@@ -47,7 +47,11 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
     let(:library_type_name) { 'Test Library Type' }
 
-    let(:requests) { Array.new(4) { |i| create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name } }
+    let(:requests) do
+      Array.new(4) do |i|
+        create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name
+      end
+    end
 
     let(:dilutions_config) do
       {

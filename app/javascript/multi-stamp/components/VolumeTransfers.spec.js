@@ -33,9 +33,11 @@ describe('VolumeTransfers', () => {
     expect(wrapper.vm.isValid).toEqual(false)
   })
 
-  it('emits the correct composite object', () => {
+  it('emits the correct composite object', async () => {
     const wrapper = wrapperFactory()
     wrapper.setData({ volume: '40' })
+
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted()).toEqual({
       change: [[{

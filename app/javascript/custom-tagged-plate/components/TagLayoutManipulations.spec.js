@@ -57,12 +57,6 @@ describe('TagLayoutManipulations', () => {
   })
 
   describe('#rendering tests:', () => {
-    it('renders a vue instance', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.isVueInstance()).toBe(true)
-    })
-
     it('renders a tag plate scan component', () => {
       const wrapper = wrapperFactory()
 

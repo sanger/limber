@@ -3,13 +3,16 @@
 module Robots
   # Core robot class. Used when plates have a simple
   # 1:1 parent child relationship.
+  # Todo: Improve class length by using rails error handling
+  # rubocop:disable Metrics/ClassLength
   class Robot
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode, :require_robot
 
     alias verify_robot? verify_robot
+    alias require_robot? require_robot
 
     def plate_includes
       %i[purpose parents]
@@ -25,20 +28,6 @@ module Robots
         bed.valid? || raise(Bed::BedError, bed.error_messages)
       end
       beds.values.each(&:transition)
-    end
-
-    def error_messages
-      @error_messages ||= []
-    end
-
-    def error(bed, message)
-      error_messages << "#{bed.label}: #{message}"
-      false
-    end
-
-    def bed_error(bed)
-      error_messages << bed.formatted_message
-      false
     end
 
     def formatted_message
@@ -72,22 +61,53 @@ module Robots
 
     private
 
+    def error(bed, message)
+      error_messages << "#{bed.label}: #{message}"
+      false
+    end
+
+    def bed_error(bed)
+      error_messages << bed.formatted_message
+      false
+    end
+
+    def error_messages
+      @error_messages ||= []
+    end
+
     def valid_robot
-      if verify_robot? && beds.values.first.plate.present?
-        if beds.values.first.plate.custom_metadatum_collection.nil?
-          error_messages << 'Your plate is not on the right robot'
-          return false
-        elsif beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot'] != robot_barcode
-          error_messages << 'Your plate is not on the right robot'
-          return false
-        end
+      return false unless robot_present_if_required
+
+      return true unless verify_robot? && beds.values.first.plate.present?
+
+      if missing_custom_metadatum_collection || original_robot != robot_barcode
+        error_messages << 'Your plate is not on the right robot'
+        return false
       end
       true
     end
 
+    def robot_present_if_required
+      if require_robot? && robot_barcode.blank?
+        error_messages << 'Please scan the robot barcode'
+        return false
+      end
+      true
+    end
+
+    def missing_custom_metadatum_collection
+      beds.values.first.plate.custom_metadatum_collection.nil?
+    end
+
+    def original_robot
+      return nil if missing_custom_metadatum_collection
+
+      beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot']
+    end
+
     def valid_plates
-      beds.each_with_object({}) do |(bed_id, bed), states|
-        states[bed_id] = bed.valid? || bed_error(bed)
+      beds.transform_values do |bed|
+        bed.valid? || bed_error(bed)
       end
     end
 
@@ -97,8 +117,8 @@ module Robots
     #
     # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
-      parents_and_position do |parent, position|
-        check_plate_identity(position, parent)
+      parents_and_position do |parents, position|
+        check_plate_identity(parents, position)
       end.compact
     end
 
@@ -108,19 +128,34 @@ module Robots
 
     def parents_and_position
       recognised_beds.transform_values do |bed|
-        next if bed.parent.nil?
+        next if bed.parents.blank?
 
-        yield(bed.parent_plate, bed.parent)
+        bed.parents.all? do |parent_bed_barcode|
+          yield(bed.parent_plates, parent_bed_barcode)
+        end
       end
     end
 
-    def check_plate_identity(position, expected_plate)
-      return true if beds[position].plate.try(:uuid) == expected_plate.try(:uuid)
+    # Check whether the plate scanned onto the indicated bed
+    # matches the expected plates. Records any errors.
+    #
+    # @param expected_plates [Array] An array of expected plates
+    # @param position [String] The barcode of the bed expected to contain the plates
+    # @return [Boolean] True if valid, false otherwise
+    def check_plate_identity(expected_plates, position) # rubocop:todo Metrics/AbcSize
+      expected_uuids = expected_plates.map(&:uuid)
+      # We haven't scanned a plate, and no scanned plates are expected
+      return true if expected_uuids.empty? && beds[position].plate.nil?
+      # We've scanned a plate, and its in the list of expected plates
+      return true if expected_uuids.include?(beds[position].plate.try(:uuid))
 
-      message = if expected_plate.present?
-                  "Should contain #{expected_plate.human_barcode}."
+      # At this point something is wrong
+      message = if expected_plates.present?
+                  # We've scanned an unexpected plate
+                  "Should contain #{expected_plates.map(&:human_barcode).join(',')}."
                 else
-                  'Could not match labware with expected child.'
+                  # We've scanned a plate, but weren't expecting one.
+                  'Unexpected plate scanned, or parent plate has not been scanned.'
                 end
       error(beds[position], message)
     end
@@ -129,4 +164,5 @@ module Robots
       beds.select { |_barcode, bed| bed.recognised? }
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

@@ -21,7 +21,8 @@ class RobotsController < ApplicationController
     end
   end
 
-  def start
+  # rubocop:todo Metrics/MethodLength
+  def start # rubocop:todo Metrics/AbcSize
     @robot.perform_transfer(stripped_beds)
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
@@ -47,12 +48,13 @@ class RobotsController < ApplicationController
                     notice: "Robot #{@robot.name} has been started."
       end
     end
-  rescue Robots::Bed::BedError => exception
+  rescue Robots::Bed::BedError => e
     # Our beds complained, nothing has happened.
     respond_to do |format|
-      format.html { redirect_to robot_path(id: @robot.id), notice: "#{exception.message} No plates have been started." }
+      format.html { redirect_to robot_path(id: @robot.id), notice: "#{e.message} No plates have been started." }
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def verify
     render(json: @robot.verify(robot_params))

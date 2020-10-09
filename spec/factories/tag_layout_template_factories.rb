@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 tag layout template. The inheriting factories set up the patterns
+  # commonly seen by Limber
   factory :tag_layout_template, class: Limber::TagLayoutTemplate, traits: [:api_object] do
+    skip_create
+
     json_root { 'tag_layout_template' }
     resource_actions { %w[read create] }
 
@@ -17,7 +21,9 @@ FactoryBot.define do
     tag_group do
       {
         'name' => 'Tag group 1',
-        'tags' => (1..size).each_with_object({}) { |i, hash| hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+        'tags' => (1..size).each_with_object({}) do |i, hash|
+                    hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+                  end
       }
     end
 
@@ -51,13 +57,16 @@ FactoryBot.define do
       tag2_group do
         {
           'name' => 'Tag group 2',
-          'tags' => (1..size).each_with_object({}) { |i, hash| hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+          'tags' => (1..size).each_with_object({}) do |i, hash|
+                      hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+                    end
         }
       end
     end
   end
 
-  factory :tag_layout_template_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  # API V1 index of tag lauout templates
+  factory :tag_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do
@@ -65,6 +74,7 @@ FactoryBot.define do
       resource_actions { %w[read first last] }
       resource_url { 'tag_layout_templates/1' }
       uuid { nil }
+      # Specifies which templates to generate
       template_factory { :tag_layout_template }
       direction { 'column' }
     end

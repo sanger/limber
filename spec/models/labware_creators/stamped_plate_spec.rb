@@ -14,8 +14,12 @@ RSpec.describe LabwareCreators::StampedPlate do
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
-  let(:plate) { create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests }
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests }
+  let(:plate) do
+    create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
+  end
+  let(:child_plate) do
+    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
+  end
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -120,8 +124,10 @@ RSpec.describe LabwareCreators::StampedPlate do
       let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-d' }
       let(:wells) do
         [
-          create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a, request_b]),
-          create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c, request_d]),
+          create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1,
+                                 requests_as_source: [request_a, request_b]),
+          create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1,
+                                 requests_as_source: [request_c, request_d]),
           create(:v2_stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
         ]
       end
@@ -169,8 +175,12 @@ RSpec.describe LabwareCreators::StampedPlate do
 
       context 'when using library type filter' do
         let(:lib_type_a) { 'LibTypeA' }
-        let(:request_b) { create :library_request, request_type: request_type_b, uuid: 'request-b', library_type: lib_type_a }
-        let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-d', library_type: lib_type_a }
+        let(:request_b) do
+          create :library_request, request_type: request_type_b, uuid: 'request-b', library_type: lib_type_a
+        end
+        let(:request_d) do
+          create :library_request, request_type: request_type_b, uuid: 'request-d', library_type: lib_type_a
+        end
 
         context 'when a library type is supplied' do
           let(:form_attributes) do

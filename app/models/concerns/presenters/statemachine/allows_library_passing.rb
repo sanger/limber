@@ -2,7 +2,7 @@
 
 # The state presents the library pass page for tagged assets
 module Presenters::Statemachine
-  module AllowsLibraryPassing
+  module AllowsLibraryPassing # rubocop:todo Style/Documentation
     def control_library_passing
       yield if libraries_passable? && !suggest_library_passing?
     end

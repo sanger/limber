@@ -36,7 +36,7 @@ class PipelinesController < ApplicationController
     end
   end
 
-  def calculate_nodes
+  def calculate_nodes # rubocop:todo Metrics/MethodLength
     Settings.purposes.map do |_uuid, purpose|
       {
         group: 'nodes',

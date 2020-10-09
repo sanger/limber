@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::TubeLabel < Labels::Base
+class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
   def attributes
     # we have to remove first two characters from name (normally it is 'DN'),
     # because otherwise we will lose important information about wells
@@ -25,10 +25,11 @@ class Labels::TubeLabel < Labels::Base
   private
 
   def first_line
-    labware.name[2..-1] if labware.name.present?
+    labware.name[2..] if labware.name.present?
   end
 
   def second_line
-    labware.barcode.number.to_s + ', P' + (@options[:pool_size] || labware.aliquots.count).to_s
+    pools_size = @options[:pool_size] || labware.aliquots.count
+    "#{labware.barcode.number}, P#{pools_size}"
   end
 end

@@ -43,7 +43,7 @@ Webpacker
 
 You'll need to run `webpack-dev-server` when developing to ensure all the vue.js javascript is correctly compiled.
 
-
+ 
 Writing specs
 -------------
 

@@ -77,7 +77,8 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     end
     # Find out what tubes we've just made!
     let(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+']))
+      stub_api_get(tube_creation_request_uuid, 'children',
+                   body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+']))
     end
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form

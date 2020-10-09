@@ -6,16 +6,15 @@ require_dependency 'form'
 require_dependency 'labware_creators'
 
 module LabwareCreators
-  class Base
+  class Base # rubocop:todo Style/Documentation
     include Form
     include PlateWalking
     include NoCustomPage
 
     extend NestedValidation
 
-    attr_reader :api
+    attr_reader :api, :child
     attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
-    attr_reader :child
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
@@ -103,9 +102,11 @@ module LabwareCreators
 
     private
 
+    # rubocop:todo Naming/MemoizedInstanceVariableName
     def transfer_template
       @template ||= api.transfer_template.find(transfer_template_uuid)
     end
+    # rubocop:enable Naming/MemoizedInstanceVariableName
 
     def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!

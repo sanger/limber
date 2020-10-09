@@ -4,8 +4,9 @@
 # rubocop:disable Rails/Output
 # rubocop:disable Metrics/ParameterLists
 
-class PurposeConfig
+class PurposeConfig # rubocop:todo Style/Documentation
   attr_reader :name, :options, :store, :api
+
   class_attribute :default_state_changer, :default_options
 
   self.default_state_changer = 'StateChangers::DefaultStateChanger'
@@ -31,6 +32,7 @@ class PurposeConfig
     default_options[:pmb_template] = default_pmb_template_for(default_options[:printer])
   end
 
+  # rubocop:todo Metrics/MethodLength
   def config
     {
       name: name,
@@ -45,12 +47,13 @@ class PurposeConfig
       pmb_template: print_option(:pmb_template)
     }.merge(@options)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def uuid
     store.fetch(name).uuid
   end
 
-  class Tube < PurposeConfig
+  class Tube < PurposeConfig # rubocop:todo Style/Documentation
     self.default_options = {}.tap do |options|
       options[:printer] = :tube
       options[:presenter] = 'Presenters::SimpleTubePresenter'
@@ -68,7 +71,7 @@ class PurposeConfig
     end
   end
 
-  class Plate < PurposeConfig
+  class Plate < PurposeConfig # rubocop:todo Style/Documentation
     self.default_options = {}.tap do |options|
       options[:printer] = :plate_a
       options[:presenter] = 'Presenters::StandardPresenter'

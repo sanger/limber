@@ -5,7 +5,7 @@ module Validators
   # them to provide more feedback to the user. It only gets used
   # if a stock plate is stuck at pending, so performance is not critical
   class StockStateValidator < ActiveModel::Validator
-    class Analyzer
+    class Analyzer # rubocop:todo Style/Documentation
       attr_reader :filled_wells, :empty_wells
 
       def initialize(labware)
@@ -70,17 +70,25 @@ module Validators
       end
     end
 
-    def validate(presenter)
+    # rubocop:todo Metrics/MethodLength
+    def validate(presenter) # rubocop:todo Metrics/AbcSize
       analyzer = Analyzer.new(presenter.labware)
       if analyzer.no_submission?
         presenter.errors.add(:plate, 'has no requests. Please check that your submission built correctly.')
       elsif analyzer.no_samples?
         presenter.errors.add(:plate, 'has no samples. Did the cherry-pick complete successfully?')
       else
-        presenter.errors.add(:plate, "has multiple submissions on: #{analyzer.duplicates.to_sentence}") if analyzer.duplicates?
+        if analyzer.duplicates?
+          presenter.errors.add(:plate,
+                               "has multiple submissions on: #{analyzer.duplicates.to_sentence}")
+        end
         presenter.errors.add(:plate, "has no submissions on: #{analyzer.missing.to_sentence}") if analyzer.missing?
-        presenter.errors.add(:plate, "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}") if analyzer.empty_wells_with_requests?
+        if analyzer.empty_wells_with_requests?
+          presenter.errors.add(:plate,
+                               "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}")
+        end
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

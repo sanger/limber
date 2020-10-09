@@ -45,7 +45,8 @@ RSpec.describe PrintJob do
       ]
     end
 
-    PMB::TestSuiteStubs.post('/v1/print_jobs', print_job_post_multiple_labels(printer.name, label_template_id)) do |_env|
+    PMB::TestSuiteStubs.post('/v1/print_jobs',
+                             print_job_post_multiple_labels(printer.name, label_template_id)) do |_env|
       [
         200,
         { content_type: 'application/json' },

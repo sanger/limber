@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V1 collection of multiple transfer requests
+  # This allows easy creation of multiple transfers between arbitrary receptacles
   factory :transfer_request_collection, class: Sequencescape::TransferRequestCollection, traits: [:api_object] do
     json_root { 'transfer_request_collection' }
 
     transient do
+      # The number of transfers to create (Will be generated in column order for wells)
       transfer_count { 2 }
+      # Number of different targets expected. For example, setting this to 1 will result in
+      # transfers into a single target, wheas setting it to the same as transfer count will
+      # result in lots of 1 to 1 transfers. Between this you'll get multiple different pools
       number_of_targets { 1 }
+      # The well on the source plate that transfers will begin from (0 for A1)
       initial_well { 0 }
+      # Offset the uuid generation for expected target assets.
       initial_target { 0 }
       source_plate_barcode { 'DN2' }
     end
@@ -15,7 +23,8 @@ FactoryBot.define do
     transfer_requests do
       Array.new(transfer_count) do |i|
         target_number = ((number_of_targets / transfer_count.to_f) * i).floor + initial_target
-        { 'source_asset' => { "uuid": "example-well-uuid-#{i + initial_well}" }, "target_asset": { "uuid": "target-#{target_number}-uuid" } }
+        { 'source_asset' => { "uuid": "example-well-uuid-#{i + initial_well}" },
+          "target_asset": { "uuid": "target-#{target_number}-uuid" } }
       end
     end
 
@@ -31,7 +40,9 @@ FactoryBot.define do
     end
   end
 
-  factory :transfer_request_collection_collection, class: Sequencescape::Api::Associations::HasMany::AssociationProxy, traits: [:api_object] do
+  # A collection of transfer request collections.
+  # Basically what happens if you transfer out of a plate multiple times
+  factory :transfer_request_collection_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 
     transient do

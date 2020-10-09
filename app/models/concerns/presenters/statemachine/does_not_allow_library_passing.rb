@@ -2,7 +2,7 @@
 
 # The state never presents the library pass button
 module Presenters::Statemachine
-  module DoesNotAllowLibraryPassing
+  module DoesNotAllowLibraryPassing # rubocop:todo Style/Documentation
     def control_library_passing
       false
     end

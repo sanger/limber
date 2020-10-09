@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WellHelpers
+module WellHelpers # rubocop:todo Style/Documentation
   COLUMNS_RANGE = {
     96 => (1..12).freeze,
     384 => (1..24).freeze
@@ -119,7 +119,7 @@ module WellHelpers
   # @return [Array<Integer>] An array of two integers indicating column and row. eg. [0, 2]
   #
   def self.well_coordinate(well)
-    [well[1..-1].to_i - 1, well.upcase.getbyte(0) - 'A'.getbyte(0)]
+    [well[1..].to_i - 1, well.upcase.getbyte(0) - 'A'.getbyte(0)]
   end
 
   #

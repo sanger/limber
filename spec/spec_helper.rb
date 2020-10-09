@@ -30,9 +30,11 @@ require 'rspec/json_expectations'
 require 'capybara/rspec'
 require 'webmock/rspec'
 require 'selenium/webdriver'
+require 'csv'
 
 begin
   require 'pry'
+  require 'ruby_jard'
 rescue LoadError
   # We don't have pry. We're probably on Travis.
   nil
@@ -138,6 +140,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rails.application.load_tasks
+
     Rake::Task['assets:precompile'].invoke
 
     FactoryBot.find_definitions
@@ -160,9 +163,41 @@ RSpec.configure do |config|
     # Unfortunately this means the library, not the animal.
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
-    Capybara.current_session.driver.resize_window(1400, 1400) if Capybara.current_session.driver.respond_to?(:resize_window)
+    if Capybara.current_session.driver.respond_to?(:resize_window)
+      Capybara.current_session.driver.resize_window(1400,
+                                                    1400)
+    end
     # Wipe out existing purposes
     Settings.purposes = {}
     Settings.pipelines = PipelineList.new
+  end
+
+  factory_bot_results = {}
+  config.before(:suite) do
+    ActiveSupport::Notifications.subscribe('factory_bot.run_factory') do |_name, start, finish, _id, payload|
+      factory_name = payload[:name]
+      strategy_name = payload[:strategy].to_s
+      time_taken = finish - start
+      factory_bot_results[factory_name] ||= {}
+      factory_bot_results[factory_name][strategy_name] ||= []
+      factory_bot_results[factory_name][strategy_name] << time_taken
+    end
+  end
+
+  config.after(:suite) do
+    unused_factories = FactoryBot.factories.map(&:name)
+    CSV.open('tmp/factories.csv', 'wb') do |csv|
+      csv << ['Factory', 'Strategy', 'Called', 'Total Time (s)', 'Avg Time (s)']
+      factory_bot_results.each do |factory, strategy_details|
+        strategy_details.each do |strategy, times|
+          unused_factories.delete(factory)
+          csv << [factory, strategy, times.length, times.sum, times.sum / times.length]
+        end
+      end
+      unused_factories.each do |factory|
+        csv << [factory, 'UNUSED', 0, 0, 0]
+      end
+    end
+    puts "\n📊 Output factory statistics to tmp/factories.csv"
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::PrimerPanel < Sequencescape::Api::V2::Base
+class Sequencescape::Api::V2::PrimerPanel < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   UNKNOWN = 'Unknown'
 
   def program_name_for(step)

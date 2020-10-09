@@ -17,7 +17,9 @@ RSpec.describe Sequencescape::Api::V2::Plate::Pools do
 
   describe '#each' do
     it 'yields once per pool' do
-      expect { |b| pools.each(&b) }.to yield_successive_args(Sequencescape::Api::V2::Plate::Pool, Sequencescape::Api::V2::Plate::Pool)
+      expect do |b|
+        pools.each(&b)
+      end.to yield_successive_args(Sequencescape::Api::V2::Plate::Pool, Sequencescape::Api::V2::Plate::Pool)
     end
   end
 

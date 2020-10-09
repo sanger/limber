@@ -38,7 +38,8 @@ module Utility
     #
     # @return [hash] The well details hash containing calculated normalisation values.
     #
-    def normalisation_details(wells)
+    # rubocop:todo Metrics/MethodLength
+    def normalisation_details(wells) # rubocop:todo Metrics/AbcSize
       # sort on well coordinate to ensure wells are in plate column order
       wells.sort_by(&:coordinate).each_with_object({}) do |well, details|
         # skip empty wells
@@ -67,6 +68,7 @@ module Utility
         }
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     #
     # Computes the volume of source material required for normalisation based on the sample
@@ -106,7 +108,7 @@ module Utility
     #
     # @return [array] An array of qc assay details for the child plate, ready to send via Api to sequencescape.
     #
-    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash)
+    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash) # rubocop:todo Metrics/MethodLength
       dest_concs = extract_destination_concentrations(transfer_hash)
       dest_concs.map do |dest_locn, dest_conc|
         {

@@ -80,41 +80,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
-                                              'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true })
-      end
-    end
-
-    context 'when a submission is split over multiple plates' do
-      let(:pools) { 1 }
-      before do
-        stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
-      end
-      context 'and tubes have been used' do
-        let(:pool_json) do
-          json(:dual_submission_pool_collection,
-               used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
-        end
-      end
-      context 'and nothing has been used' do
-        let(:pool_json) do
-          json(:dual_submission_pool_collection)
-        end
-      end
-      context 'and dual index plates have been used' do
-        let(:pool_json) do
-          json(:dual_submission_pool_collection,
-               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
-        end
-      end
-    end
-
-    context 'when a submission is not split over multiple plates' do
-      before do
-        stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
-      end
-
-      it 'does not require tag2' do
-        expect(subject.requires_tag2?).to be false
+                                              'tag-layout-template-1' => { tags: layout_hash, used: false,
+                                                                           dual_index: false, approved: true })
       end
     end
   end
@@ -166,10 +133,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         },
         body: json(:state_change)
       )
-    end
-
-    before do
-      stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
     end
 
     context 'Providing simple options' do

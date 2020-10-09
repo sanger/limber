@@ -4,7 +4,7 @@ require_dependency 'form'
 require_dependency 'labware_creators'
 
 module LabwareCreators
-  class PlateWithTemplate < Base
+  class PlateWithTemplate < Base # rubocop:todo Style/Documentation
     include SupportParent::PlateOnly
 
     def transfer_material_from_parent!(child_uuid)

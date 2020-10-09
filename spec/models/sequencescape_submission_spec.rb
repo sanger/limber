@@ -5,7 +5,10 @@ require 'rails_helper'
 RSpec.describe SequencescapeSubmission do
   has_a_working_api
 
-  subject { SequencescapeSubmission.new(api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid) }
+  subject do
+    SequencescapeSubmission.new(api: api, assets: assets, template_uuid: template_uuid, request_options: request_options,
+                                user: user_uuid)
+  end
 
   let(:assets) { ['asset-uuid'] }
   let(:template_uuid) { 'template-uuid' }

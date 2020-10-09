@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module BarcodeLabelsHelper
-  def barcode_printing_form(labels:, redirection_url:, default_printer_name: @presenter.default_printer)
+module BarcodeLabelsHelper # rubocop:todo Style/Documentation
+  def barcode_printing_form(labels:, redirection_url:, default_printer_name: @presenter.default_printer) # rubocop:todo Rails/HelperInstanceVariable
     # labels are Labels::PlateLabel or Labels::TubeLabel so you can get the
     # default layout based on the such class
     printer_types = labels.map(&:printer_type)
@@ -16,7 +16,7 @@ module BarcodeLabelsHelper
   end
 
   def printers_of_type(printer_types)
-    @printers.select { |printer| printer_types.include?(printer.type.name) }
+    @printers.select { |printer| printer_types.include?(printer.type.name) } # rubocop:todo Rails/HelperInstanceVariable
   end
 
   def useful_barcode(barcode)
@@ -28,7 +28,7 @@ module BarcodeLabelsHelper
     if human_readable == barcode.machine
       human_readable
     else
-      "#{human_readable} <em>#{barcode.machine}</em>".html_safe
+      "#{human_readable} <em>#{barcode.machine}</em>".html_safe # rubocop:todo Rails/OutputSafety
     end
   end
 end

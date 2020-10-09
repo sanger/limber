@@ -7,7 +7,7 @@ module LabwareCreators
   # Handles the generation of 384 well plates from 1-4 96 well plates.
   #
   # Briefly, 96 well plates get stamped onto 384 plates in an interpolated pattern
-  # eg.
+  # eg. where P1-4 is Plate 1-4
   # +--+--+--+--+--+--+--~
   # |P1|P3|P1|P3|P1|P3|P1
   # |A1|A1|A2|A2|A3|A3|A4
@@ -21,7 +21,7 @@ module LabwareCreators
   # |P2|P4|P2|P4|P2|P4|P1
   # |B1|B1|B2|B2|B3|B3|B4
   #
-  # The transfers layout 'quadrant' descibed above is implemented client side.
+  # The transfers layout 'quadrant' described above is implemented client side.
   #
   class QuadrantStampBase < MultiStamp
     self.transfers_layout = 'quadrant'
@@ -54,9 +54,7 @@ module LabwareCreators
       transfers.each do |transfer|
         target_well_location = transfer.dig(:new_target, :location)
         target_well_quadrant = WellHelpers.well_quadrant(target_well_location)
-        if source_plates_uuids[target_well_quadrant].nil?
-          source_plates_uuids[target_well_quadrant] = transfer[:source_plate]
-        end
+        source_plates_uuids[target_well_quadrant] = transfer[:source_plate] if source_plates_uuids[target_well_quadrant].nil?
       end
       source_plates_uuids
     end

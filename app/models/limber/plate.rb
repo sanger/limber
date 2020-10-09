@@ -59,9 +59,11 @@ class Limber::Plate < Sequencescape::Plate
 
   private
 
+  # rubocop:todo Naming/MemoizedInstanceVariableName
   def well_uuids_to_location
     @well_uuids_to_map_description ||= wells.each_with_object({}) do |well, hash|
       hash[well.uuid] = well.location
     end
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 end

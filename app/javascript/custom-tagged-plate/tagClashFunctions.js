@@ -94,7 +94,7 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
       let tagMapId = tagMapIds[i]
 
       // check for tag substitution
-      if(tagSubstitutions.hasOwnProperty(tagMapId)) {
+      if (Object.prototype.hasOwnProperty.call(tagSubstitutions,tagMapId)) {
         tagMapId = tagSubstitutions[tagMapId]
       }
 

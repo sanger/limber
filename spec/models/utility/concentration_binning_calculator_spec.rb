@@ -47,7 +47,11 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
 
     let(:library_type_name) { 'Test Library Type' }
 
-    let(:requests) { Array.new(4) { |i| create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name } }
+    let(:requests) do
+      Array.new(4) do |i|
+        create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name
+      end
+    end
 
     let(:dilutions_config) do
       {
@@ -87,7 +91,8 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
             'D1' => 18.0
           }
 
-          expect(subject.compute_well_amounts(filtered_wells, subject.source_multiplication_factor)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells,
+                                              subject.source_multiplication_factor)).to eq(expected_amounts)
         end
       end
 
@@ -100,7 +105,8 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
             'D1' => 18.0
           }
 
-          expect(subject.compute_well_amounts(filtered_wells, subject.source_multiplication_factor)).to eq(expected_amounts)
+          expect(subject.compute_well_amounts(filtered_wells,
+                                              subject.source_multiplication_factor)).to eq(expected_amounts)
         end
       end
     end

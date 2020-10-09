@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Labels::PlateLabelBase < Labels::Base
+class Labels::PlateLabelBase < Labels::Base # rubocop:todo Style/Documentation
   def attributes
     {
       top_left: date_today,

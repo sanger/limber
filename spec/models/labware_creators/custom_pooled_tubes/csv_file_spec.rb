@@ -43,7 +43,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   end
 
   context 'A valid file with missing volumes' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file_with_zero_and_blank.csv', 'sequencescape/qc_file') }
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/pooling_file_with_zero_and_blank.csv', 'sequencescape/qc_file')
+    end
 
     describe '#valid?' do
       subject { described_class.new(file).valid? }
@@ -83,7 +85,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   end
 
   context 'An unrecognised well' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file_with_invalid_wells.csv', 'sequencescape/qc_file') }
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/pooling_file_with_invalid_wells.csv', 'sequencescape/qc_file')
+    end
 
     describe '#valid?' do
       subject { described_class.new(file).valid? }

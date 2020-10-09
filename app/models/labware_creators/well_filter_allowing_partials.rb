@@ -14,7 +14,7 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
     requests.select { |r| @request_state.blank? || @request_state.include?(r.state) }
   end
 
-  def filter_requests(requests, well)
+  def filter_requests(requests, well) # rubocop:todo Metrics/MethodLength
     return nil if well.requests_as_source.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)
@@ -31,7 +31,8 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
       { 'outer_request' => filtered_requests_by_state.first.uuid }
     else
       # too many matching requests, cannot disentangle
-      errors.add(:base, "found #{num_requests} eligible requests for #{well.location}, possible overlapping submissions")
+      errors.add(:base,
+                 "found #{num_requests} eligible requests for #{well.location}, possible overlapping submissions")
     end
   end
 

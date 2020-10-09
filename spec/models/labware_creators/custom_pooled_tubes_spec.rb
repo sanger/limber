@@ -94,7 +94,8 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
     # Find out what tubes we've just made!
     let(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN5 A1:B2', 'DN5 C1:G2']))
+      stub_api_get(tube_creation_request_uuid, 'children',
+                   body: json(:tube_collection, names: ['DN5 A1:B2', 'DN5 C1:G2']))
     end
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form

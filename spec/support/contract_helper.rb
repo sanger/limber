@@ -12,7 +12,8 @@ module ContractHelper
       @root = File.split(File.expand_path(root_directory))
     end
 
-    REQUEST_REGEXP = %r{
+    # rubocop:todo Lint/MixedRegexpCaptureTypes
+    REQUEST_REGEXP = %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
       (?<eol>       \r\n|\r|\n){0}
       (?<verb>      GET|PUT|POST|DELETE){0}
       (?<path>      /[^\s]*){0}
@@ -24,8 +25,9 @@ module ContractHelper
       \g<headers>\g<eol>
       (\g<eol>\g<body>?)?
     }mx.freeze
+    # rubocop:enable Lint/MixedRegexpCaptureTypes
 
-    def request(contract_name)
+    def request(contract_name) # rubocop:todo Metrics/AbcSize
       contract(contract_name) do |file|
         match = REQUEST_REGEXP.match(file.read) ||
                 raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
@@ -51,21 +53,23 @@ module ContractHelper
       spec.after(:each)  { builder.send(:validate_request_and_response_called, self) }
     end
 
+    def setup_request_and_response_mock
+      stub_request(@http_verb, @url)
+        .with(@conditions)
+        .to_return(@content)
+    end
+
     private
 
-    def contract(contract_name)
+    def contract(contract_name, &block)
       path = @root.dup
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
-        return File.open(filename, 'r') { |file| yield(file) } if File.file?(filename)
+        return File.open(filename, 'r', &block) if File.file?(filename)
 
         path.pop
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"
-    end
-
-    def setup_request_and_response_mock
-      stub_request(@http_verb, @url).with(@conditions).to_return(@content)
     end
 
     def validate_request_and_response_called(scope)

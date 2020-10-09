@@ -5,15 +5,18 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parent, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
     delegate :state, to: :plate, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
-    validates :barcodes, length: { maximum: 1, too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
-    validates :plate, presence: { message: ->(bed, _data) { "Could not find a plate with the barcode '#{bed.barcode}'." } }, if: :barcode
+    validates :barcodes, length: { maximum: 1,
+                                   too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
+    validates :plate, presence: { message: lambda { |bed, _data|
+                                             "Could not find a plate with the barcode '#{bed.barcode}'."
+                                           } }, if: :barcode
     validate :correct_plate_purpose, if: :plate
     validate :correct_plate_state, if: :plate
 
@@ -21,14 +24,23 @@ module Robots::Bed
       true
     end
 
+    def parent=(parent_bed)
+      @parents = [parent_bed]
+    end
+
+    def parent
+      (@parents || []).first
+    end
+
     def transitions?
       target_state.present?
     end
 
-    def transition
+    def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || plate.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,
+                                                                                            "Robot #{robot.name} started")
     end
 
     def purpose_labels
@@ -46,21 +58,25 @@ module Robots::Bed
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
-      @plates = Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
+      @plates = if @barcodes.present?
+                  Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
+                else
+                  []
+                end
     end
 
     def plate
       @plates&.first
     end
 
-    def parent_plate
-      return nil if plate.nil?
+    def parent_plates
+      return [] if plate.nil?
 
-      parent = plate.parents.first
-      return parent if parent
+      parents = plate.parents
+      return parents if parents.present?
 
-      error("Labware #{plate.human_barcode} doesn't seem to have a parent, and yet one was expected.")
-      nil
+      error("Labware #{plate.human_barcode} doesn't seem to have any parents, and yet at least one was expected.")
+      []
     end
 
     def child_plates

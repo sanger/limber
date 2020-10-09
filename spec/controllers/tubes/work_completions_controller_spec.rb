@@ -16,7 +16,9 @@ RSpec.describe Tubes::WorkCompletionsController, type: :controller do
     let(:work_completion) { json :work_completion }
 
     let!(:tube_get) { stub_api_get(tube_uuid, body: example_tube) }
-    let!(:work_completion_creation) { stub_api_post('work_completions', payload: work_completion_request, body: work_completion) }
+    let!(:work_completion_creation) do
+      stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
+    end
 
     it 'creates work_completion' do
       post :create, params: { limber_tube_id: tube_uuid }, session: { user_uuid: user_uuid }

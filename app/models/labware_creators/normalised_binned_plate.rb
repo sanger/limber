@@ -20,7 +20,7 @@ module LabwareCreators
 
     private
 
-    def request_hash(source_well, child_plate, additional_parameters)
+    def request_hash(source_well, child_plate, additional_parameters) # rubocop:todo Metrics/AbcSize
       return unless transfer_hash.key?(source_well.location)
 
       {

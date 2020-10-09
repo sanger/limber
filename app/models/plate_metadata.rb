@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PlateMetadata
+class PlateMetadata # rubocop:todo Style/Documentation
   attr_accessor :api, :user, :plate, :barcode
 
   def initialize(params = {})
@@ -13,10 +13,10 @@ class PlateMetadata
       @plate = params.fetch(:plate, nil)
       raise ArgumentError, 'Parameters plate or barcode missing' if plate.nil?
     end
-    raise ArgumentError, 'Parameter api missing' unless api.present?
+    raise ArgumentError, 'Parameter api missing' if api.nil?
   end
 
-  def update!(metadata)
+  def update!(metadata) # rubocop:todo Metrics/AbcSize
     if plate.custom_metadatum_collection.uuid.present?
       current_metadata = plate.custom_metadatum_collection.metadata.symbolize_keys
       plate.custom_metadatum_collection.update!(

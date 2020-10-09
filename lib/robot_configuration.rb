@@ -4,7 +4,7 @@
 module RobotConfiguration
   BedOrCar = Struct.new(:barcode, :name)
 
-  module BedHelpers
+  module BedHelpers # rubocop:todo Style/Documentation
     def bed(number)
       barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
       ean13 = barcode.machine_barcode.to_s
@@ -19,7 +19,7 @@ module RobotConfiguration
     end
   end
 
-  class Register
+  class Register # rubocop:todo Style/Documentation
     include BedHelpers
     def self.configure(&block)
       register = new
@@ -31,12 +31,13 @@ module RobotConfiguration
       @robots[key] = hash
     end
 
-    def bravo_robot(transition_to: 'passed', verify_robot: false, &block)
-      simple_robot('bravo', transition_to: transition_to, verify_robot: verify_robot, &block)
+    def bravo_robot(transition_to: 'passed', verify_robot: false, require_robot: false, &block)
+      simple_robot('bravo', transition_to: transition_to, verify_robot: verify_robot, require_robot: require_robot,
+                   &block)
     end
 
-    def simple_robot(type, transition_to: 'passed', verify_robot: false, &block)
-      added_robot = RobotConfiguration::Simple.new(type, transition_to, verify_robot, &block)
+    def simple_robot(type, transition_to: 'passed', verify_robot: false, require_robot: false, &block)
+      added_robot = RobotConfiguration::Simple.new(type, transition_to, verify_robot, require_robot, &block)
       @robots[added_robot.key] = added_robot.configuration
       added_robot
     end
@@ -50,16 +51,19 @@ module RobotConfiguration
     end
   end
 
-  class Simple
+  class Simple # rubocop:todo Style/Documentation
     include BedHelpers
-    attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot
+    attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot, :require_robot
 
-    def initialize(type, target_state = 'passed', verify_robot = false, &block)
+    # rubocop:todo Style/OptionalBooleanParameter
+    def initialize(type, target_state = 'passed', verify_robot = false, require_robot = false, &block)
       @verify_robot = verify_robot
+      @require_robot = require_robot
       @type = type
       @target_state = target_state
       instance_eval(&block) if block
     end
+    # rubocop:enable Style/OptionalBooleanParameter
 
     def from(source_purpose, bed, state = 'passed')
       @source_purpose = source_purpose
@@ -97,21 +101,24 @@ module RobotConfiguration
       "#{type} #{source_purpose} to #{target_purpose}".parameterize
     end
 
-    def configuration
+    def configuration # rubocop:todo Metrics/MethodLength
       {
         name: name,
         verify_robot: verify_robot,
+        require_robot: require_robot,
         beds: {
           source_bed_barcode => {
             purpose: source_purpose,
             states: [source_bed_state],
-            label: source_bed_name },
+            label: source_bed_name
+          },
           target_bed_barcode => {
             purpose: target_purpose,
             states: [target_bed_state],
             label: target_bed_name,
             parent: source_bed_barcode,
-            target_state: target_state }
+            target_state: target_state
+          }
         }
       }
     end

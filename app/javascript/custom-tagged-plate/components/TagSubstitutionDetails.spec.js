@@ -16,12 +16,6 @@ describe('TagSubstitutionDetails', () => {
   }
 
   describe('#rendering tests', () => {
-    it('renders a vue instance', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.isVueInstance()).toBe(true)
-    })
-
     it('renders a row for each substitution', () => {
       const wrapper = wrapperFactory()
 
@@ -34,12 +28,14 @@ describe('TagSubstitutionDetails', () => {
       expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(true)
     })
 
-    it('renders different text if tag substitutions are disallowed', () => {
+    it('renders different text if tag substitutions are disallowed', async () => {
       const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag_substitutions_allowed').exists()).toBe(true)
 
       wrapper.setProps({ tagSubstitutionsAllowed: false })
+
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('#tag_substitutions_allowed').exists()).toBe(false)
       expect(wrapper.find('#tag_substitutions_disallowed').exists()).toBe(true)

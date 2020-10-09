@@ -1,0 +1,26 @@
+---
+Heron-96 Tailed A: # Heron 96-well pipeline specific to PCR 1 plate
+  filters:
+    request_type_key: limber_heron_lthr
+    library_type: PCR amplicon tailed adapters 96
+  library_pass: LTHR Lib PCR pool
+  relationships:
+    LTHR RT: LTHR PCR 1
+    LTHR PCR 1: LTHR Lib PCR 1
+    LTHR Lib PCR 1: LTHR Lib PCR pool
+Heron-96 Tailed B:
+  filters:
+    request_type_key: limber_heron_lthr
+    library_type: PCR amplicon tailed adapters 96
+  library_pass: LTHR Lib PCR pool
+  relationships:
+    LTHR RT: LTHR PCR 2
+    LTHR PCR 2: LTHR Lib PCR 2
+    LTHR Lib PCR 2: LTHR Lib PCR pool
+Heron 96 Tailed MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    LTHR Lib PCR pool: LTHR Pool XP
+    LTHR Pool XP: LB Lib Pool Norm

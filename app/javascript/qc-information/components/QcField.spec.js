@@ -50,24 +50,21 @@ describe('QcField', () => {
     expect(wrapper.vm.value).toBe('1.5')
   })
 
-  it('updates assayType when assayType is selected', () => {
+  it('updates assayType when assayType is selected', async () => {
     let wrapper = wrapperFactory()
     wrapper.find('select').element.value = 'Two'
-    wrapper.find('select').trigger('change')
+    await wrapper.find('select').trigger('change')
 
     expect(wrapper.vm.assayType).toBe('Two')
   })
 
-  it('emits nicely formatted quant assay objects', () => {
+  it('emits nicely formatted quant assay objects', async () => {
     let wrapper = wrapperFactory()
-    wrapper.find('input').setValue('1.5')
-    wrapper.find('select').setValue('Two')
+    await wrapper.find('input').setValue('1.5')
+    await wrapper.find('select').setValue('Two')
 
     expect(wrapper.emitted()).toEqual({
       change: [
-        // The input event on the input field appears to trigger twice. This is pretty harmless, but
-        // it would be great if we didn't explicitly test that behaviour.
-        [{ value: '1.5', assay_type: 'One', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'uuid' }],
         [{ value: '1.5', assay_type: 'One', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'uuid' }],
         [{ value: '1.5', assay_type: 'Two', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'uuid' }]
       ]

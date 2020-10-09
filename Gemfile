@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gem 'rails'
 # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
+gem 'bootsnap'
 gem 'inline_svg'
 
 gem 'exception_notification'
@@ -15,10 +16,10 @@ gem 'webpacker'
 gem 'hashie'
 
 # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
-gem 'json_api_client', github: 'sanger/json_api_client'
+gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', require: 'sequencescape'
+gem 'sequencescape-client-api', '~> 0.4.2', require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 
@@ -61,9 +62,13 @@ group :development do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'web-console'
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'travis'
+  # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
+  # with jard
+  gem 'ruby_jard'
 end

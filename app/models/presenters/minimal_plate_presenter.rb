@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class MinimalPlatePresenter < PlatePresenter
+  class MinimalPlatePresenter < PlatePresenter # rubocop:todo Style/Documentation
     include Presenters::Statemachine::Standard
     self.summary_partial = 'labware/plates/minimal_summary'
     self.allow_well_failure_in_states = []

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
+class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube # rubocop:todo Style/Documentation
   def location
     'A1'
   end
