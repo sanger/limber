@@ -84,7 +84,7 @@ module LabwareCreators
     private
 
     def transfers
-      @transfers ||= @data[3..-1].each_with_index.map do |row_data, index|
+      @transfers ||= @data[3..].each_with_index.map do |row_data, index|
         Row.new(@config, well_details_header_row, index + 2, row_data)
       end
     end
