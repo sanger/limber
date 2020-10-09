@@ -98,20 +98,15 @@ module LabwareCreators
     def generate_well_details_hash
       return {} unless valid?
 
-      well_details_hash = {}
-
-      transfers.each do |row|
+      fields = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage sample_volume]
+      transfers.each_with_object({}) do |row, well_details_hash|
         next if row.empty?
 
-        well_details_hash[row.well] = {}
-        well_details_hash[row.well]['sample_volume'] = row.sample_volume
-        well_details_hash[row.well]['diluent_volume'] = row.diluent_volume
-        well_details_hash[row.well]['pcr_cycles'] = row.pcr_cycles
-        well_details_hash[row.well]['submit_for_sequencing'] = row.submit_for_sequencing
-        well_details_hash[row.well]['sub_pool'] = row.sub_pool
-        well_details_hash[row.well]['coverage'] = row.coverage
+        field_to_value = fields.each_with_object({}) { |field, obj| obj[field] = row.send(field) }
+
+        well_location = row.well
+        well_details_hash[well_location] = field_to_value
       end
-      well_details_hash
     end
   end
 end
