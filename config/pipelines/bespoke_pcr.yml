@@ -16,6 +16,11 @@ Bespoke PCR:
     - TraDIS
     - Chromium Visium
     - Hi-C
+    - Hi-C - Arima v2
+    - Hi-C - Qiagen
+    - Hi-C - OmniC
+    - Hi-C - Arima v1
+    - Hi-C - Dovetail
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
