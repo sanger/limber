@@ -12,7 +12,7 @@
       pWGS-384 Post Shear XP: pWGS-384 End Prep
       pWGS-384 End Prep: pWGS-384 AL Lib
       pWGS-384 AL Lib: pWGS-384 Lib PCR
-  WGS MX: # Bottom of the pipeline (Pooling and normalization)
+  pWGS-384 MX: # Bottom of the pipeline (Pooling and normalization)
     filters:
       request_type_key:
       - limber_multiplexing
