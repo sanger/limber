@@ -1,0 +1,20 @@
+---
+pWGS-384 Post Shear XP:
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
+  :size: 384
+pWGS-384 End Prep:
+  :asset_type: plate
+  :size: 384
+pWGS-384 AL Lib:
+  :asset_type: plate
+  :size: 384
+pWGS-384 Lib PCR:
+  :asset_type: plate
+  :size: 384
+  :tag_layout_templates:
+  - TS_scRNA 384
+pWGS-384 Pool XP:
+  :asset_type: plate
+  :size: 384
