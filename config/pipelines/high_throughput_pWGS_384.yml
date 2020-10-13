@@ -1,21 +1,21 @@
 ---
-  pWGS-384: # Top of the pipeline (Library Prep)
-    filters:
-      request_type_key:
-      - pWGS-384
-      library_type: pWGS-384
-    library_pass: pWGS-384 Lib PCR
-    relationships:
-      LB Cherrypick: LB Shear
-      LB Shear: LB Post Shear
-      LB Post Shear: pWGS-384 Post Shear XP
-      pWGS-384 Post Shear XP: pWGS-384 End Prep
-      pWGS-384 End Prep: pWGS-384 AL Lib
-      pWGS-384 AL Lib: pWGS-384 Lib PCR
-  pWGS-384 MX: # Bottom of the pipeline (Pooling and normalization)
-    filters:
-      request_type_key:
-      - limber_multiplexing
-    relationships:
-      pWGS-384 Lib PCR: pWGS-384 Pool XP
-      pWGS-384 Pool XP: LB Lib Pool Norm
+pWGS-384: # Top of the pipeline (Library Prep)
+  filters:
+    request_type_key:
+    - pWGS-384
+    library_type: pWGS-384
+  library_pass: pWGS-384 Lib PCR
+  relationships:
+    LB Cherrypick: LB Shear
+    LB Shear: LB Post Shear
+    LB Post Shear: pWGS-384 Post Shear XP
+    pWGS-384 Post Shear XP: pWGS-384 End Prep
+    pWGS-384 End Prep: pWGS-384 AL Lib
+    pWGS-384 AL Lib: pWGS-384 Lib PCR
+pWGS-384 MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    pWGS-384 Lib PCR: pWGS-384 Pool XP
+    pWGS-384 Pool XP: LB Lib Pool Norm
