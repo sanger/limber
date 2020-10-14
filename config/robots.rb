@@ -2094,4 +2094,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  custom_robot('bravo-pwgs-384-al-lib',
+               name: 'Bravo pWGS-384 AL-Lib',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                   purpose: 'pWGS-384 AL Lib',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
+               })
 end
