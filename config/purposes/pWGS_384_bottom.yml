@@ -6,6 +6,7 @@ pWGS-384 Post Shear XP:
   :size: 384
 pWGS-384 End Prep:
   :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
   :size: 384
 pWGS-384 AL Lib:
   :asset_type: plate
