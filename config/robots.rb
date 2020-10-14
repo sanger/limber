@@ -2058,4 +2058,26 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  custom_robot('bravo-pwgs-384-post-shear-xp-to-pwgs-384-end-prep',
+               name: 'Bravo pWGS-384 Post Shear XP => pWGS-384 End Prep',
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'pWGS-384 Post Shear XP',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 car('1,4').barcode => {
+                   purpose: 'pWGS-384 End Prep',
+                   states: ['pending'],
+                   label: 'Carousel 1,4',
+                   parent: bed(4).barcode
+                 },
+                 car('3,5').barcode => {
+                   purpose: 'pWGS-384 AL Lib',
+                   states: ['pending'],
+                   label: 'Carousel 3,5',
+                   parent: bed(4).barcode
+                 }
+               })
 end
