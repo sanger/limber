@@ -2082,4 +2082,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  custom_robot('bravo-pwgs-384-end-prep',
+               name: 'Bravo pWGS-384 End Prep',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                   purpose: 'pWGS-384 End Prep',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
+               })
 end
