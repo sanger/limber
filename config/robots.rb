@@ -2071,13 +2071,15 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'pWGS-384 End Prep',
                    states: ['pending'],
                    label: 'Carousel 1,4',
-                   parent: bed(4).barcode
+                   parent: bed(4).barcode,
+                   target_state: 'passed'
                  },
                  car('3,5').barcode => {
                    purpose: 'pWGS-384 AL Lib',
                    states: ['pending'],
                    label: 'Carousel 3,5',
-                   parent: bed(4).barcode
+                   parent: bed(4).barcode,
+                   target_state: 'passed'
                  }
                })
 end
