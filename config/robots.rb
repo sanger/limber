@@ -2024,38 +2024,38 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
-    
+
   # Robots for pWGS 384 pipeline
 
   custom_robot('star-pwgs-384-post-shear-to-pwgs-384-post-shear-x',
-                name: 'STAR pWGS-384 Post Shear => pWGS-384 Post Shear X',
-                beds: {
-                  bed(12).barcode => {
-                    purpose: 'LB Post Shear',
-                    states: ['passed'],
-                    label: 'Bed 12'
-                  },
-                  bed(13).barcode => {
-                    purpose: 'LB Post Shear',
-                    states: ['passed'],
-                    label: 'Bed 13'
-                  },
-                  bed(14).barcode => {
-                    purpose: 'LB Post Shear',
-                    states: ['passed'],
-                    label: 'Bed 14'
-                  },
-                  bed(15).barcode => {
-                    purpose: 'LB Post Shear',
-                    states: ['passed'],
-                    label: 'Bed 15'
-                  },
-                  bed(7).barcode => {
-                    purpose: 'pWGS-384 Post Shear XP',
-                    states: ['pending'],
-                    label: 'Bed 7',
-                    parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
-                    target_state: 'passed'
-                  }
-                })
+               name: 'STAR pWGS-384 Post Shear => pWGS-384 Post Shear X',
+               beds: {
+                 bed(12).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   label: 'Bed 12'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   label: 'Bed 13'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   label: 'Bed 14'
+                 },
+                 bed(15).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   label: 'Bed 15'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'pWGS-384 Post Shear XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
+                   target_state: 'passed'
+                 }
+               })
 end
