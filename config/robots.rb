@@ -2027,8 +2027,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Robots for pWGS 384 pipeline
 
-  custom_robot('star-pwgs-384-post-shear-to-pwgs-384-post-shear-x',
-               name: 'STAR pWGS-384 Post Shear => pWGS-384 Post Shear X',
+  custom_robot('star-pwgs-384-post-shear-to-pwgs-384-post-shear-xp',
+               name: 'STAR pWGS-384 Post Shear => pWGS-384 Post Shear XP',
                beds: {
                  bed(12).barcode => {
                    purpose: 'LB Post Shear',
