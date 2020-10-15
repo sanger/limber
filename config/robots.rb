@@ -2061,6 +2061,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   custom_robot('bravo-pwgs-384-post-shear-xp-to-pwgs-384-end-prep',
                name: 'Bravo pWGS-384 Post Shear XP => pWGS-384 End Prep',
+               require_robot: true,
                beds: {
                  bed(4).barcode => {
                    purpose: 'pWGS-384 Post Shear XP',
@@ -2107,6 +2108,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   custom_robot('bravo-pwgs-384-al-lib-to-pwgs-384-lib-pcr',
                name: 'Bravo pWGS-384 AL-Lib => pWGS-384 Lib PCR',
+               verify_robot: true,
                beds: {
                  bed(7).barcode => {
                    purpose: 'pWGS-384 AL-Lib',
