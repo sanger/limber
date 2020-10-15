@@ -2118,7 +2118,9 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(6).barcode => {
                    purpose: 'pWGS-384 Lib PCR',
                    states: ['pending'],
-                   label: 'Bed 6'
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
                  }
                })
 end
