@@ -70,5 +70,5 @@ group :development do
   gem 'travis'
   # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
   # with jard
-  gem 'ruby_jard'
+  # gem 'ruby_jard'
 end
