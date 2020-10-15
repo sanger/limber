@@ -2111,7 +2111,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                verify_robot: true,
                beds: {
                  bed(7).barcode => {
-                   purpose: 'pWGS-384 AL-Lib',
+                   purpose: 'pWGS-384 AL Lib',
                    states: ['passed'],
                    label: 'Bed 7'
                  },
