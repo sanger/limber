@@ -16,6 +16,10 @@ pWGS-384 Lib PCR:
   :size: 384
   :tag_layout_templates:
   - TS_scRNA 384
-pWGS-384 Pool XP:
-  :asset_type: plate
-  :size: 384
+pWGS-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
