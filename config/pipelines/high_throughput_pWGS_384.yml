@@ -2,7 +2,7 @@
 pWGS-384: # Top of the pipeline (Library Prep)
   filters:
     request_type_key: limber_pwgs
-    library_type: pWGS-384
+    library_type: Standard
   library_pass: pWGS-384 Lib PCR
   relationships:
     LB Cherrypick: LB Shear
