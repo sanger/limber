@@ -8,7 +8,7 @@
       name_array = transfer_req.source_asset.name.split(':')
       # Diluent volume stored on well
       # Want volume displayed to 2 decimal places
-      diluent_vol = well.attributes['diluent_volume'].round(2)
+      diluent_vol = well.attributes['diluent_volume'].to_f.round(2)
       if name_array.length == 2
         rows_array << [
                         name_array[0],
