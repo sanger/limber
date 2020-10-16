@@ -1,3 +1,8 @@
+<!--
+# @markup markdown
+# @title Purposes yaml files
+-->
+
 # Pipelines yaml files
 
 There are a number of `*.yml` files located in `app/config/purposes/` these
@@ -345,7 +350,7 @@ specified in default_pmb_templates in {file:config/label_templates.yml}.
 :label_template: plate_xp
 ```
 
-### :submission
+#### :submission
 
 Hash, specifying:
 
@@ -364,7 +369,7 @@ the labware is charged and passed.
     :read_length: 150
 ```
 
-#### :merger_plate:
+#### :merger_plate
 
 Boolean, set to true on plate where multiple smaller plates get merged together.
 Assists with extracting correct stock plate information when the plates get
@@ -376,7 +381,7 @@ Usually used in concert with a creator like {LabwareCreators::QuadrantStamp}
 :merger_plate: true
 ```
 
-### :warnings
+#### :warnings
 
 Hash, used to generate warnings to the user when expected conditions aren't met.
 Valid keys are `pcr_cycles_not_in` where the value should be an array of
@@ -388,7 +393,7 @@ warnings:
     - 6
 ```
 
-## Presenter/Creator specific configuration
+### Presenter/Creator specific configuration
 
 These options are only used for specific creators or presenters.
 
@@ -429,7 +434,8 @@ Used by:
     min: 1500
 ```
 
-Other example (LabwareCreators::FixedNormalisedPlate)
+Other example {LabwareCreators::FixedNormalisedPlate}
+
 ```yaml
 :dilutions:
   :source_volume: 2

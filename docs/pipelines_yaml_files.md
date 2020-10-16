@@ -1,3 +1,8 @@
+<!--
+# @markup markdown
+# @title Pipelines yaml files
+-->
+
 # Pipelines yaml files
 
 There are a number of `*.yml` files located in `app/config/pipelines/` these
@@ -13,15 +18,6 @@ loads all files, detects potential duplicates, and populates the {PipelineList}.
 > It is suggested that you create a new file for each new 'pipeline'. In most
 > cases this file will actually contain a handful of internal 'pipelines'
 > reflecting branches, or different stages of the process.
-
-> **TIP**
-> In most Limber pipelines, the final multiplex library tube is created
-> upfront by the limber_multiplexing request. This allows the SSRs to access
-> the sequencing requests easily prior to the completion of library creation,
-> allowing for the addition of removal of requests. A side effect of this is
-> that any Limber pipelines using the standard limber_multiplexing request
-> share the final tube purpose, 'LB Lib Pool Norm'. This is defined in:
-> {file:config/purposes/final_tube.yml}
 
 ## An example file
 
@@ -176,6 +172,15 @@ relationships:
 ```
 
 The above shows a transition from 'LB Cherrypick' to 'LB Shear', 'LB Shear' to 'LB Post Shear' and so on.
+
+> **TIP**
+> In most Limber pipelines, the final multiplex library tube is created
+> upfront by the limber_multiplexing request. This allows the SSRs to access
+> the sequencing requests easily prior to the completion of library creation,
+> allowing for the addition of removal of requests. A side effect of this is
+> that any Limber pipelines using the standard limber_multiplexing request
+> share the final tube purpose, 'LB Lib Pool Norm'. This is defined in:
+> {file:config/purposes/final_tube.yml}
 
 It should be noted that because the above structure is a hash, it is not possible to reflect a branching pipeline. Instead, each branch of the pipeline
 can be represented by a separate pipeline within th same file.
