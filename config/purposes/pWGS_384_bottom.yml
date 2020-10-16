@@ -13,6 +13,7 @@ pWGS-384 AL Lib:
   :size: 384
 pWGS-384 Lib PCR:
   :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
   :size: 384
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
