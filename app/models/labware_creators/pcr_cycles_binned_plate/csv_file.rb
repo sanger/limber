@@ -45,6 +45,7 @@ module LabwareCreators
       @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
       @parent_barcode = parent_barcode
       @data = CSV.parse(file.read)
+      remove_bom_hex_characters
       @parsed = true
     end
 
@@ -82,6 +83,19 @@ module LabwareCreators
     end
 
     private
+
+    def remove_bom_hex_characters
+      return unless @data.present? && @data[0][0].present?
+
+      # check for match vs regex for byte only marker at start of first row
+      # e.g. \\xEF\\xBB\\xBFPlate Barcode
+      regex = /^(?:[\\]{1,2}x[A-P]{2}){3}(.*)/
+      first_cell_value = @data[0][0]
+
+      return unless first_cell_value[regex]
+
+      @data[0][0] = first_cell_value[regex, 1]
+    end
 
     def transfers
       @transfers ||= @data[3..].each_with_index.map do |row_data, index|
