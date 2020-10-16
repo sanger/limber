@@ -2,6 +2,8 @@
 db/*.sqlite3
 log/*.log*
 tmp/
+doc/
+.yardoc/
 public/stylesheets/*.css
 .DS_Store
 .sass-cache/

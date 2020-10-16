@@ -48,6 +48,7 @@ begin
   env_config = config[environment] ||= build_config
   file.rewind
   file.puts config.to_yaml
+  file.close
   run_environment(env_config)
   $stdout.puts 'Building configuration'
   $stdout.puts `bundle exec rake config:generate`
