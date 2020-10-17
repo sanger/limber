@@ -45,7 +45,7 @@ module LabwareCreators
       @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
       @parent_barcode = parent_barcode
       @data = CSV.parse(file.read)
-      remove_bom_hex_characters
+      remove_bom
       @parsed = true
     end
 
@@ -84,17 +84,18 @@ module LabwareCreators
 
     private
 
-    def remove_bom_hex_characters
+    # remove byte order marker if present
+    def remove_bom
       return unless @data.present? && @data[0][0].present?
 
-      # check for match vs regex for byte only marker at start of first row
-      # e.g. \\xEF\\xBB\\xBFPlate Barcode
-      regex = /^(?:[\\]{1,2}x[A-P]{2}){3}(.*)/
-      first_cell_value = @data[0][0]
+      # byte order marker will appear at beginning of in first string in @data array
+      s = @data[0][0]
 
-      return unless first_cell_value[regex]
+      # NB. had to make byte order marker string mutable here otherwise get frozen string error
+      bom = +"\xEF\xBB\xBF"
+      s_mod = s.gsub!(bom.force_encoding(Encoding::BINARY), '')
 
-      @data[0][0] = first_cell_value[regex, 1]
+      @data[0][0] = s_mod unless s_mod.nil?
     end
 
     def transfers
