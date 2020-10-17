@@ -55,7 +55,7 @@ class ExportsController < ApplicationController
     'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri' =>
       CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Ligation SPRI', nil),
     'hamilton_lds_al_lib_to_qc1' =>
-      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick', nil),
+      CSVDetail.new('hamilton_plate_stamp_to_qc', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick', nil),
     'hamilton_lds_al_lib_to_lds_al_lib_dil' =>
       CSVDetail.new('hamilton_variable_volume_dilutions_with_well_diluents', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil)
   }.freeze
