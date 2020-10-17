@@ -179,8 +179,9 @@ RSpec.describe ExportsController, type: :controller do
 
       context 'where csv id requested is hamilton_lds_al_lib_to_qc1.csv' do
         let(:csv_id) { 'hamilton_lds_al_lib_to_qc1' }
+        let(:expected_template) { 'hamilton_plate_stamp_to_qc' }
 
-        it_behaves_like 'a hamilton plate stamp view'
+        it_behaves_like 'a csv view'
       end
 
       context 'where csv id requested is hamilton_lds_al_lib_to_lds_al_lib_dil.csv' do
