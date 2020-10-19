@@ -29,4 +29,3 @@ pWGS-384 Lib Pool XP:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  
