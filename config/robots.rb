@@ -2027,8 +2027,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Robots for pWGS 384 pipeline
 
-  custom_robot('star-pwgs-384-post-shear-to-pwgs-384-post-shear-xp',
-               name: 'STAR pWGS-384 Post Shear => pWGS-384 Post Shear XP',
+  custom_robot('star-lb-post-shear-to-pwgs-384-post-shear-xp',
+               name: 'STAR LB Post Shear => pWGS-384 Post Shear XP',
                beds: {
                  bed(12).barcode => {
                    purpose: 'LB Post Shear',
@@ -2113,7 +2113,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                })
 
   custom_robot('bravo-pwgs-384-al-lib-to-pwgs-384-lib-pcr',
-               name: 'Bravo pWGS-384 AL-Lib => pWGS-384 Lib PCR',
+               name: 'Bravo pWGS-384 AL Lib => pWGS-384 Lib PCR',
                verify_robot: true,
                beds: {
                  bed(7).barcode => {
