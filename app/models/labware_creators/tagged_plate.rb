@@ -26,6 +26,10 @@ module LabwareCreators
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
+
+    # If I call `tag_plates_used?`, it calls `tag_plates.used?`
+    # where `tag_plates` is a method in this class, returning an instance of TagCollection
+    # similar for `list` and `names`
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 

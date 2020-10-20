@@ -83,7 +83,8 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           [w, [pool, i + 1]]
         end
       end
-      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
+      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is not unused.
+      # No method explicitly called `tag_plates_list` - comes from `delegate :used?, :list, :names, to: :tag_plates, prefix: true`
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
                                               'tag-layout-template-1' => { tags: layout_hash, used: false,

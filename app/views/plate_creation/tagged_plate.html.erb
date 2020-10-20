@@ -8,6 +8,7 @@
        });
      })(window,jQuery);
   </script>
+
   <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>

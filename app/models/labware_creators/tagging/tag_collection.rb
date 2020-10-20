@@ -18,7 +18,7 @@ module LabwareCreators::Tagging
     #
     # Returns hash of usable tag layout templates, and the tags assigned to
     # each well:
-    # eg. { "tag-layout-template-0"=>{tags: [["A1", [1, 1]], ["B1", [1, 2]]], dual_index: true } }
+    # eg. { "tag-layout-template-0" => { tags: [["A1", [1, 1]], ["B1", [1, 2]]], dual_index: true } }
     # where { tag_template_uuid => { tags: [[well_name, [ pool_id, tag_id ]]], dual_index: dual_index? } }
     # @return [Hash] Tag layouts and their tags
     #
