@@ -17,21 +17,29 @@
 
     qcLookup = function(barcodeBox, collector) {
       if (barcodeBox.length === 0) { return false; }
+
       var qc_lookup = this, status;
       this.inputBox = barcodeBox;
+
+      // the `data` attribute is set when declaring the element in tagged_plate,html.erb
       this.infoPanel = $('#'+barcodeBox.data('info-panel'));
       this.dualIndex = barcodeBox.data('dual-index');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
       this.required = this.inputBox[0].required;
+
+      // add an onchange event to the box, to look up the plate
       this.inputBox.on('change', function(){
         qc_lookup.resetStatus();
         qc_lookup.requestPlate(this.value);
       });
       this.monitor = collector.register(!this.required, this);
+
+      // set initial values for the tag plate data
       this.qcable = unkownQcable;
       this.template = unknownTemplate;
     };
 
+    // why is this called `qcLookup`? Shouldn't it be tagPlateLookup or similar?
     qcLookup.prototype = {
       resetStatus: function() {
         this.monitor.fail();
@@ -40,6 +48,7 @@
       },
       requestPlate: function(barcode) {
         if ( this.inputBox.val()==="" && !this.required ) { return this.monitor.pass();}
+        // find the qcable (tag plate) based on the barcode scanned in by the user
         $.ajax({
           type: 'POST',
           dataType: "json",
@@ -53,6 +62,7 @@
           if (response.error) {
             qc_lookup.message(response.error,'danger');
           } else if (response.qcable) {
+            // if response is as expected, load some data
             qc_lookup.plateFound(response.qcable);
           } else {
             qc_lookup.message('An unexpected response was received. Please contact support.','danger');
@@ -66,18 +76,29 @@
         };
       },
       validators: [
+        // `t` is a qcLookup object
+        // The data for t.template comes from app/models/labware_creators/tagging/tag_collection.rb
         new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
         new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
         new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
         new validator(function(t) { return !(t.dualIndex && t.template.used && t.template.dual_index); }, 'This template has already been used.'),
         new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
         new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.'),
+        // TODO: add extra filter to below, so doesn't break existing functionality that tries to avoid tag clashes in pools
         new validator(function(t) { return t.template.matches_templates_in_pool }, 'It doesn\'t match those already used for other plates in this submission pool.')
       ],
+      //
+      // The major function that runs when a tag plate is scanned into the box
+      // Loads tag plate data into `qcable` and `template`
+      // Adds visible information to the information panel
+      // Validates whether the tag plate is suitable
+      // Updates the plate diagram with tag numbers
+      //
       plateFound: function(qcable) {
         this.qcable = qcable;
         this.template = this.approvedTypes[qcable.template_uuid] || unknownTemplate;
         this.populateData();
+
         if (this.validPlate()) {
           this.message('The ' + qcable.qcable_type + ' is suitable.', 'success');
           SCAPE.update_layout();
@@ -88,6 +109,7 @@
         }
       },
       populateData: function() {
+        // add information retrieved about the scanned tag plate to the information panel for the user to see
         this.infoPanel.find('dd.lot-number').text(this.qcable.lot_number);
         this.infoPanel.find('dd.template').text(this.qcable.tag_layout);
         this.infoPanel.find('dd.state').text(this.qcable.state);
@@ -95,6 +117,7 @@
         this.infoPanel.find('.template_uuid').val(this.qcable.template_uuid);
       },
       validPlate: function() {
+        // run through the `validators`, and collect any errors
         this.errors = '';
         for (var i =0; i < this.validators.length; i+=1) {
           var response = this.validators[i].validate(this);

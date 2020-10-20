@@ -44,6 +44,7 @@ module LabwareCreators::Tagging
       end
     end
 
+    # Have any tag layout templates already been used on other plates in the relevant submission pools?
     def used?
       used.present?
     end
