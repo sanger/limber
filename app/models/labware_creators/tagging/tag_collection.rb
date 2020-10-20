@@ -29,6 +29,7 @@ module LabwareCreators::Tagging
             tags: tags_by_column(layout),
             dual_index: layout.dual_index?,
             used: used.include?(layout.uuid),
+            matches_templates_in_pool: matches_templates_in_pool(layout.uuid),
             approved: acceptable_template?(layout)
           }
         end
@@ -45,6 +46,24 @@ module LabwareCreators::Tagging
 
     def used?
       used.present?
+    end
+
+    #
+    # Used where the wells being pooled together originate from the same sample,
+    # so should have the same tags, so they are kept together when analysing sequencing data.
+    # (As opposed to when the pool will contain multiple samples, and therefore need to have different tags)
+    #
+    # @param [string] uuid - the uuid of the Tag Layout Template we are currently dealing with
+    #
+    # @return [Bool] true if either no other templates have been used in the submission pool, or
+    #                     if all the templates used are the same as this one
+    #
+    def matches_templates_in_pool(uuid)
+      # if there haven't been any templates used yet in the pool, we say it matches them
+      return true if used.empty?
+
+      # return true if the list is empty after we remove our uuid, meaning no different templates have been used
+      return used.dup.delete(uuid).empty?
     end
 
     private

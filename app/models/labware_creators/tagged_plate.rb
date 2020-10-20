@@ -108,7 +108,7 @@ module LabwareCreators
     # Forbidden if part of a pool using tubes
     # Permitted, but not required in all other cases
     #
-    # @return [<Boolean] false: UDI plates are forbidden
+    # @return [Boolean] false: UDI plates are forbidden
     #                    true: UDI plates are required
     #                    nil: UDI plates are permitted, but not required
     #

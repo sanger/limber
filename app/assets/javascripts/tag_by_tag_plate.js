@@ -71,7 +71,8 @@
         new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
         new validator(function(t) { return !(t.dualIndex && t.template.used && t.template.dual_index); }, 'This template has already been used.'),
         new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
-        new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.')
+        new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.'),
+        new validator(function(t) { return t.template.matches_templates_in_pool }, 'It doesn\'t match those already used for other plates in this submission pool.')
       ],
       plateFound: function(qcable) {
         this.qcable = qcable;
