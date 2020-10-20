@@ -36,6 +36,8 @@ module LabwareCreators::Tagging
       end
     end
 
+    # Returns a list of the tag layout templates (their uuids) that have already been used on
+    # other plates in the relevant submission pools
     def used
       return [] if @plate.submission_pools.empty?
 
