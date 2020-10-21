@@ -33,7 +33,7 @@ module LabwareCreators
     MISSING_WELL_DETAIL = 'is missing a row for well %s, all wells with content must have a row in the uploaded file.'
     PENDING_WELL = 'contains at least one pending well %s, the plate and all wells in it should be passed before creating the child plate.'
 
-    self.page = 'pcr_cycles_binned_plate' # TODO: how does this work? new page for uploading file? see custom_pooled_tubes directory in labware_creators
+    self.page = 'pcr_cycles_binned_plate'
     self.attributes += [:file]
 
     attr_accessor :file
