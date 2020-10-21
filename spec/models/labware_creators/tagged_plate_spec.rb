@@ -97,11 +97,13 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
+
       context 'and tubes have been used' do
         let(:pool_json) do
           json(:dual_submission_pool_collection,
                used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
         end
+
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
@@ -112,9 +114,10 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           end
 
           it 'describes only the unused tube' do
-            expect(subject.tag_tubes_list).to eq('tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
-                                                 'tag2-layout-template-1' => { dual_index: true, used: false,
-                                                                               approved: true })
+            expect(subject.tag_tubes_list).to eq(
+              'tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
+              'tag2-layout-template-1' => { dual_index: true, used: false, approved: true }
+            )
             expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
           end
 
@@ -123,6 +126,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           end
         end
       end
+
       context 'and nothing has been used' do
         let(:pool_json) do
           json(:dual_submission_pool_collection)
@@ -131,6 +135,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
         end
       end
+
       context 'and dual index plates have been used' do
         let(:pool_json) do
           json(:dual_submission_pool_collection,

@@ -78,6 +78,8 @@
       validators: [
         // `t` is a qcLookup object
         // The data for t.template comes from app/models/labware_creators/tagging/tag_collection.rb
+        // t.dualIndex = whether we are expecting a UDI plate to be scanned, based on what has already been used in the other plates in the pool
+        // t.template.dual_index = whether the scanned tag plate contains both i5 and i7 tags in its wells (UDI plate)
         new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
         new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
         new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
