@@ -211,7 +211,7 @@ GEM
       json
       websocket (~> 1.0)
     rack (2.2.3)
-    rack-mini-profiler (2.0.2)
+    rack-mini-profiler (2.2.0)
       rack (>= 1.2.0)
     rack-proxy (0.6.5)
       rack
@@ -293,10 +293,6 @@ GEM
       rack (>= 1.1)
       rubocop (>= 0.87.0)
     ruby-progressbar (1.10.1)
-    ruby_jard (0.3.0)
-      byebug (>= 9.1, < 12.0)
-      pry (~> 0.13.0)
-      tty-screen (~> 0.8.1)
     rubyzip (2.3.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -346,7 +342,6 @@ GEM
       launchy (~> 2.1)
       pusher-client (~> 0.4)
       typhoeus (~> 0.6, >= 0.6.8)
-    tty-screen (0.8.1)
     typhoeus (0.8.0)
       ethon (>= 0.8.0)
     tzinfo (1.2.7)
@@ -411,7 +406,6 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
-  ruby_jard
   sanger_barcode_format!
   sass-rails
   select2-rails
