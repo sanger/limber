@@ -78,16 +78,19 @@
       validators: [
         // `t` is a qcLookup object
         // The data for t.template comes from app/models/labware_creators/tagging/tag_collection.rb
-        // t.dualIndex = whether we are expecting a UDI plate to be scanned, based on what has already been used in the other plates in the pool
-        // t.template.dual_index = whether the scanned tag plate contains both i5 and i7 tags in its wells (UDI plate)
+        // t.template.dual_index is true if the scanned tag plate contains both i5 and i7 tags together in its wells (is a UDI plate)
+        // t.dualIndex is true if there are multiple source plates from the submission, which will be pooled...
+        // ... and therefore an i5 tag (tag 2) is needed (from either a tube or UDI plate)
         new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
         new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
         new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
         new validator(function(t) { return !(t.dualIndex && t.template.used && t.template.dual_index); }, 'This template has already been used.'),
         new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
         new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.'),
-        // TODO: add extra filter to below, so doesn't break existing functionality that tries to avoid tag clashes in pools
-        new validator(function(t) { return t.template.matches_templates_in_pool }, 'It doesn\'t match those already used for other plates in this submission pool.')
+        new validator(
+          function(t) { return (SCAPE.enforceSameTemplateWithinPool ? t.template.matches_templates_in_pool : true) },
+          'It doesn\'t match those already used for other plates in this submission pool.'
+        )
       ],
       //
       // The major function that runs when a tag plate is scanned into the box

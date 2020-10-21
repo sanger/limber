@@ -95,6 +95,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
     context 'when a submission is split over multiple plates' do
       let(:pools) { 1 }
+
       before do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
@@ -132,6 +133,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         let(:pool_json) do
           json(:dual_submission_pool_collection)
         end
+
         it 'allows tubes or plates' do
           expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
         end
@@ -142,6 +144,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           json(:dual_submission_pool_collection,
                used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
         end
+
         it 'enforces use of plates' do
           expect(subject.acceptable_tag2_sources).to eq ['plate']
         end

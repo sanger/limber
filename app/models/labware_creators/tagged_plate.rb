@@ -127,6 +127,10 @@ module LabwareCreators
       nil
     end
 
+    def enforce_same_template_within_pool?
+      purpose_config.fetch(:enforce_same_template_within_pool, false)
+    end
+
     private
 
     def transfer_hash
