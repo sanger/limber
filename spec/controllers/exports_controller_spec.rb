@@ -39,6 +39,12 @@ RSpec.describe ExportsController, type: :controller do
     it_behaves_like 'a csv view'
   end
 
+  RSpec.shared_examples 'a hamilton variable volume dilutions with well diluents view' do
+    let(:expected_template) { 'hamilton_variable_volume_dilutions_with_well_diluents' }
+
+    it_behaves_like 'a csv view'
+  end
+
   context 'on generating a csv' do
     before do
       expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes,
@@ -65,6 +71,14 @@ RSpec.describe ExportsController, type: :controller do
       let(:includes) { well_qc_sample_includes }
       let(:csv_id) { 'duplex_seq_al_lib_concentrations_for_customer' }
       let(:expected_template) { 'duplex_seq_al_lib_concentrations_for_customer' }
+
+      it_behaves_like 'a csv view'
+    end
+
+    context 'where csv id requested is duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'duplex_seq_pcr_xp_concentrations_for_custom_pooling' }
+      let(:expected_template) { 'duplex_seq_pcr_xp_concentrations_for_custom_pooling' }
 
       it_behaves_like 'a csv view'
     end
@@ -161,6 +175,19 @@ RSpec.describe ExportsController, type: :controller do
         let(:csv_id) { 'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' }
 
         it_behaves_like 'a hamilton variable volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lds_al_lib_to_qc1.csv' do
+        let(:csv_id) { 'hamilton_lds_al_lib_to_qc1' }
+        let(:expected_template) { 'hamilton_plate_stamp_to_qc' }
+
+        it_behaves_like 'a csv view'
+      end
+
+      context 'where csv id requested is hamilton_lds_al_lib_to_lds_al_lib_dil.csv' do
+        let(:csv_id) { 'hamilton_lds_al_lib_to_lds_al_lib_dil' }
+
+        it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
       end
     end
   end

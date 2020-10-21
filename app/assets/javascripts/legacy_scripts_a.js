@@ -20,7 +20,7 @@
       }
     }
 
-    this['concentration-binned-view'] = {
+    this['binned-view'] = {
       activate: function(){
         plateElement.addClass('binning-colours')
       },

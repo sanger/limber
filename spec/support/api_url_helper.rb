@@ -84,6 +84,12 @@ module ApiUrlHelper
       end
     end
 
+    def stub_api_v2_post(klass)
+      # intercepts the 'update_attributes' method for any class beginning with 'Sequencescape::Api::V2::' and returns true
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
+    end
+
     # Builds the basic v2 plate finding query.
     # rubocop:todo Metrics/MethodLength
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize

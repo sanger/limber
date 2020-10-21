@@ -1,12 +1,12 @@
 /*
- * This css is for the concentration binned plate presenter.
- * In /app/views/aliquots/_concentration_binned_aliquot.html.erb we define two aliquot divs, one specific to the binning
+ * This css is for the binned plate presenter.
+ * In /app/views/aliquots/_binned_aliquot.html.erb we define two aliquot divs, one specific to the binning
  * tab, and the default pooling one for other tabs. This css shows and hides the relevant aliquot div.
  */
 .plate-view {
-  .concentration-binning-id { display: none; }
+  .binning-id { display: none; }
    &.binning-colours {
-    .concentration-binning-id { display: inline; }
+    .binning-id { display: inline; }
   }
 
   .aliquot.aliquot-pooled { display: inline-block; }
