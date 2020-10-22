@@ -81,7 +81,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq(
           'tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true },
-          'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true })
+          'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true }
+        )
       end
     end
   end
