@@ -163,7 +163,8 @@ Default: `false`
 **(plate only)**
 Boolean, indicates that the plate will appear as a
 cherrypicking target options in Sequencescape. Usually only true for the first
-plate in the pipeline.
+plate in the pipeline. This option is only used to register a purpose in
+sequencescape, and does not affect its behaviour in Limber.
 
 ```yaml
 :cherrypickable_target: false
@@ -221,6 +222,8 @@ different stages or ensure tag information gets shown.
 
 If you don't need any special behaviour, the defaults should be just fine.
 
+{file:docs/presenters.md Full list of presenters and their behaviour}
+
 ```yaml
 :presenter_class: Presenters::StockPlatePresenter
 ```
@@ -238,6 +241,8 @@ purpose. State changers are used on updating labware state, either via a
 the default option.
 
 Valid options are subclasses of {StateChangers::DefaultStateChanger}.
+
+{file:docs/state_changers.md Full list of state changers and their behaviour}
 
 ```yaml
 :state_changer_class: StateChangers::DefaultStateChanger
@@ -258,6 +263,8 @@ wells are not transferred.
 
 The default tube creator {LabwareCreators::TubeFromTube} handles the transfer
 of all material from the parent tube to the new child tube.
+
+{file:docs/creators.md Full list of creators and their behaviour}
 
 ```yaml
 :creator_class: LabwareCreators::TaggedPlate
@@ -343,6 +350,11 @@ String, used to select an alternative {Labels::Base label} template, such as for
 printing QC labels. A list of valid label templates can be found in
 {file:config/label_templates.yml}
 
+A label template is a configuration that combines a {Labels::Base label class},
+which describes the specific fields (barcode, date, user, etc...) which will be
+displayed on a Plate/Tube label, and a print my barcode template, which
+describes how those fields are physically laid out on the label.
+
 If unspecified, falls back on the default label template for the given printer
 specified in default_pmb_templates in {file:config/label_templates.yml}.
 
@@ -360,7 +372,10 @@ Hash, specifying:
                   exact keys required will depend on the submission template.
 
 Used by {WorkCompletion} to automatically build a downstream submission when
-the labware is charged and passed.
+the labware is charged and passed. This can be useful to, for example, build
+sequencing submissions automatically off the final tube in a pipeline, in cases
+where it is not possible to build the sequencing requests upfront; such as when
+pooling is dynamic.
 
 ```yaml
 :submission:
@@ -399,8 +414,9 @@ These options are only used for specific creators or presenters.
 
 #### :dilutions
 
-Used to define binning both for sorting samples by concentration, and for
-annotating the resulting wells.
+Used to define binning (grouping) both for sorting samples by concentration,
+and for annotating the resulting wells with grouping/concentration information
+when shown to the user.
 
 Please see the associated classes for more details.
 
