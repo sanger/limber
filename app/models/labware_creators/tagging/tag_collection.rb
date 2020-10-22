@@ -65,8 +65,8 @@ module LabwareCreators::Tagging
       # if there haven't been any templates used yet in the pool, we say it matches them
       return true if used.empty?
 
-      # return true if the list is empty after we remove our uuid, meaning no different templates have been used
-      return used.dup.delete(uuid).empty?
+      # return true if this template has been used already in the pool
+      return used.include?(uuid)
     end
 
     private
