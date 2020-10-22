@@ -39,7 +39,6 @@
       this.template = unknownTemplate;
     };
 
-    // why is this called `qcLookup`? Shouldn't it be tagPlateLookup or similar?
     qcLookup.prototype = {
       resetStatus: function() {
         this.monitor.fail();
