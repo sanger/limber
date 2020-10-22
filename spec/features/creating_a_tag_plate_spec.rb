@@ -217,9 +217,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:enforce_same_template_within_pool) { true }
         let(:used_template_uuid) { 'tag-layout-template-0' }
 
+        # this is used in shared_tagging_examples when stubbing the tag_layout_creation_request
+        let(:enforce_uniqueness) { false }
+
         # don't use dual_submission_pool_collection - we only want 1 source plate in our submission
         let(:submission_pools) do
-          json(:dual_submission_pool_collection, # json(:submission_pool_collection,
+          json(:submission_pool_collection,
             used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
         end
 
