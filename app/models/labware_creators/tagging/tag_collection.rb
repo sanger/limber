@@ -24,16 +24,21 @@ module LabwareCreators::Tagging
     #
     def list
       @list ||= tag_layout_templates.each_with_object({}) do |layout, hash|
+        # the `throw` that this catches comes from `generate_tag_layout` method
         catch(:unacceptable_tag_layout) do
-          hash[layout.uuid] = {
-            tags: tags_by_column(layout),
-            dual_index: layout.dual_index?,
-            used: used.include?(layout.uuid),
-            matches_templates_in_pool: matches_templates_in_pool(layout.uuid),
-            approved: acceptable_template?(layout)
-          }
+          hash[layout.uuid] = layout_hash(layout)
         end
       end
+    end
+
+    def layout_hash(layout)
+      {
+        tags: tags_by_column(layout),
+        dual_index: layout.dual_index?,
+        used: used.include?(layout.uuid),
+        matches_templates_in_pool: matches_templates_in_pool(layout.uuid),
+        approved: acceptable_template?(layout)
+      }
     end
 
     # Returns a list of the tag layout templates (their uuids) that have already been used on
@@ -66,7 +71,7 @@ module LabwareCreators::Tagging
       return true if used.empty?
 
       # return true if this template has been used already in the pool
-      return used.include?(uuid)
+      used.include?(uuid)
     end
 
     private

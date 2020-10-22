@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:todo Metrics/ClassLength
 module LabwareCreators
   # Handles transfer of material into a pre-existing tag plate, created via
   # Gatekeeper. It performs a few actions:
@@ -173,3 +174,4 @@ module LabwareCreators
     # rubocop:enable Metrics/MethodLength
   end
 end
+# rubocop:enable Metrics/ClassLength

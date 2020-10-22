@@ -222,7 +222,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         # don't use dual_submission_pool_collection - we only want 1 source plate in our submission
         let(:submission_pools) do
           json(:submission_pool_collection,
-            used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
+               used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
         end
 
         context 'when the template has been used' do
