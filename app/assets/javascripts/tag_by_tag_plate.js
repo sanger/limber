@@ -7,7 +7,7 @@
   // TAG CREATION
   $(document).ready(function(){
     if ($('#tag-creation-page').length === 0) { return; }
-    var qcLookup;
+    var qcableLookup;
 
     //= require lib/ajax_support
 
@@ -15,7 +15,7 @@
     var unknownTemplate = { unknown: true, dual_index: false };
     var unkownQcable = { template_uuid: 'not-loaded' };
 
-    qcLookup = function(barcodeBox, collector) {
+    qcableLookup = function(barcodeBox, collector) {
       if (barcodeBox.length === 0) { return false; }
 
       var qc_lookup = this, status;
@@ -39,7 +39,7 @@
       this.template = unknownTemplate;
     };
 
-    qcLookup.prototype = {
+    qcableLookup.prototype = {
       resetStatus: function() {
         this.monitor.fail();
         this.infoPanel.find('dd').text('');
@@ -75,7 +75,7 @@
         };
       },
       validators: [
-        // `t` is a qcLookup object
+        // `t` is a qcableLookup object
         // The data for t.template comes from app/models/labware_creators/tagging/tag_collection.rb
         // t.template.dual_index is true if the scanned tag plate contains both i5 and i7 tags together in its wells (is a UDI plate)
         // t.dualIndex is true if there are multiple source plates from the submission, which will be pooled...
@@ -155,8 +155,8 @@
       }
     );
 
-    new qcLookup($('#plate_tag_plate_barcode'), qcCollector);
-    new qcLookup($('#plate_tag2_tube_barcode'), qcCollector);
+    new qcableLookup($('#plate_tag_plate_barcode'), qcCollector);
+    new qcableLookup($('#plate_tag2_tube_barcode'), qcCollector);
 
     /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
     $('form#plate_new').on('submit', function(){ return !$('input#plate_submit')[0].disabled; } );
