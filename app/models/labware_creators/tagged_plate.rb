@@ -82,7 +82,7 @@ module LabwareCreators
     # - If we don't need a tag2, allow anything, it doesn't matter.
     # - If we've already started using one method, enforce it for the rest of the pool
     # - Otherwise, anything goes
-    # Note: The order matter here, as pools tagged with tubes will still list plates
+    # Note: The order matters here, as pools tagged with tubes will still list plates
     # for the i5 (tag) tag.
     #
     # @return [Array<String>] An array of acceptable sources, 'plate' and/or 'tube'

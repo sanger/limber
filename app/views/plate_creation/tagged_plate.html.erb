@@ -1,7 +1,7 @@
 <%= page(:'tag-creation-page', prevent_row: true) do -%>
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
-       $.extend(SCAPE, {
+      $.extend(SCAPE, {
         tag_plates_list: <%= @labware_creator.tag_plates_list.to_json.html_safe %>,
         tag_tubes_list: <%= @labware_creator.tag_tubes_list.to_json.html_safe %>,
         dualRequired: <%= @labware_creator.requires_tag2? %>,

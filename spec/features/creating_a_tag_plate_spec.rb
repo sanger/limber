@@ -215,7 +215,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
         # set purposes config to enforce_same_template_within_pool
         let(:enforce_same_template_within_pool) { true }
-        let(:used_template_uuid) { 'tag-layout-template-0' }
 
         # this is used in shared_tagging_examples when stubbing the tag_layout_creation_request
         let(:enforce_uniqueness) { false }
@@ -227,6 +226,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         end
 
         context 'when the template has been used' do
+          let(:used_template_uuid) { 'tag-layout-template-0' }
           it_behaves_like 'supports dual-index plates'
         end
 
