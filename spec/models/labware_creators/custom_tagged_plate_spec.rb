@@ -79,9 +79,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       end
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
       it 'lists tag groups' do
-        expect(subject.tag_plates_list).to eq('tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true },
-                                              'tag-layout-template-1' => { tags: layout_hash, used: false,
-                                                                           dual_index: false, approved: true })
+        expect(subject.tag_plates_list).to eq(
+          'tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true },
+          'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true })
       end
     end
   end
