@@ -464,7 +464,7 @@ String, used by {StateChangers::AutomaticPlateStateChanger} to determine which
 request type to automatically pass when the plate is passed.
 
 ```yaml
-:state_changer_class: StateChangers::AutomaticPlateStateChanger
+:work_completion_request_type: 'limber_bespoke_aggregation'
 ```
 
 #### :tag_layout_templates
