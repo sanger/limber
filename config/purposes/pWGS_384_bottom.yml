@@ -7,7 +7,7 @@ pWGS-384 Post Shear XP:
   :size: 384
 pWGS-384 End Prep:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :presenter_class: Presenters::SingleChildPermissivePresenter
   :label_template: plate_6mm_double
   :size: 384
 pWGS-384 AL Lib:
