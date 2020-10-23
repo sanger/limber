@@ -4,7 +4,7 @@ module Presenters::Statemachine
   # Supports creation of a single child asset in this state
   module StateAllowsSingleChildCreation
     def control_additional_creation
-      yield if self.child_assets.nil? || self.child_assets.empty?
+      yield if child_assets.blank?
     end
   end
 end

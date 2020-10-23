@@ -108,9 +108,7 @@ class Presenters::PlatePresenter
     "#{human_barcode} - #{purpose_name}"
   end
 
-  def child_assets
-    child_plates
-  end
+  alias child_assets child_plates
 
   private
 
