@@ -17,6 +17,10 @@ RSpec.shared_examples 'a labware presenter' do
     # If you don't expect to trigger any request, just use let(:expected_requests_for_summary) {}
     expect { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
   end
+
+  it 'responds to child_assets' do
+    expect(subject).to respond_to(:child_assets)
+  end
 end
 
 RSpec.shared_examples 'a stock presenter' do
