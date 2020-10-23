@@ -108,6 +108,10 @@ class Presenters::PlatePresenter
     "#{human_barcode} - #{purpose_name}"
   end
 
+  def child_assets
+    child_plates
+  end
+
   private
 
   def libraries_passable?
