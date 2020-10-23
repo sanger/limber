@@ -89,6 +89,8 @@ namespace :config do
       ].join("\n"))
       file.puts(CONFIG.to_yaml)
     end
+
+    Rake::Task['docs:update'].invoke if Rails.env.development?
   end
 
   task default: :generate

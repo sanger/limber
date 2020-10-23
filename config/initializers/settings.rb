@@ -2,8 +2,8 @@
 
 require 'config_loader/pipelines_loader'
 
-# This is used as part of a take task, and will be run within a console.
-# rubocop:disable Style/StderrPuts
+# Global setting object loaded from `config/settings/_environment_.yml` which is
+# generated on running `rake config:generate`
 class Settings
   class << self
     def configuration_filename
@@ -22,11 +22,15 @@ class Settings
       @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
       @instance
     rescue Errno::ENOENT
+      # This before we've fully initialized and is intended to report issues to
+      # the user.
+      # rubocop:disable Style/StderrPuts
       star_length = [96, 12 + configuration_filename.to_s.length].max
       $stderr.puts('*' * star_length)
       $stderr.puts "WARNING! No #{configuration_filename}"
       $stderr.puts "You need to run 'rake config:generate' and can ignore this message if that's what you are doing!"
       $stderr.puts('*' * star_length)
+      # rubocop:enable Style/StderrPuts
     end
 
     delegate_missing_to :instance
@@ -34,4 +38,3 @@ class Settings
 end
 
 Settings.instance
-# rubocop:enable Style/StderrPuts

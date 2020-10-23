@@ -379,6 +379,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yajl-ruby (1.4.1)
+    yard (0.9.25)
 
 PLATFORMS
   ruby
@@ -425,6 +426,7 @@ DEPENDENCIES
   webdrivers
   webmock
   webpacker
+  yard
 
 BUNDLED WITH
    2.1.4

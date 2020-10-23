@@ -1,0 +1,51 @@
+<!--
+# @markup markdown
+# @title Available Presenters
+-->
+
+# Available Presenters
+
+> **Note** This file is generated automatically by `rake docs:update` and should
+> be generated automatically if you run `rake config:generate` in development.
+> If you wish to modify the file, update `docs/templates/presenters.md.erb`
+> instead. The description of each class is pulled directly from the class itself.
+
+Presenters are responsible for showing information about a piece of labware.
+
+## Plate presenters
+
+<% [Presenters::PlatePresenter, *Presenters::PlatePresenter.descendants].each do |presenter_class| %>
+
+### <%= presenter_class.name %>
+
+{include:<%= presenter_class.name %>}
+
+<% if used_presenter[presenter_class.name].present? %>
+  Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
+  <%= used_presenter[presenter_class.name].to_sentence %>
+<% else %>
+  **This presenter is unused**
+<% end %>
+
+{<%= presenter_class.name %> View class documentation}
+
+<% end %>
+
+## Tube presenters
+
+<% [Presenters::TubePresenter, *Presenters::TubePresenter.descendants].each do |presenter_class| %>
+
+### <%= presenter_class.name %>
+
+{include:<%= presenter_class.name %>}
+
+<% if used_presenter[presenter_class.name].present? %>
+Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
+<% used_presenter[presenter_class.name].each do |purpose| %><%= purpose %>, <% end %>
+<% else %>
+  **This template is unused**
+<% end %>
+
+{<%= presenter_class.name %> View class documentation}
+
+<% end %>

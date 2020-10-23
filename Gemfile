@@ -56,6 +56,7 @@ group :development, :test do
   gem 'select2-rails'
   # We use the sortable component of jquery ui
   gem 'jquery-ui-rails'
+  gem 'yard'
 end
 
 group :development do

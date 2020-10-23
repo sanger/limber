@@ -1,18 +1,28 @@
-Limber Pipeline Application
-=============================
+# Limber Pipeline Application
 
 [![Build Status](https://travis-ci.org/sanger/limber.svg?branch=next_release)](https://travis-ci.org/sanger/limber)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/sanger/limber)
 
 
-Description
------------
+## Description
 
 A flexible front end to plate bases pipelines in Sequencescape
 
+## Docs
 
-Running Specs
--------------
+In addition to the [externally hosted YARD docs](https://www.rubydoc.info/github/sanger/limber), you can also run a local server:
+
+```shell
+yard server -r --gems -m limber
+```
+
+You can then access the Sequencescape documentation through: http://localhost:8808/docs/limber
+Yard will also try and document the installed gems: http://localhost:8808/docs
+
+## Configuring pipelines
+{file:docs/configuring_new_pipelines.md Configuring new pipelines}
+
+## Running Specs
 
 #### RSpec
 Ruby unit and feature tests:
@@ -43,7 +53,7 @@ Webpacker
 
 You'll need to run `webpack-dev-server` when developing to ensure all the vue.js javascript is correctly compiled.
 
- 
+
 Writing specs
 -------------
 
