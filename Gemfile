@@ -56,6 +56,7 @@ group :development, :test do
   gem 'select2-rails'
   # We use the sortable component of jquery ui
   gem 'jquery-ui-rails'
+  gem 'yard'
 end
 
 group :development do
@@ -70,5 +71,5 @@ group :development do
   gem 'travis'
   # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
   # with jard
-  gem 'ruby_jard'
+  # gem 'ruby_jard'
 end

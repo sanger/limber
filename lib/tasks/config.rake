@@ -41,7 +41,7 @@ namespace :config do
     end
 
     # Build the configuration file based on the server we are connected to.
-    CONFIG = {}.tap do |configuration| # rubocop:todo Metrics/BlockLength
+    CONFIG = {}.tap do |configuration| # rubocop:todo Metrics/BlockLength, Lint/ConstantDefinitionInBlock
       puts 'Preparing searches ...'
       configuration[:searches] = api.search.all.each_with_object({}) do |search, searches|
         searches[search.name] = search.uuid
@@ -89,6 +89,8 @@ namespace :config do
       ].join("\n"))
       file.puts(CONFIG.to_yaml)
     end
+
+    Rake::Task['docs:update'].invoke if Rails.env.development?
   end
 
   task default: :generate

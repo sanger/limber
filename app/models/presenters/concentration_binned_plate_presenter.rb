@@ -11,8 +11,8 @@ module Presenters
 
     PLATE_WITH_QC_RESULTS_INCLUDES = 'wells.aliquots,wells.qc_results'
 
-    self.summary_partial = 'labware/plates/concentration_binned_summary'
-    self.aliquot_partial = 'concentration_binned_aliquot'
+    self.summary_partial = 'labware/plates/binned_summary'
+    self.aliquot_partial = 'binned_aliquot'
 
     def dilutions_config
       purpose_config.fetch(:dilutions)

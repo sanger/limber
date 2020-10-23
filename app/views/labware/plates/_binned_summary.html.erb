@@ -7,7 +7,7 @@
     <a class="nav-link" href="#samples_tab" data-toggle="tab" role="tab" data-plate-view="samples-view">Samples</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#concentration_binned_tab" data-toggle="tab" role="tab" data-plate-view="concentration-binned-view">Binning</a>
+    <a class="nav-link" href="#binned_tab" data-toggle="tab" role="tab" data-plate-view="binned-view">Binning</a>
   </li>
 <% end %>
 
@@ -15,8 +15,8 @@
   <div class="tab-pane" id='samples_tab' role="tabpanel">
     <%= render partial: 'plates/samples_tab', locals: { plate_presenter: presenter } %>
   </div>
-  <div class="tab-pane" id='concentration_binned_tab' role="tabpanel">
-    <%= render partial: 'plates/concentration_binned_tab', locals: { plate_presenter: presenter } %>
+  <div class="tab-pane" id='binned_tab' role="tabpanel">
+    <%= render partial: 'plates/binned_tab', locals: { plate_presenter: presenter } %>
   </div>
 <% end %>
 

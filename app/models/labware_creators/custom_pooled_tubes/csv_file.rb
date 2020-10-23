@@ -21,6 +21,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
 
     def initialize(file)
       @data = CSV.parse(file.read)
+      remove_bom
       @parsed = true
     rescue StandardError => e
       @data = []
@@ -52,6 +53,20 @@ module LabwareCreators # rubocop:todo Style/Documentation
     end
 
     private
+
+    # remove byte order marker if present
+    def remove_bom
+      return unless @data.present? && @data[0][0].present?
+
+      # byte order marker will appear at beginning of in first string in @data array
+      s = @data[0][0]
+
+      # NB. had to make byte order marker string mutable here otherwise get frozen string error
+      bom = +"\xEF\xBB\xBF"
+      s_mod = s.gsub!(bom.force_encoding(Encoding::BINARY), '')
+
+      @data[0][0] = s_mod unless s_mod.nil?
+    end
 
     def transfers
       @transfers ||= @data[1..].each_with_index.map do |row_data, index|

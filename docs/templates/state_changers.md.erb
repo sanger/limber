@@ -1,0 +1,31 @@
+<!--
+# @markup markdown
+# @title Available State Changers
+-->
+
+# Available State Changers
+
+> **Note** This file is generated automatically by `rake docs:update` and should
+> be generated automatically if you run `rake config:generate` in development.
+> If you wish to modify the file, update `docs/templates/state_changers.md.erb`
+> instead. The description of each class is pulled directly from the class itself.
+
+State changers are responsible for updating labware state either via robot or
+manual transfer.
+
+<% [StateChangers::DefaultStateChanger, *StateChangers::DefaultStateChanger.descendants].each do |state_changer_class| %>
+
+## <%= state_changer_class.name %>
+
+{include:<%= state_changer_class.name %>}
+
+<% if used_state_changer[state_changer_class.name].present? %>
+  Used directly in <%= used_state_changer[state_changer_class.name].length %> purposes:
+  <%= used_state_changer[state_changer_class.name].to_sentence %>
+<% else %>
+  **This state changer is unused**
+<% end %>
+
+{<%= state_changer_class.name %> View class documentation}
+
+<% end %>

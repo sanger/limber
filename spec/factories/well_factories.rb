@@ -84,7 +84,12 @@ FactoryBot.define do
     name { "#{plate_barcode}:#{location}" }
     position { { 'name' => location } }
     state { 'passed' }
-    uuid
+    uuid { SecureRandom.uuid }
+    diluent_volume { nil }
+    pcr_cycles { nil }
+    submit_for_sequencing { nil }
+    sub_pool { nil }
+    coveraga { nil }
 
     after(:build) do |well, evaluator|
       well._cached_relationship(:qc_results) { evaluator.qc_results || [] }
@@ -97,6 +102,7 @@ FactoryBot.define do
       well._cached_relationship(:upstream_tubes) { evaluator.upstream_tubes || [] }
       well._cached_relationship(:upstream_assets) { evaluator.upstream_assets || [] }
       well._cached_relationship(:upstream_plates) { evaluator.upstream_plates || [] }
+      well._cached_relationship(:pcr_cycles) { evaluator.pcr_cycles || [] }
     end
 
     # API v2 stock wells associate the outer requests with the well requests_as_source,

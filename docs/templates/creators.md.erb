@@ -1,0 +1,30 @@
+<!--
+# @markup markdown
+# @title Available LabwareCreators
+-->
+
+# Available LabwareCreators
+
+> **Note** This file is generated automatically by `rake docs:update` and should
+> be generated automatically if you run `rake config:generate` in development.
+> If you wish to modify the file, update `docs/templates/creators.md.erb`
+> instead. The description of each class is pulled directly from the class itself.
+
+Labware creators are responsible for creating new labware from a parent labware.
+
+<% [LabwareCreators::Base, *LabwareCreators::Base.descendants].each do |creator_class| %>
+
+## <%= creator_class.name %>
+
+{include:<%= creator_class.name %>}
+
+<% if used_creator[creator_class.name].present? %>
+  Used directly in <%= used_creator[creator_class.name].length %> purposes:
+  <%= used_creator[creator_class.name].to_sentence %>
+<% else %>
+  **This labware creator is unused**
+<% end %>
+
+{<%= creator_class.name %> View class documentation}
+
+<% end %>

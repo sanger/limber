@@ -190,3 +190,12 @@ Performance/StringInclude: # (new in 1.7)
   Enabled: true
 Performance/Sum: # (new in 1.8)
   Enabled: true
+Layout/BeginEndAlignment: # (new in 0.91)
+  Enabled: true
+Lint/ConstantDefinitionInBlock: # (new in 0.91)
+  Enabled: true
+Lint/IdentityComparison: # (new in 0.91)
+  Enabled: true
+Lint/UselessTimes: # (new in 0.91)
+  Enabled: true
+
