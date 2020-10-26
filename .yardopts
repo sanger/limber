@@ -1,0 +1,7 @@
+--embed-mixins
+config/initializers/settings.rb
+app/**/*.rb
+lib/**/*.rb
+lib/*.rb
+-
+docs/*.md
