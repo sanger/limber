@@ -1,0 +1,31 @@
+---
+pWGS-384 Post Shear XP:
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
+  :label_template: plate_6mm_double
+  :size: 384
+pWGS-384 End Prep:
+  :asset_type: plate
+  :presenter_class: Presenters::SingleChildPermissivePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+pWGS-384 AL Lib:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :size: 384
+pWGS-384 Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+  - 'TSsc384'
+pWGS-384 Lib Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

@@ -2024,4 +2024,109 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  # Robots for pWGS 384 pipeline
+
+  custom_robot('star-lb-post-shear-to-pwgs-384-post-shear-xp',
+               name: 'STAR LB Post Shear => pWGS-384 Post Shear XP',
+               beds: {
+                 bed(12).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   child: bed(7).barcode,
+                   label: 'Bed 12'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   child: bed(7).barcode,
+                   label: 'Bed 13'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   child: bed(7).barcode,
+                   label: 'Bed 14'
+                 },
+                 bed(15).barcode => {
+                   purpose: 'LB Post Shear',
+                   states: ['passed'],
+                   child: bed(7).barcode,
+                   label: 'Bed 15'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'pWGS-384 Post Shear XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parents: [bed(12).barcode, bed(13).barcode, bed(14).barcode, bed(15).barcode],
+                   target_state: 'passed'
+                 }
+               },
+               destination_bed: bed(7).barcode,
+               class: 'Robots::QuadrantRobot')
+
+  custom_robot('bravo-pwgs-384-post-shear-xp-to-pwgs-384-end-prep',
+               name: 'Bravo pWGS-384 Post Shear XP => pWGS-384 End Prep',
+               require_robot: true,
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'pWGS-384 Post Shear XP',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 car('1,4').barcode => {
+                   purpose: 'pWGS-384 End Prep',
+                   states: ['pending'],
+                   label: 'Carousel 1,4',
+                   target_state: 'started'
+                 },
+                 car('3,5').barcode => {
+                   purpose: 'pWGS-384 AL Lib',
+                   states: ['pending'],
+                   label: 'Carousel 3,5',
+                   target_state: 'started'
+                 }
+               })
+
+  custom_robot('bravo-pwgs-384-end-prep',
+               name: 'Bravo pWGS-384 End Prep',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                   purpose: 'pWGS-384 End Prep',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-pwgs-384-al-lib',
+               name: 'Bravo pWGS-384 AL-Lib',
+               verify_robot: true,
+               beds: {
+                 bed(5).barcode => {
+                   purpose: 'pWGS-384 AL Lib',
+                   states: ['started'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-pwgs-384-al-lib-to-pwgs-384-lib-pcr',
+               name: 'Bravo pWGS-384 AL Lib => pWGS-384 Lib PCR',
+               verify_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'pWGS-384 AL Lib',
+                   states: ['passed'],
+                   label: 'Bed 7'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'pWGS-384 Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
 end
