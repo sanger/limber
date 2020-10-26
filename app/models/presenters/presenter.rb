@@ -82,6 +82,10 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     "<#{self.class.name} labware:#{labware.uuid} ...>"
   end
 
+  def child_assets
+    nil
+  end
+
   private
 
   def active_pipelines
