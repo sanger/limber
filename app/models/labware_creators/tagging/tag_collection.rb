@@ -18,23 +18,31 @@ module LabwareCreators::Tagging
     #
     # Returns hash of usable tag layout templates, and the tags assigned to
     # each well:
-    # eg. { "tag-layout-template-0"=>{tags: [["A1", [1, 1]], ["B1", [1, 2]]], dual_index: true } }
+    # eg. { "tag-layout-template-0" => { tags: [["A1", [1, 1]], ["B1", [1, 2]]], dual_index: true } }
     # where { tag_template_uuid => { tags: [[well_name, [ pool_id, tag_id ]]], dual_index: dual_index? } }
     # @return [Hash] Tag layouts and their tags
     #
     def list
       @list ||= tag_layout_templates.each_with_object({}) do |layout, hash|
+        # the `throw` that this catches comes from `generate_tag_layout` method
         catch(:unacceptable_tag_layout) do
-          hash[layout.uuid] = {
-            tags: tags_by_column(layout),
-            dual_index: layout.dual_index?,
-            used: used.include?(layout.uuid),
-            approved: acceptable_template?(layout)
-          }
+          hash[layout.uuid] = layout_hash(layout)
         end
       end
     end
 
+    def layout_hash(layout)
+      {
+        tags: tags_by_column(layout),
+        dual_index: layout.dual_index?,
+        used: used.include?(layout.uuid),
+        matches_templates_in_pool: matches_templates_in_pool(layout.uuid),
+        approved: acceptable_template?(layout)
+      }
+    end
+
+    # Returns a list of the tag layout templates (their uuids) that have already been used on
+    # other plates in the relevant submission pools
     def used
       return [] if @plate.submission_pools.empty?
 
@@ -43,8 +51,27 @@ module LabwareCreators::Tagging
       end
     end
 
+    # Have any tag layout templates already been used on other plates in the relevant submission pools?
     def used?
       used.present?
+    end
+
+    #
+    # Used where the wells being pooled together originate from the same sample,
+    # so should have the same tags, so they are kept together when analysing sequencing data.
+    # (As opposed to when the pool will contain multiple samples, and therefore need to have different tags)
+    #
+    # @param [string] uuid - the uuid of the Tag Layout Template we are currently dealing with
+    #
+    # @return [Bool] true if either no other templates have been used in the submission pool, or
+    #                     if all the templates used are the same as this one
+    #
+    def matches_templates_in_pool(uuid)
+      # if there haven't been any templates used yet in the pool, we say it matches them
+      return true if used.empty?
+
+      # return true if this template has been used already in the pool
+      used.include?(uuid)
     end
 
     private

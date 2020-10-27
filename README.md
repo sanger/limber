@@ -16,7 +16,7 @@ In addition to the [externally hosted YARD docs](https://www.rubydoc.info/github
 yard server -r --gems -m limber
 ```
 
-You can then access the Sequencescape documentation through: http://localhost:8808/docs/limber
+You can then access the Limber documentation through: http://localhost:8808/docs/limber
 Yard will also try and document the installed gems: http://localhost:8808/docs
 
 ## Configuring pipelines
