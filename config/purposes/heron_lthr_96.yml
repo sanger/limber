@@ -5,6 +5,8 @@ LTHR RT:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :printer_type: 'Squix 96 Well Plate'
+  :pmb_template: 'plate_96.yml.erb'
 LTHR PCR 1:
   :asset_type: plate
 LTHR PCR 2:

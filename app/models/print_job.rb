@@ -12,17 +12,37 @@ class PrintJob # rubocop:todo Style/Documentation
     return false unless valid?
 
     begin
-      job = PMB::PrintJob.new(
-        printer_name: printer_name,
-        label_template_id: label_template_id,
-        labels: { body: all_labels }
+      # if printer type is PMB
+      # job = PMB::PrintJob.new(
+      #   printer_name: printer_name,
+      #   label_template_id: label_template_id,
+      #   labels: { body: all_labels }
+      # )
+      # if job.save
+      #   true
+      # else
+      #   errors.add(:print_server, job.errors.full_messages.join(' - '))
+      #   false
+      # end
+
+      # if printer type is Squix / SPrint
+      # TODO: get attributes into here through PlateLabel and hidden fields
+      response = SprintClient.send_print_request(
+        printer_name,
+        label_template,
+        [
+          {
+            barcode: "DN111111",
+            date: "1-APR-2020",
+            barcode_text: "DN111111",
+            workline_identifier: "DN111111",
+            order_role: "Heron",
+            plate_purpose: "LHR PCR 1"
+          }
+        ]
       )
-      if job.save
-        true
-      else
-        errors.add(:print_server, job.errors.full_messages.join(' - '))
-        false
-      end
+      puts "response: #{response}"
+
     rescue JsonApiClient::Errors::ConnectionError
       errors.add(:pmb, 'PrintMyBarcode service is down')
       false
