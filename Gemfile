@@ -22,6 +22,7 @@ gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream
 gem 'sequencescape-client-api', '~> 0.4.2', require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
+gem 'sprint_client'
 
 gem 'puma'
 gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
