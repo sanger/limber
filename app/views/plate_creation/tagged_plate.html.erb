@@ -1,13 +1,15 @@
 <%= page(:'tag-creation-page', prevent_row: true) do -%>
   <script type="text/javascript" charset="utf-8">
     (function(exports, $, undefined){
-       $.extend(SCAPE, {
+      $.extend(SCAPE, {
         tag_plates_list: <%= @labware_creator.tag_plates_list.to_json.html_safe %>,
         tag_tubes_list: <%= @labware_creator.tag_tubes_list.to_json.html_safe %>,
-        dualRequired: <%= @labware_creator.requires_tag2? %>
-       });
+        dualRequired: <%= @labware_creator.requires_tag2? %>,
+        enforceSameTemplateWithinPool: <%= @labware_creator.enforce_same_template_within_pool? %>
+      });
      })(window,jQuery);
   </script>
+
   <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>

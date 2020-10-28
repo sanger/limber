@@ -14,7 +14,7 @@ Limber automatically loads all `.yml` files within this directory into the
 refactored to use a PurposeConfig object in future, to bring it more in line
 with the {Pipeline} behaviour.
 
-In addition, limber will also register purposes in Sequencescape upon running
+In addition, Limber will also register purposes in Sequencescape upon running
 `rake config:generate`. This process is idempotent (ie. will only register
 each purpose once), although is subject to race conditions if run concurrently.
 `rake config:generate` is run automatically on deployment, and is run in series
@@ -27,9 +27,8 @@ Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which
 loads all files and detects potential duplicates.
 
 > **TIP**
-> It is suggested that where you create a purposes.yml to match the
-> corresponding pipeline. However, purposes can be shared between different
-> pipelines.
+> It is suggested that when you create a new pipeline, you create a purposes.yml to match.
+> However, purposes can be shared between different pipelines.
 
 ## An example file
 
@@ -497,6 +496,22 @@ all layout templates are approved.
 - 'TS_pWGSC_UDI96'
 - 'TS_pWGSD_UDI96'
 - 'TS_RNAhWGS_UDI_96'
+```
+
+#### :enforce_same_template_within_pool
+
+Boolean, specifies whether tagged plates which will end up being pooled together
+should use the same tag layout template as each other.
+For instance, they should use different tags if they are different samples
+and will therefore need to be 'de-plexed' during data analysis, but should
+use the same tags if they originate from the same plate and therefore
+contain the same samples.
+
+Used by {LabwareCreators::TaggedPlate}. The default behaviour is as if this setting
+is set to false, whether or not it exists.
+
+```yaml
+:enforce_same_template_within_pool: true
 ```
 
 #### :merged_plate

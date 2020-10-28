@@ -19,6 +19,7 @@ LTHR Lib PCR 1:
   - TS_pWGSC_UDI96
   - TS_pWGSD_UDI96
   - TS_pWGSA_UDI96v2
+  :enforce_same_template_within_pool: true
 LTHR Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -29,6 +30,7 @@ LTHR Lib PCR 2:
   - TS_pWGSC_UDI96
   - TS_pWGSD_UDI96
   - TS_pWGSA_UDI96v2
+  :enforce_same_template_within_pool: true
 LTHR Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate

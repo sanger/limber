@@ -65,7 +65,7 @@ FactoryBot.define do
     end
   end
 
-  # API V1 index of tag lauout templates
+  # API V1 index of tag layout templates
   factory :tag_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 2 }
 

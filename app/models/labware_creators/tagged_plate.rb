@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:todo Metrics/ClassLength
 module LabwareCreators
   # Handles transfer of material into a pre-existing tag plate, created via
   # Gatekeeper. It performs a few actions:
@@ -26,6 +27,10 @@ module LabwareCreators
     validates :tag2_tube_barcode, :tag2_tube, presence: { if: :tag_tubes_used? }
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
+
+    # If I call `tag_plates_used?`, it calls `tag_plates.used?`
+    # where `tag_plates` is a method in this class, returning an instance of TagCollection
+    # similar for `list` and `names`
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
     delegate :used?, :list, :names, to: :tag_tubes, prefix: true
 
@@ -78,7 +83,7 @@ module LabwareCreators
     # - If we don't need a tag2, allow anything, it doesn't matter.
     # - If we've already started using one method, enforce it for the rest of the pool
     # - Otherwise, anything goes
-    # Note: The order matter here, as pools tagged with tubes will still list plates
+    # Note: The order matters here, as pools tagged with tubes will still list plates
     # for the i5 (tag) tag.
     #
     # @return [Array<String>] An array of acceptable sources, 'plate' and/or 'tube'
@@ -104,7 +109,7 @@ module LabwareCreators
     # Forbidden if part of a pool using tubes
     # Permitted, but not required in all other cases
     #
-    # @return [<Boolean] false: UDI plates are forbidden
+    # @return [Boolean] false: UDI plates are forbidden
     #                    true: UDI plates are required
     #                    nil: UDI plates are permitted, but not required
     #
@@ -121,6 +126,10 @@ module LabwareCreators
 
     def pool_index(_pool_index)
       nil
+    end
+
+    def enforce_same_template_within_pool?
+      purpose_config.fetch(:enforce_same_template_within_pool, false)
     end
 
     private
@@ -165,3 +174,4 @@ module LabwareCreators
     # rubocop:enable Metrics/MethodLength
   end
 end
+# rubocop:enable Metrics/ClassLength

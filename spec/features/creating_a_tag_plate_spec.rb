@@ -38,6 +38,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
   let(:tag_lot_number) { 'tag_lot_number' }
   let(:tag2_lot_number) { 'tag2_lot_number' }
+  let(:enforce_same_template_within_pool) { false }
 
   include_context 'a tag plate creator'
   include_context 'a tag plate creator with dual indexing'
@@ -48,7 +49,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     create :purpose_config, uuid: 'stock-plate-purpose-uuid', name: 'Limber Cherrypicked'
     create :tagged_purpose_config,
            tag_layout_templates: acceptable_templates,
-           uuid: 'child-purpose-0'
+           uuid: child_purpose_uuid,
+           enforce_same_template_within_pool: enforce_same_template_within_pool
     create :pipeline, relationships: { 'Limber Cherrypicked' => 'Tag Purpose' }
 
     # We look up the user
@@ -147,6 +149,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:help_text) { 'This plate is part of a larger pool and must be dual indexed.' }
         it_behaves_like 'supports a plate-tube combo'
       end
+
       context 'when a tube has already been used in the pool' do
         let(:submission_pools) do
           json(:dual_submission_pool_collection,
@@ -156,6 +159,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
         it_behaves_like 'supports a plate-tube combo'
       end
+
       context 'when the pool has been tagged by plates' do
         let(:submission_pools) do
           json(:dual_submission_pool_collection,
@@ -175,6 +179,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:help_text) { 'This plate is part of a larger pool and must be dual indexed.' }
         it_behaves_like 'supports dual-index plates'
       end
+
       context 'when the pool has been tagged by plates' do
         let(:submission_pools) do
           json(:dual_submission_pool_collection,
@@ -183,6 +188,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         it_behaves_like 'supports dual-index plates'
       end
+
       context 'when the template has been used' do
         let(:submission_pools) do
           json(:dual_submission_pool_collection,
@@ -192,6 +198,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:tag_error) { 'This template has already been used.' }
         it_behaves_like 'it rejects the candidate plate'
       end
+
       context 'when a tube has already been used in the pool' do
         let(:submission_pools) do
           json(:dual_submission_pool_collection,
@@ -200,6 +207,34 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with tubes.' }
         let(:tag_error) { 'Pool has been tagged with tube. Dual indexed plates are unsupported.' }
         it_behaves_like 'it rejects the candidate plate'
+      end
+
+      context 'when all the plates in the pool must use the same template' do
+        # This happens when they are derived from the same original samples, so shouldn't be de-plexed.
+        # Like in the Heron 96 tailed pipeline.
+
+        # set purposes config to enforce_same_template_within_pool
+        let(:enforce_same_template_within_pool) { true }
+
+        # this is used in shared_tagging_examples when stubbing the tag_layout_creation_request
+        let(:enforce_uniqueness) { false }
+
+        # don't use dual_submission_pool_collection - we only want 1 source plate in our submission
+        let(:submission_pools) do
+          json(:submission_pool_collection,
+               used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
+        end
+
+        context 'when the template has been used' do
+          let(:used_template_uuid) { 'tag-layout-template-0' }
+          it_behaves_like 'supports dual-index plates'
+        end
+
+        context 'when the pool has been tagged by plates' do
+          let(:used_template_uuid) { 'tag-layout-template-1' }
+          let(:tag_error) { 'It doesn\'t match those already used for other plates in this submission pool.' }
+          it_behaves_like 'it rejects the candidate plate'
+        end
       end
     end
   end
@@ -212,6 +247,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
     let(:direction) { 'column' }
     let(:a2_tag)    { '9' }
+
     it_behaves_like 'a recognised template'
   end
 
