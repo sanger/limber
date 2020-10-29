@@ -26,18 +26,16 @@ class PrintJob # rubocop:todo Style/Documentation
       # end
 
       # if printer type is Squix / SPrint
-      # TODO: get attributes into here through PlateLabel and hidden fields
       response = SPrintClient.send_print_request(
         printer_name,
         label_template,
         [
           {
-            barcode: "DN111111",
-            date: "1-APR-2020",
-            barcode_text: "DN111111",
-            workline_identifier: "DN111111",
-            order_role: "Heron",
-            plate_purpose: "LHR PCR 1"
+            barcode: labels[0]['main_label']['barcode'],
+            top_left: labels[0]['main_label']['top_left'],
+            bottom_left: labels[0]['main_label']['bottom_left'],
+            top_right: labels[0]['main_label']['top_right'],
+            bottom_right: labels[0]['main_label']['bottom_right']
           }
         ]
       )
