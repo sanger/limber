@@ -27,7 +27,7 @@ class PrintJob # rubocop:todo Style/Documentation
 
       # if printer type is Squix / SPrint
       # TODO: get attributes into here through PlateLabel and hidden fields
-      response = SprintClient.send_print_request(
+      response = SPrintClient.send_print_request(
         printer_name,
         label_template,
         [
