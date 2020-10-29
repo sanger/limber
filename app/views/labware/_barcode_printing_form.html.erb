@@ -2,17 +2,21 @@
   <%= f.hidden_field :label_template %>
 
   <% labels.each do |label| %>
+    <!-- main label for this plate -->
     <% label.attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
     <%end%>
+    <!-- second label for 384-well plates -->
     <% label.extra_attributes.each do |k, v|%>
       <%= f.hidden_field "labels[][extra_label][#{k}]", value: v %>
     <%end%>
+    <!-- extra labels for intermediate plates in Duplex-Seq -->
     <% label.intermediate_attributes.each do |interm|%>
       <% interm.each do |k, v|%>
         <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
       <%end%>
     <%end%>
+    <!-- extra labels for QC plates in several pipelines -->
     <% label.qc_attributes.each do |qc_label|%>
       <% qc_label.each do |k, v|%>
         <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>

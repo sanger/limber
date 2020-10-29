@@ -26,12 +26,49 @@ class PrintJob # rubocop:todo Style/Documentation
       # end
 
       # if printer type is Squix / SPrint
+      # N.B. this will not currently work for labels that use 'double' labels,
+      # because templates are not implemented that use right_text, left_text etc.
+
+      # labels structure is like this:
+      # "labels"=>[
+      #   {
+      #     "main_label"=>{
+      #       "top_left"=>"29-OCT-2020",
+      #       "bottom_left"=>"DN9000214K",
+      #       "top_right"=>"DN9000211H",
+      #       "bottom_right"=>"Duplex-Seq LDS AL Lib",
+      #       "barcode"=>"DN9000214K"
+      #     },
+      #     "extra_label"=>{
+      #       "top_left"=>"29-OCT-2020",
+      #       "bottom_left"=>"DN9000214K",
+      #       "top_right"=>"DN9000211H",
+      #       "bottom_right"=>"Duplex-Seq LDS AL Lib extra",
+      #       "barcode"=>"DN9000214K"
+      #     }
+      #   },
+      #   {
+      #     "main_label"=>{
+      #       "top_left"=>"29-OCT-2020",
+      #       "bottom_left"=>"DN9000214K",
+      #       "top_right"=>"DN9000211H",
+      #       "bottom_right"=>"Duplex-Seq LDS Lig",
+      #       "barcode"=>"DN9000214K-LIG"
+      #     }
+      #   }
+      # ]
+      label_array = []
+      labels.each do |label|
+        # Not sure why PMB treats main_label and extra_label differently
+        # so we'll just add them both as separate labels
+        label_array << label.values
+      end
+
+      # assumes all labels use the same label template
       response = SPrintClient.send_print_request(
         printer_name,
         label_template,
-        [
-          labels[0]['main_label']
-        ]
+        label_array * number_of_copies
       )
       puts "response: #{response}"
 
