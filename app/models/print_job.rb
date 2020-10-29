@@ -30,13 +30,7 @@ class PrintJob # rubocop:todo Style/Documentation
         printer_name,
         label_template,
         [
-          {
-            barcode: labels[0]['main_label']['barcode'],
-            top_left: labels[0]['main_label']['top_left'],
-            bottom_left: labels[0]['main_label']['bottom_left'],
-            top_right: labels[0]['main_label']['top_right'],
-            bottom_right: labels[0]['main_label']['bottom_right']
-          }
+          labels[0]['main_label']
         ]
       )
       puts "response: #{response}"
