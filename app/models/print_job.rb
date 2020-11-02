@@ -12,7 +12,7 @@ class PrintJob # rubocop:todo Style/Documentation
     return false unless valid?
 
     begin
-      # if printer type is PMB
+      # if printer_service field is PMB (retrieved through API)
       # job = PMB::PrintJob.new(
       #   printer_name: printer_name,
       #   label_template_id: label_template_id,
@@ -25,9 +25,7 @@ class PrintJob # rubocop:todo Style/Documentation
       #   false
       # end
 
-      # if printer type is Squix / SPrint
-      # N.B. this will not currently work for labels that use 'double' labels,
-      # because templates are not implemented that use right_text, left_text etc.
+      # if printer_service field is SPrint (retrieved through API)
 
       # labels structure is like this:
       # "labels"=>[
@@ -57,6 +55,10 @@ class PrintJob # rubocop:todo Style/Documentation
       #     }
       #   }
       # ]
+
+      puts "printer_name: #{printer_name}" # check what has come through from 'collection_select' on _barcode_printing_form
+      # printer_name = 'stub'
+
       label_array = []
       labels.each do |label|
         # Not sure why PMB treats main_label and extra_label differently

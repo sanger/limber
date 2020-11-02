@@ -6,11 +6,16 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
     # default layout based on the such class
     printer_types = labels.map(&:printer_type)
     printers = printers_of_type(printer_types)
+
     print_job = PrintJob.new(
       number_of_copies: Settings.printers['default_count'],
       printer_name: default_printer_name,
       label_template: labels.first.label_template
     )
+
+    puts "template: #{labels.first.label_template}"
+    puts "printers: #{printers}"
+
     locals = { print_job: print_job, printers: printers, labels: labels, redirection_url: redirection_url }
     render(partial: 'labware/barcode_printing_form', locals: locals)
   end

@@ -25,6 +25,7 @@
   <% end %>
 
   <%= f.label :printer_name, 'Barcode Printer', class: 'col-2' %>
+  <!-- pass the whole printer object through here, if poss, (instead of :name) or just the id and then re-query the printer through API -->
   <%= f.collection_select :printer_name, printers, :name, :name, {}, class: 'custom-select col-3' %>
   <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1, class: 'form-control col-2' %>
   <%= f.submit 'Print Label', class: 'print-button btn btn-success col-3' %>
