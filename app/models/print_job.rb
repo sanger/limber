@@ -4,7 +4,7 @@ class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
-  attr_accessor :labels, :printer_name, :label_templates_by_service, :printer
+  attr_accessor :labels, :printer_name, :label_templates_by_service, :printer, :labels_sprint
 
   validates :printer_name, :label_templates_by_service, :number_of_copies, :labels, presence: true
 
@@ -67,18 +67,23 @@ class PrintJob # rubocop:todo Style/Documentation
     #       "bottom_right"=>"Duplex-Seq LDS Lig",
     #       "barcode"=>"DN9000214K-LIG"
     #     }
-    #   }
+    #   },
     # ]
+
+    # "labels_sprint"=>{
+    #   "sprint"=>{"a"=>" 3-NOV-2020", "b"=>"DN9000210G", "c"=>"DN9000210G", "d"=>"Duplex-Seq LDS Stock", "e"=>"DN9000210G", "f"=>"hello"},
+    #   "interm_0"=>{"l"=>"Int 1", "m"=>"DN9000210G", "n"=>"DN9000210G", "o"=>"Duplex-Seq LDS Lig", "p"=>"DN9000210G-LIG"},
+    #   "interm_1"=>{"q"=>"Int 2", "r"=>"DN9000210G", "s"=>"DN9000210G", "t"=>"Duplex-Seq LDS A-tail", "u"=>"DN9000210G-ATL"},
+    #   "interm_2"=>{"v"=>"Int 3", "w"=>"DN9000210G", "x"=>"DN9000210G", "y"=>"Duplex-Seq LDS Frag", "z"=>"DN9000210G-FRG"},
+    #   "qc_0"=>{"g"=>"QC 1", "h"=>"QC 1", "i"=>"QC 1"},
+    #   "qc_1"=>{"j"=>"QC 2", "k"=>"QC 2"}
+    # }
 
     label_template = get_label_template_by_service('SPrint')
     # puts "label_template: #{label_template}"
 
-    label_array = []
-    labels.each do |label|
-      # Not sure why PMB treats main_label and extra_label differently
-      # so we'll just add them both as separate labels
-      label.values.each { |v| label_array << v }
-    end
+    label_array = labels_sprint.values
+    # puts "label_array: #{label_array}"
 
     # assumes all labels use the same label template
     response = SPrintClient.send_print_request(

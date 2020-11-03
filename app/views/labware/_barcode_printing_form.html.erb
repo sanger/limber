@@ -24,6 +24,25 @@
     <%end%>
   <% end %>
 
+  <% labels.each do |label| %>
+    <!-- this includes main label and extra label in one -->
+    <% label.sprint_attributes.each_with_index do |(k, v), index|%>
+      <%= f.hidden_field "labels_sprint[sprint][#{k}]", value: v %>
+    <%end%>
+    <!-- extra labels for intermediate plates in Duplex-Seq -->
+    <% label.intermediate_attributes.each_with_index do |interm, index|%>
+      <% interm.each do |k, v|%>
+        <%= f.hidden_field "labels_sprint[interm_#{index}][#{k}]", value: v %>
+      <%end%>
+    <%end%>
+    <!-- extra labels for QC plates in several pipelines -->
+    <% label.qc_attributes.each_with_index do |qc_label, index|%>
+      <% qc_label.each do |k, v|%>
+        <%= f.hidden_field "labels_sprint[qc_#{index}][#{k}]", value: v %>
+      <%end%>
+    <%end%>
+  <% end %>
+
   <%= f.label :printer_name, 'Barcode Printer', class: 'col-2' %>
   <!-- pass the whole printer object through here, if poss, (instead of :name) or just the id and then re-query the printer through API -->
   <%= f.collection_select :printer_name, printers, :name, :name, {}, class: 'custom-select col-3' %>

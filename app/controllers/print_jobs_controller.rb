@@ -29,6 +29,7 @@ class PrintJobsController < ApplicationController
       # While we COULD carefully define the current label structure, we gain nothing by doing so and make
       # future changes more painful.
       permitted[:labels] = params.require(:print_job)[:labels].map(&:permit!)
+      permitted[:labels_sprint] = params.require(:print_job)[:labels_sprint].permit!
     end
   end
 end
