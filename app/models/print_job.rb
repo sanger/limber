@@ -4,7 +4,7 @@ class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
-  attr_accessor :labels, :printer_name, :label_template
+  attr_accessor :labels, :printer_name, :label_template, :printer
 
   validates :printer_name, :label_template, :number_of_copies, :labels, presence: true
 
@@ -57,6 +57,10 @@ class PrintJob # rubocop:todo Style/Documentation
       # ]
 
       puts "printer_name: #{printer_name}" # check what has come through from 'collection_select' on _barcode_printing_form
+      puts "printer_name.class: #{printer_name.class}" # check what has come through from 'collection_select' on _barcode_printing_form
+      puts "printer: #{printer}" # check what has come through from 'collection_select' on _barcode_printing_form
+      puts "printer.class: #{printer.class}" # check what has come through from 'collection_select' on _barcode_printing_form
+      puts "printer.name: #{printer.name}" # check what has come through from 'collection_select' on _barcode_printing_form
       # printer_name = 'stub'
 
       label_array = []

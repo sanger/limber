@@ -5,7 +5,13 @@
 # the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
   def create
+    # there's bound to be a better way of doing this, so we don't have to requery all the printers here to find the right one
+    printers = api.barcode_printer.all
+    printer = printers.find { |p| p.name == print_job_params[:printer_name] }
+
     @print_job = PrintJob.new(print_job_params)
+    @print_job.printer = printer
+
     if @print_job.execute
       flash.notice = "Your label(s) have been sent to #{print_job_params[:printer_name]}"
     else
