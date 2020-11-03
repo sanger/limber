@@ -11,77 +11,80 @@ class PrintJob # rubocop:todo Style/Documentation
   def execute # rubocop:todo Metrics/MethodLength
     return false unless valid?
 
+    if printer.print_service == 'PMB'
+      print_to_pmb
+    elsif printer.print_service == 'SPrint'
+      print_to_sprint
+    else
+      errors.add(:base, "Print service #{printer.print_service} not recognised.")
+      false
+    end
+  end
+
+  def print_to_pmb
     begin
-      # if printer_service field is PMB (retrieved through API)
-      # job = PMB::PrintJob.new(
-      #   printer_name: printer_name,
-      #   label_template_id: label_template_id,
-      #   labels: { body: all_labels }
-      # )
-      # if job.save
-      #   true
-      # else
-      #   errors.add(:print_server, job.errors.full_messages.join(' - '))
-      #   false
-      # end
-
-      # if printer_service field is SPrint (retrieved through API)
-
-      # labels structure is like this:
-      # "labels"=>[
-      #   {
-      #     "main_label"=>{
-      #       "top_left"=>"29-OCT-2020",
-      #       "bottom_left"=>"DN9000214K",
-      #       "top_right"=>"DN9000211H",
-      #       "bottom_right"=>"Duplex-Seq LDS AL Lib",
-      #       "barcode"=>"DN9000214K"
-      #     },
-      #     "extra_label"=>{
-      #       "top_left"=>"29-OCT-2020",
-      #       "bottom_left"=>"DN9000214K",
-      #       "top_right"=>"DN9000211H",
-      #       "bottom_right"=>"Duplex-Seq LDS AL Lib extra",
-      #       "barcode"=>"DN9000214K"
-      #     }
-      #   },
-      #   {
-      #     "main_label"=>{
-      #       "top_left"=>"29-OCT-2020",
-      #       "bottom_left"=>"DN9000214K",
-      #       "top_right"=>"DN9000211H",
-      #       "bottom_right"=>"Duplex-Seq LDS Lig",
-      #       "barcode"=>"DN9000214K-LIG"
-      #     }
-      #   }
-      # ]
-
-      puts "printer_name: #{printer_name}" # check what has come through from 'collection_select' on _barcode_printing_form
-      puts "printer_name.class: #{printer_name.class}" # check what has come through from 'collection_select' on _barcode_printing_form
-      puts "printer: #{printer}" # check what has come through from 'collection_select' on _barcode_printing_form
-      puts "printer.class: #{printer.class}" # check what has come through from 'collection_select' on _barcode_printing_form
-      puts "printer.name: #{printer.name}" # check what has come through from 'collection_select' on _barcode_printing_form
-      # printer_name = 'stub'
-
-      label_array = []
-      labels.each do |label|
-        # Not sure why PMB treats main_label and extra_label differently
-        # so we'll just add them both as separate labels
-        label_array << label.values
-      end
-
-      # assumes all labels use the same label template
-      response = SPrintClient.send_print_request(
-        printer_name,
-        label_template,
-        label_array * number_of_copies
+      job = PMB::PrintJob.new(
+        printer_name: printer_name,
+        label_template_id: label_template_id,
+        labels: { body: all_labels }
       )
-      puts "response: #{response}"
-
+      if job.save
+        true
+      else
+        errors.add(:print_server, job.errors.full_messages.join(' - '))
+        false
+      end
     rescue JsonApiClient::Errors::ConnectionError
       errors.add(:pmb, 'PrintMyBarcode service is down')
       false
     end
+  end
+
+  def print_to_sprint
+    # labels structure is like this:
+    # "labels"=>[
+    #   {
+    #     "main_label"=>{
+    #       "top_left"=>"29-OCT-2020",
+    #       "bottom_left"=>"DN9000214K",
+    #       "top_right"=>"DN9000211H",
+    #       "bottom_right"=>"Duplex-Seq LDS AL Lib",
+    #       "barcode"=>"DN9000214K"
+    #     },
+    #     "extra_label"=>{
+    #       "top_left"=>"29-OCT-2020",
+    #       "bottom_left"=>"DN9000214K",
+    #       "top_right"=>"DN9000211H",
+    #       "bottom_right"=>"Duplex-Seq LDS AL Lib extra",
+    #       "barcode"=>"DN9000214K"
+    #     }
+    #   },
+    #   {
+    #     "main_label"=>{
+    #       "top_left"=>"29-OCT-2020",
+    #       "bottom_left"=>"DN9000214K",
+    #       "top_right"=>"DN9000211H",
+    #       "bottom_right"=>"Duplex-Seq LDS Lig",
+    #       "barcode"=>"DN9000214K-LIG"
+    #     }
+    #   }
+    # ]
+
+    label_array = []
+    labels.each do |label|
+      # Not sure why PMB treats main_label and extra_label differently
+      # so we'll just add them both as separate labels
+      label_array << label.values
+    end
+
+    # assumes all labels use the same label template
+    response = SPrintClient.send_print_request(
+      printer_name,
+      label_template,
+      label_array * number_of_copies
+    )
+    puts "response: #{response}"
+    true
   end
 
   def number_of_copies=(number)
