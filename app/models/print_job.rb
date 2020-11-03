@@ -74,7 +74,7 @@ class PrintJob # rubocop:todo Style/Documentation
     labels.each do |label|
       # Not sure why PMB treats main_label and extra_label differently
       # so we'll just add them both as separate labels
-      label_array << label.values
+      label.values.each { |v| label_array << v }
     end
 
     # assumes all labels use the same label template
