@@ -24,4 +24,8 @@ class Labels::PlateDoubleLabel < Labels::Base
   def default_label_template
     default_label_template_for(:plate_double)
   end
+
+  def default_sprint_label_template
+    default_sprint_label_template_for(:plate_double)
+  end
 end

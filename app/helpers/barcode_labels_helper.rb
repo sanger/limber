@@ -3,18 +3,15 @@
 module BarcodeLabelsHelper # rubocop:todo Style/Documentation
   def barcode_printing_form(labels:, redirection_url:, default_printer_name: @presenter.default_printer) # rubocop:todo Rails/HelperInstanceVariable
     # labels are Labels::PlateLabel or Labels::TubeLabel so you can get the
-    # default layout based on the such class
+    # default layout based on the class
     printer_types = labels.map(&:printer_type)
     printers = printers_of_type(printer_types)
 
     print_job = PrintJob.new(
       number_of_copies: Settings.printers['default_count'],
       printer_name: default_printer_name,
-      label_template: labels.first.label_template
+      label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
     )
-
-    puts "template: #{labels.first.label_template}"
-    puts "printers: #{printers}"
 
     locals = { print_job: print_job, printers: printers, labels: labels, redirection_url: redirection_url }
     render(partial: 'labware/barcode_printing_form', locals: locals)

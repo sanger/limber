@@ -4,9 +4,9 @@ class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
-  attr_accessor :labels, :printer_name, :label_template, :printer
+  attr_accessor :labels, :printer_name, :label_templates_by_service, :printer
 
-  validates :printer_name, :label_template, :number_of_copies, :labels, presence: true
+  validates :printer_name, :label_templates_by_service, :number_of_copies, :labels, presence: true
 
   def execute # rubocop:todo Metrics/MethodLength
     return false unless valid?
@@ -25,8 +25,8 @@ class PrintJob # rubocop:todo Style/Documentation
     begin
       job = PMB::PrintJob.new(
         printer_name: printer_name,
-        label_template_id: label_template_id,
-        labels: { body: all_labels }
+        label_template_id: pmb_label_template_id,
+        labels: { body: (labels * number_of_copies) }
       )
       if job.save
         true
@@ -70,6 +70,9 @@ class PrintJob # rubocop:todo Style/Documentation
     #   }
     # ]
 
+    label_template = get_label_template_by_service('SPrint')
+    # puts "label_template: #{label_template}"
+
     label_array = []
     labels.each do |label|
       # Not sure why PMB treats main_label and extra_label differently
@@ -84,6 +87,7 @@ class PrintJob # rubocop:todo Style/Documentation
       label_array * number_of_copies
     )
     puts "response: #{response}"
+    puts "response.body: #{response.body}"
     true
   end
 
@@ -93,14 +97,15 @@ class PrintJob # rubocop:todo Style/Documentation
 
   private
 
-  def label_template_id
+  def pmb_label_template_id
     # This isn't a rails finder; so we disable the cop.
-    PMB::LabelTemplate.where(name: label_template).first.id
+    PMB::LabelTemplate.where(name: get_label_template_by_service('PMB')).first.id
   rescue JsonApiClient::Errors::ConnectionError
     errors.add(:pmb, 'PrintMyBarcode service is down')
   end
 
-  def all_labels
-    labels * number_of_copies
+  def get_label_template_by_service(print_service)
+    templates_by_service = JSON.parse(label_templates_by_service)
+    templates_by_service[print_service]
   end
 end

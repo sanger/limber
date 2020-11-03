@@ -4,6 +4,11 @@ default_pmb_templates:
   :plate_a: sqsc_96plate_label_template_code39
   :tube: limber_tube_label_template
 
+default_sprint_templates:
+  :plate_double: plate_384.yml.erb
+  :plate_a: plate_96.yml.erb
+  :tube: tube.yml.erb
+
 default_printer_type_names:
   :plate_double: '384 Well Plate Double'
   :plate_a: '96 Well Plate'
