@@ -24,6 +24,10 @@ class Labels::Base # rubocop:todo Style/Documentation
     []
   end
 
+  def sprint_attributes
+    attributes
+  end
+
   def date_today
     Time.zone.today.strftime('%e-%^b-%Y')
   end
