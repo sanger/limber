@@ -12,25 +12,18 @@ RSpec.describe BarcodeLabelsHelper do
     let(:labels) { [Labels::PlateLabel.new(plate, {})] }
     let(:redirection_url) { 'example_plate_url' }
     let(:default_printer_name) { 'example_printer_name' }
-
-    # let(:printers) { build(:barcode_printer_collection) }
-    let(:printers) { [ build(:plate_barcode_printer), build(:tube_barcode_printer) ] }
-
-    # let(:printer) { build(:plate_barcode_printer) }
+    let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
+    let(:presenter) { Presenters::StockPlatePresenter.new }
 
     before do
-      @printers = printers
-      # puts "@printers: #{@printers}"
-      # puts "@printers.class: #{@printers.class}"
-      # puts "printer.type: #{printer.type}"
-      # binding.pry
+      barcode_printers_request
+      @printers = api.barcode_printer.all
+      @presenter = presenter
     end
 
     it 'renders a partial' do
-      puts "Start of test"
-      # Currently failing due to @printers variable not having correct structure
-      # Been struggling with the barcode printer factories
       barcode_printing_form(labels: labels, redirection_url: redirection_url, default_printer_name: default_printer_name)
+      # TODO: assert something
     end
 
     it 'has the right locals set' do
