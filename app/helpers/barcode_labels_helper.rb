@@ -13,6 +13,7 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
       label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
     )
 
+    # Is redirection_url needed?
     locals = { print_job: print_job, printers: printers, labels: labels, redirection_url: redirection_url }
     render(partial: 'labware/barcode_printing_form', locals: locals)
   end
