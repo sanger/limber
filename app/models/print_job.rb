@@ -4,8 +4,9 @@ class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
-  attr_accessor :labels, :printer_name, :label_templates_by_service, :printer, :labels_sprint
+  attr_accessor :printer, :printer_name, :label_templates_by_service, :labels, :labels_sprint
 
+  # Add printer/ labels_sprint below?
   validates :printer_name, :label_templates_by_service, :number_of_copies, :labels, presence: true
 
   def execute # rubocop:todo Metrics/MethodLength
@@ -86,13 +87,11 @@ class PrintJob # rubocop:todo Style/Documentation
     # puts "label_array: #{label_array}"
 
     # assumes all labels use the same label template
-    response = SPrintClient.send_print_request(
+    SPrintClient.send_print_request(
       printer_name,
       label_template,
       label_array * number_of_copies
     )
-    puts "response: #{response}"
-    puts "response.body: #{response.body}"
     true
   end
 

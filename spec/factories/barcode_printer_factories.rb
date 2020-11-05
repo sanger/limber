@@ -8,6 +8,7 @@ FactoryBot.define do
 
     active { true } # Whether Sequencescape reports the printer as active or not
     service { { 'url' => 'DEPRECATED' } } # Previously the URL of the SOAP barcode printing service. Now deprecated.
+    print_service { "PMB" }
 
     transient do
       # The type of printer, either 'plate' or 'tube'. Use this to set the layout and name to something
