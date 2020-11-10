@@ -153,12 +153,13 @@ RSpec.describe PrintJob do
   describe 'print_to_sprint' do
     let(:labels_sprint) do
       {
-        'sprint' => { 'a' => ' 3-NOV-2020', 'b' => 'DN9000210G', 'c' => 'DN9000210G', 'd' => 'Duplex-Seq LDS Stock', 'e' => 'DN9000210G', 'f' => 'hello' },
-        'interm_0' => { 'l' => 'Int 1', 'm' => 'DN9000210G', 'n' => 'DN9000210G', 'o' => 'Duplex-Seq LDS Lig', 'p' => 'DN9000210G-LIG' },
-        'interm_1' => { 'q' => 'Int 2', 'r' => 'DN9000210G', 's' => 'DN9000210G', 't' => 'Duplex-Seq LDS A-tail', 'u' => 'DN9000210G-ATL' },
-        'interm_2' => { 'v' => 'Int 3', 'w' => 'DN9000210G', 'x' => 'DN9000210G', 'y' => 'Duplex-Seq LDS Frag', 'z' => 'DN9000210G-FRG' },
-        'qc_0' => { 'g' => 'QC 1', 'h' => 'QC 1', 'i' => 'QC 1' },
-        'qc_1' => { 'j' => 'QC 2', 'k' => 'QC 2' }
+        'sprint'=> {
+         'right_text'=>'DN9000003B',
+         'left_text'=>'DN9000003B',
+         'barcode'=>'DN9000003B',
+         'extra_right_text'=>'DN9000003B  LTHR-384 RT',
+         'extra_left_text'=>'10-NOV-2020'
+        }
       }
     end
 
