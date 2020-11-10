@@ -9,8 +9,8 @@ RSpec.describe PrintJob do
   let(:printer_sprint) { build :barcode_printer, print_service: 'SPrint' }
   let(:printer_unknown) { build :barcode_printer, print_service: 'UNKNOWN' }
 
-  let(:label_template_id)           { 1 }
-  let(:label_template_name_pmb)         { 'sqsc_96plate_label_template' }
+  let(:label_template_id) { 1 }
+  let(:label_template_name_pmb) { 'sqsc_96plate_label_template' }
   let(:label_template_name_sprint)  { 'sqsc_96plate_label_template_sprint' }
   let(:label_templates_by_service)  { JSON.generate({ 'PMB' => label_template_name_pmb, 'SPrint' => label_template_name_sprint }) }
   let(:label_template_query)        { { 'filter[name]': label_template_name_pmb, 'page[page]': 1, 'page[per_page]': 1 } }
@@ -97,14 +97,14 @@ RSpec.describe PrintJob do
       expect(pj.errors).to be_truthy
       pj.execute
     end
-
   end
 
   describe 'print_to_pmb' do
-    let(:pmb_print_job) { PMB::PrintJob.new(printer_name: printer_pmb.name,
-                                            label_template_id: label_template_id,
-                                            labels: [{ label: { barcode: '12345', test_attr: 'test' } }])
-                        }
+    let(:pmb_print_job) do
+      PMB::PrintJob.new(printer_name: printer_pmb.name,
+                        label_template_id: label_template_id,
+                        labels: [{ label: { barcode: '12345', test_attr: 'test' } }])
+    end
 
     it 'should send post request to pmb if job is valid' do
       pj = PrintJob.new(
@@ -140,27 +140,27 @@ RSpec.describe PrintJob do
       expect(pj.print_to_pmb).to eq(false)
     end
 
-      # it 'should not execute if pmb is down' do
-      #   stub_request(:get, "http://localhost:3002" + label_template_url)
-      #     .to_raise(JsonApiClient::Errors::ConnectionError)
-      #   stub_request(:post, "http://localhost:3002/v1/print_jobs")
-      #     .to_raise(JsonApiClient::Errors::ConnectionError)
-      #   pj = PrintJob.new(printer_name: printer.name, printer_type: printer.type.name, labels:[{label:{barcode:'12345', test_attr:'test'}}], number_of_copies: 1)
-      #   expect(pj.execute).to be false
-      # end
+    # it 'should not execute if pmb is down' do
+    #   stub_request(:get, "http://localhost:3002" + label_template_url)
+    #     .to_raise(JsonApiClient::Errors::ConnectionError)
+    #   stub_request(:post, "http://localhost:3002/v1/print_jobs")
+    #     .to_raise(JsonApiClient::Errors::ConnectionError)
+    #   pj = PrintJob.new(printer_name: printer.name, printer_type: printer.type.name, labels:[{label:{barcode:'12345', test_attr:'test'}}], number_of_copies: 1)
+    #   expect(pj.execute).to be false
+    # end
   end
 
   describe 'print_to_sprint' do
-    let(:labels_sprint) {
+    let(:labels_sprint) do
       {
-          "sprint"=>{"a"=>" 3-NOV-2020", "b"=>"DN9000210G", "c"=>"DN9000210G", "d"=>"Duplex-Seq LDS Stock", "e"=>"DN9000210G", "f"=>"hello"},
-          "interm_0"=>{"l"=>"Int 1", "m"=>"DN9000210G", "n"=>"DN9000210G", "o"=>"Duplex-Seq LDS Lig", "p"=>"DN9000210G-LIG"},
-          "interm_1"=>{"q"=>"Int 2", "r"=>"DN9000210G", "s"=>"DN9000210G", "t"=>"Duplex-Seq LDS A-tail", "u"=>"DN9000210G-ATL"},
-          "interm_2"=>{"v"=>"Int 3", "w"=>"DN9000210G", "x"=>"DN9000210G", "y"=>"Duplex-Seq LDS Frag", "z"=>"DN9000210G-FRG"},
-          "qc_0"=>{"g"=>"QC 1", "h"=>"QC 1", "i"=>"QC 1"},
-          "qc_1"=>{"j"=>"QC 2", "k"=>"QC 2"}
-        }
-    }
+        'sprint' => { 'a' => ' 3-NOV-2020', 'b' => 'DN9000210G', 'c' => 'DN9000210G', 'd' => 'Duplex-Seq LDS Stock', 'e' => 'DN9000210G', 'f' => 'hello' },
+        'interm_0' => { 'l' => 'Int 1', 'm' => 'DN9000210G', 'n' => 'DN9000210G', 'o' => 'Duplex-Seq LDS Lig', 'p' => 'DN9000210G-LIG' },
+        'interm_1' => { 'q' => 'Int 2', 'r' => 'DN9000210G', 's' => 'DN9000210G', 't' => 'Duplex-Seq LDS A-tail', 'u' => 'DN9000210G-ATL' },
+        'interm_2' => { 'v' => 'Int 3', 'w' => 'DN9000210G', 'x' => 'DN9000210G', 'y' => 'Duplex-Seq LDS Frag', 'z' => 'DN9000210G-FRG' },
+        'qc_0' => { 'g' => 'QC 1', 'h' => 'QC 1', 'i' => 'QC 1' },
+        'qc_1' => { 'j' => 'QC 2', 'k' => 'QC 2' }
+      }
+    end
 
     it 'will send a print request to SPrintClient' do
       pj = PrintJob.new(

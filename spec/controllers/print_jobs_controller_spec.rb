@@ -24,7 +24,7 @@ RSpec.describe PrintJobsController, type: :controller do
         }
       }
 
-      print_job_mock = PrintJob.new()
+      print_job_mock = PrintJob.new
       allow(PrintJob).to receive(:new).and_return(print_job_mock)
       allow(print_job_mock).to receive(:execute).and_return(true)
 

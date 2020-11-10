@@ -9,12 +9,13 @@ class PrintJob # rubocop:todo Style/Documentation
   # Add printer/ labels_sprint below?
   validates :printer_name, :label_templates_by_service, :number_of_copies, :labels, presence: true
 
-  def execute # rubocop:todo Metrics/MethodLength
+  def execute
     return false unless valid?
 
-    if printer.print_service == 'PMB'
+    case printer.print_service
+    when 'PMB'
       print_to_pmb
-    elsif printer.print_service == 'SPrint'
+    when 'SPrint'
       print_to_sprint
     else
       errors.add(:base, "Print service #{printer.print_service} not recognised.")
@@ -22,23 +23,21 @@ class PrintJob # rubocop:todo Style/Documentation
     end
   end
 
-  def print_to_pmb
-    begin
-      job = PMB::PrintJob.new(
-        printer_name: printer_name,
-        label_template_id: pmb_label_template_id,
-        labels: { body: (labels * number_of_copies) }
-      )
-      if job.save
-        true
-      else
-        errors.add(:print_server, job.errors.full_messages.join(' - '))
-        false
-      end
-    rescue JsonApiClient::Errors::ConnectionError
-      errors.add(:pmb, 'PrintMyBarcode service is down')
+  def print_to_pmb # rubocop:todo Metrics/MethodLength
+    job = PMB::PrintJob.new(
+      printer_name: printer_name,
+      label_template_id: pmb_label_template_id,
+      labels: { body: (labels * number_of_copies) }
+    )
+    if job.save
+      true
+    else
+      errors.add(:print_server, job.errors.full_messages.join(' - '))
       false
     end
+  rescue JsonApiClient::Errors::ConnectionError
+    errors.add(:pmb, 'PrintMyBarcode service is down')
+    false
   end
 
   def print_to_sprint

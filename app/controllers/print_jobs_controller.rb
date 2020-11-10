@@ -4,7 +4,7 @@
 # Pretty simple wrapper for print job, and incredibly un-opinionated, simply passes
 # the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
-  def create
+  def create # rubocop:todo Metrics/AbcSize
     # there's bound to be a better way of doing this, so we don't have to requery all the printers here to find the right one
     printers = api.barcode_printer.all
     printer = printers.find { |p| p.name == print_job_params[:printer_name] }
