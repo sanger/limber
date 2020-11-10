@@ -153,12 +153,12 @@ RSpec.describe PrintJob do
   describe 'print_to_sprint' do
     let(:labels_sprint) do
       {
-        'sprint'=> {
-         'right_text'=>'DN9000003B',
-         'left_text'=>'DN9000003B',
-         'barcode'=>'DN9000003B',
-         'extra_right_text'=>'DN9000003B  LTHR-384 RT',
-         'extra_left_text'=>'10-NOV-2020'
+        'sprint' => {
+          'right_text' => 'DN9000003B',
+          'left_text' => 'DN9000003B',
+          'barcode' => 'DN9000003B',
+          'extra_right_text' => 'DN9000003B  LTHR-384 RT',
+          'extra_left_text' => '10-NOV-2020'
         }
       }
     end
