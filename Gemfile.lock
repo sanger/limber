@@ -322,7 +322,7 @@ GEM
     simplecov-json (0.2.1)
       json
       simplecov
-    sprint_client (0.0.9)
+    sprint_client (0.0.10)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
