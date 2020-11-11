@@ -3,7 +3,6 @@
 class Labels::Base # rubocop:todo Style/Documentation
   attr_reader :labware
 
-  #
   # Generates a label object for the provided labware
   # @param labware [Labware] The tube or plate for which to generate a label
   # @param options = {} [Hash] Optional parameters hash

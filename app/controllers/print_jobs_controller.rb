@@ -4,13 +4,9 @@
 # Pretty simple wrapper for print job, and incredibly un-opinionated, simply passes
 # the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
-  def create # rubocop:todo Metrics/AbcSize
-    # there's bound to be a better way of doing this, so we don't have to requery all the printers here to find the right one
-    printers = api.barcode_printer.all
-    printer = printers.find { |p| p.name == print_job_params[:printer_name] }
-
+  def create
     @print_job = PrintJob.new(print_job_params)
-    @print_job.printer = printer
+    @print_job.printer = find_printer_from_name
 
     if @print_job.execute
       flash.notice = "Your label(s) have been sent to #{print_job_params[:printer_name]}"
@@ -31,5 +27,11 @@ class PrintJobsController < ApplicationController
       permitted[:labels] = params.require(:print_job)[:labels].map(&:permit!)
       permitted[:labels_sprint] = params.require(:print_job)[:labels_sprint].permit!
     end
+  end
+
+  def find_printer_from_name
+    # there's bound to be a better way of doing this, so we don't have to requery all the printers here to find the right one
+    printers = api.barcode_printer.all
+    printers.find { |p| p.name == print_job_params[:printer_name] }
   end
 end

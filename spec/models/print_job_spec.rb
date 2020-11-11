@@ -140,14 +140,22 @@ RSpec.describe PrintJob do
       expect(pj.print_to_pmb).to eq(false)
     end
 
-    # it 'should not execute if pmb is down' do
-    #   stub_request(:get, "http://localhost:3002" + label_template_url)
-    #     .to_raise(JsonApiClient::Errors::ConnectionError)
-    #   stub_request(:post, "http://localhost:3002/v1/print_jobs")
-    #     .to_raise(JsonApiClient::Errors::ConnectionError)
-    #   pj = PrintJob.new(printer_name: printer.name, printer_type: printer.type.name, labels:[{label:{barcode:'12345', test_attr:'test'}}], number_of_copies: 1)
-    #   expect(pj.execute).to be false
-    # end
+    it 'should not execute if pmb is down' do
+      stub_request(:get, "http://localhost:3002#{label_template_url}")
+        .to_raise(JsonApiClient::Errors::ConnectionError)
+      stub_request(:post, 'http://localhost:3002/v1/print_jobs')
+        .to_raise(JsonApiClient::Errors::ConnectionError)
+
+      pj = PrintJob.new(
+        printer_name: printer_pmb.name,
+        printer: printer_pmb,
+        labels: [
+          { label: { barcode: '12345', test_attr: 'test' } }
+        ],
+        number_of_copies: 1
+      )
+      expect(pj.execute).to be false
+    end
   end
 
   describe 'print_to_sprint' do
