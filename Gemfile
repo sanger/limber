@@ -19,7 +19,7 @@ gem 'hashie'
 gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', '~> 0.4.2', require: 'sequencescape'
+gem 'sequencescape-client-api', require: 'sequencescape'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 gem 'sprint_client'
