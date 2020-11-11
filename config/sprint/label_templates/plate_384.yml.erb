@@ -1,10 +1,5 @@
 [
   {
-    "labelSize": {
-      "width": 68,
-      "height": 6,
-      "displacement": 13
-    },
     "barcodeFields": [
       {
         "x": 21,
@@ -24,7 +19,7 @@
         "fontSize": 1.7
       },
       {
-        "x": 47,
+        "x": 50,
         "y": 4,
         "value": "<%= merge_fields[:right_text] %>",
         "font": 'proportional',
@@ -33,23 +28,18 @@
     ]
   },
   {
-    "labelSize": {
-      "width": 68,
-      "height": 6,
-      "displacement": 13
-    },
     "textFields": [
       {
         "x": 1,
         "y": 3,
-        "value": "<%= merge_fields[:extra_left_text] %>",
+        "value": "<%= merge_fields[:left_text] %>",
         "font": 'proportional',
         "fontSize": 1.7
       },
       {
-        "x": 15,
+        "x": 20,
         "y": 3,
-        "value": "<%= merge_fields[:extra_right_text] %>",
+        "value": "<%= merge_fields[:right_text] %>",
         "font": 'proportional',
         "fontSize": 1.7
       }
