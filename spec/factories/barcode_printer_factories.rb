@@ -8,6 +8,7 @@ FactoryBot.define do
 
     active { true } # Whether Sequencescape reports the printer as active or not
     service { { 'url' => 'DEPRECATED' } } # Previously the URL of the SOAP barcode printing service. Now deprecated.
+    print_service { 'PMB' }
 
     transient do
       # The type of printer, either 'plate' or 'tube'. Use this to set the layout and name to something
@@ -29,6 +30,10 @@ FactoryBot.define do
     end
 
     name { "#{printer_type} printer" }
+
+    after(:build) do |barcode_printer, evaluator|
+      RSpec::Mocks.allow_message(barcode_printer, :type).and_return(evaluator.type)
+    end
 
     # Build an API V1 plate barcode printer
     factory :plate_barcode_printer do
@@ -53,7 +58,7 @@ FactoryBot.define do
       uuid { nil }
     end
 
-    barcoder_printers do
+    barcode_printers do
       Array.new(tube_printer_size) do |i|
         associated(:plate_barcode_printer, name: "plate printer #{i}")
       end +

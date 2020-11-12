@@ -22,6 +22,10 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
     default_label_template_for(:tube)
   end
 
+  def default_sprint_label_template
+    default_sprint_label_template_for(:tube)
+  end
+
   private
 
   def first_line

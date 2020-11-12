@@ -61,4 +61,6 @@ Rails.application.configure do
 
   config.assets.debug = true
   config.disable_animations = true
+
+  config.sprint_uri = 'http://example_sprint.com/graphql'
 end
