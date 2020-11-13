@@ -2,7 +2,9 @@
 Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
   filters:
     request_type_key: limber_heron
-    library_type: PCR amplicon ligated adapters 384
+    library_type:
+    - PCR amplicon ligated adapters 384
+    - PCR with TruSeq tails amplicon 384
   library_pass: LHR-384 Lib PCR
   relationships:
     LHR-384 RT: LHR-384 PCR 1
@@ -14,7 +16,9 @@ Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
 Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relationships after cDNA plate)
   filters:
     request_type_key: limber_heron
-    library_type: PCR amplicon ligated adapters 384
+    library_type:
+    - PCR amplicon ligated adapters 384
+    - PCR with TruSeq tails amplicon 384
   relationships:
     LHR-384 RT: LHR-384 PCR 2
     LHR-384 PCR 2: LHR-384 cDNA
