@@ -5,6 +5,7 @@ module Presenters
     include Presenters::Statemachine::Shared
     include Presenters::Statemachine::StateDoesNotAllowChildCreation
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
+    include Presenters::StateChangeless
 
     validate :add_unknown_plate_warnings
 
@@ -24,14 +25,6 @@ module Presenters
 
     def default_printer
       :plate_a
-    end
-
-    def control_state_change
-      # You cannot change the state of the unknown plate
-    end
-
-    def default_state_change
-      # You cannot change the state of the unknown plate
     end
   end
 end

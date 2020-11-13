@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+require_relative 'shared_labware_presenter_examples'
+
 RSpec.describe Presenters::StockPlatePresenter do
   has_a_working_api
 
