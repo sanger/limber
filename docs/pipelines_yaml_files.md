@@ -116,6 +116,10 @@ The most common keys to filter on are request_type and library_type.
 
 All filters must be fulfilled for a pipeline to be considered valid.
 
+For branching pipelines with identical filters, you are strongly encouraged to
+use yaml anchors to share the filter between pipelines. See the relationships
+section below for more details, and an example.
+
 #### library_pass
 
 library_pass indicates the plate purposes for which the Lims should suggest the
@@ -182,16 +186,25 @@ The above shows a transition from 'LB Cherrypick' to 'LB Shear', 'LB Shear' to '
 > share the final tube purpose, 'LB Lib Pool Norm'. This is defined in:
 > {file:config/purposes/final_tube.yml}
 
-It should be noted that because the above structure is a hash, it is not possible to reflect a branching pipeline. Instead, each branch of the pipeline
-can be represented by a separate pipeline within th same file.
+It should be noted that because the above structure is a hash, it is not possible
+to reflect a branching pipeline. Instead, each branch of the pipeline can be
+represented by a separate pipeline within the same file.
 
 For example, the heron pipeline has A and B forks, representing the PCR 1 and
 PCR 2 routes.
 
+> **TIP**
+> Note the use of &heron_filters and *heron_filters in the example below.
+> This allows a filter to be share between two branches of the pipeline.
+> You are *strongly* encouraged to use this approach when dealing with branched
+> pipelines with identical filters. In the past there have been several
+> occasions where failure to follow this pattern has resulted in a library type
+> only getting added to one branch of the pipeline by mistake.
+
 ```yaml
 ---
 Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
-  filters:
+  filters: &heron_filters
     request_type_key: limber_heron
     library_type: PCR amplicon ligated adapters 384
   library_pass: LHR-384 Lib PCR
@@ -203,9 +216,7 @@ Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
     LHR-384 End Prep: LHR-384 AL Lib
     LHR-384 AL Lib: LHR-384 Lib PCR
 Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relationships after cDNA plate)
-  filters:
-    request_type_key: limber_heron
-    library_type: PCR amplicon ligated adapters 384
+  filters: *heron_filters
   relationships:
     LHR-384 RT: LHR-384 PCR 2
     LHR-384 PCR 2: LHR-384 cDNA
