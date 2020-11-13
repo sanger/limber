@@ -13,8 +13,9 @@ RSpec.describe Labels::PlateLabelXp, type: :model do
     end
 
     context 'when the plate has one stock plate' do
-      it 'displays the stock plate barcode' do
-      end
+      # TODO: This test was left empty. Made rubocop happy, which means it is
+      # now flagged as pending. Which is correct, it is pending.
+      it 'displays the stock plate barcode'
     end
   end
 end

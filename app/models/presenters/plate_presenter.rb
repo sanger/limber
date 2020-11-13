@@ -28,7 +28,7 @@ class Presenters::PlatePresenter
   self.allow_well_failure_in_states = [:passed]
   self.style_class = 'standard'
 
-  # Note: Validation here is intended as a warning. Rather than strict validation
+  # @note Validation here is intended as a warning. Rather than strict validation
   validates :pcr_cycles_specified,
             numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' },
             unless: :multiple_requests_per_well?

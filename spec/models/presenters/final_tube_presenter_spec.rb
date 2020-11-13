@@ -34,9 +34,6 @@ RSpec.describe Presenters::FinalTubePresenter do
     ]
   end
 
-  let(:expected_requests_for_summary) do
-  end
-
   subject do
     Presenters::FinalTubePresenter.new(
       api: api,
