@@ -156,6 +156,8 @@ FactoryBot.define do
         ancestors { [] }
         is_stock { true }
       end
+
+      state { 'passed' }
     end
 
     # Sets up a plate of GBS requests with configured primer panels

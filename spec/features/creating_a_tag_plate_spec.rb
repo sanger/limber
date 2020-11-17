@@ -13,7 +13,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:child_purpose_uuid)    { 'child-purpose-0' }
   let(:pools) { 1 }
   let(:example_plate) do
-    create :v2_stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8],
+    create :v2_stock_plate, uuid: plate_uuid, pool_sizes: [8, 8],
                             submission_pools_count: pools, purpose_name: 'Limber Cherrypicked', purpose_uuid: 'stock-plate-purpose-uuid'
   end
   let(:old_api_example_plate) do

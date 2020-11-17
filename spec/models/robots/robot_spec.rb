@@ -434,7 +434,7 @@ RSpec.describe Robots::Robot, robots: true do
     end
 
     let(:plate) do
-      create :v2_stock_plate,
+      create :v2_plate,
              barcode_number: '123',
              purpose_uuid: 'lb_end_prep_uuid',
              purpose_name: 'LB End Prep',
