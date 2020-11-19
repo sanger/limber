@@ -114,6 +114,16 @@ Presenters are responsible for showing information about a piece of labware.
 {Presenters::StockPlatePresenter View class documentation}
 
 
+### Presenters::SubmissionPlatePresenter
+
+{include:Presenters::SubmissionPlatePresenter}
+
+  Used directly in 1 purposes:
+  LTHR Cherrypick
+
+{Presenters::SubmissionPlatePresenter View class documentation}
+
+
 ### Presenters::UnknownPlatePresenter
 
 {include:Presenters::UnknownPlatePresenter}

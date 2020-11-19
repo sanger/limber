@@ -236,8 +236,11 @@ FactoryBot.define do
       # Alias for request: The request set on the aliquot itself
       outer_request { create :library_request, state: library_state }
       well_location { 'A1' }
+      study_id { 1 }
+      project_id { 1 }
     end
 
+    sequence(:id, &:to_s)
     tag_oligo { nil }
     tag_index { nil }
     tag2_oligo { nil }
@@ -249,6 +252,20 @@ FactoryBot.define do
     after(:build) do |aliquot, evaluator|
       aliquot._cached_relationship(:request) { evaluator.request }
       aliquot._cached_relationship(:sample) { evaluator.sample }
+      aliquot.relationships.study = {
+        'links' => {
+          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/study",
+          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/study"
+        },
+        'data' => { 'type' => 'studies', 'id' => evaluator.study_id.to_s }
+      }
+      aliquot.relationships.project = {
+        'links' => {
+          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/project",
+          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/project"
+        },
+        'data' => { 'type' => 'projects', 'id' => evaluator.project_id.to_s }
+      }
     end
 
     factory :v2_tagged_aliquot do

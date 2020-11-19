@@ -30,6 +30,7 @@ RSpec.describe Presenters::MinimalPlatePresenter do
       ['Created on', '2016-10-19']
     ]
   end
+  let(:sidebar_partial) { 'default' }
 
   before do
     create :purpose_config, uuid: labware.purpose.uuid

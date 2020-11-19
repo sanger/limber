@@ -21,6 +21,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
       ['Created on', '2019-06-10']
     ]
   end
+  let(:sidebar_partial) { 'default' }
 
   # Create binning for 4 wells in 2 bins:
   #     1   2

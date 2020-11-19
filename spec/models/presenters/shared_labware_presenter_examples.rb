@@ -17,6 +17,10 @@ RSpec.shared_examples 'a labware presenter' do
     expect { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
   end
 
+  it 'has a sidebar partial' do
+    expect(subject.sidebar_partial).to eq(sidebar_partial)
+  end
+
   it 'responds to child_assets' do
     expect(subject).to respond_to(:child_assets)
   end

@@ -76,6 +76,8 @@ namespace :config do
       %i[default_pmb_templates default_sprint_templates default_printer_type_names].each do |key|
         configuration[key] = label_templates[key.to_s]
       end
+
+      configuration[:submission_templates] = submission_templates
     end
 
     # Write out the current environment configuration file

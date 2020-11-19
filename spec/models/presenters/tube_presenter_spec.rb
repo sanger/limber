@@ -31,6 +31,7 @@ RSpec.describe Presenters::TubePresenter do
       ['Created on', '2016-10-19']
     ]
   end
+  let(:sidebar_partial) { 'default' }
 
   subject do
     Presenters::TubePresenter.new(

@@ -8,11 +8,12 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     include Form
     include BarcodeLabelsHelper
 
-    class_attribute :summary_items
+    class_attribute :summary_items, :sidebar_partial
 
     attr_accessor :api, :labware
 
     self.page = 'show'
+    self.sidebar_partial = 'default'
     #     self.attributes = %i[api labware]
 
     def csv
