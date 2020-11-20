@@ -194,6 +194,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    oj (3.10.16)
     parallel (1.20.0)
     parser (2.7.2.0)
       ast (~> 2.4.1)
@@ -309,11 +310,11 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (2.3.0)
-    sequencescape-client-api (0.4.3)
+    sequencescape-client-api (0.5.0.pre.rc1)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
       i18n
-      yajl-ruby (>= 1.4.1)
+      multi_json
     shellany (0.0.1)
     simplecov (0.18.5)
       docile (~> 1.1)
@@ -374,7 +375,6 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yajl-ruby (1.4.1)
     yard (0.9.25)
 
 PLATFORMS
@@ -395,6 +395,7 @@ DEPENDENCIES
   jquery-ui-rails
   json_api_client!
   launchy
+  oj
   pmb-client (= 0.1.0)!
   pry
   pry-byebug
@@ -411,7 +412,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api
+  sequencescape-client-api (~> 0.5.0.pre.rc1)
   simplecov
   simplecov-json
   sprint_client

@@ -19,7 +19,9 @@ gem 'hashie'
 gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
 # Older Sequencescape API
-gem 'sequencescape-client-api', require: 'sequencescape'
+gem 'sequencescape-client-api', '~> 0.5.0.pre.rc1', require: 'sequencescape'
+# Speed up json encoding/decoding with oj
+gem 'oj'
 
 gem 'pmb-client', '0.1.0', github: 'sanger/pmb-client'
 gem 'sprint_client'
