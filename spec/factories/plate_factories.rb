@@ -125,10 +125,9 @@ FactoryBot.define do
     # We could probably avoid needing to do anything sneaky at all if we instead generated
     # json-api data and generated the objects from that.
     after(:build) do |plate, evaluator|
-      plate._cached_relationship(:wells) { evaluator.wells }
-      plate._cached_relationship(:purpose) { evaluator.purpose }
-      plate._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
-      # TODO: Tidy up this to reduce the mocking.
+      Sequencescape::Api::V2::Plate.associations.each do |association|
+        plate._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
+      end
       RSpec::Mocks.allow_message(plate, :stock_plate).and_return(evaluator.stock_plate)
 
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)

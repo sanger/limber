@@ -1,4 +1,7 @@
 <%= sidebar do %>
   <%= render 'logged_out_warning' %>
-  <%= render 'choose_workflow', presenter: presenter %>
+    <%= render 'pending_submissions', presenter: presenter %>
+  <% unless presenter.pending_submissions? %>
+    <%= render 'choose_workflow', presenter: presenter %>
+  <% end %>
 <% end %>

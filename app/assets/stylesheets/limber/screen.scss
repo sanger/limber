@@ -60,6 +60,17 @@ header.limber-header {
   }
 }
 
+.submission-list {
+  @extend .list-group;
+  @extend .list-group-flush;
+
+  li {
+    @extend .list-group-item;
+    @extend .justify-content-between;
+    @extend .d-flex;
+  }
+}
+
 button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn;
   @extend .btn-primary;

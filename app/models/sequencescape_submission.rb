@@ -22,9 +22,11 @@ class SequencescapeSubmission
   # A hash of valid request options for the submission
   # @return [Hash] request_options: The request options to use
   attr_accessor :request_options
-  # @return [Array<Array<String>>] Returns a nested array of asset uuids, each
-  #                                group of ids represents an asset group, and
-  #                                will form a separate order
+  # @return [Array<Hash>] Returns a nested array of asset_group object. Each
+  #                       asset group is a hash containing:
+  #                       assets: Array of asset uuids
+  #                       study: The study uuid
+  #                       project: The project uuid
   attr_reader :asset_groups
 
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
@@ -51,7 +53,7 @@ class SequencescapeSubmission
   # @param asset_uuids [Array<String>] Array of asset uuids to submit
   #
   def assets=(asset_uuids)
-    @asset_groups = [asset_uuids]
+    @asset_groups = [{ assets: asset_uuids }]
   end
 
   #
@@ -60,34 +62,34 @@ class SequencescapeSubmission
   # @return [Array<String>] Array of asset uuids to submit
   #
   def assets
-    @asset_groups.flatten
+    @asset_groups.pluck(:assets).flatten
   end
 
   #
-  # Set
+  # Set asset_groups for the submission
   #
-  # @param assets [Array<Array<String>>, Hash<Array>]
-  #   Nested array of asset_uuids, grouped together into asset groups. Also
+  # @param asset_groups [Array<Hash>, Hash<Hash>]
+  #   Nested array asset_group hashes. (See #asset_groups) Also
   #   accepts hash to support HTML forms, where each value is an array of asset
   #   uuids, indicating an asset group. Keys are ignored.
   #
-  def asset_groups=(assets)
-    @asset_groups = if assets.respond_to?(:values)
-                      assets.values
+  def asset_groups=(asset_groups)
+    @asset_groups = if asset_groups.respond_to?(:values)
+                      asset_groups.values
                     else
-                      assets
+                      asset_groups
                     end
   end
 
   private
 
   def generate_orders
-    asset_groups.map do |asset_uuids|
-      submission_template.orders.create!(
-        assets: asset_uuids,
+    asset_groups.map do |asset_group|
+      order_parameters = {
         request_options: request_options,
         user: user
-      )
+      }.merge(asset_group)
+      submission_template.orders.create!(order_parameters)
     end
   end
 

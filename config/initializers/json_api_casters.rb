@@ -13,4 +13,14 @@ class LabwareBarcodeCaster
   end
 end
 
+# Takes strings, and allows them to be queries with .string_value?
+class StringInquirerCaster
+  def self.cast(value, default)
+    return nil unless value || default
+
+    ActiveSupport::StringInquirer.new(value||default)
+  end
+end
+
 JsonApiClient::Schema.register barcode: LabwareBarcodeCaster
+JsonApiClient::Schema.register string_inquirer: StringInquirerCaster

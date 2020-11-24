@@ -79,13 +79,18 @@ RSpec.describe SequencescapeSubmission do
     # associated with different studies. To do this we group them into multiple
     # asset groups.
     context 'with a multiple asset groups' do
+      let(:study1_uuid) { SecureRandom.uuid }
+      let(:study2_uuid) { SecureRandom.uuid }
+      let(:project1_uuid) { SecureRandom.uuid }
+      let(:project2_uuid) { SecureRandom.uuid }
+
       let(:assets2) { ['asset-2-uuid'] }
       let(:attributes) do
         {
           api: api,
           asset_groups: {
-            '1' => assets,
-            '2' => assets2
+            '1' => { assets: assets, study: study1_uuid, project: project1_uuid },
+            '2' => { assets: assets2, study: study2_uuid, project: project2_uuid }
           },
           template_uuid: template_uuid,
           request_options: request_options,
@@ -97,6 +102,8 @@ RSpec.describe SequencescapeSubmission do
         stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
         stub_api_post(template_uuid, 'orders',
                       payload: { order: {
+                        study: study1_uuid,
+                        project: project1_uuid,
                         assets: assets,
                         request_options: request_options,
                         user: user_uuid
@@ -104,6 +111,8 @@ RSpec.describe SequencescapeSubmission do
                       body: '{"order":{"uuid":"order-uuid"}}')
         stub_api_post(template_uuid, 'orders',
                       payload: { order: {
+                        study: study2_uuid,
+                        project: project2_uuid,
                         assets: assets2,
                         request_options: request_options,
                         user: user_uuid

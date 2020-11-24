@@ -11,6 +11,8 @@ module Presenters
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
     include Presenters::StateChangeless
 
+    self.style_class = 'stock'
+
     self.summary_items = {
       'Barcode' => :barcode,
       'Number of wells' => :number_of_wells,
@@ -28,14 +30,23 @@ module Presenters
       end
     end
 
+    def pending_submissions?
+      submissions.any? { |submission| submission.building_in_progress?(ready_buffer: 20.seconds) }
+    end
+
+    def submissions
+      labware.direct_submissions
+    end
+
     private
 
     def asset_groups
       @asset_groups ||= labware.wells
                                .reject(&:empty?)
                                .group_by(&:order_group)
-                               .transform_values { |wells| wells.map(&:uuid) }
-                               .values
+                               .map do |_, wells|
+                                 { assets: wells.map(&:uuid), autodetect_studies_projects: true }
+                               end
     end
   end
 end

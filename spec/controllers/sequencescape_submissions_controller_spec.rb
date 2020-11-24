@@ -24,7 +24,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
         'sequencescape_submission' => {
           'request_options' => request_options,
           'template_uuid' => template_uuid,
-          'asset_groups' => { '0' => assets }
+          'asset_groups' => { '0' => { 'assets' => assets } }
         }
       }
     end

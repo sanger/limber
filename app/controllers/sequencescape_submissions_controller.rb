@@ -7,7 +7,6 @@ class SequencescapeSubmissionsController < ApplicationController
   before_action :check_for_current_user!
 
   def create
-    p params
     create_submission
     redirect_back fallback_location: :root
   end
