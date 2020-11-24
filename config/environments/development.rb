@@ -80,4 +80,5 @@ Rails.application.configure do
     'read_length' => 11
   }
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
+  config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql'
 end

@@ -19,6 +19,7 @@ RSpec.describe 'barcode printer factory' do
         },
         "uuid": "example-barcode-printer-uuid",
         "name": "tube printer",
+        "print_service": "PMB",
         "active": true,
         "service": {
           "url": "DEPRECATED"

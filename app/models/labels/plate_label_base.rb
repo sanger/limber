@@ -18,4 +18,8 @@ class Labels::PlateLabelBase < Labels::Base # rubocop:todo Style/Documentation
   def default_label_template
     default_label_template_for(:plate_a)
   end
+
+  def default_sprint_label_template
+    default_sprint_label_template_for(:plate_a)
+  end
 end

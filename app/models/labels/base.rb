@@ -3,7 +3,6 @@
 class Labels::Base # rubocop:todo Style/Documentation
   attr_reader :labware
 
-  #
   # Generates a label object for the provided labware
   # @param labware [Labware] The tube or plate for which to generate a label
   # @param options = {} [Hash] Optional parameters hash
@@ -24,6 +23,10 @@ class Labels::Base # rubocop:todo Style/Documentation
     []
   end
 
+  def sprint_attributes
+    attributes
+  end
+
   def date_today
     Time.zone.today.strftime('%e-%^b-%Y')
   end
@@ -38,6 +41,15 @@ class Labels::Base # rubocop:todo Style/Documentation
     Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, default_label_template)
   end
 
+  def label_templates_by_service
+    pmb_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, default_label_template)
+    sprint_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:sprint_template, default_sprint_label_template)
+    {
+      'PMB' => pmb_template,
+      'SPrint' => sprint_template
+    }
+  end
+
   private
 
   def default_printer_type_for(printer_type)
@@ -46,5 +58,9 @@ class Labels::Base # rubocop:todo Style/Documentation
 
   def default_label_template_for(printer_type)
     Settings.default_pmb_templates[printer_type]
+  end
+
+  def default_sprint_label_template_for(printer_type)
+    Settings.default_sprint_templates[printer_type]
   end
 end
