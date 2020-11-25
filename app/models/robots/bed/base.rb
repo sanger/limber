@@ -44,7 +44,7 @@ module Robots::Bed
     end
 
     def purpose_labels
-      purpose
+      Array(purpose).to_sentence(two_words_connector: ' or ', last_word_connector: ' or ')
     end
 
     def barcodes
@@ -96,9 +96,9 @@ module Robots::Bed
     private
 
     def correct_plate_purpose
-      return true if plate.purpose.name == purpose
+      return true if Array(purpose).include?(plate.purpose.name)
 
-      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose} plate.")
+      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose_labels} plate.")
     end
 
     def correct_plate_state
