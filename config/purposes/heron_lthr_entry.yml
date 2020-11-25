@@ -1,4 +1,7 @@
 ---
+# Entry point for LTHR pipeline from Beckman picked plates
+# Presents the user with a page to select a workflow, which
+# builds the appropriate Sequencescape submission
 LTHR Cherrypick:
   :asset_type: plate
   :stock_plate: true

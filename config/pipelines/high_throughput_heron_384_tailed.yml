@@ -7,6 +7,7 @@ Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
     - Sanger_tailed_artic_v1_384
   library_pass: LTHR-384 Lib PCR pool
   relationships:
+    LTHR Cherrypick: LTHR-384 RT
     LTHR-384 RT: LTHR-384 PCR 1
     LTHR-384 PCR 1: LTHR-384 Lib PCR 1
     LTHR-384 Lib PCR 1: LTHR-384 Lib PCR pool

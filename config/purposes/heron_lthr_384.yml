@@ -5,6 +5,8 @@ LTHR-384 RT:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
 LTHR-384 PCR 1:
