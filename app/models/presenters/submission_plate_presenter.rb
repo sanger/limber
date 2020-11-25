@@ -2,10 +2,18 @@
 
 module Presenters
   #
-  # The StandardPresenter is used for the majority of plates. It shows a preview
-  # of the plate itself, and permits state changes, well failures and child
-  # creation when passed.
+  # The SubmissionPlatePresenter is used when plates enter the process with no
+  # assigned pipeline. It presents the user with a selection of workflows,
+  # and allows them to generate corresponding Sequencescape submissions. Once
+  # these submissions are passed, the plate behaves like a standard stock plate.
   #
+  # Submission options are defined by the submission_options config in the
+  # purposes/*.yml file. Structure is:
+  # <button text>:
+  #   template_name: <submission template name>
+  #   request_options:
+  #     <request_option_key>: <request_option_value>
+  #     ...
   class SubmissionPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Submission
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
