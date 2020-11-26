@@ -5,6 +5,7 @@ LTHR-384 RT:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
   :label_template: plate_6mm_double
   :size: 384
 LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT

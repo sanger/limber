@@ -7,6 +7,7 @@ LTHR Cherrypick:
   :stock_plate: true
   :cherrypickable_target: true
   :input_plate: true
+  :creator_class: LabwareCreators::Uncreatable
   :presenter_class: Presenters::SubmissionPlatePresenter
   :submission_options:
     LTHR 96 - NovaSeq:
