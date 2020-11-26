@@ -1915,7 +1915,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
                beds: {
                  bed(9).barcode => {
-                   purpose: ['LTHR-384 RT','LTHR-384 RT-Q'],
+                   purpose: ['LTHR-384 RT', 'LTHR-384 RT-Q'],
                    states: ['passed'],
                    label: 'Bed 9'
                  },

@@ -37,7 +37,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
         have_attributes(
           template_uuid: example_template_uuid,
           request_options: { 'option' => 1 },
-          asset_groups: [{ assets: labware.wells.map(&:uuid), autodetect_studies_projects: true }],
+          asset_groups: [{ assets: labware.wells.map(&:uuid), autodetect_studies_projects: true }]
         )
       )],
       ['LTHR-384', be_a_kind_of(SequencescapeSubmission).and(
@@ -111,8 +111,6 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it 'has pending submissions' do
       expect(presenter.pending_submissions?).to eq true
     end
-
-
   end
 
   context 'with a race condition' do

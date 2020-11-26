@@ -18,7 +18,7 @@ class StringInquirerCaster
   def self.cast(value, default)
     return nil unless value || default
 
-    ActiveSupport::StringInquirer.new(value||default)
+    ActiveSupport::StringInquirer.new(value || default)
   end
 end
 
