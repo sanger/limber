@@ -39,8 +39,9 @@ module Robots::Bed
     def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || plate.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,
-                                                                                            "Robot #{robot.name} started")
+      StateChangers.lookup_for(plate.purpose.uuid)
+                   .new(api, plate.uuid, user_uuid)
+                   .move_to!(target_state, "Robot #{robot.name} started")
     end
 
     def purpose_labels
