@@ -28,7 +28,7 @@ LTHR-384 Lib PCR 1:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - 'TSsc384'
+  - TSsc384 - nCoV-2019/V3/B - PCR1
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -36,7 +36,7 @@ LTHR-384 Lib PCR 2:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - 'TSsc384'
+  - TSsc384 - nCoV-2019/V3/B - PCR2
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
