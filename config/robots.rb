@@ -1873,8 +1873,8 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Heron LTHR 384 Pipeline
 
-  custom_robot('bravo-lthr-cherrypick-to-lthr-384-rt',
-               name: 'Bravo LTHR Cherrypick => LTHR-384 RT',
+  custom_robot('bravo-lthr-cherrypick-to-lthr-384-rt-q',
+               name: 'Bravo LTHR Cherrypick => LTHR-384 RT-Q',
                beds: {
                  bed(1).barcode => {
                    purpose: 'LTHR Cherrypick',
@@ -1901,10 +1901,10 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    label: 'Bed 6'
                  },
                  bed(5).barcode => {
-                   purpose: 'LTHR-384 RT',
+                   purpose: 'LTHR-384 RT-Q',
                    states: ['pending'],
                    label: 'Bed 5',
-                   parents: [bed(1).barcode, bed(4).barcode, bed(3).barcode, bed(15).barcode],
+                   parents: [bed(1).barcode, bed(4).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed'
                  }
                },
@@ -1915,7 +1915,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
                beds: {
                  bed(9).barcode => {
-                   purpose: 'LTHR-384 RT',
+                   purpose: ['LTHR-384 RT','LTHR-384 RT-Q'],
                    states: ['passed'],
                    label: 'Bed 9'
                  },
