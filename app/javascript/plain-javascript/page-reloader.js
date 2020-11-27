@@ -1,7 +1,7 @@
 console.log('Imported')
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Loaded')
-  const timerElement = document.querySelector(`[data-reload-time]`)
+  const timerElement = document.querySelector('[data-reload-time]')
   if (timerElement) {
     let timer = parseInt(timerElement.dataset['reloadTime'])
     let interval = window.setInterval(_ => {
