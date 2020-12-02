@@ -2,7 +2,6 @@
 
 require_dependency 'presenters/statemachine'
 module Presenters::Statemachine
-
   #
   # Presenters::Statemachine::Submission can be included in a class to provide
   # a state machine with the following behaviour:
