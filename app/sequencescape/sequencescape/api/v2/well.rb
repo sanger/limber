@@ -103,4 +103,8 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
       'c' # control of unspecified type
     end
   end
+
+  def order_group
+    aliquots.map(&:order_group).uniq
+  end
 end

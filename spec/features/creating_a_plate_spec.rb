@@ -29,15 +29,15 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let(:example_plate) do
-    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, state: 'passed', wells: wells, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
   end
 
   let(:another_plate) do
-    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, state: 'passed', wells: wells, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
   end
 
   let(:alternative_plate) do
-    create :v2_stock_plate, barcode_number: 107, uuid: another_plate_uuid, state: 'passed', wells: wells, purpose_name: alternative_purpose_name
+    create :v2_stock_plate, barcode_number: 107, uuid: another_plate_uuid, wells: wells, purpose_name: alternative_purpose_name
   end
 
   let(:alternative_purpose_name) { 'Alternative identifier plate' }

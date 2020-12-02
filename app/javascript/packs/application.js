@@ -17,3 +17,4 @@ require('custom-tagged-plate')
 // Load simple javscripts
 // Tag animations rotates the displayed tag Id in wells with multiple tags
 require('plain-javascript/tag-animations')
+require('plain-javascript/page-reloader')

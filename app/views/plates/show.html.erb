@@ -1,4 +1,5 @@
 <%= content_for(:title, @presenter.title) %>
+
 <%= page(:'plate-show-page', :'show-page') do %>
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
@@ -9,17 +10,17 @@
           <%= image_tag("icon_#{@presenter.labware.priority}_flag.png", size: "32x32") %>
         </h2>
       </div>
-      <%= render partial: 'warnings', locals: { presenter: @presenter } %>
+      <%= render 'warnings', presenter: @presenter %>
       <% if @presenter.well_failing_applicable? %>
         <div id="labware-well-failing" class='collapse'>
-          <%= render(partial: 'fail_wells', locals: { presenter: @presenter }) %>
+          <%= render 'fail_wells', presenter: @presenter %>
         </div>
       <% end %>
       <div id="labware-summary" class='collapse show'>
-        <%= render(partial: @presenter.summary_partial, locals: { presenter: @presenter }) %>
+        <%= render @presenter.summary_partial, presenter: @presenter %>
       </div>
     <% end %>
   <% end %>
 
-  <%= render partial: 'sidebar', locals: { presenter: @presenter } %>
+  <%= render "plates/sidebars/#{@presenter.sidebar_partial}", presenter: @presenter %>
 <% end %>

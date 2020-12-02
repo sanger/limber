@@ -15,6 +15,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
 
   has_many :aliquots
+  has_many :direct_submissions
 
   has_one :purpose
 

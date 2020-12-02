@@ -44,6 +44,7 @@ FactoryBot.define do
 
     after(:build) do |request, evaluator|
       RSpec::Mocks.allow_message(request, :submission).and_return(evaluator.submission)
+
       request.relationships.submission = {
         'links' => {
           'self' => "http://localhost:3000/api/v2/requests/#{request.id}/relationships/submission",

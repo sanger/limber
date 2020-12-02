@@ -1,0 +1,28 @@
+---
+# Entry point for LTHR pipeline from Beckman picked plates
+# Presents the user with a page to select a workflow, which
+# builds the appropriate Sequencescape submission
+LTHR Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :creator_class: LabwareCreators::Uncreatable
+  :presenter_class: Presenters::SubmissionPlatePresenter
+  :submission_options:
+    LTHR 96 - NovaSeq:
+      template_name: 'Limber - Heron LTHR - Automated'
+      request_options:
+        library_type: 'Sanger_tailed_artic_v1_96'
+        read_length: 150
+        fragment_size_required_from: '50'
+        fragment_size_required_to: '800'
+        primer_panel_name: nCoV-2019/V3/B
+    LTHR 384 - NovaSeq:
+      template_name: 'Limber - Heron LTHR - Automated'
+      request_options:
+        library_type: 'Sanger_tailed_artic_v1_384'
+        read_length: 150
+        fragment_size_required_from: '50'
+        fragment_size_required_to: '800'
+        primer_panel_name: nCoV-2019/V3/B

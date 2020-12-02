@@ -4,6 +4,7 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base # rubocop:t
   FragmentSize = Struct.new(:from, :to)
 
   has_one :submission
+  has_one :order
 
   delegate :for_multiplexing, to: :request_type
   delegate :key, to: :request_type, prefix: true

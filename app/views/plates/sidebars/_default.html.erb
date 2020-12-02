@@ -1,50 +1,51 @@
 <%= sidebar do %>
-  <%= render partial: 'plate_printing' %>
+  <%= render 'logged_out_warning' %>
+  <%= render 'plate_printing' %>
   <% presenter.tubes_and_sources do %>
-    <%= render(partial: 'labware/plates/tube_printing', locals: { presenter: presenter }) %>
+    <%= render 'labware/plates/tube_printing', presenter: presenter %>
   <% end %>
 
-  <%= render(partial: 'labware/qc_data') %>
+  <%= render 'labware/qc_data' %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= render partial: 'work_completion_form', locals: { presenter: presenter } %>
+      <%= render 'work_completion_form', presenter: presenter %>
     <% end %>
 
     <% presenter.control_additional_creation do -%>
-      <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
+      <%= render presenter.suggested_purposes, parent: presenter.labware %>
     <% end %>
 
-    <% @presenter.csv_file_links.each do |link_name, link_target| %>
+    <% presenter.csv_file_links.each do |link_name, link_target| %>
       <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
     <% end %>
 
     <% if presenter.robot? %>
       <h4 class="card-title mt-3">Robots</h4>
       <% presenter.each_robot do |robot_id, robot_name| %>
-        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
+        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block logged_in_only' %>
       <% end %>
     <% else %>
       <%= simple_state_change_form(presenter) %>
     <% end %>
   <% end %>
 
-  <%= card title: 'Adding a Comment' do %>
+  <%= card title: 'Adding a Comment', css_class: 'logged_in_only' do %>
     <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
   <% end %>
 
-  <%= card title:'Other Actions', css_class: 'other-actions' do %>
+  <%= card title:'Other Actions', css_class: 'other-actions logged_in_only' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(presenter) %>
     <% end %>
 
     <% presenter.control_additional_creation do %>
-      <%= render partial: 'creation_dropdown', locals: { resource_type: 'plates', resources: presenter.compatible_plate_purposes } %>
-      <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
+      <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
     <% end %>
 
     <% presenter.control_library_passing do %>
-      <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
+      <%= render 'work_completion_form', presenter: presenter %>
     <% end %>
 
     <% if presenter.well_failing_applicable? %>

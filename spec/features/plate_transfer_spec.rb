@@ -15,16 +15,16 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   let(:plate_barcode_2)   { 'DN2T' }
   let(:plate_uuid)        { SecureRandom.uuid }
   let(:example_plate) do
-    create :v2_stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
+    create :v2_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
   end
   let(:example_plate_without_metadata) do
-    create :v2_stock_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started', barcode_number: 1
+    create :v2_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started', barcode_number: 1
   end
   let(:custom_metadatum_collection) do
     create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' }
   end
   let(:example_plate_with_metadata) do
-    create :v2_stock_plate,
+    create :v2_plate,
            uuid: plate_uuid,
            purpose_name: 'LB End Prep',
            purpose_uuid: 'lb_end_prep_uuid',

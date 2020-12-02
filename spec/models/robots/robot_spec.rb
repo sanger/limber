@@ -31,10 +31,26 @@ RSpec.describe Robots::Robot, robots: true do
 
   let(:robot) { Robots::Robot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
 
+  shared_examples 'a robot' do
+    context 'with an unknown plate' do
+      before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
+      let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'with a plate on an unknown bed' do
+      let(:scanned_layout) { { 'bed99_barcode' => [source_barcode] } }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
   describe '#verify' do
     subject { robot.verify(bed_plates: scanned_layout) }
 
     context 'a simple robot' do
+      let(:source_purpose) { 'Limber Cherrypicked' }
       let(:robot_spec) do
         {
           'name' => 'robot_name',
@@ -60,18 +76,7 @@ RSpec.describe Robots::Robot, robots: true do
         bed_plate_lookup(target_plate)
       end
 
-      context 'with an unknown plate' do
-        before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
-        let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
-
-        it { is_expected.not_to be_valid }
-      end
-
-      context 'with a plate on an unknown bed' do
-        let(:scanned_layout) { { 'bed3_barcode' => [source_barcode] } }
-
-        it { is_expected.not_to be_valid }
-      end
+      it_behaves_like 'a robot'
 
       context 'with a valid layout' do
         let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode] } }
@@ -94,6 +99,17 @@ RSpec.describe Robots::Robot, robots: true do
         context 'but unrelated plates' do
           let(:target_plate_parents) { [create(:v2_plate)] }
           it { is_expected.not_to be_valid }
+        end
+
+        context 'an multiple source purposes' do
+          let(:source_purpose) { ['Limber Cherrypicked', 'Other'] }
+          let(:target_plate_parents) { [source_plate] }
+          it { is_expected.to be_valid }
+
+          context 'but of the wrong purpose' do
+            let(:source_purpose_name) { 'Invalid plate purpose' }
+            it { is_expected.not_to be_valid }
+          end
         end
       end
 
@@ -170,18 +186,7 @@ RSpec.describe Robots::Robot, robots: true do
         bed_plate_lookup(target_plate)
       end
 
-      context 'with an unknown plate' do
-        before { bed_plate_lookup_with_barcode('dodgy_barcode', []) }
-        let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
-
-        it { is_expected.not_to be_valid }
-      end
-
-      context 'with a plate on an unknown bed' do
-        let(:scanned_layout) { { 'bed4_barcode' => [source_barcode] } }
-
-        it { is_expected.not_to be_valid }
-      end
+      it_behaves_like 'a robot'
 
       context 'with only one parent scanned' do
         let(:scanned_layout) do
@@ -434,7 +439,7 @@ RSpec.describe Robots::Robot, robots: true do
     end
 
     let(:plate) do
-      create :v2_stock_plate,
+      create :v2_plate,
              barcode_number: '123',
              purpose_uuid: 'lb_end_prep_uuid',
              purpose_name: 'LB End Prep',

@@ -1,0 +1,34 @@
+<%= card title:'Choose workflow', css_class: 'suggested-actions logged_in_only' do %>
+  <p class="lead">
+    This plate can be processed via multiple workflows and there are currently
+    no active workflows associated with the plate. Please select a workflow.
+    This will build the necessary submissions in Sequencescape, and will allow
+    you to proceed.
+  </p>
+  <% presenter.each_submission_option do |name, submission| %>
+    <%= form_for submission do |f| %>
+        <%= f.fields_for('request_options') do |ro| %>
+          <% submission.request_options.each do |k,v| %>
+            <%= ro.hidden_field k, value: v %>
+          <% end %>
+        <% end %>
+        <%= f.hidden_field :template_uuid %>
+        <%= f.fields_for :asset_groups do |asset_groups_form| %>
+          <% submission.asset_groups.each_with_index do |asset_group, group_id| %>
+            <%= asset_groups_form.fields_for group_id.to_s do |ag_form| %>
+              <% asset_group.except(:assets).each do |key, value| %>
+                <%# Deconstruct the other fields of our asset group, such as study and project %>
+                <%= ag_form.hidden_field key, value: value  %>
+              <% end %>
+              <%= ag_form.fields_for :assets do |asset_form| %>
+              <% asset_group[:assets].each do |asset_uuid| %>
+                <%= asset_form.hidden_field nil, value: asset_uuid  %>
+              <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <%= submit_tag name, class: 'create-submission-button' %>
+    <% end %>
+  <% end %>
+<% end %>

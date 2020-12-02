@@ -53,6 +53,9 @@ FactoryBot.define do
           end
         end
       end
+      # In most cases we only want to generate aliquots if we have an
+      # associated request. This allows us to over-ride that
+      aliquots_without_requests { 0 }
       # Constructs the wells for the plate. Constructs
       # well_count wells using the factory specified in well_factory
       # Sets requests on wells by pulling them off the outer_request array
@@ -65,7 +68,7 @@ FactoryBot.define do
                                outer_request: outer_requests[i],
                                downstream_tubes: transfer_targets[location],
                                uuid: well_uuid_result % location,
-                               aliquot_count: outer_requests[i] ? 1 : 0
+                               aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests
         end
       end
       # Overide the purpose name
@@ -122,10 +125,9 @@ FactoryBot.define do
     # We could probably avoid needing to do anything sneaky at all if we instead generated
     # json-api data and generated the objects from that.
     after(:build) do |plate, evaluator|
-      plate._cached_relationship(:wells) { evaluator.wells }
-      plate._cached_relationship(:purpose) { evaluator.purpose }
-      plate._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
-      # TODO: Tidy up this to reduce the mocking.
+      Sequencescape::Api::V2::Plate.associations.each do |association|
+        plate._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
+      end
       RSpec::Mocks.allow_message(plate, :stock_plate).and_return(evaluator.stock_plate)
 
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
@@ -153,6 +155,8 @@ FactoryBot.define do
         ancestors { [] }
         is_stock { true }
       end
+
+      state { 'passed' }
     end
 
     # Sets up a plate of GBS requests with configured primer panels
@@ -202,6 +206,16 @@ FactoryBot.define do
         request_factory { :aggregation_request }
         include_submissions { true }
         pool_sizes { [2, 2] }
+      end
+    end
+
+    # Sets up a plate of samples without submissions for testing of the
+    # SubmissionPlatePresenter
+    factory :v2_plate_for_submission do
+      transient do
+        well_factory { :v2_stock_well }
+        aliquots_without_requests { 1 }
+        pool_sizes { [] }
       end
     end
   end

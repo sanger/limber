@@ -15,15 +15,19 @@ class SequencescapeSubmission
   # Controls the user who is recorded as having made the submission
   # @return [String] user: The uuid of the user who is making the submission
   attr_accessor :user
-  # Sets the assets which will be input into the submission
-  # @return [Array] assets: Array of asset uuids to submit
-  attr_accessor :assets
   # Selects the template to use, by uuid.
-  # @return [String] template_uuid: The uuid of the submission template to use
-  attr_accessor :template_uuid
+  attr_writer :template_uuid
+  # Selects the template to use by template name
+  attr_writer :template_name
   # A hash of valid request options for the submission
   # @return [Hash] request_options: The request options to use
   attr_accessor :request_options
+  # @return [Array<Hash>] Returns a nested array of asset_group object. Each
+  #                       asset group is a hash containing:
+  #                       assets: Array of asset uuids
+  #                       study: The study uuid
+  #                       project: The project uuid
+  attr_reader :asset_groups
 
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
 
@@ -38,18 +42,63 @@ class SequencescapeSubmission
     generate_submissions
   end
 
+  # @return [String] template_uuid: The uuid of the submission template to use
+  def template_uuid
+    @template_uuid ||= Settings.submission_templates[@template_name]
+  end
+
+  #
+  # Sets up a single asset group containing the supplied assets
+  #
+  # @param asset_uuids [Array<String>] Array of asset uuids to submit
+  #
+  def assets=(asset_uuids)
+    @asset_groups = [{ assets: asset_uuids }]
+  end
+
+  #
+  # An array of all asset uuids that will be submitted
+  #
+  # @return [Array<String>] Array of asset uuids to submit
+  #
+  def assets
+    @asset_groups.pluck(:assets).flatten
+  end
+
+  #
+  # Set asset_groups for the submission
+  #
+  # @param asset_groups [Array<Hash>, Hash<Hash>]
+  #   Nested array asset_group hashes. (See #asset_groups) Also
+  #   accepts hash to support HTML forms, where each value is an array of asset
+  #   uuids, indicating an asset group. Keys are ignored.
+  #
+  def asset_groups=(asset_groups)
+    @asset_groups = if asset_groups.respond_to?(:values)
+                      asset_groups.values
+                    else
+                      asset_groups
+                    end
+  end
+
   private
+
+  def generate_orders
+    asset_groups.map do |asset_group|
+      order_parameters = {
+        request_options: request_options,
+        user: user
+      }.merge(asset_group)
+      submission_template.orders.create!(order_parameters)
+    end
+  end
 
   # rubocop:todo Metrics/MethodLength
   def generate_submissions # rubocop:todo Metrics/AbcSize
-    order = submission_template.orders.create!(
-      assets: assets,
-      request_options: request_options,
-      user: user
-    )
+    orders = generate_orders
 
     submission = api.submission.create!(
-      orders: [order.uuid],
+      orders: orders.map(&:uuid),
       user: user
     )
 

@@ -6,32 +6,31 @@
 # @author Genome Research Ltd.
 #
 module WorkCompletionBehaviour
+  extend ActiveSupport::Concern
+
+  included do
+    include SequencescapeSubmissionBehaviour
+  end
   # Create a work completion for the given limber_plate_id
   # and redirect to the plate page.
   # Work completions mark library creation requests as completed
   # and hook them up to the correct wells.
-  # rubocop:todo Metrics/MethodLength
-  def create # rubocop:todo Metrics/AbcSize
-    messages = Hash.new { |message_store, category| message_store[category] = [] }
+  def create
     api.work_completion.create!(
       # Our pools keys are our submission uuids.
       submissions: labware.in_progress_submission_uuids,
       target: labware.uuid,
       user: current_user_uuid
     )
-    messages[:notice] << 'Requests have been passed'
 
-    if params[:sequencescape_submission]
-      ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-      if ss.save
-        messages[:notice] << 'Your submissions have been made and should be built shortly.'
-      else
-        messages[:alert] = truncate_flash(ss.errors.full_messages)
-      end
-    end
-    redirect_to labware, messages
+    # We assign the message in an array as create_submission may wish to add
+    # its own feedback.
+    flash[:notice] = ['Requests have been passed']
+
+    create_submission if params[:sequencescape_submission]
+
+    redirect_to labware
   end
-  # rubocop:enable Metrics/MethodLength
 
   def sequencescape_submission_parameters
     params
