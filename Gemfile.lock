@@ -163,7 +163,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
-    json (2.3.0)
+    json (2.3.1)
     launchy (2.5.0)
       addressable (~> 2.7)
     listen (3.2.1)
@@ -315,11 +315,11 @@ GEM
       i18n
       yajl-ruby (>= 1.4.1)
     shellany (0.0.1)
-    simplecov (0.18.5)
+    simplecov (0.19.1)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-html (0.12.2)
-    simplecov-json (0.2.1)
+    simplecov-html (0.12.3)
+    simplecov-json (0.2.3)
       json
       simplecov
     sprint_client (0.0.10)
