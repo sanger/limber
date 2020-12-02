@@ -2794,10 +2794,10 @@ detect-node@^2.0.4:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
   integrity sha512-ZIzRpLJrOj7jjP2miAtgqIfmzbxa4ZOr5jJc601zklsfEx9oTzmmj2nVpIPRpNlRTIh8lc1kyViIY7BWSGNmKw==
 
-devour-client@^2.0.15:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/devour-client/-/devour-client-2.1.0.tgz#7948b9ea08610a9765819654e323c69c81e4708c"
-  integrity sha512-QW/lAFq4zgSRgcssgbS3Leji+aV6GgSQntggRtcscYtKw2Gon3g0szmCMoRFwufcs2vujspnN47rPCotCo+VwQ==
+devour-client@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/devour-client/-/devour-client-2.1.1.tgz#d9113b9bb03b32c65abe5e3ec70e9396d7a9817e"
+  integrity sha512-ELygMkt1t9rA/+E2+oM7heUovGz0jPdaxleiLA+tRLL5hEEYU9hZ+16ZE1yAevBCro7EIidicFnFzRi6iuMKXQ==
   dependencies:
     axios "^0.19.0"
     es6-promise ">=3.1.2 <5.0.0"
