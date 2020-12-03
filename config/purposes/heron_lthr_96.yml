@@ -5,6 +5,7 @@ LTHR RT:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
 LTHR PCR 1:
   :asset_type: plate
 LTHR PCR 2:

@@ -3,6 +3,8 @@
 class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
   belongs_to :request
   has_one :sample
+  has_one :study
+  has_one :project
 
   def tagged?
     tag_oligo.present? || tag2_oligo.present?
@@ -25,5 +27,9 @@ class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:t
   # Returns the combination of tag and tag2 oligos for the aliquot
   def tag_pair
     [tag_oligo, tag2_oligo]
+  end
+
+  def order_group
+    [relationships.study.dig(:data, :id), relationships.project.dig(:data, :id)]
   end
 end

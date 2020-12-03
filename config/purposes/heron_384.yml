@@ -1,4 +1,8 @@
 ---
+# These purposes were part of the original Heron pipeline, which has been
+# superseded in favour of the LTHR (tailed) workflow (heron_lthr_384).
+# The associated pipeline was removed as part of
+# https://github.com/sanger/limber/issues/546
 LHR-384 RT:
   :asset_type: plate
   :stock_plate: true

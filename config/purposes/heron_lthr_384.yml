@@ -5,6 +5,13 @@ LTHR-384 RT:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :label_template: plate_6mm_double
+  :size: 384
+LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
 LTHR-384 PCR 1:
@@ -22,7 +29,7 @@ LTHR-384 Lib PCR 1:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - 'TSsc384'
+  - TSsc384 - nCoV-2019/V3/B - PCR1
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -30,7 +37,7 @@ LTHR-384 Lib PCR 2:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - 'TSsc384'
+  - TSsc384 - nCoV-2019/V3/B - PCR2
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate

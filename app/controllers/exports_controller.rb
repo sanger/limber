@@ -12,8 +12,7 @@ class ExportsController < ApplicationController
   WELL_QC_SAMPLE_INCLUDES = 'wells.qc_results,wells.aliquots.sample.sample_metadata'
   WELL_SRC_ASSET_INCLUDES = 'wells.transfer_requests_as_target.source_asset'
 
-  CSVDetail = Struct.new(:csv, :plate_includes, :workflow, :ancestor_purpose) do
-  end
+  CSVDetail = Struct.new(:csv, :plate_includes, :workflow, :ancestor_purpose)
 
   CSV_DETAILS = {
     'concentrations_ngul' =>

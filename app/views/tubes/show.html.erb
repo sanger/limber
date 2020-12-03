@@ -15,5 +15,5 @@
     <% end %>
   <% end %>
 
-  <%= render partial: 'sidebar', locals: { presenter: @presenter } %>
+  <%= render partial: "tubes/sidebars/#{@presenter.sidebar_partial}", locals: { presenter: @presenter } %>
 <% end %>

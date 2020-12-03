@@ -31,6 +31,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
       ['Created on', '2016-10-19']
     ]
   end
+  let(:sidebar_partial) { 'default' }
 
   before do
     create :stock_plate_config, uuid: labware.purpose.uuid, name: purpose_name

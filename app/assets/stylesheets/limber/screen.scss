@@ -60,6 +60,17 @@ header.limber-header {
   }
 }
 
+.submission-list {
+  @extend .list-group;
+  @extend .list-group-flush;
+
+  li {
+    @extend .list-group-item;
+    @extend .justify-content-between;
+    @extend .d-flex;
+  }
+}
+
 button#btnGroupInboxes, button#btnGroupRobots {
   @extend .btn;
   @extend .btn-primary;
@@ -127,7 +138,7 @@ nav.inbox-list, nav.robots-list {
   }
 }
 
-.work-completion-button, .robots-button, .create-plate-button, .create-tube-button, .csv-link {
+.work-completion-button, .robots-button, .create-plate-button, .create-tube-button, .csv-link, .create-submission-button {
   @extend .btn;
   @extend .btn-lg;
   @extend .btn-block;
@@ -138,7 +149,7 @@ nav.inbox-list, nav.robots-list {
   .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-secondary;}
 }
 .suggested-actions {
-  .work-completion-button, .create-plate-button, .create-tube-button { @extend .btn-success;}
+  .work-completion-button, .create-plate-button, .create-tube-button, .create-submission-button { @extend .btn-success;}
 }
 .robots-button {
   @extend .btn-primary;

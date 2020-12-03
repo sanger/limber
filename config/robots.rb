@@ -1873,11 +1873,49 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Heron LTHR 384 Pipeline
 
+  custom_robot('bravo-lthr-cherrypick-to-lthr-384-rt-q',
+               name: 'Bravo LTHR Cherrypick => LTHR-384 RT-Q',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(5).barcode,
+                   label: 'Bed 1'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(5).barcode,
+                   label: 'Bed 4'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(5).barcode,
+                   label: 'Bed 3'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(5).barcode,
+                   label: 'Bed 6'
+                 },
+                 bed(5).barcode => {
+                   purpose: 'LTHR-384 RT-Q',
+                   states: ['pending'],
+                   label: 'Bed 5',
+                   parents: [bed(1).barcode, bed(4).barcode, bed(3).barcode, bed(6).barcode],
+                   target_state: 'passed'
+                 }
+               },
+               destination_bed: bed(5).barcode,
+               class: 'Robots::QuadrantRobot')
+
   custom_robot('bravo-lthr-384-rt-to-lthr-384-pcr-1-and-2',
                name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
                beds: {
                  bed(9).barcode => {
-                   purpose: 'LTHR-384 RT',
+                   purpose: ['LTHR-384 RT', 'LTHR-384 RT-Q'],
                    states: ['passed'],
                    label: 'Bed 9'
                  },
@@ -1954,7 +1992,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                name: 'bravo LTHR RT => LTHR PCR 1 and 2',
                beds: {
                  bed(9).barcode => {
-                   purpose: 'LTHR RT',
+                   purpose: ['LTHR RT', 'LTHR Cherrypick'],
                    states: ['passed'],
                    label: 'Bed 9'
                  },

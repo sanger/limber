@@ -39,12 +39,13 @@ module Robots::Bed
     def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || plate.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.purpose.uuid).new(api, plate.uuid, user_uuid).move_to!(target_state,
-                                                                                            "Robot #{robot.name} started")
+      StateChangers.lookup_for(plate.purpose.uuid)
+                   .new(api, plate.uuid, user_uuid)
+                   .move_to!(target_state, "Robot #{robot.name} started")
     end
 
     def purpose_labels
-      purpose
+      Array(purpose).to_sentence(two_words_connector: ' or ', last_word_connector: ' or ')
     end
 
     def barcodes
@@ -96,9 +97,9 @@ module Robots::Bed
     private
 
     def correct_plate_purpose
-      return true if plate.purpose.name == purpose
+      return true if Array(purpose).include?(plate.purpose.name)
 
-      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose} plate.")
+      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose_labels} plate.")
     end
 
     def correct_plate_state

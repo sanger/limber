@@ -14,8 +14,11 @@ RSpec.shared_examples 'a labware presenter' do
   end
 
   it 'has a summary' do
-    # If you don't expect to trigger any request, just use let(:expected_requests_for_summary) {}
     expect { |b| subject.summary(&b) }.to yield_successive_args(*summary_tab)
+  end
+
+  it 'has a sidebar partial' do
+    expect(subject.sidebar_partial).to eq(sidebar_partial)
   end
 
   it 'responds to child_assets' do

@@ -33,9 +33,7 @@ RSpec.describe Presenters::FinalTubePresenter do
       ['Created on', '2016-10-19']
     ]
   end
-
-  let(:expected_requests_for_summary) do
-  end
+  let(:sidebar_partial) { 'default' }
 
   subject do
     Presenters::FinalTubePresenter.new(

@@ -58,5 +58,7 @@ Rails.application.routes.draw do
 
   resources :pipelines, only: :index
 
+  resources :sequencescape_submissions
+
   root to: 'search#new'
 end

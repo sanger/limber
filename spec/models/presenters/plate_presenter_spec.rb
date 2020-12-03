@@ -21,6 +21,7 @@ RSpec.describe Presenters::PlatePresenter do
       ['Created on', '2016-10-19']
     ]
   end
+  let(:sidebar_partial) { 'default' }
 
   let(:labware) do
     build :v2_plate,

@@ -4,6 +4,7 @@ module Presenters
   class UnknownTubePresenter < TubePresenter # rubocop:todo Style/Documentation
     include Presenters::Statemachine::Standard
     include Statemachine::DoesNotAllowLibraryPassing
+    include Presenters::StateChangeless
 
     validate :add_unknown_tube_warnings
 
@@ -16,16 +17,8 @@ module Presenters
                  "type '#{labware.purpose.name}' is not a limber tube. Perhaps you are using the wrong pipeline application?")
     end
 
-    def control_state_change
-      # You cannot change the state of the unknown plate
-    end
-
-    def default_state_change
-      # You cannot change the state of the unknown plate
-    end
-
     def default_printer
-      :plate_a
+      :tube
     end
   end
 end

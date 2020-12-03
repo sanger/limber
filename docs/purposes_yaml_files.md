@@ -546,3 +546,35 @@ Only used by Creators that use transfer templates, such as
 ```
 
 Default specified by default_transfer_template_name for the creator class.
+
+### :submission_options:
+
+Hash of workflows to offer the user. Keys are the text that will appear on the
+button, and values are a Hash, specifying:
+
+  template_name: The name of the submission template to use.
+
+  request_options: Valid request options hash to pass in to the submission, the
+                  exact keys required will depend on the submission template.
+
+This mirrors the same structure used by work completions.
+
+```yaml
+:submission_options:
+  LTHR 96 - NovaSeq:
+    template_name: 'Limber - Heron LTHR - Automated'
+    request_options:
+      library_type: 'Sanger_tailed_artic_v1_96'
+      read_length: 150
+      fragment_size_required_from: '50'
+      fragment_size_required_to: '800'
+      primer_panel_name: nCoV-2019/V3/B
+  LTHR 384 - NovaSeq:
+    template_name: 'Limber - Heron LTHR - Automated'
+    request_options:
+      library_type: 'Sanger_tailed_artic_v1_384'
+      read_length: 150
+      fragment_size_required_from: '50'
+      fragment_size_required_to: '800'
+      primer_panel_name: nCoV-2019/V3/B
+```
