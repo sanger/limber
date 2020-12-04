@@ -16,7 +16,7 @@ Heron-96 Tailed B:
   filters: *heron_tailed_filters
   library_pass: LTHR Lib PCR pool
   relationships:
-    LTHR Cherrypick: LTHR PCR 2
+    LTHR RT-S: LTHR PCR 2
     LTHR RT: LTHR PCR 2
     LTHR PCR 2: LTHR Lib PCR 2
     LTHR Lib PCR 2: LTHR Lib PCR pool
