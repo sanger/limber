@@ -316,13 +316,15 @@ GEM
       i18n
       multi_json
     shellany (0.0.1)
-    simplecov (0.19.1)
+    simplecov (0.20.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov-json (0.2.3)
       json
       simplecov
+    simplecov_json_formatter (0.1.2)
     sprint_client (0.0.10)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
