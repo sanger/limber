@@ -7,7 +7,8 @@ Heron-96 Tailed A: # Heron 96-well pipeline specific to PCR 1 plate
     - Sanger_tailed_artic_v1_96
   library_pass: LTHR Lib PCR pool
   relationships:
-    LTHR Cherrypick: LTHR PCR 1
+    LTHR Cherrypick: LTHR RT-S
+    LTHR RT-S: LTHR PCR 1
     LTHR RT: LTHR PCR 1
     LTHR PCR 1: LTHR Lib PCR 1
     LTHR Lib PCR 1: LTHR Lib PCR pool

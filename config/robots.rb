@@ -1988,11 +1988,16 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Heron LTHR 96 Pipeline
 
+  bravo_robot do
+    from 'LTHR Cherrypick', bed(1)
+    to 'LTHR RT-S', bed(5)
+  end
+
   custom_robot('bravo-lthr-96-rt-to-lthr-96-pcr-1-and-2',
                name: 'bravo LTHR RT => LTHR PCR 1 and 2',
                beds: {
                  bed(9).barcode => {
-                   purpose: ['LTHR RT', 'LTHR Cherrypick'],
+                   purpose: ['LTHR RT', 'LTHR RT-S'],
                    states: ['passed'],
                    label: 'Bed 9'
                  },
