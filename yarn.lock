@@ -1599,10 +1599,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-vue@^2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.19.0.tgz#5019df48251e552a5c34da57fc97dabebd53b02f"
-  integrity sha512-IjAXUSrRU5Qu9x3uwUcoj6LtysKbCVeWoJOsODyI/WokStUr95M+tTIajXUjIrB/Nsk0fS+RNvZnm2sWeNFrhg==
+bootstrap-vue@^2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.20.1.tgz#1b6cd4368632c1a6dd4a5ed161242baa131c3cd5"
+  integrity sha512-s+w83q0T2mo/RbFwTM8gExbLJMEOYpdTUqmyFaHv2Ir+TFprMvTWpeAzeNuawJ130W1gePZ3LW3cNp1t/tZbOw==
   dependencies:
     "@nuxt/opencollective" "^0.3.2"
     bootstrap ">=4.5.3 <5.0.0"
@@ -2621,10 +2621,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cytoscape@^3.16.3:
-  version "3.16.3"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.16.3.tgz#8880911da5d6192f6acda1095d18aa7662e89d2f"
-  integrity sha512-OGu9r5jsU2IgmqDy0NpW1M7ze2muvnJ3yNIB1mlzDLA7fcGI0aeE2hmLIoowi8E3+6HJF8Scx2iXGp11tbXHEg==
+cytoscape@^3.17.0:
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.17.0.tgz#9dc476636a32e2b6f272ee0620177b933427c571"
+  integrity sha512-zPAB2UVV4QWArs+0UEq0ojYn7riFfz8CjivL67wibE/zdnAE8TTvDO5bFxsShSTutmG+1NkCnTXJjOxfosDMwA==
   dependencies:
     heap "^0.2.6"
     lodash.debounce "^4.0.8"
@@ -2794,10 +2794,10 @@ detect-node@^2.0.4:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
   integrity sha512-ZIzRpLJrOj7jjP2miAtgqIfmzbxa4ZOr5jJc601zklsfEx9oTzmmj2nVpIPRpNlRTIh8lc1kyViIY7BWSGNmKw==
 
-devour-client@^2.0.15:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/devour-client/-/devour-client-2.1.0.tgz#7948b9ea08610a9765819654e323c69c81e4708c"
-  integrity sha512-QW/lAFq4zgSRgcssgbS3Leji+aV6GgSQntggRtcscYtKw2Gon3g0szmCMoRFwufcs2vujspnN47rPCotCo+VwQ==
+devour-client@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/devour-client/-/devour-client-2.1.1.tgz#d9113b9bb03b32c65abe5e3ec70e9396d7a9817e"
+  integrity sha512-ELygMkt1t9rA/+E2+oM7heUovGz0jPdaxleiLA+tRLL5hEEYU9hZ+16ZE1yAevBCro7EIidicFnFzRi6iuMKXQ==
   dependencies:
     axios "^0.19.0"
     es6-promise ">=3.1.2 <5.0.0"
