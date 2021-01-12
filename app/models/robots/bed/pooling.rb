@@ -7,11 +7,7 @@ module Robots::Bed
 
     def each_parent
       range.each do |i|
-        plate_barcode = if parent_plates[i].present?
-                          parent_plates[i].barcode
-                        else
-                          SBCF::EmptyBarcode.new
-                        end
+        plate_barcode = parent_plates[i]&.barcode || SBCF::EmptyBarcode.new
         yield(parents[i], plate_barcode)
       end
     end
