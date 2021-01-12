@@ -18,17 +18,23 @@ class LabwareBarcode
     extracted && extracted[:prefix]
   end
 
-  def sbcf
-    @sbcf ||= SBCF::SangerBarcode.from_human(@human)
-  end
-
   def to_s
     @human
   end
 
-  delegate :=~, to: :sbcf
+  def =~(other)
+    if sbcf.valid?
+      sbcf =~ other
+    else
+      machine == other
+    end
+  end
 
   private
+
+  def sbcf
+    @sbcf ||= SBCF::SangerBarcode.from_human(@human)
+  end
 
   def extracted
     /\A(?<prefix>[a-zA-Z]*)(?<number>\d+)/.match(human)
