@@ -30,6 +30,9 @@ module Presenters
       'Created on' => :created_on
     }
 
+    # Is a new argument for the .new(); is this needed to be defined or will it work?
+    attr_reader :additional_labwares
+
     def each_submission_option
       purpose_config.submission_options.each do |button_text, options|
         submission_options = options.to_hash
@@ -49,7 +52,19 @@ module Presenters
     private
 
     def asset_groups
+      return asset_groups_including_additional_labwares if additional_labwares
+      # TODO: this would need to include all 4 plates, not just 1.
       @asset_groups ||= labware.wells
+                               .reject(&:empty?)
+                               .group_by(&:order_group)
+                               .map do |_, wells|
+                                 { assets: wells.map(&:uuid), autodetect_studies_projects: true }
+                               end
+    end
+
+    def _asset_groups_including_additional_labwares
+      @asset_groups ||= [labware, additional_labwares].flatten
+                               .map(&:wells).flatten
                                .reject(&:empty?)
                                .group_by(&:order_group)
                                .map do |_, wells|

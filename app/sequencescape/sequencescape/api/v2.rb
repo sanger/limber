@@ -19,6 +19,10 @@ module Sequencescape::Api::V2
     Plate.includes(*PLATE_PRESENTER_INCLUDES).find(query).first
   end
 
+  def self.additional_plates_for_presenter(query)
+    Plate.includes(*PLATE_PRESENTER_INCLUDES).find(query)
+  end
+
   def self.plate_with_wells(uuid)
     Plate.includes('wells').find(uuid: uuid).first
   end

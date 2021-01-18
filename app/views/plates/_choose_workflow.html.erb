@@ -6,7 +6,8 @@
     you to proceed.
   </p>
   <% presenter.each_submission_option do |name, submission| %>
-    <%= form_for submission do |f| %>
+    <%= card do %>
+      <%= form_for submission do |f| %>
         <%= f.fields_for('request_options') do |ro| %>
           <% submission.request_options.each do |k,v| %>
             <%= ro.hidden_field k, value: v %>
@@ -28,7 +29,16 @@
             <% end %>
           <% end %>
         <% end %>
-      <%= submit_tag name, class: 'create-submission-button' %>
+
+        <% if submission.allowed_extra_barcodes %>
+          <%= f.label :extra_barcodes, 'Additional labware barcodes' %>
+          <br/>
+          <%= f.text_area :extra_barcodes %>
+        <% end %>
+
+        <%= submit_tag name, class: 'create-submission-button' %>
+      <% end %>
     <% end %>
   <% end %>
+
 <% end %>
