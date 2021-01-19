@@ -38,7 +38,7 @@ class PlatesController < LabwareController
   def params_for_presenter
     {
       api: api,
-      labware: labware,
+      labware: @labware,
       additional_labwares: additional_labwares
     }
   end
