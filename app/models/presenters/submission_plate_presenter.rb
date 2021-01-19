@@ -63,6 +63,7 @@ module Presenters
                                end
     end
 
+    # rubocop:todo Naming/MemoizedInstanceVariableName
     def _asset_groups_including_additional_labwares
       @asset_groups ||= [labware, additional_labwares].flatten
                                                       .map(&:wells).flatten
@@ -72,5 +73,6 @@ module Presenters
         { assets: wells.map(&:uuid), autodetect_studies_projects: true }
       end
     end
+    # rubocop:enable Naming/MemoizedInstanceVariableName
   end
 end

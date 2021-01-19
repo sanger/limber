@@ -6,7 +6,7 @@
 # Note: Finds plates via the v2 api
 class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
-  before_action :locate_additional_labwares, only: :show
+  before_action :locate_additional_labwares, only: [:show] # rubocop:todo Rails/LexicallyScopedActionFilter
 
   # rubocop:todo Metrics/MethodLength
   def fail_wells # rubocop:todo Metrics/AbcSize
@@ -30,9 +30,11 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
+  # rubocop:todo Naming/MemoizedInstanceVariableName
   def locate_additional_labwares
     @additional_labwares ||= locate_additional_labwares_by_barcode
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def params_for_presenter
     {
