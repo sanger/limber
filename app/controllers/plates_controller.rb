@@ -7,6 +7,8 @@
 class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
 
+  before_action :locate_additional_labwares, only: :show
+
   # rubocop:todo Metrics/MethodLength
   def fail_wells # rubocop:todo Metrics/AbcSize
     if wells_to_fail.empty?
@@ -29,7 +31,24 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
+  def locate_additional_labwares
+    @additional_labwares ||= locate_additional_labwares_by_barcode
+  end
+
+  def params_for_presenter
+    {
+      api: api,
+      labware: labware,
+      additional_labwares: additional_labwares
+    }
+  end
+
   private
+
+  def search_additional_labwares_param
+    return nil unless params[:extra_barcodes].kind_of?(String)
+    { barcode: params[:extra_barcodes].split(' ') }
+  end
 
   def locate_labware_identified_by_id
     Sequencescape::Api::V2.plate_for_presenter(search_param) ||

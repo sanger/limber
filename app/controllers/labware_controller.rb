@@ -9,7 +9,6 @@ class LabwareController < ApplicationController
   UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/.freeze
 
   before_action :locate_labware, only: :show
-  before_action :locate_additional_labwares, only: :show
   before_action :find_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
@@ -66,11 +65,6 @@ class LabwareController < ApplicationController
     # end
   end
 
-  def search_additional_labwares_param
-    return nil unless params[:extra_barcodes].kind_of?(String)
-    { barcode: params[:extra_barcodes].split(' ') }
-  end
-
   def unknown_type
     redirect_to(
       search_path,
@@ -88,10 +82,6 @@ class LabwareController < ApplicationController
   end
   # rubocop:enable Naming/MemoizedInstanceVariableName
 
-  def locate_additional_labwares
-    @additional_labwares ||= locate_additional_labwares_by_barcode
-  end
-
   def find_printers
     @printers = api.barcode_printer.all
   end
@@ -101,11 +91,14 @@ class LabwareController < ApplicationController
   end
 
   def presenter_for(labware)
-    Presenters.lookup_for(labware).new(
+    Presenters.lookup_for(labware).new(params_for_presenter)
+  end
+
+  def params_for_presenter
+    {
       api: api,
-      labware: labware,
-      additional_labwares: additional_labwares
-    )
+      labware: labware
+    }
   end
 
 end
