@@ -6,7 +6,6 @@
 # Note: Finds plates via the v2 api
 class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
-
   before_action :locate_additional_labwares, only: :show
 
   # rubocop:todo Metrics/MethodLength
@@ -39,7 +38,7 @@ class PlatesController < LabwareController
     {
       api: api,
       labware: @labware,
-      additional_labwares: additional_labwares
+      additional_labwares: @additional_labwares
     }
   end
 
