@@ -64,7 +64,22 @@ class SequencescapeSubmission
   # @return [Array<String>] Array of asset uuids to submit
   #
   def assets
-    @asset_groups.pluck(:assets).flatten
+    @asset_groups.pluck(:assets)
+  end
+
+  def extra_plates
+    return @extra_plates if @extra_plates
+    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes)
+    @extra_plates ||= response
+    raise "Barcodes not found #{extra_barcodes}" unless @extra_plates
+    @extra_plates
+  end
+
+  def extra_assets
+    return [] unless extra_plates
+    @extra_assets ||= extra_plates.map do |labware|
+      labware.wells.reject(&:empty?).map(&:uuid)
+    end.flatten
   end
 
   #
@@ -83,10 +98,15 @@ class SequencescapeSubmission
                     end
   end
 
+  def asset_groups_for_orders_creation
+    return asset_groups unless asset_groups.length == 1
+    [{assets: [assets, extra_assets].flatten.compact}]
+  end
+
   private
 
   def generate_orders
-    asset_groups.map do |asset_group|
+    asset_groups_for_orders_creation.map do |asset_group|
       order_parameters = {
         request_options: request_options,
         user: user
