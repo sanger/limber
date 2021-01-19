@@ -69,14 +69,17 @@ class SequencescapeSubmission
 
   def extra_plates
     return @extra_plates if @extra_plates
+
     response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes)
     @extra_plates ||= response
     raise "Barcodes not found #{extra_barcodes}" unless @extra_plates
+
     @extra_plates
   end
 
   def extra_assets
     return [] unless extra_plates
+
     @extra_assets ||= extra_plates.map do |labware|
       labware.wells.reject(&:empty?).map(&:uuid)
     end.flatten
@@ -100,7 +103,8 @@ class SequencescapeSubmission
 
   def asset_groups_for_orders_creation
     return asset_groups unless asset_groups.length == 1
-    [{assets: [assets, extra_assets].flatten.compact, autodetect_studies_projects: true}]
+
+    [{ assets: [assets, extra_assets].flatten.compact, autodetect_studies_projects: true }]
   end
 
   private

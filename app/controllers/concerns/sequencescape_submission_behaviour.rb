@@ -20,8 +20,7 @@ module SequencescapeSubmissionBehaviour
   def sequencescape_submission_parameters
     params
       .require(:sequencescape_submission).permit(:extra_barcodes,
-        :template_uuid, request_options: {}, assets: [], asset_groups: {},
-      )
+                                                 :template_uuid, request_options: {}, assets: [], asset_groups: {})
       .merge(api: api, user: current_user_uuid)
   end
 end
