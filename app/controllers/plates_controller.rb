@@ -6,7 +6,6 @@
 # Note: Finds plates via the v2 api
 class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
-  before_action :locate_additional_labwares, only: [:show] # rubocop:todo Rails/LexicallyScopedActionFilter
 
   # rubocop:todo Metrics/MethodLength
   def fail_wells # rubocop:todo Metrics/AbcSize
@@ -30,38 +29,10 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
-  # rubocop:todo Naming/MemoizedInstanceVariableName
-  def locate_additional_labwares
-    @additional_labwares ||= locate_additional_labwares_by_barcode
-  end
-  # rubocop:enable Naming/MemoizedInstanceVariableName
-
-  def params_for_presenter
-    {
-      api: api,
-      labware: @labware,
-      additional_labwares: @additional_labwares
-    }
-  end
-
   private
-
-  def search_additional_labwares_param
-    return nil unless params[:extra_barcodes].is_a?(String)
-
-    { barcode: params[:extra_barcodes].split(' ') }
-  end
 
   def locate_labware_identified_by_id
     Sequencescape::Api::V2.plate_for_presenter(search_param) ||
       raise(ActionController::RoutingError, "Unknown resource #{search_param}")
-  end
-
-  def locate_additional_labwares_by_barcode
-    return nil unless search_additional_labwares_param
-
-    # TODO: check that this is returning a list
-    Sequencescape::Api::V2.additional_plates_for_presenter(search_additional_labwares_param) ||
-      raise(ActionController::RoutingError, "Unknown resource #{search_additional_labwares_param}")
   end
 end
