@@ -45,7 +45,8 @@ class PlatesController < LabwareController
   private
 
   def search_additional_labwares_param
-    return nil unless params[:extra_barcodes].kind_of?(String)
+    return nil unless params[:extra_barcodes].is_a?(String)
+
     { barcode: params[:extra_barcodes].split(' ') }
   end
 
@@ -56,6 +57,7 @@ class PlatesController < LabwareController
 
   def locate_additional_labwares_by_barcode
     return nil unless search_additional_labwares_param
+
     # TODO: check that this is returning a list
     Sequencescape::Api::V2.additional_plates_for_presenter(search_additional_labwares_param) ||
       raise(ActionController::RoutingError, "Unknown resource #{search_additional_labwares_param}")

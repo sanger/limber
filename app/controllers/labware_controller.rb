@@ -53,6 +53,13 @@ class LabwareController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength
 
+  def params_for_presenter
+    {
+      api: api,
+      labware: respond_to?(:labware) ? labware : @labware
+    }
+  end
+
   private
 
   def search_param
@@ -93,12 +100,4 @@ class LabwareController < ApplicationController
   def presenter_for(labware)
     Presenters.lookup_for(labware).new(params_for_presenter)
   end
-
-  def params_for_presenter
-    {
-      api: api,
-      labware: labware
-    }
-  end
-
 end

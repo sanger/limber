@@ -53,6 +53,7 @@ module Presenters
 
     def asset_groups
       return asset_groups_including_additional_labwares if additional_labwares
+
       # TODO: this would need to include all 4 plates, not just 1.
       @asset_groups ||= labware.wells
                                .reject(&:empty?)
@@ -64,12 +65,12 @@ module Presenters
 
     def _asset_groups_including_additional_labwares
       @asset_groups ||= [labware, additional_labwares].flatten
-                               .map(&:wells).flatten
-                               .reject(&:empty?)
-                               .group_by(&:order_group)
-                               .map do |_, wells|
-                                 { assets: wells.map(&:uuid), autodetect_studies_projects: true }
-                               end
+                                                      .map(&:wells).flatten
+                                                      .reject(&:empty?)
+                                                      .group_by(&:order_group)
+                                                      .map do |_, wells|
+        { assets: wells.map(&:uuid), autodetect_studies_projects: true }
+      end
     end
   end
 end
