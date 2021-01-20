@@ -67,10 +67,14 @@ class SequencescapeSubmission
     @asset_groups.pluck(:assets)
   end
 
+  def extra_barcodes_list
+    return nil unless extra_barcodes
+    extra_barcodes.split(' ')
+  end
+
   def extra_plates
     return @extra_plates if @extra_plates
-
-    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes)
+    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes_list)
     @extra_plates ||= response
     raise "Barcodes not found #{extra_barcodes}" unless @extra_plates
 
@@ -82,7 +86,7 @@ class SequencescapeSubmission
 
     @extra_assets ||= extra_plates.map do |labware|
       labware.wells.reject(&:empty?).map(&:uuid)
-    end.flatten
+    end.flatten.uniq
   end
 
   #
