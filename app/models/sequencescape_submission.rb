@@ -102,7 +102,7 @@ class SequencescapeSubmission
   end
 
   def asset_groups_for_orders_creation
-    return asset_groups unless asset_groups.length == 1 and extra_barcodes
+    return asset_groups unless (asset_groups.length == 1) && extra_barcodes
 
     [{ assets: [assets, extra_assets].flatten.compact, autodetect_studies_projects: true }]
   end
