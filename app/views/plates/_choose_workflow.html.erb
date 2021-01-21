@@ -31,9 +31,9 @@
         <% end %>
 
         <% if submission.allowed_extra_barcodes %>
-          <%= f.label :extra_barcodes, 'Additional labware barcodes' %>
+          <%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>
           <br/>
-          <%= f.text_area :extra_barcodes %>
+          <%= f.text_area :extra_barcodes, cols: 30, rows: 5, style: 'width: 100%; resize: none;' %>
         <% end %>
 
         <%= submit_tag name, class: 'create-submission-button' %>
