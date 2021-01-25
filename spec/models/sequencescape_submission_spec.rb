@@ -61,7 +61,7 @@ RSpec.describe SequencescapeSubmission do
       expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
     end
     it 'splits by comma' do
-      obj = described_class.new(attributes.merge(extra_barcodes: "1234,5678"))
+      obj = described_class.new(attributes.merge(extra_barcodes: '1234,5678'))
       expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
     end
   end
