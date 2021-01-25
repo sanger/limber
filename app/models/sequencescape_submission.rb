@@ -64,7 +64,7 @@ class SequencescapeSubmission
   # @return [Array<String>] Array of asset uuids to submit
   #
   def assets
-    @asset_groups.pluck(:assets)
+    @asset_groups.pluck(:assets).flatten
   end
 
   def extra_barcodes_list

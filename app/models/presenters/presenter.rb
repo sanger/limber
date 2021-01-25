@@ -10,7 +10,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
     class_attribute :summary_items, :sidebar_partial
 
-    attr_accessor :api, :labware, :additional_labwares
+    attr_accessor :api, :labware
 
     self.page = 'show'
     self.sidebar_partial = 'default'
