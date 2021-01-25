@@ -64,6 +64,18 @@ RSpec.describe SequencescapeSubmission do
       obj = described_class.new(attributes.merge(extra_barcodes: '1234,5678'))
       expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
     end
+    it 'removes any extra whitespaces' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "   1234   \n  5678        "))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'splits with carriage return' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n5678"))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'allows having empty lines' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n\r\n5678"))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
   end
 
   describe '#extra_plates' do

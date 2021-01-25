@@ -70,7 +70,7 @@ class SequencescapeSubmission
   def extra_barcodes_list
     return nil unless extra_barcodes
 
-    extra_barcodes.split(/[\n ,]/)
+    extra_barcodes.split(/[\n ,]+/).map(&:strip).reject(&:empty?)
   end
 
   def extra_plates
