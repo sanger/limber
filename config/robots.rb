@@ -1411,24 +1411,24 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'hamilton-lbc-cherrypick-to-lbc-tcr-dil-1',
     name: 'hamilton LBC Cherrypick => LBC TCR Dil 1',
     beds: {
-      bed(13).barcode => {
+      bed(1).barcode => {
         purpose: 'LBC Cherrypick',
         states: ['passed'],
-        label: 'Bed 13'
+        label: 'Bed 1'
       },
-      bed(3).barcode => {
+      bed(13).barcode => {
         purpose: 'LBC TCR Dil 1',
         states: ['pending'],
-        label: 'Bed 3',
+        label: 'Bed 13',
         target_state: 'passed',
-        parent: bed(13).barcode
+        parent: bed(1).barcode
       }
     }
   )
 
   custom_robot(
-    'hamilton-lbc-tcr-dil-1-to-lbc-tcr-enrich1-1xspri',
-    name: 'hamilton LBC TCR Dil 1 => LBC TCR Enrich1 1XSPRI',
+    'hamilton-lbc-tcr-dil-1-to-lbc-tcr-enrich1-2xspri',
+    name: 'hamilton LBC TCR Dil 1 => LBC TCR Enrich1 2XSPRI',
     beds: {
       bed(13).barcode => {
         purpose: 'LBC TCR Dil 1',
@@ -1436,7 +1436,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 13'
       },
       bed(3).barcode => {
-        purpose: 'LBC TCR Enrich1 1XSPRI',
+        purpose: 'LBC TCR Enrich1 2XSPRI',
         states: ['pending'],
         label: 'Bed 3',
         target_state: 'passed',
@@ -1446,11 +1446,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot(
-    'hamilton-lbc-tcr-enrich1-1xspri-to-lbc-tcr-enrich2-2xspri',
-    name: 'hamilton LBC TCR Enrich1 1XSPRI => LBC TCR Enrich2 2XSPRI',
+    'hamilton-lbc-tcr-enrich1-2xspri-to-lbc-tcr-enrich2-2xspri',
+    name: 'hamilton LBC TCR Enrich1 2XSPRI => LBC TCR Enrich2 2XSPRI',
     beds: {
       bed(13).barcode => {
-        purpose: 'LBC TCR Enrich1 1XSPRI',
+        purpose: 'LBC TCR Enrich1 2XSPRI',
         states: ['passed'],
         label: 'Bed 13'
       },
@@ -1507,24 +1507,24 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     'hamilton-lbc-cherrypick-to-lbc-bcr-dil-1',
     name: 'hamilton LBC Cherrypick => LBC BCR Dil 1',
     beds: {
-      bed(13).barcode => {
+      bed(1).barcode => {
         purpose: 'LBC Cherrypick',
         states: ['passed'],
-        label: 'Bed 13'
+        label: 'Bed 1'
       },
-      bed(3).barcode => {
+      bed(13).barcode => {
         purpose: 'LBC BCR Dil 1',
         states: ['pending'],
-        label: 'Bed 3',
+        label: 'Bed 13',
         target_state: 'passed',
-        parent: bed(13).barcode
+        parent: bed(1).barcode
       }
     }
   )
 
   custom_robot(
-    'hamilton-lbc-bcr-dil-1-to-lbc-bcr-enrich1-1xspri',
-    name: 'hamilton LBC BCR Dil 1 => LBC BCR Enrich1 1XSPRI',
+    'hamilton-lbc-bcr-dil-1-to-lbc-bcr-enrich1-2xspri',
+    name: 'hamilton LBC BCR Dil 1 => LBC BCR Enrich1 2XSPRI',
     beds: {
       bed(13).barcode => {
         purpose: 'LBC BCR Dil 1',
@@ -1532,7 +1532,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 13'
       },
       bed(3).barcode => {
-        purpose: 'LBC BCR Enrich1 1XSPRI',
+        purpose: 'LBC BCR Enrich1 2XSPRI',
         states: ['pending'],
         label: 'Bed 3',
         target_state: 'passed',
@@ -1542,11 +1542,11 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   )
 
   custom_robot(
-    'hamilton-lbc-bcr-enrich1-1xspri-to-lbc-bcr-enrich2-2xspri',
-    name: 'hamilton LBC BCR Enrich1 1XSPRI => LBC BCR Enrich2 2XSPRI',
+    'hamilton-lbc-bcr-enrich1-2xspri-to-lbc-bcr-enrich2-2xspri',
+    name: 'hamilton LBC BCR Enrich1 2XSPRI => LBC BCR Enrich2 2XSPRI',
     beds: {
       bed(13).barcode => {
-        purpose: 'LBC BCR Enrich1 1XSPRI',
+        purpose: 'LBC BCR Enrich1 2XSPRI',
         states: ['passed'],
         label: 'Bed 13'
       },
