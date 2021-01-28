@@ -7,8 +7,8 @@ Bespoke Chromium BCR:
   library_pass: LBC BCR Post PCR
   relationships:
     LBC Cherrypick: LBC BCR Dil 1
-    LBC BCR Dil 1: LBC BCR Enrich1 1XSPRI
-    LBC BCR Enrich1 1XSPRI: LBC BCR Enrich2 2XSPRI
+    LBC BCR Dil 1: LBC BCR Enrich1 2XSPRI
+    LBC BCR Enrich1 2XSPRI: LBC BCR Enrich2 2XSPRI
     LBC BCR Enrich2 2XSPRI: LBC BCR Dil 2
     LBC BCR Dil 2: LBC BCR Post Lig 1XSPRI
     LBC BCR Post Lig 1XSPRI: LBC BCR Post PCR
