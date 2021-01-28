@@ -26,8 +26,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::StampedPlate}
 
-  Used directly in 73 purposes:
-  LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LBC BCR Enrich1 1XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LBC TCR Enrich1 1XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR PCR 1, LHR PCR 2, and LHR End Prep
+  Used directly in 76 purposes:
+  LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
 
 {LabwareCreators::StampedPlate View class documentation}
 
@@ -144,8 +144,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::Uncreatable}
 
-  Used directly in 5 purposes:
-  LTHR-384 RT, LTHR Cherrypick, LHR-384 RT, LTHR RT, and LHR RT
+  Used directly in 3 purposes:
+  LTHR-384 RT, LTHR Cherrypick, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 
