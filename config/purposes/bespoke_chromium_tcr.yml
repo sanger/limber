@@ -12,16 +12,16 @@ LBC TCR Dil 1:
     id: 'hamilton_cherrypick_to_tcr_dilution1'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-LBC TCR Enrich1 1XSPRI:
+LBC TCR Enrich1 2XSPRI:
   :asset_type: plate
   :file_links:
-  - name: 'Download Hamilton TCR Dil 1 to TCR Enrich1 1XSPRI CSV'
-    id: 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri'
+  - name: 'Download Hamilton TCR Dil 1 to TCR Enrich1 2XSPRI CSV'
+    id: 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_2xspri'
 LBC TCR Enrich2 2XSPRI:
   :asset_type: plate
   :file_links:
-  - name: 'Download Hamilton TCR Enrich1 1XSPRI to TCR Enrich2 2XSPRI CSV'
-    id: 'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri'
+  - name: 'Download Hamilton TCR Enrich1 2XSPRI to TCR Enrich2 2XSPRI CSV'
+    id: 'hamilton_lbc_tcr_enrich1_2xspri_to_lbc_tcr_enrich2_2xspri'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
 LBC TCR Dil 2:
@@ -40,7 +40,7 @@ LBC TCR Post Lig 1XSPRI:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :tags_per_well: 4
+  :tags_per_well: 1
   :file_links:
   - name: 'Download Hamilton TCR Dil 2 to TCR Post Lig 1XSPRI CSV'
     id: 'hamilton_lbc_tcr_dil_2_to_lbc_tcr_post_lig_1xspri'

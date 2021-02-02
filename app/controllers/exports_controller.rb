@@ -34,20 +34,20 @@ class ExportsController < ApplicationController
     'hamilton_cherrypick_to_5p_gex_dilution' =>
       CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil),
     'hamilton_cherrypick_to_bcr_dilution1' =>
-      CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil),
-    'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' =>
-      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Single SPRI', nil),
-    'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' =>
+      CSVDetail.new('hamilton_cherrypick_dilutions', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick', nil),
+    'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_2xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Double SPRI', nil),
+    'hamilton_lbc_bcr_enrich1_2xspri_to_lbc_bcr_enrich2_2xspri' =>
       CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 2 Double SPRI', nil),
     'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2' =>
       CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil),
     'hamilton_lbc_bcr_dil_2_to_lbc_bcr_post_lig_1xspri' =>
       CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Ligation SPRI', nil),
     'hamilton_cherrypick_to_tcr_dilution1' =>
-      CSVDetail.new('hamilton_fixed_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil),
-    'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' =>
-      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Single SPRI', nil),
-    'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' =>
+      CSVDetail.new('hamilton_cherrypick_dilutions', WELL_SRC_ASSET_INCLUDES, 'Cherry Pick', nil),
+    'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_2xspri' =>
+      CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 1 Double SPRI', nil),
+    'hamilton_lbc_tcr_enrich1_2xspri_to_lbc_tcr_enrich2_2xspri' =>
       CSVDetail.new('hamilton_plate_stamp', WELL_SRC_ASSET_INCLUDES, '10X VDJ Post Target Enrichment 2 Double SPRI', nil),
     'hamilton_lbc_tcr_enrich2_2xspri_to_lbc_tcr_dil_2' =>
       CSVDetail.new('hamilton_variable_volume_dilutions', WELL_SRC_ASSET_INCLUDES, 'Sample Dilution', nil),
