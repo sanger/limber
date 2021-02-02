@@ -44,6 +44,114 @@ RSpec.describe SequencescapeSubmission do
     end
   end
 
+  describe '#extra_barcodes_list' do
+    let(:attributes) do
+      {
+        api: api, assets: assets, template_uuid: template_uuid,
+        request_options: request_options, user: user_uuid
+      }
+    end
+
+    it 'splits by whitespace' do
+      obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'splits by new line' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "1234\n5678"))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'splits by comma' do
+      obj = described_class.new(attributes.merge(extra_barcodes: '1234,5678'))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'removes any extra whitespaces' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "   1234   \n  5678        "))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'splits with carriage return' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n5678"))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+    it 'allows having empty lines' do
+      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n\r\n5678"))
+      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+    end
+  end
+
+  describe '#extra_plates' do
+    let(:attributes) do
+      {
+        api: api, assets: assets, template_uuid: template_uuid,
+        request_options: request_options, user: user_uuid
+      }
+    end
+
+    let(:plate) { create :v2_plate }
+    let(:obj) { described_class.new(attributes.merge(extra_barcodes: '1234 5678')) }
+    it 'raises error if barcodes not found in service' do
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return(nil)
+      expect { obj.extra_plates }.to raise_error
+    end
+    it 'returns the data obtained from service' do
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return([plate])
+      expect(obj.extra_plates).to eq([plate])
+    end
+  end
+
+  describe '#extra_assets' do
+    let(:attributes) do
+      {
+        api: api, assets: assets, template_uuid: template_uuid,
+        request_options: request_options, user: user_uuid
+      }
+    end
+
+    let(:plate) { create(:passed_plate) }
+    let(:plate2) { create(:passed_plate) }
+    it 'returns the uuids of the labwares wells' do
+      obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+        .with(barcode: %w[1234 5678]).and_return([plate, plate2])
+      # There are 4 non-empty wells in each labware
+      expect(obj.extra_assets.count).to eq(8)
+    end
+    it 'removes duplicates uuids in the returned list' do
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+        .with(barcode: %w[1234 1234 5678]).and_return([plate, plate, plate2])
+      obj = described_class.new(attributes.merge(extra_barcodes: '1234 1234 5678'))
+      expect(obj.extra_assets.count).to eq(8)
+      expect(obj.extra_assets.uniq.count).to eq(8)
+    end
+  end
+
+  describe '#asset_groups_for_orders_creation' do
+    let(:attributes) do
+      {
+        api: api, assets: assets, template_uuid: template_uuid,
+        request_options: request_options, user: user_uuid
+      }
+    end
+
+    it 'returns normal asset groups when no extra barcodes provided' do
+      obj = described_class.new(attributes)
+      expect(obj.asset_groups_for_orders_creation).to eq(obj.asset_groups)
+    end
+    context 'when extra barcodes provided' do
+      let(:plate) { create(:passed_plate) }
+      let(:plate2) { create(:passed_plate) }
+
+      before do
+        allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+          .with(barcode: %w[1234 5678]).and_return([plate, plate2])
+      end
+
+      it 'returns the current assets plus the extra assets' do
+        obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
+        expect(obj.asset_groups_for_orders_creation.first[:assets].count).to eq(obj.assets.count + 8)
+      end
+    end
+  end
+
   describe '#save' do
     context 'with a single asset group' do
       let!(:order_request) do
