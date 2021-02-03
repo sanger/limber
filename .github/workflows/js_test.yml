@@ -4,6 +4,9 @@ on:
   - push
   - pull_request
 
+env:
+  TZ: Europe/London
+
 jobs:
   test:
     name: Test
