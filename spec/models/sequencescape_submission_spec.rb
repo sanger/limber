@@ -90,7 +90,7 @@ RSpec.describe SequencescapeSubmission do
     let(:obj) { described_class.new(attributes.merge(extra_barcodes: '1234 5678')) }
     it 'raises error if barcodes not found in service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return(nil)
-      expect { obj.extra_plates }.to raise_error
+      expect { obj.extra_plates }.to raise_error('Barcodes not found 1234 5678')
     end
     it 'returns the data obtained from service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return([plate])
