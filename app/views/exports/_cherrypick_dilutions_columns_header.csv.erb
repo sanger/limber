@@ -1,0 +1,15 @@
+<%= CSV.generate_line [
+                        'Workflow',
+                        @workflow
+                      ],
+                      row_sep: ""
+%>
+<%= CSV.generate_line [
+                        'Source Plate ID',
+                        'Source Plate Well',
+                        'Destination Plate ID',
+                        'Destination Plate Well',
+                        'Sample Vol'
+                      ],
+                      row_sep: ""
+%>

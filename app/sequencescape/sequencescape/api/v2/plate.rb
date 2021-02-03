@@ -97,7 +97,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def stock_plate
-    stock_plates.last
+    stock_plates.order(id: :asc).last
   end
 
   def workline_identifier
