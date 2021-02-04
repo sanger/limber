@@ -29,7 +29,7 @@ class SequencescapeSubmission
   #                       project: The project uuid
   attr_reader :asset_groups
 
-  attr_accessor :allowed_extra_barcodes, :extra_barcodes
+  attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes
 
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
 
