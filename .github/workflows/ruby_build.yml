@@ -5,7 +5,7 @@ on:
     types: published
 
 env:
-  BUNDLE_WITHOUT: 'development test lint'
+  BUNDLE_WITHOUT: 'test lint'
 
 jobs:
   build:
