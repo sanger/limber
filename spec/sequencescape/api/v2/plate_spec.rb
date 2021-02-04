@@ -11,17 +11,29 @@ RSpec.describe Sequencescape::Api::V2::Plate do
   describe '#stock_plate' do
     let(:stock_plates) { create_list :v2_stock_plate, 2 }
     let(:plate) do
-      build :unmocked_v2_plate, barcode_number: 12_345, stock_plates: stock_plates
+      build :unmocked_v2_plate, barcode_number: 12_345, ancestors: stock_plates
     end
 
-    before do
-      ancestor_scope = instance_double('JsonApiClient::Query::Builder')
-      allow(plate).to receive(:stock_plates).and_return(ancestor_scope)
-      expect(ancestor_scope).to receive(:order).with(id: :asc).and_return(stock_plates)
+    context 'when not a stock_plate' do
+      before do
+        ancestor_scope = instance_double('JsonApiClient::Query::Builder')
+        expect(plate).to receive(:stock_plates).and_return(ancestor_scope)
+        expect(ancestor_scope).to receive(:order).with(id: :asc).and_return(stock_plates)
+        expect(plate).to receive(:stock_plate?).and_return(false)
+      end
+
+      it 'returns the last element of the stock plates list' do
+        expect(plate.stock_plate).to eq(stock_plates.last)
+      end
     end
 
-    it 'returns the last element of the stock plates list' do
-      expect(plate.stock_plate).to eq(stock_plates.last)
+    context 'when a stock_plate' do
+      before do
+        expect(plate).to receive(:stock_plate?).and_return(true)
+      end
+      it 'returns itself' do
+        expect(plate.stock_plate).to eq(plate)
+      end
     end
   end
 
