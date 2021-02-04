@@ -1,8 +1,9 @@
 # Limber Pipeline Application
 
-[![Build Status](https://travis-ci.org/sanger/limber.svg?branch=next_release)](https://travis-ci.org/sanger/limber)
+![Linting](https://github.com/JamesGlover/limber/workflows/Linting/badge.svg)
+![Ruby RSpec Tests](https://github.com/JamesGlover/limber/workflows/Ruby%20RSpec%20Tests/badge.svg)
+![Javascript testing](https://github.com/JamesGlover/limber/workflows/Javascript%20testing/badge.svg)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/sanger/limber)
-
 
 ## Description
 

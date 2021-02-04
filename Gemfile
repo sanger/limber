@@ -42,7 +42,6 @@ group :test do
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'simplecov', require: false
-  gem 'simplecov-json', require: false
   # Keep webdriver in sync with chrome to prevent frustrating CI failures
   gem 'webdrivers', require: false
   gem 'webmock'

@@ -144,7 +144,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
-    json (2.5.1)
     launchy (2.5.0)
       addressable (~> 2.7)
     listen (3.2.1)
@@ -299,9 +298,6 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
-    simplecov-json (0.2.3)
-      json
-      simplecov
     simplecov_json_formatter (0.1.2)
     sprint_client (0.0.10)
     sprockets (4.0.2)
@@ -381,7 +377,6 @@ DEPENDENCIES
   select2-rails
   sequencescape-client-api (~> 0.5.0)
   simplecov
-  simplecov-json
   sprint_client
   state_machines
   uglifier
