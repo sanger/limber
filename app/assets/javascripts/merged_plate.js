@@ -1,8 +1,6 @@
 (function($, exports, undefined){
   'use strict'
 
-  //= require lib/keycodes
-
   $(function(_event) {
     // If we are not on the multi-plate pooling page, don't set anything up.
     if ($('#merged-plate-page').length === 0) { return }
@@ -16,9 +14,9 @@
     // and enter, rather than a tab. We also set the focus
     // to the next field, to ensure it behaves the same
     fields.filter('input[type=text]').each(function (index, field) {
-      $(field).on("keydown", function(e) {
-        var code = e.charCode || e.keyCode;
-        if (code === ENTER_KEYCODE) {
+      $(field).on("keypress", function(e) {
+        var code = e.key;
+        if (code === 'Enter') {
           e.preventDefault() // Stop the form submitting
           $(fields[index+1]).focus() // Emulate a tab
         }
