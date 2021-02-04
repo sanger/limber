@@ -3,8 +3,8 @@
 source 'https://rubygems.org'
 
 group :default do
-  gem 'rails'
   gem 'bootsnap'
+  gem 'rails'
   # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
   gem 'inline_svg'
 
@@ -52,7 +52,7 @@ group :build, :test do
   gem 'uglifier'
   # Bootstrap is a css framework
   gem 'bootstrap'
-  #gem 'coffee-rails', require: false
+  # gem 'coffee-rails', require: false
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
   gem 'sass-rails'
@@ -63,10 +63,10 @@ group :build, :test do
 end
 
 group :development do
+  gem 'guard-rspec', require: false
   gem 'pry'
   gem 'pry-byebug'
   gem 'web-console'
-  gem 'guard-rspec', require: false
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
