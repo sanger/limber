@@ -40,10 +40,10 @@
             <%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>
             <br/>
             <% (1..submission.num_extra_barcodes).each do |num| %>
-              <%= f.label :extra_barcodes, "Barcode #{num}" %>
-              <br/>
-              <%= f.text_field :extra_barcodes, multiple: true, style: 'width: 100%; resize: none;' %>
-              <br/><br/>
+              <div class="form-group row">
+                <%= f.label :extra_barcodes, "Barcode #{num}", class:"plate-label col-md-2" %>
+                <%= f.text_field :extra_barcodes, multiple: true, class: "form-control col-md-8" %>
+              </div>
             <% end %>
           <% end %>
 
