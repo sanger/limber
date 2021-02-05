@@ -1,6 +1,4 @@
 function diable_enter_key_submit(elementSelectorToIdentifyPage, formWrapperElement){
-  console.log('hello again!')
-
   // If we are not on the specified page, don't set anything up.
   if ($(elementSelectorToIdentifyPage).length === 0) { return }
 
@@ -18,7 +16,6 @@ function diable_enter_key_submit(elementSelectorToIdentifyPage, formWrapperEleme
       $(field).on("keypress", function(e) {
         var code = e.key;
         if (code === 'Enter') {
-          console.log('hello again again!')
           e.preventDefault() // Stop the form submitting
           $(fields[index+1]).focus() // Emulate a tab
         }
