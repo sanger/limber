@@ -33,10 +33,6 @@
           <% end %>
 
           <% if submission.allowed_extra_barcodes %>
-            <!--<%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>-->
-            <!--<br/>-->
-            <!--<%= f.text_area :extra_barcodes, cols: 30, rows: 5, style: 'width: 100%; resize: none;' %>-->
-
             <%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>
             <br/>
             <% (1..submission.num_extra_barcodes).each do |num| %>
