@@ -42,7 +42,7 @@
             <% (1..submission.num_extra_barcodes).each do |num| %>
               <%= f.label :extra_barcodes, "Barcode #{num}" %>
               <br/>
-              <%= f.text_field :extra_barcodes, style: 'width: 100%; resize: none;' %>
+              <%= f.text_field :extra_barcodes, multiple: true, style: 'width: 100%; resize: none;' %>
               <br/><br/>
             <% end %>
           <% end %>

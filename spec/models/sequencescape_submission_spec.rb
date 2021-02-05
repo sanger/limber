@@ -44,7 +44,7 @@ RSpec.describe SequencescapeSubmission do
     end
   end
 
-  describe '#extra_barcodes_list' do
+  describe '#extra_barcodes_trimmed' do
     let(:attributes) do
       {
         api: api, assets: assets, template_uuid: template_uuid,
@@ -52,29 +52,9 @@ RSpec.describe SequencescapeSubmission do
       }
     end
 
-    it 'splits by whitespace' do
-      obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
-    end
-    it 'splits by new line' do
-      obj = described_class.new(attributes.merge(extra_barcodes: "1234\n5678"))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
-    end
-    it 'splits by comma' do
-      obj = described_class.new(attributes.merge(extra_barcodes: '1234,5678'))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
-    end
     it 'removes any extra whitespaces' do
-      obj = described_class.new(attributes.merge(extra_barcodes: "   1234   \n  5678        "))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
-    end
-    it 'splits with carriage return' do
-      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n5678"))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
-    end
-    it 'allows having empty lines' do
-      obj = described_class.new(attributes.merge(extra_barcodes: "1234\r\n\r\n5678"))
-      expect(obj.extra_barcodes_list).to eq(%w[1234 5678])
+      obj = described_class.new(attributes.merge(extra_barcodes: ['   1234   ','  5678        ', ' ', '']))
+      expect(obj.extra_barcodes_trimmed).to eq(%w[1234 5678])
     end
   end
 
@@ -87,10 +67,10 @@ RSpec.describe SequencescapeSubmission do
     end
 
     let(:plate) { create :v2_plate }
-    let(:obj) { described_class.new(attributes.merge(extra_barcodes: '1234 5678')) }
+    let(:obj) { described_class.new(attributes.merge(extra_barcodes: ['1234','5678'])) }
     it 'raises error if barcodes not found in service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return(nil)
-      expect { obj.extra_plates }.to raise_error('Barcodes not found 1234 5678')
+      expect { obj.extra_plates }.to raise_error('Barcodes not found ["1234", "5678"]')
     end
     it 'returns the data obtained from service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return([plate])
@@ -109,7 +89,7 @@ RSpec.describe SequencescapeSubmission do
     let(:plate) { create(:passed_plate) }
     let(:plate2) { create(:passed_plate) }
     it 'returns the uuids of the labwares wells' do
-      obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
+      obj = described_class.new(attributes.merge(extra_barcodes: ['1234','5678']))
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
         .with(barcode: %w[1234 5678]).and_return([plate, plate2])
       # There are 4 non-empty wells in each labware
@@ -118,7 +98,7 @@ RSpec.describe SequencescapeSubmission do
     it 'removes duplicates uuids in the returned list' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
         .with(barcode: %w[1234 1234 5678]).and_return([plate, plate, plate2])
-      obj = described_class.new(attributes.merge(extra_barcodes: '1234 1234 5678'))
+      obj = described_class.new(attributes.merge(extra_barcodes: ['1234', '1234', '5678']))
       expect(obj.extra_assets.count).to eq(8)
       expect(obj.extra_assets.uniq.count).to eq(8)
     end
@@ -146,7 +126,7 @@ RSpec.describe SequencescapeSubmission do
       end
 
       it 'returns the current assets plus the extra assets' do
-        obj = described_class.new(attributes.merge(extra_barcodes: '1234 5678'))
+        obj = described_class.new(attributes.merge(extra_barcodes: ['1234', '5678']))
         expect(obj.asset_groups_for_orders_creation.first[:assets].count).to eq(obj.assets.count + 8)
       end
     end
