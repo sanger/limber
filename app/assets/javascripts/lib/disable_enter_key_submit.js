@@ -1,4 +1,4 @@
-function diable_enter_key_submit(elementSelectorToIdentifyPage, formWrapperElement){
+function disable_enter_key_submit(elementSelectorToIdentifyPage, formWrapperElement){
   // If we are not on the specified page, don't set anything up.
   if ($(elementSelectorToIdentifyPage).length === 0) { return }
 
