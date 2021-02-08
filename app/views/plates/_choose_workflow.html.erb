@@ -16,6 +16,7 @@
             <% end %>
           <% end %>
           <%= f.hidden_field :template_uuid %>
+          <%= f.hidden_field :labware_barcode %>
           <%= f.fields_for :asset_groups do |asset_groups_form| %>
             <% submission.asset_groups.each_with_index do |asset_group, group_id| %>
               <%= asset_groups_form.fields_for group_id.to_s do |ag_form| %>
