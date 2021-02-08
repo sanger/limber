@@ -98,6 +98,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def stock_plate
     return self if stock_plate?
+
     stock_plates.order(id: :asc).last
   end
 
