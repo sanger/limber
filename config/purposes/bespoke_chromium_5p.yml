@@ -30,7 +30,7 @@ LBC 5p GEX LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-  :tags_per_well: 4
+  :tags_per_well: 1
   :file_links:
   - name: 'Download Hamilton Frag 2XP to LigXP CSV'
     id: 'hamilton_gex_frag_2xp_to_gex_ligxp'

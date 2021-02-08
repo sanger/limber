@@ -45,6 +45,12 @@ RSpec.describe ExportsController, type: :controller do
     it_behaves_like 'a csv view'
   end
 
+  RSpec.shared_examples 'a hamilton cherrypick dilutions view' do
+    let(:expected_template) { 'hamilton_cherrypick_dilutions' }
+
+    it_behaves_like 'a csv view'
+  end
+
   context 'on generating a csv' do
     before do
       expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes,
@@ -120,11 +126,11 @@ RSpec.describe ExportsController, type: :controller do
       context 'where csv id requested is hamilton_cherrypick_to_bcr_dilution1.csv' do
         let(:csv_id) { 'hamilton_cherrypick_to_bcr_dilution1' }
 
-        it_behaves_like 'a hamilton fixed volume dilutions view'
+        it_behaves_like 'a hamilton cherrypick dilutions view'
       end
 
-      context 'where csv id requested is hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri.csv' do
-        let(:csv_id) { 'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_1xspri' }
+      context 'where csv id requested is hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_dil_1_to_lbc_bcr_enrich1_2xspri' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
@@ -135,8 +141,8 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri.csv' do
-        let(:csv_id) { 'hamilton_lbc_bcr_enrich1_1xspri_to_lbc_bcr_enrich2_2xspri' }
+      context 'where csv id requested is hamilton_lbc_bcr_enrich1_2xspri_to_lbc_bcr_enrich2_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_bcr_enrich1_2xspri_to_lbc_bcr_enrich2_2xspri' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
@@ -150,11 +156,11 @@ RSpec.describe ExportsController, type: :controller do
       context 'where csv id requested is hamilton_cherrypick_to_tcr_dilution1.csv' do
         let(:csv_id) { 'hamilton_cherrypick_to_tcr_dilution1' }
 
-        it_behaves_like 'a hamilton fixed volume dilutions view'
+        it_behaves_like 'a hamilton cherrypick dilutions view'
       end
 
-      context 'where csv id requested is hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri.csv' do
-        let(:csv_id) { 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_1xspri' }
+      context 'where csv id requested is hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_dil_1_to_lbc_tcr_enrich1_2xspri' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
@@ -165,8 +171,8 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri.csv' do
-        let(:csv_id) { 'hamilton_lbc_tcr_enrich1_1xspri_to_lbc_tcr_enrich2_2xspri' }
+      context 'where csv id requested is hamilton_lbc_tcr_enrich1_2xspri_to_lbc_tcr_enrich2_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lbc_tcr_enrich1_2xspri_to_lbc_tcr_enrich2_2xspri' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
