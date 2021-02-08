@@ -4,6 +4,6 @@
   'use strict'
 
   $(function(_event) {
-    disable_enter_key_submit('#merged-plate-page', '#new_plate')
+    disable_enter_key_submit('#choose_workflow_card', '#submission_forms')
   })
 })(jQuery, window)

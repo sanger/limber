@@ -29,7 +29,7 @@ class SequencescapeSubmission
   #                       project: The project uuid
   attr_reader :asset_groups
 
-  attr_accessor :allowed_extra_barcodes, :extra_barcodes
+  attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes
 
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
 
@@ -67,16 +67,16 @@ class SequencescapeSubmission
     @asset_groups.pluck(:assets).flatten
   end
 
-  def extra_barcodes_list
+  def extra_barcodes_trimmed
     return nil unless extra_barcodes
 
-    extra_barcodes.split(/[\n ,]+/).map(&:strip).reject(&:empty?)
+    extra_barcodes.map(&:strip).reject(&:empty?)
   end
 
   def extra_plates
     return @extra_plates if @extra_plates
 
-    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes_list)
+    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes_trimmed)
     @extra_plates ||= response
     raise "Barcodes not found #{extra_barcodes}" unless @extra_plates
 
