@@ -34,6 +34,7 @@ module Presenters
       purpose_config.submission_options.each do |button_text, options|
         submission_options = options.to_hash
         submission_options[:asset_groups] = asset_groups
+        submission_options[:labware_barcode] = labware.labware_barcode.human
         yield button_text, SequencescapeSubmission.new(submission_options)
       end
     end
