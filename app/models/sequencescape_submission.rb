@@ -29,9 +29,10 @@ class SequencescapeSubmission
   #                       project: The project uuid
   attr_reader :asset_groups
 
-  attr_accessor :allowed_extra_barcodes, :extra_barcodes
+  attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes, :labware_barcode
 
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
+  validate :check_extra_barcodes
 
   #
   # Sends the submission to Sequencescape
@@ -67,16 +68,16 @@ class SequencescapeSubmission
     @asset_groups.pluck(:assets).flatten
   end
 
-  def extra_barcodes_list
+  def extra_barcodes_trimmed
     return nil unless extra_barcodes
 
-    extra_barcodes.split(/[\n ,]+/).map(&:strip).reject(&:empty?)
+    extra_barcodes.map(&:strip).reject(&:empty?)
   end
 
   def extra_plates
     return @extra_plates if @extra_plates
 
-    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes_list)
+    response = Sequencescape::Api::V2.additional_plates_for_presenter(barcode: extra_barcodes_trimmed)
     @extra_plates ||= response
     raise "Barcodes not found #{extra_barcodes}" unless @extra_plates
 
@@ -148,4 +149,19 @@ class SequencescapeSubmission
   def submission_template
     api.order_template.find(template_uuid)
   end
+
+  # I think rubocop's suggestions make it less readable
+  # rubocop:disable Style/IfUnlessModifier, Style/GuardClause
+  def check_extra_barcodes
+    return unless extra_barcodes
+
+    if extra_barcodes_trimmed.size != extra_barcodes_trimmed.uniq.size
+      errors.add(:submission, 'Additional scanned barcodes should not include duplicates')
+    end
+
+    if extra_barcodes_trimmed.include? labware_barcode
+      errors.add(:submission, 'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included')
+    end
+  end
+  # rubocop:enable Style/IfUnlessModifier, Style/GuardClause
 end
