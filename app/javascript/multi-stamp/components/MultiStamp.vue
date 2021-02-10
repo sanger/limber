@@ -212,14 +212,13 @@ export default {
     transfersError() {
       const errorMessages = []
       if (this.duplicatedTransfers.length > 0) {
-        var problemSourcePlateBarcodes = new Set()
-        var i;
-        for(i = 0; i < this.duplicatedTransfers.length; i++){
-          const transfer = this.duplicatedTransfers[i]
-          problemSourcePlateBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
-        }
+        var sourceBarcodes = new Set()
+        this.duplicatedTransfers.forEach(transfer => {
+          sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
+        });
+
         const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
-                    + [...problemSourcePlateBarcodes].join(', ')
+                    + [...sourceBarcodes].join(', ')
                     + ') have more than one active submission.'
         errorMessages.push(msg)
       }
