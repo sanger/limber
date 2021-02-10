@@ -219,7 +219,7 @@ describe('MultiStamp', () => {
     expect(wrapper.vm.transfersError).toEqual('excess transfers')
   })
 
-  it('display "Duplicated transfers" when scanned plate contains duplicated requests', () => {
+  it('displays the correct error message when scanned plate contains duplicated requests', () => {
     const requests1 = [
       requestFactory({uuid: 'req-1-uuid'}),
       requestFactory({uuid: 'req-2-uuid'})
@@ -236,6 +236,6 @@ describe('MultiStamp', () => {
     wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
 
     expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
-    expect(wrapper.vm.transfersError).toEqual('Duplicated transfers')
+    expect(wrapper.vm.transfersError).toEqual('This would result in multiple transfers into the same well. Check if the source plates (DN1S) have more than one active submission.')
   })
 })

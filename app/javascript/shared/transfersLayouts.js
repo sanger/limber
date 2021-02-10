@@ -25,7 +25,7 @@ const quadrantOffsets = {
 // valid transfers and an array of duplicated transfers (i.e. a transfer whose
 // both source and destination match a transfer already present in the
 // validTransfers array will be put in the duplicatedTransfer array).
-// For eaach request, the target well is calculated using quadrantTargetFor
+// For each request, the target well is calculated using quadrantTargetFor
 // function with quadrantOffsets.
 //
 // Resulting plate eg. where P1-4 is Plate 1-4

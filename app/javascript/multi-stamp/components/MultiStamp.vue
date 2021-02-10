@@ -212,7 +212,15 @@ export default {
     transfersError() {
       const errorMessages = []
       if (this.duplicatedTransfers.length > 0) {
-        errorMessages.push('Duplicated transfers')
+        var sourceBarcodes = new Set()
+        this.duplicatedTransfers.forEach(transfer => {
+          sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
+        })
+
+        const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
+                    + [...sourceBarcodes].join(', ')
+                    + ') have more than one active submission.'
+        errorMessages.push(msg)
       }
       if (this.excessTransfers.length > 0) {
         errorMessages.push('excess transfers')
