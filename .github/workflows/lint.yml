@@ -26,8 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Export node version
+      id: node_version
+      run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
     - name: Setup node
       uses: actions/setup-node@v2
+      with:
+        node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
     - name: Node Information
       run: node --version
     - name: Install
