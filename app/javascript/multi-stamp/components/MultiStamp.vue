@@ -215,7 +215,7 @@ export default {
         var sourceBarcodes = new Set()
         this.duplicatedTransfers.forEach(transfer => {
           sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
-        });
+        })
 
         const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
                     + [...sourceBarcodes].join(', ')
