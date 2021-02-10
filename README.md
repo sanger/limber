@@ -1,8 +1,8 @@
 # Limber Pipeline Application
 
-![Linting](https://github.com/JamesGlover/limber/workflows/Linting/badge.svg)
-![Ruby RSpec Tests](https://github.com/JamesGlover/limber/workflows/Ruby%20RSpec%20Tests/badge.svg)
-![Javascript testing](https://github.com/JamesGlover/limber/workflows/Javascript%20testing/badge.svg)
+![Linting](https://github.com/sanger/limber/workflows/Linting/badge.svg)
+![Ruby RSpec Tests](https://github.com/sanger/limber/workflows/Ruby%20RSpec%20Tests/badge.svg)
+![Javascript testing](https://github.com/sanger/limber/workflows/Javascript%20testing/badge.svg)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/github/sanger/limber)
 
 ## Description

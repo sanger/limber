@@ -37,5 +37,5 @@ jobs:
       run: node --version
     - name: Install
       run: yarn install
-    - name: Run yarn test
+    - name: Run yarn lint
       run: yarn lint
