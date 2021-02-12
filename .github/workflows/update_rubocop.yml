@@ -1,12 +1,7 @@
 
 name: Update Rubocop
 
-on:
-- workflow_dispatch: true
-- schedule:
-  # * is a special character in YAML so you have to quote this string
-  # Every sunday
-  - cron:  '0 10 * * 0'
+on: workflow_dispatch
 
 jobs:
   update_rubocop:
