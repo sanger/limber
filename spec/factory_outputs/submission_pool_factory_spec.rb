@@ -76,8 +76,8 @@ RSpec.describe 'submission_pool factories' do
       json(
         :dual_submission_pool_collection,
         plate_uuid: 'plate-uuid',
-        used_tag2_templates: [{ "uuid": 'used-tag2-template-uuid', "name": 'Used template' }],
-        used_tag_templates: [{ "uuid": 'used-tag-template-uuid', "name": 'Used template' }]
+        used_tag2_templates: [{ uuid: 'used-tag2-template-uuid', name: 'Used template' }],
+        used_tag_templates: [{ uuid: 'used-tag-template-uuid', name: 'Used template' }]
       )
     end
 
