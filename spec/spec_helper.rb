@@ -18,6 +18,9 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+SimpleCov.start 'rails'
+
 require 'webdrivers/chromedriver'
 Webdrivers::Chromedriver.update
 require 'factory_bot'
@@ -35,9 +38,8 @@ require 'csv'
 
 begin
   require 'pry'
-  require 'ruby_jard'
 rescue LoadError
-  # We don't have pry. We're probably on Travis.
+  # We don't have pry. We're probably on CI.
   nil
 end
 

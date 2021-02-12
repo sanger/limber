@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 require 'simplecov'
-require 'simplecov-json'
-SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
-                                                                  SimpleCov::Formatter::HTMLFormatter,
-                                                                  SimpleCov::Formatter::JSONFormatter
-                                                                ])
 SimpleCov.start 'rails'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
