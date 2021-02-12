@@ -6,10 +6,12 @@ on:
   # * is a special character in YAML so you have to quote this string
   # Every sunday
   - cron:  '0 10 * * 0'
+  release:
+    types: published
 
 jobs:
   update_rubocop:
-    if: (github.repository == 'sanger/limber')
+    if: (github.repository == 'jamesglover/limber')
     runs-on: ubuntu-latest
 
     steps:
