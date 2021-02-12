@@ -75,3 +75,19 @@ barcoded: Automatically ensures that barcode is populated with the correct hash,
 Request stubs are provided by webmock. Two helper methods will assist with the majority of mocking requests to the api, `stub_api_get` and `stub_api_post`. See `spec/support/api_url_helper.rb` for details.
 
 **Note**: Due to the way the api functions, the factories don't yet support nested associations.
+
+### Lefthook
+
+[Lefthook](https://github.com/Arkweid/lefthook) is a git-hook manager that will
+ensure staged files are linted before committing.
+
+You can install it either via homebrew `brew install Arkweid/lefthook/lefthook` or rubygems `gem install lefthook`
+
+You'll then need to initialize it for each repository you wish to track `lefthook install`
+
+Hooks will run automatically on commit, but you can test them with: `lefthook run pre-commit`
+
+In addition you can also run `lefthook run fix` to run the auto-fixers on staged files only.
+Note that after doing this you will still need to stage the fixes before committing. I'd love to be
+able to automate this, but haven't discovered a solution that maintains the ability to partially
+stage a file, and doesn't involve running the linters directly on files in the .git folder.
