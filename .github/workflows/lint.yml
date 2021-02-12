@@ -16,8 +16,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        bundler-cache: true # Runs bundle install and caches gems. See the ruby_test.yml
-                            # example if you need more control over bundler.
+        bundler-cache: true # Runs bundle install and caches gems.
     - name: Run lint
       run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
