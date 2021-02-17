@@ -52,7 +52,9 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   end
 
   def stock_plate(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plate ||= ancestors.where(purpose_name: purpose_names).last
+    # this is an array not a collection so cant use order_by
+    # sort_by naturally sorts in ascending order
+    @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
   end
 
   def human_barcode
