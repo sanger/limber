@@ -2,15 +2,17 @@
 name: Update Rubocop
 
 on:
+  # Can be triggered manually from the GH interface or via a dispatches POST
+  # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
   workflow_dispatch:
   schedule:
   # * is a special character in YAML so you have to quote this string
-  # Every sunday
+  # Every sunday at 10 am
   - cron: "0 10 * * 0"
 
 jobs:
   update_rubocop:
-    if: (github.repository_owner == 'jamesglover')
+    if: (github.repository_owner == 'sanger') # On the sanger fork only
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
