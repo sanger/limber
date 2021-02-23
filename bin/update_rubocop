@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-# frozen_string_literal: true
-
-# Find rubocop gems
-puts "Updating cops"
-system("bundle update --group=lint")
-puts "Correcting and ignoring..."
-system("bundle exec rubocop --auto-correct --disable-uncorrectable")
