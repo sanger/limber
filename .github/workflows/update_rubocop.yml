@@ -21,7 +21,9 @@ jobs:
       with:
         bundler-cache: true
     - name: Update Rubocop
-      run: bundle update --group=lint
+      run: |
+        bundle config --local deployment false
+        bundle update --group=lint
     - name: Correcting and ignoring
       run: bundle exec rubocop --auto-correct --disable-uncorrectable
       # https://github.com/marketplace/actions/create-pull-request
