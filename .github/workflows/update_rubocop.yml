@@ -10,7 +10,7 @@ on:
 
 jobs:
   update_rubocop:
-    if: (github.repository == 'sanger/limber')
+    if: (github.repository_owner == 'jamesglover')
     runs-on: ubuntu-latest
 
     steps:
