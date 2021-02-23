@@ -2,8 +2,7 @@
 # frozen_string_literal: true
 
 # Find rubocop gems
-cops = `bundle list`.scan(/rubocop[\w-]*/).join(' ')
-puts "Updating #{cops}"
-system("bundle update #{cops}")
+puts "Updating cops"
+system("bundle update --group=lint")
 puts "Correcting and ignoring..."
 system("bundle exec rubocop --auto-correct --disable-uncorrectable")

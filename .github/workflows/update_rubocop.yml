@@ -10,16 +10,16 @@ on:
 
 jobs:
   update_rubocop:
-    if: (github.repository_owner == 'sanger')
+    if: (github.repository_owner == 'jamesglover')
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
+      env:
+        BUNDLE_WITHOUT: 'test development default'
       with:
-        bundler-cache: true # Runs bundle install and caches gems. See the ruby_test.yml
-                            # example if you need more control over bundler.
+        bundler-cache: true
     - name: Update Rubocop
       run: bin/update_rubocop
       # https://github.com/marketplace/actions/create-pull-request
