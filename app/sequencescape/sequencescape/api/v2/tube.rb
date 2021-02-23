@@ -27,6 +27,13 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Tube.includes(*includes).find(options).first
   end
 
+  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
+    Sequencescape::Api::V2::Tube.includes(*includes)
+                                .where(options)
+                                .paginate(paginate)
+                                .all
+  end
+
   # Dummied out for the moment. But no real reason not to add it to the API.
   def requests_as_source
     []

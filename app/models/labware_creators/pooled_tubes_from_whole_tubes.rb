@@ -11,7 +11,6 @@ module LabwareCreators
 
     self.page = 'pooled_tubes_from_whole_tubes'
     self.attributes += [{ barcodes: [] }]
-    self.default_transfer_template_name = 'Whole plate to tube'
 
     validate :parents_suitable
 
@@ -39,33 +38,28 @@ module LabwareCreators
 
     # TODO: This should probably be asynchronous
     def available_tubes
-      @search_options = OngoingTube.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
-      @search_results = tube_search.all(
-        Limber::Tube,
-        @search_options.search_parameters
-      )
+      @search_options = OngoingTube.new(purpose_names: [parent.purpose.name], include_used: false)
+      @search_results = Sequencescape::Api::V2::Tube.find_all(@search_options.v2_search_parameters,
+                                                              includes: 'purpose', paginate: @search_options.v2_pagination)
     end
 
     def parents
-      @parents ||= api.search.find(Settings.searches['Find assets by barcode']).all(Limber::BarcodedAsset,
-                                                                                    barcode: barcodes)
+      @parents ||= Sequencescape::Api::V2::Tube.find_all({ barcode: barcodes }, includes: [])
     end
 
     def parents_suitable
-      missing_barcodes = barcodes - parents.map { |p| p.barcode.ean13 }
+      # Plate#barcode =~ ensures different 'flavours' of the same barcode still match.
+      # Ie. EAN13 encoded versions will match the Code39 encoded versions.
+      missing_barcodes = barcodes.reject { |scanned_bc| parents.any? { |p| p.barcode =~ scanned_bc } }
       errors.add(:barcodes, "could not be found: #{missing_barcodes}") unless missing_barcodes.empty?
     end
 
     private
 
     def transfer_request_attributes
-      parents.each_with_object([]) do |parent, transfer_requests|
-        transfer_requests << { source_asset: parent.uuid, target_asset: @child.uuid }
+      parents.map do |parent|
+        { source_asset: parent.uuid, target_asset: @child.uuid }
       end
-    end
-
-    def tube_search
-      api.search.find(Settings.searches.fetch('Find tubes'))
     end
   end
 end

@@ -16,6 +16,7 @@ if ARGV[0].nil?
 end
 
 environment = ARGV[0]
+command = ARGV[1] || 's'
 
 def build_config # rubocop:todo Metrics/MethodLength
   $stdout.puts 'No configuration for environment'
@@ -53,7 +54,7 @@ begin
   $stdout.puts 'Building configuration'
   $stdout.puts `bundle exec rake config:generate`
   $stdout.puts 'Running application'
-  exec('bundle exec rails s')
+  exec("bundle exec rails #{command}")
 rescue Errno::ENOENT
   attempts = (attempts || 0) + 1
   file = File.open(CONFIG_FILE, 'w')

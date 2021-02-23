@@ -93,11 +93,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
                  body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+']))
   end
 
-  # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
-  let!(:stub_barcode_searches) do
-    stub_asset_search(barcodes, [example_tube_listed, example_tube_2_listed])
-  end
-
   let!(:transfer_creation_request) do
     stub_api_post('transfer_request_collections',
                   payload: { transfer_request_collection: {
@@ -137,13 +132,18 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     stub_v2_tube(example_v2_tube)
     stub_v2_tube(example_v2_tube2)
 
-    # We have a basic inbox search running
-    stub_search_and_multi_result(
-      'Find tubes',
-      { 'search' => { states: ['passed'], tube_purpose_uuids: ['example-purpose-uuid'], include_used: false,
-                      page: 1 } },
-      [example_tube_listed, example_tube_2_listed]
-    )
+    # Available tubes search
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      { include_used: false, purpose_name: ['example-purpose'] },
+      includes: 'purpose',
+      paginate: { size: 30, number: 1 }
+    ).and_return([example_v2_tube, example_v2_tube2])
+
+    # Parent lookup
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      { barcode: [tube_barcode_1, tube_barcode_2] },
+      includes: []
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Old API still used when loading parent
     stub_api_get(tube_uuid, body: example_tube)
