@@ -18,7 +18,7 @@ RSpec.describe PrintJobsController, type: :controller do
             { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
           ],
           labels_sprint: {
-            'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+            sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
           },
           number_of_copies: 1
         }

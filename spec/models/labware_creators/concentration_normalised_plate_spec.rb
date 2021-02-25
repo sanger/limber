@@ -131,7 +131,7 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
       it 'makes the expected requests' do
         # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
         expect(Sequencescape::Api::V2::QcAssay)
-          .to receive(:create).with("qc_results": dest_well_qc_attributes).and_return(true)
+          .to receive(:create).with(qc_results: dest_well_qc_attributes).and_return(true)
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made

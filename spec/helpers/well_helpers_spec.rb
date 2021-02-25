@@ -47,10 +47,10 @@ WELL_384 = %w[
 
 RSpec.describe WellHelpers do
   let(:well_96) { WELL_96 }
-  let(:stamp_96) { Hash[WELL_96.zip(WELL_96)] }
+  let(:stamp_96) { WELL_96.zip(WELL_96).to_h }
 
   let(:well_384) { WELL_384 }
-  let(:stamp_384) { Hash[WELL_384.zip(WELL_384)] }
+  let(:stamp_384) { WELL_384.zip(WELL_384).to_h }
 
   shared_examples 'range generator' do
     it 'generates ranges' do

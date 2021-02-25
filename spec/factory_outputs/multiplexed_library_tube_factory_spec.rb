@@ -9,14 +9,14 @@ RSpec.describe 'multiplexed_library_tube factory' do
       uuid: 'example-multiplexed-library-tube-uuid',
       barcode_number: 123_456,
       stock_plate: {
-        "barcode": {
-          "ean13": '1111111111111',
-          "number": '427444',
-          "prefix": 'DN',
-          "two_dimensional": nil,
-          "type": 1
+        barcode: {
+          ean13: '1111111111111',
+          number: '427444',
+          prefix: 'DN',
+          two_dimensional: nil,
+          type: 1
         },
-        "uuid": 'example-stock-plate-uuid'
+        uuid: 'example-stock-plate-uuid'
       }
     )
   end

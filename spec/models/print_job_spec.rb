@@ -17,7 +17,7 @@ RSpec.describe PrintJob do
   let(:label_template_url)          { "/v1/label_templates?#{URI.encode_www_form(label_template_query)}" }
 
   let(:expected_labels)         { [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }] }
-  let(:expected_sprint_labels)  { { 'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' } } }
+  let(:expected_sprint_labels)  { { sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' } } }
 
   describe 'init' do
     it 'has the correct insatnce variables' do
@@ -29,7 +29,7 @@ RSpec.describe PrintJob do
           { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
         ],
         labels_sprint: {
-          'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+          sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
         },
         number_of_copies: 2
       )
@@ -53,7 +53,7 @@ RSpec.describe PrintJob do
           { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
         ],
         labels_sprint: {
-          'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+          sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
         },
         number_of_copies: 2
       )
@@ -71,7 +71,7 @@ RSpec.describe PrintJob do
           { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
         ],
         labels_sprint: {
-          'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+          sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
         },
         number_of_copies: 2
       )
@@ -89,7 +89,7 @@ RSpec.describe PrintJob do
           { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
         ],
         labels_sprint: {
-          'sprint': { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+          sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
         },
         number_of_copies: 2
       )

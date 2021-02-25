@@ -1,0 +1,38 @@
+
+name: Update Rubocop
+
+on:
+  # Can be triggered manually from the GH interface or via a dispatches POST
+  # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
+  workflow_dispatch:
+  schedule:
+  # * is a special character in YAML so you have to quote this string
+  # Every sunday at 10 am
+  - cron: "0 10 * * 0"
+
+jobs:
+  update_rubocop:
+    if: (github.repository_owner == 'sanger') # On the sanger fork only
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      env:
+        BUNDLE_WITHOUT: 'test:development:default'
+      with:
+        bundler-cache: true
+    - name: Update Rubocop
+      run: |
+        bundle config --local deployment false
+        bundle update --group=lint
+    - name: Correcting and ignoring
+      run: bundle exec rubocop --auto-correct --disable-uncorrectable
+      # https://github.com/marketplace/actions/create-pull-request
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        title: Automatic Rubocop update
+        branch: gh_action/update_rubocop
+        delete-branch: true
+        body: Automatic update via .github/workflows/update_rubocop.yml

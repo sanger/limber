@@ -40,7 +40,7 @@ class CreationController < ApplicationController
   def creation_failed(exception) # rubocop:todo Metrics/AbcSize
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
     Rails.logger.error(exception.message)
-    exception.backtrace.map(&Rails.logger.method(:error))
+    exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
 
     respond_to do |format|
       format.html do

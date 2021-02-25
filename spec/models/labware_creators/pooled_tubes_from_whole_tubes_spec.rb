@@ -19,8 +19,8 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   let(:purpose)       { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid)   { SecureRandom.uuid }
   let(:parent2_uuid)  { SecureRandom.uuid }
-  let(:parent)        { associated :tube, uuid: parent_uuid, barcode_number: 1 }
-  let(:parent2)       { associated :tube, uuid: parent2_uuid, barcode_number: 2 }
+  let(:parent)        { create :v2_tube, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent2)       { create :v2_tube, uuid: parent2_uuid, barcode_number: 2 }
   let(:child_uuid)    { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
 
@@ -81,11 +81,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
                    body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+']))
     end
 
-    # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
-    let(:stub_barcode_searches) do
-      stub_asset_search(barcodes, [parent, parent2])
-    end
-
     let(:transfer_creation_request) do
       stub_api_post('transfer_request_collections',
                     payload: { transfer_request_collection: {
@@ -99,7 +94,11 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     end
 
     before do
-      stub_barcode_searches
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+        { barcode: barcodes },
+        includes: []
+      ).and_return([parent, parent2])
+
       tube_creation_request
       tube_creation_children_request
       transfer_creation_request
