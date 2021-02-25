@@ -11,19 +11,19 @@ RSpec.describe 'plate factory' do
          name: 'Cherrypicked 427444',
          qc_state: nil,
          iteration: 1,
-         label: { "prefix": 'RNA-seq dUTP eukaryotic PCR', "text": 'ILC Stock' },
+         label: { prefix: 'RNA-seq dUTP eukaryotic PCR', text: 'ILC Stock' },
          location: 'Library creation freezer',
          pool_sizes: [9, 9],
          priority: 0,
          stock_plate: {
-           "barcode": {
-             "ean13": '1111111111111',
-             "number": '427444',
-             "prefix": 'DN',
-             "two_dimensional": nil,
-             "type": 1
+           barcode: {
+             ean13: '1111111111111',
+             number: '427444',
+             prefix: 'DN',
+             two_dimensional: nil,
+             type: 1
            },
-           "uuid": 'example-stock-plate-uuid'
+           uuid: 'example-stock-plate-uuid'
          },
          created_at: '2016-01-21 16:08:28 +0000',
          updated_at: '2016-01-21 16:16:42 +0000',

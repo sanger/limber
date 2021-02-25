@@ -60,7 +60,7 @@ FactoryBot.define do
             'uuid' => "child-tube-#{i}",
             'name' => "Child tube #{i}",
             'state' => 'pending',
-            'label' => { "text": 'Example purpose', "prefix": 'prefix' },
+            'label' => { text: 'Example purpose', prefix: 'prefix' },
             'barcode' => {
               'number' => (i + 1).to_s,
               'prefix' => 'NT',

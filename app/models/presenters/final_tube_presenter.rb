@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class FinalTubePresenter < TubePresenter # rubocop:todo Style/Documentation
+  class FinalTubePresenter < TubePresenter
     state_machine :state, initial: :pending do
       event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed

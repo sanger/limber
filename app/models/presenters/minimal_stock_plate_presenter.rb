@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class MinimalStockPlatePresenter < MinimalPlatePresenter # rubocop:todo Style/Documentation
+  class MinimalStockPlatePresenter < MinimalPlatePresenter
     include Presenters::StockBehaviour
   end
 end
