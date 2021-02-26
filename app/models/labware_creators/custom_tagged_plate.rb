@@ -8,6 +8,7 @@ module LabwareCreators
   class CustomTaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
+    include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
     attr_accessor :tag_layout
@@ -52,12 +53,7 @@ module LabwareCreators
       return true if tag_plate.asset_uuid.blank? || tag_plate.state == 'exhausted'
 
       begin
-        api.state_change.create!(
-          user: user_uuid,
-          target: tag_plate.asset_uuid,
-          reason: 'Used in Library creation',
-          target_state: 'exhausted'
-        )
+        flag_tag_plate_as_exhausted
       rescue RepeatedStateChangeError => e
         # Plate is already exhausted, the user is probably processing two plates
         # at the same time
@@ -67,10 +63,6 @@ module LabwareCreators
       true
     end
     # rubocop:enable Metrics/MethodLength
-
-    def requires_tag2?
-      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
-    end
 
     def pool_index(_pool_index)
       nil
@@ -91,14 +83,6 @@ module LabwareCreators
 
     def tag_layout_attributes
       tag_layout.reject { |_key, value| value.blank? }
-    end
-
-    def transfer_hash
-      WellHelpers.stamp_hash(parent.size)
-    end
-
-    def tag_plates
-      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
     end
 
     def create_labware!

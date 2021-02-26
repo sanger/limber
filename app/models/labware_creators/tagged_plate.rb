@@ -11,6 +11,7 @@ module LabwareCreators
   class TaggedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
+    include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
     attr_accessor :tag_plate_barcode
@@ -26,11 +27,6 @@ module LabwareCreators
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
-    # If I call `tag_plates_used?`, it calls `tag_plates.used?`
-    # where `tag_plates` is a method in this class, returning an instance of TagCollection
-    # similar for `list` and `names`
-    delegate :used?, :list, :names, to: :tag_plates, prefix: true
-
     QcableObject = Struct.new(:asset_uuid, :template_uuid)
 
     def tag_plate=(params)
@@ -42,47 +38,18 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    # rubocop:todo Metrics/MethodLength
-    def create_plate! # rubocop:todo Metrics/AbcSize
+    def create_plate!
       transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
 
-      api.state_change.create!(
-        user: user_uuid,
-        target: tag_plate.asset_uuid,
-        reason: 'Used in Library creation',
-        target_state: 'exhausted'
-      )
+      flag_tag_plate_as_exhausted
 
       # Convert plate instead of creating it
-      @child = api.plate_conversion.create!(
-        target: tag_plate.asset_uuid,
-        purpose: purpose_uuid,
-        user: user_uuid,
-        parent: parent_uuid
-      ).target
+      # Target returns the newly converted tag plate
+      @child = convert_tag_plate_to_new_purpose.target
 
       true
-    end
-    # rubocop:enable Metrics/MethodLength
-
-    def requires_tag2?
-      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
-    end
-
-    #
-    # Indicates if a UDI tag plate is required
-    # UDI plates are:
-    # Required if part of a pool already using UDI plates
-    # Permitted, but not required in all other cases
-    #
-    # @return [Boolean] false: UDI plates are forbidden [Not currently used]
-    #                    true: UDI plates are required
-    #                    nil: UDI plates are permitted, but not required
-    #
-    def tag_plate_dual_index?
-      requires_tag2? || nil
     end
 
     def help
@@ -99,12 +66,18 @@ module LabwareCreators
 
     private
 
-    def transfer_hash
-      WellHelpers.stamp_hash(parent.size)
-    end
-
-    def tag_plates
-      @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
+    #
+    # Convert the tag plate to the new purpose
+    #
+    # @return [Sequencescape::Api::PlateConversion] The conversion action
+    #
+    def convert_tag_plate_to_new_purpose
+      api.plate_conversion.create!(
+        target: tag_plate.asset_uuid,
+        purpose: purpose_uuid,
+        user: user_uuid,
+        parent: parent_uuid
+      )
     end
 
     def create_labware!

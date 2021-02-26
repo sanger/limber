@@ -27,9 +27,11 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
   let(:plate_request) { stub_api_get(plate_uuid, body: plate) }
   let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
+  let(:disable_cross_plate_pool_detection) { false }
 
   before do
-    create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
+    create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid,
+                            disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
     plate_request
     wells_request
   end
@@ -100,10 +102,9 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         stub_api_get(plate_uuid, 'submission_pools', body: pool_json)
       end
 
-      context 'and tubes have been used' do
+      context 'and nothing has been used' do
         let(:pool_json) do
-          json(:dual_submission_pool_collection,
-               used_tag2_templates: [{ uuid: 'tag2-layout-template-0', name: 'Used template' }])
+          json(:dual_submission_pool_collection)
         end
 
         it 'requires tag2' do
@@ -111,16 +112,27 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         end
       end
 
-      context 'and nothing has been used' do
-        let(:pool_json) do
-          json(:dual_submission_pool_collection)
-        end
-      end
-
       context 'and dual index plates have been used' do
         let(:pool_json) do
           json(:dual_submission_pool_collection,
                used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
+        end
+
+        it 'requires tag2' do
+          expect(subject.requires_tag2?).to be true
+        end
+      end
+
+      context 'and detection has been disabled' do
+        let(:pool_json) do
+          json(:dual_submission_pool_collection,
+               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
+        end
+
+        let(:disable_cross_plate_pool_detection) { true }
+
+        it 'requires tag2' do
+          expect(subject.requires_tag2?).to be false
         end
       end
     end
