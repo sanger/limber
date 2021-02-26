@@ -69,37 +69,3 @@ RSpec.shared_context 'a tag plate creator' do
     )
   end
 end
-
-RSpec.shared_context 'a tag plate creator with dual indexing' do
-  let!(:state_change_tag2_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          user: user_uuid,
-          target: tag2_tube_uuid,
-          reason: 'Used in Library creation',
-          target_state: 'exhausted'
-        }
-      },
-      body: json(:state_change)
-    )
-  end
-
-  let(:tag2_layout_template) { json(:tag2_layout_template, uuid: tag2_template_uuid) }
-
-  let!(:tag2_layout_request) do
-    stub_api_get(tag2_template_uuid, body: tag2_layout_template)
-    stub_api_post(
-      tag2_template_uuid,
-      payload: {
-        tag2_layout: {
-          plate: tag_plate_uuid,
-          user: user_uuid,
-          source: tag2_tube_uuid
-        }
-      },
-      body: '{}'
-    )
-  end
-end

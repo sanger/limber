@@ -109,33 +109,11 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
-
-        context 'with advertised tag2 templates' do
-          before do
-            stub_api_get('tag2_layout_templates', body: json(:tag2_layout_template_collection))
-          end
-
-          it 'describes only the unused tube' do
-            expect(subject.tag_tubes_list).to eq(
-              'tag2-layout-template-0' => { dual_index: true, used: true, approved: true },
-              'tag2-layout-template-1' => { dual_index: true, used: false, approved: true }
-            )
-            expect(subject.tag_tubes_names).to eq(['Tag2 layout 1'])
-          end
-
-          it 'enforces use of tubes' do
-            expect(subject.acceptable_tag2_sources).to eq ['tube']
-          end
-        end
       end
 
       context 'and nothing has been used' do
         let(:pool_json) do
           json(:dual_submission_pool_collection)
-        end
-
-        it 'allows tubes or plates' do
-          expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
         end
       end
 
@@ -143,10 +121,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         let(:pool_json) do
           json(:dual_submission_pool_collection,
                used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
-        end
-
-        it 'enforces use of plates' do
-          expect(subject.acceptable_tag2_sources).to eq ['plate']
         end
       end
     end
@@ -158,10 +132,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
-      end
-
-      it 'allows tubes or plates' do
-        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
       end
     end
 
@@ -175,10 +145,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
       end
-
-      it 'allows tubes or plates' do
-        expect(subject.acceptable_tag2_sources).to eq %w[tube plate]
-      end
     end
   end
 
@@ -186,7 +152,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag_plate_barcode) { '1234567890' }
     let(:tag_plate_uuid) { 'tag-plate' }
     let(:tag_template_uuid) { 'tag-layout-template' }
-    let(:tag2_tube_barcode) { '2345678901' }
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
@@ -198,7 +163,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection))
     end
 
-    context 'With no tag 2' do
+    context 'With a tag plate' do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
@@ -228,49 +193,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
         it 'has the correct child (and uuid)' do
           expect(subject.save).to be true
-          expect(subject.child.uuid).to eq(tag_plate_uuid)
-        end
-      end
-    end
-
-    context 'With tag 2' do
-      let(:form_attributes) do
-        {
-          purpose_uuid: child_purpose_uuid,
-          parent_uuid: plate_uuid,
-          user_uuid: user_uuid,
-          tag_plate_barcode: tag_plate_barcode,
-          tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid },
-          tag2_tube_barcode: tag2_tube_barcode,
-          tag2_tube: { asset_uuid: tag2_tube_uuid, template_uuid: tag2_template_uuid }
-        }
-      end
-
-      it 'can be created' do
-        expect(subject).to be_a LabwareCreators::TaggedPlate
-      end
-
-      it_behaves_like 'it has a custom page', 'tagged_plate'
-
-      context 'on save!' do
-        include_context 'a tag plate creator with dual indexing'
-
-        it 'creates a tag plate' do
-          subject.save!
-          expect(state_change_tag_plate_request).to have_been_made.once
-          expect(plate_conversion_request).to have_been_made.once
-          expect(transfer_creation_request).to have_been_made.once
-          expect(tag_layout_creation_request).to have_been_made.once
-        end
-
-        it 'applies tag2 specific actions' do
-          subject.save!
-          expect(state_change_tag2_request).to have_been_made.once
-          expect(tag2_layout_request).to have_been_made.once
-        end
-
-        it 'has the correct child (and uuid)' do
-          subject.save!
           expect(subject.child.uuid).to eq(tag_plate_uuid)
         end
       end

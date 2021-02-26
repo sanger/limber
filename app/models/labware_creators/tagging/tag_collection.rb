@@ -5,7 +5,7 @@ module LabwareCreators::Tagging
     #
     # Create a tag collection
     #
-    # @param [Sequencescape::Client::Api] api an api object used to retrieve tag 2 templates
+    # @param [Sequencescape::Client::Api] api an api object used to retrieve tag templates
     # @param [Limber::Plate] plate The plate from which the tag layout will be generated
     # @param [String] purpose_uuid The uuid of the purpose which is about to be created
     #
