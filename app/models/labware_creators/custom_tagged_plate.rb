@@ -27,7 +27,6 @@ module LabwareCreators
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
-    delegate :used?, :list, :names, to: :tag_plates, prefix: true
 
     def tag_plate=(params)
       @tag_plate = OpenStruct.new(params)
