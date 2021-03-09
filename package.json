@@ -4,7 +4,7 @@
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.20.1",
     "cytoscape": "^3.18.0",
-    "devour-client": "^2.1.1",
+    "devour-client": "^2.1.2",
     "flush-promises": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.8",
     "pluralize": "^7.0.0",
