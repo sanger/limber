@@ -38,8 +38,9 @@
             <br/>
             <% (1..submission.num_extra_barcodes).each do |num| %>
               <div class="form-group row">
-                <%= f.label :extra_barcodes, "Barcode #{num}", class:"plate-label col-md-2" %>
-                <%= f.text_field :extra_barcodes, multiple: true, class: "form-control col-md-8" %>
+                <%= f.label "extra_barcodes_#{num}", "Barcode #{num}", class:"plate-label col-md-2" %>
+                <%= f.text_field :extra_barcodes, multiple: true, class: "form-control col-md-8",
+                                 id: "sequencescape_submission_extra_barcodes_#{num}" %>
               </div>
             <% end %>
           <% end %>
