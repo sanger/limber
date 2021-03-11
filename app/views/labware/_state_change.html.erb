@@ -18,12 +18,21 @@
         <div id="cancelled_reasons" class="reason form-group form-row" <%= 'style=display:none;' unless show_state?('cancelled', presenter, transitions) %>>
           <%= label_tag :reason, 'Reason for cancellation' %>
           <%= select_tag(:reason, options_for_select([ 'Contaminated', 'Incorrect protocol used', 'Not required' ]), disable_cancelled_by_state(transitions)) %>
+          <div class="alert alert-info w-100 mt-2">
+            Cancelling will prevent further work from being performed on this labware only. It will not cancel the
+            associated library requests. You will be able to return to an earlier plate in the process, and continue
+            work.
+          </div>
         </div>
         <div id="failed_reasons" class="reason form-group form-row" <%= 'style=display:none;' unless show_state?('failed', presenter, transitions)%>>
           <%= label_tag :reason, 'Reason for failure' %>
           <%= select_tag(:reason, options_for_select([ 'Equipment failure', 'Poor yield', 'Power failure', 'Reagent failure' ]), disable_failed_by_state(transitions)) %>
           <%= label_tag :customer_accepts_responsibility, 'Still charge customer' %>
           <%= check_box_tag :customer_accepts_responsibility, true, false %>
+          <div class="alert alert-info w-100 mt-2">
+            Failing will mark this labware as failed and will fail the associated library requests. This decision is not
+            reversible and will prevent any further work being carried out on parent plates.
+          </div>
         </div>
           <%= f.submit 'Change State', class: 'btn btn-lg btn-danger btn-block', data: { disable_with: 'Changing state...' } %>
       </div>
