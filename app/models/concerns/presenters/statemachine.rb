@@ -17,6 +17,10 @@ module Presenters::Statemachine
         event :cancel do
           transition %i[pending started passed] => :cancelled
         end
+
+        event :fail do
+          transition %i[pending started passed] => :failed
+        end
       end
     end
   end

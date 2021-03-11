@@ -30,6 +30,8 @@ module Presenters
       'Created on' => :created_on
     }
 
+    self.allow_well_failure_in_states = []
+
     def each_submission_option
       purpose_config.submission_options.each do |button_text, options|
         submission_options = options.to_hash
