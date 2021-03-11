@@ -158,7 +158,7 @@ nav.inbox-list, nav.robots-list {
 .csv-link { @extend .btn-info; }
 
 
-#state-changer {
+#state-changer .reason {
   label { @extend .col-3; }
   select {
     @extend .custom-select;

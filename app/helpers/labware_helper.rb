@@ -27,22 +27,6 @@ module LabwareHelper # rubocop:todo Style/Documentation
   cycling_colours(:bait)    { |labware, _|            labware.bait }
   cycling_colours(:pooling) { |_labware, destination| destination }
 
-  def show_state?(state, presenter, transitions)
-    [presenter.labware.state, transitions.first.to].include?(state)
-  end
-
-  def self.disable_based_on_state(state_name)
-    define_method(:"disable_#{state_name}_by_state") do |transitions, options = {}|
-      options ||= {}
-      return { disabled: true }.merge(options) unless transitions.first.to == state_name.to_s
-
-      {}.merge(options)
-    end
-  end
-
-  disable_based_on_state(:cancelled)
-  disable_based_on_state(:failed)
-
   def permanent_state(container)
     container.state == 'failed' ? 'failed' : 'good'
   end

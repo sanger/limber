@@ -2,22 +2,22 @@
 (function($, window, undefined){
   "use strict";
 
-  var displayReason = function() {
-    var new_state = this.value;
-    if($('.reason:visible').length === 0) {
-      $('#'+new_state+'_reasons').slideDown('slow').find('select:disabled').prop('disabled',false);
+  var updateDisplay = function(new_state, speed) {
+    if ($('.reason:visible').length === 0) {
+      $('#' + new_state + '_reasons').slideDown(speed).find('select:disabled').prop('disabled', false);
     }
     else {
-      $('.reason').not('#'+new_state+'_reasons').slideUp('slow', function(){
-        $('#'+new_state+'_reasons').slideDown('slow').find('select:disabled').prop('disabled',false);
-      }).prop('disabled',true);
+      $('.reason').not('#' + new_state + '_reasons').slideUp(speed, function () {
+        $('#' + new_state + '_reasons').slideDown(speed).find('select:disabled').prop('disabled', false);
+      }).prop('disabled', true);
     }
+  }
+
+  var displayReason = function() {
+    updateDisplay(this.value, 'fast')
   };
 
-  $(document).ready(function(){
-    $('#state-changer').find('#state').on('change', displayReason);
+  $(function(){
+    $('#state-changer').find('input[type=radio]').on('change', displayReason);
   });
-
-
-
 })(jQuery,window);
