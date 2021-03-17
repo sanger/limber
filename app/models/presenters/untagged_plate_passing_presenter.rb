@@ -10,6 +10,7 @@ module Presenters
     include Presenters::Statemachine::Standard
 
     validates_with Validators::SuboptimalValidator
+    validates_with Validators::ActiveRequestValidator
 
     # Libraries don't need to be tagged to get passed
     def libraries_passable?

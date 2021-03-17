@@ -9,6 +9,8 @@ module Presenters
   class ConcentrationBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
+    validates_with Validators::ActiveRequestValidator
+
     PLATE_WITH_QC_RESULTS_INCLUDES = 'wells.aliquots,wells.qc_results'
 
     self.summary_partial = 'labware/plates/binned_summary'

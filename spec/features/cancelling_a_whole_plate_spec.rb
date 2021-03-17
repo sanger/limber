@@ -58,13 +58,12 @@ RSpec.feature 'Cancelling a whole plate', js: true do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 
-  scenario 'failing a plate' do
+  scenario 'from the interface' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
 
     # Spotted a potential bug where we could accidentally persist details
     # from the failure tab if we select that first and change our minds. So
     # we'll explicitly check that
-
     within_fieldset('Change state to') do
       choose('failed', allow_label_click: true)
     end

@@ -139,4 +139,6 @@ FactoryBot.define do
       }
     end
   end
+
+  sequence(:id, &:to_s)
 end

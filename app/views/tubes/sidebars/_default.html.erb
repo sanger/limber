@@ -30,7 +30,7 @@
     <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
   <% end %>
 
-  <%= card title:'Other Actions', css_class: 'other-actions' do %>
+  <%= card title:'Other Actions', css_class: 'other-actions logged_in_only' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>

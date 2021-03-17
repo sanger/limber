@@ -14,6 +14,8 @@ module Presenters
     self.summary_partial = 'labware/plates/binned_summary'
     self.aliquot_partial = 'binned_aliquot'
 
+    validates_with Validators::ActiveRequestValidator
+
     def dilutions_config
       purpose_config.fetch(:dilutions)
     end

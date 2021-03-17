@@ -47,9 +47,9 @@ RSpec.describe PlatesController, type: :controller do
                       'state_change' => {
                         user: user_uuid,
                         target: plate_uuid,
-                        target_state: 'cancelled',
+                        target_state: 'failed',
                         reason: 'Because testing',
-                        customer_accepts_responsibility: 'true',
+                        customer_accepts_responsibility: true,
                         contents: nil
                       }
                     },
@@ -60,10 +60,12 @@ RSpec.describe PlatesController, type: :controller do
       put :update,
           params: {
             id: plate_uuid,
-            state: 'cancelled',
-            reason: 'Because testing',
-            purpose_uuid: 'stock-plate-purpose-uuid',
-            customer_accepts_responsibility: true
+            state: 'failed',
+            failed: {
+              reason: 'Because testing',
+              customer_accepts_responsibility: 'true'
+            },
+            purpose_uuid: 'stock-plate-purpose-uuid'
           },
           session: { user_uuid: user_uuid }
       expect(state_change_request).to have_been_made

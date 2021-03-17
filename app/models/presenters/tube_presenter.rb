@@ -32,9 +32,7 @@ module Presenters
     end
 
     def tag_sequences
-      @tag_sequences ||= labware.aliquots.each_with_object([]) do |aliquot, tags|
-        tags << [aliquot.tag_oligo, aliquot.tag2_oligo]
-      end
+      labware.aliquots.map(&:tag_pair)
     end
 
     def comment_title

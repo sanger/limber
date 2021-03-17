@@ -44,7 +44,7 @@ RSpec.describe TubesController, type: :controller do
                         target: tube_uuid,
                         target_state: 'cancelled',
                         reason: 'Because testing',
-                        customer_accepts_responsibility: 'true',
+                        customer_accepts_responsibility: true,
                         contents: nil
                       }
                     },
@@ -56,9 +56,11 @@ RSpec.describe TubesController, type: :controller do
           params: {
             id: tube_uuid,
             state: 'cancelled',
-            reason: 'Because testing',
-            purpose_uuid: 'stock-tube-purpose-uuid',
-            customer_accepts_responsibility: true
+            cancelled: {
+              reason: 'Because testing',
+              customer_accepts_responsibility: true
+            },
+            purpose_uuid: 'stock-tube-purpose-uuid'
           },
           session: { user_uuid: user_uuid }
       expect(state_change_request).to have_been_made

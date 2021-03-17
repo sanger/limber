@@ -76,7 +76,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Libraries on this plate have been cancelled. You should not carry out further work.' \
+        'Libraries on this plate have already been failed (A1-E1). You should not carry out further work. ' \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
@@ -88,7 +88,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Libraries on this plate have already been failed. You should not carry out further work.' \
+        'Wells on this plate (A1-E1) have cancelled requests. You should not carry out further work. ' \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end

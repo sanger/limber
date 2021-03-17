@@ -95,10 +95,8 @@ module ApiUrlHelper
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
       # Stub to v1 api search here as well!
       if stub_search
-        stub_asset_search(
-          plate.barcode.machine,
-          json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
-        )
+        labware_mock = create :labware_plate, uuid: plate.uuid
+        allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: plate.barcode.machine).and_return([labware_mock])
       end
 
       if custom_query
@@ -117,10 +115,8 @@ module ApiUrlHelper
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       # Stub to v1 api search here as well!
       if stub_search
-        stub_asset_search(
-          tube.barcode.machine,
-          json(:tube, uuid: tube.uuid, purpose_name: tube.purpose.name, purpose_uuid: tube.purpose.uuid)
-        )
+        labware_mock = create :labware_tube, uuid: tube.uuid
+        allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: tube.barcode.machine).and_return([labware_mock])
       end
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
