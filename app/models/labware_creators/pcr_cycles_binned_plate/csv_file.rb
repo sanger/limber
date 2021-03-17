@@ -117,7 +117,7 @@ module LabwareCreators
       transfers.each_with_object({}) do |row, well_details_hash|
         next if row.empty?
 
-        field_to_value = fields.each_with_object({}) { |field, obj| obj[field] = row.send(field) }
+        field_to_value = fields.index_with { |field| row.send(field) }
 
         well_location = row.well
         well_details_hash[well_location] = field_to_value

@@ -44,6 +44,26 @@ Presenters are responsible for showing information about a piece of labware.
 {Presenters::MinimalPlatePresenter View class documentation}
 
 
+### Presenters::MinimalPcrPlatePresenter
+
+{include:Presenters::MinimalPcrPlatePresenter}
+
+  Used directly in 9 purposes:
+  pWGS-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LHR-384 Lib PCR, GBS PCR1, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, and scRNA-384 Lib PCR
+
+{Presenters::MinimalPcrPlatePresenter View class documentation}
+
+
+### Presenters::MinimalStockPlatePresenter
+
+{include:Presenters::MinimalStockPlatePresenter}
+
+  Used directly in 3 purposes:
+  GBS Stock, GBS-96 Stock, and scRNA-384 Stock
+
+{Presenters::MinimalStockPlatePresenter View class documentation}
+
+
 ### Presenters::NormalisedBinnedPlatePresenter
 
 {include:Presenters::NormalisedBinnedPlatePresenter}
@@ -72,6 +92,16 @@ Presenters are responsible for showing information about a piece of labware.
   LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, pWGS-384 Post Shear XP, pWGS-384 AL Lib, PF Shear, PF Post Shear, PF Post Shear XP, PF-384 Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 RT-Q, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 Lib PCR pool, LBR Globin, LBR Frag cDNA, LBC BCR Dil 1, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Dil 2, LBC BCR Post PCR, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 cDNA, LHR-384 XP, LHR-384 AL Lib, LBC Aggregate, LBC Cherrypick, LBC TCR Dil 1, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Dil 2, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LTHR Lib PCR pool, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, scRNA cDNA-XP, scRNA End Prep, LHR PCR 1, LHR PCR 2, LHR XP, and LHR End Prep
 
 {Presenters::StandardPresenter View class documentation}
+
+
+### Presenters::PcrPresenter
+
+{include:Presenters::PcrPresenter}
+
+  Used directly in 14 purposes:
+  LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, LBC BCR Post Lig 1XSPRI, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, scRNA Lib PCR, and LHR Lib PCR
+
+{Presenters::PcrPresenter View class documentation}
 
 
 ### Presenters::PermissivePresenter
@@ -141,36 +171,6 @@ Presenters are responsible for showing information about a piece of labware.
   GnT MDA Norm
 
 {Presenters::UntaggedPlatePassingPresenter View class documentation}
-
-
-### Presenters::MinimalPcrPlatePresenter
-
-{include:Presenters::MinimalPcrPlatePresenter}
-
-  Used directly in 9 purposes:
-  pWGS-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LHR-384 Lib PCR, GBS PCR1, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, and scRNA-384 Lib PCR
-
-{Presenters::MinimalPcrPlatePresenter View class documentation}
-
-
-### Presenters::MinimalStockPlatePresenter
-
-{include:Presenters::MinimalStockPlatePresenter}
-
-  Used directly in 3 purposes:
-  GBS Stock, GBS-96 Stock, and scRNA-384 Stock
-
-{Presenters::MinimalStockPlatePresenter View class documentation}
-
-
-### Presenters::PcrPresenter
-
-{include:Presenters::PcrPresenter}
-
-  Used directly in 14 purposes:
-  LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, LBC BCR Post Lig 1XSPRI, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, scRNA Lib PCR, and LHR Lib PCR
-
-{Presenters::PcrPresenter View class documentation}
 
 
 ## Tube presenters
