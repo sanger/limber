@@ -64,9 +64,11 @@ class SearchController < ApplicationController
   # rubocop:enable Metrics/MethodLength
 
   def find_labware(barcode)
-    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: barcode)
-  rescue Sequencescape::Api::ResourceNotFound => e
-    raise e, "Sorry, could not find labware with the barcode '#{barcode}'."
+    labware = Sequencescape::Api::V2::Labware.where(barcode: barcode).first
+
+    raise e, "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
+
+    labware
   end
 
   def find_qcable(barcode)
