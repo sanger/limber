@@ -44,7 +44,6 @@ class SearchController < ApplicationController
     render json: { 'error' => e.message }
   end
 
-  # rubocop:todo Metrics/MethodLength
   def create # rubocop:todo Metrics/AbcSize
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
@@ -52,8 +51,7 @@ class SearchController < ApplicationController
       format.html { redirect_to find_labware(params[:plate_barcode]) }
     end
   rescue StandardError => e
-    @search_results = []
-    flash[:error]   = e.message
+    flash.now[:error] = e.message
 
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
@@ -61,12 +59,11 @@ class SearchController < ApplicationController
       format.json { render json: { error: e.message }, status: :not_found }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def find_labware(barcode)
-    api.search.find(Settings.searches['Find assets by barcode']).first(barcode: barcode)
-  rescue Sequencescape::Api::ResourceNotFound => e
-    raise e, "Sorry, could not find labware with the barcode '#{barcode}'."
+    Sequencescape::Api::V2::Labware.where(barcode: barcode).first.tap do |labware|
+      raise e, "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
+    end
   end
 
   def find_qcable(barcode)

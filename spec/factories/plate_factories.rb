@@ -216,6 +216,7 @@ FactoryBot.define do
         well_factory { :v2_stock_well }
         aliquots_without_requests { 1 }
         pool_sizes { [] }
+        well_count { 2 }
       end
     end
   end

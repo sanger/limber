@@ -60,6 +60,10 @@ module Presenters::Statemachine
 
         state :cancelled do
           include StateDoesNotAllowChildCreation
+
+          def sidebar_partial
+            'submission'
+          end
         end
 
         state :failed do

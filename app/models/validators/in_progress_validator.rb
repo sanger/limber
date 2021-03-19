@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Validators
-  class InProgressValidator < ActiveModel::Validator # rubocop:todo Style/Documentation
+  # Displays a warning if the requests on the plate have already been completed
+  class InProgressValidator < ActiveModel::Validator
     def validate(presenter)
       return true unless presenter.labware.any_complete_requests?
 

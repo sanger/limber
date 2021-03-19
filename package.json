@@ -32,6 +32,7 @@
   "name": "limber",
   "scripts": {
     "lint": "eslint --ext .js --ext .vue app/javascript",
-    "test": "karma start --single-run"
+    "test": "karma start --single-run",
+    "lintOnly": "eslint --ext .js --ext .vue"
   }
 }

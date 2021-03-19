@@ -9,5 +9,6 @@ module Presenters
     include Presenters::Statemachine::SingleChildPermissive
 
     validates_with Validators::SuboptimalValidator
+    validates_with Validators::ActiveRequestValidator
   end
 end

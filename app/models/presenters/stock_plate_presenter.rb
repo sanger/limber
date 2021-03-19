@@ -18,5 +18,6 @@ module Presenters
     self.style_class = 'stock'
 
     validates_with Validators::SuboptimalValidator
+    validates_with Validators::ActiveRequestValidator
   end
 end

@@ -24,11 +24,11 @@ module NestedValidation
       Array(value).each do |nested|
         next if nested.valid?
 
-        nested.errors.each do |nested_attribute, nested_error|
-          if nested_attribute == :base
-            record.errors.add(attribute, nested_error)
+        nested.errors.each do |error|
+          if error.attribute == :base
+            record.errors.add(attribute, error.message)
           else
-            record.errors.add("#{attribute}.#{nested_attribute}", nested_error)
+            record.errors.add("#{attribute}.#{error.attribute}", error.message)
           end
         end
       end

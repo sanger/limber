@@ -21,7 +21,7 @@ module FactoryBot
     # @param [*String] names 1 or more association names
     # @return [nil] nil
     # rubocop:todo Metrics/MethodLength
-    def with_has_many_associations(*names, actions: ['read']) # rubocop:todo Metrics/AbcSize
+    def with_has_many_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
           send("#{association}_count") { 0 }
@@ -32,8 +32,8 @@ module FactoryBot
         send(association) do
           {}.tap do |h|
             h['size'] = send("#{association}_count") if send("#{association}_actions").include?('read')
-            h['actions'] = send("#{association}_actions").each_with_object({}) do |action_name, actions_store|
-              actions_store[action_name] = "#{resource_url}/#{association}"
+            h['actions'] = send("#{association}_actions").index_with do |_action_name|
+              "#{resource_url}/#{association}"
             end
           end
         end
@@ -53,8 +53,8 @@ module FactoryBot
       names.each do |association|
         send(association) do
           {
-            'actions' => send("#{association}_actions").each_with_object({}) do |action_name, actions_store|
-              actions_store[action_name] = api_root + send("#{association}_uuid")
+            'actions' => send("#{association}_actions").index_with do |_action_name|
+              api_root + send("#{association}_uuid")
             end,
             'uuid' => send("#{association}_uuid")
           }

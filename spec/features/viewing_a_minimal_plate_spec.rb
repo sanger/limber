@@ -70,6 +70,30 @@ RSpec.feature 'Viewing a plate', js: true do
     end
   end
 
+  feature 'with failed pools' do
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['failed'], pool_sizes: [5] }
+
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content(
+        'Libraries on this plate have already been failed (A1-E1). You should not carry out further work. ' \
+        'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+      )
+    end
+  end
+
+  feature 'with cancelled pools' do
+    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['cancelled'], pool_sizes: [5] }
+
+    scenario 'there is a warning' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      expect(find('.asset-warnings')).to have_content(
+        'Wells on this plate (A1-E1) have cancelled requests. You should not carry out further work. ' \
+        'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+      )
+    end
+  end
+
   feature 'plates with 384 wells' do
     let(:example_plate) do
       create :v2_stock_plate,
