@@ -54,6 +54,7 @@ module Utility
     # Sorts well locations into bins based on their number of pcr cycles.
     def pcr_cycle_bins
       pcr_bins = calculate_bins
+      # Generates a hash with each value in pcr_bins as a key, and [] as a value
       binned_wells = pcr_bins.index_with { |_bin_pcr_cycles_num| [] }
       @well_details.each do |well_locn, details|
         pcr_cycles_num = details['pcr_cycles']
