@@ -182,6 +182,9 @@ dl.metadata, dl#samples-information {
   input[type=checkbox]:checked + label .aliquot {
     background-color: red;
   }
+  input[type=checkbox]:disabled + label .aliquot {
+    opacity: 0.5;
+  }
 
   label {
     font-size: small;

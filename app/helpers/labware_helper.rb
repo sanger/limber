@@ -27,12 +27,8 @@ module LabwareHelper # rubocop:todo Style/Documentation
   cycling_colours(:bait)    { |labware, _|            labware.bait }
   cycling_colours(:pooling) { |_labware, destination| destination }
 
-  def permanent_state(container)
-    container.state == 'failed' ? 'failed' : 'good'
-  end
-
   def failable?(container)
-    container.state == 'passed'
+    container.passed? && container.control_info != 'negative'
   end
 
   def colours_by_location

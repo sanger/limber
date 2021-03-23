@@ -87,10 +87,14 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     false
   end
 
+  def control_info
+    aliquots[0]&.sample&.control_type
+  end
+
   def control_info_formatted
     return nil unless contains_control?
 
-    case aliquots[0].sample.control_type
+    case control_info
     when 'positive'
       '+'
     when 'negative'
