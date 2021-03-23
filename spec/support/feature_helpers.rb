@@ -117,4 +117,19 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   def ean13(number, prefix = 'DN')
     SBCF::SangerBarcode.new(prefix: prefix, number: number).machine_barcode.to_s
   end
+
+  # Because wells can get quite small on 384 well plates, we use a tooltip
+  # to provide feedback about which well is being hovered over. This is provided
+  # by bootstrap: https://getbootstrap.com/docs/4.6/components/tooltips/
+  # This finder allows capybara to identify an element by its tooltip
+  #
+  # @param tooltip [String] The text of the tooltip
+  # @param type [String] A selector for the element eg. 'div', '.well'
+  #                      'div' by default
+  #
+  # @return [Capybara::Node::Element] The element found
+  #
+  def find_with_tooltip(tooltip, type: 'div')
+    find("#{type}[data-original-title='#{tooltip}']")
+  end
 end

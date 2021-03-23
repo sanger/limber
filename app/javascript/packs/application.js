@@ -18,3 +18,4 @@ require('custom-tagged-plate')
 // Tag animations rotates the displayed tag Id in wells with multiple tags
 require('plain-javascript/tag-animations')
 require('plain-javascript/page-reloader')
+require('plain-javascript/quadrant-well-failing')

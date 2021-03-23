@@ -31,6 +31,10 @@ module LabwareHelper # rubocop:todo Style/Documentation
     container.passed? && container.control_info != 'negative'
   end
 
+  def prevent_quadrant_fail?(container)
+    !container.passed?
+  end
+
   def colours_by_location
     return @location_colours if @location_colours.present? # rubocop:todo Rails/HelperInstanceVariable
 
