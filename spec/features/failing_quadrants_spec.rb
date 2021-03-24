@@ -53,7 +53,7 @@ RSpec.feature 'Failing quadrants', js: true do
     2.times do # For both the initial find, and the redirect post state change
       stub_v2_plate(example_plate)
     end
-    # stub_api_get(plate_uuid, body: example_plate)
+
     stub_api_get(plate_uuid, 'wells',
                  body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))

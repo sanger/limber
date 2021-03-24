@@ -22,8 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check the box
     checkbox.checked = true
     if(checkbox.disabled) {
-      // If the box was disabled it, but record that it was previously disabled,
-      // as we'll need to revert this if we deselect other wells in the quadrant
+      // If the box was disabled then enable it, but record that it was
+      // previously disabled, as we'll need to revert this if we deselect other
+      // wells in the quadrant
       checkbox.disabled = false
       checkbox.dataset.wasDisabled = true
     }
