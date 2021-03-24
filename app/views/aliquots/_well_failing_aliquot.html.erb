@@ -1,6 +1,18 @@
-<%= presenter.form.check_box(id) if failable?(container) %>
+<%= presenter.form.check_box(id, disabled: !failable?(container), data: {
+  quadrant_index: container.quadrant_index,
+  prevent_quadrant_fail: prevent_quadrant_fail?(container)
+}) %>
 <%= presenter.form.label id do %>
-  <div id="aliquot_<%= id %>" class="aliquot <%= permanent_state(container) %>" data-well="<%= id %>">
-    <%= id %>
+  <div id="aliquot_<%= id %>"
+       class="aliquot <%= container.state %>"
+       data-toggle="tooltip"
+       data-placement="top"
+       title="<%= id %>"
+       >
+    <% if container.respond_to?(:contains_control?) && container.contains_control? %>
+      <div class="control-type">
+        <%= container.control_info_formatted %>
+      </div>
+    <%end%>
   </div>
 <% end %>

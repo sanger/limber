@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Failing wells', js: true do
+RSpec.feature 'Failing quadrants', js: true do
   has_a_working_api
 
   let(:user_uuid)      { 'user-uuid' }
@@ -20,7 +20,8 @@ RSpec.feature 'Failing wells', js: true do
     ]
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
+    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid',
+                      state: 'passed', wells: wells, size: 384
   end
 
   let!(:state_change_request) do
@@ -30,7 +31,7 @@ RSpec.feature 'Failing wells', js: true do
         'state_change' => {
           user: user_uuid,
           target: plate_uuid,
-          contents: %w[A2 A3],
+          contents: %w[A1 A3],
           target_state: 'failed',
           reason: 'Individual Well Failure',
           customer_accepts_responsibility: nil
@@ -52,7 +53,7 @@ RSpec.feature 'Failing wells', js: true do
     2.times do # For both the initial find, and the redirect post state change
       stub_v2_plate(example_plate)
     end
-    # stub_api_get(plate_uuid, body: example_plate)
+
     stub_api_get(plate_uuid, 'wells',
                  body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -61,12 +62,9 @@ RSpec.feature 'Failing wells', js: true do
   scenario 'failing wells' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     click_on('Fail Wells')
-    within_fieldset('Select wells to fail') do
-      # The actual check-boxes are invisible so we use the labels
-      find_with_tooltip('A3').click
-      find_with_tooltip('A2').click
-      find_with_tooltip('B2').click
-    end
+
+    click_on('Select Quadrant 1')
+    click_on('Select Quadrant 4')
 
     click_on('Fail selected wells')
     expect(find('#flashes')).to have_content('Selected wells have been failed')

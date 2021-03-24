@@ -109,6 +109,10 @@ module Presenters
 
     alias child_assets child_plates
 
+    def quadrants_helper
+      size == 384 ? 'quadrant_helper' : 'none'
+    end
+
     private
 
     def libraries_passable?
