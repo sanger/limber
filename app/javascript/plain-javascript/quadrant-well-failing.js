@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   const failureTable = 'well-failures'
+  const quadrantHelper = document.getElementById('quadrant-helper')
 
-  document.getElementById('quadrant-helper')
+  if (quadrantHelper === null) { return }
+
+  quadrantHelper
     .querySelectorAll('a[data-select-quadrant-index]')
     .forEach((button) => {
       button.addEventListener('click', ()=>{
