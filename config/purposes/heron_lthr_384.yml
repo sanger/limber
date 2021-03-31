@@ -30,6 +30,7 @@ LTHR-384 Lib PCR 1:
   :size: 384
   :tag_layout_templates:
   - TSsc384-PCR1-nCoV-2019/V3/B
+  - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
 LTHR-384 Lib PCR 2:
   :asset_type: plate
@@ -39,6 +40,7 @@ LTHR-384 Lib PCR 2:
   :size: 384
   :tag_layout_templates:
   - TSsc384-PCR2-nCoV-2019/V3/B
+  - TSsc384-PCR2-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
 LTHR-384 Lib PCR pool:
   :asset_type: plate
