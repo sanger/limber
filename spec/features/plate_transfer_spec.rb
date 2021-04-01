@@ -80,6 +80,12 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     bed_plate_lookup(example_plate)
     stub_v2_plate(example_plate)
 
+    # Legacy asset search
+    stub_asset_search(
+      example_plate.barcode.machine,
+      json(:plate, uuid: example_plate.uuid, purpose_name: example_plate.purpose.name, purpose_uuid: example_plate.purpose.uuid)
+    )
+
     fill_in_swipecard(swipecard)
 
     # if we don't do this the next step doesn't work

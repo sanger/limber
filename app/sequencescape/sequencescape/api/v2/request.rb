@@ -9,17 +9,9 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base # rubocop:t
   delegate :for_multiplexing, to: :request_type
   delegate :key, to: :request_type, prefix: true
 
-  def passed?
-    state == 'passed'
-  end
+  property :state, type: :string_inquirer
 
-  def failed?
-    state == 'failed'
-  end
-
-  def cancelled?
-    state == 'cancelled'
-  end
+  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, to: :state, allow_nil: true
 
   def completed?
     passed? || failed?

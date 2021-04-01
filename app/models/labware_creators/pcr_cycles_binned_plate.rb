@@ -92,7 +92,7 @@ module LabwareCreators
     end
 
     def update_well_with_metadata(well, metadata, fields_to_update)
-      options = fields_to_update.each_with_object({}) { |field, obj| obj[field] = metadata[field] }
+      options = fields_to_update.index_with { |field| metadata[field] }
       well.update(options)
     end
 

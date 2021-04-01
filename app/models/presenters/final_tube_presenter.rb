@@ -15,6 +15,10 @@ module Presenters
         transition %i[pending started] => :cancelled
       end
 
+      event :qc_complete do
+        transition passed: :qc_complete
+      end
+
       state :pending do
         include Statemachine::StateDoesNotAllowChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
@@ -45,8 +49,9 @@ module Presenters
         include Statemachine::DoesNotAllowLibraryPassing
       end
 
-      event :qc_complete do
-        transition passed: :qc_complete
+      state :cancelled do
+        include Statemachine::StateDoesNotAllowChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
       end
     end
   end

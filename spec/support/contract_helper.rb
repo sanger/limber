@@ -35,7 +35,7 @@ module ContractHelper
         @http_verb = match[:verb].downcase.to_sym
         @url = "http://example.com:3000#{match[:path]}"
         @conditions = {}
-        @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)] # rubocop:todo Style/HashConversion
+        @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) if match[:body].present?
       end
     end

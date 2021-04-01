@@ -10,6 +10,7 @@ module Presenters
     include Presenters::Statemachine::Standard
 
     validates_with Validators::SuboptimalValidator
+    validates_with Validators::ActiveRequestValidator
 
     self.summary_items = {
       'Barcode' => :barcode,

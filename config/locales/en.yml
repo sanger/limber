@@ -38,33 +38,14 @@ en:
         <p>This plate does not appear to be part of a larger pool. Dual indexing is optional.</p>
         <ol>
           <li>Scan a target single or UDI tag plate into 'Tag plate barcode'.</li>
-          <li>Optionally, scan an tag 2 tube into 'Tag 2 tube barcode' if single tag plates were used.</li>
-          <li>Confirm the details and ensure both are passed as valid.</li>
-          <li>Click 'Create plate'</li>
-          <li>This will link up the tag plate.</li>
-        </ol>
-      dual_tube_html: >
-        <p>This plate is part of a larger pool which has been indexed with tubes.</p>
-        <ol>
-          <li>Scan a target single tag plate into 'Tag plate barcode'.</li>
-          <li>Scan a tag 2 tube into 'Tag 2 tube barcode'.</li>
           <li>Confirm the details and ensure both are passed as valid.</li>
           <li>Click 'Create plate'</li>
           <li>This will link up the tag plate.</li>
         </ol>
       dual_plate_html: >
-        <p>This plate is part of a larger pool which has been indexed with UDI plates.</p>
-        <ol>
-          <li>Scan a target UDI tag plate into 'Tag plate barcode'.</li>
-          <li>Confirm the details and ensure both are passed as valid.</li>
-          <li>Click 'Create plate'</li>
-          <li>This will link up the tag plate.</li>
-        </ol>
-      dual_tube_plate_html: >
-        <p>This plate is part of a larger pool and must be dual indexed.</p>
+        <p>This plate is part of a larger pool and must be indexed with UDI plates.</p>
         <ol>
           <li>Scan a target single or UDI tag plate into 'Tag plate barcode'.</li>
-          <li>Scan an tag 2 tube into 'Tag 2 tube barcode' if single tag plates were used.</li>
           <li>Confirm the details and ensure both are passed as valid.</li>
           <li>Click 'Create plate'</li>
           <li>This will link up the tag plate.</li>

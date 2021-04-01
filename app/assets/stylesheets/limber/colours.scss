@@ -12,7 +12,6 @@
 .good              { @include shade-aliquot($success, #FFFFFF); } // Used on well failure page
 .failed            { @include shade-aliquot($danger, #FFFFFF); }
 .cancelled         { @include shade-aliquot($danger, #FFFFFF); }
-.permanent-failure { @include shade-aliquot($danger, #FFFFFF); }
 
 /*
  * Colours from: https://stackoverflow.com/questions/33295120/how-to-generate-gif-256-colors-palette/33295456#33295456

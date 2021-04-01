@@ -47,6 +47,11 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
       stub_v2_plate(plate)
       bed_plate_lookup(plate)
+      # Legacy asset search
+      stub_asset_search(
+        plate.barcode.machine,
+        json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
+      )
     end
 
     it 'adds robot barcode to plate metadata' do

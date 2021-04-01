@@ -25,10 +25,12 @@ RSpec.describe SearchController, type: :controller do
   describe '#search' do
     let(:barcode) { '12345' }
 
-    before { stub_asset_search(barcode, labware) }
+    before do
+      allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: barcode).and_return([labware])
+    end
 
     context 'for a plate' do
-      let(:labware) { json :plate, uuid: 'uuid' }
+      let(:labware) { create :labware_plate, uuid: 'uuid' }
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_plate_path('uuid'))
@@ -36,7 +38,7 @@ RSpec.describe SearchController, type: :controller do
     end
 
     context 'for a tube' do
-      let(:labware) { json :tube, uuid: 'uuid' }
+      let(:labware) { create :labware_tube, uuid: 'uuid' }
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_tube_path('uuid'))

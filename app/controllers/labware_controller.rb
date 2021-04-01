@@ -32,10 +32,10 @@ class LabwareController < ApplicationController
   end
 
   def update # rubocop:todo Metrics/AbcSize
-    state_changer.move_to!(params[:state], params[:reason], params[:customer_accepts_responsibility])
+    state_changer.move_to!(*update_params)
 
     notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
-    notice << ' The customer will still be charged.' if params[:customer_accepts_responsibility]
+    notice << ' The customer will still be charged.' if update_params[2]
 
     respond_to do |format|
       format.html do
@@ -54,6 +54,12 @@ class LabwareController < ApplicationController
   # rubocop:enable Metrics/MethodLength
 
   private
+
+  def update_params
+    state = params.require(:state)
+    state_options = params.require(state)
+    [state, state_options[:reason], ActiveModel::Type::Boolean.new.deserialize(state_options[:customer_accepts_responsibility])]
+  end
 
   def search_param
     { uuid: params[:id] }
@@ -76,11 +82,9 @@ class LabwareController < ApplicationController
     state_changer_for(params[:purpose_uuid], params[:id])
   end
 
-  # rubocop:todo Naming/MemoizedInstanceVariableName
   def locate_labware
-    @labware ||= locate_labware_identified_by_id
+    @labware = locate_labware_identified_by_id
   end
-  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def find_printers
     @printers = api.barcode_printer.all

@@ -19,6 +19,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
   has_many :transfer_requests_as_source, class_name: 'Sequencescape::Api::V2::TransferRequest'
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
 
+  property :state, type: :string_inquirer
+
+  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, to: :state
+
   def latest_concentration
     latest_qc(key: 'concentration', units: 'ng/ul')
   end
@@ -54,16 +58,8 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     aliquots.blank? || aliquots.empty?
   end
 
-  def pending?
-    state == 'pending'
-  end
-
-  def passed?
-    state == 'passed'
-  end
-
-  def failed?
-    state == 'failed'
+  def inactive?
+    empty? || failed? || cancelled?
   end
 
   def suboptimal?
@@ -91,10 +87,14 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     false
   end
 
+  def control_info
+    aliquots[0]&.sample&.control_type
+  end
+
   def control_info_formatted
     return nil unless contains_control?
 
-    case aliquots[0].sample.control_type
+    case control_info
     when 'positive'
       '+'
     when 'negative'

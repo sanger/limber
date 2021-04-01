@@ -17,7 +17,7 @@ RSpec.describe ExportsController, type: :controller do
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
       expect(response).to render_template(expected_template)
-      assert_equal 'text/csv', @response.content_type
+      assert_equal 'text/csv; charset=utf-8', @response.content_type
     end
   end
 

@@ -31,20 +31,22 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     }
   end
 
+  let(:wells_with_aliquots) { %w[2-well-A1 2-well-B1] }
+
   let(:template_options) do
     [
       ['LTHR-96', be_a_kind_of(SequencescapeSubmission).and(
         have_attributes(
           template_uuid: example_template_uuid,
           request_options: { 'option' => 1 },
-          asset_groups: [{ assets: labware.wells.map(&:uuid), autodetect_studies_projects: true }]
+          asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
         )
       )],
       ['LTHR-384', be_a_kind_of(SequencescapeSubmission).and(
         have_attributes(
           template_uuid: example2_template_uuid,
           request_options: { 'option' => 2 },
-          asset_groups: [{ assets: labware.wells.map(&:uuid), autodetect_studies_projects: true }]
+          asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
         )
       )]
     ]
@@ -66,7 +68,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
-        ['Number of wells', '96/96'],
+        ['Number of wells', '2/96'],
         ['Plate type', purpose_name],
         ['Current plate state', state],
         ['Input plate barcode', barcode_string],
@@ -100,7 +102,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
-        ['Number of wells', '96/96'],
+        ['Number of wells', '2/96'],
         ['Plate type', purpose_name],
         ['Current plate state', state],
         ['Input plate barcode', barcode_string],
@@ -142,7 +144,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
-        ['Number of wells', '96/96'],
+        ['Number of wells', '2/96'],
         ['Plate type', purpose_name],
         ['Current plate state', state],
         ['Input plate barcode', barcode_string],
@@ -176,6 +178,45 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
         ['Input plate barcode', barcode_string],
         ['Created on', '2017-06-29']
       ]
+    end
+  end
+
+  context 'with cancelled submissions' do
+    # If our requests have been cancelled, then we're back at square 1
+
+    it_behaves_like 'a labware presenter'
+    it_behaves_like 'a stock presenter'
+
+    let(:labware) do
+      create :v2_stock_plate, purpose_name: purpose_name,
+                              barcode_number: 2, pool_sizes: [2],
+                              direct_submissions: submissions, state: state
+    end
+    let(:submissions) { create_list :v2_submission, 1, state: 'cancelled' }
+    let(:barcode_string) { 'DN2T' }
+    let(:purpose_name) { 'Test Plate' }
+    let(:title) { purpose_name }
+    let(:state) { 'cancelled' }
+    let(:sidebar_partial) { 'submission' }
+    let(:summary_tab) do
+      [
+        %w[Barcode DN2T],
+        ['Number of wells', '2/96'],
+        ['Plate type', purpose_name],
+        ['Current plate state', state],
+        ['Input plate barcode', barcode_string],
+        ['Created on', '2017-06-29']
+      ]
+    end
+
+    it 'renders the submission options' do
+      expect { |b| presenter.each_submission_option(&b) }.to yield_successive_args(*template_options)
+    end
+
+    it 'has no pending submissions' do
+      # We have submissions, but they are built. pending_submissions? controls aspects like the
+      # refresh, that would be a nightmare if you were trying to set up a submission
+      expect(presenter.pending_submissions?).to eq false
     end
   end
 end

@@ -46,10 +46,14 @@
       display: inline-block;
       border: 2px $gray-800 solid;
       border-radius: 7px;
-      font-size: small;
 
       .tag {
         display: none;
+      }
+
+      // As the tag index gets longer, scale back the font size
+      .tag-3 {
+        font-size: 80%;
       }
 
       .tag:first-child {
@@ -103,7 +107,6 @@
   .good              { background-color: $success; } // Used on well failure page
   .failed            { background-color: $danger;  }
   .cancelled         { background-color: $danger;  }
-  .permanent-failure { background-color: $danger;  }
 }
 
 .tube-view {

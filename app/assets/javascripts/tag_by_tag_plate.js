@@ -5,7 +5,7 @@
   //= require lib/validator
 
   // TAG CREATION
-  $(document).ready(function(){
+  $(function(){
     if ($('#tag-creation-page').length === 0) { return; }
     var qcableLookup;
 
@@ -13,7 +13,7 @@
 
     // Set up some null objects
     var unknownTemplate = { unknown: true, dual_index: false };
-    var unkownQcable = { template_uuid: 'not-loaded' };
+    var unknownQcable = { template_uuid: 'not-loaded' };
 
     qcableLookup = function(barcodeBox, collector) {
       if (barcodeBox.length === 0) { return false; }
@@ -23,7 +23,7 @@
 
       // the `data` attribute is set when declaring the element in tagged_plate,html.erb
       this.infoPanel = $('#'+barcodeBox.data('info-panel'));
-      this.dualIndex = barcodeBox.data('dual-index');
+      this.requiresDualIndexing = barcodeBox.data('requires-dual-indexing');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];
       this.required = this.inputBox[0].required;
 
@@ -35,7 +35,7 @@
       this.monitor = collector.register(!this.required, this);
 
       // set initial values for the tag plate data
-      this.qcable = unkownQcable;
+      this.qcable = unknownQcable;
       this.template = unknownTemplate;
     };
 
@@ -71,21 +71,27 @@
       error: function() {
         var qc_lookup = this;
         return function() {
-          qc_lookup.message('The barcode could not be found. There may be network issues, or problems with Sequencescape.','danger');
+          qc_lookup.message(
+            'The barcode could not be found. There may be network issues, or problems with Sequencescape.',
+            'danger'
+            );
         };
       },
       validators: [
         // `t` is a qcableLookup object
         // The data for t.template comes from app/models/labware_creators/tagging/tag_collection.rb
         // t.template.dual_index is true if the scanned tag plate contains both i5 and i7 tags together in its wells (is a UDI plate)
-        // t.dualIndex is true if there are multiple source plates from the submission, which will be pooled...
-        // ... and therefore an i5 tag (tag 2) is needed (from either a tube or UDI plate)
+        // t.requiresDualIndexing is true if there are multiple source plates from the submission, which will be pooled...
+        // ... and therefore an i5 tag (tag 2) is needed (from a UDI plate)
         new validator(function(t) { return t.qcable.state == 'available'; }, 'The scanned item is not available.'),
         new validator(function(t) { return !t.template.unknown; }, 'It is an unrecognised template.'),
         new validator(function(t) { return t.template.approved; }, 'It is not approved for use with this pipeline.'),
-        new validator(function(t) { return !(t.dualIndex && t.template.used && t.template.dual_index); }, 'This template has already been used.'),
-        new validator(function(t) { return !(t.dualIndex && !t.template.dual_index); }, 'Pool has been tagged with a UDI plate. UDI plates must be used.'),
-        new validator(function(t) { return !(t.dualIndex == false && t.template.dual_index); }, 'Pool has been tagged with tube. Dual indexed plates are unsupported.'),
+        new validator(function(t) {
+          return !(t.requiresDualIndexing && t.template.used && t.template.dual_index);
+        }, 'This template has already been used.'),
+        new validator(function(t) {
+          return !(t.requiresDualIndexing && !t.template.dual_index);
+        }, 'Pool is spread across multiple plates. UDI plates must be used.'),
         new validator(
           function(t) { return (SCAPE.enforceSameTemplateWithinPool ? t.template.matches_templates_in_pool : true) },
           'It doesn\'t match those already used for other plates in this submission pool.'
@@ -156,7 +162,6 @@
     );
 
     new qcableLookup($('#plate_tag_plate_barcode'), qcCollector);
-    new qcableLookup($('#plate_tag2_tube_barcode'), qcCollector);
 
     /* Disables form submit (eg. by enter) if the button is disabled. Seems safari doesn't do this by default */
     $('form#plate_new').on('submit', function(){ return !$('input#plate_submit')[0].disabled; } );
@@ -185,6 +190,5 @@
       }
     });
     SCAPE.update_layout();
-   // $('#plate_tag_plate_template_uuid').change(SCAPE.update_layout);
   });
 })(jQuery,window);

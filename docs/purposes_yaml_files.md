@@ -514,6 +514,32 @@ is set to false, whether or not it exists.
 :enforce_same_template_within_pool: true
 ```
 
+#### :disable_cross_plate_pool_detection
+
+Boolean, specifies whether cross-plate pool detection should be disabled for
+this creator. This can be useful in cases where a plate is consolidated earlier
+in the pipeline, and the plate contains all samples due to be pooled. This may
+be desirable as it allow for re-work following a failed tag application.
+
+This option is safest to enable when:
+
+- The pipeline has an earlier consolidation step
+- The pipeline will never pool at a higher level than the current late
+- Only one template is available anyway
+
+In other scenarios you may be at risk of introducing tag clashes.
+
+See <https://github.com/sanger/limber/issues/647> for more discussion behind the
+introduction of this option, and alternative solutions which were ruled out or
+postponed.
+
+Used by {LabwareCreators::TaggedPlate}. The default behaviour is as if this
+setting is set to false, whether or not it exists.
+
+```yaml
+:disable_cross_plate_pool_detection: true
+```
+
 #### :merged_plate
 
 Hash, specifying:

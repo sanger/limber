@@ -53,7 +53,8 @@ module Utility
 
     # Sorts well locations into bins based on their amounts and the binning configuration.
     def concentration_bins(well_amounts) # rubocop:todo Metrics/AbcSize
-      conc_bins = (1..number_of_bins).each_with_object({}) { |bin_number, bins_hash| bins_hash[bin_number] = [] }
+      # Returns eg. { 1 => [], 2 => [], 3 => [] }
+      conc_bins = (1..number_of_bins).index_with { |_bin_number| [] }
       well_amounts.each do |well_locn, amount|
         bins_template.each_with_index do |bin_template, bin_index|
           next unless (bin_template['min']...bin_template['max']).cover?(amount)

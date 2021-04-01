@@ -7,8 +7,8 @@ module Sequencescape::Api::V2
     :purpose,
     { child_plates: :purpose },
     { wells: [
-      :downstream_tubes,
       {
+        downstream_tubes: 'purpose',
         requests_as_source: %w[request_type primer_panel pre_capture_pool],
         aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
       }

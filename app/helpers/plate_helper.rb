@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 module PlateHelper # rubocop:todo Style/Documentation
-  class WellFailingPresenter < BasicObject # rubocop:todo Style/Documentation
+  # Proxy object wrapping the form alongside the presenter.
+  # This allows us to use the shared plate partial, but pass the form
+  # object through to the custom aliquot partial
+  # rubocop:disable Rails/HelperInstanceVariable
+  class WellFailingPresenter < BasicObject
     def initialize(form, presenter)
-      @form = form # rubocop:todo Rails/HelperInstanceVariable
-      @_presenter = presenter # rubocop:todo Rails/HelperInstanceVariable
+      @form = form
+      @_presenter = presenter
     end
 
     def aliquot_partial
@@ -14,6 +18,7 @@ module PlateHelper # rubocop:todo Style/Documentation
     delegate_missing_to :_presenter
     attr_reader :form, :_presenter
   end
+  # rubocop:enable Rails/HelperInstanceVariable
 
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
@@ -56,20 +61,4 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
   # rubocop:enable Metrics/MethodLength
-
-  def pools_by_id(pools) # rubocop:todo Metrics/AbcSize
-    # rubocop:todo Style/MultilineBlockChain
-    pools_by_position = pools.transform_values do |value|
-      WellHelpers.sort_in_column_order(value['wells']).first
-    end.sort_by { |_k, v| WellHelpers.well_coordinate(v) }.map.with_index { |v, i| [v.first, i + 1] }.to_h
-    # rubocop:enable Style/MultilineBlockChain
-
-    {}.tap do |h|
-      pools.each do |key, value|
-        value['wells'].each do |well|
-          h[well] = pools_by_position[key]
-        end
-      end
-    end
-  end
 end

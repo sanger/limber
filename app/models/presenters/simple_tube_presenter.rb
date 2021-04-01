@@ -12,10 +12,6 @@ module Presenters
     }
 
     state_machine :state, initial: :pending do
-      event :start do
-        transition pending: :started
-      end
-
       event :take_default_path, human_name: 'Manual Transfer' do
         transition pending: :passed
       end
@@ -49,6 +45,11 @@ module Presenters
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
+        include Statemachine::DoesNotAllowLibraryPassing
+      end
+
+      state :cancelled do
+        include Statemachine::StateDoesNotAllowChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
       end
     end

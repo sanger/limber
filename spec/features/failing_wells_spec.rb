@@ -63,9 +63,9 @@ RSpec.feature 'Failing wells', js: true do
     click_on('Fail Wells')
     within_fieldset('Select wells to fail') do
       # The actual check-boxes are invisible so we use the labels
-      find(:label, text: 'A3').click
-      find(:label, text: 'A2').click
-      find(:label, text: 'B2').click
+      find_with_tooltip('A3').click
+      find_with_tooltip('A2').click
+      find_with_tooltip('B2').click
     end
 
     click_on('Fail selected wells')

@@ -14,6 +14,8 @@ module Presenters
     self.summary_partial = 'labware/plates/binned_summary'
     self.aliquot_partial = 'binned_aliquot'
 
+    validates_with Validators::ActiveRequestValidator
+
     def current_plate
       @current_plate ||=
         Sequencescape::Api::V2.plate_with_custom_includes(CURRENT_PLATE_INCLUDES, uuid: labware.uuid)

@@ -70,10 +70,14 @@ module Sequencescape::Api::V2::Shared
       requests_in_progress(request_type_key: request_type_key).flat_map(&:submission_uuid).uniq
     end
 
+    def all_requests
+      requests_as_source + requests_in_progress
+    end
+
     private
 
     def associated_requests
-      @associated_requests ||= (requests_as_source + requests_in_progress).reject(&:cancelled?)
+      @associated_requests ||= all_requests.reject(&:cancelled?)
     end
 
     def complete_requests

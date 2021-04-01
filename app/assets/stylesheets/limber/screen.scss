@@ -158,7 +158,7 @@ nav.inbox-list, nav.robots-list {
 .csv-link { @extend .btn-info; }
 
 
-#state-changer {
+#state-changer .reason {
   label { @extend .col-3; }
   select {
     @extend .custom-select;
@@ -181,6 +181,9 @@ dl.metadata, dl#samples-information {
   }
   input[type=checkbox]:checked + label .aliquot {
     background-color: red;
+  }
+  input[type=checkbox]:disabled + label .aliquot {
+    opacity: 0.5;
   }
 
   label {
