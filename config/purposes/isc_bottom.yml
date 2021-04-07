@@ -34,7 +34,7 @@ LB Cap Lib Pool:
 Cap Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::FinalTubeFromPlate
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
