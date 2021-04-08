@@ -3,7 +3,7 @@
 LB Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::FinalTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube

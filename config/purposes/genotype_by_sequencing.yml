@@ -57,7 +57,7 @@ GBS PCR Pool Selected:
 GBS MiSeq Pool:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubeNoQcPurpose
+  :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
   :presenter_class: Presenters::FinalTubePresenter
   :submission:
