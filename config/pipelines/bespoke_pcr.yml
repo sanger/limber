@@ -21,6 +21,7 @@ Bespoke PCR:
     - Hi-C - OmniC
     - Hi-C - Arima v1
     - Hi-C - Dovetail
+    - Haplotagging
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
