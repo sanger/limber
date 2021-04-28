@@ -200,7 +200,7 @@ String, passed to Sequencescape. Specifies the class used for the tube
 purpose itself.
 
 Typically, one of `IlluminaHtp::InitialStockTubePurpose`,
-`IlluminaHtp::StockTubePurpose` or `IlluminaHtp::MxTubeNoQcPurpose`
+`IlluminaHtp::StockTubePurpose` or `IlluminaHtp::MxTubePurpose`
 the first it used for the first tube of a pipeline, the second for intermediate
 tubes, the latter for the final tube of a pipeline.
 
