@@ -14,6 +14,8 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   # But until we get polymorphic association support
   has_one :purpose
 
+  has_many :state_changes
+
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
   # to the expected endpoint.

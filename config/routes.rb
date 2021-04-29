@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'pipeline_work_in_progress/index'
   scope 'search', controller: :search do
     get  '/',                 action: :new, as: :search
     post '/',                 action: :create, as: :perform_search

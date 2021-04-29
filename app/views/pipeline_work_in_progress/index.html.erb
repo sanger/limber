@@ -1,0 +1,15 @@
+<h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
+
+<%= "Number of records: #{@num_records}" %>
+
+<% @grouped.keys.each do |purpose_group| %>
+  <h2><%= purpose_group %></h2>
+
+  <ul>
+    <% @grouped[purpose_group].each do |labware| %>
+      <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
+      <li><%= "#{labware.labware_barcode&.human} - #{state}" %></li>
+    <% end %>
+  </ul>
+
+<% end %>
