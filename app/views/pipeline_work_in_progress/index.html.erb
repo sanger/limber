@@ -1,14 +1,16 @@
 <h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
 
-<%= "Number of records: #{@num_records}" %>
-
 <% @grouped.keys.each do |purpose_group| %>
   <h2><%= purpose_group %></h2>
 
   <ul>
     <% @grouped[purpose_group].each do |labware| %>
       <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
-      <li><%= "#{labware.labware_barcode&.human} - #{state}" %></li>
+      <% next if state == 'cancelled' %>
+
+      <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
+
+      <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state}" %></li>
     <% end %>
   </ul>
 
