@@ -28,6 +28,7 @@ class PipelineWorkInProgressController < ApplicationController
           "LTHR Cherrypick","LTHR-384 RT-Q","LTHR-384 PCR 1","LTHR-384 PCR 2","LTHR-384 Lib PCR 1","LTHR-384 Lib PCR 2","LTHR-384 Lib PCR pool","LTHR-384 Pool XP"
         ]
       )
+      .per(500)
 
     # TODO: do tubes as well
     # p = Sequencescape::Api::V2::Plate.select("uuid","labware_barcode","purpose","state", {purposes: "name"})
