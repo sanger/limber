@@ -10,7 +10,7 @@
 
       <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
 
-      <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state}" %></li>
+      <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %></li>
     <% end %>
   </ul>
 

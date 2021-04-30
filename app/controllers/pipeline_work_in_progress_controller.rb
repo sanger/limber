@@ -17,8 +17,8 @@ class PipelineWorkInProgressController < ApplicationController
 
     p = Sequencescape::Api::V2::Labware
       .select(
-        {plates: ["uuid", "purpose", "labware_barcode", "state_changes"]},
-        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes"]},
+        {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
+        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
         {purposes: "name"}
       )
       .includes(:state_changes)
@@ -29,6 +29,7 @@ class PipelineWorkInProgressController < ApplicationController
           "LTHR Cherrypick","LTHR-384 RT-Q","LTHR-384 PCR 1","LTHR-384 PCR 2","LTHR-384 Lib PCR 1","LTHR-384 Lib PCR 2","LTHR-384 Lib PCR pool","LTHR-384 Pool XP"
         ]
       )
+      .order(:created_at)
       .per(page_size)
 
     all_records = []
