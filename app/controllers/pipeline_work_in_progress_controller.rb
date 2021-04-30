@@ -11,7 +11,12 @@ class PipelineWorkInProgressController < ApplicationController
   # How many plates will this be? ~542 plates
   # Does it display the same plates as the Trello board?
   def index
-    puts "*** index **"
+    # haven't tested it yet including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
+    pipeline_configs = Settings.pipelines.select{ |pipeline| ['Heron-384 Tailed A', 'Heron-384 Tailed B'].include? pipeline.name }
+    puts "*** pipeline_configs: #{pipeline_configs} ***"
+
+    @ordered_purpose_list = combine_and_order_pipelines(pipeline_configs)
+
     @pipeline = '"Heron"'
     page_size = 500
 
@@ -25,9 +30,7 @@ class PipelineWorkInProgressController < ApplicationController
       .includes(:purpose)
       .where(
         without_children: true,
-        purpose_name: [ # LTHR Cherrypick id 395
-          "LTHR Cherrypick","LTHR-384 RT-Q","LTHR-384 PCR 1","LTHR-384 PCR 2","LTHR-384 Lib PCR 1","LTHR-384 Lib PCR 2","LTHR-384 Lib PCR pool","LTHR-384 Pool XP"
-        ]
+        purpose_name: @ordered_purpose_list
       )
       .order(:created_at)
       .per(page_size)
@@ -62,4 +65,50 @@ class PipelineWorkInProgressController < ApplicationController
       end
     end
   end
+end
+
+
+# TODO: refactor to make less wordy and more readable
+def combine_and_order_pipelines(pipeline_configs)
+  ordered_purpose_list = []
+
+  # binding.pry
+  combined_relationships = {}
+  all_purposes = []
+
+  pipeline_configs.each do |pipeline_config|
+    pipeline_config.relationships.each do |key, value|
+      if combined_relationships.key? key
+        combined_relationships[key] << value
+      else
+        combined_relationships[key] = [value]
+      end
+
+      all_purposes << key
+      all_purposes << value
+    end
+  end
+
+  all_purposes = all_purposes.uniq
+  ending = all_purposes.select { |pur| !(combined_relationships.key? pur) }
+
+  while combined_relationships.size > 0 # TODO: check if this could ever go infinite
+    children = combined_relationships.values.flatten.uniq
+    no_parent = all_purposes - children
+
+    ordered_purpose_list += no_parent
+
+    no_parent.each { |n| combined_relationships.delete(n) }
+
+    all_purposes = []
+    combined_relationships.each do |key, value|
+      all_purposes << key
+      all_purposes += value
+    end
+    all_purposes = all_purposes.uniq
+  end
+
+  ordered_purpose_list += ending
+
+  ordered_purpose_list
 end

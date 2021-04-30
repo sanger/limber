@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A plate from sequencescape via the V2 API
+# A labware from sequencescape via the V2 API
 class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   def self.table_name
     'labware'
