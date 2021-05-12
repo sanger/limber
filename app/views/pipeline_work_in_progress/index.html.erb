@@ -1,19 +1,26 @@
-<h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
+<%= content do %>
+  <h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
+  <div class="container-fluid">
+    <div class="row">
+      <% @ordered_purpose_list.each do |purpose_group| %>
+        <div class="col-md">
+          <%= card title: purpose_group do %>
+            <% if @grouped.key? purpose_group %>
+              <% @grouped[purpose_group].each do |labware| %>
+                <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
+                <% next if state == 'cancelled' %>
 
-<% @ordered_purpose_list.each do |purpose_group| %>
-  <h2><%= purpose_group %></h2>
+                <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
 
-  <ul>
-    <% if @grouped.key? purpose_group %>
-      <% @grouped[purpose_group].each do |labware| %>
-        <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
-        <% next if state == 'cancelled' %>
-
-        <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
-
-        <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %></li>
+                <%= card do %>
+                  <%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
       <% end %>
-    <% end %>
-  </ul>
+    </div>
+  </div>
 
 <% end %>
