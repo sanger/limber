@@ -14,7 +14,7 @@ class PipelineWorkInProgressController < ApplicationController
     from_date = param_date ? param_date : Date.today.prev_month
 
     labware_records = retrieve_labware(page_size, from_date, @ordered_purpose_list)
-    @grouped = group_labware_by_purpose(labware_records)
+    @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
   end
 end
 
@@ -97,17 +97,32 @@ def retrieve_labware(page_size, from_date, purposes)
 end
 
 
-def group_labware_by_purpose(labware_records)
-  grouped = {}
+# Returns following structure (example):
+#
+# {
+#   "LTHR Cherrypick" => [
+#     {
+#       :record => #<Sequencescape::Api::V2::Labware:@attributes={"type"=>"plates", "id"=>"1234", "uuid"=>"12a34b5c-defg-67hi-8jkl-mn901opq2345", "labware_barcode"=>#<LabwareBarcode:0x00007ff16e5f06b0 @human="DN123456D", @machine="DN123456D", @ean13="1234567890123">, "created_at"=>2021-05-04 12:19:32 +0100}>,
+#       :state => "pending"
+#     }
+#   ],
+#   "LTHR-384 PCR 1" => [{}]
+# }
+def mould_data_for_view(purposes, labware_records)
+  output = {}
+  # Make sure there's an entry for each of the purposes, even if no records
+  purposes.each { |p| output[p] = [] }
 
   labware_records.each do |rec|
-    purpose_name = rec.purpose&.name
-    if grouped.key? purpose_name
-      grouped[purpose_name] << rec
-    else
-      grouped[purpose_name] = [rec]
-    end
+    next unless rec.purpose
+
+    state = rec.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
+    next if state == 'cancelled'
+
+    labware_data = {record: rec, state: state}
+
+    output[rec.purpose.name] << labware_data
   end
 
-  grouped
+  output
 end
