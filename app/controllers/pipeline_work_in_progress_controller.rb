@@ -30,7 +30,8 @@ class PipelineWorkInProgressController < ApplicationController
       .includes(:purpose)
       .where(
         without_children: true,
-        purpose_name: @ordered_purpose_list
+        purpose_name: @ordered_purpose_list,
+        created_at_gt: Date.today.prev_month
       )
       .order(:created_at)
       .per(page_size)
