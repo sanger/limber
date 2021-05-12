@@ -9,7 +9,7 @@
     "karma-sourcemap-loader": "^0.3.8",
     "pluralize": "^7.0.0",
     "vue": "2.6.11",
-    "vue-loader": "^15.9.6",
+    "vue-loader": "^15.9.7",
     "vue-style-loader": "^4.1.3",
     "vue-template-compiler": "^2.6.11"
   },
