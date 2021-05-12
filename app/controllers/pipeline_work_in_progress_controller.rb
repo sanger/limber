@@ -19,46 +19,57 @@ class PipelineWorkInProgressController < ApplicationController
 end
 
 
-# TODO: refactor to make less wordy and more readable
+# Builds a flat list of purposes in a sensible order from the relationships config
+# Allowing the config hash to be in any order
+# For example getting from this:
+#
+# {
+#   "LTHR Cherrypick" => [ "LTHR-384 RT-Q" ],
+#   "LTHR-384 RT-Q" => [ "LTHR-384 PCR 1", "LTHR-384 PCR 2" ],
+#   "LTHR-384 RT" => [ "LTHR-384 PCR 1", "LTHR-384 PCR 2" ],
+#   "LTHR-384 PCR 1" => [ "LTHR-384 Lib PCR 1" ],
+#   "LTHR-384 Lib PCR 1" => [ "LTHR-384 Lib PCR pool" ],
+#   "LTHR-384 PCR 2" => [ "LTHR-384 Lib PCR 2" ],
+#   "LTHR-384 Lib PCR 2" => [ "LTHR-384 Lib PCR pool" ]
+# }
+#
+# To this:
+#
+# ["LTHR Cherrypick", "LTHR-384 RT", "LTHR-384 RT-Q", "LTHR-384 PCR 1", "LTHR-384 PCR 2", "LTHR-384 Lib PCR 1", "LTHR-384 Lib PCR 2", "LTHR-384 Lib PCR pool"]
 def combine_and_order_pipelines(pipeline_configs)
   ordered_purpose_list = []
+
   combined_relationships = {}
-  all_purposes = []
-
-  pipeline_configs.each do |pipeline_config|
-    pipeline_config.relationships.each do |key, value|
-      if combined_relationships.key? key
-        combined_relationships[key] << value
-      else
-        combined_relationships[key] = [value]
-      end
-
-      all_purposes << key
-      all_purposes << value
+  pipeline_configs.each do |pc|
+    pc.relationships.each do |key, value|
+      combined_relationships[key] ||= []
+      combined_relationships[key] << value
     end
   end
 
-  all_purposes = all_purposes.uniq
-  ending = all_purposes.select { |pur| !(combined_relationships.key? pur) }
+  all_purposes = (combined_relationships.keys + combined_relationships.values.flatten).uniq
 
-  while combined_relationships.size > 0 # TODO: check if this could ever go infinite
-    children = combined_relationships.values.flatten.uniq
-    no_parent = all_purposes - children
+  # Any purposes with no 'child' purposes should go at the end of the list
+  without_child = all_purposes.select { |p| !(combined_relationships.key? p) }
 
-    ordered_purpose_list += no_parent
+  while combined_relationships.size > 0
+    # Find any purposes with no 'parent' purposes - to go on the front of the list
+    with_parent = combined_relationships.values.flatten.uniq
+    without_parent = all_purposes - with_parent
+    raise "Pipeline config can't be flattened into a list of purposes" unless without_parent # important to prevent infinite looping
 
-    no_parent.each { |n| combined_relationships.delete(n) }
+    ordered_purpose_list += without_parent
 
-    all_purposes = []
-    combined_relationships.each do |key, value|
-      all_purposes << key
-      all_purposes += value
-    end
-    all_purposes = all_purposes.uniq
+    # Delete the nodes that have been added, making the next set of purposes have no parent
+    # So we can use the same technique again in the next iteration
+    without_parent.each { |n| combined_relationships.delete(n) }
+
+    # Refresh the all_purposes list for the next iteration
+    all_purposes = (combined_relationships.keys + combined_relationships.values.flatten).uniq
   end
 
-  ordered_purpose_list += ending
-
+  # When we've run out of 'parent' purposes, add the final ones on the end
+  ordered_purpose_list += without_child
   ordered_purpose_list
 end
 
