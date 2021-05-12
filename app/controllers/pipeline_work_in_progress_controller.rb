@@ -2,6 +2,9 @@
 
 class PipelineWorkInProgressController < ApplicationController
   def index
+    param_date = params[:date]&.to_date
+    from_date = param_date ? param_date : Date.today.prev_month
+
     # haven't tested it yet including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
     pipeline_configs = Settings.pipelines.select{ |pipeline| ['Heron-384 Tailed A', 'Heron-384 Tailed B'].include? pipeline.name }
     puts "*** pipeline_configs: #{pipeline_configs} ***"
@@ -22,7 +25,7 @@ class PipelineWorkInProgressController < ApplicationController
       .where(
         without_children: true,
         purpose_name: @ordered_purpose_list,
-        created_at_gt: Date.today.prev_month
+        created_at_gt: from_date
       )
       .order(:created_at)
       .per(page_size)

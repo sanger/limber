@@ -1,5 +1,9 @@
 <%= content do %>
   <h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
+
+  <%= link_to 'All time', pipeline_work_in_progress_index_path(date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
+  <%= link_to 'Last month', pipeline_work_in_progress_index_path(date: Date.today.prev_month), method: :get, class: "filter-button" %>
+
   <div class="container-fluid">
     <div class="row">
       <% @ordered_purpose_list.each do |purpose_group| %>
@@ -13,7 +17,9 @@
                 <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
 
                 <%= card do %>
-                  <%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %>
+                  <%= link_to "#{labware.labware_barcode&.human}", path %><br/>
+                  <%= state %><br/>
+                  <%= "created #{labware.created_at.strftime("%d/%m/%y")}" %>
                 <% end %>
               <% end %>
             <% end %>
