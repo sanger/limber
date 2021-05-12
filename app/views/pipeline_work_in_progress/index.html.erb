@@ -4,13 +4,15 @@
   <h2><%= purpose_group %></h2>
 
   <ul>
-    <% @grouped[purpose_group].each do |labware| %>
-      <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
-      <% next if state == 'cancelled' %>
+    <% if @grouped.key? purpose_group %>
+      <% @grouped[purpose_group].each do |labware| %>
+        <% state = labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending' %>
+        <% next if state == 'cancelled' %>
 
-      <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
+        <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
 
-      <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %></li>
+        <li><%= link_to "#{labware.labware_barcode&.human}", path %><%= " - #{state} (created #{labware.created_at.strftime("%d/%m/%y")})" %></li>
+      <% end %>
     <% end %>
   </ul>
 
