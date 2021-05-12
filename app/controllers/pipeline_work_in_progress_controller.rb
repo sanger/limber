@@ -2,60 +2,19 @@
 
 class PipelineWorkInProgressController < ApplicationController
   def index
+    # TODO: how can we avoid hardcoding this? Problem is there are multiple relevant pipelines we want to display in one.
+    @pipeline = '"Heron"'
+
+    # TODO: test including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
+    pipeline_configs = Settings.pipelines.select{ |pipeline| ['Heron-384 Tailed A', 'Heron-384 Tailed B'].include? pipeline.name }
+    @ordered_purpose_list = combine_and_order_pipelines(pipeline_configs)
+
+    page_size = 500
     param_date = params[:date]&.to_date
     from_date = param_date ? param_date : Date.today.prev_month
 
-    # haven't tested it yet including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
-    pipeline_configs = Settings.pipelines.select{ |pipeline| ['Heron-384 Tailed A', 'Heron-384 Tailed B'].include? pipeline.name }
-    puts "*** pipeline_configs: #{pipeline_configs} ***"
-
-    @ordered_purpose_list = combine_and_order_pipelines(pipeline_configs)
-
-    @pipeline = '"Heron"'
-    page_size = 500
-
-    p = Sequencescape::Api::V2::Labware
-      .select(
-        {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
-        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
-        {purposes: "name"}
-      )
-      .includes(:state_changes)
-      .includes(:purpose)
-      .where(
-        without_children: true,
-        purpose_name: @ordered_purpose_list,
-        created_at_gt: from_date
-      )
-      .order(:created_at)
-      .per(page_size)
-
-    all_records = []
-    page_num = 1
-    num_retrieved = page_size
-    while num_retrieved == page_size
-      puts "page_num: #{page_num}"
-
-      num_retrieved = p.page(page_num).to_a.size
-      puts "num_retrieved: #{num_retrieved}"
-
-      all_records += p.page(page_num).to_a
-      page_num += 1
-    end
-
-    records = all_records
-    # records = p.page(1).to_a # use instead of line above to just display the first page
-    @num_records = records.size
-
-    @grouped = {}
-    records.each do |rec|
-      purpose_name = rec.purpose&.name
-      if @grouped.key? purpose_name
-        @grouped[purpose_name] << rec
-      else
-        @grouped[purpose_name] = [rec]
-      end
-    end
+    labware_records = retrieve_labware(page_size, from_date, @ordered_purpose_list)
+    @grouped = group_labware_by_purpose(labware_records)
   end
 end
 
@@ -101,4 +60,54 @@ def combine_and_order_pipelines(pipeline_configs)
   ordered_purpose_list += ending
 
   ordered_purpose_list
+end
+
+
+def retrieve_labware(page_size, from_date, purposes)
+  p = Sequencescape::Api::V2::Labware
+    .select(
+      {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
+      {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
+      {purposes: "name"}
+    )
+    .includes(:state_changes)
+    .includes(:purpose)
+    .where(
+      without_children: true,
+      purpose_name: purposes,
+      created_at_gt: from_date
+    )
+    .order(:created_at)
+    .per(page_size)
+
+  all_records = []
+  page_num = 1
+  num_retrieved = page_size
+  while num_retrieved == page_size
+    puts "page_num: #{page_num}"
+
+    num_retrieved = p.page(page_num).to_a.size
+    puts "num_retrieved: #{num_retrieved}"
+
+    all_records += p.page(page_num).to_a
+    page_num += 1
+  end
+
+  all_records
+end
+
+
+def group_labware_by_purpose(labware_records)
+  grouped = {}
+
+  labware_records.each do |rec|
+    purpose_name = rec.purpose&.name
+    if grouped.key? purpose_name
+      grouped[purpose_name] << rec
+    else
+      grouped[purpose_name] = [rec]
+    end
+  end
+
+  grouped
 end
