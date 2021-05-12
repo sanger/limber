@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
 class PipelineWorkInProgressController < ApplicationController
-  # Get labware that don't have children
-  # Of the right purposes for the pipeline
-  # Display: purpose, barcode, state (for now)
-  # Filter out ones that are complete, in the final stage of the pipeline
-
-  # Questions:
-  # How quick can we load the page? ~30 seconds so far
-  # How many plates will this be? ~542 plates
-  # Does it display the same plates as the Trello board?
   def index
     # haven't tested it yet including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
     pipeline_configs = Settings.pipelines.select{ |pipeline| ['Heron-384 Tailed A', 'Heron-384 Tailed B'].include? pipeline.name }
@@ -55,9 +46,6 @@ class PipelineWorkInProgressController < ApplicationController
 
     @grouped = {}
     records.each do |rec|
-      # puts rec.inspect
-      # binding.pry
-
       purpose_name = rec.purpose&.name
       if @grouped.key? purpose_name
         @grouped[purpose_name] << rec
@@ -72,8 +60,6 @@ end
 # TODO: refactor to make less wordy and more readable
 def combine_and_order_pipelines(pipeline_configs)
   ordered_purpose_list = []
-
-  # binding.pry
   combined_relationships = {}
   all_purposes = []
 
