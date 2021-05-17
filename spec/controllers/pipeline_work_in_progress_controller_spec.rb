@@ -1,10 +1,33 @@
 # frozen_string_literal: true
 
 RSpec.describe PipelineWorkInProgressController, type: :controller do
+  has_a_working_api
+
   let(:controller){ described_class.new }
 
-  describe '#index' do
-    it 'runs ok'
+  describe 'GET index' do
+    let(:labware) { create_list :labware, 2 }
+
+    before do
+      allow_any_instance_of(PipelineWorkInProgressController).to receive(:merge_page_results).and_return(labware)
+    end
+
+    it 'runs ok' do
+      get :index, params: { date: Date.new(2020, 2, 5) } # why is this calling example.com?
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe '#from_date' do
+    let(:date) { Date.new(2019, 5, 13) }
+
+    it 'parses the date from the URL parameters' do
+      expect(controller.from_date({ date: date })).to eq date
+    end
+
+    it 'defaults to a month ago' do
+      expect(controller.from_date({})).to eq Date.today.prev_month
+    end
   end
 
   describe '#combine_and_order_pipelines' do

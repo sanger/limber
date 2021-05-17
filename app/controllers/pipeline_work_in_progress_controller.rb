@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PipelineWorkInProgressController < ApplicationController
+  # Retrieves data from Sequencescape and populates variables to be used in the UI
   def index
     # TODO: how can we avoid hardcoding this? Problem is there are multiple relevant pipelines we want to display in one.
     @pipeline = '"Heron"'
@@ -10,11 +11,13 @@ class PipelineWorkInProgressController < ApplicationController
     @ordered_purpose_list = combine_and_order_pipelines(pipeline_configs)
 
     page_size = 500
-    param_date = params[:date]&.to_date
-    from_date = param_date ? param_date : Date.today.prev_month
 
-    labware_records = retrieve_labware(page_size, from_date, @ordered_purpose_list)
+    labware_records = retrieve_labware(page_size, from_date(params), @ordered_purpose_list)
     @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
+  end
+
+  def from_date(params)
+    params[:date]&.to_date || Date.today.prev_month
   end
 
   # Builds a flat list of purposes in a sensible order from the relationships config
