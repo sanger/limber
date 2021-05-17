@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PipelineWorkInProgressController, type: :controller do
+  let(:controller){ described_class.new }
+
   describe '#index' do
     it 'runs ok'
   end
@@ -47,7 +49,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3", "Purpose 4", "Purpose 5"] }
 
       it 'returns the right list of purposes' do
-        expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
+        expect(controller.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
       end
     end
 
@@ -79,7 +81,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3", "Purpose 4"] }
 
       it 'returns the right list of purposes' do
-        expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
+        expect(controller.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
       end
     end
 
@@ -129,7 +131,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3", "Purpose 4"] }
 
       it 'returns the right list of purposes' do
-        expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
+        expect(controller.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
       end
     end
 
@@ -151,7 +153,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["Purpose 1", "Purpose 3", "Purpose 2", "Purpose 4"] }
 
       it 'returns the right list of purposes' do
-        expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
+        expect(controller.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
       end
     end
 
@@ -189,7 +191,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["LTHR Cherrypick", "LTHR-384 RT", "LTHR-384 RT-Q", "LTHR-384 PCR 1", "LTHR-384 PCR 2", "LTHR-384 Lib PCR 1", "LTHR-384 Lib PCR 2", "LTHR-384 Lib PCR pool"] }
 
       it 'returns the right list of purposes' do
-        expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
+        expect(controller.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
       end
     end
 
@@ -211,15 +213,44 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3"] }
 
       it 'should error' do
-        expect { described_class.new.combine_and_order_pipelines(pipeline_configs) }.to raise_error("Pipeline config can't be flattened into a list of purposes")
+        expect { controller.combine_and_order_pipelines(pipeline_configs) }.to raise_error("Pipeline config can't be flattened into a list of purposes")
       end
     end
   end
 
   describe '#retrieve_labware' do
-    it 'retrieves labware'
-    it 'defaults to retrieving the last month'
-    it 'errors if it fails'
+    let(:page_size) { 2 }
+    let(:purposes) { ['LTHR Cherrypick', 'LTHR-384 RT'] }
+    let(:from_date) { Date.today.prev_month }
+    let(:labware) { create_list :labware, 2 }
+
+    before do
+      allow(controller).to receive(:merge_page_results).and_return(labware)
+    end
+
+    it 'retrieves labware' do
+      expect(controller.retrieve_labware(page_size, from_date, purposes)).to eq labware
+    end
+  end
+
+  describe '#merge_page_results' do
+    let(:query_builder){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick') }
+    let(:query_builder_page_1){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(1) }
+    let(:query_builder_page_2){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(2) }
+    let(:page_size) { 2 }
+    let(:labware_list_page_1) { create_list :labware, 2 }
+    let(:labware_list_page_2) { create_list :labware, 1 }
+
+    before do
+      allow(query_builder).to receive(:page).with(1).and_return(query_builder_page_1)
+      allow(query_builder_page_1).to receive(:to_a).and_return(labware_list_page_1)
+      allow(query_builder).to receive(:page).with(2).and_return(query_builder_page_2)
+      allow(query_builder_page_2).to receive(:to_a).and_return(labware_list_page_2)
+    end
+
+    it 'merges page results' do
+      expect(controller.merge_page_results(query_builder, page_size)).to eq labware_list_page_1 + labware_list_page_2
+    end
   end
 
   describe '#mould_data_for_view' do

@@ -75,9 +75,11 @@ class PipelineWorkInProgressController < ApplicationController
     ordered_purpose_list
   end
 
-
+  # Retrieves labware through the Sequencescape V2 API
+  # Combines pages into one list
+  # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
-    p = Sequencescape::Api::V2::Labware
+    labware_query = Sequencescape::Api::V2::Labware
       .select(
         {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
         {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
@@ -93,16 +95,24 @@ class PipelineWorkInProgressController < ApplicationController
       .order(:created_at)
       .per(page_size)
 
+      merge_page_results(labware_query, page_size)
+  end
+
+
+  # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page
+  # and combines them into one list
+  def merge_page_results(query_builder, page_size)
     all_records = []
     page_num = 1
     num_retrieved = page_size
     while num_retrieved == page_size
       puts "page_num: #{page_num}"
 
-      num_retrieved = p.page(page_num).to_a.size
+      current_page = query_builder.page(page_num).to_a
+      num_retrieved = current_page.size
       puts "num_retrieved: #{num_retrieved}"
 
-      all_records += p.page(page_num).to_a
+      all_records += current_page
       page_num += 1
     end
 
