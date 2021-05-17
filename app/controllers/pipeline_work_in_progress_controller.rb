@@ -150,5 +150,3 @@ class PipelineWorkInProgressController < ApplicationController
     output
   end
 end
-
-

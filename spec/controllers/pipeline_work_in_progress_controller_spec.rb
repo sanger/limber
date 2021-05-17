@@ -254,7 +254,31 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#mould_data_for_view' do
-    it 'returns the correct format'
-    it 'errors if the input unexpected'
+    let(:purposes) { ['Limber Example Purpose', 'LTHR-384 RT'] }
+    let(:labware_record_no_state) { create :labware_with_purpose }
+    let(:labware_record_passsed) { create :labware_with_state_changes, target_state: 'passed' }
+    let(:labware_record_cancelled) { create :labware_with_state_changes, target_state: 'cancelled' }
+    let(:labware_records) { [labware_record_no_state, labware_record_passsed, labware_record_cancelled] }
+
+    let(:expected_output) do
+      {
+        "Limber Example Purpose" => [
+          {
+            :record => labware_record_no_state,
+            :state => "pending"
+          },
+          {
+            :record => labware_record_passsed,
+            :state => "passed"
+          }
+          # cancelled one not present
+        ],
+        "LTHR-384 RT" => []
+      }
+    end
+
+    it 'returns the correct format' do
+      expect(controller.mould_data_for_view(purposes, labware_records)).to eq expected_output
+    end
   end
 end
