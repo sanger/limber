@@ -135,21 +135,20 @@ class PipelineWorkInProgressController < ApplicationController
   #   "LTHR-384 PCR 1" => [{}]
   # }
   def mould_data_for_view(purposes, labware_records)
-    output = {}
-    # Make sure there's an entry for each of the purposes, even if no records
-    purposes.each { |p| output[p] = [] }
+    {}.tap do |output|
+      # Make sure there's an entry for each of the purposes, even if no records
+      purposes.each { |p| output[p] = [] }
 
-    labware_records.each do |rec|
-      next unless rec.purpose
+      labware_records.each do |rec|
+        next unless rec.purpose
 
-      state = rec.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
-      next if state == 'cancelled'
+        state = rec.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
+        next if state == 'cancelled'
 
-      labware_data = {record: rec, state: state}
+        labware_data = {record: rec, state: state}
 
-      output[rec.purpose.name] << labware_data
+        output[rec.purpose.name] << labware_data
+      end
     end
-
-    output
   end
 end
