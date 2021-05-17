@@ -58,7 +58,7 @@ class PipelineWorkInProgressController < ApplicationController
       # Find any purposes with no 'parent' purposes - to go on the front of the list
       with_parent = combined_relationships.values.flatten.uniq
       without_parent = all_purposes - with_parent
-      raise "Pipeline config can't be flattened into a list of purposes" unless without_parent # important to prevent infinite looping
+      raise "Pipeline config can't be flattened into a list of purposes" if without_parent.empty? # important to prevent infinite looping
 
       ordered_purpose_list += without_parent
 

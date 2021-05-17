@@ -193,31 +193,28 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
       end
     end
 
-  #   context 'when the pipeline is circular' do
-  #     let(:pipeline_1_config) do
-  #       Pipeline.new(
-  #         filters: filters,
-  #         library_pass: "Purpose 3",
-  #         relationships: {
-  #           "Purpose 1" => "Purpose 2",
-  #           "Purpose 2" => "Purpose 3",
-  #           "Purpose 3" => "Purpose 1"
-  #         },
-  #         name: "Pipeline A"
-  #       )
-  #     end
+    context 'when the pipeline is circular' do
+      let(:pipeline_1_config) do
+        Pipeline.new(
+          filters: filters,
+          library_pass: "Purpose 3",
+          relationships: {
+            "Purpose 1" => "Purpose 2",
+            "Purpose 2" => "Purpose 3",
+            "Purpose 3" => "Purpose 1"
+          },
+          name: "Pipeline A"
+        )
+      end
 
-  #     let(:pipeline_configs) { [pipeline_1_config] }
-  #     let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3"] }
+      let(:pipeline_configs) { [pipeline_1_config] }
+      let(:expected_result) { ["Purpose 1", "Purpose 2", "Purpose 3"] }
 
-  #     it 'returns the right list of purposes' do
-  #       # TODO: think this actually does hit an infinite loop - oops
-  #       expect(described_class.new.combine_and_order_pipelines(pipeline_configs)).to eq expected_result
-  #     end
-
-  #     it 'should error'
-  #   end
-  # end
+      it 'should error' do
+        expect { described_class.new.combine_and_order_pipelines(pipeline_configs) }.to raise_error("Pipeline config can't be flattened into a list of purposes")
+      end
+    end
+  end
 
   describe '#retrieve_labware' do
     it 'retrieves labware'
