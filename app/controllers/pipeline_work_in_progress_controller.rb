@@ -84,12 +84,13 @@ class PipelineWorkInProgressController < ApplicationController
   def retrieve_labware(page_size, from_date, purposes)
     labware_query = Sequencescape::Api::V2::Labware
       .select(
-        {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
-        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at"]},
+        {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at", "ancestors"]},
+        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at", "ancestors"]},
         {purposes: "name"}
       )
       .includes(:state_changes)
       .includes(:purpose)
+      .includes(:ancestors)
       .where(
                 without_children: true,
         purpose_name: purposes,

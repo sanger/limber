@@ -18,6 +18,7 @@
             <!-- plate / tube card -->
             <%= card do %>
               <%= link_to "#{labware.labware_barcode&.human}", path %><br/>
+              <%= labware.input_barcode %><br/>
               <%= labware_data[:state] %><br/>
               <%= "created #{labware.created_at.strftime("%d/%m/%y")}" %>
             <% end %>
