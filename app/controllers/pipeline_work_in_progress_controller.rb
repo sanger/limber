@@ -3,7 +3,8 @@
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def index
-    # TODO: how can we avoid hardcoding this? Problem is there are multiple relevant pipelines we want to display in one.
+    # TODO: In future, add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
+    # Then we can avoid hardcoding '@pipeline' and 'heron_pipelines' here, and give them a list of pipelines to choose from
     @pipeline = '"Heron"'
 
     # TODO: test including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
