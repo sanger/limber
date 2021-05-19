@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Controller for swimlane style view of work in progress for a pipeline
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def index
@@ -18,7 +19,7 @@ class PipelineWorkInProgressController < ApplicationController
   end
 
   def from_date(params)
-    params[:date]&.to_date || Date.today.prev_month
+    params[:date]&.to_date || Time.zone.today.prev_month
   end
 
   # Retrieves labware through the Sequencescape V2 API
@@ -26,19 +27,11 @@ class PipelineWorkInProgressController < ApplicationController
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
     labware_query = Sequencescape::Api::V2::Labware
-                    .select(
-                      { plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                      { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                      { purposes: 'name' }
-                    )
-                    .includes(:state_changes)
-                    .includes(:purpose)
-                    .includes(:ancestors)
-                    .where(
-                      without_children: true,
-                      purpose_name: purposes,
-                      created_at_gt: from_date
-                    )
+                    .select({ plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+                            { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+                            { purposes: 'name' })
+                    .includes(:state_changes, :purpose, :ancestors)
+                    .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
                     .order(:created_at)
                     .per(page_size)
 
@@ -52,12 +45,8 @@ class PipelineWorkInProgressController < ApplicationController
     page_num = 1
     num_retrieved = page_size
     while num_retrieved == page_size
-      puts "page_num: #{page_num}"
-
       current_page = query_builder.page(page_num).to_a
       num_retrieved = current_page.size
-      puts "num_retrieved: #{num_retrieved}"
-
       all_records += current_page
       page_num += 1
     end
@@ -70,7 +59,7 @@ class PipelineWorkInProgressController < ApplicationController
   # {
   #   "LTHR Cherrypick" => [
   #     {
-  #       :record => #<Sequencescape::Api::V2::Labware:@attributes={"type"=>"plates", "id"=>"1234", "uuid"=>"12a34b5c-defg-67hi-8jkl-mn901opq2345", "labware_barcode"=>#<LabwareBarcode:0x00007ff16e5f06b0 @human="DN123456D", @machine="DN123456D", @ean13="1234567890123">, "created_at"=>2021-05-04 12:19:32 +0100}>,
+  #       :record => #<Sequencescape::Api::V2::Labware...>,
   #       :state => "pending"
   #     }
   #   ],

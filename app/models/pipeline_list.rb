@@ -41,24 +41,34 @@ class PipelineList
   def combine_and_order_pipelines(pipeline_names)
     pipeline_configs = @list.select { |pipeline| pipeline_names.include? pipeline.name }
 
-    ordered_purpose_list = []
+    combined_relationships = extract_combined_relationships(pipeline_configs)
+    # binding.pry
 
-    combined_relationships = {}
-    pipeline_configs.each do |pc|
-      pc.relationships.each do |key, value|
-        combined_relationships[key] ||= []
-        combined_relationships[key] << value
+    flatten_relationships_into_purpose_list(combined_relationships)
+  end
+
+  def extract_combined_relationships(pipeline_configs)
+    {}.tap do |combined_relationships|
+      pipeline_configs.each do |pc|
+        pc.relationships.each do |key, value|
+          combined_relationships[key] ||= []
+          combined_relationships[key] << value
+        end
       end
     end
+  end
 
-    all_purposes = (combined_relationships.keys + combined_relationships.values.flatten).uniq
+  def flatten_relationships_into_purpose_list(relationship_config)
+    all_purposes = (relationship_config.keys + relationship_config.values.flatten).uniq
+
+    ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list
-    without_child = all_purposes.reject { |p| (combined_relationships.key? p) }
+    without_child = all_purposes.reject { |p| (relationship_config.key? p) }
 
-    while combined_relationships.size.positive?
+    while relationship_config.size.positive?
       # Find any purposes with no 'parent' purposes - to go on the front of the list
-      with_parent = combined_relationships.values.flatten.uniq
+      with_parent = relationship_config.values.flatten.uniq
       without_parent = all_purposes - with_parent
       raise "Pipeline config can't be flattened into a list of purposes" if without_parent.empty? # important to prevent infinite looping
 
@@ -66,14 +76,13 @@ class PipelineList
 
       # Delete the nodes that have been added, making the next set of purposes have no parent
       # So we can use the same technique again in the next iteration
-      without_parent.each { |n| combined_relationships.delete(n) }
+      without_parent.each { |n| relationship_config.delete(n) }
 
       # Refresh the all_purposes list for the next iteration
-      all_purposes = (combined_relationships.keys + combined_relationships.values.flatten).uniq
+      all_purposes = (relationship_config.keys + relationship_config.values.flatten).uniq
     end
 
     # When we've run out of 'parent' purposes, add the final ones on the end
-    ordered_purpose_list += without_child
-    ordered_purpose_list
+    ordered_purpose_list + without_child
   end
 end

@@ -26,14 +26,14 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     end
 
     it 'defaults to a month ago' do
-      expect(controller.from_date({})).to eq Date.today.prev_month
+      expect(controller.from_date({})).to eq Time.zone.today.prev_month
     end
   end
 
   describe '#retrieve_labware' do
     let(:page_size) { 2 }
     let(:purposes) { ['LTHR Cherrypick', 'LTHR-384 RT'] }
-    let(:from_date) { Date.today.prev_month }
+    let(:from_date) { Time.zone.today.prev_month }
     let(:labware) { create_list :labware, 2 }
 
     before do
