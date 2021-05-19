@@ -50,35 +50,35 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
     labware_barcode
   end
 
-  def input_barcode
-    useful_barcode(stock_plate.try(:barcode))
-  end
+  # ===== stock plate / input plate barcode ======
 
-  # for figuring out input plate barcode
-  def stock_plates(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plates ||= stock_plate? ? [self] : ancestors.select{ |a| purpose_names.include? a.purpose.name }
+  def input_barcode
+    stock_plate.try(:barcode).try(:human)
   end
 
   def stock_plate
-    return self if stock_plate?
+    @stock_plate ||= find_stock_plate
+  end
 
-    stock_plates.sort { |a, b| b.id <=> a.id }.first
+  # 'ancestors' returns different types based on the query used to retrieve 'self'
+  # if ancestors was 'included' in the query, you get an Array
+  # if not, you get a JsonApiClient::Query::Builder
+  # sometimes you can also get nil
+  # this method has no test - mocking was a nightmare and didn't represent real API responses
+  def find_stock_plate
+    stocks = SearchHelper.stock_plate_names
+    return self if stock_plate?(purpose_names: stocks)
+
+    if ancestors.class == Array
+      return ancestors.select{ |a| stocks.include? a.purpose.name }.sort { |a, b| a.id <=> b.id }.last
+    elsif ancestors.class == JsonApiClient::Query::Builder
+      return ancestors.where(purpose_name: stocks).order(id: :asc).last
+    end
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
     purpose_names.include?(purpose.name)
   end
 
-  def useful_barcode(barcode)
-    return 'Unknown' if barcode.nil?
-
-    # Support for old API
-    human_readable = barcode.try(:human) || "#{barcode.prefix}#{barcode.number}"
-
-    if human_readable == barcode.machine
-      human_readable
-    else
-      "#{human_readable} <em>#{barcode.machine}</em>".html_safe # rubocop:todo Rails/OutputSafety
-    end
-  end
+  # ===== end stock plate / input plate barcode ======
 end
