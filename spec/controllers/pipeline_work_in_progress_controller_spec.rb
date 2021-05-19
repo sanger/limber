@@ -3,7 +3,7 @@
 RSpec.describe PipelineWorkInProgressController, type: :controller do
   has_a_working_api
 
-  let(:controller){ described_class.new }
+  let(:controller) { described_class.new }
 
   describe 'GET index' do
     let(:labware) { create_list :labware, 2 }
@@ -46,9 +46,9 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#merge_page_results' do
-    let(:query_builder){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick') }
-    let(:query_builder_page_1){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(1) }
-    let(:query_builder_page_2){ Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(2) }
+    let(:query_builder) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick') }
+    let(:query_builder_page_1) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(1) }
+    let(:query_builder_page_2) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(2) }
     let(:page_size) { 2 }
     let(:labware_list_page_1) { create_list :labware, 2 }
     let(:labware_list_page_2) { create_list :labware, 1 }
@@ -74,18 +74,18 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
 
     let(:expected_output) do
       {
-        "Limber Example Purpose" => [
+        'Limber Example Purpose' => [
           {
-            :record => labware_record_no_state,
-            :state => "pending"
+            record: labware_record_no_state,
+            state: 'pending'
           },
           {
-            :record => labware_record_passsed,
-            :state => "passed"
+            record: labware_record_passsed,
+            state: 'passed'
           }
           # cancelled one not present
         ],
-        "LTHR-384 RT" => []
+        'LTHR-384 RT' => []
       }
     end
 

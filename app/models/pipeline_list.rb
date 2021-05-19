@@ -39,7 +39,7 @@ class PipelineList
   #
   # ["LTHR Cherrypick", "LTHR-384 RT", "LTHR-384 RT-Q", "LTHR-384 PCR 1", "LTHR-384 PCR 2", "LTHR-384 Lib PCR 1", "LTHR-384 Lib PCR 2", "LTHR-384 Lib PCR pool"]
   def combine_and_order_pipelines(pipeline_names)
-    pipeline_configs = @list.select{ |pipeline| pipeline_names.include? pipeline.name }
+    pipeline_configs = @list.select { |pipeline| pipeline_names.include? pipeline.name }
 
     ordered_purpose_list = []
 
@@ -54,9 +54,9 @@ class PipelineList
     all_purposes = (combined_relationships.keys + combined_relationships.values.flatten).uniq
 
     # Any purposes with no 'child' purposes should go at the end of the list
-    without_child = all_purposes.select { |p| !(combined_relationships.key? p) }
+    without_child = all_purposes.reject { |p| (combined_relationships.key? p) }
 
-    while combined_relationships.size > 0
+    while combined_relationships.size.positive?
       # Find any purposes with no 'parent' purposes - to go on the front of the list
       with_parent = combined_relationships.values.flatten.uniq
       without_parent = all_purposes - with_parent

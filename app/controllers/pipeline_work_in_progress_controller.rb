@@ -26,23 +26,23 @@ class PipelineWorkInProgressController < ApplicationController
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
     labware_query = Sequencescape::Api::V2::Labware
-      .select(
-        {plates: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at", "ancestors"]},
-        {tubes: ["uuid", "purpose", "labware_barcode", "state_changes", "created_at", "ancestors"]},
-        {purposes: "name"}
-      )
-      .includes(:state_changes)
-      .includes(:purpose)
-      .includes(:ancestors)
-      .where(
-                without_children: true,
-        purpose_name: purposes,
-        created_at_gt: from_date
-      )
-      .order(:created_at)
-      .per(page_size)
+                    .select(
+                      { plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+                      { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+                      { purposes: 'name' }
+                    )
+                    .includes(:state_changes)
+                    .includes(:purpose)
+                    .includes(:ancestors)
+                    .where(
+                      without_children: true,
+                      purpose_name: purposes,
+                      created_at_gt: from_date
+                    )
+                    .order(:created_at)
+                    .per(page_size)
 
-      merge_page_results(labware_query, page_size)
+    merge_page_results(labware_query, page_size)
   end
 
   # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page
@@ -87,7 +87,7 @@ class PipelineWorkInProgressController < ApplicationController
         state = rec.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
         next if state == 'cancelled'
 
-        labware_data = {record: rec, state: state}
+        labware_data = { record: rec, state: state }
 
         output[rec.purpose.name] << labware_data
       end

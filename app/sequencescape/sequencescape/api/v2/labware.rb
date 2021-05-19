@@ -69,10 +69,10 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
     stocks = SearchHelper.stock_plate_names
     return self if stock_plate?(purpose_names: stocks)
 
-    if ancestors.class == Array
-      return ancestors.select{ |a| stocks.include? a.purpose.name }.sort { |a, b| a.id <=> b.id }.last
-    elsif ancestors.class == JsonApiClient::Query::Builder
-      return ancestors.where(purpose_name: stocks).order(id: :asc).last
+    if ancestors.instance_of?(Array)
+      ancestors.select { |a| stocks.include? a.purpose.name }.max_by(&:id)
+    elsif ancestors.instance_of?(JsonApiClient::Query::Builder)
+      ancestors.where(purpose_name: stocks).order(id: :asc).last
     end
   end
 
