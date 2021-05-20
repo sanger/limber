@@ -2,7 +2,7 @@
   <h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
 
   <!-- filters - reload the page with a new param -->
-  <%= link_to 'All time', pipeline_work_in_progress_index_path(date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
+  <%= link_to 'All time (reduced information)', pipeline_work_in_progress_index_path(date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
   <%= link_to 'Last month', pipeline_work_in_progress_index_path(date: Date.today.prev_month), method: :get, class: "filter-button" %>
 
   <!-- one column per purpose, containing cards for each plate / tube -->
@@ -18,7 +18,9 @@
             <!-- plate / tube card -->
             <%= card do %>
               <%= link_to "#{labware.labware_barcode&.human}", path %><br/>
-              <%= labware.input_barcode %><br/>
+              <% unless @reduce_information %>
+                <%= labware.input_barcode %><br/>
+              <% end %>
               <%= labware_data[:state] %><br/>
               <%= "created #{labware.created_at.strftime("%d/%m/%y")}" %>
             <% end %>
