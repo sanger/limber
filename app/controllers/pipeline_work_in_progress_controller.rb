@@ -88,6 +88,6 @@ class PipelineWorkInProgressController < ApplicationController
   end
 
   def reduce_information_for_performance(from_date)
-    @reduce_information ||= from_date < Time.zone.today.prev_month
+    @reduce_information_for_performance ||= from_date < Time.zone.today.prev_month
   end
 end

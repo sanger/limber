@@ -18,7 +18,7 @@
             <!-- plate / tube card -->
             <%= card do %>
               <%= link_to "#{labware.labware_barcode&.human}", path %><br/>
-              <% unless @reduce_information %>
+              <% unless @reduce_information_for_performance %>
                 <%= labware.input_barcode %><br/>
               <% end %>
               <%= labware_data[:state] %><br/>
