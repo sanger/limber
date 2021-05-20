@@ -73,13 +73,15 @@ class PipelineWorkInProgressController < ApplicationController
       labware_records.each do |rec|
         next unless rec.purpose
 
-        state = rec.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
+        state = decide_state(rec)
         next if state == 'cancelled'
 
-        labware_data = { record: rec, state: state }
-
-        output[rec.purpose.name] << labware_data
+        output[rec.purpose.name] << { record: rec, state: state }
       end
     end
+  end
+
+  def decide_state(labware)
+    labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
   end
 end

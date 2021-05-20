@@ -42,10 +42,11 @@ class PipelineList
     pipeline_configs = @list.select { |pipeline| pipeline_names.include? pipeline.name }
 
     combined_relationships = extract_combined_relationships(pipeline_configs)
-    # binding.pry
 
     flatten_relationships_into_purpose_list(combined_relationships)
   end
+
+  private
 
   def extract_combined_relationships(pipeline_configs)
     {}.tap do |combined_relationships|
@@ -59,17 +60,14 @@ class PipelineList
   end
 
   def flatten_relationships_into_purpose_list(relationship_config)
-    all_purposes = (relationship_config.keys + relationship_config.values.flatten).uniq
-
     ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list
-    without_child = all_purposes.reject { |p| (relationship_config.key? p) }
+    without_child = find_purposes_without_child(relationship_config)
 
     while relationship_config.size.positive?
       # Find any purposes with no 'parent' purposes - to go on the front of the list
-      with_parent = relationship_config.values.flatten.uniq
-      without_parent = all_purposes - with_parent
+      without_parent = find_purposes_without_parent(relationship_config)
       raise "Pipeline config can't be flattened into a list of purposes" if without_parent.empty? # important to prevent infinite looping
 
       ordered_purpose_list += without_parent
@@ -77,12 +75,30 @@ class PipelineList
       # Delete the nodes that have been added, making the next set of purposes have no parent
       # So we can use the same technique again in the next iteration
       without_parent.each { |n| relationship_config.delete(n) }
-
-      # Refresh the all_purposes list for the next iteration
-      all_purposes = (relationship_config.keys + relationship_config.values.flatten).uniq
     end
 
     # When we've run out of 'parent' purposes, add the final ones on the end
     ordered_purpose_list + without_child
+  end
+
+  def find_purposes_without_child(relationship_config)
+    # reject purposes that are a 'key' in the config, meaning they have a child
+    extract_purposes_from_relationships(relationship_config).reject { |p| (relationship_config.key? p) }
+  end
+
+  def extract_purposes_from_relationships(relationship_config)
+    (relationship_config.keys + relationship_config.values.flatten).uniq
+  end
+
+  def find_purposes_without_parent(relationship_config)
+    all_purposes = extract_purposes_from_relationships(relationship_config)
+    with_parent = find_purposes_with_parent(relationship_config)
+
+    all_purposes - with_parent
+  end
+
+  def find_purposes_with_parent(relationship_config)
+    # all purposes that are 'values' in the config have a parent
+    relationship_config.values.flatten.uniq
   end
 end
