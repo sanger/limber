@@ -4,7 +4,7 @@
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
-    # Note: this looks like the pipeline is dynamically set but only really works so far for Heron
+    # This looks like the pipeline is dynamically set but only really works so far for Heron
     # as 'heron_pipelines' variable is hardcoded.
     # TODO: In future, add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
     # So that it can work for all pipelines
