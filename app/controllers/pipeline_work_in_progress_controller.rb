@@ -84,7 +84,7 @@ class PipelineWorkInProgressController < ApplicationController
   end
 
   def decide_state(labware)
-    labware.state_changes&.sort_by { |sc| sc.id }&.last&.target_state || 'pending'
+    labware.state_changes&.max_by(&:id)&.target_state || 'pending'
   end
 
   def reduce_information_for_performance(from_date)
