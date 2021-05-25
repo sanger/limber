@@ -3,10 +3,12 @@
 # Controller for swimlane style view of work in progress for a pipeline
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
-  def index
+  def show
+    # Note: this looks like the pipeline is dynamically set but only really works so far for Heron
+    # as 'heron_pipelines' variable is hardcoded.
     # TODO: In future, add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
-    # Then we can avoid hardcoding '@pipeline' and 'heron_pipelines' here, and give them a list of pipelines to choose from
-    @pipeline = 'Heron'
+    # So that it can work for all pipelines
+    @pipeline = params[:id].capitalize
 
     # TODO: test including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
     heron_pipelines = ['Heron-384 Tailed A', 'Heron-384 Tailed B']
