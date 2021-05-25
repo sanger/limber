@@ -45,26 +45,6 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     end
   end
 
-  describe '#merge_page_results' do
-    let(:query_builder) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick') }
-    let(:query_builder_page_1) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(1) }
-    let(:query_builder_page_2) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(2) }
-    let(:page_size) { 2 }
-    let(:labware_list_page_1) { create_list :labware, 2 }
-    let(:labware_list_page_2) { create_list :labware, 1 }
-
-    before do
-      allow(query_builder).to receive(:page).with(1).and_return(query_builder_page_1)
-      allow(query_builder_page_1).to receive(:to_a).and_return(labware_list_page_1)
-      allow(query_builder).to receive(:page).with(2).and_return(query_builder_page_2)
-      allow(query_builder_page_2).to receive(:to_a).and_return(labware_list_page_2)
-    end
-
-    it 'merges page results' do
-      expect(controller.merge_page_results(query_builder, page_size)).to eq labware_list_page_1 + labware_list_page_2
-    end
-  end
-
   describe '#mould_data_for_view' do
     let(:purposes) { ['Limber Example Purpose', 'LTHR-384 RT'] }
     let(:labware_record_no_state) { create :labware_with_purpose }

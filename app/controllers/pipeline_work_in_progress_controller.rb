@@ -37,23 +37,7 @@ class PipelineWorkInProgressController < ApplicationController
                     .order(:created_at)
                     .per(page_size)
 
-    merge_page_results(labware_query, page_size)
-  end
-
-  # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page
-  # and combines them into one list
-  def merge_page_results(query_builder, page_size)
-    all_records = []
-    page_num = 1
-    num_retrieved = page_size
-    while num_retrieved == page_size
-      current_page = query_builder.page(page_num).to_a
-      num_retrieved = current_page.size
-      all_records += current_page
-      page_num += 1
-    end
-
-    all_records
+    Sequencescape::Api::V2.merge_page_results(labware_query, page_size)
   end
 
   # Returns following structure (example):

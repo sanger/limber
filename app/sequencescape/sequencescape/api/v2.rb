@@ -36,4 +36,23 @@ module Sequencescape::Api::V2
   def self.plate_with_custom_includes(include_params, search_params)
     Plate.includes(include_params).find(search_params).first
   end
+
+  # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page
+  # and combines them into one list
+  def self.merge_page_results(query_builder, page_size)
+    all_records = []
+    page_num = 1
+    num_retrieved = page_size
+
+    # if the final page is a full page (has page_size records),
+    # it does one more iteration and you get an empty array retrieved, stopping the loop
+    while num_retrieved == page_size
+      current_page = query_builder.page(page_num).to_a
+      num_retrieved = current_page.size
+      all_records += current_page
+      page_num += 1
+    end
+
+    all_records
+  end
 end
