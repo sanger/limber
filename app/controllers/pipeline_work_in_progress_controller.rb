@@ -30,12 +30,10 @@ class PipelineWorkInProgressController < ApplicationController
                     .select({ plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
                             { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
                             { purposes: 'name' })
-                    .includes(:state_changes, :purpose)
+                    .includes(:state_changes, :purpose, 'ancestors.purpose')
                     .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
                     .order(:created_at)
                     .per(page_size)
-
-    labware_query = labware_query.includes(:ancestors) unless reduce_information_for_performance(from_date)
 
     merge_page_results(labware_query, page_size)
   end
@@ -85,9 +83,5 @@ class PipelineWorkInProgressController < ApplicationController
 
   def decide_state(labware)
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
-  end
-
-  def reduce_information_for_performance(from_date)
-    @reduce_information_for_performance ||= from_date < Time.zone.today.prev_month
   end
 end
