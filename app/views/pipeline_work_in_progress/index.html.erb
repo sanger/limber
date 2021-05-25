@@ -13,11 +13,10 @@
         <%= card title: "#{purpose_group} (#{@grouped[purpose_group].size})" do %>
           <% @grouped[purpose_group].each do |labware_data| %>
             <% labware = labware_data[:record] %>
-            <% path = labware.type == 'plates' ? limber_plate_path(labware) : limber_tube_path(labware) %>
 
             <!-- plate / tube card -->
             <%= card do %>
-              <%= link_to "#{labware.labware_barcode&.human}", path %><br/>
+              <%= link_to "#{labware.labware_barcode&.human}", url_for(labware) %><br/>
               <% unless @reduce_information_for_performance %>
                 <%= labware.input_barcode %><br/>
               <% end %>
