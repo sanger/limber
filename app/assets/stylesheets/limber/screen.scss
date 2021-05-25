@@ -71,7 +71,7 @@ header.limber-header {
   }
 }
 
-button#btnGroupInboxes, button#btnGroupRobots {
+button#btnGroupInboxes, button#btnGroupRobots, button#btnGroupWip {
   @extend .btn;
   @extend .btn-primary;
   @extend .dropdown-toggle;

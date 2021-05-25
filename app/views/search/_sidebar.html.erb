@@ -1,5 +1,14 @@
 <%= sidebar do %>
   <div class="btn-group btn-block" role="group">
+    <button id="btnGroupWip" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Work in progress
+    </button>
+    <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupWip">
+     <%= link_to 'Heron', pipeline_work_in_progress_path(id: 'heron') %>
+    </nav>
+  </div>
+
+  <div class="btn-group btn-block" role="group">
     <button id="btnGroupInboxes" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Inboxes
     </button>
