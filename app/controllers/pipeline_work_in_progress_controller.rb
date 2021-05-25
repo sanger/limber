@@ -6,7 +6,7 @@ class PipelineWorkInProgressController < ApplicationController
   def index
     # TODO: In future, add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
     # Then we can avoid hardcoding '@pipeline' and 'heron_pipelines' here, and give them a list of pipelines to choose from
-    @pipeline = '"Heron"'
+    @pipeline = 'Heron'
 
     # TODO: test including the 'Heron 384 Tailed MX' pipeline - might cause an issue as there might be loads of tubes in the final purpose
     heron_pipelines = ['Heron-384 Tailed A', 'Heron-384 Tailed B']

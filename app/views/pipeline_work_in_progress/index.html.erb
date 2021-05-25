@@ -1,5 +1,5 @@
 <%= content do %>
-  <h1>Work In Progress - Pipeline <%= @pipeline -%></h1>
+  <h1>Work In Progress - Pipeline "<%= @pipeline -%>"</h1>
 
   <!-- filters - reload the page with a new param -->
   <%= link_to 'All time (reduced information)', pipeline_work_in_progress_index_path(date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
