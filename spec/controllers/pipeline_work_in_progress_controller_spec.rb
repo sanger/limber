@@ -5,15 +5,15 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
 
   let(:controller) { described_class.new }
 
-  describe 'GET index' do
+  describe 'GET show' do
     let(:labware) { create_list :labware, 2 }
 
     before do
-      allow_any_instance_of(PipelineWorkInProgressController).to receive(:merge_page_results).and_return(labware)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
     end
 
     it 'runs ok' do
-      get :index, params: { date: Date.new(2020, 2, 5) } # why is this calling example.com?
+      get :show, params: { id: 'heron', date: Date.new(2020, 2, 5) }
       expect(response).to have_http_status(:ok)
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:labware) { create_list :labware, 2 }
 
     before do
-      allow(controller).to receive(:merge_page_results).and_return(labware)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
     end
 
     it 'retrieves labware' do
