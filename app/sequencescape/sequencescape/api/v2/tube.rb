@@ -17,6 +17,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :aliquots
   has_many :direct_submissions
 
+  has_many :state_changes
+
   has_one :purpose
 
   DEFAULT_INCLUDES = [

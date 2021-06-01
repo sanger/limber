@@ -12,4 +12,11 @@ FactoryBot.define do
     previous_state { 'pending' }
     reason { 'testing this works' }
   end
+
+  factory :v2_state_change, class: Sequencescape::Api::V2::StateChange do
+    skip_create
+
+    id
+    target_state { 'passed' }
+  end
 end

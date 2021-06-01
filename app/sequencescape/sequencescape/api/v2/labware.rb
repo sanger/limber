@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A plate from sequencescape via the V2 API
+# A labware from sequencescape via the V2 API
 class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   def self.table_name
     'labware'
@@ -13,6 +13,9 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   # Not great, as only true for tubes/plates not wells
   # But until we get polymorphic association support
   has_one :purpose
+
+  has_many :state_changes
+  has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
 
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
@@ -46,4 +49,36 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   def barcode
     labware_barcode
   end
+
+  # ===== stock plate / input plate barcode ======
+
+  def input_barcode
+    stock_plate.try(:barcode).try(:human)
+  end
+
+  def stock_plate
+    @stock_plate ||= find_stock_plate
+  end
+
+  # 'ancestors' returns different types based on the query used to retrieve 'self'
+  # if ancestors was 'included' in the query, you get an Array
+  # if not, you get a JsonApiClient::Query::Builder
+  # sometimes you can also get nil
+  # this method has no test - mocking was a nightmare and didn't represent real API responses
+  def find_stock_plate
+    stocks = SearchHelper.stock_plate_names
+    return self if stock_plate?(purpose_names: stocks)
+
+    if ancestors.instance_of?(Array)
+      ancestors.select { |a| stocks.include? a.purpose.name }.max_by(&:id)
+    elsif ancestors.instance_of?(JsonApiClient::Query::Builder)
+      ancestors.where(purpose_name: stocks).order(id: :asc).last
+    end
+  end
+
+  def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
+    purpose_names.include?(purpose.name)
+  end
+
+  # ===== end stock plate / input plate barcode ======
 end
