@@ -1986,6 +1986,85 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
+  # hamilton robot added for surge testing
+  custom_robot('hamilton-lthr-384-lib-pcr-pool-to-lthr-384-pool-xp',
+               name: 'Hamilton LTHR-384 Lib PCR pool => LTHR-384 Pool XP',
+               beds: {
+                 bed(16).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 16'
+                 },
+                 bed(22).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 22',
+                   parents: [bed(16).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(17).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 17'
+                 },
+                 bed(23).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 23',
+                   parents: [bed(17).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(18).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 18'
+                 },
+                 bed(24).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 24',
+                   parents: [bed(18).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(19).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 19'
+                 },
+                 bed(25).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 25',
+                   parents: [bed(19).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(20).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 20'
+                 },
+                 bed(26).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 26',
+                   parents: [bed(20).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(21).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['passed'],
+                   label: 'Bed 21'
+                 },
+                 bed(27).barcode => {
+                   purpose: 'LTHR-384 Pool XP',
+                   states: ['pending'],
+                   label: 'Bed 27',
+                   parents: [bed(21).barcode],
+                   target_state: 'passed'
+                 }
+               })
+
+
   # Heron LTHR 96 Pipeline
 
   bravo_robot do
