@@ -1950,7 +1950,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                destination_bed: bed(2).barcode,
                class: 'Robots::QuadrantRobot')
 
-
   custom_robot('bravo-lthr-384-rt-to-lthr-384-pcr-1-and-2',
                name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
                beds: {
