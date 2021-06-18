@@ -102,16 +102,16 @@ RSpec.describe Robots::PoolingRobot, robots: true do
                             associated_on: 'creation_transfers',
                             transfer_factory: :creation_transfer))
 
-    bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
-    bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
+    bed_labware_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
+    bed_labware_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
   end
 
   describe '#verify' do
-    subject { robot.verify(bed_plates: scanned_layout) }
+    subject { robot.verify(bed_labwares: scanned_layout) }
 
     context 'a simple robot' do
       context 'with an unknown plate' do
-        before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }]) }
+        before { bed_labware_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }]) }
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }
@@ -161,7 +161,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       end
 
       before do
-        bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }])
+        bed_labware_lookup(source_plate2, [:purpose, { wells: :upstream_plates }])
       end
 
       context 'with a valid layout' do

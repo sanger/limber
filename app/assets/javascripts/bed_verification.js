@@ -21,12 +21,12 @@
     SCAPE.robot_beds = {};
     SCAPE.robot_barcode = '';
 
-    var newScanned = function(bed,plate){
+    var newScanned = function(bed,labware){
       var new_li;
       // $('#whole\\['+bed+'\\]').detach();
       new_li = $(document.createElement('li')).
         attr('data-bed',bed).
-        attr('data-labware',plate).
+        attr('data-labware',labware).
         attr('class','list-group-item list-group-item-action').
         on('click', removeEntry).
         append(
@@ -40,15 +40,15 @@
           ).append(closeIcon()).append(
             $(document.createElement('p')).
             attr('class','ui-li-desc').
-            text('Plate: '+plate)
+            text('Labware: '+labware)
           ).append(
             $(document.createElement('input')).
-            attr('type','hidden').attr('id','bed_plates['+bed+']').attr('name','bed_plates['+bed+'][]').
-            val(plate)
+            attr('type','hidden').attr('id','bed_labwares['+bed+']').attr('name','bed_labwares['+bed+'][]').
+            val(labware)
           )
         );
       SCAPE.robot_beds[bed] = SCAPE.robot_beds[bed] || []
-      SCAPE.robot_beds[bed].push(plate);
+      SCAPE.robot_beds[bed].push(labware);
       $('#start-robot').prop('disabled',true);
       $('#bed_list').append(new_li);
     }
@@ -130,7 +130,7 @@
           url: window.location.pathname+'/verify',
           type: 'POST',
           data: {
-            bed_plates: SCAPE.robot_beds,
+            bed_labwares: SCAPE.robot_beds,
             robot_barcode: SCAPE.robot_barcode
           },
           success: function(data,status) { checkResponse(data); }

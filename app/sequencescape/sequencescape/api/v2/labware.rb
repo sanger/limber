@@ -17,6 +17,9 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   has_many :state_changes
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
 
+  def self.find_all(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::Labware.includes(*includes).where(options).all
+  end
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
   # to the expected endpoint.

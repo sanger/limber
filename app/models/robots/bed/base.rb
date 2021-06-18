@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 
 module Robots::Bed
-  # A bed is a barcoded area of a robot that can receive a plate.
+  # A bed is a barcoded area of a robot that can receive a labware.
   class Base
     include Form
     # Our robot has beds/rack-spaces
     attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
     attr_writer :barcodes
 
-    delegate :api, :user_uuid, :plate_includes, :well_order, to: :robot
-    delegate :state, to: :plate, allow_nil: true, prefix: true
+    # TODO: do we need a tube_includes?
+    delegate :api, :user_uuid, :labware_includes, :well_order, to: :robot
+    delegate :state, to: :labware, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
     validates :barcodes, length: { maximum: 1,
                                    too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
-    validates :plate, presence: { message: lambda { |bed, _data|
-                                             "Could not find a plate with the barcode '#{bed.barcode}'."
+    validates :labware, presence: { message: lambda { |bed, _data|
+                                             "Could not find a labware with the barcode '#{bed.barcode}'."
                                            } }, if: :barcode
-    validate :correct_plate_purpose, if: :plate
-    validate :correct_plate_state, if: :plate
+    validate :correct_labware_purpose, if: :labware
+    validate :correct_labware_state, if: :labware
 
     def recognised?
       true
@@ -37,10 +38,10 @@ module Robots::Bed
     end
 
     def transition # rubocop:todo Metrics/AbcSize
-      return if target_state.nil? || plate.nil? # We have nothing to do
+      return if target_state.nil? || labware.nil? # We have nothing to do
 
-      StateChangers.lookup_for(plate.purpose.uuid)
-                   .new(api, plate.uuid, user_uuid)
+      StateChangers.lookup_for(labware.purpose.uuid)
+                   .new(api, labware.uuid, user_uuid)
                    .move_to!(target_state, "Robot #{robot.name} started")
     end
 
@@ -59,35 +60,39 @@ module Robots::Bed
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
-      @plates = if @barcodes.present?
-                  Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: plate_includes)
-                else
-                  []
-                end
+
+      @labwares = if @barcodes.present?
+                    Sequencescape::Api::V2::Labware.find_all({ barcode: @barcodes }, includes: labware_includes)
+                  else
+                    []
+                  end
     end
 
-    def plate
-      @plates&.first
+    def labware
+      @labwares&.first
     end
 
+    # TODO: rename? and check where referenced
     def parent_plates
-      return [] if plate.nil?
+      return [] if labware.nil?
 
-      parents = plate.parents
+      parents = labware.parents
       return parents if parents.present?
 
-      error("Labware #{plate.human_barcode} doesn't seem to have any parents, and yet at least one was expected.")
+      error("Labware #{labware.human_barcode} doesn't seem to have any parents, and yet at least one was expected.")
       []
     end
 
-    def child_plates
-      return [] if plate.nil?
+    def child_labwares
+      return [] if labware.nil?
 
-      @child_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.downstream_plates.empty?
-
-        plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
-      end
+      @child_labwares ||= if labware.plate? then
+                            get_child_labwares_of_plate
+                          elsif labware.tube? then
+                            get_child_labwares_of_tube
+                          else
+                            []
+                          end
     end
 
     def formatted_message
@@ -96,21 +101,34 @@ module Robots::Bed
 
     private
 
-    def correct_plate_purpose
-      return true if Array(purpose).include?(plate.purpose.name)
+    def correct_labware_purpose
+      return true if Array(purpose).include?(labware.purpose.name)
 
-      error("Plate #{plate.human_barcode} is a #{plate.purpose.name} not a #{purpose_labels} plate.")
+      error("Labware #{labware.human_barcode} is a #{labware.purpose.name} not a #{purpose_labels} labware.")
     end
 
-    def correct_plate_state
-      return true if states.include?(plate.state)
+    def correct_labware_state
+      return true if states.include?(labware.state)
 
-      error("Plate #{plate.human_barcode} is #{plate.state} when it should be #{states.join(', ')}.")
+      error("Labware #{labware.human_barcode} is #{labware.state} when it should be #{states.join(', ')}.")
     end
 
     def error(message)
       errors.add(:base, message)
       false
+    end
+
+    def get_child_labwares_of_plate
+      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
+        next if well.downstream_labwares.empty?
+
+        plates << well.downstream_labwares.first unless plates.include?(well.downstream_labwares.first)
+      end
+    end
+
+    def get_child_labwares_of_tube
+      # TODO
+      return []
     end
   end
 end

@@ -77,7 +77,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
 
     create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
 
-    bed_plate_lookup(example_plate)
+    bed_labware_lookup(example_plate)
     stub_v2_plate(example_plate)
 
     # Legacy asset search
@@ -129,7 +129,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   end
 
   scenario 'informs if the robot barcode is wrong' do
-    bed_plate_lookup(example_plate_without_metadata)
+    bed_labware_lookup(example_plate_without_metadata)
     stub_v2_plate(example_plate_without_metadata)
 
     fill_in_swipecard(swipecard)
@@ -151,12 +151,12 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     end
     click_link('Validate Layout')
     within '#validation_report' do
-      expect(page).to have_content('There were problems: Your plate is not on the right robot')
+      expect(page).to have_content('There were problems: Your labware is not on the right robot')
     end
   end
 
   scenario 'verifies robot barcode' do
-    bed_plate_lookup(example_plate_with_metadata)
+    bed_labware_lookup(example_plate_with_metadata)
     stub_v2_plate(example_plate_with_metadata)
 
     fill_in_swipecard(swipecard)

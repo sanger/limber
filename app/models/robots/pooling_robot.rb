@@ -4,7 +4,7 @@ module Robots
   class PoolingRobot < Robot # rubocop:todo Style/Documentation
     attr_writer :destination_bed
 
-    def plate_includes
+    def labware_includes
       [:purpose, { wells: :upstream_plates }]
     end
 

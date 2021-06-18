@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Robots
-  # A splitting robot takes one parent plate, and transfers it to multiple children
-  # Child plates are numbered based on the order in which they first appear when
+  # A splitting robot takes one parent labware, and transfers it to multiple children
+  # Child labwares are numbered based on the order in which they first appear when
   # transfers are sorted in column order.
   class SplittingRobot < Robots::Robot
     attr_writer :relationships
@@ -11,8 +11,8 @@ module Robots
       :quadrant_index
     end
 
-    def plate_includes
-      [:purpose, { wells: :downstream_plates }]
+    def labware_includes
+      [:purpose, { wells: :downstream_labwares }]
     end
 
     #
@@ -28,14 +28,14 @@ module Robots
         parent_bed = relationship.dig('options', 'parent')
         child_beds = relationship.dig('options', 'children')
 
-        validations[parent_bed] = beds[parent_bed].child_plates.present?
+        validations[parent_bed] = beds[parent_bed].child_labwares.present?
         error(beds[parent_bed], 'should not be empty.') if beds[parent_bed].empty?
-        error(beds[parent_bed], 'should have children.') if beds[parent_bed].child_plates.empty?
+        error(beds[parent_bed], 'should have children.') if beds[parent_bed].child_labwares.empty?
 
-        expected_children = beds[parent_bed].child_plates
+        expected_children = beds[parent_bed].child_labwares
         expected_children.each_with_index do |expected_child, index|
           child_bed = child_beds[index]
-          validations[child_bed] = check_plate_identity([expected_child], child_bed)
+          validations[child_bed] = check_labware_identity([expected_child], child_bed)
         end
       end
     end

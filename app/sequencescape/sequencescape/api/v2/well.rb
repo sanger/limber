@@ -8,7 +8,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
   has_many :downstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
   has_many :downstream_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_many :downstream_wells, class_name: 'Sequencescape::Api::V2::Well'
-  has_many :downstream_plates, class_name: 'Sequencescape::Api::V2::Plate'
+  has_many :downstream_labwares, class_name: 'Sequencescape::Api::V2::Labware'
 
   has_many :upstream_assets, class_name: 'Sequencescape::Api::V2::Asset'
   has_many :upstream_tubes, class_name: 'Sequencescape::Api::V2::Tube'

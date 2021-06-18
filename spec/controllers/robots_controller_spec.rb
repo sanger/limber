@@ -46,7 +46,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
       create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
       stub_v2_plate(plate)
-      bed_plate_lookup(plate)
+      bed_labware_lookup(plate)
       # Legacy asset search
       stub_asset_search(
         plate.barcode.machine,
@@ -57,7 +57,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     it 'adds robot barcode to plate metadata' do
       post :start,
            params: {
-             bed_plates: {
+             bed_labwares: {
                'bed1_barcode' => ['source_plate_barcode'],
                'bed2_barcode' => [plate.human_barcode]
              },
@@ -90,16 +90,16 @@ RSpec.describe RobotsController, type: :controller, robots: true do
 
     it 'verifies robot and beds' do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      bed_plate_lookup(source_plate)
-      bed_plate_lookup(target_plate)
+      bed_labware_lookup(source_plate)
+      bed_labware_lookup(target_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with(
-        'bed_plates' => { 'bed1_barcode' => [source_plate.human_barcode],
+        'bed_labwares' => { 'bed1_barcode' => [source_plate.human_barcode],
                           'bed2_barcode' => [target_plate.human_barcode] },
         'robot_barcode' => 'abc'
       )
       post :verify,
            params: {
-             bed_plates: {
+             bed_labwares: {
                'bed1_barcode' => [source_plate.human_barcode],
                'bed2_barcode' => [target_plate.human_barcode]
              },

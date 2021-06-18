@@ -26,15 +26,18 @@ class RobotsController < ApplicationController
     @robot.perform_transfer(stripped_beds)
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
-        next unless bed.transitions? && bed.plate
+        next unless bed.transitions? && bed.labware
 
-        plate_barcode = bed.plate.barcode.machine
+        labware_barcode = bed.labware.barcode.machine
         begin
-          PlateMetadata.new(
-            api: api,
-            user: current_user_uuid,
-            barcode: plate_barcode
-          ).update!(created_with_robot: params[:robot_barcode])
+          # TODO: Add labware metadata to handle tubes as well?
+          if bed.labware.plate? then
+            PlateMetadata.new(
+              api: api,
+              user: current_user_uuid,
+              barcode: labware_barcode
+            ).update!(created_with_robot: params[:robot_barcode])
+          end
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
             format.html { redirect_to robot_path(id: @robot.id), notice: "Plate #{plate_barcode} not found." }
@@ -63,7 +66,7 @@ class RobotsController < ApplicationController
   private
 
   def robot_params
-    params.permit(:robot_barcode, bed_plates: {})
+    params.permit(:robot_barcode, bed_labwares: {})
   end
 
   def find_robot
@@ -76,7 +79,7 @@ class RobotsController < ApplicationController
 
   def stripped_beds
     {}.tap do |stripped|
-      (params[:bed_plates] || {}).each do |k, v|
+      (params[:bed_labwares] || {}).each do |k, v|
         stripped[k.strip] = stripped_plates(v)
       end
     end
@@ -90,7 +93,7 @@ class RobotsController < ApplicationController
   end
 
   def validate_beds
-    return true if params['bed_plates'].present?
+    return true if params['bed_labwares'].present?
 
     redirect_to robot_path(id: @robot.id), notice: "We didn't receive any bed information"
     false
