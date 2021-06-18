@@ -173,7 +173,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
           stock_barcode_q3: 'STOCK-BARCODE-0',
           stock_barcode: 'STOCK-BARCODE-0'
         }
-        stub_get_plate_metadata(stock_plate_v2.barcode.machine,
+        stub_get_labware_metadata(stock_plate_v2.barcode.machine,
                                 stock_plate_v1,
                                 metadata: merger_plate_metadata)
         stub_asset_search(child_plate_a.barcode.machine, child_plate_a_v1)

@@ -40,10 +40,10 @@ module LabwareCreators
 
     def create_labware!
       super do |child|
-        PlateMetadata.new(
+        LabwareMetadata.new(
           api: api,
           user: user_uuid,
-          plate: child
+          labware: child
         ).update!(stock_barcodes_by_quadrant)
         yield(child) if block_given?
       end

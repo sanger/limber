@@ -99,7 +99,10 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
   def stock_plate_barcode_from_metadata(plate_machine_barcode)
     begin
-      metadata = PlateMetadata.new(api: api, barcode: plate_machine_barcode).metadata
+      metadata = LabwareMetadata.new(
+                   api: api,
+                   barcode: plate_machine_barcode
+                 ).metadata
     rescue Sequencescape::Api::ResourceNotFound
       metadata = nil
     end

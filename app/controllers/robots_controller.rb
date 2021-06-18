@@ -30,14 +30,11 @@ class RobotsController < ApplicationController
 
         labware_barcode = bed.labware.barcode.machine
         begin
-          # TODO: Add labware metadata to handle tubes as well?
-          if bed.labware.plate? then
-            PlateMetadata.new(
-              api: api,
-              user: current_user_uuid,
-              barcode: labware_barcode
-            ).update!(created_with_robot: params[:robot_barcode])
-          end
+          LabwareMetadata.new(
+            api: api,
+            user: current_user_uuid,
+            barcode: labware_barcode
+          ).update!(created_with_robot: params[:robot_barcode])
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
             format.html { redirect_to robot_path(id: @robot.id), notice: "Plate #{plate_barcode} not found." }

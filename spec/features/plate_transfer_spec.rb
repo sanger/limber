@@ -101,7 +101,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
     end
     scan_in 'Scan robot', with: robot_barcode
@@ -113,9 +113,9 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
-      expect(page).to have_content("Plate: #{plate_barcode_2}")
+      expect(page).to have_content("Labware: #{plate_barcode_2}")
       expect(page).to have_content('Bed: 580000014851')
     end
     click_link('Validate Layout')
@@ -146,7 +146,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end
     click_link('Validate Layout')
@@ -173,7 +173,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
       expect(page).not_to have_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Plate: #{plate_barcode_1}")
+      expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end
 

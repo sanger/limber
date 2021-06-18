@@ -49,10 +49,13 @@ module LabwareCreators
 
     def add_stock_barcode_metadata(plates) # rubocop:todo Metrics/AbcSize
       merger_plate = parent.ancestors.where(purpose_name: SearchHelper.merger_plate_names).first
-      metadata = PlateMetadata.new(api: api, barcode: merger_plate.barcode.machine).metadata
+      metadata = LabwareMetadata.new(
+        api: api,
+        barcode: merger_plate.barcode.machine
+      ).metadata
       plates.each_with_index do |plate, index|
         stock_barcode = stock_barcode_from_quadrant(index, metadata) || "* #{plate.barcode.human}"
-        PlateMetadata.new(
+        LabwareMetadata.new(
           api: api,
           user: user_uuid,
           barcode: plate.barcode.machine

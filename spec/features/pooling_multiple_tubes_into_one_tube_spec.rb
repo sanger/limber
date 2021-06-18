@@ -153,7 +153,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
 
     allow(SearchHelper).to receive(:stock_plate_names).and_return([stock_plate_purpose_name])
-    stub_get_plate_metadata(parent_1.barcode.machine, parent_1_v1)
+    stub_get_labware_metadata(parent_1.barcode.machine, parent_1_v1)
   end
 
   context 'unique tags' do

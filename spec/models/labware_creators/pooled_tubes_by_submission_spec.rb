@@ -136,7 +136,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       end
 
       setup do
-        stub_get_plate_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' })
+        stub_get_labware_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' })
         stub_api_post('specific_tube_creations',
                       payload: {
                         specific_tube_creation: creation_payload

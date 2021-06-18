@@ -91,9 +91,15 @@ module LabwareCreators
 
     def parent_metadata
       if parent.is_a? Limber::Plate
-        PlateMetadata.new(api: api, plate: parent).metadata
+        LabwareMetadata.new(
+          api: api,
+          labware: parent
+        ).metadata
       else
-        PlateMetadata.new(api: api, barcode: parent.barcode.machine).metadata
+        LabwareMetadata.new(
+          api: api,
+          barcode: parent.barcode.machine
+        ).metadata
       end || {}
     end
 

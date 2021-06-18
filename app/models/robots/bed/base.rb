@@ -8,7 +8,6 @@ module Robots::Bed
     attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
     attr_writer :barcodes
 
-    # TODO: do we need a tube_includes?
     delegate :api, :user_uuid, :labware_includes, :well_order, to: :robot
     delegate :state, to: :labware, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
@@ -72,8 +71,7 @@ module Robots::Bed
       @labwares&.first
     end
 
-    # TODO: rename? and check where referenced
-    def parent_plates
+    def parent_labwares
       return [] if labware.nil?
 
       parents = labware.parents

@@ -131,7 +131,7 @@ module Robots
         next if bed.parents.blank?
 
         bed.parents.all? do |parent_bed_barcode|
-          yield(bed.parent_plates, parent_bed_barcode)
+          yield(bed.parent_labwares, parent_bed_barcode)
         end
       end
     end
