@@ -28,7 +28,7 @@ RSpec.describe Robots::Robot, robots: true do
            parents: target_plate_parents
   end
   let(:target_tube_state) { 'pending' }
-  let(:target_tube)                do
+  let(:target_tube) do
     create :v2_tube,
            purpose_name: target_tube_purpose_name,
            barcode_number: 3,

@@ -15,8 +15,8 @@ module Robots::Bed
     validates :barcodes, length: { maximum: 1,
                                    too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
     validates :labware, presence: { message: lambda { |bed, _data|
-                                             "Could not find a labware with the barcode '#{bed.barcode}'."
-                                           } }, if: :barcode
+                                               "Could not find a labware with the barcode '#{bed.barcode}'."
+                                             } }, if: :barcode
     validate :correct_labware_purpose, if: :labware
     validate :correct_labware_state, if: :labware
 
@@ -84,11 +84,10 @@ module Robots::Bed
     def child_labwares
       return [] if labware.nil?
 
-      @child_labwares ||= if labware.plate? then
-                            get_child_labwares_of_plate
-                          elsif labware.tube? then
-                            get_child_labwares_of_tube
+      @child_labwares ||= if labware.plate?
+                            child_labwares_of_plate
                           else
+                            # child_labwares currently only used in splitting_robot, not for tubes
                             []
                           end
     end
@@ -116,17 +115,12 @@ module Robots::Bed
       false
     end
 
-    def get_child_labwares_of_plate
+    def child_labwares_of_plate
       labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
         next if well.downstream_labwares.empty?
 
         plates << well.downstream_labwares.first unless plates.include?(well.downstream_labwares.first)
       end
-    end
-
-    def get_child_labwares_of_tube
-      # TODO
-      return []
     end
   end
 end

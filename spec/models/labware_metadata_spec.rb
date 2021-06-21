@@ -39,7 +39,7 @@ RSpec.describe LabwareMetadata do
         stub = stub_create_labware_metadata(123, plate, plate_uuid, user_uuid, metadata)
 
         LabwareMetadata.new(api: api, barcode: 123, user: user_uuid)
-                     .update!(created_with_robot: 'robot_barcode')
+                       .update!(created_with_robot: 'robot_barcode')
         expect(stub).to have_been_requested
       end
 
@@ -49,7 +49,7 @@ RSpec.describe LabwareMetadata do
         stub = stub_update_labware_metadata(123, plate_with_metadata, user, metadata)
 
         LabwareMetadata.new(api: api, barcode: 123, user: user_uuid)
-                     .update!(created_with_robot: 'robot_barcode')
+                       .update!(created_with_robot: 'robot_barcode')
         expect(stub).to have_been_requested
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe LabwareMetadata do
         stub = stub_create_labware_metadata(123, tube, tube_uuid, user_uuid, metadata)
 
         LabwareMetadata.new(api: api, barcode: 123, user: user_uuid)
-                     .update!(created_with_robot: 'robot_barcode')
+                       .update!(created_with_robot: 'robot_barcode')
         expect(stub).to have_been_requested
       end
 
@@ -78,7 +78,7 @@ RSpec.describe LabwareMetadata do
         stub = stub_update_labware_metadata(123, plate_with_metadata, user, metadata)
 
         LabwareMetadata.new(api: api, barcode: 123, user: user_uuid)
-                     .update!(created_with_robot: 'robot_barcode')
+                       .update!(created_with_robot: 'robot_barcode')
         expect(stub).to have_been_requested
       end
     end

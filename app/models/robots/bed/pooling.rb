@@ -23,32 +23,25 @@ module Robots::Bed
                   end
     end
 
-
     private
 
     def parent_labwares
       return [] if labware.nil?
 
-      @parent_labwares ||= if labware.plate? then
-                             get_parent_labwares_of_plate
-                           elsif
-                             get_parent_labwares_of_tube
+      @parent_labwares ||= if labware.plate?
+                             parent_labwares_of_plate
                            else
+                             # currently not used for tubes
                              []
                            end
     end
 
-    def get_parent_labwares_of_plate
+    def parent_labwares_of_plate
       labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
         next if well.upstream_plates.empty? || plates.include?(well.upstream_plates.first)
 
         plates << well.upstream_plates.first
       end
-    end
-
-    def get_parent_labwares_of_tube
-      # TODO: tube logic for getting parents
-      return []
     end
 
     def range

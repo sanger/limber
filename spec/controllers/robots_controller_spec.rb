@@ -94,7 +94,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       bed_labware_lookup(target_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with(
         'bed_labwares' => { 'bed1_barcode' => [source_plate.human_barcode],
-                          'bed2_barcode' => [target_plate.human_barcode] },
+                            'bed2_barcode' => [target_plate.human_barcode] },
         'robot_barcode' => 'abc'
       )
       post :verify,
