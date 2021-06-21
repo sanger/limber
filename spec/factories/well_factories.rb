@@ -73,7 +73,7 @@ FactoryBot.define do
       # transfer requests
       downstream_tubes { [] }
       downstream_assets { [] }
-      downstream_labwares { [] }
+      downstream_plates { [] }
       upstream_tubes { [] }
       upstream_assets { [] }
       upstream_plates { [] }
@@ -98,7 +98,7 @@ FactoryBot.define do
       well._cached_relationship(:requests_as_target) { evaluator.requests_as_target || [] }
       well._cached_relationship(:downstream_tubes) { evaluator.downstream_tubes || [] }
       well._cached_relationship(:downstream_assets) { evaluator.downstream_assets || [] }
-      well._cached_relationship(:downstream_labwares) { evaluator.downstream_labwares || [] }
+      well._cached_relationship(:downstream_plates) { evaluator.downstream_plates || [] }
       well._cached_relationship(:upstream_tubes) { evaluator.upstream_tubes || [] }
       well._cached_relationship(:upstream_assets) { evaluator.upstream_assets || [] }
       well._cached_relationship(:upstream_plates) { evaluator.upstream_plates || [] }

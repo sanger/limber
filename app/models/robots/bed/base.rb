@@ -117,9 +117,9 @@ module Robots::Bed
 
     def child_labwares_of_plate
       labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.downstream_labwares.empty?
+        next if well.downstream_plates.empty?
 
-        plates << well.downstream_labwares.first unless plates.include?(well.downstream_labwares.first)
+        plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
       end
     end
   end

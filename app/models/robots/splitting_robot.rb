@@ -12,7 +12,7 @@ module Robots
     end
 
     def labware_includes
-      [:purpose, { wells: :downstream_labwares }]
+      [:purpose, { wells: :downstream_plates }]
     end
 
     #
@@ -40,5 +40,9 @@ module Robots
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    def bed_class
+      Robots::Bed::Splitting
+    end
   end
 end
