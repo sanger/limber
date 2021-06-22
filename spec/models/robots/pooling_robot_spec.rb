@@ -107,7 +107,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   end
 
   describe '#verify' do
-    subject { robot.verify(bed_plates: scanned_layout) }
+    subject { robot.verify(bed_labwares: scanned_layout) }
 
     context 'a simple robot' do
       context 'with an unknown plate' do

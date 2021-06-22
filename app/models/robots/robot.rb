@@ -14,10 +14,6 @@ module Robots
     alias verify_robot? verify_robot
     alias require_robot? require_robot
 
-    def plate_includes
-      %i[purpose parents]
-    end
-
     def well_order
       :coordinate
     end
@@ -40,7 +36,7 @@ module Robots
     end
 
     def validation_report
-      verified = valid_plates.merge(valid_relationships) { |_k, v1, v2| v1 && v2 }
+      verified = valid_labwares.merge(valid_relationships) { |_k, v1, v2| v1 && v2 }
       verified['robot'] = valid_robot
       Report.new(verified, verified.values.all?, formatted_message)
     end
@@ -53,9 +49,9 @@ module Robots
       @beds = beds
     end
 
-    def bed_plates=(bed_plates)
-      bed_plates.each do |bed_barcode, plate_barcodes|
-        beds[bed_barcode.strip].load(plate_barcodes)
+    def bed_labwares=(bed_labwares)
+      bed_labwares.each do |bed_barcode, labware_barcodes|
+        beds[bed_barcode.strip].load(labware_barcodes)
       end
     end
 
@@ -78,10 +74,10 @@ module Robots
     def valid_robot
       return false unless robot_present_if_required
 
-      return true unless verify_robot? && beds.values.first.plate.present?
+      return true unless verify_robot? && beds.values.first.labware.present?
 
       if missing_custom_metadatum_collection || original_robot != robot_barcode
-        error_messages << 'Your plate is not on the right robot'
+        error_messages << 'Your labware is not on the right robot'
         return false
       end
       true
@@ -96,16 +92,16 @@ module Robots
     end
 
     def missing_custom_metadatum_collection
-      beds.values.first.plate.custom_metadatum_collection.nil?
+      beds.values.first.labware.custom_metadatum_collection.nil?
     end
 
     def original_robot
       return nil if missing_custom_metadatum_collection
 
-      beds.values.first.plate.custom_metadatum_collection.metadata['created_with_robot']
+      beds.values.first.labware.custom_metadatum_collection.metadata['created_with_robot']
     end
 
-    def valid_plates
+    def valid_labwares
       beds.transform_values do |bed|
         bed.valid? || bed_error(bed)
       end
@@ -118,7 +114,7 @@ module Robots
     # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
       parents_and_position do |parents, position|
-        check_plate_identity(parents, position)
+        check_labware_identity(parents, position)
       end.compact
     end
 
@@ -131,31 +127,31 @@ module Robots
         next if bed.parents.blank?
 
         bed.parents.all? do |parent_bed_barcode|
-          yield(bed.parent_plates, parent_bed_barcode)
+          yield(bed.parent_labware, parent_bed_barcode)
         end
       end
     end
 
-    # Check whether the plate scanned onto the indicated bed
-    # matches the expected plates. Records any errors.
+    # Check whether the labware scanned onto the indicated bed
+    # matches the expected labwares. Records any errors.
     #
-    # @param expected_plates [Array] An array of expected plates
-    # @param position [String] The barcode of the bed expected to contain the plates
+    # @param expected_labwares [Array] An array of expected labwares
+    # @param position [String] The barcode of the bed expected to contain the labwares
     # @return [Boolean] True if valid, false otherwise
-    def check_plate_identity(expected_plates, position) # rubocop:todo Metrics/AbcSize
-      expected_uuids = expected_plates.map(&:uuid)
-      # We haven't scanned a plate, and no scanned plates are expected
-      return true if expected_uuids.empty? && beds[position].plate.nil?
-      # We've scanned a plate, and its in the list of expected plates
-      return true if expected_uuids.include?(beds[position].plate.try(:uuid))
+    def check_labware_identity(expected_labwares, position) # rubocop:todo Metrics/AbcSize
+      expected_uuids = expected_labwares.map(&:uuid)
+      # We haven't scanned a labware, and no scanned labwares are expected
+      return true if expected_uuids.empty? && beds[position].labware.nil?
+      # We've scanned a labware, and its in the list of expected labwares
+      return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
       # At this point something is wrong
-      message = if expected_plates.present?
-                  # We've scanned an unexpected plate
-                  "Should contain #{expected_plates.map(&:human_barcode).join(',')}."
+      message = if expected_labwares.present?
+                  # We've scanned an unexpected labware
+                  "Should contain #{expected_labwares.map(&:human_barcode).join(',')}."
                 else
-                  # We've scanned a plate, but weren't expecting one.
-                  'Unexpected plate scanned, or parent plate has not been scanned.'
+                  # We've scanned a labware, but weren't expecting one.
+                  'Unexpected labware scanned, or parent labware has not been scanned.'
                 end
       error(beds[position], message)
     end

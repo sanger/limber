@@ -38,7 +38,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
 
   describe '#verify' do
-    subject { robot.verify(bed_plates: scanned_layout) }
+    subject { robot.verify(bed_labwares: scanned_layout) }
 
     context 'a simple robot' do
       let(:robot_id) { 'robot_id' }

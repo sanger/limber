@@ -7,15 +7,32 @@ module Robots::Bed
 
     def each_parent
       range.each do |i|
-        plate_barcode = parent_plates[i]&.barcode || SBCF::EmptyBarcode.new
-        yield(parents[i], plate_barcode)
+        labware_barcode = parent_labware[i]&.barcode || SBCF::EmptyBarcode.new
+        yield(parents[i], labware_barcode)
       end
+    end
+
+    def find_all_labware
+      Sequencescape::Api::V2::Plate.find_all(
+        { barcode: @barcodes },
+        includes: [:purpose, { wells: :upstream_plates }]
+      )
+    end
+
+    def parent_labware
+      return [] if labware.nil?
+
+      @parent_labware ||= if labware.plate?
+                            parent_labware_of_plate
+                          else
+                            []
+                          end
     end
 
     private
 
-    def parent_plates
-      @parent_plates ||= plate.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
+    def parent_labware_of_plate
+      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
         next if well.upstream_plates.empty? || plates.include?(well.upstream_plates.first)
 
         plates << well.upstream_plates.first
@@ -23,7 +40,7 @@ module Robots::Bed
     end
 
     def range
-      round = states.index(plate.state)
+      round = states.index(labware.state)
       size = parents.count / states.count
       (size * round...size * (round + 1))
     end
