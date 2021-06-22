@@ -11,10 +11,6 @@ module Robots
       :quadrant_index
     end
 
-    def labware_includes
-      [:purpose, { wells: :downstream_plates }]
-    end
-
     #
     # Returns a hash of bed barcodes and their valid state
     # Also adds any errors describing invalid bed states
@@ -28,11 +24,11 @@ module Robots
         parent_bed = relationship.dig('options', 'parent')
         child_beds = relationship.dig('options', 'children')
 
-        validations[parent_bed] = beds[parent_bed].child_labwares.present?
+        validations[parent_bed] = beds[parent_bed].child_labware.present?
         error(beds[parent_bed], 'should not be empty.') if beds[parent_bed].empty?
-        error(beds[parent_bed], 'should have children.') if beds[parent_bed].child_labwares.empty?
+        error(beds[parent_bed], 'should have children.') if beds[parent_bed].child_labware.empty?
 
-        expected_children = beds[parent_bed].child_labwares
+        expected_children = beds[parent_bed].child_labware
         expected_children.each_with_index do |expected_child, index|
           child_bed = child_beds[index]
           validations[child_bed] = check_labware_identity([expected_child], child_bed)

@@ -8,7 +8,7 @@ module Robots::Bed
     attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
     attr_writer :barcodes
 
-    delegate :api, :user_uuid, :labware_includes, :well_order, to: :robot
+    delegate :api, :user_uuid, :well_order, to: :robot
     delegate :state, to: :labware, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
@@ -56,22 +56,30 @@ module Robots::Bed
       barcodes.first
     end
 
+    # overriden in sub-classes of bed to customise what class is used and what is included
+    def find_all_labware
+      Sequencescape::Api::V2::Labware.find_all(
+        { barcode: @barcodes },
+        includes: %i[purpose parents]
+      )
+    end
+
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
 
-      @labwares = if @barcodes.present?
-                    Sequencescape::Api::V2::Labware.find_all({ barcode: @barcodes }, includes: labware_includes)
-                  else
-                    []
-                  end
+      @labware = if @barcodes.present?
+                   find_all_labware
+                 else
+                   []
+                 end
     end
 
     def labware
-      @labwares&.first
+      @labware&.first
     end
 
-    def parent_labwares
+    def parent_labware
       return [] if labware.nil?
 
       parents = labware.parents
@@ -79,17 +87,6 @@ module Robots::Bed
 
       error("Labware #{labware.human_barcode} doesn't seem to have any parents, and yet at least one was expected.")
       []
-    end
-
-    def child_labwares
-      return [] if labware.nil?
-
-      @child_labwares ||= if labware.plate?
-                            child_labwares_of_plate
-                          else
-                            # child_labwares currently only used in splitting_robot, not for tubes
-                            []
-                          end
     end
 
     def formatted_message
@@ -113,14 +110,6 @@ module Robots::Bed
     def error(message)
       errors.add(:base, message)
       false
-    end
-
-    def child_labwares_of_plate
-      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.downstream_plates.empty?
-
-        plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
-      end
     end
   end
 end

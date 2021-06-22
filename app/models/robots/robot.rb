@@ -14,10 +14,6 @@ module Robots
     alias verify_robot? verify_robot
     alias require_robot? require_robot
 
-    def labware_includes
-      %i[purpose parents]
-    end
-
     def well_order
       :coordinate
     end
@@ -131,7 +127,7 @@ module Robots
         next if bed.parents.blank?
 
         bed.parents.all? do |parent_bed_barcode|
-          yield(bed.parent_labwares, parent_bed_barcode)
+          yield(bed.parent_labware, parent_bed_barcode)
         end
       end
     end
