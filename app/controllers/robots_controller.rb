@@ -77,16 +77,16 @@ class RobotsController < ApplicationController
   def stripped_beds
     {}.tap do |stripped|
       (params[:bed_labwares] || {}).each do |k, v|
-        stripped[k.strip] = stripped_plates(v)
+        stripped[k.strip] = stripped_labware_barcodes(v)
       end
     end
   end
 
-  def stripped_plates(plates)
-    return plates.strip if plates.respond_to?(:strip) # We have a string
-    return plates.map(&:strip) if plates.respond_to?(:map) # We have an array
+  def stripped_labware_barcodes(bed_labware)
+    return bed_labware.strip if bed_labware.respond_to?(:strip) # We have a string
+    return bed_labware.map(&:strip) if bed_labware.respond_to?(:map) # We have an array
 
-    plates # No idea, but lets be optimistic!
+    bed_labware # No idea, but lets be optimistic!
   end
 
   def validate_beds
