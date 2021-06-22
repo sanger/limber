@@ -1911,6 +1911,45 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                destination_bed: bed(5).barcode,
                class: 'Robots::QuadrantRobot')
 
+  # alternative hamilton robot added for surge testing
+  custom_robot('hamilton-lthr-cherrypick-to-lthr-384-rt-q',
+               name: 'Hamilton LTHR Cherrypick => LTHR-384 RT-Q',
+               beds: {
+                 bed(5).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(2).barcode,
+                   label: 'Bed 5'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(2).barcode,
+                   label: 'Bed 6'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(2).barcode,
+                   label: 'Bed 7'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'LTHR Cherrypick',
+                   states: ['passed'],
+                   child: bed(2).barcode,
+                   label: 'Bed 8'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'LTHR-384 RT-Q',
+                   states: ['pending'],
+                   label: 'Bed 2',
+                   parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+                   target_state: 'passed'
+                 }
+               },
+               destination_bed: bed(2).barcode,
+               class: 'Robots::QuadrantRobot')
+
   custom_robot('bravo-lthr-384-rt-to-lthr-384-pcr-1-and-2',
                name: 'bravo LTHR-384 RT => LTHR-384 PCR 1 and 2',
                beds: {
@@ -1982,6 +2021,29 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    states: ['pending'],
                    label: 'Bed 8',
                    parents: [bed(4).barcode, bed(6).barcode],
+                   target_state: 'passed'
+                 }
+               })
+
+  # alternative hamilton robot added for surge testing
+  custom_robot('hamilton-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-pool',
+               name: 'Hamilton LTHR-384 Lib PCR 1 and 2 => LTHR-384 Lib PCR pool',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 1',
+                   states: ['passed'],
+                   label: 'Bed 1'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR-384 Lib PCR 2',
+                   states: ['passed'],
+                   label: 'Bed 3'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'LTHR-384 Lib PCR pool',
+                   states: ['pending'],
+                   label: 'Bed 2',
+                   parents: [bed(1).barcode, bed(3).barcode],
                    target_state: 'passed'
                  }
                })
