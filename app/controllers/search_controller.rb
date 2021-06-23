@@ -62,7 +62,7 @@ class SearchController < ApplicationController
 
   def find_labware(barcode)
     Sequencescape::Api::V2::Labware.where(barcode: barcode).first.tap do |labware|
-      raise e, "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
+      raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
     end
   end
 
