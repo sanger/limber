@@ -13,9 +13,14 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   # Not great, as only true for tubes/plates not wells
   # But until we get polymorphic association support
   has_one :purpose
+  has_one :custom_metadatum_collection
 
   has_many :state_changes
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+
+  def self.find_all(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::Labware.includes(*includes).where(options).all
+  end
 
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
@@ -48,6 +53,10 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
 
   def barcode
     labware_barcode
+  end
+
+  def human_barcode
+    labware_barcode.human
   end
 
   # ===== stock plate / input plate barcode ======

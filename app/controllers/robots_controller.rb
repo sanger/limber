@@ -26,14 +26,14 @@ class RobotsController < ApplicationController
     @robot.perform_transfer(stripped_beds)
     if params[:robot_barcode].present?
       @robot.beds.each_value do |bed|
-        next unless bed.transitions? && bed.plate
+        next unless bed.transitions? && bed.labware
 
-        plate_barcode = bed.plate.barcode.machine
+        labware_barcode = bed.labware.barcode.machine
         begin
-          PlateMetadata.new(
+          LabwareMetadata.new(
             api: api,
             user: current_user_uuid,
-            barcode: plate_barcode
+            barcode: labware_barcode
           ).update!(created_with_robot: params[:robot_barcode])
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
@@ -63,7 +63,7 @@ class RobotsController < ApplicationController
   private
 
   def robot_params
-    params.permit(:robot_barcode, bed_plates: {})
+    params.permit(:robot_barcode, bed_labwares: {})
   end
 
   def find_robot
@@ -76,21 +76,21 @@ class RobotsController < ApplicationController
 
   def stripped_beds
     {}.tap do |stripped|
-      (params[:bed_plates] || {}).each do |k, v|
-        stripped[k.strip] = stripped_plates(v)
+      (params[:bed_labwares] || {}).each do |k, v|
+        stripped[k.strip] = stripped_labware_barcodes(v)
       end
     end
   end
 
-  def stripped_plates(plates)
-    return plates.strip if plates.respond_to?(:strip) # We have a string
-    return plates.map(&:strip) if plates.respond_to?(:map) # We have an array
+  def stripped_labware_barcodes(bed_labware)
+    return bed_labware.strip if bed_labware.respond_to?(:strip) # We have a string
+    return bed_labware.map(&:strip) if bed_labware.respond_to?(:map) # We have an array
 
-    plates # No idea, but lets be optimistic!
+    bed_labware # No idea, but lets be optimistic!
   end
 
   def validate_beds
-    return true if params['bed_plates'].present?
+    return true if params['bed_labwares'].present?
 
     redirect_to robot_path(id: @robot.id), notice: "We didn't receive any bed information"
     false

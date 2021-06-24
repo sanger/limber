@@ -43,23 +43,23 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     end
   end
 
-  def stub_get_plate_metadata(barcode, plate_v1, metadata = nil)
+  def stub_get_labware_metadata(barcode, labware_v1, metadata = nil)
     params = {
       uuid: 'custom_metadatum_collection-uuid'
     }
     params.merge!(metadata) unless metadata.nil?
-    stub_asset_search(barcode, plate_v1)
+    stub_asset_search(barcode, labware_v1)
     stub_api_get('custom_metadatum_collection-uuid',
                  body: json(:v1_custom_metadatum_collection, params))
   end
 
-  def stub_create_plate_metadata(barcode, plate_v1, plate_uuid, user_uuid, metadata) # rubocop:todo Metrics/MethodLength
-    stub_asset_search(barcode, plate_v1)
+  def stub_create_labware_metadata(barcode, labware_v1, labware_uuid, user_uuid, metadata) # rubocop:todo Metrics/MethodLength
+    stub_asset_search(barcode, labware_v1)
     stub_api_post('custom_metadatum_collections',
                   payload: {
                     custom_metadatum_collection: {
                       user: user_uuid,
-                      asset: plate_uuid,
+                      asset: labware_uuid,
                       metadata: metadata
                     }
                   },
@@ -68,10 +68,10 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
                              metadata: metadata))
   end
 
-  def stub_update_plate_metadata(barcode, plate_v1, user, metadata)
-    stub_get_plate_metadata(barcode, plate_v1, metadata)
+  def stub_update_labware_metadata(barcode, labware_v1, user, metadata)
+    stub_get_labware_metadata(barcode, labware_v1, metadata)
     stub_api_get('user-uuid', body: user)
-    stub_api_get('asset-uuid', body: plate_v1)
+    stub_api_get('asset-uuid', body: labware_v1)
     stub_api_put('custom_metadatum_collection-uuid',
                  payload: {
                    custom_metadatum_collection: { metadata: metadata }
