@@ -55,6 +55,10 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
     labware_barcode
   end
 
+  def human_barcode
+    labware_barcode.human
+  end
+
   # ===== stock plate / input plate barcode ======
 
   def input_barcode
