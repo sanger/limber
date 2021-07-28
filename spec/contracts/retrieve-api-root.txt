@@ -1,5 +1,4 @@
 GET / HTTP/1.1
 Accept: application/json
-Cookie: WTSISignOn=
+Cookie: api_key=
 X-Sequencescape-Client-Id: testing
-
