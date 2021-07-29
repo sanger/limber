@@ -1,0 +1,156 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "LCMB",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "The current implementation of the LCMB pipeline mostly reuses the WGS and ISC pipelines.\n\nIt begins in SS with the SS making a \"Limber-Htp - LCMB\" submission on an LB Cherrypick plate,\nthis generates requests with the limber_lcmb request type.\n\nValid library types are:\n'Standard' (Probably don't want to keep this one in future)\n'Chromium single cell CNV'"
+    },
+    {
+      "file": "config/pipelines/high_throughput_wgs.yml",
+      "description": "So We start here, in the WGS Pipeline.\n\nFor more information about how these pipelines are configured see the [pipeline documentation](https://github.com/sanger/limber/blob/HEAD/./docs/configuring_new_pipelines.md)\nor the documentation [for pipeline yaml files](https://github.com/sanger/limber/blob/HEAD/./docs/pipelines_yaml_files.md)\n",
+      "pattern": "^[^\\S\\n]*WGS: # Top of the pipeline \\(Library Prep\\)"
+    },
+    {
+      "file": "config/pipelines/high_throughput_wgs.yml",
+      "description": "Here we associate the limber_lcmb pipeline with the this set of plate transitions,\nYou'll notice this is share with WGS and LCMB",
+      "pattern": "^[^\\S\\n]*- limber_lcmb"
+    },
+    {
+      "file": "config/pipelines/high_throughput_wgs.yml",
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 1
+        },
+        "end": {
+          "line": 15,
+          "character": 30
+        }
+      },
+      "description": "And here are the steps, that take us up to the LB Lib PCR-XP.\nMost of these are simple stamps, but:\n\n- LB Lib PCR is the tag plate\n- LB Lib PCR-XP has the qc performed on it\n\nThen the customer makes a decision based on the QC... either..."
+    },
+    {
+      "file": "config/purposes/isc_bottom.yml",
+      "selection": {
+        "start": {
+          "line": 41,
+          "character": 1
+        },
+        "end": {
+          "line": 55,
+          "character": 1
+        }
+      },
+      "description": "We go into these tubes, misleadingly grouped in the ISC pipeline; these should probably be in their own yaml file.\n\nThis allows the lab team to upload their robot driver CSV to configure custom pooling. The second tube is\njust a basic transfer during which the lab team normalize the tube.\n\nThe SSR doesn't need to be involved in this route, and we don't actually generate a request for this bit.\nThis is the only LCMB specific behaviour.\n\nFor information about purposes/*.yml files, [check here](https://github.com/sanger/limber/blob/HEAD/./purposes_yaml_files.md)"
+    },
+    {
+      "file": "config/pipelines/high_throughput_custom_pool.yml",
+      "selection": {
+        "start": {
+          "line": 4,
+          "character": 23
+        },
+        "end": {
+          "line": 4,
+          "character": 34
+        }
+      },
+      "description": "And the pipeline flow is configure here.\n\nYou'll notice this triggers when the limber_lcmb workflow\nhas been passed.\n\nWe don't generate a new request to handle these."
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "selection": {
+        "start": {
+          "line": 2,
+          "character": 1
+        },
+        "end": {
+          "line": 2,
+          "character": 5
+        }
+      },
+      "description": "The other option is for the customer to enter the bottom half of the ISC pipeline.\nIt is possible for the same sample to enter both the WGS *and* ISC pipelines.\n\nThis decision is triggered by an SSR making a \"Limber-Htp - ReISC - ...\" submission,\nwhere ... depends on the sequencing wanted. This is currently identical to standard\nReISC submissions (Re in this case is short for repeat, and is usually used in cases\nwhere the customer wants another round of ISC, has changed their mind, or wants ISC\nperformed on libraries previouisly made for WGS)"
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 2
+        },
+        "end": {
+          "line": 6,
+          "character": 61
+        }
+      },
+      "description": "The ReISC submisison has the limber_reisc request type, and potentially\nlibrary types of Agilent Pulldown or Twist Pulldown"
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "selection": {
+        "start": {
+          "line": 14,
+          "character": 3
+        },
+        "end": {
+          "line": 18,
+          "character": 30
+        }
+      },
+      "description": ""
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "selection": {
+        "start": {
+          "line": 19,
+          "character": 4
+        },
+        "end": {
+          "line": 24,
+          "character": 39
+        }
+      },
+      "description": "And these are the steps it'll actually go through:\n\nWe begin with the \"LB Lib PCR-XP\" plate that we finished on,\nand then pool in the \"LB Lib PrePool\" plate.\n\nThis pooling is determined during submission, and groups\nsamples together prior to pulldown.\n\nSamples can go through two rounds of pooling in this pipeline,\nso may be pooled at 8 plex here, then 96 plex at the end of the pipeline."
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "description": "The LB Hyb plate is also a bit special, and:\n\n1) Lets the user know what bait library to use\n2) Records the use of the bait library against the aliquot",
+      "pattern": "^[^\\S\\n]*LB Lib PrePool: LB Hyb"
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "description": "Finally we pool the samples for the final time, according to the submission.\nIn practice, last ime I checked, this is actually usually done into a tube rack, \nrather than a plate.",
+      "line": 24
+    },
+    {
+      "file": "config/pipelines/high_throughput_isc.yml",
+      "selection": {
+        "start": {
+          "line": 25,
+          "character": 1
+        },
+        "end": {
+          "line": 33,
+          "character": 1
+        }
+      },
+      "description": "Then these pools are transfered into tubes and normalized, very similar to the steps at the end of\nWGS"
+    },
+    {
+      "file": "docs/configuring_new_pipelines.md",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 1
+        },
+        "end": {
+          "line": 26,
+          "character": 1
+        }
+      },
+      "description": "Finally, this is the best place to start when configuring new pipelines.\n\nYou can get a nice hyperlinked version by running:\n\n```\nbundle exec yard server\n```\n\nAnd visiting: http://0.0.0.0:8808/docs/file/docs/configuring_new_pipelines.md\n"
+    }
+  ]
+}
