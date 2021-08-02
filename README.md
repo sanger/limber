@@ -63,7 +63,7 @@ Yard will also try and document the installed gems: [http://localhost:8808/docs]
 Ruby unit and feature tests:
 
 ```bash
-    bundle exec rspec
+bundle exec rspec
 ```
 
 ### Karma
@@ -71,14 +71,14 @@ Ruby unit and feature tests:
 JavaScript unit tests:
 
 ```bash
-    yarn karma start --single-run
+yarn karma start --single-run
 ```
 
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:
 
 ```bash
-    yarn
-    rake assets:precompile
+yarn
+rake assets:precompile
 ```
 
 This has the added benefit that it reduces the risk of timeouts when the tests are running, as assets will not get compiled on the fly.
