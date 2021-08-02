@@ -12,31 +12,34 @@ A flexible front end to plate bases pipelines in Sequencescape
 ## Initial Setup
 
 1. In Limber, connect to Sequencescape to configure required data:
-```shell
-  bundle exec rake config:generate
-```
+
+   ```shell
+     bundle exec rake config:generate
+   ```
 
 2. In Sequencescape, configure all Limber required data:
-```shell
-  bundle exec rake limber:setup
-```
+
+   ```shell
+     bundle exec rake limber:setup
+   ```
 
 3. Start Sequencescape (will start in 3000):
-```shell
-  bundle exec rails s
-```
+
+   ```shell
+     bundle exec rails s
+   ```
 
 4. Start the delayed job processor
-```shell
-  bundle exec rake jobs:work
-```
+
+   ```shell
+     bundle exec rake jobs:work
+   ```
 
 5. In Limber, start Limber (will start in 3001):
-```shell
-  bundle exec rails s
-```
 
-
+   ```shell
+     bundle exec rails s
+   ```
 
 ## Docs
 
@@ -46,8 +49,8 @@ In addition to the [externally hosted YARD docs](https://www.rubydoc.info/github
 yard server -r --gems -m limber
 ```
 
-You can then access the Limber documentation through: http://localhost:8808/docs/limber
-Yard will also try and document the installed gems: http://localhost:8808/docs
+You can then access the Limber documentation through: [http://localhost:8808/docs/limber](http://localhost:8808/docs/limber)
+Yard will also try and document the installed gems: [http://localhost:8808/docs](http://localhost:8808/docs)
 
 ## Configuring pipelines
 
