@@ -7,35 +7,62 @@
 
 ## Description
 
-A flexible front end to plate bases pipelines in Sequencescape
+A flexible front end to plate bases pipelines in Sequencescape.
 
 ## Initial Setup
 
-1. In Limber, connect to Sequencescape to configure required data:
+Steps must be followed in either the Sequencescape repository or this Limber
+repository, as indicated:
+
+1. In Limber, ensure the appropriate version of Ruby is installed. The command
+   here is for `rbenv` but you may want to use a different Ruby version manager.
+   If the command fails, you might need to check the list of available Ruby
+   versions using `rbenv install --list-all` and use the one that most closely
+   matches the contents of `.ruby-version`:
 
    ```shell
-   bundle exec rake config:generate
+   rbenv install
    ```
 
-2. In Sequencescape, configure all Limber required data:
+2. In Limber, make the Bundler gem install the dependencies for this project:
+
+   ```shell
+   bundle install
+   ```
+
+3. In Sequencescape, configure all Limber required data:
 
    ```shell
    bundle exec rake limber:setup
    ```
 
-3. Start Sequencescape (will start in 3000):
+4. In SequenceScape, setup an API key for Limber via the Rails console:
+
+   ```shell
+   bundle exec rails console
+   new_app = ApiApplication.new(name: 'limber', contact: 'developers', key: 'development', privilege: 'full')
+   new_app.save(validate: false)
+   ```
+
+5. In Sequencescape, start the local server (will start on port 3000):
 
    ```shell
    bundle exec rails s
    ```
 
-4. Start the delayed job processor
+6. In Limber, connect to Sequencescape to configure required data:
+
+   ```shell
+   bundle exec rake config:generate
+   ```
+
+7. In Sequencescape, start the delayed job processor
 
    ```shell
    bundle exec rake jobs:work
    ```
 
-5. In Limber, start Limber (will start in 3001):
+8. In Limber, start the local server (will start on port 3001):
 
    ```shell
    bundle exec rails s
