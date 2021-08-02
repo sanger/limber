@@ -14,31 +14,31 @@ A flexible front end to plate bases pipelines in Sequencescape
 1. In Limber, connect to Sequencescape to configure required data:
 
    ```shell
-     bundle exec rake config:generate
+   bundle exec rake config:generate
    ```
 
 2. In Sequencescape, configure all Limber required data:
 
    ```shell
-     bundle exec rake limber:setup
+   bundle exec rake limber:setup
    ```
 
 3. Start Sequencescape (will start in 3000):
 
    ```shell
-     bundle exec rails s
+   bundle exec rails s
    ```
 
 4. Start the delayed job processor
 
    ```shell
-     bundle exec rake jobs:work
+   bundle exec rake jobs:work
    ```
 
 5. In Limber, start Limber (will start in 3001):
 
    ```shell
-     bundle exec rails s
+   bundle exec rails s
    ```
 
 ## Docs
