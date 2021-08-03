@@ -36,13 +36,7 @@ repository, as indicated:
    yarn install
    ```
 
-4. In Sequencescape, configure all Limber required data:
-
-   ```shell
-   bundle exec rake limber:setup
-   ```
-
-5. In SequenceScape, setup an API key for Limber via the Rails console:
+4. In SequenceScape, setup an API key for Limber via the Rails console:
 
    ```shell
    bundle exec rails console
@@ -50,16 +44,22 @@ repository, as indicated:
    new_app.save(validate: false)
    ```
 
-6. In Sequencescape, start the local server (will start on port 3000):
+5. In Sequencescape, start the local server (will start on port 3000):
 
    ```shell
    bundle exec rails s
    ```
 
-7. In Limber, connect to Sequencescape to configure required data:
+6. In Limber, connect to Sequencescape to configure required data:
 
    ```shell
    bundle exec rake config:generate
+   ```
+
+7. In Sequencescape, configure all Limber required data:
+
+   ```shell
+   bundle exec rake limber:setup
    ```
 
 8. In Sequencescape, start the delayed job processor
