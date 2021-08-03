@@ -15,10 +15,7 @@ Steps must be followed in either the Sequencescape repository or this Limber
 repository, as indicated:
 
 1. In Limber, ensure the appropriate version of Ruby is installed. The command
-   here is for `rbenv` but you may want to use a different Ruby version manager.
-   If the command fails, you might need to check the list of available Ruby
-   versions using `rbenv install --list-all` and use the one that most closely
-   matches the contents of `.ruby-version`:
+   here is for `rbenv` but you may want to use a different Ruby version manager:
 
    ```shell
    rbenv install
