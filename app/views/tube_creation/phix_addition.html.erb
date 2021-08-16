@@ -1,0 +1,42 @@
+<%= page('phix-addition-page') do %>
+  <%= content do %>
+    <%= card id: 'main-content' do %>
+      <div>
+        <h3>Instructions</h3>
+        <p>This step records that PhiX has been added.</p>
+        <p>Scan the SpikedBuffer tube barcode into the panel on the right of the screen and click <i>Create Tube</i>.</p>
+      </div>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'Scan PhiX source tube', without_block: true do %>
+      <div id="validation_report"></div>
+      <div id="add-plates-instructions-block" class="card-body" >
+        <div class="instructions">
+          <p>Scan in the SpikedBuffer tube.</p>
+        </div>
+      </div>
+      <div class="card-body">
+      <%= form_for(
+        @labware_creator,
+        url: limber_plate_children_path(@labware_creator.parent_uuid),
+        as: :plate,
+        html: { method: :post }) do |form| %>
+
+        <%= form.hidden_field :parent_uuid %>
+        <%= form.hidden_field :purpose_uuid %>
+        <div class="plate-container scan-plate form-group row">
+          <label for="spikedbuffer_tube_barcode"
+                  class="plate-label col-md-2" >Source tube</label>
+          <input type="text"
+                  id="spikedbuffer_tube_barcode"
+                  name="plate[spikedbuffer_tube_barcode]"
+                  class="form-control col-md-8"
+                  required="required"/>
+        </div>
+        <%= form.submit 'Create Tube', class: 'btn btn-success btn-lg', id: 'create-labware' %>
+      <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

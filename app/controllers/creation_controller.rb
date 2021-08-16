@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Base class for labware creation. Inherited by PlateCreationController and TubeCreation Controller.
+# Base class for labware creation. Inherited by PlateCreationController and TubeCreationController.
 # Controllers find the appropriate LabwareCreator specified by the purpose configuration
 # new => renders the form specified by the labware creator,
 #        This usually indicates that further information needs to be supplied by the user,
