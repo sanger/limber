@@ -4,12 +4,12 @@
       <div>
         <h3>Instructions</h3>
         <p>This step records that a PhiX control has been added, and the particular tube that it came from.</p>
-        <p>Scan the source SpikedBuffer tube barcode into the panel on the right of the screen and click <i>Add PhiX and continue</i>.</p>
+        <p>Scan the PhiX tube barcode into the panel on the right of the screen and click <i>Add PhiX and continue</i>.</p>
       </div>
     <% end %>
   <% end %>
   <%= sidebar do %>
-    <%= card title: 'Scan PhiX source tube barcode', without_block: true do %>
+    <%= card title: 'Scan PhiX tube barcode', without_block: true do %>
       <div id="validation_report"></div>
       <div class="card-body">
       <%= form_for(
@@ -22,7 +22,7 @@
         <%= form.hidden_field :purpose_uuid %>
         <div class="plate-container scan-plate form-group row">
           <label for="spikedbuffer_tube_barcode"
-                  class="plate-label col-md-2" >Source tube barcode</label>
+                  class="plate-label col-md-2" >PhiX tube barcode</label>
           <input type="text"
                   id="spikedbuffer_tube_barcode"
                   name="plate[spikedbuffer_tube_barcode]"

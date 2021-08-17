@@ -15,20 +15,18 @@ module LabwareCreators
     attr_accessor :spikedbuffer_tube_barcode
 
     def create_child_stock_tubes
-      parents = [parent_uuid]
-
-      if spikedbuffer_tube_barcode.present?
-        parents << Sequencescape::Api::V2::Tube.find_by(barcode: spikedbuffer_tube_barcode).uuid
-      end
-
       tubes = api.specific_tube_creation.create!(
         user: user_uuid,
         parents: parents,
         child_purposes: [purpose_uuid] * pool_uuids.length,
         tube_attributes: tube_attributes
       ).children.index_by(&:name)
+    end
 
-      tubes
+    def parents
+      parents = [parent_uuid]
+      parents << Sequencescape::Api::V2::Tube.find_by(barcode: spikedbuffer_tube_barcode).uuid if spikedbuffer_tube_barcode.present?
+      parents
     end
   end
 end
