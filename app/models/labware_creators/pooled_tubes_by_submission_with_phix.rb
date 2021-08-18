@@ -7,7 +7,9 @@ module LabwareCreators
   class PooledTubesBySubmissionWithPhiX < PooledTubesBySubmission
     include LabwareCreators::CustomPage
 
-    self.page = 'phix_addition'
+    validate :tube_must_be_spiked_buffer
+
+    self.page = 'tube_creation/phix_addition'
     self.attributes += [
       :spikedbuffer_tube_barcode
     ]
@@ -25,8 +27,21 @@ module LabwareCreators
 
     def parents
       parents = [parent_uuid]
-      parents << Sequencescape::Api::V2::Tube.find_by(barcode: spikedbuffer_tube_barcode).uuid if spikedbuffer_tube_barcode.present?
+      parents << scanned_tube.uuid if spikedbuffer_tube_barcode.present?
       parents
+    end
+
+    # It is valid to not provide a spikedbuffer_tube_barcode, but if provided out it must make sense
+    def tube_must_be_spiked_buffer
+      return unless spikedbuffer_tube_barcode.present?
+
+      errors.add(:base, "A tube with that barcode couldn't be found.") unless scanned_tube.present?
+      # TODO: add validation to check tube is SpikedBuffer (requires change to SS V2 API)
+    end
+
+    # Only call this method if the spikedbuffer_tube_barcode is present
+    def scanned_tube
+      @scanned_tube ||= Sequencescape::Api::V2::Tube.find_by(barcode: spikedbuffer_tube_barcode)
     end
   end
 end
