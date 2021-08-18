@@ -33,10 +33,10 @@ module LabwareCreators
 
     # It is valid to not provide a spikedbuffer_tube_barcode, but if provided out it must make sense
     def tube_must_be_spiked_buffer
-      return unless spikedbuffer_tube_barcode.present?
+      return if spikedbuffer_tube_barcode.blank?
 
-      errors.add(:base, "A tube with that barcode couldn't be found.") unless scanned_tube.present?
-      # TODO: add validation to check tube is SpikedBuffer (requires change to SS V2 API)
+      errors.add(:base, "A tube with that barcode couldn't be found.") if scanned_tube.blank?
+      # TODO: add validation to check tube is SpikedBuffer (requires change to SS V2 API)
     end
 
     # Only call this method if the spikedbuffer_tube_barcode is present
