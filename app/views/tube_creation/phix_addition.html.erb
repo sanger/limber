@@ -34,7 +34,7 @@
       </div>
     <% end %>
 
-    <%= card title: 'Skip step', without_block: true do %>
+    <%= card title: 'Other actions', without_block: true do %>
       <div class="card-body">
       <div class="instructions">
         <p>Only skip adding PhiX if you know of a good reason.</p>
@@ -48,7 +48,7 @@
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
 
-        <%= form.submit 'Continue without PhiX', class: 'btn btn-danger btn-lg', id: 'create-labware-skip-step' %>
+        <%= form.submit 'Continue without PhiX', class: 'btn btn-secondary btn-lg', id: 'create-labware-skip-step' %>
       <% end %>
       </div>
     <% end %>

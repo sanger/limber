@@ -15,7 +15,7 @@ module LabwareCreators
     attr_accessor :spikedbuffer_tube_barcode
 
     def create_child_stock_tubes
-      tubes = api.specific_tube_creation.create!(
+      api.specific_tube_creation.create!(
         user: user_uuid,
         parents: parents,
         child_purposes: [purpose_uuid] * pool_uuids.length,
