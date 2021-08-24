@@ -1,0 +1,13 @@
+---
+Cardinal:
+  filters:
+    request_type_key: limber_cardinal
+    library_type: Cardinal
+  library_pass: LCA Connect PCR XP
+  relationships:
+    LCA Blood: LCA PBMC
+    LCA PBMC: LCA PBMC Pools
+    LCA PBMC Pools: LCA 10X cDNA
+    LCA 10X cDNA: LCA Connect PCRXP
+    LCA Connect PCRXP: LCA Custom Pool
+    LCA Custom Pool: LCA Custom Pool Norm
