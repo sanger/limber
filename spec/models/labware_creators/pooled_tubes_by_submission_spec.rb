@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
 
-# Parent in a plate
+# Parent is a plate
 # Creates new tubes of the child purpose
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
