@@ -3,7 +3,7 @@ Cardinal:
   filters:
     request_type_key: limber_cardinal
     library_type: Cardinal
-  library_pass: LCA Connect PCR XP
+  library_pass: LCA Connect PCRXP
   relationships:
     LCA Blood: LCA PBMC
     LCA PBMC: LCA PBMC Pools
