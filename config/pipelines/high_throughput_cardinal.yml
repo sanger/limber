@@ -17,5 +17,5 @@ Cardinal Banking: # Cardinal cell banking pipeline
   relationships:
     LCA Blood Tube: LCA Blood Bank
     LCA Blood Bank: LCA PBMC Bank
-    # TODO: LCA PBMC Bank: LCA Blood Bank Rack (name? how specify to tubes within a rack?)
+    # TODO: DPL-074 what happens next here? Is the plate handed over to samples extraction for transfer into tube rack?
 

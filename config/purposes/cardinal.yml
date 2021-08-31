@@ -85,10 +85,4 @@ LCA Blood Bank:
 LCA PBMC Bank:
   :asset_type: plate
 # LCA PBMC Bank plates are stamped into LCA PBMC Rack tube racks
-# TODO: DPL-074 create tube rack asset type
-# LCA PBMC Bank Rack:
-#   :asset_type: tube_rack
-  # # TODO: DPL-074 need presenter and creator for tube racks and their tubes, creator to use upload of scan file to create tube
-  # rack layout and tube barcodes
-  # :presenter_class: Presenters::TubeRackPresenter
-  # :creator_class: LabwareCreators::TubeRack
+# TODO: DPL-074 create tube rack via samples extraction?
