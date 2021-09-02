@@ -173,8 +173,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::CustomTaggedPlate}
 
-  Used directly in 7 purposes:
-  LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
+  Used directly in 8 purposes:
+  LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
 
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
@@ -291,8 +291,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TaggedPlate}
 
-  Used directly in 16 purposes:
-  pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LCA Connect PCRXP, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
+  Used directly in 15 purposes:
+  pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
 
 {LabwareCreators::TaggedPlate View class documentation}
 
@@ -301,8 +301,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TubeFromTube}
 
-  Used directly in 9 purposes:
-  LB Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Blood Tube, LCA Custom Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
+  Used directly in 8 purposes:
+  LB Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
 
 {LabwareCreators::TubeFromTube View class documentation}
 
@@ -311,8 +311,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::Uncreatable}
 
-  Used directly in 3 purposes:
-  LTHR-384 RT, LTHR Cherrypick, and LTHR RT
+  Used directly in 4 purposes:
+  LTHR-384 RT, LTHR Cherrypick, LCA Blood Tube, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 

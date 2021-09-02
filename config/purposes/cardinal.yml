@@ -7,14 +7,15 @@
 LCA Blood Tube:
   :asset_type: tube
   # TODO: DPL-064 is this a stock_plate?? do we have the concept of a stock_tube?
-  # :stock_plate: true
+  :stock_plate: false
   # :cherrypickable_target: false
-  # :input_plate: true
+  :input_plate: false
   # TODO: DPL-064 what are the other settings for this tube?
-  :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
+  :target: SampleTube
+  :type: Tube::Purpose
   # TODO: DPL-064 does this tube presenter work for this initial tube?
-  :presenter_class: Presenters::TubePresenter
+  :presenter_class: Presenters::StockTubePresenter
+  :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
 # LCA Blood Tubes are arrayed into LCA Blood Plates (DPL-064)
 LCA Blood Plate:

@@ -180,8 +180,7 @@ Presenters are responsible for showing information about a piece of labware.
 
 {include:Presenters::TubePresenter}
 
-Used directly in 1 purposes:
-LCA Blood Tube, 
+  **This template is unused**
 
 {Presenters::TubePresenter View class documentation}
 
@@ -200,10 +199,19 @@ LB Custom Pool Norm, LB Lib Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA
 
 {include:Presenters::SimpleTubePresenter}
 
-Used directly in 24 purposes:
-LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
+Used directly in 25 purposes:
+LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Blood Tube, LCA Custom Pool, LBC TCR LibPS, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
 
 {Presenters::SimpleTubePresenter View class documentation}
+
+
+### Presenters::StockTubePresenter
+
+{include:Presenters::StockTubePresenter}
+
+  **This template is unused**
+
+{Presenters::StockTubePresenter View class documentation}
 
 
 ### Presenters::UnknownTubePresenter

@@ -35,5 +35,4 @@ class Labels::PlateLabelLcaPbmc < Labels::PlateLabelBase
       }
     ]
   end
-  # rubocop:enable Metrics/AbcSize
 end
