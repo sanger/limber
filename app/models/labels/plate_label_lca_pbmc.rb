@@ -7,32 +7,21 @@ class Labels::PlateLabelLcaPbmc < Labels::PlateLabelBase
     super.merge(barcode: labware.barcode.human)
   end
 
-  def qc_attributes # rubocop:todo Metrics/MethodLength
+  def qc_attribute_for_index(index)
+    {
+      top_left: date_today,
+      bottom_left: "#{labware.barcode.human} QC#{index}",
+      top_right: labware.stock_plate&.barcode&.human,
+      barcode: [labware.barcode.human, "QC#{index}"].compact.join('-')
+    }
+  end
+
+  def qc_attributes
     [
-      {
-        top_left: date_today,
-        bottom_left: "#{labware.barcode.human} QC4",
-        top_right: labware.stock_plate&.barcode&.human,
-        barcode: [labware.barcode.human, 'QC4'].compact.join('-')
-      },
-      {
-        top_left: date_today,
-        bottom_left: "#{labware.barcode.human} QC3",
-        top_right: labware.stock_plate&.barcode&.human,
-        barcode: [labware.barcode.human, 'QC3'].compact.join('-')
-      },
-      {
-        top_left: date_today,
-        bottom_left: "#{labware.barcode.human} QC2",
-        top_right: labware.stock_plate&.barcode&.human,
-        barcode: [labware.barcode.human, 'QC2'].compact.join('-')
-      },
-      {
-        top_left: date_today,
-        bottom_left: "#{labware.barcode.human} QC1",
-        top_right: labware.stock_plate&.barcode&.human,
-        barcode: [labware.barcode.human, 'QC1'].compact.join('-')
-      }
+      qc_attribute_for_index(4),
+      qc_attribute_for_index(3),
+      qc_attribute_for_index(2),
+      qc_attribute_for_index(1)
     ]
   end
 end
