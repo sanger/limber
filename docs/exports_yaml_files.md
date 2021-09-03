@@ -100,7 +100,8 @@ Default: `wells`
 #### workflow
 
 A simple string that can be presented in the rendered template to distinguish
-between otherwise identical processes.
+between otherwise identical processes. Some liquid handlers may use this
+information to validate that the correct file has been uploaded.
 
 Examples in `hamilton_cherrypick_dilutions`
 
@@ -119,3 +120,8 @@ Example in `app/views/exports/duplex_seq_pcr_xp_concentrations_for_custom_poolin
 ```yaml
 ancestor_purpose: LDS AL Lib Dil
 ```
+
+### Testing
+
+Test coverage for new exports can be found in `spec/views/exports` (covering
+each view) with further coverage in `spec/controllers/exports_controller_spec.rb`
