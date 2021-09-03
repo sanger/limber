@@ -6,16 +6,12 @@ module Presenters
   # In addition it also detects common scenarios which may indicate problems
   # with the submission.
   class StockTubePresenter < TubePresenter
-    include Presenters::Statemachine::Standard
-    include Statemachine::DoesNotAllowLibraryPassing
+    include Presenters::Statemachine::StateAllowsChildCreation
+    include Presenters::Statemachine::DoesNotAllowLibraryPassing
     include Presenters::StateChangeless
 
-    def well_failing_applicable?
-      false
-    end
-
-    def default_printer
-      :tube
+    def state
+      "passed"
     end
   end
 end
