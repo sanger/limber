@@ -4,7 +4,7 @@
 ###
 # Cardinal Library preparation
 ###
-LCA Blood Tube:
+LCA Blood Vac:
   :asset_type: tube
   # TODO: DPL-064 is this a stock_plate?? do we have the concept of a stock_tube?
   :stock_plate: false
@@ -17,8 +17,8 @@ LCA Blood Tube:
   :presenter_class: Presenters::StockTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
-# LCA Blood Tubes are arrayed into LCA Blood Plates (DPL-064)
-LCA Blood Plate:
+# LCA Blood Vac tubes are arrayed into an LCA Blood Array plate (DPL-064)
+LCA Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
@@ -76,10 +76,10 @@ LCA Custom Pool Norm:
 ###
 # Cardinal Blood Banking Pipeline
 ###
-# LCA Blood Tubes are also arrayed into LCA Blood Bank plates (DPL-073)
+# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
 LCA Blood Bank:
   :asset_type: plate
-  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Plate
+  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
   # :creator_class: LabwareCreators::?
   # :presenter_class: Presenters::?
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
