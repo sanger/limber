@@ -1,0 +1,7 @@
+<%
+   cols_per_file = 3
+   start = @page * 3
+-%>
+<% @plate.wells_in_columns.each_slice(@plate.number_of_rows).to_a[start, cols_per_file].transpose.each do |wells|-%>
+<%= wells.map {|w| w.name }.to_csv -%>
+<% end %>

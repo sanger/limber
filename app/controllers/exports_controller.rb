@@ -9,12 +9,11 @@ class ExportsController < ApplicationController
   rescue_from Export::NotFound, with: :not_found
 
   def show
+    @page = params.fetch(:page, 0).to_i
     @workflow = export.workflow
-    if export.ancestor_purpose.present?
-      ancestor_result = @plate.ancestors.where(purpose_name: export.ancestor_purpose).first
-      locate_ancestor(ancestor_result.id) if ancestor_result.present?
-    end
-    render export.csv
+    @ancestor_plate = locate_ancestor
+
+    render export.csv, locals: { test: 'this' }
   end
 
   private
@@ -37,8 +36,13 @@ class ExportsController < ApplicationController
                                                                           barcode: params[:limber_plate_id])
   end
 
-  def locate_ancestor(plate_id)
-    @ancestor_plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, id: plate_id)
+  def locate_ancestor
+    return nil if export.ancestor_purpose.blank?
+
+    ancestor_result = @plate.ancestors.where(purpose_name: export.ancestor_purpose).first
+    return nil if ancestor_result.blank?
+
+    Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, id: ancestor_result.id)
   end
 
   def include_parameters
