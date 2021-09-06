@@ -1,7 +1,9 @@
 ---
-Cardinal Arraying: # Cardinal Arraying
+Cardinal Arraying A: # Cardinal Arraying
   relationships:
     LCA Blood Vac: LCA Blood Array
+Cardinal Arraying B: # Cardinal Arraying
+  relationships:
     LCA Blood Vac: LCA Blood Bank
 Cardinal Library Prep: # Cardinal Library preparation pipeline
   filters: &cardinal_filters
