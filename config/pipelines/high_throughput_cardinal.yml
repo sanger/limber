@@ -1,21 +1,27 @@
 ---
-Cardinal: # Cardinal arraying and Library preparation pipeline
+# Initial transfer from tube to plate, as entry for one or other of below pipelines. Happens without submissions / requests.
+Cardinal Entry A:
+  relationships:
+    LCA Blood Vac: LCA Blood Array
+Cardinal Entry B:
+  relationships:
+    LCA Blood Vac: LCA Blood Bank
+# Cardinal arraying and Library preparation pipeline
+Cardinal:
   filters: &cardinal_filters
     request_type_key: limber_cardinal
     # TODO: DPL-061 library_type: Cardinal   do we need to specify library type here when starting on blood tubes?
   library_pass: LCA Connect PCRXP
   relationships:
-    LCA Blood Vac: LCA Blood Array
     LCA Blood Array: LCA PBMC
     LCA PBMC: LCA PBMC Pools
     LCA PBMC Pools: LCA 10X cDNA
     LCA 10X cDNA: LCA Connect PCRXP
     LCA Connect PCRXP: LCA Custom Pool
     LCA Custom Pool: LCA Custom Pool Norm
-Cardinal Banking: # Cardinal cell banking pipeline
+# Cardinal cell banking pipeline
+Cardinal Banking:
   filters: *cardinal_filters
   relationships:
-    LCA Blood Vac: LCA Blood Bank
     LCA Blood Bank: LCA PBMC Bank
     # TODO: DPL-074 what happens next here? Is the plate handed over to samples extraction for transfer into tube rack?
-
