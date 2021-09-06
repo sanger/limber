@@ -257,6 +257,24 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::TenStamp View class documentation}
 
 
+## LabwareCreators::MultiStampTubes
+
+{include:LabwareCreators::MultiStampTubes}
+
+  **This labware creator is unused**
+
+{LabwareCreators::MultiStampTubes View class documentation}
+
+
+## LabwareCreators::MultiStampTubesArray
+
+{include:LabwareCreators::MultiStampTubesArray}
+
+  **This labware creator is unused**
+
+{LabwareCreators::MultiStampTubesArray View class documentation}
+
+
 ## LabwareCreators::PlateWithTemplate
 
 {include:LabwareCreators::PlateWithTemplate}
@@ -312,7 +330,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::Uncreatable}
 
   Used directly in 4 purposes:
-  LTHR-384 RT, LTHR Cherrypick, LCA Blood Tube, and LTHR RT
+  LTHR-384 RT, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 

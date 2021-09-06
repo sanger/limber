@@ -2,7 +2,7 @@
 # high throughput Cardinal and associated Banking pipelines
 ---
 ###
-# Cardinal Library preparation
+# Cardinal Arraying
 ###
 LCA Blood Vac:
   :asset_type: tube
@@ -26,7 +26,16 @@ LCA Blood Array:
   # TODO: DPL-064 is this presenter suitable or do we need something special that displays parent tube details?
   :presenter_class: Presenters::StockPlatePresenter
   # TODO: DPL-064 This plate gets created by the re-arraying of multiple tubes into the plate
+  :creator_class: LabwareCreators::MultiStampTubesArray
+# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
+LCA Blood Bank:
+  :asset_type: plate
+  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
   # :creator_class: LabwareCreators::?
+  # :presenter_class: Presenters::?
+###
+# Cardinal Library Preparation Pipeline
+###
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
@@ -76,12 +85,6 @@ LCA Custom Pool Norm:
 ###
 # Cardinal Blood Banking Pipeline
 ###
-# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
-LCA Blood Bank:
-  :asset_type: plate
-  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
-  # :creator_class: LabwareCreators::?
-  # :presenter_class: Presenters::?
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
