@@ -212,7 +212,7 @@ RSpec.describe Presenters::PlatePresenter do
 
     it 'reports the error' do
       presenter.valid?
-      expect(presenter.errors.full_messages).to include('Pcr cycles specified is not consistent across the plate.')
+      expect(presenter.errors.full_messages).to include('Pcr cycles are not consistent across the plate.')
     end
   end
 
@@ -249,7 +249,7 @@ RSpec.describe Presenters::PlatePresenter do
 
     it 'reports the error' do
       presenter.valid?
-      expect(presenter.errors.full_messages).to include('Pcr cycles differs from standard. 10 cycles have been requested.')
+      expect(presenter.errors.full_messages).to include('Requested pcr cycles differs from standard. 10 cycles have been requested.')
     end
   end
 
