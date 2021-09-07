@@ -32,5 +32,6 @@ FactoryBot.define do
   factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do
     skip_create
     sequence(:supplier_name) { |i| "supplier name #{i}" }
+    supplier { 'supplier1' }
   end
 end

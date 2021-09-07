@@ -41,9 +41,12 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     # these 8 pools would then be added to 8 wells in the destination plate
     plate1.wells[0..3].map { |well| well["state"] = "failed"}
 
-    plate1.wells[0..9].map { |well| well.aliquots.first.sample["supplier"] = "blood location 1"}
-    plate1.wells[9..49].map { |well| well.aliquots.first.sample["supplier"] = "blood location 2"}
-    plate1.wells[49..95].map { |well| well.aliquots.first.sample["supplier"] = "blood location 3"}
+    supplier_group_1 = plate1.wells[0..9]
+    supplier_group_1.map { |well| well.aliquots.first.sample["supplier"] = "blood location 1"}
+    supplier_group_2 = plate1.wells[9..49]
+    supplier_group_2.map { |well| well.aliquots.first.sample["supplier"] = "blood location 2"}
+    supplier_group_3 = plate1.wells[49..95]
+    supplier_group_3.map { |well| well.aliquots.first.sample["supplier"] = "blood location 3"}
     plate1
   end
 
@@ -113,6 +116,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   context '#pool_passed_samples_containing_more_than_one_blood_location' do
     it 'returns whats expected' do
       expect(subject.pool_passed_samples_containing_more_than_one_blood_location).to eq({ pool_1: [], pool_2: [], pool_3: [], pool_4: [], pool_5: [], pool_6: [], pool_7: [], pool_8: [] })
+    end
+  end
+
+  context '#group_samples_by_supplier' do
+    it 'returns whats expected' do
+      expected = {0=>plate1.wells[0..9], 1=>plate1.wells[9..49], 2=>plate1.wells[49..95]}
+      expect(subject.group_samples_by_supplier).to eq({ pool_1: [], pool_2: [], pool_3: [], pool_4: [], pool_5: [], pool_6: [], pool_7: [], pool_8: [] })
     end
   end
 end
