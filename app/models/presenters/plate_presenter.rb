@@ -85,7 +85,10 @@ module Presenters
 
     def csv_file_links
       links = purpose_config.fetch(:file_links, []).map do |link|
-        [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
+        [
+          link.name,
+          [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }]
+        ]
       end
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links

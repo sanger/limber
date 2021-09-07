@@ -300,12 +300,17 @@ name: The text to show on the download button
 id: The template to use for the CSV itself. (See {ExportsController} for the
 existing templates)
 
+params: Optional query parameters to be passed through the the link to the
+exports controller.
+
 ```yaml
 :file_links:
-- name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
-  id: 'hamilton_cherrypick_to_sample_dilution'
-- name: Download Concentration (ng/ul) CSV
-  id: concentrations_ngul
+  - name: "Download Hamilton Cherrypick to Sample Dilution CSV"
+    id: "hamilton_cherrypick_to_sample_dilution"
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+    params:
+      - page: 0
 ```
 
 @note Not all CSV generation has been migrated under the exports controller. See :csv_template

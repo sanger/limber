@@ -341,5 +341,37 @@ RSpec.describe Presenters::PlatePresenter do
         expect(presenter.csv_file_links.length).to eq(3)
       end
     end
+
+    context 'with a plate with additional parameters' do
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: [
+            { name: 'Button 1', id: 'template', params: { page: 0 } },
+            { name: 'Button 2', id: 'template', params: { page: 1 } }
+          ]
+        )
+      end
+
+      it 'returns the expected number of links' do
+        expect(presenter.csv_file_links).to eq([
+                                                 ['Button 1', [:limber_plate, :export, {
+                                                   format: :csv,
+                                                   id: 'template',
+                                                   limber_plate_id: 'DN1S',
+                                                   'page' => 0
+                                                 }]],
+                                                 ['Button 2', [:limber_plate, :export, {
+                                                   format: :csv,
+                                                   id: 'template',
+                                                   limber_plate_id: 'DN1S',
+                                                   'page' => 1
+                                                 }]]
+                                               ])
+      end
+    end
   end
 end
