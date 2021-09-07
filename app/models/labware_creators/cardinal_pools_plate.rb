@@ -5,7 +5,7 @@
 
 # 1. Create a new empty LCA PBMC Pools plate
 
-# 2. Get the number of not failed samples in the parent (LCA PBMC) plate
+# 2. Get the not failed samples in the parent (LCA PBMC) plate
 
 # 3. Look up the pooling config for that number 
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool.
@@ -42,21 +42,31 @@ module LabwareCreators
       parent.wells
     end
 
-    def request_hash(source_well, child_plate, additional_parameters)
-      {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect do |child_well|
-          child_well.location == transfer_hash[source_well.location]['dest_locn']
-        end&.uuid,
-        'volume' => transfer_hash[source_well.location]['volume'].to_s
-      }.merge(additional_parameters)
+    def get_passed_parent_samples
+      parent.wells.select { |sample| sample.state == "passed" }
     end
 
-    def transfer_hash
-      @transfer_hash ||=  {"A1": {"dest_locn": "H12"}} # dilutions_calculator.compute_well_transfers(parent)
+    def get_config_for_number_of_passed_samples
+      number_of_passed_samples_for_dest = get_passed_parent_samples.count
+      @@pooling_config[number_of_passed_samples_for_dest]
     end
 
-    private
+    def pool_passed_samples_containing_more_than_one_blood_location
+      # all suppliers are the same
+      # return if parent.wells.all? { |well| well.supplier == parents.wells.first.supplier }
+
+      # e.g. parent.wells[0] = { "supplier"=>"blood location 1" }
+      # e.g. parent.wells[1] = { "supplier"=>"blood location 2" }
+      # e.g. parent.wells[2] = { "supplier"=>"blood location 3" }
+
+      # #<Sequencescape::Api::V2::Well:@attributes={"type"=>"wells", "name"=>"DN1S:A4", "position"=>{"name"=>"A4"}, "state"=>"passed", "uuid"=>"2-well-A4", "diluent_volume"=>nil, "pcr_cycles"=>nil, "submit_for_sequencing"=>nil, "sub_pool"=>nil, "coveraga"=>nil, "supplier"=>"blood location 2"}>
+      sample_groups_by_supplier = parent.wells.map(&:aliquots).map(&:sample).group_by{ |well| well[:supplier] }
+      #binding.pry
+      # {0=>[w1ws1, w2ws1], 1=>[w3ws2, w4ws2], 2=>[w5s3, w6s3]}
+
+      # loop through pools
+      return { pool_1: [], pool_2: [], pool_3: [], pool_4: [], pool_5: [], pool_6: [], pool_7: [], pool_8: [] }
+    end
 
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
@@ -77,6 +87,26 @@ module LabwareCreators
       end
     end
 
-    
+    def request_hash(source_well, child_plate, additional_parameters)
+      {
+        'source_asset' => source_well.uuid,
+        'target_asset' => child_plate.wells.detect do |child_well|
+          child_well.location == transfer_hash[source_well.location]['dest_locn']
+        end&.uuid,
+        # 'volume' => transfer_hash[source_well.location]['volume'].to_s
+      }.merge(additional_parameters)
+    end
+
+    def transfer_hash
+      @transfer_hash ||=  {"A1": {"dest_locn": "H12"}} # dilutions_calculator.compute_well_transfers(parent)
+
+      # {
+      #   'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '1.0', 'volume' => '20.0' },
+      #   'B1' => { 'dest_locn' => 'A2', 'dest_conc' => '2.5', 'volume' => '0.893' },
+      #   'C1' => { 'dest_locn' => 'B2', 'dest_conc' => '2.5', 'volume' => '14.286' },
+      #   'D1' => { 'dest_locn' => 'C2', 'dest_conc' => '1.8', 'volume' => '20.0' }
+      # }
+    end
+  
   end
 end
