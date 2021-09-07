@@ -7,17 +7,17 @@
 
 # 2. Get the not failed samples in the parent (LCA PBMC) plate
 
-# 3. Look up the pooling config for that number 
+# 3. Look up the pooling config for that number
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool.
 
 # 4. Group samples using group size from above, where random samples are used in the pool
 
 # 5. Add the group of samples (pool) to a well in the new LCA PBMC Pools plate
 module LabwareCreators
-  class CardinalPoolsPlate < Base 
-    include SupportParent::PlateOnly    
+  class CardinalPoolsPlate < Base
+    include SupportParent::PlateOnly
     # include LabwareCreators::CustomPage
-    
+
     @@pooling_config = {}
 
     # self.page = 'cardinal_pools_plate'
@@ -46,6 +46,7 @@ module LabwareCreators
       parent.wells.select { |sample| sample.state == "passed" }
     end
 
+    # { number: 96, pool_1: 12, pool_2: 12, pool_3: 12, pool_4: 12, pool_5: 12, pool_6: 12, pool_7: 12, pool_8: 12 }
     def get_config_for_number_of_passed_samples
       number_of_passed_samples_for_dest = get_passed_parent_samples.count
       @@pooling_config[number_of_passed_samples_for_dest]
@@ -55,17 +56,37 @@ module LabwareCreators
       # all suppliers are the same
       # return if parent.wells.all? { |well| well.supplier == parents.wells.first.supplier }
 
-      # e.g. parent.wells[0] = { "supplier"=>"blood location 1" }
-      # e.g. parent.wells[1] = { "supplier"=>"blood location 2" }
-      # e.g. parent.wells[2] = { "supplier"=>"blood location 3" }
-
       # #<Sequencescape::Api::V2::Well:@attributes={"type"=>"wells", "name"=>"DN1S:A4", "position"=>{"name"=>"A4"}, "state"=>"passed", "uuid"=>"2-well-A4", "diluent_volume"=>nil, "pcr_cycles"=>nil, "submit_for_sequencing"=>nil, "sub_pool"=>nil, "coveraga"=>nil, "supplier"=>"blood location 2"}>
-      sample_groups_by_supplier = parent.wells.map(&:aliquots).map(&:sample).group_by{ |well| well[:supplier] }
-      #binding.pry
-      # {0=>[w1ws1, w2ws1], 1=>[w3ws2, w4ws2], 2=>[w5s3, w6s3]}
 
-      # loop through pools
-      return { pool_1: [], pool_2: [], pool_3: [], pool_4: [], pool_5: [], pool_6: [], pool_7: [], pool_8: [] }
+      sample_groups_by_supplier = parent.wells.map(&:aliquots).map(&:sample).group_by{ |well| well[:supplier] }
+      # {0=>['w1ws1', 'w2ws1'], 1=>['w3ws2', 'w4ws2'], 2=>['w5s3', 'w6s3']}
+
+      # initialise starting pool
+      pool_id = 1 #TODO stop at 8 - use [0..7] instead??
+      # for each supplier group
+      sample_groups_by_supplier.count.times do |i|
+        # loop through the samples for that supplier
+        # adding each sample to a different pool
+        sample_groups_by_supplier[i].each_with_index do |sample, sample_index|
+          # check the current pool isnt full
+          config = get_config_for_number_of_passed_samples
+          max_number_for_pool = config["pool_#{pool_1}"]
+
+          # create the pool_n_samples list if it doesnt already exist
+          unless config["pool_#{pool_1}_samples"]
+            config["pool_#{pool_1}_samples"] = []
+          end
+
+          # adding a sample
+          if config["pool_#{pool_1}_samples"].count < max_number_for_pool
+            config["pool_#{pool_1}_samples"] << sample
+          end
+
+          pool_id ++ # limit at 8 and cycle through again?
+        end
+      end
+
+      return config
     end
 
     def well_filter
@@ -107,6 +128,6 @@ module LabwareCreators
       #   'D1' => { 'dest_locn' => 'C2', 'dest_conc' => '1.8', 'volume' => '20.0' }
       # }
     end
-  
+
   end
 end
