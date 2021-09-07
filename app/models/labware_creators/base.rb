@@ -52,6 +52,7 @@ module LabwareCreators
     end
 
     def save
+      binding.pry
       valid? && create_labware!
     end
 
