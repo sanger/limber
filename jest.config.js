@@ -48,7 +48,7 @@ module.exports = {
   // dependencyExtractor: undefined,
 
   // Make calling deprecated APIs throw helpful error messages
-  // errorOnDeprecated: false,
+  errorOnDeprecated: false,
 
   // Force coverage collection from ignored files using an array of glob patterns
   // forceCoverageMatch: [],
@@ -104,7 +104,7 @@ module.exports = {
   // reporters: undefined,
 
   // Automatically reset mock state between every test
-  // resetMocks: false,
+  resetMocks: true,
 
   // Reset the module registry before running each individual test
   // resetModules: false,
@@ -174,10 +174,10 @@ module.exports = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  "transform": {
+  transform: {
     "^.+\\.js$": "babel-jest",
     "^.+\\.vue$": "vue-jest"
-  }
+  },
 
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -196,5 +196,5 @@ module.exports = {
   // watchPathIgnorePatterns: [],
 
   // Whether to use watchman for file crawling
-  // watchman: true,
+  watchman: true,
 };

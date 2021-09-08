@@ -120,7 +120,6 @@ describe('PlateScan', () => {
         [{ state: 'invalid', plate: null }]
       ]
     })
-    jest.spyOn(console, 'log').mockRestore()
   })
 
   it('is valid if it can find a plate', async () => {

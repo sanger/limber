@@ -109,7 +109,6 @@ describe('DevourSelect mixin', () => {
           [{ state: 'invalid', results: null }]
         ]
       })
-      jest.spyOn(console, 'log').mockRestore()
     })
   })
 })
