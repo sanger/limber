@@ -34,7 +34,7 @@ RSpec.describe 'well factory' do
             "sanger": {
               "name": "sample_A1_0",
               "sample_id": "SAMA10"
-            }
+            },
           },
           "tag": {},
           "tag2": {}
