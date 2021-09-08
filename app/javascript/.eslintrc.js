@@ -2,6 +2,7 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
+        "jasmine": true,
         "jest/globals": true
     },
     "plugins": ["jest", "vue"],
