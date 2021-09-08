@@ -39,12 +39,28 @@ LCA Blood Bank:
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
-  :label_template: plate_lca_pbmc # creates QC1 to 4 barcodes
-  # TODO: DPL-065 needs :file_links: csv output: for Cellaca input files for QC1 to 4 depending on number samples
-  # Cellaca output files (1-4) are uploaded into Quanthub to set concentrations on plate (DPL-066)
-  # TODO: DPL-065 needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
-  # TODO: DPL-065 Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
-  # TODO: DPL-065 new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
+  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :file_links:
+    - name: "Download Cellaca Input QC1"
+      id: cellaca_input_file
+      params:
+        - page: 0
+    - name: "Download Cellaca Input QC2"
+      id: cellaca_input_file
+      params:
+        - page: 1
+    - name: "Download Cellaca Input QC3"
+      id: cellaca_input_file
+      params:
+        - page: 2
+    - name: "Download Cellaca Input QC4"
+      id: cellaca_input_file
+      params:
+        - page: 3
+
+  # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
+  # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
+  # TODO: DPL-??? new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
 # LCA PBMC wells are pooled together into the LCA PBMC Pools plate
 LCA PBMC Pools:
   :asset_type: plate

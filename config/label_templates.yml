@@ -36,6 +36,6 @@ plate_lds_al_lib:
   :label_class: Labels::PlateLabelLdsAlLib
   :pmb_template: 'sqsc_96plate_label_template_code39'
 
-plate_lca_pbmc:
-  :label_class: Labels::PlateLabelLcaPbmc
-  :pmb_template: 'sqsc_96plate_label_template_code39'
+plate_cellaca_qc:
+  :label_class: Labels::PlateLabelCellacaQc
+  :pmb_template: sqsc_96plate_label_template_code39
