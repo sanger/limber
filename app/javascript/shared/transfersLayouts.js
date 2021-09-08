@@ -109,6 +109,23 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
   return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
 }
 
+const buildTubeMatrix = function(requestsWithTubes, maxTubes) {
+  console.log("*** buildTubeMatrix ***")
+  const tubeMatrix = buildArray(maxTubes, () => new Array(1))
+  const duplicatedRequests = []
+  for (let i = 0; i < requestsWithTubes.length; i++) {
+    const { request, tube, tubeObj } = requestsWithTubes[i]
+    if (request === undefined) { continue }
+    if (tubeMatrix[tubeObj.index][0] === undefined) {
+      tubeMatrix[tubeObj.index][0] = requestsWithTubes[i]
+    }
+    else {
+      duplicatedRequests.push(requestsWithTubes[i])
+    }
+  }
+  return { tubeMatrix: tubeMatrix, duplicatedRequests: duplicatedRequests }
+}
+
 
 // Used to calculate sequential transfers.
 // Receives an array of transfer requests and return an array of transfers
@@ -125,6 +142,21 @@ const buildSequentialTransfersArray = function(transferRequests) {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
       plateObj: requestWithPlate.plateObj,
+      targetWell: indexToName(i, 8)
+    }
+  }
+  return transfers
+}
+
+
+const buildSequentialTubesTransfersArray = function(transferRequests) {
+  const transfers = new Array(transferRequests.length)
+  for (let i = 0; i < transferRequests.length; i++) {
+    const requestWithTube = transferRequests[i]
+    transfers[i] = {
+      request: requestWithTube.request,
+      tube: requestWithTube.tube,
+      tubeObj: requestWithTube.tubeObj,
       targetWell: indexToName(i, 8)
     }
   }
@@ -152,6 +184,7 @@ const buildSequentialTransfersArray = function(transferRequests) {
 // |D1|  |D3      |  |D2|D3       |P1C2|P2B2|
 
 const sequentialTransfers = function(requestsWithPlates) {
+  console.log("*** sequentialTransfers ***")
   const { platesMatrix, duplicatedRequests } = buildPlatesMatrix(requestsWithPlates, 10, 96)
   const transferRequests = platesMatrix.flat()
   const validTransfers = buildSequentialTransfersArray(transferRequests)
@@ -159,9 +192,25 @@ const sequentialTransfers = function(requestsWithPlates) {
   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
+
+
+const sequentialTubeTransfers = function(requestsWithTubes) {
+  console.log("*** sequentialTubeTransfers ***")
+  const { tubeMatrix, duplicatedRequests } = buildTubeMatrix(requestsWithTubes, 96)
+  // console.log("*** finished building tube matrix ***")
+  const transferRequests = tubeMatrix.flat()
+  // console.log("*** transferRequests made ***")
+  const validTransfers = buildSequentialTubesTransfersArray(transferRequests)
+  // console.log("*** validTransfers made ***")
+const duplicatedTransfers = buildSequentialTubesTransfersArray(duplicatedRequests)
+  // console.log("*** duplicatedTransfers made ***")
+  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
+}
+
 const transferFunctions = {
   quadrant: quadrantTransfers,
-  sequential: sequentialTransfers
+  sequential: sequentialTransfers,
+  sequentialtube: sequentialTubeTransfers
 }
 
 
@@ -173,6 +222,9 @@ const transferFunctions = {
 // function.
 
 const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
+  console.log("*** transfersFromRequests ***")
+  console.log("*** requestsWithPlates ***", requestsWithPlates)
+  console.log("*** transfersLayout ***", transfersLayout)
   const transferFunction = transferFunctions[transfersLayout]
   if (transferFunction === undefined) {
     throw `Invalid transfers layout name: ${transfersLayout}`

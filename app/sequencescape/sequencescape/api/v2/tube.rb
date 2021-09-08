@@ -38,6 +38,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   # Dummied out for the moment. But no real reason not to add it to the API.
   def requests_as_source
+    # TODO does this need to return something for Cardinal
     []
   end
 

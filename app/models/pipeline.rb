@@ -38,13 +38,16 @@ class Pipeline
   # Checks if a piece of labware meets the filter criteria for a pipeline
   # @return [Boolean] returns true if labware meets the filter criteria
   def active_for?(labware)
-    labware.active_requests.any? do |request|
-      # For each attribute (eg. library_type) check that the matching property
-      # on request is included in the list of permitted values.
-      filters.all? do |request_attribute, permitted_values|
-        permitted_values.include? request.public_send(request_attribute)
-      end
-    end
+    # temp hack
+    # TODO: allow for option where there are no requests - e.g. if pipeline config has no 'filters', return true
+    true
+    # labware.active_requests.any? do |request|
+    #   # For each attribute (eg. library_type) check that the matching property
+    #   # on request is included in the list of permitted values.
+    #   filters.all? do |request_attribute, permitted_values| # state, "passed"
+    #     permitted_values.include? request.public_send(request_attribute)
+    #   end
+    # end
   end
 
   def filters=(filters)

@@ -1,0 +1,13 @@
+<div id='multi-stamp-tubes-page'
+     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"
+     data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
+     data-target-url="<%= limber_tube_children_path(@labware_creator.parent) %>"
+     data-requests-filter="<%= @labware_creator.request_filter %>"
+     data-transfers-layout="<%= @labware_creator.transfers_layout %>"
+     data-transfers-creator="<%= @labware_creator.transfers_creator %>"
+     data-target-rows="<%= @labware_creator.target_rows %>"
+     data-target-columns="<%= @labware_creator.target_columns %>"
+     data-source-tubes="<%= @labware_creator.source_tubes %>"
+     >
+  <div class="spinner-dark">Loading...</div>
+</div>

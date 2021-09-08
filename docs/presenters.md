@@ -209,7 +209,8 @@ LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384
 
 {include:Presenters::StockTubePresenter}
 
-  **This template is unused**
+Used directly in 1 purposes:
+LCA Blood Vac, 
 
 {Presenters::StockTubePresenter View class documentation}
 
@@ -221,4 +222,13 @@ LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384
   **This template is unused**
 
 {Presenters::UnknownTubePresenter View class documentation}
+
+
+### Presenters::VacTubePresenter
+
+{include:Presenters::VacTubePresenter}
+
+  **This template is unused**
+
+{Presenters::VacTubePresenter View class documentation}
 
