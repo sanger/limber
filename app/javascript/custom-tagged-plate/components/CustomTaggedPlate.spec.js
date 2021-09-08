@@ -366,7 +366,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         await wrapper.setProps({
-          tagsPerWell: 4,
+          tagsPerWell: '4',
         })
 
         wrapper.setData({
@@ -418,7 +418,7 @@ describe('CustomTaggedPlate', () => {
         const wrapper = wrapperFactory()
 
         await wrapper.setProps({
-          tagsPerWell: 4,
+          tagsPerWell: '4',
         })
 
         wrapper.setData({
