@@ -1,0 +1,92 @@
+# This configuration file is for the plate and tube purposes required for the
+# high throughput Cardinal and associated Banking pipelines
+---
+###
+# Cardinal Arraying
+###
+LCA Blood Vac:
+  :asset_type: tube
+  # TODO: DPL-064 is this a stock_plate?? do we have the concept of a stock_tube?
+  :stock_plate: false
+  # :cherrypickable_target: false
+  :input_plate: false
+  # TODO: DPL-064 what are the other settings for this tube?
+  :target: SampleTube
+  :type: Tube::Purpose
+  # TODO: DPL-064 does this tube presenter work for this initial tube?
+  :presenter_class: Presenters::StockTubePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :default_printer_type: :tube
+# LCA Blood Vac tubes are arrayed into an LCA Blood Array plate (DPL-064)
+LCA Blood Array:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  # TODO: DPL-064 is this presenter suitable or do we need something special that displays parent tube details?
+  :presenter_class: Presenters::StockPlatePresenter
+  # TODO: DPL-064 This plate gets created by the re-arraying of multiple tubes into the plate
+  :creator_class: LabwareCreators::MultiStampTubesArray
+# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
+LCA Blood Bank:
+  :asset_type: plate
+  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
+  # :creator_class: LabwareCreators::?
+  # :presenter_class: Presenters::?
+###
+# Cardinal Library Preparation Pipeline
+###
+# LCA Blood stamps into LCA PBMC
+LCA PBMC:
+  :asset_type: plate
+  :label_template: plate_lca_pbmc # creates QC1 to 4 barcodes
+  # TODO: DPL-065 needs :file_links: csv output: for Cellaca input files for QC1 to 4 depending on number samples
+  # Cellaca output files (1-4) are uploaded into Quanthub to set concentrations on plate (DPL-066)
+  # TODO: DPL-065 needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
+  # TODO: DPL-065 Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
+  # TODO: DPL-065 new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
+# LCA PBMC wells are pooled together into the LCA PBMC Pools plate
+LCA PBMC Pools:
+  :asset_type: plate
+  # TODO: DPL-067 :presenter_class: Presenters::?CardinalPoolsPlatePresenter shows pool info for wells, samples in each well
+  # TODO: DPL-067 :creator_class: LabwareCreators::?Plate new creator to make pools of samples automatically according to table, using info from PBMC QC
+  # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LCA PBMC plate
+# LCA PBMC Pools stamps into LCA 10X cDNA
+LCA 10X cDNA:
+  :asset_type: plate
+# LCA 10X cDNA stamps into LCA Connect PCRXP
+LCA Connect PCRXP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  # TODO: DPL-069 Research is there a quanthub story here to get connect concentrations into SS?
+  # TODO: DPL-071 needs :file_links: csv download of concentration file including number of samples per well and tag ids
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  # Selection of Tag groups from the i5 and i7 dropdowns will be used here rather than tag plate barcodes (single or dual index tag groups)
+# DPL-072 Wells from LCA Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
+# TODO: DPL-072 Research whether tag clashes will be automatically checked for on combining wells with multiple samples in them when pooling
+LCA Custom Pool:
+  :asset_type: tube
+  # TODO: DPL-072 Research check these are the right target and type
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+# LCA Custom Pool tube stamps into LCA Custom Pool Norm tube
+LCA Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+###
+# Cardinal Blood Banking Pipeline
+###
+# LCA Blood Bank plates are stamped into LCA PBMC Bank plates
+LCA PBMC Bank:
+  :asset_type: plate
+# LCA PBMC Bank plates are stamped into LCA PBMC Rack tube racks
+# TODO: DPL-074 create tube rack via samples extraction?
