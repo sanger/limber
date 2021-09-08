@@ -5,6 +5,7 @@ const filterProps = {
       wells: 'position,requests_as_source,aliquots,uuid',
       aliquots: 'request' },
     plateIncludes: 'wells,wells.requests_as_source,wells.requests_as_source.primer_panel,wells.aliquots.request.primer_panel',
+    tubeIncludes: 'receptacle,receptacle.requests_as_source,receptacle.requests_as_source.primer_panel,receptacle.aliquots.request.primer_panel',
     requestsFilter: 'lb-primer-panel-filter',
   },
   'null': {
@@ -13,6 +14,7 @@ const filterProps = {
       wells: 'position,requests_as_source,aliquots,uuid',
       aliquots: 'request' },
     plateIncludes: 'wells,wells.requests_as_source,wells.aliquots.request',
+    tubeIncludes: 'receptacle,receptacle.requests_as_source,receptacle.aliquots.request',
     requestsFilter: 'lb-null-filter',
   }
 }

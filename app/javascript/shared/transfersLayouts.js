@@ -214,22 +214,22 @@ const transferFunctions = {
 }
 
 
-// Receives an array of requestsWithPlates and a transfer layout name (either
-// 'quadrant' or 'sequential').
+// Receives an array of requestsWithLabware and a transfer layout name (either
+// 'quadrant' or 'sequential' or 'sequentialtubes').
 // Returns an object containing an array of valid transfers and an array of
 // duplicated transfers.
 // Throws an error if the transfers layout string is not mapped to a transfer
 // function.
 
-const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
+const transfersFromRequests = function(requestsWithLabware, transfersLayout) {
   console.log("*** transfersFromRequests ***")
-  console.log("*** requestsWithPlates ***", requestsWithPlates)
+  console.log("*** requestsWithLabware ***", requestsWithLabware)
   console.log("*** transfersLayout ***", transfersLayout)
   const transferFunction = transferFunctions[transfersLayout]
   if (transferFunction === undefined) {
     throw `Invalid transfers layout name: ${transfersLayout}`
   }
-  const { validTransfers, duplicatedTransfers } = transferFunction(requestsWithPlates)
+  const { validTransfers, duplicatedTransfers } = transferFunction(requestsWithLabware)
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 

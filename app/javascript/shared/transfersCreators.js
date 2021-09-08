@@ -22,7 +22,7 @@ const transferTubesCreator = function(transfers, extraParams = (_) => {}) {
     transfersArray[i] = {
       source_tube: transfers[i].tubeObj.tube.uuid,
       pool_index: transfers[i].tubeObj.index + 1,
-      source_asset: transfers[i].uuid,
+      source_asset: transfers[i].tube.receptacle.uuid,
       outer_request: transfers[i].request.uuid,
       new_target: { location: transfers[i].targetWell },
       ...extraParams(transfers[i])
