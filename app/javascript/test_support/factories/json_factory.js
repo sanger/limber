@@ -99,7 +99,7 @@ const buildOne = (associationName, associationValue) => {
 
 const attributesFactory = (factoryName, userAttributes = {}) => {
   const factory = findFactory(factoryName)
-  const { id = nextIndex() } = userAttributes
+  const { id = `${nextIndex()}` } = userAttributes
   return { ... globalDefaults(id), ... factory.attributes, ... userAttributes }
 }
 
@@ -116,7 +116,7 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
   // We don't recognise the factory.
   if (resource_config.invalid) { throw new InvalidFactory(factoryName, type) }
 
-  const { id = nextIndex() } = userAttributes
+  const { id = `${nextIndex()}` } = userAttributes
   const resourceUrl = `${dummyApiUrl}/${pluralize(type)}/${id}`
   const links = { self: resourceUrl }
 
