@@ -6,11 +6,10 @@ const buildTubeObjs = function(number) {
   })
 }
 
-const requestsForTube = function(tube) {
-  return [...tube.requests_as_source, ...tube.aliquots.map(aliquot => aliquot.request)].filter(request => request)
-}
+// const requestsForTube = function(tube) {
+//   return [...tube.receptacle.requests_as_source, ...tube.receptacle.aliquots.map(aliquot => aliquot.request)].filter(request => request)
+// }
 
 export {
-  buildTubeObjs,
-  requestsForTube
+  buildTubeObjs
 }

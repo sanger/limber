@@ -47,11 +47,11 @@
         >
           {{ transfersError }}
         </b-alert>
-        <component
+        <!-- <component
           :is="requestsFilterComponent"
           :requests-with-tubes="requestsWithTubes"
           @change="requestsWithTubesFiltered = $event"
-        />
+        /> -->
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
@@ -86,8 +86,8 @@ import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-import { requestIsActive, requestsFromTubes } from 'shared/requestHelpers'
-import { transfersFromRequests } from 'shared/transfersLayouts'
+// import { requestIsActive, requestsFromTubes } from 'shared/requestHelpers'
+import { transfersForTubes } from 'shared/transfersLayouts'
 import { checkDuplicates } from 'shared/components/tubeScanValidators'
 
 export default {
@@ -153,7 +153,7 @@ export default {
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
 
       // Array of filtered requestsWithTubes emitted by the request filter
-      requestsWithTubesFiltered: [],
+      // requestsWithTubesFiltered: [],
 
       // Object containing transfers creator's extraParam function and the
       // state of the transfers (i.e. isValid)
@@ -184,23 +184,26 @@ export default {
              && this.transfersCreatorObj.isValid
     },
     validTubes() {
+      console.log("*** validTubes, this.tubes ***", this.tubes)
       return this.tubes.filter( tube => tube.state === 'valid' )
     },
     unsuitableTubes() {
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
     },
-    requestsWithTubes() {
-      const requestsFromTubesArray = requestsFromTubes(this.validTubes)
-      const requestsWithTubesArray = []
-      for (let i = 0; i < requestsFromTubesArray.length; i++) {
-        if (requestIsActive(requestsFromTubesArray[i].request)) {
-          requestsWithTubesArray.push(requestsFromTubesArray[i])
-        }
-      }
-      return requestsWithTubesArray
-    },
+    // requestsWithTubes() {
+    //   const requestsFromTubesArray = requestsFromTubes(this.validTubes)
+    //   const requestsWithTubesArray = []
+    //   for (let i = 0; i < requestsFromTubesArray.length; i++) {
+    //     if (requestIsActive(requestsFromTubesArray[i].request)) {
+    //       requestsWithTubesArray.push(requestsFromTubesArray[i])
+    //     }
+    //   }
+    //   return requestsWithTubesArray
+    // },
     transfers() {
-      return transfersFromRequests(this.requestsWithTubesFiltered, this.transfersLayout)
+      // return transfersFromRequests(this.requestsWithTubesFiltered, this.transfersLayout)
+      console.log("*** transfers, this.validTubes ***", this.validTubes)
+      return transfersForTubes(this.validTubes)
     },
     validTransfers() {
       return this.transfers.valid
@@ -234,9 +237,10 @@ export default {
     },
     targetWells() {
       const wells = {}
+      console.log("*** targetWells this.validTransfers ***", this.validTransfers)
       for (let i = 0; i < this.validTransfers.length; i++) {
         console.log("*** validTransfers[i] ***", this.validTransfers[i])
-        console.log("*** tubeObj ***", this.validTransfers[i].tubeObj)
+        // console.log("*** tubeObj ***", this.validTransfers[i].tubeObj)
         wells[this.validTransfers[i].targetWell] = {
           pool_index: this.validTransfers[i].tubeObj.index + 1
         }
@@ -262,10 +266,14 @@ export default {
   },
   methods: {
     updateTube(index, data) {
+      console.log("*** updateTube *** ")
+      console.log("index", index)
+      console.log("{...data, index: index - 1 }", {...data, index: index - 1 })
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
-      console.log("*** this.tubes ***", this.tubes)
+      console.log("this.tubes", this.tubes)
     },
     apiTransfers() {
+      // what we want to transfer when cteating the plate
       return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {

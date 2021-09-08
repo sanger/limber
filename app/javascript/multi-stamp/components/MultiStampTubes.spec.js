@@ -36,14 +36,21 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.valid).toEqual(false)
   })
 
-  it('enables creation when there are all valid tubes', () => {
+  // THIS ONE
+  fit('enables creation when there are all valid tubes', () => {
     const wrapper = wrapperFactory()
     const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
     const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
+
+    console.log("*** IN TEST: tube1", tube1)
+    console.log("*** IN TEST: tube2", tube2)
+
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    console.log("*** IN TEST: tubes", wrapper.vm.tubes)
+
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.valid).toEqual(true)
@@ -52,7 +59,7 @@ describe('MultiStampTubes', () => {
   it('disables creation when there are no possible transfers', () => {
     const wrapper = wrapperFactory()
 
-    wrapper.setData({ requestsWithTubesFiltered: [] })
+    // wrapper.setData({ requestsWithTubesFiltered: [] })
 
     expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
   })
@@ -64,19 +71,19 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
 
     expect(wrapper.vm.valid).toEqual(false)
   })
 
-  fit('sends a post request when the button is clicked', async () => {
+  it('sends a post request when the button is clicked', async () => {
     let mock = new MockAdapter(localVue.prototype.$axios)
 
     const tube = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid' }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     const expectedPayload = { plate: {
@@ -115,7 +122,7 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(3, tube3)
     wrapper.vm.updateTube(4, tube4)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.apiTransfers()).toEqual([
@@ -137,7 +144,7 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(3, tube3)
     wrapper.vm.updateTube(4, tube4)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
 
     expect(wrapper.vm.targetWells).toEqual({
       'A1': { pool_index: 1 },
@@ -152,7 +159,7 @@ describe('MultiStampTubes', () => {
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
 
     expect(wrapper.vm.duplicatedTransfers).toEqual([])
     expect(wrapper.vm.excessTransfers).toEqual([])
@@ -193,7 +200,7 @@ describe('MultiStampTubes', () => {
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
 
-    wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
+    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
 
     expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
     expect(wrapper.vm.transfersError).toEqual('This would result in multiple transfers into the same well. Check if the source tubes (NT1S) have more than one active submission.')
