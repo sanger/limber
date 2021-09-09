@@ -179,8 +179,8 @@ export default {
     valid() {
       return this.unsuitableTubes.length === 0 // None of the tubes are invalid
              && this.validTransfers.length > 0 // We have at least one transfer
-             && this.excessTransfers.length === 0 // No excess transfers
-             && this.duplicatedTransfers.length === 0 // No duplicated transfers
+            //  && this.excessTransfers.length === 0 // No excess transfers
+            //  && this.duplicatedTransfers.length === 0 // No duplicated transfers
              && this.transfersCreatorObj.isValid
     },
     validTubes() {
@@ -208,28 +208,28 @@ export default {
     validTransfers() {
       return this.transfers.valid
     },
-    duplicatedTransfers() {
-      return this.transfers.duplicated
-    },
-    excessTransfers() {
-      return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
-    },
+    // duplicatedTransfers() {
+    //   return this.transfers.duplicated
+    // },
+    // excessTransfers() {
+    //   return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
+    // },
     transfersError() {
       const errorMessages = []
-      if (this.duplicatedTransfers.length > 0) {
-        var sourceBarcodes = new Set()
-        this.duplicatedTransfers.forEach(transfer => {
-          sourceBarcodes.add(transfer.tubeObj.tube.labware_barcode.human_barcode)
-        })
+      // if (this.duplicatedTransfers.length > 0) {
+      //   var sourceBarcodes = new Set()
+      //   this.duplicatedTransfers.forEach(transfer => {
+      //     sourceBarcodes.add(transfer.tubeObj.tube.labware_barcode.human_barcode)
+      //   })
 
-        const msg = 'This would result in multiple transfers into the same well. Check if the source tubes ('
-                    + [...sourceBarcodes].join(', ')
-                    + ') have more than one active submission.'
-        errorMessages.push(msg)
-      }
-      if (this.excessTransfers.length > 0) {
-        errorMessages.push('excess transfers')
-      }
+      //   const msg = 'This would result in multiple transfers into the same well. Check if the source tubes ('
+      //               + [...sourceBarcodes].join(', ')
+      //               + ') have more than one active submission.'
+      //   errorMessages.push(msg)
+      // }
+      // if (this.excessTransfers.length > 0) {
+      //   errorMessages.push('excess transfers')
+      // }
       return errorMessages.join(' and ')
     },
     transfersCreatorComponent() {
@@ -237,14 +237,13 @@ export default {
     },
     targetWells() {
       const wells = {}
-      console.log("*** targetWells this.validTransfers ***", this.validTransfers)
+      console.log("*** MultiStampTubes: targetWells: this.validTransfers ***", this.validTransfers)
       for (let i = 0; i < this.validTransfers.length; i++) {
-        console.log("*** validTransfers[i] ***", this.validTransfers[i])
-        // console.log("*** tubeObj ***", this.validTransfers[i].tubeObj)
+        console.log("*** MultiStampTubes: targetWells: this.validTransfers[i] ***", this.validTransfers[i])
         wells[this.validTransfers[i].targetWell] = {
           pool_index: this.validTransfers[i].tubeObj.index + 1
         }
-        console.log("well:", wells[this.validTransfers[i].targetWell])
+        console.log("*** MultiStampTubes: targetWells: well ***", wells[this.validTransfers[i].targetWell])
       }
       return wells
     },
@@ -266,11 +265,7 @@ export default {
   },
   methods: {
     updateTube(index, data) {
-      console.log("*** updateTube *** ")
-      console.log("index", index)
-      console.log("{...data, index: index - 1 }", {...data, index: index - 1 })
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
-      console.log("this.tubes", this.tubes)
     },
     apiTransfers() {
       // what we want to transfer when cteating the plate
@@ -281,7 +276,7 @@ export default {
       this.loading = true
       let payload = {
         plate: {
-          parent_uuid: this.validTubes[0].tube.uuid,
+          parent_uuid: this.validTubes[0].tube.uuid, // TODO: this is just one tube of 96 and assumes A1 is filled, it may not be
           purpose_uuid: this.purposeUuid,
           transfers: this.apiTransfers()
         }

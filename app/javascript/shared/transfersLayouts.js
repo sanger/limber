@@ -151,16 +151,23 @@ const buildSequentialTransfersArray = function(transferRequests) {
 
 
 const buildSequentialTubesTransfersArray = function(transferRequests) {
+  console.log("*** transferLayouts: buildSequentialTubesTransfersArray ***")
   const transfers = new Array(transferRequests.length)
   for (let i = 0; i < transferRequests.length; i++) {
-    const requestWithTube = transferRequests[i]
+    const tubeTransferReq = transferRequests[i]
+
+    console.log("** transferLayouts: buildSequentialTubesTransfersArray: tubeTransferReq i **", i)
+    console.log("** transferLayouts: buildSequentialTubesTransfersArray: tubeTransferReq **", tubeTransferReq)
+
     transfers[i] = {
-      request: requestWithTube.request,
-      tube: requestWithTube.tube,
-      tubeObj: requestWithTube.tubeObj,
+      // request: null,
+      // receptacle: tubeTransferReq.tubeObj.receptacle,
+      tubeObj: { tube: tubeTransferReq.tube, index: tubeTransferReq.index },
       targetWell: indexToName(i, 8)
     }
+    console.log("** transferLayouts: buildSequentialTubesTransfersArray: transfers[i] **", transfers[i])
   }
+  console.log("** transferLayouts: buildSequentialTubesTransfersArray: transfers **", transfers)
   return transfers
 }
 
@@ -193,24 +200,9 @@ const sequentialTransfers = function(requestsWithPlates) {
 }
 
 
-
-// const sequentialTubeTransfers = function(potentialTransfers) {
-//   console.log("*** sequentialTubeTransfers ***")
-//   const { tubeMatrix, duplicatedRequests } = buildTubeMatrix(potentialTransfers, 96)
-//   // console.log("*** finished building tube matrix ***")
-//   const transferRequests = tubeMatrix.flat()
-//   // console.log("*** transferRequests made ***")
-//   const validTransfers = buildSequentialTubesTransfersArray(transferRequests)
-//   // console.log("*** validTransfers made ***")
-//   const duplicatedTransfers = buildSequentialTubesTransfersArray(duplicatedRequests)
-//   // console.log("*** duplicatedTransfers made ***")
-//   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
-// }
-
 const transferFunctions = {
   quadrant: quadrantTransfers,
-  sequential: sequentialTransfers// ,
-  // sequentialtube: sequentialTubeTransfers
+  sequential: sequentialTransfers
 }
 
 
@@ -247,27 +239,30 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
 //      ]
 //
 const transfersForTubes = function(validTubes) {
-  console.log("*** transfersForTubes : validTubes ***", validTubes)
+  console.log("*** transfersLayouts: transfersForTubes : validTubes ***", validTubes)
 
+  const tubesMatrix = buildArray(96, () => new Array(1))
 
-  // const tubeMatrix = buildArray(maxTubes, () => new Array(1))
-  // const { tube, tubeObj } = validTubes[i]
-//     if (tubeMatrix[tubeObj.index][0] === undefined) {
-//       tubeMatrix[tubeObj.index][0] = validTubes[i]
-//     }
-//     else {
-//       duplicatedRequests.push(validTubes[i])
-//     }
+  for (let i = 0; i < validTubes.length; i++) {
+    const tubeObj = validTubes[i]
+    console.log("** transfersLayouts: transfersForTubes : i **", i)
+    console.log("** transfersLayouts: transfersForTubes : tubeObj **", tubeObj)
 
+    if (tubesMatrix[tubeObj.index][0] === undefined) {
+      console.log("* transfersLayouts: transfersForTubes : setting tube at index *", tubeObj.index)
+      tubesMatrix[tubeObj.index][0] = validTubes[i]
+    }
+  }
 
-  // const { tubeMatrix } = buildTubeMatrix(validTubes, 96)
-  // console.log("*** finished building tube matrix ***")
-  // const transferRequests = tubeMatrix.flat()
-  // console.log("*** transferRequests made ***")
-  const validTransfers = []
+  console.log("** Tube Matrix **", tubesMatrix)
+
+  const transferRequests = tubesMatrix.flat()
+  console.log("*** transfersLayouts: transfersForTubes : transferRequests ***", transferRequests)
+
+  const validTransfers = buildSequentialTubesTransfersArray(transferRequests)
+  console.log("*** transfersLayouts: transfersForTubes : validTransfers ***", validTransfers)
+
   const duplicatedTransfers = []
-  // const validTransfers = buildSequentialTubesTransfersArray(transferRequests)
-  // console.log("*** validTransfers made ***")
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 

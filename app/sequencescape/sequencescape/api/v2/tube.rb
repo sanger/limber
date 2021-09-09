@@ -21,6 +21,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   has_one :purpose
 
+  has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptable'
+
   DEFAULT_INCLUDES = [
     :purpose, 'aliquots.request.request_type'
   ].freeze
@@ -38,7 +40,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   # Dummied out for the moment. But no real reason not to add it to the API.
   def requests_as_source
-    # TODO does this need to return something for Cardinal?
     []
   end
 

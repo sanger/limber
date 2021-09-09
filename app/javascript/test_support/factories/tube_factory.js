@@ -11,9 +11,8 @@ const tubeFactory = function(tubeOptions = {}) {
     id: id,
     labware_barcode: { ean13_barcode: '1220542971784', human_barcode: 'NT1S', machine_barcode: '1220542971784' },
     state: 'passed',
-
-    requests_as_source: buildArray(1, (iteration) => requestFactory({ uuid: `${uuid}-source-request-${iteration}` })),
-    aliquots: [{ request: null }]
+    requests_as_source: [],
+    receptacle: { uuid: 'receptacle-uuid', aliquots: [{ request: null }] }
   }
   return { ...tubeDefaults, ...(tubeOptions || {}) }
 }

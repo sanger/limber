@@ -9,7 +9,7 @@ import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
-describe('MultiStampTubes', () => {
+fdescribe('MultiStampTubes', () => {
   const wrapperFactory = function(options = {}) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
@@ -36,8 +36,7 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.valid).toEqual(false)
   })
 
-  // THIS ONE
-  fit('enables creation when there are all valid tubes', () => {
+  it('enables creation when there are all valid tubes', () => {
     const wrapper = wrapperFactory()
     const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
     const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
@@ -111,11 +110,11 @@ describe('MultiStampTubes', () => {
 
   })
 
-  it('calculates transfers for multiple tubes', () => {
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
-    const tube3 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-3' }) }
-    const tube4 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-4' }) }
+  fit('calculates transfers for multiple tubes', () => {
+    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' , receptacle: { uuid: 'receptacle-uuid-1' }}) }
+    const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' , receptacle: { uuid: 'receptacle-uuid-2' }}) }
+    const tube3 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-3' , receptacle: { uuid: 'receptacle-uuid-3' }}) }
+    const tube4 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-4' , receptacle: { uuid: 'receptacle-uuid-4' }}) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -126,10 +125,10 @@ describe('MultiStampTubes', () => {
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.apiTransfers()).toEqual([
-      { source_tube: 'tube-uuid-1', pool_index: 1, source_asset: 'tube-uuid-1', outer_request: 'tube-uuid-1-source-request-0', new_target: { location: 'A1' } },
-      { source_tube: 'tube-uuid-2', pool_index: 2, source_asset: 'tube-uuid-2', outer_request: 'tube-uuid-2-source-request-0', new_target: { location: 'B1' } },
-      { source_tube: 'tube-uuid-3', pool_index: 3, source_asset: 'tube-uuid-3', outer_request: 'tube-uuid-3-source-request-0', new_target: { location: 'C1' } },
-      { source_tube: 'tube-uuid-4', pool_index: 4, source_asset: 'tube-uuid-4', outer_request: 'tube-uuid-4-source-request-0', new_target: { location: 'D1' } }
+      { source_tube: 'tube-uuid-1', pool_index: 1, source_asset: 'receptacle-uuid-1', outer_request: null, new_target: { location: 'A1' } },
+      { source_tube: 'tube-uuid-2', pool_index: 2, source_asset: 'receptacle-uuid-2', outer_request: null, new_target: { location: 'B1' } },
+      { source_tube: 'tube-uuid-3', pool_index: 3, source_asset: 'receptacle-uuid-3', outer_request: null, new_target: { location: 'C1' } },
+      { source_tube: 'tube-uuid-4', pool_index: 4, source_asset: 'receptacle-uuid-4', outer_request: null, new_target: { location: 'D1' } }
     ])
   })
 

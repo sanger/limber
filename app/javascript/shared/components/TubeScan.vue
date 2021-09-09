@@ -141,6 +141,7 @@ export default {
       }
     },
     async findTube() {
+      console.log("*** TubeScan: findTube: this.includes ***", this.includes)
       const tube = (
         await this.api.findAll(this.tubeType, {
           include: this.includes,

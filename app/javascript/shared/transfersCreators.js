@@ -14,21 +14,24 @@ const baseTransferCreator = function(transfers, extraParams = (_) => {}) {
 }
 
 const transferTubesCreator = function(transfers, extraParams = (_) => {}) {
-  console.log("*** transferTubesCreator ***")
-  console.log("*** transfers ***", transfers)
+  console.log("*** transferCreators: transferTubesCreator ***")
+  console.log("***transferCreators: transferTubesCreator: transfers ***", transfers)
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
-    console.log("*** transfers[i] ***", transfers[i])
+    console.log("*** transferCreators: transferTubesCreator: transfers[i] ***", transfers[i])
+    console.log("*** transferCreators: transferTubesCreator: transfers[i].tubeObj.tube.uuid ***", transfers[i].tubeObj.tube.uuid)
+    console.log("*** transferCreators: transferTubesCreator: transfers[i].tubeObj.tube.receptacle ***", transfers[i].tubeObj.tube.receptacle)
+    console.log("*** transferCreators: transferTubesCreator: transfers[i].tubeObj.tube.receptacle.uuid ***", transfers[i].tubeObj.tube.receptacle.uuid)
     transfersArray[i] = {
       source_tube: transfers[i].tubeObj.tube.uuid,
       pool_index: transfers[i].tubeObj.index + 1,
-      source_asset: transfers[i].tube.receptacle.uuid,
+      source_asset: transfers[i].tubeObj.tube.receptacle.uuid, // TODO: how to get source asset uuid for tube?
       outer_request: null, // transfers[i].request.uuid,
       new_target: { location: transfers[i].targetWell },
       ...extraParams(transfers[i])
     }
   }
-  console.log("*** transfersArray ***", transfersArray)
+  console.log("*** transferCreators: transferTubesCreator: transfersArray ***", transfersArray)
   return transfersArray
 }
 
