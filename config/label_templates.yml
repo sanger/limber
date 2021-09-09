@@ -10,31 +10,31 @@ default_sprint_templates:
   :tube: tube.yml.erb
 
 default_printer_type_names:
-  :plate_double: '384 Well Plate Double'
-  :plate_a: '96 Well Plate'
-  :tube: '1D Tube'
+  :plate_double: 384 Well Plate Double
+  :plate_a: 96 Well Plate
+  :tube: 1D Tube
 
 plate_6mm_double:
   :label_class: Labels::PlateDoubleLabel
-  :printer_type: '384 Well Plate Double'
-  :pmb_template: 'plate_6mm_double_code39'
+  :printer_type: 384 Well Plate Double
+  :pmb_template: plate_6mm_double_code39
 
 plate_6mm_double_qc:
   :label_class: Labels::PlateDoubleLabelQc
-  :printer_type: '384 Well Plate Double'
-  :pmb_template: 'plate_6mm_double_code39'
+  :printer_type: 384 Well Plate Double
+  :pmb_template: plate_6mm_double_code39
 
 plate_xp:
   :label_class: Labels::PlateLabelXp
-  :pmb_template: 'sqsc_96plate_label_template_code39'
+  :pmb_template: sqsc_96plate_label_template_code39
 
 plate_split:
   :label_class: Labels::PlateSplit
-  :pmb_template: 'sqsc_96plate_label_template_code39'
+  :pmb_template: sqsc_96plate_label_template_code39
 
 plate_lds_al_lib:
   :label_class: Labels::PlateLabelLdsAlLib
-  :pmb_template: 'sqsc_96plate_label_template_code39'
+  :pmb_template: sqsc_96plate_label_template_code39
 
 plate_cellaca_qc:
   :label_class: Labels::PlateLabelCellacaQc

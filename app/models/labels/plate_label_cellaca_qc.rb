@@ -16,7 +16,7 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
       next if occupied_columns.none? { |col| col / COLS_PER_PAGE == index }
 
       qc_label(index)
-    end
+    end.reverse
   end
 
   private
