@@ -80,3 +80,5 @@ hamilton_lds_al_lib_to_lds_al_lib_dil:
   csv: hamilton_variable_volume_dilutions_with_well_diluents
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
+cellaca_input_file:
+  csv: cellaca_input_file

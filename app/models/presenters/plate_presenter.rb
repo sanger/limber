@@ -24,26 +24,27 @@ module Presenters
       'Plate type' => :purpose_name,
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
-      'PCR Cycles' => :pcr_cycles,
+      'PCR Cycles' => :requested_pcr_cycles,
       'Created on' => :created_on
     }
     self.allow_well_failure_in_states = [:passed]
     self.style_class = 'standard'
 
     # @note Validation here is intended as a warning. Rather than strict validation
-    validates :pcr_cycles_specified,
-              numericality: { less_than_or_equal_to: 1, message: 'is not consistent across the plate.' },
+    validates :pcr_cycles,
+              length: { maximum: 1, message: 'are not consistent across the plate.' },
               unless: :multiple_requests_per_well?
 
-    validates :pcr_cycles,
+    validates :requested_pcr_cycles,
               inclusion: { in: ->(r) { r.expected_cycles },
-                           message: 'differs from standard. %{value} cycles have been requested.' }, # rubocop:todo Style/FormatStringToken
+                           message: 'differs from standard. %<value>s cycles have been requested.' },
               if: :expected_cycles
 
     validates_with Validators::InProgressValidator
     validates_with Validators::FailedValidator
 
-    delegate :tagged?, :number_of_columns, :number_of_rows, :size, :purpose, :human_barcode, :priority, :pools, to: :labware
+    delegate :pcr_cycles, :tagged?, :number_of_columns, :number_of_rows, :size,
+             :purpose, :human_barcode, :priority, :pools, to: :labware
     delegate :pool_index, to: :pools
     delegate :tube_labels, to: :tubes_and_sources
 
@@ -58,8 +59,8 @@ module Presenters
       "#{number_of_filled_wells}/#{size}"
     end
 
-    def pcr_cycles
-      pcr_cycles_specified.zero? ? 'No pools specified' : cycles.to_sentence
+    def requested_pcr_cycles
+      pcr_cycles.empty? ? 'No pools specified' : pcr_cycles.to_sentence
     end
 
     def expected_cycles
@@ -83,9 +84,14 @@ module Presenters
       end
     end
 
+    alias child_assets child_plates
+
     def csv_file_links
       links = purpose_config.fetch(:file_links, []).map do |link|
-        [link.name, [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv }]]
+        [
+          link.name,
+          [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }]
+        ]
       end
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links
@@ -107,8 +113,6 @@ module Presenters
       "#{human_barcode} - #{purpose_name}"
     end
 
-    alias child_assets child_plates
-
     def quadrants_helper
       size == 384 ? 'quadrant_helper' : 'none'
     end
@@ -125,14 +129,6 @@ module Presenters
 
     def number_of_filled_wells
       wells.count { |w| w.aliquots.present? }
-    end
-
-    def pcr_cycles_specified
-      cycles.length
-    end
-
-    def cycles
-      labware.pcr_cycles
     end
 
     # Passable requests are those associated with aliquots,
