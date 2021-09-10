@@ -4,6 +4,7 @@ require 'rails_helper'
 require './app/controllers/plates_controller'
 
 RSpec.describe ExportsController, type: :controller do
+  let(:default_plate_includes) { 'wells' }
   let(:well_qc_includes) { 'wells.qc_results' }
   let(:well_qc_sample_includes) { 'wells.qc_results,wells.aliquots.sample.sample_metadata' }
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
@@ -194,6 +195,24 @@ RSpec.describe ExportsController, type: :controller do
         let(:csv_id) { 'hamilton_lds_al_lib_to_lds_al_lib_dil' }
 
         it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
+      end
+    end
+
+    context 'where csv id requested is cellaca_input_file.csv' do
+      let(:includes) { default_plate_includes }
+      let(:csv_id) { 'cellaca_input_file' }
+      let(:expected_template) { 'cellaca_input_file' }
+
+      it_behaves_like 'a csv view'
+
+      it 'assigns page 0 by default' do
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        expect(assigns(:page)).to be 0
+      end
+
+      it 'assigns page 1 if specified' do
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode, page: '1' }, as: :csv
+        expect(assigns(:page)).to be 1
       end
     end
   end
