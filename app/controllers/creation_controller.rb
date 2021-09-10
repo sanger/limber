@@ -36,7 +36,6 @@ class CreationController < ApplicationController
                       ))
   end
 
-  # rubocop:todo Metrics/MethodLength
   def creation_failed(exception) # rubocop:todo Metrics/AbcSize
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
     Rails.logger.error(exception.message)
@@ -51,11 +50,10 @@ class CreationController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 
-  def create_success # rubocop:todo Metrics/MethodLength
+  def create_success
     respond_to do |format|
       format.json do
         render json: {
@@ -70,7 +68,6 @@ class CreationController < ApplicationController
     end
   end
 
-  # rubocop:todo Metrics/MethodLength
   def create_failure # rubocop:todo Metrics/AbcSize
     Rails.logger.error(@labware_creator.errors.full_messages)
     respond_to do |format|
@@ -84,7 +81,6 @@ class CreationController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def permitted_attributes
     creator_class.attributes
