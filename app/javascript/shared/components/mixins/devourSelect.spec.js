@@ -74,6 +74,10 @@ describe('DevourSelect mixin', () => {
     it('is invalid if there are api troubles', async () => {
       const api = mockApi()
 
+      // Devour logs the error automatically, which clutters the feedback
+      // so we disable logging here
+      jest.spyOn(console, 'log').mockImplementation(() => { })
+
       // mock the devour api: url, params, response
       api.mockFail('tests', {
         filter: testFilter,

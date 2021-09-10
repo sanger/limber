@@ -562,7 +562,7 @@ export default {
         // Something has gone wrong
         this.loading = false
         // TODO replace this with generic limber logging when available
-        console.log(error)
+        console.error(error)
         this.creationRequestInProgress = false
         this.creationRequestSuccessful = false
       })

@@ -87,6 +87,10 @@ describe('PlateScan', () => {
 
   it('is invalid if there are api troubles', async () => {
     const api = mockApi()
+    // Devour logs the error automatically, which clutters the feedback
+    // so we disable logging here
+    jest.spyOn(console, 'log').mockImplementation(() => { })
+
     api.mockFail('plates', {
       filter: { barcode: 'Good barcode' },
       include: 'wells.requests_as_source,wells.aliquots.request',
