@@ -29,8 +29,8 @@ RSpec.describe LabwareHelper do
     end
   end
 
-  describe '::prevent_quadrant_fail?' do
-    subject { prevent_quadrant_fail?(well) }
+  describe '::prevent_well_fail?' do
+    subject { prevent_well_fail?(well) }
 
     context 'when passed a failed well' do
       let(:well) { instance_double(Sequencescape::Api::V2::Well, passed?: false, control_info: nil) }

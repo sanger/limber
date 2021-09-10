@@ -1,6 +1,6 @@
 <%= presenter.form.check_box(id, disabled: !failable?(container), data: {
   quadrant_index: container.quadrant_index,
-  prevent_quadrant_fail: prevent_quadrant_fail?(container),
+  prevent_well_fail: prevent_well_fail?(container),
   **container.all_latest_qc.map {|qc| ["qc-#{qc.key}", qc.value] }.to_h
 }) %>
 <%= presenter.form.label id do %>
