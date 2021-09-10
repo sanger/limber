@@ -1,13 +1,18 @@
 <%= presenter.form.check_box(id, disabled: !failable?(container), data: {
   quadrant_index: container.quadrant_index,
-  prevent_quadrant_fail: prevent_quadrant_fail?(container)
+  prevent_quadrant_fail: prevent_quadrant_fail?(container),
+  **container.all_latest_qc.map {|qc| ["qc-#{qc.key}", qc.value] }.to_h
 }) %>
 <%= presenter.form.label id do %>
   <div id="aliquot_<%= id %>"
        class="aliquot <%= container.state %>"
        data-toggle="tooltip"
        data-placement="top"
-       title="<%= id %>"
+       data-html="true"
+       title="<%= id %>
+        <% container.all_latest_qc.each do |qc| %>
+          <p><%= qc.key %> : <%= qc.value %> <%= qc.units %></p>
+       <%- end %>"
        >
     <% if container.respond_to?(:contains_control?) && container.contains_control? %>
       <div class="control-type">
