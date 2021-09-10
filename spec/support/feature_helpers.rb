@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FeatureHelpers # rubocop:todo Metrics/ModuleLength
-  def stub_search_and_single_result(search, query, result = nil) # rubocop:todo Metrics/MethodLength
+  def stub_search_and_single_result(search, query, result = nil)
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
     stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
@@ -53,7 +53,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
                  body: json(:v1_custom_metadatum_collection, params))
   end
 
-  def stub_create_labware_metadata(barcode, labware_v1, labware_uuid, user_uuid, metadata) # rubocop:todo Metrics/MethodLength
+  def stub_create_labware_metadata(barcode, labware_v1, labware_uuid, user_uuid, metadata)
     stub_asset_search(barcode, labware_v1)
     stub_api_post('custom_metadatum_collections',
                   payload: {
