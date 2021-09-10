@@ -1,0 +1,18 @@
+<%# This is a picking file for a Hamilton robot for pooling and resuspending PBMC samples %>
+<%= CSV.generate_line [
+                        'SourcePlate',
+                        'SourceWell',
+                        'DestinationPlate',
+                        'DestinationWell',
+                        'SampleVolume',
+                        'ResuspensionVolume',
+                      ],
+                      row_sep: ''
+%>
+<%
+  rows_array = []
+  rows_array << ['SOURCE_BARCODE', 'A1', @plate.barcode, 'A1', 1, 31.25]
+%>
+<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
+<%= CSV.generate_line row, row_sep: '' %>
+<% end %>
