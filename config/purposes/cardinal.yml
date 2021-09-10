@@ -44,19 +44,19 @@ LCA PBMC:
     - name: "Download Cellaca Input QC1"
       id: cellaca_input_file
       params:
-        - page: 0
+        page: 0
     - name: "Download Cellaca Input QC2"
       id: cellaca_input_file
       params:
-        - page: 1
+        page: 1
     - name: "Download Cellaca Input QC3"
       id: cellaca_input_file
       params:
-        - page: 2
+        page: 2
     - name: "Download Cellaca Input QC4"
       id: cellaca_input_file
       params:
-        - page: 3
+        page: 3
 
   # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
   # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
