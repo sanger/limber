@@ -6,12 +6,15 @@
 
 module LabwareCreators
   class MultiStampTubesArray < MultiStampTubes # rubocop:todo Style/Documentation
-    self.transfers_layout = 'sequential'
+    self.transfers_layout = 'sequentialtubes'
     # self.transfers_creator = 'with-volume'
     self.attributes += [
       {
+        # transfers: [
+        #   [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
+        # ]
         transfers: [
-          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
+          [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }]
         ]
       }
     ]

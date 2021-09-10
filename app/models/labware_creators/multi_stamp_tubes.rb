@@ -39,7 +39,7 @@ module LabwareCreators
 
     # Returns a list of parent tube uuids extracted from the transfers
     def parent_uuids
-      transfers.pluck(:source_tube).uniq
+      transfers.pluck(:source_tubes).uniq
     end
 
     def transfer_material_from_parent!(child_uuid)

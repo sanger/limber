@@ -125,7 +125,6 @@ export default {
   },
   watch: {
     state() {
-      // console.log('EMIT', this.tube, this.state)
       this.$emit('change', { tube: this.tube, state: this.state })
     }
   },
@@ -141,7 +140,6 @@ export default {
       }
     },
     async findTube() {
-      console.log("*** TubeScan: findTube: this.includes ***", this.includes)
       const tube = (
         await this.api.findAll(this.tubeType, {
           include: this.includes,

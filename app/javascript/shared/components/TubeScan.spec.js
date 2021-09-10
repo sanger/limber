@@ -1,4 +1,3 @@
-// Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import TubeScan from 'shared/components/TubeScan.vue'
@@ -6,15 +5,12 @@ import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 
 // create an extended `Vue` constructor
-
 import localVue from 'test_support/base_vue'
 
 describe('TubeScan', () => {
   const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
   const nullTube = { data: [] }
   const goodTube = jsonCollectionFactory('tube', [{ uuid: assetUuid }])
-  // TODO: what makes a tube a bad tube? e.g. no sample
-  const badTube = jsonCollectionFactory('tube', [{ uuid: assetUuid }])
 
   const wrapperFactoryTube = function(api = mockApi()) {
     return mount(TubeScan, {

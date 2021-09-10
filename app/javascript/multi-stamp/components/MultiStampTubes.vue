@@ -179,57 +179,23 @@ export default {
     valid() {
       return this.unsuitableTubes.length === 0 // None of the tubes are invalid
              && this.validTransfers.length > 0 // We have at least one transfer
-            //  && this.excessTransfers.length === 0 // No excess transfers
-            //  && this.duplicatedTransfers.length === 0 // No duplicated transfers
              && this.transfersCreatorObj.isValid
     },
     validTubes() {
-      console.log("*** validTubes, this.tubes ***", this.tubes)
       return this.tubes.filter( tube => tube.state === 'valid' )
     },
     unsuitableTubes() {
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
     },
-    // requestsWithTubes() {
-    //   const requestsFromTubesArray = requestsFromTubes(this.validTubes)
-    //   const requestsWithTubesArray = []
-    //   for (let i = 0; i < requestsFromTubesArray.length; i++) {
-    //     if (requestIsActive(requestsFromTubesArray[i].request)) {
-    //       requestsWithTubesArray.push(requestsFromTubesArray[i])
-    //     }
-    //   }
-    //   return requestsWithTubesArray
-    // },
     transfers() {
-      // return transfersFromRequests(this.requestsWithTubesFiltered, this.transfersLayout)
-      console.log("*** transfers, this.validTubes ***", this.validTubes)
       return transfersForTubes(this.validTubes)
     },
     validTransfers() {
       return this.transfers.valid
     },
-    // duplicatedTransfers() {
-    //   return this.transfers.duplicated
-    // },
-    // excessTransfers() {
-    //   return this.validTransfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
-    // },
     transfersError() {
       const errorMessages = []
-      // if (this.duplicatedTransfers.length > 0) {
-      //   var sourceBarcodes = new Set()
-      //   this.duplicatedTransfers.forEach(transfer => {
-      //     sourceBarcodes.add(transfer.tubeObj.tube.labware_barcode.human_barcode)
-      //   })
-
-      //   const msg = 'This would result in multiple transfers into the same well. Check if the source tubes ('
-      //               + [...sourceBarcodes].join(', ')
-      //               + ') have more than one active submission.'
-      //   errorMessages.push(msg)
-      // }
-      // if (this.excessTransfers.length > 0) {
-      //   errorMessages.push('excess transfers')
-      // }
+      // TODO: what errors can we have here? duplicate and excess requests seem impossible with tubes
       return errorMessages.join(' and ')
     },
     transfersCreatorComponent() {
@@ -237,13 +203,10 @@ export default {
     },
     targetWells() {
       const wells = {}
-      console.log("*** MultiStampTubes: targetWells: this.validTransfers ***", this.validTransfers)
       for (let i = 0; i < this.validTransfers.length; i++) {
-        console.log("*** MultiStampTubes: targetWells: this.validTransfers[i] ***", this.validTransfers[i])
         wells[this.validTransfers[i].targetWell] = {
           pool_index: this.validTransfers[i].tubeObj.index + 1
         }
-        console.log("*** MultiStampTubes: targetWells: well ***", wells[this.validTransfers[i].targetWell])
       }
       return wells
     },
@@ -296,7 +259,7 @@ export default {
         this.locationObj.href = response.data.redirect
       }).catch((error) => {
         // Something has gone wrong
-        console.log(error)
+        console.error(error)
         this.loading = false
       })
     }

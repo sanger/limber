@@ -2,14 +2,14 @@
 import { shallowMount } from '@vue/test-utils'
 import MultiStampTubes from './MultiStampTubes.vue'
 import localVue from 'test_support/base_vue.js'
-import { tubeFactory, requestFactory } from 'test_support/factories'
+import { tubeFactory } from 'test_support/factories'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
-fdescribe('MultiStampTubes', () => {
+describe('MultiStampTubes', () => {
   const wrapperFactory = function(options = {}) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
@@ -41,15 +41,9 @@ fdescribe('MultiStampTubes', () => {
     const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
     const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
 
-    console.log("*** IN TEST: tube1", tube1)
-    console.log("*** IN TEST: tube2", tube2)
-
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
 
-    console.log("*** IN TEST: tubes", wrapper.vm.tubes)
-
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.valid).toEqual(true)
@@ -58,7 +52,7 @@ fdescribe('MultiStampTubes', () => {
   it('disables creation when there are no possible transfers', () => {
     const wrapper = wrapperFactory()
 
-    // wrapper.setData({ requestsWithTubesFiltered: [] })
+    wrapper.setData({ tubes: [] })
 
     expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
   })
@@ -70,8 +64,6 @@ fdescribe('MultiStampTubes', () => {
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
 
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
     expect(wrapper.vm.valid).toEqual(false)
   })
 
@@ -82,20 +74,18 @@ fdescribe('MultiStampTubes', () => {
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube)
 
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     const expectedPayload = { plate: {
       parent_uuid: 'tube-uuid',
       purpose_uuid: 'test',
       transfers: [
-        { source_tube: 'tube-uuid', pool_index: 1, source_asset: 'tube-uuid', outer_request: 'tube-uuid-source-request-0', new_target: { location: 'A1' } }
+        { source_tube: 'tube-uuid', pool_index: 1, source_asset: 'receptacle-uuid', outer_request: null, new_target: { location: 'A1' } }
       ]
     }}
 
     mockLocation.href = null
     mock.onPost().reply((config) =>{
-
       expect(config.url).toEqual('example/example')
       expect(config.data).toEqual(JSON.stringify(expectedPayload))
       return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
@@ -121,7 +111,6 @@ fdescribe('MultiStampTubes', () => {
     wrapper.vm.updateTube(3, tube3)
     wrapper.vm.updateTube(4, tube4)
 
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
 
     expect(wrapper.vm.apiTransfers()).toEqual([
@@ -143,8 +132,6 @@ fdescribe('MultiStampTubes', () => {
     wrapper.vm.updateTube(3, tube3)
     wrapper.vm.updateTube(4, tube4)
 
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
     expect(wrapper.vm.targetWells).toEqual({
       'A1': { pool_index: 1 },
       'B1': { pool_index: 2 },
@@ -158,50 +145,6 @@ fdescribe('MultiStampTubes', () => {
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
 
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
-    expect(wrapper.vm.duplicatedTransfers).toEqual([])
-    expect(wrapper.vm.excessTransfers).toEqual([])
     expect(wrapper.vm.transfersError).toEqual('')
-  })
-
-  // it('display "excess transfers" when too many transfers for the target are scanned', () => {
-  //   const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
-  //   const wrapper = wrapperFactory({ targetRows: '1', targetColumns: '1' })
-  //   wrapper.vm.updateTube(1, plate1)
-
-  //   wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
-  //   expect(wrapper.vm.excessTransfers.length).toEqual(3)
-  //   expect(wrapper.vm.transfersError).toEqual('excess transfers')
-  // })
-
-  // it('display "excess transfers" when too many transfers for the target are scanned over multiple plates', () => {
-  //   const plate1 = { state: 'valid', plate: plateFactory({ uuid: 'plate-1-uuid', _filledWells: 4 }) }
-  //   const plate2 = { state: 'valid', plate: plateFactory({ uuid: 'plate-2-uuid', _filledWells: 4 }) }
-  //   const wrapper = wrapperFactory({ targetRows: '2', targetColumns: '2' })
-  //   wrapper.vm.updateTube(1, plate1)
-  //   wrapper.vm.updateTube(2, plate2)
-
-  //   wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
-  //   expect(wrapper.vm.excessTransfers.length).toEqual(4)
-  //   expect(wrapper.vm.transfersError).toEqual('excess transfers')
-  // })
-
-  it('displays the correct error message when scanned plate contains duplicated requests', () => {
-    const requests1 = [
-      requestFactory({uuid: 'req-1-uuid'}),
-      requestFactory({uuid: 'req-2-uuid'})
-    ]
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-1-uuid', requests_as_source: requests1 }) }
-    console.log("*** tube factory tube ***", tube1)
-    const wrapper = wrapperFactory()
-    wrapper.vm.updateTube(1, tube1)
-
-    // wrapper.setData({ requestsWithTubesFiltered: wrapper.vm.requestsWithTubes })
-
-    expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
-    expect(wrapper.vm.transfersError).toEqual('This would result in multiple transfers into the same well. Check if the source tubes (NT1S) have more than one active submission.')
   })
 })

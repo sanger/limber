@@ -1,6 +1,3 @@
-import buildArray from 'shared/buildArray'
-import requestFactory from 'test_support/factories/request_factory'
-
 const tubeFactory = function(tubeOptions = {}) {
   let uuid = tubeOptions.uuid || 'tube-uuid'
   let id = tubeOptions.id || '1'
