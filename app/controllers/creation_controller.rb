@@ -83,8 +83,6 @@ class CreationController < ApplicationController
   end
 
   def permitted_attributes
-    puts("*** DEGUG: creation_controller: permitted_attributes: #{creator_class.attributes}")
-    puts("*** DEGUG: creation_controller: creator_class: #{creator_class}")
     creator_class.attributes
   end
 
