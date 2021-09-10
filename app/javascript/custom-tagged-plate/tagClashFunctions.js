@@ -19,7 +19,7 @@ function extractParentWellSubmissionDetails(parentPlate) {
 
       if(!submDetails.id) {
         // TODO replace this with generic limber logging when available
-        console.log('Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
+        console.error('Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
         return
       }
 
@@ -55,7 +55,7 @@ function extractParentUsedOligos(parentPlate) {
 
       if(!submDetails.id) {
         // TODO replace this with generic limber logging when available
-        console.log('Tag clash functions: extractParentUsedOligos: Error: Submission Id not found for well')
+        console.error('Tag clash functions: extractParentUsedOligos: Error: Submission Id not found for well')
         return
       }
 
