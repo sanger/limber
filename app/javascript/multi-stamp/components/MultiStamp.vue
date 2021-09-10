@@ -289,7 +289,7 @@ export default {
         this.locationObj.href = response.data.redirect
       }).catch((error) => {
         // Something has gone wrong
-        console.log(error)
+        console.error(error)
         this.loading = false
       })
     }

@@ -122,14 +122,12 @@ export default {
         return { state: 'invalid', message: 'Could not find plate' }
       } else {
         const result = aggregate(this.validators, this.plate)
-        // console.log('VALIDATE', this.plate.labware_barcode.human_barcode)
         return { state: boolToString[result.valid], message: result.message }
       }
     }
   },
   watch: {
     state() {
-      // console.log('EMIT', this.plate, this.state)
       this.$emit('change', { plate: this.plate, state: this.state })
     }
   },
