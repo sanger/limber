@@ -110,7 +110,7 @@ fdescribe('MultiStampTubes', () => {
 
   })
 
-  fit('calculates transfers for multiple tubes', () => {
+  it('calculates transfers for multiple tubes', () => {
     const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' , receptacle: { uuid: 'receptacle-uuid-1' }}) }
     const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' , receptacle: { uuid: 'receptacle-uuid-2' }}) }
     const tube3 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-3' , receptacle: { uuid: 'receptacle-uuid-3' }}) }
