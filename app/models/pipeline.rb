@@ -19,7 +19,9 @@ class Pipeline
   # @example
   #   pipeline.filters = { 'request_type_key' => 'library_request', 'library_type' => ['Stndard', 'Other'] }
   # @return [Hash] Filter options
-  attr_reader :filters
+  def filters
+    @filters || {}
+  end
 
   # The plate types(s) for which to suggest library passing for this particular pipeline
   # @return [Array, String]
