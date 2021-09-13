@@ -84,3 +84,4 @@ cellaca_input_file:
   csv: cellaca_input_file
 hamilton_pooling_plate_pbmc:
   csv: hamilton_pooling_plate_pbmc
+  ancestor_purpose: LCA PBMC

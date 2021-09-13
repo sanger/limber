@@ -11,7 +11,7 @@
 %>
 <%
   rows_array = []
-  rows_array << ['SOURCE_BARCODE', 'A1', @plate.barcode, 'A1', 1, 31.25]
+  rows_array << [@ancestor_plate.barcode, 'A1', @plate.barcode, 'A1', 1, 31.25]
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
 <%= CSV.generate_line row, row_sep: '' %>
