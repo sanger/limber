@@ -7,12 +7,8 @@
 module LabwareCreators
   class MultiStampTubesArray < MultiStampTubes # rubocop:todo Style/Documentation
     self.transfers_layout = 'sequentialtubes'
-    # self.transfers_creator = 'with-volume'
     self.attributes += [
       {
-        # transfers: [
-        #   [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
-        # ]
         transfers: [
           [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }]
         ]
@@ -22,11 +18,5 @@ module LabwareCreators
     self.target_columns = 12
     self.source_tubes = 96
 
-    private
-
-    # def request_hash(transfer, *args)
-    #   # We might want to add the 'volume' key into a nested hash called 'metadata'
-    #   super.merge('volume' => transfer[:volume])
-    # end
   end
 end

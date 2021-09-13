@@ -47,11 +47,6 @@
         >
           {{ transfersError }}
         </b-alert>
-        <!-- <component
-          :is="requestsFilterComponent"
-          :requests-with-tubes="requestsWithTubes"
-          @change="requestsWithTubesFiltered = $event"
-        /> -->
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
@@ -72,13 +67,8 @@
 <script>
 import TubeSummary from './TubeSummary'
 import filterProps from './filterProps'
-// TODO: do we need primer panels?
-// import PrimerPanelFilter from './PrimerPanelFilter'
-import NullFilterTubes from './NullFilterTubes'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
-import MultiStampTransfers from './MultiStampTransfers'
-// TODO: do we need a volume?
-// import VolumeTransfers from './VolumeTransfers'
+import MultiStampTubesTransfers from './MultiStampTubesTransfers'
 import { transferTubesCreator } from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
 import TubeScan from 'shared/components/TubeScan'
@@ -86,7 +76,6 @@ import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-// import { requestIsActive, requestsFromTubes } from 'shared/requestHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
 import { checkDuplicates } from 'shared/components/tubeScanValidators'
 
@@ -97,10 +86,7 @@ export default {
     'lb-tube-scan': TubeScan,
     'lb-tube-summary': TubeSummary,
     'lb-loading-modal': LoadingModal,
-    // 'lb-primer-panel-filter': PrimerPanelFilter,
-    'lb-null-filter': NullFilterTubes,
-    'lb-multi-stamp-transfers': MultiStampTransfers
-    // 'lb-volume-transfers': VolumeTransfers
+    'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers
   },
   props: {
     // Sequencescape API V2 URL
@@ -111,12 +97,6 @@ export default {
 
     // Limber target Asset URL for posting the transfers
     targetUrl: { type: String, required: true },
-
-    // Name of the requests filter configuration to use. Requests filters takes
-    // an array of requests (requestsWithTubes) and return a filtered array
-    // (requestsWithTubesFiltered).
-    // (See configurations in ./filterProps.js)
-    requestsFilter: { type: String, required: true },
 
     // Name of the transfers creator to use. Transfers Creators translates
     // validTransfers into apiTransfers and potentially modify or add
@@ -152,9 +132,6 @@ export default {
       // (See ../../shared/resources.js for details)
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
 
-      // Array of filtered requestsWithTubes emitted by the request filter
-      // requestsWithTubesFiltered: [],
-
       // Object containing transfers creator's extraParam function and the
       // state of the transfers (i.e. isValid)
       transfersCreatorObj: {},
@@ -168,40 +145,51 @@ export default {
   },
   computed: {
     sourceTubeNumber() {
+      console.log("DEBUG: in sourceTubeNumber")
       return Number.parseInt(this.sourceTubes)
     },
     targetRowsNumber() {
+      console.log("DEBUG: in targetRowsNumber")
       return Number.parseInt(this.targetRows)
     },
     targetColumnsNumber() {
+      console.log("DEBUG: in targetColumnsNumber")
       return Number.parseInt(this.targetColumns)
     },
     valid() {
+      console.log("DEBUG: in valid")
       return this.unsuitableTubes.length === 0 // None of the tubes are invalid
              && this.validTransfers.length > 0 // We have at least one transfer
              && this.transfersCreatorObj.isValid
     },
     validTubes() {
+      console.log("DEBUG: in validTubes")
       return this.tubes.filter( tube => tube.state === 'valid' )
     },
     unsuitableTubes() {
+      console.log("DEBUG: in unsuitableTubes")
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
     },
     transfers() {
+      console.log("DEBUG: in transfers")
       return transfersForTubes(this.validTubes)
     },
     validTransfers() {
+      console.log("DEBUG: in validTransfers")
       return this.transfers.valid
     },
     transfersError() {
+      console.log("DEBUG: in transfersError")
       const errorMessages = []
       // TODO: what errors can we have here? duplicate and excess requests seem impossible with tubes
       return errorMessages.join(' and ')
     },
     transfersCreatorComponent() {
+      console.log("DEBUG: in transfersCreatorComponent")
       return transfersCreatorsComponentsMap[this.transfersCreator]
     },
     targetWells() {
+      console.log("DEBUG: in targetWells")
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
         wells[this.validTransfers[i].targetWell] = {
@@ -210,16 +198,16 @@ export default {
       }
       return wells
     },
-    requestsFilterComponent() {
-      return filterProps[this.requestsFilter].requestsFilter
-    },
     tubeIncludes() {
-      return filterProps[this.requestsFilter].tubeIncludes
+      console.log("DEBUG: in tubeIncludes")
+      return filterProps.tubeIncludes
     },
     tubeFields() {
-      return filterProps[this.requestsFilter].tubeFields
+      console.log("DEBUG: in tubeFields")
+      return filterProps.tubeFields
     },
     scanValidation() {
+      console.log("DEBUG: in scanValidation")
       const currTubes = this.tubes.map(tubeItem => tubeItem.tube)
       return [
         checkDuplicates(currTubes)
@@ -228,13 +216,16 @@ export default {
   },
   methods: {
     updateTube(index, data) {
+      console.log("DEBUG: in updateTube")
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
     },
     apiTransfers() {
+      console.log("DEBUG: in apiTransfers")
       // what we want to transfer when cteating the plate
       return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
+      console.log("DEBUG: in createPlate")
       this.progressMessage = 'Creating plate...'
       this.loading = true
       let payload = {
