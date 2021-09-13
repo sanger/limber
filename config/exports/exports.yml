@@ -85,3 +85,6 @@ cellaca_input_file:
 hamilton_pooling_plate_pbmc:
   csv: hamilton_pooling_plate_pbmc
   ancestor_purpose: LCA PBMC
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
