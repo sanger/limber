@@ -113,9 +113,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
       # NB. Making assumption here that name field on asset is for a plate well
       # and contains a plate barcode and well position e.g. DN12345678:A1
       name_array = transfer_req.source_asset.name.split(':')
-      if name_array.length == 2
-        yield name_array[0], name_array[1]
-      end
+      yield name_array[0], name_array[1] if name_array.length == 2
     end
   end
 end
