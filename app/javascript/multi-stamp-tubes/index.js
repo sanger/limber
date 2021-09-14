@@ -18,7 +18,6 @@ Vue.component('lb-sidebar', Sidebar)
 
 document.addEventListener('DOMContentLoaded', () => {
   if ( document.getElementById('multi-stamp-tubes-page') ) {
-    console.log("DEBUG: starting MultiStampTubes Vue")
     axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     Vue.prototype.$axios = axios
     /* The files-list element isn't on all pages. So only initialize our

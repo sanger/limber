@@ -69,7 +69,7 @@ export default {
       // - Resource types in keys should be plural.
       // - If you include associated records, the associated name should be included in the fields option to ensure
       //   devour can actually follow the association.
-      default: () => { return { tubes: 'labware_barcode,uuid' } },
+      default: () => { return { tubes: 'labware_barcode,uuid,receptacle', receptacles: 'uuid' } },
       type: Object
     },
     validators: {
