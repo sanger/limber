@@ -34,7 +34,7 @@
             v-for="i in sourceTubeNumber"
             :key="i"
             :api="devourApi"
-            :label="'Tube ' + i"
+            :label="wellIndexToName(i - 1)"
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
@@ -78,6 +78,7 @@ import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
 import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { indexToName } from 'shared/wellHelpers'
 
 export default {
   name: 'MultiStampTubes',
@@ -215,6 +216,10 @@ export default {
     }
   },
   methods: {
+    wellIndexToName(index) {
+      console.log("DEBUG: in wellIndexToName")
+      return indexToName(index, this.targetRowsNumber)
+    },
     updateTube(index, data) {
       console.log("DEBUG: in updateTube")
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
