@@ -61,7 +61,12 @@ module LabwareCreators
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
     def transfer_request_attributes(dest_plate)
       passed_parent_wells.map do |source_well, additional_parameters|
-        request_hash(source_well, dest_plate, additional_parameters)
+        # TODO: revert back to the below
+        # request_hash(source_well, dest_plate, additional_parameters)
+
+        # Temp fix below is for testing until we have the tag clash on pooling issue resolved
+        # as only returning the first request_hash for now whilst developing
+        return [request_hash(source_well, dest_plate, additional_parameters)]
       end
     end
 
@@ -71,6 +76,7 @@ module LabwareCreators
         'target_asset' => dest_plate.wells.detect do |dest_well|
           dest_well.location == transfer_hash[source_well.location][:dest_locn]
         end&.uuid
+        # TODO: add concentration/ cell count here?
         # 'volume' => transfer_hash[source_well.location]['volume'].to_s
       } # .merge(additional_parameters)
     end
