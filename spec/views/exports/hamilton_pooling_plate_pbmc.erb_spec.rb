@@ -15,21 +15,21 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
     create(
       :v2_transfer_request,
       source_asset: ancestor_well_a1,
-      target_asset: nil,
+      target_asset: nil
     )
   end
   let(:transfer_request_from_b1) do
     create(
       :v2_transfer_request,
       source_asset: ancestor_well_b1,
-      target_asset: nil,
+      target_asset: nil
     )
   end
   let(:transfer_request_from_c1) do
     create(
       :v2_transfer_request,
       source_asset: ancestor_well_c1,
-      target_asset: nil,
+      target_asset: nil
     )
   end
 
@@ -37,14 +37,14 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
     create(
       :v2_well_with_transfer_requests,
       position: { 'name' => 'A1' },
-      transfer_requests_as_target: [transfer_request_from_a1, transfer_request_from_b1],
+      transfer_requests_as_target: [transfer_request_from_a1, transfer_request_from_b1]
     )
   end
   let(:well_b1) do
     create(
       :v2_well_with_transfer_requests,
       position: { 'name' => 'B1' },
-      transfer_requests_as_target: [transfer_request_from_c1],
+      transfer_requests_as_target: [transfer_request_from_c1]
     )
   end
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [2, 1]) }
@@ -56,10 +56,10 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
 
   let(:expected_content) do
     [
-      ['SourcePlate', 'SourceWell', 'DestinationPlate', 'DestinationWell', 'SampleVolume', 'ResuspensionVolume'],
+      %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
       [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '1', '31.25'],
       [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '1', '31.25'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '2', '31.25'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '2', '31.25']
     ]
   end
 
