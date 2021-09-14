@@ -89,7 +89,7 @@ FactoryBot.define do
     pcr_cycles { nil }
     submit_for_sequencing { nil }
     sub_pool { nil }
-    coveraga { nil }
+    coverage { nil }
 
     after(:build) do |well, evaluator|
       well._cached_relationship(:qc_results) { evaluator.qc_results || [] }
