@@ -57,9 +57,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
   let(:expected_content) do
     [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '1', '31.25'],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '1', '31.25'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '2', '31.25']
+      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '1', '6.25'],
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '1', '6.25'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '2', '3.125']
     ]
   end
 

@@ -10,18 +10,26 @@
                       row_sep: ''
 %>
 <%
-  rows_array = []
+  # Prepare the fields determined from the transfer requests
+  transfer_request_data = []
   @plate.wells_in_columns.each_with_index do |well, idx|
     well.each_source_barcode_and_location_from_transfer_requests do |src_barcode, src_coordinate|
-      rows_array << [
-                      src_barcode,
-                      src_coordinate,
-                      @plate.labware_barcode.human,
-                      well.location,
-                      idx % 12 + 1,
-                      31.25
-                    ]
+      transfer_request_data << [
+        src_barcode,
+        src_coordinate,
+        @plate.labware_barcode.human,
+        well.location,
+        idx % 12 + 1
+      ]
     end
+  end
+%>
+<%
+  # Calculate the resuspension volumes from the pooled samples count
+  samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }
+  rows_array = transfer_request_data.map do |data|
+    samples_in_pool = samples_by_dest_well[data[3]].count
+    data + [samples_in_pool * 3.125]
   end
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
