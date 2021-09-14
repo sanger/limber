@@ -9,18 +9,18 @@
         bg-variant="dark"
         text-variant="white"
       >
+        <lb-plate
+          caption="Layout of the new plate"
+          :rows="targetRowsNumber"
+          :columns="targetColumnsNumber"
+          :wells="targetWells"
+        />
         <lb-tube-summary
           v-for="tube in tubes"
           :key="tube.index"
           :state="tube.state"
           :pool_index="tube.index + 1"
           :tube="tube.tube"
-        />
-        <lb-plate
-          caption="New Plate"
-          :rows="targetRowsNumber"
-          :columns="targetColumnsNumber"
-          :wells="targetWells"
         />
       </b-card>
     </lb-main-content>
