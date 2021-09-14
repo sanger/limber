@@ -101,7 +101,7 @@ module RobotConfiguration
       "#{type} #{source_purpose} to #{target_purpose}".parameterize
     end
 
-    def configuration # rubocop:todo Metrics/MethodLength
+    def configuration
       {
         name: name,
         verify_robot: verify_robot,

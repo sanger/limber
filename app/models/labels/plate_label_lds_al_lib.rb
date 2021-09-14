@@ -10,7 +10,7 @@ class Labels::PlateLabelLdsAlLib < Labels::PlateLabelBase
   end
 
   # rubocop:disable Metrics/AbcSize
-  def intermediate_attributes # rubocop:todo Metrics/MethodLength
+  def intermediate_attributes
     [
       {
         top_left: date_today,
@@ -36,7 +36,7 @@ class Labels::PlateLabelLdsAlLib < Labels::PlateLabelBase
     ]
   end
 
-  def qc_attributes # rubocop:todo Metrics/MethodLength
+  def qc_attributes
     [
       {
         top_left: date_today,

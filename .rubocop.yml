@@ -20,6 +20,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 # Filter out all the DSLs
 Metrics/BlockLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
   IgnoredMethods:
     - describe
     - context
@@ -44,7 +48,16 @@ Metrics/BlockLength:
     - it
   Exclude:
     - config/robots.rb
-
+Metrics/ClassLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+Metrics/MethodLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
 # Ideally we want to get this down a bit more. 120 would be nice, 80 is overkill
 # Although the above line is exactly 80 characters. That wasn't intentional.
 Layout/LineLength:

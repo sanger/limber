@@ -108,7 +108,7 @@ module Utility
     #
     # @return [array] An array of qc assay details for the child plate, ready to send via Api to sequencescape.
     #
-    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash) # rubocop:todo Metrics/MethodLength
+    def construct_dest_qc_assay_attributes(child_uuid, transfer_hash)
       dest_concs = extract_destination_concentrations(transfer_hash)
       dest_concs.map do |dest_locn, dest_conc|
         {

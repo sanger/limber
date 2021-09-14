@@ -9,7 +9,7 @@ module LabwareCreators
 
     attr_reader :tube_transfer
 
-    def create_labware! # rubocop:todo Metrics/MethodLength
+    def create_labware!
       @child_tube = api.tube_from_tube_creation.create!(
         parent: parent_uuid,
         child_purpose: purpose_uuid,
