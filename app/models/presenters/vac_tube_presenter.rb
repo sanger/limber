@@ -11,7 +11,7 @@ module Presenters
     include Presenters::StateChangeless
 
     def state
-      "passed"
+      'passed'
     end
   end
 end

@@ -16,6 +16,5 @@ module LabwareCreators
     self.target_rows = 8
     self.target_columns = 12
     self.source_tubes = 96
-
   end
 end
