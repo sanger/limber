@@ -39,7 +39,7 @@ module LabwareCreators
 
     # Returns a list of parent tube uuids extracted from the transfers
     def parent_uuids
-      transfers.pluck(:source_tubes).uniq
+      transfers.pluck(:source_tube).uniq
     end
 
     def transfer_material_from_parent!(child_uuid)
@@ -61,8 +61,7 @@ module LabwareCreators
         'source_asset' => transfer[:source_asset],
         'target_asset' => child_plate.wells.detect do |child_well|
                             child_well.location == transfer.dig(:new_target, :location)
-                          end&.uuid,
-        'outer_request' => transfer[:outer_request]
+                          end&.uuid
       }
     end
   end
