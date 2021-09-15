@@ -39,9 +39,10 @@ class Pipeline
 
   # Checks if a piece of labware meets the filter criteria for a pipeline
   # If there are no filter criteria, the pipeline could be active for any labware
+  # @param  labware  On load of plate / tube pages, is a Sequencescape::Api::V2::Plate / Sequencescape::Api::V2::Tube
   # @return [Boolean] returns true if labware meets the filter criteria or there are no filters
   def active_for?(labware)
-    return true unless filters
+    return true if filters.blank?
 
     labware.active_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
