@@ -4,9 +4,9 @@ RSpec.describe Pipeline do
   let(:model) { described_class.new(pipeline_config) }
 
   describe '#active_for?' do
-    let(:filters) { { 'request_type_key' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
-
     context 'when there are filters and the labware is a plate' do
+      let(:filters) { { 'request_type_key' => ['limber_wgs'], 'library_type' => ['Standard'] } }
+
       let(:pipeline_config) do
         {
           filters: filters,
@@ -19,20 +19,14 @@ RSpec.describe Pipeline do
         }
       end
 
-      # TODO: fix
-      # context 'when the labware requests match the filters' do
-      #   let(:labware) { create :v2_stock_plate }
-      #   let(:well) { create :v2_stock_well }
+      context 'when the labware requests match the filters' do
+        # Specifying pool_sizes means the factory produces a plate where the wells have requests coming out of them.
+        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
 
-      #   it 'returns true' do
-      #     puts "labware wells: #{labware.wells}"
-      #     puts "labware wells class: #{labware.wells.first.class}"
-      #     puts "labware requests: #{labware.active_requests}"
-      #     binding.pry
-      #     # TODO: the plate made by the factory doesn't have requests, despite using v2_stock_well (which does have requests)
-      #     expect(model.active_for?(labware)).to eq true
-      #   end
-      # end
+        it 'returns true' do
+          expect(model.active_for?(labware)).to eq true
+        end
+      end
 
       context 'when the labware requests do not match the filters' do
         let(:labware) { create :v2_stock_plate }
