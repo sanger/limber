@@ -99,7 +99,7 @@ LCA Custom Pool Norm:
 LCA Blood Bank:
   :asset_type: plate
   # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
-  :creator_class: LabwareCreators::TempSampleArrayingCardinal
+  :creator_class: LabwareCreators::MultiStampTubesArray
   # :presenter_class: Presenters::?
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
