@@ -146,51 +146,46 @@ export default {
   },
   computed: {
     sourceTubeNumber() {
-      console.log("DEBUG: in sourceTubeNumber")
       return Number.parseInt(this.sourceTubes)
     },
     targetRowsNumber() {
-      console.log("DEBUG: in targetRowsNumber")
       return Number.parseInt(this.targetRows)
     },
     targetColumnsNumber() {
-      console.log("DEBUG: in targetColumnsNumber")
       return Number.parseInt(this.targetColumns)
     },
     valid() {
-      console.log("DEBUG: in valid")
       return this.unsuitableTubes.length === 0 // None of the tubes are invalid
              && this.validTransfers.length > 0 // We have at least one transfer
              && this.transfersCreatorObj.isValid
     },
     validTubes() {
-      console.log("DEBUG: in validTubes")
       return this.tubes.filter( tube => tube.state === 'valid' )
     },
     unsuitableTubes() {
-      console.log("DEBUG: in unsuitableTubes")
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
     },
     transfers() {
-      console.log("DEBUG: in transfers")
       return transfersForTubes(this.validTubes)
     },
     validTransfers() {
-      console.log("DEBUG: in validTransfers")
       return this.transfers.valid
     },
     transfersError() {
-      console.log("DEBUG: in transfersError")
       const errorMessages = []
       // TODO: what errors can we have here? duplicate and excess requests seem impossible with tubes
       return errorMessages.join(' and ')
     },
     transfersCreatorComponent() {
-      console.log("DEBUG: in transfersCreatorComponent")
       return transfersCreatorsComponentsMap[this.transfersCreator]
     },
+    // map of well position to pool index (just a number that controls the colour)
+    // {
+    //   "A1": 2,
+    //   "B4": 9,
+    //   ...
+    // }
     targetWells() {
-      console.log("DEBUG: in targetWells")
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
         wells[this.validTransfers[i].targetWell] = {
@@ -200,15 +195,12 @@ export default {
       return wells
     },
     tubeIncludes() {
-      console.log("DEBUG: in tubeIncludes")
       return filterProps.tubeIncludes
     },
     tubeFields() {
-      console.log("DEBUG: in tubeFields")
       return filterProps.tubeFields
     },
     scanValidation() {
-      console.log("DEBUG: in scanValidation")
       const currTubes = this.tubes.map(tubeItem => tubeItem.tube)
       return [
         checkDuplicates(currTubes)
@@ -217,20 +209,16 @@ export default {
   },
   methods: {
     wellIndexToName(index) {
-      console.log("DEBUG: in wellIndexToName")
       return indexToName(index, this.targetRowsNumber)
     },
     updateTube(index, data) {
-      console.log("DEBUG: in updateTube")
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
     },
     apiTransfers() {
-      console.log("DEBUG: in apiTransfers")
       // what we want to transfer when cteating the plate
       return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
-      console.log("DEBUG: in createPlate")
       this.progressMessage = 'Creating plate...'
       this.loading = true
       let payload = {

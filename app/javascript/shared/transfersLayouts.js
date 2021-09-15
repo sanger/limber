@@ -130,16 +130,45 @@ const buildSequentialTransfersArray = function(transferRequests) {
   return transfers
 }
 
-
+// Takes an array with 96 elements (for a 96 well plate)
+// Returns an array with elements just for those wells that have been populated (by scanning into the UI)
+// including the target well coordinate.
+// Example of one element of the output array:
+// {
+//   targetWell: "A1",
+//   tubeObj:
+//   {
+//     index: 0,
+//     tube:
+//     {
+//       id: "1",
+//       labware_barcode:
+//       {
+//         human_barcode: "NT4R",
+//         ...
+//       },
+//       links: {self: "http://localhost:3000/api/v2/tubes/9"},
+//       receptacle:
+//       {
+//         type: "tubes",
+//         uuid: "db4f1e22-1230-11ec-962c-38f9d3dee0d3"
+//       }
+//     }
+//   }
+// }
 const buildSequentialTubesTransfersArray = function(transferRequests) {
-  const transfers = new Array(transferRequests.length)
-  for (let i = 0; i < transferRequests.length; i++) {
-    const tubeTransferReq = transferRequests[i]
+  const transfers = new Array()
 
-    transfers[i] = {
+  for (let i = 0; i < transferRequests.length; i++) {
+    if(transferRequests[i] === undefined){
+      continue
+    }
+
+    const tubeTransferReq = transferRequests[i]
+    transfers.push( {
       tubeObj: { tube: tubeTransferReq.tube, index: tubeTransferReq.index },
       targetWell: indexToName(i, 8)
-    }
+    })
   }
   return transfers
 }
@@ -209,17 +238,17 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
 //      ]
 //
 const transfersForTubes = function(validTubes) {
-  const tubesMatrix = buildArray(96, () => new Array(1))
+  const maxTubes = 96
+  const tubeArray = new Array(maxTubes)
 
   for (let i = 0; i < validTubes.length; i++) {
     const tubeObj = validTubes[i]
-    if (tubesMatrix[tubeObj.index][0] === undefined) {
-      tubesMatrix[tubeObj.index][0] = validTubes[i]
+    if (tubeArray[tubeObj.index] === undefined) {
+      tubeArray[tubeObj.index] = validTubes[i]
     }
   }
 
-  const transferRequests = tubesMatrix.flat()
-  const validTransfers = buildSequentialTubesTransfersArray(transferRequests)
+  const validTransfers = buildSequentialTubesTransfersArray(tubeArray)
   const duplicatedTransfers = []
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
