@@ -6,7 +6,7 @@ Cardinal Entry A:
 Cardinal Entry B:
   relationships:
     LCA Blood Vac: LCA Blood Bank
-# Cardinal arraying and Library preparation pipeline
+# Cardinal library preparation pipeline
 Cardinal:
   filters: &cardinal_filters
     request_type_key: limber_cardinal
