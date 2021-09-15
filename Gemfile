@@ -13,6 +13,9 @@ group :default do
   gem 'state_machines'
   gem 'webpacker'
 
+  # Adds easy conversions between units
+  gem 'ruby-units'
+
   # Used in the setting object, allows access by object and hash notation.
   gem 'hashie'
 
