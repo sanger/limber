@@ -6,7 +6,6 @@
 
 module LabwareCreators
   class MultiStampTubesArray < MultiStampTubes # rubocop:todo Style/Documentation
-    self.transfers_layout = 'sequentialtubes'
     self.attributes += [
       {
         transfers: [
