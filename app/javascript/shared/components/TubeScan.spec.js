@@ -60,7 +60,7 @@ describe('TubeScan', () => {
     api.mockGet('tubes', {
       filter: { barcode: 'not a barcode' },
       include: '',
-      fields: { tubes: 'labware_barcode,uuid' }
+      fields: { tubes: 'labware_barcode,uuid,receptacle', receptacles: 'uuid' }
     }, nullTube)
     const wrapper = wrapperFactoryTube(api)
 
@@ -85,7 +85,7 @@ describe('TubeScan', () => {
     api.mockFail('tubes', {
       filter: { barcode: 'Good barcode' },
       include: '',
-      fields: { tubes: 'labware_barcode,uuid' }
+      fields: { tubes: 'labware_barcode,uuid,receptacle', receptacles: 'uuid' }
     }, { 'errors': [{
       title: 'Not good',
       detail: 'Very not good',
@@ -120,7 +120,7 @@ describe('TubeScan', () => {
     api.mockGet('tubes',{
       include: '',
       filter: { barcode: 'DN12345' },
-      fields: { tubes: 'labware_barcode,uuid' }
+      fields: { tubes: 'labware_barcode,uuid,receptacle', receptacles: 'uuid' }
     }, goodTube)
 
     wrapper.find('input').setValue('DN12345')
