@@ -158,8 +158,8 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   describe '#build_pools' do
-    it 'always returns a list of length 8' do
-      expect(subject.build_pools.length).to eq(8)
+    it 'return a list of length equal to the config number_of_pools' do
+      expect(subject.build_pools.length).to eq(subject.number_of_pools)
     end
 
     it 'a sample should only be in one pool' do
@@ -167,19 +167,29 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect(result.flatten.uniq.count).to eq 92
     end
 
-    context 'when there is 8 supppier groups, and 96 passed samples' do
-      it 'returns a a list of pools, each with 12 samples' do
+    context 'returns a nested list with samples allocated to the correct number of pools' do
+      it 'returns a list of 8 pools, each with 96 passed samples' do
         plate.wells[0..3].map { |well| well['state'] = 'passed' }
         result_pools = subject.build_pools
         expect(result_pools.each.map(&:count)).to eq([12, 12, 12, 12, 12, 12, 12, 12])
       end
-    end
 
-    context 'when there is 1 supppier group, and 55 passed samples' do
-      it 'returns a nested list with samples allocated to the correct number of pools' do
+      it 'returns a list of 5 pools, each with 55 passed samples' do
         plate.wells[4..40].map { |well| well['state'] = 'failed' }
         result_pools = subject.build_pools
-        expect(result_pools.each.map(&:count)).to eq([11, 11, 11, 11, 11, 0, 0, 0])
+        expect(result_pools.each.map(&:count)).to eq([11, 11, 11, 11, 11])
+      end
+
+      it 'returns a list of 2 pools, each with 21 passed samples' do
+        plate.wells[4..74].map { |well| well['state'] = 'failed' }
+        result_pools = subject.build_pools
+        expect(result_pools.each.map(&:count)).to eq([11, 10])
+      end
+
+      it 'returns a a list of 1 pool, with 10 samples' do
+        plate.wells[4..85].map { |well| well['state'] = 'failed' }
+        result_pools = subject.build_pools
+        expect(result_pools.each.map(&:count)).to eq([10])
       end
     end
   end
@@ -187,6 +197,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   describe '#wells_grouped_by_supplier' do
     it 'returns whats expected' do
       expect(subject.wells_grouped_by_supplier.count).to eq(3)
+    end
+
+    context 'the wells within a supplier group are randomised' do
+      it 'returns whats expected' do
+        # difficult to test randomness as there is a chance this fails if the randomisation is such that it remains the same order
+        expect(subject.wells_grouped_by_supplier['blood location 2']).not_to eq plate.wells[9..49]
+      end
     end
 
     context 'when there are 4 suppliers, but only 3 suppliers contain passed samples' do

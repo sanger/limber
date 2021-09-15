@@ -108,12 +108,14 @@ module LabwareCreators
     end
 
     def build_pools
-      pools = [[], [], [], [], [], [], [], []]
+      pools = []
       current_pool = 0
       # wells_grouped_by_supplier = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
       wells_grouped_by_supplier.each do |_supplier, wells|
         # Loop through the wells for that supplier
         wells.each do |well|
+          # Create pool if it doesnt already exist
+          pools[current_pool] = [] unless pools[current_pool]
           # Add well to pool
           pools[current_pool] << well
           # Rotate through the pools
