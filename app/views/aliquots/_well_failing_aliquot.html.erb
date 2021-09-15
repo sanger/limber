@@ -1,7 +1,7 @@
 <%= presenter.form.check_box(id, disabled: !failable?(container), data: {
   quadrant_index: container.quadrant_index,
   prevent_well_fail: prevent_well_fail?(container),
-  **container.all_latest_qc.map {|qc| ["qc-#{qc.key}", qc.value] }.to_h
+  **container.all_latest_qc.map {|qc| ["qc-#{qc.key}", presenter.qc_thresholds.value_for(qc)] }.to_h
 }) %>
 <%= presenter.form.label id do %>
   <div id="aliquot_<%= id %>"
@@ -9,8 +9,7 @@
        data-toggle="tooltip"
        data-placement="top"
        data-html="true"
-       title="<%= id %>
-        <% container.all_latest_qc.each do |qc| %>
+       title="<%= id %><% container.all_latest_qc.each do |qc| %>
           <p><%= qc.key %> : <%= qc.value %> <%= qc.units %></p>
        <%- end %>"
        >

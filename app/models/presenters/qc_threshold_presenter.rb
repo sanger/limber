@@ -88,6 +88,12 @@ class Presenters::QcThresholdPresenter
       "Incompatible units #{units}. Automatic thresholds disabled." unless enabled?
     end
 
+    def value_for(qc_result)
+      qc_result.unit_value.convert_to(units).scalar
+    rescue ArgumentError
+      nil
+    end
+
     private
 
     def unique_units
@@ -119,12 +125,20 @@ class Presenters::QcThresholdPresenter
   end
 
   def thresholds
-    all_thresholds.map do |key|
-      Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {}))
-    end
+    indexed_thresholds.values
+  end
+
+  def value_for(qc_result)
+    indexed_thresholds[qc_result.key].value_for(qc_result)
   end
 
   private
+
+  def indexed_thresholds
+    @indexed_thresholds ||= all_thresholds.index_with do |key|
+      Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {}))
+    end
+  end
 
   #
   # Returns a hash of all well results indexed by the key (eg. molarity)

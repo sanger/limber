@@ -136,4 +136,13 @@ RSpec.describe Presenters::QcThresholdPresenter do
       end
     end
   end
+
+  describe '#value_for' do
+    let(:configuration) { {} }
+    let(:qc_to_convert) { create(:qc_result, key: 'volume', value: '1', units: 'ml') }
+    # Value for converts all scalar values to an appropriate unit
+    it 'converts values to the thresholds unit' do
+      expect(presenter.value_for(qc_to_convert)).to eq 1000.0
+    end
+  end
 end
