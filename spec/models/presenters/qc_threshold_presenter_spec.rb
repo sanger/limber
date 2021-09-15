@@ -62,6 +62,28 @@ RSpec.describe Presenters::QcThresholdPresenter do
           have_attributes(name: 'volume', default: 0)
         )
       end
+
+      it 'is enabled' do
+        expect(presenter.thresholds).to all be_enabled
+      end
+    end
+
+    context 'with incompatible units' do
+      let(:qc_results) do
+        [
+          [create(:qc_result, key: 'concentration', value: '10', units: 'ng/ul')],
+          [create(:qc_result, key: 'concentration', value: '50', units: 'nM')]
+        ]
+      end
+      let(:configuration) { {} }
+
+      it 'is disabled' do
+        expect(presenter.thresholds.first).to_not be_enabled
+      end
+
+      it 'explains the problem' do
+        expect(presenter.thresholds.first.error).to eq 'Incompatible units ng/ul, nM. Automatic thresholds disabled.'
+      end
     end
 
     context 'with configuration' do

@@ -21,24 +21,71 @@ class Presenters::QcThresholdPresenter
       @configuration = configuration
     end
 
+    #
+    # The maximum value for the slider. If not set in the thresholds section of
+    # the purpose configuration is calibrated based on the maximum obserbved
+    # vaule. (Or 100 ifd its a percentage)
+    #
+    # @return [Float] The maxmium value to use for the range
+    #
     def max
       @max ||= configuration.fetch(:max) { percentage? ? 100 : max_result + range_buffer }
     end
 
+    #
+    # The minimum value for the slider. If not set in the thresholds section of
+    # the purpose configuration is calibrated based on the minimum obserbved
+    # vaule. (Or 0 if its a percentage)
+    #
+    # @return [Float] The minimum value to use for the range
+    #
     def min
       @min ||= configuration.fetch(:min) { percentage? ? 0 : min_result - range_buffer }
     end
 
+    #
+    # The units to use for the threshold. If not set in the thresholds section of
+    # the purpose configuration is calibrated based on the most sensitive
+    # observed units
+    #
+    # @return [String] The units to use for the threshold
+    #
     def units
       @units ||= configuration.fetch(:units) do
         unique_units.min.units
       end
-    rescue ArgumentError => e
-      e.message
+    rescue ArgumentError
+      unique_units.first
     end
 
+    #
+    # The default position for the slider. If not set in the thresholds section of
+    # the purpose configuration is set to zero.
+    #
+    # @return [Float,Integer] The default slider position
+    #
     def default
       configuration.fetch(:default_threshold, 0)
+    end
+
+    #
+    # Indicates if the field should be enabled. Is disabled if the units used
+    # for the wells can't be directly converted.
+    #
+    # @return [Boolean]
+    #
+    def enabled?
+      unique_units.all? { |unit| unit.compatible?(units) }
+    end
+
+    #
+    # Text that can be displayed to the user if the field is disabled.
+    #
+    # @return [String]
+    #
+    def error
+      units = unique_units.map(&:units).join(', ')
+      "Incompatible units #{units}. Automatic thresholds disabled." unless enabled?
     end
 
     private
