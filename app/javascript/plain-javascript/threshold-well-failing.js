@@ -37,21 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const wells = document.getElementById('well-failures').querySelectorAll('input[type="checkbox"]')
 
   // Currently we can only change the status of 'passed' wells, so skip anything else
-  const skipWell = (well) => well.dataset.state !=='passed' || well.dataset.disabled
+  const skipWell = (well) => well.dataset.preventWellFail === 'true' || well.dataset.disabled
 
   // Wells evaluate their state based on all thresholds.
   const updateWells = () => {
     wells.forEach((well) => {
-
       // This is the state before we load this page. We can't change state
       // on these wells, so lets escape early.
       if (skipWell(well)) { return }
 
       // The well must meet all thresholds.
-      const wellValid = Object.entries(threshold)
-        .every(([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue)
+      const wellInvalid = Object.entries(threshold)
+        .some(([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue)
 
-      well.checked = wellValid
+      well.checked = wellInvalid
     })
   }
 

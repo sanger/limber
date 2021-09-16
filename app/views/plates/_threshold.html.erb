@@ -11,7 +11,9 @@
       </div>
     </div>
     <datalist id="<%= threshold.key %>-data">
-      <option value="50.0" label="50%"></option>
+      <% threshold.options do |value, label| %>
+        <option value="<%= value %>" label="<%= label %>"></option>
+      <% end %>
     </datalist>
   </div>
 <% else %>

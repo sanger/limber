@@ -94,6 +94,13 @@ class Presenters::QcThresholdPresenter
       nil
     end
 
+    def options
+      configured_default = configuration[:default_threshold]
+      return unless configured_default
+
+      yield configured_default, "#{configured_default} #{units}"
+    end
+
     private
 
     def unique_units
