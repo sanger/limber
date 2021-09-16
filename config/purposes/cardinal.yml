@@ -26,7 +26,7 @@ LCA Blood Array:
   # TODO: DPL-064 is this presenter suitable or do we need something special that displays parent tube details?
   :presenter_class: Presenters::StockPlatePresenter
   # TODO: DPL-064 This plate gets created by the re-arraying of multiple tubes into the plate
-  :creator_class: LabwareCreators::MultiStampTubesArray
+  # :creator_class: LabwareCreators::MultiStampTubesArray
 # LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
 LCA Blood Bank:
   :asset_type: plate

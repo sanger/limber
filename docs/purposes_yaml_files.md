@@ -310,7 +310,7 @@ exports controller.
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
     params:
-      - page: 0
+      page: 0
 ```
 
 @note Not all CSV generation has been migrated under the exports controller. See :csv_template
