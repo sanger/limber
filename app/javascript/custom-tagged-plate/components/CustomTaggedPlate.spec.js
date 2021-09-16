@@ -15,7 +15,7 @@ import {
   exampleTag2Group,
   exampleTag2GroupLonger,
   exampleQcableData,
-  exampleTag1GroupChromium
+  exampleTag1GroupChromium,
 } from '../testData/customTaggedPlateTestData.js'
 
 describe('CustomTaggedPlate', () => {
@@ -29,9 +29,9 @@ describe('CustomTaggedPlate', () => {
         targetUrl: '',
         parentUuid: plateUuid,
         tagsPerWell: '1',
-        locationObj: mockLocation
+        locationObj: mockLocation,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -43,28 +43,28 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
-      it('returns false if any wells with aliquots are invalid', () => {
+      it('returns false if any wells with aliquots are invalid', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
-          offsetTagsBy: 4
+          offsetTagsBy: 4,
         })
 
         expect(wrapper.vm.isChildWellsValid).toEqual(false)
       })
 
-      it('returns true if all aliquots contain valid tag indexes', () => {
+      it('returns true if all aliquots contain valid tag indexes', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
-          direction: 'column'
+          direction: 'column',
         })
 
         expect(wrapper.vm.isChildWellsValid).toEqual(true)
@@ -72,77 +72,77 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('createButtonState:', () => {
-      it('returns setup if tags are not valid', () => {
+      it('returns setup if tags are not valid', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           loading: true,
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
-          offsetTagsBy: 4
+          offsetTagsBy: 4,
         })
 
         expect(wrapper.vm.createButtonState).toEqual('setup')
       })
 
-      it('returns pending if tags are valid and creation not started', () => {
+      it('returns pending if tags are valid and creation not started', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           loading: false,
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
-          direction: 'column'
+          direction: 'column',
         })
 
         expect(wrapper.vm.createButtonState).toEqual('pending')
       })
 
-      it('returns busy if tags are valid and creation in progress', () => {
+      it('returns busy if tags are valid and creation in progress', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           loading: true,
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
-          creationRequestInProgress: true
+          creationRequestInProgress: true,
         })
 
         expect(wrapper.vm.createButtonState).toEqual('busy')
       })
 
-      it('returns success if creation was successful', () => {
+      it('returns success if creation was successful', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           loading: false,
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
-          creationRequestSuccessful: true
+          creationRequestSuccessful: true,
         })
 
         expect(wrapper.vm.createButtonState).toEqual('success')
       })
 
-      it('returns failure if creation was unsuccessful', () => {
+      it('returns failure if creation was unsuccessful', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           loading: false,
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
           creationRequestInProgress: false,
-          creationRequestSuccessful: false
+          creationRequestSuccessful: false,
         })
 
         expect(wrapper.vm.createButtonState).toEqual('failure')
@@ -156,10 +156,10 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.numberOfRows).toEqual(null)
       })
 
-      it('returns number of rows on parent plate', () => {
+      it('returns number of rows on parent plate', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: exampleParent })
+        await wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfRows).toEqual(8)
       })
@@ -172,20 +172,20 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.numberOfColumns).toEqual(null)
       })
 
-      it('returns number of columns on parent plate', () => {
+      it('returns number of columns on parent plate', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: exampleParent })
+        await wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfColumns).toEqual(12)
       })
     })
 
     describe('tagsPerWellAsNumber:', () => {
-      it('returns a numeric version of the prop tags per well', () => {
+      it('returns a numeric version of the prop tags per well', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ tagsPerWell: '4' })
+        await wrapper.setProps({ tagsPerWell: '4' })
 
         expect(wrapper.vm.tagsPerWellAsNumber).toEqual(4)
       })
@@ -198,11 +198,11 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells).toEqual({})
       })
 
-      it('returns wells from parent with pool indexes using requests as source', () => {
+      it('returns wells from parent with pool indexes using requests as source', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          parentPlate: exampleParent
+        await wrapper.setData({
+          parentPlate: exampleParent,
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
@@ -212,11 +212,11 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
       })
 
-      it('returns wells from parent with pool indexes using aliquot requests', () => {
+      it('returns wells from parent with pool indexes using aliquot requests', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          parentPlate: exampleParentWithoutWellRequestsAsResource
+        await wrapper.setData({
+          parentPlate: exampleParentWithoutWellRequestsAsResource,
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
@@ -226,11 +226,11 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
       })
 
-      it('returns wells from parent with pool indexes where multiple submissions set', () => {
+      it('returns wells from parent with pool indexes where multiple submissions set', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          parentPlate: exampleParentWithPools
+        await wrapper.setData({
+          parentPlate: exampleParentWithPools,
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
@@ -248,168 +248,177 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.childWells).toEqual({})
       })
 
-      it('returns parent wells if no tag layout', () => {
+      it('returns parent wells if no tag layout', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: exampleParent})
+        await wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.childWells).toEqual(wrapper.vm.parentWells)
       })
 
-      it('returns valid wells object if all properties valid', () => {
+      it('returns valid wells object if all properties valid', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          parentPlate: exampleParentTag1Only,
-          tag1Group: exampleTag1Group,
-          walkingBy: 'manual by plate',
-          direction: 'column'
-        })
-
-        const expectedChildWells = {
-          A1: {
-            position: 'A1',
-            aliquotCount: 1,
-            tagMapIds: [ 11 ],
-            submId: '1',
-            pool_index: 1,
-            validity: { valid: true, message: '' }
-          },
-          A2: {
-            position: 'A2',
-            aliquotCount: 1,
-            tagMapIds: [ 12 ],
-            submId: '1',
-            pool_index: 1,
-            validity: { valid: true, message: '' }
-          },
-          A3: {
-            position: 'A3',
-            aliquotCount: 1,
-            tagMapIds: [ 13 ],
-            submId: '1',
-            pool_index: 1,
-            validity: { valid: true, message: '' }
-          },
-          A4: {
-            position: 'A4',
-            aliquotCount: 1,
-            tagMapIds: [ 14 ],
-            submId: '1',
-            pool_index: 1,
-            validity: { valid: true, message: '' }
-          }
-        }
-
-        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
-      })
-
-      it('returns invalid wells if not enough tags', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
-          offsetTagsBy: 6
         })
 
         const expectedChildWells = {
           A1: {
             position: 'A1',
             aliquotCount: 1,
-            tagMapIds: [ 17 ],
+            tagMapIds: [11],
             submId: '1',
             pool_index: 1,
-            validity: { valid: true, message: '' }
+            validity: { valid: true, message: '' },
           },
           A2: {
             position: 'A2',
             aliquotCount: 1,
-            tagMapIds: [ -1 ],
+            tagMapIds: [12],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
+            validity: { valid: true, message: '' },
           },
           A3: {
             position: 'A3',
             aliquotCount: 1,
-            tagMapIds: [ -1 ],
+            tagMapIds: [13],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
+            validity: { valid: true, message: '' },
           },
           A4: {
             position: 'A4',
             aliquotCount: 1,
-            tagMapIds: [ -1 ],
+            tagMapIds: [14],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
-          }
+            validity: { valid: true, message: '' },
+          },
         }
 
         expect(wrapper.vm.childWells).toEqual(expectedChildWells)
       })
 
-      it('returns valid wells object for a chromium plate', () => {
+      it('returns invalid wells if not enough tags', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({
-          tagsPerWell: 4
+        await wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+          offsetTagsBy: 6,
+        })
+
+        const expectedChildWells = {
+          A1: {
+            position: 'A1',
+            aliquotCount: 1,
+            tagMapIds: [17],
+            submId: '1',
+            pool_index: 1,
+            validity: { valid: true, message: '' },
+          },
+          A2: {
+            position: 'A2',
+            aliquotCount: 1,
+            tagMapIds: [-1],
+            submId: '1',
+            pool_index: 1,
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
+          },
+          A3: {
+            position: 'A3',
+            aliquotCount: 1,
+            tagMapIds: [-1],
+            submId: '1',
+            pool_index: 1,
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
+          },
+          A4: {
+            position: 'A4',
+            aliquotCount: 1,
+            tagMapIds: [-1],
+            submId: '1',
+            pool_index: 1,
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
+          },
+        }
+
+        expect(wrapper.vm.childWells).toEqual(expectedChildWells)
+      })
+
+      it('returns valid wells object for a chromium plate', async () => {
+        const wrapper = wrapperFactory()
+
+        await wrapper.setProps({
+          tagsPerWell: '4',
         })
 
         wrapper.setData({
           parentPlate: exampleParent,
           tag1Group: exampleTag1GroupChromium,
           walkingBy: 'manual by plate',
-          direction: 'column'
+          direction: 'column',
         })
 
         const expectedChildWells = {
           A1: {
             position: 'A1',
             aliquotCount: 1,
-            tagMapIds: [ 1,2,3,4 ],
+            tagMapIds: [1, 2, 3, 4],
             submId: '1',
             pool_index: 1,
-            validity: { valid: true, message: '' }
+            validity: { valid: true, message: '' },
           },
           A2: {
             position: 'A2',
             aliquotCount: 1,
-            tagMapIds: [ 5,6,7,8 ],
+            tagMapIds: [5, 6, 7, 8],
             submId: '1',
             pool_index: 1,
-            validity: { valid: true, message: '' }
+            validity: { valid: true, message: '' },
           },
           A3: {
             position: 'A3',
             aliquotCount: 1,
-            tagMapIds: [ 9,10,11,12 ],
+            tagMapIds: [9, 10, 11, 12],
             submId: '1',
             pool_index: 1,
-            validity: { valid: true, message: '' }
+            validity: { valid: true, message: '' },
           },
           A4: {
             position: 'A4',
             aliquotCount: 1,
-            tagMapIds: [ 13,14,15,16 ],
+            tagMapIds: [13, 14, 15, 16],
             submId: '1',
             pool_index: 1,
-            validity: { valid: true, message: '' }
-          }
+            validity: { valid: true, message: '' },
+          },
         }
 
         expect(wrapper.vm.childWells).toEqual(expectedChildWells)
       })
 
-      it('returns invalid wells where multiple tags and not enough tags', () => {
+      it('returns invalid wells where multiple tags and not enough tags', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({
-          tagsPerWell: 4
+        await wrapper.setProps({
+          tagsPerWell: '4',
         })
 
         wrapper.setData({
@@ -417,42 +426,54 @@ describe('CustomTaggedPlate', () => {
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
           direction: 'column',
-          offsetTagsBy: 1
+          offsetTagsBy: 1,
         })
 
         const expectedChildWells = {
           A1: {
             position: 'A1',
             aliquotCount: 1,
-            tagMapIds: [ 15,16,17,-1 ],
+            tagMapIds: [15, 16, 17, -1],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
           },
           A2: {
             position: 'A2',
             aliquotCount: 1,
-            tagMapIds: [ -1,-1,-1,-1 ],
+            tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
           },
           A3: {
             position: 'A3',
             aliquotCount: 1,
-            tagMapIds: [ -1,-1,-1,-1 ],
+            tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
           },
           A4: {
             position: 'A4',
             aliquotCount: 1,
-            tagMapIds: [ -1,-1,-1,-1 ],
+            tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
-            validity: { valid: false, message: 'Missing tag ids for this well' }
-          }
+            validity: {
+              valid: false,
+              message: 'Missing tag ids for this well',
+            },
+          },
         }
 
         expect(wrapper.vm.childWells).toEqual(expectedChildWells)
@@ -460,18 +481,21 @@ describe('CustomTaggedPlate', () => {
     })
 
     describe('button text, style and disabled:', () => {
-      it('returns the correct text depending on state', () => {
+      it('returns the correct text depending on state', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentTag1Only,
           tag1Group: exampleTag1Group,
           walkingBy: 'manual by plate',
-          direction: 'column'
+          direction: 'column',
         })
 
         expect(wrapper.vm.createButtonState).toEqual('pending')
-        expect(wrapper.vm.createButtonText).toEqual('Create new Custom Tagged plate')
+        expect(wrapper.vm.createButtonText).toEqual(
+          'Create new Custom Tagged plate'
+        )
+
         expect(wrapper.vm.createButtonStyle).toEqual('primary')
         expect(wrapper.vm.createButtonDisabled).toBe(false)
       })
@@ -484,32 +508,32 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.numberOfTags).toBe(0)
       })
 
-      it('returns the correct number if a tag 1 group has been selected', () => {
+      it('returns the correct number if a tag 1 group has been selected', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          tag1Group: exampleTag1Group
+        await wrapper.setData({
+          tag1Group: exampleTag1Group,
         })
 
         expect(wrapper.vm.numberOfTags).toBe(7)
       })
 
-      it('returns the correct number if only tag 2 group has been selected', () => {
+      it('returns the correct number if only tag 2 group has been selected', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          tag2Group: exampleTag2Group
+        await wrapper.setData({
+          tag2Group: exampleTag2Group,
         })
 
         expect(wrapper.vm.numberOfTags).toBe(6)
       })
 
-      it('returns the correct number if tag 1 group has more tags than tag 2 group', () => {
+      it('returns the correct number if tag 1 group has more tags than tag 2 group', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           tag1Group: exampleTag1Group,
-          tag2Group: exampleTag2Group
+          tag2Group: exampleTag2Group,
         })
 
         expect(wrapper.vm.numberOfTags).toBe(6)
@@ -523,94 +547,110 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.useableTagMapIds).toEqual([])
       })
 
-      it('returns an array of the tag 1 group map ids if only tag 1 group is selected', () => {
+      it('returns an array of the tag 1 group map ids if only tag 1 group is selected', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          tag1Group: exampleTag1Group
-        })
-
-        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
-      })
-
-      it('returns an array of the tag 2 group map ids if only tag 2 group is selected', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
-          tag2Group: exampleTag2Group
-        })
-
-        expect(wrapper.vm.useableTagMapIds).toEqual([21,22,23,24,25,26])
-      })
-
-      it('returns a shortened array of the tag 1 group map ids if both groups are selected and tag group 2 is smaller', () => {
-        const wrapper = wrapperFactory()
-
-        wrapper.setData({
+        await wrapper.setData({
           tag1Group: exampleTag1Group,
-          tag2Group: exampleTag2Group
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16])
+        expect(wrapper.vm.useableTagMapIds).toEqual([
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+        ])
       })
 
-      it('returns a full array of the tag 1 group map ids if both groups are selected and tag group 2 is longer', () => {
+      it('returns an array of the tag 2 group map ids if only tag 2 group is selected', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
-          tag1Group: exampleTag1Group,
-          tag2Group: exampleTag2GroupLonger
+        await wrapper.setData({
+          tag2Group: exampleTag2Group,
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([11,12,13,14,15,16,17])
+        expect(wrapper.vm.useableTagMapIds).toEqual([21, 22, 23, 24, 25, 26])
+      })
+
+      it('returns a shortened array of the tag 1 group map ids if both groups are selected and tag group 2 is smaller', async () => {
+        const wrapper = wrapperFactory()
+
+        await wrapper.setData({
+          tag1Group: exampleTag1Group,
+          tag2Group: exampleTag2Group,
+        })
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([11, 12, 13, 14, 15, 16])
+      })
+
+      it('returns a full array of the tag 1 group map ids if both groups are selected and tag group 2 is longer', async () => {
+        const wrapper = wrapperFactory()
+
+        await wrapper.setData({
+          tag1Group: exampleTag1Group,
+          tag2Group: exampleTag2GroupLonger,
+        })
+
+        expect(wrapper.vm.useableTagMapIds).toEqual([
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+        ])
       })
     })
 
     describe('numberOfTargetWells:', () => {
-      it('returns zero if no parent plate exists', () => {
+      it('returns zero if no parent plate exists', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ walkingBy: 'manual by plate' })
+        await wrapper.setData({ walkingBy: 'manual by plate' })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(0)
       })
 
-      it('returns zero if no walking by is set', () => {
+      it('returns zero if no walking by is set', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({ parentPlate: exampleParent })
+        await wrapper.setData({ parentPlate: exampleParent })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(0)
       })
 
-      it('returns correct value for a fixed plate', () => {
+      it('returns correct value for a fixed plate', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParent,
-          walkingBy: 'wells of plate'
+          walkingBy: 'wells of plate',
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(4)
       })
 
-      it('returns correct value for a plate by sequence', () => {
+      it('returns correct value for a plate by sequence', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentSequential,
-          walkingBy: 'manual by plate'
+          walkingBy: 'manual by plate',
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(3)
       })
 
-      it('returns correct value for a plate with pools', () => {
+      it('returns correct value for a plate with pools', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setData({
+        await wrapper.setData({
           parentPlate: exampleParentWithPools,
-          walkingBy: 'manual by pool'
+          walkingBy: 'manual by pool',
         })
 
         expect(wrapper.vm.numberOfTargetWells).toBe(2)
@@ -628,27 +668,33 @@ describe('CustomTaggedPlate', () => {
           targetUrl: '',
           parentUuid: plateUuid,
           tagsPerWell: '1',
-          locationObj: mockLocation
+          locationObj: mockLocation,
         },
         stubs: {
           'lb-parent-plate-lookup': true,
           'lb-parent-plate-view': true,
           'lb-tag-substitution-details': true,
           'lb-tag-layout-manipulations': true,
-          'lb-well-modal': true
+          'lb-well-modal': true,
         },
-        localVue
+        localVue,
       })
 
       wrapper.setData({
-        parentPlate: exampleParent
+        parentPlate: exampleParent,
       })
 
       await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(
+        true
+      )
+
+      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(
+        true
+      )
+
       expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
 
@@ -661,27 +707,33 @@ describe('CustomTaggedPlate', () => {
           targetUrl: '',
           parentUuid: plateUuid,
           tagsPerWell: '4',
-          locationObj: mockLocation
+          locationObj: mockLocation,
         },
         stubs: {
           'lb-parent-plate-lookup': true,
           'lb-parent-plate-view': true,
           'lb-tag-substitution-details': true,
           'lb-tag-layout-manipulations-multiple': true,
-          'lb-well-modal': true
+          'lb-well-modal': true,
         },
-        localVue
+        localVue,
       })
 
       wrapper.setData({
-        parentPlate: exampleParent
+        parentPlate: exampleParent,
       })
 
       await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-layout-manipulations-multiple-stub').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(
+        true
+      )
+
+      expect(
+        wrapper.find('lb-tag-layout-manipulations-multiple-stub').exists()
+      ).toBe(true)
+
       expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
 
@@ -690,16 +742,18 @@ describe('CustomTaggedPlate', () => {
 
       await flushPromises()
 
-      expect(wrapper.find('#custom_tagged_plate_submit_button').exists()).toBe(true)
+      expect(wrapper.find('#custom_tagged_plate_submit_button').exists()).toBe(
+        true
+      )
     })
   })
 
   describe('#integration tests:', () => {
-    it('disallows tag substitutions for chromium plates', () => {
+    it('disallows tag substitutions for chromium plates', async () => {
       const wrapper = wrapperFactory()
 
-      wrapper.setProps({
-        tagsPerWell: '4'
+      await wrapper.setProps({
+        tagsPerWell: '4',
       })
 
       wrapper.setData({
@@ -707,7 +761,7 @@ describe('CustomTaggedPlate', () => {
         tag1Group: exampleTag1Group,
         tag2Group: exampleTag2Group,
         direction: 'row',
-        walkingBy: 'wells of plate'
+        walkingBy: 'wells of plate',
       })
 
       expect(wrapper.vm.isMultipleTaggedPlate).toBe(true)
@@ -723,11 +777,13 @@ describe('CustomTaggedPlate', () => {
         tag2Group: exampleTag2Group,
         direction: 'row',
         walkingBy: 'wells of plate',
-        tagSubstitutions: { 14: 15 }
+        tagSubstitutions: { 14: 15 },
       })
 
       expect(wrapper.vm.childWells['A4'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A4'].validity.message).toBe('Tag clash with the following: submission')
+      expect(wrapper.vm.childWells['A4'].validity.message).toBe(
+        'Tag clash with the following: submission'
+      )
     })
 
     it('sets a childwell to invalid if there is a tag clash with another childwell', () => {
@@ -739,13 +795,18 @@ describe('CustomTaggedPlate', () => {
         tag2Group: exampleTag2Group,
         direction: 'row',
         walkingBy: 'wells of plate',
-        tagSubstitutions: { 13: 11 }
+        tagSubstitutions: { 13: 11 },
       })
 
       expect(wrapper.vm.childWells['A1'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A1'].validity.message).toBe('Tag clash with the following: A3')
+      expect(wrapper.vm.childWells['A1'].validity.message).toBe(
+        'Tag clash with the following: A3'
+      )
+
       expect(wrapper.vm.childWells['A3'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A3'].validity.message).toBe('Tag clash with the following: A1')
+      expect(wrapper.vm.childWells['A3'].validity.message).toBe(
+        'Tag clash with the following: A1'
+      )
     })
 
     it('sends a post request when the create plate button is clicked', async () => {
@@ -753,21 +814,21 @@ describe('CustomTaggedPlate', () => {
 
       const wrapper = wrapperFactory()
 
-      wrapper.setProps({
+      await wrapper.setProps({
         purposeUuid: 'purpose-uuid',
         targetUrl: 'example/example',
         parentUuid: 'parent-plate-uuid',
-        tagsPerWell: '1'
+        tagsPerWell: '1',
       })
 
-      wrapper.setData({
+      await wrapper.setData({
         tagPlate: exampleQcableData.plate,
         tag1Group: exampleTag1Group,
         tag2Group: exampleTag2Group,
         direction: 'column',
         walkingBy: 'manual by plate',
         offsetTagsBy: 1,
-        tagSubstitutions: {}
+        tagSubstitutions: {},
       })
 
       const expectedPayload = {
@@ -781,21 +842,24 @@ describe('CustomTaggedPlate', () => {
             walking_by: 'manual by plate',
             initial_tag: 1,
             substitutions: {},
-            tags_per_well: 1
+            tags_per_well: 1,
           },
           tag_plate: {
             asset_uuid: 'asset-uuid',
             template_uuid: 'tag-template-uuid',
-            state: 'available'
-          }
-        }
+            state: 'available',
+          },
+        },
       }
 
       mockLocation.href = null
-      mock.onPost().reply((config) =>{
+      mock.onPost().reply((config) => {
         expect(config.url).toEqual('example/example')
         expect(config.data).toEqual(JSON.stringify(expectedPayload))
-        return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
+        return [
+          201,
+          { redirect: 'http://wwww.example.com', message: 'Creating...' },
+        ]
       })
 
       // to click the button we would need to mount rather than shallowMount, but then we run into issues with mocking other database calls

@@ -126,7 +126,6 @@ class SequencescapeSubmission
     end
   end
 
-  # rubocop:todo Metrics/MethodLength
   def generate_submissions # rubocop:todo Metrics/AbcSize
     orders = generate_orders
 
@@ -144,7 +143,6 @@ class SequencescapeSubmission
     errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
-  # rubocop:enable Metrics/MethodLength
 
   def submission_template
     api.order_template.find(template_uuid)

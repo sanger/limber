@@ -32,7 +32,6 @@ class PurposeConfig # rubocop:todo Style/Documentation
     default_options[:pmb_template] = default_pmb_template_for(default_options[:printer])
   end
 
-  # rubocop:todo Metrics/MethodLength
   def config
     {
       name: name,
@@ -47,7 +46,6 @@ class PurposeConfig # rubocop:todo Style/Documentation
       pmb_template: print_option(:pmb_template)
     }.merge(@options)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def uuid
     store.fetch(name).uuid

@@ -88,12 +88,12 @@ Ruby unit and feature tests:
 bundle exec rspec
 ```
 
-### Karma
+### Jest
 
 JavaScript unit tests:
 
 ```bash
-yarn karma start --single-run
+yarn test
 ```
 
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:

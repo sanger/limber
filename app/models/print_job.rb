@@ -23,7 +23,7 @@ class PrintJob # rubocop:todo Style/Documentation
     end
   end
 
-  def print_to_pmb # rubocop:todo Metrics/MethodLength
+  def print_to_pmb
     job = PMB::PrintJob.new(
       printer_name: printer_name,
       label_template_id: pmb_label_template_id,
