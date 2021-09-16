@@ -89,7 +89,7 @@ class Presenters::QcThresholdPresenter
     end
 
     def value_for(qc_result)
-      qc_result.unit_value.convert_to(units).scalar
+      qc_result.unit_value.convert_to(units).scalar.to_f
     rescue ArgumentError
       nil
     end
