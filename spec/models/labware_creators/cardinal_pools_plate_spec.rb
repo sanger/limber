@@ -121,7 +121,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     it 'returns a hash with the well source and well target info, 92 passed samples' do
       passed_source_well = plate.wells[4] # supplier_group1, pool 5 = E1
 
-      result = subject.request_hash(passed_source_well, child_plate, {}, 1)
+      result = subject.request_hash(passed_source_well, child_plate, {})
 
       expected_dest_well = child_plate.wells.detect do |dest_well|
         dest_well.location == subject.transfer_hash[passed_source_well.location][:dest_locn]
