@@ -126,7 +126,24 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expected_dest_well = child_plate.wells.detect do |dest_well|
         dest_well.location == subject.transfer_hash[passed_source_well.location][:dest_locn]
       end
-      expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid })
+      expected_tag_depth = subject.tag_depth(passed_source_well)
+
+      expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid, 'tag_depth' => expected_tag_depth })
+    end
+  end
+
+  context '#tag_depth' do
+    it 'determines the index of the given well in its pool' do
+      pools = subject.build_pools
+      subject.instance_variable_set(:@pools, pools)
+
+      # gets the first well from the first pool
+      source_well1 = pools[0][0]
+      # gets the last well from the last pool (since 92 passed wells should 8 pools 11 wells)
+      source_well2 = pools[7][10]
+
+      expect(subject.tag_depth(source_well1)).to eq(1)
+      expect(subject.tag_depth(source_well2)).to eq(11)
     end
   end
 

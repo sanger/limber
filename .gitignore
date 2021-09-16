@@ -21,6 +21,7 @@ REVISION
 /spec/examples.txt
 yarn-error.log
 .tern-project
+.talismanrc
 *.swn
 
 /public/packs
