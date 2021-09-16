@@ -139,11 +139,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
       # gets the first well from the first pool
       source_well1 = pools[0][0]
-      # gets the last well from the last pool (since 92 passed wells should 8 pools 11 wells)
+      # gets the last well from the last pool (since 92 passed wells should be 8 pools 11 wells)
       source_well2 = pools[7][10]
 
-      expect(subject.tag_depth(source_well1)).to eq(1)
-      expect(subject.tag_depth(source_well2)).to eq(11)
+      expect(subject.tag_depth(source_well1)).to eq('1')
+      expect(subject.tag_depth(source_well2)).to eq('11')
     end
   end
 

@@ -107,7 +107,7 @@ module LabwareCreators
 
     def tag_depth(source_well)
       @pools.each do |pool|
-        return pool.index(source_well) + 1 unless pool.index(source_well).nil?
+        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
         # index + 1 incase of 0th index
       end
     end
