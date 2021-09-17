@@ -67,7 +67,7 @@ describe('TubeScan', () => {
     wrapper.find('input').setValue('not a barcode')
     await wrapper.find('input').trigger('change')
 
-    expect(wrapper.find('.wait-tube').exists()).toBe(true)
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
     await flushPromises()
 
@@ -97,7 +97,7 @@ describe('TubeScan', () => {
     wrapper.find('input').setValue('Good barcode')
     await wrapper.find('input').trigger('change')
 
-    expect(wrapper.find('.wait-tube').exists()).toBe(true)
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
     await flushPromises()
 
@@ -126,7 +126,7 @@ describe('TubeScan', () => {
     wrapper.find('input').setValue('DN12345')
     await wrapper.find('input').trigger('change')
 
-    expect(wrapper.find('.wait-tube').exists()).toBe(true)
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
 
     await flushPromises()
 
