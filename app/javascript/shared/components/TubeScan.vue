@@ -8,7 +8,7 @@
     :state="formState"
     :invalid-feedback="feedback"
     :valid-feedback="feedback"
-    :class="{ 'wait-tube': searching }"
+    :class="{ 'wait-plate': searching }"
   >
     <b-form-input
       :id="uid"
@@ -98,9 +98,14 @@ export default {
     searching() { return this.apiActivity.state === 'searching' }, // The API is in progress
     state() { return this.validated.state }, // Overall state, eg. valid, invalid, empty
     formState() {
-      return {
-        'valid': true, 'invalid': false
-      }[this.state] || null
+      switch (this.state) {
+        case 'valid':
+          return true
+        case 'invalid':
+          return false
+        default:
+          return null
+      }
     },
     validated() {
       if (this.apiActivity.state === 'valid') {
