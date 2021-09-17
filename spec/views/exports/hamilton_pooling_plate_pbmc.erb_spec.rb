@@ -14,28 +14,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
   let(:ancestor_well_c1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'C1', qc_results: [live_cell_count_c1]) }
   let(:ancestor_labware) { create(:v2_plate, wells: [ancestor_well_a1, ancestor_well_b1, ancestor_well_c1], pool_sizes: [1, 1, 1]) }
 
-  let(:transfer_request_from_a1) do
-    create(
-      :v2_transfer_request,
-      source_asset: ancestor_well_a1,
-      target_asset: nil
-    )
-  end
-  let(:transfer_request_from_b1) do
-    create(
-      :v2_transfer_request,
-      source_asset: ancestor_well_b1,
-      target_asset: nil
-    )
-  end
-  let(:transfer_request_from_c1) do
-    create(
-      :v2_transfer_request,
-      source_asset: ancestor_well_c1,
-      target_asset: nil
-    )
-  end
-
+  let(:transfer_request_from_a1) { create(:v2_transfer_request, source_asset: ancestor_well_a1, target_asset: nil) }
+  let(:transfer_request_from_b1) { create(:v2_transfer_request, source_asset: ancestor_well_b1, target_asset: nil) }
+  let(:transfer_request_from_c1) { create(:v2_transfer_request, source_asset: ancestor_well_c1, target_asset: nil) }
   let(:well_a1) do
     create(
       :v2_well_with_transfer_requests,
