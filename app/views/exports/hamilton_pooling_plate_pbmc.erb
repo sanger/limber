@@ -17,8 +17,8 @@
     # Note: 20,000 / (cells/ml) * 1,000 is the same as 20,000,000 / (cells/ml)
     src_well = @ancestor_plate.wells_in_columns.find { |well| well.location == src_location }
     cell_count = src_well.latest_live_cell_count
-    continue if cell_count.nil?
-    required_volume = 20000000 / cell_count.value.to_i
+    next if cell_count.nil?
+    required_volume = (20000000.0 / cell_count.value.to_i).round
 
     transfer_request_data << [
       src_barcode,
