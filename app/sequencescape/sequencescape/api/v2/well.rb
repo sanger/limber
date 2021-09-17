@@ -107,13 +107,4 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
   def order_group
     aliquots.map(&:order_group).uniq
   end
-
-  def each_source_barcode_and_location_from_transfer_requests
-    transfer_requests_as_target.each do |transfer_req|
-      # NB. Making assumption here that name field on asset is for a plate well
-      # and contains a plate barcode and well position e.g. DN12345678:A1
-      name_array = transfer_req.source_asset.name.split(':')
-      yield name_array[0], name_array[1] if name_array.length == 2
-    end
-  end
 end

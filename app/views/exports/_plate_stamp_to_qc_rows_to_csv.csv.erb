@@ -1,15 +1,13 @@
 <%
   rows_array = []
-  @plate.wells_in_columns.each do |well|
-    well.each_source_barcode_and_location_from_transfer_requests do |src_barcode, src_location|
-      rows_array << [
-                      src_barcode,
-                      src_location,
-                      @plate.labware_barcode.human,
-                      well.position['name'],
-                      10.00
-                    ]
-    end
+  each_source_metadata_for_plate(@plate) do |dest_well, index, src_barcode, src_location|
+    rows_array << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.position['name'],
+      10.00
+    ]
   end
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>

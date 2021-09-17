@@ -12,16 +12,14 @@
 <%
   # Prepare the fields determined from the transfer requests
   transfer_request_data = []
-  @plate.wells_in_columns.each_with_index do |well, idx|
-    well.each_source_barcode_and_location_from_transfer_requests do |src_barcode, src_coordinate|
-      transfer_request_data << [
-        src_barcode,
-        src_coordinate,
-        @plate.labware_barcode.human,
-        well.location,
-        idx % 12 + 1
-      ]
-    end
+  each_source_metadata_for_plate(@plate) do |dest_well, index, src_barcode, src_location|
+    transfer_request_data << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.location,
+      index % 12 + 1
+    ]
   end
 %>
 <%
