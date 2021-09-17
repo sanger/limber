@@ -78,7 +78,7 @@ module LabwareCreators
         end&.uuid,
         # TODO: add concentration/ cell count here?
         # 'volume' => "12345" #transfer_hash[source_well.location]['volume'].to_s
-        'tag_depth' => tag_depth(source_well)
+        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
       } # .merge(additional_parameters)
     end
 
