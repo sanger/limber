@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Helper methods for the Exports controller
 module ExportsHelper
   def each_source_metadata_for_plate(plate)
     index = 0
