@@ -67,6 +67,9 @@ LCA PBMC Pools:
   # TODO: DPL-067 :presenter_class: Presenters::?CardinalPoolsPlatePresenter shows pool info for wells, samples in each well
   # TODO: DPL-067 :creator_class: LabwareCreators::?Plate new creator to make pools of samples automatically according to table, using info from PBMC QC
   # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LCA PBMC plate
+  :file_links:
+    - name: "Download Hamilton LCA PBMC to LCA PBMC Pools CSV"
+      id: hamilton_pooling_plate_pbmc
 # LCA PBMC Pools stamps into LCA 10X cDNA
 LCA 10X cDNA:
   :asset_type: plate
