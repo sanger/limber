@@ -31,6 +31,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     latest_qc(key: 'molarity', units: 'nM')
   end
 
+  def latest_live_cell_count
+    latest_qc(key: 'live_cell_count', units: 'cells/ml')
+  end
+
   def latest_qc(key:, units:)
     qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
               .select { |qc| qc.key.casecmp(key).zero? }

@@ -1,6 +1,6 @@
 <%
   rows_array = []
-  each_source_metadata_for_plate(@plate) do |dest_well, index, src_barcode, src_location|
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
     rows_array << [
       src_barcode,
       src_location,
