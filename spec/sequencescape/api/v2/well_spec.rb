@@ -74,7 +74,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
         key: 'live_cell_count',
         value: '1000000',
         units: 'cells/ml',
-        created_at: Time.parse.utc('2020-01-02 03:04:05')
+        created_at: Time.utc(2020, 1, 2, 3, 4, 5)
       )
     end
     let(:later_live_cell_count) do
@@ -83,13 +83,13 @@ RSpec.describe Sequencescape::Api::V2::Well do
         key: 'live_cell_count',
         value: '1350000',
         units: 'cells/ml',
-        created_at: Time.parse.utc('2020-02-03 04:05:06')
+        created_at: Time.utc(2020, 2, 3, 4, 5, 6)
       )
     end
     let(:concentration_result) do
       create(
         :qc_result_concentration,
-        created_at: Time.parse.utc('2020-11-12 13:14:15')  # Latest of all the creation times
+        created_at: Time.utc(2020, 11, 12, 13, 14, 15)  # Latest of all the creation times
       )
     end
 
