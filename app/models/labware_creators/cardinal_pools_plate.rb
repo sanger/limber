@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-# TODO
-# Update presenter to display pools, and number of samples in each pool, for a destination well
-# Generate CSV
-
 # require_dependency 'form'
 # require_dependency 'labware_creators'
 
@@ -13,12 +9,11 @@
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
 # 4. Group samples by supplier, to ensure samples with the same supplier are distrubuted across different pools
-# 5. Add the pool to a well in the new LCA PBMC Pools plate
+# 5. Create a Transfer Requests in SS - adding the pool to a well in the new LCA PBMC Pools plate
 module LabwareCreators
   # This class is used for creating randomicardinal pools into destination plate
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
-    # include LabwareCreators::CustomPage
 
     def filters=(filter_parameters)
       well_filter.assign_attributes(filter_parameters)
@@ -61,12 +56,7 @@ module LabwareCreators
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
     def transfer_request_attributes(dest_plate)
       passed_parent_wells.map do |source_well, additional_parameters|
-        # TODO: revert back to the below
         request_hash(source_well, dest_plate, additional_parameters)
-
-        # Temp fix below is for testing until we have the tag clash on pooling issue resolved
-        # as only returning the first request_hash for now whilst developing
-        # return [request_hash(source_well, dest_plate, additional_parameters)]
       end
     end
 
@@ -76,10 +66,8 @@ module LabwareCreators
         'target_asset' => dest_plate.wells.detect do |dest_well|
           dest_well.location == transfer_hash[source_well.location][:dest_locn]
         end&.uuid,
-        # TODO: add concentration/ cell count here?
-        # 'volume' => "12345" #transfer_hash[source_well.location]['volume'].to_s
-        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
-      } # .merge(additional_parameters)
+        aliquot_attributes: { 'tag_depth' => tag_depth(source_well) }
+      }
     end
 
     # returns: [A1, B1, ... H1]
@@ -105,10 +93,15 @@ module LabwareCreators
       result
     end
 
+    # returns: an integer, unique within the pool of samples
+    # used to handle the uniqueness constraint on pooling untagged samples
     def tag_depth(source_well)
+      return nil if @pools.empty?
+
       @pools.each do |pool|
+        # 'pool.index(source_well) + 1' because we want the initital element
+        # in a pool to have an index of 1
         return (pool.index(source_well) + 1).to_s if pool.index(source_well)
-        # index + 1 incase of 0th index
       end
     end
 

@@ -128,8 +128,8 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       end
       expected_tag_depth = subject.tag_depth(passed_source_well)
 
-      expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid, 
-        'aliquot_attributes': { 'tag_depth' => expected_tag_depth }})
+      expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid,
+                             aliquot_attributes: { 'tag_depth' => expected_tag_depth } })
     end
   end
 
@@ -145,6 +145,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
       expect(subject.tag_depth(source_well1)).to eq('1')
       expect(subject.tag_depth(source_well2)).to eq('11')
+    end
+
+    it 'returns nil when pools is empty' do
+      subject.instance_variable_set(:@pools, [])
+      well = plate.wells[4]
+
+      expect(subject.tag_depth(well)).to eq(nil)
     end
   end
 
