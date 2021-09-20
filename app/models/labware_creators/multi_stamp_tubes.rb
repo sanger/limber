@@ -35,19 +35,19 @@ module LabwareCreators
 
       # TODO: create submission here (1 of 2 types - library prep or banking)
 
-      submission_options = purpose_config.submission_options
-      if submission_options.count == 1
-        request_options = submission_options.values.first[:request_options]
+      submission_options_from_config = purpose_config.submission_options
+      if submission_options_from_config.count == 1
+        configured_params = submission_options_from_config.values.first
 
         sequencescape_submission_parameters = {
-          template_name: "Limber - Cardinal",
+          template_name: configured_params[:template_name],
           labware_barcode: @child.human_barcode,
-          request_options: request_options,
+          request_options: configured_params[:request_options],
           asset_groups: [{ assets: @child.wells, autodetect_studies_projects: true }],
           api: api,
           user: user_uuid
         }
-        puts "sequencescape_submission_parameters: #{sequencescape_submission_parameters}"
+
         ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
         ss.save # TODO: check if true, handle if not
       end
