@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const failWell = (checkbox) => {
     // Failed and cancelled wells can't even be failed in bulk.
-    if (checkbox.dataset.preventQuadrantFail==='true') { return }
+    if (checkbox.dataset.preventWellFail==='true') { return }
     // Check the box
     checkbox.checked = true
     if(checkbox.disabled) {
