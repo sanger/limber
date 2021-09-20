@@ -53,7 +53,7 @@ export default {
     margin: 0 2% 10px 2%;
     display: inline-block;
     padding: 5px;
-    border-radius: 0px 15px 15px 15px;
+    border-radius: 0px 15px 15px 0px;
   }
   .no-tube {
     border: 1px solid white;
