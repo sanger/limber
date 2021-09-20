@@ -23,10 +23,10 @@ class Presenters::QcThresholdPresenter
 
     #
     # The maximum value for the slider. If not set in the thresholds section of
-    # the purpose configuration is calibrated based on the maximum obserbved
-    # vaule. (Or 100 ifd its a percentage)
+    # the purpose configuration is calibrated based on the maximum observed
+    # value. (Or 100 if it's a percentage)
     #
-    # @return [Float] The maxmium value to use for the range
+    # @return [Float] The maximum value to use for the range
     #
     def max
       @max ||= configuration.fetch(:max) { percentage? ? 100 : max_result + range_buffer }
@@ -34,8 +34,8 @@ class Presenters::QcThresholdPresenter
 
     #
     # The minimum value for the slider. If not set in the thresholds section of
-    # the purpose configuration is calibrated based on the minimum obserbved
-    # vaule. (Or 0 if its a percentage)
+    # the purpose configuration is calibrated based on the minimum observed
+    # value. (Or 0 if it's a percentage)
     #
     # @return [Float] The minimum value to use for the range
     #
@@ -120,7 +120,7 @@ class Presenters::QcThresholdPresenter
     end
 
     # We add a buffer to the range to ensure our slider can move a little way past
-    # our most extream values.
+    # our most extreme values.
     def range_buffer
       @range_buffer ||= (max_result - min_result) * RANGE_EXPANSION / 100
     end
