@@ -66,4 +66,50 @@ RSpec.describe Sequencescape::Api::V2::Well do
       end
     end
   end
+
+  describe '#latest_live_cell_count' do
+    let(:earlier_live_cell_count) { create(:qc_result, key: 'live_cell_count', value: '1000000', units: 'cells/ml', created_at: Time.parse('2020-01-02 03:04:05')) }
+    let(:later_live_cell_count) { create(:qc_result, key: 'live_cell_count', value: '1350000', units: 'cells/ml', created_at: Time.parse('2020-02-03 04:05:06')) }
+    let(:concentration_result) { create(:qc_result_concentration, created_at: Time.parse('2020-11-12 13:14:15')) }  # Latest of all the creation times
+
+    context 'when well has a single concentration result' do
+      let(:well) { create(:v2_well, qc_results: [concentration_result]) }
+
+      it 'returns nil' do
+        expect(well.latest_live_cell_count).to be_nil
+      end
+    end
+
+    context 'when well has a single cell count result' do
+      let(:well) { create(:v2_well, qc_results: [earlier_live_cell_count]) }
+
+      it 'returns the correct QC result' do
+        expect(well.latest_live_cell_count).to be(earlier_live_cell_count)
+      end
+    end
+
+    context 'when well has a two concentration results in date order' do
+      let(:well) { create(:v2_well, qc_results: [earlier_live_cell_count, later_live_cell_count]) }
+
+      it 'returns the later QC result by creation date' do
+        expect(well.latest_live_cell_count).to be(later_live_cell_count)
+      end
+    end
+
+    context 'when well has a two concentration results in reverse date order' do
+      let(:well) { create(:v2_well, qc_results: [later_live_cell_count, earlier_live_cell_count]) }
+
+      it 'returns the later QC result by creation date' do
+        expect(well.latest_live_cell_count).to be(later_live_cell_count)
+      end
+    end
+
+    context 'when well has a mixed concentration result' do
+      let(:well) { create(:v2_well, qc_results: [concentration_result, later_live_cell_count, earlier_live_cell_count]) }
+
+      it 'returns the later QC result for live cell count' do
+        expect(well.latest_live_cell_count).to be(later_live_cell_count)
+      end
+    end
+  end
 end
