@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe ExportsHelper do
   include ExportsHelper
 
-  context 'each_source_metadata_for_plate' do
+  describe '#each_source_metadata_for_plate' do
     let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }
     let(:ancestor_well_a1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'A1') }
     let(:ancestor_well_b1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'B1') }
