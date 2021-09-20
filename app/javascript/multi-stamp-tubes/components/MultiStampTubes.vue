@@ -38,6 +38,7 @@
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
+            :colour_index="i"
             @change="updateTube(i, $event)"
           />
         </b-form-group>

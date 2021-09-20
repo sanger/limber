@@ -1,26 +1,41 @@
 <template>
-  <b-form-group
-    :label="label"
-    :label-cols="2"
-    label-size="lg"
-    :label-for="uid"
-    :description="description"
-    :state="formState"
-    :invalid-feedback="feedback"
-    :valid-feedback="feedback"
-    :class="{ 'wait-plate': searching }"
-  >
-    <b-form-input
-      :id="uid"
-      v-model.trim="tubeBarcode"
-      type="text"
-      :state="formState"
-      size="lg"
-      placeholder="Scan a tube"
-      :disabled="scanDisabled"
-      @change="lookupTube"
-    />
-  </b-form-group>
+  <div>
+    <b-container>
+      <b-row>
+        <b-col cols="1">
+          <div :class="['pool-colours']">
+            <div :id="'well_index_' + colour_index" class="well">
+              <span :class="['aliquot', colourClass]" />
+            </div>
+          </div>
+        </b-col>
+        <b-col cols="9">
+          <b-form-group
+            :label="label"
+            :label-cols="2"
+            label-size="lg"
+            :label-for="uid"
+            :description="description"
+            :state="formState"
+            :invalid-feedback="feedback"
+            :valid-feedback="feedback"
+            :class="{ 'wait-plate': searching }"
+          >
+            <b-form-input
+              :id="uid"
+              v-model.trim="tubeBarcode"
+              type="text"
+              :state="formState"
+              size="lg"
+              placeholder="Scan a tube"
+              :disabled="scanDisabled"
+              @change="lookupTube"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 <script>
@@ -83,6 +98,9 @@ export default {
     tubeType: {
       // Used to specify the type of 'tube' to find by barcode
       type: String, default: 'tube'
+    },
+    colour_index: {
+      type: Number, default: null
     }
   },
   data() {
@@ -126,6 +144,9 @@ export default {
         const result = aggregate(this.validators, this.tube)
         return { state: boolToString[result.valid], message: result.message }
       }
+    },
+    colourClass() {
+      return `colour-${this.colour_index}`
     }
   },
   watch: {
@@ -171,3 +192,25 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .well {
+    height:38px;
+    width:30px;
+    margin-top: 10px;
+    text-align: center;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
+    .aliquot {
+      width:26px;
+      height:26px;
+      margin-top: 2px;
+      text-align: center;
+      display: inline-block;
+      border: 2px #343a40 solid;
+      border-radius: 7px;
+    }
+  }
+</style>

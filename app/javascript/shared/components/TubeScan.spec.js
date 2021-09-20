@@ -18,7 +18,8 @@ describe('TubeScan', () => {
         label: 'My Tube',
         description: 'Scan it in',
         api: api.devour,
-        includes: ''
+        includes: '',
+        colour_index: 3
       },
       localVue
     })
@@ -31,11 +32,18 @@ describe('TubeScan', () => {
         description: 'Scan it in',
         api: api.devour,
         includes: '',
-        scanDisabled: true
+        colour_index: 3,
+        scanDisabled: true,
       },
       localVue
     })
   }
+
+  it('renders the provided well colour', () => {
+    const wrapper = wrapperFactoryTube()
+
+    expect(wrapper.find('.colour-3').exists()).toBe(true)
+  })
 
   it('renders the provided label', () => {
     const wrapper = wrapperFactoryTube()
