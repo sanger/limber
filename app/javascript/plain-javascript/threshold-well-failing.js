@@ -17,7 +17,7 @@
  * #JS
  * The threshold object is considered the authoritative source of threshold
  * values. Keys are the data-qc-key value (eg. qcCellCount) with the value being
- * # the scalar threshold. (eg. 50.0 for a threshold of 50nm)
+ * the scalar threshold. (eg. 50.0 for a threshold of 50nm)
  *
  * This app binds an updateThreshold event to the input action of the slider
  * and the change action of the text field. This event updates the corresponding
@@ -27,13 +27,12 @@
  * Finally the app updates the status of the wells based on all thresholds.
  */
 document.addEventListener('DOMContentLoaded', () => {
-
   // Wraps our collection of threshold helpers
   const thresholdsHelper = document.getElementById('qc-thresholds-helper')
 
   if (thresholdsHelper === null) { return }
 
-  // Out wells are represented by simple checkboxes
+  // Our wells are represented by simple checkboxes
   const wells = document.getElementById('well-failures').querySelectorAll('input[type="checkbox"]')
 
   // Currently we can only change the status of 'passed' wells, so skip anything else
