@@ -30,27 +30,11 @@ module LabwareCreators
       )
 
       @child = plate_creation.child
+      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
 
-      transfer_material_from_parent!(@child.uuid)
+      transfer_material_from_parent!(child_v2)
 
-      # TODO: create submission here (1 of 2 types - library prep or banking)
-
-      submission_options_from_config = purpose_config.submission_options
-      if submission_options_from_config.count == 1
-        configured_params = submission_options_from_config.values.first
-
-        sequencescape_submission_parameters = {
-          template_name: configured_params[:template_name],
-          labware_barcode: @child.human_barcode,
-          request_options: configured_params[:request_options],
-          asset_groups: [{ assets: @child.wells, autodetect_studies_projects: true }],
-          api: api,
-          user: user_uuid
-        }
-
-        ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-        ss.save # TODO: check if true, handle if not
-      end
+      create_submission_from_child_plate(child_v2)
 
       yield(@child) if block_given?
       true
@@ -61,8 +45,7 @@ module LabwareCreators
       transfers.pluck(:source_tube).uniq
     end
 
-    def transfer_material_from_parent!(child_uuid)
-      child_plate = Sequencescape::Api::V2.plate_with_wells(child_uuid)
+    def transfer_material_from_parent!(child_plate)
       api.transfer_request_collection.create!(
         user: user_uuid,
         transfer_requests: transfer_request_attributes(child_plate)
@@ -82,6 +65,25 @@ module LabwareCreators
                             child_well.location == transfer.dig(:new_target, :location)
                           end&.uuid
       }
+    end
+
+    def create_submission_from_child_plate(child_plate)
+      submission_options_from_config = purpose_config.submission_options
+      if submission_options_from_config.count == 1
+        configured_params = submission_options_from_config.values.first
+
+        sequencescape_submission_parameters = {
+          template_name: configured_params[:template_name],
+          labware_barcode: child_plate.human_barcode,
+          request_options: configured_params[:request_options],
+          asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
+          api: api,
+          user: user_uuid
+        }
+
+        ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
+        ss.save # TODO: check if true, handle if not
+      end
     end
   end
 end
