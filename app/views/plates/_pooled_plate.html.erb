@@ -17,7 +17,7 @@
             <div id="<%= "well_#{well.location}" %>" class="well">
               <% unless transfers[well.location].nil? -%>
                 <% Array(transfers[well.location]).each do |location| -%>
-                <div id="<%= "aliquot_#{location}" %>" class="aliquot <%= colours_by_location[location] %>" rel="<%= "#details_#{location}" %>">
+                <div id="<%= "aliquot_#{location}" %>" class="aliquot <%= colours_by_location[location] %>">
                   <%= location %>
                 </div>
                 <% end %>

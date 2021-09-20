@@ -57,7 +57,14 @@ LCA PBMC:
       id: cellaca_input_file
       params:
         page: 3
-
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
   # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
   # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
   # TODO: DPL-??? new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?

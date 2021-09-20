@@ -1,7 +1,6 @@
 <div
   id="aliquot_<%= id %>"
   class="aliquot <%= container.location %> <%= container.state %>"
-  rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool) ? container.pool_id : '' %>">
   <% container.aliquots.each do |aliquot| %>
     <%= content_tag(:span, aliquot.tag_index, class: ['tag', "tag-#{aliquot.tag_index.to_s.length}"]) %>

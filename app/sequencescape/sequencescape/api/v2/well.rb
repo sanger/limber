@@ -38,6 +38,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
               .max_by(&:created_at)
   end
 
+  def all_latest_qc
+    qc_results.sort_by(&:id).index_by(&:key).values
+  end
+
   def coordinate
     WellHelpers.well_coordinate(location)
   end
