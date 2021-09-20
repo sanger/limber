@@ -18,14 +18,14 @@
     src_well = @ancestor_plate.wells_in_columns.find { |well| well.location == src_location }
     cell_count = src_well.latest_live_cell_count
     next if cell_count.nil?
-    required_volume = (20000000.0 / cell_count.value.to_i).round
+    required_volume = 20000000.0 / cell_count.value.to_i
 
     transfer_request_data << [
       src_barcode,
       src_location,
       @plate.labware_barcode.human,
       dest_well.location,
-      required_volume,
+      '%0.2f' % required_volume,
     ]
   end
 %>

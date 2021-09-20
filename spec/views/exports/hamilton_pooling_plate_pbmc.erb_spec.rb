@@ -8,7 +8,7 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
   let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }
   let(:concentration_result) { create(:qc_result_concentration) }
   let(:live_cell_count_a1) { create(:qc_result, key: 'live_cell_count', value: '1000000', units: 'cells/ml') }
-  let(:live_cell_count_b1) { create(:qc_result, key: 'live_cell_count', value: '1250000', units: 'cells/ml') }
+  let(:live_cell_count_b1) { create(:qc_result, key: 'live_cell_count', value: '1400000', units: 'cells/ml') }
   let(:live_cell_count_c1) { create(:qc_result, key: 'live_cell_count', value: '1850000', units: 'cells/ml') }
   let(:ancestor_well_a1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'A1', qc_results: [live_cell_count_a1, concentration_result]) }
   let(:ancestor_well_b1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'B1', qc_results: [live_cell_count_b1]) }
@@ -42,9 +42,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
   let(:expected_content) do
     [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20', '6.25'],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '16', '6.25'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '11', '3.125'] # rounded from 10.8
+      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20.00', '6.25'],
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '6.25'],  # Rounded up from 14.2857
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
     ]
   end
 
@@ -57,8 +57,8 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
 
     expected = [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '16', '3.125'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '11', '3.125']
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
     ]
 
     expect(CSV.parse(render)).to eq(expected)
@@ -69,8 +69,8 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
 
     expected = [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '16', '3.125'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '11', '3.125']
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
     ]
 
     expect(CSV.parse(render)).to eq(expected)
