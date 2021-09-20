@@ -561,7 +561,8 @@ export default {
       }).catch((error)=>{
         // Something has gone wrong
         this.loading = false
-        // TODO replace this with generic limber logging when available
+        // TODO Replace this with generic limber logging when available
+        // See https://github.com/sanger/limber/issues/836
         console.error(error)
         this.creationRequestInProgress = false
         this.creationRequestSuccessful = false
