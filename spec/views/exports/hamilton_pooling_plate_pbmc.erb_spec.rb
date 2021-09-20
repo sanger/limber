@@ -34,7 +34,6 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
   end
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [2, 1]) }
 
-
   before do
     assign(:ancestor_plate, ancestor_labware)
     assign(:plate, labware)

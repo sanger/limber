@@ -68,9 +68,30 @@ RSpec.describe Sequencescape::Api::V2::Well do
   end
 
   describe '#latest_live_cell_count' do
-    let(:earlier_live_cell_count) { create(:qc_result, key: 'live_cell_count', value: '1000000', units: 'cells/ml', created_at: Time.parse('2020-01-02 03:04:05')) }
-    let(:later_live_cell_count) { create(:qc_result, key: 'live_cell_count', value: '1350000', units: 'cells/ml', created_at: Time.parse('2020-02-03 04:05:06')) }
-    let(:concentration_result) { create(:qc_result_concentration, created_at: Time.parse('2020-11-12 13:14:15')) }  # Latest of all the creation times
+    let(:earlier_live_cell_count) do
+      create(
+        :qc_result,
+        key: 'live_cell_count',
+        value: '1000000',
+        units: 'cells/ml',
+        created_at: Time.parse.utc('2020-01-02 03:04:05')
+      )
+    end
+    let(:later_live_cell_count) do
+      create(
+        :qc_result,
+        key: 'live_cell_count',
+        value: '1350000',
+        units: 'cells/ml',
+        created_at: Time.parse.utc('2020-02-03 04:05:06')
+      )
+    end
+    let(:concentration_result) do
+      create(
+        :qc_result_concentration,
+        created_at: Time.parse.utc('2020-11-12 13:14:15')  # Latest of all the creation times
+      )
+    end
 
     context 'when well has a single concentration result' do
       let(:well) { create(:v2_well, qc_results: [concentration_result]) }
