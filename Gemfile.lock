@@ -305,7 +305,7 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    sequencescape-client-api (0.6.1)
+    sequencescape-client-api (0.7.0)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
       i18n
@@ -393,7 +393,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api (~> 0.6.1)
+  sequencescape-client-api (~> 0.7.0)
   simplecov
   sprint_client
   state_machines
