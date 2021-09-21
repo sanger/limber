@@ -23,7 +23,7 @@
         header-tag="h3"
       >
         <b-form-group label="Scan in the tubes you wish to use">
-          <lb-tube-scan
+          <lb-labware-scan
             v-for="i in sourceTubeNumber"
             :key="i"
             :api="devourApi"
@@ -31,7 +31,8 @@
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
-            :colour_index="i"
+            :colourIndex="i"
+            :labwareType="'tube'"
             @change="updateTube(i, $event)"
           />
         </b-form-group>
@@ -64,7 +65,7 @@ import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
 import { transferTubesCreator } from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
-import TubeScan from 'shared/components/TubeScan'
+import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
@@ -77,7 +78,7 @@ export default {
   name: 'MultiStampTubes',
   components: {
     'lb-plate': Plate,
-    'lb-tube-scan': TubeScan,
+    'lb-labware-scan': LabwareScan,
     'lb-loading-modal': LoadingModal,
     'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers
   },
@@ -193,7 +194,7 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
-      const currTubes = this.tubes.map(tubeItem => tubeItem.tube)
+      const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
       return [
         checkDuplicates(currTubes)
       ]
@@ -215,7 +216,7 @@ export default {
       this.loading = true
       let payload = {
         plate: {
-          parent_uuid: this.validTubes[0].tube.uuid, // TODO: this is just one tube of 96 and assumes A1 is filled, it may not be
+          parent_uuid: this.validTubes[0].labware.uuid, // TODO: this is just one tube of 96 and assumes A1 is filled, it may not be
           purpose_uuid: this.purposeUuid,
           transfers: this.apiTransfers()
         }

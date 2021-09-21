@@ -166,7 +166,7 @@ const buildSequentialTubesTransfersArray = function(transferRequests) {
 
     const tubeTransferReq = transferRequests[i]
     transfers.push( {
-      tubeObj: { tube: tubeTransferReq.tube, index: tubeTransferReq.index },
+      tubeObj: { tube: tubeTransferReq.labware, index: tubeTransferReq.index },
       targetWell: indexToName(i, 8)
     })
   }
