@@ -88,8 +88,8 @@ Presenters are responsible for showing information about a piece of labware.
 
 {include:Presenters::StandardPresenter}
 
-  Used directly in 68 purposes:
-  LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, pWGS-384 Post Shear XP, pWGS-384 AL Lib, PF Shear, PF Post Shear, PF Post Shear XP, PF-384 Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 RT-Q, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 Lib PCR pool, LBR Globin, LBR Frag cDNA, LBC BCR Dil 1, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Dil 2, LBC BCR Post PCR, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 cDNA, LHR-384 XP, LHR-384 AL Lib, LBC Aggregate, LBC Cherrypick, LCA PBMC, LCA PBMC Pools, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Dil 1, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Dil 2, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LTHR Lib PCR pool, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, scRNA cDNA-XP, scRNA End Prep, LHR PCR 1, LHR PCR 2, LHR XP, and LHR End Prep
+  Used directly in 69 purposes:
+  LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, pWGS-384 Post Shear XP, pWGS-384 AL Lib, PF Shear, PF Post Shear, PF Post Shear XP, PF-384 Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 RT-Q, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 Lib PCR pool, LBR Globin, LBR Frag cDNA, LBC BCR Dil 1, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Dil 2, LBC BCR Post PCR, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 cDNA, LHR-384 XP, LHR-384 AL Lib, LBC Aggregate, LBC Cherrypick, LCA Blood Bank, LCA PBMC, LCA PBMC Pools, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Dil 1, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Dil 2, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LTHR Lib PCR pool, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, scRNA cDNA-XP, scRNA End Prep, LHR PCR 1, LHR PCR 2, LHR XP, and LHR End Prep
 
 {Presenters::StandardPresenter View class documentation}
 
@@ -138,8 +138,8 @@ Presenters are responsible for showing information about a piece of labware.
 
 {include:Presenters::StockPlatePresenter}
 
-  Used directly in 13 purposes:
-  PF Cherrypicked, LTHR-384 RT, LBR Cherrypick, GnT Stock, LB Cherrypick, LDS Stock, LDS Cherrypick, LBC Stock, LHR-384 RT, LTHR RT, LBB Cherrypick, scRNA Stock, and LHR RT
+  Used directly in 14 purposes:
+  PF Cherrypicked, LTHR-384 RT, LBR Cherrypick, GnT Stock, LB Cherrypick, LDS Stock, LDS Cherrypick, LBC Stock, LHR-384 RT, LCA Blood Array, LTHR RT, LBB Cherrypick, scRNA Stock, and LHR RT
 
 {Presenters::StockPlatePresenter View class documentation}
 
@@ -148,8 +148,8 @@ Presenters are responsible for showing information about a piece of labware.
 
 {include:Presenters::SubmissionPlatePresenter}
 
-  Used directly in 3 purposes:
-  LTHR Cherrypick, LCA Blood Array, and LCA Blood Bank
+  Used directly in 1 purposes:
+  LTHR Cherrypick
 
 {Presenters::SubmissionPlatePresenter View class documentation}
 
@@ -209,7 +209,8 @@ LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384
 
 {include:Presenters::UnknownTubePresenter}
 
-  **This template is unused**
+Used directly in 1 purposes:
+LCA Blood Vac, 
 
 {Presenters::UnknownTubePresenter View class documentation}
 
