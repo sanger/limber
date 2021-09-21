@@ -75,9 +75,9 @@ RSpec.describe Presenters::QcThresholdPresenter do
           [create(:qc_result, key: 'concentration', value: '50', units: 'nM')]
         ]
       end
-      let(:configuration) { {
-        molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' },
-      } }
+      let(:configuration) do
+        { molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' } }
+      end
 
       it 'is disabled' do
         expect(presenter.thresholds.first).to_not be_enabled

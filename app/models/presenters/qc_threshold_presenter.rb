@@ -76,7 +76,7 @@ class Presenters::QcThresholdPresenter
     # @return [Boolean]
     #
     def enabled?
-      has_results? && has_compatible_units?
+      results? && compatible_units?
     end
 
     #
@@ -85,12 +85,11 @@ class Presenters::QcThresholdPresenter
     # @return [String]
     #
     def error
-      return "There are no QC results of this type to apply a threshold." unless has_results?
+      return 'There are no QC results of this type to apply a threshold.' unless results?
+      return if compatible_units?
 
-      unless has_compatible_units?
-        units = unique_units.map(&:units).join(', ')
-        return "Incompatible units #{units}. Automatic thresholds disabled."
-      end
+      units = unique_units.map(&:units).join(', ')
+      "Incompatible units #{units}. Automatic thresholds disabled."
     end
 
     def value_for(qc_result)
@@ -108,11 +107,11 @@ class Presenters::QcThresholdPresenter
 
     private
 
-    def has_results?
+    def results?
       results.any?
     end
 
-    def has_compatible_units?
+    def compatible_units?
       unique_units.all? { |unit| unit.compatible?(units) }
     end
 
