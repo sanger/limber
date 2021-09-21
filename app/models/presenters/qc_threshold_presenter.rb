@@ -69,23 +69,28 @@ class Presenters::QcThresholdPresenter
     end
 
     #
-    # Indicates if the field should be enabled. Is disabled if the units used
-    # for the wells can't be directly converted.
+    # Indicates if the field should be enabled. Returns false if there are no QC
+    # results for thresholds to work with or the units used for the wells can't
+    # be directly converted.
     #
     # @return [Boolean]
     #
     def enabled?
-      unique_units.all? { |unit| unit.compatible?(units) }
+      has_results? && has_compatible_units?
     end
 
     #
-    # Text that can be displayed to the user if the field is disabled.
+    # UI ready text to display to the user if the field is not enabled.
     #
     # @return [String]
     #
     def error
-      units = unique_units.map(&:units).join(', ')
-      "Incompatible units #{units}. Automatic thresholds disabled." unless enabled?
+      return "There are no QC results of this type to apply a threshold." unless has_results?
+
+      unless has_compatible_units?
+        units = unique_units.map(&:units).join(', ')
+        return "Incompatible units #{units}. Automatic thresholds disabled."
+      end
     end
 
     def value_for(qc_result)
@@ -102,6 +107,14 @@ class Presenters::QcThresholdPresenter
     end
 
     private
+
+    def has_results?
+      results.any?
+    end
+
+    def has_compatible_units?
+      unique_units.all? { |unit| unit.compatible?(units) }
+    end
 
     def unique_units
       results.map(&:units).uniq.map { |u| Unit.new(u) }
