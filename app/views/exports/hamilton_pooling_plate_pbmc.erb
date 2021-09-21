@@ -1,24 +1,31 @@
 <%# This is a picking file for a Hamilton robot for pooling and resuspending PBMC samples %>
 <%= CSV.generate_line [
-                        'SourcePlate',
-                        'SourceWell',
-                        'DestinationPlate',
-                        'DestinationWell',
-                        'SampleVolume',
-                        'ResuspensionVolume',
-                      ],
-                      row_sep: ''
+      'SourcePlate',
+      'SourceWell',
+      'DestinationPlate',
+      'DestinationWell',
+      'SampleVolume',
+      'ResuspensionVolume',
+    ],
+    row_sep: ''
 %>
 <%
   # Prepare the fields determined from the transfer requests
   transfer_request_data = []
-  each_source_metadata_for_plate(@plate) do |dest_well, index, src_barcode, src_location|
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    # Convert cells/ml into µl / 20,000 cells
+    # Note: 20,000 / (cells/ml) * 1,000 is the same as 20,000,000 / (cells/ml)
+    src_well = @ancestor_plate.wells_in_columns.find { |well| well.location == src_location }
+    cell_count = src_well.latest_live_cell_count
+    next if cell_count.nil?
+    required_volume = 20000000.0 / cell_count.value.to_i
+
     transfer_request_data << [
       src_barcode,
       src_location,
       @plate.labware_barcode.human,
       dest_well.location,
-      index % 12 + 1
+      '%0.2f' % required_volume,
     ]
   end
 %>
