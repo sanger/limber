@@ -69,21 +69,24 @@ module LabwareCreators
 
     def create_submission_from_child_plate(child_plate)
       submission_options_from_config = purpose_config.submission_options
-      if submission_options_from_config.count == 1
-        configured_params = submission_options_from_config.values.first
+      # if there's more than one appropriate submission, we can't know which one to choose,
+      # so don't create one.
+      return unless submission_options_from_config.count == 1
 
-        sequencescape_submission_parameters = {
-          template_name: configured_params[:template_name],
-          labware_barcode: child_plate.human_barcode,
-          request_options: configured_params[:request_options],
-          asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
-          api: api,
-          user: user_uuid
-        }
+      # otherwise, create a submission with params specified in the config
+      configured_params = submission_options_from_config.values.first
 
-        ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-        ss.save # TODO: check if true, handle if not
-      end
+      sequencescape_submission_parameters = {
+        template_name: configured_params[:template_name],
+        labware_barcode: child_plate.human_barcode,
+        request_options: configured_params[:request_options],
+        asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
+        api: api,
+        user: user_uuid
+      }
+
+      ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
+      ss.save # TODO: check if true, handle if not
     end
   end
 end

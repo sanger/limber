@@ -102,12 +102,12 @@ export default {
     state() { return this.validated.state }, // Overall state, eg. valid, invalid, empty
     formState() {
       switch (this.state) {
-        case 'valid':
-          return true
-        case 'invalid':
-          return false
-        default:
-          return null
+      case 'valid':
+        return true
+      case 'invalid':
+        return false
+      default:
+        return null
       }
     },
     validated() {
