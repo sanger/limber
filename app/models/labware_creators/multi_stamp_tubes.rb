@@ -70,7 +70,7 @@ module LabwareCreators
     def create_submission_from_child_plate(child_plate)
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
-      # so don't create one.
+      # so don't create one.
       return unless submission_options_from_config.count == 1
 
       # otherwise, create a submission with params specified in the config
