@@ -117,6 +117,10 @@ module Presenters
       size == 384 ? 'quadrant_helper' : 'none'
     end
 
+    def qc_thresholds
+      @qc_thresholds ||= Presenters::QcThresholdPresenter.new(labware, purpose_config.fetch(:qc_thresholds, {}))
+    end
+
     private
 
     def libraries_passable?

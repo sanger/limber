@@ -11,6 +11,7 @@
     </fieldset>
     <div class="card-body">
       <%= render presenter.quadrants_helper %>
+      <%= render 'thresholds', presenter: presenter.qc_thresholds %>
 
       <p>Once the "Fail Selected Wells" button has been pressed failures can't be undone but further failed wells can be added. The 'Still charge customer' option will only affect the wells selected for failure at the same time. Previously and subsequently failed wells will retain their original options.</p>
 

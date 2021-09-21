@@ -3,6 +3,7 @@
 FactoryBot.define do
   # API V2 qc result with molarity data
   factory :qc_result, class: Sequencescape::Api::V2::QcResult do
+    id
     key { 'molarity' }
     value { '1.5' }
     units { 'nM' }

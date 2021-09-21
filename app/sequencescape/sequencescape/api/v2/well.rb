@@ -31,11 +31,19 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     latest_qc(key: 'molarity', units: 'nM')
   end
 
+  def latest_live_cell_count
+    latest_qc(key: 'live_cell_count', units: 'cells/ml')
+  end
+
   def latest_qc(key:, units:)
     qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
               .select { |qc| qc.key.casecmp(key).zero? }
               .select { |qc| qc.units.casecmp(units).zero? }
               .max_by(&:created_at)
+  end
+
+  def all_latest_qc
+    qc_results.sort_by(&:id).index_by(&:key).values
   end
 
   def coordinate

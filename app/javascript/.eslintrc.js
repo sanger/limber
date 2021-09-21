@@ -39,7 +39,8 @@ module.exports = {
                 "argsIgnorePattern": "^_"
             }
         ],
-        /* We need a proper logging solution, but until then: */
+        // We need a proper logging solution (see https://github.com/sanger/limber/issues/836),
+        // but until then:
         "no-console": ["error", { "allow": ["warn", "error", "log"] }],
         // The API sends snake case stuff, and this lets us pass things straight
         // through. Not a great compromise though.
