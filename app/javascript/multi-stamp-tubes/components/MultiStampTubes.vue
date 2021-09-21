@@ -15,13 +15,6 @@
           :columns="targetColumnsNumber"
           :wells="targetWells"
         />
-        <lb-tube-summary
-          v-for="tube in tubes"
-          :key="tube.index"
-          :state="tube.state"
-          :pool_index="tube.index + 1"
-          :tube="tube.tube"
-        />
       </b-card>
     </lb-main-content>
     <lb-sidebar>
@@ -66,7 +59,6 @@
 </template>
 
 <script>
-import TubeSummary from './TubeSummary'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
@@ -86,7 +78,6 @@ export default {
   components: {
     'lb-plate': Plate,
     'lb-tube-scan': TubeScan,
-    'lb-tube-summary': TubeSummary,
     'lb-loading-modal': LoadingModal,
     'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers
   },
