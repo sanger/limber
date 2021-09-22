@@ -149,11 +149,6 @@ export default {
       }
     },
     computedValidators(){
-      console.log("*** computedValidators ***")
-      console.log(this.validators)
-      if(this.validators) { console.log("validators is truthy") }
-      console.log(this.validators.size)
-      console.log(this.validators[0])
       if(this.validators) { return this.validators }
 
       if(this.labwareType=='tube'){
