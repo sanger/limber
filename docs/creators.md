@@ -130,6 +130,16 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::QuadrantSplitPlate View class documentation}
 
 
+## LabwareCreators::CardinalPoolsPlate
+
+{include:LabwareCreators::CardinalPoolsPlate}
+
+  Used directly in 1 purposes:
+  LCA PBMC Pools
+
+{LabwareCreators::CardinalPoolsPlate View class documentation}
+
+
 ## LabwareCreators::PooledTubesBase
 
 {include:LabwareCreators::PooledTubesBase}

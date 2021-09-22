@@ -46,6 +46,6 @@ LTHR Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::PooledTubesBySubmissionWithPhiX
+  # :creator_class: LabwareCreators::PooledTubesBySubmissionWithPhiX
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
