@@ -19,7 +19,7 @@ module Presenters
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
       'Stock plate barcode' => :stock_plate_barcode,
-      'PCR Cycles' => :pcr_cycles,
+      'PCR Cycles' => :requested_pcr_cycles,
       'Created on' => :created_on
     }
 

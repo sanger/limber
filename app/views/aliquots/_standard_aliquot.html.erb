@@ -5,7 +5,6 @@
         <%= container.state %>
         <%= container.suboptimal? ? 'suboptimal' : '' %>
         colour-<%= presenter.pool_index(container.pool_id) %>"
-  rel="<%= "details_#{id}" %>"
   data-pool="<%= container.respond_to?(:pool_id) ? container.pool_id : '' %>">
   <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
   <% if container.respond_to?(:contains_control?) && container.contains_control? %>

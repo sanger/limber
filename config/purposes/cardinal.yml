@@ -2,7 +2,7 @@
 # high throughput Cardinal and associated Banking pipelines
 ---
 ###
-# Cardinal Library preparation
+# Cardinal Arraying
 ###
 LCA Blood Vac:
   :asset_type: tube
@@ -26,16 +26,48 @@ LCA Blood Array:
   # TODO: DPL-064 is this presenter suitable or do we need something special that displays parent tube details?
   :presenter_class: Presenters::StockPlatePresenter
   # TODO: DPL-064 This plate gets created by the re-arraying of multiple tubes into the plate
+  # :creator_class: LabwareCreators::MultiStampTubesArray
+# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
+LCA Blood Bank:
+  :asset_type: plate
+  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
   # :creator_class: LabwareCreators::?
+  # :presenter_class: Presenters::?
+###
+# Cardinal Library Preparation Pipeline
+###
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
-  :label_template: plate_lca_pbmc # creates QC1 to 4 barcodes
-  # TODO: DPL-065 needs :file_links: csv output: for Cellaca input files for QC1 to 4 depending on number samples
-  # Cellaca output files (1-4) are uploaded into Quanthub to set concentrations on plate (DPL-066)
-  # TODO: DPL-065 needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
-  # TODO: DPL-065 Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
-  # TODO: DPL-065 new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
+  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :file_links:
+    - name: "Download Cellaca Input QC1"
+      id: cellaca_input_file
+      params:
+        page: 0
+    - name: "Download Cellaca Input QC2"
+      id: cellaca_input_file
+      params:
+        page: 1
+    - name: "Download Cellaca Input QC3"
+      id: cellaca_input_file
+      params:
+        page: 2
+    - name: "Download Cellaca Input QC4"
+      id: cellaca_input_file
+      params:
+        page: 3
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
+  # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
+  # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
+  # TODO: DPL-??? new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
 # LCA PBMC wells are pooled together into the LCA PBMC Pools plate
 LCA PBMC Pools:
   :asset_type: plate
@@ -44,6 +76,9 @@ LCA PBMC Pools:
   # new creator to make pools of samples automatically according to table, using info from PBMC QC
   :creator_class: LabwareCreators::CardinalPoolsPlate
   # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LCA PBMC plate
+  :file_links:
+    - name: "Download Hamilton LCA PBMC to LCA PBMC Pools CSV"
+      id: hamilton_pooling_plate_pbmc
 # LCA PBMC Pools stamps into LCA 10X cDNA
 LCA 10X cDNA:
   :asset_type: plate
@@ -78,12 +113,6 @@ LCA Custom Pool Norm:
 ###
 # Cardinal Blood Banking Pipeline
 ###
-# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
-LCA Blood Bank:
-  :asset_type: plate
-  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
-  # :creator_class: LabwareCreators::?
-  # :presenter_class: Presenters::?
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate

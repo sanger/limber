@@ -53,7 +53,7 @@ module ApiUrlHelper
       stub_api_modify(*components, status: status, body: body, payload: payload)
     end
 
-    def stub_api_modify(*components, body:, payload:, action: :post, status: 201) # rubocop:todo Metrics/MethodLength
+    def stub_api_modify(*components, body:, payload:, action: :post, status: 201)
       Array(body).reduce(
         stub_request(action, api_url_for(*components))
         .with(
@@ -91,7 +91,6 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 plate finding query.
-    # rubocop:todo Metrics/MethodLength
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
       # Stub to v1 api search here as well!
       if stub_search
@@ -109,7 +108,6 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(*arguments).and_return(plate)
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)

@@ -2,13 +2,13 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "jasmine": true
+        "jasmine": true,
+        "jest/globals": true
     },
-    "plugins": ["jasmine", "vue"],
+    "plugins": ["jest", "vue"],
      "extends": [
         "eslint:recommended",
-        "plugin:vue/recommended",
-        "plugin:jasmine/recommended"
+        "plugin:vue/recommended"
     ],
     "parserOptions": {
         "parser": "babel-eslint",
@@ -39,7 +39,8 @@ module.exports = {
                 "argsIgnorePattern": "^_"
             }
         ],
-        /* We need a proper logging solution, but until then: */
+        // We need a proper logging solution (see https://github.com/sanger/limber/issues/836),
+        // but until then:
         "no-console": ["error", { "allow": ["warn", "error", "log"] }],
         // The API sends snake case stuff, and this lets us pass things straight
         // through. Not a great compromise though.
@@ -48,7 +49,7 @@ module.exports = {
     "overrides": [
         {
           "files": [ "**/*.spec.js" ],
-          "plugins": ["jasmine", "vue"]
+          "plugins": ["jest", "vue"]
         }
       ]
 };

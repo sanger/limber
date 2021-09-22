@@ -18,7 +18,7 @@ end
 environment = ARGV[0]
 command = ARGV[1] || 's'
 
-def build_config # rubocop:todo Metrics/MethodLength
+def build_config
   $stdout.puts 'No configuration for environment'
   $stdout.print 'Sequencescape url: '
   url = $stdin.gets.chomp

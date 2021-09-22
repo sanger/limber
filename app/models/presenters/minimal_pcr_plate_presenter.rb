@@ -15,7 +15,7 @@ module Presenters
       'Primer panel' => :panel_name,
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
-      'PCR Cycles' => :pcr_cycles,
+      'PCR Cycles' => :requested_pcr_cycles,
       'Created on' => :created_on
     }
   end
