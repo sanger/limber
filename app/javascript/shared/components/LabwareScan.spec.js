@@ -1,38 +1,42 @@
+// Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import TubeScan from 'shared/components/TubeScan.vue'
+import LabwareScan from 'shared/components/LabwareScan.vue'
 import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 
 // create an extended `Vue` constructor
 import localVue from 'test_support/base_vue'
 
-describe('TubeScan', () => {
+describe('LabwareScan', () => {
   const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
   const nullTube = { data: [] }
   const goodTube = jsonCollectionFactory('tube', [{ uuid: assetUuid }])
 
+
   const wrapperFactoryTube = function(api = mockApi()) {
-    return mount(TubeScan, {
+    return mount(LabwareScan, {
       propsData: {
+        labwareType: 'tube',
         label: 'My Tube',
         description: 'Scan it in',
         api: api.devour,
         includes: '',
-        colour_index: 3
+        colourIndex: 3
       },
       localVue
     })
   }
 
   const wrapperFactoryTubeDisabled = function(api = mockApi()) {
-    return mount(TubeScan, {
+    return mount(LabwareScan, {
       propsData: {
+        labwareType: 'tube',
         label: 'My Tube',
         description: 'Scan it in',
         api: api.devour,
         includes: '',
-        colour_index: 3,
+        colourIndex: 3,
         scanDisabled: true,
       },
       localVue
@@ -79,11 +83,11 @@ describe('TubeScan', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find tube')
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find labware')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', tube: null }],
-        [{ state: 'invalid', tube: undefined }]
+        [{ state: 'searching', labware: null }],
+        [{ state: 'invalid', labware: undefined }]
       ]
     })
   })
@@ -115,8 +119,8 @@ describe('TubeScan', () => {
     expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ state: 'searching', tube: null }],
-        [{ state: 'invalid', tube: null }]
+        [{ state: 'searching', labware: null }],
+        [{ state: 'invalid', labware: null }]
       ]
     })
   })
@@ -143,8 +147,79 @@ describe('TubeScan', () => {
     const events = wrapper.emitted()
 
     expect(events.change.length).toEqual(2)
-    expect(events.change[0]).toEqual([{ state: 'searching', tube: null }])
+    expect(events.change[0]).toEqual([{ state: 'searching', labware: null }])
     expect(events.change[1][0].state).toEqual('valid')
-    expect(events.change[1][0].tube.uuid).toEqual(assetUuid)
+    expect(events.change[1][0].labware.uuid).toEqual(assetUuid)
+  })
+
+  describe('When labwareType is plate', () => {
+    const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
+    const badPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid , number_of_columns: 24, number_of_rows: 8 }])
+
+    const wrapperFactoryPlate = function(api = mockApi()) {
+      return mount(LabwareScan, {
+        propsData: {
+          label: 'My Plate',
+          description: 'Scan it in',
+          api: api.devour,
+          includes: 'wells.requests_as_source,wells.aliquots.request'
+        },
+        localVue
+      })
+    }
+
+    it('is valid if it can find a plate', async () => {
+      const api = mockApi()
+      const wrapper = wrapperFactoryPlate(api)
+
+      api.mockGet('plates',{
+        include: 'wells.requests_as_source,wells.aliquots.request',
+        filter: { barcode: 'DN12345' },
+        fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
+      }, goodPlate)
+
+      wrapper.find('input').setValue('DN12345')
+      await wrapper.find('input').trigger('change')
+
+      expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+      await flushPromises()
+
+      expect(wrapper.find('.valid-feedback').text()).toEqual('Great!')
+
+      const events = wrapper.emitted()
+
+      expect(events.change.length).toEqual(2)
+      expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
+      expect(events.change[1][0].state).toEqual('valid')
+      expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
+    })
+
+    it('is invalid if the plate is the wrong size', async () => {
+      const api = mockApi()
+      const wrapper = wrapperFactoryPlate(api)
+
+      api.mockGet('plates',{
+        include:  'wells.requests_as_source,wells.aliquots.request',
+        filter: { barcode: 'Good barcode' },
+        fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
+      }, badPlate)
+
+      wrapper.find('input').setValue('Good barcode')
+      await wrapper.find('input').trigger('change')
+
+      expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+      await flushPromises()
+
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('The plate should be 12×8 wells in size')
+
+      const events = wrapper.emitted()
+
+      expect(events.change.length).toEqual(2)
+      expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
+      expect(events.change[1][0].state).toEqual('invalid')
+      expect(events.change[1][0].plate.uuid).toEqual(assetUuid)
+    })
   })
 })

@@ -79,7 +79,7 @@ import MultiStampTransfers from './MultiStampTransfers'
 import VolumeTransfers from './VolumeTransfers'
 import { baseTransferCreator } from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
-import PlateScan from 'shared/components/PlateScan'
+import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
@@ -92,7 +92,7 @@ export default {
   name: 'MultiStamp',
   components: {
     'lb-plate': Plate,
-    'lb-plate-scan': PlateScan,
+    'lb-plate-scan': LabwareScan,
     'lb-plate-summary': PlateSummary,
     'lb-loading-modal': LoadingModal,
     'lb-primer-panel-filter': PrimerPanelFilter,

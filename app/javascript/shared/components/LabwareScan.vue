@@ -149,11 +149,6 @@ export default {
       }
     },
     computedValidators(){
-      console.log("*** computedValidators ***")
-      console.log(this.validators)
-      if(this.validators) { console.log("validators is truthy") }
-      console.log(this.validators.size)
-      console.log(this.validators[0])
       if(this.validators) { return this.validators }
 
       if(this.labwareType=='tube'){
@@ -168,7 +163,13 @@ export default {
   },
   watch: {
     state() {
-      this.$emit('change', { labware: this.labware, state: this.state })
+      var message
+      if(this.labwareType == 'tube'){
+        message = { labware: this.labware, state: this.state }
+      } else {
+        message = { plate: this.labware, state: this.state }
+      }
+      this.$emit('change', message)
     }
   },
   methods: {
@@ -187,7 +188,7 @@ export default {
         await this.api.findAll(this.labwareType, {
           include: this.includes,
           filter: { barcode: this.labwareBarcode },
-          fields: this.fieldsToRetrieve
+          fields: this.fieldsToRetrieve()
         })
       )
       return labware.data[0]

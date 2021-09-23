@@ -68,6 +68,26 @@ RSpec.describe Presenters::QcThresholdPresenter do
       end
     end
 
+    context 'with no QC results for a configured key' do
+      let(:qc_results) do
+        [
+          [create(:qc_result, key: 'concentration', value: '10', units: 'ng/ul')],
+          [create(:qc_result, key: 'concentration', value: '50', units: 'nM')]
+        ]
+      end
+      let(:configuration) do
+        { molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' } }
+      end
+
+      it 'is disabled' do
+        expect(presenter.thresholds.first).to_not be_enabled
+      end
+
+      it 'explains the problem' do
+        expect(presenter.thresholds.first.error).to eq 'There are no QC results of this type to apply a threshold.'
+      end
+    end
+
     context 'with incompatible units' do
       let(:qc_results) do
         [
