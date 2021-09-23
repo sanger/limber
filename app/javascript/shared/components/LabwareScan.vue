@@ -163,7 +163,13 @@ export default {
   },
   watch: {
     state() {
-      this.$emit('change', { labware: this.labware, state: this.state })
+      var message
+      if(this.labwareType == 'tube'){
+        message = { labware: this.labware, state: this.state }
+      } else {
+        message = { plate: this.labware, state: this.state }
+      }
+      this.$emit('change', message)
     }
   },
   methods: {
