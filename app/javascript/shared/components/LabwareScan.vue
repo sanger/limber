@@ -188,7 +188,7 @@ export default {
         await this.api.findAll(this.labwareType, {
           include: this.includes,
           filter: { barcode: this.labwareBarcode },
-          fields: this.fieldsToRetrieve
+          fields: this.fieldsToRetrieve()
         })
       )
       return labware.data[0]
