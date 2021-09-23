@@ -27,7 +27,7 @@ LCA Blood Array:
   :cherrypickable_target: false
   :input_plate: true
   :presenter_class: Presenters::SubmissionPlatePresenter
-  :creator_class: LabwareCreators::MultiStampTubesArray
+  :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal library prep:
       template_name: 'Limber - Cardinal'
@@ -118,7 +118,7 @@ LCA Blood Bank:
   :cherrypickable_target: false
   :input_plate: true
   :presenter_class: Presenters::SubmissionPlatePresenter
-  :creator_class: LabwareCreators::MultiStampTubesArray
+  :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal cell banking:
       template_name: 'Limber - Cardinal cell banking'

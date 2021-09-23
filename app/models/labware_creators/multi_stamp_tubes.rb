@@ -14,9 +14,16 @@ module LabwareCreators
     self.request_filter = 'null'
     self.transfers_layout = 'null'
     self.transfers_creator = 'multi-stamp-tubes'
-    self.target_rows = 0
-    self.target_columns = 0
-    self.source_tubes = 0
+    self.attributes += [
+      {
+        transfers: [
+          [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }]
+        ]
+      }
+    ]
+    self.target_rows = 8
+    self.target_columns = 12
+    self.source_tubes = 96
 
     validates :transfers, presence: true
 
