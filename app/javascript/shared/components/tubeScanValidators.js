@@ -1,4 +1,4 @@
-// Tube Scan Validators can be passed in to a TubeScan.vue component to
+// Tube Scan Validators can be passed in to a LabwareScan.vue component to
 // provide custom validation.
 //
 // A validator is a function which:
