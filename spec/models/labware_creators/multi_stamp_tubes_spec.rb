@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-# require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # # Up to 96 tubes are transferred onto a single 96-well plate.
@@ -13,8 +12,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:parent1_uuid) { 'example-tube1-uuid' }
   let(:parent2_uuid) { 'example-tube2-uuid' }
   let(:child_uuid) { 'child-uuid' }
-  let(:parent1) { create :v2_tube, uuid: parent1_uuid, purpose_uuid: 'parent-tube-purpose-uuid' }
-  let(:parent2) { create :v2_tube, uuid: parent2_uuid, purpose_uuid: 'parent-tube-purpose-uuid' }
+  let(:parent1) { create :v2_stock_tube, uuid: parent1_uuid, purpose_uuid: 'parent-tube-purpose-uuid' }
+  let(:parent2) { create :v2_stock_tube, uuid: parent2_uuid, purpose_uuid: 'parent-tube-purpose-uuid' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
