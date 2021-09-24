@@ -20,9 +20,9 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:child_plate_v2) { create :v2_plate_for_submission, uuid: child_uuid, purpose_name: child_purpose_name, barcode_number: '5', size: 96 }
   let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_uuid } }
 
-  let(:assets) {
+  let(:assets) do
     child_plate_v2.wells.map(&:uuid)
-  }
+  end
   let(:user_uuid) { 'user-uuid' }
   let(:user) { json :v1_user, uuid: user_uuid }
 
@@ -136,7 +136,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                         assets: assets,
                         request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
                         user: user_uuid,
-                        autodetect_studies_projects:true
+                        autodetect_studies_projects: true
                       } },
                       body: '{"order":{"uuid":"order-uuid"}}')
       end
