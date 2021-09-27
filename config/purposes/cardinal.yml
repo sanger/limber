@@ -14,28 +14,28 @@ LCA Blood Vac:
   :target: SampleTube
   :type: Tube::Purpose
   # TODO: DPL-064 does this tube presenter work for this initial tube?
-  :presenter_class: Presenters::StockTubePresenter
+  :presenter_class: Presenters::VacTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
+###
+# Cardinal Library Preparation Pipeline
+###
 # LCA Blood Vac tubes are arrayed into an LCA Blood Array plate (DPL-064)
 LCA Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  # TODO: DPL-064 is this presenter suitable or do we need something special that displays parent tube details?
-  :presenter_class: Presenters::StockPlatePresenter
-  # TODO: DPL-064 This plate gets created by the re-arraying of multiple tubes into the plate
-  # :creator_class: LabwareCreators::MultiStampTubesArray
-# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
-LCA Blood Bank:
-  :asset_type: plate
-  # TODO: DPL-073 This plate is created from tubes, needs a special creator and presenter similar to the LCA Blood Array
-  # :creator_class: LabwareCreators::?
-  # :presenter_class: Presenters::?
-###
-# Cardinal Library Preparation Pipeline
-###
+  :presenter_class: Presenters::SubmissionPlatePresenter
+  :creator_class: LabwareCreators::MultiStampTubes
+  :submission_options:
+    Cardinal library prep:
+      template_name: 'Limber - Cardinal'
+      request_options:
+        library_type: 'Cardinal'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
@@ -111,6 +111,22 @@ LCA Custom Pool Norm:
 ###
 # Cardinal Blood Banking Pipeline
 ###
+# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
+LCA Blood Bank:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::SubmissionPlatePresenter
+  :creator_class: LabwareCreators::MultiStampTubes
+  :submission_options:
+    Cardinal cell banking:
+      template_name: 'Limber - Cardinal cell banking'
+      request_options:
+        library_type: 'Cardinal Banking'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate

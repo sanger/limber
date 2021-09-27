@@ -12,6 +12,7 @@ require('file-list')
 require('asset-comments')
 require('qc-information')
 require('multi-stamp')
+require('multi-stamp-tubes')
 require('custom-tagged-plate')
 
 // Load simple javscripts
