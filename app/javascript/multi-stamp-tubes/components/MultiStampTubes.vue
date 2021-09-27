@@ -31,8 +31,8 @@
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
-            :colourIndex="i"
-            :labwareType="'tube'"
+            :colour-index="i"
+            :labware-type="'tube'"
             @change="updateTube(i, $event)"
           />
         </b-form-group>

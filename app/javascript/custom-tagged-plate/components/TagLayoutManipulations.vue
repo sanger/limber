@@ -15,7 +15,7 @@
             id="tag_plate_scan"
             :api="api"
             :label="'Tag Plate'"
-            labwareType="qcable"
+            labware-type="qcable"
             :scan-disabled="tagPlateScanDisabled"
             :includes="tagPlateLookupIncludes"
             :fields="tagPlateLookupFields"
