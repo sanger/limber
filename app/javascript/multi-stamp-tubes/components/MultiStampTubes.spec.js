@@ -38,8 +38,8 @@ describe('MultiStampTubes', () => {
 
   it('enables creation when there are all valid tubes', () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
+    const tube2 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -59,8 +59,8 @@ describe('MultiStampTubes', () => {
 
   it('disables creation when there are some invalid tubes', () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'invalid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
+    const tube2 = { state: 'invalid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
 
@@ -70,7 +70,7 @@ describe('MultiStampTubes', () => {
   it('sends a post request when the button is clicked', async () => {
     let mock = new MockAdapter(localVue.prototype.$axios)
 
-    const tube = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid' }) }
+    const tube = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid' }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube)
 
@@ -101,10 +101,10 @@ describe('MultiStampTubes', () => {
   })
 
   it('calculates transfers for multiple tubes', () => {
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' , receptacle: { uuid: 'receptacle-uuid-1' }}) }
-    const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' , receptacle: { uuid: 'receptacle-uuid-2' }}) }
-    const tube3 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-3' , receptacle: { uuid: 'receptacle-uuid-3' }}) }
-    const tube4 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-4' , receptacle: { uuid: 'receptacle-uuid-4' }}) }
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' , receptacle: { uuid: 'receptacle-uuid-1' }}) }
+    const tube2 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-2' , receptacle: { uuid: 'receptacle-uuid-2' }}) }
+    const tube3 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-3' , receptacle: { uuid: 'receptacle-uuid-3' }}) }
+    const tube4 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-4' , receptacle: { uuid: 'receptacle-uuid-4' }}) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -122,10 +122,10 @@ describe('MultiStampTubes', () => {
   })
 
   it('passes on the layout', () => {
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-2' }) }
-    const tube3 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-3' }) }
-    const tube4 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-uuid-4' }) }
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
+    const tube2 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube3 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-3' }) }
+    const tube4 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-4' }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -141,7 +141,7 @@ describe('MultiStampTubes', () => {
   })
 
   it('does not display an alert if no invalid transfers are present', () => {
-    const tube1 = { state: 'valid', tube: tubeFactory({ uuid: 'tube-1-uuid' }) }
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-1-uuid' }) }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
 
