@@ -65,8 +65,7 @@ module LabwareCreators
         'source_asset' => source_well.uuid,
         'target_asset' => dest_plate.wells.detect do |dest_well|
           dest_well.location == transfer_hash[source_well.location][:dest_locn]
-        end&.uuid,
-        aliquot_attributes: { 'tag_depth' => tag_depth(source_well) }
+        end&.uuid
       }
     end
 
@@ -91,18 +90,6 @@ module LabwareCreators
         end
       end
       result
-    end
-
-    # returns: an integer, unique within the pool of samples
-    # used to handle the uniqueness constraint on pooling untagged samples
-    def tag_depth(source_well)
-      return nil if @pools.empty?
-
-      @pools.each do |pool|
-        # 'pool.index(source_well) + 1' because we want the initital element
-        # in a pool to have an index of 1
-        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
-      end
     end
 
     def build_pools
