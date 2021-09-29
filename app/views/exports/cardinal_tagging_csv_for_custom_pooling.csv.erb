@@ -6,8 +6,8 @@
       nil,
       nil,
       rand(12) + 1, # TODO: number of samples to be determined by DPL-067
-      well.aliquots[0]["tag_index"],
-      well.aliquots[0]["tag2_index"]
+      well.aliquots[0].tag_index,
+      well.aliquots[0].tag2_index
     ] unless well.empty? || well.aliquots.size > 1 # TODO: assuming a well has only one aliquot, determined by DPL-067
   end
 %>
