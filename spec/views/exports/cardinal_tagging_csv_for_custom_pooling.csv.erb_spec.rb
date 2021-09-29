@@ -24,8 +24,8 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   it 'renders the expected content' do
     parsed_csv = CSV.parse(render)
     expect(parsed_csv.size).to eq 4 # last line is empty
-    expect(parsed_csv[3]).to eq []
     expect(parsed_csv[0]).to eq(expected_headers)
+    expect(parsed_csv[3]).to eq []
 
     # Check one column at a time
     barcode = labware.labware_barcode.human
@@ -35,33 +35,45 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
 
     # TODO: DPL-071 Check number of samples are correct when they're not random
     #       For now, just check they are integers.
-    expect(get_column(parsed_csv, 3)).to all(satisfy { |val| true if Integer(val) rescue false })
+    expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
 
     expect(get_column(parsed_csv, 4)).to eq([well_a1.aliquots[0].tag_index.to_s, well_b1.aliquots[0].tag_index.to_s])
     expect(get_column(parsed_csv, 5)).to eq([well_a1.aliquots[0].tag2_index.to_s, well_b1.aliquots[0].tag2_index.to_s])
   end
 
-  # it 'removes entries with no qc results' do
-  #   ancestor_labware.wells_in_columns[0].qc_results = []
+  context 'well a1 is empty' do
+    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 0) }
 
-  #   expected = [
-  #     %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-  #     [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
-  #     [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
-  #   ]
+    it 'skips empty wells' do
+      parsed_csv = CSV.parse(render)
+      expect(parsed_csv.size).to eq 3 # last line is empty
+      expect(parsed_csv[0]).to eq(expected_headers)
+      expect(parsed_csv[2]).to eq []
 
-  #   expect(CSV.parse(render)).to eq(expected)
-  # end
+      expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
+      expect(get_column(parsed_csv, 1)).to eq([nil])
+      expect(get_column(parsed_csv, 2)).to eq([nil])
+      expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
+      expect(get_column(parsed_csv, 4)).to eq([well_b1.aliquots[0].tag_index.to_s])
+      expect(get_column(parsed_csv, 5)).to eq([well_b1.aliquots[0].tag2_index.to_s])
+    end
+  end
 
-  # it 'removes entries with no cell count results' do
-  #   ancestor_labware.wells_in_columns[0].qc_results.shift
+  context 'well a1 has more than 1 aliquot' do
+    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 2) }
 
-  #   expected = [
-  #     %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-  #     [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
-  #     [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
-  #   ]
+    it 'skips wells with more than 1 aliquot' do
+      parsed_csv = CSV.parse(render)
+      expect(parsed_csv.size).to eq 3 # last line is empty
+      expect(parsed_csv[0]).to eq(expected_headers)
+      expect(parsed_csv[2]).to eq []
 
-  #   expect(CSV.parse(render)).to eq(expected)
-  # end
+      expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
+      expect(get_column(parsed_csv, 1)).to eq([nil])
+      expect(get_column(parsed_csv, 2)).to eq([nil])
+      expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
+      expect(get_column(parsed_csv, 4)).to eq([well_b1.aliquots[0].tag_index.to_s])
+      expect(get_column(parsed_csv, 5)).to eq([well_b1.aliquots[0].tag2_index.to_s])
+    end
+  end
 end
