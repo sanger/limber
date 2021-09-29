@@ -1,0 +1,14 @@
+<%
+  csv_array = [['Source Well', 'Volume to add to pool', 'Dest. pool', 'Number of samples', 'Tag index', 'Tag 2 index']]
+  @plate.wells_in_columns.each do |well|
+    csv_array << [
+      "#{@plate.human_barcode}:#{well.location}",
+      nil,
+      nil,
+      rand(12) + 1, # TODO: number of samples to be determined by DPL-067
+      well.aliquots[0]["tag_index"],
+      well.aliquots[0]["tag2_index"]
+    ] unless well.empty? || well.aliquots.size > 1 # TODO: assuming a well has only one aliquot, determined by DPL-067
+  end
+%>
+<%= csv_array.map { |row| row.to_csv }.join %>
