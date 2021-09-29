@@ -38,8 +38,12 @@ class Pipeline
   attr_accessor :alternative_workline_identifier
 
   # Checks if a piece of labware meets the filter criteria for a pipeline
-  # @return [Boolean] returns true if labware meets the filter criteria
+  # If there are no filter criteria, the pipeline could be active for any labware
+  # @param  labware  On load of plate / tube pages, is a Sequencescape::Api::V2::Plate / Sequencescape::Api::V2::Tube
+  # @return [Boolean] returns true if labware meets the filter criteria or there are no filters
   def active_for?(labware)
+    return true if filters.blank?
+
     labware.active_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
       # on request is included in the list of permitted values.

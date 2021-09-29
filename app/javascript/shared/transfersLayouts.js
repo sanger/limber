@@ -109,7 +109,6 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
   return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
 }
 
-
 // Used to calculate sequential transfers.
 // Receives an array of transfer requests and return an array of transfers
 // where the target well is calculated from the index of the request in
@@ -127,6 +126,49 @@ const buildSequentialTransfersArray = function(transferRequests) {
       plateObj: requestWithPlate.plateObj,
       targetWell: indexToName(i, 8)
     }
+  }
+  return transfers
+}
+
+// Takes an array with 96 elements (for a 96 well plate)
+// Returns an array with elements just for those wells that have been populated (by scanning into the UI)
+// including the target well coordinate.
+// Example of one element of the output array:
+// {
+//   targetWell: "A1",
+//   tubeObj:
+//   {
+//     index: 0,
+//     tube:
+//     {
+//       id: "1",
+//       labware_barcode:
+//       {
+//         human_barcode: "NT4R",
+//         ...
+//       },
+//       links: {self: "http://localhost:3000/api/v2/tubes/9"},
+//       receptacle:
+//       {
+//         type: "tubes",
+//         uuid: "db4f1e22-1230-11ec-962c-38f9d3dee0d3"
+//       }
+//     }
+//   }
+// }
+const buildSequentialTubesTransfersArray = function(transferRequests) {
+  const transfers = new Array()
+
+  for (let i = 0; i < transferRequests.length; i++) {
+    if(transferRequests[i] === undefined){
+      continue
+    }
+
+    const tubeTransferReq = transferRequests[i]
+    transfers.push( {
+      tubeObj: { tube: tubeTransferReq.labware, index: tubeTransferReq.index },
+      targetWell: indexToName(i, 8)
+    })
   }
   return transfers
 }
@@ -159,6 +201,7 @@ const sequentialTransfers = function(requestsWithPlates) {
   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
+
 const transferFunctions = {
   quadrant: quadrantTransfers,
   sequential: sequentialTransfers
@@ -181,4 +224,33 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
-export { transfersFromRequests }
+
+// Receives an array of potential transfers and a transfer layout name
+// (valid options: 'sequentialtubes').
+// Returns an object containing an array of valid transfers
+// Throws an error if the transfers layout string is not mapped to a transfer
+// function.
+// Inputs:
+//      validTubes: [
+//        { index: 0, state: 'valid', tube: {} },
+//        { index: 1, state: 'valid', tube: {} },
+//        ...etc...
+//      ]
+//
+const transfersForTubes = function(validTubes) {
+  const maxTubes = 96
+  const tubeArray = new Array(maxTubes)
+
+  for (let i = 0; i < validTubes.length; i++) {
+    const tubeObj = validTubes[i]
+    if (tubeArray[tubeObj.index] === undefined) {
+      tubeArray[tubeObj.index] = validTubes[i]
+    }
+  }
+
+  const validTransfers = buildSequentialTubesTransfersArray(tubeArray)
+  const duplicatedTransfers = []
+  return { valid: validTransfers, duplicated: duplicatedTransfers }
+}
+
+export { transfersFromRequests, transfersForTubes }
