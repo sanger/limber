@@ -118,7 +118,10 @@ LCA Blood Bank:
   :cherrypickable_target: false
   :input_plate: true
   :presenter_class: Presenters::SubmissionPlatePresenter
-  :creator_class: LabwareCreators::MultiStampTubes
+  :creator_class:
+    name: LabwareCreators::MultiStampTubes
+    params:
+      allow_tube_duplicates: yes
   :submission_options:
     Cardinal cell banking:
       template_name: 'Limber - Cardinal cell banking'

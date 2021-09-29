@@ -13,7 +13,18 @@ module LabwareCreators # rubocop:todo Style/Documentation
   end
 
   def self.class_for(purpose_uuid)
-    Settings.purposes.fetch(purpose_uuid).fetch(:creator_class).constantize
+    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    if refer.kind_of?(String)
+      refer.constantize
+    else
+      refer[:name].constantize
+    end
+  end
+
+  def self.params_for(purpose_uuid)
+    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    return {:params => {} } if refer.kind_of?(String)
+    return {:params => refer[:params] }
   end
 
   # Used to render the create plate/tube buttons

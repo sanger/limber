@@ -32,7 +32,7 @@ class CreationController < ApplicationController
   def labware_creator(form_attributes)
     creator_class.new(api,
                       form_attributes.permit(permitted_attributes).merge(
-                        user_uuid: current_user_uuid
+                        params_for_creator_build
                       ))
   end
 
@@ -87,7 +87,17 @@ class CreationController < ApplicationController
   end
 
   def creator_class
-    @creator_class ||= LabwareCreators.class_for(params[:purpose_uuid] || creator_params.fetch(:purpose_uuid))
+    @creator_class ||= LabwareCreators.class_for(params_purpose_uuid)
+  end
+
+  def params_for_creator_build
+    LabwareCreators.params_for(params_purpose_uuid).merge({ 
+      user_uuid: current_user_uuid 
+    })
+  end
+
+  def params_purpose_uuid
+    params[:purpose_uuid] || creator_params.fetch(:purpose_uuid)
   end
 
   def parent_uuid

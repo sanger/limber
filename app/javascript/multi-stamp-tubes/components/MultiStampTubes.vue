@@ -113,7 +113,9 @@ export default {
     sourceTubes: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] }
+    locationObj: { default: () => { return location }, type: [Object, Location] },
+
+    allowTubeDuplicates: { type: String, required: true }
   },
   data () {
     return {
@@ -195,9 +197,15 @@ export default {
     },
     scanValidation() {
       const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [
-        checkDuplicates(currTubes)
-      ]
+      if (this.allowTubeDuplicates === 'true') {
+        return [() => {
+          return { valid: true, message: 'Great!' }
+        }]
+      } else {
+        return [
+          checkDuplicates(currTubes)
+        ]
+      }
     }
   },
   methods: {

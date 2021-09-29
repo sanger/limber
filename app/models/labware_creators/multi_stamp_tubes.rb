@@ -5,7 +5,7 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::TubeOnly
 
-    attr_accessor :transfers, :parents
+    attr_accessor :transfers, :parents, :params
 
     class_attribute :request_filter, :transfers_layout, :transfers_creator, :target_rows, :target_columns, :source_tubes
 
@@ -26,6 +26,10 @@ module LabwareCreators
     self.source_tubes = 96
 
     validates :transfers, presence: true
+
+    def allow_tube_duplicates?
+      params.fetch("allow_tube_duplicates", false)
+    end
 
     private
 
