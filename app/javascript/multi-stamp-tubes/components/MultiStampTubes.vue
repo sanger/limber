@@ -22,7 +22,10 @@
         header="Add tubes"
         header-tag="h3"
       >
-        <b-form-group label="Scan in the tubes you wish to use">
+        <b-form-group
+          label="Scan in the tubes you wish to use"
+          style="position:relative; height:400px; overflow-y:scroll;"
+        >
           <lb-labware-scan
             v-for="i in sourceTubeNumber"
             :key="i"
