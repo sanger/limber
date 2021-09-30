@@ -37,6 +37,4 @@
     data + [samples_in_pool * 3.125]
   end
 %>
-<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
-<%= CSV.generate_line row, row_sep: '' %>
-<% end %>
+<%= rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.map(&:to_csv).join %>

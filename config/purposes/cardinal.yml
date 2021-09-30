@@ -86,9 +86,11 @@ LCA Connect PCRXP:
   :default_printer_type: :plate_b
   :label_template: plate_xp
   # TODO: DPL-069 Research is there a quanthub story here to get connect concentrations into SS?
-  # TODO: DPL-071 needs :file_links: csv download of concentration file including number of samples per well and tag ids
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
+  :file_links:
+    - name: "Download tagging CSV for Custom Pooling"
+      id: cardinal_tagging_csv_for_custom_pooling
   # Selection of Tag groups from the i5 and i7 dropdowns will be used here rather than tag plate barcodes (single or dual index tag groups)
 # DPL-072 Wells from LCA Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
 # TODO: DPL-072 Research whether tag clashes will be automatically checked for on combining wells with multiple samples in them when pooling
