@@ -26,4 +26,4 @@ Cardinal Banking:
     library_type: Cardinal Banking
   relationships:
     LCA Blood Bank: LCA PBMC Bank
-    # TODO: DPL-074 what happens next here? Is the plate handed over to samples extraction for transfer into tube rack?
+    LCA PBMC Bank: LCA Bank Tube Rack

@@ -132,5 +132,6 @@ LCA Blood Bank:
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
-# LCA PBMC Bank plates are stamped into LCA PBMC Rack tube racks
-# TODO: DPL-074 create tube rack via samples extraction?
+# LCA PBMC Bank plates are stamped into FluidX tube racks for storage
+LCA Bank Tube Rack:
+  :asset_type: plate
