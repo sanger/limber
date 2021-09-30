@@ -18,14 +18,13 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   def get_column(csv, index)
-    csv[1..-2].map { |r| r[index] }
+    csv[1..-1].map { |r| r[index] }
   end
 
   it 'renders the expected content' do
     parsed_csv = CSV.parse(render)
-    expect(parsed_csv.size).to eq 4 # last line is empty
-    expect(parsed_csv[0]).to eq(expected_headers)
-    expect(parsed_csv[3]).to eq []
+    expect(parsed_csv.size).to eq 3
+    expect(parsed_csv[0]).to eq expected_headers
 
     # Check one column at a time
     barcode = labware.labware_barcode.human
@@ -46,9 +45,8 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
 
     it 'skips empty wells' do
       parsed_csv = CSV.parse(render)
-      expect(parsed_csv.size).to eq 3 # last line is empty
-      expect(parsed_csv[0]).to eq(expected_headers)
-      expect(parsed_csv[2]).to eq []
+      expect(parsed_csv.size).to eq 2
+      expect(parsed_csv[0]).to eq expected_headers
 
       expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
       expect(get_column(parsed_csv, 1)).to eq([nil])
@@ -64,9 +62,8 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
 
     it 'skips wells with more than 1 aliquot' do
       parsed_csv = CSV.parse(render)
-      expect(parsed_csv.size).to eq 3 # last line is empty
-      expect(parsed_csv[0]).to eq(expected_headers)
-      expect(parsed_csv[2]).to eq []
+      expect(parsed_csv.size).to eq 2
+      expect(parsed_csv[0]).to eq expected_headers
 
       expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
       expect(get_column(parsed_csv, 1)).to eq([nil])
