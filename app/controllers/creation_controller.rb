@@ -91,9 +91,9 @@ class CreationController < ApplicationController
   end
 
   def params_for_creator_build
-    LabwareCreators.params_for(params_purpose_uuid).merge({ 
-      user_uuid: current_user_uuid 
-    })
+    LabwareCreators.params_for(params_purpose_uuid).merge({
+                                                            user_uuid: current_user_uuid
+                                                          })
   end
 
   def params_purpose_uuid
