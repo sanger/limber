@@ -18,7 +18,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   def get_column(csv, index)
-    csv[1..-1].map { |r| r[index] }
+    csv[1..].map { |r| r[index] }
   end
 
   it 'renders the expected content' do
