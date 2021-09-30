@@ -11,4 +11,4 @@
     ] unless well.empty? || well.aliquots.size > 1 # TODO: assuming a well has only one aliquot, determined by DPL-067
   end
 %>
-<%= csv_array.map { |row| row.to_csv }.join %>
+<%= csv_array.map(&:to_csv).join %>
