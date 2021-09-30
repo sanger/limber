@@ -5,10 +5,10 @@
       "#{@plate.human_barcode}:#{well.location}",
       nil,
       nil,
-      rand(12) + 1, # TODO: number of samples to be determined by DPL-067
+      rand(12) + 1, # TODO: DPL-067 Determine actual number of samples per well
       well.aliquots[0].tag_index,
       well.aliquots[0].tag2_index
-    ] unless well.empty? || well.aliquots.size > 1 # TODO: assuming a well has only one aliquot, determined by DPL-067
+    ] unless well.empty? || well.aliquots.size > 1 # TODO: DPL-067 Verify the assumption that a well only has one aliquot
   end
 %>
 <%= csv_array.map(&:to_csv).join %>
