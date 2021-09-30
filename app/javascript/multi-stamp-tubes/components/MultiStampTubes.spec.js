@@ -24,6 +24,7 @@ describe('MultiStampTubes', () => {
         locationObj: mockLocation,
         transfersLayout: 'sequentialtube',
         transfersCreator: 'multi-stamp-tubes',
+        allowTubeDuplicates: 'false',
         ...options
       },
       localVue
