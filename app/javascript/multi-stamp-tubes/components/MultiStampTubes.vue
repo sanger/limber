@@ -50,7 +50,7 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
-        <hr/>
+        <hr />
         <b-button
           :disabled="!valid"
           variant="success"
