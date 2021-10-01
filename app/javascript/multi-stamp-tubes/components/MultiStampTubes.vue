@@ -36,6 +36,7 @@
             :validators="scanValidation"
             :colour-index="i"
             :labware-type="'tube'"
+            :valid-message="''"
             @change="updateTube(i, $event)"
           />
         </b-form-group>
