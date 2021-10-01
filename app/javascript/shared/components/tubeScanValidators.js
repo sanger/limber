@@ -53,9 +53,16 @@ const checkDuplicates = (tubeList) => {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
     }
     else {
-      return { valid: true, message: 'Great!' }
+      return validTubeScanMessage()
     }
   }
+}
+
+// Renders a valid Tube scan
+// 
+// Returns an object with the right tube scan validation message
+const validTubeScanMessage = () => {
+  return { valid: true, message: 'Great!' }
 }
 
 // Returns a validator that ensures the tube has a state that matches to the
@@ -82,4 +89,4 @@ const aggregate = (validators, item) => {
   }, { valid: true, message: 'Great!'})
 }
 
-export { checkDuplicates, checkState, aggregate }
+export { checkDuplicates, checkState, aggregate, validTubeScanMessage }

@@ -68,6 +68,32 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.valid).toEqual(false)
   })
 
+  it('is not valid when we scan duplicate tubes',  async () => {
+    const wrapper = wrapperFactory()
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
+
+    wrapper.vm.updateTube(1, tube1)
+    wrapper.vm.updateTube(2, tube1)
+    const validator = wrapper.vm.scanValidation[0]
+    const validations = validator(tube1.labware)
+
+    expect(validations.valid).toEqual(false)
+  })
+
+  it('is valid when we scan duplicate tubes and this is allowed', () => {
+    const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
+
+    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
+
+    wrapper.vm.updateTube(1, tube1)
+    wrapper.vm.updateTube(2, tube1)
+    const validator = wrapper.vm.scanValidation[0]
+    const validations = validator(tube1.labware)
+    
+    expect(validations.valid).toEqual(true)
+  })
+
+
   it('sends a post request when the button is clicked', async () => {
     let mock = new MockAdapter(localVue.prototype.$axios)
 
@@ -76,7 +102,7 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(1, tube)
 
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
-
+    
     const expectedPayload = { plate: {
       parent_uuid: 'tube-uuid',
       purpose_uuid: 'test',
