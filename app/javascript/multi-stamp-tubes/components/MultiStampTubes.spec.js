@@ -102,7 +102,6 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(1, tube)
 
     wrapper.setData({ transfersCreatorObj: { isValid: true, extraParams: (_) => {} } })
-    
     const expectedPayload = { plate: {
       parent_uuid: 'tube-uuid',
       purpose_uuid: 'test',
