@@ -23,8 +23,8 @@
         header-tag="h3"
       >
         <b-form-group
-          label="Scan the tube barcodes into the relevant well locations:"
-          style="position:relative; height:400px; overflow-y:scroll;"
+          label="Scan the tube barcodes into the relevant rack / well coordinates:"
+          style="position:relative; height:460px; overflow-y:scroll;"
         >
           <lb-labware-scan
             v-for="i in sourceTubeNumber"
