@@ -1,0 +1,35 @@
+<%
+  csv_rows = [
+    ['Plate Barcode', @plate.human_barcode.to_s],
+    [],
+    [nil, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+  ]
+  plate_row_headers = ['A','B','C','D','E','F','G','H']
+  well_matrix = Array.new(@plate.number_of_rows)
+  well_matrix.map! { Array.new(@plate.number_of_columns + 1) }
+
+  # add row headers to matrix
+  plate_row_headers.each do |row_header|
+    row_index = plate_row_headers.index(row_header)
+    well_matrix[row_index][0] = row_header
+  end
+
+  # fetch tube barcode for each well in matrix
+  @plate.wells_in_columns.each do |well|
+    well_name = well.position['name']
+    well_row_letter = well_name.slice(0..0)
+    row_index = plate_row_headers.index(well_row_letter)
+    well_col_num = well_name.slice(1..-1).to_i
+
+    if well.empty?
+      well_matrix[row_index][well_col_num] = 'empty'
+    else
+      well_matrix[row_index][well_col_num] = well.upstream_tubes.first.human_barcode
+    end
+  end
+
+  @plate.number_of_rows.times do |row|
+    csv_rows << well_matrix[row]
+  end
+%>
+<%= csv_rows.map(&:to_csv).join %>

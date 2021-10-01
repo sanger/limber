@@ -36,6 +36,9 @@ LCA Blood Array:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
+  :file_links:
+    - name: "Download Scanned Tube Layout for LCA Blood Array Plate"
+      id: cardinal_sample_arraying_tube_layout
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
