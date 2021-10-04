@@ -6,7 +6,7 @@
   ]
   plate_row_headers = ['A','B','C','D','E','F','G','H']
   well_matrix = Array.new(@plate.number_of_rows)
-  well_matrix.map! { Array.new(@plate.number_of_columns + 1) }
+  well_matrix.map! { Array.new(@plate.number_of_columns + 1, 'empty') }
 
   # add row headers to matrix
   plate_row_headers.each do |row_header|
@@ -21,9 +21,7 @@
     row_index = plate_row_headers.index(well_row_letter)
     well_col_num = well_name.slice(1..-1).to_i
 
-    if well.empty?
-      well_matrix[row_index][well_col_num] = 'empty'
-    else
+    unless well.empty?
       well_matrix[row_index][well_col_num] = well.upstream_tubes.first.human_barcode
     end
   end
