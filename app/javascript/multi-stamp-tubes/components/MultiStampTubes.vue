@@ -19,10 +19,13 @@
     </lb-main-content>
     <lb-sidebar>
       <b-card
-        header="Add tubes"
+        header="Scan tubes"
         header-tag="h3"
       >
-        <b-form-group label="Scan in the tubes you wish to use">
+        <b-form-group
+          label="Scan the tube barcodes into the relevant rack / well coordinates:"
+          style="position:relative; height:460px; overflow-y:scroll;"
+        >
           <lb-labware-scan
             v-for="i in sourceTubeNumber"
             :key="i"
@@ -33,6 +36,7 @@
             :validators="scanValidation"
             :colour-index="i"
             :labware-type="'tube'"
+            :valid-message="''"
             @change="updateTube(i, $event)"
           />
         </b-form-group>
@@ -47,6 +51,7 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
+        <hr />
         <b-button
           :disabled="!valid"
           variant="success"
