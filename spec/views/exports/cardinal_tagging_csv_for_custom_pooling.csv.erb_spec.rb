@@ -27,7 +27,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     expect(parsed_csv[0]).to eq expected_headers
 
     # Check one column at a time
-    expect(get_column(parsed_csv, 0)).to eq(['A1', 'B1'])
+    expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
     expect(get_column(parsed_csv, 1)).to eq([nil, nil])
     expect(get_column(parsed_csv, 2)).to eq([nil, nil])
 
@@ -48,7 +48,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
 
-      expect(get_column(parsed_csv, 0)).to eq(['A1', 'B1'])
+      expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
       expect(get_column(parsed_csv, 1)).to eq([nil, nil])
       expect(get_column(parsed_csv, 2)).to eq([nil, nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
@@ -82,7 +82,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
 
-      expect(get_column(parsed_csv, 0)).to eq(['A1', 'B1'])
+      expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
       expect(get_column(parsed_csv, 1)).to eq([nil, nil])
       expect(get_column(parsed_csv, 2)).to eq([nil, nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
