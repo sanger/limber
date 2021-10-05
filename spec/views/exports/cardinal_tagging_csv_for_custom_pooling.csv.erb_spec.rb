@@ -14,7 +14,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   let(:expected_headers) do
-    ['Source Well', 'Volume to add to pool', 'Dest. pool', 'Number of samples', 'Tag index', 'Tag 2 index']
+    ['Source Well', 'Volume to add to pool', 'Dest. well', 'Number of samples', 'Tag index', 'Tag 2 index']
   end
 
   def get_column(csv, index)
@@ -27,8 +27,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     expect(parsed_csv[0]).to eq expected_headers
 
     # Check one column at a time
-    barcode = labware.labware_barcode.human
-    expect(get_column(parsed_csv, 0)).to eq(["#{barcode}:A1", "#{barcode}:B1"])
+    expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
     expect(get_column(parsed_csv, 1)).to eq([nil, nil])
     expect(get_column(parsed_csv, 2)).to eq([nil, nil])
 
@@ -49,8 +48,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
 
-      barcode = labware.labware_barcode.human
-      expect(get_column(parsed_csv, 0)).to eq(["#{barcode}:A1", "#{barcode}:B1"])
+      expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
       expect(get_column(parsed_csv, 1)).to eq([nil, nil])
       expect(get_column(parsed_csv, 2)).to eq([nil, nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
@@ -67,7 +65,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers
 
-      expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
+      expect(get_column(parsed_csv, 0)).to eq(['B1'])
       expect(get_column(parsed_csv, 1)).to eq([nil])
       expect(get_column(parsed_csv, 2)).to eq([nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
@@ -84,8 +82,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
 
-      barcode = labware.labware_barcode.human
-      expect(get_column(parsed_csv, 0)).to eq(["#{barcode}:A1", "#{barcode}:B1"])
+      expect(get_column(parsed_csv, 0)).to eq(%w[A1 B1])
       expect(get_column(parsed_csv, 1)).to eq([nil, nil])
       expect(get_column(parsed_csv, 2)).to eq([nil, nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
@@ -104,7 +101,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers
 
-      expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
+      expect(get_column(parsed_csv, 0)).to eq(['B1'])
       expect(get_column(parsed_csv, 1)).to eq([nil])
       expect(get_column(parsed_csv, 2)).to eq([nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })
@@ -123,7 +120,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers
 
-      expect(get_column(parsed_csv, 0)).to eq(["#{labware.labware_barcode.human}:B1"])
+      expect(get_column(parsed_csv, 0)).to eq(['B1'])
       expect(get_column(parsed_csv, 1)).to eq([nil])
       expect(get_column(parsed_csv, 2)).to eq([nil])
       expect(get_column(parsed_csv, 3)).to all(satisfy { |val| val.match(/^\d+$/) })

@@ -1,5 +1,5 @@
 <%
-  csv_array = [['Source Well', 'Volume to add to pool', 'Dest. pool', 'Number of samples', 'Tag index', 'Tag 2 index']]
+  csv_array = [['Source Well', 'Volume to add to pool', 'Dest. well', 'Number of samples', 'Tag index', 'Tag 2 index']]
   @plate.wells_in_columns.each do |well|
     # We want to skip wells that are empty or have multiple aliquots with different tag indices
     tag_1_indices = well.aliquots.map(&:tag_index).uniq
@@ -7,7 +7,7 @@
     next if well.empty? || tag_1_indices.size > 1 || tag_2_indices.size > 1
 
     csv_array << [
-      "#{@plate.human_barcode}:#{well.location}",
+      well.location,
       nil,
       nil,
       rand(12) + 1, # TODO: DPL-067 Determine actual number of samples per well
