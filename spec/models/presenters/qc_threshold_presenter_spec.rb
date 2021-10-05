@@ -16,7 +16,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
         create(:qc_result, key: 'volume', value: '1000', units: 'ul')
       ],
       [
-        create(:qc_result, key: 'molarity', value: '50', units: 'nM'),
+        create(:qc_result, key: 'molarity', value: '50.12345', units: 'nM'),
         create(:qc_result, key: 'viability', value: '20', units: '%'),
         create(:qc_result, key: 'volume', value: '1', units: 'ml')
       ]
@@ -37,8 +37,10 @@ RSpec.describe Presenters::QcThresholdPresenter do
       end
 
       it 'sets limits derived from the wells' do
+        # NOTE: Maximum and minimum values need to have the same (or lower) precision
+        # as the step, otherwise the browser will adopt this precision
         expect(presenter.thresholds).to contain_exactly(
-          have_attributes(name: 'molarity', max: 52.0, min: 8.0),
+          have_attributes(name: 'molarity', max: 52.13, min: 7.99),
           have_attributes(name: 'concentration', max: 10.0, min: 10.0),
           have_attributes(name: 'viability', min: 0, max: 100),
           have_attributes(name: 'volume', min: 1000.0, max: 1000.0)
@@ -60,6 +62,15 @@ RSpec.describe Presenters::QcThresholdPresenter do
           have_attributes(name: 'concentration', default: 0),
           have_attributes(name: 'viability', default: 0),
           have_attributes(name: 'volume', default: 0)
+        )
+      end
+
+      it 'picks a step of 0.01' do
+        expect(presenter.thresholds).to contain_exactly(
+          have_attributes(name: 'molarity', step: 0.01),
+          have_attributes(name: 'concentration', step: 0.01),
+          have_attributes(name: 'viability', step: 0.01),
+          have_attributes(name: 'volume', step: 0.01)
         )
       end
 
@@ -110,7 +121,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
       let(:configuration) do
         {
           molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' },
-          cell_count: { name: 'cell count', default_threshold: 2, max: 5, min: 0, units: 'cells/ml' },
+          cell_count: { name: 'cell count', default_threshold: 2, max: 5, min: 0, units: 'cells/ml', decimal_places: 0 },
           volume: { name: 'volume', units: 'ml' }
         }
       end
@@ -152,6 +163,16 @@ RSpec.describe Presenters::QcThresholdPresenter do
           have_attributes(name: 'volume', default: 0),
           have_attributes(name: 'concentration', default: 0),
           have_attributes(name: 'viability', default: 0)
+        )
+      end
+
+      it 'picks the configured step' do
+        expect(presenter.thresholds).to contain_exactly(
+          have_attributes(name: 'molarity', step: 0.01),
+          have_attributes(name: 'cell count', step: 1),
+          have_attributes(name: 'volume', step: 0.01),
+          have_attributes(name: 'concentration', step: 0.01),
+          have_attributes(name: 'viability', step: 0.01)
         )
       end
     end
