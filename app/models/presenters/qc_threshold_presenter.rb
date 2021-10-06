@@ -12,6 +12,8 @@ class Presenters::QcThresholdPresenter
     # percentage indicated here to ensure the maximum and minimum values don't
     # butt right up against the range limits
     RANGE_EXPANSION = 5
+    DEFAULT_DECIMAL_PLACES = 2
+
     attr_reader :name, :configuration, :results, :key
 
     def initialize(key, results, configuration)
@@ -29,7 +31,7 @@ class Presenters::QcThresholdPresenter
     # @return [Float] The maximum value to use for the range
     #
     def max
-      @max ||= configuration.fetch(:max) { percentage? ? 100 : max_result + range_buffer }
+      @max ||= configuration.fetch(:max) { percentage? ? 100 : max_result + range_buffer }.ceil(decimal_places)
     end
 
     #
@@ -40,7 +42,7 @@ class Presenters::QcThresholdPresenter
     # @return [Float] The minimum value to use for the range
     #
     def min
-      @min ||= configuration.fetch(:min) { percentage? ? 0 : min_result - range_buffer }
+      @min ||= configuration.fetch(:min) { percentage? ? 0 : min_result - range_buffer }.floor(decimal_places)
     end
 
     #
@@ -105,7 +107,15 @@ class Presenters::QcThresholdPresenter
       yield configured_default, "#{configured_default} #{units}"
     end
 
+    def step
+      (10**-decimal_places).to_f
+    end
+
     private
+
+    def decimal_places
+      configuration.fetch(:decimal_places, DEFAULT_DECIMAL_PLACES)
+    end
 
     def results?
       results.any?

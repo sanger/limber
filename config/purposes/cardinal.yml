@@ -68,9 +68,9 @@ LCA PBMC:
       name: Cell count
       units: 'cells/ml'
       default_threshold: 400000
+      decimal_places: 0
   # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
   # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
-  # TODO: DPL-??? new :presenter_class: Presenters::?CardinalPBMCPlatePresenter needs a special presenter to pick and display viability and cell count?
 # LCA PBMC wells are pooled together into the LCA PBMC Pools plate
 LCA PBMC Pools:
   :asset_type: plate
