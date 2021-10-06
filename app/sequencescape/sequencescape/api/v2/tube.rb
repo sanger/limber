@@ -73,8 +73,4 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   def human_barcode
     labware_barcode.human
   end
-
-  def size
-    1
-  end
 end
