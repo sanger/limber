@@ -27,6 +27,10 @@ module LabwareCreators
 
     validates :transfers, presence: true
 
+    def allow_tube_duplicates?
+      params.fetch('allow_tube_duplicates', false)
+    end
+
     private
 
     def create_labware!

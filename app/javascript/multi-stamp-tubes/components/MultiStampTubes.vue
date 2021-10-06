@@ -76,7 +76,7 @@ import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, validTubeScanMessage } from 'shared/components/tubeScanValidators'
 import { indexToName } from 'shared/wellHelpers'
 
 export default {
@@ -118,7 +118,9 @@ export default {
     sourceTubes: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] }
+    locationObj: { default: () => { return location }, type: [Object, Location] },
+
+    allowTubeDuplicates: { type: String, required: true }
   },
   data () {
     return {
@@ -199,6 +201,11 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
+      if (this.allowTubeDuplicates === 'true') {
+        return [
+          validTubeScanMessage
+        ]
+      }
       const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
       return [
         checkDuplicates(currTubes)

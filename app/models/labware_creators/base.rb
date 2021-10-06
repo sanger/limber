@@ -14,7 +14,7 @@ module LabwareCreators
     extend NestedValidation
 
     attr_reader :api, :child
-    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
