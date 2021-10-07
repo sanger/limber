@@ -15,6 +15,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
   has_many :upstream_wells, class_name: 'Sequencescape::Api::V2::Well'
   has_many :upstream_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :aliquots, class_name: 'Sequencescape::Api::V2::Aliquot'
+  has_many :samples, class_name: 'Sequencescape::Api::V2::Sample'
 
   has_many :transfer_requests_as_source, class_name: 'Sequencescape::Api::V2::TransferRequest'
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
