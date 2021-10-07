@@ -177,7 +177,7 @@ module LabwareCreators
     # Inserts a record in SS sample_links table, and MLWH sample_links table
     def attach_component_samples_to_compound_sample(compound_sample, destination_well_location, component_samples)
       component_samples_payload = component_samples.each_with_index.map { |s, _pos| { type: 'samples', id: s.id } }
-
+      # TODO
       # api_post "/api/v2/samples/#{compound_sample.id}/relationships/component_samples", { data: component_samples_payload }
     end
 
