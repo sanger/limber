@@ -22,6 +22,8 @@ Bespoke PCR:
     - Hi-C - Arima v1
     - Hi-C - Dovetail
     - Haplotagging
+    - Chromium single cell HTO
+    - Chromium single cell surface protein
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
