@@ -91,7 +91,7 @@ hamilton_pooling_plate_pbmc:
 cardinal_tagging_csv_for_custom_pooling:
   csv: cardinal_tagging_csv_for_custom_pooling
   plate_includes:
-    - wells.aliquots
+    - wells.aliquots.sample.component_samples
 cardinal_sample_arraying_tube_layout:
   csv: cardinal_sample_arraying_tube_layout
   plate_includes:

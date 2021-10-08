@@ -10,10 +10,10 @@
       well.location,
       nil,
       nil,
-      rand(12) + 1, # TODO: DPL-067 Determine actual number of samples per well
+      component_samples_count_for(well),
       tag_1_indices.first,
       tag_2_indices.first
     ]
   end
 %>
-<%= csv_array.map(&:to_csv).join %>
+<%= csv_array.map(&:to_csv).join -%>
