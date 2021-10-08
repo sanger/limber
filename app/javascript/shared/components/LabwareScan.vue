@@ -104,6 +104,9 @@ export default {
     },
     colourIndex: {
       type: Number, default: null
+    },
+    validMessage: {
+      type: String, default: 'Great!'
     }
   },
   data() {
@@ -136,6 +139,9 @@ export default {
       }
     },
     feedback() {
+      if(this.validated.state === 'valid') {
+        return this.validMessage
+      }
       return this.validated.message
     },
     validatedLabware() {

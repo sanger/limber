@@ -19,10 +19,13 @@
     </lb-main-content>
     <lb-sidebar>
       <b-card
-        header="Add tubes"
+        header="Scan tubes"
         header-tag="h3"
       >
-        <b-form-group label="Scan in the tubes you wish to use">
+        <b-form-group
+          label="Scan the tube barcodes into the relevant rack / well coordinates:"
+          style="position:relative; height:460px; overflow-y:scroll;"
+        >
           <lb-labware-scan
             v-for="i in sourceTubeNumber"
             :key="i"
@@ -33,6 +36,7 @@
             :validators="scanValidation"
             :colour-index="i"
             :labware-type="'tube'"
+            :valid-message="''"
             @change="updateTube(i, $event)"
           />
         </b-form-group>
@@ -47,6 +51,7 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
+        <hr />
         <b-button
           :disabled="!valid"
           variant="success"
@@ -71,7 +76,7 @@ import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, validTubeScanMessage } from 'shared/components/tubeScanValidators'
 import { indexToName } from 'shared/wellHelpers'
 
 export default {
@@ -113,7 +118,9 @@ export default {
     sourceTubes: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] }
+    locationObj: { default: () => { return location }, type: [Object, Location] },
+
+    allowTubeDuplicates: { type: String, required: true }
   },
   data () {
     return {
@@ -194,6 +201,11 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
+      if (this.allowTubeDuplicates === 'true') {
+        return [
+          validTubeScanMessage
+        ]
+      }
       const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
       return [
         checkDuplicates(currTubes)
