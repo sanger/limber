@@ -78,7 +78,7 @@ module LabwareCreators
 
       # api.transfer_request_collection.create!(
       #   user: user_uuid,
-      #   transfer_requests: transfer_request_attributes(dest_plate)
+      #   transfer_requests: transfer_request_attributes(source_plate, dest_plate)
       # )
       # true
 
@@ -183,10 +183,11 @@ module LabwareCreators
       # api_post "/api/v2/samples/#{compound_sample.id}/relationships/component_samples", { data: component_samples_payload }
     end
 
+
     # returns: a list of objects, mapping source well to destination well
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
-    def transfer_request_attributes(dest_plate)
-      passed_parent_wells.map do |source_well, additional_parameters|
+    def transfer_request_attributes(source_plate, dest_plate)
+      passed_parent_wells(source_plate).map do |source_well, additional_parameters|
         request_hash(source_well, dest_plate, additional_parameters)
       end
     end
