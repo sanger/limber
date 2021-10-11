@@ -22,21 +22,17 @@ module LabwareCreators
 
     # This should only be called from passed_parent_wells
     # As we want to only transfer passed wells to the LCA PBMC plate
-    def labware_wells
-      parent.wells
-    end
-
     # returns: a list of passed samples
-    def passed_parent_wells
-      labware_wells.select { |well| well.state == 'passed' }
+    def passed_parent_wells(source_plate)
+      source_plate.wells.select { |well| well.state == 'passed' }
     end
 
     # returns: the number of pools required for a given passed samples count
     # this config is appended in the Cardinal initialiser
     # e.g. 95,12,12,12,12,12,12,12,11 ==> 8
     # e.g. 53,11,11,11,10,10,,, ==> 5
-    def number_of_pools
-      Rails.application.config.cardinal_pooling_config[passed_parent_wells.count]
+    def number_of_pools(source_plate)
+      Rails.application.config.cardinal_pooling_config[passed_parent_wells(source_plate).count]
     end
 
     def well_filter
@@ -48,10 +44,11 @@ module LabwareCreators
     # Send the transfer request to SS
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
+      source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
 
       # Create pools
       # Ensure this is the only place build_pools is called
-      @pools ||= build_pools
+      @pools ||= build_pools(source_plate)
 
       # A "compound" sample should be created for each "pool"
       @pools.each_with_index do |pool, index|
@@ -63,7 +60,7 @@ module LabwareCreators
 
         # Create the "compound" sample in SS
         # Check sample is created in the MLWH samples table
-        compound_sample = create_sample(dest_plate.barcode, destination_well_location)
+        compound_sample = create_sample(dest_plate.barcode, destination_well_location, pool)
 
         # Update the well with the compound sample
         # This adds the compount sample to the destination plate well,
@@ -102,13 +99,18 @@ module LabwareCreators
     end
 
 
-    def create_sample(barcode, well_location)
+    def create_sample(barcode, well_location, pool)
       # name is unique
+      samples = pool.map{|well| well.aliquots.to_a[0].sample }
+      #component_samples_payload = sample_uuids.map{|uuid| {type: 'samples', uuid: uuid} }
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample#{barcode}#{well_location}",
         sanger_sample_id: "CompoundSample#{barcode}#{well_location}",
         # studies: [] #[study] Param not allowed??
-      )
+        #relationships: { component_samples: { data: component_samples_payload } }
+      ).tap do |compound_sample|
+        compound_sample.update_attributes(component_samples: samples)
+      end
     end
 
 
@@ -239,11 +241,11 @@ module LabwareCreators
     end
 
     # e.g. pools = [[s1,s4],[s2,s5],[s3,s6]]
-    def build_pools
+    def build_pools(source_plate)
       pools = []
       current_pool = 0
       # wells_grouped_by_supplier = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
-      wells_grouped_by_supplier.each do |_supplier, wells|
+      wells_grouped_by_supplier(source_plate).each do |_supplier, wells|
         # Loop through the wells for that supplier
         wells.each do |well|
           # Create pool if it doesnt already exist
@@ -251,7 +253,7 @@ module LabwareCreators
           # Add well to pool
           pools[current_pool] << well
           # Rotate through the pools
-          current_pool = current_pool == number_of_pools - 1 ? 0 : current_pool + 1
+          current_pool = current_pool == number_of_pools(source_plate) - 1 ? 0 : current_pool + 1
         end
       end
       pools
@@ -259,8 +261,8 @@ module LabwareCreators
 
     # Get passed parent wells, randomise, then group by sample supplier
     # e.g. { 0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23'] }
-    def wells_grouped_by_supplier
-      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.supplier }
+    def wells_grouped_by_supplier(source_plate)
+      passed_parent_wells(source_plate).to_a.shuffle.group_by { |well| well.samples[0].sanger_sample_id }
     end
   end
 end
