@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+# From UAT Actions
+# 1. Create Plate
+# 2. Update Manifest
+# 3. Create Submission
 
 RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   has_a_working_api
@@ -26,11 +30,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     plate1.wells[0..3].map { |well| well['state'] = 'failed' }
     plate1.wells[4..95].map { |well| well['state'] = 'passed' }
     supplier_group1 = plate1.wells[0..9]
-    supplier_group1.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 1' }
+    supplier_group1.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 1' }
     supplier_group2 = plate1.wells[9..49]
-    supplier_group2.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 2' }
+    supplier_group2.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 2' }
     supplier_group3 = plate1.wells[49..95]
-    supplier_group3.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 3' }
+    supplier_group3.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 3' }
     plate1
   end
 
@@ -197,13 +201,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   describe '#wells_grouped_by_supplier' do
     it 'returns whats expected' do
-      expect(subject.wells_grouped_by_supplier.count).to eq(3)
+      expect(subject.wells_grouped_by_supplier(plate).count).to eq(3)
     end
 
     context 'the wells within a supplier group are randomised' do
       it 'returns whats expected' do
         # difficult to test randomness as there is a chance this fails if the randomisation is such that it remains the same order
-        expect(subject.wells_grouped_by_supplier['blood location 2']).not_to eq plate.wells[9..49]
+        expect(subject.wells_grouped_by_supplier(plate)['blood location 2']).not_to eq plate.wells[9..49]
       end
     end
 
@@ -211,9 +215,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       it 'returns whats expected' do
         supplier_group4 = plate.wells[0..3] # contains only failed samples
         supplier_group4.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 4' }
-        expect(subject.wells_grouped_by_supplier.count).to eq(3)
-        expect(subject.wells_grouped_by_supplier.keys).to match_array ['blood location 3', 'blood location 2', 'blood location 1']
-        expect(subject.wells_grouped_by_supplier['blood location 4']).to be_nil
+        expect(subject.wells_grouped_by_supplier(plate).count).to eq(3)
+        expect(subject.wells_grouped_by_supplier(plate).keys).to match_array ['blood location 3', 'blood location 2', 'blood location 1']
+        expect(subject.wells_grouped_by_supplier(plate)['blood location 4']).to be_nil
       end
     end
   end

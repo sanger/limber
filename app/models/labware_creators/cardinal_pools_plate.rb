@@ -263,7 +263,7 @@ module LabwareCreators
     # Get passed parent wells, randomise, then group by sample supplier
     # e.g. { 0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23'] }
     def wells_grouped_by_supplier(source_plate)
-      passed_parent_wells(source_plate).to_a.shuffle.group_by { |well| well.samples[0].sanger_sample_id }
+      passed_parent_wells(source_plate).to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
     end
   end
 end
