@@ -23,7 +23,7 @@ module LabwareCreators
     # This should only be called from passed_parent_wells
     # As we want to only transfer passed wells to the LCA PBMC plate
     # returns: a list of passed samples
-    def passed_parent_wells(source_plate)
+    def passed_parent_wells
       source_plate.wells.select { |well| well.state == 'passed' }
     end
 
@@ -31,24 +31,26 @@ module LabwareCreators
     # this config is appended in the Cardinal initialiser
     # e.g. 95,12,12,12,12,12,12,12,11 ==> 8
     # e.g. 53,11,11,11,10,10,,, ==> 5
-    def number_of_pools(source_plate)
-      Rails.application.config.cardinal_pooling_config[passed_parent_wells(source_plate).count]
+    def number_of_pools
+      Rails.application.config.cardinal_pooling_config[passed_parent_wells.count]
     end
 
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    # barcode: DN9000020C
+    # this is being called alot, use ||=
+    def source_plate
+      Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
+    end
 
     # Send the transfer request to SS
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
 
       # Create pools
       # Ensure this is the only place build_pools is called
-      @pools ||= build_pools(source_plate)
+      @pools ||= build_pools
 
       # A "compound" sample should be created for each "pool"
       @pools.each_with_index do |pool, index|
@@ -109,6 +111,8 @@ module LabwareCreators
         # studies: [] #[study] Param not allowed??
         #relationships: { component_samples: { data: component_samples_payload } }
       ).tap do |compound_sample|
+        # This adds the component sample to the compound sample
+        # Inserts a record in SS sample_links table, and MLWH sample_links table
         compound_sample.update_attributes(component_samples: samples)
       end
     end
@@ -175,32 +179,23 @@ module LabwareCreators
       Sequencescape::Api::V2::Receptacle.find(well.id)
     end
 
-    # This adds the component sample to the compound sample
-    # Inserts a record in SS sample_links table, and MLWH sample_links table
-    def attach_component_samples_to_compound_sample(compound_sample, destination_well_location, component_samples)
-      component_samples_payload = component_samples.each_with_index.map { |s, _pos| { type: 'samples', id: s.id } }
-      # TODO
-      # api_post "/api/v2/samples/#{compound_sample.id}/relationships/component_samples", { data: component_samples_payload }
-    end
-
-
     # returns: a list of objects, mapping source well to destination well
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
-    def transfer_request_attributes(source_plate, dest_plate)
-      passed_parent_wells(source_plate).map do |source_well, additional_parameters|
-        request_hash(source_well, dest_plate, additional_parameters)
-      end
-    end
+    # def transfer_request_attributes(source_plate, dest_plate)
+    #   passed_parent_wells(parent).map do |source_well, additional_parameters|
+    #     request_hash(source_well, dest_plate, additional_parameters)
+    #   end
+    # end
 
-    def request_hash(source_well, dest_plate, _additional_parameters)
-      {
-        'source_asset' => source_well.uuid,
-        # 'target_asset' => dest_plate.wells.detect do |dest_well|
-        #   dest_well.location == transfer_hash[source_well.location][:dest_locn]
-        # end&.uuid
-        'target_asset' => get_well_for_plate_location(dest_plate, transfer_hash[source_well.location][:dest_locn])&.uuid
-      }
-    end
+    # def request_hash(source_well, dest_plate, _additional_parameters)
+    #   {
+    #     'source_asset' => source_well.uuid,
+    #     # 'target_asset' => dest_plate.wells.detect do |dest_well|
+    #     #   dest_well.location == transfer_hash[source_well.location][:dest_locn]
+    #     # end&.uuid
+    #     'target_asset' => get_well_for_plate_location(dest_plate, transfer_hash[source_well.location][:dest_locn])&.uuid
+    #   }
+    # end
 
     # returns: [A1, B1, ... H1]
     # Used to assign pools to a destination well, e.g. Pool 1 > A1, Pool2 > B1
@@ -230,7 +225,7 @@ module LabwareCreators
       result = {}
 
       # Build only once, as this is called in a loop
-      # @pools ||= build_pools
+      @pools ||= build_pools
       @pools.each_with_index do |pool, index|
         destination_well_location = dest_coordinates[index]
         pool.each do |well|
@@ -242,11 +237,11 @@ module LabwareCreators
     end
 
     # e.g. pools = [[s1,s4],[s2,s5],[s3,s6]]
-    def build_pools(source_plate)
+    def build_pools
       pools = []
       current_pool = 0
       # wells_grouped_by_supplier = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
-      wells_grouped_by_supplier(source_plate).each do |_supplier, wells|
+      wells_grouped_by_supplier.each do |_supplier, wells|
         # Loop through the wells for that supplier
         wells.each do |well|
           # Create pool if it doesnt already exist
@@ -254,7 +249,7 @@ module LabwareCreators
           # Add well to pool
           pools[current_pool] << well
           # Rotate through the pools
-          current_pool = current_pool == number_of_pools(source_plate) - 1 ? 0 : current_pool + 1
+          current_pool = current_pool == number_of_pools - 1 ? 0 : current_pool + 1
         end
       end
       pools
@@ -262,8 +257,8 @@ module LabwareCreators
 
     # Get passed parent wells, randomise, then group by sample supplier
     # e.g. { 0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23'] }
-    def wells_grouped_by_supplier(source_plate)
-      passed_parent_wells(source_plate).to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
+    def wells_grouped_by_supplier
+      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
     end
   end
 end
