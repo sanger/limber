@@ -21,7 +21,7 @@
       var qc_lookup = this, status;
       this.inputBox = barcodeBox;
 
-      // the `data` attribute is set when declaring the element in tagged_plate,html.erb
+      // the `data` attribute is set when declaring the element in tagged_plate.html.erb
       this.infoPanel = $('#'+barcodeBox.data('info-panel'));
       this.requiresDualIndexing = barcodeBox.data('requires-dual-indexing');
       this.approvedTypes = SCAPE[barcodeBox.data('approved-list')];

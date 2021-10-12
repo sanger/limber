@@ -2,13 +2,13 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "jasmine": true
+        "jasmine": true,
+        "jest/globals": true
     },
-    "plugins": ["jasmine", "vue"],
+    "plugins": ["jest", "vue"],
      "extends": [
         "eslint:recommended",
-        "plugin:vue/recommended",
-        "plugin:jasmine/recommended"
+        "plugin:vue/recommended"
     ],
     "parserOptions": {
         "parser": "babel-eslint",
@@ -48,7 +48,7 @@ module.exports = {
     "overrides": [
         {
           "files": [ "**/*.spec.js" ],
-          "plugins": ["jasmine", "vue"]
+          "plugins": ["jest", "vue"]
         }
       ]
 };

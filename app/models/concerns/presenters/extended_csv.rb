@@ -8,7 +8,6 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   end
 
   # Yields information for the show_extended.csv
-  # rubocop:todo Metrics/MethodLength
   def each_well_transfer(offset = 0) # rubocop:todo Metrics/AbcSize
     index = 0
     transfers_for_csv[offset * 4...(offset + 1) * 4].each_with_index do |transfers_list, bed_index|
@@ -25,7 +24,6 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 

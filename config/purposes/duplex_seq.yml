@@ -29,7 +29,7 @@ LDS AL Lib Dil:
   :creator_class: LabwareCreators::PcrCyclesBinnedPlate
   :csv_file_upload:
     :input_amount_desired_min: 0.0
-    :input_amount_desired_max: 50.0
+    :input_amount_desired_max: 10000.0
     :sample_volume_min: 0.2
     :sample_volume_max: 50.0
     :diluent_volume_min: 0.0

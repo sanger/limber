@@ -64,7 +64,7 @@ export default {
         'failure': false
       }[this.state]
     },
-    assetCommentTrimed() {
+    assetCommentTrimmed() {
       return this.assetComment.trim()
     }
   },
@@ -72,7 +72,7 @@ export default {
     async submit() {
       if(this.isCommentInvalid()) { return }
       this.state = 'busy'
-      var successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimed)
+      const successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimmed)
       if(successful) {
         this.state = 'success'
         this.assetComment = ''
@@ -83,7 +83,7 @@ export default {
       }
     },
     isCommentInvalid() {
-      if(this.assetCommentTrimed === undefined || this.assetCommentTrimed === '') {
+      if(this.assetCommentTrimmed === undefined || this.assetCommentTrimmed === '') {
         return true
       }
       if(this.previous_success != null && this.previous_success) {

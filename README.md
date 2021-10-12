@@ -7,36 +7,61 @@
 
 ## Description
 
-A flexible front end to plate bases pipelines in Sequencescape
+A flexible front end to plate bases pipelines in Sequencescape.
 
 ## Initial Setup
 
-1. In Limber, connect to Sequencescape to configure required data:
-```shell
-  bundle exec rake config:generate
-```
+Steps must be followed in either the Sequencescape repository or this Limber
+repository, as indicated:
 
-2. In Sequencescape, configure all Limber required data:
-```shell
-  bundle exec rake limber:setup
-```
+1. In Limber, ensure the appropriate version of Ruby is installed. The command
+   here is for `rbenv` but you may want to use a different Ruby version manager:
 
-3. Start Sequencescape (will start in 3000):
-```shell
-  bundle exec rails s
-```
+   ```shell
+   rbenv install
+   ```
 
-4. Start the delayed job processor
-```shell
-  bundle exec rake jobs:work
-```
+2. In Limber, make the Bundler gem install the dependencies for this project:
 
-5. In Limber, start Limber (will start in 3001):
-```shell
-  bundle exec rails s
-```
+   ```shell
+   bundle install
+   ```
 
+3. In Limber, install the yarn dependencies:
 
+   ```shell
+   yarn install
+   ```
+
+4. In Sequencescape, start the local server (will start on port 3000):
+
+   ```shell
+   bundle exec rails s
+   ```
+
+5. In Limber, connect to Sequencescape to configure required data:
+
+   ```shell
+   bundle exec rake config:generate
+   ```
+
+6. In Sequencescape, configure all Limber required data:
+
+   ```shell
+   bundle exec rake limber:setup
+   ```
+
+7. In Sequencescape, start the delayed job processor
+
+   ```shell
+   bundle exec rake jobs:work
+   ```
+
+8. In Limber, start the local server (will start on port 3001):
+
+   ```shell
+   bundle exec rails s
+   ```
 
 ## Docs
 
@@ -46,8 +71,8 @@ In addition to the [externally hosted YARD docs](https://www.rubydoc.info/github
 yard server -r --gems -m limber
 ```
 
-You can then access the Limber documentation through: http://localhost:8808/docs/limber
-Yard will also try and document the installed gems: http://localhost:8808/docs
+You can then access the Limber documentation through: [http://localhost:8808/docs/limber](http://localhost:8808/docs/limber)
+Yard will also try and document the installed gems: [http://localhost:8808/docs](http://localhost:8808/docs)
 
 ## Configuring pipelines
 
@@ -60,22 +85,22 @@ Yard will also try and document the installed gems: http://localhost:8808/docs
 Ruby unit and feature tests:
 
 ```bash
-    bundle exec rspec
+bundle exec rspec
 ```
 
-### Karma
+### Jest
 
 JavaScript unit tests:
 
 ```bash
-    yarn karma start --single-run
+yarn test
 ```
 
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:
 
 ```bash
-    yarn
-    rake assets:precompile
+yarn
+rake assets:precompile
 ```
 
 This has the added benefit that it reduces the risk of timeouts when the tests are running, as assets will not get compiled on the fly.
