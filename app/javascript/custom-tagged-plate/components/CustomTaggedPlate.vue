@@ -60,6 +60,7 @@
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
               :tags-per-well="tagsPerWellAsNumber"
+              :tag-group-adapter-type-name-filter="this.tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
             <div class="form-group form-row">
@@ -157,6 +158,11 @@ export default {
     locationObj: {
       // This is used to mock the browser location bar for testing purposes.
       type: [Object, Location], default: () => { return location }
+    },
+    tagGroupAdapterTypeNameFilter: {
+      // This is passed through to the tag groups lookup and filters that list if present
+      type: String,
+      required: false
     }
   },
   data () {
