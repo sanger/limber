@@ -106,14 +106,14 @@ RSpec.describe ExportsHelper do
       it { is_expected.to eq 3 }
     end
 
-    context 'a well with a composite sample' do
+    context 'a well with a compound sample' do
       let(:aliquot) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample_count } }
       let(:well) { create(:v2_well, aliquots: [aliquot]) }
       let(:component_sample_count) { 3 }
       it { is_expected.to eq component_sample_count }
     end
 
-    context 'a well with multiple composite samples' do
+    context 'a well with multiple compound samples' do
       let(:aliquot1) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample1_count } }
       let(:aliquot2) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample2_count } }
       let(:well) { create(:v2_well, aliquots: [aliquot1, aliquot2]) }

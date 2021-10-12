@@ -16,7 +16,7 @@ module ExportsHelper
 
   #
   # Returns the sum total of all samples within a well, this includes breaking
-  # down composite samples into the sum of their components
+  # down compound samples into the sum of their components
   #
   # @param well [Sequencescape::Api::V2::Well] The well to count samples in
   #
