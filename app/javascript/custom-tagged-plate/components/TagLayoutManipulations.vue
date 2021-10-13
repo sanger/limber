@@ -147,14 +147,15 @@ export default {
   components: {
     'lb-plate-scan': LabwareScan
   },
+  mixins: [TagLayout],
   props: {
     tagGroupAdapterTypeNameFilter: {
       // filters list of tag groups if present
       type: String,
-      required: false
+      required: false,
+      default: null
     }
   },
-  mixins: [TagLayout],
   data () {
     return {
       tagPlateWasScanned: false, // flag to indicate a tag plate was scanned

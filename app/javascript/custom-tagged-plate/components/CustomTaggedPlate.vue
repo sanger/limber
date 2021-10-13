@@ -60,7 +60,7 @@
               :number-of-tags="numberOfTags"
               :number-of-target-wells="numberOfTargetWells"
               :tags-per-well="tagsPerWellAsNumber"
-              :tag-group-adapter-type-name-filter="this.tagGroupAdapterTypeNameFilter"
+              :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
             <div class="form-group form-row">
@@ -162,7 +162,8 @@ export default {
     tagGroupAdapterTypeNameFilter: {
       // This is passed through to the tag groups lookup and filters that list if present
       type: String,
-      required: false
+      required: false,
+      default: null
     }
   },
   data () {
