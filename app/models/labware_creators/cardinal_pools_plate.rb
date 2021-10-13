@@ -16,32 +16,32 @@ module LabwareCreators
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
 
+    def well_filter
+      @well_filter ||= WellFilter.new(creator: self)
+    end
+
     def filters=(filter_parameters)
       well_filter.assign_attributes(filter_parameters)
     end
 
-    # This should only be called from passed_parent_wells
-    # As we want to only transfer passed wells to the LCA PBMC plate
-    # returns: a list of passed samples
+    # parent is using SS v1 API
+    # so this method is used to access the plate via SS v2 API
+    # this is being called alot, use ||=
+    def source_plate
+      @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
+    end
+
+    # Returns: a list of passed wells
     def passed_parent_wells
       source_plate.wells.select { |well| well.state == 'passed' }
     end
 
-    # returns: the number of pools required for a given passed samples count
+    # Returns: the number of pools required for a given passed samples count
     # this config is appended in the Cardinal initialiser
     # e.g. 95,12,12,12,12,12,12,12,11 ==> 8
     # e.g. 53,11,11,11,10,10,,, ==> 5
     def number_of_pools
       Rails.application.config.cardinal_pooling_config[passed_parent_wells.count]
-    end
-
-    def well_filter
-      @well_filter ||= WellFilter.new(creator: self)
-    end
-
-    # this is being called alot, use ||=
-    def source_plate
-      Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
     # Send the transfer request to SS
@@ -103,7 +103,7 @@ module LabwareCreators
 
     def create_sample(barcode, well_location, pool)
       # name is unique
-      samples = pool.map{|well| well.aliquots.to_a[0].sample }
+      component_samples = pool.map{|well| well.aliquots.to_a[0].sample }
       #component_samples_payload = sample_uuids.map{|uuid| {type: 'samples', uuid: uuid} }
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample#{barcode}#{well_location}",
@@ -113,36 +113,32 @@ module LabwareCreators
       ).tap do |compound_sample|
         # This adds the component sample to the compound sample
         # Inserts a record in SS sample_links table, and MLWH sample_links table
-        compound_sample.update_attributes(component_samples: samples)
+        compound_sample.update_attributes(component_samples: component_samples)
       end
     end
 
 
+    def get_well_for_plate_location(plate, well_location)
+      plate.wells.detect do |well|
+        well.location == well_location
+      end
+    end
+
     def add_sample_to_well_and_update_aliquot(sample, plate, well_location)
       well = get_well_for_plate_location(plate, well_location)
 
-      # well = get_well_for_plate_location(dest_plate, "C1")
-
-      # This creates a aliquot with default values
-      # {receptacle_id: 4435,study_id: nil,project_id: nil,library_id: nil,sample_id: 688}
-      # api_post "/api/v2/wells/#{well.id}/relationships/samples", { data: [{ type: 'samples', id: sample.id } }] }
+      # This also creates a aliquot with default values
       Sequencescape::Api::V2::Well.find(well.id)[0].update_attributes(samples: [sample])
 
-      # Check the data on the aliquot.
-      # Updating the aliquot with study, library etc.
-      # Aliquot should have study, project, library_type
+      # We then need to update the aliquots study, project and library_type
+      # TODO: Move study_id into config
+      # TODO: Move project into config
+      # TODO: Move library_type into config
       aliquot = Sequencescape::Api::V2::Well.find(well.id)[0].aliquots[0]
-
-      # Update Aliquots study, project and library_type
-      # study_id in config
-      # project in config
-      # library_type in config
       Sequencescape::Api::V2::Aliquot.find(aliquot.id)[0].update_attributes(library_type: "standard", study_id: 1, project_id: 1)
     end
 
     def create_submission_for_dest_plate(dest_plate)
-      # ss = SequencescapeSubmission.new({ template_uuid: "33f69080-2124-11ec-91bc-faffc2566f1d", labware_barcode: dest_plate.barcode })
-
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.
@@ -152,7 +148,6 @@ module LabwareCreators
       configured_params = submission_options_from_config.values.first
 
       sequencescape_submission_parameters = {
-        # template_uuid: "33f69080-2124-11ec-91bc-faffc2566f1d",
         template_name: configured_params[:template_name],
         labware_barcode: dest_plate.barcode,
         request_options: configured_params[:request_options],
@@ -163,23 +158,9 @@ module LabwareCreators
 
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
       ss.save # TODO: check if true, handle if not
-
-      # Labware.find_by_barcode("DN9000053L").wells[0].samples[0].aliquots[0].update_attributes(
-      #   request: Labware.find_by_barcode("DN9000053L").wells[0].samples[0].aliquots[0].receptacle.requests[0]
-      # )
     end
 
-    def get_well_for_plate_location(plate, well_location)
-      plate.wells.detect do |well|
-        well.location == well_location
-      end
-    end
-
-    def get_receptable_for_well(well)
-      Sequencescape::Api::V2::Receptacle.find(well.id)
-    end
-
-    # returns: a list of objects, mapping source well to destination well
+    # Returns: a list of objects, mapping source well to destination well
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
     # def transfer_request_attributes(source_plate, dest_plate)
     #   passed_parent_wells(parent).map do |source_well, additional_parameters|
@@ -197,23 +178,24 @@ module LabwareCreators
     #   }
     # end
 
-    # returns: [A1, B1, ... H1]
+    # Returns: [A1, B1, ... H1]
     # Used to assign pools to a destination well, e.g. Pool 1 > A1, Pool2 > B1
     def dest_coordinates
       ('A'..'H').to_a.map { |letter| "#{letter}1" }
     end
 
     # "A11"=>{:dest_locn=>"A1"}, "G3"=>{:dest_locn=>"A1"}, "C5"=>{:dest_locn=>"A1"}}
-    # returns ["A1"]
+    # Returns ["A1"]
     def dest_coordinates_filled_with_a_compound_sample
-      transfer_hash.map do |k,v| p v[:dest_locn] end.uniq
+      transfer_hash.map do |k,v| v[:dest_locn] end.uniq
     end
 
+    # Returns a list of wells which contain a compound sample
     def dest_wells_filled_with_a_compound_sample(dest_plate)
       dest_plate.wells.filter {|w| dest_coordinates_filled_with_a_compound_sample.include?(w.location)}
     end
 
-    # returns: an object mapping a source well location to the destination well location
+    # Returns: an object mapping a source well location to the destination well location
     # e.g. { 'A1': { 'dest_locn': 'B1' }, { 'A2': { 'dest_locn': 'A1' }, { 'A3': { 'dest_locn': 'B1' }}
     # {
     #   "A4"=>{:dest_locn=>"A1"},
