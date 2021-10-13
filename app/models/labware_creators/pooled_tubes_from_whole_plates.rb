@@ -13,7 +13,6 @@ module LabwareCreators
 
     validate :parents_suitable
 
-    # rubocop:todo Metrics/MethodLength
     def create_labware! # rubocop:todo Metrics/AbcSize
       # Create a single tube
       # TODO: This should link to multiple parents in production
@@ -33,7 +32,6 @@ module LabwareCreators
         )
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def barcodes=(input)
       @barcodes = (input || []).map(&:strip).reject(&:blank?)

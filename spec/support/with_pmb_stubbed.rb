@@ -29,7 +29,7 @@ def print_job_response(printer_name, template_id) # rubocop:todo Metrics/MethodL
   })
 end
 
-def print_job_post(printer_name, template_id) # rubocop:todo Metrics/MethodLength
+def print_job_post(printer_name, template_id)
   {
     data: {
       type: 'print_jobs',
@@ -46,7 +46,7 @@ def print_job_post(printer_name, template_id) # rubocop:todo Metrics/MethodLengt
   }.to_json
 end
 
-def print_job_post_multiple_labels(printer_name, template_id) # rubocop:todo Metrics/MethodLength
+def print_job_post_multiple_labels(printer_name, template_id)
   {
     data: {
       type: 'print_jobs',

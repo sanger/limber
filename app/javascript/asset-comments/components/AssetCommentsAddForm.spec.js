@@ -1,11 +1,8 @@
 // Import the component being tested
-import localVue from 'test_support/base_vue.js'
+import localVue from 'test_support/base_vue'
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 import AssetCommentsAddForm from './AssetCommentsAddForm.vue'
 
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('AssetCommentsAddForm', () => {
 
   const wrapperFactory = function(comments) {
@@ -41,9 +38,7 @@ describe('AssetCommentsAddForm', () => {
   it('enables the add comment submit button with valid input', async () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.setData({ assetComment: 'Test comment', state: 'pending' })
-
-    await wrapper.vm.$nextTick()
+    await wrapper.setData({ assetComment: 'Test comment', state: 'pending' })
 
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
@@ -84,12 +79,9 @@ describe('AssetCommentsAddForm', () => {
 
   it('submits a comment via the comment store object on clicking the submit button', async () => {
     let wrapper = wrapperFactory([])
+    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(true)
 
-    wrapper.setData({ assetComment: 'Test comment' })
-
-    await wrapper.vm.$nextTick()
-
-    spyOn(wrapper.vm.$parent, 'addComment')
+    await wrapper.setData({ assetComment: 'Test comment' })
 
     expect(wrapper.vm.state).toEqual('pending')
 
@@ -102,12 +94,10 @@ describe('AssetCommentsAddForm', () => {
   it('adding a comment updates the state and button text', async () => {
     let wrapper = wrapperFactory([])
 
-    spyOn(wrapper.vm.$parent, 'addComment').and.returnValue(true)
+    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(true)
 
-    wrapper.setData({ assetComment: 'Test comment' })
-    wrapper.vm.submit()
-
-    await flushPromises()
+    await wrapper.setData({ assetComment: 'Test comment' })
+    await wrapper.vm.submit()
 
     expect(wrapper.vm.state).toEqual('success')
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
@@ -117,12 +107,10 @@ describe('AssetCommentsAddForm', () => {
   it('adding unsuccessfully updates the state and button text', async () => {
     let wrapper = wrapperFactory([])
 
-    spyOn(wrapper.vm.$parent, 'addComment').and.returnValue(false)
+    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(false)
 
-    wrapper.setData({ assetComment: 'Test comment' })
-    wrapper.vm.submit()
-
-    await flushPromises()
+    await wrapper.setData({ assetComment: 'Test comment' })
+    await wrapper.vm.submit()
 
     expect(wrapper.vm.state).toEqual('failure')
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()

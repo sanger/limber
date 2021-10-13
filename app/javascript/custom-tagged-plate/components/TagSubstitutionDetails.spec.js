@@ -9,9 +9,9 @@ describe('TagSubstitutionDetails', () => {
   const wrapperFactory = function() {
     return shallowMount(TagSubstitutionDetails, {
       propsData: {
-        tagSubstitutions: { '2': '5', '3': '6' }
+        tagSubstitutions: { '2': '5', '3': '6' },
       },
-      localVue
+      localVue,
     })
   }
 
@@ -21,11 +21,15 @@ describe('TagSubstitutionDetails', () => {
 
       expect(wrapper.find('#original_tag_id_2').exists()).toBe(true)
       expect(wrapper.find('#substituted_tag_id_2').exists()).toBe(true)
-      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
+      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(
+        true
+      )
 
       expect(wrapper.find('#original_tag_id_3').exists()).toBe(true)
       expect(wrapper.find('#substituted_tag_id_3').exists()).toBe(true)
-      expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(true)
+      expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(
+        true
+      )
     })
 
     it('renders different text if tag substitutions are disallowed', async () => {
@@ -44,10 +48,10 @@ describe('TagSubstitutionDetails', () => {
 
   describe('#computed function tests:', () => {
     describe('hasTagSubstitutions:', () => {
-      it('returns false if no tag substitutions are present', () => {
+      it('returns false if no tag substitutions are present', async () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ tagSubstitutions: {} })
+        await wrapper.setProps({ tagSubstitutions: {} })
 
         expect(wrapper.vm.hasTagSubstitutions).toBe(false)
       })
@@ -55,7 +59,7 @@ describe('TagSubstitutionDetails', () => {
       it('returns true if tag substitutions are present', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ tagSubstitutions: { '1':'2' } })
+        wrapper.setProps({ tagSubstitutions: { '1': '2' } })
 
         expect(wrapper.vm.hasTagSubstitutions).toBe(true)
       })
@@ -67,7 +71,9 @@ describe('TagSubstitutionDetails', () => {
       const wrapper = wrapperFactory()
       const emitted = wrapper.emitted()
 
-      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
+      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(
+        true
+      )
 
       // const button = wrapper.find('#remove_tag_id_2_submit_button')
       // button.trigger('click')
