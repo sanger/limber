@@ -51,6 +51,9 @@ module LabwareCreators
       @pools ||= build_pools(source_plate)
 
       # A "compound" sample should be created for each "pool"
+      ###
+      # Check how to create groups of requests
+      ###
       @pools.each_with_index do |pool, index|
         # pool = [s1,s3,s4]
 
@@ -58,14 +61,17 @@ module LabwareCreators
         # This assumes pools are ordered?
         destination_well_location = dest_coordinates[index]
 
+
+        target_well = get_well_for_plate_location(dest_plate, destination_well_location)
+
         # Create the "compound" sample in SS
         # Check sample is created in the MLWH samples table
-        compound_sample = create_sample(dest_plate.barcode, destination_well_location, pool)
+        compound_sample = create_sample(dest_plate.barcode, destination_well_location, pool, target_well)
 
         # Update the well with the compound sample
         # This adds the compount sample to the destination plate well,
         # This creates the aliquot on the compound sample
-        add_sample_to_well_and_update_aliquot(compound_sample, dest_plate, destination_well_location)
+        add_sample_to_well_and_update_aliquot(compound_sample, target_well)
 
         # For each pool, associate the component samples with the copound sample
         # attach_component_samples_to_compound_sample(compound_sample, destination_well_location, pool)
@@ -99,9 +105,15 @@ module LabwareCreators
     end
 
 
-    def create_sample(barcode, well_location, pool)
+    def create_sample(barcode, well_location, pool, target_well)
       # name is unique
-      samples = pool.map{|well| well.aliquots.to_a[0].sample }
+      samples = pool.map do |well| 
+        well.aliquots.to_a[0].sample.tap do |sample|
+          sample.asset_id = well.id
+          sample.target_id = target_well.id
+        end
+      end
+
       #component_samples_payload = sample_uuids.map{|uuid| {type: 'samples', uuid: uuid} }
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample#{barcode}#{well_location}",
@@ -110,24 +122,30 @@ module LabwareCreators
         #relationships: { component_samples: { data: component_samples_payload } }
       ).tap do |compound_sample|
         compound_sample.update_attributes(component_samples: samples)
+        compound_sample.save
+        compound_sample.sample_compound_component_data = samples.map do |s| 
+          {
+            sample_id: s.id, asset_id: s.asset_id, target_asset_id: s.target_id
+          }
+        end
+        compound_sample.save
       end
     end
 
 
-    def add_sample_to_well_and_update_aliquot(sample, plate, well_location)
-      well = get_well_for_plate_location(plate, well_location)
+    def add_sample_to_well_and_update_aliquot(sample, target_well)
 
       # well = get_well_for_plate_location(dest_plate, "C1")
 
       # This creates a aliquot with default values
       # {receptacle_id: 4435,study_id: nil,project_id: nil,library_id: nil,sample_id: 688}
       # api_post "/api/v2/wells/#{well.id}/relationships/samples", { data: [{ type: 'samples', id: sample.id } }] }
-      Sequencescape::Api::V2::Well.find(well.id)[0].update_attributes(samples: [sample])
+      target_well.update_attributes(samples: [sample])
 
       # Check the data on the aliquot.
       # Updating the aliquot with study, library etc.
       # Aliquot should have study, project, library_type
-      aliquot = Sequencescape::Api::V2::Well.find(well.id)[0].aliquots[0]
+      aliquot = target_well.aliquots[0]
 
       # Update Aliquots study, project and library_type
       # study_id in config
