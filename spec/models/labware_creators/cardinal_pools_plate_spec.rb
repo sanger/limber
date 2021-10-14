@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+# From UAT Actions
+# 1. Create Plate
+# 2. Update Manifest
+# 3. Create Submission
 
 RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   has_a_working_api
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
   let(:parent_uuid)       { 'example-parent-uuid' }
-  let(:child_uuid)        { 'example-dest-uuid' }
   let(:user_uuid)         { 'user-uuid' }
   let(:plate_size)        { 96 }
-  let(:child_plate) { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
+  let(:child_uuid)        { 'example-dest-uuid' }
+  let(:child_plate)       { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
 
   let(:form_attributes) do
     {
@@ -20,17 +24,18 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     }
   end
 
+  # TODO: rename throughout to source and dest
   let(:plate) do
     plate1 = create(:v2_plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
 
     plate1.wells[0..3].map { |well| well['state'] = 'failed' }
     plate1.wells[4..95].map { |well| well['state'] = 'passed' }
     supplier_group1 = plate1.wells[0..9]
-    supplier_group1.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 1' }
+    supplier_group1.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 1' }
     supplier_group2 = plate1.wells[9..49]
-    supplier_group2.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 2' }
+    supplier_group2.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 2' }
     supplier_group3 = plate1.wells[49..95]
-    supplier_group3.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 3' }
+    supplier_group3.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 3' }
     plate1
   end
 
@@ -59,17 +64,33 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
-  context '#labware_wells' do
-    # TODO
+  context '#source_plate' do
+    it 'returns the plate' do
+      stub_v2_plate(plate, stub_search: false)
+      expect(subject.source_plate).to eq(plate)
+    end
   end
 
   context '#passed_parent_wells' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+    end
+
     it 'gets the passed samples for the parent plate' do
       expect(subject.passed_parent_wells.count).to eq(92)
+    end
+
+    it 'gets the passed samples for the parent plate' do
+      plate.wells[4]['state'] = 'failed'
+      expect(subject.passed_parent_wells.count).to eq(91)
     end
   end
 
   context '#number_of_pools' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+    end
+
     # 4 failed
     it 'has 92 passed samples' do
       expect(subject.number_of_pools).to eq(8)
@@ -89,45 +110,68 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   context '#transfer_material_from_parent!' do
-    let!(:transfer_creation_request) do
-      stub_api_post('transfer_request_collections',
-                    payload: { transfer_request_collection: {
-                      user: user_uuid,
-                      transfer_requests: subject.transfer_request_attributes(child_plate)
-                    } },
-                    body: '{}')
-    end
-
-    it 'makes the expected requests' do
+    it 'calls the expected helper methods' do
+      expect(subject).to receive(:create_sample).exactly(8).times.and_return true
+      expect(subject).to receive(:add_sample_to_well_and_update_aliquot).exactly(8).times.and_return true
+      expect(subject).to receive(:create_submission_for_dest_plate).once.with(child_plate).and_return true
+      stub_v2_plate(plate, stub_search: false)
       stub_v2_plate(child_plate, stub_search: false)
-      expect(subject.transfer_material_from_parent!(child_uuid)).to eq true
-      expect(transfer_creation_request).to have_been_made
+      subject.transfer_material_from_parent!(child_uuid)
     end
   end
 
-  context '#transfer_request_attributes' do
-    it 'returns a list of request_hash' do
-      expect(subject.transfer_request_attributes(child_plate).count).to eq 92
-    end
+  context '#create_sample' do
+    let(:well1)             { create(:v2_well) }
+    let(:well2)             { create(:v2_well) }
+    let(:component_samples) { [well1.aliquots.to_a[0].sample, well2.aliquots.to_a[0].sample] }
+    let(:pool)              { [well1, well2] }
+    let(:uniq_identifier)   { "CompoundSample#{barcode}#{well_location}" }
+    let(:sample)            { create(:v2_sample, name: uniq_identifier) }
+    let(:barcode)           { 'abarcode' }
+    let(:well_location)     { 'A1' }
 
-    it 'calls request_hash for each passed source well' do
-      allow(subject).to receive(:request_hash)
-      expect(subject).to receive(:request_hash).exactly(92).times
-      subject.transfer_request_attributes(child_plate)
+    it 'creates the compound sample with component samples' do
+      expect(Sequencescape::Api::V2::Sample).to receive(:create).with({ name: uniq_identifier, sanger_sample_id: uniq_identifier }).and_return(sample)
+      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:update_attributes).with({ component_samples: component_samples }).and_return(true)
+      subject.create_sample('abarcode', 'A1', pool)
     end
   end
 
-  context '#request_hash' do
-    it 'returns a hash with the well source and well target info, 92 passed samples' do
-      passed_source_well = plate.wells[4] # supplier_group1, pool 5 = E1
+  context '#get_well_for_plate_location' do
+    it 'returns the well for a given plate and location' do
+      expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
+    end
+  end
 
-      result = subject.request_hash(passed_source_well, child_plate, {})
+  context '#add_sample_to_well_and_update_aliquot' do
+    let(:sample)           { create(:v2_sample) }
+    let(:well)             { create(:v2_well) }
 
-      expected_dest_well = child_plate.wells.detect do |dest_well|
-        dest_well.location == subject.transfer_hash[passed_source_well.location][:dest_locn]
-      end
+    before do
+      allow(subject).to receive(:get_well_for_plate_location).and_return(well)
+    end
 
-      expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid })
+    it 'updates the well and the aliquot' do
+      expect_any_instance_of(Sequencescape::Api::V2::Well).to receive(:update_attributes).and_return(true)
+      expect_any_instance_of(Sequencescape::Api::V2::Aliquot).to receive(:update_attributes).with({ library_type: 'standard', study_id: 1,
+                                                                                                    project_id: 1 }).and_return(true)
+      subject.add_sample_to_well_and_update_aliquot(sample, child_plate, well.location)
+    end
+  end
+
+  context '#create_submission_for_dest_plate' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+
+      purpose_config = Hashie::Mash.new({ submission_options: { 'Cardinal library prep': { template_name: 'example', request_options: { option: 1 } } } })
+      allow(subject).to receive(:purpose_config).and_return purpose_config
+      Settings.submission_templates = { example: SecureRandom.uuid }
+      allow_any_instance_of(SequencescapeSubmission).to receive(:save).and_return true
+    end
+
+    it 'creates a submission request' do
+      result = subject.create_submission_for_dest_plate(child_plate)
+      expect(result).to eq true
     end
   end
 
@@ -138,7 +182,39 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
+  context '#dest_coordinates_filled_with_a_compound_sample' do
+    before do
+      transfer_hash = {
+        'A4' => { dest_locn: 'A1' },
+        'A11' => { dest_locn: 'A1' },
+        'C5' => { dest_locn: 'B1' }
+      }
+
+      allow(subject).to receive(:transfer_hash).and_return(transfer_hash)
+    end
+
+    it 'returns a list of coordinates that contain a sample' do
+      expect(subject.dest_coordinates_filled_with_a_compound_sample.count).to eq(2)
+      expect(subject.dest_coordinates_filled_with_a_compound_sample).to include('A1', 'B1')
+    end
+  end
+
+  context '#dest_wells_filled_with_a_compound_sample' do
+    before do
+      allow(subject).to receive(:dest_coordinates_filled_with_a_compound_sample).and_return(%w[A1 B1])
+    end
+
+    it 'returns a list of coordinates that contain a sample' do
+      expect(subject.dest_wells_filled_with_a_compound_sample(child_plate).count).to eq(2)
+      expect(subject.dest_wells_filled_with_a_compound_sample(child_plate)).to eq [child_plate.wells[0], child_plate.wells[1]]
+    end
+  end
+
   describe '#transfer_hash' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+    end
+
     context 'when there are 92 passed samples' do
       it 'returns an object where passed source well keys map to pool destination well' do
         result = subject.transfer_hash
@@ -159,8 +235,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   describe '#build_pools' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+    end
     it 'return a list of length equal to the config number_of_pools' do
-      expect(subject.build_pools.length).to eq(subject.number_of_pools)
+      expect(subject.build_pools.length).to eq(8)
     end
 
     it 'a sample should only be in one pool' do
@@ -196,6 +275,10 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   describe '#wells_grouped_by_supplier' do
+    before do
+      stub_v2_plate(plate, stub_search: false)
+    end
+
     it 'returns whats expected' do
       expect(subject.wells_grouped_by_supplier.count).to eq(3)
     end
@@ -218,24 +301,3 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 end
-
-# context 'when wells are missing a concentration value' do
-#   let(:well_e1) do
-#     create(:v2_well,
-#            position: { 'name' => 'E1' },
-#            qc_results: [])
-#   end
-
-#   let(:parent_plate) do
-#     create :v2_plate,
-#            uuid: parent_uuid,
-#            barcode_number: '2',
-#            size: plate_size,
-#            wells: [well_a1, well_b1, well_c1, well_d1, well_e1],
-#            outer_requests: requests
-#   end
-
-#   it 'fails validation' do
-#     expect(subject).to_not be_valid
-#   end
-# end

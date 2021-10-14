@@ -84,6 +84,7 @@ FactoryBot.define do
     name { "#{plate_barcode}:#{location}" }
     position { { 'name' => location } }
     state { 'passed' }
+    sequence(:id) { |i| i }
     uuid { SecureRandom.uuid }
     diluent_volume { nil }
     pcr_cycles { nil }
