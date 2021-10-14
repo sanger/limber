@@ -261,8 +261,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::MultiStampTubes}
 
-  Used directly in 2 purposes:
-  LCA Blood Array and LCA Blood Bank
+  Used directly in 1 purposes:
+  LCA Blood Array
 
 {LabwareCreators::MultiStampTubes View class documentation}
 
