@@ -218,7 +218,7 @@ RSpec.describe ExportsController, type: :controller do
       it 'sets the correct filename' do
         page = 0
         get :show, params: { id: csv_id, limber_plate_id: plate_barcode, page: page }, as: :csv
-        expect(@response.headers['Content-Disposition'].include? "filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\"").to eq(true)
+        expect(@response.headers['Content-Disposition'].include?("filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\"")).to eq(true)
       end
     end
   end
