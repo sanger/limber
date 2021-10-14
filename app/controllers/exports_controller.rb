@@ -54,8 +54,8 @@ class ExportsController < ApplicationController
 
   def set_filename
     filename = export.csv
-    filename += "_#{@labware.human_barcode}" if export.filename["include_barcode"]
-    filename += "_#{@page + 1}" if export.filename["include_page"]
-    response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.csv"'
+    filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
+    filename += "_#{@page + 1}" if export.filename['include_page']
+    response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.csv\""
   end
 end
