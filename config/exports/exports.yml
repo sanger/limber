@@ -82,6 +82,9 @@ hamilton_lds_al_lib_to_lds_al_lib_dil:
   workflow: Sample Dilution
 cellaca_input_file:
   csv: cellaca_input_file
+  filename:
+    include_barcode: true
+    include_page: true
 hamilton_pooling_plate_pbmc:
   csv: hamilton_pooling_plate_pbmc
   ancestor_purpose: LCA PBMC
