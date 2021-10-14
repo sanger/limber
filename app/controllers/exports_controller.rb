@@ -14,6 +14,8 @@ class ExportsController < ApplicationController
     @workflow = export.workflow
     @ancestor_plate = locate_ancestor
 
+    set_filename if export.filename
+
     render export.csv, locals: { test: 'this' }
   end
 
@@ -48,5 +50,12 @@ class ExportsController < ApplicationController
 
   def include_parameters
     export.plate_includes || 'wells'
+  end
+
+  def set_filename
+    filename = export.csv
+    filename += "_#{@labware.human_barcode}" if export.filename["include_barcode"]
+    filename += "_#{@page + 1}" if export.filename["include_page"]
+    response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.csv"'
   end
 end
