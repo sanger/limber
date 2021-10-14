@@ -121,19 +121,18 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   context '#create_sample' do
-    let(:well1)             { create(:v2_well) }
-    let(:well2)             { create(:v2_well) }
-    let(:component_samples) { [well1.aliquots.to_a[0].sample, well2.aliquots.to_a[0].sample] }
-    let(:pool)              { [well1, well2] }
-    let(:uniq_identifier)   { "CompoundSample#{barcode}#{well_location}" }
-    let(:sample)            { create(:v2_sample, name: uniq_identifier) }
-    let(:barcode)           { 'abarcode' }
-    let(:well_location)     { 'A1' }
+    let(:target_well)         { child_plate.wells[0] }
+    let(:component_well1)     { plate.wells[0] }  
+    let(:component_well2)     { plate.wells[1] }  
+    let(:component_samples)   { [component_well1.aliquots.to_a[0].sample, component_well2.aliquots.to_a[0].sample] }
+    let(:pool)                { [component_well1, component_well2] }
+    let(:uniq_identifier)     { "CompoundSample#{target_well.name}" }
+    let(:sample)              { create(:v2_sample, name: uniq_identifier) }
 
     it 'creates the compound sample with component samples' do
       expect(Sequencescape::Api::V2::Sample).to receive(:create).with({ name: uniq_identifier, sanger_sample_id: uniq_identifier }).and_return(sample)
-      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:update_attributes).with({ component_samples: component_samples }).and_return(true)
-      subject.create_sample('abarcode', 'A1', pool)
+      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:save).exactly(pool.count+1).times.and_return(true)
+      subject.create_sample(pool, target_well)
     end
   end
 
@@ -155,7 +154,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect_any_instance_of(Sequencescape::Api::V2::Well).to receive(:update_attributes).and_return(true)
       expect_any_instance_of(Sequencescape::Api::V2::Aliquot).to receive(:update_attributes).with({ library_type: 'standard', study_id: 1,
                                                                                                     project_id: 1 }).and_return(true)
-      subject.add_sample_to_well_and_update_aliquot(sample, child_plate, well.location)
+      subject.add_sample_to_well_and_update_aliquot(sample, well)
     end
   end
 

@@ -6,6 +6,8 @@ FactoryBot.define do
   # API V2 sample
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
+    
+    sequence(:id, &:to_s)
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
     control { false }

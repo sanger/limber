@@ -26,9 +26,8 @@ module LabwareCreators
 
     # parent is using SS v1 API
     # so this method is used to access the plate via SS v2 API
-    # TODO: this is being called alot, use ||=
     def source_plate
-      @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
+      Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
     # Returns: a list of passed wells
@@ -60,12 +59,12 @@ module LabwareCreators
         # This assumes pools are ordered?
         destination_well_location = dest_coordinates[index]
 
-
         target_well = get_well_for_plate_location(dest_plate, destination_well_location)
 
         # Create the "compound" sample in SS
         # Check sample is created in the MLWH samples table
-        compound_sample = create_sample(dest_plate.barcode, destination_well_location, pool, target_well)
+        # TODO: Check sample is created in the MLWH samples table
+        compound_sample = create_sample(pool, target_well)
 
         # Update the well with the compound sample
         # This adds the compount sample to the destination plate well,
@@ -78,9 +77,7 @@ module LabwareCreators
       create_submission_for_dest_plate(dest_plate)
     end
 
-
-    def create_sample(barcode, well_location, pool, target_well)
-      # name is unique
+    def create_sample(pool, target_well)
       samples = pool.map do |well| 
         well.aliquots.to_a[0].sample.tap do |sample|
           sample.asset_id = well.id
@@ -88,9 +85,10 @@ module LabwareCreators
         end
       end
 
+      # TODO: Check compound sample is created in MLWH db with component samples
       Sequencescape::Api::V2::Sample.create(
-        name: "CompoundSample#{barcode}#{well_location}",
-        sanger_sample_id: "CompoundSample#{barcode}#{well_location}"
+        name: "CompoundSample_#{target_well.name.gsub(':','_')}",
+        sanger_sample_id: "CompoundSample_#{target_well.name.gsub(':','_')}"
       ).tap do |compound_sample|
         # Associate the component samples to the compound sample
         # Inserts a record in SS sample_links table, and MLWH sample_links table
@@ -117,7 +115,7 @@ module LabwareCreators
       target_well.update_attributes(samples: [sample])
 
       # We then need to update the aliquots study, project and library_type
-      # TODO: Move values into config
+      # TODO: Move values into config, not hard coded, ENV var?
       aliquot = target_well.aliquots[0]
       aliquot.update_attributes(library_type: "standard", study_id: 1, project_id: 1)
     end
