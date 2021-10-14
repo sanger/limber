@@ -9,10 +9,10 @@
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
 # 4. Group samples by supplier, to ensure samples with the same supplier are distrubuted across different pools
-
-# 5. Create a Transfer Requests in SS - adding the pool to a well in the new LCA PBMC Pools plate
+# 5. Create the compound sample in SS - adding the pool to a well in the new LCA PBMC Pools plate
+# 6. Associate compound sample with its component samples
 module LabwareCreators
-  # This class is used for creating randomicardinal pools into destination plate
+  # This class is used for creating Cardinal pools into destination plate
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
 
@@ -26,7 +26,7 @@ module LabwareCreators
 
     # parent is using SS v1 API
     # so this method is used to access the plate via SS v2 API
-    # this is being called alot, use ||=
+    # TODO: this is being called alot, use ||=
     def source_plate
       @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
@@ -48,76 +48,42 @@ module LabwareCreators
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
 
-      # Create pools
       # Ensure this is the only place build_pools is called
       @pools ||= build_pools
 
       # A "compound" sample should be created for each "pool"
       @pools.each_with_index do |pool, index|
-        # pool = [s1,s3,s4]
-
         # For each pool, get the destination plate well
         # This assumes pools are ordered?
         destination_well_location = dest_coordinates[index]
 
         # Create the "compound" sample in SS
-        # Check sample is created in the MLWH samples table
+        # TODO: Check sample is created in the MLWH samples table
         compound_sample = create_sample(dest_plate.barcode, destination_well_location, pool)
 
-        # Update the well with the compound sample
-        # This adds the compount sample to the destination plate well,
-        # This creates the aliquot on the compound sample
+        # Update the destination plate well with the compound sample
+        # This also creates the aliquot on the compound sample
         add_sample_to_well_and_update_aliquot(compound_sample, dest_plate, destination_well_location)
-
-        # For each pool, associate the component samples with the copound sample
-        # attach_component_samples_to_compound_sample(compound_sample, destination_well_location, pool)
       end
-
-      # Transfer request for each component well
-      # However this transfer request wont actually transfer the aliquot
-      # From the source well, as instead the destination well
-      # Already has the compound sample
-
-      # api.transfer_request_collection.create!(
-      #   user: user_uuid,
-      #   transfer_requests: transfer_request_attributes(source_plate, dest_plate)
-      # )
-      # true
-
-      # For each well (with a compound sample?)
-      # Create a request
-      # Either via a submission, or manually
-
-      # In SS
-      # SubmissionTemplate.find_by(name: "Limber - Cardinal")
-      # request_type = RequestType.find(127).plate_purposes
-      # PlatePurpose.find_by(name: "LCA PBMC Pools")
-
-      # *** Below needs to be added to SS seed ***
-      # RequestType::RequestTypePlatePurpose.create(request_type_id: 127, plate_purpose_id: PlatePurpose.find_by(name: "LCA PBMC Pools").id)
-
-      # template_uuid in config
       create_submission_for_dest_plate(dest_plate)
     end
 
-
+    # TODO: update unique name so dont need to pass in barcode and location
+    # TODO: Check compound sample is created in MLWH db with component samples
     def create_sample(barcode, well_location, pool)
-      # name is unique
-      component_samples = pool.map{|well| well.aliquots.to_a[0].sample }
-      #component_samples_payload = sample_uuids.map{|uuid| {type: 'samples', uuid: uuid} }
+      component_samples = pool.map { |well| well.aliquots.to_a[0].sample }
+
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample#{barcode}#{well_location}",
-        sanger_sample_id: "CompoundSample#{barcode}#{well_location}",
-        # studies: [] #[study] Param not allowed??
-        #relationships: { component_samples: { data: component_samples_payload } }
+        sanger_sample_id: "CompoundSample#{barcode}#{well_location}"
       ).tap do |compound_sample|
-        # This adds the component sample to the compound sample
+        # Associate the component samples to the compound sample
         # Inserts a record in SS sample_links table, and MLWH sample_links table
-        compound_sample.update_attributes(component_samples: component_samples)
+        compound_sample.update(component_samples: component_samples)
       end
     end
 
-
+    # Returns: An instance of Sequencescape::Api::V2::Well
     def get_well_for_plate_location(plate, well_location)
       plate.wells.detect do |well|
         well.location == well_location
@@ -126,16 +92,13 @@ module LabwareCreators
 
     def add_sample_to_well_and_update_aliquot(sample, plate, well_location)
       well = get_well_for_plate_location(plate, well_location)
-
       # This also creates a aliquot with default values
-      Sequencescape::Api::V2::Well.find(well.id)[0].update_attributes(samples: [sample])
+      well.update(samples: [sample])
 
       # We then need to update the aliquots study, project and library_type
-      # TODO: Move study_id into config
-      # TODO: Move project into config
-      # TODO: Move library_type into config
-      aliquot = Sequencescape::Api::V2::Well.find(well.id)[0].aliquots[0]
-      Sequencescape::Api::V2::Aliquot.find(aliquot.id)[0].update_attributes(library_type: "standard", study_id: 1, project_id: 1)
+      # TODO: Move values into config
+      aliquot = well.aliquots[0]
+      aliquot.update(library_type: 'standard', study_id: 1, project_id: 1)
     end
 
     def create_submission_for_dest_plate(dest_plate)
@@ -160,24 +123,6 @@ module LabwareCreators
       ss.save # TODO: check if true, handle if not
     end
 
-    # Returns: a list of objects, mapping source well to destination well
-    # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
-    # def transfer_request_attributes(source_plate, dest_plate)
-    #   passed_parent_wells(parent).map do |source_well, additional_parameters|
-    #     request_hash(source_well, dest_plate, additional_parameters)
-    #   end
-    # end
-
-    # def request_hash(source_well, dest_plate, _additional_parameters)
-    #   {
-    #     'source_asset' => source_well.uuid,
-    #     # 'target_asset' => dest_plate.wells.detect do |dest_well|
-    #     #   dest_well.location == transfer_hash[source_well.location][:dest_locn]
-    #     # end&.uuid
-    #     'target_asset' => get_well_for_plate_location(dest_plate, transfer_hash[source_well.location][:dest_locn])&.uuid
-    #   }
-    # end
-
     # Returns: [A1, B1, ... H1]
     # Used to assign pools to a destination well, e.g. Pool 1 > A1, Pool2 > B1
     def dest_coordinates
@@ -187,12 +132,12 @@ module LabwareCreators
     # "A11"=>{:dest_locn=>"A1"}, "G3"=>{:dest_locn=>"A1"}, "C5"=>{:dest_locn=>"A1"}}
     # Returns ["A1"]
     def dest_coordinates_filled_with_a_compound_sample
-      transfer_hash.map do |k,v| v[:dest_locn] end.uniq
+      transfer_hash.map { |_k, v| v[:dest_locn] }.uniq
     end
 
     # Returns a list of wells which contain a compound sample
     def dest_wells_filled_with_a_compound_sample(dest_plate)
-      dest_plate.wells.filter {|w| dest_coordinates_filled_with_a_compound_sample.include?(w.location)}
+      dest_plate.wells.filter { |w| dest_coordinates_filled_with_a_compound_sample.include?(w.location) }
     end
 
     # Returns: an object mapping a source well location to the destination well location
@@ -218,7 +163,8 @@ module LabwareCreators
       result
     end
 
-    # e.g. pools = [[s1,s4],[s2,s5],[s3,s6]]
+    # Returns a nested list of wells, grouped by pool
+    # e.g. pools = [[w1,w4],[w2,w5],[w3,w6]]
     def build_pools
       pools = []
       current_pool = 0

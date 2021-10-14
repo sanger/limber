@@ -11,9 +11,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
   let(:parent_uuid)       { 'example-parent-uuid' }
-  let(:child_uuid)        { 'example-dest-uuid' }
   let(:user_uuid)         { 'user-uuid' }
   let(:plate_size)        { 96 }
+  let(:child_uuid)        { 'example-dest-uuid' }
   let(:child_plate)       { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
 
   let(:form_attributes) do
@@ -24,6 +24,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     }
   end
 
+  # TODO: rename throughout to source and dest
   let(:plate) do
     plate1 = create(:v2_plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
 
@@ -109,48 +110,62 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   context '#transfer_material_from_parent!' do
-    # TODO
-    # it 'makes the expected requests' do
-    #   stub_v2_plate(child_plate, stub_search: false)
-    #   expect(subject.transfer_material_from_parent!(child_uuid)).to eq true
-    #   expect(transfer_creation_request).to have_been_made
-    # end
+    it 'calls the expected helper methods' do
+      expect(subject).to receive(:create_sample).exactly(8).times.and_return true
+      expect(subject).to receive(:add_sample_to_well_and_update_aliquot).exactly(8).times.and_return true
+      expect(subject).to receive(:create_submission_for_dest_plate).once.with(child_plate).and_return true
+      stub_v2_plate(plate, stub_search: false)
+      stub_v2_plate(child_plate, stub_search: false)
+      subject.transfer_material_from_parent!(child_uuid)
+    end
   end
 
   context '#create_sample' do
-    # TODO
+    let(:well1)             { create(:v2_well) }
+    let(:well2)             { create(:v2_well) }
+    let(:component_samples) { [well1.aliquots.to_a[0].sample, well2.aliquots.to_a[0].sample] }
+    let(:pool)              { [well1, well2] }
+    let(:uniq_identifier)   { "CompoundSample#{barcode}#{well_location}" }
+    let(:sample)            { create(:v2_sample, name: uniq_identifier) }
+    let(:barcode)           { 'abarcode' }
+    let(:well_location)     { 'A1' }
+
+    it 'creates the compound sample with component samples' do
+      expect(Sequencescape::Api::V2::Sample).to receive(:create).with({ name: uniq_identifier, sanger_sample_id: uniq_identifier }).and_return(sample)
+      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:update_attributes).with({ component_samples: component_samples }).and_return(true)
+      subject.create_sample('abarcode', 'A1', pool)
+    end
   end
 
   context '#get_well_for_plate_location' do
     it 'returns the well for a given plate and location' do
-      expect(subject.get_well_for_plate_location(child_plate, "A1")).to eq child_plate.wells[0]
+      expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
     end
   end
 
   context '#add_sample_to_well_and_update_aliquot' do
-    # TODO
+    let(:sample)           { create(:v2_sample) }
+    let(:well)             { create(:v2_well) }
 
-    # let(:sample)  { create(:v2_sample) }
+    before do
+      allow(subject).to receive(:get_well_for_plate_location).and_return(well)
+    end
 
-    # before do
-    #   allow(subject).to receive(:get_well_for_plate_location).and_return(Hashie::Mash.new({ 'id': 1 }))
-
-    #   well_mock = child_plate.wells[0]
-    #   allow(Sequencescape::Api::V2::Well).to receive(:where).with(id: 1).and_return([well_mock])
-    # end
-
-    # it 'adds the sample to the well and updates the aliquot' do
-    #   subject.add_sample_to_well_and_update_aliquot(sample, child_plate, "A1")
-    # end
+    it 'updates the well and the aliquot' do
+      expect_any_instance_of(Sequencescape::Api::V2::Well).to receive(:update_attributes).and_return(true)
+      expect_any_instance_of(Sequencescape::Api::V2::Aliquot).to receive(:update_attributes).with({ library_type: 'standard', study_id: 1,
+                                                                                                    project_id: 1 }).and_return(true)
+      subject.add_sample_to_well_and_update_aliquot(sample, child_plate, well.location)
+    end
   end
 
   context '#create_submission_for_dest_plate' do
     before do
       stub_v2_plate(plate, stub_search: false)
 
-      purpose_config = Hashie::Mash.new({'submission_options': {'Cardinal library prep': { template_name: 'example', request_options: { option: 1 } }}})
+      purpose_config = Hashie::Mash.new({ submission_options: { 'Cardinal library prep': { template_name: 'example', request_options: { option: 1 } } } })
       allow(subject).to receive(:purpose_config).and_return purpose_config
-      Settings.submission_templates = { 'example': SecureRandom.uuid }
+      Settings.submission_templates = { example: SecureRandom.uuid }
       allow_any_instance_of(SequencescapeSubmission).to receive(:save).and_return true
     end
 
@@ -159,32 +174,6 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect(result).to eq true
     end
   end
-
-  # context '#transfer_request_attributes' do
-  #   it 'returns a list of request_hash' do
-  #     expect(subject.transfer_request_attributes(child_plate).count).to eq 92
-  #   end
-
-  #   it 'calls request_hash for each passed source well' do
-  #     allow(subject).to receive(:request_hash)
-  #     expect(subject).to receive(:request_hash).exactly(92).times
-  #     subject.transfer_request_attributes(child_plate)
-  #   end
-  # end
-
-  # context '#request_hash' do
-  #   it 'returns a hash with the well source and well target info, 92 passed samples' do
-  #     passed_source_well = plate.wells[4] # supplier_group1, pool 5 = E1
-
-  #     result = subject.request_hash(passed_source_well, child_plate, {})
-
-  #     expected_dest_well = child_plate.wells.detect do |dest_well|
-  #       dest_well.location == subject.transfer_hash[passed_source_well.location][:dest_locn]
-  #     end
-
-  #     expect(result).to eq({ 'source_asset' => passed_source_well.uuid, 'target_asset' => expected_dest_well.uuid })
-  #   end
-  # end
 
   context '#dest_coordinates' do
     it 'returns a list of A1 -> H1' do
@@ -196,9 +185,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   context '#dest_coordinates_filled_with_a_compound_sample' do
     before do
       transfer_hash = {
-        "A4"=>{:dest_locn=>"A1"},
-        "A11"=>{:dest_locn=>"A1"},
-        "C5"=>{:dest_locn=>"B1"},
+        'A4' => { dest_locn: 'A1' },
+        'A11' => { dest_locn: 'A1' },
+        'C5' => { dest_locn: 'B1' }
       }
 
       allow(subject).to receive(:transfer_hash).and_return(transfer_hash)
@@ -212,7 +201,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   context '#dest_wells_filled_with_a_compound_sample' do
     before do
-      allow(subject).to receive(:dest_coordinates_filled_with_a_compound_sample).and_return(['A1', 'B1'])
+      allow(subject).to receive(:dest_coordinates_filled_with_a_compound_sample).and_return(%w[A1 B1])
     end
 
     it 'returns a list of coordinates that contain a sample' do
