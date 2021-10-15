@@ -77,14 +77,19 @@ module LabwareCreators
       create_submission_for_dest_plate(dest_plate)
     end
 
-    def create_sample(pool, target_well)
-      samples = pool.map do |well|
-        well.aliquots.to_a[0].sample.tap do |sample|
-          sample.asset_id = well.id
-          sample.target_id = target_well.id
-        end
+    def sample_compound_component_data(samples_and_wells, target_well)
+      samples_and_wells.map do |obj|
+        { sample_id: obj[:sample].id, asset_id: obj[:well].id, target_asset_id: target_well.id }
       end
+    end
 
+    def samples_and_wells_from_pool(pool)
+      pool.map do |w| 
+        { sample: w.aliquots.to_a[0].sample, well: w }
+      end
+    end
+
+    def create_sample(pool, target_well)
       # TODO: Check compound sample is created in MLWH db with component samples
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample_#{target_well.name.tr(':', '_')}",
@@ -92,13 +97,10 @@ module LabwareCreators
       ).tap do |compound_sample|
         # Associate the component samples to the compound sample
         # Inserts a record in SS sample_links table, and MLWH sample_links table
-        compound_sample.update_attributes(component_samples: samples)
+        samples_and_wells = samples_and_wells_from_pool(pool)
+        compound_sample.update(component_samples: samples_and_wells.pluck(:sample))
         compound_sample.save
-        compound_sample.sample_compound_component_data = samples.map do |s|
-          {
-            sample_id: s.id, asset_id: s.asset_id, target_asset_id: s.target_id
-          }
-        end
+        compound_sample.sample_compound_component_data = sample_compound_component_data(samples_and_wells, target_well)
         compound_sample.save
       end
     end
@@ -112,12 +114,12 @@ module LabwareCreators
 
     def add_sample_to_well_and_update_aliquot(sample, target_well)
       # This creates a aliquot with default values
-      target_well.update_attributes(samples: [sample])
+      target_well.update(samples: [sample])
 
       # We then need to update the aliquots study, project and library_type
       # TODO: Move values into config, not hard coded, ENV var?
       aliquot = target_well.aliquots[0]
-      aliquot.update_attributes(library_type: 'standard', study_id: 1, project_id: 1)
+      aliquot.update(library_type: 'standard', study_id: 1, project_id: 1)
     end
 
     def create_submission_for_dest_plate(dest_plate)

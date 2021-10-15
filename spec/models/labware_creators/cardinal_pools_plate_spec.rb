@@ -126,7 +126,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     let(:component_well2)     { plate.wells[1] }
     let(:component_samples)   { [component_well1.aliquots.to_a[0].sample, component_well2.aliquots.to_a[0].sample] }
     let(:pool)                { [component_well1, component_well2] }
-    let(:uniq_identifier)     { "CompoundSample#{target_well.name}" }
+    let(:uniq_identifier)     { "CompoundSample_#{target_well.name.gsub(':', '_')}" }
     let(:sample)              { create(:v2_sample, name: uniq_identifier) }
 
     it 'creates the compound sample with component samples' do
