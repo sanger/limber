@@ -122,8 +122,8 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   context '#create_sample' do
     let(:target_well)         { child_plate.wells[0] }
-    let(:component_well1)     { plate.wells[0] }  
-    let(:component_well2)     { plate.wells[1] }  
+    let(:component_well1)     { plate.wells[0] }
+    let(:component_well2)     { plate.wells[1] }
     let(:component_samples)   { [component_well1.aliquots.to_a[0].sample, component_well2.aliquots.to_a[0].sample] }
     let(:pool)                { [component_well1, component_well2] }
     let(:uniq_identifier)     { "CompoundSample#{target_well.name}" }
@@ -131,7 +131,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
     it 'creates the compound sample with component samples' do
       expect(Sequencescape::Api::V2::Sample).to receive(:create).with({ name: uniq_identifier, sanger_sample_id: uniq_identifier }).and_return(sample)
-      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:save).exactly(pool.count+1).times.and_return(true)
+      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:save).exactly(pool.count + 1).times.and_return(true)
       subject.create_sample(pool, target_well)
     end
   end

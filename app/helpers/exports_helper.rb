@@ -29,14 +29,18 @@ module ExportsHelper
 
   def _each_source_metadata_for_plate_with_compound_samples(plate)
     raise 'Only one parent plate should be defined for a plate with compound samples' if plate.parents.count > 1
+
     parent_plate = Sequencescape::Api::V2::Plate.find_by(uuid: plate.parents.first.uuid)
     plate.wells_in_columns.each do |dest_well|
       raise 'Only one sample should be present in a destination with compound samples' if dest_well.samples.count > 1
+
       compound_sample = dest_well.samples.first
       next unless compound_sample
+
       compound_sample.component_samples.each do |component_sample|
-        source_wells = parent_plate.wells.select{|w| w.samples.map(&:id).include?(component_sample.id)}
+        source_wells = parent_plate.wells.select { |w| w.samples.map(&:id).include?(component_sample.id) }
         raise 'Only one source well should be present in a destination with compound samples' if source_wells.count > 1
+
         source_well = source_wells.first
         # NB. Making assumption here that name field on asset is for a plate well
         # and contains a plate barcode and well location e.g. DN12345678:A1
@@ -45,5 +49,4 @@ module ExportsHelper
       end
     end
   end
-
 end

@@ -27,10 +27,10 @@ module LabwareCreators
     # parent is using SS v1 API
     # so this method is used to access the plate via SS v2 API
     def source_plate
-      Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
+      @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
-    # Returns: a list of passed wells
+    # Returns: a list of passed wellspassed_parent_wells
     def passed_parent_wells
       source_plate.wells.select { |well| well.state == 'passed' }
     end
@@ -78,7 +78,7 @@ module LabwareCreators
     end
 
     def create_sample(pool, target_well)
-      samples = pool.map do |well| 
+      samples = pool.map do |well|
         well.aliquots.to_a[0].sample.tap do |sample|
           sample.asset_id = well.id
           sample.target_id = target_well.id
@@ -87,14 +87,14 @@ module LabwareCreators
 
       # TODO: Check compound sample is created in MLWH db with component samples
       Sequencescape::Api::V2::Sample.create(
-        name: "CompoundSample_#{target_well.name.gsub(':','_')}",
-        sanger_sample_id: "CompoundSample_#{target_well.name.gsub(':','_')}"
+        name: "CompoundSample_#{target_well.name.tr(':', '_')}",
+        sanger_sample_id: "CompoundSample_#{target_well.name.tr(':', '_')}"
       ).tap do |compound_sample|
         # Associate the component samples to the compound sample
         # Inserts a record in SS sample_links table, and MLWH sample_links table
         compound_sample.update_attributes(component_samples: samples)
         compound_sample.save
-        compound_sample.sample_compound_component_data = samples.map do |s| 
+        compound_sample.sample_compound_component_data = samples.map do |s|
           {
             sample_id: s.id, asset_id: s.asset_id, target_asset_id: s.target_id
           }
@@ -117,7 +117,7 @@ module LabwareCreators
       # We then need to update the aliquots study, project and library_type
       # TODO: Move values into config, not hard coded, ENV var?
       aliquot = target_well.aliquots[0]
-      aliquot.update_attributes(library_type: "standard", study_id: 1, project_id: 1)
+      aliquot.update_attributes(library_type: 'standard', study_id: 1, project_id: 1)
     end
 
     def create_submission_for_dest_plate(dest_plate)
