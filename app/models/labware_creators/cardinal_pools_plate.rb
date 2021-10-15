@@ -84,7 +84,7 @@ module LabwareCreators
     end
 
     def samples_and_wells_from_pool(pool)
-      pool.map do |w| 
+      pool.map do |w|
         { sample: w.aliquots.to_a[0].sample, well: w }
       end
     end
@@ -119,7 +119,19 @@ module LabwareCreators
       # We then need to update the aliquots study, project and library_type
       # TODO: Move values into config, not hard coded, ENV var?
       aliquot = target_well.aliquots[0]
-      aliquot.update(library_type: 'standard', study_id: 1, project_id: 1)
+      aliquot.update(library_type: 'standard', study_id: default_study_id, project_id: default_project_id)
+    end
+
+    def default_study_id
+      values = source_plate.wells.map{|w| w.aliquots.first.study_id}.uniq
+      raise 'There is more than one study in the source plate which is not allowed for pooling' unless values.length < 1
+      values.first
+    end
+
+    def default_project_id
+      values = source_plate.wells.map{|w| w.aliquots.first.project_id}.uniq
+      raise 'There is more than one project in the source plate which is not allowed for pooling' unless values.length < 1
+      values.first
     end
 
     def create_submission_for_dest_plate(dest_plate)

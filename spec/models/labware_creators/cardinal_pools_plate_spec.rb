@@ -126,7 +126,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     let(:component_well2)     { plate.wells[1] }
     let(:component_samples)   { [component_well1.aliquots.to_a[0].sample, component_well2.aliquots.to_a[0].sample] }
     let(:pool)                { [component_well1, component_well2] }
-    let(:uniq_identifier)     { "CompoundSample_#{target_well.name.gsub(':', '_')}" }
+    let(:uniq_identifier)     { "CompoundSample_#{target_well.name.tr(':', '_')}" }
     let(:sample)              { create(:v2_sample, name: uniq_identifier) }
 
     it 'creates the compound sample with component samples' do
@@ -154,6 +154,8 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect_any_instance_of(Sequencescape::Api::V2::Well).to receive(:update_attributes).and_return(true)
       expect_any_instance_of(Sequencescape::Api::V2::Aliquot).to receive(:update_attributes).with({ library_type: 'standard', study_id: 1,
                                                                                                     project_id: 1 }).and_return(true)
+      allow(subject).to receive(:default_study_id).and_return(1)
+      allow(subject).to receive(:default_project_id).and_return(1)
       subject.add_sample_to_well_and_update_aliquot(sample, well)
     end
   end
