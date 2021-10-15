@@ -26,7 +26,7 @@ module ExportsHelper
       end
     end
   end
-  
+
   #
   # Returns the sum total of all samples within a well, this includes breaking
   # down compound samples into the sum of their components

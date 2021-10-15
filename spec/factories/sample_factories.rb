@@ -6,7 +6,7 @@ FactoryBot.define do
   # API V2 sample
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
-    
+
     sequence(:id, &:to_s)
 
     transient do
