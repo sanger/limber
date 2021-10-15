@@ -141,5 +141,10 @@ LCA Blood Bank:
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
-# LCA PBMC Bank plates are stamped into LCA PBMC Rack tube racks
-# TODO: DPL-074 create tube rack via samples extraction?
+# LCA PBMC Bank plates are transferred into LCA PBMC Rack tube racks, with some consolidation of wells containing the same sample.
+# We store them as individual tubes, until Limber supports tube racks.
+LCA Bank Stock:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::PooledTubesBySample
