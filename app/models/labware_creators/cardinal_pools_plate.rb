@@ -123,14 +123,16 @@ module LabwareCreators
     end
 
     def default_study_id
-      values = source_plate.wells.map{|w| w.aliquots.first.study_id}.uniq
-      raise 'There is more than one study in the source plate which is not allowed for pooling' unless values.length < 1
+      values = source_plate.wells.map { |w| w.aliquots.first.study_id }.uniq
+      raise 'There is more than one study in the source plate which is not allowed for pooling' unless values.empty?
+
       values.first
     end
 
     def default_project_id
-      values = source_plate.wells.map{|w| w.aliquots.first.project_id}.uniq
-      raise 'There is more than one project in the source plate which is not allowed for pooling' unless values.length < 1
+      values = source_plate.wells.map { |w| w.aliquots.first.project_id }.uniq
+      raise 'There is more than one project in the source plate which is not allowed for pooling' unless values.empty?
+
       values.first
     end
 
