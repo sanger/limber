@@ -8,13 +8,20 @@ FactoryBot.define do
     skip_create
     
     sequence(:id, &:to_s)
+
+    transient do
+      component_samples_count { 0 }
+    end
+
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
+    component_samples { create_list :v2_sample, component_samples_count }
     control { false }
     control_type { nil }
 
     after(:build) do |sample, evaluator|
       sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }
+      sample._cached_relationship(:component_samples) { evaluator.component_samples }
     end
   end
 

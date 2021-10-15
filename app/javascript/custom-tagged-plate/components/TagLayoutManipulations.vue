@@ -3,6 +3,7 @@
     <lb-tag-groups-lookup
       :api="api"
       resource-name="tag_group"
+      :filter="tagGroupLookupFilter()"
       @change="tagGroupsLookupUpdated($event)"
     />
     <b-row class="form-group form-row">
@@ -147,6 +148,14 @@ export default {
     'lb-plate-scan': LabwareScan
   },
   mixins: [TagLayout],
+  props: {
+    tagGroupAdapterTypeNameFilter: {
+      // filters list of tag groups if present
+      type: String,
+      required: false,
+      default: null
+    }
+  },
   data () {
     return {
       tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
@@ -233,6 +242,12 @@ export default {
         }
       }
       this.updateTagParams(null)
+    },
+    tagGroupLookupFilter() {
+      if(this.tagGroupAdapterTypeNameFilter) {
+        return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
+      }
+      return {}
     }
   }
 }

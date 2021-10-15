@@ -26,4 +26,16 @@ module ExportsHelper
       end
     end
   end
+  
+  #
+  # Returns the sum total of all samples within a well, this includes breaking
+  # down compound samples into the sum of their components
+  #
+  # @param well [Sequencescape::Api::V2::Well] The well to count samples in
+  #
+  # @return [Integer] The total number of component samples with it well
+  #
+  def component_samples_count_for(well)
+    well.aliquots.sum(&:component_samples_count)
+  end
 end

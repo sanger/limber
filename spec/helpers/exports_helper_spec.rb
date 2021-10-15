@@ -92,4 +92,34 @@ RSpec.describe ExportsHelper do
       end
     end
   end
+
+  describe '#component_samples_count_for' do
+    subject { component_samples_count_for(well) }
+
+    context 'when a basic single sample well' do
+      let(:well) { create :v2_well }
+      it { is_expected.to eq 1 }
+    end
+
+    context 'when a basic multi sample well' do
+      let(:well) { create :v2_well, aliquot_count: 3 }
+      it { is_expected.to eq 3 }
+    end
+
+    context 'a well with a compound sample' do
+      let(:aliquot) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample_count } }
+      let(:well) { create(:v2_well, aliquots: [aliquot]) }
+      let(:component_sample_count) { 3 }
+      it { is_expected.to eq component_sample_count }
+    end
+
+    context 'a well with multiple compound samples' do
+      let(:aliquot1) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample1_count } }
+      let(:aliquot2) { create :v2_aliquot, sample_attributes: { component_samples_count: component_sample2_count } }
+      let(:well) { create(:v2_well, aliquots: [aliquot1, aliquot2]) }
+      let(:component_sample1_count) { 3 }
+      let(:component_sample2_count) { 2 }
+      it { is_expected.to eq(component_sample1_count + component_sample2_count) }
+    end
+  end
 end

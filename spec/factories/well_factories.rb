@@ -239,6 +239,7 @@ FactoryBot.define do
       well_location { 'A1' }
       study_id { 1 }
       project_id { 1 }
+      sample_attributes { {} }
     end
 
     sequence(:id, &:to_s)
@@ -247,7 +248,7 @@ FactoryBot.define do
     tag2_oligo { nil }
     tag2_index { nil }
     suboptimal { false }
-    sample { create :v2_sample }
+    sample { create :v2_sample, sample_attributes }
     request { outer_request }
 
     after(:build) do |aliquot, evaluator|

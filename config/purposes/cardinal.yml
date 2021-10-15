@@ -103,6 +103,8 @@ LCA Connect PCRXP:
   # TODO: DPL-069 Research is there a quanthub story here to get connect concentrations into SS?
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 1
+  :tag_group_adapter_type_name_filter: 'Chromium'
   :file_links:
     - name: "Download tagging CSV for Custom Pooling"
       id: cardinal_tagging_csv_for_custom_pooling
