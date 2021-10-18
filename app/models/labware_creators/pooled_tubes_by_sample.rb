@@ -3,147 +3,70 @@
 require_dependency 'labware_creators/base'
 
 module LabwareCreators
-  # ...
-  class PooledTubesBySample < Base
+  # Pools from a plate into tubes, grouping together wells that contain the same sample
+  class PooledTubesBySample < PooledTubesBase
     include SupportParent::PlateOnly
 
     # loop through source wells, building hash by grouping based on sample uuid
     # each hash of samples will go into one destination tube
     # set parameter on transfer request collection (if that's where it is) to consolidate identical aliquots
 
-    attr_reader :tube_transfer, :child_stock_tubes
+    # QUESTIONS:
+    #
+    # Should the request hash contain the submission uuid? -> Don't see why not, since we do have one.
+    #
+    # Should we pre-filter wells, based on whether they have been failed, or based on what request they have?
+    #   -> Probably OK without - robot will be hard-coded to do a pattern of picking...
+    #   -> Should check this general strategy with team, as labware creators are inconsistent.
+    #
+    # Does it matter we're inheriting include SupportParent::TaggedPlateOnly ?
+    #
+    # Should we set 'outer_request' in the request_hash? Implications of setting this, or submission, neither, or both?
+    #
 
-    def create_labware!
-      @child_stock_tubes = create_child_stock_tubes
-      perform_transfers
-      true
-    end
+    # TODO:
+    #
+    # Get 'merge_equivalent_aliquots' functionality working
+    #
+    #
 
-    def perform_transfers
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes
-      )
-    end
-
-    def create_child_stock_tubes
-      api.specific_tube_creation.create!(
-        user: user_uuid,
-        parent: parent_uuid,
-        child_purposes: [purpose_uuid] * wells_with_matching_samples.count,
-        tube_attributes: tube_attributes
-      ).children.index_by(&:name)
-    end
-
-    def transfer_request_attributes
-      index = 0
-      request_hashes = []
-      # for each sample
-      wells_with_matching_samples.each do |sample_uuid, well_filter_hashes|
-        puts "*** sample_uuid ***"
-        puts sample_uuid
-
-        well_filter_hashes.each do |well_filter_hash|
-          well_filter_hash.each do |well, additional_parameters|
-            puts "*** well ***"
-            puts well
-            puts "*** additional_parameters ***"
-            puts additional_parameters
-
-            # TODO child tube nil here atm
-            request_hashes << request_hash(well, @child_stock_tubes[index], additional_parameters)
-          end
-        end
-        index += 1
-      end
-      request_hashes
-    end
-
-    # returns hash of samples to wells that contain that sample, in the form:
-    # sample uuid => [ well filter info ]
-    def pools_hash(filtered_wells)
-      output = {}
-      filtered_wells.each do |well, additional_parameters|
-        # TODO: error if well has >1 sample
-        next if well.empty?
-        # binding.pry
-
-        sample_uuid = well.aliquots.first.sample.uuid
-        if output.key? sample_uuid
-          output[sample_uuid] << {well => additional_parameters}
-        else
-          output[sample_uuid] = [{well => additional_parameters}]
-        end
-      end
-      puts "*** pools_hash output ***"
-      puts output
-      output
-    end
-
-    # output the transfer requests that will be sent to Sequencescape
-    # to control the creation of aliquots & samples in the new labwares
-    def request_hash(source_well, child_tube, additional_parameters)
-      # binding.pry
-      {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_tube.receptacle.uuid,
-        'merge_equivalent_aliquots' => true
-      }.merge(additional_parameters)
-    end
-
-    def parent
-      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
-    end
-
-    def labware_wells
-      parent.wells
+    def pools
+      @pools ||= determine_pools
     end
 
     private
 
-    def well_filter
-      @well_filter ||= WellFilter.new(creator: self)
-    end
+    #
+    # Builds pools hash, based on which wells contain the same sample.
+    # Uses the sample uuid as the key for the pool.
+    #
+    # @return [Hash] eg. { "a1aa0101-16e1-11ec-80e2-acde48001121" => ["A1", "B1"] }
+    # where 'A1' and 'B1' are the coordinates of the source wells to go into that pool
+    #
+    def determine_pools
+      pools = Hash.new { |hash, pool_name| hash[pool_name] = [] }
+      parent.wells.each do |well|
+        # TODO: error if well has >1 sample
+        next if well.aliquots.size == 0
 
-    def wells_with_matching_samples
-      @wells_with_matching_samples ||= pools_hash(well_filter.filtered)
-    end
-
-    def tube_attributes
-      puts "*** wells_with_matching_samples ***"
-      puts wells_with_matching_samples
-      wells_with_matching_samples.values.map do |sample_well_details|
-        # { name: name_for(sample_well_details) }
-        puts "*** sample_well_details ***"
-        puts sample_well_details
-        { name: name_for(sample_well_details) }
+        sample_uuid = well.aliquots.first.sample.uuid
+        pools[sample_uuid] << well.location
       end
+      pools
     end
 
-    def name_for(sample_well_details)
-      names = []
-      sample_well_details.each do |well_hash|
-        names << well_hash.keys[0].position["name"]
-      end
-      puts "name_for names = #{names.join(',')}"
-      "#{stock_plate_barcode} #{names.join(',')}"
-    end
-
-    def stock_plate_barcode
-      legacy_barcode = "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
-      metadata_stock_barcode || legacy_barcode
-    end
-
-    def metadata_stock_barcode
-      @metadata_stock_barcode ||= parent_metadata.fetch('stock_barcode', nil)
-    end
-
-    def parent_metadata
-      if parent.is_a? Limber::Plate
-        LabwareMetadata.new(api: api, labware: parent).metadata
-      else
-        LabwareMetadata.new(api: api, barcode: parent.barcode.machine).metadata
-      end || {}
+    # Don't set submission id for now, as the wrong thing is coming from PooledTubesBase
+    # Set merge_equivalent_aliquots
+    #
+    # merge_equivalent_aliquots not working yet as expected - get following error with or without -
+    # Cannot create the next piece of labware:
+    # DN9000378G:B1 contains aliquots which can't be transferred due to tag clash
+    def request_hash(source, target, _submission)
+      {
+        'source_asset' => source,
+        'target_asset' => target,
+        'merge_equivalent_aliquots' => true
+      }
     end
   end
 end
