@@ -34,7 +34,10 @@ module LabwareCreators # rubocop:todo Style/Documentation
     #
     # Extracts pool information from the uploaded csv file
     #
-    # @return [Hash] eg. { '1' => { 'wells' => ['A1','B1','C1'] } }
+    # @return [Hash] { "1" => [ "A1", "B1" ] }
+    # where "1" is just an identifier for the pool
+    #   - it comes from the 'destination_well' column in the file
+    # and 'A1' and 'B1' are the coordiates of the source wells to go into that pool
     #
     def pools
       @pools ||= generate_pools_hash
