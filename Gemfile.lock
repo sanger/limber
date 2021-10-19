@@ -25,6 +25,15 @@ GIT
   specs:
     sanger_barcode_format (0.2.0)
 
+PATH
+  remote: /Users/emr/projects/sequencescape-client-api
+  specs:
+    sequencescape-client-api (0.6.1)
+      activemodel (>= 5.0.0)
+      activesupport (>= 5.0.0)
+      i18n
+      multi_json
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -306,11 +315,6 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    sequencescape-client-api (0.6.1)
-      activemodel (>= 5.0.0)
-      activesupport (>= 5.0.0)
-      i18n
-      multi_json
     shellany (0.0.1)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -395,7 +399,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api (~> 0.6.1)
+  sequencescape-client-api!
   simplecov
   sprint_client
   state_machines

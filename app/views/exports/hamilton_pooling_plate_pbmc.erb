@@ -12,7 +12,8 @@
 <%
   # Prepare the fields determined from the transfer requests
   transfer_request_data = []
-  each_source_metadata_for_plate_with_compound_samples(@plate) do |src_barcode, src_location, dest_well|
+  #each_source_metadata_for_plate_with_compound_samples
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
     # Convert cells/ml into µl / 20,000 cells
     # Note: 20,000 / (cells/ml) * 1,000 is the same as 20,000,000 / (cells/ml)
     src_well = @ancestor_plate.wells_in_columns.find { |well| well.location == src_location }

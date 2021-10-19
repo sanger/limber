@@ -8,12 +8,12 @@ Cardinal Entry B:
     LCA Blood Vac: LCA Blood Bank
 
 # Cardinal samples compound pipeline
-CardinalCompound:
-  filters:
-    request_type_key: limber_cardinal_sample_compound
-  relationships:
-    LCA Blood Array: LCA PBMC
-    LCA PBMC: LCA PBMC Pools
+# CardinalCompound:
+#   filters:
+#     request_type_key: limber_cardinal_sample_compound
+#   relationships:
+#     LCA Blood Array: LCA PBMC
+#     LCA PBMC: LCA PBMC Pools
 
 # Cardinal library preparation pipeline
 Cardinal:
@@ -22,6 +22,8 @@ Cardinal:
     library_type: Cardinal
   library_pass: LCA Connect PCRXP
   relationships:
+    LCA Blood Array: LCA PBMC
+    LCA PBMC: LCA PBMC Pools
     LCA PBMC Pools: LCA 10X cDNA
     LCA 10X cDNA: LCA Connect PCRXP
     LCA Connect PCRXP: LCA Custom Pool

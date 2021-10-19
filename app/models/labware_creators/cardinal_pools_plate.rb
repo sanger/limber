@@ -35,6 +35,10 @@ module LabwareCreators
       source_plate.wells.select { |well| well.state == 'passed' }
     end
 
+    def pools
+      @pools ||= build_pools
+    end
+
     # Returns: the number of pools required for a given passed samples count
     # this config is appended in the Cardinal initialiser
     # e.g. 95,12,12,12,12,12,12,12,11 ==> 8
@@ -47,14 +51,11 @@ module LabwareCreators
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
 
-      # Ensure this is the only place build_pools is called
-      @pools ||= build_pools
-
       # A "compound" sample should be created for each "pool"
       ###
       # Check how to create groups of requests
       ###
-      @pools.each_with_index do |pool, index|
+      pools.each_with_index do |pool, index|
         # For each pool, get the destination plate well
         # This assumes pools are ordered?
         destination_well_location = dest_coordinates[index]
@@ -74,7 +75,7 @@ module LabwareCreators
         # For each pool, associate the component samples with the copound sample
         # attach_component_samples_to_compound_sample(compound_sample, destination_well_location, pool)
       end
-      create_submission_for_dest_plate(dest_plate)
+      #create_submission_for_dest_plate(dest_plate)
     end
 
     def sample_compound_component_data(samples_and_wells, target_well)
@@ -100,8 +101,20 @@ module LabwareCreators
         samples_and_wells = samples_and_wells_from_pool(pool)
         compound_sample.update(component_samples: samples_and_wells.pluck(:sample))
         compound_sample.save
+
         compound_sample.sample_compound_component_data = sample_compound_component_data(samples_and_wells, target_well)
         compound_sample.save
+
+        api.transfer_request_collection.create!(
+          user: user_uuid,
+          transfer_requests: samples_and_wells.pluck(:well).map do |well|
+            { 
+              source_asset: well.uuid, 
+              target_asset: target_well.uuid,
+              dont_transfer_anything: true
+            }
+          end
+        )  
       end
     end
 
@@ -124,14 +137,14 @@ module LabwareCreators
 
     def default_study_id
       values = source_plate.wells.map { |w| w.aliquots.first.study_id }.uniq
-      raise 'There is more than one study in the source plate which is not allowed for pooling' unless values.empty?
+      raise 'There should only be one study in the source plate for pooling' unless (values.count == 1)
 
       values.first
     end
 
     def default_project_id
       values = source_plate.wells.map { |w| w.aliquots.first.project_id }.uniq
-      raise 'There is more than one project in the source plate which is not allowed for pooling' unless values.empty?
+      raise 'There should only be one project in the source plate for pooling' unless (values.count== 1)
 
       values.first
     end
@@ -167,7 +180,7 @@ module LabwareCreators
     # "A11"=>{:dest_locn=>"A1"}, "G3"=>{:dest_locn=>"A1"}, "C5"=>{:dest_locn=>"A1"}}
     # Returns ["A1"]
     def dest_coordinates_filled_with_a_compound_sample
-      transfer_hash.map { |_k, v| v[:dest_locn] }.uniq
+      transfer_hash(pools).map { |_k, v| v[:dest_locn] }.uniq
     end
 
     # Returns a list of wells which contain a compound sample
@@ -183,12 +196,11 @@ module LabwareCreators
     #   "G3"=>{:dest_locn=>"A1"},
     #   "C5"=>{:dest_locn=>"A1"},
     # }
-    def transfer_hash
+    def transfer_hash(pools)
       result = {}
 
-      # Build only once, as this is called in a loop
-      @pools ||= build_pools
-      @pools.each_with_index do |pool, index|
+      # Build only once, as this is called in a loop      
+      pools.each_with_index do |pool, index|
         destination_well_location = dest_coordinates[index]
         pool.each do |well|
           source_position = well.location
