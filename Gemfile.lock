@@ -26,9 +26,9 @@ GIT
     sanger_barcode_format (0.2.0)
 
 PATH
-  remote: /Users/emr/projects/sequencescape-client-api
+  remote: /Users/hc6/psd/gems/sequencescape-client-api
   specs:
-    sequencescape-client-api (0.6.1)
+    sequencescape-client-api (0.7.1)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
       i18n
@@ -399,7 +399,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api!
+  sequencescape-client-api (= 0.7.1)!
   simplecov
   sprint_client
   state_machines

@@ -50,6 +50,41 @@ module LabwareCreators
     # Send the transfer request to SS
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
+      api.transfer_request_collection.create!(
+        user: user_uuid,
+        transfer_requests: transfer_request_attributes(dest_plate)
+      )
+      true
+    end
+
+    # returns: a list of objects, mapping source well to destination well
+    # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
+    def transfer_request_attributes(dest_plate)
+      passed_parent_wells.map do |source_well|
+        request_hash(source_well, dest_plate)
+      end
+    end
+
+    def request_hash(source_well, dest_plate,)
+      {
+        'source_asset' => source_well.uuid,
+        'target_asset' => dest_plate.wells.detect do |dest_well|
+          dest_well.location == transfer_hash[source_well.location][:dest_locn]
+        end&.uuid,
+        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
+      }
+    end
+
+    def tag_depth(source_well)
+      @pools.each do |pool|
+        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
+        # index + 1 incase of 0th index
+      end
+    end
+
+    # Send the transfer request to SS
+    def _transfer_material_from_parent!(dest_uuid)
+      dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
 
       # A "compound" sample should be created for each "pool"
       ###
@@ -78,19 +113,19 @@ module LabwareCreators
       #create_submission_for_dest_plate(dest_plate)
     end
 
-    def sample_compound_component_data(samples_and_wells, target_well)
+    def _sample_compound_component_data(samples_and_wells, target_well)
       samples_and_wells.map do |obj|
         { sample_id: obj[:sample].id, asset_id: obj[:well].id, target_asset_id: target_well.id }
       end
     end
 
-    def samples_and_wells_from_pool(pool)
+    def _samples_and_wells_from_pool(pool)
       pool.map do |w|
         { sample: w.aliquots.to_a[0].sample, well: w }
       end
     end
 
-    def create_sample(pool, target_well)
+    def _create_sample(pool, target_well)
       # TODO: Check compound sample is created in MLWH db with component samples
       Sequencescape::Api::V2::Sample.create(
         name: "CompoundSample_#{target_well.name.tr(':', '_')}",
@@ -108,24 +143,24 @@ module LabwareCreators
         api.transfer_request_collection.create!(
           user: user_uuid,
           transfer_requests: samples_and_wells.pluck(:well).map do |well|
-            { 
-              source_asset: well.uuid, 
+            {
+              source_asset: well.uuid,
               target_asset: target_well.uuid,
               dont_transfer_anything: true
             }
           end
-        )  
+        )
       end
     end
 
     # Returns: An instance of Sequencescape::Api::V2::Well
-    def get_well_for_plate_location(plate, well_location)
+    def _get_well_for_plate_location(plate, well_location)
       plate.wells.detect do |well|
         well.location == well_location
       end
     end
 
-    def add_sample_to_well_and_update_aliquot(sample, target_well)
+    def _add_sample_to_well_and_update_aliquot(sample, target_well)
       # This creates a aliquot with default values
       target_well.update(samples: [sample])
 
@@ -135,21 +170,21 @@ module LabwareCreators
       aliquot.update(library_type: 'standard', study_id: default_study_id, project_id: default_project_id)
     end
 
-    def default_study_id
+    def _default_study_id
       values = source_plate.wells.map { |w| w.aliquots.first.study_id }.uniq
       raise 'There should only be one study in the source plate for pooling' unless (values.count == 1)
 
       values.first
     end
 
-    def default_project_id
+    def _default_project_id
       values = source_plate.wells.map { |w| w.aliquots.first.project_id }.uniq
       raise 'There should only be one project in the source plate for pooling' unless (values.count== 1)
 
       values.first
     end
 
-    def create_submission_for_dest_plate(dest_plate)
+    def _create_submission_for_dest_plate(dest_plate)
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.
@@ -179,12 +214,12 @@ module LabwareCreators
 
     # "A11"=>{:dest_locn=>"A1"}, "G3"=>{:dest_locn=>"A1"}, "C5"=>{:dest_locn=>"A1"}}
     # Returns ["A1"]
-    def dest_coordinates_filled_with_a_compound_sample
+    def _dest_coordinates_filled_with_a_compound_sample
       transfer_hash(pools).map { |_k, v| v[:dest_locn] }.uniq
     end
 
     # Returns a list of wells which contain a compound sample
-    def dest_wells_filled_with_a_compound_sample(dest_plate)
+    def _dest_wells_filled_with_a_compound_sample(dest_plate)
       dest_plate.wells.filter { |w| dest_coordinates_filled_with_a_compound_sample.include?(w.location) }
     end
 
@@ -199,7 +234,7 @@ module LabwareCreators
     def transfer_hash(pools)
       result = {}
 
-      # Build only once, as this is called in a loop      
+      # Build only once, as this is called in a loop
       pools.each_with_index do |pool, index|
         destination_well_location = dest_coordinates[index]
         pool.each do |well|
