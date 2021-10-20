@@ -153,7 +153,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesBySample}
 
-  **This labware creator is unused**
+  Used directly in 1 purposes:
+  LCA Bank Stock
 
 {LabwareCreators::PooledTubesBySample View class documentation}
 

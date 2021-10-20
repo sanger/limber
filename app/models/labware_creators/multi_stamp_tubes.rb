@@ -34,6 +34,12 @@ module LabwareCreators
     private
 
     def create_labware!
+      create_submission_from_parent_tubes
+
+      # TODO: Hack - change this to poll for status or something
+      puts "*** Waiting for it to build ***"
+      sleep(10)
+
       plate_creation = api.pooled_plate_creation.create!(
         parents: parent_uuids,
         child_purpose: purpose_uuid,
@@ -44,8 +50,6 @@ module LabwareCreators
       child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
 
       transfer_material_from_parent!(child_v2)
-
-      create_submission_from_child_plate(child_v2)
 
       yield(@child) if block_given?
       true
@@ -70,15 +74,18 @@ module LabwareCreators
     end
 
     def request_hash(transfer, child_plate)
+      tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
+
       {
         'source_asset' => transfer[:source_asset],
         'target_asset' => child_plate.wells.detect do |child_well|
                             child_well.location == transfer.dig(:new_target, :location)
-                          end&.uuid
+                          end&.uuid,
+        'outer_request' => tube.receptacle.requests_as_source.first.uuid
       }
     end
 
-    def create_submission_from_child_plate(child_plate)
+    def create_submission_from_parent_tubes
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.
@@ -89,9 +96,8 @@ module LabwareCreators
 
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
-        labware_barcode: child_plate.human_barcode,
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
+        asset_groups: [{ assets: parent_uuids, autodetect_studies_projects: true }],
         api: api,
         user: user_uuid
       }

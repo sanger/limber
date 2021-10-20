@@ -26,7 +26,6 @@ LCA Blood Array:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  :presenter_class: Presenters::SubmissionPlatePresenter
   :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal library prep:
@@ -122,7 +121,6 @@ LCA Blood Bank:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  :presenter_class: Presenters::SubmissionPlatePresenter
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:

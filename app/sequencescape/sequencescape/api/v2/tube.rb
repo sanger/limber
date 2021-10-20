@@ -15,6 +15,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
+  has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
 
   has_many :aliquots
   has_many :direct_submissions
@@ -41,6 +42,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   end
 
   # Dummied out for the moment. But no real reason not to add it to the API.
+  # This is accessed through the Receptacle
+  # TODO: allow this method and delegate it?
   def requests_as_source
     []
   end

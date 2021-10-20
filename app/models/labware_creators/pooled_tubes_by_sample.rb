@@ -22,7 +22,9 @@ module LabwareCreators
     # Does it matter we're inheriting include SupportParent::TaggedPlateOnly ?
     #
     # Should we set 'outer_request' in the request_hash? Implications of setting this, or submission, neither, or both?
+    # Sequencescape transfer_request.rb says setting outer_request is preferable
     #
+    # Are these pool identifiers recorded in the db? SS transfer_request.rb mentions 'the pool_id attribute on well'...?
 
     # TODO:
     #
