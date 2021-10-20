@@ -16,6 +16,7 @@ FactoryBot.define do
     component_samples { create_list :v2_sample, component_samples_count }
     control { false }
     control_type { nil }
+    manifest_supplier { 'supplier1' }
 
     after(:build) do |sample, evaluator|
       sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }

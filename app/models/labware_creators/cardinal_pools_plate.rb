@@ -102,7 +102,7 @@ module LabwareCreators
     #   "G3"=>{:dest_locn=>"A1"},
     #   "C5"=>{:dest_locn=>"A1"},
     # }
-    def transfer_hash(pools)
+    def transfer_hash
       result = {}
 
       # Build only once, as this is called in a loop
@@ -139,7 +139,7 @@ module LabwareCreators
     # Get passed parent wells, randomise, then group by sample supplier
     # e.g. { 0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23'] }
     def wells_grouped_by_supplier
-      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
+      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.manifest_supplier }
     end
   end
 end

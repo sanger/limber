@@ -31,11 +31,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     plate1.wells[0..3].map { |well| well['state'] = 'failed' }
     plate1.wells[4..95].map { |well| well['state'] = 'passed' }
     supplier_group1 = plate1.wells[0..9]
-    supplier_group1.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 1' }
+    supplier_group1.map { |well| well.aliquots.first.sample[:manifest_supplier] = 'blood location 1' }
     supplier_group2 = plate1.wells[9..49]
-    supplier_group2.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 2' }
+    supplier_group2.map { |well| well.aliquots.first.sample[:manifest_supplier] = 'blood location 2' }
     supplier_group3 = plate1.wells[49..95]
-    supplier_group3.map { |well| well.aliquots.first.sample.sample_metadata[:supplier_name] = 'blood location 3' }
+    supplier_group3.map { |well| well.aliquots.first.sample[:manifest_supplier] = 'blood location 3' }
     plate1
   end
 
@@ -109,70 +109,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
-  context '#transfer_material_from_parent!' do
-    it 'calls the expected helper methods' do
-      expect(subject).to receive(:create_sample).exactly(8).times.and_return true
-      expect(subject).to receive(:add_sample_to_well_and_update_aliquot).exactly(8).times.and_return true
-      expect(subject).to receive(:create_submission_for_dest_plate).once.with(child_plate).and_return true
-      stub_v2_plate(plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
-      subject.transfer_material_from_parent!(child_uuid)
-    end
-  end
-
-  context '#create_sample' do
-    let(:target_well)         { child_plate.wells[0] }
-    let(:component_well1)     { plate.wells[0] }
-    let(:component_well2)     { plate.wells[1] }
-    let(:component_samples)   { [component_well1.aliquots.to_a[0].sample, component_well2.aliquots.to_a[0].sample] }
-    let(:pool)                { [component_well1, component_well2] }
-    let(:uniq_identifier)     { "CompoundSample_#{target_well.name.tr(':', '_')}" }
-    let(:sample)              { create(:v2_sample, name: uniq_identifier) }
-
-    it 'creates the compound sample with component samples' do
-      expect(Sequencescape::Api::V2::Sample).to receive(:create).with({ name: uniq_identifier, sanger_sample_id: uniq_identifier }).and_return(sample)
-      expect_any_instance_of(Sequencescape::Api::V2::Sample).to receive(:save).exactly(pool.count + 1).times.and_return(true)
-      subject.create_sample(pool, target_well)
-    end
-  end
-
   context '#get_well_for_plate_location' do
     it 'returns the well for a given plate and location' do
       expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
-    end
-  end
-
-  context '#add_sample_to_well_and_update_aliquot' do
-    let(:sample)           { create(:v2_sample) }
-    let(:well)             { create(:v2_well) }
-
-    before do
-      allow(subject).to receive(:get_well_for_plate_location).and_return(well)
-    end
-
-    it 'updates the well and the aliquot' do
-      expect_any_instance_of(Sequencescape::Api::V2::Well).to receive(:update_attributes).and_return(true)
-      expect_any_instance_of(Sequencescape::Api::V2::Aliquot).to receive(:update_attributes).with({ library_type: 'standard', study_id: 1,
-                                                                                                    project_id: 1 }).and_return(true)
-      allow(subject).to receive(:default_study_id).and_return(1)
-      allow(subject).to receive(:default_project_id).and_return(1)
-      subject.add_sample_to_well_and_update_aliquot(sample, well)
-    end
-  end
-
-  context '#create_submission_for_dest_plate' do
-    before do
-      stub_v2_plate(plate, stub_search: false)
-
-      purpose_config = Hashie::Mash.new({ submission_options: { 'Cardinal library prep': { template_name: 'example', request_options: { option: 1 } } } })
-      allow(subject).to receive(:purpose_config).and_return purpose_config
-      Settings.submission_templates = { example: SecureRandom.uuid }
-      allow_any_instance_of(SequencescapeSubmission).to receive(:save).and_return true
-    end
-
-    it 'creates a submission request' do
-      result = subject.create_submission_for_dest_plate(child_plate)
-      expect(result).to eq true
     end
   end
 
@@ -180,34 +119,6 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     it 'returns a list of A1 -> H1' do
       expect(subject.dest_coordinates).to include('A1', 'H1')
       expect(subject.dest_coordinates.count).to eq(8)
-    end
-  end
-
-  context '#dest_coordinates_filled_with_a_compound_sample' do
-    before do
-      transfer_hash = {
-        'A4' => { dest_locn: 'A1' },
-        'A11' => { dest_locn: 'A1' },
-        'C5' => { dest_locn: 'B1' }
-      }
-
-      allow(subject).to receive(:transfer_hash).and_return(transfer_hash)
-    end
-
-    it 'returns a list of coordinates that contain a sample' do
-      expect(subject.dest_coordinates_filled_with_a_compound_sample.count).to eq(2)
-      expect(subject.dest_coordinates_filled_with_a_compound_sample).to include('A1', 'B1')
-    end
-  end
-
-  context '#dest_wells_filled_with_a_compound_sample' do
-    before do
-      allow(subject).to receive(:dest_coordinates_filled_with_a_compound_sample).and_return(%w[A1 B1])
-    end
-
-    it 'returns a list of coordinates that contain a sample' do
-      expect(subject.dest_wells_filled_with_a_compound_sample(child_plate).count).to eq(2)
-      expect(subject.dest_wells_filled_with_a_compound_sample(child_plate)).to eq [child_plate.wells[0], child_plate.wells[1]]
     end
   end
 
@@ -294,7 +205,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     context 'when there are 4 suppliers, but only 3 suppliers contain passed samples' do
       it 'returns whats expected' do
         supplier_group4 = plate.wells[0..3] # contains only failed samples
-        supplier_group4.map { |well| well.aliquots.first.sample[:supplier] = 'blood location 4' }
+        supplier_group4.map { |well| well.aliquots.first.sample[:manifest_supplier] = 'blood location 4' }
         expect(subject.wells_grouped_by_supplier.count).to eq(3)
         expect(subject.wells_grouped_by_supplier.keys).to match_array ['blood location 3', 'blood location 2', 'blood location 1']
         expect(subject.wells_grouped_by_supplier['blood location 4']).to be_nil
