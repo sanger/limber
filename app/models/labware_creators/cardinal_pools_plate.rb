@@ -77,7 +77,7 @@ module LabwareCreators
       {
         'source_asset' => source_well.uuid,
         'target_asset' => get_well_for_plate_location(dest_plate, source_location)&.uuid,
-        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
+        aliquot_attributes: { 'tag_depth' => tag_depth(source_well) }
       }
     end
 
