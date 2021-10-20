@@ -65,7 +65,7 @@ module LabwareCreators
       end
     end
 
-    def request_hash(source_well, dest_plate,)
+    def request_hash(source_well, dest_plate)
       {
         'source_asset' => source_well.uuid,
         'target_asset' => dest_plate.wells.detect do |dest_well|
