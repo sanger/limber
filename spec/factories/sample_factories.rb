@@ -7,8 +7,6 @@ FactoryBot.define do
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
 
-    sequence(:id, &:to_s)
-
     transient do
       component_samples_count { 0 }
     end
@@ -41,6 +39,5 @@ FactoryBot.define do
   factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do
     skip_create
     sequence(:supplier_name) { |i| "supplier name #{i}" }
-    supplier { 'supplier1' }
   end
 end

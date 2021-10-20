@@ -65,162 +65,33 @@ module LabwareCreators
       end
     end
 
-    def request_hash(source_well, dest_plate)
-      {
-        'source_asset' => source_well.uuid,
-        'target_asset' => dest_plate.wells.detect do |dest_well|
-          dest_well.location == transfer_hash[source_well.location][:dest_locn]
-        end&.uuid,
-        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
-      }
-    end
-
-    def tag_depth(source_well)
-      @pools.each do |pool|
-        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
-        # index + 1 incase of 0th index
-      end
-    end
-
-    # Send the transfer request to SS
-    def _transfer_material_from_parent!(dest_uuid)
-      dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-
-      # A "compound" sample should be created for each "pool"
-      ###
-      # Check how to create groups of requests
-      ###
-      pools.each_with_index do |pool, index|
-        # For each pool, get the destination plate well
-        # This assumes pools are ordered?
-        destination_well_location = dest_coordinates[index]
-
-        target_well = get_well_for_plate_location(dest_plate, destination_well_location)
-
-        # Create the "compound" sample in SS
-        # Check sample is created in the MLWH samples table
-        # TODO: Check sample is created in the MLWH samples table
-        compound_sample = create_sample(pool, target_well)
-
-        # Update the well with the compound sample
-        # This adds the compount sample to the destination plate well,
-        # This creates the aliquot on the compound sample
-        add_sample_to_well_and_update_aliquot(compound_sample, target_well)
-
-        # For each pool, associate the component samples with the copound sample
-        # attach_component_samples_to_compound_sample(compound_sample, destination_well_location, pool)
-      end
-      #create_submission_for_dest_plate(dest_plate)
-    end
-
-    def _sample_compound_component_data(samples_and_wells, target_well)
-      samples_and_wells.map do |obj|
-        { sample_id: obj[:sample].id, asset_id: obj[:well].id, target_asset_id: target_well.id }
-      end
-    end
-
-    def _samples_and_wells_from_pool(pool)
-      pool.map do |w|
-        { sample: w.aliquots.to_a[0].sample, well: w }
-      end
-    end
-
-    def _create_sample(pool, target_well)
-      # TODO: Check compound sample is created in MLWH db with component samples
-      Sequencescape::Api::V2::Sample.create(
-        name: "CompoundSample_#{target_well.name.tr(':', '_')}",
-        sanger_sample_id: "CompoundSample_#{target_well.name.tr(':', '_')}"
-      ).tap do |compound_sample|
-        # Associate the component samples to the compound sample
-        # Inserts a record in SS sample_links table, and MLWH sample_links table
-        samples_and_wells = samples_and_wells_from_pool(pool)
-        compound_sample.update(component_samples: samples_and_wells.pluck(:sample))
-        compound_sample.save
-
-        compound_sample.sample_compound_component_data = sample_compound_component_data(samples_and_wells, target_well)
-        compound_sample.save
-
-        api.transfer_request_collection.create!(
-          user: user_uuid,
-          transfer_requests: samples_and_wells.pluck(:well).map do |well|
-            {
-              source_asset: well.uuid,
-              target_asset: target_well.uuid,
-              dont_transfer_anything: true
-            }
-          end
-        )
-      end
-    end
-
     # Returns: An instance of Sequencescape::Api::V2::Well
-    def _get_well_for_plate_location(plate, well_location)
+    def get_well_for_plate_location(plate, well_location)
       plate.wells.detect do |well|
         well.location == well_location
       end
     end
 
-    def _add_sample_to_well_and_update_aliquot(sample, target_well)
-      # This creates a aliquot with default values
-      target_well.update(samples: [sample])
-
-      # We then need to update the aliquots study, project and library_type
-      # TODO: Move values into config, not hard coded, ENV var?
-      aliquot = target_well.aliquots[0]
-      aliquot.update(library_type: 'standard', study_id: default_study_id, project_id: default_project_id)
-    end
-
-    def _default_study_id
-      values = source_plate.wells.map { |w| w.aliquots.first.study_id }.uniq
-      raise 'There should only be one study in the source plate for pooling' unless (values.count == 1)
-
-      values.first
-    end
-
-    def _default_project_id
-      values = source_plate.wells.map { |w| w.aliquots.first.project_id }.uniq
-      raise 'There should only be one project in the source plate for pooling' unless (values.count== 1)
-
-      values.first
-    end
-
-    def _create_submission_for_dest_plate(dest_plate)
-      submission_options_from_config = purpose_config.submission_options
-      # if there's more than one appropriate submission, we can't know which one to choose,
-      # so don't create one.
-      return unless submission_options_from_config.count == 1
-
-      # otherwise, create a submission with params specified in the config
-      configured_params = submission_options_from_config.values.first
-
-      sequencescape_submission_parameters = {
-        template_name: configured_params[:template_name],
-        labware_barcode: dest_plate.barcode,
-        request_options: configured_params[:request_options],
-        asset_groups: [{ assets: dest_wells_filled_with_a_compound_sample(dest_plate).pluck(:uuid), autodetect_studies_projects: true }],
-        api: api,
-        user: user_uuid
+    def request_hash(source_well, dest_plate)
+      source_location = transfer_hash[source_well.location][:dest_locn]
+      {
+        'source_asset' => source_well.uuid,
+        'target_asset' => get_well_for_plate_location(dest_plate, source_location)&.uuid,
+        'aliquot_attributes': { 'tag_depth' => tag_depth(source_well) }
       }
+    end
 
-      ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-      ss.save # TODO: check if true, handle if not
+    def tag_depth(source_well)
+      pools.each do |pool|
+        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
+        # index + 1 incase of 0th index
+      end
     end
 
     # Returns: [A1, B1, ... H1]
     # Used to assign pools to a destination well, e.g. Pool 1 > A1, Pool2 > B1
     def dest_coordinates
       ('A'..'H').to_a.map { |letter| "#{letter}1" }
-    end
-
-    # "A11"=>{:dest_locn=>"A1"}, "G3"=>{:dest_locn=>"A1"}, "C5"=>{:dest_locn=>"A1"}}
-    # Returns ["A1"]
-    def _dest_coordinates_filled_with_a_compound_sample
-      transfer_hash(pools).map { |_k, v| v[:dest_locn] }.uniq
-    end
-
-    # Returns a list of wells which contain a compound sample
-    def _dest_wells_filled_with_a_compound_sample(dest_plate)
-      dest_plate.wells.filter { |w| dest_coordinates_filled_with_a_compound_sample.include?(w.location) }
     end
 
     # Returns: an object mapping a source well location to the destination well location

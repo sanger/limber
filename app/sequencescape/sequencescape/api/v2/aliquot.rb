@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
-  # belongs_to :request
   has_one :sample
   has_one :study
   has_one :project
-  has_one :receptacle
 
   delegate :component_samples_count, to: :sample
 
