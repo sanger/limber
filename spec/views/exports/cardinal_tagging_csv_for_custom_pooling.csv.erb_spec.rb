@@ -7,7 +7,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
 
   let(:aliquot_1) { create :v2_tagged_aliquot }
   let(:aliquot_2) { create :v2_tagged_aliquot }
-  let(:aliquot_3)  { create :v2_tagged_aliquot }
+  let(:aliquot_3) { create :v2_tagged_aliquot }
   let(:well_a1) { create(:v2_tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_3]) }
   let(:well_b1) { create(:v2_tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_2]) }
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }

@@ -98,8 +98,8 @@ Presenters are responsible for showing information about a piece of labware.
 
 {include:Presenters::StandardPresenter}
 
-  Used directly in 68 purposes:
-  LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, pWGS-384 Post Shear XP, pWGS-384 AL Lib, PF Shear, PF Post Shear, PF Post Shear XP, PF-384 Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 RT-Q, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 Lib PCR pool, LBR Globin, LBR Frag cDNA, LBC BCR Dil 1, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Dil 2, LBC BCR Post PCR, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 cDNA, LHR-384 XP, LHR-384 AL Lib, LBC Aggregate, LBC Cherrypick, LCA PBMC, LCA PBMC Pools, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Dil 1, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Dil 2, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LTHR Lib PCR pool, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, scRNA cDNA-XP, scRNA End Prep, LHR PCR 1, LHR PCR 2, LHR XP, and LHR End Prep
+  Used directly in 67 purposes:
+  LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, pWGS-384 Post Shear XP, pWGS-384 AL Lib, PF Shear, PF Post Shear, PF Post Shear XP, PF-384 Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 RT-Q, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 Lib PCR pool, LBR Globin, LBR Frag cDNA, LBC BCR Dil 1, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Dil 2, LBC BCR Post PCR, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 cDNA, LHR-384 XP, LHR-384 AL Lib, LBC Aggregate, LBC Cherrypick, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Dil 1, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Dil 2, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LTHR Lib PCR pool, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, scRNA cDNA-XP, scRNA End Prep, LHR PCR 1, LHR PCR 2, LHR XP, and LHR End Prep
 
 {Presenters::StandardPresenter View class documentation}
 
@@ -200,7 +200,7 @@ Presenters are responsible for showing information about a piece of labware.
 {include:Presenters::FinalTubePresenter}
 
 Used directly in 5 purposes:
-LB Custom Pool Norm, LB Lib Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm,
+LB Custom Pool Norm, LB Lib Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
 
 {Presenters::FinalTubePresenter View class documentation}
 
@@ -210,7 +210,7 @@ LB Custom Pool Norm, LB Lib Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA
 {include:Presenters::SimpleTubePresenter}
 
 Used directly in 24 purposes:
-LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP,
+LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
 
 {Presenters::SimpleTubePresenter View class documentation}
 
@@ -229,7 +229,7 @@ LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384
 {include:Presenters::VacTubePresenter}
 
 Used directly in 1 purposes:
-LCA Blood Vac,
+LCA Blood Vac, 
 
 {Presenters::VacTubePresenter View class documentation}
 
