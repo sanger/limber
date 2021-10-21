@@ -6,7 +6,6 @@ Cardinal Entry A:
 Cardinal Entry B:
   relationships:
     LCA Blood Vac: LCA Blood Bank
-
 # Cardinal library preparation pipeline
 Cardinal:
   filters:
