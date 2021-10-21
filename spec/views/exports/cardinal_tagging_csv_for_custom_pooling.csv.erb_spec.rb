@@ -5,8 +5,8 @@ require 'spec_helper'
 RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   has_a_working_api
 
-  let(:aliquot_a1) { create :v2_tagged_aliquot, sample_attributes: { component_samples_count: 2 } }
-  let(:aliquot_b1) { create :v2_tagged_aliquot, sample_attributes: { component_samples_count: 3 } }
+  let(:aliquot_a1) { create :v2_tagged_aliquot }
+  let(:aliquot_b1) { create :v2_tagged_aliquot }
   let(:well_a1) { create(:v2_tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_a1]) }
   let(:well_b1) { create(:v2_tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_b1]) }
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }
