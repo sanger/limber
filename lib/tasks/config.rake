@@ -29,7 +29,8 @@ namespace :config do
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
 
     puts 'Fetching purposes...'
-    all_purposes = api.plate_purpose.all.index_by(&:name).merge(api.tube_purpose.all.index_by(&:name))
+    query = Sequencescape::Api::V2::Purpose.select(:uuid, :name).paginate(per_page: 100)
+    all_purposes = Sequencescape::Api::V2.merge_page_results(query).index_by(&:name)
 
     purpose_config = ConfigLoader::PurposesLoader.new.config.map do |name, options|
       PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
