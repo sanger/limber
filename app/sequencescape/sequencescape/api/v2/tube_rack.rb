@@ -5,6 +5,8 @@
 # Note: [JG] 20181003 I actually appear to be hitting the correct class
 # now, but am not sure what changed.
 class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
+  has_one :purpose
+
   property :created_at, type: :time
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode

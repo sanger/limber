@@ -4,7 +4,10 @@
 # rubocop:disable Rails/Output
 # rubocop:disable Metrics/ParameterLists
 
-class PurposeConfig # rubocop:todo Style/Documentation
+# Purpose config is used to translate the configuration options in the purposes/*.yml
+# files into the serialized versions in the config/settings/*.yml
+# It also handles the registration of new purposes within Sequencescape.
+class PurposeConfig
   attr_reader :name, :options, :store, :api
 
   class_attribute :default_state_changer, :default_options
@@ -50,7 +53,10 @@ class PurposeConfig # rubocop:todo Style/Documentation
   # Currently limber does not register its own tube racks. This is because we
   # will delegate most behaviour to the contained tube purposes
   class TubeRack < PurposeConfig
-    self.default_options = {}.freeze
+    self.default_options = {
+      default_printer_type: :tube_rack,
+      presenter_class: 'Presenters::TubeRackPresenter'
+    }.freeze
 
     def register!
       warn 'Cannot create tube racks from within limber'

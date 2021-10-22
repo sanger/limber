@@ -56,7 +56,8 @@ namespace :config do
       configuration[:printers] = {}.tap do |printers|
         printers[:plate_a] = 'g316bc'
         printers[:plate_b] = 'g311bc2'
-        printers[:tube]    = 'g311bc1'
+        printers[:tube_rack] = 'heron-bc2'
+        printers[:tube] = 'g311bc1'
         printers['limit'] = 5
         printers['default_count'] = 2
       end

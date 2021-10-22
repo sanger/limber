@@ -61,7 +61,9 @@ class SearchController < ApplicationController
   end
 
   def find_labware(barcode)
-    Sequencescape::Api::V2::Labware.where(barcode: barcode).first.tap do |labware|
+    Sequencescape::Api::V2::Labware.where(barcode: barcode)
+                                   .select(tube_racks: :uuid, plates: :uuid, tubes: :uuid)
+                                   .first.tap do |labware|
       raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
     end
   end

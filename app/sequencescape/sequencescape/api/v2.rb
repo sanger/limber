@@ -27,6 +27,10 @@ module Sequencescape::Api::V2
     Plate.includes('wells').find(uuid: uuid).first
   end
 
+  def self.tube_rack_for_presenter(query)
+    TubeRack.find(query).first
+  end
+
   def self.plate_for_completion(uuid)
     Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type')
          .find(uuid: uuid)
