@@ -14,6 +14,20 @@ describe('LabwareScan', () => {
   const goodTube = jsonCollectionFactory('tube', [{ uuid: assetUuid }])
 
 
+  const wrapperFactoryPlate = function(api = mockApi()) {
+    return mount(LabwareScan, {
+      propsData: {
+        labwareType: 'plate',
+        label: 'My Plate',
+        description: 'Scan it in',
+        api: api.devour,
+        includes: '',
+        colourIndex: 3
+      },
+      localVue
+    })
+  }
+
   const wrapperFactoryTube = function(api = mockApi()) {
     return mount(LabwareScan, {
       propsData: {
@@ -61,6 +75,18 @@ describe('LabwareScan', () => {
     expect(wrapper.find('.text-muted').text()).toEqual('Scan it in')
   })
 
+  it('renders the correct placeholder for a plate', () => {
+    const wrapper = wrapperFactoryPlate()
+
+    expect(wrapper.find('input').element.placeholder).toEqual('Scan plate')
+  })
+
+  it('renders the correct placeholder for a tube', () => {
+    const wrapper = wrapperFactoryTube()
+
+    expect(wrapper.find('input').element.placeholder).toEqual('Scan tube')
+  })
+
   it('renders disabled if the disabled prop is set true', () => {
     const wrapper = wrapperFactoryTubeDisabled()
 
@@ -68,6 +94,31 @@ describe('LabwareScan', () => {
   })
 
   it('is invalid if it can not find a plate', async () => {
+    const api = mockApi()
+    api.mockGet('plates', {
+      filter: { barcode: 'not a barcode' },
+      include: '',
+      fields: { plates: 'labware_barcode,uuid,number_of_rows,number_of_columns' }
+    }, nullTube)
+    const wrapper = wrapperFactoryPlate(api)
+
+    wrapper.find('input').setValue('not a barcode')
+    await wrapper.find('input').trigger('change')
+
+    expect(wrapper.find('.wait-plate').exists()).toBe(true)
+
+    await flushPromises()
+
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find plate')
+    expect(wrapper.emitted()).toEqual({
+      change: [
+        [{ state: 'searching', plate: null }],
+        [{ state: 'invalid', plate: undefined }]
+      ]
+    })
+  })
+
+  it('is invalid if it can not find a tube', async () => {
     const api = mockApi()
     api.mockGet('tubes', {
       filter: { barcode: 'not a barcode' },
@@ -83,7 +134,7 @@ describe('LabwareScan', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find labware')
+    expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find tube')
     expect(wrapper.emitted()).toEqual({
       change: [
         [{ state: 'searching', labware: null }],

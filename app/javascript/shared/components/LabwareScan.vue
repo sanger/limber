@@ -25,7 +25,7 @@
             :state="formState"
             :invalid-feedback="feedback"
             :valid-feedback="feedback"
-            :class="{ 'wait-plate': searching }"
+            :class="{ 'wait-plate' : searching }"
           >
             <b-form-input
               :id="uid"
@@ -154,7 +154,7 @@ export default {
       if (this.labware === null) {
         return { state: 'empty', message: '' }
       } else if (this.labware === undefined) {
-        return { state: 'invalid', message: 'Could not find labware' }
+        return { state: 'invalid', message: `Could not find ${this.labwareType}` }
       } else {
         const result = aggregate(this.computedValidators, this.labware)
         return { state: boolToString[result.valid], message: result.message }
