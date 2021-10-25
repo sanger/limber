@@ -86,18 +86,7 @@ export default {
     indexToName(index) {
       const rowIndex = Math.floor(index / 8)
       const colIndex = index - (rowIndex * 8)
-      return `${"ABCDEFGH"[rowIndex]}${colIndex + 1}`
-    },
-    scanValidation() {
-      if (this.allowTubeDuplicates === 'true') {
-        return [
-          validTubeScanMessage
-        ]
-      }
-      const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [
-        checkDuplicates(currTubes)
-      ]
+      return `${'ABCDEFGH'[rowIndex]}${colIndex + 1}`
     }
   }
 }
