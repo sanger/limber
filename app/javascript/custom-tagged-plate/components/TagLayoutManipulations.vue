@@ -15,7 +15,7 @@
             id="tag_plate_scan"
             :api="api"
             :label="'Tag Plate'"
-            plate-type="qcable"
+            labware-type="qcable"
             :scan-disabled="tagPlateScanDisabled"
             :includes="tagPlateLookupIncludes"
             :fields="tagPlateLookupFields"
@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import PlateScan from 'shared/components/PlateScan'
+import LabwareScan from 'shared/components/LabwareScan'
 import { checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 
@@ -144,7 +144,7 @@ import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 export default {
   name: 'TagLayoutManipulations',
   components: {
-    'lb-plate-scan': PlateScan
+    'lb-plate-scan': LabwareScan
   },
   mixins: [TagLayout],
   data () {
