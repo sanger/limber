@@ -20,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if ( document.getElementById('tubes-to-rack-page') ) {
     axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     Vue.prototype.$axios = axios
-    /* The files-list element isn't on all pages. So only initialize our
-    * Vue app if we actually find it */
     new Vue({
       // Customized render function to pass in properties from our root element
       // Uses render (h) rather than h => to ensure that `this` is the Vue app.

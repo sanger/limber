@@ -13,6 +13,7 @@ require('asset-comments')
 require('qc-information')
 require('multi-stamp')
 require('custom-tagged-plate')
+require('tubes-to-rack')
 
 // Load simple javscripts
 // Tag animations rotates the displayed tag Id in wells with multiple tags
