@@ -31,7 +31,7 @@
               type="text"
               :state="formState"
               size="lg"
-              placeholder="Scan labware"
+              v-bind:placeholder="'Scan ' + labwareType"
               :disabled="scanDisabled"
               @change="lookupLabware"
             />
