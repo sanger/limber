@@ -79,6 +79,13 @@ button#btnGroupInboxes, button#btnGroupRobots, button#btnGroupWip {
   @extend .btn-block;
 }
 
+#btnNewTubeRack {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+  @extend .btn-block;
+}
+
 #btnPipelinesOverview {
   @extend .btn;
   @extend .btn-primary;
