@@ -9,6 +9,7 @@ module ConfigLoader
   class Base
     BASE_CONFIG_PATH = %w[config].freeze
     EXTENSION = '.yml'
+    WIP_EXTENSION = '.wip.yml'
 
     class_attribute :config_folder
 
@@ -21,7 +22,7 @@ module ConfigLoader
     #
     def initialize(files: nil, directory: default_path)
       path = directory.is_a?(Pathname) ? directory : Pathname.new(directory)
-      @files = path.children.select { |child| yaml?(child) && in_list?(files, child) }
+      @files = path.children.select { |child| yaml?(child) && in_list?(files, child) && !work_in_progress?(child) }
       load_config
     end
 
@@ -44,6 +45,10 @@ module ConfigLoader
 
     def in_list?(list, file)
       (list.nil? || list.include?(file.basename(EXTENSION).to_s))
+    end
+
+    def work_in_progress?(filename)
+      filename.to_s.end_with?(WIP_EXTENSION)
     end
 
     #
