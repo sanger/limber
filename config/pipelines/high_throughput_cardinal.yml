@@ -24,7 +24,6 @@ Cardinal:
 Cardinal Banking:
   filters:
     request_type_key: limber_cardinal_banking
-    library_type: Cardinal Banking
   relationships:
     LCA Blood Vac: LCA Blood Bank
     LCA Blood Bank: LCA PBMC Bank

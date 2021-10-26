@@ -6,14 +6,10 @@
 ###
 LCA Blood Vac:
   :asset_type: tube
-  # TODO: DPL-064 is this a stock_plate?? do we have the concept of a stock_tube?
   :stock_plate: false
-  # :cherrypickable_target: false
   :input_plate: false
-  # TODO: DPL-064 what are the other settings for this tube?
   :target: SampleTube
   :type: Tube::Purpose
-  # TODO: DPL-064 does this tube presenter work for this initial tube?
   :presenter_class: Presenters::VacTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
@@ -118,9 +114,6 @@ LCA Custom Pool Norm:
 # LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
 LCA Blood Bank:
   :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: false
-  :input_plate: true
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:
@@ -139,10 +132,12 @@ LCA Blood Bank:
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
-# LCA PBMC Bank plates are transferred into LCA PBMC Rack tube racks, with some consolidation of wells containing the same sample.
+# LCA PBMC Bank plate wells are transferred into LCA Bank Stock tubes, with some
+# consolidation of wells containing the same sample into the same tube.
 # We store them as individual tubes, until Limber supports tube racks.
 LCA Bank Stock:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
+  :presenter_class: Presenters::SimpleTubePresenter
