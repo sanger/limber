@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     resources :work_completions, only: :create, module: :tubes
   end
 
-  resources :limber_tube_rack, controller: :tube_racks do
+  resources :limber_tube_racks, controller: :tube_racks do
     resources :qc_files, controller: :qc_files
   end
 

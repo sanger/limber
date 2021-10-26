@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-# Hopefully temporary class to handle limitations in json-api-client in handling
-# polymorphic associations
-# Note: [JG] 20181003 I actually appear to be hitting the correct class
-# now, but am not sure what changed.
+# Tube racks can be barcoded, and contain tubes at defined locations.
 class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   has_one :purpose
 
