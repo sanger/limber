@@ -27,10 +27,7 @@ RSpec.describe SearchController, type: :controller do
     let(:barcode) { '12345' }
 
     before do
-      allow(Sequencescape::Api::V2::Labware).to receive_message_chain(
-        where: { barcode: barcode },
-        select: { tube_racks: :uuid, plates: :uuid, tubes: :uuid }
-      ).and_return([labware])
+      stub_barcode_search(barcode, labware)
     end
 
     context 'for a plate' do

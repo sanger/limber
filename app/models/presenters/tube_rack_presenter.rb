@@ -8,5 +8,9 @@ module Presenters
   # rack presenters based on the tubes within.
   class TubeRackPresenter
     include Presenters::Presenter
+
+    def state
+      'pending'
+    end
   end
 end

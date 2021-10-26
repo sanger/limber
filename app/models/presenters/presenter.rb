@@ -14,7 +14,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
     self.page = 'show'
     self.sidebar_partial = 'default'
-    #     self.attributes = %i[api labware]
+    self.summary_items = []
 
     def csv
       purpose_config[:csv_template]
