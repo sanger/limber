@@ -9,7 +9,12 @@
         bg-variant="dark"
         text-variant="white"
       >
-        <h1>Tube Rack</h1>
+        <h3>Tube rack UI goes here</h3>
+        <p>
+          Scanned tubes will appear in a UI representation of the tube rack.
+          This will be similar in function to the plate UI but will be capable
+          of opening the tube information page when viewed after creation.
+        </p>
       </b-card>
     </lb-main-content>
     <lb-sidebar>
@@ -35,7 +40,7 @@
         <b-button
           :disabled="!valid"
           variant="success"
-          @click="createPlate()"
+          @click="createRack()"
         >
           Create
         </b-button>
@@ -87,7 +92,8 @@ export default {
       const rowIndex = Math.floor(index / 8)
       const colIndex = index - (rowIndex * 8)
       return `${'ABCDEFGH'[rowIndex]}${colIndex + 1}`
-    }
+    },
+    createRack() {}
   }
 }
 </script>
