@@ -1,18 +1,4 @@
-import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
-
-describe('aggregate', () => {
-  const validFunction = (_) => { return { valid: true, message: 'Good' } }
-  const invalidFunction = (_) => { return { valid: false, message: 'Bad' } }
-
-  it('is valid if all functions are valid', () => {
-    expect(aggregate([validFunction, validFunction], {})).toEqual({ valid: true, message: 'Good' })
-  })
-
-  it('is invalid if any functions are invalid', () => {
-    expect(aggregate([validFunction, invalidFunction], {})).toEqual({ valid: false, message: 'Bad' })
-    expect(aggregate([invalidFunction, validFunction], {})).toEqual({ valid: false, message: 'Bad' })
-  })
-})
+import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {

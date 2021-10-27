@@ -46,7 +46,8 @@
 
 <script>
 
-import { checkSize, aggregate } from './plateScanValidators'
+import { checkSize } from './plateScanValidators'
+import { aggregate } from './scanValidators'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with
