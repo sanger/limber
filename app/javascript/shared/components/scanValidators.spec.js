@@ -1,4 +1,4 @@
-import { aggregate } from 'shared/components/scanValidators'
+import { aggregate, validScanMessage } from 'shared/components/scanValidators'
 
 describe('aggregate', () => {
   const validFunction = (_) => { return { valid: true, message: 'Good' } }
@@ -11,5 +11,11 @@ describe('aggregate', () => {
   it('is invalid if any functions are invalid', () => {
     expect(aggregate([validFunction, invalidFunction], {})).toEqual({ valid: false, message: 'Bad' })
     expect(aggregate([invalidFunction, validFunction], {})).toEqual({ valid: false, message: 'Bad' })
+  })
+})
+
+describe('validScanMessage', () => {
+  it('provides a valid scan result object', () => {
+    expect(validScanMessage()).toEqual({ valid: true, message: 'Great!' })
   })
 })
