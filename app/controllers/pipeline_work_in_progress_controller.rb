@@ -39,7 +39,7 @@ class PipelineWorkInProgressController < ApplicationController
                     .order(:created_at)
                     .per(page_size)
 
-    Sequencescape::Api::V2.merge_page_results(labware_query, page_size)
+    Sequencescape::Api::V2.merge_page_results(labware_query)
   end
 
   # Returns following structure (example):

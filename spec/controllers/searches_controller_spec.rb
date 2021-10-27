@@ -14,6 +14,7 @@ RSpec.describe SearchController, type: :controller do
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
   let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
   let(:user_uuid) { SecureRandom.uuid }
+  let(:uuid) { SecureRandom.uuid }
 
   describe '#new' do
     it 'returns 200' do
@@ -26,22 +27,30 @@ RSpec.describe SearchController, type: :controller do
     let(:barcode) { '12345' }
 
     before do
-      allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: barcode).and_return([labware])
+      stub_barcode_search(barcode, labware)
     end
 
     context 'for a plate' do
-      let(:labware) { create :labware_plate, uuid: 'uuid' }
+      let(:labware) { create :labware_plate, uuid: uuid }
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_plate_path('uuid'))
+        expect(response).to redirect_to(limber_plate_path(uuid))
       end
     end
 
     context 'for a tube' do
-      let(:labware) { create :labware_tube, uuid: 'uuid' }
+      let(:labware) { create :labware_tube, uuid: uuid }
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_path('uuid'))
+        expect(response).to redirect_to(limber_tube_path(uuid))
+      end
+    end
+
+    context 'for a tube rack' do
+      let(:labware) { create :labware_tube_rack, uuid: uuid }
+      it 'redirects to the found labware' do
+        post :create, params: { plate_barcode: barcode }
+        expect(response).to redirect_to(limber_tube_rack_path(uuid))
       end
     end
   end
