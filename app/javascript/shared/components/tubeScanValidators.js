@@ -59,7 +59,7 @@ const checkDuplicates = (tubeList) => {
 }
 
 // Renders a valid Tube scan
-// 
+//
 // Returns an object with the right tube scan validation message
 const validTubeScanMessage = () => {
   return { valid: true, message: 'Great!' }
@@ -74,7 +74,7 @@ const checkState = (allowedStatesList) => {
     if(!allowedStatesList.includes(tube.state)) {
       return { valid: false, message: 'Tube must have a state of: ' + allowedStatesList.join(' or ') }
     } else {
-      return { valid: true, message: 'Great!' }
+      return validTubeScanMessage()
     }
   }
 }
@@ -86,7 +86,7 @@ const checkState = (allowedStatesList) => {
 const aggregate = (validators, item) => {
   return validators.reduce((aggregate, validator) => {
     return aggregate.valid ? validator(item) : aggregate
-  }, { valid: true, message: 'Great!'})
+  }, validTubeScanMessage())
 }
 
 export { checkDuplicates, checkState, aggregate, validTubeScanMessage }
