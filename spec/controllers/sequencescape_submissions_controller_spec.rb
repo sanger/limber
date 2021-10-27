@@ -14,7 +14,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
         'read_length' => '150',
         'fragment_size_required_from' => '50',
         'fragment_size_required_to' => '800',
-        'primer_panel_name' => 'nCoV-2019/V3/B'
+        'primer_panel_name' => 'nCoV-2019/V4'
       }
     end
     let(:template_uuid) { SecureRandom.uuid }
