@@ -1,4 +1,4 @@
-import { checkDuplicates, checkState } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, checkMatchingPurposes, checkState } from 'shared/components/tubeScanValidators'
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
@@ -37,6 +37,29 @@ describe('checkDuplicates', () => {
     expect(
       checkDuplicates([empty, tube2])(tube1)
     ).toEqual({ valid: true, message: 'Great!' })
+  })
+})
+
+describe('checkMatchingPurposes', () => {
+  it('passes if the tube has a matching purpose', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube)).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it('passes if the tube is undefined', () => {
+    const tube = undefined
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube)).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it('passes if the reference purpose is undefined', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkMatchingPurposes(undefined)(tube)).toEqual({ valid: true, message: 'Great!' })
+  })
+
+  it("fails if the tube purpose doesn't match the reference purpose", () => {
+    const tube = { purpose: { name: 'Another Purpose' } }
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
+      .toEqual({ valid: false, message: "Tube purpose 'Another Purpose' doesn't match other tubes" })
   })
 })
 
