@@ -1,15 +1,13 @@
 const tubeFactory = function(tubeOptions = {}) {
-  let uuid = tubeOptions.uuid || 'tube-uuid'
-  let id = tubeOptions.id || '1'
-
   const tubeDefaults = {
     name: 'Tube NT1S',
-    uuid: uuid,
-    id: id,
+    uuid: 'tube-uuid',
+    id: '1',
     labware_barcode: { ean13_barcode: '1220542971784', human_barcode: 'NT1S', machine_barcode: '1220542971784' },
     state: 'passed',
     requests_as_source: [],
-    receptacle: { uuid: 'receptacle-uuid', aliquots: [{ request: null }] }
+    receptacle: { uuid: 'receptacle-uuid', aliquots: [{ request: null }] },
+    purpose: { uuid: 'purpose-uuid', name: 'purpose-name' }
   }
   return { ...tubeDefaults, ...(tubeOptions || {}) }
 }
