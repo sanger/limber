@@ -9,8 +9,8 @@
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
 # 4. Group samples by supplier, to ensure samples with the same supplier are distrubuted across different pools
-# 5. Create the compound sample in SS - adding the pool to a well in the new LCA PBMC Pools plate
-# 6. Associate compound sample with its component samples
+# 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well
+# in the new LCA PBMC Pools plate
 module LabwareCreators
   # This class is used for creating Cardinal pools into destination plate
   class CardinalPoolsPlate < Base
@@ -30,7 +30,7 @@ module LabwareCreators
       @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
-    # Returns: a list of passed wellspassed_parent_wells
+    # Returns: a list of passed wells passed_parent_wells
     def passed_parent_wells
       source_plate.wells.select { |well| well.state == 'passed' }
     end
