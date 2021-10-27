@@ -60,7 +60,7 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'TubesToRack',
@@ -96,7 +96,8 @@ export default {
   computed: {
     scanValidators() {
       const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [checkDuplicates(allTubes)]
+      const firstPurpose = this.validTubes[0]?.labware.purpose
+      return [checkDuplicates(allTubes), checkMatchingPurposes(firstPurpose)]
     },
     tubeFields() {
       return filterProps.tubeFields

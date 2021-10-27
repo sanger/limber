@@ -60,6 +60,21 @@ const checkDuplicates = (tubeList) => {
   }
 }
 
+// Returns a validator that ensures the purpose namess of all the tubes match
+// the name for the one provided. Typically the one provided should be the one
+// of the purposes from the full set of tubes being validated.
+const checkMatchingPurposes = (purpose) => {
+  return (tube) => {
+    if (tube?.purpose.name && purpose?.name && tube.purpose.name !== purpose.name) {
+      return {
+        valid: false,
+        message: `Tube purpose '${tube.purpose.name}' doesn't match other tubes`
+      }
+    }
+
+    return validScanMessage()
+  }
+}
 
 // Returns a validator that ensures the tube has a state that matches to the
 // supplied list of states. e.g. to check a tube has a state of 'available'
@@ -75,4 +90,4 @@ const checkState = (allowedStatesList) => {
   }
 }
 
-export { checkDuplicates, checkIdenticalPurposes, checkState }
+export { checkDuplicates, checkMatchingPurposes, checkState }
