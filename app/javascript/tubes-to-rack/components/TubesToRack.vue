@@ -31,9 +31,12 @@
             :key="i"
             :api="devourApi"
             :label="indexToName(i - 1)"
+            :includes="tubeIncludes"
+            :validators="scanValidators"
             :colour-index="i"
             :labware-type="'tube'"
             :valid-message="''"
+            @change="updateTube(i, $event)"
           />
         </b-form-group>
         <hr>
@@ -51,9 +54,12 @@
 
 <script>
 import devourApi from 'shared/devourApi'
-import LoadingModal from 'shared/components/LoadingModal'
+import filterProps from './filterProps'
 import LabwareScan from 'shared/components/LabwareScan'
+import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
+import { buildTubeObjs } from 'shared/tubeHelpers'
+import { checkDuplicates } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'TubesToRack',
@@ -70,6 +76,11 @@ export default {
   },
   data () {
     return {
+      // Array containing objects with scanned tubes, their states and the
+      // index of the form input in which they were scanned.
+      // Note: Cannot use computed functions as data is invoked before
+      tubes: buildTubeObjs(this.tubeCount),
+
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
@@ -82,6 +93,13 @@ export default {
     }
   },
   computed: {
+    scanValidators() {
+      const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
+      return [checkDuplicates(currTubes)]
+    },
+    tubeIncludes() {
+      return filterProps.tubeIncludes
+    },
     valid() {
       // TODO: DPL-110 identify whether we have a valid submission
       return true
@@ -92,6 +110,9 @@ export default {
       const rowIndex = Math.floor(index / 8)
       const colIndex = index - (rowIndex * 8)
       return `${'ABCDEFGH'[rowIndex]}${colIndex + 1}`
+    },
+    updateTube(index, data) {
+      this.$set(this.tubes, index - 1, {...data, index: index - 1 })
     },
     createRack() {}
   }
