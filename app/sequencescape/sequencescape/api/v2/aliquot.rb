@@ -6,6 +6,8 @@ class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:t
   has_one :study
   has_one :project
 
+  delegate :component_samples_count, to: :sample
+
   def tagged?
     tag_oligo.present? || tag2_oligo.present?
   end

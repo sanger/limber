@@ -15,8 +15,9 @@ class PipelineList
   end
 
   # Returns an array of all pipelines that are 'active' for a particular piece of
-  # labware. An 'active' pipeline is one where one or more active requests on the
+  # labware. Normally, an 'active' pipeline is one where one or more active requests on the
   # plate meet the filter criteria.
+  # If a pipeline has no filter criteria, it will also be considered 'active' for the labware.
   def active_pipelines_for(labware)
     @list.select { |pipeline| pipeline.active_for?(labware) }
   end

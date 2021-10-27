@@ -2,9 +2,9 @@
 
 # Handles upload, listing and download of qc files.
 # Finds source asset depending of the provided parameters
-# index => Ajaxy rendering of the files attached to a plate/tube
+# index => Ajaxy rendering of the files attached to a plate/tube/tube_rack
 # show => Retrieve a particular file
-# create => Attach a new file to a plate/tube
+# create => Attach a new file to a plate/tube/tube_rack
 class QcFilesController < ApplicationController
   attr_reader :asset, :asset_path
 
@@ -30,7 +30,7 @@ class QcFilesController < ApplicationController
   private
 
   def find_assets
-    %w[plate tube multiplexed_library_tube].each do |klass|
+    %w[plate tube multiplexed_library_tube tube_rack].each do |klass|
       next if params["limber_#{klass}_id"].nil?
 
       @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])

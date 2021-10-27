@@ -90,32 +90,27 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
     end
 
+    def stub_barcode_search(barcode, labware)
+      labware_result = create :labware, type: labware.type, uuid: labware.uuid, id: labware.id
+      allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)
+    end
+
     # Builds the basic v2 plate finding query.
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
-      # Stub to v1 api search here as well!
-      if stub_search
-        labware_mock = create :labware_plate, uuid: plate.uuid
-        allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: plate.barcode.machine).and_return([labware_mock])
-      end
+      stub_barcode_search(plate.barcode.machine, plate) if stub_search
 
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(plate)
       elsif custom_includes
-        arguments = [custom_includes, { uuid: plate.uuid }]
-        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(*arguments).and_return(plate)
+        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(custom_includes, { uuid: plate.uuid }).and_return(plate)
       else
-        arguments = [{ uuid: plate.uuid }]
-        allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(*arguments).and_return(plate)
+        allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
     end
 
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
-      # Stub to v1 api search here as well!
-      if stub_search
-        labware_mock = create :labware_tube, uuid: tube.uuid
-        allow(Sequencescape::Api::V2::Labware).to receive(:where).with(barcode: tube.barcode.machine).and_return([labware_mock])
-      end
+      stub_barcode_search(tube.barcode.machine, tube) if stub_search
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
     end

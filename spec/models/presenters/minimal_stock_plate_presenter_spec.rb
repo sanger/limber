@@ -67,7 +67,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
 
     it 'reports the error' do
       subject.valid?
-      expect(subject.errors.full_messages).to include('Pcr cycles specified is not consistent across the plate.')
+      expect(subject.errors.full_messages).to include('Pcr cycles are not consistent across the plate.')
     end
   end
 end

@@ -33,6 +33,8 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
       ::ActiveModel::Name.new(Limber::Tube, false)
     when 'plates'
       ::ActiveModel::Name.new(Limber::Plate, false)
+    when 'tube_racks'
+      ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'Limber::TubeRack')
     else
       raise "Can't view #{type} in limber"
     end

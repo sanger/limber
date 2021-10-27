@@ -213,3 +213,12 @@ LBC 5p GLibPS, Cap Lib Pool Norm, LB Custom Pool, pWGS-384 Lib Pool XP, LTHR-384
 
 {Presenters::UnknownTubePresenter View class documentation}
 
+
+### Presenters::VacTubePresenter
+
+{include:Presenters::VacTubePresenter}
+
+  **This template is unused**
+
+{Presenters::VacTubePresenter View class documentation}
+

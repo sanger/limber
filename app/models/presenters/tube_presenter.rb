@@ -46,5 +46,19 @@ module Presenters
       yield s if block_given?
       s
     end
+
+    def child_plates
+      labware.child_plates.tap do |child_plates|
+        yield child_plates if block_given? && child_plates.present?
+      end
+    end
+
+    alias child_assets child_plates
+
+    def tubes_and_sources
+      labware.child_tubes.tap do |child_tubes|
+        yield child_tubes if block_given? && child_tubes.present?
+      end
+    end
   end
 end

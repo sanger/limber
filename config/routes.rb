@@ -41,9 +41,14 @@ Rails.application.routes.draw do
   resources :qc_files, only: :show
 
   resources :limber_tubes, controller: :tubes do
+    resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
     resources :qc_files, controller: :qc_files
     resources :work_completions, only: :create, module: :tubes
+  end
+
+  resources :limber_tube_racks, controller: :tube_racks do
+    resources :qc_files, controller: :qc_files
   end
 
   # limber_multiplexed_library_tube routes have been removed, and instead

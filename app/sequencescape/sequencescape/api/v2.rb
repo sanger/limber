@@ -10,10 +10,24 @@ module Sequencescape::Api::V2
       {
         downstream_tubes: 'purpose',
         requests_as_source: %w[request_type primer_panel pre_capture_pool],
-        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
+        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }],
+        qc_results: []
       }
     ] }
   ].freeze
+
+  #
+  # Returns a {Sequencescape::V2::Api::Labware} object with *just* the UUID, suitable for redirection
+  #
+  # @param barcode [String] The barcode to find
+  #
+  # @return [Sequencescape::V2::Api::Labware] Found labware object
+  #
+  def self.minimal_labware_by_barcode(barcode, select: :uuid)
+    Sequencescape::Api::V2::Labware.where(barcode: barcode)
+                                   .select(tube_racks: select, plates: select, tubes: select)
+                                   .first
+  end
 
   def self.plate_for_presenter(query)
     Plate.includes(*PLATE_PRESENTER_INCLUDES).find(query).first
@@ -25,6 +39,10 @@ module Sequencescape::Api::V2
 
   def self.plate_with_wells(uuid)
     Plate.includes('wells').find(uuid: uuid).first
+  end
+
+  def self.tube_rack_for_presenter(query)
+    TubeRack.find(query).first
   end
 
   def self.plate_for_completion(uuid)
@@ -39,20 +57,12 @@ module Sequencescape::Api::V2
 
   # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page
   # and combines them into one list
-  def self.merge_page_results(query_builder, page_size)
-    all_records = []
-    page_num = 1
-    num_retrieved = page_size
-
-    # if the final page is a full page (has page_size records),
-    # it does one more iteration and you get an empty array retrieved, stopping the loop
-    while num_retrieved == page_size
-      current_page = query_builder.page(page_num).to_a
-      num_retrieved = current_page.size
-      all_records += current_page
-      page_num += 1
+  def self.merge_page_results(query_builder)
+    total_pages = query_builder.pages.total_pages
+    first_page = query_builder.to_a.dup
+    (2..total_pages).reduce(first_page) do |all_pages, page_number|
+      current_page = query_builder.page(page_number).to_a
+      all_pages.concat(current_page)
     end
-
-    all_records
   end
 end
