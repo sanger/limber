@@ -76,6 +76,17 @@ module LabwareCreators
       purpose_config.fetch(:tags_per_well, 1)
     end
 
+    #
+    # The adapter type name filter for limiting the tag group list drop downs on the custom tagging
+    # screen. In most cases this will not be present in the purposes yml and is not required.
+    # e.g. to just show tag groups with Chromium adapter types it is 'Chromium'
+    #
+    # @return [<String] The name of the adapter type.
+    #
+    def tag_group_adapter_type_name_filter
+      purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
+    end
+
     private
 
     def tag_layout_attributes

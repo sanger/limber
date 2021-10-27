@@ -1,0 +1,19 @@
+<%
+  csv_array = [['Source Well', 'Volume to add to pool', 'Dest. well', 'Number of samples', 'Tag index', 'Tag 2 index']]
+  @plate.wells_in_columns.each do |well|
+    # We want to skip wells that are empty or have multiple aliquots with different tag indices
+    tag_1_indices = well.aliquots.map(&:tag_index).uniq
+    tag_2_indices = well.aliquots.map(&:tag2_index).uniq
+    next if well.empty? || tag_1_indices.size > 1 || tag_2_indices.size > 1
+
+    csv_array << [
+      well.location,
+      nil,
+      nil,
+      component_samples_count_for(well),
+      tag_1_indices.first,
+      tag_2_indices.first
+    ]
+  end
+%>
+<%= csv_array.map(&:to_csv).join -%>

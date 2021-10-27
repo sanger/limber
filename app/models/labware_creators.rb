@@ -13,7 +13,19 @@ module LabwareCreators # rubocop:todo Style/Documentation
   end
 
   def self.class_for(purpose_uuid)
-    Settings.purposes.fetch(purpose_uuid).fetch(:creator_class).constantize
+    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    if refer.is_a?(String)
+      refer.constantize
+    else
+      refer[:name].constantize
+    end
+  end
+
+  def self.params_for(purpose_uuid)
+    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    return { params: {} } if refer.is_a?(String)
+
+    { params: refer[:params] }
   end
 
   # Used to render the create plate/tube buttons
@@ -26,8 +38,13 @@ module LabwareCreators # rubocop:todo Style/Documentation
       false
     end
 
+    # limber_plate_children (Plate -> Plate) (plate_creation#create)
+    # limber_plate_tubes (Plate -> Tube) (tube_creation#create)
+    # limber_tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
+    # limber_tube_tubes (Tube -> Tube) (tube_creation#create)
     def model_name
       case type
+      # TODO: can we rename 'child' to 'plate' please? see routes.rb
       when 'plate' then ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
       when 'tube' then ::ActiveModel::Name.new(Limber::Tube, nil, 'tube')
       else

@@ -3,6 +3,7 @@
     <lb-tag-groups-lookup
       :api="api"
       resource-name="tag_group"
+      :filter="tagGroupLookupFilter()"
       @change="tagGroupsLookupUpdated($event)"
     />
     <b-row class="form-group form-row">
@@ -15,7 +16,7 @@
             id="tag_plate_scan"
             :api="api"
             :label="'Tag Plate'"
-            plate-type="qcable"
+            labware-type="qcable"
             :scan-disabled="tagPlateScanDisabled"
             :includes="tagPlateLookupIncludes"
             :fields="tagPlateLookupFields"
@@ -123,7 +124,7 @@
 </template>
 
 <script>
-import PlateScan from 'shared/components/PlateScan'
+import LabwareScan from 'shared/components/LabwareScan'
 import { checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 
@@ -144,9 +145,17 @@ import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 export default {
   name: 'TagLayoutManipulations',
   components: {
-    'lb-plate-scan': PlateScan
+    'lb-plate-scan': LabwareScan
   },
   mixins: [TagLayout],
+  props: {
+    tagGroupAdapterTypeNameFilter: {
+      // filters list of tag groups if present
+      type: String,
+      required: false,
+      default: null
+    }
+  },
   data () {
     return {
       tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
@@ -233,6 +242,12 @@ export default {
         }
       }
       this.updateTagParams(null)
+    },
+    tagGroupLookupFilter() {
+      if(this.tagGroupAdapterTypeNameFilter) {
+        return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
+      }
+      return {}
     }
   }
 }

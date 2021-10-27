@@ -12,6 +12,7 @@ require('file-list')
 require('asset-comments')
 require('qc-information')
 require('multi-stamp')
+require('multi-stamp-tubes')
 require('custom-tagged-plate')
 
 // Load simple javscripts
@@ -19,3 +20,4 @@ require('custom-tagged-plate')
 require('plain-javascript/tag-animations')
 require('plain-javascript/page-reloader')
 require('plain-javascript/quadrant-well-failing')
+require('plain-javascript/threshold-well-failing')
