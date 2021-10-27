@@ -31,6 +31,7 @@
             :key="i"
             :api="devourApi"
             :label="indexToName(i - 1)"
+            :fields="tubeFields"
             :includes="tubeIncludes"
             :validators="scanValidators"
             :colour-index="i"
@@ -94,8 +95,11 @@ export default {
   },
   computed: {
     scanValidators() {
-      const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [checkDuplicates(currTubes)]
+      const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
+      return [checkDuplicates(allTubes)]
+    },
+    tubeFields() {
+      return filterProps.tubeFields
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
