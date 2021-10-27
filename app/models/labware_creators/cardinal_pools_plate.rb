@@ -9,7 +9,7 @@
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
 # 4. Group samples by supplier, to ensure samples with the same supplier are distrubuted across different pools
-# 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well 
+# 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well
 # in the new LCA PBMC Pools plate
 module LabwareCreators
   # This class is used for creating Cardinal pools into destination plate
