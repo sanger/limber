@@ -1,11 +1,26 @@
-<%= content_for(:title, 'Coming soon') %>
+<%= content_for(:title, @presenter.title) %>
 
 <%= page(:'tube-rack-show-page', :'show-page') do %>
   <%= content do %>
-    <h1>We're not quite ready yet...<h1>
-    <p class="lead">
-      Tube rack support is coming, but we don't quite have anything to show you yet.
-      Please try scanning in a plate or a tube instead.
-    </p>
+    <%= card without_block: true, id: 'main-content' do %>
+      <div class="card-body">
+        <h2 id="tube-rack-title" class="card-title">
+          <%= @presenter.title %>
+          <%= state_badge(@presenter.state) %>
+          <%= image_tag("icon_#{@presenter.priority}_flag.png", size: "32x32") %>
+        </h2>
+      </div>
+      <%= render 'warnings', presenter: @presenter %>
+      <% if @presenter.tube_failing_applicable? %>
+        <div id="labware-well-failing" class='well-fail-toggle collapse'>
+          <%= render 'fail_wells', presenter: @presenter %>
+        </div>
+      <% end %>
+      <div id="labware-summary" class='well-fail-toggle collapse show'>
+        <%= render @presenter.summary_partial, presenter: @presenter %>
+      </div>
+    <% end %>
   <% end %>
+
+  <%= render "tube_racks/sidebars/#{@presenter.sidebar_partial}", presenter: @presenter %>
 <% end %>

@@ -1,7 +1,7 @@
 <%= card title: 'Print tube labels', css_class: 'tube-printing' do %>
   <%= barcode_printing_form(
         labels: presenter.tube_labels,
-        redirection_url: limber_plate_path(presenter.labware),
+        redirection_url: url_for(presenter.labware),
         default_printer_name: Settings.printers[:tube]
   ) %>
 <% end %>

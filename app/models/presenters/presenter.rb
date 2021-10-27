@@ -8,27 +8,24 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     include Form
     include BarcodeLabelsHelper
 
-    class_attribute :summary_items, :sidebar_partial
+    class_attribute :summary_items, :sidebar_partial, :summary_partial
 
     attr_accessor :api, :labware
 
     self.page = 'show'
     self.sidebar_partial = 'default'
     self.summary_items = []
+    self.summary_partial = ''
 
     def csv
       purpose_config[:csv_template]
     end
   end
 
-  delegate :state, :uuid, :id, to: :labware
+  delegate :state, :uuid, :id, :purpose_name, to: :labware
 
   def suggest_library_passing?
     active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
-  end
-
-  def purpose_name
-    labware.purpose.name
   end
 
   def title
@@ -45,10 +42,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
   def printer_limit
     @printer_limit ||= Settings.printers['limit']
-  end
-
-  def well_failing_applicable?
-    allow_well_failure_in_states.include?(state.to_sym)
   end
 
   def summary

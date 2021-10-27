@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-class Labels::PlateLabelBase < Labels::Base # rubocop:todo Style/Documentation
+# Handles generating the parameters the printing from for Tube Racks
+class Labels::TubeRackLabel < Labels::Base
   def attributes
     {
       top_left: date_today,
       bottom_left: labware.barcode.human,
-      top_right: workline_identifier,
-      bottom_right: [labware.role, labware.purpose_name].compact.join(' '),
+      top_right: labware.name,
+      bottom_right: labware.purpose_name,
       barcode: labware.barcode.machine
     }
   end

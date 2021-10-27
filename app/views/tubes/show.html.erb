@@ -8,6 +8,7 @@
           <%# No priority flag %>
         </h2>
       </div>
+      <%= render 'warnings', presenter: @presenter %>
 
       <div id="labware-summary">
         <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>

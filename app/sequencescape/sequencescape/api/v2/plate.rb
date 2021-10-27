@@ -2,6 +2,7 @@
 
 # A plate from sequencescape via the V2 API
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
+  include WellHelpers::Extensions
   include Sequencescape::Api::V2::Shared::HasRequests
 
   self.plate = true
@@ -21,6 +22,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
   property :labware_barcode, type: :barcode
+
+  delegate :name, to: :purpose, allow_nil: true, prefix: true
 
   def self.find_by(options)
     Sequencescape::Api::V2.plate_for_presenter(options)
@@ -85,10 +88,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     number_of_rows * number_of_columns
   end
 
-  def locations_in_rows
-    WellHelpers.row_order(size)
-  end
-
   def barcode
     labware_barcode
   end
@@ -124,7 +123,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def primer_panels
-    active_requests.map(&:primer_panel).compact.uniq
+    active_requests.map(&:primer_panel).filter_map.uniq
   end
 
   def primer_panel

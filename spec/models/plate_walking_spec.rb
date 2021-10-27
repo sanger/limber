@@ -24,7 +24,6 @@ RSpec.describe PlateWalking::Walker do
   end
 
   context 'A v2 plate' do
-    has_a_working_api
     let(:plate) { build :v2_plate, well_count: 96 }
 
     it 'yields wells in rows' do

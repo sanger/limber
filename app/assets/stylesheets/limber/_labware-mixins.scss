@@ -1,0 +1,93 @@
+@mixin labware-view {
+  .unknown           { background-color: $secondary; }
+  .pending           { background: none; }
+  .started, .process_1, .process_2 { background-color: $info;    }
+  .passed            { background-color: $success; }
+  .qc_complete       { background-color: $primary; }
+  .good              { background-color: $success; } // Used on well failure page
+  .failed            { background-color: $danger;  }
+  .cancelled         { background-color: $danger;  }
+}
+
+@mixin labware-grid-view {
+  padding: 10px;
+  border-collapse: separate;
+  border-radius: 0px 15px 15px 15px;
+
+  th {
+    padding: 0;
+    vertical-align: middle;
+    text-align:     center;
+    padding:0;
+    color: $gray-600;
+  }
+
+  th.first-col {
+    width: 15px;
+  }
+
+  .well {
+    height:36px;
+    width:36px;
+    text-align: center;
+    overflow: hidden;
+
+    .aliquot {
+      width:32px;
+      height:32px;
+      margin-top: 2px;
+      text-align: center;
+      display: inline-block;
+      border: 2px $gray-800 solid;
+      border-radius: 7px;
+
+      .tag {
+        display: none;
+      }
+
+      // As the tag index gets longer, scale back the font size
+      .tag-3 {
+        font-size: 80%;
+      }
+
+      .tag:first-child {
+        display: inline;
+      }
+    }
+
+    .aliquot:hover {
+      color: #FFD600;
+      cursor: pointer;
+      @extend .selected-aliquot;
+    }
+  }
+}
+
+@mixin labware-grid-view-384 {
+  padding: 5px;
+  border-collapse: separate;
+  td, th { font-size: 50%; }
+
+
+  th.first-col {
+    width: 15px;
+  }
+
+  .well {
+    height:18px;
+    width:18px;
+
+    .aliquot {
+      width:16px;
+      height:16px;
+      margin-top: 1px;
+      border: 1px $gray-800 solid;
+      border-radius: 3px;
+    }
+  }
+
+  .control-type {
+    font-size: 16px;
+    line-height: 13px;
+  }
+}

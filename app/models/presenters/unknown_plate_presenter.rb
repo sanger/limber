@@ -9,6 +9,10 @@ module Presenters
 
     validate :add_unknown_plate_warnings
 
+    def robot?
+      false
+    end
+
     def well_failing_applicable?
       false
     end

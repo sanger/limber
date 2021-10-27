@@ -112,7 +112,8 @@ FactoryBot.define do
       ancestors { [stock_plate] }
       barcode_prefix { 'NT' }
       library_state { 'pending' }
-      outer_request { create request_factory, state: library_state }
+      priority { 0 }
+      outer_request { create request_factory, state: library_state, priority: priority }
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }

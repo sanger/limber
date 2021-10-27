@@ -36,6 +36,10 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
                                 .all
   end
 
+  def purpose_name
+    purpose&.name || Sequencescape::Api::V2::Purpose::UNKNOWN
+  end
+
   # Dummied out for the moment. But no real reason not to add it to the API.
   def requests_as_source
     []

@@ -1,9 +1,12 @@
 @import "select2";
 @import "select2-bootstrap";
 @import "limber/_bootstrap-variables";
+@import "limber/_labware-mixins";
 @import "bootstrap";
 @import "limber/screen";
 @import "limber/plate";
+@import "limber/tube";
+@import "limber/tube-rack";
 @import "limber/binning";
 @import "limber/spinner";
 @import "limber/pipeline-graph";

@@ -10,6 +10,8 @@ class Limber::Plate < Sequencescape::Plate
            :ready_for_custom_pooling?, :submissions, :primer_panel,
            to: :pools_info
 
+  delegate :name, to: :purpose, allow_nil: true, prefix: true
+
   #
   # The width of the plate. Assumes a 3:2 ratio
   #

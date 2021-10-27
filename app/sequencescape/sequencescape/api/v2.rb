@@ -41,7 +41,7 @@ module Sequencescape::Api::V2
   end
 
   def self.tube_rack_for_presenter(query)
-    TubeRack.find(query).first
+    TubeRack.includes('racked_tubes.tube.purpose,racked_tubes.tube.aliquots.request.request_type').find(query).first
   end
 
   def self.plate_for_completion(uuid)
