@@ -100,9 +100,15 @@ export default {
     tubeIncludes() {
       return filterProps.tubeIncludes
     },
+    unsuitableTubes() {
+      return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
+    },
     valid() {
-      // TODO: DPL-110 identify whether we have a valid submission
-      return true
+      return this.validTubes.length > 0 &&      // At least one tube is validated
+             this.unsuitableTubes.length === 0  // None of the tubes are invalid
+    },
+    validTubes() {
+      return this.tubes.filter( tube => tube.state === 'valid' )
     }
   },
   methods: {
