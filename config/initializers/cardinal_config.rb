@@ -7,7 +7,5 @@ Rails.application.config.cardinal_pooling_config = {}
 
 cardinal_pooling_csv.each do |data|
   contents = data.to_hash
-  number_of_pools = data.to_hash.values.compact.count - 1
-
-  Rails.application.config.cardinal_pooling_config[contents[:number]] = number_of_pools
+  Rails.application.config.cardinal_pooling_config[contents[:number]] = contents[:number_of_pools]
 end
