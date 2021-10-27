@@ -257,6 +257,15 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::TenStamp View class documentation}
 
 
+## LabwareCreators::MultiStampTubes
+
+{include:LabwareCreators::MultiStampTubes}
+
+  **This labware creator is unused**
+
+{LabwareCreators::MultiStampTubes View class documentation}
+
+
 ## LabwareCreators::PlateWithTemplate
 
 {include:LabwareCreators::PlateWithTemplate}

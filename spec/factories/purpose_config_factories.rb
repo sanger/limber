@@ -151,6 +151,26 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a multi stamp from tubes plate purpose
+    factory :multi_stamp_tubes_purpose_config do
+      creator_class { 'LabwareCreators::MultiStampTubes' }
+      presenter_class { 'Presenters::SubmissionPlatePresenter' }
+
+      submission_options do
+        {
+          'Cardinal library prep' => {
+            'template_name' => 'example',
+            'allowed_extra_barcodes' => false,
+            'request_options' => {
+              'library_type' => 'example_library',
+              'fragment_size_required_from' => '200',
+              'fragment_size_required_to' => '800'
+            }
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }

@@ -13,7 +13,6 @@ describe('LabwareScan', () => {
   const nullTube = { data: [] }
   const goodTube = jsonCollectionFactory('tube', [{ uuid: assetUuid }])
 
-
   const wrapperFactoryPlate = function(api = mockApi()) {
     return mount(LabwareScan, {
       propsData: {

@@ -300,12 +300,17 @@ name: The text to show on the download button
 id: The template to use for the CSV itself. (See {ExportsController} for the
 existing templates)
 
+params: Optional query parameters to be passed through the the link to the
+exports controller.
+
 ```yaml
 :file_links:
-- name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
-  id: 'hamilton_cherrypick_to_sample_dilution'
-- name: Download Concentration (ng/ul) CSV
-  id: concentrations_ngul
+  - name: "Download Hamilton Cherrypick to Sample Dilution CSV"
+    id: "hamilton_cherrypick_to_sample_dilution"
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+    params:
+      page: 0
 ```
 
 @note Not all CSV generation has been migrated under the exports controller. See :csv_template
@@ -405,6 +410,34 @@ acceptable values.
 warnings:
   pcr_cycles_not_in:
     - 6
+```
+
+### :qc_thresholds
+
+Hash used to configure qc sliders for well failing. Without this configuration,
+limber will attempt to pick sensible values based on those seen on the plate.
+
+The hash is keyed with the qc attribute (key in the `qc_results` table) under
+scrutiny. Values can contain the following keys
+
+name: A user friendly name for the field (String)
+units: The expected units. Where possible limber will attempt to convert units
+       to match. eg. ml -> ul (String)
+default_threshold: The value to which the slider will be se initially.
+decimal_places: The number of decimal places to 'step' between. Can be negative
+                to step up in intervals of 10, 100, 1000 etc. Defaults to 2
+
+
+```yaml
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
+      decimal_places: 0
 ```
 
 ### Presenter/Creator specific configuration

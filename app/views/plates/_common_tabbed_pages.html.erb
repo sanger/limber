@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="tab-pane" id='children_tab' role="tabpanel">
-    <%= render partial: 'tube_list', locals: { presenter: presenter } %>
+    <%= render partial: 'tube_list', locals: { presenter: presenter, tube_template: 'labware/pooled_tube' } %>
     <%= render partial: 'plate_list', locals: { presenter: presenter } %>
   </div>
   <%= yield(:additional_panels) if content_for?(:additional_panels) %>

@@ -77,7 +77,7 @@ import NullFilter from './NullFilter'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTransfers from './MultiStampTransfers'
 import VolumeTransfers from './VolumeTransfers'
-import baseTransferCreator from 'shared/transfersCreators'
+import { baseTransferCreator } from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
@@ -143,7 +143,13 @@ export default {
     return {
       // Array containing objects with scanned plates, their states and the
       // index of the form input in which they were scanned.
-      // Note: Cannot use computed functions as data is invoked before
+      // Note: Cannot use computed functions as data is invoked before.
+      // Initial structure (4 for quadstamp):
+      // [
+      //   { "index": 0, "plate": null, "state": "empty" },
+      //   { "index": 1, "plate": null, "state": "empty" },
+      //   ...
+      // ]
       plates: buildPlateObjs(Number.parseInt(this.sourcePlates)),
 
       // Devour API object to deserialise assets from sequencescape API.
