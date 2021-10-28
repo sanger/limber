@@ -13,6 +13,6 @@ class Sequencescape::Api::V2::QcResult < Sequencescape::Api::V2::Base
   #                https://github.com/olbrich/ruby-units
   #
   def unit_value
-    Unit.new(value, units)
+    ::RubyUnits::Unit.new(value, units)
   end
 end
