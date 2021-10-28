@@ -25,7 +25,7 @@ module.exports = function(api) {
           }
         }
       ],
-      (isDevelopmentEnv) && [
+      (isProductionEnv || isDevelopmentEnv) && [
         '@babel/preset-env',
         {
           forceAllTransforms: true,
