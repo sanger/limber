@@ -274,6 +274,15 @@
     "@babel/helper-remap-async-to-generator" "^7.15.4"
     "@babel/plugin-syntax-async-generators" "^7.8.4"
 
+"@babel/plugin-proposal-async-generator-functions@^7.15.8":
+  version "7.15.8"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-async-generator-functions/-/plugin-proposal-async-generator-functions-7.15.8.tgz#a3100f785fab4357987c4223ab1b02b599048403"
+  integrity sha512-2Z5F2R2ibINTc63mY7FLqGfEbmofrHU9FitJW1Q7aPaKFhiPvSq6QEt/BoWN5oME3GVyjcRuNNSRbb9LC0CSWA==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/helper-remap-async-to-generator" "^7.15.4"
+    "@babel/plugin-syntax-async-generators" "^7.8.4"
+
 "@babel/plugin-proposal-class-properties@^7.14.5":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.14.5.tgz#40d1ee140c5b1e31a350f4f5eed945096559b42e"
@@ -747,6 +756,14 @@
     "@babel/helper-plugin-utils" "^7.14.5"
     "@babel/helper-skip-transparent-expression-wrappers" "^7.14.5"
 
+"@babel/plugin-transform-spread@^7.15.8":
+  version "7.15.8"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-spread/-/plugin-transform-spread-7.15.8.tgz#79d5aa27f68d700449b2da07691dfa32d2f6d468"
+  integrity sha512-/daZ8s2tNaRekl9YJa9X4bzjpeRZLt122cpgFnQPLGUe61PH8zMEBmYqKkW5xF5JUEh5buEGXJoQpqBmIbpmEQ==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/helper-skip-transparent-expression-wrappers" "^7.15.4"
+
 "@babel/plugin-transform-sticky-regex@^7.14.5":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-sticky-regex/-/plugin-transform-sticky-regex-7.14.5.tgz#5b617542675e8b7761294381f3c28c633f40aeb9"
@@ -862,17 +879,17 @@
     core-js-compat "^3.16.0"
     semver "^6.3.0"
 
-"@babel/preset-env@^7.15.4":
-  version "7.15.4"
-  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.15.4.tgz#197e7f99a755c488f0af411af179cbd10de6e815"
-  integrity sha512-4f2nLw+q6ht8gl3sHCmNhmA5W6b1ItLzbH3UrKuJxACHr2eCpk96jwjrAfCAaXaaVwTQGnyUYHY2EWXJGt7TUQ==
+"@babel/preset-env@^7.15.8":
+  version "7.15.8"
+  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.15.8.tgz#f527ce5bcb121cd199f6b502bf23e420b3ff8dba"
+  integrity sha512-rCC0wH8husJgY4FPbHsiYyiLxSY8oMDJH7Rl6RQMknbN9oDDHhM9RDFvnGM2MgkbUJzSQB4gtuwygY5mCqGSsA==
   dependencies:
     "@babel/compat-data" "^7.15.0"
     "@babel/helper-compilation-targets" "^7.15.4"
     "@babel/helper-plugin-utils" "^7.14.5"
     "@babel/helper-validator-option" "^7.14.5"
     "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining" "^7.15.4"
-    "@babel/plugin-proposal-async-generator-functions" "^7.15.4"
+    "@babel/plugin-proposal-async-generator-functions" "^7.15.8"
     "@babel/plugin-proposal-class-properties" "^7.14.5"
     "@babel/plugin-proposal-class-static-block" "^7.15.4"
     "@babel/plugin-proposal-dynamic-import" "^7.14.5"
@@ -881,7 +898,7 @@
     "@babel/plugin-proposal-logical-assignment-operators" "^7.14.5"
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.14.5"
     "@babel/plugin-proposal-numeric-separator" "^7.14.5"
-    "@babel/plugin-proposal-object-rest-spread" "^7.14.7"
+    "@babel/plugin-proposal-object-rest-spread" "^7.15.6"
     "@babel/plugin-proposal-optional-catch-binding" "^7.14.5"
     "@babel/plugin-proposal-optional-chaining" "^7.14.5"
     "@babel/plugin-proposal-private-methods" "^7.14.5"
@@ -927,16 +944,16 @@
     "@babel/plugin-transform-regenerator" "^7.14.5"
     "@babel/plugin-transform-reserved-words" "^7.14.5"
     "@babel/plugin-transform-shorthand-properties" "^7.14.5"
-    "@babel/plugin-transform-spread" "^7.14.6"
+    "@babel/plugin-transform-spread" "^7.15.8"
     "@babel/plugin-transform-sticky-regex" "^7.14.5"
     "@babel/plugin-transform-template-literals" "^7.14.5"
     "@babel/plugin-transform-typeof-symbol" "^7.14.5"
     "@babel/plugin-transform-unicode-escapes" "^7.14.5"
     "@babel/plugin-transform-unicode-regex" "^7.14.5"
     "@babel/preset-modules" "^0.1.4"
-    "@babel/types" "^7.15.4"
+    "@babel/types" "^7.15.6"
     babel-plugin-polyfill-corejs2 "^0.2.2"
-    babel-plugin-polyfill-corejs3 "^0.2.2"
+    babel-plugin-polyfill-corejs3 "^0.2.5"
     babel-plugin-polyfill-regenerator "^0.2.2"
     core-js-compat "^3.16.0"
     semver "^6.3.0"
@@ -2079,6 +2096,14 @@ babel-plugin-polyfill-corejs3@^0.2.2:
     "@babel/helper-define-polyfill-provider" "^0.2.2"
     core-js-compat "^3.14.0"
 
+babel-plugin-polyfill-corejs3@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-polyfill-corejs3/-/babel-plugin-polyfill-corejs3-0.2.5.tgz#2779846a16a1652244ae268b1e906ada107faf92"
+  integrity sha512-ninF5MQNwAX9Z7c9ED+H2pGt1mXdP4TqzlHKyPIYmJIYz0N+++uwdM7RnJukklhzJ54Q84vA4ZJkgs7lu5vqcw==
+  dependencies:
+    "@babel/helper-define-polyfill-provider" "^0.2.2"
+    core-js-compat "^3.16.2"
+
 babel-plugin-polyfill-regenerator@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-polyfill-regenerator/-/babel-plugin-polyfill-regenerator-0.2.2.tgz#b310c8d642acada348c1fa3b3e6ce0e851bee077"
@@ -2406,6 +2431,17 @@ browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.16.6, browserslist@^4
     escalade "^3.1.1"
     node-releases "^1.1.75"
 
+browserslist@^4.17.5:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.17.5.tgz#c827bbe172a4c22b123f5e337533ceebadfdd559"
+  integrity sha512-I3ekeB92mmpctWBoLXe0d5wPS2cBuRvvW0JyyJHMrk9/HmP2ZjrTboNAZ8iuGqaEIlKguljbQY32OkOJIRrgoA==
+  dependencies:
+    caniuse-lite "^1.0.30001271"
+    electron-to-chromium "^1.3.878"
+    escalade "^3.1.1"
+    node-releases "^2.0.1"
+    picocolors "^1.0.0"
+
 bser@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/bser/-/bser-2.1.1.tgz#e6787da20ece9d07998533cfd9de6f5c38f4bc05"
@@ -2560,6 +2596,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001061, can
   version "1.0.30001255"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001255.tgz#f3b09b59ab52e39e751a569523618f47c4298ca0"
   integrity sha512-F+A3N9jTZL882f/fg/WWVnKSu6IOo3ueLz4zwaOPbPYHNmM/ZaDUyzyJwS1mZhX7Ex5jqTyW599Gdelh5PDYLQ==
+
+caniuse-lite@^1.0.30001271:
+  version "1.0.30001272"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001272.tgz#8e9790ff995e9eb6e1f4c45cd07ddaa87cddbb14"
+  integrity sha512-DV1j9Oot5dydyH1v28g25KoVm7l8MTxazwuiH3utWiAS6iL/9Nh//TGwqFEeqqN8nnWYQ8HHhUq+o4QPt9kvYw==
 
 case-sensitive-paths-webpack-plugin@^2.4.0:
   version "2.4.0"
@@ -2969,20 +3010,28 @@ core-js-compat@^3.14.0, core-js-compat@^3.16.0:
     browserslist "^4.16.8"
     semver "7.0.0"
 
+core-js-compat@^3.16.2:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.19.0.tgz#b3b93f93c8721b3ed52b91f12f964cc410967f8b"
+  integrity sha512-R09rKZ56ccGBebjTLZHvzDxhz93YPT37gBm6qUhnwj3Kt7aCjjZWD1injyNbyeFHxNKfeZBSyds6O9n3MKq1sw==
+  dependencies:
+    browserslist "^4.17.5"
+    semver "7.0.0"
+
 core-js@^2.4.0:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
+core-js@^3.16.2:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
+  integrity sha512-L1TpFRWXZ76vH1yLM+z6KssLZrP8Z6GxxW4auoCj+XiViOzNPJCAuTIkn03BGdFe6Z5clX5t64wRIRypsZQrUg==
+
 core-js@^3.18.1:
   version "3.18.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.18.1.tgz#289d4be2ce0085d40fc1244c0b1a54c00454622f"
   integrity sha512-vJlUi/7YdlCZeL6fXvWNaLUPh/id12WXj3MbkMw5uOyF0PfWPBNOCNbs53YqgrvtujLNlt9JQpruyIKkUZ+PKA==
-
-core-js@^3.6.4:
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
-  integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -3615,6 +3664,11 @@ electron-to-chromium@^1.3.830:
   version "1.3.832"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.832.tgz#b947205525a7825eff9b39566140d5471241c244"
   integrity sha512-x7lO8tGoW0CyV53qON4Lb5Rok9ipDelNdBIAiYUZ03dqy4u9vohMM1qV047+s/hiyJiqUWX/3PNwkX3kexX5ig==
+
+electron-to-chromium@^1.3.878:
+  version "1.3.883"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.883.tgz#cc409921469b3aa6ab6efd65cc2a4375128bb703"
+  integrity sha512-goyjNx4wB9j911PBteb+AXNbErug7rJVkmDXWdw5SCVn2JlARBwsqucPkvp1h5mXWxHUbBRK3bwXTrqSxSiAIQ==
 
 elliptic@^6.0.0, elliptic@^6.5.2:
   version "6.5.4"
@@ -6442,6 +6496,11 @@ node-releases@^1.1.75:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.75.tgz#6dd8c876b9897a1b8e5a02de26afa79bb54ebbfe"
   integrity sha512-Qe5OUajvqrqDSy6wrWFmMwfJ0jVgwiw4T3KqmbTcZ62qW0gQkheXYhcFM1+lOVcGUoRxcEcfyvFMAnDgaF1VWw==
 
+node-releases@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.1.tgz#3d1d395f204f1f2f29a54358b9fb678765ad2fc5"
+  integrity sha512-CqyzN6z7Q6aMeF/ktcMVTzhAHCEpf8SOarwpzpf8pNBY2k5/oM34UHldUwp8VKI7uxct2HxSRdJjBaZeESzcxA==
+
 nopt@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-5.0.0.tgz#530942bb58a512fccafe53fe210f13a25355dc88"
@@ -6857,6 +6916,11 @@ pbkdf2@^3.0.3:
     ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+picocolors@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
+  integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
 
 picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3:
   version "2.3.0"
