@@ -72,6 +72,9 @@ export default {
     // Sequencescape API V2 URL
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
+    // Limber target Asset URL for posting the transfers
+    targetUrl: { type: String, required: true },
+
     // Number of source tubes
     tubeCount: { type: Number, default: 16 }
   },
@@ -96,14 +99,16 @@ export default {
   computed: {
     scanValidators() {
       const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      const firstPurpose = this.validTubes[0]?.labware.purpose
-      return [checkDuplicates(allTubes), checkMatchingPurposes(firstPurpose)]
+      return [checkDuplicates(allTubes), checkMatchingPurposes(this.firstTubePurpose)]
     },
     tubeFields() {
       return filterProps.tubeFields
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
+    },
+    firstTubePurpose() {
+      return this.validTubes[0]?.labware.purpose
     },
     unsuitableTubes() {
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
@@ -125,7 +130,33 @@ export default {
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
     },
-    createRack() {}
+    createRack() {
+      this.progressMessage = 'Creating tube rack...'
+      this.loading = true
+      let payload = {
+        tube_rack: {
+          purpose_uuid: this.firstTubePurpose.uuid
+        }
+      }
+      this.$axios({
+        method: 'post',
+        url: this.targetUrl,
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data: payload
+      }).then((response) => {
+        // Ajax responses automatically follow redirects, which
+        // would result in us receiving the full HTML for the child
+        // plate here, which we'd then need to inject into the
+        // page, and update the history. Instead we don't redirect
+        // application/json requests, and redirect the user ourselves.
+        this.progressMessage = response.data.message
+        this.locationObj.href = response.data.redirect
+      }).catch((error) => {
+        // Something has gone wrong
+        console.error(error)
+        this.loading = false
+      })
+    }
   }
 }
 </script>
