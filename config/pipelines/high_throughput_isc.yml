@@ -6,6 +6,7 @@ ISC:
     - limber_reisc # Typically reISC begins on LB Lib PCR-XP
     library_type: # Taken from the library types on the above request types
     - Agilent Pulldown
+    - Duplex-Seq
     - Twist Pulldown
   library_pass:
   - LB Cap Lib PCR-XP
@@ -29,4 +30,3 @@ ISC MX:
   relationships:
     LB Cap Lib PCR-XP: LB Cap Lib Pool
     LB Cap Lib Pool: Cap Lib Pool Norm
-

@@ -13,6 +13,9 @@ group :default do
   gem 'state_machines'
   gem 'webpacker'
 
+  # Adds easy conversions between units
+  gem 'ruby-units'
+
   # Used in the setting object, allows access by object and hash notation.
   gem 'hashie'
 
@@ -20,7 +23,7 @@ group :default do
   gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
   # Older Sequencescape API
-  gem 'sequencescape-client-api', '~> 0.6.1', require: 'sequencescape'
+  gem 'sequencescape-client-api', '~> 0.7.1', require: 'sequencescape'
   # Speed up json encoding/decoding with oj
   gem 'oj'
 
@@ -50,7 +53,9 @@ end
 group :development, :test do
   gem 'uglifier'
   # Bootstrap is a css framework
-  gem 'bootstrap'
+  # Pinning to v4 as bootstrap 5 drops compatibility with the latest versions of chrome and FF on XP
+  # Some lab machines are locked to XP due to vendor compatibility
+  gem 'bootstrap', '~>4'
   # gem 'coffee-rails', require: false
   # Use jquery as the JavaScript library
   gem 'jquery-rails'

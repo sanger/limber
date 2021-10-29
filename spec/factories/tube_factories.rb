@@ -141,6 +141,11 @@ FactoryBot.define do
     factory :v2_multiplexed_library_tube do
       purpose_name { 'Example Purpose' }
     end
+
+    factory :v2_stock_tube do
+      ancestors { nil }
+      outer_request { nil }
+    end
   end
 
   factory :tube_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do

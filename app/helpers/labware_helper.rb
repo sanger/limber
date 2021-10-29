@@ -31,7 +31,7 @@ module LabwareHelper # rubocop:todo Style/Documentation
     container.passed? && container.control_info != 'negative'
   end
 
-  def prevent_quadrant_fail?(container)
+  def prevent_well_fail?(container)
     !container.passed?
   end
 

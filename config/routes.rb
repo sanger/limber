@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   resources :qc_files, only: :show
 
   resources :limber_tubes, controller: :tubes do
+    resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
     resources :qc_files, controller: :qc_files
     resources :work_completions, only: :create, module: :tubes
