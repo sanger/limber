@@ -32,7 +32,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
 
-
   def self.find_by(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Tube.includes(*includes).find(options).first
   end

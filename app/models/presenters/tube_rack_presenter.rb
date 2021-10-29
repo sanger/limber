@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'presenters/presenter'
-
 module Presenters
   # Basic core presenter class for tube racks
   # Over time, expect this class to use composition to handle the need for different

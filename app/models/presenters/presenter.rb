@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'presenters'
+
 module Presenters::Presenter # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
 
