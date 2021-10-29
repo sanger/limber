@@ -23,7 +23,7 @@ module Presenters
 
     def add_unknown_plate_warnings
       errors.add(:plate,
-                 "type '#{labware.purpose.name}' is not a limber plate. "\
+                 "type '#{labware.purpose_name}' is not a limber plate. "\
                  'Perhaps you are using the wrong pipeline application?')
     end
 

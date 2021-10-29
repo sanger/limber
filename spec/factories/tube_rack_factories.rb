@@ -33,6 +33,8 @@ FactoryBot.define do
     number_of_columns { 12 }
     size { number_of_rows * number_of_columns }
     name { 'Example' }
+    created_at { '2017-06-29T09:31:59.000+01:00' }
+    updated_at { '2017-06-29T09:31:59.000+01:00' }
 
     after(:build) do |tube_rack, evaluator|
       Sequencescape::Api::V2::TubeRack.associations.each do |association|

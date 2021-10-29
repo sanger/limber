@@ -3,11 +3,14 @@
 # Tubes can be barcoded, but only have one receptacle for samples.
 class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasRequests
-  self.tube = true
+  include Sequencescape::Api::V2::Shared::HasPurpose
+  include Sequencescape::Api::V2::Shared::HasBarcode
 
-  property :created_at, type: :time
-  property :updated_at, type: :time
-  property :labware_barcode, type: :barcode
+  DEFAULT_INCLUDES = [
+    :purpose, 'aliquots.request.request_type'
+  ].freeze
+
+  self.tube = true
 
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
@@ -19,11 +22,11 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   has_many :state_changes
 
-  has_one :purpose
+  # Other relationships
+  # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
 
-  DEFAULT_INCLUDES = [
-    :purpose, 'aliquots.request.request_type'
-  ].freeze
+  property :created_at, type: :time
+  property :updated_at, type: :time
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Tube.includes(*includes).find(options).first
@@ -34,10 +37,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
                                 .where(options)
                                 .paginate(paginate)
                                 .all
-  end
-
-  def purpose_name
-    purpose&.name || Sequencescape::Api::V2::Purpose::UNKNOWN
   end
 
   # Dummied out for the moment. But no real reason not to add it to the API.
@@ -60,17 +59,9 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     uuid
   end
 
-  def barcode
-    labware_barcode
-  end
-
   def stock_plate(purpose_names: SearchHelper.stock_plate_names)
     # this is an array not a collection so cant use order_by
     # max_by naturally sorts in ascending order
     @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
-  end
-
-  def human_barcode
-    labware_barcode.human
   end
 end

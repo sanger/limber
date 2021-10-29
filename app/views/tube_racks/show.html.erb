@@ -3,13 +3,7 @@
 <%= page(:'tube-rack-show-page', :'show-page') do %>
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
-      <div class="card-body">
-        <h2 id="tube-rack-title" class="card-title">
-          <%= @presenter.title %>
-          <%= state_badge(@presenter.state) %>
-          <%= image_tag("icon_#{@presenter.priority}_flag.png", size: "32x32") %>
-        </h2>
-      </div>
+      <%= render 'content_header', presenter: @presenter, type: 'tube-rack' %>
       <%= render 'warnings', presenter: @presenter %>
       <% if @presenter.tube_failing_applicable? %>
         <div id="labware-well-failing" class='well-fail-toggle collapse'>
