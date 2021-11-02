@@ -61,6 +61,7 @@ import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
+import { indexToName } from 'shared/wellHelpers.js'
 
 export default {
   name: 'TubesToRack',
@@ -124,9 +125,7 @@ export default {
   },
   methods: {
     indexToName(index) {
-      const rowIndex = Math.floor(index / 8)
-      const colIndex = index - (rowIndex * 8)
-      return `${'ABCDEFGH'[rowIndex]}${colIndex + 1}`
+      return indexToName(index, this.rackHeight)
     },
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
