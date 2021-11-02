@@ -56,6 +56,12 @@ describe('checkMatchingPurposes', () => {
     expect(checkMatchingPurposes(undefined)(tube)).toEqual({ valid: true })
   })
 
+  it('fails if the tube purpose is undefined', () => {
+    const tube = {}
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
+      .toEqual({ valid: false, message: 'Tube purpose \'UNKNOWN\' doesn\'t match other tubes' })
+  })
+
   it('fails if the tube purpose doesn\'t match the reference purpose', () => {
     const tube = { purpose: { name: 'Another Purpose' } }
     expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
