@@ -72,15 +72,18 @@ export default {
     // Sequencescape API V2 URL
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
-    // Number of source tubes
-    tubeCount: { type: Number, default: 16 }
+    // Width of tube rack
+    rackWidth: { type: Number, default: 8 },
+
+    // Height of tube rack
+    rackHeight: { type: Number, default: 2 }
   },
   data () {
     return {
       // Array containing objects with scanned tubes, their states and the
       // index of the form input in which they were scanned.
-      // Note: Cannot use computed functions as data is invoked before
-      tubes: buildTubeObjs(this.tubeCount),
+      // Note: Cannot use computed functions as data is invoked before.
+      tubes: buildTubeObjs(this.rackWidth * this.rackHeight),
 
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
@@ -98,6 +101,9 @@ export default {
       const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
       const firstPurpose = this.validTubes[0]?.labware.purpose
       return [checkDuplicates(allTubes), checkMatchingPurposes(firstPurpose)]
+    },
+    tubeCount() {
+      return this.rackWidth * this.rackHeight
     },
     tubeFields() {
       return filterProps.tubeFields
