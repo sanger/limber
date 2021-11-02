@@ -12,7 +12,7 @@ const aggregate = (validators, item) => {
 //
 // Returns an object with a scan validation message
 const validScanMessage = () => {
-  return { valid: true, message: 'Great!' }
+  return { valid: true }
 }
 
 export { aggregate, validScanMessage }
