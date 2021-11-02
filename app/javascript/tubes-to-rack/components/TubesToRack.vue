@@ -24,7 +24,7 @@
       >
         <b-form-group
           label="Scan the tube barcodes into the relevant rack coordinates:"
-          style="position:relative; height:460px; overflow-y:scroll;"
+          class="fixed-height-scroll"
         >
           <lb-labware-scan
             v-for="i in tubeCount"
@@ -134,3 +134,10 @@ export default {
   }
 }
 </script>
+
+<style>
+  .fixed-height-scroll {
+    height:460px;
+    overflow-y:scroll;
+  }
+</style>
