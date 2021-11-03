@@ -78,6 +78,19 @@ module LabwareCreators
       }
     end
 
+    def asset_groups(child_plate)
+      # split the wells by study id e.g. { '1': [<well1>, <well3>, <well4>], '2': [{<well2>, <well5>}]}
+      study_wells = child_plate.wells.to_a.group_by { |well| well.aliquots.first.study.id }
+
+      # then build asset groups by study in a hash
+      study_wells.transform_values do |wells|
+        {
+          assets: wells.pluck(:uuid),
+          autodetect_studies_projects: true
+        }
+      end
+    end
+
     def create_submission_from_child_plate(child_plate)
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
@@ -91,7 +104,7 @@ module LabwareCreators
         template_name: configured_params[:template_name],
         labware_barcode: child_plate.human_barcode,
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
+        asset_groups: asset_groups(child_plate),
         api: api,
         user: user_uuid
       }
