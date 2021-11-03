@@ -1,3 +1,11 @@
+<!--
+  This is partially complete work and needs a few more pieces putting into place:
+  - Swap out the UI of the tube rack for a component James G was working on.
+  - Parse the tubes added to the rack into the correct format and hook up the
+    API call to the V2 SequenceScape endpoint for tube racks.
+  - Review the validations applied here and adjust if needed.
+-->
+
 <template>
   <lb-page>
     <lb-loading-modal
