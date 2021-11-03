@@ -16,6 +16,6 @@ describe('aggregate', () => {
 
 describe('validScanMessage', () => {
   it('provides a valid scan result object', () => {
-    expect(validScanMessage()).toEqual({ valid: true, message: 'Great!' })
+    expect(validScanMessage()).toEqual({ valid: true })
   })
 })

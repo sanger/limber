@@ -65,10 +65,10 @@ const checkDuplicates = (tubeList) => {
 // of the purposes from the full set of tubes being validated.
 const checkMatchingPurposes = (purpose) => {
   return (tube) => {
-    if (tube && purpose && tube.purpose.name !== purpose.name) {
+    if (tube && purpose && tube.purpose?.name !== purpose.name) {
       return {
         valid: false,
-        message: `Tube purpose '${tube.purpose.name}' doesn't match other tubes`
+        message: `Tube purpose '${tube.purpose?.name || 'UNKNOWN'}' doesn't match other tubes`
       }
     }
 

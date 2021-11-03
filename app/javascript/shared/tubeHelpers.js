@@ -6,6 +6,4 @@ const buildTubeObjs = function(number) {
   })
 }
 
-export {
-  buildTubeObjs
-}
+export { buildTubeObjs }

@@ -24,7 +24,7 @@
       >
         <b-form-group
           label="Scan the tube barcodes into the relevant rack coordinates:"
-          style="position:relative; height:460px; overflow-y:scroll;"
+          class="fixed-height-scroll"
         >
           <lb-labware-scan
             v-for="i in tubeCount"
@@ -61,6 +61,7 @@ import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
+import { indexToName } from 'shared/wellHelpers.js'
 
 export default {
   name: 'TubesToRack',
@@ -72,18 +73,21 @@ export default {
     // Sequencescape API V2 URL
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
-    // Limber target Asset URL for posting the transfers
-    targetUrl: { type: String, required: true },
+    // Width of tube rack
+    rackWidth: { type: Number, default: 8 },
 
-    // Number of source tubes
-    tubeCount: { type: Number, default: 16 }
+    // Height of tube rack
+    rackHeight: { type: Number, default: 2 },
+
+    // Limber target Asset URL for posting the transfers
+    targetUrl: { type: String, required: true }
   },
   data () {
     return {
       // Array containing objects with scanned tubes, their states and the
       // index of the form input in which they were scanned.
-      // Note: Cannot use computed functions as data is invoked before
-      tubes: buildTubeObjs(this.tubeCount),
+      // Note: Cannot use computed functions as data is invoked before.
+      tubes: buildTubeObjs(this.rackWidth * this.rackHeight),
 
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
@@ -100,6 +104,9 @@ export default {
     scanValidators() {
       const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
       return [checkDuplicates(allTubes), checkMatchingPurposes(this.firstTubePurpose)]
+    },
+    tubeCount() {
+      return this.rackWidth * this.rackHeight
     },
     tubeFields() {
       return filterProps.tubeFields
@@ -123,9 +130,7 @@ export default {
   },
   methods: {
     indexToName(index) {
-      const rowIndex = Math.floor(index / 8)
-      const colIndex = index - (rowIndex * 8)
-      return `${'ABCDEFGH'[rowIndex]}${colIndex + 1}`
+      return indexToName(index, this.rackHeight)
     },
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
@@ -160,3 +165,10 @@ export default {
   }
 }
 </script>
+
+<style>
+  .fixed-height-scroll {
+    height:460px;
+    overflow-y:scroll;
+  }
+</style>

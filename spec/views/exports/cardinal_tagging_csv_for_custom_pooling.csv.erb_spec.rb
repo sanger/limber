@@ -5,10 +5,11 @@ require 'spec_helper'
 RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   has_a_working_api
 
-  let(:aliquot_a1) { create :v2_tagged_aliquot, sample_attributes: { component_samples_count: 2 } }
-  let(:aliquot_b1) { create :v2_tagged_aliquot, sample_attributes: { component_samples_count: 3 } }
-  let(:well_a1) { create(:v2_tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_a1]) }
-  let(:well_b1) { create(:v2_tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_b1]) }
+  let(:aliquot_1) { create :v2_tagged_aliquot }
+  let(:aliquot_2) { create :v2_tagged_aliquot }
+  let(:aliquot_3) { create :v2_tagged_aliquot }
+  let(:well_a1) { create(:v2_tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_3]) }
+  let(:well_b1) { create(:v2_tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_2]) }
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }
 
   before do
@@ -33,7 +34,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     expect(get_column(parsed_csv, 1)).to eq([nil, nil])
     expect(get_column(parsed_csv, 2)).to eq([nil, nil])
 
-    expect(get_column(parsed_csv, 3)).to eq(%w[2 3])
+    expect(get_column(parsed_csv, 3)).to eq(%w[2 1])
 
     expect(get_column(parsed_csv, 4)).to eq([well_a1.aliquots[0].tag_index.to_s, well_b1.aliquots[0].tag_index.to_s])
     expect(get_column(parsed_csv, 5)).to eq([well_a1.aliquots[0].tag2_index.to_s, well_b1.aliquots[0].tag2_index.to_s])
