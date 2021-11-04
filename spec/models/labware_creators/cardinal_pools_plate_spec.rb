@@ -25,6 +25,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   # TODO: rename throughout to source and dest
+  # SS V2 API Plate
   let(:plate) do
     plate1 = create(:v2_plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
 
@@ -59,6 +60,22 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect(Rails.application.config.cardinal_pooling_config[39]).to eq(3)
       expect(Rails.application.config.cardinal_pooling_config[26]).to eq(2)
       expect(Rails.application.config.cardinal_pooling_config[20]).to eq(1)
+    end
+
+    context 'when missing a sample manifest' do
+      it 'fails validation when all wells a missed a sample manifest' do
+        stub_v2_plate(plate, stub_search: false)
+        plate.wells.map { |well| well.aliquots.first.sample.sample_manifest = nil }
+        expect(subject).to_not be_valid
+        expect(subject.errors.messages[:source_plate]).to be_present
+      end
+
+      it 'fails validation when 1 well is missing a sample manifest' do
+        stub_v2_plate(plate, stub_search: false)
+        plate.wells[0].aliquots.first.sample.sample_manifest = nil
+        expect(subject).to_not be_valid
+        expect(subject.errors.messages[:source_plate]).to be_present
+      end
     end
   end
 

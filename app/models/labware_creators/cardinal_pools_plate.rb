@@ -15,6 +15,9 @@ module LabwareCreators
   # This class is used for creating Cardinal pools into destination plate
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
+    include LabwareCreators::RequireWellsWithSampleManifest
+
+    validate :wells_with_aliquots_have_sample_manifest?
 
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
@@ -137,7 +140,8 @@ module LabwareCreators
     end
 
     # Get passed parent wells, randomise, then group by sample supplier
-    # e.g. { 0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23'] }
+    # e.g. { supplier0=>['w1', 'w4'], supplier1=>['w6', 'w2'], supplier2=>['w9', 'w23'] }
+    # wells_with_aliquots_have_sample_manfiest? handles the validation of sample_manfiest presence
     def wells_grouped_by_supplier
       passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_manifest.supplier_name }
     end
