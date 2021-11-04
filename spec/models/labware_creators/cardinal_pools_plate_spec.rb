@@ -76,6 +76,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
         expect(subject).to_not be_valid
         expect(subject.errors.messages[:source_plate]).to be_present
       end
+
+      it 'fails validation when the sample manifests supplier name is missing' do
+        stub_v2_plate(plate, stub_search: false)
+        plate.wells[0].aliquots.first.sample.sample_manifest.supplier_name = nil
+        expect(subject).to_not be_valid
+        expect(subject.errors.messages[:source_plate]).to be_present
+      end
     end
   end
 
