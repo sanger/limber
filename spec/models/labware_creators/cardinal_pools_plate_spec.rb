@@ -63,7 +63,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
 
     context 'when missing a sample manifest' do
-      it 'fails validation when all wells a missed a sample manifest' do
+      it 'fails validation when all wells are missing a sample manifest' do
         stub_v2_plate(plate, stub_search: false)
         plate.wells.map { |well| well.aliquots.first.sample.sample_manifest = nil }
         expect(subject).to_not be_valid

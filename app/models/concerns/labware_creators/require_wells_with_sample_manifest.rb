@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# Can be included in plate creators which requires well aliquots to a sample manifest
+# Can be included in plate creators which requires well aliquots to have a sample manifest
 module LabwareCreators::RequireWellsWithSampleManifest
   extend ActiveSupport::Concern
 
-  # Validation method that can be called to check that all wells with aliquots
+  # Validation method that can be called to check that all wells, with aliquots,
   # have an associated sample manifest.
   def wells_with_aliquots_have_sample_manifest?
     invalid_well_locations = wells_with_missing_sample_manifest
