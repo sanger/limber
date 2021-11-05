@@ -1,0 +1,7 @@
+<div class="card-body">
+  <h2 id="<%= type %>-title" class="card-title">
+    <%= presenter.title %>
+    <%= state_badge(presenter.state) %>
+    <%= image_tag("icon_#{presenter.priority}_flag.png", size: "32x32") if presenter.try(:priority)%>
+  </h2>
+</div>

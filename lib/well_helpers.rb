@@ -1,36 +1,57 @@
 # frozen_string_literal: true
 
-module WellHelpers # rubocop:todo Style/Documentation
-  COLUMNS_RANGE = {
-    96 => (1..12).freeze,
-    384 => (1..24).freeze
-  }.freeze
+# Provides a series of helper methos to assist with generating and processing well names
+module WellHelpers
+  # Provide model level wrappers for these methods. Requires the the including class
+  # responds to #number_of_columns and #number of wells
+  module Extensions
+    def locations_in_rows
+      WellHelpers.row_order(rows: number_of_rows, columns: number_of_columns)
+    end
 
-  ROWS_RANGE = {
-    96 => ('A'..'H').freeze,
-    384 => ('A'..'P').freeze
-  }.freeze
+    def rows_range
+      WellHelpers.rows_range(rows: number_of_rows)
+    end
 
-  def self.columns_range(size)
-    COLUMNS_RANGE.fetch(size)
+    def columns_range
+      WellHelpers.columns_range(columns: number_of_columns)
+    end
   end
 
-  def self.rows_range(size)
-    ROWS_RANGE.fetch(size)
+  HORIZONTAL_RATIO = 3
+  VERTICAL_RATIO = 2
+
+  def self.default_columns(size)
+    ((size / (VERTICAL_RATIO * HORIZONTAL_RATIO))**0.5).to_i * HORIZONTAL_RATIO
+  end
+
+  def self.default_rows(size)
+    ((size / (VERTICAL_RATIO * HORIZONTAL_RATIO))**0.5).to_i * VERTICAL_RATIO
+  end
+
+  def self.columns_range(size = nil, columns: nil)
+    number_columns = columns || default_columns(size)
+    (1..number_columns)
+  end
+
+  def self.rows_range(size = nil, rows: nil)
+    number_rows = rows || default_rows(size)
+    ('A'..).take(number_rows)
   end
 
   # Returns an array of all well names in column order
   #
   # @return [Array] well names in column order ie. A1, B1, C1 ...
-  def self.column_order(size = 96)
-    columns_range(size).each_with_object([]) { |c, wells| rows_range(size).each { |r| wells << "#{r}#{c}" } }.freeze
+  def self.column_order(size = 96, rows: nil, columns: nil)
+    columns_range(size, columns: columns).each_with_object([]) { |c, wells| rows_range(size, rows: rows).each { |r| wells << "#{r}#{c}" } }.freeze
   end
 
   # Returns an array of all well names in row order
   #
+  # @param [96,192] number of wells on the plate. Only valid for 3:2 ratio plate sizes
   # @return [Array] well names in column order ie. A1, A2, A3 ...
-  def self.row_order(size = 96)
-    rows_range(size).each_with_object([]) { |r, wells| columns_range(size).each { |c| wells << "#{r}#{c}" } }.freeze
+  def self.row_order(size = 96, rows: nil, columns: nil)
+    rows_range(size, rows: rows).each_with_object([]) { |r, wells| columns_range(size, columns: columns).each { |c| wells << "#{r}#{c}" } }.freeze
   end
 
   #
@@ -40,8 +61,8 @@ module WellHelpers # rubocop:todo Style/Documentation
   #
   # @return [Hash] eg. { 'A1' => 'A1', 'B1' => 'B1', ...}
   #
-  def self.stamp_hash(size)
-    column_order(size).each_with_object({}) { |well, hash| hash[well] = well }
+  def self.stamp_hash(size, rows: nil, columns: nil)
+    column_order(size, rows: rows, columns: columns).each_with_object({}) { |well, hash| hash[well] = well }
   end
 
   # Returns the index of the well by column

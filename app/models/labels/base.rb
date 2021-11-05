@@ -34,16 +34,16 @@ class Labels::Base # rubocop:todo Style/Documentation
   delegate :workline_identifier, to: :labware
 
   def printer_type
-    Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:printer_type, default_printer_type)
+    config.fetch(:printer_type, default_printer_type)
   end
 
   def label_template
-    Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, default_label_template)
+    config.fetch(:pmb_template, default_label_template)
   end
 
   def label_templates_by_service
-    pmb_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:pmb_template, default_label_template)
-    sprint_template = Settings.purposes.fetch(labware.purpose.uuid, {}).fetch(:sprint_template, default_sprint_label_template)
+    pmb_template = config.fetch(:pmb_template, default_label_template)
+    sprint_template = config.fetch(:sprint_template, default_sprint_label_template)
     {
       'PMB' => pmb_template,
       'SPrint' => sprint_template
@@ -51,6 +51,10 @@ class Labels::Base # rubocop:todo Style/Documentation
   end
 
   private
+
+  def config
+    @config ||= Settings.purposes.fetch(labware.purpose&.uuid, {})
+  end
 
   def default_printer_type_for(printer_type)
     Settings.default_printer_type_names[printer_type]

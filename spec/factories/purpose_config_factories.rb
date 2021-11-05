@@ -195,4 +195,28 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :tube_rack_config, class: Hash do
+    to_create do |instance, evaluator|
+      Settings.purpose_uuids[evaluator.name] = evaluator.uuid
+      Settings.purposes[evaluator.uuid] = instance
+    end
+
+    initialize_with { attributes }
+
+    transient do
+      uuid { 'example-purpose-uuid' }
+    end
+
+    name { 'Tube rack' }
+    asset_type { 'tube_rack' }
+    default_printer_type { :tube_rack }
+    presenter_class { 'Presenters::TubeRackPresenter' }
+    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    submission { {} }
+    label_class { nil }
+    printer_type { '96 Well Plate' }
+    pmb_template { 'sqsc_96plate_label_template_code39' }
+    size { 96 }
+  end
 end

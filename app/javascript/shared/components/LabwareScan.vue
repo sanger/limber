@@ -2,11 +2,13 @@
   <div>
     <b-container>
       <b-row>
-        <b-col v-if="labwareType=='tube'"
+        <b-col
+          v-if="labwareType=='tube'"
           cols="1"
         >
           <div :class="['pool-colours']">
-            <div :id="'well_index_' + colourIndex"
+            <div
+              :id="'well_index_' + colourIndex"
               class="well"
             >
               <span :class="['aliquot', colourClass]" />
