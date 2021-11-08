@@ -51,11 +51,6 @@ Rails.application.routes.draw do
     resources :qc_files, controller: :qc_files
   end
 
-  scope 'tube_rack', controller: :tube_rack_creation do
-    get  'new', action: :tubes_to_rack, as: :new_tube_rack
-    post 'create', action: :create, as: :create_tube_rack
-  end
-
   # limber_multiplexed_library_tube routes have been removed, and instead
   # mx tubes behave like standard tubes for the purposes of routing/url generation
   # Keeping this redirect here to handle bookmarks. The other routes weren't
