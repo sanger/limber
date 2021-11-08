@@ -36,7 +36,11 @@ RSpec.describe LabwareCreators::MultiStampTubes do
     }
     stub_v2_tube(parent1, stub_search: false)
     stub_v2_tube(parent2, stub_search: false)
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
+    stub_v2_plate(
+      child_plate_v2,
+      stub_search: false,
+      custom_includes: 'wells,wells.aliquots,wells.aliquots.study'
+    )
   end
 
   context 'on new' do

@@ -27,6 +27,8 @@ module LabwareCreators
 
     validates :transfers, presence: true
 
+    PLATE_INCLUDES = 'wells,wells.aliquots,wells.aliquots.study'
+
     def allow_tube_duplicates?
       params.fetch('allow_tube_duplicates', false)
     end
@@ -41,7 +43,7 @@ module LabwareCreators
       )
 
       @child = plate_creation.child
-      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
+      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: @child.uuid)
 
       transfer_material_from_parent!(child_v2)
 
@@ -79,16 +81,12 @@ module LabwareCreators
     end
 
     def occupied_wells(wells)
-      wells.each_with_object([]) do |well, occupied_wells|
-        next if well.empty?
-
-        occupied_wells << well
-      end
+      wells.reject(&:empty?)
     end
 
     def asset_groups(child_plate)
       # split the wells by study id e.g. { '1': [<well1>, <well3>, <well4>], '2': [{<well2>, <well5>}]}
-      study_wells = occupied_wells(child_plate.wells).to_a.group_by { |well| well.aliquots.first.study.id }
+      study_wells = occupied_wells(child_plate.wells).group_by { |well| well.aliquots.first.study.id }
 
       # then build asset groups by study in a hash
       study_wells.transform_values do |wells|
