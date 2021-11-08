@@ -33,7 +33,7 @@
               type="text"
               :state="formState"
               size="lg"
-              placeholder="Scan labware"
+              :placeholder="'Scan ' + labwareType"
               :disabled="scanDisabled"
               @change="lookupLabware"
             />
@@ -46,7 +46,8 @@
 
 <script>
 
-import { checkSize, aggregate } from './plateScanValidators'
+import { checkSize } from './plateScanValidators'
+import { aggregate } from './scanValidators'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with
@@ -154,7 +155,7 @@ export default {
       if (this.labware === null) {
         return { state: 'empty', message: '' }
       } else if (this.labware === undefined) {
-        return { state: 'invalid', message: 'Could not find labware' }
+        return { state: 'invalid', message: `Could not find ${this.labwareType}` }
       } else {
         const result = aggregate(this.computedValidators, this.labware)
         return { state: boolToString[result.valid], message: result.message }

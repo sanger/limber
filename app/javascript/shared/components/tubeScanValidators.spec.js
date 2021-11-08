@@ -1,18 +1,4 @@
-import { checkDuplicates, checkState, aggregate } from 'shared/components/tubeScanValidators'
-
-describe('aggregate', () => {
-  const validFunction = (_) => { return { valid: true, message: 'Good' } }
-  const invalidFunction = (_) => { return { valid: false, message: 'Bad' } }
-
-  it('is valid if all functions are valid', () => {
-    expect(aggregate([validFunction, validFunction], {})).toEqual({ valid: true, message: 'Good' })
-  })
-
-  it('is invalid if any functions are invalid', () => {
-    expect(aggregate([validFunction, invalidFunction], {})).toEqual({ valid: false, message: 'Bad' })
-    expect(aggregate([invalidFunction, validFunction], {})).toEqual({ valid: false, message: 'Bad' })
-  })
-})
+import { checkDuplicates, checkMatchingPurposes, checkState } from 'shared/components/tubeScanValidators'
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
@@ -21,7 +7,7 @@ describe('checkDuplicates', () => {
 
     expect(
       checkDuplicates([tube1, tube2])(tube1)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails if there are duplicate tubes', () => {
@@ -50,7 +36,36 @@ describe('checkDuplicates', () => {
 
     expect(
       checkDuplicates([empty, tube2])(tube1)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
+  })
+})
+
+describe('checkMatchingPurposes', () => {
+  it('passes if the tube has a matching purpose', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube)).toEqual({ valid: true })
+  })
+
+  it('passes if the tube is undefined', () => {
+    const tube = undefined
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube)).toEqual({ valid: true })
+  })
+
+  it('passes if the reference purpose is undefined', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkMatchingPurposes(undefined)(tube)).toEqual({ valid: true })
+  })
+
+  it('fails if the tube purpose is undefined', () => {
+    const tube = {}
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
+      .toEqual({ valid: false, message: 'Tube purpose \'UNKNOWN\' doesn\'t match other tubes' })
+  })
+
+  it('fails if the tube purpose doesn\'t match the reference purpose', () => {
+    const tube = { purpose: { name: 'Another Purpose' } }
+    expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
+      .toEqual({ valid: false, message: 'Tube purpose \'Another Purpose\' doesn\'t match other tubes' })
   })
 })
 
@@ -60,7 +75,7 @@ describe('checkState', () => {
 
     expect(
       checkState(['available', 'exhausted'],0)(tube)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails if the state is not in the allowed list', () => {

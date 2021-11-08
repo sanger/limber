@@ -1,24 +1,10 @@
-import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy, aggregate } from 'shared/components/plateScanValidators'
-
-describe('aggregate', () => {
-  const validFunction = (_) => { return { valid: true, message: 'Good' } }
-  const invalidFunction = (_) => { return { valid: false, message: 'Bad' } }
-
-  it('is valid if all functions are valid', () => {
-    expect(aggregate([validFunction, validFunction], {})).toEqual({ valid: true, message: 'Good' })
-  })
-
-  it('is invalid if any functions are invalid', () => {
-    expect(aggregate([validFunction, invalidFunction], {})).toEqual({ valid: false, message: 'Bad' })
-    expect(aggregate([invalidFunction, validFunction], {})).toEqual({ valid: false, message: 'Bad' })
-  })
-})
+import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {
     expect(
       checkSize(12,8)({number_of_columns: 12, number_of_rows: 8 })
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('is valid if the plate is the wrong size', () => {
@@ -35,7 +21,7 @@ describe('checkDuplicates', () => {
 
     expect(
       checkDuplicates([plate1, plate2])(plate1)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails if there are duplicate plates', () => {
@@ -64,7 +50,7 @@ describe('checkDuplicates', () => {
 
     expect(
       checkDuplicates([empty, plate2])(plate1)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 })
 
@@ -78,7 +64,7 @@ describe('checkExcess', () => {
 
     expect(
       checkExcess(excessTransfers)(plate)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails when the plate is the source of excess transfers', () => {
@@ -104,7 +90,7 @@ describe('checkState', () => {
 
     expect(
       checkState(['available', 'exhausted'],0)(plate)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails if the state is not in the allowed list', () => {
@@ -128,7 +114,7 @@ describe('checkQCableWalkingBy', () => {
 
     expect(
       checkQCableWalkingBy(['wells of plate'],0)(qcable)
-    ).toEqual({ valid: true, message: 'Great!' })
+    ).toEqual({ valid: true })
   })
 
   it('fails if the qcable does not contain a tag layout template', () => {
