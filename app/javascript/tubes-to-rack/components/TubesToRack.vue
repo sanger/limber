@@ -1,3 +1,11 @@
+<!--
+  This is partially complete work and needs a few more pieces putting into place:
+  - Swap out the UI of the tube rack for a component James G was working on.
+  - Parse the tubes added to the rack into the correct format and hook up the
+    API call to the V2 SequenceScape endpoint for tube racks.
+  - Review the validations applied here and adjust if needed.
+-->
+
 <template>
   <lb-page>
     <lb-loading-modal
@@ -77,7 +85,10 @@ export default {
     rackWidth: { type: Number, default: 8 },
 
     // Height of tube rack
-    rackHeight: { type: Number, default: 2 }
+    rackHeight: { type: Number, default: 2 },
+
+    // Limber target Asset URL for posting the transfers
+    targetUrl: { type: String, required: true }
   },
   data () {
     return {
@@ -100,8 +111,7 @@ export default {
   computed: {
     scanValidators() {
       const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      const firstPurpose = this.validTubes[0]?.labware.purpose
-      return [checkDuplicates(allTubes), checkMatchingPurposes(firstPurpose)]
+      return [checkDuplicates(allTubes), checkMatchingPurposes(this.firstTubePurpose)]
     },
     tubeCount() {
       return this.rackWidth * this.rackHeight
@@ -111,6 +121,9 @@ export default {
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
+    },
+    firstTubePurpose() {
+      return this.validTubes[0]?.labware.purpose
     },
     unsuitableTubes() {
       return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
@@ -130,7 +143,33 @@ export default {
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, {...data, index: index - 1 })
     },
-    createRack() {}
+    createRack() {
+      this.progressMessage = 'Creating tube rack...'
+      this.loading = true
+      let payload = {
+        tube_rack: {
+          purpose_uuid: this.firstTubePurpose.uuid
+        }
+      }
+      this.$axios({
+        method: 'post',
+        url: this.targetUrl,
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data: payload
+      }).then((response) => {
+        // Ajax responses automatically follow redirects, which
+        // would result in us receiving the full HTML for the child
+        // plate here, which we'd then need to inject into the
+        // page, and update the history. Instead we don't redirect
+        // application/json requests, and redirect the user ourselves.
+        this.progressMessage = response.data.message
+        this.locationObj.href = response.data.redirect
+      }).catch((error) => {
+        // Something has gone wrong
+        console.error(error)
+        this.loading = false
+      })
+    }
   }
 }
 </script>
