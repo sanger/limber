@@ -27,6 +27,8 @@ module LabwareCreators
 
     validates :transfers, presence: true
 
+    PLATE_INCLUDES = 'wells,wells.aliquots,wells.aliquots.study'
+
     def allow_tube_duplicates?
       params.fetch('allow_tube_duplicates', false)
     end
@@ -41,7 +43,7 @@ module LabwareCreators
       )
 
       @child = plate_creation.child
-      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
+      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: @child.uuid)
 
       transfer_material_from_parent!(child_v2)
 
@@ -78,6 +80,23 @@ module LabwareCreators
       }
     end
 
+    def occupied_wells(wells)
+      wells.reject(&:empty?)
+    end
+
+    def asset_groups(child_plate)
+      # split the wells by study id e.g. { '1': [<well1>, <well3>, <well4>], '2': [{<well2>, <well5>}]}
+      study_wells = occupied_wells(child_plate.wells).group_by { |well| well.aliquots.first.study.id }
+
+      # then build asset groups by study in a hash
+      study_wells.transform_values do |wells|
+        {
+          assets: wells.pluck(:uuid),
+          autodetect_studies_projects: true
+        }
+      end
+    end
+
     def create_submission_from_child_plate(child_plate)
       submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
@@ -91,7 +110,7 @@ module LabwareCreators
         template_name: configured_params[:template_name],
         labware_barcode: child_plate.human_barcode,
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: child_plate.wells.pluck(:uuid), autodetect_studies_projects: true }],
+        asset_groups: asset_groups(child_plate),
         api: api,
         user: user_uuid
       }
