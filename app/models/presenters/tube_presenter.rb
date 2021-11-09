@@ -60,5 +60,14 @@ module Presenters
         yield child_tubes if block_given? && child_tubes.present?
       end
     end
+
+    def qc_summary
+      # yield 'Concentration', labware.concentration unless labware.concentration.nil?
+      nil
+    end
+
+    def qc_footer
+
+    end
   end
 end

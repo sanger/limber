@@ -19,7 +19,7 @@
   <div class="tab-content">
     <div class="tab-pane active" id='summary_tab' role="tabpanel">
       <%= render partial: 'summary', locals: { presenter: presenter } %>
-      <%= render partial: 'qc_data_output', locals: { presenter: presenter } %>
+      <%= render partial: 'qc_data_show', locals: { presenter: presenter } %>
     </div>
     <div class="tab-pane" id='children_tab' role="tabpanel">
       <%= render partial: 'tube_list', locals: { presenter: presenter, tube_template: 'labware/simple_tube' } %>
