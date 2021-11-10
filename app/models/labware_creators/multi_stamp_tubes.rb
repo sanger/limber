@@ -47,6 +47,7 @@ module LabwareCreators
 
       transfer_material_from_parent!(child_v2)
 
+      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: @child.uuid) # reload to get the aliquots
       create_submission_from_child_plate(child_v2)
 
       yield(@child) if block_given?
