@@ -61,7 +61,7 @@ module Presenters
       end
     end
 
-    def qc_data?
+    def qc_summary?
       labware.receptacle&.qc_results&.to_a.present?
     end
 
@@ -69,9 +69,19 @@ module Presenters
       labware.receptacle.qc_results.sort_by(&:key).each do |result|
         yield result.key.titleize, result.unit_value
       end
+      transfer_volumes.each { |key, value| yield key.titleize, value } if transfer_volumes.present?
       nil
     end
 
-    def qc_footer; end
+    def transfer_inputs
+      nil
+    end
+
+    def transfer_volumes
+      {
+        'sample volume *' => '180 µl',
+        'buffer volume *' => '12 µl'
+      }
+    end
   end
 end
