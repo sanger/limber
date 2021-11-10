@@ -6,6 +6,7 @@ module Presenters
     include Presenters::Presenter
     include Statemachine::Shared
     include Presenters::CreationBehaviour
+    include TransfersHelper
     include RobotControlled
 
     self.summary_items = {
@@ -69,19 +70,30 @@ module Presenters
       labware.receptacle.qc_results.sort_by(&:key).each do |result|
         yield result.key.titleize, result.unit_value
       end
-      transfer_volumes.each { |key, value| yield key.titleize, value } if transfer_volumes.present?
       nil
+    end
+
+    def transfer_inputs?
+      transfer_inputs.present?
     end
 
     def transfer_inputs
-      nil
+      { target_molarity: 4, target_volume: 192, source_molarity: 12, minimum_pick: 2 }
     end
 
     def transfer_volumes
-      {
-        'sample volume *' => '180 µl',
-        'buffer volume *' => '12 µl'
-      }
+      return nil unless transfer_inputs?
+
+      volumes = calculate_pick_volumes(
+        target_molarity: transfer_inputs[:target_molarity],
+        target_volume: transfer_inputs[:target_volume],
+        source_molarity: transfer_inputs[:source_molarity],
+        minimum_pick: transfer_inputs[:minimum_pick]
+      )
+
+      yield 'Sample Volume *', "#{volumes[:sample_volume]} µl"
+      yield 'Buffer Volume *', "#{volumes[:buffer_volume]} µl"
+      nil
     end
   end
 end
