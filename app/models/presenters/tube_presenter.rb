@@ -61,6 +61,10 @@ module Presenters
       end
     end
 
+    def qc_data?
+      labware.receptacle&.qc_results.present?
+    end
+
     def qc_summary
       labware.receptacle.qc_results.sort_by(&:key).each do |result|
         yield result.key.titleize, result.unit_value
