@@ -17,6 +17,14 @@ module TransfersHelper
   #  - A hash containing keys :pick_volume and :buffer_volume for the transfer.
   #    Volumes in the return hash use the same units as the target_volume parameter.
   def calculate_pick_volumes(target_molarity, target_volume, source_molarity, minimum_pick)
-    return { pick_volume: 0, buffer_volume: 0 }
+    pick_volume = (target_molarity / source_molarity) * target_volume
+    pick_volume = [pick_volume, minimum_pick].max
+    buffer_volume = target_volume - pick_volume
+
+    if buffer_volume < minimum_pick
+      { pick_volume: target_volume, buffer_volume: 0 }
+    else
+      { pick_volume: pick_volume, buffer_volume: buffer_volume }
+    end
   end
 end
