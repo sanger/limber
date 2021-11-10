@@ -1,17 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TransfersHelper do
-  let(:target_molarity) { 5 }
-  let(:target_volume) { 200 }
   let(:source_molarity) { 15 }
-  let(:minimum_pick) { 2 }
   let(:return_value) do
-    calculate_pick_volumes(
-      target_molarity,
-      target_volume,
-      source_molarity,
-      minimum_pick
-    )
+    calculate_pick_volumes(target_molarity: 5, target_volume: 200, minimum_pick: 2, source_molarity: source_molarity)
   end
   let(:sample_volume) { return_value[:sample_volume] }
   let(:buffer_volume) { return_value[:buffer_volume] }
