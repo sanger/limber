@@ -62,7 +62,7 @@ module Presenters
     end
 
     def qc_data?
-      labware.receptacle&.qc_results.present?
+      labware.receptacle&.qc_results&.to_a.present?
     end
 
     def qc_summary
