@@ -5,7 +5,7 @@
       <%= presenter.qc_summary do |key, value| %>
         <dt><%= key %></dt><dd><%= value %></dd>
       <% end %>
-      <% if presenter.transfer_inputs? %>
+      <% if presenter.transfer_volumes? %>
         <%= presenter.transfer_volumes do |key, value| %>
           <dt><%= key %></dt><dd><%= value %></dd>
         <% end %>

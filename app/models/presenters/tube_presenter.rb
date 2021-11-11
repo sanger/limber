@@ -73,26 +73,37 @@ module Presenters
       nil
     end
 
-    def transfer_inputs?
-      transfer_inputs.present?
+    def transfer_volumes?
+      [source_molarity, target_molarity, target_volume, minimum_pick].none?(&:nil?)
     end
 
-    def transfer_inputs
-      { target_molarity: 4, target_volume: 192, source_molarity: 12, minimum_pick: 2 }
+    def source_molarity
+      molarity_qc_result = labware.receptacle.qc_results.detect { |result| result.key == 'molarity' }
+      molarity_qc_result.nil? ? nil : molarity_qc_result.value.to_f
+    end
+
+    def target_molarity
+      purpose_config.transfer_parameters[:target_molarity_nm]
+    end
+
+    def target_volume
+      purpose_config.transfer_parameters[:target_volume_ul]
+    end
+
+    def minimum_pick
+      purpose_config.transfer_parameters[:minimum_pick_ul]
     end
 
     def transfer_volumes
-      return nil unless transfer_inputs?
-
       volumes = calculate_pick_volumes(
-        target_molarity: transfer_inputs[:target_molarity],
-        target_volume: transfer_inputs[:target_volume],
-        source_molarity: transfer_inputs[:source_molarity],
-        minimum_pick: transfer_inputs[:minimum_pick]
+        target_molarity: target_molarity,
+        target_volume: target_volume,
+        source_molarity: source_molarity,
+        minimum_pick: minimum_pick
       )
 
-      yield 'Sample Volume *', "#{volumes[:sample_volume]} µl"
-      yield 'Buffer Volume *', "#{volumes[:buffer_volume]} µl"
+      yield 'Sample Volume *', "#{volumes[:sample_volume].round} µl"
+      yield 'Buffer Volume *', "#{volumes[:buffer_volume].round} µl"
       nil
     end
   end
