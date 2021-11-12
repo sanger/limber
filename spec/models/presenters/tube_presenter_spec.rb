@@ -9,6 +9,7 @@ RSpec.describe Presenters::TubePresenter do
 
   let(:labware) do
     build :v2_multiplexed_library_tube,
+          receptacle: receptacle,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 6,
@@ -22,6 +23,7 @@ RSpec.describe Presenters::TubePresenter do
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
+  let(:receptacle) { create :v2_receptacle }
   let(:summary_tab) do
     [
       ['Barcode', 'NT6T <em>3980000006844</em>'],
@@ -41,4 +43,12 @@ RSpec.describe Presenters::TubePresenter do
   end
 
   it_behaves_like 'a labware presenter'
+
+  context 'has no receptacle' do
+    let(:receptacle) { nil }
+
+    it 'has no qc_summary' do
+      expect(subject.qc_summary?).to be_falsey
+    end
+  end
 end
