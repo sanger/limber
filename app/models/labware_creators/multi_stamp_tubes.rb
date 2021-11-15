@@ -73,6 +73,13 @@ module LabwareCreators
       end
     end
 
+    def source_tube_outer_request_uuid(tube)
+      # Assumptions: the requests we want will still be in state pending, and there will only be one
+      # Alternatively, if we know what request type we are expecting, we could look for that type
+      pending_reqs = tube.receptacle.requests_as_source.reject { |req| req.state == 'passed' }
+      pending_reqs.first.uuid
+    end
+
     def request_hash(transfer, child_plate)
       tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
@@ -81,12 +88,16 @@ module LabwareCreators
         'target_asset' => child_plate.wells.detect do |child_well|
                             child_well.location == transfer.dig(:new_target, :location)
                           end&.uuid,
-        'outer_request' => tube.receptacle.requests_as_source.first.uuid
+        'outer_request' => source_tube_outer_request_uuid(tube)
       }
     end
 
+    def submission_options_from_config
+      @submission_options_from_config ||= purpose_config.submission_options
+    end
+
     def create_submission_from_parent_tubes
-      submission_options_from_config = purpose_config.submission_options
+      # submission_options_from_config = purpose_config.submission_options
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.
       return unless submission_options_from_config.count == 1
