@@ -8,7 +8,7 @@ RSpec.describe Presenters::TubePresenter do
   has_a_working_api
 
   let(:labware) do
-    build :v2_multiplexed_library_tube,
+    build :v2_tube,
           receptacle: receptacle,
           purpose_name: purpose_name,
           state: state,

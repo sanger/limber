@@ -10,7 +10,7 @@ RSpec.describe Presenters::FinalTubePresenter do
   has_a_working_api
 
   let(:labware) do
-    build :v2_multiplexed_library_tube,
+    build :v2_tube,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 6,

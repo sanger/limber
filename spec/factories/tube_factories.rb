@@ -139,10 +139,6 @@ FactoryBot.define do
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
     end
 
-    factory :v2_multiplexed_library_tube do
-      purpose_name { 'Example Purpose' }
-    end
-
     factory :v2_stock_tube do
       ancestors { nil }
       outer_request { nil }
