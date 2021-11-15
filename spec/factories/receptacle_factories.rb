@@ -6,5 +6,13 @@ FactoryBot.define do
     skip_create
     sequence(:id, &:to_s)
     uuid
+
+    transient do
+      qc_results { [] }
+    end
+
+    after(:build) do |receptacle, evaluator|
+      receptacle._cached_relationship(:qc_results) { evaluator.qc_results || [] }
+    end
   end
 end

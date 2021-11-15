@@ -136,6 +136,7 @@ FactoryBot.define do
       asset._cached_relationship(:ancestors) { ancestors_scope }
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
+      asset._cached_relationship(:receptacle) { evaluator.receptacle }
     end
 
     factory :v2_multiplexed_library_tube do
