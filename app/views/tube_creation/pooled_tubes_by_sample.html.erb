@@ -23,9 +23,7 @@
           <tr><td>C2</td><td>AB00000011</td></tr>
           <tr><td>D2</td><td>NoScan</td></tr>
           <tr><td>E2</td><td>NoScan</td></tr>
-          <tr><td>F2</td><td>AB00000014</td></tr>
-          <tr><td>G2</td><td>AB00000015</td></tr>
-          <tr><td>H2</td><td>AB00000016</td></tr>
+          <tr><td>etc...</td></tr>
         </tbody>
       </table>
       <p>NB. Columns headers and all 96 positions in the rack must be represented in the file. If a tube is not present in a position, the system expects to see a NoScan value in the barcode column.</p>
@@ -33,7 +31,7 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'File upload' do %>
-      <%= form_for(@labware_creator, as: :tube, url: limber_tube_children_path(@labware_creator.parent)) do |f| %>
+      <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
         <%= f.hidden_field :purpose_uuid %>
         <div class="form-group">
           <%= f.file_field :file, accept: '.csv', required: true %>
