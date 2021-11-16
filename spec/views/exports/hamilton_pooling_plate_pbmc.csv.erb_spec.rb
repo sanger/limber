@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_pooling_plate_pbmc.erb' do
+RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
   has_a_working_api
 
   let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }
