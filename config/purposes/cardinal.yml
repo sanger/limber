@@ -114,6 +114,8 @@ LCA Custom Pool Norm:
 # LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
 LCA Blood Bank:
   :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:
@@ -140,4 +142,4 @@ LCA Bank Stock:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class: Presenters::CardinalBankStockTubePresenter
