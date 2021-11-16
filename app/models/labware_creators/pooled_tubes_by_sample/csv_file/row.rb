@@ -13,23 +13,21 @@ module LabwareCreators
     TUBE_LOCATION_NOT_RECOGNISED = 'contains an invalid coordinate, in %s'
     BARCODE_MISSING = 'cannot be empty, in %s'
 
-    attr_reader :header, :position, :barcode, :index
+    attr_reader :position, :barcode, :index
 
     validates :position,
               inclusion: { in: WellHelpers.column_order, message: ->(object, _data) { TUBE_LOCATION_NOT_RECOGNISED % object } },
               unless: :empty?
     validates :barcode,
               presence: { message: ->(object, _data) { BARCODE_MISSING % object } }
-    delegate :position_column, :barcode_column, to: :header
 
-    def initialize(header, index, row_data)
-      @header = header
+    def initialize(index, row_data)
       @index = index
       @row_data = row_data
 
       # initialize supplied fields
-      @position = (@row_data[position_column] || '').strip.upcase
-      @barcode = @row_data[barcode_column]&.strip&.upcase
+      @position = (@row_data[0] || '').strip.upcase
+      @barcode = (@row_data[1] || '').strip.upcase
     end
 
     def to_s

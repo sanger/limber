@@ -11,17 +11,19 @@ module LabwareCreators
   # Takes the user uploaded tube rack scan csv file, validates the content and extracts the information.
   # This file will be used to determine and create the fluidX tubes into which samples will be transferred,
   # and the tube locations then used to create a driver file for the liquid handler.
+  # Example of content (NB. no header):
+  # A1, FR05653780
+  # A2, NO READ
+  # etc.
   #
   class PooledTubesBySample::CsvFile
     include ActiveModel::Validations
     extend NestedValidation
 
     validate :correctly_parsed?
-    validates :tube_details_header_row, presence: true
-    validates_nested :tube_details_header_row
     validates_nested :tube_rack_scan, if: :correctly_formatted?
 
-    delegate :position_column, :barcode_column, to: :tube_details_header_row
+    NO_TUBE_TEXTS = ['NO READ'].freeze
 
     #
     # Passing in the file to be parsed, the configuration from the purposes yml, and
@@ -64,11 +66,6 @@ module LabwareCreators
       false
     end
 
-    # Returns the contents of the header row for the tube location detail columns
-    def tube_details_header_row
-      @tube_details_header_row ||= TubeDetailsHeader.new(@data[0]) if @data[0]
-    end
-
     private
 
     # remove byte order marker if present
@@ -86,25 +83,30 @@ module LabwareCreators
     end
 
     def tube_rack_scan
-      @tube_rack_scan ||= @data[1..].each_with_index.map do |row_data, index|
-        Row.new(tube_details_header_row, index, row_data)
+      @tube_rack_scan ||= @data[0..].each_with_index.map do |row_data, index|
+        Row.new(index, row_data)
       end
     end
 
     # Gates looking for tube locations if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && tube_details_header_row.valid?
+      correctly_parsed?
     end
 
     # Create the hash of tube location details from the file upload values
+    # TODO does this need to be sorted in position order?
     def generate_position_details_hash
       return {} unless valid?
 
       tube_rack_scan.each_with_object({}) do |row, position_details_hash|
+        # ignore blank rows in file
         next if row.empty?
 
+        # filter out locations with no tube scanned
+        next if NO_TUBE_TEXTS.include? row.barcode.strip.upcase
+
         position = row.position
-        position_details_hash[position] = { 'barcode' => row.barcode }
+        position_details_hash[position] = { 'barcode' => row.barcode.strip.upcase }
       end
     end
   end

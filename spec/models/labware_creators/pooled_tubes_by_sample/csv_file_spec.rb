@@ -60,11 +60,11 @@ RSpec.describe LabwareCreators::PooledTubesBySample::CsvFile, with: :uploader do
     context 'A file which has missing tubes' do
       let(:file) { fixture_file_upload('spec/fixtures/files/tube_rack_scan_with_missing_tubes.csv', 'sequencescape/qc_file') }
 
+      # missing tube rows should be filtered out e.g. C1 is a NO READ here
       let(:expected_position_details) do
         {
           'A1' => { 'barcode' => 'AB10000001' },
           'B1' => { 'barcode' => 'AB10000002' },
-          'C1' => { 'barcode' => 'NOSCAN' },
           'D1' => { 'barcode' => 'AB10000004' },
           'E1' => { 'barcode' => 'AB10000005' },
           'F1' => { 'barcode' => 'AB10000006' },
@@ -128,7 +128,6 @@ RSpec.describe LabwareCreators::PooledTubesBySample::CsvFile, with: :uploader do
 
       it 'reports the errors' do
         subject.valid?
-        puts subject.errors.full_messages
         expect(subject.errors.full_messages).to include(row4_error)
       end
     end
@@ -144,8 +143,10 @@ RSpec.describe LabwareCreators::PooledTubesBySample::CsvFile, with: :uploader do
 
       it 'reports the errors' do
         subject.valid?
-        expect(subject.errors.full_messages).to include('Tube details header row position column could not be found in: \'This is an example file\'')
-        expect(subject.errors.full_messages).to include('Tube details header row barcode column could not be found in: \'This is an example file\'')
+        expect(subject.errors.full_messages).to include('Tube rack scan position contains an invalid coordinate, in row 2 [THIS IS AN EXAMPLE FILE]')
+        expect(subject.errors.full_messages).to include('Tube rack scan barcode cannot be empty, in row 2 [THIS IS AN EXAMPLE FILE]')
+        expect(subject.errors.full_messages).to include('Tube rack scan position contains an invalid coordinate, in row 3 [IT IS USED TO TEST QC FILE UPLOAD]')
+        expect(subject.errors.full_messages).to include('Tube rack scan barcode cannot be empty, in row 3 [IT IS USED TO TEST QC FILE UPLOAD]')
       end
     end
   end
