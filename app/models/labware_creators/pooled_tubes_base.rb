@@ -83,8 +83,13 @@ module LabwareCreators
       "#{stock_plate_barcode} #{first}:#{last}"
     end
 
+    def legacy_barcode
+      if parent.stock_plate
+        "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
+      end || nil
+    end
+
     def stock_plate_barcode
-      legacy_barcode = "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
       metadata_stock_barcode || legacy_barcode
     end
 
