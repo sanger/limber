@@ -38,6 +38,19 @@ FactoryBot.define do
       input_plate { true }
     end
 
+    # Sets up config for a tube with transfer parameters
+    factory :tube_with_transfer_parameters_config do
+      name { 'LTHR-384 Pool XP' }
+      presenter_class { 'Presenters::TubePresenter' }
+      transfer_parameters do
+        {
+          target_molarity_nm: 4,
+          target_volume_ul: 192,
+          minimum_pick_ul: 2
+        }
+      end
+    end
+
     # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }

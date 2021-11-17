@@ -59,3 +59,7 @@ LTHR-384 Pool XP:
   :creator_class: LabwareCreators::PooledTubesBySubmissionWithPhiX
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :transfer_parameters:
+    target_molarity_nm: 4
+    target_volume_ul: 192
+    minimum_pick_ul: 2

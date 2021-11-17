@@ -3,7 +3,7 @@
   <%= render 'rack_printing', presenter: presenter %>
   <%= render 'tube_printing', presenter: presenter %>
 
-  <%= render 'labware/qc_data' %>
+  <%= render 'labware/qc_data_upload' %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.csv_file_links.each do |link_name, link_target| %>

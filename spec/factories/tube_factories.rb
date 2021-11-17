@@ -103,7 +103,6 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
-    purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
@@ -121,6 +120,7 @@ FactoryBot.define do
         create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request
       end
       parents { [] }
+      purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
     end
 
     # Mock the relationships. Should probably handle this all a bit differently
@@ -136,10 +136,7 @@ FactoryBot.define do
       asset._cached_relationship(:ancestors) { ancestors_scope }
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
-    end
-
-    factory :v2_multiplexed_library_tube do
-      purpose_name { 'Example Purpose' }
+      asset._cached_relationship(:receptacle) { evaluator.receptacle }
     end
 
     factory :v2_stock_tube do
