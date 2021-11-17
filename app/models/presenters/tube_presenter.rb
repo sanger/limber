@@ -63,11 +63,11 @@ module Presenters
     end
 
     def qc_summary?
-      labware.receptacle&.qc_results&.to_a.present?
+      labware.receptacle&.all_latest_qc&.to_a.present?
     end
 
     def qc_summary
-      labware.receptacle.qc_results.sort_by(&:key).each do |result|
+      labware.receptacle.all_latest_qc.sort_by(&:key).each do |result|
         yield result.key.titleize, result.unit_value.to_s
       end
       nil
@@ -78,7 +78,7 @@ module Presenters
     end
 
     def source_molarity
-      molarity_qc_result = labware.receptacle.qc_results.detect { |result| result.key == 'molarity' }
+      molarity_qc_result = labware.receptacle.latest_molarity
       molarity_qc_result.nil? ? nil : molarity_qc_result.value.to_f
     end
 
