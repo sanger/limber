@@ -49,7 +49,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     summary_items.each do |label, method_symbol|
       yield label, send(method_symbol)
     end
-    nil
   end
 
   # Human formatted date of creation

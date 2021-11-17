@@ -2,11 +2,11 @@
   <div class='card-body'>
     <h4>QC Results</h4>
     <dl id="qc-info-show" class="row metadata">
-      <%= presenter.qc_summary do |key, value| %>
+      <% presenter.qc_summary do |key, value| %>
         <dt><%= key %></dt><dd><%= value %></dd>
       <% end %>
       <% if presenter.transfer_volumes? %>
-        <%= presenter.transfer_volumes do |key, value| %>
+        <% presenter.transfer_volumes do |key, value| %>
           <dt><%= key %></dt><dd><%= value %></dd>
         <% end %>
         <dt></dt><dd>* volumes required to create a <%= presenter.target_volume %> µl / <%= presenter.target_molarity %> nM solution.</dd>
