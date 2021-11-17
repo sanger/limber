@@ -74,7 +74,7 @@ module Presenters
     end
 
     def transfer_volumes?
-      [source_molarity, target_molarity, target_volume, minimum_pick].none?(&:nil?)
+      [source_molarity, target_molarity, target_volume, minimum_pick].all?
     end
 
     def source_molarity
