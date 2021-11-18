@@ -111,6 +111,24 @@ RSpec.describe Presenters::TubePresenter do
       it_behaves_like 'no transfer volumes'
     end
 
+    context 'missing transfer_parameters' do
+      let!(:purpose_config) do
+        create(
+          :tube_with_transfer_parameters_config,
+          uuid: purpose_uuid,
+          transfer_parameters: nil
+        )
+      end
+
+      it_behaves_like 'no transfer volumes'
+
+      it 'returns nil for transfer parameter fields' do
+        expect(subject.target_molarity).to be_nil
+        expect(subject.target_volume).to be_nil
+        expect(subject.minimum_pick).to be_nil
+      end
+    end
+
     context 'missing target_molarity_nm' do
       let!(:purpose_config) do
         create(

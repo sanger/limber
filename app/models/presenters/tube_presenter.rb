@@ -82,15 +82,15 @@ module Presenters
     end
 
     def target_molarity
-      purpose_config.transfer_parameters[:target_molarity_nm]
+      purpose_config.transfer_parameters&.fetch(:target_molarity_nm, nil)
     end
 
     def target_volume
-      purpose_config.transfer_parameters[:target_volume_ul]
+      purpose_config.transfer_parameters&.fetch(:target_volume_ul, nil)
     end
 
     def minimum_pick
-      purpose_config.transfer_parameters[:minimum_pick_ul]
+      purpose_config.transfer_parameters&.fetch(:minimum_pick_ul, nil)
     end
 
     def transfer_volumes
