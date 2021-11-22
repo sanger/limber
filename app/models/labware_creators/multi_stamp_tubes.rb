@@ -37,7 +37,7 @@ module LabwareCreators
       create_submission_from_parent_tubes
 
       # TODO: Hack - change this to poll for status or something
-      puts "*** Waiting for it to build ***"
+      puts '*** Waiting for it to build ***'
       sleep(10)
 
       plate_creation = api.pooled_plate_creation.create!(
