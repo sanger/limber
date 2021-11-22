@@ -134,6 +134,9 @@ LCA Blood Bank:
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
+  :file_links:
+    - name: "Download Hamilton LCA PBMC Bank plate to LCA Bank Stock tubes CSV"
+      id: hamilton_lca_pbmc_bank_to_lca_bank_stock
 # LCA PBMC Bank plate wells are transferred into LCA Bank Stock tubes, with some
 # consolidation of wells containing the same sample into the same tube.
 # We store them as individual tubes, until Limber supports tube racks.
@@ -142,4 +145,5 @@ LCA Bank Stock:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
+  :ancestor_stock_tube_purpose_name: LCA Blood Vac
   :presenter_class: Presenters::CardinalBankStockTubePresenter
