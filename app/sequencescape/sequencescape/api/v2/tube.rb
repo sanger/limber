@@ -26,6 +26,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptable'
 
+  has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
+
   DEFAULT_INCLUDES = [
     :purpose, 'aliquots.request.request_type'
   ].freeze
