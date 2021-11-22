@@ -1,0 +1,48 @@
+<%# This is a custom picking file for the transfer from LCA PBMC Bank plate to %>
+<%# LCA Bank Stock tubes on a Hamilton robot %>
+<%= CSV.generate_line [
+                        'Workflow',
+                        @workflow
+                      ],
+                      row_sep: ""
+%>
+
+<%= CSV.generate_line [
+                        'Source Plate ID',
+                        'Source Plate Well',
+                        'Destination Tube ID',
+                        'Destination Tube Position',
+                        'Sample Vac Tube ID',
+                        'Sample Name'
+                      ],
+                      row_sep: ""
+%>
+<%
+  rows_array = []
+  @plate.wells_in_columns.each do |source_well|
+    next if source_well.empty?
+
+    # assume 1 tube per source_well (many source_wells to 1 tube)
+    destination_tube = source_well.downstream_tubes.first
+
+    # assume 1 sample per tube
+    destination_sample_uuid = destination_tube.aliquots.first.sample.uuid
+
+    source_well_posn = source_well.position['name']
+
+    destination_tube_name_array = destination_tube.name.split(':')
+    if destination_tube_name_array.length == 2
+      rows_array << [
+        @plate.labware_barcode.human,
+        source_well_posn,
+        destination_tube.labware_barcode.human,
+        destination_tube_name_array.last,
+        @ancestor_tubes[destination_sample_uuid].labware_barcode.human,
+        source_well.aliquots.first.sample.name
+      ]
+    end
+  end
+%>
+<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>
