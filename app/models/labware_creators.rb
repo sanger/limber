@@ -13,7 +13,10 @@ module LabwareCreators # rubocop:todo Style/Documentation
   end
 
   def self.class_for(purpose_uuid)
-    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    # While most creators have a creator_class assigned by default, this wasn't the case with tube racks
+    # when first added. Here we fall back to 'LabwareCreators::Uncreatable' in cases where the purpose is
+    # not fully configured
+    refer = Settings.purposes.fetch(purpose_uuid, {}).fetch(:creator_class, 'LabwareCreators::Uncreatable')
     if refer.is_a?(String)
       refer.constantize
     else
@@ -22,7 +25,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
   end
 
   def self.params_for(purpose_uuid)
-    refer = Settings.purposes.fetch(purpose_uuid).fetch(:creator_class)
+    refer = Settings.purposes.fetch(purpose_uuid, {}).fetch(:creator_class, 'LabwareCreators::Uncreatable')
     return { params: {} } if refer.is_a?(String)
 
     { params: refer[:params] }

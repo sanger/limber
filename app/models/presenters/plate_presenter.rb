@@ -12,7 +12,7 @@ module Presenters
     include Presenters::ExtendedCsv
     include Presenters::CreationBehaviour
 
-    class_attribute :aliquot_partial, :summary_partial, :allow_well_failure_in_states, :style_class
+    class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class
 
     self.summary_partial = 'labware/plates/standard_summary'
     self.aliquot_partial = 'standard_aliquot'
@@ -115,6 +115,10 @@ module Presenters
 
     def quadrants_helper
       size == 384 ? 'quadrant_helper' : 'none'
+    end
+
+    def well_failing_applicable?
+      allow_well_failure_in_states.include?(state.to_sym)
     end
 
     def qc_thresholds

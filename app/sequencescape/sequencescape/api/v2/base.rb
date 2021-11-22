@@ -5,7 +5,7 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
 
   # Adjusts the parameters used for pagination. We create a custom
   # class to avoid mutating the global JsonApiClient::Paginating::Paginator object
-  class SequencescapePaginator < JsonApiClient::Paginating::Paginator
+  class SequencescapePaginator < JsonApiClient::Paginating::NestedParamPaginator
     self.page_param = 'number'
     self.per_page_param = 'size'
   end

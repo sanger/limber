@@ -23,7 +23,7 @@ group :default do
   gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
   # Older Sequencescape API
-  gem 'sequencescape-client-api', '~> 0.6.1', require: 'sequencescape'
+  gem 'sequencescape-client-api', '~> 0.7.1', require: 'sequencescape'
   # Speed up json encoding/decoding with oj
   gem 'oj'
 
@@ -72,9 +72,6 @@ group :development do
   gem 'web-console'
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
-  # Ruby jard is a ruby debugger, buit on top of pry and byebug. Invoke it
-  # with jard
-  # gem 'ruby_jard'
   gem 'yard'
 end
 

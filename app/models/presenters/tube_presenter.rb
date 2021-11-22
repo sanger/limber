@@ -6,6 +6,7 @@ module Presenters
     include Presenters::Presenter
     include Statemachine::Shared
     include Presenters::CreationBehaviour
+    include TransfersHelper
     include RobotControlled
 
     self.summary_items = {
@@ -59,6 +60,49 @@ module Presenters
       labware.child_tubes.tap do |child_tubes|
         yield child_tubes if block_given? && child_tubes.present?
       end
+    end
+
+    def qc_summary?
+      labware.receptacle&.all_latest_qc&.to_a.present?
+    end
+
+    def qc_summary
+      labware.receptacle.all_latest_qc.sort_by(&:key).each do |result|
+        yield result.key.titleize, result.unit_value.to_s
+      end
+    end
+
+    def transfer_volumes?
+      [source_molarity, target_molarity, target_volume, minimum_pick].all?
+    end
+
+    def source_molarity
+      molarity_qc_result = labware.receptacle.latest_molarity
+      molarity_qc_result.nil? ? nil : molarity_qc_result.value.to_f
+    end
+
+    def target_molarity
+      purpose_config.transfer_parameters&.fetch(:target_molarity_nm, nil)
+    end
+
+    def target_volume
+      purpose_config.transfer_parameters&.fetch(:target_volume_ul, nil)
+    end
+
+    def minimum_pick
+      purpose_config.transfer_parameters&.fetch(:minimum_pick_ul, nil)
+    end
+
+    def transfer_volumes
+      volumes = calculate_pick_volumes(
+        target_molarity: target_molarity,
+        target_volume: target_volume,
+        source_molarity: source_molarity,
+        minimum_pick: minimum_pick
+      )
+
+      yield 'Sample Volume *', "#{volumes[:sample_volume].round} µl"
+      yield 'Buffer Volume *', "#{volumes[:buffer_volume].round} µl"
     end
   end
 end

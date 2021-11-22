@@ -17,6 +17,7 @@ FactoryBot.define do
 
     factory(:labware_plate) { type { 'plates' } }
     factory(:labware_tube) { type { 'tubes' } }
+    factory(:labware_tube_rack) { type { 'tube_racks' } }
 
     factory(:labware_with_purpose) do
       purpose { create :v2_purpose }

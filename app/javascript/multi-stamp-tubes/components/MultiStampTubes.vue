@@ -24,7 +24,7 @@
       >
         <b-form-group
           label="Scan the tube barcodes into the relevant rack / well coordinates:"
-          style="position:relative; height:460px; overflow-y:scroll;"
+          class="fixed-height-scroll"
         >
           <lb-labware-scan
             v-for="i in sourceTubeNumber"
@@ -51,7 +51,7 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
-        <hr />
+        <hr>
         <b-button
           :disabled="!valid"
           variant="success"
@@ -76,7 +76,8 @@ import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates, validTubeScanMessage } from 'shared/components/tubeScanValidators'
+import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { validScanMessage } from 'shared/components/scanValidators'
 import { indexToName } from 'shared/wellHelpers'
 
 export default {
@@ -203,7 +204,7 @@ export default {
     scanValidation() {
       if (this.allowTubeDuplicates === 'true') {
         return [
-          validTubeScanMessage
+          validScanMessage
         ]
       }
       const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
@@ -255,3 +256,10 @@ export default {
   }
 }
 </script>
+
+<style>
+  .fixed-height-scroll {
+    height:460px;
+    overflow-y:scroll;
+  }
+</style>

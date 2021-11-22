@@ -14,7 +14,7 @@ module SearchHelper # rubocop:todo Style/Documentation
   end
 
   def self.alternative_workline_reference_name(labware)
-    conf = purpose_config_for_purpose_name(labware.purpose.name)
+    conf = purpose_config_for_purpose_name(labware.purpose_name)
     return nil if conf.nil?
 
     conf[:alternative_workline_identifier]

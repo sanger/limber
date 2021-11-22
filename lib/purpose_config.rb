@@ -4,7 +4,10 @@
 # rubocop:disable Rails/Output
 # rubocop:disable Metrics/ParameterLists
 
-class PurposeConfig # rubocop:todo Style/Documentation
+# Purpose config is used to translate the configuration options in the purposes/*.yml
+# files into the serialized versions in the config/settings/*.yml
+# It also handles the registration of new purposes within Sequencescape.
+class PurposeConfig
   attr_reader :name, :options, :store, :api
 
   class_attribute :default_state_changer, :default_options
@@ -15,6 +18,7 @@ class PurposeConfig # rubocop:todo Style/Documentation
     case options.fetch(:asset_type)
     when 'plate' then PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_templates)
     when 'tube' then PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_templates)
+    when 'tube_rack' then PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_templates)
     else raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
   end
@@ -28,19 +32,14 @@ class PurposeConfig # rubocop:todo Style/Documentation
     @submission_templates = submission_templates
     @label_templates = label_templates
     @template_name = (@options.delete(:label_template) || '')
-    default_options[:printer_type] = default_printer_type_for(default_options[:printer])
-    default_options[:pmb_template] = default_pmb_template_for(default_options[:printer])
   end
 
   def config
     {
       name: name,
-      creator_class: default_options[:creator],
-      presenter_class: default_options[:presenter],
+      ** default_options,
       state_changer_class: default_state_changer,
-      default_printer_type: default_options[:printer],
       submission: submission_options,
-      file_links: default_options[:file_links] || [],
       label_class: print_option(:label_class),
       printer_type: print_option(:printer_type),
       pmb_template: print_option(:pmb_template)
@@ -51,13 +50,27 @@ class PurposeConfig # rubocop:todo Style/Documentation
     store.fetch(name).uuid
   end
 
-  class Tube < PurposeConfig # rubocop:todo Style/Documentation
-    self.default_options = {}.tap do |options|
-      options[:printer] = :tube
-      options[:presenter] = 'Presenters::SimpleTubePresenter'
-      options[:creator] = 'LabwareCreators::TubeFromTube'
-      options[:label_class] = 'Labels::TubeLabel'
+  # Currently limber does not register its own tube racks. This is because we
+  # will delegate most behaviour to the contained tube purposes
+  class TubeRack < PurposeConfig
+    self.default_options = {
+      default_printer_type: :tube_rack,
+      presenter_class: 'Presenters::TubeRackPresenter'
+    }.freeze
+
+    def register!
+      warn 'Cannot create tube racks from within limber'
     end
+  end
+
+  class Tube < PurposeConfig # rubocop:todo Style/Documentation
+    self.default_options = {
+      default_printer_type: :tube,
+      presenter_class: 'Presenters::SimpleTubePresenter',
+      creator_class: 'LabwareCreators::TubeFromTube',
+      label_class: 'Labels::TubeLabel',
+      file_links: []
+    }.freeze
 
     def register!
       puts "Creating #{name}"
@@ -70,13 +83,13 @@ class PurposeConfig # rubocop:todo Style/Documentation
   end
 
   class Plate < PurposeConfig # rubocop:todo Style/Documentation
-    self.default_options = {}.tap do |options|
-      options[:printer] = :plate_a
-      options[:presenter] = 'Presenters::StandardPresenter'
-      options[:creator] = 'LabwareCreators::StampedPlate'
-      options[:label_class] = 'Labels::PlateLabel'
-      options[:file_links] = [{ name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' }]
-    end
+    self.default_options = {
+      default_printer_type: :plate_a,
+      presenter_class: 'Presenters::StandardPresenter',
+      creator_class: 'LabwareCreators::StampedPlate',
+      label_class: 'Labels::PlateLabel',
+      file_links: [{ name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' }]
+    }.freeze
 
     def register!
       puts "Creating #{name}"
@@ -101,16 +114,24 @@ class PurposeConfig # rubocop:todo Style/Documentation
     }
   end
 
+  def default_printer_options
+    {
+      printer_type: default_printer_type,
+      pmb_template: default_pmb_template,
+      label_class: default_options[:label_class]
+    }
+  end
+
   def print_option(option)
-    @label_templates.fetch(@template_name.to_s, {}).fetch(option, default_options[option])
+    @label_templates.fetch(@template_name.to_s, {}).fetch(option, default_printer_options[option])
   end
 
-  def default_printer_type_for(printer_type)
-    @label_templates.fetch('default_printer_type_names').fetch(printer_type)
+  def default_printer_type
+    @label_templates.fetch('default_printer_type_names').fetch(default_options[:default_printer_type])
   end
 
-  def default_pmb_template_for(printer_type)
-    @label_templates.fetch('default_pmb_templates').fetch(printer_type)
+  def default_pmb_template
+    @label_templates.fetch('default_pmb_templates').fetch(default_options[:default_printer_type])
   end
 end
 # rubocop:enable Metrics/ParameterLists

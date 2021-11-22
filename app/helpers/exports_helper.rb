@@ -13,4 +13,15 @@ module ExportsHelper
       end
     end
   end
+
+  #
+  # Returns the total of all aliquots within a well
+  #
+  # @param well [Sequencescape::Api::V2::Well] The well to count samples in
+  #
+  # @return [Integer] The total number of aliquots within the well
+  #
+  def aliquots_count_for(well)
+    well.aliquots.count
+  end
 end

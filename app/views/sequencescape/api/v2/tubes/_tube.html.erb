@@ -4,7 +4,7 @@
     <p><%= tube.name %>
     <dl>
       <dt>Created</dt><dd><%= tube.created_at.to_formatted_s(:date_created) %></dd>
-      <dt>Type</dt><dd><%= tube.purpose.name %></dd>
+      <dt>Type</dt><dd><%= tube.purpose_name %></dd>
     </dl>
   <% end -%>
 </li>

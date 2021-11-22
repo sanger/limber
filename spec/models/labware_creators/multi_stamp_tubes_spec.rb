@@ -36,7 +36,11 @@ RSpec.describe LabwareCreators::MultiStampTubes do
     }
     stub_v2_tube(parent1, stub_search: false)
     stub_v2_tube(parent2, stub_search: false)
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
+    stub_v2_plate(
+      child_plate_v2,
+      stub_search: false,
+      custom_includes: 'wells,wells.aliquots,wells.aliquots.study'
+    )
   end
 
   context 'on new' do
@@ -129,35 +133,90 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                      body: json(:v1_custom_metadatum_collection))
       end
 
-      let!(:order_request) do
-        stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
-        stub_api_post(example_template_uuid, 'orders',
-                      payload: { order: {
-                        assets: assets,
-                        request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                        user: user_uuid,
-                        autodetect_studies_projects: true
-                      } },
-                      body: '{"order":{"uuid":"order-uuid"}}')
-      end
-
-      let!(:submission_request) do
-        stub_api_post('submissions',
-                      payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                      body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
-      end
-
       let!(:submission_submit) do
         stub_api_post('sub-uuid', 'submit')
       end
 
-      it 'creates a plate!' do
-        subject.save!
-        expect(ms_plate_creation_request).to have_been_made.once
-        expect(transfer_creation_request).to have_been_made.once
-        expect(order_request).to have_been_made.once
-        expect(submission_request).to have_been_made.once
-        expect(submission_submit).to have_been_made.once
+      context 'when sources are from a single study' do
+        let!(:order_request) do
+          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
+          stub_api_post(example_template_uuid, 'orders',
+                        payload: { order: {
+                          assets: assets,
+                          request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                          user: user_uuid,
+                          autodetect_studies_projects: true
+                        } },
+                        body: '{"order":{"uuid":"order-uuid"}}')
+        end
+
+        let!(:submission_request) do
+          stub_api_post('submissions',
+                        payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
+                        body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
+        end
+
+        it 'creates a plate!' do
+          subject.save!
+          expect(ms_plate_creation_request).to have_been_made.once
+          expect(transfer_creation_request).to have_been_made.once
+          expect(order_request).to have_been_made.once
+          expect(submission_request).to have_been_made.once
+          expect(submission_submit).to have_been_made.once
+        end
+      end
+
+      context 'when sources are from multiple studies' do
+        # set up two tube to plate well transfers, each from a different study
+        let(:aliquot1) { create :v2_aliquot, study_id: 1 }
+        let(:aliquot2) { create :v2_aliquot, study_id: 2 }
+        let(:parent1) { create :v2_stock_tube, uuid: parent1_uuid, purpose_uuid: 'parent-tube-purpose-uuid', aliquots: [aliquot1] }
+        let(:parent2) { create :v2_stock_tube, uuid: parent2_uuid, purpose_uuid: 'parent-tube-purpose-uuid', aliquots: [aliquot2] }
+
+        let(:child_aliquot1) { create :v2_aliquot, study_id: 1 }
+        let(:child_aliquot2) { create :v2_aliquot, study_id: 2 }
+        let(:child_well1) { create :v2_stock_well, location: 'A1', uuid: '5-well-A1', aliquots: [child_aliquot1] }
+        let(:child_well2) { create :v2_stock_well, location: 'B1', uuid: '5-well-B1', aliquots: [child_aliquot2] }
+        let(:child_plate_v2) do
+          create :v2_plate_for_submission, uuid: child_uuid, purpose_name: child_purpose_name, barcode_number: '5', size: 96, wells: [child_well1, child_well2]
+        end
+
+        let!(:order_request) do
+          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
+          stub_api_post(example_template_uuid, 'orders',
+                        payload: { order: {
+                          assets: [assets[0]],
+                          request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                          user: user_uuid,
+                          autodetect_studies_projects: true
+                        } },
+                        body: '{"order":{"uuid":"order-uuid"}}')
+          stub_api_post(example_template_uuid, 'orders',
+                        payload: { order: {
+                          assets: [assets[1]],
+                          request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                          user: user_uuid,
+                          autodetect_studies_projects: true
+                        } },
+                        body: '{"order":{"uuid":"order-2-uuid"}}')
+        end
+
+        let!(:submission_request) do
+          stub_api_post('submissions',
+                        payload: { submission: { orders: ['order-uuid', 'order-2-uuid'], user: user_uuid } },
+                        body: json(:submission, uuid: 'sub-uuid', orders: [
+                                     { uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }
+                                   ]))
+        end
+
+        it 'creates a plate!' do
+          subject.save!
+          expect(ms_plate_creation_request).to have_been_made.once
+          expect(transfer_creation_request).to have_been_made.once
+          expect(order_request).to have_been_made.once
+          expect(submission_request).to have_been_made.once
+          expect(submission_submit).to have_been_made.once
+        end
       end
     end
   end

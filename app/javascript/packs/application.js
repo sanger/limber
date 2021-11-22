@@ -14,6 +14,7 @@ require('qc-information')
 require('multi-stamp')
 require('multi-stamp-tubes')
 require('custom-tagged-plate')
+require('tubes-to-rack')
 
 // Load simple javscripts
 // Tag animations rotates the displayed tag Id in wells with multiple tags

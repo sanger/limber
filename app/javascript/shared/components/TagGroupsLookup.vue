@@ -50,8 +50,10 @@ export default {
 
       while(morePagesAvailable) {
         currentPage++
-        const response = await this.api.findAll(this.resourceName, { page: { number: currentPage, size: 150 }})
-
+        const response = await this.api.findAll(this.resourceName, {
+          filter: this.filter,
+          page: { number: currentPage, size: 150 }
+        })
         if(response.data.length > 0) {
           response.data.forEach(e => tagGroupsArray.unshift(e))
         }

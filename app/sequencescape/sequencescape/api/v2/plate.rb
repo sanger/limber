@@ -2,7 +2,10 @@
 
 # A plate from sequencescape via the V2 API
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
+  include WellHelpers::Extensions
   include Sequencescape::Api::V2::Shared::HasRequests
+  include Sequencescape::Api::V2::Shared::HasPurpose
+  include Sequencescape::Api::V2::Shared::HasBarcode
 
   self.plate = true
   has_many :wells
@@ -15,12 +18,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
-  has_one :purpose
   has_one :custom_metadatum_collection
+
+  # Other relationships
+  # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
 
   property :created_at, type: :time
   property :updated_at, type: :time
-  property :labware_barcode, type: :barcode
 
   def self.find_by(options)
     Sequencescape::Api::V2.plate_for_presenter(options)
@@ -69,10 +73,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.any?(&:tagged?)
   end
 
-  def human_barcode
-    labware_barcode.human
-  end
-
   def ready_for_automatic_pooling?
     for_multiplexing
   end
@@ -83,14 +83,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def size
     number_of_rows * number_of_columns
-  end
-
-  def locations_in_rows
-    WellHelpers.row_order(size)
-  end
-
-  def barcode
-    labware_barcode
   end
 
   def stock_plates(purpose_names: SearchHelper.stock_plate_names)
@@ -120,11 +112,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
-    purpose_names.include?(purpose.name)
+    purpose_names.include?(purpose_name)
   end
 
   def primer_panels
-    active_requests.map(&:primer_panel).compact.uniq
+    active_requests.map(&:primer_panel).filter_map.uniq
   end
 
   def primer_panel
