@@ -45,7 +45,7 @@ module Presenters::CreationBehaviour
   # TODO: Refactor handling of purposes to tidy this up
   def suggested_purpose_options
     active_pipelines.lazy.map do |pipeline, _store|
-      child_name = pipeline.child_for(labware.purpose.name)
+      child_name = pipeline.child_for(labware.purpose_name)
       uuid, settings = compatible_purposes.detect do |_purpose_uuid, purpose_settings|
         purpose_settings[:name] == child_name
       end

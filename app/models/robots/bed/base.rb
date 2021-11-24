@@ -96,9 +96,9 @@ module Robots::Bed
     private
 
     def correct_labware_purpose
-      return true if Array(purpose).include?(labware.purpose.name)
+      return true if Array(purpose).include?(labware.purpose_name)
 
-      error("Labware #{labware.human_barcode} is a #{labware.purpose.name} not a #{purpose_labels} labware.")
+      error("Labware #{labware.human_barcode} is a #{labware.purpose_name} not a #{purpose_labels} labware.")
     end
 
     def correct_labware_state

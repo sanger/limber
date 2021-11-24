@@ -1,0 +1,17 @@
+<%= sidebar do %>
+  <%= render 'logged_out_warning' %>
+  <%= render 'rack_printing', presenter: presenter %>
+  <%= render 'tube_printing', presenter: presenter %>
+
+  <%= render 'labware/qc_data_upload' %>
+
+  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+    <% presenter.csv_file_links.each do |link_name, link_target| %>
+      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+    <% end %>
+  <% end %>
+
+  <%= card title: 'Adding a Comment', css_class: 'logged_in_only' do %>
+    <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
+  <% end %>
+<% end %>

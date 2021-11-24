@@ -15,7 +15,7 @@ class Labels::PlateDoubleLabelQc < Labels::PlateDoubleLabel
         barcode: "#{labware.barcode.human}-QC"
       },
       {
-        right_text: "#{workline_identifier} #{labware.role} #{labware.purpose.name} QC",
+        right_text: "#{workline_identifier} #{labware.role} #{labware.purpose_name} QC",
         left_text: date_today
       }
     ]

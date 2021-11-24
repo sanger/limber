@@ -89,7 +89,7 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(2, tube1)
     const validator = wrapper.vm.scanValidation[0]
     const validations = validator(tube1.labware)
-    
+
     expect(validations.valid).toEqual(true)
   })
 

@@ -12,7 +12,7 @@ class Labels::PlateDoubleLabel < Labels::Base
 
   def extra_attributes
     {
-      right_text: "#{workline_identifier} #{labware.role} #{labware.purpose.name}",
+      right_text: "#{workline_identifier} #{labware.role} #{labware.purpose_name}",
       left_text: date_today
     }
   end
@@ -22,7 +22,7 @@ class Labels::PlateDoubleLabel < Labels::Base
       right_text: workline_identifier,
       left_text: labware.barcode.human,
       barcode: labware.barcode.machine,
-      extra_right_text: "#{workline_identifier} #{labware.role} #{labware.purpose.name}",
+      extra_right_text: "#{workline_identifier} #{labware.role} #{labware.purpose_name}",
       extra_left_text: date_today
     }
   end

@@ -6,7 +6,7 @@ class Labels::PlateLabelBase < Labels::Base # rubocop:todo Style/Documentation
       top_left: date_today,
       bottom_left: labware.barcode.human,
       top_right: workline_identifier,
-      bottom_right: [labware.role, labware.purpose.name].compact.join(' '),
+      bottom_right: [labware.role, labware.purpose_name].compact.join(' '),
       barcode: labware.barcode.machine
     }
   end

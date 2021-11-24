@@ -2,7 +2,7 @@
 // provide custom validation.
 //
 // A validator is a function which:
-// 1) Takes the result of the APi query (usually a tube) as a sole argument
+// 1) Takes the result of the API query (usually a tube) as a sole argument
 // 2) Returns javascript object with two properties:
 //    a) valid: A Boolean indicating if the tube is suitable or not
 //    b) message: A string which will be displayed to the user. Especially
@@ -35,9 +35,11 @@
 //}
 //
 // Validating multiple criteria
-// Try and keep validators checking one thing only. It makes them easier to
-// test and reuse. The aggregate validator allows you to combine multiple
-// validators together.
+// Try and keep validators checking one thing only. It makes them easier to test
+// and reuse. Multiple validators can be combined together using the aggregate
+// function in scanValidators.js
+
+import { validScanMessage } from './scanValidators'
 
 // Returns a validator that ensures that the scanned item does not appear
 // multiple times in the list (based on UUID).
@@ -53,16 +55,25 @@ const checkDuplicates = (tubeList) => {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
     }
     else {
-      return validTubeScanMessage()
+      return validScanMessage()
     }
   }
 }
 
-// Renders a valid Tube scan
-// 
-// Returns an object with the right tube scan validation message
-const validTubeScanMessage = () => {
-  return { valid: true, message: 'Great!' }
+// Returns a validator that ensures the purpose namess of all the tubes match
+// the name for the one provided. Typically the one provided should be the one
+// of the purposes from the full set of tubes being validated.
+const checkMatchingPurposes = (purpose) => {
+  return (tube) => {
+    if (tube && purpose && tube.purpose?.name !== purpose.name) {
+      return {
+        valid: false,
+        message: `Tube purpose '${tube.purpose?.name || 'UNKNOWN'}' doesn't match other tubes`
+      }
+    }
+
+    return validScanMessage()
+  }
 }
 
 // Returns a validator that ensures the tube has a state that matches to the
@@ -74,19 +85,9 @@ const checkState = (allowedStatesList) => {
     if(!allowedStatesList.includes(tube.state)) {
       return { valid: false, message: 'Tube must have a state of: ' + allowedStatesList.join(' or ') }
     } else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
 
-// Receives an array of validators and calls them in the order they appear on
-// the array.
-// As a result, the smallest indexed failing validator will determine the
-// error message and the remaining validators will be skipped.
-const aggregate = (validators, item) => {
-  return validators.reduce((aggregate, validator) => {
-    return aggregate.valid ? validator(item) : aggregate
-  }, { valid: true, message: 'Great!'})
-}
-
-export { checkDuplicates, checkState, aggregate, validTubeScanMessage }
+export { checkDuplicates, checkMatchingPurposes, checkState }

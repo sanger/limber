@@ -1,13 +1,8 @@
 <%= page(:'tube-show-page', :'show-page') do %>
   <%= content do %>
     <%= card without_block: true do %>
-      <div class="card-body">
-        <h2 id="tube-title" class="card-title">
-          <%= @presenter.title %>
-          <%= state_badge(@presenter.state) %>
-          <%# No priority flag %>
-        </h2>
-      </div>
+      <%= render 'content_header', presenter: @presenter, type: 'tube' %>
+      <%= render 'warnings', presenter: @presenter %>
 
       <div id="labware-summary">
         <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>
