@@ -1,0 +1,6 @@
+---
+LCA DNA RNA:
+  filters:
+    request_type_key: lca_seq_dna_rna
+  relationships:
+    Lysate LCA: Lysate DNAseq cherrypick

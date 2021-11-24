@@ -1,0 +1,8 @@
+---
+Lysate LCA:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :file_links: []
+
+Lysate DNAseq cherrypick:
+  :asset_type: plate
