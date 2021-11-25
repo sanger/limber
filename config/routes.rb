@@ -47,6 +47,8 @@ Rails.application.routes.draw do
     resources :work_completions, only: :create, module: :tubes
   end
 
+  resources :transfer_volumes, only: :index, module: :tubes
+
   resources :limber_tube_racks, controller: :tube_racks do
     resources :qc_files, controller: :qc_files
     resources :exports, only: :show
