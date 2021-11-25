@@ -1205,61 +1205,61 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     name: 'hamilton LCA Lysate => LCA DNA',
     beds: {
       bed(1).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 1'
       },
       bed(2).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 2'
       },
       bed(3).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 3'
       },
       bed(4).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 4'
       },
       bed(5).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 5'
       },
       bed(6).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 6'
       },
       bed(7).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 7'
       },
       bed(8).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 8'
       },
       bed(9).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 9'
       },
       bed(10).barcode => {
-        purpose: 'Lysate LCA:',
+        purpose: 'Lysate LCA',
         states: %w[passed qc_complete],
         child: bed(13).barcode,
         label: 'Bed 10'

@@ -6,3 +6,6 @@ Lysate LCA:
 
 Lysate DNAseq cherrypick:
   :asset_type: plate
+  :creator_class: LabwareCreators::TenStamp
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  #:work_completion_request_type: 'limber_bespoke_aggregation'
