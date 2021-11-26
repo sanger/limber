@@ -4,7 +4,7 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import TransferVolumes from './components/TransferVolumes.vue'
+import MainComponent from './components/ValidatePairedTubes.vue'
 import MainContent from 'shared/components/MainContent.vue'
 import Page from 'shared/components/Page.vue'
 import Sidebar from 'shared/components/Sidebar.vue'
@@ -17,7 +17,7 @@ Vue.component('lb-page', Page)
 Vue.component('lb-sidebar', Sidebar)
 
 document.addEventListener('DOMContentLoaded', () => {
-  if ( document.getElementById('transfer-volumes') ) {
+  if ( document.getElementById('validate-paired-tubes') ) {
     axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     Vue.prototype.$axios = axios
     new Vue({
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // navigation elements based on appropriateness
       // h in this case is Vue-shorthand for createElement
       // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-      render (h) { return h(TransferVolumes, { props: this.$el.dataset }) }
-    }).$mount('#transfer-volumes')
+      render (h) { return h(MainComponent, { props: this.$el.dataset }) }
+    }).$mount('#validate-paired-tubes')
   }
 })

@@ -48,6 +48,7 @@
           />
         </div>
       </b-card>
+      <lb-transfer-volumes />
     </lb-sidebar>
   </lb-page>
 </template>
@@ -58,12 +59,14 @@ import filterProps from './filterProps'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
+import TransferVolumes from './TransferVolumes'
 
 export default {
-  name: 'TransferVolumes',
+  name: 'ValidatePairedTubes',
   components: {
     'lb-labware-scan': LabwareScan,
-    'lb-loading-modal': LoadingModal
+    'lb-loading-modal': LoadingModal,
+    'lb-transfer-volumes': TransferVolumes
   },
   props: {
     // Sequencescape API V2 URL

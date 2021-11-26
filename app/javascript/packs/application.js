@@ -14,8 +14,8 @@ require('file-list')
 require('multi-stamp')
 require('multi-stamp-tubes')
 require('qc-information')
-require('transfer-volumes')
 require('tubes-to-rack')
+require('validate-paired-tubes')
 
 // Load simple javscripts
 // Tag animations rotates the displayed tag Id in wells with multiple tags
