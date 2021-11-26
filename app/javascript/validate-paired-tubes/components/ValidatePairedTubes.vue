@@ -21,14 +21,16 @@
         header="Validate Tubes"
         header-tag="h3"
       >
-        <p class="vt-instructions">Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown below.</p>
+        <p class="vt-instructions">
+          Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown below.
+        </p>
         <div class="tube-scan-fields">
           <lb-labware-scan
             key="source"
             ref="sourceScan"
             :api="devourApi"
             label="Pool XP"
-            :labelCols="3"
+            :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
             :validators="scanValidators"
@@ -39,7 +41,7 @@
             key="destination"
             :api="devourApi"
             label="Pool Norm"
-            :labelCols="3"
+            :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
             :validators="scanValidators"
