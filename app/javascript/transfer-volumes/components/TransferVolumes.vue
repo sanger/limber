@@ -33,7 +33,7 @@
             :includes="tubeIncludes"
             :validators="scanValidators"
             :labware-type="'tube'"
-            @change="updateTube(0, $event)"
+            @change="updateSourceTube($event)"
           />
           <lb-labware-scan
             key="destination"
@@ -44,7 +44,7 @@
             :includes="tubeIncludes"
             :validators="scanValidators"
             :labware-type="'tube'"
-            @change="updateTube(1, $event)"
+            @change="updateDestinationTube($event)"
           />
         </div>
       </b-card>
@@ -58,8 +58,6 @@ import filterProps from './filterProps'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
-import { buildTubeObjs } from 'shared/tubeHelpers'
-import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'TransferVolumes',
@@ -73,10 +71,6 @@ export default {
   },
   data () {
     return {
-      // Array containing objects with scanned tubes, their states and the
-      // index of the form input in which they were scanned.
-      tubes: buildTubeObjs(2),
-
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
@@ -85,40 +79,37 @@ export default {
       loading: false,
 
       // Message to be shown during loading screen
-      progressMessage: ''
+      progressMessage: '',
+
+      // The tube scanned as source for the validation.
+      // Also the source of transfer volume inputs.
+      sourceTube: { state: 'empty', labware: null },
+
+      // The tube scanned as source for the validation.
+      // Also the source of transfer volume inputs.
+      destinationTube: { state: 'empty', labware: null }
     }
   },
   computed: {
     scanValidators() {
-      const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [checkDuplicates(allTubes), checkMatchingPurposes(this.firstTubePurpose)]
+      return []
     },
     tubeFields() {
       return filterProps.tubeFields
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
-    },
-    firstTubePurpose() {
-      return this.validTubes[0]?.labware.purpose
-    },
-    unsuitableTubes() {
-      return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
-    },
-    valid() {
-      return this.validTubes.length > 0 &&      // At least one tube is validated
-             this.unsuitableTubes.length === 0  // None of the tubes are invalid
-    },
-    validTubes() {
-      return this.tubes.filter( tube => tube.state === 'valid' )
     }
   },
   mounted() {
     this.$refs.sourceScan.focus()
   },
   methods: {
-    updateTube(index, data) {
-      this.$set(this.tubes, index - 1, {...data, index: index - 1 })
+    updateSourceTube(data) {
+      this.sourceTube = Object.assign({}, this.sourceTube, data)
+    },
+    updateDestinationTube(data) {
+      this.destinationTube = Object.assign({}, this.destinationTube, data)
     }
   }
 }
