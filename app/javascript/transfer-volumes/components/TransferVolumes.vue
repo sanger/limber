@@ -21,29 +21,31 @@
         header="Validate Tubes"
         header-tag="h3"
       >
-        <h4>Scan the tubes to validate and perform a transfer on:</h4>
-        <lb-labware-scan
-          key="source"
-          :api="devourApi"
-          label="Source"
-          :fields="tubeFields"
-          :includes="tubeIncludes"
-          :validators="scanValidators"
-          colour-index="1"
-          :labware-type="'tube'"
-          @change="updateTube(0, $event)"
-        />
-        <lb-labware-scan
-          key="destination"
-          :api="devourApi"
-          label="Destination"
-          :fields="tubeFields"
-          :includes="tubeIncludes"
-          :validators="scanValidators"
-          colour-index="2"
-          :labware-type="'tube'"
-          @change="updateTube(1, $event)"
-        />
+        <p class="vt-instructions">Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown below.</p>
+        <div class="tube-scan-fields">
+          <lb-labware-scan
+            key="source"
+            :api="devourApi"
+            label="Pool XP"
+            :labelCols="3"
+            :fields="tubeFields"
+            :includes="tubeIncludes"
+            :validators="scanValidators"
+            :labware-type="'tube'"
+            @change="updateTube(0, $event)"
+          />
+          <lb-labware-scan
+            key="destination"
+            :api="devourApi"
+            label="Pool Norm"
+            :labelCols="3"
+            :fields="tubeFields"
+            :includes="tubeIncludes"
+            :validators="scanValidators"
+            :labware-type="'tube'"
+            @change="updateTube(1, $event)"
+          />
+        </div>
       </b-card>
     </lb-sidebar>
   </lb-page>
@@ -64,7 +66,10 @@ export default {
     'lb-labware-scan': LabwareScan,
     'lb-loading-modal': LoadingModal
   },
-  props: {},
+  props: {
+    // Sequencescape API V2 URL
+    sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+  },
   data () {
     return {
       // Array containing objects with scanned tubes, their states and the
@@ -114,3 +119,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.vt-instructions {
+  font-size: 120%;
+}
+
+.tube-scan-fields {
+  margin: 40px 0px;
+}
+</style>

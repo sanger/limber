@@ -3,7 +3,7 @@
     <b-container>
       <b-row>
         <b-col
-          v-if="labwareType=='tube'"
+          v-if="labwareType=='tube' && colourIndex !== null"
           cols="1"
         >
           <div :class="['pool-colours']">
@@ -18,7 +18,7 @@
         <b-col cols="9">
           <b-form-group
             :label="label"
-            :label-cols="2"
+            :label-cols="labelCols"
             label-size="lg"
             :label-for="uid"
             :description="description"
@@ -72,6 +72,10 @@ export default {
     label: {
       // The label for the text field.
       type: String, default: 'Plate'
+    },
+    labelCols: {
+      // The number of columns for the label (out of 9)
+      type: Number, default: 2
     },
     description: {
       // Optional description text which will be displayed below the input. Intended
