@@ -8,12 +8,13 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Currently setting up each component as its own mini vue app.
-require('file-list')
 require('asset-comments')
-require('qc-information')
+require('custom-tagged-plate')
+require('file-list')
 require('multi-stamp')
 require('multi-stamp-tubes')
-require('custom-tagged-plate')
+require('qc-information')
+require('transfer-volumes')
 require('tubes-to-rack')
 
 // Load simple javscripts
