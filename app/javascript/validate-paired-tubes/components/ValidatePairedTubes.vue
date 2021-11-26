@@ -29,8 +29,8 @@
             :api="devourApi"
             label="Pool XP"
             :labelCols="3"
-            :fields="tubeFields"
-            :includes="tubeIncludes"
+            :fields="devourFields"
+            :includes="devourIncludes"
             :validators="scanValidators"
             :labware-type="'tube'"
             @change="updateSourceTube($event)"
@@ -40,8 +40,8 @@
             :api="devourApi"
             label="Pool Norm"
             :labelCols="3"
-            :fields="tubeFields"
-            :includes="tubeIncludes"
+            :fields="devourFields"
+            :includes="devourIncludes"
             :validators="scanValidators"
             :labware-type="'tube'"
             @change="updateDestinationTube($event)"
@@ -69,8 +69,11 @@ export default {
     'lb-transfer-volumes': TransferVolumes
   },
   props: {
-    // Sequencescape API V2 URL
+    // Sequencescape API V2 URL.
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+
+    // Purpose config JSON string of objects keyed by purpose UUIDs.
+    purposeConfigJson: { type: String, required: true }
   },
   data () {
     return {
@@ -97,11 +100,11 @@ export default {
     scanValidators() {
       return []
     },
-    tubeFields() {
-      return filterProps.tubeFields
+    devourFields() {
+      return filterProps.fields
     },
-    tubeIncludes() {
-      return filterProps.tubeIncludes
+    devourIncludes() {
+      return filterProps.includes
     }
   },
   mounted() {

@@ -415,6 +415,10 @@ const resources = [
         "jsonApi": "hasMany",
         "type": "aliquot"
       },
+      "qc_results": {
+        "jsonApi": "hasMany",
+        "type": "qc_result"
+      },
       "downstream_assets": {
         "jsonApi": "hasMany"
       },

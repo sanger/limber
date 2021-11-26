@@ -1,9 +1,10 @@
 const filterProps = {
-  tubeFields: {
-    tubes: 'labware_barcode,uuid,purpose',
-    purposes: 'name'
+  fields: {
+    tubes: 'labware_barcode,uuid,purpose,receptacle',
+    purposes: 'name,uuid',
+    receptacles: 'qc_results'
   },
-  tubeIncludes: 'purpose'
+  includes: 'purpose,receptacle.qc_results'
 }
 
 export default filterProps
