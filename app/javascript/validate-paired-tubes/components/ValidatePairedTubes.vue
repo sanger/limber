@@ -21,7 +21,7 @@
         header="Validate Tubes"
         header-tag="h3"
       >
-        <p class="vt-instructions">
+        <p class="tv-instructions">
           Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown below.
         </p>
         <div class="tube-scan-fields">
@@ -123,8 +123,8 @@ export default {
 }
 </script>
 
-<style>
-.vt-instructions {
+<style scoped>
+.tv-instructions {
   font-size: 120%;
 }
 
