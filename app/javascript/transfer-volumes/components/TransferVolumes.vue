@@ -25,6 +25,7 @@
         <div class="tube-scan-fields">
           <lb-labware-scan
             key="source"
+            ref="sourceScan"
             :api="devourApi"
             label="Pool XP"
             :labelCols="3"
@@ -111,6 +112,9 @@ export default {
     validTubes() {
       return this.tubes.filter( tube => tube.state === 'valid' )
     }
+  },
+  mounted() {
+    this.$refs.sourceScan.focus()
   },
   methods: {
     updateTube(index, data) {

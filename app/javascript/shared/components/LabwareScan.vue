@@ -29,6 +29,7 @@
           >
             <b-form-input
               :id="uid"
+              ref="scan"
               v-model.trim="labwareBarcode"
               type="text"
               :state="formState"
@@ -232,6 +233,9 @@ export default {
       } else {
         this.apiActivity = { ...err, state: 'invalid' }
       }
+    },
+    focus() {
+      this.$refs.scan.$el.focus()
     }
   }
 }
