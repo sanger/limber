@@ -73,7 +73,7 @@ module Presenters
     end
 
     def transfer_volumes?
-      [source_molarity, target_molarity, target_volume, minimum_pick].all?
+      !purpose_config.transfer_parameters.nil?
     end
 
     def source_molarity

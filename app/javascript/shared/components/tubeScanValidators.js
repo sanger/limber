@@ -40,6 +40,13 @@
 // function in scanValidators.js
 
 import { validScanMessage } from './scanValidators'
+import { purposeConfigForTube } from 'shared/tubeHelpers'
+import {
+  purposeTargetMolarityParameter,
+  purposeTargetVolumeParameter,
+  purposeMinimumPickParameter,
+  tubeMostRecentMolarity,
+} from 'shared/tubeTransferVolumes'
 
 // Returns a validator that ensures that the scanned item does not appear
 // multiple times in the list (based on UUID).
@@ -82,7 +89,7 @@ const checkMatchingPurposes = (purpose) => {
 // checkState(['available', 'exhausted'])
 const checkState = (allowedStatesList) => {
   return (tube) => {
-    if(!allowedStatesList.includes(tube.state)) {
+    if (!allowedStatesList.includes(tube.state)) {
       return { valid: false, message: 'Tube must have a state of: ' + allowedStatesList.join(' or ') }
     } else {
       return validScanMessage()
@@ -90,4 +97,12 @@ const checkState = (allowedStatesList) => {
   }
 }
 
-export { checkDuplicates, checkMatchingPurposes, checkState }
+const checkTransferParameters = (purposeConfigs) => {
+  return (tube) => {
+    const purposeConfig = purposeConfigForTube(tube, purposeConfigs)
+    const transferParameters = purposeConfig?.transfer_parameters
+
+  }
+}
+
+export { checkDuplicates, checkMatchingPurposes, checkState, checkTransferParameters }

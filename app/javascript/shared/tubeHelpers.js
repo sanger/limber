@@ -6,4 +6,9 @@ const buildTubeObjs = function(number) {
   })
 }
 
-export { buildTubeObjs }
+const purposeConfigForTube = function(tube, purposeConfigs) {
+  const purposeUuid = tube?.purpose?.uuid
+  return purposeConfigs[purposeUuid]
+}
+
+export { buildTubeObjs, purposeConfigForTube }

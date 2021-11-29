@@ -33,7 +33,7 @@
             :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
-            :validators="scanValidators"
+            :validators="sourceTubeValidators"
             :labware-type="'tube'"
             @change="updateSourceTube($event)"
           />
@@ -44,7 +44,7 @@
             :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
-            :validators="scanValidators"
+            :validators="destinationTubeValidators"
             :labware-type="'tube'"
             @change="updateDestinationTube($event)"
           />
@@ -62,6 +62,7 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import TransferVolumes from './TransferVolumes'
+import { checkState } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'ValidatePairedTubes',
@@ -99,7 +100,10 @@ export default {
     }
   },
   computed: {
-    scanValidators() {
+    sourceTubeValidators() {
+      return [checkState(['passed'])]
+    },
+    destinationTubeValidators() {
       return []
     },
     devourFields() {
@@ -107,6 +111,9 @@ export default {
     },
     devourIncludes() {
       return filterProps.includes
+    },
+    purposeConfigs() {
+      return JSON.parse(this.purposeConfigJson)
     }
   },
   mounted() {
@@ -115,6 +122,7 @@ export default {
   methods: {
     updateSourceTube(data) {
       this.sourceTube = Object.assign({}, this.sourceTube, data)
+      debugger
     },
     updateDestinationTube(data) {
       this.destinationTube = Object.assign({}, this.destinationTube, data)
