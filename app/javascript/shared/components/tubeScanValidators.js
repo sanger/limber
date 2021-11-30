@@ -67,7 +67,7 @@ const checkDuplicates = (tubeList) => {
   }
 }
 
-// Returns a validator that ensures the purpose namess of all the tubes match
+// Returns a validator that ensures the purpose names of all the tubes match
 // the name for the one provided. Typically the one provided should be the one
 // of the purposes from the full set of tubes being validated.
 const checkMatchingPurposes = (purpose) => {
@@ -80,6 +80,18 @@ const checkMatchingPurposes = (purpose) => {
     }
 
     return validScanMessage()
+  }
+}
+
+// Returns a validator that ensures the tube contains at least one QC result
+// for molarity in nM.
+const checkMolarityResult = () => {
+  return (tube) => {
+    if (tubeMostRecentMolarity(tube) === undefined) {
+      return { valid: false, message: 'Tube has no molarity QC result' }
+    } else {
+      return validScanMessage()
+    }
   }
 }
 
@@ -97,12 +109,23 @@ const checkState = (allowedStatesList) => {
   }
 }
 
+// Returns a validator that ensures the scanned tube has a purpose with configured
+// transfer parameters.  All three parameters are needed to perform a transfer volume
+// calculation.
+// purposeConfigs: An object containing keys for purpose UUIDs, and values containing
+//                 the config options for each purpose.
 const checkTransferParameters = (purposeConfigs) => {
   return (tube) => {
     const purposeConfig = purposeConfigForTube(tube, purposeConfigs)
-    const transferParameters = purposeConfig?.transfer_parameters
-
+    const targetMolarity = purposeTargetMolarityParameter(purposeConfig)
+    const targetVolume = purposeTargetVolumeParameter(purposeConfig)
+    const minimumPick = purposeMinimumPickParameter(purposeConfig)
+    if ([targetMolarity, targetVolume, minimumPick].some(param => param === undefined)) {
+      return { valid: false, message: 'Tube purpose is not configured for generating transfer volumes' }
+    } else {
+      return validScanMessage()
+    }
   }
 }
 
-export { checkDuplicates, checkMatchingPurposes, checkState, checkTransferParameters }
+export { checkDuplicates, checkMatchingPurposes, checkMolarityResult, checkState, checkTransferParameters }

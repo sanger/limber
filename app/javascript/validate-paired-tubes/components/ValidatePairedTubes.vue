@@ -62,7 +62,7 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import TransferVolumes from './TransferVolumes'
-import { checkState } from 'shared/components/tubeScanValidators'
+import { checkState, checkMolarityResult, checkTransferParameters } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'ValidatePairedTubes',
@@ -101,7 +101,7 @@ export default {
   },
   computed: {
     sourceTubeValidators() {
-      return [checkState(['passed'])]
+      return [checkState(['passed']), checkTransferParameters(this.purposeConfigs), checkMolarityResult()]
     },
     destinationTubeValidators() {
       return []
@@ -114,7 +114,7 @@ export default {
     },
     purposeConfigs() {
       return JSON.parse(this.purposeConfigJson)
-    }
+    },
   },
   mounted() {
     this.$refs.sourceScan.focus()
@@ -122,7 +122,6 @@ export default {
   methods: {
     updateSourceTube(data) {
       this.sourceTube = Object.assign({}, this.sourceTube, data)
-      debugger
     },
     updateDestinationTube(data) {
       this.destinationTube = Object.assign({}, this.destinationTube, data)
