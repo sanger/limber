@@ -60,8 +60,20 @@ const checkDuplicates = (tubeList) => {
     }
     if (occurrences > 1) {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
+    } else {
+      return validScanMessage()
     }
-    else {
+  }
+}
+
+// Returns a validator that ensures the tube has an ID in the allowed list.
+// To allow tubes with IDs in the list 123, 345, 567 and an invalid message:
+// checkId(['123', '345', '567'], 'Invalid ID')
+const checkId = (allowedIds, invalidMessage) => {
+  return (tube) => {
+    if (!allowedIds.includes(tube?.id)) {
+      return { valid: false, message: invalidMessage }
+    } else {
       return validScanMessage()
     }
   }
@@ -140,4 +152,4 @@ const checkTransferParameters = (purposeConfigs) => {
   }
 }
 
-export { checkDuplicates, checkMatchingPurposes, checkMolarityResult, checkPurpose, checkState, checkTransferParameters }
+export { checkDuplicates, checkId, checkMatchingPurposes, checkMolarityResult, checkPurpose, checkState, checkTransferParameters }

@@ -34,7 +34,7 @@
             :fields="devourFields"
             :includes="devourIncludes"
             :validators="sourceTubeValidators"
-            :labware-type="'tube'"
+            labware-type="tube"
             @change="updateSourceTube($event)"
           />
           <lb-labware-scan
@@ -45,7 +45,7 @@
             :fields="devourFields"
             :includes="devourIncludes"
             :validators="destinationTubeValidators"
-            :labware-type="'tube'"
+            labware-type="tube"
             @change="updateDestinationTube($event)"
           />
         </div>
@@ -63,9 +63,10 @@ import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import TransferVolumes from './TransferVolumes'
 import {
-  checkState,
+  checkId,
   checkMolarityResult,
   checkPurpose,
+  checkState,
   checkTransferParameters
 } from 'shared/components/tubeScanValidators'
 
@@ -109,7 +110,9 @@ export default {
       return [checkState(['passed']), checkTransferParameters(this.purposeConfigs), checkMolarityResult()]
     },
     destinationTubeValidators() {
-      return [checkPurpose(['LB Lib Pool Norm'])]
+      const allowedIdsFromSource = this.sourceTube.labware?.receptacle.downstream_tubes.map(tube => tube.id)
+      const allowedIds = (allowedIdsFromSource === undefined) ? [] : allowedIdsFromSource
+      return [checkPurpose(['LB Lib Pool Norm']), checkId(allowedIds, 'Does not match the source tube')]
     },
     devourFields() {
       return filterProps.fields
@@ -119,7 +122,7 @@ export default {
     },
     purposeConfigs() {
       return JSON.parse(this.purposeConfigJson)
-    },
+    }
   },
   mounted() {
     this.$refs.sourceScan.focus()
