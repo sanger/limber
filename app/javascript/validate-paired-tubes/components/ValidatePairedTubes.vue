@@ -62,7 +62,12 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import TransferVolumes from './TransferVolumes'
-import { checkState, checkMolarityResult, checkTransferParameters } from 'shared/components/tubeScanValidators'
+import {
+  checkState,
+  checkMolarityResult,
+  checkPurpose,
+  checkTransferParameters
+} from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'ValidatePairedTubes',
@@ -104,7 +109,7 @@ export default {
       return [checkState(['passed']), checkTransferParameters(this.purposeConfigs), checkMolarityResult()]
     },
     destinationTubeValidators() {
-      return []
+      return [checkPurpose(['LB Lib Pool Norm'])]
     },
     devourFields() {
       return filterProps.fields
