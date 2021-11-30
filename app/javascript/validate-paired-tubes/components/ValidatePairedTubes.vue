@@ -33,7 +33,7 @@
             :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
-            :scanDisabled="allValid"
+            :scan-disabled="allValid"
             :validators="sourceTubeValidators"
             labware-type="tube"
             @change="updateSourceTube($event)"
@@ -45,13 +45,16 @@
             :label-cols="3"
             :fields="devourFields"
             :includes="devourIncludes"
-            :scanDisabled="allValid"
+            :scan-disabled="allValid"
             :validators="destinationTubeValidators"
             labware-type="tube"
             @change="updateDestinationTube($event)"
           />
         </div>
-        <p v-show="allValid" class="tv-instructions">
+        <p
+          v-show="allValid"
+          class="tv-instructions"
+        >
           The scanned tubes match. Transfer volumes are shown below. Refresh the page to scan another pair.
         </p>
       </b-card>
