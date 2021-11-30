@@ -58,7 +58,11 @@
           The scanned tubes match. Transfer volumes are shown below. Refresh the page to scan another pair.
         </p>
       </b-card>
-      <lb-transfer-volumes />
+      <lb-transfer-volumes
+        :purpose-configs="purposeConfigs"
+        :tube="sourceTube.labware"
+        :confirmed-pair="allValid"
+      />
     </lb-sidebar>
   </lb-page>
 </template>
