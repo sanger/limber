@@ -6,7 +6,6 @@ module Presenters
     include Presenters::Presenter
     include Statemachine::Shared
     include Presenters::CreationBehaviour
-    include TransfersHelper
     include RobotControlled
 
     self.summary_items = {
