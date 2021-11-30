@@ -30,18 +30,16 @@ const tubeMostRecentMolarity = function(tube) {
 //
 // [Object] An Object containing keys sample_volume and buffer_volume for the transfer.
 //          Volumes in the return Object use the same units as the target_volume parameter.
-const calculateTransferVolumes = function(tube, purposeConfig) {
-  // def calculate_pick_volumes(target_molarity:, target_volume:, source_molarity:, minimum_pick:)
-  // sample_volume = (target_molarity.to_f / source_molarity) * target_volume
-  // sample_volume = [sample_volume, minimum_pick].max
-  // buffer_volume = target_volume - sample_volume
+const calculateTransferVolumes = function(target_molarity, target_volume, source_molarity, minimum_pick) {
+  const sample_volume = (target_molarity / source_molarity) * target_volume
+  const sample_volume = Math.max(sample_volume, minimum_pick)
+  const buffer_volume = target_volume - sample_volume
 
-  // if buffer_volume < minimum_pick
-  //   { sample_volume: target_volume, buffer_volume: 0 }
-  // else
-  //   { sample_volume: sample_volume, buffer_volume: buffer_volume }
-  // end
-  // end
+  if (buffer_volume < minimum_pick) {
+     return { sample_volume: target_volume, buffer_volume: 0 }
+  } else {
+     return { sample_volume: sample_volume, buffer_volume: buffer_volume }
+  }
 }
 
 export {
