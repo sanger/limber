@@ -151,7 +151,7 @@ export default {
       }
     },
     feedback() {
-      if(this.validated.state === 'valid') {
+      if (this.validated.state === 'valid') {
         return this.validMessage
       }
       return this.validated.message
@@ -167,9 +167,9 @@ export default {
       }
     },
     computedValidators(){
-      if(this.validators) { return this.validators }
+      if (this.validators) { return this.validators }
 
-      if(this.labwareType=='tube'){
+      if (this.labwareType=='tube'){
         return []
       } else {
         return [checkSize(12, 8)]
