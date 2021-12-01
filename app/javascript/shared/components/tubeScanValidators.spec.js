@@ -1,4 +1,9 @@
-import { checkDuplicates, checkMatchingPurposes, checkState } from 'shared/components/tubeScanValidators'
+import {
+  checkDuplicates,
+  checkId,
+  checkMatchingPurposes,
+  checkState
+} from 'shared/components/tubeScanValidators'
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
@@ -37,6 +42,27 @@ describe('checkDuplicates', () => {
     expect(
       checkDuplicates([empty, tube2])(tube1)
     ).toEqual({ valid: true })
+  })
+})
+
+describe('checkId', () => {
+  const valid_ids = ['123', '456', '789']
+  test.each(valid_ids)("passes a tube with acceptable ID %p as valid", test_id => {
+    const tube = { id: test_id }
+    expect(checkId(valid_ids)(tube)).toEqual({ valid: true })
+  })
+
+  describe('tube with invalid ID', () => {
+    const tube = { id: '999' }
+
+    it('is marked as invalid', () => {
+      expect(checkId(valid_ids)(tube)).toEqual({ valid: false })
+    })
+
+    it('is given the specified error message', () => {
+      const error_message = 'Test error'
+      expect(checkId(valid_ids, error_message)(tube)).toEqual({ valid: false, message: error_message })
+    })
   })
 })
 
