@@ -2,8 +2,15 @@ import {
   checkDuplicates,
   checkId,
   checkMatchingPurposes,
+  checkMolarityResult,
   checkState
 } from 'shared/components/tubeScanValidators'
+
+import { tubeMostRecentMolarity } from '../tubeTransferVolumes'
+
+jest.mock('shared/tubeTransferVolumes', () => ({
+  tubeMostRecentMolarity: jest.fn()
+}))
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
@@ -92,6 +99,24 @@ describe('checkMatchingPurposes', () => {
     const tube = { purpose: { name: 'Another Purpose' } }
     expect(checkMatchingPurposes({ name: 'A Purpose' })(tube))
       .toEqual({ valid: false, message: 'Tube purpose \'Another Purpose\' doesn\'t match other tubes' })
+  })
+})
+
+describe('checkMolarityResult', () => {
+  const tube = {}
+
+  describe('when the tube has molarity results', () => {
+    it('passes the tube', () => {
+      tubeMostRecentMolarity.mockReturnValue(2.0)
+      expect(checkMolarityResult()(tube)).toEqual({ valid: true })
+    })
+  })
+
+  describe('when the tube has no molarity results', () => {
+    it('fails the tube', () => {
+      tubeMostRecentMolarity.mockReturnValue(undefined)
+      expect(checkMolarityResult()(tube)).toEqual({ valid: false, message: 'Tube has no molarity QC result' })
+    })
   })
 })
 
