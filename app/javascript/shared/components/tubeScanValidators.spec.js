@@ -60,6 +60,30 @@ describe('checkId', () => {
     expect(checkId(validIds)(tube)).toEqual({ valid: true })
   })
 
+  const errorMessage = 'Test error'
+
+  describe('undefined tube', () => {
+    it('is marked as invalid', () => {
+      expect(checkId(validIds)(undefined)).toEqual({ valid: false })
+    })
+
+    it('is given the specified error message', () => {
+      expect(checkId(validIds, errorMessage)(undefined)).toEqual({ valid: false, message: errorMessage })
+    })
+  })
+
+  describe('tube with no ID', () => {
+    const tube = { }
+
+    it('is marked as invalid', () => {
+      expect(checkId(validIds)(tube)).toEqual({ valid: false })
+    })
+
+    it('is given the specified error message', () => {
+      expect(checkId(validIds, errorMessage)(tube)).toEqual({ valid: false, message: errorMessage })
+    })
+  })
+
   describe('tube with invalid ID', () => {
     const tube = { id: '999' }
 
@@ -68,7 +92,6 @@ describe('checkId', () => {
     })
 
     it('is given the specified error message', () => {
-      const errorMessage = 'Test error'
       expect(checkId(validIds, errorMessage)(tube)).toEqual({ valid: false, message: errorMessage })
     })
   })
@@ -107,16 +130,32 @@ describe('checkMolarityResult', () => {
   const tube = {}
 
   describe('when the tube has molarity results', () => {
-    it('passes the tube', () => {
+    beforeEach(() => {
       tubeMostRecentMolarity.mockReturnValue(2.0)
+    })
+
+    it('passes the tube', () => {
       expect(checkMolarityResult()(tube)).toEqual({ valid: true })
+    })
+
+    it('passes an undefined tube', () => {
+      expect(checkMolarityResult()(undefined)).toEqual({ valid: true })
     })
   })
 
   describe('when the tube has no molarity results', () => {
-    it('fails the tube', () => {
+    const failureMessage = 'Tube has no molarity QC result'
+
+    beforeEach(() => {
       tubeMostRecentMolarity.mockReturnValue(undefined)
-      expect(checkMolarityResult()(tube)).toEqual({ valid: false, message: 'Tube has no molarity QC result' })
+    })
+
+    it('fails the tube', () => {
+      expect(checkMolarityResult()(tube)).toEqual({ valid: false, message: failureMessage })
+    })
+
+    it('fails an undefined tube', () => {
+      expect(checkMolarityResult()(undefined)).toEqual({ valid: false, message: failureMessage })
     })
   })
 })
