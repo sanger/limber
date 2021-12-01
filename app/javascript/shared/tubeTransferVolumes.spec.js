@@ -2,6 +2,7 @@ import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,
   purposeMinimumPickParameter,
+  tubeMostRecentMolarity,
   calculateTransferVolumes
 } from 'shared/tubeTransferVolumes'
 
@@ -76,7 +77,69 @@ describe('purposeMinimumPickParameter', () => {
 })
 
 describe('tubeMostRecentMolarity', () => {
+  describe('with tube containing multiple QC results and multiple molarity results', () => {
+    const tube = { receptacle: { qc_results: [
+      { key: 'volume', units: 'µl', value: '250', created_at: '2021-11-20T01:02:03' },
+      { key: 'molarity', units: 'nM', value: '25', created_at: '2021-01-20T12:03:04' },
+      { key: 'molarity', units: 'nM', value: '50', created_at: '2021-01-20T17:04:05' } // <= most recent molarity
+    ] } }
 
+    it('returns the correct molarity measurement', () => {
+      expect(tubeMostRecentMolarity(tube)).toBe('50')
+    })
+  })
+
+  describe('with molarity results in the wrong units', () => {
+    const tube = { receptacle: { qc_results: [
+      { key: 'molarity', units: 'µM', value: '25', created_at: '2021-01-12T08:03:04' }, // oldest molarity / wrong units
+      { key: 'molarity', units: 'nM', value: '250', created_at: '2021-01-15T12:03:04' }, // second most recent / correct units
+      { key: 'molarity', units: 'M', value: '2', created_at: '2021-01-20T17:04:05' } // <= most recent molarity / wrong units
+    ] } }
+
+    it('returns the correct molarity measurement', () => {
+      expect(tubeMostRecentMolarity(tube)).toBe('250')
+    })
+  })
+
+  describe('with no molarity results', () => {
+    const tube = { receptacle: { qc_results: [
+      { key: 'volume', units: 'µl', value: '250', created_at: '2021-11-20T01:02:03' }
+    ] } }
+
+    it('returns undefined', () => {
+      expect(tubeMostRecentMolarity(tube)).toBeUndefined()
+    })
+  })
+
+  describe('with no QC results (empty array)', () => {
+    const tube = { receptacle: { qc_results: [] } }
+
+    it('returns undefined', () => {
+      expect(tubeMostRecentMolarity(tube)).toBeUndefined()
+    })
+  })
+
+  describe('with no QC results (missing key)', () => {
+    const tube = { receptacle: { } }
+
+    it('returns undefined', () => {
+      expect(tubeMostRecentMolarity(tube)).toBeUndefined()
+    })
+  })
+
+  describe('with no QC receptacle', () => {
+    const tube = { }
+
+    it('returns undefined', () => {
+      expect(tubeMostRecentMolarity(tube)).toBeUndefined()
+    })
+  })
+
+  describe('with undefined tube', () => {
+    it('returns undefined', () => {
+      expect(tubeMostRecentMolarity(undefined)).toBeUndefined()
+    })
+  })
 })
 
 describe('calculateTransferVolumes', () => {
