@@ -34,7 +34,11 @@ module LabwareCreators
     private
 
     def create_labware!
-      create_submission_from_parent_tubes
+      submission_created = create_submission_from_parent_tubes
+      unless submission_created
+        errors.add(:base, "Failed to create submission")
+        return
+      end
 
       # TODO: Hack - change this to poll for status or something
       puts '*** Waiting for it to build ***'
@@ -132,7 +136,14 @@ module LabwareCreators
       }
 
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-      ss.save # TODO: check if true, handle if not
+      submission_created = ss.save
+      binding.pry
+      if submission_created
+        return true
+      else
+        errors.add(:base, ss.errors.full_messages)
+        return false
+      end
     end
   end
 end
