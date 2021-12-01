@@ -74,34 +74,5 @@ module Presenters
     def transfer_volumes?
       !purpose_config.transfer_parameters.nil?
     end
-
-    def source_molarity
-      molarity_qc_result = labware.receptacle.latest_molarity
-      molarity_qc_result.nil? ? nil : molarity_qc_result.value.to_f
-    end
-
-    def target_molarity
-      purpose_config.transfer_parameters&.fetch(:target_molarity_nm, nil)
-    end
-
-    def target_volume
-      purpose_config.transfer_parameters&.fetch(:target_volume_ul, nil)
-    end
-
-    def minimum_pick
-      purpose_config.transfer_parameters&.fetch(:minimum_pick_ul, nil)
-    end
-
-    def transfer_volumes
-      volumes = calculate_pick_volumes(
-        target_molarity: target_molarity,
-        target_volume: target_volume,
-        source_molarity: source_molarity,
-        minimum_pick: minimum_pick
-      )
-
-      yield 'Sample Volume *', "#{volumes[:sample_volume].round} µl"
-      yield 'Buffer Volume *', "#{volumes[:buffer_volume].round} µl"
-    end
   end
 end

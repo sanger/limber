@@ -85,30 +85,6 @@ RSpec.describe Presenters::TubePresenter do
       it 'has transfer volumes' do
         expect(subject.transfer_volumes?).to be_truthy
       end
-
-      it 'provides inputs for the volume calculation' do
-        expect(subject.source_molarity).to eq 5.5
-        expect(subject.target_molarity).to eq 4
-        expect(subject.target_volume).to eq 192
-        expect(subject.minimum_pick).to eq 2
-      end
-
-      it 'yields the correct transfer volume outputs' do
-        # Sample volume:  (4 / 5.5) * 192 = 140
-        # Buffer volume:  192 - 140 = 52
-        expect { |b| subject.transfer_volumes(&b) }.to yield_successive_args(['Sample Volume *', '140 µl'], ['Buffer Volume *', '52 µl'])
-      end
-    end
-
-    shared_examples 'no transfer volumes' do
-      it 'has no transfer volumes' do
-        expect(subject.transfer_volumes?).to be_falsey
-      end
-    end
-
-    context 'no molarity result' do
-      let(:qc_results) { [create(:qc_result, key: 'volume', value: '600.0', units: 'ul')] }
-      it_behaves_like 'no transfer volumes'
     end
 
     context 'missing transfer_parameters' do
@@ -120,46 +96,9 @@ RSpec.describe Presenters::TubePresenter do
         )
       end
 
-      it_behaves_like 'no transfer volumes'
-
-      it 'returns nil for transfer parameter fields' do
-        expect(subject.target_molarity).to be_nil
-        expect(subject.target_volume).to be_nil
-        expect(subject.minimum_pick).to be_nil
+      it 'does not have transfer volumes' do
+        expect(subject.transfer_volumes?).to be_falsey
       end
-    end
-
-    context 'missing target_molarity_nm' do
-      let!(:purpose_config) do
-        create(
-          :tube_with_transfer_parameters_config,
-          uuid: purpose_uuid,
-          transfer_parameters: { target_volume_ul: 192, minimum_pick_ul: 2 }
-        )
-      end
-      it_behaves_like 'no transfer volumes'
-    end
-
-    context 'missing target_volume_ul' do
-      let!(:purpose_config) do
-        create(
-          :tube_with_transfer_parameters_config,
-          uuid: purpose_uuid,
-          transfer_parameters: { target_molarity_nm: 4, minimum_pick_ul: 2 }
-        )
-      end
-      it_behaves_like 'no transfer volumes'
-    end
-
-    context 'missing minimum_pick_ul' do
-      let!(:purpose_config) do
-        create(
-          :tube_with_transfer_parameters_config,
-          uuid: purpose_uuid,
-          transfer_parameters: { target_molarity_nm: 4, target_volume_ul: 192 }
-        )
-      end
-      it_behaves_like 'no transfer volumes'
     end
   end
 end
