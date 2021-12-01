@@ -1,5 +1,7 @@
 import {
   purposeTargetMolarityParameter,
+  purposeTargetVolumeParameter,
+  purposeMinimumPickParameter,
   calculateTransferVolumes
 } from 'shared/tubeTransferVolumes'
 
@@ -34,11 +36,43 @@ describe('purposeTargetMolarityParameter', () => {
 })
 
 describe('purposeTargetVolumeParameter', () => {
+  describe('with complete transfer purposeConfig', () => {
+    it('returns the correct value', () => {
+      expect(purposeTargetVolumeParameter(validPurposeConfig)).toBe(192)
+    })
+  })
 
+  describe('with no transfer parameters', () => {
+    it('returns undefined', () => {
+      expect(purposeTargetVolumeParameter(emptyPurposeConfig)).toBeUndefined()
+    })
+  })
+
+  describe('with undefined purposeConfig', () => {
+    it('returns undefined', () => {
+      expect(purposeTargetVolumeParameter(undefined)).toBeUndefined()
+    })
+  })
 })
 
 describe('purposeMinimumPickParameter', () => {
+  describe('with complete transfer purposeConfig', () => {
+    it('returns the correct value', () => {
+      expect(purposeMinimumPickParameter(validPurposeConfig)).toBe(2)
+    })
+  })
 
+  describe('with no transfer parameters', () => {
+    it('returns undefined', () => {
+      expect(purposeMinimumPickParameter(emptyPurposeConfig)).toBeUndefined()
+    })
+  })
+
+  describe('with undefined purposeConfig', () => {
+    it('returns undefined', () => {
+      expect(purposeMinimumPickParameter(undefined)).toBeUndefined()
+    })
+  })
 })
 
 describe('tubeMostRecentMolarity', () => {
