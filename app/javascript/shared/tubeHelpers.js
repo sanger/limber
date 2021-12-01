@@ -8,7 +8,7 @@ const buildTubeObjs = function(number) {
 
 const purposeConfigForTube = function(tube, purposeConfigs) {
   const purposeUuid = tube?.purpose?.uuid
-  return purposeConfigs[purposeUuid]
+  return purposeConfigs ? purposeConfigs[purposeUuid] : undefined
 }
 
 export { buildTubeObjs, purposeConfigForTube }
