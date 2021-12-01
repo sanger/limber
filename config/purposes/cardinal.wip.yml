@@ -125,7 +125,6 @@ LCA Blood Bank:
     Cardinal cell banking:
       template_name: 'Limber - Cardinal cell banking'
       request_options:
-        library_type: 'Cardinal Banking'
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
