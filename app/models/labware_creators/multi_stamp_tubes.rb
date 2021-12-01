@@ -137,7 +137,6 @@ module LabwareCreators
 
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
       submission_created = ss.save
-      binding.pry
       if submission_created
         return true
       else
