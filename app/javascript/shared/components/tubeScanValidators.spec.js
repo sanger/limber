@@ -54,7 +54,7 @@ describe('checkDuplicates', () => {
 
 describe('checkId', () => {
   const valid_ids = ['123', '456', '789']
-  test.each(valid_ids)("passes a tube with acceptable ID %p as valid", test_id => {
+  test.each(valid_ids)('passes a tube with acceptable ID %p as valid', test_id => {
     const tube = { id: test_id }
     expect(checkId(valid_ids)(tube)).toEqual({ valid: true })
   })
