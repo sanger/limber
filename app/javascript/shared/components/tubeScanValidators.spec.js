@@ -54,22 +54,22 @@ describe('checkDuplicates', () => {
 })
 
 describe('checkId', () => {
-  const valid_ids = ['123', '456', '789']
-  test.each(valid_ids)('passes a tube with acceptable ID %p as valid', test_id => {
-    const tube = { id: test_id }
-    expect(checkId(valid_ids)(tube)).toEqual({ valid: true })
+  const validIds = ['123', '456', '789']
+  test.each(validIds)('passes a tube with acceptable ID %p as valid', testId => {
+    const tube = { id: testId }
+    expect(checkId(validIds)(tube)).toEqual({ valid: true })
   })
 
   describe('tube with invalid ID', () => {
     const tube = { id: '999' }
 
     it('is marked as invalid', () => {
-      expect(checkId(valid_ids)(tube)).toEqual({ valid: false })
+      expect(checkId(validIds)(tube)).toEqual({ valid: false })
     })
 
     it('is given the specified error message', () => {
-      const error_message = 'Test error'
-      expect(checkId(valid_ids, error_message)(tube)).toEqual({ valid: false, message: error_message })
+      const errorMessage = 'Test error'
+      expect(checkId(validIds, errorMessage)(tube)).toEqual({ valid: false, message: errorMessage })
     })
   })
 })
