@@ -21,7 +21,7 @@ LCA Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: true
+  :input_plate: false
   :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal library prep:
