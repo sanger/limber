@@ -22,8 +22,7 @@ describe('tubeHelpers', () => {
     test.each([
       ['purposeA', 'purposeAId'],
       ['purposeB', 'purposeBId']
-    ])
-    (
+    ])(
       'tube with purpose UUID %p returns purpose with identifier %p',
       (uuid, identifier) => {
         const tube = { purpose: { uuid: uuid } }

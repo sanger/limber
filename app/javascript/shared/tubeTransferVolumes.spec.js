@@ -154,8 +154,7 @@ describe('calculateTransferVolumes', () => {
       expect(Object.keys(volumes)).toEqual(['sampleVolume', 'bufferVolume'])
     })
 
-    test.each(Object.keys(volumes))
-    (
+    test.each(Object.keys(volumes))(
       'returns an object with value for key %p as a Number',
       (key) => {
         expect(volumes[key]).toEqual(expect.any(Number))
