@@ -1,9 +1,36 @@
 import {
+  purposeTargetMolarityParameter,
   calculateTransferVolumes
 } from 'shared/tubeTransferVolumes'
 
-describe('purposeTargetMolarityParameter', () => {
+const validPurposeConfig = {
+  transfer_parameters: {
+    target_molarity_nm: 4,
+    target_volume_ul: 192,
+    minimum_pick_ul: 2
+  }
+}
 
+const emptyPurposeConfig = { }
+
+describe('purposeTargetMolarityParameter', () => {
+  describe('with complete transfer purposeConfig', () => {
+    it('returns the correct value', () => {
+      expect(purposeTargetMolarityParameter(validPurposeConfig)).toBe(4)
+    })
+  })
+
+  describe('with no transfer parameters', () => {
+    it('returns undefined', () => {
+      expect(purposeTargetMolarityParameter(emptyPurposeConfig)).toBeUndefined()
+    })
+  })
+
+  describe('with undefined purposeConfig', () => {
+    it('returns undefined', () => {
+      expect(purposeTargetMolarityParameter(undefined)).toBeUndefined()
+    })
+  })
 })
 
 describe('purposeTargetVolumeParameter', () => {
