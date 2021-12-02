@@ -5,16 +5,11 @@
       :message="progressMessage"
     />
     <lb-main-content>
-      <b-card
-        bg-variant="dark"
-        text-variant="white"
-      >
-        <h3>Scanned tubes will be shown here!</h3>
-        <p>
-          Scanned tubes will appear here for the user to be able to visualise
-          what they've been scanning on the right.
-        </p>
-      </b-card>
+      <lb-transfer-volumes
+        :purpose-configs="purposeConfigs"
+        :tube="sourceTube.labware"
+        :confirmed-pair="allValid"
+      />
     </lb-main-content>
     <lb-sidebar>
       <b-card
@@ -22,7 +17,7 @@
         header-tag="h3"
       >
         <p class="tv-instructions">
-          Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown below.
+          Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown to the left.
         </p>
         <div class="tube-scan-fields">
           <lb-labware-scan
@@ -55,14 +50,9 @@
           v-show="allValid"
           class="tv-instructions"
         >
-          The scanned tubes match. Transfer volumes are shown below. Refresh the page to scan another pair.
+          The scanned tubes match. Transfer volumes are now shown. Refresh the page to scan another pair.
         </p>
       </b-card>
-      <lb-transfer-volumes
-        :purpose-configs="purposeConfigs"
-        :tube="sourceTube.labware"
-        :confirmed-pair="allValid"
-      />
     </lb-sidebar>
   </lb-page>
 </template>

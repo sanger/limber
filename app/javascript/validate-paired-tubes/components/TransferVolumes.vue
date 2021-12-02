@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style scoped>
-  p {
+  p, dl {
     font-size: 120%;
   }
 </style>
