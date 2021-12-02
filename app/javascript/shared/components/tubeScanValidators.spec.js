@@ -9,11 +9,6 @@ import {
 } from 'shared/components/tubeScanValidators'
 
 import { purposeConfigForTube } from 'shared/tubeHelpers'
-
-jest.mock('shared/tubeHelpers', () => ({
-  purposeConfigForTube: jest.fn()
-}))
-
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,
@@ -21,12 +16,8 @@ import {
   tubeMostRecentMolarity,
 } from 'shared/tubeTransferVolumes'
 
-jest.mock('shared/tubeTransferVolumes', () => ({
-  purposeTargetMolarityParameter: jest.fn(),
-  purposeTargetVolumeParameter: jest.fn(),
-  purposeMinimumPickParameter: jest.fn(),
-  tubeMostRecentMolarity: jest.fn()
-}))
+jest.mock('shared/tubeHelpers')
+jest.mock('shared/tubeTransferVolumes')
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
