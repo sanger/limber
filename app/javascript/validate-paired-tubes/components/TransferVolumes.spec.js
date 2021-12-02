@@ -3,12 +3,7 @@ import TransferVolumes from './TransferVolumes.vue'
 import { shallowMount } from '@vue/test-utils'
 
 import { purposeConfigForTube } from 'shared/tubeHelpers'
-
-jest.mock('shared/tubeHelpers', () => (
-  {
-    purposeConfigForTube: jest.fn()
-  }
-))
+jest.mock('shared/tubeHelpers')
 
 import {
   purposeTargetMolarityParameter,
@@ -17,16 +12,7 @@ import {
   tubeMostRecentMolarity,
   calculateTransferVolumes,
 } from 'shared/tubeTransferVolumes'
-
-jest.mock('shared/tubeTransferVolumes', () => (
-  {
-    purposeTargetMolarityParameter: jest.fn(),
-    purposeTargetVolumeParameter: jest.fn(),
-    purposeMinimumPickParameter: jest.fn(),
-    tubeMostRecentMolarity: jest.fn(),
-    calculateTransferVolumes: jest.fn()
-  }
-))
+jest.mock('shared/tubeTransferVolumes')
 
 describe('TransferVolumes', () => {
   const mockTube = {}
