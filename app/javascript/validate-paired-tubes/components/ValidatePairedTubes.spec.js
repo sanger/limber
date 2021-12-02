@@ -117,20 +117,40 @@ describe('TransferVolumes', () => {
   })
 
   describe('allValid', () => {
-    it('first test', () => {
-      wrapperFactory()
-    })
+    test.each([
+      ['empty', 'empty', false],
+      ['invalid', 'invalid', false],
+      ['valid', 'empty', false],
+      ['valid', 'invalid', false],
+      ['empty', 'valid', false],
+      ['invalid', 'valid', false],
+      ['valid', 'valid', true]
+    ])(
+      'with %p source tube and %p destination tube, returns %p',
+      (sourceState, destinationState, result) => {
+        const wrapper = wrapperFactory()
+        wrapper.vm.sourceTube = { state: sourceState }
+        wrapper.vm.destinationTube = { state: destinationState }
+        expect(wrapper.vm.allValid).toBe(result)
+      }
+    )
   })
 
   describe('updateSourceTube', () => {
-    it('first test', () => {
-      wrapperFactory()
+    it('updates the source tube', () => {
+      const wrapper = wrapperFactory()
+      const tube = { testKey: 'testValue' }
+      wrapper.vm.updateSourceTube(tube)
+      expect(wrapper.vm.sourceTube).toEqual({ labware: null, state: 'empty', testKey: 'testValue' })
     })
   })
 
   describe('updateDestinationTube', () => {
-    it('first test', () => {
-      wrapperFactory()
+    it('updates the destination tube', () => {
+      const wrapper = wrapperFactory()
+      const tube = { testKey: 'testValue' }
+      wrapper.vm.updateDestinationTube(tube)
+      expect(wrapper.vm.destinationTube).toEqual({ labware: null, state: 'empty', testKey: 'testValue' })
     })
   })
 })
