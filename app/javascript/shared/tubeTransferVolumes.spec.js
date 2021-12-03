@@ -80,9 +80,9 @@ describe('tubeMostRecentMolarity', () => {
   describe('with tube containing multiple QC results and multiple molarity results', () => {
     const tube = { receptacle: { qc_results: [
       { id: '1', key: 'volume', units: 'µl', value: '250', created_at: '2021-11-20T01:02:03' },
-      { id: '2', key: 'molarity', units: 'nM', value: '25', created_at: '2021-01-20T12:03:04' },
-      { id: '4', key: 'molarity', units: 'nM', value: '50', created_at: '2021-01-20T17:04:05' }, // <= most recent, newer ID
-      { id: '3', key: 'molarity', units: 'nM', value: '75', created_at: '2021-01-20T17:04:05' } // <= most recent, older ID
+      { id: '3', key: 'molarity', units: 'nM', value: '25', created_at: '2021-01-20T12:03:04' },
+      { id: '30', key: 'molarity', units: 'nM', value: '50', created_at: '2021-01-20T17:04:05' }, // <= most recent, newer ID
+      { id: '2', key: 'molarity', units: 'nM', value: '75', created_at: '2021-01-20T17:04:05' } // <= most recent, older ID
     ] } }
 
     it('returns the correct molarity measurement', () => {

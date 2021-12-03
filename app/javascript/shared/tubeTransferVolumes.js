@@ -13,7 +13,7 @@ const tubeMostRecentMolarity = function(tube) {
   return tube?.receptacle?.qc_results
     ?.filter(result => result.key === 'molarity' && result.units === 'nM')
     .sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
-    .sort((resultA, resultB) => resultA.id > resultB.id ? -1 : 1)[0]
+    .sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)[0]
     ?.value
 }
 
