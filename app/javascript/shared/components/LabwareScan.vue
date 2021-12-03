@@ -18,7 +18,7 @@
         <b-col cols="9">
           <b-form-group
             :label="label"
-            :label-cols="labelCols"
+            :label-cols="labelColumnSpan"
             label-size="lg"
             :label-for="uid"
             :description="description"
@@ -74,8 +74,8 @@ export default {
       // The label for the text field.
       type: String, default: 'Plate'
     },
-    labelCols: {
-      // The number of columns for the label (out of 9)
+    labelColumnSpan: {
+      // The number of columns for the label to span (out of 9)
       type: Number, default: 2
     },
     description: {
