@@ -3,7 +3,7 @@
     <b-container>
       <b-row>
         <b-col
-          v-if="labwareType=='tube'"
+          v-if="showWellIndicator"
           cols="1"
         >
           <div :class="['pool-colours']">
@@ -18,7 +18,7 @@
         <b-col cols="9">
           <b-form-group
             :label="label"
-            :label-cols="2"
+            :label-cols="labelColumnSpan"
             label-size="lg"
             :label-for="uid"
             :description="description"
@@ -29,6 +29,7 @@
           >
             <b-form-input
               :id="uid"
+              ref="scan"
               v-model.trim="labwareBarcode"
               type="text"
               :state="formState"
@@ -72,6 +73,10 @@ export default {
     label: {
       // The label for the text field.
       type: String, default: 'Plate'
+    },
+    labelColumnSpan: {
+      // The number of columns for the label to span (out of 9)
+      type: Number, default: 2
     },
     description: {
       // Optional description text which will be displayed below the input. Intended
@@ -126,6 +131,7 @@ export default {
     }
   },
   computed: {
+    showWellIndicator() { return this.labwareType=='tube' && this.colourIndex !== null },
     searching() { return this.apiActivity.state === 'searching' }, // The API is in progress
     state() { return this.validated.state }, // Overall state, eg. valid, invalid, empty
     formState() {
@@ -146,7 +152,7 @@ export default {
       }
     },
     feedback() {
-      if(this.validated.state === 'valid') {
+      if (this.validated.state === 'valid') {
         return this.validMessage
       }
       return this.validated.message
@@ -162,9 +168,9 @@ export default {
       }
     },
     computedValidators(){
-      if(this.validators) { return this.validators }
+      if (this.validators) { return this.validators }
 
-      if(this.labwareType=='tube'){
+      if (this.labwareType=='tube'){
         return []
       } else {
         return [checkSize(12, 8)]
@@ -228,6 +234,9 @@ export default {
       } else {
         this.apiActivity = { ...err, state: 'invalid' }
       }
+    },
+    focus() {
+      this.$refs.scan.$el.focus()
     }
   }
 }

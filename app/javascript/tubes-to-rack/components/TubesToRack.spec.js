@@ -8,10 +8,11 @@ jest.mock('shared/components/tubeScanValidators')
 
 describe('MultiStampTubes', () => {
   const wrapperFactory = function(options = {}) {
-    // Not ideal using mount here, but having massive trouble
-    // triggering change events on unmounted components
     return shallowMount(TubesToRack, {
-      propsData: { ...options },
+      propsData: {
+        targetUrl: '',
+        ...options
+      },
       localVue
     })
   }
