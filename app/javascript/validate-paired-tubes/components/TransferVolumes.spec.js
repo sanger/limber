@@ -94,7 +94,7 @@ describe('TransferVolumes', () => {
     const targetMolarity = 4
     const targetVolume = 192
     const minimumPick = 2
-    const sourceMolarity = 8
+    const sourceMolarity = 8.0
     const mockTransferVolumes = {}
 
     beforeEach(() => {

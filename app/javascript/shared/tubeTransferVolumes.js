@@ -8,13 +8,17 @@ const purposeMinimumPickParameter = (purposeConfig) =>
   purposeConfig?.transfer_parameters?.minimum_pick_ul
 
 const tubeMostRecentMolarity = function(tube) {
-  // Get the QC results, find those for molarity entries in nM, inverse sort by the created_at timestamp,
-  // inverse sort by the id, then take the first item.
-  return tube?.receptacle?.qc_results
-    ?.filter(result => result.key === 'molarity' && result.units === 'nM')
-    .sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
-    .sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)[0]
-    ?.value
+  // Get the QC results,
+  // find those for molarity entries in nM,
+  // inverse sort by the created_at timestamp,
+  // inverse sort by the id,
+  // take the first item and parse the value to a float.
+  const qcResults = tube?.receptacle?.qc_results
+  const molarityEntries =  qcResults?.filter(result => result.key === 'molarity' && result.units === 'nM')
+  const sortedByCreatedAt = molarityEntries.sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
+  const sortedByIds = sortedByCreatedAt.sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)
+  const mostRecentMolarityResult = sortedByIds[0]
+  return parseFloat(mostRecentMolarityResult?.value)
 }
 
 // Calculates the source volume and the buffer volume to reach a target molarity
