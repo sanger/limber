@@ -15,10 +15,10 @@ const tubeMostRecentMolarity = function(tube) {
   // take the first item and parse the value to a float.
   const qcResults = tube?.receptacle?.qc_results
   const molarityEntries =  qcResults?.filter(result => result.key === 'molarity' && result.units === 'nM')
-  const sortedByCreatedAt = molarityEntries.sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
-  const sortedByIds = sortedByCreatedAt.sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)
-  const mostRecentMolarityResult = sortedByIds[0]
-  return parseFloat(mostRecentMolarityResult?.value)
+  const sortedByCreatedAt = molarityEntries?.sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
+  const sortedByIds = sortedByCreatedAt?.sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)
+  const mostRecentMolarityResult = sortedByIds?.[0]
+  return mostRecentMolarityResult ? parseFloat(mostRecentMolarityResult?.value) : undefined
 }
 
 // Calculates the source volume and the buffer volume to reach a target molarity
