@@ -8,11 +8,12 @@ const purposeMinimumPickParameter = (purposeConfig) =>
   purposeConfig?.transfer_parameters?.minimum_pick_ul
 
 const tubeMostRecentMolarity = function(tube) {
-  // Get the QC results, find those for molarity entries in nM, inverse sort by the created_at timestamp
-  // then take the first item.
+  // Get the QC results, find those for molarity entries in nM, inverse sort by the created_at timestamp,
+  // inverse sort by the id, then take the first item.
   return tube?.receptacle?.qc_results
     ?.filter(result => result.key === 'molarity' && result.units === 'nM')
-    .sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))[0]
+    .sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
+    .sort((resultA, resultB) => resultA.id > resultB.id ? -1 : 1)[0]
     ?.value
 }
 
