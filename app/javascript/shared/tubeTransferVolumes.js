@@ -1,14 +1,11 @@
-const purposeTargetMolarityParameter = function(purposeConfig) {
-  return purposeConfig?.transfer_parameters?.target_molarity_nm
-}
+const purposeTargetMolarityParameter = (purposeConfig) =>
+  purposeConfig?.transfer_parameters?.target_molarity_nm
 
-const purposeTargetVolumeParameter = function(purposeConfig) {
-  return purposeConfig?.transfer_parameters?.target_volume_ul
-}
+const purposeTargetVolumeParameter = (purposeConfig) =>
+  purposeConfig?.transfer_parameters?.target_volume_ul
 
-const purposeMinimumPickParameter = function(purposeConfig) {
-  return purposeConfig?.transfer_parameters?.minimum_pick_ul
-}
+const purposeMinimumPickParameter = (purposeConfig) =>
+  purposeConfig?.transfer_parameters?.minimum_pick_ul
 
 const tubeMostRecentMolarity = function(tube) {
   // Get the QC results, find those for molarity entries in nM, inverse sort by the created_at timestamp
