@@ -107,19 +107,6 @@ const checkMolarityResult = () => {
   }
 }
 
-// Returns a validator that ensures the tube has a purpose with a name that matches the
-// supplied list of names. e.g. to check a tube has a purpose with name 'LB Lib Pool Norm':
-// checkPurpose(['LB Lib Pool Norm'])
-const checkPurpose = (allowedPurposeNames) => {
-  return (tube) => {
-    if (!allowedPurposeNames.includes(tube?.purpose?.name)) {
-      return { valid: false, message: 'Tube must have a purpose of: ' + allowedPurposeNames.join(' or ') }
-    } else {
-      return validScanMessage()
-    }
-  }
-}
-
 // Returns a validator that ensures the tube has a state that matches the
 // supplied list of states. e.g. to check a tube has a state of 'available'
 // or 'exhausted':  checkState(['available', 'exhausted'])
@@ -152,4 +139,4 @@ const checkTransferParameters = (purposeConfigs) => {
   }
 }
 
-export { checkDuplicates, checkId, checkMatchingPurposes, checkMolarityResult, checkPurpose, checkState, checkTransferParameters }
+export { checkDuplicates, checkId, checkMatchingPurposes, checkMolarityResult, checkState, checkTransferParameters }

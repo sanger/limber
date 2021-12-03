@@ -3,7 +3,6 @@ import {
   checkId,
   checkMatchingPurposes,
   checkMolarityResult,
-  checkPurpose,
   checkState,
   checkTransferParameters
 } from 'shared/components/tubeScanValidators'
@@ -163,47 +162,6 @@ describe('checkMolarityResult', () => {
 
     it('fails an undefined tube', () => {
       expect(checkMolarityResult()(undefined)).toEqual({ valid: false, message: failureMessage })
-    })
-  })
-})
-
-describe('checkPurpose', () => {
-  const validPurposes = ['Purpose A', 'Purpose B']
-
-  test.each(validPurposes)('passes a tube with acceptable purpose %p', testPurpose => {
-    const tube = { purpose: { name: testPurpose } }
-    expect(checkPurpose(validPurposes)(tube)).toEqual({ valid: true })
-  })
-
-  const invalidMessage =  'Tube must have a purpose of: Purpose A or Purpose B'
-
-  describe('undefined tube', () => {
-    it('is marked as invalid', () => {
-      expect(checkPurpose(validPurposes)(undefined)).toEqual({ valid: false, message: invalidMessage })
-    })
-  })
-
-  describe('tube with no purpose', () => {
-    const tube = { }
-
-    it('is marked as invalid', () => {
-      expect(checkPurpose(validPurposes)(tube)).toEqual({ valid: false, message: invalidMessage })
-    })
-  })
-
-  describe('tube with unnamed purpose', () => {
-    const tube = { purpose: { } }
-
-    it('is marked as invalid', () => {
-      expect(checkPurpose(validPurposes)(tube)).toEqual({ valid: false, message: invalidMessage })
-    })
-  })
-
-  describe('tube with invalid purpose', () => {
-    const tube = { purpose: { name: 'Purpose C' } }
-
-    it('is marked as invalid', () => {
-      expect(checkPurpose(validPurposes)(tube)).toEqual({ valid: false, message: invalidMessage })
     })
   })
 })

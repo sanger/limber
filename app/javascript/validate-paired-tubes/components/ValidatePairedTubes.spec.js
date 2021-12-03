@@ -5,7 +5,6 @@ import { shallowMount } from '@vue/test-utils'
 import {
   checkId,
   checkMolarityResult,
-  checkPurpose,
   checkState,
   checkTransferParameters
 } from 'shared/components/tubeScanValidators'
@@ -44,14 +43,12 @@ describe('TransferVolumes', () => {
     const mockCheckState = (_) => validMessage
     const mockCheckTransferParameters = (_) => validMessage
     const mockCheckMolarityResult = (_) => validMessage
-    const mockCheckPurpose = (_) => validMessage
     const mockCheckId = (_) => validMessage
 
     beforeEach(() => {
       checkState.mockReturnValue(mockCheckState)
       checkTransferParameters.mockReturnValue(mockCheckTransferParameters)
       checkMolarityResult.mockReturnValue(mockCheckMolarityResult)
-      checkPurpose.mockReturnValue(mockCheckPurpose)
       checkId.mockReturnValue(mockCheckId)
     })
 
@@ -73,11 +70,6 @@ describe('TransferVolumes', () => {
     })
 
     describe('destinationTubeValidators', () => {
-      it('includes the checkPurpose validator', () => {
-        const wrapper = wrapperFactory()
-        expect(wrapper.vm.destinationTubeValidators).toContain(mockCheckPurpose)
-      })
-
       it('includes the checkId validator', () => {
         const wrapper = wrapperFactory()
         expect(wrapper.vm.destinationTubeValidators).toContain(mockCheckId)
@@ -92,11 +84,6 @@ describe('TransferVolumes', () => {
     it('passed the correct parameter to checkTransferParameters', () => {
       wrapperFactory({ purposeConfigJson: '{ "testKey": "testValue" }' })
       expect(checkTransferParameters.mock.calls[0][0]).toEqual({ testKey: 'testValue' })
-    })
-
-    it('passed the correct parameter to checkPurpose', () => {
-      wrapperFactory()
-      expect(checkPurpose.mock.calls[0][0]).toEqual(['LB Lib Pool Norm'])
     })
 
     it('passed the correct parameters to checkId', () => {

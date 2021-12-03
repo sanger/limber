@@ -17,15 +17,15 @@
         header-tag="h3"
       >
         <p class="tv-instructions">
-          Scan the LTHR-384 Pool XP tube and the corresponding LB Lib Pool Norm tube. If they match, the transfer volumes will be shown to the left.
+          Scan the source tube and the corresponding destination tube. If they match, the transfer volumes will be shown to the left.
         </p>
         <div class="tube-scan-fields">
           <lb-labware-scan
             key="source"
             ref="sourceScan"
             :api="devourApi"
-            label="Pool XP"
-            :label-column-span="3"
+            label="Source"
+            :label-column-span="4"
             :fields="devourFields"
             :includes="devourIncludes"
             :scan-disabled="allValid"
@@ -36,8 +36,8 @@
           <lb-labware-scan
             key="destination"
             :api="devourApi"
-            label="Pool Norm"
-            :label-column-span="3"
+            label="Destination"
+            :label-column-span="4"
             :fields="devourFields"
             :includes="devourIncludes"
             :scan-disabled="allValid"
@@ -67,7 +67,6 @@ import TransferVolumes from './TransferVolumes'
 import {
   checkId,
   checkMolarityResult,
-  checkPurpose,
   checkState,
   checkTransferParameters
 } from 'shared/components/tubeScanValidators'
@@ -114,7 +113,7 @@ export default {
     destinationTubeValidators() {
       const allowedIdsFromSource = this.sourceTube.labware?.receptacle.downstream_tubes.map(tube => tube.id)
       const allowedIds = (allowedIdsFromSource === undefined) ? [] : allowedIdsFromSource
-      return [checkPurpose(['LB Lib Pool Norm']), checkId(allowedIds, 'Does not match the source tube')]
+      return [checkId(allowedIds, 'Does not match the source tube')]
     },
     devourFields() {
       return filterProps.fields
