@@ -3,7 +3,7 @@
     <b-container>
       <b-row>
         <b-col
-          v-if="labwareType=='tube' && colourIndex !== null"
+          v-if="showWellIndicator"
           cols="1"
         >
           <div :class="['pool-colours']">
@@ -131,6 +131,7 @@ export default {
     }
   },
   computed: {
+    showWellIndicator() { return this.labwareType=='tube' && this.colourIndex !== null },
     searching() { return this.apiActivity.state === 'searching' }, // The API is in progress
     state() { return this.validated.state }, // Overall state, eg. valid, invalid, empty
     formState() {
