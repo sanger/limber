@@ -48,6 +48,7 @@ module LabwareCreators
           sleep(5)
           count += 1
         else
+          @submission_id = submission.id
           break
         end
       end
@@ -93,7 +94,7 @@ module LabwareCreators
       # Assumption: the requests we want will still be in state pending, and there will only be
       # one for the submission id we just created
       pending_reqs = tube.receptacle.requests_as_source.reject do |req|
-        req.state == 'passed' || req.submission_uuid != @submission_uuid
+        req.state == 'passed' || req.submission_id != @submission_id
       end
       # TODO: what if no requests remain? shouldn't happen if submission was built previously
       pending_reqs.first.uuid || nil
