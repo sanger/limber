@@ -40,9 +40,17 @@ module LabwareCreators
         return
       end
 
-      # TODO: Hack - change this to poll for status or something
-      puts '*** Waiting for it to build ***'
-      sleep(10)
+      tries = 6
+      count = 1
+      while(count <= tries)
+        submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
+        if submission.building_in_progress?
+          sleep(5)
+          count += 1
+        else
+          break
+        end
+      end
 
       plate_creation = api.pooled_plate_creation.create!(
         parents: parent_uuids,
@@ -82,10 +90,13 @@ module LabwareCreators
     end
 
     def source_tube_outer_request_uuid(tube)
-      # Assumptions: the requests we want will still be in state pending, and there will only be one
-      # Alternatively, if we know what request type we are expecting, we could look for that type
-      pending_reqs = tube.receptacle.requests_as_source.reject { |req| req.state == 'passed' }
-      pending_reqs.first.uuid
+      # Assumption: the requests we want will still be in state pending, and there will only be
+      # one for the submission id we just created
+      pending_reqs = tube.receptacle.requests_as_source.reject do |req|
+        req.state == 'passed' || req.submission_uuid != @submission_uuid
+      end
+      # TODO: what if no requests remain? shouldn't happen if submission was built previously
+      pending_reqs.first.uuid || nil
     end
 
     def request_hash(transfer, child_plate)
@@ -137,7 +148,9 @@ module LabwareCreators
 
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
       submission_created = ss.save
+
       if submission_created
+        @submission_uuid = ss.submission_uuid
         return true
       else
         errors.add(:base, ss.errors.full_messages)
