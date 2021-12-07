@@ -217,6 +217,7 @@ module LabwareCreators
     # }
     # where 'A1' and 'B1' are the coordinates of the source wells to go into that pool
     #
+    # rubocop:disable Metrics/AbcSize
     def extract_pools_with_extra_details
       extra_details = Hash.new { |hash, pool_name| hash[pool_name] = { locations: [] } }
 
@@ -233,6 +234,7 @@ module LabwareCreators
       end
       extra_details
     end
+    # rubocop:enable Metrics/AbcSize
 
     #
     # Builds pools hash, based on which wells contain the same sample.

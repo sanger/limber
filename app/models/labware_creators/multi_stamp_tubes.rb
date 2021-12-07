@@ -34,24 +34,8 @@ module LabwareCreators
     private
 
     def create_labware!
-      submission_created = create_submission_from_parent_tubes
-      unless submission_created
-        errors.add(:base, "Failed to create submission")
-        return
-      end
-
-      tries = 6
-      count = 1
-      while(count <= tries)
-        submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
-        if submission.building_in_progress?
-          sleep(5)
-          count += 1
-        else
-          @submission_id = submission.id
-          break
-        end
-      end
+      create_and_build_submission
+      return if errors.size.positive?
 
       plate_creation = api.pooled_plate_creation.create!(
         parents: parent_uuids,
@@ -66,6 +50,31 @@ module LabwareCreators
 
       yield(@child) if block_given?
       true
+    end
+
+    def create_and_build_submission
+      submission_created = create_submission_from_parent_tubes
+      unless submission_created
+        errors.add(:base, 'Failed to create submission')
+        return
+      end
+
+      errors.add(:base, 'Failed to build submission') unless submission_built?
+    end
+
+    def submission_built?
+      counter = 1
+      while counter <= 6
+        submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
+        if submission.building_in_progress?
+          sleep(5)
+          counter += 1
+        else
+          @submission_id = submission.id
+          return true
+        end
+      end
+      false
     end
 
     # Returns a list of parent tube uuids extracted from the transfers
@@ -123,7 +132,7 @@ module LabwareCreators
       # then build asset groups by study in a hash
       tubes_by_study.transform_values do |tubes|
         {
-          assets: tubes.map{ |tube| tube.receptacle.uuid },
+          assets: tubes.map { |tube| tube.receptacle.uuid },
           autodetect_studies_projects: true
         }
       end
@@ -134,11 +143,18 @@ module LabwareCreators
 
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.
-      return unless submission_options_from_config.count == 1
+      if submission_options_from_config.count > 1
+        errors.add(:base, 'Expected only one submission')
+        return
+      end
 
       # otherwise, create a submission with params specified in the config
       configured_params = submission_options_from_config.values.first
 
+      create_submission(configured_params)
+    end
+
+    def create_submission(configured_params)
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
@@ -153,10 +169,10 @@ module LabwareCreators
       if submission_created
         @submission_uuid = ss.submission_uuid
         return true
-      else
-        errors.add(:base, ss.errors.full_messages)
-        return false
       end
+
+      errors.add(:base, ss.errors.full_messages)
+      false
     end
   end
 end

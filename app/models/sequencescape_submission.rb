@@ -126,15 +126,11 @@ class SequencescapeSubmission
     end
   end
 
-  def generate_submissions # rubocop:todo Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize
+  def generate_submissions
     orders = generate_orders
-
-    submission = api.submission.create!(
-      orders: orders.map(&:uuid),
-      user: user
-    )
+    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
     @submission_uuid = submission.uuid
-
     submission.submit!
     true
   rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => e
@@ -144,6 +140,7 @@ class SequencescapeSubmission
     errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
+  # rubocop:enable Metrics/AbcSize
 
   def submission_template
     api.order_template.find(template_uuid)
