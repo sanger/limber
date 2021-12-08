@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  limber:
+    build: .
+    image: rails_app
+    environment:
+      - GENERATE_CONFIG=$GENERATE_CONFIG
+      - LOCALHOST=host.docker.internal
