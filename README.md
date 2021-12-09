@@ -100,12 +100,12 @@ Assuming you started the container via `docker-compose` you can access the shell
 using:
 
 ```shell
-docker exec -ti limber_limber1 bash
+docker exec -ti limber_limber_1 bash
 ```
 
-If the container isn't recognised, check the image name for the container using
-`docker ps --all`, ensure it's up/running and substitute the name into the above
-command in place of `limber_limber1`.
+If the container isn't recognised, check the container name (right hand column)
+using `docker ps --all`, ensure it's up/running and substitute the name into the
+above command in place of `limber_limber_1`.
 
 ## Docs
 
