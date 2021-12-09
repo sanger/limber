@@ -2,22 +2,17 @@ FROM ruby:2.7.5-slim
 
 # Install required software:
 #  - build-essential: to have a compiling environment for building gems
-#  - curl: for healthcheck
+#  - curl: for setting Node version and healthcheck
 #  - git is a rails gems dependency
-#  - net-tools: to run ping and other networking tools
-#  - netcat: for wait for connection to database
-#  - nodejs and npm are used for yarn
-#  - vim is a convenience for developers
-RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    net-tools \
-    netcat \
-    nodejs \
-    npm \
-    vim
+RUN apt-get update
+RUN apt-get install -y build-essential
+RUN apt-get install -y curl
+RUN apt-get install -y git
+
+# Set Node to install version 14
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get update
+RUN apt-get install -y nodejs
 
 # Change the working directory for all proceeding operations
 #   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir
