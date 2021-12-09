@@ -1,7 +1,11 @@
 version: "3.3"
 services:
   limber:
-    build: .
+    build:
+      context: .
+      args:
+        bundlerWithout: '' # Don't exclude development groups
+        yarnFlags: '' # Don't exclude devDependencies
     ports:
       - "3001:3001"
     environment:

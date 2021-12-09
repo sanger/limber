@@ -1,5 +1,8 @@
 FROM ruby:2.7.5-slim
 
+ARG bundlerWithout="development test lint"
+ARG yarnFlags="--production"
+
 # Install required software:
 #  - build-essential: to have a compiling environment for building gems
 #  - curl: for setting Node version and healthcheck
@@ -25,12 +28,13 @@ RUN gem install bundler
 # Install bundler based dependencies
 COPY Gemfile .
 COPY Gemfile.lock .
+RUN bundle config set without "${bundlerWithout}"
 RUN bundle install
 
 # Install yarn based dependencies
 COPY package.json .
 COPY yarn.lock .
-RUN rm -rf node_modules && yarn install --frozen-lockfile
+RUN rm -rf node_modules && yarn install --frozen-lockfile ${yarnFlags}
 
 # "items (files, directories) that do not require ADD’s tar auto-extraction capability, you should always use COPY."
 #   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy
