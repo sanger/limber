@@ -44,7 +44,7 @@ RUN chmod +x /usr/bin/entrypoint.sh
 #   command (and then use CMD as the default flags)."
 #   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#entrypoint
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["bundle", "exec", "rails", "server"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3001"]
 
 # https://docs.docker.com/engine/reference/builder/#healthcheck
 HEALTHCHECK --interval=30s --timeout=10s  --retries=4 \
