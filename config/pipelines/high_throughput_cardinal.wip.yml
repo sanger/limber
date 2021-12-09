@@ -13,6 +13,7 @@ Cardinal:
     library_type: Cardinal
   library_pass: LCA Connect PCRXP
   relationships:
+    LCA Blood Vac: LCA Blood Array
     LCA Blood Array: LCA PBMC
     LCA PBMC: LCA PBMC Pools
     LCA PBMC Pools: LCA 10X cDNA
@@ -23,7 +24,7 @@ Cardinal:
 Cardinal Banking:
   filters:
     request_type_key: limber_cardinal_banking
-    library_type: Cardinal Banking
   relationships:
+    LCA Blood Vac: LCA Blood Bank
     LCA Blood Bank: LCA PBMC Bank
-    # TODO: DPL-074 what happens next here? Is the plate handed over to samples extraction for transfer into tube rack?
+    LCA PBMC Bank: LCA Bank Stock

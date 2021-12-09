@@ -12,7 +12,8 @@ class ExportsController < ApplicationController
   def show
     @page = params.fetch(:page, 0).to_i
     @workflow = export.workflow
-    @ancestor_plate = locate_ancestor
+    @ancestor_plate = locate_ancestor_plate
+    @ancestor_tubes = locate_ancestor_tubes
 
     set_filename if export.filename
 
@@ -39,7 +40,7 @@ class ExportsController < ApplicationController
                                                                           barcode: params[:limber_plate_id])
   end
 
-  def locate_ancestor
+  def locate_ancestor_plate
     return nil if export.ancestor_purpose.blank?
 
     ancestor_result = @plate.ancestors.where(purpose_name: export.ancestor_purpose).first
@@ -57,5 +58,23 @@ class ExportsController < ApplicationController
     filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
     filename += "_#{@page + 1}" if export.filename['include_page']
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.csv\""
+  end
+
+  def ancestor_tube_details(ancestor_results)
+    ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
+      tube = Sequencescape::Api::V2::Tube.find_by(uuid: ancestor_result.uuid)
+      tube_sample_uuid = tube.aliquots.first.sample.uuid
+      tube_list[tube_sample_uuid] = tube if tube_sample_uuid.present?
+    end
+  end
+
+  def locate_ancestor_tubes
+    return nil if export.ancestor_tube_purpose.blank?
+
+    ancestor_results = @plate.ancestors.where(purpose_name: export.ancestor_tube_purpose)
+    return nil if ancestor_results.blank?
+
+    # create hash of sample uuid to tube
+    ancestor_tube_details(ancestor_results)
   end
 end

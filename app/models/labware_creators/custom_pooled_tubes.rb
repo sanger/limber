@@ -2,7 +2,7 @@
 
 module LabwareCreators
   # Allows the user to create custom pooled tubes.
-  # THe user may create an arbitrary number of tubes, with a
+  # The user may create an arbitrary number of tubes, with
   # 1 or more wells in each. An individual well may contribute
   # to more than one tube.
   # Layout is specified by uploading the same CSV which will be used to
