@@ -9,7 +9,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - GENERATE_CONFIG=true
+      - GENERATE_CONFIG=${GENERATE_CONFIG:-true}
       - LOCALHOST=host.docker.internal
     volumes:
       - ".:/code"
