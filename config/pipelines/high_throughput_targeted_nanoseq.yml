@@ -1,0 +1,21 @@
+---
+Targeted NanoSeq:
+  filters:
+    request_type_key: limber_targeted_nanoseq
+    library_type:
+    - Targeted NanoSeq Pulldown Twist
+    - Targeted NanoSeq Pulldown Agilent
+  library_pass: LTN Lib PCR XP
+  relationships:
+    LTN Stock: LTN Stock XP
+    LTN Cherrypick: LTN Shear
+    LTN Shear: LTN Post Shear
+    LTN Post Shear: LTN Stock XP
+    LTN Stock XP: LTN AL Lib
+    LTN AL Lib: LTN AL Lib Dil
+    LTN AL Lib Dil: LTN Lib PCR
+    LTN Lib PCR: LTN Lib PCR XP
+    # At this point we transfer into the ISC pipeline
+    LTN Lib PCR XP: LB Lib PCR-XP
+    # LTN Lib PCR XP: LTN Custom Pool
+    # LTN Custom Pool: LTN Custom Pool Norm
