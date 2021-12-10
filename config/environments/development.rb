@@ -3,7 +3,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  localhost = ENV.fetch('LOCALHOST', 'localhost')
+  localhost_env = ENV.fetch('LOCALHOST', 'localhost')
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -67,12 +67,13 @@ Rails.application.configure do
   config.api.v1                                  = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v1.connection_options.namespace     = 'Limber'
-  config.api.v1.connection_options.url           = ENV.fetch('API_URL', "http://#{localhost}:3000/api/1/")
+  config.api.v1.connection_options.url           = ENV.fetch('API_URL', "http://#{localhost_env}:3000/api/1/")
   config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
   config.api.v2                                  = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options.url           = ENV.fetch('API2_URL', "http://#{localhost}:3000/api/v2")
+  config.api.v2.connection_options.url           = ENV.fetch('API2_URL', "http://#{localhost_env}:3000/api/v2")
+  config.api.v2.connection_options.jsUrl         = ENV.fetch('API2_URL', "http://localhost:3000/api/v2")
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project
@@ -81,6 +82,6 @@ Rails.application.configure do
   config.request_options = {
     'read_length' => 11
   }
-  config.pmb_uri = ENV.fetch('PMB_URI', "http://#{localhost}:3002/v1/")
+  config.pmb_uri = ENV.fetch('PMB_URI', "http://#{localhost_env}:3002/v1/")
   config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql'
 end

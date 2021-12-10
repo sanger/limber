@@ -56,6 +56,7 @@ Rails.application.configure do
   config.api.v2 = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options.url           = 'http://example.com:3000/api/v2'
+  config.api.v2.connection_options.jsUrl         = 'http://example.com:3000/api/v2'
 
   config.pmb_uri = 'http://example.com:3002/v1/'
 
