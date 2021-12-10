@@ -73,7 +73,7 @@ Rails.application.configure do
   config.api.v2                                  = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options.url           = ENV.fetch('API2_URL', "http://#{localhost_env}:3000/api/v2")
-  config.api.v2.connection_options.jsUrl         = ENV.fetch('API2_URL', "http://localhost:3000/api/v2")
+  config.api.v2.connection_options.js_url        = ENV.fetch('API2_URL', "http://localhost:3000/api/v2")
 
   config.qc_submission_name = 'MiSeq for QC'
   # By default used first study/project
