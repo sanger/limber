@@ -6,8 +6,8 @@ require 'spec_helper'
 RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
   has_a_working_api
 
-  #:tag_layout_template_by_row
-  #:tag_layout_template_by_quadrant
+  # :tag_layout_template_by_row
+  # :tag_layout_template_by_quadrant
 
   subject(:tag_layout_template) { build template_factory }
 
