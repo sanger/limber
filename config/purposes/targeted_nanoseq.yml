@@ -62,20 +62,20 @@ LTN Lib PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
-  # :file_links:
-  # - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
-  #   id: 'duplex_seq_pcr_xp_concentrations_for_custom_pooling'
-# LTN Custom Pool:
-#   :asset_type: tube
-#   :target: StockMultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::CustomPooledTubes
-#   :presenter_class: Presenters::SimpleTubePresenter
-#   :default_printer_type: :tube
-# LTN Custom Pool Norm:
-#   :asset_type: tube
-#   :target: MultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::TubeFromTube
-#   :presenter_class: Presenters::FinalTubePresenter
-#   :default_printer_type: :tube
+  :file_links:
+  - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+    id: 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling'
+LTN Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LTN Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
