@@ -1,0 +1,41 @@
+<% if threshold.enabled? %>
+  <div data-qc-key="qc<%= threshold.key.camelcase %>" class="form-group alert alert-success">
+    <h4 class="alert-heading"><label for="qc-<%= threshold.key %>"><%= threshold.name.titlecase %></label></h4>
+    <input type="range"
+           id="qc-<%= threshold.key %>-range"
+           name="<%= threshold.key %>"
+           min="<%= threshold.min %>"
+           max="<%= threshold.max %>"
+           value="<%= threshold.default %>"
+           step="<%= threshold.step %>"
+           list="<%= threshold.key %>-data"
+           <%# Don't assign to a form, to prevent validation blocking form submission.
+             # This allows for example, setting the thresholds outside the maximum and minimum values
+             # of the slider, or introducing arbitary precision in the input field.
+           %>
+           form
+           class="form-control-range mb-3">
+    <div class="input-group">
+      <input type="number"
+             id="qc-<%= threshold.key %>"
+             value="<%= threshold.default %>"
+             step="<%= threshold.step %>"
+             list="<%= threshold.key %>-data"
+             form
+             class="form-control">
+      <div class="input-group-append">
+        <span class="input-group-text"><%= threshold.units %></span>
+      </div>
+    </div>
+    <datalist id="<%= threshold.key %>-data">
+      <% threshold.options do |value, label| %>
+        <option value="<%= value %>" label="<%= label %>"></option>
+      <% end %>
+    </datalist>
+  </div>
+<% else %>
+  <div class="alert alert-warning">
+    <h4 class="alert-heading"><%= threshold.name.titlecase %></h4>
+    <%= threshold.error %>
+  </div>
+<% end %>

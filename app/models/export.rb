@@ -20,7 +20,7 @@ class Export
     end
   end
 
-  attr_accessor :csv, :plate_includes, :workflow, :ancestor_purpose
+  attr_accessor :csv, :plate_includes, :workflow, :ancestor_purpose, :filename, :tube_includes, :ancestor_tube_purpose
 
   def initialize(args = {})
     assign_attributes(args)

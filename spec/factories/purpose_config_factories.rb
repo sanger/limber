@@ -38,6 +38,19 @@ FactoryBot.define do
       input_plate { true }
     end
 
+    # Sets up config for a tube with transfer parameters
+    factory :tube_with_transfer_parameters_config do
+      name { 'LTHR-384 Pool XP' }
+      presenter_class { 'Presenters::TubePresenter' }
+      transfer_parameters do
+        {
+          target_molarity_nm: 4,
+          target_volume_ul: 192,
+          minimum_pick_ul: 2
+        }
+      end
+    end
+
     # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }
@@ -151,6 +164,26 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a multi stamp from tubes plate purpose
+    factory :multi_stamp_tubes_purpose_config do
+      creator_class { 'LabwareCreators::MultiStampTubes' }
+      presenter_class { 'Presenters::SubmissionPlatePresenter' }
+
+      submission_options do
+        {
+          'Cardinal library prep' => {
+            'template_name' => 'example',
+            'allowed_extra_barcodes' => false,
+            'request_options' => {
+              'library_type' => 'example_library',
+              'fragment_size_required_from' => '200',
+              'fragment_size_required_to' => '800'
+            }
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
@@ -174,5 +207,29 @@ FactoryBot.define do
         creator_class { 'LabwareCreators::PooledTubesFromWholeTubes' }
       end
     end
+  end
+
+  factory :tube_rack_config, class: Hash do
+    to_create do |instance, evaluator|
+      Settings.purpose_uuids[evaluator.name] = evaluator.uuid
+      Settings.purposes[evaluator.uuid] = instance
+    end
+
+    initialize_with { attributes }
+
+    transient do
+      uuid { 'example-purpose-uuid' }
+    end
+
+    name { 'Tube rack' }
+    asset_type { 'tube_rack' }
+    default_printer_type { :tube_rack }
+    presenter_class { 'Presenters::TubeRackPresenter' }
+    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    submission { {} }
+    label_class { nil }
+    printer_type { '96 Well Plate' }
+    pmb_template { 'sqsc_96plate_label_template_code39' }
+    size { 96 }
   end
 end

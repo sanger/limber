@@ -8,14 +8,18 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Currently setting up each component as its own mini vue app.
-require('file-list')
 require('asset-comments')
-require('qc-information')
-require('multi-stamp')
 require('custom-tagged-plate')
+require('file-list')
+require('multi-stamp')
+require('multi-stamp-tubes')
+require('qc-information')
+require('tubes-to-rack')
+require('validate-paired-tubes')
 
 // Load simple javscripts
 // Tag animations rotates the displayed tag Id in wells with multiple tags
 require('plain-javascript/tag-animations')
 require('plain-javascript/page-reloader')
 require('plain-javascript/quadrant-well-failing')
+require('plain-javascript/threshold-well-failing')

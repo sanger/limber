@@ -1,0 +1,23 @@
+.tube-rack-view {
+  @include labware-view;
+  @include labware-grid-view;
+  @extend .mx-auto;
+
+  background-color: $gray-100;
+
+  th {
+    color: $gray-600;
+  }
+
+  .well {
+    background: $gray-500;
+
+    .aliquot {
+      border-radius: 3px 3px 16px 16px;
+    }
+  }
+}
+
+.tube-rack-view.tube-rack-384 {
+  @include labware-grid-view-384;
+}

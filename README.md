@@ -9,7 +9,35 @@
 
 A flexible front end to plate bases pipelines in Sequencescape.
 
-## Initial Setup
+## Initial Setup (using Docker)
+
+Docker provides all the dependencies needed by Limber, so there is less to
+install on your machine. It can make development harder though, so it might be
+preferable to use a native installation (see below) if that is possible on your
+machine. The only dependency that isn't provided is Sequencescape, so please
+ensure you have that running on port 3000 on your localhost before attempting to
+run Limber in Docker.
+
+You must have Docker Desktop installed on your machine.  Then the only command
+you should need to run is:
+
+```shell
+docker-compose up
+```
+
+Variations on this command include:
+
+- `docker-compose up -d` which starts the container as a background task
+  (freeing up the terminal).  You can then use `docker-compose down` to turn it
+  off again.
+- `GENERATE_CONFIG=false docker-compose up` which will avoid running the
+  `config:generate` rake task as Limber is started.
+- `docker-compose up --build` which forces a rebuild of the Docker image if your
+  changes to the Dockerfile or related scripts don't seem to be taking effect.
+
+Limber should be accessible via [http://localhost:3001](http://localhost:3001).
+
+## Initial Setup (using native installation)
 
 Steps must be followed in either the Sequencescape repository or this Limber
 repository, as indicated:
@@ -62,6 +90,22 @@ repository, as indicated:
    ```shell
    bundle exec rails s
    ```
+
+## Note about the remainder of this document
+
+The rest of the sections shown here were written for and apply to the native
+installation, but can also be used in the Docker container if required. In order
+to use Docker, it's probably best to create a shell in the running container.
+Assuming you started the container via `docker-compose` you can access the shell
+using:
+
+```shell
+docker exec -ti limber_limber_1 bash
+```
+
+If the container isn't recognised, check the container name (right hand column)
+using `docker ps --all`, ensure it's up/running and substitute the name into the
+above command in place of `limber_limber_1`.
 
 ## Docs
 

@@ -3,25 +3,28 @@ Bespoke PCR:
   filters:
     request_type_key: limber_pcr_bespoke
     library_type:
-    - Manual Standard WGS (Plate)
-    - ChIP-Seq Auto
-    - TruSeq mRNA (RNA Seq)
-    - Small RNA (miRNA)
-    - RNA-seq dUTP eukaryotic
-    - RNA-seq dUTP prokaryotic
-    - Standard
-    - Ribozero RNA depletion
-    - Ribozero RNA-seq (Bacterial)
-    - Ribozero RNA-seq (HMR)
-    - TraDIS
-    - Chromium Visium
-    - Hi-C
-    - Hi-C - Arima v2
-    - Hi-C - Qiagen
-    - Hi-C - OmniC
-    - Hi-C - Arima v1
-    - Hi-C - Dovetail
-    - Haplotagging
+      - ChIP-Seq Auto
+      - Chromium single cell HTO
+      - Chromium single cell surface protein
+      - Chromium Visium
+      - emSEQ
+      - Haplotagging
+      - Hi-C
+      - Hi-C - Arima v1
+      - Hi-C - Arima v2
+      - Hi-C - Dovetail
+      - Hi-C - OmniC
+      - Hi-C - Qiagen
+      - Manual Standard WGS (Plate)
+      - Ribozero RNA depletion
+      - Ribozero RNA-seq (Bacterial)
+      - Ribozero RNA-seq (HMR)
+      - RNA-seq dUTP eukaryotic
+      - RNA-seq dUTP prokaryotic
+      - Small RNA (miRNA)
+      - Standard
+      - TraDIS
+      - TruSeq mRNA (RNA Seq)
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
@@ -29,7 +32,7 @@ Bespoke PCR:
 Bespoke PCR MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm

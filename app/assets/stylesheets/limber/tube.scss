@@ -1,0 +1,11 @@
+.tube-view {
+  @include labware-view
+  height:32px;
+  width:32px;
+  padding: 3px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px ridge rgba(5,19,40,0.1);
+  background: $gray-200;
+  border-radius: 7px;
+}

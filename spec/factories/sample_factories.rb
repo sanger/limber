@@ -6,10 +6,12 @@ FactoryBot.define do
   # API V2 sample
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
+
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
     control { false }
     control_type { nil }
+    sample_manifest { create(:v2_sample_manifest) }
 
     after(:build) do |sample, evaluator|
       sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }
@@ -32,5 +34,10 @@ FactoryBot.define do
   factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do
     skip_create
     sequence(:supplier_name) { |i| "supplier name #{i}" }
+  end
+
+  factory :v2_sample_manifest, class: Sequencescape::Api::V2::SampleManifest do
+    skip_create
+    supplier_name { 'supplier1' }
   end
 end

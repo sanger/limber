@@ -2,10 +2,10 @@
   <%= render 'logged_out_warning' %>
   <%= render 'plate_printing' %>
   <% presenter.tubes_and_sources do %>
-    <%= render 'labware/plates/tube_printing', presenter: presenter %>
+    <%= render 'tube_printing', presenter: presenter %>
   <% end %>
 
-  <%= render 'labware/qc_data' %>
+  <%= render 'labware/qc_data_upload' %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  # Creates a new tube per submission, and transfers all the wells matching that submission
-  # into each tube.
+  # Creates a new tube per pool, and transfers from wells into that pool
+  # Leaves the pooling logic - allocation of wells to pools - to subclasses to implement
+  # TODO: transfer_request_attributes currently assumes the pool identifier is the submission uuid - this should be changed
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
     attr_reader :tube_transfer, :child_stock_tubes
@@ -31,12 +32,14 @@ module LabwareCreators
     end
 
     def transfer_request_attributes
-      pools.each_with_object([]) do |(submission_uuid, pool), transfer_requests|
+      pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
+        # this currently assumes that pool_identifier will be the submission_uuid
+        # (it would have always been, historically)
         pool.each do |location|
           transfer_requests << request_hash(
             well_locations.fetch(location).uuid,
             child_stock_tubes.fetch(name_for(pool)).uuid,
-            submission_uuid
+            pool_identifier
           )
         end
       end
@@ -80,8 +83,11 @@ module LabwareCreators
       "#{stock_plate_barcode} #{first}:#{last}"
     end
 
+    def legacy_barcode
+      ("#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}" if parent.stock_plate) || nil
+    end
+
     def stock_plate_barcode
-      legacy_barcode = "#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}"
       metadata_stock_barcode || legacy_barcode
     end
 

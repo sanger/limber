@@ -1,4 +1,4 @@
-// Plate Scan Validators can be passed in to a PlateScan.vue component to
+// Plate Scan Validators can be passed in to a LabwareScan.vue component to
 // provide custom validation.
 //
 // A validator is a function which:
@@ -36,8 +36,10 @@
 //
 // Validating multiple criteria
 // Try and keep validators checking one thing only. It makes them easier to
-// test and reuse. The aggregate validator allows you to combine multiple
-// validators together.
+// test and reuse. Multiple validators can be combined together using the aggregate
+// function in scanValidators.js
+
+import { validScanMessage } from './scanValidators'
 
 // Returns a validator which ensures the plate is of a particular size.
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
@@ -50,7 +52,7 @@ const checkSize = (cols, rows) => {
       return { valid: false, message: `The plate should be ${cols}×${rows} wells in size` }
     }
     else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
@@ -69,7 +71,7 @@ const checkDuplicates = (plateList) => {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
     }
     else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
@@ -92,7 +94,7 @@ const checkExcess = (excessTransfers) => {
       return { valid: false, message: 'Wells in excess: ' + excessWells.join(', ') }
     }
     else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
@@ -106,7 +108,7 @@ const checkState = (allowedStatesList) => {
     if(!allowedStatesList.includes(plate.state)) {
       return { valid: false, message: 'Plate must have a state of: ' + allowedStatesList.join(' or ') }
     } else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
@@ -123,21 +125,9 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
     if(!allowedWalkingByList.includes(qcable.lot.tag_layout_template.walking_by)) {
       return { valid: false, message: 'QCable layout must have a walking by of: ' + allowedWalkingByList.join(' or ') }
     } else {
-      return { valid: true, message: 'Great!' }
+      return validScanMessage()
     }
   }
 }
 
-// Receives an array of validators and calls them in the order they appear on
-// the array.
-// As a result, the smallest indexed failing validator will determine the
-// error message and the remaining validators will be skipped.
-// eg. aggregate([checkSize(12, 8), checkDuplicates(this.plates, 0)], plate)
-// will return a validator which checks first the size of the plate, then duplications.
-const aggregate = (validators, item) => {
-  return validators.reduce((aggregate, validator) => {
-    return aggregate.valid ? validator(item) : aggregate
-  }, { valid: true, message: 'Great!'})
-}
-
-export { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy, aggregate }
+export { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy }

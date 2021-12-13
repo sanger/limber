@@ -8,6 +8,9 @@
         <a class="nav-link active" href="#summary_tab" data-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="#children_tab" data-toggle="tab" role="tab" data-plate-view="pools-view">Children</a>
+      </li>
+      <li class="nav-item">
         <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter') %></a>
       </li>
     </ul>
@@ -16,6 +19,11 @@
   <div class="tab-content">
     <div class="tab-pane active" id='summary_tab' role="tabpanel">
       <%= render partial: 'summary', locals: { presenter: presenter } %>
+      <%= render partial: 'qc_data_show', locals: { presenter: presenter } %>
+    </div>
+    <div class="tab-pane" id='children_tab' role="tabpanel">
+      <%= render partial: 'tube_list', locals: { presenter: presenter, tube_template: 'labware/simple_tube' } %>
+      <%= render partial: 'plate_list', locals: { presenter: presenter } %>
     </div>
     <div class="tab-pane" id='comments_tab' role="tabpanel">
       <div id='asset-comments' data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"

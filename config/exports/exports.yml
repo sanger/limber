@@ -80,3 +80,31 @@ hamilton_lds_al_lib_to_lds_al_lib_dil:
   csv: hamilton_variable_volume_dilutions_with_well_diluents
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
+cellaca_input_file:
+  csv: cellaca_input_file
+  filename:
+    include_barcode: true
+    include_page: true
+hamilton_pooling_plate_pbmc:
+  csv: hamilton_pooling_plate_pbmc
+  ancestor_purpose: LCA PBMC
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
+cardinal_tagging_csv_for_custom_pooling:
+  csv: cardinal_tagging_csv_for_custom_pooling
+  plate_includes:
+    - wells.aliquots.sample.component_samples
+cardinal_sample_arraying_tube_layout:
+  csv: cardinal_sample_arraying_tube_layout
+  plate_includes:
+    - wells.upstream_tubes
+hamilton_lca_pbmc_bank_to_lca_bank_stock:
+  csv: hamilton_lca_pbmc_bank_to_lca_bank_stock
+  workflow: Cardinal Cell Banking Pooling
+  plate_includes:
+    - wells.downstream_tubes
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+  ancestor_tube_purpose: LCA Blood Vac
