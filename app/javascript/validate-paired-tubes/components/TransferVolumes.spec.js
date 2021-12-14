@@ -143,7 +143,7 @@ describe('TransferVolumes', () => {
     })
 
     it('returns the expected sample volume', () => {
-      expect(wrapper.vm.sampleVolume).toBe('150.1')
+      expect(wrapper.vm.sampleVolume).toBe('150.12')
     })
   })
 
@@ -160,7 +160,7 @@ describe('TransferVolumes', () => {
     })
 
     it('returns the expected buffer volume', () => {
-      expect(wrapper.vm.bufferVolume).toBe('49.9')
+      expect(wrapper.vm.bufferVolume).toBe('49.88')
     })
   })
 
@@ -202,8 +202,8 @@ describe('TransferVolumes', () => {
     const targetMolarity = 4
     const targetVolume = 192
     const transferVolumes = {
-      sampleVolume: 150.1,
-      bufferVolume: 49.9
+      sampleVolume: 150.12345,
+      bufferVolume: 49.87655
     }
 
     beforeEach(() => {
@@ -224,11 +224,11 @@ describe('TransferVolumes', () => {
     })
 
     it('displays the sample volume', () => {
-      expect(wrapper.text()).toMatch(/Sample Volume.+150\.1 \u03BCl/)
+      expect(wrapper.text()).toMatch(/Sample Volume.+150\.12 \u03BCl/)
     })
 
     it('displays the buffer volume', () => {
-      expect(wrapper.text()).toMatch(/Buffer Volume.+49\.9 \u03BCl/)
+      expect(wrapper.text()).toMatch(/Buffer Volume.+49\.88 \u03BCl/)
     })
   })
 })
