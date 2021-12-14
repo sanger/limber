@@ -58,10 +58,10 @@ export default {
       return calculateTransferVolumes(this.targetMolarity, this.targetVolume, sourceMolarity, minimumPick)
     },
     sampleVolume() {
-      return this.transferVolumes?.sampleVolume?.toFixed(1)
+      return this.transferVolumes?.sampleVolume?.toFixed(2)
     },
     bufferVolume() {
-      return this.transferVolumes?.bufferVolume?.toFixed(1)
+      return this.transferVolumes?.bufferVolume?.toFixed(2)
     },
     readyToDisplayResult() {
       return this.purposeConfig && this.confirmedPair
