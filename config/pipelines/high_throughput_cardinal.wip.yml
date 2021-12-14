@@ -10,7 +10,7 @@ Cardinal Entry B:
 Cardinal:
   filters:
     request_type_key: limber_cardinal
-    library_type: Cardinal
+    library_type: Chromium single cell 3 prime v3
   library_pass: LCA Connect PCRXP
   relationships:
     LCA Blood Vac: LCA Blood Array
