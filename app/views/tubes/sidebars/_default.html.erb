@@ -5,7 +5,7 @@
   <%= card title: 'QC Information' do %>
     <div id="qc-information"
          data-asset-uuid="<%= @presenter.uuid %>"
-         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.url %>"></div>
+         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"></div>
   <% end %>
 
 
@@ -13,9 +13,11 @@
     <% presenter.control_suggested_library_passing do %>
       <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
-
     <% @presenter.control_additional_creation do -%>
       <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
+    <% end %>
+    <% if presenter.transfer_volumes? %>
+      <%= link_to "Validate tubes to view transfer volumes", validate_paired_tubes_path, class: 'btn btn-primary btn-lg btn-block' %>
     <% end %>
     <% if presenter.robot? %>
       <% @presenter.each_robot do |robot_id, robot_name| %>

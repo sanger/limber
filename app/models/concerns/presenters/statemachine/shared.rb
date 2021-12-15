@@ -15,7 +15,7 @@ module Presenters::Statemachine
     # We ignore the assignment of the state because that is the statemachine getting in before
     # the plate has been loaded.
     #++
-    def state=(value) #:nodoc:
+    def state=(value) # :nodoc:
       # Ignore this!
     end
 

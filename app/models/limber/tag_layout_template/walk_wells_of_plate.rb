@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Limber::TagLayoutTemplate::WalkWellsOfPlate # rubocop:todo Style/Documentation
-  def generate_tag_layout(plate) # rubocop:todo Metrics/AbcSize
+  def generate_tag_layout(plate)
     tagged_wells = {}
     tags = tag_ids
     groups = group_wells_of_plate(plate)
-    pools  = groups.map { |w| w.try(:[], 1) }.compact.uniq
+    pools  = groups.filter_map { |w| w.try(:[], 1) }.uniq
 
     groups.each_with_index do |(well, pool_id, _well_empty), index|
       throw :unacceptable_tag_layout if tags.size <= index

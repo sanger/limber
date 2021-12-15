@@ -56,6 +56,19 @@ describe('LabwareScan', () => {
     })
   }
 
+  const wrapperFactoryTubeNoColour = function(api = mockApi()) {
+    return mount(LabwareScan, {
+      propsData: {
+        labwareType: 'tube',
+        label: 'My Tube',
+        description: 'Scan it in',
+        api: api.devour,
+        includes: ''
+      },
+      localVue
+    })
+  }
+
   it('renders the provided well colour', () => {
     const wrapper = wrapperFactoryTube()
 
@@ -86,10 +99,23 @@ describe('LabwareScan', () => {
     expect(wrapper.find('input').element.placeholder).toEqual('Scan tube')
   })
 
+  it('renders with a well indicator', () => {
+    const wrapper = wrapperFactoryTube()
+
+    expect(wrapper.find('.well').exists()).toBe(true)
+  })
+
+
   it('renders disabled if the disabled prop is set true', () => {
     const wrapper = wrapperFactoryTubeDisabled()
 
     expect(wrapper.find('input').element.disabled).toBe(true)
+  })
+
+  it('renders without a well indicator if colour index not specified', () => {
+    const wrapper = wrapperFactoryTubeNoColour()
+
+    expect(wrapper.find('.well').exists()).toBe(false)
   })
 
   it('is invalid if it can not find a plate', async () => {

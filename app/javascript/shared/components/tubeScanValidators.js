@@ -40,6 +40,13 @@
 // function in scanValidators.js
 
 import { validScanMessage } from './scanValidators'
+import { purposeConfigForTube } from 'shared/tubeHelpers'
+import {
+  purposeTargetMolarityParameter,
+  purposeTargetVolumeParameter,
+  purposeMinimumPickParameter,
+  tubeMostRecentMolarity,
+} from 'shared/tubeTransferVolumes'
 
 // Returns a validator that ensures that the scanned item does not appear
 // multiple times in the list (based on UUID).
@@ -53,14 +60,26 @@ const checkDuplicates = (tubeList) => {
     }
     if (occurrences > 1) {
       return { valid: false, message: 'Barcode has been scanned multiple times' }
-    }
-    else {
+    } else {
       return validScanMessage()
     }
   }
 }
 
-// Returns a validator that ensures the purpose namess of all the tubes match
+// Returns a validator that ensures the tube has an ID in the allowed list.
+// To allow tubes with IDs in the list 123, 345, 567 and an invalid message:
+// checkId(['123', '345', '567'], 'Invalid ID')
+const checkId = (allowedIds, invalidMessage) => {
+  return (tube) => {
+    if (!allowedIds.includes(tube?.id)) {
+      return { valid: false, message: invalidMessage }
+    } else {
+      return validScanMessage()
+    }
+  }
+}
+
+// Returns a validator that ensures the purpose names of all the tubes match
 // the name for the one provided. Typically the one provided should be the one
 // of the purposes from the full set of tubes being validated.
 const checkMatchingPurposes = (purpose) => {
@@ -76,13 +95,24 @@ const checkMatchingPurposes = (purpose) => {
   }
 }
 
-// Returns a validator that ensures the tube has a state that matches to the
+// Returns a validator that ensures the tube contains at least one QC result
+// for molarity in nM.
+const checkMolarityResult = () => {
+  return (tube) => {
+    if (tubeMostRecentMolarity(tube) === undefined) {
+      return { valid: false, message: 'Tube has no molarity QC result' }
+    } else {
+      return validScanMessage()
+    }
+  }
+}
+
+// Returns a validator that ensures the tube has a state that matches the
 // supplied list of states. e.g. to check a tube has a state of 'available'
-// or 'exhausted':
-// checkState(['available', 'exhausted'])
+// or 'exhausted':  checkState(['available', 'exhausted'])
 const checkState = (allowedStatesList) => {
   return (tube) => {
-    if(!allowedStatesList.includes(tube.state)) {
+    if (!allowedStatesList.includes(tube.state)) {
       return { valid: false, message: 'Tube must have a state of: ' + allowedStatesList.join(' or ') }
     } else {
       return validScanMessage()
@@ -90,4 +120,23 @@ const checkState = (allowedStatesList) => {
   }
 }
 
-export { checkDuplicates, checkMatchingPurposes, checkState }
+// Returns a validator that ensures the scanned tube has a purpose with configured
+// transfer parameters.  All three parameters are needed to perform a transfer volume
+// calculation.
+// purposeConfigs: An object containing keys for purpose UUIDs, and values containing
+//                 the config options for each purpose.
+const checkTransferParameters = (purposeConfigs) => {
+  return (tube) => {
+    const purposeConfig = purposeConfigForTube(tube, purposeConfigs)
+    const targetMolarity = purposeTargetMolarityParameter(purposeConfig)
+    const targetVolume = purposeTargetVolumeParameter(purposeConfig)
+    const minimumPick = purposeMinimumPickParameter(purposeConfig)
+    if ([targetMolarity, targetVolume, minimumPick].some(param => param === undefined)) {
+      return { valid: false, message: 'Tube purpose is not configured for generating transfer volumes' }
+    } else {
+      return validScanMessage()
+    }
+  }
+}
+
+export { checkDuplicates, checkId, checkMatchingPurposes, checkMolarityResult, checkState, checkTransferParameters }
