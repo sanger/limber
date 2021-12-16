@@ -1598,6 +1598,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
     }
   )
 
+  # duplex seq
   custom_robot(
     'hamilton-lds-al-lib-to-lds-al-lib-dil',
     name: 'hamilton LDS AL Lib => LDS AL Lib Dil',
@@ -1613,6 +1614,64 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
         label: 'Bed 3',
         target_state: 'passed',
         parent: bed(13).barcode
+      }
+    }
+  )
+
+  # targeted nanoseq
+  custom_robot(
+    'hamilton-ltn-al-lib-to-ltn-al-lib-dil',
+    name: 'hamilton LTN AL Lib => LTN AL Lib Dil',
+    beds: {
+      bed(13).barcode => {
+        purpose: 'LTN AL Lib',
+        states: ['passed'],
+        label: 'Bed 13'
+      },
+      bed(3).barcode => {
+        purpose: 'LTN AL Lib Dil',
+        states: ['pending'],
+        label: 'Bed 3',
+        target_state: 'passed',
+        parent: bed(13).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'bravo-ltn-cherrypick-to-ltn-shear',
+    name: 'bravo LTN Cherrypick => LTN Shear',
+    beds: {
+      bed(7).barcode => {
+        purpose: 'LTN Cherrypick',
+        states: ['passed'],
+        label: 'Bed 7'
+      },
+      bed(9).barcode => {
+        purpose: 'LTN Shear',
+        states: ['pending'],
+        label: 'Bed 9',
+        target_state: 'passed',
+        parent: bed(7).barcode
+      }
+    }
+  )
+
+  custom_robot(
+    'bravo-ltn-shear-to-ltn-post-shear',
+    name: 'bravo LTN Shear => LTN Post Shear',
+    beds: {
+      bed(9).barcode => {
+        purpose: 'LTN Shear',
+        states: ['passed'],
+        label: 'Bed 9'
+      },
+      bed(7).barcode => {
+        purpose: 'LTN Post Shear',
+        states: ['pending'],
+        label: 'Bed 7',
+        target_state: 'passed',
+        parent: bed(9).barcode
       }
     }
   )

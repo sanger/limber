@@ -90,6 +90,22 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
+    context 'where csv id requested is targeted_nanoseq_al_lib_concentrations_for_customer.csv' do
+      let(:includes) { well_qc_sample_includes }
+      let(:csv_id) { 'targeted_nanoseq_al_lib_concentrations_for_customer' }
+      let(:expected_template) { 'targeted_nanoseq_al_lib_concentrations_for_customer' }
+
+      it_behaves_like 'a csv view'
+    end
+
+    context 'where csv id requested is targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
+      let(:expected_template) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
+
+      it_behaves_like 'a csv view'
+    end
+
     context 'where template is for the hamilton robot' do
       let(:includes) { well_src_asset_includes }
 
@@ -193,6 +209,19 @@ RSpec.describe ExportsController, type: :controller do
 
       context 'where csv id requested is hamilton_lds_al_lib_to_lds_al_lib_dil.csv' do
         let(:csv_id) { 'hamilton_lds_al_lib_to_lds_al_lib_dil' }
+
+        it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
+      end
+
+      context 'where csv id requested is hamilton_ltn_al_lib_to_qc1.csv' do
+        let(:csv_id) { 'hamilton_ltn_al_lib_to_qc1' }
+        let(:expected_template) { 'hamilton_plate_stamp_to_qc' }
+
+        it_behaves_like 'a csv view'
+      end
+
+      context 'where csv id requested is hamilton_ltn_al_lib_to_ltn_al_lib_dil.csv' do
+        let(:csv_id) { 'hamilton_ltn_al_lib_to_ltn_al_lib_dil' }
 
         it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
       end
