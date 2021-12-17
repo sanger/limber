@@ -24,7 +24,8 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       purpose_uuid: target_purpose_uuid,
       barcode_number: 2,
       parents: target_plate_parents,
-      wells: wells
+      wells: wells,
+      state: target_plate_state
     }
   end
 
@@ -36,6 +37,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   let(:source_purpose_name)         { 'Parent Purpose' }
   let(:source_purpose_uuid)         { SecureRandom.uuid }
   let(:source_plate_state) { 'passed' }
+  let(:target_plate_state) { 'pending' }
   let(:source_plate) do
     create :v2_plate, source_plate_attributes
   end
@@ -217,6 +219,16 @@ RSpec.describe Robots::PoolingRobot, robots: true do
     it 'performs transfer from started to passed' do
       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
       expect(state_change_request).to have_been_requested
+    end
+
+    context 'if the bed is unexpectedly invalid' do
+      let(:target_plate_state) { 'passed' }
+
+      it 'raises a bed error in the event of last-minute errors' do
+        expect do
+          robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
+        end.to raise_error(Robots::Bed::BedError)
+      end
     end
   end
 end
