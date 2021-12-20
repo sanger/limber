@@ -20,7 +20,7 @@
           <tr><td>etc...</td></tr>
         </tbody>
       </table>
-      <p>NB. The system will also understand the value NO READ instead of a barcode, if the scan was not successful in that position, and ignore that tube when deciding where to transfer material.</p>
+      <p>NB. NO READ is also a valid value for the second column. This is interpreted as meaning that the tube rack scanner was not able to read a tube barcode in that position. The system will ignore these tubes when deciding which tubes to pool samples into.</p>
     <% end %>
   <% end %>
   <%= sidebar do %>
