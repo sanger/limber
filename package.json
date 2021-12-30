@@ -30,7 +30,7 @@
     "jest": "^27.3.1",
     "mini-css-extract-plugin": "^0.7.0",
     "vue-jest": "^3.0.7",
-    "webpack-dev-server": "^4.2.1"
+    "webpack-dev-server": "^4.7.2"
   },
   "name": "limber",
   "scripts": {
