@@ -12,7 +12,7 @@ module LabwareHelper # rubocop:todo Style/Documentation
   STANDARD_COLOURS = (1..384).map { |i| "colour-#{i}" }
   FAILED_STATES    = %w[failed cancelled].freeze
 
-  def self.cycling_colours(name, &block)
+  def self.cycling_colours(name)
     define_method(:"#{name}_colour") do |*args|
       return 'failed' if FAILED_STATES.include?(args.first) # First argument is always the well
 
@@ -20,7 +20,7 @@ module LabwareHelper # rubocop:todo Style/Documentation
       @rotating ||= Hash.new do |h, k|
         h[k] = @colours[name].rotate!.last # rubocop:todo Rails/HelperInstanceVariable
       end
-      @rotating[block.call(*args)] # rubocop:todo Rails/HelperInstanceVariable
+      @rotating[yield(*args)] # rubocop:todo Rails/HelperInstanceVariable
     end
   end
 
