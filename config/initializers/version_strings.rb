@@ -23,11 +23,13 @@ rescue LoadError
     ABBREV_COMMIT = ''
 
     require 'ostruct'
+    # rubocop:todo Style/OpenStructUse
     DETAILS = OpenStruct.new(
       name: APP_NAME,
       version: VERSION_ID,
       environment: ENVIRONMENT
     )
+    # rubocop:enable Style/OpenStructUse
   end
   ####################################################
 end

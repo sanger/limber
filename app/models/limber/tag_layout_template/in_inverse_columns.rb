@@ -25,7 +25,7 @@ module Limber::TagLayoutTemplate::InInverseColumns # rubocop:todo Style/Document
   def primary_index(row, column, scale, height, width)
     tag_col = (column / scale)
     tag_row = (row / scale)
-    (height / scale) * (width / scale) -
+    ((height / scale) * (width / scale)) -
       (tag_row + (height / scale * tag_col)) - 1
   end
 end

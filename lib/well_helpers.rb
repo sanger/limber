@@ -152,6 +152,6 @@ module WellHelpers
   #
   def self.well_quadrant(well)
     col, row = well_coordinate(well)
-    2 * (col % 2) + (row % 2)
+    (2 * (col % 2)) + (row % 2)
   end
 end
