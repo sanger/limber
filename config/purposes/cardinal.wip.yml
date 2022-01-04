@@ -6,14 +6,10 @@
 ###
 LCA Blood Vac:
   :asset_type: tube
-  # TODO: DPL-064 is this a stock_plate?? do we have the concept of a stock_tube?
   :stock_plate: false
-  # :cherrypickable_target: false
   :input_plate: false
-  # TODO: DPL-064 what are the other settings for this tube?
   :target: SampleTube
   :type: Tube::Purpose
-  # TODO: DPL-064 does this tube presenter work for this initial tube?
   :presenter_class: Presenters::VacTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
@@ -25,14 +21,13 @@ LCA Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: true
-  :presenter_class: Presenters::SubmissionPlatePresenter
+  :input_plate: false
   :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal library prep:
       template_name: 'Limber - Cardinal'
       request_options:
-        library_type: 'Cardinal'
+        library_type: 'Chromium single cell 3 prime v3'
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
@@ -120,10 +115,8 @@ LCA Custom Pool Norm:
 # LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
 LCA Blood Bank:
   :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: false
-  :input_plate: true
-  :presenter_class: Presenters::SubmissionPlatePresenter
+  :stock_plate: false
+  :input_plate: false
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:
@@ -132,7 +125,6 @@ LCA Blood Bank:
     Cardinal cell banking:
       template_name: 'Limber - Cardinal cell banking'
       request_options:
-        library_type: 'Cardinal Banking'
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
@@ -142,5 +134,16 @@ LCA Blood Bank:
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
-# LCA PBMC Bank plates are stamped into LCA PBMC Rack tube racks
-# TODO: DPL-074 create tube rack via samples extraction?
+  :file_links:
+    - name: "Download Hamilton LCA PBMC Bank plate to LCA Bank Stock tubes CSV"
+      id: hamilton_lca_pbmc_bank_to_lca_bank_stock
+# LCA PBMC Bank plate wells are transferred into LCA Bank Stock tubes, with some
+# consolidation of wells containing the same sample into the same tube.
+# We store them as individual tubes, until Limber supports tube racks.
+LCA Bank Stock:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::PooledTubesBySample
+  :ancestor_stock_tube_purpose_name: LCA Blood Vac
+  :presenter_class: Presenters::CardinalBankStockTubePresenter

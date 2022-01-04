@@ -1,0 +1,37 @@
+<%= page(:'pooled-tubes-by-sample') do -%>
+  <%= content do %>
+    <%= card title: 'Help' do %>
+      <p>Upload the tube rack scan csv file describing the positions and barcodes of the tubes. An example is shown below:</p>
+      <table class='table table-sm'>
+        <tbody>
+          <tr><td>A1</td><td>AB00000001</td></tr>
+          <tr><td>B1</td><td>AB00000002</td></tr>
+          <tr><td>C1</td><td>AB00000003</td></tr>
+          <tr><td>D1</td><td>AB00000004</td></tr>
+          <tr><td>E1</td><td>AB00000005</td></tr>
+          <tr><td>F1</td><td>AB00000006</td></tr>
+          <tr><td>G1</td><td>AB00000007</td></tr>
+          <tr><td>H1</td><td>AB00000008</td></tr>
+          <tr><td>A2</td><td>AB00000009</td></tr>
+          <tr><td>B2</td><td>AB00000010</td></tr>
+          <tr><td>C2</td><td>AB00000011</td></tr>
+          <tr><td>D2</td><td>NO READ</td></tr>
+          <tr><td>E2</td><td>AB00000013</td></tr>
+          <tr><td>etc...</td></tr>
+        </tbody>
+      </table>
+      <p>NB. NO READ is also a valid value for the second column. This is interpreted as meaning that the tube rack scanner was not able to read a tube barcode in that position. The system will ignore these tubes when deciding which tubes to pool samples into.</p>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'File upload' do %>
+      <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
+        <%= f.hidden_field :purpose_uuid %>
+        <div class="form-group">
+          <%= f.file_field :file, accept: '.csv', required: true %>
+        </div>
+        <%= f.submit class: 'btn btn-success' %>
+      <% end %>
+    <% end %>
+  <% end %>
+<%- end -%>

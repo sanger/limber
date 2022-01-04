@@ -103,6 +103,7 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
+    receptacle { create(:v2_receptacle, qc_results: []) }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 

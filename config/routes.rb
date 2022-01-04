@@ -3,6 +3,8 @@
 Rails.application.routes.draw do
   resources 'pipeline_work_in_progress', only: :show
 
+  get '/health', controller: :health, action: 'show', as: :health
+
   scope 'search', controller: :search do
     get  '/',                 action: :new, as: :search
     post '/',                 action: :create, as: :perform_search
@@ -46,6 +48,8 @@ Rails.application.routes.draw do
     resources :qc_files, controller: :qc_files
     resources :work_completions, only: :create, module: :tubes
   end
+
+  resources :validate_paired_tubes, only: :index, module: :tubes
 
   resources :limber_tube_racks, controller: :tube_racks do
     resources :qc_files, controller: :qc_files

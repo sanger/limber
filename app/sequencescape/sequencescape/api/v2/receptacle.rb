@@ -2,6 +2,7 @@
 
 # A class representing receptacles coming from the SequenceScape JSON API.
 class Sequencescape::Api::V2::Receptacle < Sequencescape::Api::V2::Base
+  has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :qc_results, class_name: 'Sequencescape::Api::V2::QcResult'
 
   def latest_molarity

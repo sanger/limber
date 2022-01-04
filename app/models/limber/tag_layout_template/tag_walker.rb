@@ -5,7 +5,7 @@ module Limber::TagLayoutTemplate::TagWalker
   def generate_tag_layout(plate) # rubocop:todo Metrics/AbcSize
     tags = tag_ids
     groups = group_wells_of_plate(plate)
-    pools  = groups.map { |w| w.try(:[], 1) }.compact.uniq
+    pools  = groups.filter_map { |w| w.try(:[], 1) }.uniq
     groups.each_with_object({}) do |(well, pool_id, _well_empty), tagged_wells|
       next if well.nil?
 

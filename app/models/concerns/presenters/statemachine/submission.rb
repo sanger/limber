@@ -68,6 +68,10 @@ module Presenters::Statemachine
 
         state :failed do
           include StateDoesNotAllowChildCreation
+
+          def sidebar_partial
+            'submission'
+          end
         end
 
         state :unknown do
