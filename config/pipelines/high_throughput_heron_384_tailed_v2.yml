@@ -1,5 +1,5 @@
 ---
-Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
+Heron-384 Tailed A V2: # Heron 384-well pipeline specific to PCR 1 plate
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr_v2
     library_type:
@@ -13,7 +13,7 @@ Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
     LTHR-384 Lib PCR 1: LTHR-384 Lib PCR pool
     LTHR-384 Lib PCR pool: LTHR-384 Pool XP
     LTHR-384 Pool XP: LB Lib Pool Norm
-Heron-384 Tailed B:
+Heron-384 Tailed B V2:
   filters: *heron_tailed_filters
   library_pass: LB Lib Pool Norm
   relationships:

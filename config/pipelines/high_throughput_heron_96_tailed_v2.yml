@@ -1,5 +1,5 @@
 ---
-Heron-96 Tailed A: # Heron 96-well pipeline specific to PCR 1 plate
+Heron-96 Tailed A V2: # Heron 96-well pipeline specific to PCR 1 plate
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr_v2
     library_type:
@@ -14,7 +14,7 @@ Heron-96 Tailed A: # Heron 96-well pipeline specific to PCR 1 plate
     LTHR Lib PCR 1: LTHR Lib PCR pool
     LTHR Lib PCR pool: LTHR Pool XP
     LTHR Pool XP: LB Lib Pool Norm
-Heron-96 Tailed B:
+Heron-96 Tailed B V2:
   filters: *heron_tailed_filters
   library_pass: LB Lib Pool Norm
   relationships:
