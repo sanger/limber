@@ -11,7 +11,7 @@ LTHR Cherrypick:
   :presenter_class: Presenters::SubmissionPlatePresenter
   :submission_options:
     LTHR 96 - NovaSeq:
-      template_name: 'Limber - Heron LTHR V2 - Automated'
+      template_name: 'Limber - Heron LTHR - Automated'
       request_options:
         library_type: 'Sanger_tailed_artic_v1_96'
         read_length: 150
@@ -20,7 +20,7 @@ LTHR Cherrypick:
         primer_panel_name: nCoV-2019/V4
       allowed_extra_barcodes: false
     LTHR 384 - NovaSeq:
-      template_name: 'Limber - Heron LTHR V2 - Automated'
+      template_name: 'Limber - Heron LTHR - Automated'
       request_options:
         library_type: 'Sanger_tailed_artic_v1_384'
         read_length: 150
