@@ -8,6 +8,8 @@ ISC:
     - Agilent Pulldown
     - Duplex-Seq
     - Twist Pulldown
+    - Targeted NanoSeq Pulldown Twist
+    - Targeted NanoSeq Pulldown Agilent
   library_pass:
   - LB Cap Lib PCR-XP
   - LB Cap Lib Pool
