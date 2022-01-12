@@ -3,7 +3,7 @@ Targeted NanoSeq:
   filters: &targeted_nanoseq_filters
     request_type_key: limber_targeted_nanoseq
     library_type:
-    - Targeted NanoSeq
+    - Targeted Nanoseq
   library_pass: LTN Lib PCR XP
   relationships:
     LTN Stock: LTN Stock XP
