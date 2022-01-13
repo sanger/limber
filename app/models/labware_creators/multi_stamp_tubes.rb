@@ -125,19 +125,6 @@ module LabwareCreators
       @submission_options_from_config ||= purpose_config.submission_options
     end
 
-    def asset_groups
-      # split the receptacles by study id e.g. { '1': [<receptacle1>, <receptacle3>, <receptacle4>], '2': [{<receptacle2>, <receptacle5>}]}
-      tubes_by_study = parent_tubes.group_by { |tube| tube.aliquots.first.study.id }
-
-      # then build asset groups by study in a hash
-      tubes_by_study.transform_values do |tubes|
-        {
-          assets: tubes.map { |tube| tube.receptacle.uuid },
-          autodetect_studies_projects: true
-        }
-      end
-    end
-
     def create_submission_from_parent_tubes
       submission_options_from_config = purpose_config.submission_options
 
@@ -154,11 +141,12 @@ module LabwareCreators
       create_submission(configured_params)
     end
 
+    # Project and Study are specified on the Submission Template (submission parameters)
     def create_submission(configured_params)
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        asset_groups: asset_groups,
+        assets: parent_tubes.map { |tube| tube.receptacle.uuid },
         api: api,
         user: user_uuid
       }
