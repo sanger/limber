@@ -31,17 +31,19 @@ const tubeMostRecentMolarity = function(tube) {
 // minimum_pick [Float] The minimum pick volume possible for both the sample and the buffer.
 //        Units should match the target_volume.
 //
-// [Object] An Object containing keys sampleVolume and bufferVolume for the transfer.
+// [Object] An Object containing keys sampleVolume, bufferVolume and belowTarget for the transfer.
 //          Volumes in the return Object use the same units as the target_volume parameter.
+//          The boolean returned in belowTarget indicates whether the target_molarity was achieved or
+//          if the actual molarity is below the target due to a weak concentration of source sample.
 const calculateTransferVolumes = function(target_molarity, target_volume, source_molarity, minimum_pick) {
   const calc_sample_volume = (target_molarity / source_molarity) * target_volume
   const sample_volume = Math.max(calc_sample_volume, minimum_pick)
   const buffer_volume = target_volume - sample_volume
 
   if (buffer_volume < minimum_pick) {
-    return { sampleVolume: target_volume, bufferVolume: 0 }
+    return { sampleVolume: target_volume, bufferVolume: 0, belowTarget: buffer_volume < 0 }
   } else {
-    return { sampleVolume: sample_volume, bufferVolume: buffer_volume }
+    return { sampleVolume: sample_volume, bufferVolume: buffer_volume, belowTarget: false }
   }
 }
 
