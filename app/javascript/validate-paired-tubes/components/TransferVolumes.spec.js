@@ -89,6 +89,25 @@ describe('TransferVolumes', () => {
     })
   })
 
+  describe('sourceMolarity', () => {
+    var wrapper
+    const sourceMolarity = 6
+
+    beforeEach(() => {
+      tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
+      wrapper = wrapperFactory()
+    })
+
+    it('calls purposeTargetVolumeParameter with expected arguments', () => {
+      expect(tubeMostRecentMolarity.mock.calls.length).toBe(1)
+      expect(tubeMostRecentMolarity.mock.calls[0][0]).toBe(mockTube)
+    })
+
+    it('returns the expected target volume', () => {
+      expect(wrapper.vm.sourceMolarity).toBe(sourceMolarity)
+    })
+  })
+
   describe('transferVolumes', () => {
     var wrapper
     const targetMolarity = 4
@@ -130,7 +149,7 @@ describe('TransferVolumes', () => {
     })
   })
 
-  describe('sampleVolume', () => {
+  describe('sampleVolumeForDisplay', () => {
     var wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
@@ -143,11 +162,11 @@ describe('TransferVolumes', () => {
     })
 
     it('returns the expected sample volume', () => {
-      expect(wrapper.vm.sampleVolume).toBe('150.12')
+      expect(wrapper.vm.sampleVolumeForDisplay).toBe('150.12')
     })
   })
 
-  describe('bufferVolume', () => {
+  describe('bufferVolumeForDisplay', () => {
     var wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
@@ -160,7 +179,7 @@ describe('TransferVolumes', () => {
     })
 
     it('returns the expected buffer volume', () => {
-      expect(wrapper.vm.bufferVolume).toBe('49.88')
+      expect(wrapper.vm.bufferVolumeForDisplay).toBe('49.88')
     })
   })
 
@@ -214,13 +233,13 @@ describe('TransferVolumes', () => {
     })
 
     it('displays the target molarity', () => {
-      expect(wrapper.text()).toMatch(/4 nM/)
+      expect(wrapper.text()).toMatch(/4.00 nM/)
     })
 
     // Have to use \u03BC in place of µ symbol because JavaScript regex doesn't like it
 
     it('displays the target volume', () => {
-      expect(wrapper.text()).toMatch(/192 \u03BCl/)
+      expect(wrapper.text()).toMatch(/192.00 \u03BCl/)
     })
 
     it('displays the sample volume', () => {
