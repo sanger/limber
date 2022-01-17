@@ -5,7 +5,7 @@
       <b-col>
         <b-input-group
           prepend="Volume"
-          append="&#181;L"
+          append="µL"
         >
           <b-form-input
             id="input-volume"

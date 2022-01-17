@@ -130,4 +130,46 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
   }
 }
 
-export { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy }
+const requestsFromWell = (well) => {
+  return well.requests_as_source.length
+}
+
+const filterWellsWithRequest = (wells) => {
+  return wells.filter((well) => { return (requestsFromWell(well) >= 1) })
+}
+
+const checkMaxCountRequests = (plateList, maxWellsWithRequests) => {
+  return (plate) => {
+    if (filterWellsWithRequest(plate.wells).length > maxWellsWithRequests) {
+      return { valid: false, message: 'Plate has more than '+maxWellsWithRequests+' wells with requests' }
+    }
+    return validScanMessage()
+  }
+}
+
+const checkMinCountRequests = (plateList, minWellsWithRequests) => {
+  return (plate) => {
+    if (filterWellsWithRequest(plate.wells).length < minWellsWithRequests) {
+      return { valid: false, message: 'Plate should not have less than '+minWellsWithRequests+' wells with requests' }
+    }
+    return validScanMessage()
+  }
+}
+
+const checkAllSamplesInColumnsList = (plateList, columnsList) => {
+  return (plate) => {
+    const wells = filterWellsWithRequest(plate.wells)
+    for (var i=0; i<wells.length; i++) {
+      var well = wells[i]
+      var column = well.position.name.slice(1)
+      if (!columnsList.includes(column)) {
+        return { valid: false, message: 'All samples should be in the columns '+columnsList }
+      }
+    }
+    return validScanMessage()
+  }
+}
+
+export { checkSize, checkDuplicates, checkExcess, 
+  checkState, checkQCableWalkingBy, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList
+}

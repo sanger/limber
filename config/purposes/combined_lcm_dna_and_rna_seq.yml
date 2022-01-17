@@ -1,0 +1,20 @@
+---
+LLCM Lysate:
+  :asset_type: plate
+  :stock_plate: true
+  :input_plate: true
+  :creator_class: LabwareCreators::Uncreatable
+
+LLCM DNAseq Cherrypick:
+  :asset_type: plate
+  :creator_class: 
+    name: LabwareCreators::MultiStampDuplicator
+    args:
+      children_purposes:
+        - LLCM DNAseq Cherrypick
+        - LLCM RNAseq Cherrypick
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+
+LLCM RNAseq Cherrypick:
+  :asset_type: plate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
