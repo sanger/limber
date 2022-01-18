@@ -30,11 +30,11 @@ module ConfigLoader
 
     def should_include_file?(files, child)
       yaml?(child) &&
-      in_list?(files, child) &&
-      (
-        !work_in_progress?(child) ||
-        (work_in_progress?(child) && Limber::Application.config.deploy_wip_pipelines)
-      )
+        in_list?(files, child) &&
+        (
+          !work_in_progress?(child) ||
+          (work_in_progress?(child) && Limber::Application.config.deploy_wip_pipelines)
+        )
     end
 
     #
