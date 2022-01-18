@@ -178,7 +178,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                         payload: { order: {
                           assets: parent_receptacle_uuids,
                           request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                          user: user_uuid
+                          user: user_uuid,
+                          autodetect_studies_projects: false
                         } },
                         body: '{"order":{"uuid":"order-uuid"}}')
         end
