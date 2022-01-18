@@ -141,12 +141,16 @@ module LabwareCreators
       create_submission(configured_params)
     end
 
-    # Project and Study are specified on the Submission Template (submission parameters)
+    # Project and Study are specified on the Submission Template (submission_parameters field)
+    # It's important that autodetect_studies_projects is false here,
+    # to make sure the Study is set explicitly, since it controls data access
     def create_submission(configured_params)
+      asset_uuids = parent_tubes.map { |tube| tube.receptacle.uuid }
+
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        assets: parent_tubes.map { |tube| tube.receptacle.uuid },
+        asset_groups: [{ assets: asset_uuids, autodetect_studies_projects: false }],
         api: api,
         user: user_uuid
       }
