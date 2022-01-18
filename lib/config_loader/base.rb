@@ -22,6 +22,7 @@ module ConfigLoader
     #
     def initialize(files: nil, directory: default_path)
       path = directory.is_a?(Pathname) ? directory : Pathname.new(directory)
+
       @files = path.children.select { |child| should_include_file?(files, child) }
       load_config
     end
@@ -33,8 +34,12 @@ module ConfigLoader
         in_list?(files, child) &&
         (
           !work_in_progress?(child) ||
-          (work_in_progress?(child) && Limber::Application.config.deploy_wip_pipelines)
+          (work_in_progress?(child) && deploy_wip_pipelines)
         )
+    end
+
+    def deploy_wip_pipelines
+      Limber::Application.config.try(:deploy_wip_pipelines) || false
     end
 
     #
