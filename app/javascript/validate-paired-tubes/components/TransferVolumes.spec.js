@@ -49,6 +49,25 @@ describe('TransferVolumes', () => {
     })
   })
 
+  describe('sourceMolarity', () => {
+    var wrapper
+    const sourceMolarity = 6
+
+    beforeEach(() => {
+      tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
+      wrapper = wrapperFactory()
+    })
+
+    it('calls purposeTargetVolumeParameter with expected arguments', () => {
+      expect(tubeMostRecentMolarity.mock.calls.length).toBe(1)
+      expect(tubeMostRecentMolarity.mock.calls[0][0]).toBe(mockTube)
+    })
+
+    it('returns the expected target volume', () => {
+      expect(wrapper.vm.sourceMolarity).toBe(sourceMolarity)
+    })
+  })
+
   describe('targetMolarity', () => {
     var wrapper
     const molarity = 250
@@ -86,25 +105,6 @@ describe('TransferVolumes', () => {
 
     it('returns the expected target volume', () => {
       expect(wrapper.vm.targetVolume).toBe(volume)
-    })
-  })
-
-  describe('sourceMolarity', () => {
-    var wrapper
-    const sourceMolarity = 6
-
-    beforeEach(() => {
-      tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
-      wrapper = wrapperFactory()
-    })
-
-    it('calls purposeTargetVolumeParameter with expected arguments', () => {
-      expect(tubeMostRecentMolarity.mock.calls.length).toBe(1)
-      expect(tubeMostRecentMolarity.mock.calls[0][0]).toBe(mockTube)
-    })
-
-    it('returns the expected target volume', () => {
-      expect(wrapper.vm.sourceMolarity).toBe(sourceMolarity)
     })
   })
 
@@ -161,7 +161,7 @@ describe('TransferVolumes', () => {
       wrapper = wrapperFactory()
     })
 
-    it('returns the expected sample volume', () => {
+    it('returns the expected sample volume string', () => {
       expect(wrapper.vm.sampleVolumeForDisplay).toBe('150.12')
     })
   })
@@ -178,8 +178,88 @@ describe('TransferVolumes', () => {
       wrapper = wrapperFactory()
     })
 
-    it('returns the expected buffer volume', () => {
+    it('returns the expected buffer volume string', () => {
       expect(wrapper.vm.bufferVolumeForDisplay).toBe('49.88')
+    })
+  })
+
+  describe('sourceMolarityForDisplay', () => {
+    var wrapper
+    const sourceMolarity = 3.4567
+
+    beforeEach(() => {
+      tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
+      wrapper = wrapperFactory()
+    })
+
+    it('returns the expected source molarity string', () => {
+      expect(wrapper.vm.sourceMolarityForDisplay).toBe('3.46')
+    })
+
+  })
+
+  describe('targetMolarityForDisplay', () => {
+    var wrapper
+    const molarity = 5.6789
+
+    beforeEach(() => {
+      purposeConfigForTube.mockReturnValue(mockPurposeConfig)
+      purposeTargetMolarityParameter.mockReturnValue(molarity)
+      wrapper = wrapperFactory()
+    })
+
+    it('returns the expected target molarity string', () => {
+      expect(wrapper.vm.targetMolarityForDisplay).toBe('5.68')
+    })
+
+  })
+
+  describe('targetVolumeForDisplay', () => {
+    var wrapper
+    const volume = 25.6789
+
+    beforeEach(() => {
+      purposeConfigForTube.mockReturnValue(mockPurposeConfig)
+      purposeTargetVolumeParameter.mockReturnValue(volume)
+      wrapper = wrapperFactory()
+    })
+
+    it('returns the expected target volume string', () => {
+      expect(wrapper.vm.targetVolumeForDisplay).toBe('25.68')
+    })
+  })
+
+  describe('belowTargetMolarity', () => {
+    describe('is below target molarity', () => {
+      var wrapper
+      const transferVolumes = {
+        belowTarget: true
+      }
+
+      beforeEach(() => {
+        calculateTransferVolumes.mockReturnValue(transferVolumes)
+        wrapper = wrapperFactory()
+      })
+
+      it('returns the expected below target molarity value', () => {
+        expect(wrapper.vm.belowTargetMolarity).toBe(true)
+      })
+    })
+
+    describe('is not below target molarity', () => {
+      var wrapper
+      const transferVolumes = {
+        belowTarget: false
+      }
+
+      beforeEach(() => {
+        calculateTransferVolumes.mockReturnValue(transferVolumes)
+        wrapper = wrapperFactory()
+      })
+
+      it('returns the expected below target molarity value', () => {
+        expect(wrapper.vm.belowTargetMolarity).toBe(false)
+      })
     })
   })
 
