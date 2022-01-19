@@ -29,7 +29,7 @@ module LabwareCreators
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
     def tag_plate=(params)
-      @tag_plate = OpenStruct.new(params)
+      @tag_plate = OpenStruct.new(params) # rubocop:todo Style/OpenStructUse
     end
 
     def initialize(*args, &block)

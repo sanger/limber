@@ -627,7 +627,7 @@ This mirrors the same structure used by work completions.
       read_length: 150
       fragment_size_required_from: '50'
       fragment_size_required_to: '800'
-      primer_panel_name: nCoV-2019/V4
+      primer_panel_name: nCoV-2019/V4.1alt
   LTHR 384 - NovaSeq:
     template_name: 'Limber - Heron LTHR - Automated'
     request_options:
@@ -635,5 +635,5 @@ This mirrors the same structure used by work completions.
       read_length: 150
       fragment_size_required_from: '50'
       fragment_size_required_to: '800'
-      primer_panel_name: nCoV-2019/V4
+      primer_panel_name: nCoV-2019/V4.1alt
 ```

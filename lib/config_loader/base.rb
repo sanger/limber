@@ -22,11 +22,25 @@ module ConfigLoader
     #
     def initialize(files: nil, directory: default_path)
       path = directory.is_a?(Pathname) ? directory : Pathname.new(directory)
-      @files = path.children.select { |child| yaml?(child) && in_list?(files, child) && !work_in_progress?(child) }
+
+      @files = path.children.select { |child| should_include_file?(files, child) }
       load_config
     end
 
     private
+
+    def should_include_file?(files, child)
+      yaml?(child) &&
+        in_list?(files, child) &&
+        (
+          !work_in_progress?(child) ||
+          (work_in_progress?(child) && deploy_wip_pipelines)
+        )
+    end
+
+    def deploy_wip_pipelines
+      Limber::Application.config.try(:deploy_wip_pipelines) || false
+    end
 
     #
     # Returns true if filename is a yaml file.

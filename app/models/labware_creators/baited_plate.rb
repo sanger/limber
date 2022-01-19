@@ -18,6 +18,8 @@ module LabwareCreators
 
     delegate :number_of_columns, :number_of_rows, :size, to: :plate
 
+    Baits = Struct.new(:location, :bait, :aliquots, :pool_id)
+
     def plate
       parent
     end
@@ -47,11 +49,11 @@ module LabwareCreators
         bait     = bait_library_layout_preview[location]
         aliquot  = bait # Fudge, will be nil if no bait
 
-        OpenStruct.new(
-          location: location,
-          bait: bait,
-          aliquots: [aliquot].compact,
-          pool_id: nil
+        Baits.new(
+          location,
+          bait,
+          [aliquot].compact,
+          nil
         )
       end
     end
