@@ -82,17 +82,61 @@ module LabwareCreators
   
         @child = plate_creation.child
 
-        transfer_material_from_parent!(@child.uuid)
+        transfer_material_from_parent!(@child)
   
         yield(@child) if block_given?
         true
-      end  
-  
-      def request_hash(transfer, *args)
-        # We might want to add the 'volume' key into a nested hash called 'metadata'
-        binding.pry
-        super.merge('volume' => transfer[:volume])
       end
+
+      def transfer_material_from_parent!(child_plate)
+        api.transfer_request_collection.create!(
+          user: user_uuid,
+          transfer_requests: transfer_request_attributes(child_plate)
+        )
+      end
+  
+      def transfer_request_attributes(child_plate)
+        transfers.map do |transfer|
+          request_hash(transfer, child_plate)
+        end
+      end  
+
+      def outer_request_for_library_type(well_uuid, library_type)
+        parent_plates.each do |plate|
+          well = plate.wells.select{|w| w.uuid == well_uuid }.first
+          if well
+            found = well.requests_as_source.select{|r| r.library_type == library_type }
+            return found.first if found
+          end
+        end
+      end
+  
+      def request_hash(transfer, child_plate)
+        transfer.merge({
+          'target_asset' => child_plate.wells.detect do |child_well|
+            child_well.location == transfer.dig(:new_target, :location)
+          end&.uuid,
+          'outer_request' => outer_request_for_library_type(transfer[:source_asset], library_type_for_plate(child_plate)).uuid
+        })
+      end
+  
+      def library_type_for_plate(plate)
+        @_memo ||= {}
+        @_memo[plate.purpose.name] ||= purpose_for_name(plate.purpose.name).dig(:transfer_library_type)
+      end
+
+      def purpose_for_name(name)
+        Settings.purposes.each do |uuid,obj|
+          return obj if obj[:name] == name
+        end
+      end
+
+      def parent_plates
+        @parent_plates ||= Sequencescape::Api::V2::Plate.find_all({ 
+          uuid: parent_uuids 
+          }, includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source')
+      end
+
     end
   end
   
