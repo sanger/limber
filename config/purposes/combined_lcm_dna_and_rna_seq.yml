@@ -5,16 +5,33 @@ LLCM Lysate:
   :input_plate: true
   :creator_class: LabwareCreators::Uncreatable
 
+# LLCM Lysate DNAseq and RNAseq Cherrypick:
+#   :asset_type: plate
+#   :creator_class: 
+#     name: LabwareCreators::MultiStampDuplicator
+#     args:
+#       children_purposes:
+#         - LLCM DNAseq Cherrypick
+#         - LLCM RNAseq Cherrypick
+
 LLCM DNAseq Cherrypick:
   :asset_type: plate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :creator_class: 
     name: LabwareCreators::MultiStampDuplicator
     args:
       children_purposes:
         - LLCM DNAseq Cherrypick
         - LLCM RNAseq Cherrypick
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-
+  transfer_library_type: Combined LCM DNA
+        
 LLCM RNAseq Cherrypick:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :creator_class: 
+    name: LabwareCreators::MultiStampDuplicator
+    args:
+      children_purposes:
+        - LLCM DNAseq Cherrypick
+        - LLCM RNAseq Cherrypick
+  transfer_library_type: Combined LCM RNA

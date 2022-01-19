@@ -3,4 +3,6 @@ LLCM DNA RNA Seq:
   filters:
     request_type_key: lcm_dna_rna_seq
   relationships:
+    # LLCM Lysate: LLCM Lysate DNAseq and RNAseq Cherrypick
     LLCM Lysate: LLCM DNAseq Cherrypick
+    #LLCM Lysate: LLCM RNAseq Cherrypick
