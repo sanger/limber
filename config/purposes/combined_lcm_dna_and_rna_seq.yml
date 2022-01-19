@@ -1,37 +1,72 @@
 ---
-LLCM Lysate:
+CLCM Lysate:
   :asset_type: plate
   :stock_plate: true
   :input_plate: true
   :creator_class: LabwareCreators::Uncreatable
-
-# LLCM Lysate DNAseq and RNAseq Cherrypick:
-#   :asset_type: plate
-#   :creator_class: 
-#     name: LabwareCreators::MultiStampDuplicator
-#     args:
-#       children_purposes:
-#         - LLCM DNAseq Cherrypick
-#         - LLCM RNAseq Cherrypick
-
-LLCM DNAseq Cherrypick:
+CLCM Consolidated Lysate DNAseq:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :creator_class: 
     name: LabwareCreators::MultiStampDuplicator
     args:
       children_purposes:
-        - LLCM DNAseq Cherrypick
-        - LLCM RNAseq Cherrypick
+        - CLCM Consolidated Lysate DNAseq
+        - CLCM Consolidated Lysate RNAseq
   transfer_library_type: Combined LCM DNA
-        
-LLCM RNAseq Cherrypick:
+CLCM Consolidated Lysate RNAseq:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :creator_class: 
     name: LabwareCreators::MultiStampDuplicator
     args:
       children_purposes:
-        - LLCM DNAseq Cherrypick
-        - LLCM RNAseq Cherrypick
+        - CLCM Consolidated Lysate DNAseq
+        - CLCM Consolidated Lysate RNAseq
   transfer_library_type: Combined LCM RNA
+CLCM RNA XP Buffer:
+  :asset_type: plate
+CLCM RNA XP RT Mix:
+  :asset_type: plate
+CLCM RNA XP PreAmp Mix:
+  :asset_type: plate
+CLCM Cherrypick:
+  :asset_type: plate
+  :cherrypickable_target: true
+  :presenter_class: Presenters::StockPlatePresenter
+CLCM LB End Prep:
+  :asset_type: plate
+CLCM LB Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  warnings:
+    pcr_cycles_not_in:
+      - 6
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
+  - pWGS UDI tag layout v2 A
+  - pWGS UDI tag layout v2 B
+  - pWGS UDI tag layout v2 C
+  - pWGS UDI tag layout v2 D
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TSRNAhWGS_UDI96
+  - TS_pWGSA_UDI96v2
+  - TSISC_UDI96
+CLCM LB Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+  - name: Download Concentration (nM) CSV
+    id: concentrations_nm
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+# pipeline also uses these standard tubes defined elsewhere:
+# LB Custom Pool
+# LB Custom Pool Norm

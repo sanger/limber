@@ -1,8 +1,33 @@
 ---
-LLCM DNA RNA Seq:
+CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
   filters:
     request_type_key: lcm_dna_rna_seq
+    library_type: Combined LCM DNA
+  library_pass: CLCM LB Lib PCR XP
   relationships:
-    # LLCM Lysate: LLCM Lysate DNAseq and RNAseq Cherrypick
-    LLCM Lysate: LLCM DNAseq Cherrypick
-    #LLCM Lysate: LLCM RNAseq Cherrypick
+    CLCM Lysate: CLCM Consolidated Lysate DNAseq
+    CLCM Consolidated Lysate DNAseq: CLCM Cherrypick
+    CLCM Cherrypick: CLCM LB End Prep
+    CLCM LB End Prep: CLCM LB Lib PCR
+    CLCM LB Lib PCR: CLCM LB Lib PCR XP
+CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
+  filters:
+    request_type_key: lcm_dna_rna_seq
+    library_type: Combined LCM RNA
+  library_pass: CLCM LB Lib PCR XP
+  relationships:
+    CLCM Lysate: CLCM Consolidated Lysate RNAseq
+    CLCM Consolidated Lysate RNAseq: CLCM RNA XP Buffer
+    CLCM RNA XP Buffer: CLCM RNA XP RT Mix
+    CLCM RNA XP RT Mix: CLCM RNA XP PreAmp Mix
+    CLCM RNA XP PreAmp Mix: CLCM Cherrypick
+    CLCM Cherrypick: CLCM LB End Prep
+    CLCM LB End Prep: CLCM LB Lib PCR
+    CLCM LB Lib PCR: CLCM LB Lib PCR XP
+CLCM Combined LCM DNA and RNAseq MX: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key:
+    - limber_multiplexing
+  relationships:
+    CLCM LB Lib PCR XP: LB Custom Pool
+    LB Custom Pool: LB Lib Pool Norm
