@@ -23,7 +23,7 @@ group :default do
   gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
 
   # Older Sequencescape API
-  gem 'sequencescape-client-api', '0.8.0.pre.rcx', require: 'sequencescape'
+  gem 'sequencescape-client-api', '0.8.2.pre.rcx', require: 'sequencescape'
   # Speed up json encoding/decoding with oj
   gem 'oj'
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ApiUrlHelper
-  API_ROOT = 'https://example.com:3000'
+  API_ROOT = 'http://example.com:3000'
 
   def self.included(base)
     base.extend(ClassMethods)

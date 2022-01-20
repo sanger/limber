@@ -309,7 +309,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    sequencescape-client-api (0.8.0.pre.rcx)
+    sequencescape-client-api (0.8.2.pre.rcx)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
       i18n
@@ -400,7 +400,7 @@ DEPENDENCIES
   sanger_barcode_format!
   sass-rails
   select2-rails
-  sequencescape-client-api (= 0.8.0.pre.rcx)
+  sequencescape-client-api (= 0.8.2.pre.rcx)
   simplecov
   sprint_client
   state_machines
