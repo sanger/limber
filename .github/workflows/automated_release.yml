@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - dpl-243-ss-gem-https
 
 env:
   BUNDLE_WITHOUT: 'test lint'
