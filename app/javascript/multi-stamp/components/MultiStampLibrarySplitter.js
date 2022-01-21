@@ -1,6 +1,9 @@
 import MultiStamp from './MultiStamp'
 import Vue from 'vue'
-import { checkSize, checkDuplicates, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ } from 'shared/components/plateScanValidators'
+import { 
+  checkSize, checkDuplicates, checkMaxCountRequests, 
+  checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ 
+} from 'shared/components/plateScanValidators'
 
 
 export default Vue.extend({
@@ -18,6 +21,7 @@ export default Vue.extend({
       ]
     },
     valid() {
+      //debugger
       return true
     }
   }

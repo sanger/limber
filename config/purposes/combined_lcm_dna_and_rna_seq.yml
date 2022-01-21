@@ -8,8 +8,13 @@ CLCM Consolidated Lysate DNAseq:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :creator_class: 
-    name: LabwareCreators::MultiStampDuplicator
-    args:
+    name: LabwareCreators::MultiStampLibrarySplitter
+    args: &library_type_splitting_config
+      library_type_split_plate_purpose:
+        - library_type: Combined LCM DNA
+          plate_purpose: CLCM Consolidated Lysate DNAseq
+        - library_type: Combined LCM RNA
+          plate_purpose: CLCM Consolidated Lysate RNAseq
       children_purposes:
         - CLCM Consolidated Lysate DNAseq
         - CLCM Consolidated Lysate RNAseq
@@ -18,11 +23,8 @@ CLCM Consolidated Lysate RNAseq:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :creator_class: 
-    name: LabwareCreators::MultiStampDuplicator
-    args:
-      children_purposes:
-        - CLCM Consolidated Lysate DNAseq
-        - CLCM Consolidated Lysate RNAseq
+    name: LabwareCreators::MultiStampLibrarySplitter
+    args: *library_type_splitting_config
   transfer_library_type: Combined LCM RNA
 CLCM RNA XP Buffer:
   :asset_type: plate

@@ -24,12 +24,12 @@
 # client side.
 
 module LabwareCreators
-    class MultiStampDuplicator < MultiStamp # rubocop:todo Style/Documentation
+    class MultiStampLibrarySplitter < MultiStamp # rubocop:todo Style/Documentation
       class_attribute :max_wells_count
       
-      self.page = 'multi_stamp_duplicator'
+      self.page = 'multi_stamp_library_splitter'
 
-      self.transfers_layout = 'sequential'
+      self.transfers_layout = 'sequentialLibrarySplit'
       self.transfers_creator = 'with-volume'
       self.attributes += [
         {

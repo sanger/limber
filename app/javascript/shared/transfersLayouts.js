@@ -109,6 +109,31 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
   return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
 }
 
+const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
+  //const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
+  const platesMatrix = []
+  const library_types = {}
+  const duplicatedRequests = []
+  for (let i = 0; i < requestsWithPlates.length; i++) {
+    const { request, well, plateObj } = requestsWithPlates[i]
+    if (request === undefined) { continue }
+    const wellIndex = nameToIndex(well.position.name, 8)
+    if (!(request.library_type in library_types)) {
+      library_types[request.library_type]=platesMatrix.length
+      platesMatrix[platesMatrix.length] = []
+    }
+    const positionPlate = library_types[request.library_type]
+    if (platesMatrix[positionPlate][wellIndex] === undefined) {
+      platesMatrix[positionPlate][wellIndex] = requestsWithPlates[i]
+    }
+    else {
+      duplicatedRequests.push(requestsWithPlates[i])
+    }
+  }
+  return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
+}
+
+
 // Used to calculate sequential transfers.
 // Receives an array of transfer requests and return an array of transfers
 // where the target well is calculated from the index of the request in
@@ -129,6 +154,22 @@ const buildSequentialTransfersArray = function(transferRequests) {
   }
   return transfers
 }
+
+// TODO: targetWell should go to the specific column for the plate (plate 1: [1,2,3], plate2: [4,5,6])
+const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
+  const transfers = new Array(transferRequests.length)
+  for (let i = 0; i < transferRequests.length; i++) {
+    const requestWithPlate = transferRequests[i]
+    transfers[i] = {
+      request: requestWithPlate.request,
+      well: requestWithPlate.well,
+      plateObj: requestWithPlate.plateObj,
+      targetWell: indexToName(i, 8)
+    }
+  }
+  return transfers
+}
+
 
 // Takes an array with 96 elements (for a 96 well plate)
 // Returns an array with elements just for those wells that have been populated (by scanning into the UI)
@@ -202,9 +243,18 @@ const sequentialTransfers = function(requestsWithPlates) {
 }
 
 
+const sequentialLibrarySplitTransfers = function(requestsWithPlates) {
+  const { platesMatrix, duplicatedRequests } = buildLibrarySplitPlatesMatrix(requestsWithPlates)
+  const transferRequests = platesMatrix.flat()
+  const validTransfers = buildSequentialTransfersArray(transferRequests)
+  const duplicatedTransfers = buildSequentialTransfersArray(duplicatedRequests)
+  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
+}
+
 const transferFunctions = {
   quadrant: quadrantTransfers,
-  sequential: sequentialTransfers
+  sequential: sequentialTransfers,
+  sequentialLibrarySplit: sequentialLibrarySplitTransfers,
 }
 
 
@@ -253,4 +303,4 @@ const transfersForTubes = function(validTubes) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
-export { transfersFromRequests, transfersForTubes }
+export { transfersFromRequests, transfersForTubes, buildPlatesMatrix, buildLibrarySplitPlatesMatrix }
