@@ -1,4 +1,6 @@
 ---
+# This pipeline can be deleted once all "limber_heron_lthr" requests have progressed through it
+# It is being replaced by high_throughput_heron_96_tailed_v2
 Heron-96 Tailed A: # Heron 96-well pipeline specific to PCR 1 plate
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr

@@ -8,14 +8,21 @@
     </p>
     <div v-show="readyToDisplayResult">
       <p>
-        The transfer volumes shown are to make a {{ targetVolume }} μl / {{ targetMolarity }} nM solution.
+        The transfer volumes shown are to make a {{ targetVolumeForDisplay }} μl / {{ targetMolarityForDisplay }} nM solution.
       </p>
       <dl class="row metadata">
         <dt>Sample Volume</dt>
-        <dd>{{ sampleVolume }} μl</dd>
+        <dd>{{ sampleVolumeForDisplay }} μl</dd>
         <dt>Buffer Volume</dt>
-        <dd>{{ bufferVolume }} μl</dd>
+        <dd>{{ bufferVolumeForDisplay }} μl</dd>
       </dl>
+      <div v-show="belowTargetMolarity" class="alert alert-warning">
+        <h5>Insufficient Source Molarity</h5>
+        <p>
+          The source sample has a molarity of {{ sourceMolarityForDisplay }} nM which is below the target of {{ targetMolarityForDisplay }} nM.
+          The transfer as shown will not achieve the target molarity.
+        </p>
+      </div>
     </div>
   </b-card>
 </template>
@@ -46,6 +53,9 @@ export default {
     purposeConfig() {
       return purposeConfigForTube(this.tube, this.purposeConfigs)
     },
+    sourceMolarity() {
+      return tubeMostRecentMolarity(this.tube)
+    },
     targetMolarity() {
       return purposeTargetMolarityParameter(this.purposeConfig)
     },
@@ -53,15 +63,26 @@ export default {
       return purposeTargetVolumeParameter(this.purposeConfig)
     },
     transferVolumes() {
-      const sourceMolarity = tubeMostRecentMolarity(this.tube)
       const minimumPick = purposeMinimumPickParameter(this.purposeConfig)
-      return calculateTransferVolumes(this.targetMolarity, this.targetVolume, sourceMolarity, minimumPick)
+      return calculateTransferVolumes(this.targetMolarity, this.targetVolume, this.sourceMolarity, minimumPick)
     },
-    sampleVolume() {
+    sampleVolumeForDisplay() {
       return this.transferVolumes?.sampleVolume?.toFixed(2)
     },
-    bufferVolume() {
+    bufferVolumeForDisplay() {
       return this.transferVolumes?.bufferVolume?.toFixed(2)
+    },
+    sourceMolarityForDisplay() {
+      return this.sourceMolarity?.toFixed(2)
+    },
+    targetMolarityForDisplay() {
+      return this.targetMolarity?.toFixed(2)
+    },
+    targetVolumeForDisplay() {
+      return this.targetVolume?.toFixed(2)
+    },
+    belowTargetMolarity() {
+      return this.transferVolumes?.belowTarget
     },
     readyToDisplayResult() {
       return this.purposeConfig && this.confirmedPair
