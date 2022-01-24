@@ -34,9 +34,9 @@ CLCM Cherrypick:
   :asset_type: plate
   :cherrypickable_target: true
   :presenter_class: Presenters::StockPlatePresenter
-CLCM LB End Prep:
+CLCM End Prep:
   :asset_type: plate
-CLCM LB Lib PCR:
+CLCM Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
@@ -58,7 +58,7 @@ CLCM LB Lib PCR:
   - TSRNAhWGS_UDI96
   - TS_pWGSA_UDI96v2
   - TSISC_UDI96
-CLCM LB Lib PCR XP:
+CLCM Lib PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
@@ -67,6 +67,17 @@ CLCM LB Lib PCR XP:
     id: concentrations_nm
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-# pipeline also uses these standard tubes defined elsewhere:
-# LB Custom Pool
-# LB Custom Pool Norm
+CLCM Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+CLCM Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube

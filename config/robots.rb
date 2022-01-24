@@ -2422,4 +2422,87 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
+
+  # Robots for Combined LCM pipeline
+
+  # TODO: needs to track 1-4 sources split out to 2 destinations
+  # Current robots don't handle multiple parents to multiple children. New robot required?
+  custom_robot('bravo-clcm-lysate-to-clcm-consolidated-lysate-dnaseq-and-rnaseq',
+               name: 'Bravo CLCM Lysate => CLCM Consolidated Lysate DNAseq and RNAseq',
+               require_robot: true,
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'CLCM Lysate',
+                   states: ['passed'],
+                   label: 'Bed 1'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'CLCM Lysate',
+                   states: ['passed'],
+                   label: 'Bed 2'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'CLCM Lysate',
+                   states: ['passed'],
+                   label: 'Bed 3'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'CLCM Lysate',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(5).barcode => {
+                   purpose: 'CLCM Consolidated Lysate DNAseq',
+                   states: ['pending'],
+                   label: 'Bed 5',
+                   # parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM Consolidated Lysate RNAseq',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   # parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-clcm-lb-end-prep-to-clcm-lb-lib-pcr',
+               name: 'bravo CLCM LB End Prep => CLCM LB Lib PCR',
+               require_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM LB End Prep',
+                   states: ['passed'],
+                   label: 'Bed 7',
+                   child: bed(6).barcode,
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM LB Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-clcm-lb-lib-pcr-to-clcm-lb-lib-pcr-xp',
+               name: 'bravo CLCM LB Lib PCR => CLCM LB Lib PCR XP',
+               require_robot: true,
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'CLCM LB Lib PCR',
+                   states: ['passed'],
+                   label: 'Bed 1',
+                   child: bed(9).barcode,
+                 },
+                 bed(9).barcode => {
+                   purpose: 'CLCM LB Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 9',
+                   parent: bed(1).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
 end
