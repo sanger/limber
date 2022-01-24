@@ -12,6 +12,6 @@ namespace :test_config do
                  label_templates:
                   { 'tube' => 'limber_tube_label_template',
                     'plate' => 'sqsc_96plate_label_template' } }
-    File.open(Rails.root.join('config/settings/test.yml'), 'w') { |f| f.write(settings.to_yaml) }
+    File.write(Rails.root.join('config/settings/test.yml'), settings.to_yaml)
   end
 end
