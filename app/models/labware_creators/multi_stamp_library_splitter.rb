@@ -24,50 +24,49 @@
 # client side.
 
 module LabwareCreators
-    class MultiStampLibrarySplitter < MultiStamp # rubocop:todo Style/Documentation
-      class_attribute :max_wells_count
-      
-      self.page = 'multi_stamp_library_splitter'
+  class MultiStampLibrarySplitter < MultiStamp # rubocop:todo Style/Documentation
+    class_attribute :max_wells_count
 
-      self.transfers_layout = 'sequentialLibrarySplit'
-      #self.transfers_layout = 'sequential'
-      self.transfers_creator = 'with-volume'
-      self.attributes += [
-        {
-          transfers: [
-            [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
-          ]
-        }
-      ]
-      self.target_rows = 8
-      self.target_columns = 12
-      self.source_plates = 4
-      self.max_wells_count = 24
+    self.page = 'multi_stamp_library_splitter'
 
-      #
-      # We've created multiple plates, so we redirect to the parent.
-      #
-      # @return [Sequencescape::Api::V2::Plate] The parent plate
-      def redirection_target
-        parent
+    self.transfers_layout = 'sequentialLibrarySplit'
+    # self.transfers_layout = 'sequential'
+    self.transfers_creator = 'with-volume'
+    self.attributes += [
+      {
+        transfers: [
+          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
+        ]
+      }
+    ]
+    self.target_rows = 8
+    self.target_columns = 12
+    self.source_plates = 4
+    self.max_wells_count = 24
+
+    #
+    # We've created multiple plates, so we redirect to the parent.
+    #
+    # @return [Sequencescape::Api::V2::Plate] The parent plate
+    def redirection_target
+      parent
+    end
+
+    def anchor
+      'children_tab'
+    end
+
+    def children_library_type_to_purpose_mapping
+      purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:library_type_split_plate_purpose, []).each_with_object({}) do |val, memo|
+        library_type = val[:library_type]
+        plate_purpose_name = val[:plate_purpose]
+        memo[library_type] = all_purposes_uuids_by_name[plate_purpose_name]
       end
+    end
 
-      def anchor
-        'children_tab'
-      end
-
-      def children_library_type_to_purpose_mapping
-        purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:library_type_split_plate_purpose, []).reduce({}) do |memo, val|
-          library_type = val[:library_type]
-          plate_purpose_name = val[:plate_purpose]
-          memo[library_type]=all_purposes_uuids_by_name[plate_purpose_name]
-          memo
-        end
-      end
-
-      def all_purposes_uuids_by_name
-        Settings.purposes.map{|uuid, obj| { "#{obj[:name]}" => uuid}}.reduce{|m,v| m.merge(v)}
-      end      
+    def all_purposes_uuids_by_name
+      Settings.purposes.map { |uuid, obj| { (obj[:name]).to_s => uuid } }.reduce { |m, v| m.merge(v) }
+    end
 
     #   private
 
@@ -77,19 +76,17 @@ module LabwareCreators
     #     end
     #   end
 
-
-
     #   def _create_labware_with_purpose!(purpose_uuid)
     #     plate_creation = api.pooled_plate_creation.create!(
     #       parents: parent_uuids,
     #       child_purpose: purpose_uuid,
     #       user: user_uuid
     #     )
-  
+
     #     @child = plate_creation.child
 
     #     transfer_material_from_parent!(@child)
-  
+
     #     yield(@child) if block_given?
     #     true
     #   end
@@ -100,12 +97,12 @@ module LabwareCreators
     #       transfer_requests: transfer_request_attributes(child_plate)
     #     )
     #   end
-  
+
     #   def transfer_request_attributes(child_plate)
     #     transfers.map do |transfer|
     #       request_hash(transfer, child_plate)
     #     end
-    #   end  
+    #   end
 
     #   def outer_request_for_library_type(well_uuid, library_type)
     #     parent_plates.each do |plate|
@@ -116,7 +113,7 @@ module LabwareCreators
     #       end
     #     end
     #   end
-  
+
     #   def request_hash(transfer, child_plate)
     #     transfer.merge({
     #       'target_asset' => child_plate.wells.detect do |child_well|
@@ -125,7 +122,7 @@ module LabwareCreators
     #       'outer_request' => outer_request_for_library_type(transfer[:source_asset], library_type_for_plate(child_plate)).uuid
     #     })
     #   end
-  
+
     #   def library_type_for_plate(plate)
     #     @_memo ||= {}
     #     @_memo[plate.purpose.name] ||= purpose_for_name(plate.purpose.name).dig(:transfer_library_type)
@@ -138,11 +135,9 @@ module LabwareCreators
     #   end
 
     #   def parent_plates
-    #     @parent_plates ||= Sequencescape::Api::V2::Plate.find_all({ 
-    #       uuid: parent_uuids 
+    #     @parent_plates ||= Sequencescape::Api::V2::Plate.find_all({
+    #       uuid: parent_uuids
     #       }, includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source')
     #   end
-
-    end
   end
-  
+end
