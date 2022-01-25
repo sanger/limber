@@ -49,24 +49,14 @@ describe('transfersLayouts.js', () => {
     it('returns the right set of requests for each library type', () => {
       const result = buildLibrarySplitPlatesMatrix(requests)
 
-      // Library type A (first plate)
-      expect(result.platesMatrix[0]).toEqual([
-        // A1
-       requests[0],
-       // B1, C1, D1, E1, F1, G1, H1, A2
-       undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 
-       // B2
-       requests[2]])
-
-     // Library type B (second plate)
-     expect(result.platesMatrix[1]).toEqual([
-       // A1
-       requests[1], 
-       // B1, C1, D1, E1, F1, G1, H1, A2
-       undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 
-       // B2
-       requests[3]
-     ])
+      expect(result.platesMatrix[0]).toEqual({
+        'A': [requests[0]],
+        'B': [requests[1]]
+      })
+      expect(result.platesMatrix[1]).toEqual({
+        'A': [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, requests[2]],
+        'B': [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, requests[3]]
+      })
     })
     it('returns empty for the list of duplicates', () => {
       const result = buildLibrarySplitPlatesMatrix(requests)
@@ -104,20 +94,15 @@ describe('transfersLayouts.js', () => {
       })
       it('returns the right requests for each library type', () => {
         const result = buildLibrarySplitPlatesMatrix(requests)
-        // Library type A (first plate)
-        expect(result.platesMatrix[0]).toEqual([
-          // A1
-         requests[0]])
-        
-         // Library type B (second plate)
-        expect(result.platesMatrix[1]).toEqual([
-         // A1
-         undefined, 
-         // B1, C1, D1, E1, F1, G1, H1, A2
-         undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 
-         // B2
-         requests[2]
-       ])
+
+        // I only get requests[0] because requests[1] is a clash on library
+        expect(result.platesMatrix[0]).toEqual({
+          'A': [requests[0]]
+        })
+        // I only get requests[2] because requests[3] is a clash on library
+        expect(result.platesMatrix[1]).toEqual({
+          'B': [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, requests[2]]
+        })
 
       })
       it('returns the list of duplicates', () => {
@@ -125,8 +110,7 @@ describe('transfersLayouts.js', () => {
   
         expect(result.duplicatedRequests.length).toEqual(2)
         expect(result.duplicatedRequests).toEqual([requests[1],requests[3]])
-      })
-        
+      })        
     })
   })
   

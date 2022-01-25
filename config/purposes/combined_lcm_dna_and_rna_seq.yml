@@ -13,9 +13,9 @@ CLCM Lysate DNA:
     args: &library_type_splitting_config
       library_type_split_plate_purpose:
         - library_type: Combined LCM DNA
-          plate_purpose: CLCM Consolidated Lysate DNAseq
+          plate_purpose: CLCM Lysate DNA
         - library_type: Combined LCM RNA
-          plate_purpose: CLCM Consolidated Lysate RNAseq
+          plate_purpose: CLCM Lysate RNA
   transfer_library_type: Combined LCM DNA
 CLCM DNA End Prep:
   :asset_type: plate

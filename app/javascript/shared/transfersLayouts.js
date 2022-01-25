@@ -110,7 +110,6 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 }
 
 const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
-  //const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
   const platesMatrix = []
   const duplicatedRequests = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
