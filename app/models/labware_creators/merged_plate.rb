@@ -44,7 +44,7 @@ module LabwareCreators
     def barcodes=(barcodes)
       @barcodes = barcodes
       # Removes empty strings from barcodes, for validation and strips off whitespace
-      @minimal_barcodes = barcodes.reject(&:blank?).map(&:strip)
+      @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
 
     private

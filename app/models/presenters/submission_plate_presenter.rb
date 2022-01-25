@@ -53,7 +53,7 @@ module Presenters
 
     def asset_groups
       @asset_groups ||= labware.wells
-                               .reject(&:empty?)
+                               .compact_blank
                                .group_by(&:order_group)
                                .map do |_, wells|
                                  { assets: wells.map(&:uuid), autodetect_studies_projects: true }

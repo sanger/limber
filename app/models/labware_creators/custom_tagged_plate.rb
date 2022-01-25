@@ -41,7 +41,7 @@ module LabwareCreators
       @child = api.pooled_plate_creation.create!(
         child_purpose: purpose_uuid,
         user: user_uuid,
-        parents: [parent_uuid, tag_plate.asset_uuid].reject(&:blank?)
+        parents: [parent_uuid, tag_plate.asset_uuid].compact_blank
       ).child
 
       transfer_material_from_parent!(@child.uuid)
@@ -90,7 +90,7 @@ module LabwareCreators
     private
 
     def tag_layout_attributes
-      tag_layout.reject { |_key, value| value.blank? }
+      tag_layout.compact_blank
     end
 
     def create_labware!
