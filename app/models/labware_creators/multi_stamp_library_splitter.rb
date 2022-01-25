@@ -30,6 +30,7 @@ module LabwareCreators
       self.page = 'multi_stamp_library_splitter'
 
       self.transfers_layout = 'sequentialLibrarySplit'
+      #self.transfers_layout = 'sequential'
       self.transfers_creator = 'with-volume'
       self.attributes += [
         {

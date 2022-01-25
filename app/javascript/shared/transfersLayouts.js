@@ -112,19 +112,19 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
   //const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
   const platesMatrix = []
-  const library_types = {}
   const duplicatedRequests = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
     if (request === undefined) { continue }
     const wellIndex = nameToIndex(well.position.name, 8)
-    if (!(request.library_type in library_types)) {
-      library_types[request.library_type]=platesMatrix.length
-      platesMatrix[platesMatrix.length] = []
+    if (platesMatrix[plateObj.index] === undefined) {
+      platesMatrix[plateObj.index] = {}
     }
-    const positionPlate = library_types[request.library_type]
-    if (platesMatrix[positionPlate][wellIndex] === undefined) {
-      platesMatrix[positionPlate][wellIndex] = requestsWithPlates[i]
+    if (platesMatrix[plateObj.index][request.library_type] === undefined) {
+      platesMatrix[plateObj.index][request.library_type] = []
+    }
+    if (platesMatrix[plateObj.index][request.library_type][wellIndex] === undefined) {
+      platesMatrix[plateObj.index][request.library_type][wellIndex] = requestsWithPlates[i]
     }
     else {
       duplicatedRequests.push(requestsWithPlates[i])
@@ -158,14 +158,28 @@ const buildSequentialTransfersArray = function(transferRequests) {
 // TODO: targetWell should go to the specific column for the plate (plate 1: [1,2,3], plate2: [4,5,6])
 const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
   const transfers = new Array(transferRequests.length)
+  const libraryTypes = []
+  const positionWellInLibraryTypePlate = {}
   for (let i = 0; i < transferRequests.length; i++) {
     const requestWithPlate = transferRequests[i]
+    var libraryType = requestWithPlate.request.library_type
+    
+    if (libraryTypes.indexOf(libraryType) < 0) {
+      libraryTypes[libraryTypes.length] = libraryType
+      positionWellInLibraryTypePlate[libraryType] = 0
+    }
+
+    const positionWell = positionWellInLibraryTypePlate[libraryType]
+    const positionPlate = libraryTypes.indexOf(libraryType)
+
     transfers[i] = {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
       plateObj: requestWithPlate.plateObj,
-      targetWell: indexToName(i, 8)
+      targetWell: indexToName(positionWell, 8),
+      targetPlate: positionPlate
     }
+    positionWellInLibraryTypePlate[libraryType] += 1
   }
   return transfers
 }
@@ -245,9 +259,9 @@ const sequentialTransfers = function(requestsWithPlates) {
 
 const sequentialLibrarySplitTransfers = function(requestsWithPlates) {
   const { platesMatrix, duplicatedRequests } = buildLibrarySplitPlatesMatrix(requestsWithPlates)
-  const transferRequests = platesMatrix.flat()
-  const validTransfers = buildSequentialTransfersArray(transferRequests)
-  const duplicatedTransfers = buildSequentialTransfersArray(duplicatedRequests)
+  const transferRequests = platesMatrix.flatMap((x) => Object.values(x)).flat()
+  const validTransfers = buildSequentialLibrarySplitTransfersArray(transferRequests)
+  const duplicatedTransfers = buildSequentialLibrarySplitTransfersArray(duplicatedRequests)
   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
