@@ -3,31 +3,34 @@ CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
   filters:
     request_type_key: clcm_dna_rna_seq
     library_type: Combined LCM DNA
-  library_pass: CLCM Lib PCR XP
+  library_pass: CLCM RNA Lib PCR XP
   relationships:
-    CLCM Lysate: CLCM Consolidated Lysate DNAseq
-    CLCM Consolidated Lysate DNAseq: CLCM Cherrypick
-    CLCM Cherrypick: CLCM End Prep
-    CLCM End Prep: CLCM Lib PCR
-    CLCM Lib PCR: CLCM Lib PCR XP
-CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
-  filters:
-    request_type_key: clcm_dna_rna_seq
-    library_type: Combined LCM RNA
-  library_pass: CLCM Lib PCR XP
-  relationships:
-    CLCM Lysate: CLCM Consolidated Lysate RNAseq
-    CLCM Consolidated Lysate RNAseq: CLCM RNA XP Buffer
-    CLCM RNA XP Buffer: CLCM RNA XP RT Mix
-    CLCM RNA XP RT Mix: CLCM RNA XP PreAmp Mix
-    CLCM RNA XP PreAmp Mix: CLCM Cherrypick
-    CLCM Cherrypick: CLCM End Prep
-    CLCM End Prep: CLCM Lib PCR
-    CLCM Lib PCR: CLCM Lib PCR XP
-CLCM Custom Pool: # Bottom of the pipeline (Pooling and normalization)
+    CLCM Stock: CLCM Lysate DNA
+    CLCM Lysate DNA: CLCM DNA End Prep
+    CLCM DNA End Prep: CLCM DNA Lib PCR
+    CLCM DNA Lib PCR: CLCM DNA Lib PCR XP
+CLCM Custom Pooling for DNAseq: # Bottom of the pipeline (Pooling and normalization)
   filters:
     request_type_key: clcm_dna_rna_seq
     state: passed
   relationships:
-    CLCM Lib PCR XP: CLCM Custom Pool
-    CLCM Custom Pool: CLCM Lib Pool Norm
+    CLCM DNA Lib PCR XP: CLCM DNA Pool
+    CLCM DNA Pool: CLCM DNA Pool Norm
+CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    library_type: Combined LCM RNA
+  library_pass: CLCM RNA Lib PCR XP
+  relationships:
+    CLCM Stock: CLCM Lysate RNA
+    CLCM Lysate RNA: CLCM RT PreAmp
+    CLCM RT PreAmp: CLCM RNA End Prep
+    CLCM RNA End Prep: CLCM RNA Lib PCR
+    CLCM RNA Lib PCR: CLCM RNA Lib PCR XP
+CLCM Custom Pooling for RNAseq: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    state: passed
+  relationships:
+    CLCM RNA Lib PCR XP: CLCM RNA Pool
+    CLCM RNA Pool: CLCM RNA Pool Norm

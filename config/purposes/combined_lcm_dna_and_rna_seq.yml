@@ -1,42 +1,23 @@
 ---
-CLCM Lysate:
+CLCM Stock:
   :asset_type: plate
   :stock_plate: true
   :input_plate: true
   :creator_class: LabwareCreators::Uncreatable
-CLCM Consolidated Lysate DNAseq:
+CLCM Lysate DNA:
   :asset_type: plate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :creator_class: 
-    name: LabwareCreators::MultiStampDuplicator
-    args:
-      children_purposes:
-        - CLCM Consolidated Lysate DNAseq
-        - CLCM Consolidated Lysate RNAseq
-  transfer_library_type: Combined LCM DNA
-CLCM Consolidated Lysate RNAseq:
-  :asset_type: plate
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :creator_class: 
-    name: LabwareCreators::MultiStampDuplicator
-    args:
-      children_purposes:
-        - CLCM Consolidated Lysate DNAseq
-        - CLCM Consolidated Lysate RNAseq
-  transfer_library_type: Combined LCM RNA
-CLCM RNA XP Buffer:
-  :asset_type: plate
-CLCM RNA XP RT Mix:
-  :asset_type: plate
-CLCM RNA XP PreAmp Mix:
-  :asset_type: plate
-CLCM Cherrypick:
-  :asset_type: plate
-  :cherrypickable_target: true
   :presenter_class: Presenters::StockPlatePresenter
-CLCM End Prep:
+  :creator_class: 
+    name: LabwareCreators::MultiStampDuplicator
+    args: &clcm_args
+      children_purposes:
+        - CLCM Lysate DNA
+        - CLCM Lysate RNA
+  transfer_library_type: Combined LCM DNA
+CLCM DNA End Prep:
   :asset_type: plate
-CLCM Lib PCR:
+CLCM DNA Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
@@ -58,7 +39,7 @@ CLCM Lib PCR:
   - TSRNAhWGS_UDI96
   - TS_pWGSA_UDI96v2
   - TSISC_UDI96
-CLCM Lib PCR XP:
+CLCM DNA Lib PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
@@ -67,14 +48,71 @@ CLCM Lib PCR XP:
     id: concentrations_nm
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
-CLCM Custom Pool:
+CLCM DNA Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::CustomPooledTubes
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-CLCM Custom Pool Norm:
+CLCM DNA Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+CLCM Lysate RNA:
+  :asset_type: plate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: 
+    name: LabwareCreators::MultiStampDuplicator
+    args: *clcm_args
+  transfer_library_type: Combined LCM RNA
+CLCM RT Preamp:
+  :asset_type: plate
+CLCM RNA End Prep:
+  :asset_type: plate
+CLCM RNA Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  warnings:
+    pcr_cycles_not_in:
+      - 6
+  :tag_layout_templates:
+  - Illumina pipeline tagging
+  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+  - hWGS and RNAseq UDI tag layout v3
+  - pWGS UDI tag layout v2 A
+  - pWGS UDI tag layout v2 B
+  - pWGS UDI tag layout v2 C
+  - pWGS UDI tag layout v2 D
+  - TS_pWGSA_UDI96
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TSRNAhWGS_UDI96
+  - TS_pWGSA_UDI96v2
+  - TSISC_UDI96
+CLCM RNA Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+  - name: Download Concentration (nM) CSV
+    id: concentrations_nm
+  - name: Download Concentration (ng/ul) CSV
+    id: concentrations_ngul
+CLCM RNA Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+CLCM RNA Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose

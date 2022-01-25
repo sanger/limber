@@ -2427,58 +2427,58 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # TODO: needs to track 1-4 sources split out to 2 destinations
   # Current robots don't handle multiple parents to multiple children. New robot required?
-  custom_robot('bravo-clcm-lysate-to-clcm-consolidated-lysate-dnaseq-and-rnaseq',
-               name: 'Bravo CLCM Lysate => CLCM Consolidated Lysate DNAseq and RNAseq',
+  custom_robot('bravo-clcm-stock-to-clcm-lysate-dna-and-rna',
+               name: 'Bravo CLCM Stock => CLCM Lysate DNA and RNA',
                require_robot: true,
                beds: {
-                 bed(1).barcode => {
-                   purpose: 'CLCM Lysate',
-                   states: ['passed'],
-                   label: 'Bed 1'
-                 },
-                 bed(2).barcode => {
-                   purpose: 'CLCM Lysate',
-                   states: ['passed'],
-                   label: 'Bed 2'
-                 },
-                 bed(3).barcode => {
-                   purpose: 'CLCM Lysate',
-                   states: ['passed'],
-                   label: 'Bed 3'
-                 },
                  bed(4).barcode => {
-                   purpose: 'CLCM Lysate',
+                   purpose: 'CLCM Stock',
                    states: ['passed'],
                    label: 'Bed 4'
                  },
-                 bed(5).barcode => {
-                   purpose: 'CLCM Consolidated Lysate DNAseq',
-                   states: ['pending'],
-                   label: 'Bed 5',
-                   # parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
-                   target_state: 'passed'
+                 bed(7).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 7'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 3'
                  },
                  bed(6).barcode => {
-                   purpose: 'CLCM Consolidated Lysate RNAseq',
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 6'
+                 },
+                 bed(5).barcode => {
+                   purpose: 'CLCM Lysate RNA',
                    states: ['pending'],
-                   label: 'Bed 6',
-                   # parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+                   label: 'Bed 5',
+                   # parents: [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
+                   target_state: 'passed'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'CLCM Lysate DNA',
+                   states: ['pending'],
+                   label: 'Bed 8',
+                   # parents: [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed'
                  }
                })
 
-  custom_robot('bravo-clcm-lb-end-prep-to-clcm-lb-lib-pcr',
-               name: 'bravo CLCM LB End Prep => CLCM LB Lib PCR',
+  custom_robot('bravo-clcm-dna-end-prep-to-clcm-dna-lib-pcr',
+               name: 'Bravo CLCM DNA End Prep => CLCM DNA Lib PCR',
                require_robot: true,
                beds: {
                  bed(7).barcode => {
-                   purpose: 'CLCM LB End Prep',
+                   purpose: 'CLCM DNA End Prep',
                    states: ['passed'],
                    label: 'Bed 7',
                    child: bed(6).barcode,
                  },
                  bed(6).barcode => {
-                   purpose: 'CLCM LB Lib PCR',
+                   purpose: 'CLCM DNA Lib PCR',
                    states: ['pending'],
                    label: 'Bed 6',
                    parent: bed(7).barcode,
@@ -2486,18 +2486,56 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
-  custom_robot('bravo-clcm-lb-lib-pcr-to-clcm-lb-lib-pcr-xp',
-               name: 'bravo CLCM LB Lib PCR => CLCM LB Lib PCR XP',
+  custom_robot('bravo-clcm-rna-end-prep-to-clcm-rna-lib-pcr',
+               name: 'Bravo CLCM RNA End Prep => CLCM RNA Lib PCR',
+               require_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA End Prep',
+                   states: ['passed'],
+                   label: 'Bed 7',
+                   child: bed(6).barcode,
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM RNA Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-clcm-dna-lib-pcr-to-clcm-dna-lib-pcr-xp',
+               name: 'Bravo CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
                require_robot: true,
                beds: {
                  bed(1).barcode => {
-                   purpose: 'CLCM LB Lib PCR',
+                   purpose: 'CLCM DNA Lib PCR',
                    states: ['passed'],
                    label: 'Bed 1',
                    child: bed(9).barcode,
                  },
                  bed(9).barcode => {
-                   purpose: 'CLCM LB Lib PCR XP',
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 9',
+                   parent: bed(1).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-clcm-rna-lib-pcr-to-clcm-rna-lib-pcr-xp',
+               name: 'Bravo CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
+               require_robot: true,
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'CLCM RNA Lib PCR',
+                   states: ['passed'],
+                   label: 'Bed 1',
+                   child: bed(9).barcode,
+                 },
+                 bed(9).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
                    states: ['pending'],
                    label: 'Bed 9',
                    parent: bed(1).barcode,
