@@ -26,8 +26,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::StampedPlate}
 
-  Used directly in 86 purposes:
-  LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
+  Used directly in 92 purposes:
+  LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, CLCM RNA XP Buffer, CLCM RNA XP RT Mix, CLCM RNA XP PreAmp Mix, CLCM Cherrypick, CLCM End Prep, CLCM Lib PCR XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
 
 {LabwareCreators::StampedPlate View class documentation}
 
@@ -153,8 +153,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::CustomPooledTubes}
 
-  Used directly in 4 purposes:
-  LB Custom Pool, LTN Custom Pool, LDS Custom Pool, and LCA Custom Pool
+  Used directly in 5 purposes:
+  LB Custom Pool, CLCM Custom Pool, LTN Custom Pool, LCA Custom Pool, and LDS Custom Pool
 
 {LabwareCreators::CustomPooledTubes View class documentation}
 
@@ -194,7 +194,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::CustomTaggedPlate}
 
   Used directly in 8 purposes:
-  LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
+  LBC 5p GEX LigXP, LCA Connect PCRXP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
 
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
@@ -236,6 +236,15 @@ Labware creators are responsible for creating new labware from a parent labware.
   **This labware creator is unused**
 
 {LabwareCreators::MultiStamp View class documentation}
+
+
+## LabwareCreators::MultiStampDuplicator
+
+{include:LabwareCreators::MultiStampDuplicator}
+
+  **This labware creator is unused**
+
+{LabwareCreators::MultiStampDuplicator View class documentation}
 
 
 ## LabwareCreators::QuadrantStampBase
@@ -321,8 +330,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TaggedPlate}
 
-  Used directly in 16 purposes:
-  pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
+  Used directly in 17 purposes:
+  CLCM Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
 
 {LabwareCreators::TaggedPlate View class documentation}
 
@@ -331,8 +340,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TubeFromTube}
 
-  Used directly in 9 purposes:
-  LB Custom Pool Norm, LTN Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
+  Used directly in 10 purposes:
+  LB Custom Pool Norm, CLCM Custom Pool Norm, LTN Custom Pool Norm, LCA Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, scRNA Lib Pool XP, and LHR Lib Pool XP
 
 {LabwareCreators::TubeFromTube View class documentation}
 
@@ -341,8 +350,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::Uncreatable}
 
-  Used directly in 4 purposes:
-  LTHR-384 RT, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
+  Used directly in 5 purposes:
+  CLCM Lysate, LTHR-384 RT, LCA Blood Vac, LTHR Cherrypick, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 
