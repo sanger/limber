@@ -55,88 +55,93 @@ module LabwareCreators
       def anchor
         'children_tab'
       end
-  
-      private
 
-      def create_labware!
-        children_purposes_uuids.each do |purpose_uuid|
-          _create_labware_with_purpose!(purpose_uuid)
-        end
-      end
-
-      def children_purposes_uuids
-        purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:children_purposes, []).map do |name|
-          all_purposes_uuids_by_name[name]
+      def children_library_type_to_purpose_mapping
+        purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:library_type_split_plate_purpose, []).reduce({}) do |memo, val|
+          library_type = val[:library_type]
+          plate_purpose_name = val[:plate_purpose]
+          memo[library_type]=all_purposes_uuids_by_name[plate_purpose_name]
+          memo
         end
       end
 
       def all_purposes_uuids_by_name
         Settings.purposes.map{|uuid, obj| { "#{obj[:name]}" => uuid}}.reduce{|m,v| m.merge(v)}
-      end
+      end      
 
-      def _create_labware_with_purpose!(purpose_uuid)
-        plate_creation = api.pooled_plate_creation.create!(
-          parents: parent_uuids,
-          child_purpose: purpose_uuid,
-          user: user_uuid
-        )
+    #   private
+
+    #   def create_labware!
+    #     children_purposes_uuids.each do |purpose_uuid|
+    #       _create_labware_with_purpose!(purpose_uuid)
+    #     end
+    #   end
+
+
+
+    #   def _create_labware_with_purpose!(purpose_uuid)
+    #     plate_creation = api.pooled_plate_creation.create!(
+    #       parents: parent_uuids,
+    #       child_purpose: purpose_uuid,
+    #       user: user_uuid
+    #     )
   
-        @child = plate_creation.child
+    #     @child = plate_creation.child
 
-        transfer_material_from_parent!(@child)
+    #     transfer_material_from_parent!(@child)
   
-        yield(@child) if block_given?
-        true
-      end
+    #     yield(@child) if block_given?
+    #     true
+    #   end
 
-      def transfer_material_from_parent!(child_plate)
-        api.transfer_request_collection.create!(
-          user: user_uuid,
-          transfer_requests: transfer_request_attributes(child_plate)
-        )
-      end
+    #   def transfer_material_from_parent!(child_plate)
+    #     api.transfer_request_collection.create!(
+    #       user: user_uuid,
+    #       transfer_requests: transfer_request_attributes(child_plate)
+    #     )
+    #   end
   
-      def transfer_request_attributes(child_plate)
-        transfers.map do |transfer|
-          request_hash(transfer, child_plate)
-        end
-      end  
+    #   def transfer_request_attributes(child_plate)
+    #     transfers.map do |transfer|
+    #       request_hash(transfer, child_plate)
+    #     end
+    #   end  
 
-      def outer_request_for_library_type(well_uuid, library_type)
-        parent_plates.each do |plate|
-          well = plate.wells.select{|w| w.uuid == well_uuid }.first
-          if well
-            found = well.requests_as_source.select{|r| r.library_type == library_type }
-            return found.first if found
-          end
-        end
-      end
+    #   def outer_request_for_library_type(well_uuid, library_type)
+    #     parent_plates.each do |plate|
+    #       well = plate.wells.select{|w| w.uuid == well_uuid }.first
+    #       if well
+    #         found = well.requests_as_source.select{|r| r.library_type == library_type }
+    #         return found.first if found
+    #       end
+    #     end
+    #   end
   
-      def request_hash(transfer, child_plate)
-        transfer.merge({
-          'target_asset' => child_plate.wells.detect do |child_well|
-            child_well.location == transfer.dig(:new_target, :location)
-          end&.uuid,
-          'outer_request' => outer_request_for_library_type(transfer[:source_asset], library_type_for_plate(child_plate)).uuid
-        })
-      end
+    #   def request_hash(transfer, child_plate)
+    #     transfer.merge({
+    #       'target_asset' => child_plate.wells.detect do |child_well|
+    #         child_well.location == transfer.dig(:new_target, :location)
+    #       end&.uuid,
+    #       'outer_request' => outer_request_for_library_type(transfer[:source_asset], library_type_for_plate(child_plate)).uuid
+    #     })
+    #   end
   
-      def library_type_for_plate(plate)
-        @_memo ||= {}
-        @_memo[plate.purpose.name] ||= purpose_for_name(plate.purpose.name).dig(:transfer_library_type)
-      end
+    #   def library_type_for_plate(plate)
+    #     @_memo ||= {}
+    #     @_memo[plate.purpose.name] ||= purpose_for_name(plate.purpose.name).dig(:transfer_library_type)
+    #   end
 
-      def purpose_for_name(name)
-        Settings.purposes.each do |uuid,obj|
-          return obj if obj[:name] == name
-        end
-      end
+    #   def purpose_for_name(name)
+    #     Settings.purposes.each do |uuid,obj|
+    #       return obj if obj[:name] == name
+    #     end
+    #   end
 
-      def parent_plates
-        @parent_plates ||= Sequencescape::Api::V2::Plate.find_all({ 
-          uuid: parent_uuids 
-          }, includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source')
-      end
+    #   def parent_plates
+    #     @parent_plates ||= Sequencescape::Api::V2::Plate.find_all({ 
+    #       uuid: parent_uuids 
+    #       }, includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source')
+    #   end
 
     end
   end
