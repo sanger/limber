@@ -3,7 +3,7 @@ CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
   filters:
     request_type_key: clcm_dna_rna_seq
     library_type: Combined LCM DNA
-  library_pass: CLCM RNA Lib PCR XP
+  library_pass: CLCM DNA Lib PCR XP
   relationships:
     CLCM Stock: CLCM Lysate DNA
     CLCM Lysate DNA: CLCM DNA End Prep
