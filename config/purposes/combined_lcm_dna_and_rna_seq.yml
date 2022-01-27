@@ -6,7 +6,6 @@ CLCM Stock:
   :creator_class: LabwareCreators::Uncreatable
 CLCM Lysate DNA:
   :asset_type: plate
-  :presenter_class: Presenters::StockPlatePresenter
   :creator_class: 
     name: LabwareCreators::MultiStampLibrarySplitter
     args: &library_type_splitting_config
@@ -22,9 +21,6 @@ CLCM DNA Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  warnings:
-    pcr_cycles_not_in:
-      - 6
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
@@ -65,12 +61,11 @@ CLCM DNA Pool Norm:
   :default_printer_type: :tube
 CLCM Lysate RNA:
   :asset_type: plate
-  :presenter_class: Presenters::StockPlatePresenter
   :creator_class: 
     name: LabwareCreators::MultiStampLibrarySplitter
     args: *library_type_splitting_config
   :transfer_library_type: Combined LCM RNA
-CLCM RT Preamp:
+CLCM RT PreAmp:
   :asset_type: plate
 CLCM RNA End Prep:
   :asset_type: plate
@@ -78,9 +73,6 @@ CLCM RNA Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  warnings:
-    pcr_cycles_not_in:
-      - 6
   :tag_layout_templates:
   - Illumina pipeline tagging
   - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
