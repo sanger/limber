@@ -1202,54 +1202,53 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # For Chromium 10x pipeline aggregation to cherrypick
   custom_robot('hamilton-lcm-lysate-to-lcm-dna',
-    name: 'hamilton LCA Lysate => LCA DNA',
-    beds: {
-      bed(1).barcode => {
-        purpose: 'Lysate LCA',
-        states: %w[passed qc_complete],
-        child: bed(13).barcode,
-        label: 'Bed 1'
-      },
-      bed(2).barcode => {
-        purpose: 'Lysate LCA',
-        states: %w[passed qc_complete],
-        child: bed(13).barcode,
-        label: 'Bed 2'
-      },
-      bed(3).barcode => {
-        purpose: 'Lysate LCA',
-        states: %w[passed qc_complete],
-        child: bed(13).barcode,
-        label: 'Bed 3'
-      },
-      bed(4).barcode => {
-        purpose: 'Lysate LCA',
-        states: %w[passed qc_complete],
-        child: bed(13).barcode,
-        label: 'Bed 4'
-      },
-      bed(13).barcode => {
-        purpose: 'Lysate DNAseq cherrypick',
-        states: %w[pending started],
-        parents: [
-          bed(1).barcode,
-          bed(2).barcode,
-          bed(3).barcode,
-          bed(4).barcode,
-          bed(5).barcode,
-          bed(6).barcode,
-          bed(7).barcode,
-          bed(8).barcode,
-          bed(9).barcode,
-          bed(10).barcode
-        ],
-        target_state: 'passed',
-        label: 'Bed 13'
-      }
-    },
-    destination_bed: bed(13).barcode,
-    class: 'Robots::PoolingRobot')
-
+               name: 'hamilton LCA Lysate => LCA DNA',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 1'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 2'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 3'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 4'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'Lysate DNAseq cherrypick',
+                   states: %w[pending started],
+                   parents: [
+                     bed(1).barcode,
+                     bed(2).barcode,
+                     bed(3).barcode,
+                     bed(4).barcode,
+                     bed(5).barcode,
+                     bed(6).barcode,
+                     bed(7).barcode,
+                     bed(8).barcode,
+                     bed(9).barcode,
+                     bed(10).barcode
+                   ],
+                   target_state: 'passed',
+                   label: 'Bed 13'
+                 }
+               },
+               destination_bed: bed(13).barcode,
+               class: 'Robots::PoolingRobot')
 
   # For Chromium 10x pipeline aggregation to cherrypick
   custom_robot('hamilton-lbc-aggregate-to-lbc-cherrypick',
@@ -2475,7 +2474,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'CLCM DNA End Prep',
                    states: ['passed'],
                    label: 'Bed 7',
-                   child: bed(6).barcode,
+                   child: bed(6).barcode
                  },
                  bed(6).barcode => {
                    purpose: 'CLCM DNA Lib PCR',
@@ -2494,7 +2493,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'CLCM RNA End Prep',
                    states: ['passed'],
                    label: 'Bed 7',
-                   child: bed(6).barcode,
+                   child: bed(6).barcode
                  },
                  bed(6).barcode => {
                    purpose: 'CLCM RNA Lib PCR',
@@ -2513,7 +2512,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'CLCM DNA Lib PCR',
                    states: ['passed'],
                    label: 'Bed 1',
-                   child: bed(9).barcode,
+                   child: bed(9).barcode
                  },
                  bed(9).barcode => {
                    purpose: 'CLCM DNA Lib PCR XP',
@@ -2532,7 +2531,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'CLCM RNA Lib PCR',
                    states: ['passed'],
                    label: 'Bed 1',
-                   child: bed(9).barcode,
+                   child: bed(9).barcode
                  },
                  bed(9).barcode => {
                    purpose: 'CLCM RNA Lib PCR XP',
@@ -2542,5 +2541,4 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    target_state: 'passed'
                  }
                })
-
 end
