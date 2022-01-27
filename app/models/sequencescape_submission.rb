@@ -71,7 +71,7 @@ class SequencescapeSubmission
   def extra_barcodes_trimmed
     return nil unless extra_barcodes
 
-    extra_barcodes.map(&:strip).reject(&:empty?)
+    extra_barcodes.map(&:strip).compact_blank
   end
 
   def extra_plates
@@ -88,7 +88,7 @@ class SequencescapeSubmission
     return [] unless extra_plates
 
     @extra_assets ||= extra_plates.map do |labware|
-      labware.wells.reject(&:empty?).map(&:uuid)
+      labware.wells.compact_blank.map(&:uuid)
     end.flatten.uniq
   end
 

@@ -66,7 +66,7 @@ module Robots::Bed
 
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
-      @barcodes = Array(barcodes).map(&:strip).uniq.reject(&:blank?)
+      @barcodes = Array(barcodes).map(&:strip).uniq.compact_blank
 
       @labware = if @barcodes.present?
                    find_all_labware

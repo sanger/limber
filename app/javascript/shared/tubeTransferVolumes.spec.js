@@ -152,19 +152,20 @@ describe('calculateTransferVolumes', () => {
     })
 
     it('returns an object with the correct keys', () => {
-      expect(Object.keys(volumes)).toEqual(['sampleVolume', 'bufferVolume'])
+      expect(Object.keys(volumes)).toEqual(['sampleVolume', 'bufferVolume', 'belowTarget'])
     })
 
-    test.each(Object.keys(volumes))(
-      'returns an object with value for key %p as a Number',
-      (key) => {
-        expect(volumes[key]).toEqual(expect.any(Number))
+    test.each([['sampleVolume', Number], ['bufferVolume', Number], ['belowTarget', Boolean]])(
+      'returns an object with value for key %p as a %p',
+      (key, type) => {
+        expect(volumes[key]).toEqual(expect.any(type))
       }
     )
 
     it('returns the correctly calculated values', () => {
       expect(volumes.sampleVolume).toBeCloseTo(66.667, 3)
       expect(volumes.bufferVolume).toBeCloseTo(133.333, 3)
+      expect(volumes.belowTarget).toBe(false)
     })
   })
 
@@ -174,6 +175,7 @@ describe('calculateTransferVolumes', () => {
     it('returns the correctly calculated values', () => {
       expect(volumes.sampleVolume).toBe(200)
       expect(volumes.bufferVolume).toBe(0)
+      expect(volumes.belowTarget).toBe(true)
     })
   })
 
@@ -183,6 +185,7 @@ describe('calculateTransferVolumes', () => {
     it('returns the correctly calculated values', () => {
       expect(volumes.sampleVolume).toBe(200)
       expect(volumes.bufferVolume).toBe(0)
+      expect(volumes.belowTarget).toBe(false)
     })
   })
 
@@ -192,6 +195,7 @@ describe('calculateTransferVolumes', () => {
     it('returns the correctly calculated values', () => {
       expect(volumes.sampleVolume).toBe(2)
       expect(volumes.bufferVolume).toBe(198)
+      expect(volumes.belowTarget).toBe(false)
     })
   })
 })

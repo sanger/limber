@@ -44,7 +44,7 @@ module Presenters::CreationBehaviour
 
   # TODO: Refactor handling of purposes to tidy this up
   def suggested_purpose_options
-    active_pipelines.lazy.map do |pipeline, _store|
+    active_pipelines.lazy.filter_map do |pipeline, _store|
       child_name = pipeline.child_for(labware.purpose_name)
       uuid, settings = compatible_purposes.detect do |_purpose_uuid, purpose_settings|
         purpose_settings[:name] == child_name
@@ -52,7 +52,7 @@ module Presenters::CreationBehaviour
       next unless uuid
 
       [uuid, settings.merge(filters: pipeline.filters)]
-    end.reject(&:nil?).uniq
+    end.uniq
   end
 
   def compatible_purposes

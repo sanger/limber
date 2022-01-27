@@ -148,41 +148,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         stub_api_post('sub-uuid', 'submit')
       end
 
-      context 'when sources are from a single study' do
-        setup do
-          expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return([single_study_submission])
-        end
-
-        let!(:order_request) do
-          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
-          stub_api_post(example_template_uuid, 'orders',
-                        payload: { order: {
-                          assets: parent_receptacle_uuids,
-                          request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                          user: user_uuid,
-                          autodetect_studies_projects: true
-                        } },
-                        body: '{"order":{"uuid":"order-uuid"}}')
-        end
-
-        let!(:submission_request) do
-          stub_api_post('submissions',
-                        payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                        body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
-        end
-
-        let!(:single_study_submission) { create(:v2_submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]) }
-
-        it 'creates a plate!' do
-          subject.save!
-          expect(ms_plate_creation_request).to have_been_made.once
-          expect(transfer_creation_request).to have_been_made.once
-          expect(order_request).to have_been_made.once
-          expect(submission_request).to have_been_made.once
-          expect(submission_submit).to have_been_made.once
-        end
-      end
-
       context 'when sources are from multiple studies' do
         setup do
           expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return([multiple_study_submission])
@@ -211,27 +176,19 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
           stub_api_post(example_template_uuid, 'orders',
                         payload: { order: {
-                          assets: [parent_receptacle_uuids[0]],
+                          assets: parent_receptacle_uuids,
                           request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
                           user: user_uuid,
-                          autodetect_studies_projects: true
+                          autodetect_studies_projects: false
                         } },
                         body: '{"order":{"uuid":"order-uuid"}}')
-          stub_api_post(example_template_uuid, 'orders',
-                        payload: { order: {
-                          assets: [parent_receptacle_uuids[1]],
-                          request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                          user: user_uuid,
-                          autodetect_studies_projects: true
-                        } },
-                        body: '{"order":{"uuid":"order-2-uuid"}}')
         end
 
         let!(:submission_request) do
           stub_api_post('submissions',
-                        payload: { submission: { orders: ['order-uuid', 'order-2-uuid'], user: user_uuid } },
+                        payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
                         body: json(:submission, uuid: 'sub-uuid', orders: [
-                                     { uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }
+                                     { uuid: 'order-uuid' }
                                    ]))
         end
 
