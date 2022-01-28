@@ -170,6 +170,56 @@ const checkAllSamplesInColumnsList = (plateList, columnsList) => {
   }
 }
 
+const substractArrays = (array_a, array_b) => {
+  return array_a.filter(n => !array_b.includes(n))
+}
+
+const checkLibraryTypesInAllWells = (libraryTypes) => {
+  return (plate) => {
+    for (var posWell=0; posWell<plate.wells.length; posWell++) {
+      var well = plate.wells[posWell]
+      const wellPosition = well.position.name
+      const librariesInWell = well.requests_as_source.map((request) => request.library_type)
+      const libraryTypesSubstraction = substractArrays(libraryTypes, librariesInWell)
+      if (libraryTypesSubstraction.length != 0) {
+        return { valid: false, 
+          message: 'The well at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
+        }
+      }
+    }
+
+    // var mapLibraries = validTransfers.reduce((memo, transfer) => {
+    //   const plateIndex = transfer.plateObj.index
+    //   const wellPosition = transfer.well.position.name
+    //   const libraryType = transfer.request.library_type
+
+    //   if (typeof memo[plateIndex] === 'undefined') {
+    //     memo[plateIndex] = {}
+    //   }
+    //   if (typeof memo[plateIndex][wellPosition] === 'undefined') {
+    //     memo[plateIndex][wellPosition] = []
+    //   }
+    //   memo[plateIndex][wellPosition].push(libraryType)
+
+    //   return memo
+    // }, {})
+
+    // for (var plateIndex in mapLibraries) {
+    //   for (var wellPosition in mapLibraries[plateIndex]) {
+    //     var libraryTypesSubstraction = substractArrays(libraryTypes, mapLibraries[plateIndex][wellPosition])
+    //     if (libraryTypesSubstraction.length != 0) {
+    //       const plateRealPosition = parseInt(plateIndex, 10) + 1
+    //       return { valid: false, 
+    //         message: 'The source plate '+plateRealPosition+' at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
+    //       }
+    //     }
+    //   }
+    // }
+    return validScanMessage()
+  }
+}
+
 export { checkSize, checkDuplicates, checkExcess, 
+  checkLibraryTypesInAllWells, substractArrays, 
   checkState, checkQCableWalkingBy, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList
 }

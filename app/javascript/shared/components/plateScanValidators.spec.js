@@ -1,4 +1,4 @@
-import { checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
+import { substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {
@@ -139,5 +139,63 @@ describe('checkQCableWalkingBy', () => {
     expect(
       checkQCableWalkingBy(['pool', 'plate sequential'],0)(qcable)
     ).toEqual({ valid: false, message: 'QCable layout must have a walking by of: pool or plate sequential' })
+  })
+
+  describe('substractArrays', () => {
+    it('can substract arrays', () => {
+      expect(substractArrays([1,2,3], [2,3])).toEqual([1])
+      expect(substractArrays([1,2,3], [1,2,3])).toEqual([])
+      expect(substractArrays([1,2,3], [])).toEqual([1,2,3])
+      expect(substractArrays([], [1,2,3])).toEqual([])
+      expect(substractArrays([], [])).toEqual([])
+    })
+  })
+
+  describe('checkLibraryTypesInAllWells', () => {
+    describe('when we have all libraries for every position', () => {
+      const plate = {
+        wells: [
+          { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+          { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
+        ]
+      }
+      // const transfers = [
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 0} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 1} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 1} },
+      //   { well: {position: {name: 'B1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
+      //   { well: {position: {name: 'B1'}}, request: { library_type: 'B'}, plateObj: {index: 0} }
+      // ]
+      const validator = checkLibraryTypesInAllWells(['A', 'B'])
+
+      it('validates that the library types are present in all wells', () => {
+        expect(validator(plate)).toEqual({ valid: true })
+      })
+    })
+
+    describe('when we are missing libraries in one of the positions', () => {
+      const plate = {
+        wells: [
+          {position: {name: 'A1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+          {position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}]}
+        ]
+      }
+
+      // const transfers = [
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 0} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 1} },
+      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 1} },
+      //   { well: {position: {name: 'B1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
+      // ]
+      const validator = checkLibraryTypesInAllWells(['A', 'B'])
+      it('displays the error message for that position', () => {
+        expect(validator(plate)).toEqual(
+          { valid: false, 
+            message: 'The well at position B1 is missing libraries: B'
+          })
+      })
+    })
   })
 })

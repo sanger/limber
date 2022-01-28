@@ -2,6 +2,7 @@ import MultiStamp from './MultiStamp'
 import Vue from 'vue'
 import { 
   checkSize, checkDuplicates, checkMaxCountRequests, 
+  checkLibraryTypesInAllWells,
   checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ 
 } from 'shared/components/plateScanValidators'
 import { baseTransferCreator } from 'shared/transfersCreators'
@@ -15,6 +16,9 @@ export default Vue.extend({
   computed: {
     childrenLibraryTypeToPurposeMapping() {
       return JSON.parse(this.childrenLibraryTypeToPurposeMappingJson)
+    },
+    libraryTypes() {
+      return Object.keys(this.childrenLibraryTypeToPurposeMapping)
     },
     validTransfersByTargetPlate() {
       return this.validTransfers.reduce((memo, transfer) => { 
@@ -32,18 +36,38 @@ export default Vue.extend({
     },
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)
+      //debugger
       return [
         checkSize(12, 8),
         checkDuplicates(currPlates),
         checkMaxCountRequests(currPlates, 24),
         checkMinCountRequests(currPlates, 1),
-        checkAllSamplesInColumnsList(currPlates, ["1", "2", "3"])
+        checkAllSamplesInColumnsList(currPlates, ["1", "2", "3"]),
+        checkLibraryTypesInAllWells(this.libraryTypes)
         // checkExcess(this.excessTransfers)
       ]
     },
-    valid() {
-      //debugger
-      return true
+    validateLibraryTypeForEveryRequest() {
+      return this.validTransfers.every((transfer) => (this.libraryTypes.indexOf(transfer.request.libraryType)>=0))
+    },
+    transfersError() {
+      const errorMessages = []
+      if (this.duplicatedTransfers.length > 0) {
+        var sourceBarcodes = new Set()
+        this.duplicatedTransfers.forEach(transfer => {
+          sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
+        })
+
+        const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
+                    + [...sourceBarcodes].join(', ')
+                    + ') have more than one active submission.'
+        errorMessages.push(msg)
+      }
+      if (this.excessTransfers.length > 0) {
+        errorMessages.push('excess transfers')
+      }
+      //debugger;
+      return errorMessages.join(' and ')
     }
   },
   methods: {
