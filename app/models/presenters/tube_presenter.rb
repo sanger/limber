@@ -72,7 +72,7 @@ module Presenters
     end
 
     def transfer_volumes?
-      !purpose_config.transfer_parameters.nil?
+      !purpose_config[:transfer_parameters].nil?
     end
   end
 end
