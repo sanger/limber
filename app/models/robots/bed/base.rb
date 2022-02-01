@@ -24,6 +24,10 @@ module Robots::Bed
       true
     end
 
+    def error_messages
+      errors.full_messages.join(' ')
+    end
+
     def parent=(parent_bed)
       @parents = [parent_bed]
     end
