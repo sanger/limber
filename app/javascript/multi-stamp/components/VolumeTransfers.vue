@@ -25,10 +25,19 @@
 // applied as an extra parameter to each transfer request
 export default {
   name: 'VolumeTransfers',
-  data () {
+  props: {
+    defaultVolume: {
+      default: null,
+      type: Number
+    }
+  },  
+  data() {
     return {
       volume: null
     }
+  },
+  created() {
+    setTimeout(() => { this.volume = this.defaultVolume }, 2000)
   },
   computed: {
     transferFunc() {
@@ -38,7 +47,7 @@ export default {
     },
     isValid() {
       return !isNaN(Number.parseFloat(this.volume))
-    }
+    },
   },
   watch: {
     volume: function () {

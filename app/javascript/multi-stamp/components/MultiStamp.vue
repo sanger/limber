@@ -54,6 +54,7 @@
         />
         <component
           :is="transfersCreatorComponent"
+          :default-volume="defaultVolumeNumber"
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
@@ -171,6 +172,12 @@ export default {
     }
   },
   computed: {
+    defaultVolumeNumber() {
+      if (typeof this.defaultVolume === 'undefined') {
+        return null
+      }
+      return Number.parseInt(this.defaultVolume)
+    },
     sourcePlateNumber() {
       return Number.parseInt(this.sourcePlates)
     },

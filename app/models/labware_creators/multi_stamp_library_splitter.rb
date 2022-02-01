@@ -25,7 +25,7 @@
 
 module LabwareCreators
   class MultiStampLibrarySplitter < MultiStamp # rubocop:todo Style/Documentation
-    class_attribute :max_wells_count
+    class_attribute :max_wells_count, :default_volume
 
     self.page = 'multi_stamp_library_splitter'
 
@@ -43,6 +43,10 @@ module LabwareCreators
     self.target_columns = 12
     self.source_plates = 4
     self.max_wells_count = 24
+
+    def default_volume
+      purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:default_volume, nil)
+    end
 
     #
     # We've created multiple plates, so we redirect to the parent.
@@ -66,6 +70,13 @@ module LabwareCreators
 
     def all_purposes_uuids_by_name
       Settings.purposes.map { |uuid, obj| { (obj[:name]).to_s => uuid } }.reduce { |m, v| m.merge(v) }
+    end
+
+    private
+
+    def request_hash(transfer, *args)
+      # We might want to add the 'volume' key into a nested hash called 'metadata'
+      super.merge('volume' => transfer[:volume])
     end
 
     #   private

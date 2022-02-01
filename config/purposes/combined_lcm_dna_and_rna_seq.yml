@@ -9,6 +9,7 @@ CLCM Lysate DNA:
   :creator_class: 
     name: LabwareCreators::MultiStampLibrarySplitter
     args: &library_type_splitting_config
+      default_volume: 25
       library_type_split_plate_purpose:
         - library_type: Combined LCM DNA
           plate_purpose: CLCM Lysate DNA

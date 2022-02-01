@@ -8,14 +8,22 @@ import {
   checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ 
 } from 'shared/components/plateScanValidators'
 import { baseTransferCreator } from 'shared/transfersCreators'
-import MemoryOutputFileSystem from 'webpack/lib/MemoryOutputFileSystem'
 
 export default Vue.extend({
   mixins: [MultiStamp],
   props: {
     childrenLibraryTypeToPurposeMappingJson: { type: String, required: true },
+    defaultVolume: { type: String }
   },
   computed: {
+    valid() {
+      return this.unsuitablePlates.length === 0 // None of the plates are invalid
+             && this.validTransfers.length > 0 // We have at least one transfer
+             && this.excessTransfers.length === 0 // No excess transfers
+             && this.duplicatedTransfers.length === 0 // No duplicated transfers
+             && //((typeof this.transfersCreatorObj.isValid === 'undefined') || 
+                (this.transfersCreatorObj.isValid)
+    },
     childrenLibraryTypeToPurposeMapping() {
       return JSON.parse(this.childrenLibraryTypeToPurposeMappingJson)
     },
