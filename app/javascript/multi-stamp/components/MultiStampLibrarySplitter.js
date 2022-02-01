@@ -3,6 +3,8 @@ import Vue from 'vue'
 import { 
   checkSize, checkDuplicates, checkMaxCountRequests, 
   checkLibraryTypesInAllWells,
+  checkAllRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadySubmissions,
   checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ 
 } from 'shared/components/plateScanValidators'
 import { baseTransferCreator } from 'shared/transfersCreators'
@@ -36,14 +38,15 @@ export default Vue.extend({
     },
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)
-      //debugger
       return [
         checkSize(12, 8),
         checkDuplicates(currPlates),
-        checkMaxCountRequests(currPlates, 24),
-        checkMinCountRequests(currPlates, 1),
-        checkAllSamplesInColumnsList(currPlates, ["1", "2", "3"]),
-        checkLibraryTypesInAllWells(this.libraryTypes)
+        checkMaxCountRequests(24),
+        checkMinCountRequests(1),
+        checkAllSamplesInColumnsList(['1', '2', '3']),
+        checkLibraryTypesInAllWells(this.libraryTypes),
+        checkAllRequestsWithSameReadySubmissions(),
+        checkPlateWithSameReadySubmissions({})
         // checkExcess(this.excessTransfers)
       ]
     },

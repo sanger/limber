@@ -40,6 +40,7 @@
 // function in scanValidators.js
 
 import { validScanMessage } from './scanValidators'
+import _ from 'lodash'
 
 // Returns a validator which ensures the plate is of a particular size.
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
@@ -138,25 +139,27 @@ const filterWellsWithRequest = (wells) => {
   return wells.filter((well) => { return (requestsFromWell(well) >= 1) })
 }
 
-const checkMaxCountRequests = (plateList, maxWellsWithRequests) => {
+const checkMaxCountRequests = (maxWellsWithRequests) => {
   return (plate) => {
-    if (filterWellsWithRequest(plate.wells).length > maxWellsWithRequests) {
-      return { valid: false, message: 'Plate has more than '+maxWellsWithRequests+' wells with requests' }
+    const numWellsWithRequest = filterWellsWithRequest(plate.wells).length
+    if (numWellsWithRequest > maxWellsWithRequests) {
+      return { valid: false, message: 'Plate has more than '+maxWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
     }
     return validScanMessage()
   }
 }
 
-const checkMinCountRequests = (plateList, minWellsWithRequests) => {
+const checkMinCountRequests = (minWellsWithRequests) => {
   return (plate) => {
-    if (filterWellsWithRequest(plate.wells).length < minWellsWithRequests) {
-      return { valid: false, message: 'Plate should not have less than '+minWellsWithRequests+' wells with requests' }
+    const numWellsWithRequest = filterWellsWithRequest(plate.wells).length
+    if (numWellsWithRequest < minWellsWithRequests) {
+      return { valid: false, message: 'Plate should have at least '+minWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
     }
     return validScanMessage()
   }
 }
 
-const checkAllSamplesInColumnsList = (plateList, columnsList) => {
+const checkAllSamplesInColumnsList = (columnsList) => {
   return (plate) => {
     const wells = filterWellsWithRequest(plate.wells)
     for (var i=0; i<wells.length; i++) {
@@ -179,47 +182,70 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
     for (var posWell=0; posWell<plate.wells.length; posWell++) {
       var well = plate.wells[posWell]
       const wellPosition = well.position.name
-      const librariesInWell = well.requests_as_source.map((request) => request.library_type)
-      const libraryTypesSubstraction = substractArrays(libraryTypes, librariesInWell)
-      if (libraryTypesSubstraction.length != 0) {
-        return { valid: false, 
-          message: 'The well at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
+      // Only wells with requests are checked
+      if (well.requests_as_source.length > 0) {
+        const librariesInWell = well.requests_as_source.map((request) => request.library_type)
+        const libraryTypesSubstraction = substractArrays(libraryTypes, librariesInWell)
+        if (libraryTypesSubstraction.length != 0) {
+          return { valid: false, 
+            message: 'The well at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
+          }
         }
       }
     }
-
-    // var mapLibraries = validTransfers.reduce((memo, transfer) => {
-    //   const plateIndex = transfer.plateObj.index
-    //   const wellPosition = transfer.well.position.name
-    //   const libraryType = transfer.request.library_type
-
-    //   if (typeof memo[plateIndex] === 'undefined') {
-    //     memo[plateIndex] = {}
-    //   }
-    //   if (typeof memo[plateIndex][wellPosition] === 'undefined') {
-    //     memo[plateIndex][wellPosition] = []
-    //   }
-    //   memo[plateIndex][wellPosition].push(libraryType)
-
-    //   return memo
-    // }, {})
-
-    // for (var plateIndex in mapLibraries) {
-    //   for (var wellPosition in mapLibraries[plateIndex]) {
-    //     var libraryTypesSubstraction = substractArrays(libraryTypes, mapLibraries[plateIndex][wellPosition])
-    //     if (libraryTypesSubstraction.length != 0) {
-    //       const plateRealPosition = parseInt(plateIndex, 10) + 1
-    //       return { valid: false, 
-    //         message: 'The source plate '+plateRealPosition+' at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
-    //       }
-    //     }
-    //   }
-    // }
     return validScanMessage()
+  }
+}
+
+const getAllSubmissionsWithStateForPlate = (plate, submission_state) => {
+  return plate.wells.filter((well) => well.requests_as_source.length > 0 ).map((well) => {
+    return well.requests_as_source.filter(
+      (request) => request.submission.state == submission_state
+    ).map((request) => request.submission.id)
+  })
+}
+
+const getAllUniqueSubmissionReadyIds = (plate) => {
+  return _.uniq(getAllSubmissionsWithStateForPlate(plate, 'ready').flat())
+}
+
+const checkAllRequestsWithSameReadySubmissions = () => {
+  return (plate) => {
+    const allSubmissions = getAllSubmissionsWithStateForPlate(plate, 'ready')
+    const firstElem = allSubmissions[0]
+    // To compare lists we use _.isEqual because there is no equivalent function for lists in 
+    // plain Javascript
+    if (allSubmissions.every((currentElem) => _.isEqual(firstElem, currentElem))) {
+      return validScanMessage()
+    } else {
+      return { valid: false, 
+        message: 'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.'
+      }    
+    }
+  }
+}
+
+const checkPlateWithSameReadySubmissions = (cached_submission_ids) => {
+  return (plate) => {
+    if (typeof cached_submission_ids.submission_ids === 'undefined') {
+      cached_submission_ids.submission_ids = getAllUniqueSubmissionReadyIds(plate)
+      return validScanMessage()
+    }
+    if (_.isEqual(getAllUniqueSubmissionReadyIds(plate), cached_submission_ids.submission_ids)) {
+      return validScanMessage()
+    } else {
+      return { valid: false, 
+        message: 'The submission from this plate are different from the submissions from previous scanned plates in this screen.'
+      }
+    }
   }
 }
 
 export { checkSize, checkDuplicates, checkExcess, 
   checkLibraryTypesInAllWells, substractArrays, 
+  getAllSubmissionsWithStateForPlate,
+  checkAllRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadySubmissions,
+  getAllUniqueSubmissionReadyIds,
   checkState, checkQCableWalkingBy, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList
 }

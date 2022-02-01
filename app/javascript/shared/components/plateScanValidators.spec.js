@@ -1,4 +1,12 @@
-import { substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
+import {
+   getAllSubmissionsWithStateForPlate,
+   checkAllRequestsWithSameReadySubmissions,
+   checkPlateWithSameReadySubmissions,
+   getAllUniqueSubmissionReadyIds,
+   checkMaxCountRequests,
+   checkMinCountRequests,
+   checkAllSamplesInColumnsList,
+   substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {
@@ -140,61 +148,309 @@ describe('checkQCableWalkingBy', () => {
       checkQCableWalkingBy(['pool', 'plate sequential'],0)(qcable)
     ).toEqual({ valid: false, message: 'QCable layout must have a walking by of: pool or plate sequential' })
   })
+})
+describe('substractArrays', () => {
+  it('can substract arrays', () => {
+    expect(substractArrays([1,2,3], [2,3])).toEqual([1])
+    expect(substractArrays([1,2,3], [1,2,3])).toEqual([])
+    expect(substractArrays([1,2,3], [])).toEqual([1,2,3])
+    expect(substractArrays([], [1,2,3])).toEqual([])
+    expect(substractArrays([], [])).toEqual([])
+  })
+})
 
-  describe('substractArrays', () => {
-    it('can substract arrays', () => {
-      expect(substractArrays([1,2,3], [2,3])).toEqual([1])
-      expect(substractArrays([1,2,3], [1,2,3])).toEqual([])
-      expect(substractArrays([1,2,3], [])).toEqual([1,2,3])
-      expect(substractArrays([], [1,2,3])).toEqual([])
-      expect(substractArrays([], [])).toEqual([])
+describe('checkMaxCountRequests', () => {
+  const plate_good = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}]},
+      { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}]},
+      { position: {name: 'C1'}, requests_as_source: []}
+    ]
+  }
+  const plate_bad = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'C1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
+    ]
+  }
+
+  const validator = checkMaxCountRequests(2)
+
+  it('validates has maximum requests', () => {
+    expect(validator(plate_good)).toEqual({ valid: true })
+  })
+  it('fails when has more than maximum requests', () => {
+    expect(validator(plate_bad).valid).toEqual(false)
+  })
+
+})
+
+describe('checkMinCountRequests', () => {
+  const plate_bad = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}]},
+      { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}]},
+      { position: {name: 'C1'}, requests_as_source: []}
+    ]
+  }
+  const plate_good = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'C1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
+    ]
+  }
+
+  const validator = checkMinCountRequests(3)
+
+  it('validates has more than minimum requests', () => {
+    expect(validator(plate_good)).toEqual({ valid: true })
+  })
+  it('fails when has less than minimum requests', () => {
+    expect(validator(plate_bad).valid).toEqual(false)
+  })
+
+})
+
+describe('checkAllSamplesInColumnsList', () => {
+  const plate_good = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}]},
+      { position: {name: 'B2'}, requests_as_source: [{library_type: 'A'}]},
+      { position: {name: 'A3'}, requests_as_source: [{library_type: 'A'}]}
+    ]
+  }
+  const plate_bad = {
+    wells: [
+      { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'A3'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+      { position: {name: 'B4'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
+    ]
+  }
+
+  const validator = checkAllSamplesInColumnsList(['1', '2', '3'])
+
+  it('validates has samples in valid columns', () => {
+    expect(validator(plate_good)).toEqual({ valid: true })
+  })
+  it('fails when has samples in invalid columns', () => {
+    expect(validator(plate_bad).valid).toEqual(false)
+  })
+
+})
+
+
+describe('checkLibraryTypesInAllWells', () => {
+  describe('when we have all libraries for every position', () => {
+    const plate = {
+      wells: [
+        { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+        { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
+      ]
+    }
+    const validator = checkLibraryTypesInAllWells(['A', 'B'])
+
+    it('validates that the library types are present in all wells', () => {
+      expect(validator(plate)).toEqual({ valid: true })
+    })
+  })
+  describe('when we have positions without requests', () => {
+    const plate = {
+      wells: [
+        { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
+        { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+        { position: {name: 'C1'}, requests_as_source: []}
+      ]
+    }
+    const validator = checkLibraryTypesInAllWells(['A', 'B'])
+
+    it('validates that the library types are present in all wells with requests', () => {
+      expect(validator(plate)).toEqual({ valid: true })
     })
   })
 
-  describe('checkLibraryTypesInAllWells', () => {
-    describe('when we have all libraries for every position', () => {
-      const plate = {
-        wells: [
-          { position: { name: 'A1' }, requests_as_source: [ {library_type: 'A'}, {library_type: 'B'}]},
-          { position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]}
-        ]
-      }
-      // const transfers = [
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 0} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 1} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 1} },
-      //   { well: {position: {name: 'B1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
-      //   { well: {position: {name: 'B1'}}, request: { library_type: 'B'}, plateObj: {index: 0} }
-      // ]
-      const validator = checkLibraryTypesInAllWells(['A', 'B'])
+  describe('when we are missing libraries in one of the positions', () => {
+    const plate = {
+      wells: [
+        {position: {name: 'A1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
+        {position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}]}
+      ]
+    }
 
-      it('validates that the library types are present in all wells', () => {
-        expect(validator(plate)).toEqual({ valid: true })
-      })
+    const validator = checkLibraryTypesInAllWells(['A', 'B'])
+    it('displays the error message for that position', () => {
+      expect(validator(plate)).toEqual(
+        { valid: false, 
+          message: 'The well at position B1 is missing libraries: B'
+        })
     })
+  })
+})
 
-    describe('when we are missing libraries in one of the positions', () => {
-      const plate = {
-        wells: [
-          {position: {name: 'A1'}, requests_as_source: [{library_type: 'A'}, {library_type: 'B'}]},
-          {position: {name: 'B1'}, requests_as_source: [{library_type: 'A'}]}
-        ]
-      }
+describe('getAllSubmissionsWithStateForPlate', () => {
+  const plate = {
+    wells: [
+      {position: {name: 'A1'}, requests_as_source: [
+        {submission: {state: 'failed', id: '1'}}, 
+        {submission: {state: 'ready', id: '2'}}
+      ]},
+      {position: {name: 'B1'}, requests_as_source: [{
+        submission: {state: 'ready', id: '2'},
+        library_type: 'A'}]}
+    ]
+  }
+  const plate2 = {
+    wells: [
+      {position: {name: 'A1'}, requests_as_source: [
+        {submission: {state: 'failed', id: '1'}}, 
+        {submission: {state: 'ready', id: '2'}}
+      ]},
+      {position: {name: 'B1'}, requests_as_source: [{
+        submission: {state: 'ready', id: '2'},
+        library_type: 'A'}]},
+      {position: {name: 'C1'}, requests_as_source: []}  
+    ]
+  }
 
-      // const transfers = [
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 0} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'A'}, plateObj: {index: 1} },
-      //   { well: {position: {name: 'A1'}}, request: { library_type: 'B'}, plateObj: {index: 1} },
-      //   { well: {position: {name: 'B1'}}, request: { library_type: 'A'}, plateObj: {index: 0} },
-      // ]
-      const validator = checkLibraryTypesInAllWells(['A', 'B'])
-      it('displays the error message for that position', () => {
-        expect(validator(plate)).toEqual(
-          { valid: false, 
-            message: 'The well at position B1 is missing libraries: B'
-          })
+
+  it('returns all submissions with state', () => {
+    expect(getAllSubmissionsWithStateForPlate(plate, 'ready')).toEqual([['2'],['2']])
+    expect(getAllSubmissionsWithStateForPlate(plate, 'failed')).toEqual([['1'],[]])
+  })
+
+  it('filters out wells without requests', () => {
+    expect(getAllSubmissionsWithStateForPlate(plate2, 'ready')).toEqual([['2'],['2']])
+    expect(getAllSubmissionsWithStateForPlate(plate, 'failed')).toEqual([['1'],[]])
+  })
+})
+
+describe('getAllUniqueSubmissionReadyIds', () => {
+  const plate = {
+    wells: [
+      {position: {name: 'A1'}, requests_as_source: [
+        {submission: {state: 'failed', id: '1'}}, 
+        {submission: {state: 'ready', id: '2'}}
+      ]},
+      {position: {name: 'B1'}, requests_as_source: [{
+        submission: {state: 'ready', id: '3'},
+        library_type: 'A'}]}
+    ]
+  }
+
+  it('returns all unique submissions with ready state', () => {
+    expect(getAllUniqueSubmissionReadyIds(plate)).toEqual(['2', '3'])
+  })
+})
+
+describe('checkAllRequestsWithSameReadySubmissions', () => {
+  const plate = {
+    wells: [
+      {position: {name: 'A1'}, requests_as_source: [
+        {submission: {state: 'failed', id: '1'}}, 
+        {submission: {state: 'ready', id: '2'}}
+      ]},
+      {position: {name: 'B1'}, requests_as_source: [{
+        submission: {state: 'ready', id: '2'},
+        library_type: 'A'}]}
+    ]
+  }
+
+  const plate2 = {
+    wells: [
+      {position: {name: 'A1'}, requests_as_source: [
+        {submission: {state: 'failed', id: '1'}}, 
+        {submission: {state: 'ready', id: '2'}}
+      ]},
+      {position: {name: 'B1'}, requests_as_source: [{
+        submission: {state: 'ready', id: '1'},
+        library_type: 'A'}]}
+    ]
+  }
+
+
+  const validator = checkAllRequestsWithSameReadySubmissions()
+
+  it('validates when all requests has same submissions', () => {
+    expect(validator(plate)).toEqual({ valid: true })
+  })
+
+  it('fails when some requests are different', () => {
+    expect(validator(plate2)).toEqual({ 
+      valid: false, 
+      message: 'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.'
+    })
+  })
+})
+
+describe('checkPlateWithSameReadySubmissions', () => {
+
+  describe('when the received plates have the same submissions', () => {
+    const plate = {
+      wells: [
+        {position: {name: 'A1'}, requests_as_source: [
+          {submission: {state: 'failed', id: '1'}}, 
+          {submission: {state: 'ready', id: '2'}}
+        ]},
+        {position: {name: 'B1'}, requests_as_source: [{
+          submission: {state: 'ready', id: '2'},
+          library_type: 'A'}]}
+      ]
+    }
+
+    const plate2 = {
+      wells: [
+        {position: {name: 'A1'}, requests_as_source: [
+          {submission: {state: 'failed', id: '1'}}, 
+          {submission: {state: 'ready', id: '2'}}
+        ]},
+        {position: {name: 'B1'}, requests_as_source: [{
+          submission: {state: 'ready', id: '2'},
+          library_type: 'A'}]}
+      ]
+    }
+
+
+    const validator = checkPlateWithSameReadySubmissions({})
+
+    it('validates when all requests has same submissions', () => {
+      expect(validator(plate)).toEqual({ valid: true })
+      expect(validator(plate2)).toEqual({valid: true})
+    })  
+  })
+
+  describe('when the received plates have different submissions', () => {
+    const plate = {
+      wells: [
+        {position: {name: 'A1'}, requests_as_source: [
+          {submission: {state: 'failed', id: '1'}}, 
+          {submission: {state: 'ready', id: '2'}}
+        ]},
+        {position: {name: 'B1'}, requests_as_source: [{
+          submission: {state: 'ready', id: '2'},
+          library_type: 'A'}]}
+      ]
+    }
+
+    const plate2 = {
+      wells: [
+        {position: {name: 'A1'}, requests_as_source: [
+          {submission: {state: 'failed', id: '1'}}, 
+          {submission: {state: 'ready', id: '2'}}
+        ]},
+        {position: {name: 'B1'}, requests_as_source: [{
+          submission: {state: 'ready', id: '1'},
+          library_type: 'A'}]}
+      ]
+    }
+  
+    const validator = checkPlateWithSameReadySubmissions({})
+
+    it('fails when some requests are different', () => {
+      expect(validator(plate)).toEqual({valid: true})
+      expect(validator(plate2)).toEqual({ 
+        valid: false, 
+        message: 'The submission from this plate are different from the submissions from previous scanned plates in this screen.'
       })
     })
   })
