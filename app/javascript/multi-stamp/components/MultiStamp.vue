@@ -138,7 +138,10 @@ export default {
     sourcePlates: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] }
+    locationObj: { default: () => { return location }, type: [Object, Location] },
+
+    // Default volume to define in the UI for the volume control
+    defaultVolume: { type: String, required: false, default: null }
   },
   data () {
     return {
@@ -173,7 +176,8 @@ export default {
   },
   computed: {
     defaultVolumeNumber() {
-      if (typeof this.defaultVolume === 'undefined') {
+      if ((typeof this.defaultVolume === 'undefined') || 
+        (this.defaultVolume === null)){
         return null
       }
       return Number.parseInt(this.defaultVolume)

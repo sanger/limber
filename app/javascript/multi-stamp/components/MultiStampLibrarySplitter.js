@@ -12,8 +12,17 @@ import { baseTransferCreator } from 'shared/transfersCreators'
 export default Vue.extend({
   mixins: [MultiStamp],
   props: {
-    childrenLibraryTypeToPurposeMappingJson: { type: String, required: true },
-    defaultVolume: { type: String }
+    childrenLibraryTypeToPurposeMappingJson: {
+      default: '{}',
+      validator(value) {
+        try {
+          JSON.parse(value)
+        } catch (e) {
+          return false
+        }
+        return true
+      }
+    }
   },
   computed: {
     valid() {
@@ -21,8 +30,7 @@ export default Vue.extend({
              && this.validTransfers.length > 0 // We have at least one transfer
              && this.excessTransfers.length === 0 // No excess transfers
              && this.duplicatedTransfers.length === 0 // No duplicated transfers
-             && //((typeof this.transfersCreatorObj.isValid === 'undefined') || 
-                (this.transfersCreatorObj.isValid)
+             && (this.transfersCreatorObj.isValid)
     },
     childrenLibraryTypeToPurposeMapping() {
       return JSON.parse(this.childrenLibraryTypeToPurposeMappingJson)
@@ -60,31 +68,9 @@ export default Vue.extend({
     },
     validateLibraryTypeForEveryRequest() {
       return this.validTransfers.every((transfer) => (this.libraryTypes.indexOf(transfer.request.libraryType)>=0))
-    },
-    transfersError() {
-      const errorMessages = []
-      if (this.duplicatedTransfers.length > 0) {
-        var sourceBarcodes = new Set()
-        this.duplicatedTransfers.forEach(transfer => {
-          sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
-        })
-
-        const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
-                    + [...sourceBarcodes].join(', ')
-                    + ') have more than one active submission.'
-        errorMessages.push(msg)
-      }
-      if (this.excessTransfers.length > 0) {
-        errorMessages.push('excess transfers')
-      }
-      //debugger;
-      return errorMessages.join(' and ')
     }
   },
   methods: {
-    updatePlate(index, data) {
-      this.$set(this.plates, index - 1, {...data, index: index - 1 })
-    },
     apiTransfers() {
       return this.validTransfersByTargetPlate.reduce((memo, transfers) => {
         const library_type = transfers[0].request.library_type
@@ -125,11 +111,12 @@ export default Vue.extend({
         this.locationObj.href = response.data.redirect
       }).catch((error) => {
         // Something has gone wrong
-        console.error(error)
+        if ((typeof console != 'undefined') && (typeof console.error != 'undefined')) {
+          //debugger
+          //console.error(error)
+        }
         this.loading = false
       })
     }
   }
-
-
 })
