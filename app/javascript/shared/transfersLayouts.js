@@ -154,8 +154,18 @@ const buildSequentialTransfersArray = function(transferRequests) {
   return transfers
 }
 
+const allPlateObjects = function(transferRequests) {
+  return transferRequests.reduce((memo, request) => {
+    if (memo.indexOf(request.plateObj) < 0) {
+      memo.push(request.plateObj)
+    }
+    return memo
+  }, [])
+}
+
 // TODO: targetWell should go to the specific column for the plate (plate 1: [1,2,3], plate2: [4,5,6])
 const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
+  const allPlates = allPlateObjects(transferRequests)
   const transfers = new Array(transferRequests.length)
   const libraryTypes = []
   const positionWellInLibraryTypePlate = {}
@@ -165,12 +175,11 @@ const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
     
     if (libraryTypes.indexOf(libraryType) < 0) {
       libraryTypes[libraryTypes.length] = libraryType
-      positionWellInLibraryTypePlate[libraryType] = 0
     }
 
-    const positionWell = positionWellInLibraryTypePlate[libraryType]
+    const incrementalWellsForPlate = allPlates.indexOf(requestWithPlate.plateObj) * 24
+    const positionWell = nameToIndex(requestWithPlate.well.position.name, 8) + incrementalWellsForPlate
     const positionPlate = libraryTypes.indexOf(libraryType)
-
     transfers[i] = {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
@@ -316,4 +325,4 @@ const transfersForTubes = function(validTubes) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
-export { transfersFromRequests, transfersForTubes, buildPlatesMatrix, buildLibrarySplitPlatesMatrix }
+export { transfersFromRequests, transfersForTubes, buildPlatesMatrix, buildLibrarySplitPlatesMatrix, buildSequentialLibrarySplitTransfersArray }

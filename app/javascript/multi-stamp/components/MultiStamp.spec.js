@@ -143,10 +143,7 @@ describe('MultiStamp', () => {
   
       expect(wrapper.vm.excessTransfers.length).toEqual(4)
       expect(wrapper.vm.transfersError).toEqual('excess transfers')
-    })
-    
+    })    
   })
-
-
 })
 

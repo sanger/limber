@@ -111,10 +111,7 @@ export default Vue.extend({
         this.locationObj.href = response.data.redirect
       }).catch((error) => {
         // Something has gone wrong
-        if ((typeof console != 'undefined') && (typeof console.error != 'undefined')) {
-          //debugger
-          //console.error(error)
-        }
+        console.error(error)
         this.loading = false
       })
     }
