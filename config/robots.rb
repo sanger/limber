@@ -2083,6 +2083,30 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
+  custom_robot('hamilton-lthr-384-rt-to-lthr-384-pcr-1-and-2',
+               name: 'Hamilton LTHR-384 RT => LTHR-384 PCR 1 and 2',
+               beds: {
+                 bed(2).barcode => {
+                   purpose: ['LTHR-384 RT', 'LTHR-384 RT-Q'],
+                   states: ['passed'],
+                   label: 'Bed 2'
+                 },
+                 bed(1).barcode => {
+                   purpose: 'LTHR-384 PCR 1',
+                   states: ['pending'],
+                   label: 'Bed 1',
+                   target_state: 'passed',
+                   parent: bed(2).barcode
+                 },
+                 bed(3).barcode => {
+                   purpose: 'LTHR-384 PCR 2',
+                   states: ['pending'],
+                   label: 'Bed 3',
+                   target_state: 'passed',
+                   parent: bed(2).barcode
+                 }
+               })
+
   custom_robot('mosquito-lthr-384-pcr-1-and-2-to-lthr-384-lib-pcr-1-and-2',
                name: 'Mosquito LV LTHR-384 PCR 1 and 2 => LTHR-384 Lib PCR 1 and 2',
                beds: {

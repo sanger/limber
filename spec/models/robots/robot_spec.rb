@@ -11,6 +11,7 @@ RSpec.describe Robots::Robot, robots: true do
   let(:source_barcode_alt)          { 'DN1S' }
   let(:source_purpose_name)         { 'Limber Cherrypicked' }
   let(:source_plate_state) { 'passed' }
+  let(:target_plate_state) { 'pending' }
   let(:source_plate) do
     create :v2_plate,
            barcode_number: 1,
@@ -25,7 +26,8 @@ RSpec.describe Robots::Robot, robots: true do
     create :v2_plate,
            purpose_name: target_purpose_name,
            barcode_number: 2,
-           parents: target_plate_parents
+           parents: target_plate_parents,
+           state: target_plate_state
   end
   let(:target_tube_state) { 'pending' }
   let(:target_tube) do
@@ -512,6 +514,7 @@ RSpec.describe Robots::Robot, robots: true do
         }
       }
     end
+    let(:target_plate_state) { 'started' }
 
     let(:state_change_request) do
       stub_api_post('state_changes',
@@ -533,7 +536,7 @@ RSpec.describe Robots::Robot, robots: true do
              barcode_number: '123',
              purpose_uuid: 'lb_end_prep_uuid',
              purpose_name: 'LB End Prep',
-             state: 'started'
+             state: target_plate_state
     end
 
     before do
@@ -545,6 +548,16 @@ RSpec.describe Robots::Robot, robots: true do
     it 'performs transfer from started to passed' do
       robot.perform_transfer('580000014851' => [plate.human_barcode])
       expect(state_change_request).to have_been_requested
+    end
+
+    context 'if the bed is unexpectedly invalid' do
+      let(:target_plate_state) { 'passed' }
+
+      it 'raises a bed error in the event of last-minute errors' do
+        expect do
+          robot.perform_transfer('580000014851' => [plate.human_barcode])
+        end.to raise_error(Robots::Bed::BedError)
+      end
     end
   end
 end

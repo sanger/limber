@@ -35,7 +35,7 @@ module LabwareCreators
     end
 
     def barcodes=(input)
-      @barcodes = (input || []).map(&:strip).reject(&:blank?)
+      @barcodes = (input || []).map(&:strip).compact_blank
     end
 
     # TODO: This should probably be asynchronous
