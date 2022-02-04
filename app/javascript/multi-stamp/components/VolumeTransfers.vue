@@ -36,9 +36,6 @@ export default {
       volume: null
     }
   },
-  created() {
-    setTimeout(() => { this.volume = this.defaultVolume }, 2000)
-  },
   computed: {
     transferFunc() {
       return (_transfer) => {
@@ -56,6 +53,9 @@ export default {
         isValid: this.isValid
       })
     }
+  },
+  created() {
+    setTimeout(() => { this.volume = this.defaultVolume }, 2000)
   }
 }
 </script>

@@ -6,7 +6,7 @@ import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.spec
 import flushPromises from 'flush-promises'
 // // Import the component being tested
 import localVue from 'test_support/base_vue.js'
-import { plateFactory, wellFactory, requestFactory } from 'test_support/factories'
+import { plateFactory } from 'test_support/factories'
 
 import MockAdapter from 'axios-mock-adapter'
 

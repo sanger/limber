@@ -1,10 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
 import localVue from 'test_support/base_vue.js'
-import {
-  plateFactory,
-  wellFactory,
-  requestFactory,
-} from 'test_support/factories'
 import flushPromises from 'flush-promises'
 
 import MockAdapter from 'axios-mock-adapter'
