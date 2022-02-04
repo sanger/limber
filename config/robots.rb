@@ -2492,8 +2492,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    'parents' => [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
                    'children' => [bed(5).barcode, bed(8).barcode]
                  }
-               }]
-              )
+               }])
 
   custom_robot('bravo-clcm-dna-end-prep-to-clcm-dna-lib-pcr',
                name: 'Bravo CLCM DNA End Prep => CLCM DNA Lib PCR',
