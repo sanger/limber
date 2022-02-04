@@ -1,12 +1,13 @@
 import {
-   getAllSubmissionsWithStateForPlate,
-   checkAllRequestsWithSameReadySubmissions,
-   checkPlateWithSameReadySubmissions,
-   getAllUniqueSubmissionReadyIds,
-   checkMaxCountRequests,
-   checkMinCountRequests,
-   checkAllSamplesInColumnsList,
-   substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
+  getAllSubmissionsWithStateForPlate,
+  checkAllRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadySubmissions,
+  getAllUniqueSubmissionReadyIds,
+  checkMaxCountRequests,
+  checkMinCountRequests,
+  checkAllSamplesInColumnsList,
+  substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy 
+} from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {
