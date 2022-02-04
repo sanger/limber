@@ -40,6 +40,8 @@
 // function in scanValidators.js
 
 import { validScanMessage } from './scanValidators'
+import { requestIsLibraryCreation, requestIsActive } from '../requestHelpers'
+
 import _ from 'lodash'
 
 // Returns a validator which ensures the plate is of a particular size.
@@ -131,17 +133,17 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
   }
 }
 
-const requestsFromWell = (well) => {
-  return well.requests_as_source.length
+const libraryCreationRequestsFromWell = (well) => {
+  return well.requests_as_source.filter((request) => requestIsLibraryCreation(request) && requestIsActive(request))
 }
 
-const filterWellsWithRequest = (wells) => {
-  return wells.filter((well) => { return (requestsFromWell(well) >= 1) })
+const filterWellsWithLibraryCreationRequests = (wells) => {
+  return wells.filter((well) => { return (libraryCreationRequestsFromWell(well).length >= 1) })
 }
 
 const checkMaxCountRequests = (maxWellsWithRequests) => {
   return (plate) => {
-    const numWellsWithRequest = filterWellsWithRequest(plate.wells).length
+    const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
     if (numWellsWithRequest > maxWellsWithRequests) {
       return { valid: false, message: 'Plate has more than '+maxWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
     }
@@ -151,7 +153,7 @@ const checkMaxCountRequests = (maxWellsWithRequests) => {
 
 const checkMinCountRequests = (minWellsWithRequests) => {
   return (plate) => {
-    const numWellsWithRequest = filterWellsWithRequest(plate.wells).length
+    const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
     if (numWellsWithRequest < minWellsWithRequests) {
       return { valid: false, message: 'Plate should have at least '+minWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
     }
@@ -161,7 +163,7 @@ const checkMinCountRequests = (minWellsWithRequests) => {
 
 const checkAllSamplesInColumnsList = (columnsList) => {
   return (plate) => {
-    const wells = filterWellsWithRequest(plate.wells)
+    const wells = filterWellsWithLibraryCreationRequests(plate.wells)
     for (var i=0; i<wells.length; i++) {
       var well = wells[i]
       var column = well.position.name.slice(1)
@@ -183,8 +185,9 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
       var well = plate.wells[posWell]
       const wellPosition = well.position.name
       // Only wells with requests are checked
-      if (well.requests_as_source.length > 0) {
-        const librariesInWell = well.requests_as_source.map((request) => request.library_type)
+      const libraryCreationRequests = libraryCreationRequestsFromWell(well)
+      if (libraryCreationRequests.length > 0) {
+        const librariesInWell = libraryCreationRequests.map((request) => request.library_type)
         const libraryTypesSubstraction = substractArrays(libraryTypes, librariesInWell)
         if (libraryTypesSubstraction.length != 0) {
           return { valid: false, 
@@ -198,8 +201,10 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
 }
 
 const getAllSubmissionsWithStateForPlate = (plate, submission_state) => {
-  return plate.wells.filter((well) => well.requests_as_source.length > 0 ).map((well) => {
-    return well.requests_as_source.filter(
+  return filterWellsWithLibraryCreationRequests(plate.wells).map((well) => {
+  //return plate.wells.filter((well) => well.requests_as_source.length > 0 ).map((well) => {
+    return libraryCreationRequestsFromWell(well).filter(
+    //return well.requests_as_source.filter(
       (request) => request.submission.state == submission_state
     ).map((request) => request.submission.id)
   })

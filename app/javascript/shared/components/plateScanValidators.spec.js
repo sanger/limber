@@ -293,22 +293,22 @@ describe('getAllSubmissionsWithStateForPlate', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {submission: {state: 'failed', id: '1'}}, 
-        {submission: {state: 'ready', id: '2'}}
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'B', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
-        submission: {state: 'ready', id: '2'},
+        state: 'pending', submission: {state: 'ready', id: '2'},
         library_type: 'A'}]}
     ]
   }
   const plate2 = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {submission: {state: 'failed', id: '1'}}, 
-        {submission: {state: 'ready', id: '2'}}
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'B', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
-        submission: {state: 'ready', id: '2'},
+        state: 'pending', submission: {state: 'ready', id: '2'},
         library_type: 'A'}]},
       {position: {name: 'C1'}, requests_as_source: []}  
     ]
@@ -330,11 +330,11 @@ describe('getAllUniqueSubmissionReadyIds', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {submission: {state: 'failed', id: '1'}}, 
-        {submission: {state: 'ready', id: '2'}}
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
-        submission: {state: 'ready', id: '3'},
+        state: 'pending', submission: {state: 'ready', id: '3'},
         library_type: 'A'}]}
     ]
   }
@@ -348,11 +348,11 @@ describe('checkAllRequestsWithSameReadySubmissions', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {submission: {state: 'failed', id: '1'}}, 
-        {submission: {state: 'ready', id: '2'}}
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
-        submission: {state: 'ready', id: '2'},
+        state: 'pending', submission: {state: 'ready', id: '2'},
         library_type: 'A'}]}
     ]
   }
@@ -360,11 +360,11 @@ describe('checkAllRequestsWithSameReadySubmissions', () => {
   const plate2 = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {submission: {state: 'failed', id: '1'}}, 
-        {submission: {state: 'ready', id: '2'}}
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
-        submission: {state: 'ready', id: '1'},
+        state: 'pending', submission: {state: 'ready', id: '1'},
         library_type: 'A'}]}
     ]
   }
@@ -390,23 +390,23 @@ describe('checkPlateWithSameReadySubmissions', () => {
     const plate = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {submission: {state: 'failed', id: '1'}}, 
-          {submission: {state: 'ready', id: '2'}}
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
-          submission: {state: 'ready', id: '2'},
-          library_type: 'A'}]}
+          state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}
+        }]}
       ]
     }
 
     const plate2 = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {submission: {state: 'failed', id: '1'}}, 
-          {submission: {state: 'ready', id: '2'}}
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
-          submission: {state: 'ready', id: '2'},
+          state: 'pending', submission: {state: 'ready', id: '2'},
           library_type: 'A'}]}
       ]
     }
@@ -424,11 +424,11 @@ describe('checkPlateWithSameReadySubmissions', () => {
     const plate = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {submission: {state: 'failed', id: '1'}}, 
-          {submission: {state: 'ready', id: '2'}}
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
-          submission: {state: 'ready', id: '2'},
+          state: 'pending', submission: {state: 'ready', id: '2'},
           library_type: 'A'}]}
       ]
     }
@@ -436,11 +436,11 @@ describe('checkPlateWithSameReadySubmissions', () => {
     const plate2 = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {submission: {state: 'failed', id: '1'}}, 
-          {submission: {state: 'ready', id: '2'}}
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
-          submission: {state: 'ready', id: '1'},
+          state: 'pending', submission: {state: 'ready', id: '1'},
           library_type: 'A'}]}
       ]
     }

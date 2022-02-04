@@ -11,6 +11,7 @@
 //   targetWell: <position string>
 // }
 
+import { requestIsLibraryCreation, requestIsActive } from './requestHelpers'
 import { indexToName, nameToIndex, quadrantTargetFor } from './wellHelpers'
 import buildArray from './buildArray'
 
@@ -154,18 +155,18 @@ const buildSequentialTransfersArray = function(transferRequests) {
   return transfers
 }
 
-const allPlateObjects = function(transferRequests) {
-  return transferRequests.reduce((memo, request) => {
-    if (memo.indexOf(request.plateObj) < 0) {
-      memo.push(request.plateObj)
-    }
-    return memo
-  }, [])
-}
 
-// TODO: targetWell should go to the specific column for the plate (plate 1: [1,2,3], plate2: [4,5,6])
-const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
-  const allPlates = allPlateObjects(transferRequests)
+// Gets a list of requests and create as many destinations as different library types we have defined in the requests.
+// For every source plate a number of wells at the destination is assigned so the wells will be transferred as stamp into 
+// those list of wells reserved in column order. Eg:
+// Default value is 24 wells, so first plate will get the first 3 columns, second plate columns 4 to 6, etc; the position
+// will be a stamp from the source into those columns (so A2 in plate 2 will go to A5 in each destination plate)
+/* Args: 
+ * - transferRequests: each request from a source plate that we want to connect with a destination plate
+ * - numberOfWellsForEachSourcePlateInColumnOrder: number of wells that every source plate will have reserved in each
+ * destination plate (default 24 wells (3 columns))
+*/
+const buildSequentialLibrarySplitTransfersArray = function(transferRequests, numberOfWellsForEachSourcePlateInColumnOrder=24) {
   const transfers = new Array(transferRequests.length)
   const libraryTypes = []
   const positionWellInLibraryTypePlate = {}
@@ -177,7 +178,7 @@ const buildSequentialLibrarySplitTransfersArray = function(transferRequests) {
       libraryTypes[libraryTypes.length] = libraryType
     }
 
-    const incrementalWellsForPlate = allPlates.indexOf(requestWithPlate.plateObj) * 24
+    const incrementalWellsForPlate = requestWithPlate.plateObj.index * numberOfWellsForEachSourcePlateInColumnOrder
     const positionWell = nameToIndex(requestWithPlate.well.position.name, 8) + incrementalWellsForPlate
     const positionPlate = libraryTypes.indexOf(libraryType)
     transfers[i] = {
@@ -264,19 +265,23 @@ const sequentialTransfers = function(requestsWithPlates) {
   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
+const libraryRequestsWithPlates = function(requestsWithPlates) {
+  return requestsWithPlates.filter((obj) => requestIsLibraryCreation(obj.request) && requestIsActive(obj.request))
+}
 
-const sequentialLibrarySplitTransfers = function(requestsWithPlates) {
-  const { platesMatrix, duplicatedRequests } = buildLibrarySplitPlatesMatrix(requestsWithPlates)
+const stampLibrarySplitTransfers = function(requestsWithPlates) {
+  const filteredOnlyLibraryRequestsWithPlates = libraryRequestsWithPlates(requestsWithPlates)
+  const { platesMatrix, duplicatedRequests } = buildLibrarySplitPlatesMatrix(filteredOnlyLibraryRequestsWithPlates)
   const transferRequests = platesMatrix.flatMap((x) => Object.values(x)).flat()
-  const validTransfers = buildSequentialLibrarySplitTransfersArray(transferRequests)
-  const duplicatedTransfers = buildSequentialLibrarySplitTransfersArray(duplicatedRequests)
+  const validTransfers = buildSequentialLibrarySplitTransfersArray(transferRequests, 24)
+  const duplicatedTransfers = buildSequentialLibrarySplitTransfersArray(duplicatedRequests, 24)
   return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
 }
 
 const transferFunctions = {
   quadrant: quadrantTransfers,
   sequential: sequentialTransfers,
-  sequentialLibrarySplit: sequentialLibrarySplitTransfers,
+  sequentialLibrarySplit: stampLibrarySplitTransfers,
 }
 
 
