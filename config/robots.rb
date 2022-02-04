@@ -2424,8 +2424,6 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
 
   # Robots for Combined LCM pipeline
 
-  # TODO: needs to track 1-4 sources split out to 2 destinations
-  # Current robots don't handle multiple parents to multiple children. New robot required?
   custom_robot('bravo-clcm-stock-to-clcm-lysate-dna-and-rna',
                name: 'Bravo CLCM Stock => CLCM Lysate DNA and RNA',
                require_robot: true,
@@ -2454,17 +2452,24 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    purpose: 'CLCM Lysate RNA',
                    states: ['pending'],
                    label: 'Bed 5',
-                   # parents: [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed'
                  },
                  bed(8).barcode => {
                    purpose: 'CLCM Lysate DNA',
                    states: ['pending'],
                    label: 'Bed 8',
-                   # parents: [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
                    target_state: 'passed'
                  }
-               })
+               },
+               class: 'Robots::PoolingAndSplittingRobot',
+               relationships: [{
+                 'type' => 'RNA and DNA split',
+                 'options' => {
+                   'parents' => [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
+                   'children' => [bed(5).barcode, bed(8).barcode]
+                 }
+               }]
+              )
 
   custom_robot('bravo-clcm-dna-end-prep-to-clcm-dna-lib-pcr',
                name: 'Bravo CLCM DNA End Prep => CLCM DNA Lib PCR',

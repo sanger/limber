@@ -104,7 +104,7 @@ module Robots::Bed
     def correct_labware_state
       return true if states.include?(labware.state)
 
-      error("Labware #{labware.human_barcode} is #{labware.state} when it should be #{states.join(', ')}.")
+      error("Labware #{labware.human_barcode} is in state #{labware.state} when it should be #{states.join(', ')}.")
     end
 
     def error(message)
