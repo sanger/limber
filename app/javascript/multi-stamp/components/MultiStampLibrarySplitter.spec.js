@@ -138,7 +138,6 @@ describe('MultiStampLibrarySplitter', () => {
 
 
       var numCalls = 0
-      mockLocation.href = null
       var listChecks = []
       mock.onPost().reply((config) => {
         listChecks.push(config)
@@ -160,7 +159,7 @@ describe('MultiStampLibrarySplitter', () => {
         expect(config.data).toEqual(JSON.stringify(payload))
       }
 
-      //expect(mockLocation.href).toEqual('http://wwww.example.com')
+      expect(mockLocation.href).toEqual('http://wwww.example.com')
     })
   })
 })

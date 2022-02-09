@@ -5,7 +5,7 @@ import {
   checkLibraryTypesInAllWells,
   checkAllRequestsWithSameReadySubmissions,
   checkPlateWithSameReadySubmissions,
-  checkMinCountRequests, checkAllSamplesInColumnsList/* checkExcess */ 
+  checkMinCountRequests, checkAllSamplesInColumnsList
 } from 'shared/components/plateScanValidators'
 import { baseTransferCreator } from 'shared/transfersCreators'
 
@@ -25,13 +25,6 @@ export default Vue.extend({
     }
   },
   computed: {
-    valid() {
-      return this.unsuitablePlates.length === 0 // None of the plates are invalid
-             && this.validTransfers.length > 0 // We have at least one transfer
-             && this.excessTransfers.length === 0 // No excess transfers
-             && this.duplicatedTransfers.length === 0 // No duplicated transfers
-             && (this.transfersCreatorObj.isValid)
-    },
     childrenLibraryTypeToPurposeMapping() {
       return JSON.parse(this.childrenLibraryTypeToPurposeMappingJson)
     },
@@ -40,17 +33,15 @@ export default Vue.extend({
     },
     validTransfersByTargetPlate() {
       return this.validTransfers.reduce((memo, transfer) => { 
-        if (typeof memo[transfer.targetPlate] === 'undefined') {
-          memo[transfer.targetPlate] = []
-        }
+        memo[transfer.targetPlate] ??= []
         memo[transfer.targetPlate].push(transfer)
         return memo
       }, [])
     },
     excessTransfers() {
-      return this.validTransfersByTargetPlate.map((transfers) => {
+      return this.validTransfersByTargetPlate.flatMap((transfers) => {
         return transfers.slice(this.targetRowsNumber * this.targetColumnsNumber)
-      }).flat()
+      })
     },
     scanValidation() {
       const currPlates = this.plates.map(plateItem => plateItem.plate)
@@ -67,7 +58,7 @@ export default Vue.extend({
       ]
     },
     validateLibraryTypeForEveryRequest() {
-      return this.validTransfers.every((transfer) => (this.libraryTypes.indexOf(transfer.request.libraryType)>=0))
+      return this.validTransfers.every((transfer) => this.libraryTypes.includes(transfer.request.libraryType))
     }
   },
   methods: {
@@ -78,12 +69,8 @@ export default Vue.extend({
         return memo
       }, {})
     },
-    createPlate() {
-      this.progressMessage = 'Creating plates...'
-      this.loading = true
-      let apiTransfers = this.apiTransfers()
-      let payloads = Object.keys(apiTransfers).map((libraryType) => {
-        const transfers = apiTransfers[libraryType]
+    apiPayloads() {
+      return Object.entries(this.apiTransfers()).map(([libraryType, transfers]) => {
         return {
           plate: {
             parent_uuid: this.validPlates[0].plate.uuid,
@@ -92,8 +79,12 @@ export default Vue.extend({
           }
         }
       })
+    },
+    createPlate() {
+      this.progressMessage = 'Creating plates...'
+      this.loading = true
 
-      return Promise.all(payloads.map((payload) => {
+      return Promise.all(this.apiPayloads().map((payload) => {
         return this.$axios({
           method: 'post',
           url: this.targetUrl,
