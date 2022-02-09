@@ -1,16 +1,13 @@
 import { shallowMount } from '@vue/test-utils'
 
-// // Import the component being tested
 import MultiStamp from './MultiStamp.vue'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.spec'
 import flushPromises from 'flush-promises'
-// // Import the component being tested
 import localVue from 'test_support/base_vue.js'
 import { plateFactory } from 'test_support/factories'
 
 import MockAdapter from 'axios-mock-adapter'
 
-const mockLocation = {}
 
 describe('MultiStamp', () => {
   itBehavesLikeMultiStamp({subject: MultiStamp})
@@ -29,7 +26,7 @@ describe('MultiStamp', () => {
           purposeUuid: 'test',
           requestsFilter: 'null',
           targetUrl: 'example/example',
-          locationObj: mockLocation,
+          locationObj: options.locationObj,
           transfersLayout: 'quadrant',
           transfersCreator: 'multi-stamp',
           ...options
@@ -40,9 +37,10 @@ describe('MultiStamp', () => {
 
     it('sends a post request when the button is clicked', async () => {
       let mock = new MockAdapter(localVue.prototype.$axios)
+      const locationObj = {}
   
       const plate = { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', _filledWells: 1 }) }
-      const wrapper = wrapperFactory({}, mockLocation)
+      const wrapper = wrapperFactory({ locationObj })
       wrapper.vm.updatePlate(1, plate)
   
       wrapper.setData({ requestsWithPlatesFiltered: wrapper.vm.requestsWithPlates })
@@ -56,7 +54,6 @@ describe('MultiStamp', () => {
         ]
       }}
   
-      mockLocation.href = null
       mock.onPost().reply((config) =>{
   
         expect(config.url).toEqual('example/example')
@@ -69,7 +66,7 @@ describe('MultiStamp', () => {
   
       await flushPromises()
   
-      expect(mockLocation.href).toEqual('http://wwww.example.com')
+      expect(locationObj.href).toEqual('http://wwww.example.com')
   
     })
 
