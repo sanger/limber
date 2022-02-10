@@ -266,7 +266,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
       let(:source_plate_2) { create :v2_plate, source_plate_2_attributes }
       let(:transfer_source_plates) { [source_plate_1, source_plate_2] }
 
-      let(:wells) do
+      let(:target_1_wells) do
         %w[C1 D1].map do |location|
           create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
         end +
