@@ -133,14 +133,37 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
   }
 }
 
+// Gets a well as input and return the list of requests that correspond to an active
+// library creation request
+// Args: 
+//   well - Well we want to obtain the library creation requests. The well
+//          needs to have the relationship `requests_as_source`
+// Returns: 
+//   Array of library creation requests, or empty list
 const libraryCreationRequestsFromWell = (well) => {
   return well.requests_as_source.filter((request) => requestIsLibraryCreation(request) && requestIsActive(request))
 }
 
+// Gets a list of wells and returns from the only the wells that contain at least
+// one active library creation requests
+// Args: 
+//   wells - Array of wells we want to check. They need to 
+//           have the relationship `requests_as_source`
+// Returns:
+//   Array of wells that match the condition
 const filterWellsWithLibraryCreationRequests = (wells) => {
   return wells.filter((well) => { return (libraryCreationRequestsFromWell(well).length >= 1) })
 }
 
+// Gets an integer with an integer identifying the maximum number of wells with library creation
+// requests; and returns a validator method that will check if a plate has less wells containing
+// library creation requests than the maximum number of wells specified.
+// Args:
+//   maxWellsWithRequests - Integer with the maximum number of wells with library creation
+//                          requests
+// Returns:
+//   Validator handler, that receives as argument a plate, and returns a validation message
+//   specifying if the plate is valid or not with the condition
 const checkMaxCountRequests = (maxWellsWithRequests) => {
   return (plate) => {
     const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
@@ -151,6 +174,15 @@ const checkMaxCountRequests = (maxWellsWithRequests) => {
   }
 }
 
+// Gets an integer with an integer identifying the minimum number of wells with library creation
+// requests; and returns a validator method that will check if a plate has more wells containing
+// library creation requests than the minimum number of wells specified.
+// Args:
+//   maxWellsWithRequests - Integer with the minimum number of wells with library creation
+//                          requests
+// Returns:
+//   Validator handler, that receives as argument a plate, and returns a validation message
+//   specifying if the plate is valid or not with the condition
 const checkMinCountRequests = (minWellsWithRequests) => {
   return (plate) => {
     const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
@@ -161,6 +193,15 @@ const checkMinCountRequests = (minWellsWithRequests) => {
   }
 }
 
+// Gets a list of column lists specify a strings of integers (like ['1', '2', '4'], etc); 
+// and returns a validator method that will check if a plate has all wells containing
+// library creation requests inside the columns specified.
+// Args:
+//   maxWellsWithRequests - Integer with the minimum number of wells with library creation
+//                          requests
+// Returns:
+//   Validator handler, that receives as argument a plate, and returns a validation message
+//   specifying if the plate is valid or not with the condition
 const checkAllSamplesInColumnsList = (columnsList) => {
   return (plate) => {
     const wells = filterWellsWithLibraryCreationRequests(plate.wells)
@@ -202,9 +243,7 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
 
 const getAllSubmissionsWithStateForPlate = (plate, submission_state) => {
   return filterWellsWithLibraryCreationRequests(plate.wells).map((well) => {
-  //return plate.wells.filter((well) => well.requests_as_source.length > 0 ).map((well) => {
     return libraryCreationRequestsFromWell(well).filter(
-    //return well.requests_as_source.filter(
       (request) => request.submission.state == submission_state
     ).map((request) => request.submission.id)
   })
