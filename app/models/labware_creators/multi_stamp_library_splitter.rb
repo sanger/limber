@@ -28,9 +28,10 @@ module LabwareCreators
     class_attribute :max_wells_count, :default_volume
 
     self.page = 'multi_stamp_library_splitter'
+    
 
     self.transfers_layout = 'sequentialLibrarySplit'
-    # self.transfers_layout = 'sequential'
+    self.request_filter = 'submission-and-library-type'
     self.transfers_creator = 'with-volume'
     self.attributes += [
       {

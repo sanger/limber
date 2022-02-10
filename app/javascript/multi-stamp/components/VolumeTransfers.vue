@@ -55,7 +55,7 @@ export default {
     }
   },
   created() {
-    setTimeout(() => { this.volume = this.defaultVolume }, 2000)
+    this.volume = this.defaultVolume
   }
 }
 </script>
