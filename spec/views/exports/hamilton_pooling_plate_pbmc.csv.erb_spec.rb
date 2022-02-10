@@ -42,9 +42,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
   let(:expected_content) do
     [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20.00', '6.25'],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '6.25'],  # Rounded up from 14.2857
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
+      [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20.00', '4.4'],
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '4.4'],  # Rounded up from 14.2857
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '2.2']
     ]
   end
 
@@ -57,8 +57,8 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
 
     expected = [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '2.2'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '2.2']
     ]
 
     expect(CSV.parse(render)).to eq(expected)
@@ -69,8 +69,8 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
 
     expected = [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '3.125'],
-      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '3.125']
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '2.2'],
+      [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '2.2']
     ]
 
     expect(CSV.parse(render)).to eq(expected)
