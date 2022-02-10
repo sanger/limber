@@ -128,11 +128,10 @@ module Robots
     def check_for_unused_parents
       parent_beds.each do |parent_bed|
         next if beds[parent_bed].empty?
+        next if used_parents.include?(parent_bed)
 
-        unless used_parents.include?(parent_bed)
-          verified[parent_bed] = false
-          error(beds[parent_bed], 'is unrelated to the child plates')
-        end
+        verified[parent_bed] = false
+        error(beds[parent_bed], 'is unrelated to the child plates')
       end
     end
   end

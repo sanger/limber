@@ -20,7 +20,9 @@ module Robots::Bed
 
         # we expect multiple downstream child plates, not just one as with the pooling bed
         well.downstream_plates.each do |plate|
-          plates << plate unless plates.include?(plate)
+          next if plates.include?(plate)
+
+          plates << plate
         end
       end
     end
