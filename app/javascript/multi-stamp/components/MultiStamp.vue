@@ -87,7 +87,7 @@ import resources from 'shared/resources'
 import buildPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates, /* checkExcess */ } from 'shared/components/plateScanValidators'
+import { checkSize, checkDuplicates } from 'shared/components/plateScanValidators'
 
 export default {
   name: 'MultiStamp',
@@ -176,7 +176,7 @@ export default {
   },
   computed: {
     defaultVolumeNumber() {
-      if ((typeof this.defaultVolume === 'undefined') || 
+      if ((typeof this.defaultVolume === 'undefined') ||
         (this.defaultVolume === null)){
         return null
       }
