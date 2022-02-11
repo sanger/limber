@@ -294,11 +294,10 @@ const getAllUniqueLibrarySubmissionReadyIds = (plate) => {
 //   Validation object indicating if the plate has passed the condition
 const checkAllLibraryRequestsWithSameReadySubmissions = () => {
   return (plate) => {
-    const allSubmissions = getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')
-    const firstElem = allSubmissions[0]
+    const [ firstWell, ...remainingWells] = getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')
     // To compare lists we use _.isEqual because there is no equivalent function for lists in
     // plain Javascript
-    if (allSubmissions.every((currentElem) => _.isEqual(firstElem, currentElem))) {
+    if (remainingWells.every((currentElem) => _.isEqual(firstWell, currentElem))) {
       return validScanMessage()
     } else {
       return { valid: false,
