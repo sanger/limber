@@ -43,6 +43,7 @@ import { validScanMessage } from './scanValidators'
 import { requestIsLibraryCreation, requestIsActive } from '../requestHelpers'
 
 import _ from 'lodash'
+import { validate } from 'webpack'
 
 // Returns a validator which ensures the plate is of a particular size.
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
@@ -133,21 +134,29 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
   }
 }
 
+// Gets a request and returns if it is an active library creation request
+// Args:
+//   request - request to check
+// Returns:
+//   Boolean indicating if is an active library creation request
+const activeLibraryCreationRequest = (request) =>
+  requestIsLibraryCreation(request) && requestIsActive(request)
+
 // Gets a well as input and return the list of requests that correspond to an active
 // library creation request
-// Args: 
+// Args:
 //   well - Well we want to obtain the library creation requests. The well
 //          needs to have the relationship `requests_as_source`
-// Returns: 
+// Returns:
 //   Array of library creation requests, or empty list
-const libraryCreationRequestsFromWell = (well) => {
-  return well.requests_as_source.filter((request) => requestIsLibraryCreation(request) && requestIsActive(request))
-}
+const libraryCreationRequestsFromWell = (well) =>
+  well.requests_as_source.filter(activeLibraryCreationRequest)
+
 
 // Gets a list of wells and returns from the only the wells that contain at least
 // one active library creation requests
-// Args: 
-//   wells - Array of wells we want to check. They need to 
+// Args:
+//   wells - Array of wells we want to check. They need to
 //           have the relationship `requests_as_source`
 // Returns:
 //   Array of wells that match the condition
@@ -193,7 +202,7 @@ const checkMinCountRequests = (minWellsWithRequests) => {
   }
 }
 
-// Gets a list of column lists specify a strings of integers (like ['1', '2', '4'], etc); 
+// Gets a list of column lists specify a strings of integers (like ['1', '2', '4'], etc);
 // and returns a validator method that will check if a plate has all wells containing
 // library creation requests inside the columns specified.
 // Args:
@@ -205,35 +214,47 @@ const checkMinCountRequests = (minWellsWithRequests) => {
 const checkAllSamplesInColumnsList = (columnsList) => {
   return (plate) => {
     const wells = filterWellsWithLibraryCreationRequests(plate.wells)
-    for (var i=0; i<wells.length; i++) {
-      var well = wells[i]
-      var column = well.position.name.slice(1)
-      if (!columnsList.includes(column)) {
-        return { valid: false, message: 'All samples should be in the columns '+columnsList }
-      }
+    if (!wells.every((well) => columnsList.includes(well.position.name.slice(1)))) {
+      return { valid: false, message: 'All samples should be in the columns '+columnsList }
     }
     return validScanMessage()
   }
 }
 
-const substractArrays = (array_a, array_b) => {
-  return array_a.filter(n => !array_b.includes(n))
+// Gets the list of missing libraries for a well given the list of library types
+// that it should contain.
+// Args:
+//   well - The well
+//   libraryTypes - The list of library types the well should contain
+// Returns:
+//   Array of the missing library types for the well, or an empty array
+const missingWellLibraries = (well, libraryTypes) => {
+  const libraryCreationRequests = libraryCreationRequestsFromWell(well)
+  if (libraryCreationRequests.length > 0) {
+    const librariesInWell = libraryCreationRequests.map((request) => request.library_type)
+    // return a list of missing libraries
+    return _.difference(libraryTypes, librariesInWell)
+  }
+  return []
 }
 
+// Gets a list of library type names and returns a validation handler that
+// can check for a plate that, if they have a list of library creation requests,
+// those requests are using all the library types defined as input and this has to
+// happen in every different well.
+// Args:
+//   library_types - Array of string with the name of the library types to check
+// Returns:
+//   Validation object indicating if the plate has passed the condition
 const checkLibraryTypesInAllWells = (libraryTypes) => {
   return (plate) => {
-    for (var posWell=0; posWell<plate.wells.length; posWell++) {
-      var well = plate.wells[posWell]
-      const wellPosition = well.position.name
-      // Only wells with requests are checked
-      const libraryCreationRequests = libraryCreationRequestsFromWell(well)
-      if (libraryCreationRequests.length > 0) {
-        const librariesInWell = libraryCreationRequests.map((request) => request.library_type)
-        const libraryTypesSubstraction = substractArrays(libraryTypes, librariesInWell)
-        if (libraryTypesSubstraction.length != 0) {
-          return { valid: false, 
-            message: 'The well at position '+wellPosition+' is missing libraries: '+libraryTypesSubstraction 
-          }
+    const wells = plate.wells
+    for (let i=0; i<wells.length; i++) {
+      const well = wells[i]
+      let missingLibraries = missingWellLibraries(well, libraryTypes)
+      if (missingLibraries.length != 0) {
+        return { valid: false,
+          message: 'The well at position '+well.position.name+' is missing libraries: '+missingLibraries
         }
       }
     }
@@ -241,7 +262,14 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
   }
 }
 
-const getAllSubmissionsWithStateForPlate = (plate, submission_state) => {
+// Receives a plate object and a submission state, and returns a list of submission
+// ids for each well where the library request submission state matches.
+// Args:
+//   plate - Plate object that contains the wells, requests_as_source and submissions
+//   submission_state - String with any valid submission state value ('pending', 'canceled', etc)
+// Returns:
+//   Array of arrays - an element for each well containing an array of integer submission ids
+const getAllLibrarySubmissionsWithMatchingStateForPlate = (plate, submission_state) => {
   return filterWellsWithLibraryCreationRequests(plate.wells).map((well) => {
     return libraryCreationRequestsFromWell(well).filter(
       (request) => request.submission.state == submission_state
@@ -249,47 +277,65 @@ const getAllSubmissionsWithStateForPlate = (plate, submission_state) => {
   })
 }
 
-const getAllUniqueSubmissionReadyIds = (plate) => {
-  return _.uniq(getAllSubmissionsWithStateForPlate(plate, 'ready').flat())
+// Receives a plate an returns all unique submission ids for the plate
+// that are in 'ready' state
+// Args:
+//   plate - Plate object that contains the wells, requests_as_source and submissions
+// Returns:
+//   Array of integer with the list of unique submission ids
+const getAllUniqueLibrarySubmissionReadyIds = (plate) => {
+  return _.uniq(getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready').flat())
 }
 
-const checkAllRequestsWithSameReadySubmissions = () => {
+// Receives a plate and checks that all its wells use the same group of library submissions for
+// every well.
+// Args:
+//   plate - Plate object that contains the wells, requests_as_source and submissions
+// Returns:
+//   Validation object indicating if the plate has passed the condition
+const checkAllLibraryRequestsWithSameReadySubmissions = () => {
   return (plate) => {
-    const allSubmissions = getAllSubmissionsWithStateForPlate(plate, 'ready')
+    const allSubmissions = getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')
     const firstElem = allSubmissions[0]
-    // To compare lists we use _.isEqual because there is no equivalent function for lists in 
+    // To compare lists we use _.isEqual because there is no equivalent function for lists in
     // plain Javascript
     if (allSubmissions.every((currentElem) => _.isEqual(firstElem, currentElem))) {
       return validScanMessage()
     } else {
-      return { valid: false, 
+      return { valid: false,
         message: 'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.'
-      }    
+      }
     }
   }
 }
 
-const checkPlateWithSameReadySubmissions = (cached_submission_ids) => {
+// Checks that the library submissions for the plate is the same as the list
+// of submission ids passed as argument
+// Args:
+//   cached_submission_ids - Array of submission ids to check
+// Returns:
+//   Validation object indicating if the plate has passed the condition
+const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
   return (plate) => {
     if (typeof cached_submission_ids.submission_ids === 'undefined') {
-      cached_submission_ids.submission_ids = getAllUniqueSubmissionReadyIds(plate)
+      cached_submission_ids.submission_ids = getAllUniqueLibrarySubmissionReadyIds(plate)
       return validScanMessage()
     }
-    if (_.isEqual(getAllUniqueSubmissionReadyIds(plate), cached_submission_ids.submission_ids)) {
+    if (_.isEqual(getAllUniqueLibrarySubmissionReadyIds(plate), cached_submission_ids.submission_ids)) {
       return validScanMessage()
     } else {
-      return { valid: false, 
+      return { valid: false,
         message: 'The submission from this plate are different from the submissions from previous scanned plates in this screen.'
       }
     }
   }
 }
 
-export { checkSize, checkDuplicates, checkExcess, 
-  checkLibraryTypesInAllWells, substractArrays, 
-  getAllSubmissionsWithStateForPlate,
-  checkAllRequestsWithSameReadySubmissions,
-  checkPlateWithSameReadySubmissions,
-  getAllUniqueSubmissionReadyIds,
+export { checkSize, checkDuplicates, checkExcess,
+  checkLibraryTypesInAllWells, 
+  getAllLibrarySubmissionsWithMatchingStateForPlate,
+  checkAllLibraryRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadyLibrarySubmissions,
+  getAllUniqueLibrarySubmissionReadyIds,
   checkState, checkQCableWalkingBy, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList
 }

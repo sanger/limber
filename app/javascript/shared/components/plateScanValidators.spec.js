@@ -1,12 +1,12 @@
 import {
-  getAllSubmissionsWithStateForPlate,
-  checkAllRequestsWithSameReadySubmissions,
-  checkPlateWithSameReadySubmissions,
-  getAllUniqueSubmissionReadyIds,
+  getAllLibrarySubmissionsWithMatchingStateForPlate,
+  checkAllLibraryRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadyLibrarySubmissions,
+  getAllUniqueLibrarySubmissionReadyIds,
   checkMaxCountRequests,
   checkMinCountRequests,
   checkAllSamplesInColumnsList,
-  substractArrays, checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy 
+  checkLibraryTypesInAllWells, checkSize, checkDuplicates, checkExcess, checkState, checkQCableWalkingBy
 } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
@@ -150,15 +150,6 @@ describe('checkQCableWalkingBy', () => {
     ).toEqual({ valid: false, message: 'QCable layout must have a walking by of: pool or plate sequential' })
   })
 })
-describe('substractArrays', () => {
-  it('can substract arrays', () => {
-    expect(substractArrays([1,2,3], [2,3])).toEqual([1])
-    expect(substractArrays([1,2,3], [1,2,3])).toEqual([])
-    expect(substractArrays([1,2,3], [])).toEqual([1,2,3])
-    expect(substractArrays([], [1,2,3])).toEqual([])
-    expect(substractArrays([], [])).toEqual([])
-  })
-})
 
 describe('checkMaxCountRequests', () => {
   const plate_good = {
@@ -282,18 +273,18 @@ describe('checkLibraryTypesInAllWells', () => {
     const validator = checkLibraryTypesInAllWells(['A', 'B'])
     it('displays the error message for that position', () => {
       expect(validator(plate)).toEqual(
-        { valid: false, 
+        { valid: false,
           message: 'The well at position B1 is missing libraries: B'
         })
     })
   })
 })
 
-describe('getAllSubmissionsWithStateForPlate', () => {
+describe('getAllLibrarySubmissionsWithMatchingStateForPlate', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
         {state: 'pending', library_type: 'B', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
@@ -304,33 +295,33 @@ describe('getAllSubmissionsWithStateForPlate', () => {
   const plate2 = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
         {state: 'pending', library_type: 'B', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
         state: 'pending', submission: {state: 'ready', id: '2'},
         library_type: 'A'}]},
-      {position: {name: 'C1'}, requests_as_source: []}  
+      {position: {name: 'C1'}, requests_as_source: []}
     ]
   }
 
 
   it('returns all submissions with state', () => {
-    expect(getAllSubmissionsWithStateForPlate(plate, 'ready')).toEqual([['2'],['2']])
-    expect(getAllSubmissionsWithStateForPlate(plate, 'failed')).toEqual([['1'],[]])
+    expect(getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')).toEqual([['2'],['2']])
+    expect(getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'failed')).toEqual([['1'],[]])
   })
 
   it('filters out wells without requests', () => {
-    expect(getAllSubmissionsWithStateForPlate(plate2, 'ready')).toEqual([['2'],['2']])
-    expect(getAllSubmissionsWithStateForPlate(plate, 'failed')).toEqual([['1'],[]])
+    expect(getAllLibrarySubmissionsWithMatchingStateForPlate(plate2, 'ready')).toEqual([['2'],['2']])
+    expect(getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'failed')).toEqual([['1'],[]])
   })
 })
 
-describe('getAllUniqueSubmissionReadyIds', () => {
+describe('getAllUniqueLibrarySubmissionReadyIds', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
         {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
@@ -340,15 +331,15 @@ describe('getAllUniqueSubmissionReadyIds', () => {
   }
 
   it('returns all unique submissions with ready state', () => {
-    expect(getAllUniqueSubmissionReadyIds(plate)).toEqual(['2', '3'])
+    expect(getAllUniqueLibrarySubmissionReadyIds(plate)).toEqual(['2', '3'])
   })
 })
 
-describe('checkAllRequestsWithSameReadySubmissions', () => {
+describe('checkAllLibraryRequestsWithSameReadySubmissions', () => {
   const plate = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
         {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
@@ -360,7 +351,7 @@ describe('checkAllRequestsWithSameReadySubmissions', () => {
   const plate2 = {
     wells: [
       {position: {name: 'A1'}, requests_as_source: [
-        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+        {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
         {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
       ]},
       {position: {name: 'B1'}, requests_as_source: [{
@@ -370,27 +361,27 @@ describe('checkAllRequestsWithSameReadySubmissions', () => {
   }
 
 
-  const validator = checkAllRequestsWithSameReadySubmissions()
+  const validator = checkAllLibraryRequestsWithSameReadySubmissions()
 
   it('validates when all requests has same submissions', () => {
     expect(validator(plate)).toEqual({ valid: true })
   })
 
   it('fails when some requests are different', () => {
-    expect(validator(plate2)).toEqual({ 
-      valid: false, 
+    expect(validator(plate2)).toEqual({
+      valid: false,
       message: 'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.'
     })
   })
 })
 
-describe('checkPlateWithSameReadySubmissions', () => {
+describe('checkPlateWithSameReadyLibrarySubmissions', () => {
 
   describe('when the received plates have the same submissions', () => {
     const plate = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
           {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
@@ -402,7 +393,7 @@ describe('checkPlateWithSameReadySubmissions', () => {
     const plate2 = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
           {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
@@ -412,19 +403,19 @@ describe('checkPlateWithSameReadySubmissions', () => {
     }
 
 
-    const validator = checkPlateWithSameReadySubmissions({})
+    const validator = checkPlateWithSameReadyLibrarySubmissions({})
 
     it('validates when all requests has same submissions', () => {
       expect(validator(plate)).toEqual({ valid: true })
       expect(validator(plate2)).toEqual({valid: true})
-    })  
+    })
   })
 
   describe('when the received plates have different submissions', () => {
     const plate = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
           {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
@@ -436,7 +427,7 @@ describe('checkPlateWithSameReadySubmissions', () => {
     const plate2 = {
       wells: [
         {position: {name: 'A1'}, requests_as_source: [
-          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}}, 
+          {state: 'pending', library_type: 'A', submission: {state: 'failed', id: '1'}},
           {state: 'pending', library_type: 'A', submission: {state: 'ready', id: '2'}}
         ]},
         {position: {name: 'B1'}, requests_as_source: [{
@@ -444,13 +435,13 @@ describe('checkPlateWithSameReadySubmissions', () => {
           library_type: 'A'}]}
       ]
     }
-  
-    const validator = checkPlateWithSameReadySubmissions({})
+
+    const validator = checkPlateWithSameReadyLibrarySubmissions({})
 
     it('fails when some requests are different', () => {
       expect(validator(plate)).toEqual({valid: true})
-      expect(validator(plate2)).toEqual({ 
-        valid: false, 
+      expect(validator(plate2)).toEqual({
+        valid: false,
         message: 'The submission from this plate are different from the submissions from previous scanned plates in this screen.'
       })
     })

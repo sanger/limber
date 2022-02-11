@@ -1,10 +1,10 @@
 import MultiStamp from './MultiStamp'
 import Vue from 'vue'
-import { 
-  checkSize, checkDuplicates, checkMaxCountRequests, 
+import {
+  checkSize, checkDuplicates, checkMaxCountRequests,
   checkLibraryTypesInAllWells,
-  checkAllRequestsWithSameReadySubmissions,
-  checkPlateWithSameReadySubmissions,
+  checkAllLibraryRequestsWithSameReadySubmissions,
+  checkPlateWithSameReadyLibrarySubmissions,
   checkMinCountRequests, checkAllSamplesInColumnsList
 } from 'shared/components/plateScanValidators'
 import { baseTransferCreator } from 'shared/transfersCreators'
@@ -32,7 +32,7 @@ export default Vue.extend({
       return Object.keys(this.childrenLibraryTypeToPurposeMapping)
     },
     validTransfersByTargetPlate() {
-      return this.validTransfers.reduce((memo, transfer) => { 
+      return this.validTransfers.reduce((memo, transfer) => {
         memo[transfer.targetPlate] ??= []
         memo[transfer.targetPlate].push(transfer)
         return memo
@@ -52,9 +52,8 @@ export default Vue.extend({
         checkMinCountRequests(1),
         checkAllSamplesInColumnsList(['1', '2', '3']),
         checkLibraryTypesInAllWells(this.libraryTypes),
-        checkAllRequestsWithSameReadySubmissions(),
-        checkPlateWithSameReadySubmissions({})
-        // checkExcess(this.excessTransfers)
+        checkAllLibraryRequestsWithSameReadySubmissions(),
+        checkPlateWithSameReadyLibrarySubmissions({})
       ]
     },
     validateLibraryTypeForEveryRequest() {
