@@ -46,7 +46,7 @@ module LabwareCreators
     self.max_wells_count = 24
 
     def default_volume
-      purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:default_volume, nil)
+      purpose_config.dig(:creator_class, :args, :default_volume)
     end
 
     #
@@ -61,16 +61,17 @@ module LabwareCreators
       'children_tab'
     end
 
-    def children_library_type_to_purpose_mapping
-      purpose_config.fetch(:creator_class, {}).fetch(:args, {}).fetch(:library_type_split_plate_purpose, []).each_with_object({}) do |val, memo|
-        library_type = val[:library_type]
-        plate_purpose_name = val[:plate_purpose]
-        memo[library_type] = all_purposes_uuids_by_name[plate_purpose_name]
-      end
+    def library_type_split_plate_purpose
+      purpose_config.dig(:creator_class, :args, :library_type_split_plate_purpose)
     end
 
-    def all_purposes_uuids_by_name
-      Settings.purposes.map { |uuid, obj| { (obj[:name]).to_s => uuid } }.reduce { |m, v| m.merge(v) }
+    def children_library_type_to_purpose_mapping
+      raise "Missing purpose configuration argument 'library_type_split_plate_purpose'" unless library_type_split_plate_purpose
+      library_type_split_plate_purpose.each_with_object({}) do |val, memo|
+        library_type = val[:library_type]
+        plate_purpose_name = val[:plate_purpose]
+        memo[library_type] = Settings.purpose_uuids[plate_purpose_name]
+      end
     end
 
     private
