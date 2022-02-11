@@ -43,7 +43,6 @@ import { validScanMessage } from './scanValidators'
 import { requestIsLibraryCreation, requestIsActive } from '../requestHelpers'
 
 import _ from 'lodash'
-import { validate } from 'webpack'
 
 // Returns a validator which ensures the plate is of a particular size.
 // For example, to validate your typical 12*8 96 well plate: checkSize(12,8)
@@ -332,7 +331,7 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
 }
 
 export { checkSize, checkDuplicates, checkExcess,
-  checkLibraryTypesInAllWells, 
+  checkLibraryTypesInAllWells,
   getAllLibrarySubmissionsWithMatchingStateForPlate,
   checkAllLibraryRequestsWithSameReadySubmissions,
   checkPlateWithSameReadyLibrarySubmissions,
