@@ -28,7 +28,6 @@ module LabwareCreators
     class_attribute :max_wells_count, :default_volume
 
     self.page = 'multi_stamp_library_splitter'
-    
 
     self.transfers_layout = 'sequentialLibrarySplit'
     self.request_filter = 'submission-and-library-type'
@@ -67,6 +66,7 @@ module LabwareCreators
 
     def children_library_type_to_purpose_mapping
       raise "Missing purpose configuration argument 'library_type_split_plate_purpose'" unless library_type_split_plate_purpose
+
       library_type_split_plate_purpose.each_with_object({}) do |val, memo|
         library_type = val[:library_type]
         plate_purpose_name = val[:plate_purpose]
