@@ -32,10 +32,13 @@
 <%
   # Calculate the resuspension volumes from the pooled samples count
   resuspension_volume_per_sample = 2.2
+  minimum_resuspension_volume = 20
   samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }
+
   rows_array = transfer_request_data.map do |data|
     samples_in_pool = samples_by_dest_well[data[3]].count
-    data + [samples_in_pool * resuspension_volume_per_sample]
+    resuspension_volume = [samples_in_pool * resuspension_volume_per_sample, minimum_resuspension_volume].max
+    data + ['%0.2f' % resuspension_volume]
   end
 %>
 <%= rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.map(&:to_csv).join %>
