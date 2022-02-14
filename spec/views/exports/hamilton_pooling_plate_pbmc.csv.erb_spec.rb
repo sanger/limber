@@ -15,12 +15,12 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
   let(:ancestor_well_b1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'B1', qc_results: [live_cell_count_b1]) }
   let(:ancestor_well_c1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'C1', qc_results: [live_cell_count_c1]) }
   let(:ancestor_wells_group_1) do
-    ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2', 'A3', 'B3', 'C3', 'D3'].map do |coord|
+    %w[A2 B2 C2 D2 E2 F2 G2 H2 A3 B3 C3 D3].map do |coord|
       create(:v2_well, plate_barcode: ancestor_plate_barcode, location: coord, qc_results: [live_cell_count_c1])
     end
   end
   let(:ancestor_wells_group_2) do
-    ['A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4', 'A5', 'B5', 'C5', 'D5', 'E5'].map do |coord|
+    %w[A4 B4 C4 D4 E4 F4 G4 H4 A5 B5 C5 D5 E5].map do |coord|
       create(:v2_well, plate_barcode: ancestor_plate_barcode, location: coord, qc_results: [live_cell_count_c1])
     end
   end
@@ -30,7 +30,7 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
     create(
       :v2_plate,
       wells: ancestor_wells,
-      pool_sizes: ancestor_wells.map{|well| 1}
+      pool_sizes: ancestor_wells.map { |_well| 1 }
     )
   end
 
@@ -68,7 +68,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
       transfer_requests_as_target: transfer_requests[(3 + ancestor_wells_group_1.count)..]
     )
   end
-  let(:labware) { create(:v2_plate, wells: [well_a1, well_b1, well_c1, well_d1], pool_sizes: [2, 1, ancestor_wells_group_1.count, ancestor_wells_group_2.count]) }
+  let(:labware) do
+    create(:v2_plate, wells: [well_a1, well_b1, well_c1, well_d1], pool_sizes: [2, 1, ancestor_wells_group_1.count, ancestor_wells_group_2.count])
+  end
 
   before do
     assign(:ancestor_plate, ancestor_labware)
