@@ -9,7 +9,6 @@ const mockLocation = {}
 // Import the component being tested
 import MultiStampLibrarySplitter from './MultiStampLibrarySplitter.js'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.spec'
-import { ContextExclusionPlugin } from 'webpack'
 
 describe('MultiStampLibrarySplitter', () => {
   itBehavesLikeMultiStamp({ subject: MultiStampLibrarySplitter })
