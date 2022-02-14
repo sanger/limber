@@ -41,6 +41,9 @@ describe('MultiStampLibrarySplitter', () => {
 
     describe('with several input plates', () => {
       it('sends a post request when the button is clicked', async () => {
+        // This will check receiving 3 plates, plate 1 and 2 received in positions
+        // 1 and 2; and plate 3 received in position 4, so there will be a gap for
+        // the wells corresponding to the missing plate at position 3
         let mock = new MockAdapter(localVue.prototype.$axios)
   
         const plateContent = {
