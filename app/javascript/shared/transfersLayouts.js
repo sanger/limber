@@ -109,7 +109,7 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 
 // Creates an object with an array of three dimensions, grouping the requests by source plate, library
 // type and well index.
-// 
+//
 // E.g. given two 96-wells plates containing the requests for the following wells:
 // Plate 1: {P1-A1-Lib1, P1-A1-Lib2, P1-B1-Lib1, P1-A2-Lib1}  (Note: requests are not ordered)
 // Plate 2: {P2-A1-Lib1, P2-A2-Lib1, P2-A2-Lib1, P2-B2-Lib1}
@@ -122,7 +122,7 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 //     {'Lib2': {'A1': P1-A1-Lib1}}
 //   },
 //   'Plate2': {
-//      {'Lib1': {'A1': P2-A1-Lib1, 'A2': P2-A2-Lib1, 'B2': P2-B2-Lib1]} 
+//      {'Lib1': {'A1': P2-A1-Lib1, 'A2': P2-A2-Lib1, 'B2': P2-B2-Lib1]}
 //    }
 // }
 // If a well contains more than one copy of the same library request, the extra ones will be stored in
@@ -132,20 +132,21 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
   const platesMatrix = []
   const duplicatedRequests = []
-  for (let i = 0; i < requestsWithPlates.length; i++) {
-    const { request, well, plateObj } = requestsWithPlates[i]
+
+  for (const requestObj of requestsWithPlates) {
+    const { request, well, plateObj } = requestObj
     if (request === undefined) { continue }
     const wellIndex = nameToIndex(well.position.name, 8)
     platesMatrix[plateObj.index] ??= {}
     platesMatrix[plateObj.index][request.library_type] ??= []
     if (typeof platesMatrix[plateObj.index][request.library_type][wellIndex] === 'undefined') {
       // We classify requests by source plate, library type and well position at source
-      platesMatrix[plateObj.index][request.library_type][wellIndex] = requestsWithPlates[i]
+      platesMatrix[plateObj.index][request.library_type][wellIndex] = requestObj
     }
     else {
-      // All extra requests in the same source plate, library type and position 
+      // All extra requests in the same source plate, library type and position
       // go to the duplication list
-      duplicatedRequests.push(requestsWithPlates[i])
+      duplicatedRequests.push(requestObj)
     }
   }
   return { platesMatrix: platesMatrix, duplicatedRequests: duplicatedRequests }
@@ -172,11 +173,11 @@ const buildSequentialTransfersArray = function(transferRequests) {
 }
 
 // Gets a list of requests and create as many destinations as different library types we have defined in the requests.
-// For every source plate a number of wells at the destination is assigned so the wells will be transferred as stamp into 
+// For every source plate a number of wells at the destination is assigned so the wells will be transferred as stamp into
 // those list of wells reserved in column order. Eg:
 // Default value is 24 wells, so first plate will get the first 3 columns, second plate columns 4 to 6, etc; the position
 // will be a stamp from the source into those columns (so A2 in plate 2 will go to A5 in each destination plate)
-// Args: 
+// Args:
 // - transferRequests: each request from a source plate that we want to connect with a destination plate
 // - numberOfWellsForEachSourcePlateInColumnOrder: number of wells that every source plate will have reserved in each
 // destination plate (default 24 wells (3 columns))
@@ -185,7 +186,7 @@ const buildSequentialLibrarySplitTransfersArray = function(transferRequests, num
   const libraryTypes = []
   return transferRequests.map((requestWithPlate) => {
     const libraryType = requestWithPlate.request.library_type
-    
+
     if (!libraryTypes.includes(libraryType)) {
       libraryTypes.push(libraryType)
     }
@@ -289,7 +290,7 @@ const libraryRequestsWithPlates = function(requestsWithPlates) {
 // source 1 to columns 1-3, source 2 to columns 4-6, source 3 to columns 7-9, and source 4 to columns 10-12.
 // Returns an object with the list of valid transfers and a list of duplicates, where a duplicate is a request
 // from same source plate, same library type and same well at input.
-// Args: 
+// Args:
 //   requestsWithPlates - Array of requests from the input plates
 // Returns:
 //   Object with key 'validTransfers' with the list of requests that are not duplicates, and 'duplicatedTransfers'

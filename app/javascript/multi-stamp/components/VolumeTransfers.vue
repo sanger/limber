@@ -30,7 +30,7 @@ export default {
       default: null,
       type: Number
     }
-  },  
+  },
   data() {
     return {
       volume: null
