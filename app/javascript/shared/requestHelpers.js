@@ -6,6 +6,10 @@ const requestIsActive = function(request) {
     request.state !== 'failed'
 }
 
+const requestIsLibraryCreation = function(request) {
+  return request.library_type != null
+}
+
 const requestsFromPlates = function(plateObjs) {
   const requestsArray = []
   for (let p = 0; p < plateObjs.length; p++) {
@@ -22,4 +26,4 @@ const requestsFromPlates = function(plateObjs) {
   return requestsArray
 }
 
-export { requestIsActive, requestsFromPlates }
+export { requestIsActive, requestsFromPlates, requestIsLibraryCreation }
