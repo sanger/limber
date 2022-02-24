@@ -2532,40 +2532,86 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  }
                })
 
-  custom_robot('bravo-clcm-dna-lib-pcr-to-clcm-dna-lib-pcr-xp',
-               name: 'Bravo CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
-               require_robot: true,
+  custom_robot('star-96-clcm-dna-lib-pcr-purification',
+               name: 'STAR-96 CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
+               verify_robot: false,
                beds: {
-                 bed(1).barcode => {
-                   purpose: 'CLCM DNA Lib PCR',
-                   states: ['passed'],
-                   label: 'Bed 1',
-                   child: bed(9).barcode
+                 bed(7).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 7'
                  },
                  bed(9).barcode => {
                    purpose: 'CLCM DNA Lib PCR XP',
                    states: ['pending'],
                    label: 'Bed 9',
-                   parent: bed(1).barcode,
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(12).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 12'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 14',
+                   parent: bed(12).barcode,
                    target_state: 'passed'
                  }
                })
 
-  custom_robot('bravo-clcm-rna-lib-pcr-to-clcm-rna-lib-pcr-xp',
-               name: 'Bravo CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
-               require_robot: true,
+  custom_robot('zephyr-clcm-dna-lib-pcr-purification',
+               name: 'Zephyr CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
+               verify_robot: false,
                beds: {
-                 bed(1).barcode => {
-                   purpose: 'CLCM RNA Lib PCR',
-                   states: ['passed'],
-                   label: 'Bed 1',
-                   child: bed(9).barcode
+                 bed(2).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 2'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parent: bed(2).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('star-96-clcm-rna-lib-pcr-purification',
+               name: 'STAR-96 CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 7'
                  },
                  bed(9).barcode => {
                    purpose: 'CLCM RNA Lib PCR XP',
                    states: ['pending'],
                    label: 'Bed 9',
-                   parent: bed(1).barcode,
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(12).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 12'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 14',
+                   parent: bed(12).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('zephyr-clcm-rna-lib-pcr-purification',
+               name: 'Zephyr CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(2).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 2'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parent: bed(2).barcode,
                    target_state: 'passed'
                  }
                })
