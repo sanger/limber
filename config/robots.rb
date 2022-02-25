@@ -2261,7 +2261,7 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                  bed(28).barcode => {
                    purpose: 'PhiX Spiked Buffer',
                    shared_parent: true,
-                   states: ['passed'],
+                   states: ['pending'],
                    label: 'Bed 28'
                  }
                })
