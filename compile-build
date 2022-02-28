@@ -3,6 +3,8 @@
 set -e
 export NODE_ENV=production
 export RAILS_ENV=development
+echo 'Updating yarn'
+bundle exec yarn
 echo 'Cleaning up'
 bundle exec rake assets:clobber
 echo 'Compiling assets'
