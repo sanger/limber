@@ -53,7 +53,8 @@ module RobotConfiguration
 
   class Simple # rubocop:todo Style/Documentation
     include BedHelpers
-    attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot, :require_robot
+    attr_reader :source_purpose, :target_purpose, :type, :target_state, :source_bed_state, :target_bed_state, :verify_robot, :require_robot,
+                :source_shared_parent
 
     # rubocop:todo Style/OptionalBooleanParameter
     def initialize(type, target_state = 'passed', verify_robot = false, require_robot = false, &block)
@@ -65,10 +66,11 @@ module RobotConfiguration
     end
     # rubocop:enable Style/OptionalBooleanParameter
 
-    def from(source_purpose, bed, state = 'passed')
+    def from(source_purpose, bed, state = 'passed', shared_parent: false)
       @source_purpose = source_purpose
       @source_bed = bed
       @source_bed_state = state
+      @source_shared_parent = shared_parent
     end
 
     def source_bed_name
@@ -110,7 +112,8 @@ module RobotConfiguration
           source_bed_barcode => {
             purpose: source_purpose,
             states: [source_bed_state],
-            label: source_bed_name
+            label: source_bed_name,
+            shared_parent: source_shared_parent
           },
           target_bed_barcode => {
             purpose: target_purpose,

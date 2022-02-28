@@ -138,23 +138,29 @@ module Robots
     # @param expected_labwares [Array] An array of expected labwares
     # @param position [String] The barcode of the bed expected to contain the labwares
     # @return [Boolean] True if valid, false otherwise
-    def check_labware_identity(expected_labwares, position) # rubocop:todo Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
+    def check_labware_identity(expected_labwares, position)
       expected_uuids = expected_labwares.map(&:uuid)
-      # We haven't scanned a labware, and no scanned labwares are expected
-      return true if expected_uuids.empty? && beds[position].labware.nil?
-      # We've scanned a labware, and its in the list of expected labwares
-      return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
-      # At this point something is wrong
-      message = if expected_labwares.present?
-                  # We've scanned an unexpected labware
-                  "Should contain #{expected_labwares.map(&:human_barcode).join(',')}."
-                else
-                  # We've scanned a labware, but weren't expecting one.
-                  'Unexpected labware scanned, or parent labware has not been scanned.'
-                end
-      error(beds[position], message)
+      if expected_uuids.empty?
+        # We haven't scanned a labware, and no scanned labwares are expected (valid)
+        return true if beds[position].labware.nil?
+
+        # We have a shared parent and the shared parent contains a labware, but one of the target beds
+        # does not e.g. PhiX tube shared on a robot with multiple transfers (valid)
+        return true if beds[position].shared_parent
+
+        # We've scanned a labware, but weren't expecting one (invalid)
+        error(beds[position], 'Unexpected labware scanned, or parent labware has not been scanned.')
+      else
+        # We've scanned a labware, and it is in the list of expected labwares
+        return true if expected_uuids.include?(beds[position].labware.try(:uuid))
+
+        # We've scanned an unexpected labware
+        error(beds[position], "Should contain #{expected_labwares.map(&:human_barcode).join(',')}.")
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def recognised_beds
       beds.select { |_barcode, bed| bed.recognised? }
