@@ -521,17 +521,6 @@ RSpec.describe Robots::Robot, robots: true do
             it { is_expected.to be_valid }
           end
         end
-
-        # context 'an multiple source purposes' do
-        #   let(:source_purpose) { ['Limber Cherrypicked', 'Other'] }
-        #   let(:target_tube_parents) { [source_plate] }
-        #   it { is_expected.to be_valid }
-
-        #   context 'but of the wrong purpose' do
-        #     let(:source_purpose_name) { 'Invalid plate purpose' }
-        #     it { is_expected.not_to be_valid }
-        #   end
-        # end
       end
     end
 
