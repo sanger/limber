@@ -57,11 +57,11 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
         ['Workflow', workflow_name],
         [],
         ['Source Plate ID',
-        'Source Plate Well',
-        'Destination Tube ID',
-        'Destination Tube Position',
-        'Sample Vac Tube ID',
-        'Sample Name'],
+         'Source Plate Well',
+         'Destination Tube ID',
+         'Destination Tube Position',
+         'Sample Vac Tube ID',
+         'Sample Name'],
         %w[DN3U A1 NT4R A1 NT1O Sample1],
         %w[DN3U B1 NT5S B1 NT2P Sample2]
       ]
@@ -80,11 +80,11 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
           ['Workflow', workflow_name],
           [],
           ['Source Plate ID',
-          'Source Plate Well',
-          'Destination Tube ID',
-          'Destination Tube Position',
-          'Sample Vac Tube ID',
-          'Sample Name']
+           'Source Plate Well',
+           'Destination Tube ID',
+           'Destination Tube Position',
+           'Sample Vac Tube ID',
+           'Sample Name']
         ]
       end
 
@@ -102,11 +102,11 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
           ['Workflow', workflow_name],
           [],
           ['Source Plate ID',
-          'Source Plate Well',
-          'Destination Tube ID',
-          'Destination Tube Position',
-          'Sample Vac Tube ID',
-          'Sample Name']
+           'Source Plate Well',
+           'Destination Tube ID',
+           'Destination Tube Position',
+           'Sample Vac Tube ID',
+           'Sample Name']
         ]
       end
 
