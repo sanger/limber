@@ -22,15 +22,20 @@
   @plate.wells_in_columns.each do |source_well|
     next if source_well.empty?
 
-    # assume 1 tube per source_well (many source_wells to 1 tube)
+    # expecting 1 downstream tube for each source plate well
+    next if source_well.downstream_tubes.empty?
+
     destination_tube = source_well.downstream_tubes.first
 
-    # assume 1 sample per tube
+    # expecting 1 blood sample per downstream tube
+    next if destination_tube.aliquots.empty?
+
     destination_sample_uuid = destination_tube.aliquots.first.sample.uuid
 
     source_well_posn = source_well.position['name']
 
     destination_tube_name_array = destination_tube.name.split(':')
+
     if destination_tube_name_array.length == 2
       rows_array << [
         @plate.labware_barcode.human,
