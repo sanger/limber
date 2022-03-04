@@ -151,13 +151,18 @@ module Robots
         return true if beds[position].shared_parent
 
         # We've scanned a labware, but weren't expecting one (invalid)
-        error(beds[position], 'Unexpected labware scanned, or parent labware has not been scanned.')
+        error(beds[position], 'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.')
       else
-        # We've scanned a labware, and it is in the list of expected labwares
+        # We've scanned a labware, and it is in the list of expected labwares (valid)
         return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
-        # We've scanned an unexpected labware
-        error(beds[position], "Should contain #{expected_labwares.map(&:human_barcode).join(',')}.")
+        if beds[position].labware.nil?
+           # We expected a labware but none was scanned
+          error(beds[position], "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty).")
+        else
+           # We've scanned an unexpected labware
+          error(beds[position], "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware.")
+        end
       end
     end
     # rubocop:enable Metrics/AbcSize
