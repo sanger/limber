@@ -114,7 +114,9 @@ module Robots
     # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
       parents_and_position do |parents, position|
-        check_labware_identity(parents, position)
+        # filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
+        expected_labwares = parents.filter { |parent| parent.purpose.name == beds[position].purpose }
+        check_labware_identity(expected_labwares, position)
       end.compact
     end
 
@@ -138,32 +140,54 @@ module Robots
     # @param expected_labwares [Array] An array of expected labwares
     # @param position [String] The barcode of the bed expected to contain the labwares
     # @return [Boolean] True if valid, false otherwise
-    # rubocop:disable Metrics/AbcSize
     def check_labware_identity(expected_labwares, position)
+      if expected_labwares.empty?
+        check_labware_identity_when_not_expected_labware(position)
+      else
+        check_labware_identity_when_expecting_labware(expected_labwares, position)
+      end
+    end
+
+    # Check whether the indicated bed is valid when we are not expecting anything.
+    # Records any errors.
+    #
+    # @param position [String] The barcode of the bed
+    # @return [Boolean] True if valid, false otherwise
+    def check_labware_identity_when_not_expected_labware(position)
+      # We have not scanned a labware, and no scanned labwares are expected (valid)
+      return true if beds[position].labware.nil?
+
+      # We have a shared parent and the shared parent contains a labware, but one of the target beds
+      # does not e.g. PhiX tube shared on a robot with multiple transfers (valid)
+      return true if beds[position].shared_parent
+
+      # We have scanned a labware, but weren't expecting one (invalid)
+      msg = 'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.'
+      error(beds[position], msg)
+      false
+    end
+
+    # Check whether the indicated bed is valid when we are expecting a specific labware.
+    # Records any errors.
+    #
+    # @param position [String] The barcode of the bed
+    # @return [Boolean] True if valid, false otherwise
+    # rubocop:disable Metrics/AbcSize
+    def check_labware_identity_when_expecting_labware(expected_labwares, position)
       expected_uuids = expected_labwares.map(&:uuid)
 
-      if expected_uuids.empty?
-        # We haven't scanned a labware, and no scanned labwares are expected (valid)
-        return true if beds[position].labware.nil?
+      # We have scanned a labware, and it is in the list of expected labwares (valid)
+      return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
-        # We have a shared parent and the shared parent contains a labware, but one of the target beds
-        # does not e.g. PhiX tube shared on a robot with multiple transfers (valid)
-        return true if beds[position].shared_parent
-
-        # We've scanned a labware, but weren't expecting one (invalid)
-        error(beds[position], 'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.')
-      else
-        # We've scanned a labware, and it is in the list of expected labwares (valid)
-        return true if expected_uuids.include?(beds[position].labware.try(:uuid))
-
-        if beds[position].labware.nil?
-           # We expected a labware but none was scanned
-          error(beds[position], "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty).")
-        else
-           # We've scanned an unexpected labware
-          error(beds[position], "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware.")
-        end
-      end
+      msg = if beds[position].labware.nil?
+              # We expected a labware but none was scanned
+              "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
+            else
+              # We have scanned an unexpected labware
+              "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
+            end
+      error(beds[position], msg)
+      false
     end
     # rubocop:enable Metrics/AbcSize
 
