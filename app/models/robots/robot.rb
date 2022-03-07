@@ -135,7 +135,7 @@ module Robots
     # Check whether the labware scanned onto the indicated bed
     # matches the expected labwares. Records any errors.
     #
-    # @param parents [Array] An array of expected labwares
+    # @param parents [Array] An array of parent labwares
     # @param position [String] The barcode of the bed expected to contain the labwares
     # @return [Boolean] True if valid, false otherwise
     def check_labware_identity(parents, position)
@@ -165,31 +165,46 @@ module Robots
       false
     end
 
+    # Generate the appropriate error message for this bed and scenario
+    #
+    # @param expected labwares [Array] An array of expected labwares for this bed
+    # @param position [String] The barcode of the bed
+    # @return [String] The error message
+    def generate_error_message(expected_labwares, position)
+      if expected_labwares.empty?
+        # We were unable to recognize any parent of this plate that matches the labware purpose of the beds in the configuration, so this labware
+        # has unexpected parents for this pipeline bed verification
+        "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does not have a parent with that purpose."
+      elsif beds[position].labware.nil?
+        # We expected a labware but none was scanned
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
+      else
+        # We have scanned an unexpected labware
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
+      end
+    end
+
     # Check whether the indicated bed is valid when we are expecting a specific labware.
     # Records any errors.
     #
+    # @param parents [Array] An array of parent labwares
     # @param position [String] The barcode of the bed
     # @return [Boolean] True if valid, false otherwise
-    # rubocop:disable Metrics/AbcSize
     def check_labware_identity_when_expecting_a_labware(parents, position)
       expected_uuids = parents.map(&:uuid)
 
       # We have scanned a labware, and it is in the list of expected labwares (valid)
       return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
-      # filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
+      # We have an invalid result
+      # Filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
       expected_labwares = parents.filter { |parent| parent.purpose.name == beds[position].purpose }
-      msg = if beds[position].labware.nil?
-              # We expected a labware but none was scanned
-              "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
-            else
-              # We have scanned an unexpected labware
-              "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
-            end
+
+      # Identify what looks wrong and create a suitable message
+      msg = generate_error_message(expected_labwares, position)
       error(beds[position], msg)
       false
     end
-    # rubocop:enable Metrics/AbcSize
 
     def recognised_beds
       beds.select { |_barcode, bed| bed.recognised? }
