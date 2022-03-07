@@ -103,8 +103,13 @@ RSpec.describe Robots::Robot, robots: true do
             it { is_expected.not_to be_valid }
           end
 
-          context 'but of the wrong purpose' do
+          context 'but source is of the wrong purpose' do
             let(:source_purpose_name) { 'Invalid plate purpose' }
+            it { is_expected.not_to be_valid }
+          end
+
+          context 'but target is of the wrong purpose' do
+            let(:target_purpose_name) { 'Invalid plate purpose' }
             it { is_expected.not_to be_valid }
           end
         end
@@ -114,7 +119,24 @@ RSpec.describe Robots::Robot, robots: true do
           it { is_expected.not_to be_valid }
         end
 
-        context 'an multiple source purposes' do
+        context 'and an unchecked additional parent' do
+          let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+          it { is_expected.to be_valid }
+        end
+
+        context 'and no parents' do
+          let(:target_plate_parents) { [] }
+          it { is_expected.not_to be_valid }
+        end
+
+        context 'and a parent in the database of a different purpose and an empty parent bed' do
+          let(:scanned_layout) { { 'bed1_barcode' => [], 'bed2_barcode' => [target_barcode] } }
+
+          let(:target_plate_parents) { [create(:v2_plate)] }
+          it { is_expected.not_to be_valid }
+        end
+
+        context 'and multiple source purposes' do
           let(:source_purpose) { ['Limber Cherrypicked', 'Other'] }
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to be_valid }
