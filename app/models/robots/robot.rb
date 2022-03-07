@@ -114,9 +114,7 @@ module Robots
     # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
       parents_and_position do |parents, position|
-        # filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
-        expected_labwares = parents.filter { |parent| parent.purpose.name == beds[position].purpose }
-        check_labware_identity(expected_labwares, position)
+        check_labware_identity(parents, position)
       end.compact
     end
 
@@ -137,14 +135,14 @@ module Robots
     # Check whether the labware scanned onto the indicated bed
     # matches the expected labwares. Records any errors.
     #
-    # @param expected_labwares [Array] An array of expected labwares
+    # @param parents [Array] An array of expected labwares
     # @param position [String] The barcode of the bed expected to contain the labwares
     # @return [Boolean] True if valid, false otherwise
-    def check_labware_identity(expected_labwares, position)
-      if expected_labwares.empty?
-        check_labware_identity_when_not_expected_labware(position)
+    def check_labware_identity(parents, position)
+      if parents.empty?
+        check_labware_identity_when_not_expecting_a_labware(position)
       else
-        check_labware_identity_when_expecting_labware(expected_labwares, position)
+        check_labware_identity_when_expecting_a_labware(parents, position)
       end
     end
 
@@ -153,7 +151,7 @@ module Robots
     #
     # @param position [String] The barcode of the bed
     # @return [Boolean] True if valid, false otherwise
-    def check_labware_identity_when_not_expected_labware(position)
+    def check_labware_identity_when_not_expecting_a_labware(position)
       # We have not scanned a labware, and no scanned labwares are expected (valid)
       return true if beds[position].labware.nil?
 
@@ -173,12 +171,14 @@ module Robots
     # @param position [String] The barcode of the bed
     # @return [Boolean] True if valid, false otherwise
     # rubocop:disable Metrics/AbcSize
-    def check_labware_identity_when_expecting_labware(expected_labwares, position)
-      expected_uuids = expected_labwares.map(&:uuid)
+    def check_labware_identity_when_expecting_a_labware(parents, position)
+      expected_uuids = parents.map(&:uuid)
 
       # We have scanned a labware, and it is in the list of expected labwares (valid)
       return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
+      # filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
+      expected_labwares = parents.filter { |parent| parent.purpose.name == beds[position].purpose }
       msg = if beds[position].labware.nil?
               # We expected a labware but none was scanned
               "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
