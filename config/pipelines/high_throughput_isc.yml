@@ -12,7 +12,6 @@ ISC:
     - Targeted NanoSeq Pulldown Agilent
   library_pass:
   - LB Cap Lib PCR-XP
-  - LB Cap Lib Pool
   relationships:
     LB Cherrypick: LB Shear
     LB Shear: LB Post Shear
@@ -24,7 +23,6 @@ ISC:
     LB Hyb: LB Cap Lib
     LB Cap Lib: LB Cap Lib PCR
     LB Cap Lib PCR: LB Cap Lib PCR-XP
-    LB Cap Lib PCR-XP: LB Cap Lib Pool
 ISC MX:
   filters:
     request_type_key:
