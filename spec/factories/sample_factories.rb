@@ -12,6 +12,7 @@ FactoryBot.define do
     control { false }
     control_type { nil }
     sample_manifest { create(:v2_sample_manifest) }
+    uuid { SecureRandom.uuid }
 
     after(:build) do |sample, evaluator|
       sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }

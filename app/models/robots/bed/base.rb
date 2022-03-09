@@ -5,7 +5,7 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child, :shared_parent
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :well_order, to: :robot
