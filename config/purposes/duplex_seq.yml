@@ -50,6 +50,7 @@ LDS Lib PCR:
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
   - 'TS_pWGSA_UDI96'
+  - 'TS_pWGSA_UDI96v2'
   - 'TS_pWGSB_UDI96'
   - 'TS_pWGSC_UDI96'
   - 'TS_pWGSD_UDI96'
