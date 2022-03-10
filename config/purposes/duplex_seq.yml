@@ -49,12 +49,12 @@ LDS Lib PCR:
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - 'TS_pWGSA_UDI96'
-  - 'TS_pWGSA_UDI96v2'
-  - 'TS_pWGSB_UDI96'
-  - 'TS_pWGSC_UDI96'
-  - 'TS_pWGSD_UDI96'
-  - 'TS_RNAhWGS_UDI_96'
+  - TS_pWGSA_UDI96
+  - TS_pWGSA_UDI96v2
+  - TS_pWGSB_UDI96
+  - TS_pWGSC_UDI96
+  - TS_pWGSD_UDI96
+  - TS_RNAhWGS_UDI_96
 LDS Lib PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_b
