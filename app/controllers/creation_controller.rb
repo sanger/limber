@@ -37,7 +37,7 @@ class CreationController < ApplicationController
                       ))
   end
 
-  def creation_failed(exception) # rubocop:todo Metrics/AbcSize
+  def creation_failed(exception)
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
     Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
@@ -50,12 +50,7 @@ class CreationController < ApplicationController
     Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
 
-    api_errors_hash = JSON.parse(exception.message) || {}
-    api_error_messages = if api_errors_hash.key?('general')
-                           api_errors_hash['general']
-                         else
-                           [exception.message]
-                         end
+    api_error_messages = extract_error_messages_from_api_exception(exception.message)
 
     redirect_back_after_error('Cannot create the next piece of labware, Sequencescape server API error(s):', api_error_messages)
   end
@@ -111,6 +106,15 @@ class CreationController < ApplicationController
 
   def parent_uuid
     params[:limber_tube_id] || params[:limber_plate_id]
+  end
+
+  def extract_error_messages_from_api_exception(api_message)
+    api_errors_hash = JSON.parse(api_message) || {}
+    if api_errors_hash.key?('general')
+      api_errors_hash['general']
+    else
+      [api_message]
+    end
   end
 
   def redirect_back_after_error(prefix_message, error_messages)
