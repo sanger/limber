@@ -10,6 +10,7 @@
 class CreationController < ApplicationController
   before_action :check_for_current_user!
   rescue_from Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid, with: :creation_failed
+  rescue_from Sequencescape::Api::ConnectionFactory::Actions::ServerError, with: :sequencescape_api_server_error
 
   def new
     params[:parent_uuid] ||= parent_uuid
@@ -36,19 +37,22 @@ class CreationController < ApplicationController
                       ))
   end
 
-  def creation_failed(exception) # rubocop:todo Metrics/AbcSize
+  def creation_failed(exception)
     Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
     Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
 
-    respond_to do |format|
-      format.html do
-        redirect_back(
-          fallback_location: url_for(@labware_creator.parent),
-          alert: truncate_flash(['Cannot create the next piece of labware:', *exception.resource.errors.full_messages])
-        )
-      end
-    end
+    redirect_back_after_error('Cannot create the next piece of labware:', *exception.resource.errors.full_messages)
+  end
+
+  def sequencescape_api_server_error(exception)
+    Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}, Sequencescape api server error(s)")
+    Rails.logger.error(exception.message)
+    exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
+
+    api_error_messages = extract_error_messages_from_api_exception(exception.message)
+
+    redirect_back_after_error('Cannot create the next piece of labware, Sequencescape server API error(s):', api_error_messages)
   end
 
   private
@@ -102,5 +106,26 @@ class CreationController < ApplicationController
 
   def parent_uuid
     params[:limber_tube_id] || params[:limber_plate_id]
+  end
+
+  def extract_error_messages_from_api_exception(api_message)
+    api_errors_hash = JSON.parse(api_message) || {}
+    if api_errors_hash.key?('general')
+      api_errors_hash['general']
+    else
+      [api_message]
+    end
+  end
+
+  def redirect_back_after_error(prefix_message, error_messages)
+    flash_messages = [prefix_message] + error_messages
+    respond_to do |format|
+      format.html do
+        redirect_back(
+          fallback_location: url_for(@labware_creator.parent),
+          alert: truncate_flash(flash_messages)
+        )
+      end
+    end
   end
 end
