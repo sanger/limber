@@ -23,7 +23,7 @@ module LabwareCreators
     validate :correctly_parsed?
     validates_nested :tube_rack_scan, if: :correctly_formatted?
 
-    NO_TUBE_TEXTS = ['NO READ'].freeze
+    NO_TUBE_TEXTS = ['NO READ', 'NOSCAN'].freeze
 
     #
     # Passing in the file to be parsed, the configuration from the purposes yml, and
