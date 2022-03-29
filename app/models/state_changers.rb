@@ -13,7 +13,7 @@ module StateChangers
     attr_reader :labware_uuid, :api, :user_uuid
     private :api
 
-    FILTER_FAILS_ON = ['qc_complete'].freeze
+    FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
     def initialize(api, labware_uuid, user_uuid)
       @api = api
