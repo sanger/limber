@@ -51,6 +51,15 @@ module StateChangers
     details[:state_changer_class].constantize
   end
 
+  # The tube state changer is used by Tubes. It works the same way as the default
+  # state changer but does not need to handle a subset of wells like the plate.
+  class TubeStateChanger < DefaultStateChanger
+    # Tubes have no wells so contents is always empty
+    def contents_for(_target_state)
+      nil
+    end
+  end
+
   # Plate state changer to automatically complete specified work requests.
   class AutomaticPlateStateChanger < DefaultStateChanger
     def v2_labware

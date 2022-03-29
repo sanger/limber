@@ -64,6 +64,8 @@ class PurposeConfig
   end
 
   class Tube < PurposeConfig # rubocop:todo Style/Documentation
+    self.default_state_changer = 'StateChangers::TubeStateChanger'
+
     self.default_options = {
       default_printer_type: :tube,
       presenter_class: 'Presenters::SimpleTubePresenter',
