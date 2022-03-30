@@ -42,7 +42,7 @@ module StateChangers
       well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
 
       # if no wells are in failed state then no need to send the contents subset
-      return nil if well_locations_filtered.length == labware.size
+      return nil if well_locations_filtered.length == labware.wells.length
 
       well_locations_filtered
     end
