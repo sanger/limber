@@ -189,6 +189,7 @@ FactoryBot.define do
       asset_type { 'tube' }
       default_printer_type { :tube }
       presenter_class { 'Presenters::SimpleTubePresenter' }
+      state_changer_class { 'StateChangers::TubeStateChanger' }
 
       # Config for the final tube in a pipeline
       factory :passable_tube do

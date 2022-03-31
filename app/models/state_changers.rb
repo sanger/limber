@@ -13,7 +13,7 @@ module StateChangers
     attr_reader :labware_uuid, :api, :user_uuid
     private :api
 
-    FILTER_FAILS_ON = ['qc_complete'].freeze
+    FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
     def initialize(api, labware_uuid, user_uuid)
       @api = api
@@ -38,7 +38,13 @@ module StateChangers
     def contents_for(target_state)
       return nil unless FILTER_FAILS_ON.include?(target_state)
 
-      labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
+      # determine list of well locations requiring the state change
+      well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
+
+      # if no wells are in failed state then no need to send the contents subset
+      return nil if well_locations_filtered.length == labware.wells.count
+
+      well_locations_filtered
     end
 
     def labware
@@ -49,6 +55,15 @@ module StateChangers
   def self.lookup_for(purpose_uuid)
     (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
     details[:state_changer_class].constantize
+  end
+
+  # The tube state changer is used by Tubes. It works the same way as the default
+  # state changer but does not need to handle a subset of wells like the plate.
+  class TubeStateChanger < DefaultStateChanger
+    # Tubes have no wells so contents is always empty
+    def contents_for(_target_state)
+      nil
+    end
   end
 
   # Plate state changer to automatically complete specified work requests.

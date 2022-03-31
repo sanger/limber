@@ -54,7 +54,8 @@ RSpec.describe StateChangers::DefaultStateChanger do
         stub_api_get(plate_uuid, body: plate)
         stub_api_get(plate_uuid, 'wells', body: well_collection)
       end
-      let(:wells_to_pass) { WellHelpers.column_order }
+      # if no wells are failed we leave contents blank and state changer assumes full plate
+      let(:wells_to_pass) { nil }
 
       let(:plate_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
@@ -63,7 +64,8 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
     context 'on a partially failed plate' do
       let(:plate_state) { 'passed' }
-      let(:target_state) { 'qc_complete' }
+      let(:target_state) { 'qc_complete' } # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
+      # when some wells are failed we filter those out of the contents
       let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
       let(:wells_to_pass) { WellHelpers.column_order - failed_wells.keys }
 

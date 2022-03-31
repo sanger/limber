@@ -39,8 +39,13 @@ RSpec.describe PlatesController, type: :controller do
   describe '#update' do
     before do
       create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
+      stub_api_get(plate_uuid, body: old_api_example_plate)
+      stub_api_get(plate_uuid, 'wells', body: wells_json)
     end
 
+    let(:old_api_example_plate) do
+      json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
+    end
     let!(:state_change_request) do
       stub_api_post('state_changes',
                     payload: {

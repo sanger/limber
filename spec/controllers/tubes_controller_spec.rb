@@ -7,11 +7,9 @@ RSpec.describe TubesController, type: :controller do
   has_a_working_api
 
   let(:tube_uuid) { 'example-tube-uuid' }
-  let(:tube_json) { json :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid' }
-  let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid' }
-  let(:wells_json) { json :well_collection }
+  let(:tube_json) { json :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
+  let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
   let(:tube_request) { stub_api_get tube_uuid, body: tube_json }
-  let(:tube_wells_request) { stub_api_get tube_uuid, 'wells', body: wells_json }
   let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
   let(:user_uuid) { SecureRandom.uuid }
 
