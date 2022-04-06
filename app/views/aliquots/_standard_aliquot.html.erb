@@ -6,8 +6,13 @@
         <%= container.suboptimal? ? 'suboptimal' : '' %>
         colour-<%= presenter.pool_index(container.pool_id) %>"
   data-pool="<%= container.respond_to?(:pool_id) ? container.pool_id : '' %>">
-  <span class="pool-id"><%= presenter.pool_index(container.pool_id) %></span>
-  <% if container.respond_to?(:contains_control?) && container.contains_control? %>
+  <span class="pool-id"><%= presenter.pool_index(container.pool_id) %>
+  <div class="print-information"><% container.aliquots.each do |aliquot| %>
+    <%= aliquot.sample.sanger_sample_id %>
+    <%= aliquot.sample.sample_metadata.sample_common_name %>
+  <% end %>
+  </div></span>
+  <% if container.try(:contains_control?) %>
     <div class="control-type">
       <%= container.control_info_formatted %>
     </div>
