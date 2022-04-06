@@ -1,6 +1,6 @@
 @mixin shade-aliquot($base_colour, $text_colour) {
-  &.aliquot { background-color: $base_colour; color: $text_colour; }
-  .aliquot { fill: $base_colour; color: $text_colour; }
+  &.aliquot, &.pool_name { background-color: $base_colour; color: $text_colour; }
+  .aliquot, .pool_name { fill: $base_colour; color: $text_colour; }
   &.plate-view.plate-stock .aliquot.unknown { fill: $base_colour; background-color: $base_colour; color: $text_colour; }
 }
 
