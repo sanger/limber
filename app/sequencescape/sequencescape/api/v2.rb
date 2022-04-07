@@ -9,8 +9,8 @@ module Sequencescape::Api::V2
     { wells: [
       {
         downstream_tubes: 'purpose',
-        requests_as_source: %w[request_type primer_panel pre_capture_pool],
-        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }],
+        requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
+        aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }],
         qc_results: []
       }
     ] }

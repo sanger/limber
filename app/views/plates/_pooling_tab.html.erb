@@ -4,7 +4,7 @@
       <div class="pool-data">
         <span class="pool_name colour-<%= pool.pool_index %> badge">Pool <%= pool.pool_index %></span>
         <span class="badge badge-light well-count"><%= pool.well_count %> wells</span>
-        <span class="badge badge-light well-count">5 lanes</span>
+        <span class="badge badge-light well-count"><%= pool.lane_count %> lanes</span>
       </div>
 
       <% pool.subpools.each do |subpool| %>
