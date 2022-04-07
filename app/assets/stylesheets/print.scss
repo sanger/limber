@@ -6,7 +6,7 @@
 /// Compass Utils
 @import "limber_print/print-colours";
 
-@page {size: A4 landscape; }
+@page {size: landscape; }
 // Hide from printing
 #labware-well-failing { display: none; }
 .limber-header { display: none; }
@@ -47,6 +47,8 @@ button, .instructions, #plate-view-control, .ui-loader, #labware-summary h2, .co
 .plate-view {
   border: 1px solid black;
   border-collapse: collapse;
+  transform-origin: top left;
+  transform: scale(0.8);
 
   th {
     padding: 5px;
