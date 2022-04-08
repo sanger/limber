@@ -30,7 +30,9 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_for_presenter(query)
-    Plate.includes(*PLATE_PRESENTER_INCLUDES).find(query).first
+    Plate.includes(*PLATE_PRESENTER_INCLUDES)
+         .select(submissions: 'lanes_of_sequencing', sample_metadata: 'sample_common_name')
+         .find(query).first
   end
 
   def self.additional_plates_for_presenter(query)

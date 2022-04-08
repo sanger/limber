@@ -1,0 +1,3 @@
+GET /api/v2/plates?fields%5Bsample_metadata%5D=sample_common_name&fields%5Bsubmissions%5D=lanes_of_sequencing&filter%5Buuid%5D=8681e102-b737-11ec-8ace-acde48001122&include=purpose,child_plates.purpose,wells.downstream_tubes.purpose,wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,wells.aliquots.request.submission HTTP/1.1
+Accept: application/vnd.api+json
+Content-Type: application/vnd.api+json

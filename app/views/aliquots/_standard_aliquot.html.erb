@@ -10,7 +10,7 @@
   <span class="pool-id"><%= pool_index %>
   <div class="print-information"><% container.aliquots.each do |aliquot| %>
     <%= aliquot.sample.sanger_sample_id %>
-    <%= aliquot.sample.sample_metadata.sample_common_name %>
+    <%= aliquot.sample.species %>
   <% end %>
   </div></span>
   <% if container.try(:contains_control?) %>

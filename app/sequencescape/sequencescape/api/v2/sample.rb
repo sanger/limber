@@ -10,4 +10,8 @@ class Sequencescape::Api::V2::Sample < Sequencescape::Api::V2::Base
   def self.find_by(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Sample.includes(*includes).find(options).first
   end
+
+  def species
+    sample_metadata.sample_common_name
+  end
 end

@@ -5,7 +5,7 @@
     <dd class="col-sm-11"><ul class="list-inline">
     <% well.aliquots.each do |aliquot| -%>
       <li class="list-inline-item"><%= aliquot.sample.sanger_sample_id %> -
-      <%= aliquot.sample.sample_metadata.sample_common_name %></li>
+      <%= aliquot.sample.species %></li>
     <% end -%></ul></dd>
   <% end -%>
 </dl>

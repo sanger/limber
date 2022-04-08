@@ -148,28 +148,46 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
   describe '::find_by' do
     let(:plate) { create(:v2_plate) }
+    let(:expected_includes) do
+      [
+        :purpose,
+        { child_plates: :purpose },
+        { wells: [
+          {
+            qc_results: [],
+            downstream_tubes: 'purpose',
+            requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
+            aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }]
+          }
+        ] }
+      ]
+    end
     before do
-      # Consider actually mocking at the request level
-      stub_api_v2(
-        'Plate',
-        includes: [
-          :purpose,
-          { child_plates: :purpose },
-          { wells: [
-            {
-              qc_results: [],
-              downstream_tubes: 'purpose',
-              requests_as_source: %w[request_type primer_panel pre_capture_pool],
-              aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
-            }
-          ] }
-        ],
-        where: { uuid: plate.uuid },
-        first: plate
-      )
+      # We're mocking *Far* too much here, and should use webmock. (See test below)
+      expect(described_class).to receive(:includes).with(*expected_includes).and_return(described_class)
+      expect(described_class).to receive(:select).with(submissions: 'lanes_of_sequencing', sample_metadata: 'sample_common_name').and_return(described_class)
+      allow(described_class).to receive(:find).with(uuid: plate.uuid).and_return(JsonApiClient::ResultSet.new([plate]))
     end
     it 'finds a plate' do
       expect(Sequencescape::Api::V2::Plate.find_by(uuid: plate.uuid)).to be_a Sequencescape::Api::V2::Plate
+    end
+  end
+
+  describe '::find_by (with_webmock)' do
+    # I'd love to get this working, but am currently having issues with undefined method `fetch' for #<String:0x00007fac96e956e8>
+    # on handling the mocked response. I had also hoped to use the retrieve- contract, but moved the URL inline while debugging
+    xit 'finds a plate' do
+      stub_request(:get, 'http://example.com:3000/api/v2/plates?fields%5Bsample_metadata%5D=sample_common_name&fields%5Bsubmissions%5D=lanes_of_sequencing&filter%5Buuid%5D=8681e102-b737-11ec-8ace-acde48001122&include=purpose,child_plates.purpose,wells.downstream_tubes.purpose,wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,wells.aliquots.request.submission')
+        .with(
+          headers: {
+            'Accept' => 'application/vnd.api+json',
+            'Accept-Encoding' => 'gzip,deflate',
+            'Content-Type' => 'application/vnd.api+json',
+            'User-Agent' => 'Faraday v0.17.4'
+          }
+        )
+        .to_return(File.new('./spec/contracts/v2-plate-by-uuid-for-presenter.txt'))
+      expect(Sequencescape::Api::V2::Plate.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')).to be_a Sequencescape::Api::V2::Plate
     end
   end
 end

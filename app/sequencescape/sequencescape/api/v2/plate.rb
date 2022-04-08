@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'well_helpers'
+
 # A plate from sequencescape via the V2 API
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions
