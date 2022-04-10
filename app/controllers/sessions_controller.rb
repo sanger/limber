@@ -7,9 +7,9 @@ class SessionsController < ApplicationController
   def create
     self.user_swipecard = params.require(:user_swipecard)
     if @current_user
-      redirect_to :search, notice: 'Logged in'
+      redirect_to :search, notice: 'Logged in' # rubocop:todo Rails/I18nLocaleTexts
     else
-      redirect_to :search, alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.'
+      redirect_to :search, alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.' # rubocop:todo Rails/I18nLocaleTexts
     end
   end
 
@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
     reset_session
     cookies[:user_name] = nil
     cookies[:user_id] = nil
-    redirect_to :search, notice: 'Logged out'
+    redirect_to :search, notice: 'Logged out' # rubocop:todo Rails/I18nLocaleTexts
   end
 
   private

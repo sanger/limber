@@ -74,7 +74,7 @@ class LabwareController < ApplicationController
   def unknown_type
     redirect_to(
       search_path,
-      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
+      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?' # rubocop:todo Rails/I18nLocaleTexts
     )
   end
 
