@@ -8,7 +8,7 @@
         colour-<%= pool_index %>"
   data-pool="<%= container.pool_id %>">
   <span class="pool-id"><%= pool_index %>
-  <div class="print-information"><% container.aliquots.each do |aliquot| %>
+  <div class="pool-print-information"><% container.aliquots.each do |aliquot| %>
     <%= aliquot.sample.sanger_sample_id %>
     <%= aliquot.sample.species %>
   <% end %>
