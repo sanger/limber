@@ -67,7 +67,7 @@ class CreationController < ApplicationController
       end
       format.html do
         redirect_to redirection_path(@labware_creator),
-                    notice: 'New empty labware added to the system.'
+                    notice: 'New empty labware added to the system.' # rubocop:todo Rails/I18nLocaleTexts
       end
     end
   end

@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
     redirect_to(
       search_path,
-      alert: 'You must be logged in to do that. Performing actions in multiple tabs can log you out.'
+      alert: 'You must be logged in to do that. Performing actions in multiple tabs can log you out.' # rubocop:todo Rails/I18nLocaleTexts
     )
   end
 end

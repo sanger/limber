@@ -34,7 +34,9 @@ module LabwareCreators # rubocop:todo Style/Documentation
               },
               unless: :empty?
 
+    # rubocop:todo Rails/I18nLocaleTexts
     validates :source, inclusion: { in: WellHelpers.column_order, message: "contains an invalid well name: '%{value}'" } # rubocop:todo Style/FormatStringToken
+    # rubocop:enable Rails/I18nLocaleTexts
 
     delegate :source_column, :destination_column, :volume_column, to: :header
 
