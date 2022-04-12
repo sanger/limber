@@ -5,7 +5,7 @@
       <b-col>
         <b-input-group
           prepend="Volume"
-          append="&#181;L"
+          append="µL"
         >
           <b-form-input
             id="input-volume"
@@ -25,7 +25,13 @@
 // applied as an extra parameter to each transfer request
 export default {
   name: 'VolumeTransfers',
-  data () {
+  props: {
+    defaultVolume: {
+      default: null,
+      type: Number
+    }
+  },
+  data() {
     return {
       volume: null
     }
@@ -38,7 +44,7 @@ export default {
     },
     isValid() {
       return !isNaN(Number.parseFloat(this.volume))
-    }
+    },
   },
   watch: {
     volume: function () {
@@ -47,6 +53,9 @@ export default {
         isValid: this.isValid
       })
     }
+  },
+  created() {
+    this.volume = this.defaultVolume
   }
 }
 </script>

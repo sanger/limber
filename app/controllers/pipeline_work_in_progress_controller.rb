@@ -6,13 +6,11 @@ class PipelineWorkInProgressController < ApplicationController
   def show
     @pipeline = params[:id].capitalize
 
-    # Doesn't currently include 'Tailed MX' pipelines -
-    # Could be added in future if needed although might cause an issue as there might be loads of tubes in the final purpose
     # TODO: Add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
     # So that it can work for all pipelines
     heron_pipeline_name_to_configs = {
-      'Heron-384' => ['Heron-384 Tailed A', 'Heron-384 Tailed B'],
-      'Heron-96' => ['Heron-96 Tailed A', 'Heron-96 Tailed B']
+      'Heron-384' => ['Heron-384 Tailed A V2', 'Heron-384 Tailed B V2'],
+      'Heron-96' => ['Heron-96 Tailed A V2', 'Heron-96 Tailed B V2']
     }
     @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(heron_pipeline_name_to_configs[@pipeline])
 

@@ -5,7 +5,7 @@ module Robots::Bed
   class Base
     include Form
     # Our robot has beds/rack-spaces
-    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child
+    attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child, :shared_parent
     attr_writer :barcodes
 
     delegate :api, :user_uuid, :well_order, to: :robot
@@ -108,7 +108,7 @@ module Robots::Bed
     def correct_labware_state
       return true if states.include?(labware.state)
 
-      error("Labware #{labware.human_barcode} is #{labware.state} when it should be #{states.join(', ')}.")
+      error("Labware #{labware.human_barcode} is in state #{labware.state} when it should be #{states.join(', ')}.")
     end
 
     def error(message)

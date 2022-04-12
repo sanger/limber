@@ -74,12 +74,12 @@
         // We don't have any content
         $('#loadingModal').fadeOut(100);
       } else if (response.valid) {
+        clearFlagFromBeds(response.beds);
         pass();
       } else {
         flagBeds(response.beds,response.message);
         fail();
       }
-
     }
 
     var flagBeds = function(beds,message) {
@@ -88,6 +88,12 @@
         if (!this) {$('#bed_list li[data-bed="'+bed_id+'"]').addClass('bad_bed list-group-item-danger'); bad_beds.push(bed_id);}
       });
       SCAPE.message('There were problems: '+message,'danger');
+    }
+
+    var clearFlagFromBeds = function(beds) {
+      $.each(beds, function(bed_id) {
+        if (this) {$('#bed_list li[data-bed="'+bed_id+'"]').removeClass('bad_bed list-group-item-danger');}
+      });
     }
 
     var wait = function() {

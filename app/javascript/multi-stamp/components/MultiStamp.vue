@@ -54,6 +54,7 @@
         />
         <component
           :is="transfersCreatorComponent"
+          :default-volume="defaultVolumeNumber"
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
@@ -86,7 +87,7 @@ import resources from 'shared/resources'
 import buildPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates, /* checkExcess */ } from 'shared/components/plateScanValidators'
+import { checkSize, checkDuplicates } from 'shared/components/plateScanValidators'
 
 export default {
   name: 'MultiStamp',
@@ -137,7 +138,10 @@ export default {
     sourcePlates: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] }
+    locationObj: { default: () => { return location }, type: [Object, Location] },
+
+    // Default volume to define in the UI for the volume control
+    defaultVolume: { type: String, required: false, default: null }
   },
   data () {
     return {
@@ -171,6 +175,13 @@ export default {
     }
   },
   computed: {
+    defaultVolumeNumber() {
+      if ((typeof this.defaultVolume === 'undefined') ||
+        (this.defaultVolume === null)){
+        return null
+      }
+      return Number.parseInt(this.defaultVolume)
+    },
     sourcePlateNumber() {
       return Number.parseInt(this.sourcePlates)
     },

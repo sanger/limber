@@ -1201,6 +1201,56 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
   end
 
   # For Chromium 10x pipeline aggregation to cherrypick
+  custom_robot('hamilton-lcm-lysate-to-lcm-dna',
+               name: 'hamilton LCA Lysate => LCA DNA',
+               beds: {
+                 bed(1).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 1'
+                 },
+                 bed(2).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 2'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 3'
+                 },
+                 bed(4).barcode => {
+                   purpose: 'Lysate LCA',
+                   states: %w[passed qc_complete],
+                   child: bed(13).barcode,
+                   label: 'Bed 4'
+                 },
+                 bed(13).barcode => {
+                   purpose: 'Lysate DNAseq cherrypick',
+                   states: %w[pending started],
+                   parents: [
+                     bed(1).barcode,
+                     bed(2).barcode,
+                     bed(3).barcode,
+                     bed(4).barcode,
+                     bed(5).barcode,
+                     bed(6).barcode,
+                     bed(7).barcode,
+                     bed(8).barcode,
+                     bed(9).barcode,
+                     bed(10).barcode
+                   ],
+                   target_state: 'passed',
+                   label: 'Bed 13'
+                 }
+               },
+               destination_bed: bed(13).barcode,
+               class: 'Robots::PoolingRobot')
+
+  # For Chromium 10x pipeline aggregation to cherrypick
   custom_robot('hamilton-lbc-aggregate-to-lbc-cherrypick',
                name: 'hamilton LBC Aggregate => LBC Cherrypick',
                beds: {
@@ -2392,6 +2442,176 @@ ROBOT_CONFIG = RobotConfiguration::Register.configure do
                    states: ['pending'],
                    label: 'Bed 6',
                    parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  # Robots for Combined LCM pipeline
+
+  custom_robot('bravo-clcm-stock-to-clcm-lysate-dna-and-rna',
+               name: 'Bravo CLCM Stock => CLCM Lysate DNA and RNA',
+               require_robot: true,
+               beds: {
+                 bed(4).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 4'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 7'
+                 },
+                 bed(3).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 3'
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM Stock',
+                   states: ['passed'],
+                   label: 'Bed 6'
+                 },
+                 bed(5).barcode => {
+                   purpose: 'CLCM Lysate RNA',
+                   states: ['pending'],
+                   label: 'Bed 5',
+                   target_state: 'passed'
+                 },
+                 bed(8).barcode => {
+                   purpose: 'CLCM Lysate DNA',
+                   states: ['pending'],
+                   label: 'Bed 8',
+                   target_state: 'passed'
+                 }
+               },
+               class: 'Robots::PoolingAndSplittingRobot',
+               relationships: [{
+                 'type' => 'RNA and DNA split',
+                 'options' => {
+                   'parents' => [bed(4).barcode, bed(7).barcode, bed(3).barcode, bed(6).barcode],
+                   'children' => [bed(5).barcode, bed(8).barcode]
+                 }
+               }])
+
+  custom_robot('bravo-clcm-dna-end-prep-to-clcm-dna-lib-pcr',
+               name: 'Bravo CLCM DNA End Prep => CLCM DNA Lib PCR',
+               require_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM DNA End Prep',
+                   states: ['passed'],
+                   label: 'Bed 7',
+                   child: bed(6).barcode
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM DNA Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('bravo-clcm-rna-end-prep-to-clcm-rna-lib-pcr',
+               name: 'Bravo CLCM RNA End Prep => CLCM RNA Lib PCR',
+               require_robot: true,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA End Prep',
+                   states: ['passed'],
+                   label: 'Bed 7',
+                   child: bed(6).barcode
+                 },
+                 bed(6).barcode => {
+                   purpose: 'CLCM RNA Lib PCR',
+                   states: ['pending'],
+                   label: 'Bed 6',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('star-96-clcm-dna-lib-pcr-purification',
+               name: 'STAR-96 CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 7'
+                 },
+                 bed(9).barcode => {
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 9',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(12).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 12'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 14',
+                   parent: bed(12).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('zephyr-clcm-dna-lib-pcr-purification',
+               name: 'Zephyr CLCM DNA Lib PCR => CLCM DNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(2).barcode => {
+                   purpose: 'CLCM DNA Lib PCR', states: ['passed'], label: 'Bed 2'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'CLCM DNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parent: bed(2).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('star-96-clcm-rna-lib-pcr-purification',
+               name: 'STAR-96 CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 7'
+                 },
+                 bed(9).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 9',
+                   parent: bed(7).barcode,
+                   target_state: 'passed'
+                 },
+                 bed(12).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 12'
+                 },
+                 bed(14).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 14',
+                   parent: bed(12).barcode,
+                   target_state: 'passed'
+                 }
+               })
+
+  custom_robot('zephyr-clcm-rna-lib-pcr-purification',
+               name: 'Zephyr CLCM RNA Lib PCR => CLCM RNA Lib PCR XP',
+               verify_robot: false,
+               beds: {
+                 bed(2).barcode => {
+                   purpose: 'CLCM RNA Lib PCR', states: ['passed'], label: 'Bed 2'
+                 },
+                 bed(7).barcode => {
+                   purpose: 'CLCM RNA Lib PCR XP',
+                   states: ['pending'],
+                   label: 'Bed 7',
+                   parent: bed(2).barcode,
                    target_state: 'passed'
                  }
                })

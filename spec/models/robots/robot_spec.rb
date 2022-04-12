@@ -6,10 +6,10 @@ RSpec.describe Robots::Robot, robots: true do
   include RobotHelpers
   has_a_working_api
 
-  let(:user_uuid)                   { SecureRandom.uuid }
-  let(:source_barcode)              { source_plate.human_barcode }
-  let(:source_barcode_alt)          { 'DN1S' }
-  let(:source_purpose_name)         { 'Limber Cherrypicked' }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:source_plate_barcode)              { source_plate.human_barcode }
+  let(:source_plate_barcode_alt)          { 'DN1S' }
+  let(:source_purpose_name) { 'Limber Cherrypicked' }
   let(:source_plate_state) { 'passed' }
   let(:target_plate_state) { 'pending' }
   let(:source_plate) do
@@ -53,7 +53,7 @@ RSpec.describe Robots::Robot, robots: true do
     end
 
     context 'with a plate on an unknown bed' do
-      let(:scanned_layout) { { 'bed99_barcode' => [source_barcode] } }
+      let(:scanned_layout) { { 'bed99_barcode' => [source_plate_barcode] } }
 
       it { is_expected.not_to be_valid }
     end
@@ -92,7 +92,7 @@ RSpec.describe Robots::Robot, robots: true do
       it_behaves_like 'a robot'
 
       context 'with a valid layout' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode] } }
+        let(:scanned_layout) { { 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_barcode] } }
 
         context 'and related plates' do
           let(:target_plate_parents) { [source_plate] }
@@ -103,8 +103,13 @@ RSpec.describe Robots::Robot, robots: true do
             it { is_expected.not_to be_valid }
           end
 
-          context 'but of the wrong purpose' do
+          context 'but source is of the wrong purpose' do
             let(:source_purpose_name) { 'Invalid plate purpose' }
+            it { is_expected.not_to be_valid }
+          end
+
+          context 'but target is of the wrong purpose' do
+            let(:target_purpose_name) { 'Invalid plate purpose' }
             it { is_expected.not_to be_valid }
           end
         end
@@ -114,7 +119,24 @@ RSpec.describe Robots::Robot, robots: true do
           it { is_expected.not_to be_valid }
         end
 
-        context 'an multiple source purposes' do
+        context 'and an unchecked additional parent' do
+          let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+          it { is_expected.to be_valid }
+        end
+
+        context 'and no parents' do
+          let(:target_plate_parents) { [] }
+          it { is_expected.not_to be_valid }
+        end
+
+        context 'and a parent in the database of a different purpose and an empty parent bed' do
+          let(:scanned_layout) { { 'bed1_barcode' => [], 'bed2_barcode' => [target_barcode] } }
+
+          let(:target_plate_parents) { [create(:v2_plate)] }
+          it { is_expected.not_to be_valid }
+        end
+
+        context 'and multiple source purposes' do
           let(:source_purpose) { ['Limber Cherrypicked', 'Other'] }
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to be_valid }
@@ -128,12 +150,12 @@ RSpec.describe Robots::Robot, robots: true do
 
       context 'with multiple scans' do
         let(:scanned_layout) do
-          { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
+          { 'bed1_barcode' => [source_plate_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
         end
 
         context 'and related plates' do
           before do
-            bed_labware_lookup_with_barcode([source_barcode, 'Other barcode'], [source_plate])
+            bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate])
           end
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to_not be_valid }
@@ -148,7 +170,7 @@ RSpec.describe Robots::Robot, robots: true do
                purpose_name: source_purpose_name,
                state: source_plate_state
       end
-      let(:source_2_barcode) { source_plate_2.human_barcode }
+      let(:source_plate_2_barcode) { source_plate_2.human_barcode }
       let(:target_plate_parents) { [source_plate, source_plate_2] }
 
       let(:robot_spec) do
@@ -204,7 +226,7 @@ RSpec.describe Robots::Robot, robots: true do
       context 'with only one parent scanned' do
         let(:scanned_layout) do
           {
-            'bed1_barcode' => [source_barcode],
+            'bed1_barcode' => [source_plate_barcode],
             'bed2_barcode' => [target_barcode]
           }
         end
@@ -215,8 +237,8 @@ RSpec.describe Robots::Robot, robots: true do
       context 'with a valid layout' do
         let(:scanned_layout) do
           {
-            'bed1_barcode' => [source_barcode],
-            'bed3_barcode' => [source_2_barcode],
+            'bed1_barcode' => [source_plate_barcode],
+            'bed3_barcode' => [source_plate_2_barcode],
             'bed2_barcode' => [target_barcode]
           }
         end
@@ -244,12 +266,12 @@ RSpec.describe Robots::Robot, robots: true do
 
       context 'with multiple scans' do
         let(:scanned_layout) do
-          { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
+          { 'bed1_barcode' => [source_plate_barcode, 'Other barcode'], 'bed2_barcode' => [target_barcode] }
         end
 
         context 'and related plates' do
           before do
-            bed_labware_lookup_with_barcode([source_barcode, 'Other barcode'], [source_plate])
+            bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate])
           end
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to_not be_valid }
@@ -266,12 +288,12 @@ RSpec.describe Robots::Robot, robots: true do
             'bed1_barcode' => {
               'purpose' => 'Limber Cherrypicked',
               'states' => ['passed'],
-              'label' => 'Bed 2'
+              'label' => 'Bed 1'
             },
             'bed2_barcode' => {
               'purpose' => 'target_tube_purpose',
               'states' => ['pending'],
-              'label' => 'Bed 1',
+              'label' => 'Bed 2',
               'parent' => 'bed1_barcode',
               'target_state' => 'passed'
             }
@@ -287,7 +309,7 @@ RSpec.describe Robots::Robot, robots: true do
       it_behaves_like 'a robot'
 
       context 'with a valid layout' do
-        let(:scanned_layout) { { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_tube_barcode] } }
+        let(:scanned_layout) { { 'bed1_barcode' => [source_plate_barcode], 'bed2_barcode' => [target_tube_barcode] } }
 
         context 'and related plates' do
           let(:target_tube_parents) { [source_plate] }
@@ -323,15 +345,203 @@ RSpec.describe Robots::Robot, robots: true do
 
       context 'with multiple scans' do
         let(:scanned_layout) do
-          { 'bed1_barcode' => [source_barcode, 'Other barcode'], 'bed2_barcode' => [target_tube_barcode] }
+          { 'bed1_barcode' => [source_plate_barcode, 'Other barcode'], 'bed2_barcode' => [target_tube_barcode] }
         end
 
         context 'and related plates' do
           before do
-            bed_labware_lookup_with_barcode([source_barcode, 'Other barcode'], [source_plate])
+            bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate])
           end
           let(:target_plate_parents) { [source_plate] }
           it { is_expected.to_not be_valid }
+        end
+      end
+    end
+
+    context 'a robot using a shared phiX parent tube' do
+      let(:phix_tube_purpose_name)    { 'phix_tube_purpose' }
+      let(:phix_tube_state)           { 'passed' }
+      let(:phix_tube) do
+        create :v2_tube,
+               purpose_name: phix_tube_purpose_name,
+               barcode_number: 4,
+               state: phix_tube_state
+      end
+      let(:phix_tube_barcode) { phix_tube.human_barcode }
+
+      let(:robot_spec) do
+        {
+          'name' => 'robot_name',
+          'beds' => {
+            'bed1_barcode' => {
+              'purpose' => 'Limber Cherrypicked',
+              'states' => ['passed'],
+              'label' => 'Bed 1'
+            },
+            'bed2_barcode' => {
+              'purpose' => 'target_tube_purpose',
+              'states' => ['pending'],
+              'label' => 'Bed 2',
+              'parents' => %w[bed1_barcode bed3_barcode],
+              'target_state' => 'passed'
+            },
+            'bed3_barcode' => {
+              'purpose' => 'phix_tube_purpose',
+              'states' => ['passed'],
+              'label' => 'Bed 3',
+              'shared_parent' => 'true'
+            }
+          }
+        }
+      end
+
+      before do
+        bed_labware_lookup(source_plate)
+        bed_labware_lookup(target_tube)
+        bed_labware_lookup(phix_tube)
+      end
+
+      it_behaves_like 'a robot'
+
+      context 'with a valid layout' do
+        let(:scanned_layout) do
+          {
+            'bed1_barcode' => [source_plate_barcode],
+            'bed2_barcode' => [target_tube_barcode],
+            'bed3_barcode' => [phix_tube_barcode]
+          }
+        end
+
+        context 'and related labwares' do
+          let(:target_tube_parents) { [source_plate, phix_tube] }
+          it { is_expected.to be_valid }
+
+          context 'but in the wrong state' do
+            let(:source_plate_state) { 'pending' }
+            it { is_expected.not_to be_valid }
+          end
+
+          context 'but of the wrong purpose' do
+            let(:source_purpose_name) { 'Invalid plate purpose' }
+            it { is_expected.not_to be_valid }
+          end
+        end
+
+        context 'and unrelated labwares' do
+          let(:target_tube_parents) { [create(:v2_plate)] }
+          it { is_expected.not_to be_valid }
+        end
+
+        context 'and multiple transfers' do
+          let(:robot_spec) do
+            {
+              'name' => 'robot_name',
+              'beds' => {
+                'bed1_barcode' => {
+                  'purpose' => 'Limber Cherrypicked',
+                  'states' => ['passed'],
+                  'label' => 'Bed 1'
+                },
+                'bed2_barcode' => {
+                  'purpose' => 'target_tube_purpose',
+                  'states' => ['pending'],
+                  'label' => 'Bed 2',
+                  'parents' => %w[bed1_barcode bed5_barcode],
+                  'target_state' => 'passed'
+                },
+                'bed3_barcode' => {
+                  'purpose' => 'Limber Cherrypicked',
+                  'states' => ['passed'],
+                  'label' => 'Bed 3'
+                },
+                'bed4_barcode' => {
+                  'purpose' => 'target_tube_purpose',
+                  'states' => ['pending'],
+                  'label' => 'Bed 4',
+                  'parents' => %w[bed3_barcode bed5_barcode],
+                  'target_state' => 'passed'
+                },
+                'bed5_barcode' => {
+                  'purpose' => 'phix_tube_purpose',
+                  'states' => ['passed'],
+                  'label' => 'Bed 5',
+                  'shared_parent' => 'true'
+                }
+              }
+            }
+          end
+
+          let(:target_tube_parents) { [source_plate, phix_tube] }
+
+          let(:source_plate_2) do
+            create :v2_plate,
+                   barcode_number: 5,
+                   purpose_name: source_purpose_name,
+                   state: source_plate_state
+          end
+          let(:source_plate_2_barcode) { source_plate_2.human_barcode }
+
+          let(:target_tube_2_parents) { [source_plate_2, phix_tube] }
+          let(:target_tube_2) do
+            create :v2_tube,
+                   purpose_name: target_tube_purpose_name,
+                   barcode_number: 6,
+                   state: target_tube_state,
+                   parents: target_tube_2_parents
+          end
+          let(:target_tube_2_barcode) { target_tube_2.human_barcode }
+
+          before do
+            bed_labware_lookup(source_plate)
+            bed_labware_lookup(target_tube)
+            bed_labware_lookup(source_plate_2)
+            bed_labware_lookup(target_tube_2)
+            bed_labware_lookup(phix_tube)
+          end
+
+          context 'with a valid layout' do
+            let(:scanned_layout) do
+              {
+                'bed1_barcode' => [source_plate_barcode],
+                'bed2_barcode' => [target_tube_barcode],
+                'bed3_barcode' => [source_plate_2_barcode],
+                'bed4_barcode' => [target_tube_2_barcode],
+                'bed5_barcode' => [phix_tube_barcode]
+              }
+            end
+
+            context 'and related labwares' do
+              it { is_expected.to be_valid }
+            end
+          end
+
+          context 'with an invalid layout' do
+            let(:scanned_layout) do
+              {
+                'bed1_barcode' => [source_plate_barcode],
+                'bed2_barcode' => [target_tube_barcode],
+                'bed3_barcode' => [source_plate_2_barcode],
+                'bed4_barcode' => [],
+                'bed5_barcode' => [phix_tube_barcode]
+              }
+            end
+
+            it { is_expected.not_to be_valid }
+          end
+
+          context 'with an invalid layout' do
+            let(:scanned_layout) do
+              {
+                'bed1_barcode' => [source_plate_barcode],
+                'bed2_barcode' => [target_tube_barcode],
+                'bed3_barcode' => [],
+                'bed4_barcode' => [],
+                'bed5_barcode' => [phix_tube_barcode]
+              }
+            end
+
+            it { is_expected.to be_valid }
+          end
         end
       end
     end
@@ -384,7 +594,7 @@ RSpec.describe Robots::Robot, robots: true do
       context 'and the correct layout' do
         let(:scanned_layout) do
           {
-            'bed1_barcode' => [source_barcode],
+            'bed1_barcode' => [source_plate_barcode],
             'bed2_barcode' => [target_barcode],
             'bed3_barcode' => [grandchild_barcode]
           }
