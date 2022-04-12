@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 group :default do
   gem 'bootsnap'
-  gem 'rails'
+  gem 'rails', '~>6.1'
   # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
   gem 'inline_svg'
 

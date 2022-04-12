@@ -388,7 +388,7 @@ DEPENDENCIES
   pry-byebug
   puma
   rack-mini-profiler
-  rails
+  rails (~> 6.1)
   rails-controller-testing
   rake
   rspec-json_expectations
