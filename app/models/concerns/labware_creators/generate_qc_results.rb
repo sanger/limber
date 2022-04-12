@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Can be included in plate creators which require qc_results inserted on the new plate.
-module LabwareCreators::GenerateQCResults
+module LabwareCreators::GenerateQcResults
   extend ActiveSupport::Concern
 
   private

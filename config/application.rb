@@ -31,6 +31,7 @@ module Limber
     # -- all .rb files in that directory are automatically loaded.
     config.label_templates = config_for(:label_templates)
     config.disable_animations = false
+    config.autoloader = :zeitwerk
 
     config.logger = Logger.new(Rails.root.join('log', "#{Rails.env}.log"), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new
