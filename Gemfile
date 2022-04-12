@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 group :default do
   gem 'bootsnap'
-  gem 'rails', '~>6.1'
+  gem 'rails'
   # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
   gem 'inline_svg'
 
@@ -32,6 +32,7 @@ group :default do
 
   gem 'puma'
   gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
+  gem 'sprockets-rails'
 end
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -43,7 +44,7 @@ group :test do
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '6.0.0.rc1'
   gem 'simplecov', require: false
   # Keep webdriver in sync with chrome to prevent frustrating CI failures
   gem 'webdrivers', require: false

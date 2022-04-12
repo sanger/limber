@@ -37,4 +37,6 @@ class Settings
   end
 end
 
-Settings.instance
+Rails.application.config.to_prepare do
+  Settings.instance
+end

@@ -26,12 +26,12 @@ Bundler.require(*Rails.groups)
 
 module Limber
   class Application < Rails::Application # rubocop:todo Style/Documentation
+    config.load_defaults 6.0
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.label_templates = config_for(:label_templates)
     config.disable_animations = false
-    config.autoloader = :zeitwerk
 
     config.logger = Logger.new(Rails.root.join('log', "#{Rails.env}.log"), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new
