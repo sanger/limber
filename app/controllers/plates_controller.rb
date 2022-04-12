@@ -9,7 +9,7 @@ class PlatesController < LabwareController
 
   def fail_wells # rubocop:todo Metrics/AbcSize
     if wells_to_fail.empty?
-      redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to fail')
+      redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to fail') # rubocop:todo Rails/I18nLocaleTexts
     else
       api.state_change.create!(
         user: current_user_uuid,
@@ -19,7 +19,7 @@ class PlatesController < LabwareController
         reason: 'Individual Well Failure',
         customer_accepts_responsibility: params[:customer_accepts_responsibility]
       )
-      redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been failed')
+      redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been failed') # rubocop:todo Rails/I18nLocaleTexts
     end
   end
 

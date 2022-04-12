@@ -32,12 +32,12 @@ module Presenters
 
     # @note Validation here is intended as a warning. Rather than strict validation
     validates :pcr_cycles,
-              length: { maximum: 1, message: 'are not consistent across the plate.' },
+              length: { maximum: 1, message: 'are not consistent across the plate.' }, # rubocop:todo Rails/I18nLocaleTexts
               unless: :multiple_requests_per_well?
 
     validates :requested_pcr_cycles,
               inclusion: { in: ->(r) { r.expected_cycles },
-                           message: 'differs from standard. %<value>s cycles have been requested.' },
+                           message: 'differs from standard. %<value>s cycles have been requested.' }, # rubocop:todo Rails/I18nLocaleTexts
               if: :expected_cycles
 
     validates_with Validators::InProgressValidator

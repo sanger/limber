@@ -92,7 +92,7 @@ class RobotsController < ApplicationController
   def validate_beds
     return true if params['bed_labwares'].present?
 
-    redirect_to robot_path(id: @robot.id), notice: "We didn't receive any bed information"
+    redirect_to robot_path(id: @robot.id), notice: "We didn't receive any bed information" # rubocop:todo Rails/I18nLocaleTexts
     false
   end
 end
