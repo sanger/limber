@@ -144,6 +144,7 @@ dl.descriptive-list-inline {
     border: 1px solid black;
     border-collapse: collapse;
     transform-origin: top left;
+    min-width: 100%;
     //transform: scale(0.8);
 
     th {
