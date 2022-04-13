@@ -19,7 +19,12 @@ class Sequencescape::Api::V2::Plate::Pool
     @pool_index = pool_index
   end
 
+  def lane_count
+    @lane_count || '?'
+  end
+
   def add_well_request(well, request)
+    @lane_count ||= request.submission&.lanes_of_sequencing
     compatible_subpool(well, request).add_well_request(well, request)
   end
 

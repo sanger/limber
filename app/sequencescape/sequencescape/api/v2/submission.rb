@@ -6,6 +6,7 @@ class Sequencescape::Api::V2::Submission < Sequencescape::Api::V2::Base
   property :state, type: :string_inquirer
   property :created_at, type: :time
   property :updated_at, type: :time
+  property :lanes_of_sequencing, type: :integer
 
   delegate :building?, :pending?, :processing?, :ready?, :failed?, :cancelled?, to: :state
 

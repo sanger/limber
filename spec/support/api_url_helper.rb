@@ -73,17 +73,6 @@ module ApiUrlHelper
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
 
-    def stub_api_v2(klass, where:, includes: nil, first: nil, all: nil) # rubocop:todo Metrics/AbcSize
-      query_builder = "Sequencescape::Api::V2::#{klass}".constantize
-      expect(query_builder).to receive(:includes).with(*includes).and_return(query_builder) if includes
-      if all
-        expect(query_builder).to receive(:where).with(where).and_return(query_builder)
-        expect(query_builder).to receive(:all).and_return(all)
-      else
-        expect(query_builder).to receive(:find).with(where).and_return(JsonApiClient::ResultSet.new([first]))
-      end
-    end
-
     def stub_api_v2_post(klass)
       # intercepts the 'update_attributes' method for any class beginning with 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize

@@ -194,6 +194,8 @@ dl.metadata, dl#samples-information {
   label {
     font-size: small;
   }
+
+  .pool-print-information { display: none; }
 }
 
 .inbox-results {
@@ -465,3 +467,18 @@ div.scan-plate a.bed-status-bad, div.scan-plate a.bed-status-good, div.scan-plat
 }
 
 .plate-box {display:inline-block !important;}
+
+dl.descriptive-list-inline {
+  dt {
+    display: inline;
+    margin-right: 0.5em;
+  }
+  dd {
+    display: inline;
+    margin-right: 1em;
+  }
+}
+
+.pool-data {
+  float: left;
+}

@@ -1,92 +1,176 @@
-/* Welcome to Compass. Use this file to define print styles.
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> */
-
+/*
+ * Print style sheets are split into two distinct presentation modes:
+ * Portrait: A quick overview page
+ * Landscape: Detailed tabular presentation for pool information
+ * The upper portion of the stylesheet sets up some shared styles
+ */
 
 /// Compass Utils
 @import "limber_print/print-colours";
 
-#labware-well-failing { display: none; }
-.limber-header { display: none; }
-
-h1 {
-  font-size:larger;
-  display: inline;
-  font-family: sans-serif;
-}
-.plate-view {
-  border: 1px solid black;
-  float:left;
-  clear:left;
-  margin: 5mm 0;
-  border-radius: 0px 15px 15px 15px;
-}
-.well {
-  width:5mm;
-  height:5mm;
-  padding:0;
-  margin:0;
-  border:1px solid black;
-  border-radius: 5mm;
+/*
+* We want to hide interactive and superfluous elements.
+* By default we also hide all tab content, and enable individual
+# tabs explicitly.
+*/
+button,
+.instructions,
+#plate-view-control,
+.ui-loader,
+#labware-summary h2,
+.content-secondary,
+.spinner-dark,
+.spinner,
+.version-info,
+.static-top,
+#labware-well-failing,
+.tab-pane,
+.limber-header {
+  display: none;
 }
 
-.aliquot {
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  /* Tell chrome to render backgrounds. This isn't actually
-   * required, as we also use a drop-shadow to force Mozilla
-   * browsers to also colour prints. But it adds a layer of
-   * robustness if webkit/blink goes the way of IE and stops
-   * rendering drop-shadows on printouts */
-  -webkit-print-color-adjust: exact;
-}
-#pools-information, #samples-information {
-  width:40%;
-  float:right;
-  clear:right;
-}
-#summary-information {
-  float:left;
-  margin:3mm;
-  padding:0;
+ul { list-style: none; }
+body { font-family: serif; }
+
+dl.descriptive-list-inline {
+  dt {
+    display: inline;
+    margin-right: 0.5em;
+    font-weight: 600;
+  }
+  dd {
+    display: inline;
+    margin-right: 1em;
+    margin-left: 0;
+  }
 }
 
-#pools-information .ui-li-divider {
- border: solid 1px black;
- margin: 0.5em 0 0 0;
- padding: 0.25em;
-}
-#pools-information .ui-li-static {
- border: solid 1px black;
- border-top: none;
- margin: 0;
- padding: 0.25em;
-}
-#pools-information H3 {
-  display: inline;
-  font-size: 12pt;
-  padding-right:0.5em;
-}
-#pools-information P {
-  font-size:12pt;
+@media (orientation: portrait) {
+  /* General purpose worksheet to provide rough summary of plate contents with plenty of whitespace for notes etc. */
+  // Extra well info for the pool worksheets only
+  .pool-print-information { display: none; }
+
+  h1 {
+    font-size:larger;
+    display: inline;
+    font-family: sans-serif;
+  }
+  .plate-view {
+    border: 1px solid black;
+    float:left;
+    clear:left;
+    margin: 5mm 0;
+    border-radius: 0px 15px 15px 15px;
+  }
+  .well {
+    width:5mm;
+    height:5mm;
+    padding:0;
+    margin:0;
+    border:1px solid black;
+    border-radius: 5mm;
+  }
+
+  .aliquot {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Tell chrome to render backgrounds. This isn't actually
+    * required, as we also use a drop-shadow to force Mozilla
+    * browsers to also colour prints. But it adds a layer of
+    * robustness if webkit/blink goes the way of IE and stops
+    * rendering drop-shadows on printouts */
+    -webkit-print-color-adjust: exact;
+  }
+  #pooling_tab {
+    display: block;
+    width:40%;
+    float:right;
+    clear:right;
+  }
+  #summary_tab {
+    display: block;
+    float:left;
+    margin:3mm;
+    padding:0;
+  }
+  #pools-information H3 {
+    display: inline;
+    font-size: 12pt;
+    padding-right:0.5em;
+  }
+  #pools-information P {
+    font-size:12pt;
+  }
 }
 
-#pools-information, #samples-information, #summary-information {
-  display: inline !important;
-}
+@media (orientation: landscape) {
+  /* Tabular plate presentation, designed to summarise pooling, well contents and lanes downstream. */
 
-/* Hide all the interactive stuff */
-button, .instructions, #navbar, #plate-view-control, .ui-loader, #labware-summary h2, #samples-information, .content-secondary, .spinner-dark, .spinner, .version-info, .static-top {
-  display: none !important;
-}
+  .state-badge,
+  .asset-warnings {
+    display: none;
+  }
 
-ul {
-  list-style: none;
-}
+  // But show the pooling information
+  #pooling_tab {
+    display: inline;
+    margin-top: 1em;
 
-body {
-  font-family: serif;
+    #pools-information {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      width: 100%;
+      padding: 0;
+
+      li {
+        .pool_name {
+          display: block;
+          padding: 0.5em;
+          .well-count {
+            float: right;
+
+          }
+        }
+        border: 1px solid black;
+      }
+    }
+  }
+
+  .plate-view {
+    border: 1px solid black;
+    border-collapse: collapse;
+    transform-origin: top left;
+    min-width: 100%;
+    //transform: scale(0.8);
+
+    th {
+      padding: 5px;
+    }
+
+    td {
+      padding: 0;
+      border:1px solid black;
+    }
+  }
+
+  .aliquot {
+    padding: 1px;
+    /* Tell chrome to render backgrounds. This isn't actually
+    * required, as we also use a drop-shadow to force Mozilla
+    * browsers to also colour prints. But it adds a layer of
+    * robustness if webkit/blink goes the way of IE and stops
+    * rendering drop-shadows on printouts */
+    -webkit-print-color-adjust: exact;
+  }
+
+  .metadata {
+    margin: 0.5em;
+    dt { float: left; clear: left }
+    dd {  float: right; }
+  }
+
 }

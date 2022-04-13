@@ -147,29 +147,32 @@ RSpec.describe Sequencescape::Api::V2::Plate do
   end
 
   describe '::find_by' do
-    let(:plate) { create(:v2_plate) }
-    before do
-      # Consider actually mocking at the request level
-      stub_api_v2(
-        'Plate',
-        includes: [
-          :purpose,
-          { child_plates: :purpose },
-          { wells: [
-            {
-              qc_results: [],
-              downstream_tubes: 'purpose',
-              requests_as_source: %w[request_type primer_panel pre_capture_pool],
-              aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
-            }
-          ] }
-        ],
-        where: { uuid: plate.uuid },
-        first: plate
-      )
-    end
     it 'finds a plate' do
-      expect(Sequencescape::Api::V2::Plate.find_by(uuid: plate.uuid)).to be_a Sequencescape::Api::V2::Plate
+      stub_request(:get, 'http://example.com:3000/api/v2/plates')
+        .with(
+          query: {
+            fields: {
+              sample_metadata: 'sample_common_name',
+              submissions: 'lanes_of_sequencing'
+            },
+            filter: {
+              uuid: '8681e102-b737-11ec-8ace-acde48001122'
+            },
+            # This is a bit brittle, as it depends on the exact order.
+            include: 'purpose,child_plates.purpose,wells.downstream_tubes.purpose,'\
+                     'wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,'\
+                     'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,'\
+                     'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,'\
+                     'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,'\
+                     'wells.aliquots.request.submission'
+          },
+          headers: {
+            'Accept' => 'application/vnd.api+json',
+            'Content-Type' => 'application/vnd.api+json'
+          }
+        )
+        .to_return(File.new('./spec/contracts/v2-plate-by-uuid-for-presenter.txt'))
+      expect(Sequencescape::Api::V2::Plate.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')).to be_a Sequencescape::Api::V2::Plate
     end
   end
 end
