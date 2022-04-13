@@ -20,7 +20,7 @@ group :default do
   gem 'hashie'
 
   # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
-  gem 'json_api_client', github: 'sanger/json_api_client', branch: 'merge_upstream'
+  gem 'json_api_client', github: 'sanger/json_api_client', branch: 'v1.21.0a'
 
   # Older Sequencescape API
   gem 'sequencescape-client-api', require: 'sequencescape'

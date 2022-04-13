@@ -1,14 +1,14 @@
 GIT
   remote: https://github.com/sanger/json_api_client.git
-  revision: a5b419c487ab604570fdfed7925fc2fafe2c6d02
-  branch: merge_upstream
+  revision: 2d06b4457e7c0e276736818e8d932f0691447ab6
+  branch: v1.21.0a
   specs:
-    json_api_client (1.16.1a)
+    json_api_client (1.21.0a)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       addressable (~> 2.2)
-      faraday (~> 0.15, >= 0.15.2)
-      faraday_middleware (~> 0.9)
+      faraday (>= 0.15.2, < 2.0)
+      faraday_middleware (>= 0.9.0, < 2.0)
       rack (>= 0.2)
 
 GIT
@@ -135,10 +135,31 @@ GEM
     execjs (2.8.1)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
-    faraday (0.17.5)
+    faraday (1.10.0)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.3)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.14.0)
-      faraday (>= 0.7.4, < 1.0)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
+    faraday_middleware (1.2.0)
+      faraday (~> 1.0)
     ffi (1.15.5)
     formatador (1.1.0)
     globalid (1.0.0)
@@ -313,6 +334,7 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     ruby-progressbar (1.11.0)
     ruby-units (2.3.2)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
