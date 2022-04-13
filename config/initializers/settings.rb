@@ -34,9 +34,18 @@ class Settings
     end
 
     delegate_missing_to :instance
+
+    def reinitialize
+      @instance = nil
+      self
+    end
   end
 end
 
 Rails.application.config.to_prepare do
-  Settings.instance
+  # By re-initializing here we gain:
+  # - Clear hot-reloading of classes like PipelineList when in development mode
+  # - Reloading of the settings in development mode, meaning you don't need to
+  #   restart following a rake config:generate
+  Settings.reinitialize.instance
 end
