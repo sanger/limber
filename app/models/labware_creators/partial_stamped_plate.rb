@@ -9,7 +9,7 @@ module LabwareCreators
   # Each sub-class should override the dilutions_calculator.
   class PartialStampedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
+    include LabwareCreators::GenerateQcResults
 
     validate :wells_with_aliquots_have_concentrations?
     validate :transfer_hash_present?

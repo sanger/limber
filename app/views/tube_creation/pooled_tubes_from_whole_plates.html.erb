@@ -1,6 +1,6 @@
 <%= page(:'pooled-tubes-from-whole-plates') do %>
   <%= content do %>
-    <%= render(partial: './search/inbox', locals: { search_results: @labware_creator.available_plates }) %>
+    <%= render(partial: 'search/inbox', locals: { search_results: @labware_creator.available_plates }) %>
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>

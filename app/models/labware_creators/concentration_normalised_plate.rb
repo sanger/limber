@@ -12,7 +12,7 @@ module LabwareCreators
   # binning or rearrangement.
   class ConcentrationNormalisedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
+    include LabwareCreators::GenerateQcResults
 
     validate :wells_with_aliquots_have_concentrations?
 
