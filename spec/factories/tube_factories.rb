@@ -17,12 +17,7 @@ FactoryBot.define do
     with_has_many_associations 'requests', 'qc_files', 'studies'
     name { 'Tube' }
 
-    purpose do
-      {
-        'actions' => { 'read' => api_root + purpose_uuid },
-        'uuid' => purpose_uuid, 'name' => purpose_name
-      }
-    end
+    purpose { { 'actions' => { 'read' => api_root + purpose_uuid }, 'uuid' => purpose_uuid, 'name' => purpose_name } }
 
     stock_plate do
       sp = associated(:stock_plate, barcode_number: stock_plate_barcode)
@@ -39,9 +34,7 @@ FactoryBot.define do
       json_root { 'tube' }
       state { 'pending' }
 
-      transient do
-        sample_count { 1 }
-      end
+      transient { sample_count { 1 } }
 
       aliquots do
         Array.new(sample_count) do |i|
@@ -76,9 +69,7 @@ FactoryBot.define do
           end
         end
 
-        sibling_tubes do
-          [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + other_siblings
-        end
+        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + other_siblings }
       end
     end
 
@@ -154,6 +145,7 @@ FactoryBot.define do
       json_root { nil }
       resource_actions { %w[read first last] }
       purpose_uuid { SecureRandom.uuid }
+
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}#{purpose_uuid}/children/1" }
@@ -162,9 +154,7 @@ FactoryBot.define do
       names { Array.new(size) { |i| "Tube #{i}" } }
     end
 
-    children do
-      Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i]) }
-    end
+    children { Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i]) } }
 
     factory :single_study_multiplexed_library_tube_collection do
       transient do
@@ -172,9 +162,7 @@ FactoryBot.define do
         study_count { 1 }
       end
       children do
-        Array.new(size) do |i|
-          associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count)
-        end
+        Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count) }
       end
     end
   end

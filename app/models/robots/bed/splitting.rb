@@ -21,11 +21,14 @@ module Robots::Bed
     private
 
     def child_labware_of_plate
-      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.downstream_plates.empty?
+      labware
+        .wells
+        .sort_by(&well_order)
+        .each_with_object([]) do |well, plates|
+          next if well.downstream_plates.empty?
 
-        plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
-      end
+          plates << well.downstream_plates.first unless plates.include?(well.downstream_plates.first)
+        end
     end
   end
 end

@@ -7,9 +7,7 @@ RSpec.describe Limber::Plate do
   has_a_working_api
 
   subject(:plate) { build :plate, transfer_request_collections_count: 2 }
-  let(:transfer_request_collections_json) do
-    json :transfer_request_collection_collection
-  end
+  let(:transfer_request_collections_json) { json :transfer_request_collection_collection }
 
   before do
     stub_api_get(plate.uuid, 'wells', body: json(:well_collection))

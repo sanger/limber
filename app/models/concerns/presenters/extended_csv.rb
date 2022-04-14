@@ -8,22 +8,27 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   end
 
   # Yields information for the show_extended.csv
-  def each_well_transfer(offset = 0) # rubocop:todo Metrics/AbcSize
+  # rubocop:todo Metrics/MethodLength
+  def each_well_transfer(offset = 0) # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
     index = 0
     transfers_for_csv[offset * 4...(offset + 1) * 4].each_with_index do |transfers_list, bed_index|
       transfers_list[:transfers].each do |transfer|
         source_well, destination_wells = transfer
         Array(destination_wells).each do |destination_well|
-          yield({
-            index: (index += 1),
-            name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
-            source_well: source_well,
-            destination_well: destination_well
-          }.merge(transfers_list))
+          yield(
+            {
+              index: (index += 1),
+              name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
+              source_well: source_well,
+              destination_well: destination_well
+            }.merge(transfers_list)
+          )
         end
       end
     end
   end
+
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -46,7 +51,6 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
     api.plate.find(labware.uuid)
   end
 
-  # rubocop:todo Metrics/MethodLength
   def transfers_for_csv # rubocop:todo Metrics/AbcSize
     legacy_labware.creation_transfers.map do |ct|
       source_ean = ct.source.barcode.ean13
@@ -54,9 +58,8 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
       destination_ean = ct.destination.barcode.ean13
       destination_barcode = "#{ct.destination.barcode.prefix}#{ct.destination.barcode.number}"
-      transfers = ct.transfers.reverse_merge(all_wells).sort do |a, b|
-        split_location(a.first) <=> split_location(b.first)
-      end
+      transfers =
+        ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
       {
         source_ean: source_ean,
         source_barcode: source_barcode,
@@ -67,5 +70,4 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end

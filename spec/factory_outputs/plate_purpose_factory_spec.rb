@@ -4,16 +4,11 @@ require 'rails_helper'
 
 RSpec.describe 'plate_purpose factory' do
   subject do
-    json(
-      :plate_purpose,
-      uuid: 'example-plate-purpose-uuid',
-      children_count: 1,
-      plates_actions: %w[read create]
-    )
+    json(:plate_purpose, uuid: 'example-plate-purpose-uuid', children_count: 1, plates_actions: %w[read create])
   end
 
   let(:json_content) do
-    %({
+    '{
       "plate_purpose": {
         "children": {
           "size": 1,
@@ -34,7 +29,7 @@ RSpec.describe 'plate_purpose factory' do
         "uuid": "example-plate-purpose-uuid",
         "name": "Limber Example Purpose"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 group :default do
   gem 'bootsnap'
   gem 'rails'
+
   # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
   gem 'inline_svg'
 
@@ -24,6 +25,7 @@ group :default do
 
   # Older Sequencescape API
   gem 'sequencescape-client-api', require: 'sequencescape'
+
   # Speed up json encoding/decoding with oj
   gem 'oj'
 
@@ -46,6 +48,7 @@ group :test do
   gem 'rspec-json_expectations'
   gem 'rspec-rails', '6.0.0.rc1'
   gem 'simplecov', require: false
+
   # Keep webdriver in sync with chrome to prevent frustrating CI failures
   gem 'webdrivers', require: false
   gem 'webmock'
@@ -53,15 +56,18 @@ end
 
 group :development, :test do
   gem 'uglifier'
+
   # Bootstrap is a css framework
   # Pinning to v4 as bootstrap 5 drops compatibility with the latest versions of chrome and FF on XP
   # Some lab machines are locked to XP due to vendor compatibility
   gem 'bootstrap', '~>4'
+
   # gem 'coffee-rails', require: false
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
   gem 'sass-rails'
   gem 'select2-rails'
+
   # We use the sortable component of jquery ui
   gem 'jquery-ui-rails'
 end
@@ -71,6 +77,7 @@ group :development do
   gem 'pry'
   gem 'pry-byebug'
   gem 'web-console'
+
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
   gem 'yard'

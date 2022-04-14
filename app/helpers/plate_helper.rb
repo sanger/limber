@@ -18,24 +18,30 @@ module PlateHelper # rubocop:todo Style/Documentation
     delegate_missing_to :_presenter
     attr_reader :form, :_presenter
   end
+
   # rubocop:enable Rails/HelperInstanceVariable
 
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
   end
 
-  # Returns an array of all pre-capture pools for a plate, with wells sorted into plate well column order.
-  # We rely on the fact that hashes maintain insert order, and walk the wells in column
-  # order. Each time we see a pre-capture pool for the first time, it gets inserted into the hash along with the
-  # request Order id.
-  # We then sort the pre-capture pool hashes within the array by their Order ids, to get the pools into the right
-  # sequence. Requests are grouped into Orders, each pre-capture pool has a different Order relating to the asset group
-  # name entered on the submission manifest. Asset groups are created in the sequence they are presented in the manifest.
-  # (Pre-capture pools are not created sequentially in the same order as the asset groups on the manifest).
+  # Returns an array of all pre-capture pools for a plate, with wells sorted
+  # into plate well column order. We rely on the fact that hashes maintain
+  # insert order, and walk the wells in column order. Each time we see a
+  # pre-capture pool for the first time, it gets inserted into the hash along
+  # with the request Order id.
+  # We then sort the pre-capture pool hashes within the array by their Order
+  # ids, to get the pools into the right sequence. Requests are grouped into
+  # Orders, each pre-capture pool has a different Order relating to the asset
+  # group name entered on the submission manifest. Asset groups are created in
+  # the sequence they are presented in the manifest. (Pre-capture pools are not
+  # created sequentially in the same order as the asset groups on the manifest).
   # This sorted array gets passed to our javascript via ajax.
-  # @note Javascript objects are not explicitly ordered, hence the need to pass an array here.
+  # @note Javascript objects are not explicitly ordered, hence the need to pass
+  # an array here.
   #
-  # @param current_plate [Sequencescape::Api::V2::Plate] The plate from which to extract the pre-cap pools
+  # @param current_plate [Sequencescape::Api::V2::Plate] The plate from which to
+  # extract the pre-cap pools
   #
   # @return [Array] An array of basic pool information
   # @example Example output
@@ -45,17 +51,22 @@ module PlateHelper # rubocop:todo Style/Documentation
   #   ]
   # rubocop:todo Metrics/MethodLength
   def sorted_pre_cap_pool_json(current_plate) # rubocop:todo Metrics/AbcSize
-    unsorted = current_plate.wells_in_columns.each_with_object({}) do |well, pool_store|
-      next unless well.passed?
+    unsorted =
+      current_plate
+        .wells_in_columns
+        .each_with_object({}) do |well, pool_store|
+          next unless well.passed?
 
-      well.incomplete_requests.each do |request|
-        next unless request.pre_capture_pool
+          well.incomplete_requests.each do |request|
+            next unless request.pre_capture_pool
 
-        pool_id = request.pre_capture_pool.id
-        pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
-        pool_store[pool_id][:wells] << well.location
-      end
-    end.values
+            pool_id = request.pre_capture_pool.id
+            pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
+            pool_store[pool_id][:wells] << well.location
+          end
+        end
+        .values
+
     # sort the pool hashes by Order id
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety

@@ -1,9 +1,9 @@
 const filterProps = {
   tubeFields: {
     tubes: 'labware_barcode,uuid,purpose',
-    purposes: 'name'
+    purposes: 'name',
   },
-  tubeIncludes: 'purpose'
+  tubeIncludes: 'purpose',
 }
 
 export default filterProps

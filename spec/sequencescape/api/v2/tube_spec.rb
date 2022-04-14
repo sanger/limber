@@ -19,8 +19,8 @@ RSpec.describe Sequencescape::Api::V2::Tube do
   it { is_expected.to be_tube }
 
   describe '#stock plate' do
-    let(:stock_plates)          { create_list(:v2_stock_plate, 4) }
-    let(:tube_with_ancestors)   { create :v2_tube, barcode_number: 12_345, ancestors: stock_plates }
+    let(:stock_plates) { create_list(:v2_stock_plate, 4) }
+    let(:tube_with_ancestors) { create :v2_tube, barcode_number: 12_345, ancestors: stock_plates }
 
     # I know this is a real hack but all we need to know is whether
     # it returns the last stock plate

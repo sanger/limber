@@ -1,16 +1,14 @@
 import { requestsForWell } from './wellHelpers'
 
-const requestIsActive = function(request) {
-  return request.state !== 'passed' &&
-    request.state !== 'cancelled' &&
-    request.state !== 'failed'
+const requestIsActive = function (request) {
+  return request.state !== 'passed' && request.state !== 'cancelled' && request.state !== 'failed'
 }
 
-const requestIsLibraryCreation = function(request) {
+const requestIsLibraryCreation = function (request) {
   return request.library_type != null
 }
 
-const requestsFromPlates = function(plateObjs) {
+const requestsFromPlates = function (plateObjs) {
   const requestsArray = []
   for (let p = 0; p < plateObjs.length; p++) {
     const plateObj = plateObjs[p]
@@ -19,7 +17,11 @@ const requestsFromPlates = function(plateObjs) {
       const well = wells[w]
       const requests = requestsForWell(well)
       for (let r = 0; r < requests.length; r++) {
-        requestsArray.push({ request: requests[r], well: well, plateObj: plateObj })
+        requestsArray.push({
+          request: requests[r],
+          well: well,
+          plateObj: plateObj,
+        })
       }
     }
   }

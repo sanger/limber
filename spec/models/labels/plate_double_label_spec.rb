@@ -21,7 +21,9 @@ RSpec.describe Labels::PlateDoubleLabel, type: :model do
     context '#extra_attributes' do
       it 'has the correct attributes' do
         extra_attributes = label.extra_attributes
-        expect(extra_attributes[:right_text]).to eq "#{labware.workline_identifier} #{labware.role} #{labware.purpose.name}"
+        expect(
+          extra_attributes[:right_text]
+        ).to eq "#{labware.workline_identifier} #{labware.role} #{labware.purpose.name}"
         expect(extra_attributes[:left_text]).to eq Time.zone.today.strftime('%e-%^b-%Y')
       end
     end
@@ -32,7 +34,9 @@ RSpec.describe Labels::PlateDoubleLabel, type: :model do
         expect(sprint_attributes[:right_text]).to eq labware.workline_identifier
         expect(sprint_attributes[:left_text]).to eq labware.barcode.human
         expect(sprint_attributes[:barcode]).to eq labware.barcode.machine
-        expect(sprint_attributes[:extra_right_text]).to eq "#{labware.workline_identifier} #{labware.role} #{labware.purpose.name}"
+        expect(
+          sprint_attributes[:extra_right_text]
+        ).to eq "#{labware.workline_identifier} #{labware.role} #{labware.purpose.name}"
         expect(sprint_attributes[:extra_left_text]).to eq Time.zone.today.strftime('%e-%^b-%Y')
       end
     end

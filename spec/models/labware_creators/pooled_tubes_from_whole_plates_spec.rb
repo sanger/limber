@@ -20,17 +20,17 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     expect(described_class.page).to eq 'pooled_tubes_from_whole_plates'
   end
 
-  let(:user_uuid)    { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose)      { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent2_uuid)  { SecureRandom.uuid }
-  let(:parent3_uuid)  { SecureRandom.uuid }
-  let(:parent4_uuid)  { SecureRandom.uuid }
-  let(:parent)        { associated :plate, uuid: parent_uuid, barcode_number: 1 }
-  let(:parent2)       { associated :plate, uuid: parent2_uuid, barcode_number: 2 }
-  let(:parent3)       { associated :plate, uuid: parent3_uuid, barcode_number: 3 }
-  let(:parent4)       { associated :plate, uuid: parent4_uuid, barcode_number: 4 }
+  let(:purpose) { json :purpose, uuid: purpose_uuid }
+  let(:parent_uuid) { SecureRandom.uuid }
+  let(:parent2_uuid) { SecureRandom.uuid }
+  let(:parent3_uuid) { SecureRandom.uuid }
+  let(:parent4_uuid) { SecureRandom.uuid }
+  let(:parent) { associated :plate, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent2) { associated :plate, uuid: parent2_uuid, barcode_number: 2 }
+  let(:parent3) { associated :plate, uuid: parent3_uuid, barcode_number: 3 }
+  let(:parent4) { associated :plate, uuid: parent4_uuid, barcode_number: 4 }
 
   let(:barcodes) do
     [
@@ -41,9 +41,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     ]
   end
 
-  before do
-    Settings.transfer_templates['Whole plate to tube'] = 'whole-plate-to-tube'
-  end
+  before { Settings.transfer_templates['Whole plate to tube'] = 'whole-plate-to-tube' }
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
@@ -56,12 +54,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     has_a_working_api
 
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: purpose_uuid,
-        parent_uuid: parent_uuid,
-        barcodes: barcodes
-      }
+      { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, barcodes: barcodes }
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -88,20 +81,22 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     end
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
-    let(:stub_barcode_searches) do
-      stub_asset_search(barcodes, [parent, parent2, parent3, parent4])
-    end
+    let(:stub_barcode_searches) { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     let(:transfer_creation_request) do
       stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube))
       [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |uuid|
-        stub_api_post('whole-plate-to-tube',
-                      payload: { transfer: {
-                        user: user_uuid,
-                        source: uuid,
-                        destination: 'tube-0'
-                      } },
-                      body: '{}')
+        stub_api_post(
+          'whole-plate-to-tube',
+          payload: {
+            transfer: {
+              user: user_uuid,
+              source: uuid,
+              destination: 'tube-0'
+            }
+          },
+          body: '{}'
+        )
       end
     end
 
@@ -116,9 +111,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
       it 'pools from all the plates' do
         expect(subject.save!).to be_truthy
         expect(tube_creation_request).to have_been_made.once
-        transfer_creation_request.each do |transfer|
-          expect(transfer).to have_been_made.once
-        end
+        transfer_creation_request.each { |transfer| expect(transfer).to have_been_made.once }
       end
     end
   end

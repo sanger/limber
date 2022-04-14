@@ -14,9 +14,7 @@ FactoryBot.define do
     sample_manifest { create(:v2_sample_manifest) }
     uuid { SecureRandom.uuid }
 
-    after(:build) do |sample, evaluator|
-      sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata }
-    end
+    after(:build) { |sample, evaluator| sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata } }
   end
 
   # API V1 sample
@@ -29,7 +27,7 @@ FactoryBot.define do
     json_root { 'sample' }
 
     reference { { 'genome' => 'reference_genome' } }
-    sanger    { { 'name' => name, 'sample_id' => sample_id } }
+    sanger { { 'name' => name, 'sample_id' => sample_id } }
   end
 
   factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do

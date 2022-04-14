@@ -17,11 +17,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     # when first added. Here we fall back to 'LabwareCreators::Uncreatable' in cases where the purpose is
     # not fully configured
     refer = Settings.purposes.fetch(purpose_uuid, {}).fetch(:creator_class, 'LabwareCreators::Uncreatable')
-    if refer.is_a?(String)
-      refer.constantize
-    else
-      refer[:name].constantize
-    end
+    refer.is_a?(String) ? refer.constantize : refer[:name].constantize
   end
 
   def self.params_for(purpose_uuid)
@@ -48,8 +44,10 @@ module LabwareCreators # rubocop:todo Style/Documentation
     def model_name
       case type
       # TODO: can we rename 'child' to 'plate' please? see routes.rb
-      when 'plate' then ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
-      when 'tube' then ::ActiveModel::Name.new(Limber::Tube, nil, 'tube')
+      when 'plate'
+        ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
+      when 'tube'
+        ::ActiveModel::Name.new(Limber::Tube, nil, 'tube')
       else
         raise StandardError, "Unknown type #{type}"
       end

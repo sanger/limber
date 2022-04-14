@@ -25,9 +25,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
 
     config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      'Cache-Control' => 'public, max-age=172800'
-    }
+    config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=172800' }
   else
     config.action_controller.perform_caching = false
 
@@ -64,28 +62,27 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
   config.action_mailer.smtp_settings = {}
 
-  config.admin_email          = 'nnnnnnnnnnnnnnnn'
+  config.admin_email = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
-  config.api                                     = ActiveSupport::OrderedOptions.new
-  config.api.v1                                  = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options.namespace     = 'Limber'
-  config.api.v1.connection_options.url           = rewrite_localhost(ENV.fetch('API_URL', 'http://localhost:3000/api/1/'))
+  config.api = ActiveSupport::OrderedOptions.new
+  config.api.v1 = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options.namespace = 'Limber'
+  config.api.v1.connection_options.url = rewrite_localhost(ENV.fetch('API_URL', 'http://localhost:3000/api/1/'))
   config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
-  config.api.v2                                  = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options.url           = rewrite_localhost(ENV.fetch('API2_URL', 'http://localhost:3000/api/v2'))
-  config.api.v2.connection_options.js_url        = ENV.fetch('API2_URL', 'http://localhost:3000/api/v2')
+  config.api.v2 = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options.url = rewrite_localhost(ENV.fetch('API2_URL', 'http://localhost:3000/api/v2'))
+  config.api.v2.connection_options.js_url = ENV.fetch('API2_URL', 'http://localhost:3000/api/v2')
 
   config.qc_submission_name = 'MiSeq for QC'
+
   # By default used first study/project
   config.study_uuid = nil
   config.project_uuid = nil
-  config.request_options = {
-    'read_length' => 11
-  }
+  config.request_options = { 'read_length' => 11 }
   config.pmb_uri = ENV.fetch('PMB_URI', rewrite_localhost('http://localhost:3002/v1/'))
   config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql'
 

@@ -9,872 +9,833 @@
 /* eslint quotes: ["error", "double"] */
 const resources = [
   {
-    "resource": "aliquot",
-    "attributes": {
-      "tag_oligo": "",
-      "tag_index": "",
-      "tag2_oligo": "",
-      "tag2_index": "",
-      "suboptimal": "",
-      "library_type": "",
-      "study": {
-        "jsonApi": "hasOne",
-        "type": "study"
+    resource: "aliquot",
+    attributes: {
+      tag_oligo: "",
+      tag_index: "",
+      tag2_oligo: "",
+      tag2_index: "",
+      suboptimal: "",
+      library_type: "",
+      study: {
+        jsonApi: "hasOne",
+        type: "study",
       },
-      "project": {
-        "jsonApi": "hasOne",
-        "type": "project"
+      project: {
+        jsonApi: "hasOne",
+        type: "project",
       },
-      "sample": {
-        "jsonApi": "hasOne",
-        "type": "sample"
+      sample: {
+        jsonApi: "hasOne",
+        type: "sample",
       },
-      "request": {
-        "jsonApi": "hasOne",
-        "type": "request"
-      }
+      request: {
+        jsonApi: "hasOne",
+        type: "request",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "asset",
-    "attributes": {
-      "uuid": "",
-      "custom_metadatum_collection": {
-        "jsonApi": "hasOne",
-        "type": "custom_metadatum_collection"
+    resource: "asset",
+    attributes: {
+      uuid: "",
+      custom_metadatum_collection: {
+        jsonApi: "hasOne",
+        type: "custom_metadatum_collection",
       },
-      "comments": {
-        "jsonApi": "hasMany",
-        "type": "comment"
-      }
+      comments: {
+        jsonApi: "hasMany",
+        type: "comment",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "comment",
-    "attributes": {
-      "title": "",
-      "description": "",
-      "created_at": "",
-      "updated_at": "",
-      "user": {
-        "jsonApi": "hasOne",
-        "type": "user"
+    resource: "comment",
+    attributes: {
+      title: "",
+      description: "",
+      created_at: "",
+      updated_at: "",
+      user: {
+        jsonApi: "hasOne",
+        type: "user",
       },
-      "commentable": {
-        "jsonApi": "hasOne"
-      }
+      commentable: {
+        jsonApi: "hasOne",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "custom_metadatum_collection",
-    "attributes": {
-      "uuid": "",
-      "metadata": ""
+    resource: "custom_metadatum_collection",
+    attributes: {
+      uuid: "",
+      metadata: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "labware",
-    "attributes": {
-      "uuid": "",
-      "created_at": "",
-      "purpose": {
-        "jsonApi": "hasOne",
-        "type": "purpose"
+    resource: "labware",
+    attributes: {
+      uuid: "",
+      created_at: "",
+      purpose: {
+        jsonApi: "hasOne",
+        type: "purpose",
       },
-      "custom_metadatum_collection": {
-        "jsonApi": "hasOne",
-        "type": "custom_metadatum_collection"
+      custom_metadatum_collection: {
+        jsonApi: "hasOne",
+        type: "custom_metadatum_collection",
       },
-      "comments": {
-        "jsonApi": "hasMany",
-        "type": "comment"
+      comments: {
+        jsonApi: "hasMany",
+        type: "comment",
       },
-      "direct_submissions": {
-        "jsonApi": "hasMany",
-        "type": "submission"
+      direct_submissions: {
+        jsonApi: "hasMany",
+        type: "submission",
       },
-      "state_changes": {
-        "jsonApi": "hasMany",
-        "type": "state_change"
+      state_changes: {
+        jsonApi: "hasMany",
+        type: "state_change",
       },
-      "ancestors": {
-        "jsonApi": "hasMany"
+      ancestors: {
+        jsonApi: "hasMany",
       },
-      "descendants": {
-        "jsonApi": "hasMany"
+      descendants: {
+        jsonApi: "hasMany",
       },
-      "parents": {
-        "jsonApi": "hasMany"
+      parents: {
+        jsonApi: "hasMany",
       },
-      "children": {
-        "jsonApi": "hasMany"
-      }
+      children: {
+        jsonApi: "hasMany",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "lane",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
+    resource: "lane",
+    attributes: {
+      uuid: "",
+      name: "",
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
       },
-      "studies": {
-        "jsonApi": "hasMany",
-        "type": "study"
+      studies: {
+        jsonApi: "hasMany",
+        type: "study",
       },
-      "projects": {
-        "jsonApi": "hasMany",
-        "type": "project"
-      }
+      projects: {
+        jsonApi: "hasMany",
+        type: "project",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "lot",
-    "attributes": {
-      "uuid": "",
-      "lot_number": "",
-      "lot_type": {
-        "jsonApi": "hasOne",
-        "type": "lot_type"
+    resource: "lot",
+    attributes: {
+      uuid: "",
+      lot_number: "",
+      lot_type: {
+        jsonApi: "hasOne",
+        type: "lot_type",
       },
-      "user": {
-        "jsonApi": "hasOne",
-        "type": "user"
+      user: {
+        jsonApi: "hasOne",
+        type: "user",
       },
-      "template": {
-        "jsonApi": "hasOne"
+      template: {
+        jsonApi: "hasOne",
       },
-      "tag_layout_template": {
-        "jsonApi": "hasOne",
-        "type": "tag_layout_template"
-      }
+      tag_layout_template: {
+        jsonApi: "hasOne",
+        type: "tag_layout_template",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "lot_type",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "template_type": "",
-      "target_purpose": {
-        "jsonApi": "hasOne",
-        "type": "purpose"
-      }
+    resource: "lot_type",
+    attributes: {
+      uuid: "",
+      name: "",
+      template_type: "",
+      target_purpose: {
+        jsonApi: "hasOne",
+        type: "purpose",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "order",
-    "attributes": {
-      "uuid": ""
+    resource: "order",
+    attributes: {
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "pick_list",
-    "attributes": {
-      "created_at": "",
-      "updated_at": "",
-      "state": "",
-      "links": "",
-      "pick_attributes": "",
-      "labware_pick_attributes": "",
-      "asynchronous": ""
+    resource: "pick_list",
+    attributes: {
+      created_at: "",
+      updated_at: "",
+      state: "",
+      links: "",
+      pick_attributes: "",
+      labware_pick_attributes: "",
+      asynchronous: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "plate",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "labware_barcode": "",
-      "state": "",
-      "number_of_rows": "",
-      "number_of_columns": "",
-      "size": "",
-      "created_at": "",
-      "updated_at": "",
-      "purpose": {
-        "jsonApi": "hasOne",
-        "type": "purpose"
+    resource: "plate",
+    attributes: {
+      uuid: "",
+      name: "",
+      labware_barcode: "",
+      state: "",
+      number_of_rows: "",
+      number_of_columns: "",
+      size: "",
+      created_at: "",
+      updated_at: "",
+      purpose: {
+        jsonApi: "hasOne",
+        type: "purpose",
       },
-      "custom_metadatum_collection": {
-        "jsonApi": "hasOne",
-        "type": "custom_metadatum_collection"
+      custom_metadatum_collection: {
+        jsonApi: "hasOne",
+        type: "custom_metadatum_collection",
       },
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
       },
-      "studies": {
-        "jsonApi": "hasMany",
-        "type": "study"
+      studies: {
+        jsonApi: "hasMany",
+        type: "study",
       },
-      "projects": {
-        "jsonApi": "hasMany",
-        "type": "project"
+      projects: {
+        jsonApi: "hasMany",
+        type: "project",
       },
-      "wells": {
-        "jsonApi": "hasMany",
-        "type": "well"
+      wells: {
+        jsonApi: "hasMany",
+        type: "well",
       },
-      "comments": {
-        "jsonApi": "hasMany",
-        "type": "comment"
+      comments: {
+        jsonApi: "hasMany",
+        type: "comment",
       },
-      "ancestors": {
-        "jsonApi": "hasMany"
+      ancestors: {
+        jsonApi: "hasMany",
       },
-      "descendants": {
-        "jsonApi": "hasMany"
+      descendants: {
+        jsonApi: "hasMany",
       },
-      "parents": {
-        "jsonApi": "hasMany"
+      parents: {
+        jsonApi: "hasMany",
       },
-      "children": {
-        "jsonApi": "hasMany"
+      children: {
+        jsonApi: "hasMany",
       },
-      "child_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      child_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "child_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
+      child_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
       },
-      "direct_submissions": {
-        "jsonApi": "hasMany",
-        "type": "submission"
+      direct_submissions: {
+        jsonApi: "hasMany",
+        type: "submission",
       },
-      "state_changes": {
-        "jsonApi": "hasMany",
-        "type": "state_change"
-      }
+      state_changes: {
+        jsonApi: "hasMany",
+        type: "state_change",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "plate_template",
-    "attributes": {
-      "uuid": ""
+    resource: "plate_template",
+    attributes: {
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "pre_capture_pool",
-    "attributes": {
-      "uuid": ""
+    resource: "pre_capture_pool",
+    attributes: {
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "primer_panel",
-    "attributes": {
-      "name": "",
-      "programs": ""
+    resource: "primer_panel",
+    attributes: {
+      name: "",
+      programs: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "project",
-    "attributes": {
-      "name": "",
-      "cost_code": "",
-      "uuid": ""
+    resource: "project",
+    attributes: {
+      name: "",
+      cost_code: "",
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "purpose",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "size": ""
+    resource: "purpose",
+    attributes: {
+      uuid: "",
+      name: "",
+      size: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "qc_assay",
-    "attributes": {
-      "lot_number": "",
-      "qc_results": {
-        "jsonApi": "hasMany",
-        "type": "qc_result"
-      }
+    resource: "qc_assay",
+    attributes: {
+      lot_number: "",
+      qc_results: {
+        jsonApi: "hasMany",
+        type: "qc_result",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "qc_result",
-    "attributes": {
-      "key": "",
-      "value": "",
-      "units": "",
-      "cv": "",
-      "assay_type": "",
-      "assay_version": "",
-      "created_at": "",
-      "asset": {
-        "jsonApi": "hasOne",
-        "type": "receptacle"
-      }
+    resource: "qc_result",
+    attributes: {
+      key: "",
+      value: "",
+      units: "",
+      cv: "",
+      assay_type: "",
+      assay_version: "",
+      created_at: "",
+      asset: {
+        jsonApi: "hasOne",
+        type: "receptacle",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "qcable",
-    "attributes": {
-      "uuid": "",
-      "state": "",
-      "labware_barcode": "",
-      "lot": {
-        "jsonApi": "hasOne",
-        "type": "lot"
+    resource: "qcable",
+    attributes: {
+      uuid: "",
+      state: "",
+      labware_barcode: "",
+      lot: {
+        jsonApi: "hasOne",
+        type: "lot",
       },
-      "asset": {
-        "jsonApi": "hasOne"
-      }
+      asset: {
+        jsonApi: "hasOne",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "racked_tube",
-    "attributes": {
-      "coordinate": "",
-      "tube": {
-        "jsonApi": "hasOne",
-        "type": "tube"
+    resource: "racked_tube",
+    attributes: {
+      coordinate: "",
+      tube: {
+        jsonApi: "hasOne",
+        type: "tube",
       },
-      "tube_rack": {
-        "jsonApi": "hasOne",
-        "type": "tube_rack"
-      }
+      tube_rack: {
+        jsonApi: "hasOne",
+        type: "tube_rack",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "receptacle",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "pcr_cycles": "",
-      "submit_for_sequencing": "",
-      "sub_pool": "",
-      "coverage": "",
-      "diluent_volume": "",
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
+    resource: "receptacle",
+    attributes: {
+      uuid: "",
+      name: "",
+      pcr_cycles: "",
+      submit_for_sequencing: "",
+      sub_pool: "",
+      coverage: "",
+      diluent_volume: "",
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
       },
-      "studies": {
-        "jsonApi": "hasMany",
-        "type": "study"
+      studies: {
+        jsonApi: "hasMany",
+        type: "study",
       },
-      "projects": {
-        "jsonApi": "hasMany",
-        "type": "project"
+      projects: {
+        jsonApi: "hasMany",
+        type: "project",
       },
-      "requests_as_source": {
-        "jsonApi": "hasMany",
-        "type": "request"
+      requests_as_source: {
+        jsonApi: "hasMany",
+        type: "request",
       },
-      "requests_as_target": {
-        "jsonApi": "hasMany",
-        "type": "request"
+      requests_as_target: {
+        jsonApi: "hasMany",
+        type: "request",
       },
-      "qc_results": {
-        "jsonApi": "hasMany",
-        "type": "qc_result"
+      qc_results: {
+        jsonApi: "hasMany",
+        type: "qc_result",
       },
-      "aliquots": {
-        "jsonApi": "hasMany",
-        "type": "aliquot"
+      aliquots: {
+        jsonApi: "hasMany",
+        type: "aliquot",
       },
-      "downstream_assets": {
-        "jsonApi": "hasMany"
+      downstream_assets: {
+        jsonApi: "hasMany",
       },
-      "downstream_wells": {
-        "jsonApi": "hasMany",
-        "type": "well"
+      downstream_wells: {
+        jsonApi: "hasMany",
+        type: "well",
       },
-      "downstream_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      downstream_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "downstream_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
+      downstream_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
       },
-      "upstream_assets": {
-        "jsonApi": "hasMany"
+      upstream_assets: {
+        jsonApi: "hasMany",
       },
-      "upstream_wells": {
-        "jsonApi": "hasMany",
-        "type": "well"
+      upstream_wells: {
+        jsonApi: "hasMany",
+        type: "well",
       },
-      "upstream_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      upstream_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "upstream_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
-      }
+      upstream_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "request",
-    "attributes": {
-      "uuid": "",
-      "role": "",
-      "state": "",
-      "priority": "",
-      "options": "",
-      "library_type": "",
-      "submission": {
-        "jsonApi": "hasOne",
-        "type": "submission"
+    resource: "request",
+    attributes: {
+      uuid: "",
+      role: "",
+      state: "",
+      priority: "",
+      options: "",
+      library_type: "",
+      submission: {
+        jsonApi: "hasOne",
+        type: "submission",
       },
-      "order": {
-        "jsonApi": "hasOne",
-        "type": "order"
+      order: {
+        jsonApi: "hasOne",
+        type: "order",
       },
-      "request_type": {
-        "jsonApi": "hasOne",
-        "type": "request_type"
+      request_type: {
+        jsonApi: "hasOne",
+        type: "request_type",
       },
-      "primer_panel": {
-        "jsonApi": "hasOne",
-        "type": "primer_panel"
+      primer_panel: {
+        jsonApi: "hasOne",
+        type: "primer_panel",
       },
-      "pre_capture_pool": {
-        "jsonApi": "hasOne",
-        "type": "pre_capture_pool"
-      }
+      pre_capture_pool: {
+        jsonApi: "hasOne",
+        type: "pre_capture_pool",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "request_type",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "key": "",
-      "for_multiplexing": ""
+    resource: "request_type",
+    attributes: {
+      uuid: "",
+      name: "",
+      key: "",
+      for_multiplexing: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "sample_manifest",
-    "attributes": {
-      "supplier_name": ""
+    resource: "sample_manifest",
+    attributes: {
+      supplier_name: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "sample_metadata",
-    "attributes": {
-      "sample_common_name": "",
-      "supplier_name": ""
+    resource: "sample_metadata",
+    attributes: {
+      sample_common_name: "",
+      supplier_name: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "sample",
-    "attributes": {
-      "name": "",
-      "sanger_sample_id": "",
-      "uuid": "",
-      "control": "",
-      "control_type": "",
-      "sample_metadata": {
-        "jsonApi": "hasOne",
-        "type": "sample_metadata"
+    resource: "sample",
+    attributes: {
+      name: "",
+      sanger_sample_id: "",
+      uuid: "",
+      control: "",
+      control_type: "",
+      sample_metadata: {
+        jsonApi: "hasOne",
+        type: "sample_metadata",
       },
-      "sample_manifest": {
-        "jsonApi": "hasOne",
-        "type": "sample_manifest"
+      sample_manifest: {
+        jsonApi: "hasOne",
+        type: "sample_manifest",
       },
-      "component_samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
-      }
+      component_samples: {
+        jsonApi: "hasMany",
+        type: "sample",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "state_change",
-    "attributes": {
-      "previous_state": "",
-      "target_state": "",
-      "created_at": "",
-      "updated_at": "",
-      "labware": {
-        "jsonApi": "hasOne",
-        "type": "labware"
-      }
+    resource: "state_change",
+    attributes: {
+      previous_state: "",
+      target_state: "",
+      created_at: "",
+      updated_at: "",
+      labware: {
+        jsonApi: "hasOne",
+        type: "labware",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "study",
-    "attributes": {
-      "name": "",
-      "uuid": ""
+    resource: "study",
+    attributes: {
+      name: "",
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "submission",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "state": "",
-      "created_at": "",
-      "updated_at": "",
-      "used_tags": ""
+    resource: "submission",
+    attributes: {
+      uuid: "",
+      name: "",
+      state: "",
+      created_at: "",
+      updated_at: "",
+      used_tags: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tag_group_adapter_type",
-    "attributes": {
-      "name": "",
-      "tag_groups": {
-        "jsonApi": "hasMany",
-        "type": "tag_group"
-      }
+    resource: "tag_group_adapter_type",
+    attributes: {
+      name: "",
+      tag_groups: {
+        jsonApi: "hasMany",
+        type: "tag_group",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tag_group",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "tags": "",
-      "tag_group_adapter_type": {
-        "jsonApi": "hasOne",
-        "type": "tag_group_adapter_type"
-      }
+    resource: "tag_group",
+    attributes: {
+      uuid: "",
+      name: "",
+      tags: "",
+      tag_group_adapter_type: {
+        jsonApi: "hasOne",
+        type: "tag_group_adapter_type",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tag_layout_template",
-    "attributes": {
-      "uuid": "",
-      "direction": "",
-      "walking_by": "",
-      "tag_group": {
-        "jsonApi": "hasOne",
-        "type": "tag_group"
+    resource: "tag_layout_template",
+    attributes: {
+      uuid: "",
+      direction: "",
+      walking_by: "",
+      tag_group: {
+        jsonApi: "hasOne",
+        type: "tag_group",
       },
-      "tag2_group": {
-        "jsonApi": "hasOne",
-        "type": "tag_group"
-      }
+      tag2_group: {
+        jsonApi: "hasOne",
+        type: "tag_group",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "transfer_request",
-    "attributes": {
-      "uuid": "",
-      "state": "",
-      "volume": "",
-      "target_asset": {
-        "jsonApi": "hasOne",
-        "type": "receptacle"
+    resource: "transfer_request",
+    attributes: {
+      uuid: "",
+      state: "",
+      volume: "",
+      target_asset: {
+        jsonApi: "hasOne",
+        type: "receptacle",
       },
-      "source_asset": {
-        "jsonApi": "hasOne",
-        "type": "receptacle"
+      source_asset: {
+        jsonApi: "hasOne",
+        type: "receptacle",
       },
-      "submission": {
-        "jsonApi": "hasOne",
-        "type": "submission"
-      }
+      submission: {
+        jsonApi: "hasOne",
+        type: "submission",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tube_rack",
-    "attributes": {
-      "uuid": "",
-      "created_at": "",
-      "updated_at": "",
-      "labware_barcode": "",
-      "size": "",
-      "number_of_rows": "",
-      "number_of_columns": "",
-      "name": "",
-      "tube_locations": "",
-      "racked_tubes": {
-        "jsonApi": "hasMany",
-        "type": "racked_tube"
+    resource: "tube_rack",
+    attributes: {
+      uuid: "",
+      created_at: "",
+      updated_at: "",
+      labware_barcode: "",
+      size: "",
+      number_of_rows: "",
+      number_of_columns: "",
+      name: "",
+      tube_locations: "",
+      racked_tubes: {
+        jsonApi: "hasMany",
+        type: "racked_tube",
       },
-      "comments": {
-        "jsonApi": "hasMany",
-        "type": "comment"
+      comments: {
+        jsonApi: "hasMany",
+        type: "comment",
       },
-      "purpose": {
-        "jsonApi": "hasOne",
-        "type": "purpose"
-      }
+      purpose: {
+        jsonApi: "hasOne",
+        type: "purpose",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tube_rack_status",
-    "attributes": {
-      "uuid": ""
+    resource: "tube_rack_status",
+    attributes: {
+      uuid: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "tube",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "labware_barcode": "",
-      "state": "",
-      "created_at": "",
-      "updated_at": "",
-      "purpose": {
-        "jsonApi": "hasOne",
-        "type": "purpose"
+    resource: "tube",
+    attributes: {
+      uuid: "",
+      name: "",
+      labware_barcode: "",
+      state: "",
+      created_at: "",
+      updated_at: "",
+      purpose: {
+        jsonApi: "hasOne",
+        type: "purpose",
       },
-      "custom_metadatum_collection": {
-        "jsonApi": "hasOne",
-        "type": "custom_metadatum_collection"
+      custom_metadatum_collection: {
+        jsonApi: "hasOne",
+        type: "custom_metadatum_collection",
       },
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
       },
-      "studies": {
-        "jsonApi": "hasMany",
-        "type": "study"
+      studies: {
+        jsonApi: "hasMany",
+        type: "study",
       },
-      "projects": {
-        "jsonApi": "hasMany",
-        "type": "project"
+      projects: {
+        jsonApi: "hasMany",
+        type: "project",
       },
-      "aliquots": {
-        "jsonApi": "hasMany",
-        "type": "aliquot"
+      aliquots: {
+        jsonApi: "hasMany",
+        type: "aliquot",
       },
-      "direct_submissions": {
-        "jsonApi": "hasMany",
-        "type": "submission"
+      direct_submissions: {
+        jsonApi: "hasMany",
+        type: "submission",
       },
-      "ancestors": {
-        "jsonApi": "hasMany"
+      ancestors: {
+        jsonApi: "hasMany",
       },
-      "descendants": {
-        "jsonApi": "hasMany"
+      descendants: {
+        jsonApi: "hasMany",
       },
-      "parents": {
-        "jsonApi": "hasMany"
+      parents: {
+        jsonApi: "hasMany",
       },
-      "children": {
-        "jsonApi": "hasMany"
+      children: {
+        jsonApi: "hasMany",
       },
-      "child_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      child_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "child_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
+      child_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
       },
-      "comments": {
-        "jsonApi": "hasMany",
-        "type": "comment"
+      comments: {
+        jsonApi: "hasMany",
+        type: "comment",
       },
-      "state_changes": {
-        "jsonApi": "hasMany",
-        "type": "state_change"
+      state_changes: {
+        jsonApi: "hasMany",
+        type: "state_change",
       },
-      "transfer_requests_as_target": {
-        "jsonApi": "hasMany",
-        "type": "transfer_request"
+      transfer_requests_as_target: {
+        jsonApi: "hasMany",
+        type: "transfer_request",
       },
-      "receptacle": {
-        "jsonApi": "hasOne",
-        "type": "receptacle"
-      }
+      receptacle: {
+        jsonApi: "hasOne",
+        type: "receptacle",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "user",
-    "attributes": {
-      "uuid": "",
-      "login": "",
-      "first_name": "",
-      "last_name": ""
+    resource: "user",
+    attributes: {
+      uuid: "",
+      login: "",
+      first_name: "",
+      last_name: "",
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "well",
-    "attributes": {
-      "uuid": "",
-      "name": "",
-      "position": "",
-      "state": "",
-      "pcr_cycles": "",
-      "submit_for_sequencing": "",
-      "sub_pool": "",
-      "coverage": "",
-      "diluent_volume": "",
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
+    resource: "well",
+    attributes: {
+      uuid: "",
+      name: "",
+      position: "",
+      state: "",
+      pcr_cycles: "",
+      submit_for_sequencing: "",
+      sub_pool: "",
+      coverage: "",
+      diluent_volume: "",
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
       },
-      "studies": {
-        "jsonApi": "hasMany",
-        "type": "study"
+      studies: {
+        jsonApi: "hasMany",
+        type: "study",
       },
-      "projects": {
-        "jsonApi": "hasMany",
-        "type": "project"
+      projects: {
+        jsonApi: "hasMany",
+        type: "project",
       },
-      "qc_results": {
-        "jsonApi": "hasMany",
-        "type": "qc_result"
+      qc_results: {
+        jsonApi: "hasMany",
+        type: "qc_result",
       },
-      "requests_as_source": {
-        "jsonApi": "hasMany",
-        "type": "request"
+      requests_as_source: {
+        jsonApi: "hasMany",
+        type: "request",
       },
-      "requests_as_target": {
-        "jsonApi": "hasMany",
-        "type": "request"
+      requests_as_target: {
+        jsonApi: "hasMany",
+        type: "request",
       },
-      "aliquots": {
-        "jsonApi": "hasMany",
-        "type": "aliquot"
+      aliquots: {
+        jsonApi: "hasMany",
+        type: "aliquot",
       },
-      "downstream_assets": {
-        "jsonApi": "hasMany"
+      downstream_assets: {
+        jsonApi: "hasMany",
       },
-      "downstream_wells": {
-        "jsonApi": "hasMany",
-        "type": "well"
+      downstream_wells: {
+        jsonApi: "hasMany",
+        type: "well",
       },
-      "downstream_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      downstream_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "downstream_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
+      downstream_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
       },
-      "upstream_assets": {
-        "jsonApi": "hasMany"
+      upstream_assets: {
+        jsonApi: "hasMany",
       },
-      "upstream_wells": {
-        "jsonApi": "hasMany",
-        "type": "well"
+      upstream_wells: {
+        jsonApi: "hasMany",
+        type: "well",
       },
-      "upstream_plates": {
-        "jsonApi": "hasMany",
-        "type": "plate"
+      upstream_plates: {
+        jsonApi: "hasMany",
+        type: "plate",
       },
-      "upstream_tubes": {
-        "jsonApi": "hasMany",
-        "type": "tube"
+      upstream_tubes: {
+        jsonApi: "hasMany",
+        type: "tube",
       },
-      "transfer_requests_as_source": {
-        "jsonApi": "hasMany",
-        "type": "transfer_request"
+      transfer_requests_as_source: {
+        jsonApi: "hasMany",
+        type: "transfer_request",
       },
-      "transfer_requests_as_target": {
-        "jsonApi": "hasMany",
-        "type": "transfer_request"
-      }
+      transfer_requests_as_target: {
+        jsonApi: "hasMany",
+        type: "transfer_request",
+      },
     },
-    "options": {
-    }
+    options: {},
   },
   {
-    "resource": "work_order",
-    "attributes": {
-      "order_type": "",
-      "quantity": "",
-      "state": "",
-      "options": "",
-      "at_risk": "",
-      "study": {
-        "jsonApi": "hasOne",
-        "type": "study"
+    resource: "work_order",
+    attributes: {
+      order_type: "",
+      quantity: "",
+      state: "",
+      options: "",
+      at_risk: "",
+      study: {
+        jsonApi: "hasOne",
+        type: "study",
       },
-      "project": {
-        "jsonApi": "hasOne",
-        "type": "project"
+      project: {
+        jsonApi: "hasOne",
+        type: "project",
       },
-      "source_receptacle": {
-        "jsonApi": "hasOne"
+      source_receptacle: {
+        jsonApi: "hasOne",
       },
-      "samples": {
-        "jsonApi": "hasMany",
-        "type": "sample"
-      }
+      samples: {
+        jsonApi: "hasMany",
+        type: "sample",
+      },
     },
-    "options": {
-    }
-  }
+    options: {},
+  },
 ]
 
 export default resources

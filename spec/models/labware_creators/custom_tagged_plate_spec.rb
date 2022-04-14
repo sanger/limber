@@ -28,21 +28,12 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
   let!(:plate_request) { stub_api_get(plate_uuid, body: plate) }
   let!(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
 
-  before do
-    create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
-  end
+  before { create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name }
 
-  subject do
-    LabwareCreators::CustomTaggedPlate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
 
   context 'on new' do
-    let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid: plate_uuid
-      }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
     # These values all describe the returned json.
     # They are used to prevent magic numbers from appearing in the specs
@@ -51,7 +42,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     let(:pool_size) { 15 }
     let(:largest_tag_group) { 120 }
 
-    let(:maximum_tag_offset)  { largest_tag_group - occupied_wells }
+    let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
     let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
 
     it 'can be created' do
@@ -67,9 +58,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     end
 
     context 'fetching layout templates' do
-      before do
-        stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2))
-      end
+      before { stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2)) }
 
       let(:layout_hash) do
         WellHelpers.column_order.each_with_index.map do |w, i|
@@ -77,11 +66,26 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           [w, [pool, i + 1]]
         end
       end
+
+      # rubocop:todo Layout/LineLength
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
+      # rubocop:enable Layout/LineLength
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq(
-          'tag-layout-template-0' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true },
-          'tag-layout-template-1' => { tags: layout_hash, used: false, dual_index: false, approved: true, matches_templates_in_pool: true }
+          'tag-layout-template-0' => {
+            tags: layout_hash,
+            used: false,
+            dual_index: false,
+            approved: true,
+            matches_templates_in_pool: true
+          },
+          'tag-layout-template-1' => {
+            tags: layout_hash,
+            used: false,
+            dual_index: false,
+            approved: true,
+            matches_templates_in_pool: true
+          }
         )
       end
     end
@@ -94,13 +98,17 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     let(:parents) { [plate_uuid, tag_plate_uuid] }
 
     let!(:plate_creation_request) do
-      stub_api_post('pooled_plate_creations',
-                    payload: { pooled_plate_creation: {
-                      parents: parents,
-                      child_purpose: child_purpose_uuid,
-                      user: user_uuid
-                    } },
-                    body: json(:plate_creation, child_uuid: child_plate_uuid))
+      stub_api_post(
+        'pooled_plate_creations',
+        payload: {
+          pooled_plate_creation: {
+            parents: parents,
+            child_purpose: child_purpose_uuid,
+            user: user_uuid
+          }
+        },
+        body: json(:plate_creation, child_uuid: child_plate_uuid)
+      )
     end
 
     let(:expected_transfers) { WellHelpers.stamp_hash(96) }
@@ -144,7 +152,11 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           purpose_uuid: child_purpose_uuid,
           parent_uuid: plate_uuid,
           user_uuid: user_uuid,
-          tag_plate: { asset_uuid: tag_plate_uuid, template_uuid: tag_template_uuid, state: tag_plate_state },
+          tag_plate: {
+            asset_uuid: tag_plate_uuid,
+            template_uuid: tag_template_uuid,
+            state: tag_plate_state
+          },
           tag_layout: {
             user: 'user-uuid',
             tag_group: 'tag-group-uuid',
@@ -166,19 +178,21 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
       context 'on save' do
         let!(:custom_tag_layout_creation_request) do
-          stub_api_post('tag_layouts',
-                        payload: {
-                          tag_layout: {
-                            user: 'user-uuid',
-                            plate: child_plate_uuid,
-                            tag_group: 'tag-group-uuid',
-                            tag2_group: 'tag2-group-uuid',
-                            direction: 'column',
-                            walking_by: 'manual by plate',
-                            initial_tag: '1',
-                            tags_per_well: 1
-                          }
-                        })
+          stub_api_post(
+            'tag_layouts',
+            payload: {
+              tag_layout: {
+                user: 'user-uuid',
+                plate: child_plate_uuid,
+                tag_group: 'tag-group-uuid',
+                tag2_group: 'tag2-group-uuid',
+                direction: 'column',
+                walking_by: 'manual by plate',
+                initial_tag: '1',
+                tags_per_well: 1
+              }
+            }
+          )
         end
 
         context 'with an available tag plate' do
@@ -194,6 +208,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
           it 'has the correct child (and uuid)' do
             expect(subject.save).to be true
+
             # This will be our new plate
             expect(subject.child.uuid).to eq(child_plate_uuid)
           end
@@ -233,12 +248,14 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             expect(plate_creation_request).to have_been_made.once
             expect(transfer_creation_request).to have_been_made.once
             expect(state_change_tag_plate_request).not_to have_been_made
+
             # This one will be VERY different
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
             expect(subject.save).to be true
+
             # This will be our new plate
             expect(subject.child.uuid).to eq(child_plate_uuid)
           end

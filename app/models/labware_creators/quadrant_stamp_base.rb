@@ -29,22 +29,14 @@ module LabwareCreators
     self.target_columns = 24
     self.source_plates = 4
     self.attributes += [
-      {
-        transfers: [
-          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]
-        ]
-      }
+      { transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]] }
     ]
 
     private
 
     def create_labware!
       super do |child|
-        LabwareMetadata.new(
-          api: api,
-          user: user_uuid,
-          labware: child
-        ).update!(stock_barcodes_by_quadrant)
+        LabwareMetadata.new(api: api, user: user_uuid, labware: child).update!(stock_barcodes_by_quadrant)
         yield(child) if block_given?
       end
     end
@@ -54,7 +46,8 @@ module LabwareCreators
       transfers.each do |transfer|
         target_well_location = transfer.dig(:new_target, :location)
         target_well_quadrant = WellHelpers.well_quadrant(target_well_location)
-        source_plates_uuids[target_well_quadrant] = transfer[:source_plate] if source_plates_uuids[target_well_quadrant].nil?
+        source_plates_uuids[target_well_quadrant] = transfer[:source_plate] if source_plates_uuids[target_well_quadrant]
+          .nil?
       end
       source_plates_uuids
     end

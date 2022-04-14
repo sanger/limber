@@ -35,7 +35,7 @@ class Sibling
   private
 
   def missing_sibling
-    @name  = 'Other'
+    @name = 'Other'
     @state = 'Not Present'
     @sanger_barcode = 'Not Present'
   end

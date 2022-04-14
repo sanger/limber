@@ -21,7 +21,6 @@ class RobotsController < ApplicationController
     end
   end
 
-  # rubocop:todo Metrics/MethodLength
   def start # rubocop:todo Metrics/AbcSize
     @robot.perform_transfer(stripped_beds)
     if params[:robot_barcode].present?
@@ -30,11 +29,9 @@ class RobotsController < ApplicationController
 
         labware_barcode = bed.labware.barcode.machine
         begin
-          LabwareMetadata.new(
-            api: api,
-            user: current_user_uuid,
-            barcode: labware_barcode
-          ).update!(created_with_robot: params[:robot_barcode])
+          LabwareMetadata
+            .new(api: api, user: current_user_uuid, barcode: labware_barcode)
+            .update!(created_with_robot: params[:robot_barcode])
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
             format.html { redirect_to robot_path(id: @robot.id), notice: "Plate #{plate_barcode} not found." }
@@ -42,19 +39,13 @@ class RobotsController < ApplicationController
         end
       end
     end
-    respond_to do |format|
-      format.html do
-        redirect_to search_path,
-                    notice: "Robot #{@robot.name} has been started."
-      end
-    end
+    respond_to { |format| format.html { redirect_to search_path, notice: "Robot #{@robot.name} has been started." } }
   rescue Robots::Bed::BedError => e
     # Our beds complained, nothing has happened.
     respond_to do |format|
       format.html { redirect_to robot_path(id: @robot.id), notice: "#{e.message} No plates have been started." }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def verify
     render(json: @robot.verify(robot_params))
@@ -67,19 +58,11 @@ class RobotsController < ApplicationController
   end
 
   def find_robot
-    @robot = Robots.find(
-      id: params[:id],
-      api: api,
-      user_uuid: current_user_uuid
-    )
+    @robot = Robots.find(id: params[:id], api: api, user_uuid: current_user_uuid)
   end
 
   def stripped_beds
-    {}.tap do |stripped|
-      (params[:bed_labwares] || {}).each do |k, v|
-        stripped[k.strip] = stripped_labware_barcodes(v)
-      end
-    end
+    {}.tap { |stripped| (params[:bed_labwares] || {}).each { |k, v| stripped[k.strip] = stripped_labware_barcodes(v) } }
   end
 
   def stripped_labware_barcodes(bed_labware)

@@ -6,11 +6,11 @@ RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
   let(:plate_uuid) { SecureRandom.uuid }
-  let(:plate)      { json :plate, uuid: plate_uuid, state: plate_state }
+  let(:plate) { json :plate, uuid: plate_uuid, state: plate_state }
   let(:well_collection) { json :well_collection, default_state: plate_state, custom_state: failed_wells }
   let(:failed_wells) { {} }
-  let(:user_uuid)  { SecureRandom.uuid }
-  let(:reason)     { 'Because I want to' }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
   subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
 
@@ -18,7 +18,9 @@ RSpec.describe StateChangers::DefaultStateChanger do
     let!(:state_change_request) do
       stub_api_post(
         'state_changes',
-        payload: { state_change: expected_parameters },
+        payload: {
+          state_change: expected_parameters
+        },
         body: '{}' # We don't care
       )
     end
@@ -54,6 +56,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
         stub_api_get(plate_uuid, body: plate)
         stub_api_get(plate_uuid, 'wells', body: well_collection)
       end
+
       # if no wells are failed we leave contents blank and state changer assumes full plate
       let(:wells_to_pass) { nil }
 
@@ -64,7 +67,10 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
     context 'on a partially failed plate' do
       let(:plate_state) { 'passed' }
-      let(:target_state) { 'qc_complete' } # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
+
+      # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
+      let(:target_state) { 'qc_complete' }
+
       # when some wells are failed we filter those out of the contents
       let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
       let(:wells_to_pass) { WellHelpers.column_order - failed_wells.keys }
@@ -84,7 +90,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:wells_to_pass) { nil }
       let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
       let(:work_completion_request) do
-        { 'work_completion' => { target: plate_uuid, submissions: ['pool-1-uuid', 'pool-2-uuid'], user: user_uuid } }
+        { 'work_completion' => { target: plate_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
       end
       let(:work_completion) { json :work_completion }
       let!(:work_completion_creation) do
@@ -93,14 +99,10 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
       subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
 
-      before do
-        stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, plate_uuid])
-      end
+      before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, plate_uuid]) }
 
       context 'when config request type matches in progress submissions' do
-        before do
-          create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name
-        end
+        before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
 
         it 'changes plate state and triggers a work completion' do
           subject.move_to!(target_state, reason, customer_accepts_responsibility)
@@ -125,8 +127,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
       end
     end
 
-    after do
-      expect(state_change_request).to have_been_made.once
-    end
+    after { expect(state_change_request).to have_been_made.once }
   end
 end

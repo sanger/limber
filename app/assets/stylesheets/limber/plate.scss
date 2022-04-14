@@ -9,9 +9,13 @@
     color: $gray-100;
   }
 
-  .pool-id { display: none; }
-   &.pool-colours {
-    .pool-id { display: inline; }
+  .pool-id {
+    display: none;
+  }
+  &.pool-colours {
+    .pool-id {
+      display: inline;
+    }
   }
 
   .control-type {
@@ -19,8 +23,10 @@
     font-size: 25px;
     line-height: 25px;
   }
-   &.pool-colours {
-    .control-type { display: none; }
+  &.pool-colours {
+    .control-type {
+      display: none;
+    }
   }
 
   .well {

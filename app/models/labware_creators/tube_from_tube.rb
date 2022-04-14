@@ -10,17 +10,10 @@ module LabwareCreators
     attr_reader :tube_transfer
 
     def create_labware!
-      @child_tube = api.tube_from_tube_creation.create!(
-        parent: parent_uuid,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      ).child
+      @child_tube =
+        api.tube_from_tube_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid).child
 
-      @tube_transfer = transfer_template.create!(
-        user: user_uuid,
-        source: parent_uuid,
-        destination: @child_tube.uuid
-      )
+      @tube_transfer = transfer_template.create!(user: user_uuid, source: parent_uuid, destination: @child_tube.uuid)
       true
     end
 

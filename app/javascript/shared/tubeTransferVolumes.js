@@ -1,22 +1,23 @@
-const purposeTargetMolarityParameter = (purposeConfig) =>
-  purposeConfig?.transfer_parameters?.target_molarity_nm
+const purposeTargetMolarityParameter = (purposeConfig) => purposeConfig?.transfer_parameters?.target_molarity_nm
 
-const purposeTargetVolumeParameter = (purposeConfig) =>
-  purposeConfig?.transfer_parameters?.target_volume_ul
+const purposeTargetVolumeParameter = (purposeConfig) => purposeConfig?.transfer_parameters?.target_volume_ul
 
-const purposeMinimumPickParameter = (purposeConfig) =>
-  purposeConfig?.transfer_parameters?.minimum_pick_ul
+const purposeMinimumPickParameter = (purposeConfig) => purposeConfig?.transfer_parameters?.minimum_pick_ul
 
-const tubeMostRecentMolarity = function(tube) {
+const tubeMostRecentMolarity = function (tube) {
   // Get the QC results,
   // find those for molarity entries in nM,
   // inverse sort by the created_at timestamp,
   // inverse sort by the id,
   // take the first item and parse the value to a float.
   const qcResults = tube?.receptacle?.qc_results
-  const molarityEntries =  qcResults?.filter(result => result.key === 'molarity' && result.units === 'nM')
-  const sortedByCreatedAt = molarityEntries?.sort((resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at))
-  const sortedByIds = sortedByCreatedAt?.sort((resultA, resultB) => parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1)
+  const molarityEntries = qcResults?.filter((result) => result.key === 'molarity' && result.units === 'nM')
+  const sortedByCreatedAt = molarityEntries?.sort(
+    (resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at)
+  )
+  const sortedByIds = sortedByCreatedAt?.sort((resultA, resultB) =>
+    parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1
+  )
   const mostRecentMolarityResult = sortedByIds?.[0]
   return mostRecentMolarityResult ? parseFloat(mostRecentMolarityResult?.value) : undefined
 }
@@ -35,15 +36,23 @@ const tubeMostRecentMolarity = function(tube) {
 //          Volumes in the return Object use the same units as the target_volume parameter.
 //          The boolean returned in belowTarget indicates whether the target_molarity was achieved or
 //          if the actual molarity is below the target due to a weak concentration of source sample.
-const calculateTransferVolumes = function(target_molarity, target_volume, source_molarity, minimum_pick) {
+const calculateTransferVolumes = function (target_molarity, target_volume, source_molarity, minimum_pick) {
   const calc_sample_volume = (target_molarity / source_molarity) * target_volume
   const sample_volume = Math.max(calc_sample_volume, minimum_pick)
   const buffer_volume = target_volume - sample_volume
 
   if (buffer_volume < minimum_pick) {
-    return { sampleVolume: target_volume, bufferVolume: 0, belowTarget: buffer_volume < 0 }
+    return {
+      sampleVolume: target_volume,
+      bufferVolume: 0,
+      belowTarget: buffer_volume < 0,
+    }
   } else {
-    return { sampleVolume: sample_volume, bufferVolume: buffer_volume, belowTarget: false }
+    return {
+      sampleVolume: sample_volume,
+      bufferVolume: buffer_volume,
+      belowTarget: false,
+    }
   }
 }
 
@@ -52,5 +61,5 @@ export {
   purposeTargetVolumeParameter,
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
-  calculateTransferVolumes
+  calculateTransferVolumes,
 }

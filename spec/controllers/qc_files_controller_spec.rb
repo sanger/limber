@@ -16,7 +16,9 @@ RSpec.describe QcFilesController, type: :controller do
         .with(headers: { 'Accept' => 'sequencescape/qc_file' })
         .to_return(
           body: 'example file content',
-          headers: { 'Content-Disposition' => "attachment; filename=\"#{filename}\"" }
+          headers: {
+            'Content-Disposition' => "attachment; filename=\"#{filename}\""
+          }
         )
     end
 
@@ -44,10 +46,13 @@ RSpec.describe QcFilesController, type: :controller do
             'Content-Type' => 'sequencescape/qc_file',
             'Content-Disposition' => 'form-data; filename="test_file.txt"'
           }
-        ).to_return(
+        )
+        .to_return(
           status: 201,
           body: json(:qc_file, filename: 'test_file.txt'),
-          headers: { 'content-type' => 'application/json' }
+          headers: {
+            'content-type' => 'application/json'
+          }
         )
     end
 
@@ -74,19 +79,30 @@ RSpec.describe QcFilesController, type: :controller do
     let(:expected_response) do
       {
         'qc_files' => [
-          { 'filename' => 'file0.txt', 'size' => 123, 'uuid' => 'example-file-uuid-0',
-            'created' => 'June 29, 2017 09:31' },
-          { 'filename' => 'file1.txt', 'size' => 123, 'uuid' => 'example-file-uuid-1',
-            'created' => 'June 29, 2017 09:31' },
-          { 'filename' => 'file2.txt', 'size' => 123, 'uuid' => 'example-file-uuid-2',
-            'created' => 'June 29, 2017 09:31' }
+          {
+            'filename' => 'file0.txt',
+            'size' => 123,
+            'uuid' => 'example-file-uuid-0',
+            'created' => 'June 29, 2017 09:31'
+          },
+          {
+            'filename' => 'file1.txt',
+            'size' => 123,
+            'uuid' => 'example-file-uuid-1',
+            'created' => 'June 29, 2017 09:31'
+          },
+          {
+            'filename' => 'file2.txt',
+            'size' => 123,
+            'uuid' => 'example-file-uuid-2',
+            'created' => 'June 29, 2017 09:31'
+          }
         ]
       }
     end
 
     it 'returns the qc files as json' do
-      get :index, params: { limber_plate_id: plate_uuid },
-                  format: 'json'
+      get :index, params: { limber_plate_id: plate_uuid }, format: 'json'
       expect(JSON.parse(response.body)).to eq(expected_response)
     end
   end

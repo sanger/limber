@@ -41,9 +41,7 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plate)
-      well_filter.filtered.map do |well, additional_parameters|
-        request_hash(well, child_plate, additional_parameters)
-      end
+      well_filter.filtered.map { |well, additional_parameters| request_hash(well, child_plate, additional_parameters) }
     end
 
     def request_hash(source_well, child_plate, additional_parameters)

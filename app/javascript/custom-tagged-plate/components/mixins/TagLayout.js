@@ -5,7 +5,7 @@ export default {
   name: 'TagLayout',
   components: {
     'lb-tag-groups-lookup': TagGroupsLookup,
-    'lb-tag-offset': TagOffset
+    'lb-tag-offset': TagOffset,
   },
   props: {
     // A devour API object. eg. new devourClient(apiOptions)
@@ -13,28 +13,28 @@ export default {
     // components.
     api: {
       type: Object,
-      required: true
+      required: true,
     },
     // The current number of useable tags, calculated by the parent component
     // and used to determine tag offset limits.
     numberOfTags: {
       type: Number,
-      default: 0
+      default: 0,
     },
     // The number of target wells, calculated by the parent component and
     // used to determine the tag offset limits.
     numberOfTargetWells: {
       type: Number,
-      default: 0
+      default: 0,
     },
     // The tags per well number, determined by the plate purpose and used here
     // to determine what tag layout walking by options are available.
     tagsPerWell: {
       type: Number,
-      default: 1
+      default: 1,
     },
   },
-  data () {
+  data() {
     return {
       tagPlate: null, // holds the tag plate once scanned
       tagGroupsList: {}, // holds the list of tag groups once retrieved
@@ -43,18 +43,19 @@ export default {
       walkingBy: 'default', // (overriden) holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
       offsetTagsBy: 0, // holds the entered tag offset number
-      nullTagGroup: { // null tag group object used in place of a selected tag group
+      nullTagGroup: {
+        // null tag group object used in place of a selected tag group
         uuid: null, // uuid of the tag group
         name: 'No tag group selected', // name of the tag group
-        tags: [] // array of tags in the tag group
+        tags: [], // array of tags in the tag group
       },
       directionOptions: [
         { value: null, text: 'Please select a Direction Option...' },
         { value: 'row', text: 'By Rows' },
         { value: 'column', text: 'By Columns' },
         { value: 'inverse row', text: 'By Inverse Rows' },
-        { value: 'inverse column', text: 'By Inverse Columns' }
-      ]
+        { value: 'inverse column', text: 'By Inverse Columns' },
+      ],
     }
   },
   computed: {
@@ -65,7 +66,7 @@ export default {
       return this.tagGroupsList[this.tag2GroupId] || this.nullTagGroup
     },
     coreTagGroupOptions() {
-      return Object.values(this.tagGroupsList).map(tagGroup => {
+      return Object.values(this.tagGroupsList).map((tagGroup) => {
         return { value: tagGroup.id, text: tagGroup.name }
       })
     },
@@ -74,7 +75,7 @@ export default {
     },
     tag2GroupOptions() {
       return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
-    }
+    },
   },
   methods: {
     tagOffsetChanged(tagOffset) {
@@ -83,7 +84,7 @@ export default {
     },
     tagGroupsLookupUpdated(data) {
       this.tagGroupsList = {}
-      if(data.state === 'valid' && data.results) {
+      if (data.state === 'valid' && data.results) {
         this.tagGroupsList = data.results
       }
     },
@@ -94,10 +95,10 @@ export default {
         tag2Group: this.tag2Group,
         walkingBy: this.walkingBy,
         direction: this.direction,
-        offsetTagsBy: this.offsetTagsBy
+        offsetTagsBy: this.offsetTagsBy,
       }
 
       this.$emit('tagparamsupdated', updatedData)
-    }
-  }
+    },
+  },
 }

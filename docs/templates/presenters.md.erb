@@ -21,10 +21,10 @@ Presenters are responsible for showing information about a piece of labware.
 {include:<%= presenter_class.name %>}
 
 <% if used_presenter[presenter_class.name].present? %>
-  Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
-  <%= used_presenter[presenter_class.name].to_sentence %>
+Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
+<%= used_presenter[presenter_class.name].to_sentence %>
 <% else %>
-  **This presenter is unused**
+**This presenter is unused**
 <% end %>
 
 {<%= presenter_class.name %> View class documentation}
@@ -43,7 +43,7 @@ Presenters are responsible for showing information about a piece of labware.
 Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
 <% used_presenter[presenter_class.name].each do |purpose| %><%= purpose %>, <% end %>
 <% else %>
-  **This template is unused**
+**This template is unused**
 <% end %>
 
 {<%= presenter_class.name %> View class documentation}

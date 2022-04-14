@@ -23,12 +23,15 @@ class PrintJob # rubocop:todo Style/Documentation
     end
   end
 
-  def print_to_pmb
-    job = PMB::PrintJob.new(
-      printer_name: printer_name,
-      label_template_id: pmb_label_template_id,
-      labels: { body: (labels * number_of_copies) }
-    )
+  def print_to_pmb # rubocop:todo Metrics/MethodLength
+    job =
+      PMB::PrintJob.new(
+        printer_name: printer_name,
+        label_template_id: pmb_label_template_id,
+        labels: {
+          body: (labels * number_of_copies)
+        }
+      )
     if job.save
       true
     else
@@ -84,6 +87,7 @@ class PrintJob # rubocop:todo Style/Documentation
     label_template = get_label_template_by_service('SPrint')
 
     label_array = labels_sprint.values
+
     # label_array:
     # [{
     #   "right_text"=>"DN9000003B",
@@ -96,11 +100,7 @@ class PrintJob # rubocop:todo Style/Documentation
     merge_fields_list = label_array * number_of_copies
 
     # assumes all labels use the same label template
-    SPrintClient.send_print_request(
-      printer_name,
-      label_template,
-      merge_fields_list
-    )
+    SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
     true
   end
 

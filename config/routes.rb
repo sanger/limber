@@ -6,11 +6,11 @@ Rails.application.routes.draw do
   get '/health', controller: :health, action: 'show', as: :health
 
   scope 'search', controller: :search do
-    get  '/',                 action: :new, as: :search
-    post '/',                 action: :create, as: :perform_search
-    get  '/ongoing_plates',   action: :ongoing_plates
-    get  '/ongoing_tubes',    action: :ongoing_tubes
-    post '/qcables',          action: :qcables, as: :qcables_search
+    get '/', action: :new, as: :search
+    post '/', action: :create, as: :perform_search
+    get '/ongoing_plates', action: :ongoing_plates
+    get '/ongoing_tubes', action: :ongoing_tubes
+    post '/qcables', action: :qcables, as: :qcables_search
   end
 
   resource :sessions, only: %i[create delete] do
@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 
   resources :limber_plates, controller: :plates do
     resources :children, controller: :plate_creation
-    resources :tubes,    controller: :tube_creation
+    resources :tubes, controller: :tube_creation
     resources :qc_files
     resources :exports, only: :show
     resources :work_completions, only: :create, module: :plates

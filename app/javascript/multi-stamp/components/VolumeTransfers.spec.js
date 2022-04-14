@@ -3,12 +3,12 @@ import VolumeTransfers from './VolumeTransfers.vue'
 import localVue from 'test_support/base_vue.js'
 
 describe('VolumeTransfers', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(VolumeTransfers, {
       propsData: {
-        validTransfers: []
+        validTransfers: [],
       },
-      localVue
+      localVue,
     })
   }
 
@@ -40,10 +40,14 @@ describe('VolumeTransfers', () => {
     await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted()).toEqual({
-      change: [[{
-        isValid: true,
-        extraParams: wrapper.vm.transferFunc
-      }]]
+      change: [
+        [
+          {
+            isValid: true,
+            extraParams: wrapper.vm.transferFunc,
+          },
+        ],
+      ],
     })
   })
 })

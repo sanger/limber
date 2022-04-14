@@ -5,14 +5,14 @@ require_relative '../support/shared_tagging_examples'
 
 RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   has_a_working_api
-  let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { create :user, uuid: user_uuid }
-  let(:user_swipecard)        { 'abcdef' }
-  let(:plate_barcode)         { example_plate.barcode.machine }
-  let(:plate_uuid)            { SecureRandom.uuid }
-  let(:another_plate_uuid)    { SecureRandom.uuid }
-  let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:child_purpose_name)    { 'Basic' }
+  let(:user_uuid) { 'user-uuid' }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
+  let(:another_plate_uuid) { SecureRandom.uuid }
+  let(:child_purpose_uuid) { 'child-purpose-0' }
+  let(:child_purpose_name) { 'Basic' }
   let(:pools) { 1 }
   let(:request_type_a) { create :request_type, key: 'rt_a' }
   let(:request_type_b) { create :request_type, key: 'rt_b' }
@@ -33,11 +33,19 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let(:another_plate) do
-    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate,
+           barcode_number: 106,
+           uuid: another_plate_uuid,
+           wells: wells,
+           purpose_name: 'Limber Cherrypicked'
   end
 
   let(:alternative_plate) do
-    create :v2_stock_plate, barcode_number: 107, uuid: another_plate_uuid, wells: wells, purpose_name: alternative_purpose_name
+    create :v2_stock_plate,
+           barcode_number: 107,
+           uuid: another_plate_uuid,
+           wells: wells,
+           purpose_name: alternative_purpose_name
   end
 
   let(:alternative_purpose_name) { 'Alternative identifier plate' }
@@ -47,21 +55,29 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let!(:plate_creation_request) do
-    stub_api_post('plate_creations',
-                  payload: { plate_creation: {
-                    parent: plate_uuid,
-                    child_purpose: child_purpose_uuid,
-                    user: user_uuid
-                  } },
-                  body: json(:plate_creation))
+    stub_api_post(
+      'plate_creations',
+      payload: {
+        plate_creation: {
+          parent: plate_uuid,
+          child_purpose: child_purpose_uuid,
+          user: user_uuid
+        }
+      },
+      body: json(:plate_creation)
+    )
   end
   let!(:transfer_creation_request) do
-    stub_api_post('transfer_request_collections',
-                  payload: { transfer_request_collection: {
-                    user: user_uuid,
-                    transfer_requests: transfer_requests
-                  } },
-                  body: '{}')
+    stub_api_post(
+      'transfer_request_collections',
+      payload: {
+        transfer_request_collection: {
+          user: user_uuid,
+          transfer_requests: transfer_requests
+        }
+      },
+      body: '{}'
+    )
   end
 
   let(:transfer_requests) do
@@ -85,6 +101,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual plate
     2.times { stub_v2_plate(example_plate) }
     stub_v2_plate(child_plate, stub_search: false)
@@ -108,7 +125,9 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
-      allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_purpose_name).and_return([alternative_plate])
+      allow(ancestors_scope).to receive(:where)
+        .with(purpose_name: alternative_purpose_name)
+        .and_return([alternative_plate])
 
       allow(job).to receive(:save).and_return(true)
       allow(PMB::PrintJob).to receive(:new) do |args|
@@ -167,13 +186,24 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   context 'with multiple requests and no config' do
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
-                               requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
-                               requests_as_source: [request_c, request_d]),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        ),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
+
     # We'll eventually add in a disambiguation page here
     scenario 'basic plate creation' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -189,10 +219,20 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:filters) { { request_type_key: ['rt_a'] } }
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
-                               requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
-                               requests_as_source: [request_c, request_d]),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        ),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
@@ -218,10 +258,20 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1,
-                               requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1,
-                               requests_as_source: [request_c, request_d]),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '6-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        ),
         create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end

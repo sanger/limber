@@ -44,6 +44,7 @@ FactoryBot.define do
       transient do
         # Number of target tubes
         target_tubes_count { 2 }
+
         # Array of expected source well names (eg. ['A1','B1'])
         # selects wells in column order by default
         source_wells { WellHelpers.column_order[0, target_tubes_count] }
@@ -60,7 +61,10 @@ FactoryBot.define do
             'uuid' => "child-tube-#{i}",
             'name' => "Child tube #{i}",
             'state' => 'pending',
-            'label' => { text: 'Example purpose', prefix: 'prefix' },
+            'label' => {
+              text: 'Example purpose',
+              prefix: 'prefix'
+            },
             'barcode' => {
               'number' => (i + 1).to_s,
               'prefix' => 'NT',
@@ -82,7 +86,8 @@ FactoryBot.define do
         json_root { nil }
         resource_actions { %w[read first last] }
         associated_on { 'transfers_to_tubes' }
-        plate_uuid   { SecureRandom.uuid }
+        plate_uuid { SecureRandom.uuid }
+
         # While resources can be paginated, wells wont be.
         # Furthermore, we trust the api gem to handle that side of things.
         resource_url { "#{api_root}#{plate_uuid}/#{associated_on}/1" }
@@ -90,11 +95,7 @@ FactoryBot.define do
         transfer_factory { :transfer_to_mx_tubes_by_submission }
       end
 
-      transfers do
-        Array.new(size) do |_i|
-          associated(transfer_factory)
-        end
-      end
+      transfers { Array.new(size) { |_i| associated(transfer_factory) } }
     end
 
     # A collection of multiple creation transfers
@@ -103,12 +104,13 @@ FactoryBot.define do
 
       transient do
         json_root { nil }
-        source_uuids { ['source-uuid', 'source-2-uuid'] }
+        source_uuids { %w[source-uuid source-2-uuid] }
         resource_actions { %w[read first last] }
         associated_on { 'transfers_to_tubes' }
         plate_uuid { SecureRandom.uuid }
         plate { associated :plate, uuid: plate_uuid }
         sources { source_uuids.map { |uuid| associated :plate, uuid: uuid } }
+
         # While resources can be paginated, wells wont be.
         # Furthermore, we trust the api gem to handle that side of things.
         resource_url { "#{api_root}#{plate_uuid}/#{associated_on}/1" }
@@ -116,11 +118,7 @@ FactoryBot.define do
         transfer_factory { :creation_transfer }
       end
 
-      transfers do
-        sources.map do |source|
-          associated(transfer_factory, source: source, destination: plate)
-        end
-      end
+      transfers { sources.map { |source| associated(transfer_factory, source: source, destination: plate) } }
     end
   end
 end

@@ -6,7 +6,7 @@
  */
 
 /// Compass Utils
-@import "limber_print/print-colours";
+@import 'limber_print/print-colours';
 
 /*
 * We want to hide interactive and superfluous elements.
@@ -29,8 +29,12 @@ button,
   display: none;
 }
 
-ul { list-style: none; }
-body { font-family: serif; }
+ul {
+  list-style: none;
+}
+body {
+  font-family: serif;
+}
 
 dl.descriptive-list-inline {
   dt {
@@ -48,26 +52,28 @@ dl.descriptive-list-inline {
 @media (orientation: portrait) {
   /* General purpose worksheet to provide rough summary of plate contents with plenty of whitespace for notes etc. */
   // Extra well info for the pool worksheets only
-  .pool-print-information { display: none; }
+  .pool-print-information {
+    display: none;
+  }
 
   h1 {
-    font-size:larger;
+    font-size: larger;
     display: inline;
     font-family: sans-serif;
   }
   .plate-view {
     border: 1px solid black;
-    float:left;
-    clear:left;
+    float: left;
+    clear: left;
     margin: 5mm 0;
     border-radius: 0px 15px 15px 15px;
   }
   .well {
-    width:5mm;
-    height:5mm;
-    padding:0;
-    margin:0;
-    border:1px solid black;
+    width: 5mm;
+    height: 5mm;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;
     border-radius: 5mm;
   }
 
@@ -86,23 +92,23 @@ dl.descriptive-list-inline {
   }
   #pooling_tab {
     display: block;
-    width:40%;
-    float:right;
-    clear:right;
+    width: 40%;
+    float: right;
+    clear: right;
   }
   #summary_tab {
     display: block;
-    float:left;
-    margin:3mm;
-    padding:0;
+    float: left;
+    margin: 3mm;
+    padding: 0;
   }
   #pools-information H3 {
     display: inline;
     font-size: 12pt;
-    padding-right:0.5em;
+    padding-right: 0.5em;
   }
   #pools-information P {
-    font-size:12pt;
+    font-size: 12pt;
   }
 }
 
@@ -132,7 +138,6 @@ dl.descriptive-list-inline {
           padding: 0.5em;
           .well-count {
             float: right;
-
           }
         }
         border: 1px solid black;
@@ -153,7 +158,7 @@ dl.descriptive-list-inline {
 
     td {
       padding: 0;
-      border:1px solid black;
+      border: 1px solid black;
     }
   }
 
@@ -169,8 +174,12 @@ dl.descriptive-list-inline {
 
   .metadata {
     margin: 0.5em;
-    dt { float: left; clear: left }
-    dd {  float: right; }
+    dt {
+      float: left;
+      clear: left;
+    }
+    dd {
+      float: right;
+    }
   }
-
 }

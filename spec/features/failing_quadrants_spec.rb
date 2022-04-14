@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.feature 'Failing quadrants', js: true do
   has_a_working_api
 
-  let(:user_uuid)      { 'user-uuid' }
-  let(:user)           { create :user, uuid: user_uuid }
+  let(:user_uuid) { 'user-uuid' }
+  let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { example_plate.barcode.machine }
-  let(:plate_uuid)     { SecureRandom.uuid }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:wells) do
     [
       create(:v2_well, location: 'A1', state: 'passed'),
@@ -20,8 +20,12 @@ RSpec.feature 'Failing quadrants', js: true do
     ]
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid',
-                      state: 'passed', wells: wells, size: 384
+    create :v2_plate,
+           uuid: plate_uuid,
+           purpose_uuid: 'stock-plate-purpose-uuid',
+           state: 'passed',
+           wells: wells,
+           size: 384
   end
 
   let!(:state_change_request) do
@@ -46,16 +50,21 @@ RSpec.feature 'Failing quadrants', js: true do
     # Set-up the plate config
     create :purpose_config, uuid: 'stock-plate-purpose-uuid'
     create :purpose_config, uuid: 'child-purpose-0'
+
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual plate
 
     2.times do # For both the initial find, and the redirect post state change
       stub_v2_plate(example_plate)
     end
 
-    stub_api_get(plate_uuid, 'wells',
-                 body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' }))
+    stub_api_get(
+      plate_uuid,
+      'wells',
+      body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' })
+    )
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
   end
 

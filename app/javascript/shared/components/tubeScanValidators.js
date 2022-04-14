@@ -56,10 +56,15 @@ const checkDuplicates = (tubeList) => {
   return (tube) => {
     let occurrences = 0
     for (let i = 0; i < tubeList.length; i++) {
-      if (tubeList[i] && tube && tubeList[i].uuid === tube.uuid) { occurrences++ }
+      if (tubeList[i] && tube && tubeList[i].uuid === tube.uuid) {
+        occurrences++
+      }
     }
     if (occurrences > 1) {
-      return { valid: false, message: 'Barcode has been scanned multiple times' }
+      return {
+        valid: false,
+        message: 'Barcode has been scanned multiple times',
+      }
     } else {
       return validScanMessage()
     }
@@ -87,7 +92,7 @@ const checkMatchingPurposes = (purpose) => {
     if (tube && purpose && tube.purpose?.name !== purpose.name) {
       return {
         valid: false,
-        message: `Tube purpose '${tube.purpose?.name || 'UNKNOWN'}' doesn't match other tubes`
+        message: `Tube purpose '${tube.purpose?.name || 'UNKNOWN'}' doesn't match other tubes`,
       }
     }
 
@@ -113,7 +118,10 @@ const checkMolarityResult = () => {
 const checkState = (allowedStatesList) => {
   return (tube) => {
     if (!allowedStatesList.includes(tube.state)) {
-      return { valid: false, message: 'Tube must have a state of: ' + allowedStatesList.join(' or ') }
+      return {
+        valid: false,
+        message: 'Tube must have a state of: ' + allowedStatesList.join(' or '),
+      }
     } else {
       return validScanMessage()
     }
@@ -131,8 +139,11 @@ const checkTransferParameters = (purposeConfigs) => {
     const targetMolarity = purposeTargetMolarityParameter(purposeConfig)
     const targetVolume = purposeTargetVolumeParameter(purposeConfig)
     const minimumPick = purposeMinimumPickParameter(purposeConfig)
-    if ([targetMolarity, targetVolume, minimumPick].some(param => param === undefined)) {
-      return { valid: false, message: 'Tube purpose is not configured for generating transfer volumes' }
+    if ([targetMolarity, targetVolume, minimumPick].some((param) => param === undefined)) {
+      return {
+        valid: false,
+        message: 'Tube purpose is not configured for generating transfer volumes',
+      }
     } else {
       return validScanMessage()
     }

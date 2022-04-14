@@ -19,22 +19,26 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   let(:stock_plate1) { create :v2_stock_plate_for_plate, barcode_number: '1' }
   let(:stock_plate2) { create :v2_stock_plate_for_plate, barcode_number: '2' }
   let(:parent1) do
-    create(:v2_plate_with_primer_panels,
-           barcode_number: '3',
-           uuid: parent1_uuid,
-           size: 96,
-           outer_requests: requests,
-           well_count: 10,
-           stock_plate: stock_plate1)
+    create(
+      :v2_plate_with_primer_panels,
+      barcode_number: '3',
+      uuid: parent1_uuid,
+      size: 96,
+      outer_requests: requests,
+      well_count: 10,
+      stock_plate: stock_plate1
+    )
   end
   let(:parent2) do
-    create(:v2_plate_with_primer_panels,
-           barcode_number: '4',
-           uuid: parent2_uuid,
-           size: 96,
-           outer_requests: requests2,
-           well_count: 10,
-           stock_plate: stock_plate2)
+    create(
+      :v2_plate_with_primer_panels,
+      barcode_number: '4',
+      uuid: parent2_uuid,
+      size: 96,
+      outer_requests: requests2,
+      well_count: 10,
+      stock_plate: stock_plate2
+    )
   end
   let(:child_plate_v2) { create :v2_plate, uuid: child_uuid, barcode_number: '5', size: 384 }
   let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_uuid } }
@@ -52,16 +56,9 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on new' do
-    let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent1_uuid
-      }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
-    subject do
-      LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes)
-    end
+    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes) }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::QuadrantStampPrimerPanel
@@ -77,55 +74,173 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject do
-      LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid))
-    end
+    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid)) }
 
     let(:form_attributes) do
       {
         parent_uuid: parent1_uuid,
         purpose_uuid: child_purpose_uuid,
         transfers: [
-          { source_plate: parent1_uuid, source_asset: '3-well-A1', outer_request: 'request-0',
-            new_target: { location: 'A1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-B1', outer_request: 'request-1',
-            new_target: { location: 'C1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-C1', outer_request: 'request-2',
-            new_target: { location: 'E1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-D1', outer_request: 'request-3',
-            new_target: { location: 'G1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-E1', outer_request: 'request-4',
-            new_target: { location: 'I1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-F1', outer_request: 'request-5',
-            new_target: { location: 'K1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-G1', outer_request: 'request-6',
-            new_target: { location: 'M1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-H1', outer_request: 'request-7',
-            new_target: { location: 'O1' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-A2', outer_request: 'request-8',
-            new_target: { location: 'A3' } },
-          { source_plate: parent1_uuid, source_asset: '3-well-B2', outer_request: 'request-9',
-            new_target: { location: 'C3' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-A1', outer_request: 'request-0',
-            new_target: { location: 'B1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-B1', outer_request: 'request-1',
-            new_target: { location: 'D1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-C1', outer_request: 'request-2',
-            new_target: { location: 'F1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-D1', outer_request: 'request-3',
-            new_target: { location: 'H1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-E1', outer_request: 'request-4',
-            new_target: { location: 'J1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-F1', outer_request: 'request-5',
-            new_target: { location: 'L1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-G1', outer_request: 'request-6',
-            new_target: { location: 'N1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-H1', outer_request: 'request-7',
-            new_target: { location: 'P1' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-A2', outer_request: 'request-8',
-            new_target: { location: 'B3' } },
-          { source_plate: parent2_uuid, source_asset: '4-well-B2', outer_request: 'request-9',
-            new_target: { location: 'D3' } }
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-A1',
+            outer_request: 'request-0',
+            new_target: {
+              location: 'A1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-B1',
+            outer_request: 'request-1',
+            new_target: {
+              location: 'C1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-C1',
+            outer_request: 'request-2',
+            new_target: {
+              location: 'E1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-D1',
+            outer_request: 'request-3',
+            new_target: {
+              location: 'G1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-E1',
+            outer_request: 'request-4',
+            new_target: {
+              location: 'I1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-F1',
+            outer_request: 'request-5',
+            new_target: {
+              location: 'K1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-G1',
+            outer_request: 'request-6',
+            new_target: {
+              location: 'M1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-H1',
+            outer_request: 'request-7',
+            new_target: {
+              location: 'O1'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-A2',
+            outer_request: 'request-8',
+            new_target: {
+              location: 'A3'
+            }
+          },
+          {
+            source_plate: parent1_uuid,
+            source_asset: '3-well-B2',
+            outer_request: 'request-9',
+            new_target: {
+              location: 'C3'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-A1',
+            outer_request: 'request-0',
+            new_target: {
+              location: 'B1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-B1',
+            outer_request: 'request-1',
+            new_target: {
+              location: 'D1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-C1',
+            outer_request: 'request-2',
+            new_target: {
+              location: 'F1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-D1',
+            outer_request: 'request-3',
+            new_target: {
+              location: 'H1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-E1',
+            outer_request: 'request-4',
+            new_target: {
+              location: 'J1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-F1',
+            outer_request: 'request-5',
+            new_target: {
+              location: 'L1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-G1',
+            outer_request: 'request-6',
+            new_target: {
+              location: 'N1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-H1',
+            outer_request: 'request-7',
+            new_target: {
+              location: 'P1'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-A2',
+            outer_request: 'request-8',
+            new_target: {
+              location: 'B3'
+            }
+          },
+          {
+            source_plate: parent2_uuid,
+            source_asset: '4-well-B2',
+            outer_request: 'request-9',
+            new_target: {
+              location: 'D3'
+            }
+          }
         ]
       }
     end
@@ -170,34 +285,42 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer_request_collections',
-                    payload: { transfer_request_collection: {
-                      user: user_uuid,
-                      transfer_requests: transfer_requests
-                    } },
-                    body: '{}')
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: transfer_requests
+          }
+        },
+        body: '{}'
+      )
     end
 
     context '#save!' do
       setup do
         stub_api_get(child_plate_v2.uuid, body: child_plate_v1)
-        stub_api_get('custom_metadatum_collection-uuid',
-                     body: json(:v1_custom_metadatum_collection,
-                                uuid: 'custom_metadatum_collection-uuid'))
+        stub_api_get(
+          'custom_metadatum_collection-uuid',
+          body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid')
+        )
         stub_api_get('user-uuid', body: user)
         stub_api_get('asset-uuid', body: child_plate_v1)
 
-        metadata = attributes_for(:v1_custom_metadatum_collection)
-                   .fetch(:metadata, {}).merge(
-                     stock_barcode_q0: stock_plate1.barcode.human,
-                     stock_barcode_q1: stock_plate2.barcode.human
-                   )
+        metadata =
+          attributes_for(:v1_custom_metadatum_collection)
+            .fetch(:metadata, {})
+            .merge(stock_barcode_q0: stock_plate1.barcode.human, stock_barcode_q1: stock_plate2.barcode.human)
 
-        stub_api_put('custom_metadatum_collection-uuid',
-                     payload: {
-                       custom_metadatum_collection: { metadata: metadata }
-                     },
-                     body: json(:v1_custom_metadatum_collection))
+        stub_api_put(
+          'custom_metadatum_collection-uuid',
+          payload: {
+            custom_metadatum_collection: {
+              metadata: metadata
+            }
+          },
+          body: json(:v1_custom_metadatum_collection)
+        )
       end
 
       it 'creates a plate!' do

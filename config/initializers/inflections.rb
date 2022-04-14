@@ -17,6 +17,4 @@
 #   inflect.acronym 'RESTful'
 # end
 
-ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.uncountable %w[sample_metadata]
-end
+ActiveSupport::Inflector.inflections(:en) { |inflect| inflect.uncountable %w[sample_metadata] }

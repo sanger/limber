@@ -29,9 +29,9 @@ pipeline.
 WGS: # Top of the pipeline (Library Prep)
   filters:
     request_type_key:
-    - limber_wgs
-    - limber_lcmb
-    - limber_rnaa
+      - limber_wgs
+      - limber_lcmb
+      - limber_rnaa
     library_type: Standard
   library_pass: LB Lib PCR-XP
   relationships:
@@ -43,7 +43,7 @@ WGS: # Top of the pipeline (Library Prep)
 WGS MX: # Bottom of the pipeline (Pooling and normalization)
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LB Lib PCR-XP: LB Lib Pool
     LB Lib Pool: LB Lib Pool Norm
@@ -57,7 +57,7 @@ Each file is a `.yml` file located in `app/config/pipelines`, it contains the
 configuration for one or more {Pipeline pipelines}.
 
 The top level structure consists of series of keys, uniquely identifying each
-pipeline. Keys need to be unique across *all* pipelines, not just those within
+pipeline. Keys need to be unique across _all_ pipelines, not just those within
 the same file. Limber will detect duplicate keys, and will raise an exception
 on boot.
 
@@ -78,9 +78,9 @@ to set the pipeline's name.
 WGS: # Top of the pipeline (Library Prep)
   filters:
     request_type_key:
-    - limber_wgs
-    - limber_lcmb
-    - limber_rnaa
+      - limber_wgs
+      - limber_lcmb
+      - limber_rnaa
     library_type: Standard
   library_pass: LB Lib PCR-XP
   relationships:
@@ -104,9 +104,9 @@ value.
 ```yaml
 filters:
   request_type_key:
-  - limber_wgs
-  - limber_lcmb
-  - limber_rnaa
+    - limber_wgs
+    - limber_lcmb
+    - limber_rnaa
   library_type: Standard
 ```
 
@@ -127,14 +127,14 @@ library_pass indicates the plate purposes for which the Lims should suggest the
 
 It can be a string if library pass should be suggested at a single step:
 
-``` yaml
+```yaml
 library_pass: LB Lib PCR-XP
 ```
 
 Or an array, if there are multiple points at which a library can be passed:
 
-``` yaml
-  library_pass:
+```yaml
+library_pass:
   - LB Cap Lib PCR-XP
   - LB Cap Lib Pool
 ```
@@ -158,7 +158,6 @@ Or an array, if there are multiple points at which a library can be passed:
 > - The behaviour is already handled by passing the tube itself
 > - Multiplexing is not charged for, and rarely failed, so an explicit
 >   step is unnecessary and confusing.
->
 
 #### relationships
 
@@ -196,7 +195,7 @@ PCR 2 routes.
 > **TIP**
 > Note the use of &heron_filters and *heron_filters in the example below.
 > This allows a filter to be share between two branches of the pipeline.
-> You are *strongly* encouraged to use this approach when dealing with branched
+> You are *strongly\* encouraged to use this approach when dealing with branched
 > pipelines with identical filters. In the past there have been several
 > occasions where failure to follow this pattern has resulted in a library type
 > only getting added to one branch of the pipeline by mistake.

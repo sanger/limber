@@ -12,20 +12,12 @@ module Presenters
     }
 
     def stock_blood_tube_barcode
-      if labware.aliquots.present?
-        labware.aliquots.first.sample.sample_metadata.supplier_name
-      else
-        'N/A'
-      end
+      labware.aliquots.present? ? labware.aliquots.first.sample.sample_metadata.supplier_name : 'N/A'
     end
 
     def parent_barcode
       parent_plate = labware.parents.first
-      if parent_plate.present?
-        parent_plate.barcode.human
-      else
-        'N/A'
-      end
+      parent_plate.present? ? parent_plate.barcode.human : 'N/A'
     end
   end
 end

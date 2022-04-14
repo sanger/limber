@@ -25,8 +25,8 @@ LHR-384 cDNA:
   :creator_class: LabwareCreators::MergedPlate
   :merged_plate:
     source_purposes:
-    - 'LHR-384 PCR 1'
-    - 'LHR-384 PCR 2'
+      - 'LHR-384 PCR 1'
+      - 'LHR-384 PCR 2'
     help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new cDNA plate.'
   :label_template: plate_6mm_double
   :size: 384
@@ -36,8 +36,8 @@ LHR-384 XP:
   :label_template: plate_6mm_double_qc
   :size: 384
   :file_links:
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 LHR-384 End Prep:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
@@ -54,7 +54,7 @@ LHR-384 Lib PCR:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - 'TSsc384'
+    - 'TSsc384'
 LHR-384 Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

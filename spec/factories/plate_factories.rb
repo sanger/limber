@@ -17,23 +17,25 @@ FactoryBot.define do
   factory :v2_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
     skip_create
 
-    initialize_with do
-      Sequencescape::Api::V2::Plate.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::Plate.load(attributes) }
 
     transient do
       # The number of wells on the plate. Usualy calculated from
       # the plate dimensions.
       well_count { number_of_rows * number_of_columns }
+
       # The factory to use for wells on the plate
       well_factory { :v2_well }
+
       # The factory to use for requests associated with the plate.
       # For v2_plates this is associated with the aliquot, for v2_stock_plates
       # these requests are coming from the wells themselves
       request_factory { :library_request }
+
       # Wells have predictable 'uuids' in tests for example: DN12345-well-A1
       # Overide this parameter if you wish to change this format.
       well_uuid_result { "#{barcode_number}-well-%s" }
+
       # Built automatically by default (using the request_factory) and the information
       # in pool sizes.
       # This is an array of all requests associated with the plate.
@@ -53,9 +55,11 @@ FactoryBot.define do
           end
         end
       end
+
       # In most cases we only want to generate aliquots if we have an
       # associated request. This allows us to over-ride that
       aliquots_without_requests { 0 }
+
       # Constructs the wells for the plate. Constructs
       # well_count wells using the factory specified in well_factory
       # Sets requests on wells by pulling them off the outer_request array
@@ -63,20 +67,25 @@ FactoryBot.define do
       wells do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
-          create well_factory, location: location,
-                               state: well_states[i] || state,
-                               outer_request: outer_requests[i],
-                               downstream_tubes: transfer_targets[location],
-                               uuid: well_uuid_result % location,
-                               aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests
+          create well_factory,
+                 location: location,
+                 state: well_states[i] || state,
+                 outer_request: outer_requests[i],
+                 downstream_tubes: transfer_targets[location],
+                 uuid: well_uuid_result % location,
+                 aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests
         end
       end
+
       # Overide the purpose name
       purpose_name { 'example-purpose' }
+
       # Overive the purpose uuid
       purpose_uuid { 'example-purpose-uuid' }
+
       # The plate purpose
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+
       # Sets up the pools on the plate. Used by outer_requests to work out which
       # requests to build, and which pools (ie. submissions) to assign them to.
       # eg pool_sizes [96] will result in a plate with one pool of 96 requests
@@ -85,16 +94,20 @@ FactoryBot.define do
       parents { [] }
       children { [] }
       descendants { [] }
+
       # Array of pcr_cycles set up for each pool
       pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+
       # The state of the library request for each pool
       library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate_for_plate, barcode_number: is_stock ? barcode_number : 2 }
       ancestors { [stock_plate] }
       transfer_targets { {} }
+
       # Sets the plate size
       size { 96 }
       include_submissions { false }
+
       # Array of states for individual wells, used to overide plate state for, eg. failed wells
       well_states { [state] * size }
       is_stock { false }
@@ -102,10 +115,13 @@ FactoryBot.define do
 
     sequence(:id) { |i| i }
     uuid
+
     # Number of rows is calculated from the size by default
     number_of_rows { (((size / 6)**0.5) * 2).floor }
+
     # Number of columns is calculated from the size by default
     number_of_columns { (((size / 6)**0.5) * 3).floor }
+
     # The state of the plate. Can overide for individual wells using
     # well_states
     state { 'pending' }
@@ -162,9 +178,7 @@ FactoryBot.define do
     # Sets up a plate of GBS requests with configured primer panels
     # Use pool_sizes to determine how many wells have requests
     factory :v2_plate_with_primer_panels do
-      initialize_with do
-        Sequencescape::Api::V2::Plate.load(attributes)
-      end
+      initialize_with { Sequencescape::Api::V2::Plate.load(attributes) }
       transient do
         purpose_name { 'Primer Panel example' }
         request_factory { :gbs_library_request }
@@ -223,9 +237,7 @@ FactoryBot.define do
 
   # Dummy stock plate for the stock_plate association
   factory :v2_stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
-    initialize_with do
-      Sequencescape::Api::V2::Plate.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::Plate.load(attributes) }
     skip_create
 
     transient do
@@ -237,9 +249,7 @@ FactoryBot.define do
       ancestors { [] }
     end
 
-    after(:build) do |plate, evaluator|
-      plate._cached_relationship(:purpose) { evaluator.purpose }
-    end
+    after(:build) { |plate, evaluator| plate._cached_relationship(:purpose) { evaluator.purpose } }
   end
 
   # Basic API v1 plate
@@ -256,7 +266,7 @@ FactoryBot.define do
       barcode_type { 1 }
       purpose_name { 'example-purpose' }
       purpose_uuid { 'example-purpose-uuid' }
-      pool_sizes   { [] }
+      pool_sizes { [] }
       empty_wells { [] }
       library_type { 'Standard' }
       request_type { 'Limber Library Creation' }
@@ -267,8 +277,14 @@ FactoryBot.define do
       pool_complete { false }
     end
 
-    with_has_many_associations 'wells', 'comments', 'creation_transfers', 'qc_files',
-                               'requests', 'source_transfers', 'submission_pools', 'transfers_to_tubes',
+    with_has_many_associations 'wells',
+                               'comments',
+                               'creation_transfers',
+                               'qc_files',
+                               'requests',
+                               'source_transfers',
+                               'submission_pools',
+                               'transfers_to_tubes',
                                'transfer_request_collections'
 
     has_pools_hash
@@ -276,19 +292,10 @@ FactoryBot.define do
     pre_cap_groups { {} }
 
     plate_purpose do
-      {
-        'actions' => { 'read' => api_root + purpose_uuid },
-        'uuid' => purpose_uuid,
-        'name' => purpose_name
-      }
+      { 'actions' => { 'read' => api_root + purpose_uuid }, 'uuid' => purpose_uuid, 'name' => purpose_name }
     end
 
-    label do
-      {
-        prefix: 'Limber',
-        text: 'Cherrypicked'
-      }
-    end
+    label { { prefix: 'Limber', text: 'Cherrypicked' } }
 
     stock_plate do
       sp = associated(:stock_plate, barcode_number: stock_plate_barcode)
@@ -322,15 +329,21 @@ FactoryBot.define do
       pooled_wells = wells.reject { |w| empty_wells.include?(w) }
       pool_hash = {}
       pool_sizes.each_with_index do |pool_size, index|
-        pool_hash["pool-#{index + 1}-uuid"] = {
-          'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
-          'insert_size' => { from: 100, to: 300 },
-          'library_type' => { name: library_type },
-          'request_type' => request_type,
-          'pcr_cycles' => pool_prc_cycles[index],
-          'for_multiplexing' => pool_for_multiplexing[index],
-          'pool_complete' => pool_complete
-        }.merge(extra_pool_info)
+        pool_hash["pool-#{index + 1}-uuid"] =
+          {
+            'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+            'insert_size' => {
+              from: 100,
+              to: 300
+            },
+            'library_type' => {
+              name: library_type
+            },
+            'request_type' => request_type,
+            'pcr_cycles' => pool_prc_cycles[index],
+            'for_multiplexing' => pool_for_multiplexing[index],
+            'pool_complete' => pool_complete
+          }.merge(extra_pool_info)
       end
       pool_hash
     end

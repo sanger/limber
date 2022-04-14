@@ -6,10 +6,10 @@ import localVue from 'test_support/base_vue.js'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagSubstitutionDetails', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(TagSubstitutionDetails, {
       propsData: {
-        tagSubstitutions: { '2': '5', '3': '6' },
+        tagSubstitutions: { 2: '5', 3: '6' },
       },
       localVue,
     })
@@ -21,15 +21,11 @@ describe('TagSubstitutionDetails', () => {
 
       expect(wrapper.find('#original_tag_id_2').exists()).toBe(true)
       expect(wrapper.find('#substituted_tag_id_2').exists()).toBe(true)
-      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
 
       expect(wrapper.find('#original_tag_id_3').exists()).toBe(true)
       expect(wrapper.find('#substituted_tag_id_3').exists()).toBe(true)
-      expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('#remove_tag_id_3_submit_button').exists()).toBe(true)
     })
 
     it('renders different text if tag substitutions are disallowed', async () => {
@@ -59,7 +55,7 @@ describe('TagSubstitutionDetails', () => {
       it('returns true if tag substitutions are present', () => {
         const wrapper = wrapperFactory()
 
-        wrapper.setProps({ tagSubstitutions: { '1': '2' } })
+        wrapper.setProps({ tagSubstitutions: { 1: '2' } })
 
         expect(wrapper.vm.hasTagSubstitutions).toBe(true)
       })
@@ -71,9 +67,7 @@ describe('TagSubstitutionDetails', () => {
       const wrapper = wrapperFactory()
       const emitted = wrapper.emitted()
 
-      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
 
       // const button = wrapper.find('#remove_tag_id_2_submit_button')
       // button.trigger('click')

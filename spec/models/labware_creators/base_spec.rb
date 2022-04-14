@@ -8,7 +8,7 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::Base do
   it_behaves_like 'it does not allow creation'
 
-  let(:basic_purpose)  { 'test-purpose' }
+  let(:basic_purpose) { 'test-purpose' }
   let(:tagged_purpose) { 'dummy-purpose' }
 
   before do

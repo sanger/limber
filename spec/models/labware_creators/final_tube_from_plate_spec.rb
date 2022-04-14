@@ -8,31 +8,21 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::FinalTubeFromPlate do
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
-  subject do
-    LabwareCreators::FinalTubeFromPlate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::FinalTubeFromPlate.new(api, form_attributes) }
 
-  let(:user_uuid)    { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose)      { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)  { SecureRandom.uuid }
-  let(:parent)       { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
+  let(:purpose) { json :purpose, uuid: purpose_uuid }
+  let(:parent_uuid) { SecureRandom.uuid }
+  let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
 
-  let(:form_attributes) do
-    {
-      user_uuid: user_uuid,
-      purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid
-    }
-  end
+  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
 
   context '#save!' do
     has_a_working_api
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
-    let!(:parent_request) do
-      stub_api_get(parent_uuid, body: parent)
-    end
+    let!(:parent_request) { stub_api_get(parent_uuid, body: parent) }
 
     # The API needs to pull back the transfer template to know what actions it can perform
     let!(:transfer_template_request) do
@@ -40,12 +30,16 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer-to-mx-tubes-on-submission',
-                    payload: { transfer: {
-                      source: parent_uuid,
-                      user: user_uuid
-                    } },
-                    body: json(:transfer_to_mx_tubes_by_submission))
+      stub_api_post(
+        'transfer-to-mx-tubes-on-submission',
+        payload: {
+          transfer: {
+            source: parent_uuid,
+            user: user_uuid
+          }
+        },
+        body: json(:transfer_to_mx_tubes_by_submission)
+      )
     end
 
     let!(:tube_state_change_request_0) do

@@ -8,12 +8,7 @@ RSpec.describe Presenters::StockPlatePresenter do
 
   let(:labware) { create :v2_stock_plate }
 
-  subject do
-    Presenters::StockPlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::StockPlatePresenter.new(api: api, labware: labware) }
 
   let(:barcode_string) { 'DN2T' }
 

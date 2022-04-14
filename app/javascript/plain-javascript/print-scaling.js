@@ -4,12 +4,12 @@
  * to the document (ie. the page width) and scales it to fit.
  * Will revert any scaling when switching out of landscape-printing
  */
-window.matchMedia('print and (orientation: landscape)').addEventListener('change', ({matches})=>{
+window.matchMedia('print and (orientation: landscape)').addEventListener('change', ({ matches }) => {
   const plateElement = document.getElementById('plate')
   if (matches) {
     const plateWidth = plateElement.offsetWidth
     const printWidth = document.body.offsetWidth
-    const scaleFactor = printWidth/plateWidth
+    const scaleFactor = printWidth / plateWidth
     plateElement.style.transform = `scale(${scaleFactor})`
   } else {
     plateElement.style.transform = 'scale(1)'

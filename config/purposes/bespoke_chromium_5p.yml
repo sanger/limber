@@ -10,38 +10,38 @@ LBC 5p GEX Dil:
     :target_volume: 20
     :minimum_source_volume: 0.2
     :bins:
-    - colour: 1
-      pcr_cycles: 16
-      max: 26
-    - colour: 2
-      pcr_cycles: 14
-      min: 26
+      - colour: 1
+        pcr_cycles: 16
+        max: 26
+      - colour: 2
+        pcr_cycles: 14
+        min: 26
   :file_links:
-  - name: 'Download Hamilton Cherrypick to 5 prime Dilution CSV'
-    id: 'hamilton_cherrypick_to_5p_gex_dilution'
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: 'Download Hamilton Cherrypick to 5 prime Dilution CSV'
+      id: 'hamilton_cherrypick_to_5p_gex_dilution'
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 LBC 5p GEX Frag 2XP:
   :asset_type: plate
   :file_links:
-  - name: 'Download Hamilton Dilution to Frag 2XP CSV'
-    id: 'hamilton_gex_dil_to_gex_frag_2xp'
+    - name: 'Download Hamilton Dilution to Frag 2XP CSV'
+      id: 'hamilton_gex_dil_to_gex_frag_2xp'
 LBC 5p GEX LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
   :tags_per_well: 1
   :file_links:
-  - name: 'Download Hamilton Frag 2XP to LigXP CSV'
-    id: 'hamilton_gex_frag_2xp_to_gex_ligxp'
+    - name: 'Download Hamilton Frag 2XP to LigXP CSV'
+      id: 'hamilton_gex_frag_2xp_to_gex_ligxp'
 LBC 5p GEX PCR 2XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 LBC 5p GLibPS:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

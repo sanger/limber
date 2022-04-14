@@ -4,15 +4,15 @@ require 'rails_helper'
 
 RSpec.feature 'Pool tubes at end of pipeline', js: true do
   has_a_working_api
-  let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { create :user, uuid: user_uuid }
-  let(:user_swipecard)        { 'abcdef' }
-  let(:tube_barcode)          { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
-  let(:sibling_barcode)       { '1234567890123' }
-  let(:tube_uuid)             { SecureRandom.uuid }
+  let(:user_uuid) { 'user-uuid' }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
+  let(:tube_barcode) { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
+  let(:sibling_barcode) { '1234567890123' }
+  let(:tube_uuid) { SecureRandom.uuid }
   let(:sibling_uuid) { 'sibling-tube-0' }
-  let(:child_purpose_uuid)    { 'child-purpose-0' }
-  let(:example_v2_tube)       do
+  let(:child_purpose_uuid) { 'child-purpose-0' }
+  let(:example_v2_tube) do
     create(:v2_tube, uuid: tube_uuid, state: 'passed', barcode_number: 1, purpose_name: 'Example Purpose')
   end
   let(:example_tube) do
@@ -23,14 +23,28 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
   let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube-uuid' }
 
   let(:transfer_request) do
-    stub_api_post(transfer_template_uuid,
-                  payload: { transfer: { user: user_uuid, source: tube_uuid } },
-                  body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+    stub_api_post(
+      transfer_template_uuid,
+      payload: {
+        transfer: {
+          user: user_uuid,
+          source: tube_uuid
+        }
+      },
+      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
+    )
   end
   let(:transfer_request_b) do
-    stub_api_post(transfer_template_uuid,
-                  payload: { transfer: { user: user_uuid, source: sibling_uuid } },
-                  body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+    stub_api_post(
+      transfer_template_uuid,
+      payload: {
+        transfer: {
+          user: user_uuid,
+          source: sibling_uuid
+        }
+      },
+      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
+    )
   end
 
   # Setup stubs
@@ -39,15 +53,19 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
 
     # Set-up the tube config
     create :tube_config, name: 'Example Purpose', uuid: 'example-purpose-uuid'
-    create :tube_config, presenter_class: 'Presenters::FinalTubePresenter',
-                         name: 'Final Tube Purpose',
-                         creator_class: 'LabwareCreators::FinalTube',
-                         uuid: child_purpose_uuid
+    create :tube_config,
+           presenter_class: 'Presenters::FinalTubePresenter',
+           name: 'Final Tube Purpose',
+           creator_class: 'LabwareCreators::FinalTube',
+           uuid: child_purpose_uuid
     create :pipeline, relationships: { 'Example Purpose' => 'Final Tube Purpose' }
+
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual tube
     stub_v2_tube(example_v2_tube)
+
     # Creator uses the old tube
     stub_api_get(tube_uuid, body: example_tube)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))

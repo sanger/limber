@@ -32,14 +32,14 @@ scRNA Lib PCR:
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - Illumina pipeline tagging
-  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
-  - TS_pWGSA_UDI96
-  - TS_pWGSB_UDI96
-  - TS_pWGSC_UDI96
-  - TS_pWGSD_UDI96
-  - TS_pWGSA_UDI96v2
-  - TSISC_UDI96
+    - Illumina pipeline tagging
+    - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+    - TS_pWGSA_UDI96
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSD_UDI96
+    - TS_pWGSA_UDI96v2
+    - TSISC_UDI96
 scRNA-384 Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -47,8 +47,8 @@ scRNA-384 Lib PCR:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - '384sc'
-  - 'TSsc384'
+    - '384sc'
+    - 'TSsc384'
 scRNA Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

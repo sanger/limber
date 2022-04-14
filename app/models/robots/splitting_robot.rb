@@ -35,6 +35,7 @@ module Robots
         end
       end
     end
+
     # rubocop:enable Metrics/MethodLength
 
     def bed_class

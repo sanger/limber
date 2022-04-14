@@ -15,12 +15,7 @@ FactoryBot.define do
 
       # A Sequencescape::Api object
       # @note Currently requires the root to be mocked with something like webmock
-      api do
-        Sequencescape::Api.new(
-          url: api_root, cookie: nil,
-          namespace: Limber, authorisation: 'testing'
-        )
-      end
+      api { Sequencescape::Api.new(url: api_root, cookie: nil, namespace: Limber, authorisation: 'testing') }
     end
 
     # A class to handle JSON rendering (mimic an API response)
@@ -41,7 +36,7 @@ FactoryBot.define do
       # Read only resources are usually just %w[read]
       resource_actions { ['read'] }
       named_actions { [] }
-      resource_url  { api_root + uuid }
+      resource_url { api_root + uuid }
     end
 
     uuid
@@ -52,9 +47,7 @@ FactoryBot.define do
       end
     end
 
-    initialize_with do
-      new(api, json_render.new(json_root, attributes.except(:json_render, :json_root)).to_hash)
-    end
+    initialize_with { new(api, json_render.new(json_root, attributes.except(:json_render, :json_root)).to_hash) }
   end
 
   # Used for API V1 objects which do NOT have a uuid (such as submission pool)

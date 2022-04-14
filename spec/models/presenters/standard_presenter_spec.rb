@@ -17,24 +17,31 @@ RSpec.describe Presenters::StandardPresenter do
   end
   let(:wells) do
     [
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
-                       aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
-                       aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 2),
-                       aliquots: create_list(aliquot_type, 1)),
-      create(:v2_well, requests_as_source: create_list(:mx_request, 1, priority: 1),
-                       aliquots: create_list(aliquot_type, 1))
+      create(
+        :v2_well,
+        requests_as_source: create_list(:mx_request, 1, priority: 1),
+        aliquots: create_list(aliquot_type, 1)
+      ),
+      create(
+        :v2_well,
+        requests_as_source: create_list(:mx_request, 1, priority: 1),
+        aliquots: create_list(aliquot_type, 1)
+      ),
+      create(
+        :v2_well,
+        requests_as_source: create_list(:mx_request, 1, priority: 2),
+        aliquots: create_list(aliquot_type, 1)
+      ),
+      create(
+        :v2_well,
+        requests_as_source: create_list(:mx_request, 1, priority: 1),
+        aliquots: create_list(aliquot_type, 1)
+      )
     ]
   end
   let(:suggest_passes) { nil }
 
-  subject do
-    Presenters::StandardPresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::StandardPresenter.new(api: api, labware: labware) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)
@@ -59,16 +66,32 @@ RSpec.describe Presenters::StandardPresenter do
   context 'when passed' do
     before do
       create :pipeline, relationships: { purpose_name => 'Child purpose' }
-      create :pipeline, relationships: { purpose_name => 'Child purpose 2' },
-                        filters: { 'request_type_key' => ['limber_multiplexing'] }
-      create :pipeline, relationships: { purpose_name => 'Other purpose 2' },
-                        filters: { 'request_type_key' => ['other_type'] }
+      create :pipeline,
+             relationships: {
+               purpose_name => 'Child purpose 2'
+             },
+             filters: {
+               'request_type_key' => ['limber_multiplexing']
+             }
+      create :pipeline,
+             relationships: {
+               purpose_name => 'Other purpose 2'
+             },
+             filters: {
+               'request_type_key' => ['other_type']
+             }
       create :purpose_config, name: 'Child purpose', uuid: 'child-purpose'
       create :purpose_config, name: 'Child purpose 2', uuid: 'child-purpose-2'
       create :purpose_config, name: 'Other purpose', uuid: 'other-purpose'
       create :purpose_config, name: 'Other purpose 2', uuid: 'other-purpose-2'
-      create :tube_config, name: 'Tube purpose', creator_class: 'LabwareCreators::FinalTubeFromPlate', uuid: 'tube-purpose'
-      create :tube_config, name: 'Incompatible purpose', creator_class: 'LabwareCreators::FinalTube', uuid: 'incompatible-tube-purpose'
+      create :tube_config,
+             name: 'Tube purpose',
+             creator_class: 'LabwareCreators::FinalTubeFromPlate',
+             uuid: 'tube-purpose'
+      create :tube_config,
+             name: 'Incompatible purpose',
+             creator_class: 'LabwareCreators::FinalTube',
+             uuid: 'incompatible-tube-purpose'
     end
 
     let(:state) { 'passed' }
@@ -89,12 +112,7 @@ RSpec.describe Presenters::StandardPresenter do
       cpp = subject.compatible_plate_purposes
       expect(cpp).to be_an Array
       expect(cpp.length).to eq 4
-      expect(cpp.map(&:purpose_uuid)).to eq(%w[
-                                              child-purpose
-                                              child-purpose-2
-                                              other-purpose
-                                              other-purpose-2
-                                            ])
+      expect(cpp.map(&:purpose_uuid)).to eq(%w[child-purpose child-purpose-2 other-purpose other-purpose-2])
     end
 
     it 'yields the configured tube' do
@@ -113,14 +131,26 @@ RSpec.describe Presenters::StandardPresenter do
   context 'before passing' do
     let(:wells) do
       [
-        create(:v2_well, requests_as_source: [],
-                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [],
-                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [],
-                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))),
-        create(:v2_well, requests_as_source: [],
-                         aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started')))
+        create(
+          :v2_well,
+          requests_as_source: [],
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: [],
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: [],
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: [],
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
+        )
       ]
     end
 
@@ -196,18 +226,26 @@ RSpec.describe Presenters::StandardPresenter do
   context 'after passing' do
     let(:wells) do
       [
-        create(:v2_well,
-               requests_as_source: create_list(:mx_request, 1, priority: 1),
-               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))),
-        create(:v2_well,
-               requests_as_source: create_list(:mx_request, 1, priority: 1),
-               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))),
-        create(:v2_well,
-               requests_as_source: [],
-               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))),
-        create(:v2_well,
-               requests_as_source: create_list(:mx_request, 1, priority: 1),
-               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed')))
+        create(
+          :v2_well,
+          requests_as_source: create_list(:mx_request, 1, priority: 1),
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: create_list(:mx_request, 1, priority: 1),
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: [],
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
+        ),
+        create(
+          :v2_well,
+          requests_as_source: create_list(:mx_request, 1, priority: 1),
+          aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+        )
       ]
     end
 

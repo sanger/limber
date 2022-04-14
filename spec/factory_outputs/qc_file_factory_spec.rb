@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'qc file factory' do
-  subject do
-    json(
-      :qc_file,
-      uuid: 'example-qc-file-uuid',
-      filename: 'example_file.txt'
-    )
-  end
+  subject { json(:qc_file, uuid: 'example-qc-file-uuid', filename: 'example_file.txt') }
 
   let(:json_content) do
-    %({
+    '{
       "qc_file":
         {
           "filename":"example_file.txt",
@@ -21,7 +15,7 @@ RSpec.describe 'qc file factory' do
           "uuid":"example-qc-file-uuid",
           "created_at": "2017-06-29T09:31:59.000+01:00"
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

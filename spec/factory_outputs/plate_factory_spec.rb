@@ -4,37 +4,42 @@ require 'rails_helper'
 
 RSpec.describe 'plate factory' do
   subject do
-    json(:plate,
-         uuid: 'example-plate-uuid',
-         state: 'passed',
-         barcode_number: 427_444,
-         name: 'Cherrypicked 427444',
-         qc_state: nil,
-         iteration: 1,
-         label: { prefix: 'RNA-seq dUTP eukaryotic PCR', text: 'ILC Stock' },
-         location: 'Library creation freezer',
-         pool_sizes: [9, 9],
-         priority: 0,
-         stock_plate: {
-           barcode: {
-             ean13: '1111111111111',
-             number: '427444',
-             prefix: 'DN',
-             two_dimensional: nil,
-             type: 1
-           },
-           uuid: 'example-stock-plate-uuid'
-         },
-         created_at: '2016-01-21 16:08:28 +0000',
-         updated_at: '2016-01-21 16:16:42 +0000',
-         wells_count: 30,
-         qc_files_actions: %w[read create],
-         comments_count: 3,
-         submission_pools_count: 2)
+    json(
+      :plate,
+      uuid: 'example-plate-uuid',
+      state: 'passed',
+      barcode_number: 427_444,
+      name: 'Cherrypicked 427444',
+      qc_state: nil,
+      iteration: 1,
+      label: {
+        prefix: 'RNA-seq dUTP eukaryotic PCR',
+        text: 'ILC Stock'
+      },
+      location: 'Library creation freezer',
+      pool_sizes: [9, 9],
+      priority: 0,
+      stock_plate: {
+        barcode: {
+          ean13: '1111111111111',
+          number: '427444',
+          prefix: 'DN',
+          two_dimensional: nil,
+          type: 1
+        },
+        uuid: 'example-stock-plate-uuid'
+      },
+      created_at: '2016-01-21 16:08:28 +0000',
+      updated_at: '2016-01-21 16:16:42 +0000',
+      wells_count: 30,
+      qc_files_actions: %w[read create],
+      comments_count: 3,
+      submission_pools_count: 2
+    )
   end
 
   let(:json_content) do
-    %(
+    '
     {
       "plate": {
         "created_at": "2016-01-21 16:08:28 +0000",
@@ -165,7 +170,7 @@ RSpec.describe 'plate factory' do
           "uuid": "example-stock-plate-uuid"
         }
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

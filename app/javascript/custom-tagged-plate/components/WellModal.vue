@@ -9,10 +9,7 @@
   >
     <form @submit.stop.prevent="handleWellModalSubmit">
       <b-container fluid>
-        <b-row
-          v-if="wellModalDetails.originalTag"
-          class="form-group form-row"
-        >
+        <b-row v-if="wellModalDetails.originalTag" class="form-group form-row">
           <b-col>
             <b-form-group
               id="original_tag_number_group"
@@ -29,10 +26,7 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row
-          v-if="wellModalDetails.tagMapIds.length > 0"
-          class="form-group form-row"
-        >
+        <b-row v-if="wellModalDetails.tagMapIds.length > 0" class="form-group form-row">
           <b-col>
             <b-form-group
               id="substitute_tag_number_group"
@@ -53,12 +47,11 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row
-          v-if="!wellModalDetails.validity.valid"
-          class="form-group form-row"
-        >
+        <b-row v-if="!wellModalDetails.validity.valid" class="form-group form-row">
           <b-col>
-            <span id="well_error_message"><strong>{{ wellModalDetails.validity.message }}</strong></span>
+            <span id="well_error_message"
+              ><strong>{{ wellModalDetails.validity.message }}</strong></span
+            >
           </b-col>
         </b-row>
       </b-container>
@@ -67,7 +60,6 @@
 </template>
 
 <script>
-
 /**
  * Modal displayed to the user on clicking a tagged well on the plate, for them
  * to enter a tag map id to substitute the tag currently in the well.
@@ -92,38 +84,45 @@ export default {
     // if invalid e.g. 'tag clash with C8'
     // - existingSubstituteTagId : the current substitute tag id
     wellModalDetails: {
-      type: Object, default: () => {
+      type: Object,
+      default: () => {
         return {
           position: '',
           originalTag: null,
           tagMapIds: [],
           validity: { valid: true, message: '' },
-          existingSubstituteTagId: null
+          existingSubstituteTagId: null,
         }
-      }
-    }
+      },
+    },
   },
-  data () {
+  data() {
     return {
-      substituteTagId: null // the input substitute tag map id (input so string)
+      substituteTagId: null, // the input substitute tag map id (input so string)
     }
   },
   computed: {
     wellModalTitle() {
-      return ('Well: ' + this.wellModalDetails.position + ' - Tag Substitution')
+      return 'Well: ' + this.wellModalDetails.position + ' - Tag Substitution'
     },
     substituteTagIdAsNumber() {
-      return (this.substituteTagId) ? Number.parseInt(this.substituteTagId) : null
+      return this.substituteTagId ? Number.parseInt(this.substituteTagId) : null
     },
     wellModalState() {
-      if(this.wellModalDetails.tagMapIds.length === 0) { return null }
-      if(this.substituteTagId === null || this.substituteTagId === '') { return null }
+      if (this.wellModalDetails.tagMapIds.length === 0) {
+        return null
+      }
+      if (this.substituteTagId === null || this.substituteTagId === '') {
+        return null
+      }
       return this.wellModalDetails.tagMapIds.includes(this.substituteTagIdAsNumber)
     },
-    wellModalInvalidFeedback(){
-      if(this.substituteTagId === null) { return '' }
+    wellModalInvalidFeedback() {
+      if (this.substituteTagId === null) {
+        return ''
+      }
       return this.wellModalState ? '' : 'Number entered is not a valid tag map id'
-    }
+    },
   },
   methods: {
     show() {
@@ -133,18 +132,17 @@ export default {
       this.$refs.wellModalRef.hide()
     },
     handleWellModalShown(_e) {
-      if(this.wellModalDetails.existingSubstituteTagId) {
+      if (this.wellModalDetails.existingSubstituteTagId) {
         this.substituteTagId = this.wellModalDetails.existingSubstituteTagId.toString()
       }
-      if(this.wellModalDetails.tagMapIds.length > 0) {
+      if (this.wellModalDetails.tagMapIds.length > 0) {
         this.$refs.focusThis.focus()
       }
     },
     handleWellModalOk(_evt) {
-      this.$emit('wellmodalsubtituteselected', this.substituteTagIdAsNumber )
+      this.$emit('wellmodalsubtituteselected', this.substituteTagIdAsNumber)
       this.substituteTagId = null
     },
-  }
+  },
 }
-
 </script>

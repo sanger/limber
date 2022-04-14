@@ -5,7 +5,9 @@
  * child used oligos object below.
  */
 function extractParentWellSubmissionDetails(parentPlate) {
-  if(!parentPlate) { return {} }
+  if (!parentPlate) {
+    return {}
+  }
 
   let submissionPoolIndexes = {}
   let parentWellSubmissionDetails = {}
@@ -14,24 +16,26 @@ function extractParentWellSubmissionDetails(parentPlate) {
   parentPlate.wells.forEach((well) => {
     const position = well.position.name
 
-    if(well.aliquots && well.aliquots.length > 0) {
+    if (well.aliquots && well.aliquots.length > 0) {
       const submDetails = extractSubmDetailsFromWell(well)
 
-      if(!submDetails.id) {
+      if (!submDetails.id) {
         // TODO Replace this with generic limber logging when available
         // See https://github.com/sanger/limber/issues/836
-        console.error('Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well')
+        console.error(
+          'Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well'
+        )
         return
       }
 
-      if(!(submDetails.id in submissionPoolIndexes)) {
+      if (!(submDetails.id in submissionPoolIndexes)) {
         poolIndex++
         submissionPoolIndexes[submDetails.id] = poolIndex
       }
 
       parentWellSubmissionDetails[position] = {
-        'subm_id': submDetails.id,
-        'pool_index': submissionPoolIndexes[submDetails.id]
+        subm_id: submDetails.id,
+        pool_index: submissionPoolIndexes[submDetails.id],
       }
     }
   })
@@ -46,15 +50,17 @@ function extractParentWellSubmissionDetails(parentPlate) {
  * Used when building the child used oligos object below.
  */
 function extractParentUsedOligos(parentPlate) {
-  if(!parentPlate) { return {} }
+  if (!parentPlate) {
+    return {}
+  }
 
   let parentUsedOligos = {}
 
   parentPlate.wells.forEach((well) => {
-    if(well.aliquots && well.aliquots.length > 0) {
+    if (well.aliquots && well.aliquots.length > 0) {
       const submDetails = extractSubmDetailsFromWell(well)
 
-      if(!submDetails.id) {
+      if (!submDetails.id) {
         // TODO Replace this with generic limber logging when available
         // See https://github.com/sanger/limber/issues/836
         console.error('Tag clash functions: extractParentUsedOligos: Error: Submission Id not found for well')
@@ -66,14 +72,13 @@ function extractParentUsedOligos(parentPlate) {
       // add the submission used tags
       for (var i = 0; i < submDetails.usedTags.length; i++) {
         const oligoStr = submDetails.usedTags[i].join(':')
-        parentUsedOligos[submDetails.id][oligoStr] = [ 'submission' ]
+        parentUsedOligos[submDetails.id][oligoStr] = ['submission']
       }
     }
   })
 
   return parentUsedOligos
 }
-
 
 /**
  * Extracts the oligo strings the user has selected by their choice of tag
@@ -83,7 +88,17 @@ function extractParentUsedOligos(parentPlate) {
  * Used to identify tag clashes when building the child wells object.
  */
 function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos) {
-  if(!isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos)) { return {} }
+  if (
+    !isValidChildUsedOligoParameters(
+      parentUsedOligos,
+      parentWellSubmDetails,
+      tagLayout,
+      tagSubstitutions,
+      tagGroupOligos
+    )
+  ) {
+    return {}
+  }
 
   let childUsedOligos = JSON.parse(JSON.stringify(parentUsedOligos))
 
@@ -96,7 +111,7 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
       let tagMapId = tagMapIds[i]
 
       // check for tag substitution
-      if (Object.prototype.hasOwnProperty.call(tagSubstitutions,tagMapId)) {
+      if (Object.prototype.hasOwnProperty.call(tagSubstitutions, tagMapId)) {
         tagMapId = tagSubstitutions[tagMapId]
       }
 
@@ -105,24 +120,40 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
 
     const oligosStr = oligos.join(':')
 
-    if(oligosStr in childUsedOligos[submId]) {
+    if (oligosStr in childUsedOligos[submId]) {
       childUsedOligos[submId][oligosStr].push(position)
     } else {
-      childUsedOligos[submId][oligosStr] = [ position ]
+      childUsedOligos[submId][oligosStr] = [position]
     }
   })
 
   return childUsedOligos
 }
 
-function isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails, tagLayout, tagSubstitutions, tagGroupOligos) {
+function isValidChildUsedOligoParameters(
+  parentUsedOligos,
+  parentWellSubmDetails,
+  tagLayout,
+  tagSubstitutions,
+  tagGroupOligos
+) {
   let isValid = true
 
-  if(!parentUsedOligos) { isValid = false }
-  if(!parentWellSubmDetails) { isValid = false }
-  if(!tagLayout) { isValid = false }
-  if(!tagSubstitutions) { isValid = false }
-  if(!tagGroupOligos) { isValid = false }
+  if (!parentUsedOligos) {
+    isValid = false
+  }
+  if (!parentWellSubmDetails) {
+    isValid = false
+  }
+  if (!tagLayout) {
+    isValid = false
+  }
+  if (!tagSubstitutions) {
+    isValid = false
+  }
+  if (!tagGroupOligos) {
+    isValid = false
+  }
 
   return isValid
 }
@@ -130,7 +161,7 @@ function isValidChildUsedOligoParameters(parentUsedOligos, parentWellSubmDetails
 function extractSubmDetailsFromWell(well) {
   let submDetails = extractSubmDetailsFromRequestsAsSource(well)
 
-  if(!submDetails.id) {
+  if (!submDetails.id) {
     // backup method of getting to submission via aliquots if primary route fails
     submDetails = extractSubmDetailsFromAliquots(well)
   }
@@ -143,13 +174,15 @@ function extractSubmDetailsFromRequestsAsSource(well) {
 
   const requestsLen = well.requests_as_source.length
   for (var i = 0; i < requestsLen; i++) {
-    if(well.requests_as_source[i] && well.requests_as_source[i].submission) {
+    if (well.requests_as_source[i] && well.requests_as_source[i].submission) {
       submDetails.id = well.requests_as_source[i].submission.id
-      if(well.requests_as_source[i].submission.used_tags) {
+      if (well.requests_as_source[i].submission.used_tags) {
         submDetails.usedTags = well.requests_as_source[i].submission.used_tags
       }
     }
-    if(submDetails.id != null) { break }
+    if (submDetails.id != null) {
+      break
+    }
   }
 
   return submDetails
@@ -160,13 +193,15 @@ function extractSubmDetailsFromAliquots(well) {
 
   const requestsLen = well.aliquots.length
   for (var i = 0; i < requestsLen; i++) {
-    if(well.aliquots[i] && well.aliquots[i].request && well.aliquots[i].request.submission) {
+    if (well.aliquots[i] && well.aliquots[i].request && well.aliquots[i].request.submission) {
       submDetails.id = well.aliquots[i].request.submission.id
-      if(well.aliquots[i].request.submission.used_tags) {
+      if (well.aliquots[i].request.submission.used_tags) {
         submDetails.usedTags = well.aliquots[i].request.submission.used_tags
       }
     }
-    if(submDetails.id != null) { break }
+    if (submDetails.id != null) {
+      break
+    }
   }
 
   return submDetails

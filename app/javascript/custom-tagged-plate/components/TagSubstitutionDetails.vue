@@ -1,21 +1,13 @@
 <template>
   <div>
     <p><strong>Tag Substitutions</strong></p>
-    <b-container
-      v-if="hasTagSubstitutions"
-      fluid
-    >
+    <b-container v-if="hasTagSubstitutions" fluid>
       <b-row>
-        <b-col class="first-col">
-          Original Tag Id
-        </b-col>
+        <b-col class="first-col"> Original Tag Id </b-col>
         <b-col>Substituted Tag Id</b-col>
         <b-col>Remove this substitution</b-col>
       </b-row>
-      <b-row
-        v-for="(tagSubstitutionValue, tagSubstitutionKey) in tagSubstitutions"
-        :key="tagSubstitutionKey"
-      >
+      <b-row v-for="(tagSubstitutionValue, tagSubstitutionKey) in tagSubstitutions" :key="tagSubstitutionKey">
         <b-col :id="'original_tag_id_' + tagSubstitutionKey">
           {{ tagSubstitutionKey }}
         </b-col>
@@ -38,23 +30,16 @@
         </b-col>
       </b-row>
     </b-container>
-    <div
-      v-if="tagSubstitutionsAllowed"
-      id="tag_substitutions_allowed"
-    >
+    <div v-if="tagSubstitutionsAllowed" id="tag_substitutions_allowed">
       <p>Click on tagged wells to enter substitutions...</p>
     </div>
-    <div
-      v-else
-      id="tag_substitutions_disallowed"
-    >
+    <div v-else id="tag_substitutions_disallowed">
       <p>No tag substitutions allowed for this plate type.</p>
     </div>
   </div>
 </template>
 
 <script>
-
 /**
  * Displays a list of any tag substitutions the user has entered.
  * Each row contains a remove button which triggers an emit of the selected
@@ -71,25 +56,28 @@ export default {
     // a flag to indicate whether tag substitutions are allowed for this plate
     tagSubstitutionsAllowed: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // an object containing the tag map id substitutions e.g. { 2: 5, 8: 12 }
-    tagSubstitutions: { type: Object, default: () => { return {} } }
+    tagSubstitutions: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
-  data () {
-    return {
-    }
+  data() {
+    return {}
   },
   computed: {
     hasTagSubstitutions() {
       return Object.keys(this.tagSubstitutions).length > 0 ? true : false
-    }
+    },
   },
   methods: {
     removeSubstitution(origTagId) {
       this.$emit('removetagsubstitution', origTagId)
-    }
-  }
+    },
+  },
 }
-
 </script>

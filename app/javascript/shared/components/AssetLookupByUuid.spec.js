@@ -10,7 +10,7 @@ describe('AssetLookupByUuid', () => {
   const nullPlate = { data: [] }
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
 
-  const wrapperFactoryPlate = function(api = mockApi()) {
+  const wrapperFactoryPlate = function (api = mockApi()) {
     // Not ideal using mount here, but having trouble
     // triggering change events on unmounted components
     return mount(AssetLookupByUuid, {
@@ -19,20 +19,24 @@ describe('AssetLookupByUuid', () => {
         resourceName: 'plate',
         includes: '',
         fields: {},
-        filter: { uuid: assetUuid }
+        filter: { uuid: assetUuid },
       },
-      localVue
+      localVue,
     })
   }
 
   it('is invalid if it can not find a plate with the specified uuid', async () => {
     const api = mockApi()
 
-    api.mockGet('plates', {
-      include: '',
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, nullPlate)
+    api.mockGet(
+      'plates',
+      {
+        include: '',
+        filter: { uuid: assetUuid },
+        fields: {},
+      },
+      nullPlate
+    )
 
     const wrapper = wrapperFactoryPlate(api)
 
@@ -42,20 +46,22 @@ describe('AssetLookupByUuid', () => {
 
     expect(wrapper.vm.feedback).toEqual('No results retrieved')
     expect(wrapper.emitted()).toEqual({
-      change: [
-        [{ state: 'invalid', results: null }]
-      ]
+      change: [[{ state: 'invalid', results: null }]],
     })
   })
 
   it('is valid if it can find a plate', async () => {
     const api = mockApi()
 
-    api.mockGet('plates',{
-      include: '',
-      filter: { uuid: assetUuid },
-      fields: {}
-    }, goodPlate)
+    api.mockGet(
+      'plates',
+      {
+        include: '',
+        filter: { uuid: assetUuid },
+        fields: {},
+      },
+      goodPlate
+    )
 
     const wrapper = wrapperFactoryPlate(api)
 

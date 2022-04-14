@@ -8,9 +8,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   describe 'GET show' do
     let(:labware) { create_list :labware, 2 }
 
-    before do
-      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
-    end
+    before { allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware) }
 
     it 'runs ok' do
       get :show, params: { id: 'heron', date: Date.new(2020, 2, 5) }
@@ -36,9 +34,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:from_date) { Time.zone.today.prev_month }
     let(:labware) { create_list :labware, 2 }
 
-    before do
-      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
-    end
+    before { allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware) }
 
     it 'retrieves labware' do
       expect(controller.retrieve_labware(page_size, from_date, purposes)).to eq labware
@@ -55,14 +51,8 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:expected_output) do
       {
         'Limber Example Purpose' => [
-          {
-            record: labware_record_no_state,
-            state: 'pending'
-          },
-          {
-            record: labware_record_passsed,
-            state: 'passed'
-          }
+          { record: labware_record_no_state, state: 'pending' },
+          { record: labware_record_passsed, state: 'passed' }
           # cancelled one not present
         ],
         'LTHR-384 RT' => []

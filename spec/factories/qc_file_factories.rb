@@ -16,15 +16,14 @@ FactoryBot.define do
     transient do
       json_root { nil }
       resource_actions { %w[read first last create] }
-      plate_uuid   { SecureRandom.uuid }
+      plate_uuid { SecureRandom.uuid }
+
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}#{plate_uuid}/qc_files/1" }
       uuid { nil }
     end
 
-    qc_files do
-      Array.new(size) { |i| associated(:qc_file, uuid: "example-file-uuid-#{i}", filename: "file#{i}.txt") }
-    end
+    qc_files { Array.new(size) { |i| associated(:qc_file, uuid: "example-file-uuid-#{i}", filename: "file#{i}.txt") } }
   end
 end

@@ -7,12 +7,16 @@ RSpec.describe 'transfer_template factory' do
     json(
       :transfer_template,
       uuid: 'example-transfer-template-uuid',
-      transfers: { 'A1' => 'A1', 'B1' => 'B1', 'C1' => 'C1' }
+      transfers: {
+        'A1' => 'A1',
+        'B1' => 'B1',
+        'C1' => 'C1'
+      }
     )
   end
 
   let(:json_content) do
-    %({
+    '{
         "transfer_template": {
           "actions": {
             "read": "http://example.com:3000/example-transfer-template-uuid",
@@ -28,7 +32,7 @@ RSpec.describe 'transfer_template factory' do
             "C1": "C1"
           }
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

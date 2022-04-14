@@ -1,4 +1,4 @@
-const baseTransferCreator = function(transfers, extraParams = (_) => {}) {
+const baseTransferCreator = function (transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     transfersArray[i] = {
@@ -7,13 +7,13 @@ const baseTransferCreator = function(transfers, extraParams = (_) => {}) {
       source_asset: transfers[i].well.uuid,
       outer_request: transfers[i].request.uuid,
       new_target: { location: transfers[i].targetWell },
-      ...extraParams(transfers[i])
+      ...extraParams(transfers[i]),
     }
   }
   return transfersArray
 }
 
-const transferTubesCreator = function(transfers, extraParams = (_) => {}) {
+const transferTubesCreator = function (transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     transfersArray[i] = {
@@ -22,13 +22,10 @@ const transferTubesCreator = function(transfers, extraParams = (_) => {}) {
       source_asset: transfers[i].tubeObj.tube.receptacle.uuid,
       outer_request: null,
       new_target: { location: transfers[i].targetWell },
-      ...extraParams(transfers[i])
+      ...extraParams(transfers[i]),
     }
   }
   return transfersArray
 }
 
-export {
-  baseTransferCreator,
-  transferTubesCreator
-}
+export { baseTransferCreator, transferTubesCreator }

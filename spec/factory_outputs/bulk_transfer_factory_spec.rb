@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'bulk_transfer factory' do
-  subject do
-    json(
-      :bulk_transfer,
-      uuid: 'example-bulk-transfer-uuid',
-      transfers_count: 4
-    )
-  end
+  subject { json(:bulk_transfer, uuid: 'example-bulk-transfer-uuid', transfers_count: 4) }
 
   let(:json_content) do
-    %({
+    '{
         "bulk_transfer": {
           "actions": {"read": "http://example.com:3000/example-bulk-transfer-uuid"},
           "transfers": {
@@ -21,7 +15,7 @@ RSpec.describe 'bulk_transfer factory' do
           },
           "uuid": "example-bulk-transfer-uuid"
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

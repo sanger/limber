@@ -3,7 +3,8 @@
 # A State changer is responsible for transitioning the state of a plate, or
 # individual wells.
 module StateChangers
-  class StateChangeError < StandardError; end
+  class StateChangeError < StandardError
+  end
 
   # The Default State changer is used by the vast majority of plates. It creates
   # a simple StateChange record in Sequencescape, specifying the new 'target-state'
@@ -33,6 +34,7 @@ module StateChangers
       }
       api.state_change.create!(state_details)
     end
+
     # rubocop:enable Style/OptionalBooleanParameter
 
     def contents_for(target_state)
@@ -89,17 +91,14 @@ module StateChangers
       super
       complete_outstanding_requests
     end
+
     # rubocop:enable Style/OptionalBooleanParameter
 
     def complete_outstanding_requests
       in_prog_submissions = v2_labware.in_progress_submission_uuids(request_type_key: work_completion_request_type)
       return if in_prog_submissions.blank?
 
-      api.work_completion.create!(
-        submissions: in_prog_submissions,
-        target: v2_labware.uuid,
-        user: user_uuid
-      )
+      api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)
     end
   end
 end

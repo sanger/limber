@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
 module BarcodeLabelsHelper # rubocop:todo Style/Documentation
-  def barcode_printing_form(labels:, redirection_url:, default_printer_name: @presenter.default_printer) # rubocop:todo Rails/HelperInstanceVariable
+  def barcode_printing_form(
+    labels:,
+    redirection_url:,
+    default_printer_name: @presenter.default_printer # rubocop:todo Rails/HelperInstanceVariable
+  )
     # labels are Labels::PlateLabel or Labels::TubeLabel so you can get the
     # default layout based on the class
     printer_types = labels.map(&:printer_type)
     printers = printers_of_type(printer_types)
 
-    print_job = PrintJob.new(
-      number_of_copies: Settings.printers['default_count'],
-      printer_name: default_printer_name,
-      label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
-    )
+    print_job =
+      PrintJob.new(
+        number_of_copies: Settings.printers['default_count'],
+        printer_name: default_printer_name,
+        label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
+      )
 
     # Is redirection_url needed?
     locals = { print_job: print_job, printers: printers, labels: labels, redirection_url: redirection_url }

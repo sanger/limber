@@ -44,10 +44,7 @@ class Labels::Base # rubocop:todo Style/Documentation
   def label_templates_by_service
     pmb_template = config.fetch(:pmb_template, default_label_template)
     sprint_template = config.fetch(:sprint_template, default_sprint_label_template)
-    {
-      'PMB' => pmb_template,
-      'SPrint' => sprint_template
-    }
+    { 'PMB' => pmb_template, 'SPrint' => sprint_template }
   end
 
   private

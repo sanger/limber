@@ -27,12 +27,16 @@ class Presenters::TubesWithSources
   end
 
   def self.build(wells:, pools:)
-    Collection.new(wells.each_with_object({}) do |well, store|
-      well.downstream_tubes.each do |tube|
-        store[tube] ||= new(tube, pools)
-        store[tube] << well
-      end
-    end.values)
+    Collection.new(
+      wells
+        .each_with_object({}) do |well, store|
+          well.downstream_tubes.each do |tube|
+            store[tube] ||= new(tube, pools)
+            store[tube] << well
+          end
+        end
+        .values
+    )
   end
 
   attr_reader :tube
@@ -49,9 +53,7 @@ class Presenters::TubesWithSources
 
   # Returns the pool id based on the shared submission between the wells
   def pool_id
-    @sources.map(&:submission_ids)
-            .reduce { |common_ids, current_ids| common_ids & current_ids }
-            .first
+    @sources.map(&:submission_ids).reduce { |common_ids, current_ids| common_ids & current_ids }.first
   end
 
   def pool_index

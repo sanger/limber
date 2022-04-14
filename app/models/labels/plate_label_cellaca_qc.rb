@@ -11,12 +11,15 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
   end
 
   def qc_attributes
-    max_qc_plates.times.filter_map do |index|
-      # Dividing a column by three maps it to its page
-      next if occupied_columns.none? { |col| col / COLS_PER_PAGE == index }
+    max_qc_plates
+      .times
+      .filter_map do |index|
+        # Dividing a column by three maps it to its page
+        next if occupied_columns.none? { |col| col / COLS_PER_PAGE == index }
 
-      qc_label(index)
-    end.reverse
+        qc_label(index)
+      end
+      .reverse
   end
 
   private
@@ -35,10 +38,14 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
   end
 
   def occupied_columns
-    @occupied_columns ||= labware.wells.filter_map do |well|
-      next if well.empty?
+    @occupied_columns ||=
+      labware
+        .wells
+        .filter_map do |well|
+          next if well.empty?
 
-      well.coordinate.first # column
-    end.uniq
+          well.coordinate.first # column
+        end
+        .uniq
   end
 end

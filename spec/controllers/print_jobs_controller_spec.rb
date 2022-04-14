@@ -14,11 +14,12 @@ RSpec.describe PrintJobsController, type: :controller do
         print_job: {
           printer_name: 'tube printer 1',
           label_templates_by_service: 'limber_tube_label_template',
-          labels: [
-            { 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }
-          ],
+          labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
-            sprint: { 'extra_right_text' => 'some x right text', 'extra_left_text' => 'some x left text' }
+            sprint: {
+              'extra_right_text' => 'some x right text',
+              'extra_left_text' => 'some x left text'
+            }
           },
           number_of_copies: 1
         }

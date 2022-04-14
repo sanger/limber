@@ -10,6 +10,7 @@ namespace :test do
       include WebMock::API
 
       WebMock.enable!
+
       # We currently use mocks in the factories to handle building API
       # objects. We should look at better ways of handling this, but until
       # then we enable mocks while linting.

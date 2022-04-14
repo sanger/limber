@@ -17,32 +17,40 @@ RSpec.feature 'Viewing an inbox', js: true do
 
     stub_search_and_multi_result(
       'Find plates',
-      { 'search' => {
-        states: %w[pending started passed qc_complete failed cancelled],
-        plate_purpose_uuids: %w[uuid-1 uuid-2],
-        show_my_plates_only: false, include_used: false,
-        page: 1
-      } },
+      {
+        'search' => {
+          states: %w[pending started passed qc_complete failed cancelled],
+          plate_purpose_uuids: %w[uuid-1 uuid-2],
+          show_my_plates_only: false,
+          include_used: false,
+          page: 1
+        }
+      },
       [associated(:plate, barcode_number: 1), associated(:plate, barcode_number: 3)]
     )
     stub_search_and_multi_result(
       'Find plates',
-      { 'search' => {
-        states: %w[pending started passed qc_complete failed cancelled],
-        plate_purpose_uuids: %w[uuid-1 uuid-2],
-        show_my_plates_only: true, include_used: false,
-        page: 1
-      } },
+      {
+        'search' => {
+          states: %w[pending started passed qc_complete failed cancelled],
+          plate_purpose_uuids: %w[uuid-1 uuid-2],
+          show_my_plates_only: true,
+          include_used: false,
+          page: 1
+        }
+      },
       [associated(:plate, barcode_number: 1)]
     )
     stub_search_and_multi_result(
       'Find tubes',
-      { 'search' => {
-        states: %w[pending started passed qc_complete failed cancelled],
-        tube_purpose_uuids: %w[uuid-3 uuid-4],
-        include_used: false,
-        page: 1
-      } },
+      {
+        'search' => {
+          states: %w[pending started passed qc_complete failed cancelled],
+          tube_purpose_uuids: %w[uuid-3 uuid-4],
+          include_used: false,
+          page: 1
+        }
+      },
       [associated(:tube, barcode_number: 2)]
     )
   end

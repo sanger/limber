@@ -30,50 +30,52 @@
 export default {
   name: 'AssetCommentAddForm',
   props: {
-    commentTitle: { type: String, required: true }
+    commentTitle: { type: String, required: true },
   },
   data: function () {
     return {
       assetComment: '',
       state: 'pending',
-      previous_success: null
+      previous_success: null,
     }
   },
   computed: {
     buttonText() {
       return {
-        'pending': 'Add Comment to Sequencescape',
-        'busy': 'Sending...',
-        'success': 'Comment successfully added',
-        'failure': 'Failed to add comment, retry?'
+        pending: 'Add Comment to Sequencescape',
+        busy: 'Sending...',
+        success: 'Comment successfully added',
+        failure: 'Failed to add comment, retry?',
       }[this.state]
     },
     buttonStyle() {
       return {
-        'pending': 'primary',
-        'busy': 'outline-primary',
-        'success': 'success',
-        'failure': 'danger'
+        pending: 'primary',
+        busy: 'outline-primary',
+        success: 'success',
+        failure: 'danger',
       }[this.state]
     },
     disabled() {
       return {
-        'pending': this.isCommentInvalid(),
-        'busy': true,
-        'success': true,
-        'failure': false
+        pending: this.isCommentInvalid(),
+        busy: true,
+        success: true,
+        failure: false,
       }[this.state]
     },
     assetCommentTrimmed() {
       return this.assetComment.trim()
-    }
+    },
   },
   methods: {
     async submit() {
-      if(this.isCommentInvalid()) { return }
+      if (this.isCommentInvalid()) {
+        return
+      }
       this.state = 'busy'
       const successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimmed)
-      if(successful) {
+      if (successful) {
         this.state = 'success'
         this.assetComment = ''
         this.previous_success = true
@@ -83,14 +85,14 @@ export default {
       }
     },
     isCommentInvalid() {
-      if(this.assetCommentTrimmed === undefined || this.assetCommentTrimmed === '') {
+      if (this.assetCommentTrimmed === undefined || this.assetCommentTrimmed === '') {
         return true
       }
-      if(this.previous_success != null && this.previous_success) {
+      if (this.previous_success != null && this.previous_success) {
         this.state = 'pending'
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>

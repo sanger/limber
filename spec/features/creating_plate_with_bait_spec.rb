@@ -4,16 +4,14 @@ require 'rails_helper'
 
 RSpec.feature 'Creating a plate with bait', js: true do
   has_a_working_api
-  let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { create :user, uuid: user_uuid }
-  let(:user_swipecard)        { 'abcdef' }
-  let(:plate_barcode)         { example_plate.barcode.machine }
-  let(:plate_uuid)            { SecureRandom.uuid }
-  let(:child_purpose_uuid)    { 'child-purpose-0' }
+  let(:user_uuid) { 'user-uuid' }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
+  let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:requests) do
-    Array.new(6) do |i|
-      create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2'
-    end
+    Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
   let(:example_plate) do
     create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests
@@ -25,48 +23,74 @@ RSpec.feature 'Creating a plate with bait', js: true do
 
   let(:transfer_requests) do
     WellHelpers.column_order(96)[0, 6].map do |well_name|
-      {
-        'source_asset' => "2-well-#{well_name}",
-        'target_asset' => "3-well-#{well_name}",
-        'submission_id' => '2'
-      }
+      { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
     end
   end
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid'
-    create :purpose_config, creator_class: 'LabwareCreators::BaitedPlate',
-                            name: 'with-baits',
-                            uuid: 'child-purpose-0'
+    create :purpose_config, creator_class: 'LabwareCreators::BaitedPlate', name: 'with-baits', uuid: 'child-purpose-0'
     create :pipeline, relationships: { 'example-purpose' => 'with-baits' }
+
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # These stubs are required to render plate show page
     stub_v2_plate(example_plate)
     stub_v2_plate(child_plate)
 
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+
     # end of stubs for plate show page
 
     # These stubs are required to render plate_creation baiting page
-    stub_api_post('bait_library_layouts', 'preview', body: json(:bait_library_layout),
-                                                     payload: { bait_library_layout: { plate: plate_uuid, user: user_uuid } })
+    stub_api_post(
+      'bait_library_layouts',
+      'preview',
+      body: json(:bait_library_layout),
+      payload: {
+        bait_library_layout: {
+          plate: plate_uuid,
+          user: user_uuid
+        }
+      }
+    )
+
     # end of stubs for plate_creation baiting page
 
     # These stubs are required to create a new plate with baits
-    stub_api_post('plate_creations',
-                  body: json(:plate_creation),
-                  payload: {
-                    plate_creation: { parent: plate_uuid, user: user_uuid, child_purpose: child_purpose_uuid }
-                  })
-    stub_api_post('transfer_request_collections',
-                  payload: { transfer_request_collection: {
-                    user: user_uuid,
-                    transfer_requests: transfer_requests
-                  } },
-                  body: '{}')
-    stub_api_post('bait_library_layouts', body: json(:bait_library_layout),
-                                          payload: { bait_library_layout: { plate: 'child-uuid', user: user_uuid } })
+    stub_api_post(
+      'plate_creations',
+      body: json(:plate_creation),
+      payload: {
+        plate_creation: {
+          parent: plate_uuid,
+          user: user_uuid,
+          child_purpose: child_purpose_uuid
+        }
+      }
+    )
+    stub_api_post(
+      'transfer_request_collections',
+      payload: {
+        transfer_request_collection: {
+          user: user_uuid,
+          transfer_requests: transfer_requests
+        }
+      },
+      body: '{}'
+    )
+    stub_api_post(
+      'bait_library_layouts',
+      body: json(:bait_library_layout),
+      payload: {
+        bait_library_layout: {
+          plate: 'child-uuid',
+          user: user_uuid
+        }
+      }
+    )
+
     # end of stubs for creating a new plate with baits
     # Stub the requests for the next plate page
     stub_v2_plate(child_plate)
@@ -79,6 +103,8 @@ RSpec.feature 'Creating a plate with bait', js: true do
     click_on 'Add an empty with-baits plate'
     expect(page).to have_content('Carefully check the bait layout')
     click_on 'Create plate'
+    # rubocop:todo Layout/LineLength
     # I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative
+    # rubocop:enable Layout/LineLength
   end
 end

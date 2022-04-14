@@ -40,8 +40,14 @@ RSpec.describe 'exports/hamilton_fixed_volume_dilutions.csv.erb' do
     let(:expected_content) do
       [
         ['Workflow', workflow_name],
-        ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well', 'Sample Vol',
-         'Dilution Vol'],
+        [
+          'Source Plate ID',
+          'Source Plate Well',
+          'Destination Plate ID',
+          'Destination Plate Well',
+          'Sample Vol',
+          'Dilution Vol'
+        ],
         %w[DN1S A1 DN2T A1 2.0 33.0],
         %w[DN1S B1 DN2T B1 2.0 33.0]
       ]

@@ -2,38 +2,35 @@ import localVue from 'test_support/base_vue.js'
 import ValidatePairedTubes from './ValidatePairedTubes.vue'
 import { shallowMount } from '@vue/test-utils'
 
-import {
-  checkId,
-  checkMolarityResult,
-  checkState,
-  checkTransferParameters
-} from 'shared/components/tubeScanValidators'
+import { checkId, checkMolarityResult, checkState, checkTransferParameters } from 'shared/components/tubeScanValidators'
 jest.mock('shared/components/tubeScanValidators')
 
 describe('TransferVolumes', () => {
-  const wrapperFactory = function(options = {}) {
+  const wrapperFactory = function (options = {}) {
     const LabwareScan = {
       template: '<div />',
       methods: {
-        focus() { }
-      }
+        focus() {},
+      },
     }
 
     return shallowMount(ValidatePairedTubes, {
       stubs: {
-        'lb-labware-scan': LabwareScan
+        'lb-labware-scan': LabwareScan,
       },
       propsData: {
         purposeConfigJson: '{}',
-        ...options
+        ...options,
       },
-      localVue
+      localVue,
     })
   }
 
   describe('purposeConfigs', () => {
     it('parses an Object from the purposeConfigJson prop', () => {
-      const wrapper = wrapperFactory({ purposeConfigJson: '{"test":{"option":42}}' })
+      const wrapper = wrapperFactory({
+        purposeConfigJson: '{"test":{"option":42}}',
+      })
       expect(wrapper.vm.purposeConfigs).toEqual({ test: { option: 42 } })
     })
   })
@@ -83,7 +80,9 @@ describe('TransferVolumes', () => {
 
     it('passed the correct parameter to checkTransferParameters', () => {
       wrapperFactory({ purposeConfigJson: '{ "testKey": "testValue" }' })
-      expect(checkTransferParameters.mock.calls[0][0]).toEqual({ testKey: 'testValue' })
+      expect(checkTransferParameters.mock.calls[0][0]).toEqual({
+        testKey: 'testValue',
+      })
     })
 
     it('passed the correct parameters to checkId', () => {
@@ -93,8 +92,12 @@ describe('TransferVolumes', () => {
       expect(checkId.mock.calls[0][0]).toEqual([])
       expect(checkId.mock.calls[0][1]).toEqual('Does not match the source tube')
 
-      wrapper.vm.updateSourceTube({ labware: { receptacle: { downstream_tubes: [{ id: 'test1' }, { id: 'test2' }] } } })
-      wrapper.vm.destinationTubeValidators  // Refresh the evaluation to cause more calls to checkId
+      wrapper.vm.updateSourceTube({
+        labware: {
+          receptacle: { downstream_tubes: [{ id: 'test1' }, { id: 'test2' }] },
+        },
+      })
+      wrapper.vm.destinationTubeValidators // Refresh the evaluation to cause more calls to checkId
 
       // After setting a source tube
       console.log(checkId.mock.calls)
@@ -111,16 +114,13 @@ describe('TransferVolumes', () => {
       ['valid', 'invalid', false],
       ['empty', 'valid', false],
       ['invalid', 'valid', false],
-      ['valid', 'valid', true]
-    ])(
-      'with %p source tube and %p destination tube, returns %p',
-      (sourceState, destinationState, result) => {
-        const wrapper = wrapperFactory()
-        wrapper.vm.sourceTube = { state: sourceState }
-        wrapper.vm.destinationTube = { state: destinationState }
-        expect(wrapper.vm.allValid).toBe(result)
-      }
-    )
+      ['valid', 'valid', true],
+    ])('with %p source tube and %p destination tube, returns %p', (sourceState, destinationState, result) => {
+      const wrapper = wrapperFactory()
+      wrapper.vm.sourceTube = { state: sourceState }
+      wrapper.vm.destinationTube = { state: destinationState }
+      expect(wrapper.vm.allValid).toBe(result)
+    })
   })
 
   describe('updateSourceTube', () => {
@@ -128,7 +128,11 @@ describe('TransferVolumes', () => {
       const wrapper = wrapperFactory()
       const tube = { testKey: 'testValue' }
       wrapper.vm.updateSourceTube(tube)
-      expect(wrapper.vm.sourceTube).toEqual({ labware: null, state: 'empty', testKey: 'testValue' })
+      expect(wrapper.vm.sourceTube).toEqual({
+        labware: null,
+        state: 'empty',
+        testKey: 'testValue',
+      })
     })
   })
 
@@ -137,7 +141,11 @@ describe('TransferVolumes', () => {
       const wrapper = wrapperFactory()
       const tube = { testKey: 'testValue' }
       wrapper.vm.updateDestinationTube(tube)
-      expect(wrapper.vm.destinationTube).toEqual({ labware: null, state: 'empty', testKey: 'testValue' })
+      expect(wrapper.vm.destinationTube).toEqual({
+        labware: null,
+        state: 'empty',
+        testKey: 'testValue',
+      })
     })
   })
 })

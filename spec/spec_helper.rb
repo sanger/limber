@@ -155,11 +155,14 @@ RSpec.configure do |config|
       'Transfer from tube to tube by submission' => 'tube-to-tube-by-sub',
       'Whole plate to tube' => 'whole-plate-to-tube'
     }
-    YAML.parse_file(Rails.root.join('config/label_templates.yml')).to_ruby.tap do |label_templates|
-      Settings.default_pmb_templates = label_templates['default_pmb_templates']
-      Settings.default_sprint_templates = label_templates['default_sprint_templates']
-      Settings.default_printer_type_names = label_templates['default_printer_type_names']
-    end
+    YAML
+      .parse_file(Rails.root.join('config/label_templates.yml'))
+      .to_ruby
+      .tap do |label_templates|
+        Settings.default_pmb_templates = label_templates['default_pmb_templates']
+        Settings.default_sprint_templates = label_templates['default_sprint_templates']
+        Settings.default_printer_type_names = label_templates['default_printer_type_names']
+      end
   end
 
   config.before(:each) do
@@ -168,9 +171,9 @@ RSpec.configure do |config|
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
     if Capybara.current_session.driver.respond_to?(:resize_window)
-      Capybara.current_session.driver.resize_window(1400,
-                                                    1400)
+      Capybara.current_session.driver.resize_window(1400, 1400)
     end
+
     # Wipe out existing purposes
     Settings.purposes = {}
     Settings.pipelines = PipelineList.new
@@ -198,9 +201,7 @@ RSpec.configure do |config|
           csv << [factory, strategy, times.length, times.sum, times.sum / times.length]
         end
       end
-      unused_factories.each do |factory|
-        csv << [factory, 'UNUSED', 0, 0, 0]
-      end
+      unused_factories.each { |factory| csv << [factory, 'UNUSED', 0, 0, 0] }
     end
     puts "\n📊 Output factory statistics to tmp/factories.csv"
   end
