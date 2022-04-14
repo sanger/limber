@@ -7,7 +7,12 @@ module LabwareCreators
 
     attr_accessor :transfers, :parents
 
-    class_attribute :request_filter, :transfers_layout, :transfers_creator, :target_rows, :target_columns, :source_plates
+    class_attribute :request_filter,
+                    :transfers_layout,
+                    :transfers_creator,
+                    :target_rows,
+                    :target_columns,
+                    :source_plates
 
     self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
@@ -23,11 +28,8 @@ module LabwareCreators
     private
 
     def create_labware!
-      plate_creation = api.pooled_plate_creation.create!(
-        parents: parent_uuids,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      )
+      plate_creation =
+        api.pooled_plate_creation.create!(parents: parent_uuids, child_purpose: purpose_uuid, user: user_uuid)
 
       @child = plate_creation.child
 
@@ -51,17 +53,14 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plate)
-      transfers.map do |transfer|
-        request_hash(transfer, child_plate)
-      end
+      transfers.map { |transfer| request_hash(transfer, child_plate) }
     end
 
     def request_hash(transfer, child_plate)
       {
         'source_asset' => transfer[:source_asset],
-        'target_asset' => child_plate.wells.detect do |child_well|
-                            child_well.location == transfer.dig(:new_target, :location)
-                          end&.uuid,
+        'target_asset' =>
+          child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
         'outer_request' => transfer[:outer_request]
       }
     end

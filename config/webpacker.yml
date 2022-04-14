@@ -49,7 +49,6 @@ default: &default
     - .jpeg
     - .jpg
 
-
 development:
   <<: *default
 
@@ -82,8 +81,9 @@ test:
   public_output_path: packs-test
 
 production:
-  <<: *default
-   # Production depends on precompilation of packs prior to booting for performance.
+  <<:
+    *default
+    # Production depends on precompilation of packs prior to booting for performance.
   compile: false
 
   # Extract and emit a css file

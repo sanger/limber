@@ -4,9 +4,7 @@ require 'rails_helper'
 require 'config_loader/purposes_loader'
 
 RSpec.describe ConfigLoader::PurposesLoader, type: :model, loader: true do
-  subject(:loader) do
-    described_class.new(directory: test_directory, files: selected_files)
-  end
+  subject(:loader) { described_class.new(directory: test_directory, files: selected_files) }
 
   let(:test_directory) { Rails.root.join('spec/fixtures/config/purposes') }
   let(:created_purposes) { ['Basic Plate', 'Other Plate', 'Type with creator'] }

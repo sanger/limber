@@ -9,7 +9,8 @@ class SessionsController < ApplicationController
     if @current_user
       redirect_to :search, notice: 'Logged in' # rubocop:todo Rails/I18nLocaleTexts
     else
-      redirect_to :search, alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.' # rubocop:todo Rails/I18nLocaleTexts
+      redirect_to :search,
+                  alert: 'Sorry, that swipecard could not be found. Please update your details in Sequencescape.' # rubocop:todo Rails/I18nLocaleTexts
     end
   end
 
@@ -28,6 +29,7 @@ class SessionsController < ApplicationController
 
     session[:user_uuid] = @current_user.uuid
     session[:user_name] = @current_user.name
+
     # Unlike the session cookie, this cookie is accessible
     # through javascript.
     cookies[:user_name] = @current_user.name

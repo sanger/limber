@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.feature 'Viewing a plate', js: true do
   has_a_working_api
 
-  let(:user)           { create :user }
+  let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { example_plate.barcode.machine }
-  let(:plate_uuid)     { SecureRandom.uuid }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:plate_state) { 'pending' }
   let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state, pool_sizes: [3] }
   let(:default_tube_printer) { 'tube printer 1' }
@@ -17,14 +17,13 @@ RSpec.feature 'Viewing a plate', js: true do
   background do
     # Set-up the plate config
     create :minimal_purpose_config, uuid: 'stock-plate-purpose-uuid'
-    create :minimal_purpose_config,
-           uuid: 'child-purpose-0',
-           name: 'Child Purpose 0'
+    create :minimal_purpose_config, uuid: 'child-purpose-0', name: 'Child Purpose 0'
     create :pipeline, relationships: { 'Limber Cherrypicked' => 'Child Purpose 0' }
     Settings.printers[:tube] = default_tube_printer
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual plate
     stub_v2_plate(example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -65,7 +64,7 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
         'Libraries on this plate have already been completed. ' \
-        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate may run into issues at the end of the pipeline.'
       )
     end
   end
@@ -77,7 +76,7 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
         'Libraries on this plate have already been failed (A1-E1). You should not carry out further work. ' \
-        'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
   end
@@ -89,7 +88,7 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
         'Wells on this plate (A1-E1) have cancelled requests. You should not carry out further work. ' \
-        'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
   end
@@ -106,7 +105,7 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
         'Libraries on this plate have already been completed. ' \
-        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate may run into issues at the end of the pipeline.'
       )
     end
   end
@@ -115,32 +114,38 @@ RSpec.feature 'Viewing a plate', js: true do
     let(:example_plate) do
       create :v2_plate,
              uuid: plate_uuid,
-             transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) },
+             transfer_targets: {
+               'A1' => create_list(:v2_asset_tube, 1)
+             },
              purpose_uuid: 'child-purpose-0'
     end
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 
     let(:label_a) do
-      { label: {
-        top_line: 'Child tube 0 prefix',
-        middle_line: 'Example purpose',
-        bottom_line: ' 7-JUN-2017',
-        round_label_top_line: 'NT',
-        round_label_bottom_line: '1',
-        barcode: '3980000001795'
-      } }
+      {
+        label: {
+          top_line: 'Child tube 0 prefix',
+          middle_line: 'Example purpose',
+          bottom_line: ' 7-JUN-2017',
+          round_label_top_line: 'NT',
+          round_label_bottom_line: '1',
+          barcode: '3980000001795'
+        }
+      }
     end
 
     let(:label_b) do
-      { label: {
-        top_line: 'Child tube 1 prefix',
-        middle_line: 'Example purpose',
-        bottom_line: ' 7-JUN-2017',
-        round_label_top_line: 'NT',
-        round_label_bottom_line: '2',
-        barcode: '3980000001795'
-      } }
+      {
+        label: {
+          top_line: 'Child tube 1 prefix',
+          middle_line: 'Example purpose',
+          bottom_line: ' 7-JUN-2017',
+          round_label_top_line: 'NT',
+          round_label_bottom_line: '2',
+          barcode: '3980000001795'
+        }
+      }
     end
 
     scenario 'we see the tube label form' do

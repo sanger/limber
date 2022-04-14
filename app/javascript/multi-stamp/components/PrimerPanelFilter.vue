@@ -1,10 +1,6 @@
 <template>
   <b-form-group :label="formLabel">
-    <b-form-radio-group
-      v-model="primerPanel"
-      :options="primerPanels"
-      size="lg"
-    />
+    <b-form-radio-group v-model="primerPanel" :options="primerPanels" size="lg" />
   </b-form-group>
 </template>
 
@@ -12,11 +8,11 @@
 export default {
   name: 'PrimerPanelFilter',
   props: {
-    requestsWithPlates: { type: Array, required: true }
+    requestsWithPlates: { type: Array, required: true },
   },
-  data () {
+  data() {
     return {
-      primerPanel: null
+      primerPanel: null,
     }
   },
   computed: {
@@ -35,15 +31,16 @@ export default {
           if (!primerPanelArray.includes(primer_panel)) {
             primerPanelArray.push(primer_panel)
           }
-        }
-        else {
+        } else {
           primerPanelsByPlate.set(plate_id, [primer_panel])
         }
       }
-      if (primerPanelsByPlate.size === 0) { return [] }
-      const primerPanelsIterable =
-          Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
-            accu.filter(val => current.includes(val)))
+      if (primerPanelsByPlate.size === 0) {
+        return []
+      }
+      const primerPanelsIterable = Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
+        accu.filter((val) => current.includes(val))
+      )
       return primerPanelsIterable
     },
     requestsWithPrimerPanel() {
@@ -61,14 +58,11 @@ export default {
       const primer_panels_len = this.primerPanels.length
       if (pp_requests_len !== 0 && primer_panels_len !== 0) {
         return 'Select a primer panel to process'
-      }
-      else if (pp_requests_len !== 0 && primer_panels_len === 0) {
+      } else if (pp_requests_len !== 0 && primer_panels_len === 0) {
         return 'No common primer panel found among scanned plates!'
-      }
-      else if (pp_requests_len === 0 && all_requests_len !== 0) {
+      } else if (pp_requests_len === 0 && all_requests_len !== 0) {
         return 'No primer panel found among scanned plates.'
-      }
-      else {
+      } else {
         return ''
       }
     },
@@ -81,12 +75,12 @@ export default {
         }
       }
       return requestsArray
-    }
+    },
   },
   watch: {
-    requestsWithPlatesFiltered: function() {
+    requestsWithPlatesFiltered: function () {
       this.$emit('change', this.requestsWithPlatesFiltered)
-    }
-  }
+    },
+  },
 }
 </script>

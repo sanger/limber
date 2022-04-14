@@ -123,6 +123,7 @@ RSpec.describe PipelineList do
       end
 
       let(:pipeline_names) { ['Pipeline A', 'Pipeline B'] }
+
       # Purposes 3 and 4 swap places if the arguments to above :pipeline_names are passed in the other order
       let(:expected_result) { ['Purpose 1', 'Purpose 2', 'Purpose 3', 'Purpose 4'] }
 
@@ -159,7 +160,10 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Heron-384 Tailed A' => {
-            filters: { 'request_type_key' => ['limber_heron_lthr'], 'library_type' => ['Sanger_tailed_artic_v1_384'] },
+            filters: {
+              'request_type_key' => ['limber_heron_lthr'],
+              'library_type' => ['Sanger_tailed_artic_v1_384']
+            },
             library_pass: 'LTHR-384 Lib PCR pool',
             relationships: {
               'LTHR Cherrypick' => 'LTHR-384 RT-Q',
@@ -171,7 +175,10 @@ RSpec.describe PipelineList do
             name: 'Heron-384 Tailed A'
           },
           'Heron-384 Tailed B' => {
-            filters: { 'request_type_key' => ['limber_heron_lthr'], 'library_type' => ['Sanger_tailed_artic_v1_384'] },
+            filters: {
+              'request_type_key' => ['limber_heron_lthr'],
+              'library_type' => ['Sanger_tailed_artic_v1_384']
+            },
             library_pass: 'LTHR-384 Lib PCR pool',
             relationships: {
               'LTHR-384 RT-Q' => 'LTHR-384 PCR 2',
@@ -186,8 +193,16 @@ RSpec.describe PipelineList do
 
       let(:pipeline_names) { ['Heron-384 Tailed A', 'Heron-384 Tailed B'] }
       let(:expected_result) do
-        ['LTHR Cherrypick', 'LTHR-384 RT', 'LTHR-384 RT-Q', 'LTHR-384 PCR 1', 'LTHR-384 PCR 2', 'LTHR-384 Lib PCR 1', 'LTHR-384 Lib PCR 2',
-         'LTHR-384 Lib PCR pool']
+        [
+          'LTHR Cherrypick',
+          'LTHR-384 RT',
+          'LTHR-384 RT-Q',
+          'LTHR-384 PCR 1',
+          'LTHR-384 PCR 2',
+          'LTHR-384 Lib PCR 1',
+          'LTHR-384 Lib PCR 2',
+          'LTHR-384 Lib PCR pool'
+        ]
       end
 
       it 'returns the right list of purposes' do
@@ -215,7 +230,9 @@ RSpec.describe PipelineList do
       let(:expected_result) { ['Purpose 1', 'Purpose 2', 'Purpose 3'] }
 
       it 'should error' do
-        expect { model.combine_and_order_pipelines(pipeline_names) }.to raise_error("Pipeline config can't be flattened into a list of purposes")
+        expect { model.combine_and_order_pipelines(pipeline_names) }.to raise_error(
+          "Pipeline config can't be flattened into a list of purposes"
+        )
       end
     end
   end

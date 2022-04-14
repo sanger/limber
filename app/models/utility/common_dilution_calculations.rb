@@ -11,9 +11,7 @@ module Utility
     # Each calculator maintains a version number that gets written into the qc
     # assay records.
     #
-    included do
-      class_attribute :version
-    end
+    included { class_attribute :version }
 
     attr_reader :config
 
@@ -27,8 +25,14 @@ module Utility
       @config = Utility::DilutionsConfig.new(config)
     end
 
-    delegate :number_decimal_places, :source_volume, :diluent_volume, :number_of_bins, :bins_template,
-             :source_multiplication_factor, :dest_multiplication_factor, to: :config
+    delegate :number_decimal_places,
+             :source_volume,
+             :diluent_volume,
+             :number_of_bins,
+             :bins_template,
+             :source_multiplication_factor,
+             :dest_multiplication_factor,
+             to: :config
 
     #
     # Creates a hash of well normalisation details for a plate used when generating
@@ -41,33 +45,36 @@ module Utility
     # rubocop:todo Metrics/MethodLength
     def normalisation_details(wells) # rubocop:todo Metrics/AbcSize
       # sort on well coordinate to ensure wells are in plate column order
-      wells.sort_by(&:coordinate).each_with_object({}) do |well, details|
-        # skip empty wells
-        next if well.aliquots.blank?
+      wells
+        .sort_by(&:coordinate)
+        .each_with_object({}) do |well, details|
+          # skip empty wells
+          next if well.aliquots.blank?
 
-        # check for well concentration value present
-        if well.latest_concentration.blank?
-          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
-          next
+          # check for well concentration value present
+          if well.latest_concentration.blank?
+            errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+            next
+          end
+
+          sample_conc = well.latest_concentration.value.to_f
+          vol_source_reqd = compute_vol_source_reqd(sample_conc)
+          vol_diluent_reqd = (config.target_volume - vol_source_reqd)
+          amount = (vol_source_reqd * sample_conc)
+          dest_conc = (amount / config.target_volume)
+
+          # NB. we do not round the destination concentration so the full number is written
+          # in the qc_results to avoid rounding errors causing the presenter to display some
+          # wells as being in different bins.
+          details[well.location] = {
+            'vol_source_reqd' => vol_source_reqd.round(number_decimal_places),
+            'vol_diluent_reqd' => vol_diluent_reqd.round(number_decimal_places),
+            'amount_in_target' => amount.round(number_decimal_places),
+            'dest_conc' => dest_conc
+          }
         end
-
-        sample_conc      = well.latest_concentration.value.to_f
-        vol_source_reqd  = compute_vol_source_reqd(sample_conc)
-        vol_diluent_reqd = (config.target_volume - vol_source_reqd)
-        amount           = (vol_source_reqd * sample_conc)
-        dest_conc        = (amount / config.target_volume)
-
-        # NB. we do not round the destination concentration so the full number is written
-        # in the qc_results to avoid rounding errors causing the presenter to display some
-        # wells as being in different bins.
-        details[well.location] = {
-          'vol_source_reqd' => vol_source_reqd.round(number_decimal_places),
-          'vol_diluent_reqd' => vol_diluent_reqd.round(number_decimal_places),
-          'amount_in_target' => amount.round(number_decimal_places),
-          'dest_conc' => dest_conc
-        }
-      end
     end
+
     # rubocop:enable Metrics/MethodLength
 
     #
@@ -89,11 +96,12 @@ module Utility
 
       # the robot cannot accept a diluent volume of less than 1ul, so this section adjusts the transfer
       # volume to prevent that when required
-      transfer_volume = if ((config.target_volume - 1.0)...config.target_volume).cover?(max_adj_volume)
-                          max_adj_volume.round(half: :down)
-                        else
-                          max_adj_volume
-                        end
+      transfer_volume =
+        if ((config.target_volume - 1.0)...config.target_volume).cover?(max_adj_volume)
+          max_adj_volume.round(half: :down)
+        else
+          max_adj_volume
+        end
 
       # adjust the transfer volume to the minimum permissible for samples with very strong concentrations
       [transfer_volume, config.target_volume].min
@@ -132,9 +140,11 @@ module Utility
     # @return [hash] A refactored hash of well concentrations.
     #
     def extract_destination_concentrations(transfer_hash)
-      transfer_hash.values.each_with_object({}) do |dest_details, dest_hash|
-        dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
-      end
+      transfer_hash
+        .values
+        .each_with_object({}) do |dest_details, dest_hash|
+          dest_hash[dest_details['dest_locn']] = dest_details['dest_conc']
+        end
     end
 
     #
@@ -187,12 +197,13 @@ module Utility
 
       def validate_initial_arguments
         raise ArgumentError, 'compression_reqd should be a boolean' unless @compression_reqd.in? [true, false]
-
-        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.to_i <= 0
       end
 
       def validate_next_well_arguments(index_within_bin, bin_size)
-        raise ArgumentError, 'index_within_bin must be 0 or greater' if index_within_bin.nil? || index_within_bin.negative?
+        if index_within_bin.nil? || index_within_bin.negative?
+          raise ArgumentError, 'index_within_bin must be 0 or greater'
+        end
 
         raise ArgumentError, 'bin_size must be greater than 0' if bin_size.nil? || bin_size <= 0
       end
@@ -250,7 +261,7 @@ module Utility
       private
 
       def validate_initial_arguments
-        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.nil? || @number_of_rows <= 0
+        raise ArgumentError, 'number_of_rows should be greater than zero' if @number_of_rows.to_i <= 0
       end
 
       #
@@ -288,9 +299,7 @@ module Utility
     # @return [bool] Whether compression is required.
     #
     def compression_required?(bins, number_of_rows, number_of_columns)
-      columns_reqd = bins.sum do |_bin_number, bin|
-        bin.length.fdiv(number_of_rows).ceil
-      end
+      columns_reqd = bins.sum { |_bin_number, bin| bin.length.fdiv(number_of_rows).ceil }
       columns_reqd > number_of_columns
     end
 
@@ -307,10 +316,7 @@ module Utility
         bins_template.each do |bin_template|
           next unless (bin_template['min']...bin_template['max']).cover?(amount)
 
-          well_colours[well_locn] = {
-            'colour' => bin_template['colour'],
-            'pcr_cycles' => bin_template['pcr_cycles']
-          }
+          well_colours[well_locn] = { 'colour' => bin_template['colour'], 'pcr_cycles' => bin_template['pcr_cycles'] }
           break
         end
       end

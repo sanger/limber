@@ -1,14 +1,8 @@
 <template>
   <lb-page>
-    <lb-loading-modal
-      v-if="loading"
-      :message="progressMessage"
-    />
+    <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <b-card
-        bg-variant="dark"
-        text-variant="white"
-      >
+      <b-card bg-variant="dark" text-variant="white">
         <lb-plate
           caption="Layout of the new plate"
           :rows="targetRowsNumber"
@@ -18,10 +12,7 @@
       </b-card>
     </lb-main-content>
     <lb-sidebar>
-      <b-card
-        header="Scan tubes"
-        header-tag="h3"
-      >
+      <b-card header="Scan tubes" header-tag="h3">
         <b-form-group
           label="Scan the tube barcodes into the relevant rack / well coordinates:"
           class="fixed-height-scroll"
@@ -40,10 +31,7 @@
             @change="updateTube(i, $event)"
           />
         </b-form-group>
-        <b-alert
-          :show="transfersError !== ''"
-          variant="danger"
-        >
+        <b-alert :show="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
@@ -51,14 +39,8 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
-        <hr>
-        <b-button
-          :disabled="!valid"
-          variant="success"
-          @click="createPlate()"
-        >
-          Create
-        </b-button>
+        <hr />
+        <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
       </b-card>
     </lb-sidebar>
   </lb-page>
@@ -86,7 +68,7 @@ export default {
     'lb-plate': Plate,
     'lb-labware-scan': LabwareScan,
     'lb-loading-modal': LoadingModal,
-    'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers
+    'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers,
   },
   props: {
     // Sequencescape API V2 URL
@@ -119,11 +101,16 @@ export default {
     sourceTubes: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] },
+    locationObj: {
+      default: () => {
+        return location
+      },
+      type: [Object, Location],
+    },
 
-    allowTubeDuplicates: { type: String, required: true }
+    allowTubeDuplicates: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
       // Array containing objects with scanned tubes, their states and the
       // index of the form input in which they were scanned.
@@ -142,7 +129,7 @@ export default {
       loading: false,
 
       // Message to be shown during loading screen
-      progressMessage: ''
+      progressMessage: '',
     }
   },
   computed: {
@@ -156,15 +143,17 @@ export default {
       return Number.parseInt(this.targetColumns)
     },
     valid() {
-      return this.unsuitableTubes.length === 0 // None of the tubes are invalid
-             && this.validTransfers.length > 0 // We have at least one transfer
-             && this.transfersCreatorObj.isValid
+      return (
+        this.unsuitableTubes.length === 0 && // None of the tubes are invalid
+        this.validTransfers.length > 0 && // We have at least one transfer
+        this.transfersCreatorObj.isValid
+      )
     },
     validTubes() {
-      return this.tubes.filter( tube => tube.state === 'valid' )
+      return this.tubes.filter((tube) => tube.state === 'valid')
     },
     unsuitableTubes() {
-      return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
+      return this.tubes.filter((tube) => !(tube.state === 'valid' || tube.state === 'empty'))
     },
     transfers() {
       return transfersForTubes(this.validTubes)
@@ -190,7 +179,7 @@ export default {
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
         wells[this.validTransfers[i].targetWell] = {
-          pool_index: this.validTransfers[i].tubeObj.index + 1
+          pool_index: this.validTransfers[i].tubeObj.index + 1,
         }
       }
       return wells
@@ -203,22 +192,18 @@ export default {
     },
     scanValidation() {
       if (this.allowTubeDuplicates === 'true') {
-        return [
-          validScanMessage
-        ]
+        return [validScanMessage]
       }
-      const currTubes = this.tubes.map(tubeItem => tubeItem.labware)
-      return [
-        checkDuplicates(currTubes)
-      ]
-    }
+      const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
+      return [checkDuplicates(currTubes)]
+    },
   },
   methods: {
     wellIndexToName(index) {
       return indexToName(index, this.targetRowsNumber)
     },
     updateTube(index, data) {
-      this.$set(this.tubes, index - 1, {...data, index: index - 1 })
+      this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
     },
     apiTransfers() {
       // what we want to transfer when cteating the plate
@@ -231,35 +216,37 @@ export default {
         plate: {
           parent_uuid: this.validTubes[0].labware.uuid, // TODO: this is just one tube of 96 and assumes A1 is filled, it may not be
           purpose_uuid: this.purposeUuid,
-          transfers: this.apiTransfers()
-        }
+          transfers: this.apiTransfers(),
+        },
       }
       this.$axios({
         method: 'post',
         url: this.targetUrl,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data: payload
-      }).then((response) => {
-        // Ajax responses automatically follow redirects, which
-        // would result in us receiving the full HTML for the child
-        // plate here, which we'd then need to inject into the
-        // page, and update the history. Instead we don't redirect
-        // application/json requests, and redirect the user ourselves.
-        this.progressMessage = response.data.message
-        this.locationObj.href = response.data.redirect
-      }).catch((error) => {
-        // Something has gone wrong
-        console.error(error)
-        this.loading = false
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: payload,
       })
-    }
-  }
+        .then((response) => {
+          // Ajax responses automatically follow redirects, which
+          // would result in us receiving the full HTML for the child
+          // plate here, which we'd then need to inject into the
+          // page, and update the history. Instead we don't redirect
+          // application/json requests, and redirect the user ourselves.
+          this.progressMessage = response.data.message
+          this.locationObj.href = response.data.redirect
+        })
+        .catch((error) => {
+          // Something has gone wrong
+          console.error(error)
+          this.loading = false
+        })
+    },
+  },
 }
 </script>
 
 <style>
-  .fixed-height-scroll {
-    height:460px;
-    overflow-y:scroll;
-  }
+.fixed-height-scroll {
+  height: 460px;
+  overflow-y: scroll;
+}
 </style>

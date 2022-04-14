@@ -46,8 +46,6 @@ class Sequencescape::Api::V2::Plate::Pool
   end
 
   def new_subpool
-    Sequencescape::Api::V2::Plate::Subpool.new.tap do |subpool|
-      @subpools << subpool
-    end
+    Sequencescape::Api::V2::Plate::Subpool.new.tap { |subpool| @subpools << subpool }
   end
 end

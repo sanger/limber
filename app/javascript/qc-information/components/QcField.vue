@@ -2,11 +2,7 @@
   <b-form-group :label="name | titleize">
     <b-row>
       <b-col>
-        <b-form-group
-          label="Value"
-          :label-for="`qc-field-${name}-value`"
-          label-sr-only
-        >
+        <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-sr-only>
           <b-input-group :append="units">
             <b-form-input
               :id="`qc-field-${name}-value`"
@@ -19,11 +15,7 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group
-          label="Assay Type"
-          :label-for="`qc-field-${name}-assay-type`"
-          label-sr-only
-        >
+        <b-form-group label="Assay Type" :label-for="`qc-field-${name}-assay-type`" label-sr-only>
           <b-form-select
             :id="`qc-field-${name}-assay-type`"
             v-model="assayType"
@@ -42,9 +34,9 @@ export default {
   filters: {
     titleize(value) {
       if (!value) return ''
-      value = value.toString().replace('_',' ')
+      value = value.toString().replace('_', ' ')
       return value.charAt(0).toUpperCase() + value.slice(1)
-    }
+    },
   },
   props: {
     name: { type: String, required: true },
@@ -52,27 +44,37 @@ export default {
     defaultValue: { type: String, required: false, default: null },
     defaultAssayType: { type: String, required: false, default: 'Estimated' },
     dataType: { type: String, default: 'number' },
-    assayTypes: { type: Array, default: () =>{ return ['Estimated'] } },
-    fieldOptions: { type: Object, default: () => { return { step: 0.01, min: 0 } }},
-    assetUuid: { type: String, required: true }
+    assayTypes: {
+      type: Array,
+      default: () => {
+        return ['Estimated']
+      },
+    },
+    fieldOptions: {
+      type: Object,
+      default: () => {
+        return { step: 0.01, min: 0 }
+      },
+    },
+    assetUuid: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
       value: this.defaultValue,
-      assayType: this.defaultAssayType
+      assayType: this.defaultAssayType,
     }
   },
   methods: {
     emitOnChange(_value) {
-      this.$emit('change',  {
+      this.$emit('change', {
         value: this.value,
         assay_type: this.assayType,
         units: this.units,
         key: this.name,
         assay_version: 'manual',
-        uuid: this.assetUuid
+        uuid: this.assetUuid,
       })
-    }
-  }
+    },
+  },
 }
 </script>

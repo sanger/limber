@@ -3,10 +3,10 @@ Bespoke PCR Free:
   filters:
     request_type_key: limber_pcr_free_bespoke
     library_type:
-    - No PCR (Plate)
-    - HiSeqX PCR free
-    - DAFT-seq
-    - TruSeq Custom Amplicon
+      - No PCR (Plate)
+      - HiSeqX PCR free
+      - DAFT-seq
+      - TruSeq Custom Amplicon
   library_pass: LBB Lib-XP
   relationships:
     LBB Cherrypick: LBB Ligation Tagged
@@ -14,7 +14,7 @@ Bespoke PCR Free:
 Bespoke PCR Free MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LBB Lib-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm

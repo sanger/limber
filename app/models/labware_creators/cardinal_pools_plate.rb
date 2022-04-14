@@ -63,16 +63,12 @@ module LabwareCreators
     # returns: a list of objects, mapping source well to destination well
     # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
     def transfer_request_attributes(dest_plate)
-      passed_parent_wells.map do |source_well|
-        request_hash(source_well, dest_plate)
-      end
+      passed_parent_wells.map { |source_well| request_hash(source_well, dest_plate) }
     end
 
     # Returns: An instance of Sequencescape::Api::V2::Well
     def get_well_for_plate_location(plate, well_location)
-      plate.wells.detect do |well|
-        well.location == well_location
-      end
+      plate.wells.detect { |well| well.location == well_location }
     end
 
     def request_hash(source_well, dest_plate)
@@ -80,7 +76,9 @@ module LabwareCreators
       {
         'source_asset' => source_well.uuid,
         'target_asset' => get_well_for_plate_location(dest_plate, source_location)&.uuid,
-        aliquot_attributes: { 'tag_depth' => tag_depth(source_well) }
+        :aliquot_attributes => {
+          'tag_depth' => tag_depth(source_well)
+        }
       }
     end
 
@@ -124,14 +122,17 @@ module LabwareCreators
     def build_pools
       pools = []
       current_pool = 0
+
       # wells_grouped_by_supplier = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
       wells_grouped_by_supplier.each do |_supplier, wells|
         # Loop through the wells for that supplier
         wells.each do |well|
           # Create pool if it doesnt already exist
           pools[current_pool] = [] unless pools[current_pool]
+
           # Add well to pool
           pools[current_pool] << well
+
           # Rotate through the pools
           current_pool = current_pool == number_of_pools - 1 ? 0 : current_pool + 1
         end

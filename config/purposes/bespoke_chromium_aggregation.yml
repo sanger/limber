@@ -14,7 +14,7 @@ LBC Cherrypick:
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bespoke_aggregation'
   :file_links:
-  - name: 'Download Hamilton Aggregate Cherrypick CSV'
-    id: 'hamilton_aggregate_cherrypick'
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: 'Download Hamilton Aggregate Cherrypick CSV'
+      id: 'hamilton_aggregate_cherrypick'
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul

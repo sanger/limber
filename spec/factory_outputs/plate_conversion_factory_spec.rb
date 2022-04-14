@@ -3,15 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'plate_conversion factory' do
-  subject do
-    json(
-      :plate_conversion,
-      uuid: 'example-plate-conversion-uuid'
-    )
-  end
+  subject { json(:plate_conversion, uuid: 'example-plate-conversion-uuid') }
 
   let(:json_content) do
-    %({
+    '{
       "plate_conversion": {
         "actions": {
           "read": "http://example.com:3000/example-plate-conversion-uuid"
@@ -31,7 +26,7 @@ RSpec.describe 'plate_conversion factory' do
 
         "uuid": "example-plate-conversion-uuid"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

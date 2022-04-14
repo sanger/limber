@@ -18,7 +18,6 @@ class Sequencescape::Api::V2::Submission < Sequencescape::Api::V2::Base
   # anything that completed more recently than the ready_buffer as still pending.
   # This lets us handle some race conditions that can occur.
   def building_in_progress?(ready_buffer: 0.seconds)
-    pending? || processing? ||
-      (ready? && updated_at > ready_buffer.ago)
+    pending? || processing? || (ready? && updated_at > ready_buffer.ago)
   end
 end

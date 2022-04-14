@@ -17,18 +17,12 @@ module LabwareCreators
     private
 
     def create_labware!
-      plate_creation = api.pooled_plate_creation.create!(
-        parents: transfers.keys,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      )
+      plate_creation =
+        api.pooled_plate_creation.create!(parents: transfers.keys, child_purpose: purpose_uuid, user: user_uuid)
 
       @child = plate_creation.child
 
-      api.bulk_transfer.create!(
-        user: user_uuid,
-        well_transfers: well_transfers
-      )
+      api.bulk_transfer.create!(user: user_uuid, well_transfers: well_transfers)
 
       yield(@child) if block_given?
       true

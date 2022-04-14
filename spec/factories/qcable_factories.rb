@@ -15,10 +15,9 @@ FactoryBot.define do
 
     # API V1 tag plate qcable
     factory :tag_plate_qcable do
-      transient do
-        asset_uuid { 'tag-plate-uuid' }
-      end
+      transient { asset_uuid { 'tag-plate-uuid' } }
     end
+
     # API V1 tag2 tube qcable
     factory :tag2_tube_qcable do
       transient do

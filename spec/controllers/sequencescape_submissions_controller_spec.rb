@@ -24,31 +24,45 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
         'sequencescape_submission' => {
           'request_options' => request_options,
           'template_uuid' => template_uuid,
-          'asset_groups' => { '0' => { 'assets' => assets } }
+          'asset_groups' => {
+            '0' => {
+              'assets' => assets
+            }
+          }
         }
       }
     end
 
     let!(:order_request) do
       stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-      stub_api_post(template_uuid, 'orders',
-                    payload: { order: {
-                      assets: assets,
-                      request_options: request_options,
-                      user: user_uuid
-                    } },
-                    body: '{"order":{"uuid":"order-uuid"}}')
+      stub_api_post(
+        template_uuid,
+        'orders',
+        payload: {
+          order: {
+            assets: assets,
+            request_options: request_options,
+            user: user_uuid
+          }
+        },
+        body: '{"order":{"uuid":"order-uuid"}}'
+      )
     end
 
     let!(:submission_request) do
-      stub_api_post('submissions',
-                    payload: { submission: { orders: ['order-uuid'], user: user_uuid } },
-                    body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }]))
+      stub_api_post(
+        'submissions',
+        payload: {
+          submission: {
+            orders: ['order-uuid'],
+            user: user_uuid
+          }
+        },
+        body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
+      )
     end
 
-    let!(:submission_submit) do
-      stub_api_post('sub-uuid', 'submit')
-    end
+    let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
 
     it 'creates a submission' do
       post :create, params: request_parameters, session: { user_uuid: user_uuid }

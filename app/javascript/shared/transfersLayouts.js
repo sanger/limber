@@ -17,9 +17,8 @@ import buildArray from './buildArray'
 
 const quadrantOffsets = {
   rowOffset: [0, 1, 0, 1],
-  colOffset: [0, 0, 1, 1]
+  colOffset: [0, 0, 1, 1],
 }
-
 
 // Used to calculate QuadrantStamp transfers. Combines four plates into one.
 // Receives an array of requestsWithPlates and returns an object containing an array of
@@ -42,13 +41,15 @@ const quadrantOffsets = {
 // +--+--+--+--+--+--+--~
 // |P2|P4|P2|P4|P2|P4|P1
 // |B1|B1|B2|B2|B3|B3|B4
-const quadrantTransfers = function(requestsWithPlates) {
+const quadrantTransfers = function (requestsWithPlates) {
   const transfersSet = new Set()
   const validTransfers = []
   const duplicatedTransfers = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
-    if (request === undefined) { continue }
+    if (request === undefined) {
+      continue
+    }
     const targetWell = quadrantTargetFor(
       plateObj.index,
       well.position.name,
@@ -59,18 +60,20 @@ const quadrantTransfers = function(requestsWithPlates) {
       request: request,
       well: well,
       plateObj: plateObj,
-      targetWell: targetWell
+      targetWell: targetWell,
     }
     const transferStr = well.position.name + targetWell
     if (transfersSet.has(transferStr)) {
       duplicatedTransfers.push(transfer)
-    }
-    else {
+    } else {
       transfersSet.add(transferStr)
       validTransfers.push(transfer)
     }
   }
-  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
+  return {
+    validTransfers: validTransfers,
+    duplicatedTransfers: duplicatedTransfers,
+  }
 }
 
 // Creates a two dimensional matrix where each rows contains a spatial
@@ -90,17 +93,18 @@ const quadrantTransfers = function(requestsWithPlates) {
 // duplicatedRequests array.
 //
 // Note: Indexes are calculated for 96 wells plates only.
-const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPlate) {
+const buildPlatesMatrix = function (requestsWithPlates, maxPlates, maxWellsPerPlate) {
   const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
   const duplicatedRequests = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
-    if (request === undefined) { continue }
+    if (request === undefined) {
+      continue
+    }
     const wellIndex = nameToIndex(well.position.name, 8)
     if (platesMatrix[plateObj.index][wellIndex] === undefined) {
       platesMatrix[plateObj.index][wellIndex] = requestsWithPlates[i]
-    }
-    else {
+    } else {
       duplicatedRequests.push(requestsWithPlates[i])
     }
   }
@@ -129,21 +133,22 @@ const buildPlatesMatrix = function(requestsWithPlates, maxPlates, maxWellsPerPla
 // a duplicatedRequests array:
 // [P2-A2-Lib1]
 //
-const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
+const buildLibrarySplitPlatesMatrix = function (requestsWithPlates) {
   const platesMatrix = []
   const duplicatedRequests = []
 
   for (const requestObj of requestsWithPlates) {
     const { request, well, plateObj } = requestObj
-    if (request === undefined) { continue }
+    if (request === undefined) {
+      continue
+    }
     const wellIndex = nameToIndex(well.position.name, 8)
     platesMatrix[plateObj.index] ??= {}
     platesMatrix[plateObj.index][request.library_type] ??= []
     if (typeof platesMatrix[plateObj.index][request.library_type][wellIndex] === 'undefined') {
       // We classify requests by source plate, library type and well position at source
       platesMatrix[plateObj.index][request.library_type][wellIndex] = requestObj
-    }
-    else {
+    } else {
       // All extra requests in the same source plate, library type and position
       // go to the duplication list
       duplicatedRequests.push(requestObj)
@@ -158,7 +163,7 @@ const buildLibrarySplitPlatesMatrix = function(requestsWithPlates) {
 // transferRequests array.
 //
 // Note: The target well name is calculated for a 96 well plate target.
-const buildSequentialTransfersArray = function(transferRequests) {
+const buildSequentialTransfersArray = function (transferRequests) {
   const transfers = new Array(transferRequests.length)
   for (let i = 0; i < transferRequests.length; i++) {
     const requestWithPlate = transferRequests[i]
@@ -166,7 +171,7 @@ const buildSequentialTransfersArray = function(transferRequests) {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
       plateObj: requestWithPlate.plateObj,
-      targetWell: indexToName(i, 8)
+      targetWell: indexToName(i, 8),
     }
   }
   return transfers
@@ -182,7 +187,10 @@ const buildSequentialTransfersArray = function(transferRequests) {
 // - numberOfWellsForEachSourcePlateInColumnOrder: number of wells that every source plate will have reserved in each
 // destination plate (default 24 wells (3 columns))
 //
-const buildSequentialLibrarySplitTransfersArray = function(transferRequests, numberOfWellsForEachSourcePlateInColumnOrder=24) {
+const buildSequentialLibrarySplitTransfersArray = function (
+  transferRequests,
+  numberOfWellsForEachSourcePlateInColumnOrder = 24
+) {
   const libraryTypes = []
   return transferRequests.map((requestWithPlate) => {
     const libraryType = requestWithPlate.request.library_type
@@ -199,7 +207,7 @@ const buildSequentialLibrarySplitTransfersArray = function(transferRequests, num
       well: requestWithPlate.well,
       plateObj: requestWithPlate.plateObj,
       targetWell: indexToName(wellIndex, 8),
-      targetPlate: plateIndex
+      targetPlate: plateIndex,
     }
   })
 }
@@ -230,18 +238,18 @@ const buildSequentialLibrarySplitTransfersArray = function(transferRequests, num
 //     }
 //   }
 // }
-const buildSequentialTubesTransfersArray = function(transferRequests) {
+const buildSequentialTubesTransfersArray = function (transferRequests) {
   const transfers = new Array()
 
   for (let i = 0; i < transferRequests.length; i++) {
-    if(transferRequests[i] === undefined){
+    if (transferRequests[i] === undefined) {
       continue
     }
 
     const tubeTransferReq = transferRequests[i]
-    transfers.push( {
+    transfers.push({
       tubeObj: { tube: tubeTransferReq.labware, index: tubeTransferReq.index },
-      targetWell: indexToName(i, 8)
+      targetWell: indexToName(i, 8),
     })
   }
   return transfers
@@ -265,12 +273,15 @@ const buildSequentialTubesTransfersArray = function(transferRequests) {
 // |C1|C2|        |  |  |         |P1D1|P2A1|P2D3
 // +--+--+--~     +--+--+--~      +----+----+----~
 // |D1|  |D3      |  |D2|D3       |P1C2|P2B2|
-const sequentialTransfers = function(requestsWithPlates) {
+const sequentialTransfers = function (requestsWithPlates) {
   const { platesMatrix, duplicatedRequests } = buildPlatesMatrix(requestsWithPlates, 10, 96)
   const transferRequests = platesMatrix.flat()
   const validTransfers = buildSequentialTransfersArray(transferRequests)
   const duplicatedTransfers = buildSequentialTransfersArray(duplicatedRequests)
-  return { validTransfers: validTransfers, duplicatedTransfers: duplicatedTransfers }
+  return {
+    validTransfers: validTransfers,
+    duplicatedTransfers: duplicatedTransfers,
+  }
 }
 
 // Returns only the active library creation requests from a list of requests as input
@@ -278,7 +289,7 @@ const sequentialTransfers = function(requestsWithPlates) {
 //   requestsWithPlates - Array of requests
 // Returns:
 //   Array of active library creation requests
-const libraryRequestsWithPlates = function(requestsWithPlates) {
+const libraryRequestsWithPlates = function (requestsWithPlates) {
   return requestsWithPlates.filter((obj) => requestIsLibraryCreation(obj.request) && requestIsActive(obj.request))
 }
 
@@ -295,7 +306,7 @@ const libraryRequestsWithPlates = function(requestsWithPlates) {
 // Returns:
 //   Object with key 'validTransfers' with the list of requests that are not duplicates, and 'duplicatedTransfers'
 //   with the duplicated requests
-const stampLibrarySplitTransfers = function(requestsWithPlates) {
+const stampLibrarySplitTransfers = function (requestsWithPlates) {
   const filteredOnlyLibraryRequestsWithPlates = libraryRequestsWithPlates(requestsWithPlates)
   const { platesMatrix, duplicatedRequests } = buildLibrarySplitPlatesMatrix(filteredOnlyLibraryRequestsWithPlates)
   const transferRequests = platesMatrix.flatMap((x) => Object.values(x)).flat()
@@ -317,7 +328,7 @@ const transferFunctions = {
 // duplicated transfers.
 // Throws an error if the transfers layout string is not mapped to a transfer
 // function.
-const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
+const transfersFromRequests = function (requestsWithPlates, transfersLayout) {
   const transferFunction = transferFunctions[transfersLayout]
   if (transferFunction === undefined) {
     throw `Invalid transfers layout name: ${transfersLayout}`
@@ -338,7 +349,7 @@ const transfersFromRequests = function(requestsWithPlates, transfersLayout) {
 //        ...etc...
 //      ]
 //
-const transfersForTubes = function(validTubes) {
+const transfersForTubes = function (validTubes) {
   const maxTubes = 96
   const tubeArray = new Array(maxTubes)
 
@@ -354,4 +365,10 @@ const transfersForTubes = function(validTubes) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
-export { transfersFromRequests, transfersForTubes, buildPlatesMatrix, buildLibrarySplitPlatesMatrix, buildSequentialLibrarySplitTransfersArray }
+export {
+  transfersFromRequests,
+  transfersForTubes,
+  buildPlatesMatrix,
+  buildLibrarySplitPlatesMatrix,
+  buildSequentialLibrarySplitTransfersArray,
+}

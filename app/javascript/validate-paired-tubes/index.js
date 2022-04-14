@@ -17,8 +17,10 @@ Vue.component('lb-page', Page)
 Vue.component('lb-sidebar', Sidebar)
 
 document.addEventListener('DOMContentLoaded', () => {
-  if ( document.getElementById('validate-paired-tubes') ) {
-    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  if (document.getElementById('validate-paired-tubes')) {
+    axios.defaults.headers.common['X-CSRF-Token'] = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content')
     Vue.prototype.$axios = axios
     new Vue({
       // Customized render function to pass in properties from our root element
@@ -29,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // navigation elements based on appropriateness
       // h in this case is Vue-shorthand for createElement
       // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-      render (h) { return h(MainComponent, { props: this.$el.dataset }) }
+      render(h) {
+        return h(MainComponent, { props: this.$el.dataset })
+      },
     }).$mount('#validate-paired-tubes')
   }
 })

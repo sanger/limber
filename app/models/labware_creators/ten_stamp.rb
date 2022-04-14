@@ -27,11 +27,7 @@ module LabwareCreators
     self.transfers_layout = 'sequential'
     self.transfers_creator = 'with-volume'
     self.attributes += [
-      {
-        transfers: [
-          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
-        ]
-      }
+      { transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]] }
     ]
     self.target_rows = 8
     self.target_columns = 12

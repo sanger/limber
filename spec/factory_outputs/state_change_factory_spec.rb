@@ -4,16 +4,11 @@ require 'rails_helper'
 
 RSpec.describe 'state change factory' do
   subject do
-    json(
-      :state_change,
-      target_uuid: 'example-target-uuid',
-      target_state: 'passed',
-      uuid: 'example-state-change-uuid'
-    )
+    json(:state_change, target_uuid: 'example-target-uuid', target_state: 'passed', uuid: 'example-state-change-uuid')
   end
 
   let(:json_content) do
-    %({
+    '{
         "state_change": {
           "actions": {
             "read": "http://example.com:3000/example-state-change-uuid"
@@ -29,7 +24,7 @@ RSpec.describe 'state change factory' do
           "reason": "testing this works",
           "uuid": "example-state-change-uuid"
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

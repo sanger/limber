@@ -13,7 +13,7 @@ RSpec.describe 'plate_creation factory' do
   end
 
   let(:json_content) do
-    %({
+    '{
       "plate_creation": {
         "actions": {
           "read": "http://example.com:3000/example-plate-creation-uuid"
@@ -39,7 +39,7 @@ RSpec.describe 'plate_creation factory' do
 
         "uuid": "example-plate-creation-uuid"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

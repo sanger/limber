@@ -5,14 +5,19 @@ require 'rails_helper'
 RSpec.feature 'Viewing a plate', js: true do
   has_a_working_api
 
-  let(:user)           { create :user }
+  let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
-  let(:plate_barcode)  { example_plate.barcode.machine }
-  let(:plate_uuid)     { SecureRandom.uuid }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:state) { 'pending' }
   let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
   let(:example_plate) do
-    create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state: state, wells: wells_collection, purpose_uuid: purpose_uuid
+    create :v2_stock_plate,
+           uuid: plate_uuid,
+           barcode_number: 1,
+           state: state,
+           wells: wells_collection,
+           purpose_uuid: purpose_uuid
   end
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
   let(:default_tube_printer) { 'tube printer 1' }
@@ -28,6 +33,7 @@ RSpec.feature 'Viewing a plate', js: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual plate
     stub_v2_plate(example_plate)
     stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
@@ -103,16 +109,14 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
         'Libraries on this plate have already been completed. ' \
-        'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate may run into issues at the end of the pipeline.'
       )
     end
   end
 
   feature 'with a tagged plate' do
     let(:purpose_config) { create :tagged_purpose_config, uuid: purpose_uuid }
-    let(:wells_collection) do
-      %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) }
-    end
+    let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) } }
     scenario 'it shows tags' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#aliquot_A1')).to have_content('1')
@@ -121,33 +125,40 @@ RSpec.feature 'Viewing a plate', js: true do
 
   feature 'with transfers to tubes' do
     let(:example_plate) do
-      create :v2_plate, uuid: plate_uuid,
-                        transfer_targets: { 'A1' => create_list(:v2_asset_tube, 1) },
-                        purpose_uuid: 'child-purpose-0'
+      create :v2_plate,
+             uuid: plate_uuid,
+             transfer_targets: {
+               'A1' => create_list(:v2_asset_tube, 1)
+             },
+             purpose_uuid: 'child-purpose-0'
     end
     let(:barcode_printer) { 'tube printer 0' }
     let(:print_copies) { 2 }
 
     let(:label_a) do
-      { label: {
-        top_line: 'Child tube 0 prefix',
-        middle_line: 'Example purpose',
-        bottom_line: ' 7-JUN-2017',
-        round_label_top_line: 'NT',
-        round_label_bottom_line: '1',
-        barcode: '3980000001795'
-      } }
+      {
+        label: {
+          top_line: 'Child tube 0 prefix',
+          middle_line: 'Example purpose',
+          bottom_line: ' 7-JUN-2017',
+          round_label_top_line: 'NT',
+          round_label_bottom_line: '1',
+          barcode: '3980000001795'
+        }
+      }
     end
 
     let(:label_b) do
-      { label: {
-        top_line: 'Child tube 1 prefix',
-        middle_line: 'Example purpose',
-        bottom_line: ' 7-JUN-2017',
-        round_label_top_line: 'NT',
-        round_label_bottom_line: '2',
-        barcode: '3980000001795'
-      } }
+      {
+        label: {
+          top_line: 'Child tube 1 prefix',
+          middle_line: 'Example purpose',
+          bottom_line: ' 7-JUN-2017',
+          round_label_top_line: 'NT',
+          round_label_bottom_line: '2',
+          barcode: '3980000001795'
+        }
+      }
     end
 
     scenario 'we see the tube label form' do

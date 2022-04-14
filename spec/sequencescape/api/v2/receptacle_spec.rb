@@ -4,31 +4,13 @@ require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::Receptacle do
   let(:wrong_units_molarity) do
-    create(
-      :qc_result,
-      key: 'molarity',
-      value: '0.0425',
-      units: 'mM',
-      created_at: Time.utc(2020, 1, 2, 3, 4, 5)
-    )
+    create(:qc_result, key: 'molarity', value: '0.0425', units: 'mM', created_at: Time.utc(2020, 1, 2, 3, 4, 5))
   end
   let(:early_molarity) do
-    create(
-      :qc_result,
-      key: 'molarity',
-      value: '8.6',
-      units: 'nM',
-      created_at: Time.utc(2020, 2, 3, 4, 5, 6)
-    )
+    create(:qc_result, key: 'molarity', value: '8.6', units: 'nM', created_at: Time.utc(2020, 2, 3, 4, 5, 6))
   end
   let(:later_molarity) do
-    create(
-      :qc_result,
-      key: 'molarity',
-      value: '6.5',
-      units: 'nM',
-      created_at: Time.utc(2020, 3, 4, 5, 6, 7)
-    )
+    create(:qc_result, key: 'molarity', value: '6.5', units: 'nM', created_at: Time.utc(2020, 3, 4, 5, 6, 7))
   end
   let(:volume) do
     create(
@@ -36,10 +18,12 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       key: 'volume',
       value: '250',
       units: 'ul',
-      created_at: Time.utc(2020, 11, 12, 13, 14, 15)  # Latest of all the creation times
+      created_at: Time.utc(2020, 11, 12, 13, 14, 15) # Latest of all the creation times
     )
   end
-  let(:receptacle) { create(:v2_receptacle, qc_results: [wrong_units_molarity, early_molarity, later_molarity, volume]) }
+  let(:receptacle) do
+    create(:v2_receptacle, qc_results: [wrong_units_molarity, early_molarity, later_molarity, volume])
+  end
 
   describe '#all_latest_qc' do
     it 'gives all the latest results back for each key' do

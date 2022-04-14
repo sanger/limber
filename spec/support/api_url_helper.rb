@@ -21,18 +21,15 @@ module ApiUrlHelper
     # Generate an API stub for a get request.
     # eg. stub_api_get(plate, 'children', body: json(:plate_collection))
     # stub_api_get(plate_uuid, body: json(:plate))
-    # @param [Api::Resource,*String] components one or more components that form the url. Models are converted to their uuid.
+    # @param [Api::Resource,*String] components one or more components that form
+    #                                the url. Models are converted to their uuid.
     # @param [String] body: named_parameter reflecting the expected response JSON
     # @param [Int] status: the response status, defaults to 200
     # @return mocked_request
     def stub_api_get(*components, status: 200, body: '{}')
       stub_request(:get, api_url_for(*components))
         .with(headers: { 'Accept' => 'application/json' })
-        .to_return(
-          status: status,
-          body: body,
-          headers: { 'content-type' => 'application/json' }
-        )
+        .to_return(status: status, body: body, headers: { 'content-type' => 'application/json' })
     end
 
     # Generate an API stub for a post request.
@@ -44,7 +41,9 @@ module ApiUrlHelper
     #                 user: user_uuid
     #               }},
     #               body: json(:transfer))
+    # rubocop:todo Layout/LineLength
     # @param [Api::Resource,*String] components one or more components that form the url. Models are converted to their uuid.
+    # rubocop:enable Layout/LineLength
     # @param [String] body: named_parameter reflecting the expected response JSON
     # @param [Hash] payload: the payload of the post request. Hash strongly recommended over raw json
     # @param [Int] status: the response status, defaults to 201
@@ -54,19 +53,18 @@ module ApiUrlHelper
     end
 
     def stub_api_modify(*components, body:, payload:, action: :post, status: 201)
-      Array(body).reduce(
-        stub_request(action, api_url_for(*components))
-        .with(
-          headers: { 'Accept' => 'application/json', 'content-type' => 'application/json' },
-          body: payload
-        )
-      ) do |request, response|
-        request.to_return(
-          status: status,
-          body: response,
-          headers: { 'content-type' => 'application/json' }
-        )
-      end
+      Array(body)
+        .reduce(
+          stub_request(action, api_url_for(*components)).with(
+            headers: {
+              'Accept' => 'application/json',
+              'content-type' => 'application/json'
+            },
+            body: payload
+          )
+        ) do |request, response|
+          request.to_return(status: status, body: response, headers: { 'content-type' => 'application/json' })
+        end
     end
 
     def stub_api_put(*components, body:, payload:)
@@ -74,7 +72,9 @@ module ApiUrlHelper
     end
 
     def stub_api_v2_post(klass)
+      # rubocop:todo Layout/LineLength
       # intercepts the 'update_attributes' method for any class beginning with 'Sequencescape::Api::V2::' and returns true
+      # rubocop:enable Layout/LineLength
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
     end
@@ -91,7 +91,9 @@ module ApiUrlHelper
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(plate)
       elsif custom_includes
-        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(custom_includes, { uuid: plate.uuid }).and_return(plate)
+        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
+          .with(custom_includes, { uuid: plate.uuid })
+          .and_return(plate)
       else
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end

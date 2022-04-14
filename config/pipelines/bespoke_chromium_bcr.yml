@@ -15,7 +15,7 @@ Bespoke Chromium BCR:
 Bespoke Chromium BCR MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LBC BCR Post PCR: LBC BCR LibPS
     LBC BCR LibPS: LB Lib Pool Norm

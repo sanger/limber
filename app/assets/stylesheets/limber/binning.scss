@@ -4,16 +4,28 @@
  * tab, and the default pooling one for other tabs. This css shows and hides the relevant aliquot div.
  */
 .plate-view {
-  .binning-id { display: none; }
-   &.binning-colours {
-    .binning-id { display: inline; }
+  .binning-id {
+    display: none;
+  }
+  &.binning-colours {
+    .binning-id {
+      display: inline;
+    }
   }
 
-  .aliquot.aliquot-pooled { display: inline-block; }
-  .aliquot.aliquot-binned { display: none; }
+  .aliquot.aliquot-pooled {
+    display: inline-block;
+  }
+  .aliquot.aliquot-binned {
+    display: none;
+  }
 
   &.binning-colours {
-    .aliquot.aliquot-pooled { display: none; }
-    .aliquot.aliquot-binned { display: inline-block; }
+    .aliquot.aliquot-pooled {
+      display: none;
+    }
+    .aliquot.aliquot-binned {
+      display: inline-block;
+    }
   }
 }

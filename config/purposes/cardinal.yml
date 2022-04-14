@@ -32,26 +32,26 @@ LCA Blood Array:
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
   :file_links:
-    - name: "Download Scanned Tube Layout for LCA Blood Array Plate"
+    - name: 'Download Scanned Tube Layout for LCA Blood Array Plate'
       id: cardinal_sample_arraying_tube_layout
 # LCA Blood stamps into LCA PBMC
 LCA PBMC:
   :asset_type: plate
   :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
   :file_links:
-    - name: "Download Cellaca Input QC1"
+    - name: 'Download Cellaca Input QC1'
       id: cellaca_input_file
       params:
         page: 0
-    - name: "Download Cellaca Input QC2"
+    - name: 'Download Cellaca Input QC2'
       id: cellaca_input_file
       params:
         page: 1
-    - name: "Download Cellaca Input QC3"
+    - name: 'Download Cellaca Input QC3'
       id: cellaca_input_file
       params:
         page: 2
-    - name: "Download Cellaca Input QC4"
+    - name: 'Download Cellaca Input QC4'
       id: cellaca_input_file
       params:
         page: 3
@@ -72,7 +72,7 @@ LCA PBMC Pools:
   :creator_class: LabwareCreators::CardinalPoolsPlate #creator to make pools of samples automatically according to table, using info from PBMC QC
   # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LCA PBMC plate
   :file_links:
-    - name: "Download Hamilton LCA PBMC to LCA PBMC Pools CSV"
+    - name: 'Download Hamilton LCA PBMC to LCA PBMC Pools CSV'
       id: hamilton_pooling_plate_pbmc
 # LCA PBMC Pools stamps into LCA 10X cDNA
 LCA 10X cDNA:
@@ -88,7 +88,7 @@ LCA Connect PCRXP:
   :tags_per_well: 1
   :tag_group_adapter_type_name_filter: 'Chromium'
   :file_links:
-    - name: "Download tagging CSV for Custom Pooling"
+    - name: 'Download tagging CSV for Custom Pooling'
       id: cardinal_tagging_csv_for_custom_pooling
   # Selection of Tag groups from the i5 and i7 dropdowns will be used here rather than tag plate barcodes (single or dual index tag groups)
 # DPL-072 Wells from LCA Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
@@ -129,13 +129,13 @@ LCA Blood Bank:
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
   :file_links:
-    - name: "Download Scanned Tube Layout for LCA Blood Bank Plate"
+    - name: 'Download Scanned Tube Layout for LCA Blood Bank Plate'
       id: cardinal_sample_arraying_tube_layout
 # LCA Blood Bank plates are stamped into LCA PBMC Bank plates
 LCA PBMC Bank:
   :asset_type: plate
   :file_links:
-    - name: "Download Hamilton LCA PBMC Bank plate to LCA Bank Stock tubes CSV"
+    - name: 'Download Hamilton LCA PBMC Bank plate to LCA Bank Stock tubes CSV'
       id: hamilton_lca_pbmc_bank_to_lca_bank_stock
 # LCA PBMC Bank plate wells are transferred into LCA Bank Stock tubes, with some
 # consolidation of wells containing the same sample into the same tube.

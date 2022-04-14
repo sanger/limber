@@ -7,32 +7,24 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   include RobotHelpers
   has_a_working_api
 
-  let(:user_uuid)                   { SecureRandom.uuid }
-  let(:plate_uuid)                  { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:plate_uuid) { SecureRandom.uuid }
 
-  let(:wells) do
-    %w[C1 D1].map do |location|
-      create :v2_well, location: location, downstream_plates: transfer_target_1
-    end
-  end
+  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location: location, downstream_plates: transfer_target_1 } }
   let(:transfer_target_1) { [target_plate_1] }
 
-  let(:source_barcode)              { source_plate.human_barcode }
-  let(:source_purpose_name)         { 'Limber Cherrypicked' }
-  let(:source_plate_state)          { 'passed' }
+  let(:source_barcode) { source_plate.human_barcode }
+  let(:source_purpose_name) { 'Limber Cherrypicked' }
+  let(:source_plate_state) { 'passed' }
   let(:source_plate) do
-    create :v2_plate,
-           barcode_number: 1,
-           purpose_name: source_purpose_name,
-           state: source_plate_state,
-           wells: wells
+    create :v2_plate, barcode_number: 1, purpose_name: source_purpose_name, state: source_plate_state, wells: wells
   end
-  let(:target_barcode_1)            { target_plate_1.human_barcode }
-  let(:target_barcode_2)            { target_plate_2.human_barcode }
-  let(:target_purpose_name)         { 'target_plate_purpose' }
-  let(:target_plate_1)              { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 2 }
-  let(:target_plate_2)              { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 3 }
-  let(:metadata_uuid)               { SecureRandom.uuid }
+  let(:target_barcode_1) { target_plate_1.human_barcode }
+  let(:target_barcode_2) { target_plate_2.human_barcode }
+  let(:target_purpose_name) { 'target_plate_purpose' }
+  let(:target_plate_1) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 2 }
+  let(:target_plate_2) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 3 }
+  let(:metadata_uuid) { SecureRandom.uuid }
   let(:custom_metadatum_collection) { create :custom_metdatum_collection, uuid: metadata_uuid }
 
   let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
@@ -67,13 +59,15 @@ RSpec.describe Robots::SplittingRobot, robots: true do
               'target_state' => 'passed'
             }
           },
-          'relationships' => [{
-            'type' => 'quad_stamp_out',
-            'options' => {
-              'parent' => 'bed1_barcode',
-              'children' => %w[bed2_barcode bed3_barcode]
+          'relationships' => [
+            {
+              'type' => 'quad_stamp_out',
+              'options' => {
+                'parent' => 'bed1_barcode',
+                'children' => %w[bed2_barcode bed3_barcode]
+              }
             }
-          }]
+          ]
         }
       end
 
@@ -98,8 +92,11 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
       context 'with a valid layout' do
         let(:scanned_layout) do
-          { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_1],
-            'bed3_barcode' => [target_barcode_2] }
+          {
+            'bed1_barcode' => [source_barcode],
+            'bed2_barcode' => [target_barcode_1],
+            'bed3_barcode' => [target_barcode_2]
+          }
         end
 
         context 'and related plates' do
@@ -114,8 +111,11 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
       context 'with plates in the wrong order' do
         let(:scanned_layout) do
-          { 'bed1_barcode' => [source_barcode], 'bed2_barcode' => [target_barcode_2],
-            'bed3_barcode' => [target_barcode_1] }
+          {
+            'bed1_barcode' => [source_barcode],
+            'bed2_barcode' => [target_barcode_2],
+            'bed3_barcode' => [target_barcode_1]
+          }
         end
 
         context 'and related plates' do
@@ -144,18 +144,20 @@ RSpec.describe Robots::SplittingRobot, robots: true do
     end
 
     let(:state_change_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      state_change: {
-                        target_state: 'passed',
-                        reason: 'Robot bravo LB End Prep started',
-                        customer_accepts_responsibility: false,
-                        target: plate.uuid,
-                        user: user_uuid,
-                        contents: nil
-                      }
-                    },
-                    body: json(:state_change, target_state: 'passed'))
+      stub_api_post(
+        'state_changes',
+        payload: {
+          state_change: {
+            target_state: 'passed',
+            reason: 'Robot bravo LB End Prep started',
+            customer_accepts_responsibility: false,
+            target: plate.uuid,
+            user: user_uuid,
+            contents: nil
+          }
+        },
+        body: json(:state_change, target_state: 'passed')
+      )
     end
 
     let(:plate) do

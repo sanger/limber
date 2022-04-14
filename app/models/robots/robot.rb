@@ -43,16 +43,12 @@ module Robots
 
     def beds=(new_beds)
       beds = Hash.new { |store, barcode| store[barcode] = Robots::Bed::Invalid.new(barcode) }
-      new_beds.each do |id, bed|
-        beds[id] = bed_class.new(bed.merge(robot: self))
-      end
+      new_beds.each { |id, bed| beds[id] = bed_class.new(bed.merge(robot: self)) }
       @beds = beds
     end
 
     def bed_labwares=(bed_labwares)
-      bed_labwares.each do |bed_barcode, labware_barcodes|
-        beds[bed_barcode.strip].load(labware_barcodes)
-      end
+      bed_labwares.each { |bed_barcode, labware_barcodes| beds[bed_barcode.strip].load(labware_barcodes) }
     end
 
     private
@@ -102,9 +98,7 @@ module Robots
     end
 
     def valid_labwares
-      beds.transform_values do |bed|
-        bed.valid? || bed_error(bed)
-      end
+      beds.transform_values { |bed| bed.valid? || bed_error(bed) }
     end
 
     #
@@ -113,9 +107,7 @@ module Robots
     #
     # @return [Hash< String => Boolean>] Hash of boolean indexed by bed barcode
     def valid_relationships
-      parents_and_position do |parents, position|
-        check_labware_identity(parents, position)
-      end.compact
+      parents_and_position { |parents, position| check_labware_identity(parents, position) }.compact
     end
 
     def bed_class
@@ -126,9 +118,7 @@ module Robots
       recognised_beds.transform_values do |bed|
         next if bed.parents.blank?
 
-        bed.parents.all? do |parent_bed_barcode|
-          yield(bed.parent_labware, parent_bed_barcode)
-        end
+        bed.parents.all? { |parent_bed_barcode| yield(bed.parent_labware, parent_bed_barcode) }
       end
     end
 
@@ -160,7 +150,11 @@ module Robots
       return true if beds[position].shared_parent
 
       # We have scanned a labware, but weren't expecting one (invalid)
-      msg = 'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.'
+      msg =
+        # rubocop:todo Layout/LineLength
+        'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.'
+
+      # rubocop:enable Layout/LineLength
       error(beds[position], msg)
       false
     end
@@ -172,15 +166,22 @@ module Robots
     # @return [String] The error message
     def generate_error_message(expected_labwares, position)
       if expected_labwares.empty?
-        # We were unable to recognize any parent of this plate that matches the labware purpose of the beds in the configuration, so this labware
-        # has unexpected parents for this pipeline bed verification
+        # We were unable to recognize any parent of this plate that matches the
+        # labware purpose of the beds in the configuration, so this labware has
+        # unexpected parents for this pipeline bed verification
+        # rubocop:todo Layout/LineLength
         "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does not have a parent with that purpose."
+        # rubocop:enable Layout/LineLength
       elsif beds[position].labware.nil?
         # We expected a labware but none was scanned
+        # rubocop:todo Layout/LineLength
         "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
+        # rubocop:enable Layout/LineLength
       else
         # We have scanned an unexpected labware
+        # rubocop:todo Layout/LineLength
         "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
+        # rubocop:enable Layout/LineLength
       end
     end
 
@@ -197,7 +198,8 @@ module Robots
       return true if expected_uuids.include?(beds[position].labware.try(:uuid))
 
       # We have an invalid result
-      # Filter the list of parents to expected bed labware purpose at this position, e.g. position takes purpose A, filter parents for purpose A
+      # Filter the list of parents to expected bed labware purpose at this
+      # position, e.g. position takes purpose A, filter parents for purpose A
       expected_labwares = parents.filter { |parent| parent.purpose.name == beds[position].purpose }
 
       # Identify what looks wrong and create a suitable message

@@ -10,36 +10,30 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   has_a_working_api
   it_behaves_like 'it only allows creation from plates'
 
-  subject do
-    LabwareCreators::PlateWithPrimerPanel.new(api, form_attributes)
-  end
+  subject { LabwareCreators::PlateWithPrimerPanel.new(api, form_attributes) }
 
-  let(:user_uuid)    { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose)      { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)  { SecureRandom.uuid }
-  let(:plate_size)   { 384 }
+  let(:purpose) { json :purpose, uuid: purpose_uuid }
+  let(:parent_uuid) { SecureRandom.uuid }
+  let(:plate_size) { 384 }
   let(:requests) do
     Array.new(plate_size) do |i|
-      create :gbs_library_request, state: 'started', uuid: "request-#{i}", 'submission_id' => '2'
+      create :gbs_library_request, :state => 'started', :uuid => "request-#{i}", 'submission_id' => '2'
     end
   end
   let(:parent) do
-    create :v2_plate_with_primer_panels, barcode_number: '2', uuid: parent_uuid, size: plate_size, outer_requests: requests
+    create :v2_plate_with_primer_panels,
+           barcode_number: '2',
+           uuid: parent_uuid,
+           size: plate_size,
+           outer_requests: requests
   end
   let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
-  let(:form_attributes) do
-    {
-      user_uuid: user_uuid,
-      purpose_uuid: purpose_uuid,
-      parent_uuid: parent_uuid
-    }
-  end
+  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
 
-  before do
-    create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid
-  end
+  before { create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid }
 
   it 'should have page' do
     expect(LabwareCreators::PlateWithPrimerPanel.page).to eq 'plate_with_primer_panel'
@@ -54,13 +48,17 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     let!(:plate_creation_request) do
-      stub_api_post('plate_creations',
-                    payload: { plate_creation: {
-                      parent: parent_uuid,
-                      child_purpose: purpose_uuid,
-                      user: user_uuid
-                    } },
-                    body: json(:plate_creation))
+      stub_api_post(
+        'plate_creations',
+        payload: {
+          plate_creation: {
+            parent: parent_uuid,
+            child_purpose: purpose_uuid,
+            user: user_uuid
+          }
+        },
+        body: json(:plate_creation)
+      )
     end
 
     describe '#panel_name' do
@@ -82,22 +80,24 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     let(:transfer_requests) do
-      WellHelpers.column_order(plate_size).map do |well_name|
-        {
-          'source_asset' => "2-well-#{well_name}",
-          'target_asset' => "3-well-#{well_name}",
-          'submission_id' => '2'
-        }
-      end
+      WellHelpers
+        .column_order(plate_size)
+        .map do |well_name|
+          { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
+        end
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer_request_collections',
-                    payload: { transfer_request_collection: {
-                      user: user_uuid,
-                      transfer_requests: transfer_requests
-                    } },
-                    body: '{}')
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: transfer_requests
+          }
+        },
+        body: '{}'
+      )
     end
 
     it 'should create objects' do

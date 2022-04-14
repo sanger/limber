@@ -35,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   const assetElem = document.getElementById('custom-tagged-plate-page')
 
-  if ( assetElem ) {
-    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  if (assetElem) {
+    axios.defaults.headers.common['X-CSRF-Token'] = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content')
     Vue.prototype.$axios = axios
     /* The custom-tagged-plate-page element isn't on all pages. So only initialize our
-    * Vue app if we actually find it */
+     * Vue app if we actually find it */
 
     new Vue({
       // Customized render function to pass in properties from our root element
@@ -50,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // navigation elements based on appropriateness
       // h in this case is Vue-shorthand for createElement
       // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-      render (h) { return h(CustomTaggedPlate, { props: this.$el.dataset }) }
+      render(h) {
+        return h(CustomTaggedPlate, { props: this.$el.dataset })
+      },
     }).$mount('#custom-tagged-plate-page')
   }
 })

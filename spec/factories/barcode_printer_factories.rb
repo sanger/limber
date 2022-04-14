@@ -14,20 +14,17 @@ FactoryBot.define do
       # The type of printer, either 'plate' or 'tube'. Use this to set the layout and name to something
       # appropriate
       printer_type { 'plate' }
+
       # Sets the type.name attribute. Use printer_type to set this automatically
       printer_type_name { { 'plate' => '96 Well Plate', 'tube' => '1D Tube' }.fetch(printer_type) }
+
       # Sets the type.layout attribute. Use printer_type to set this automatically.
       layout { { 'plate' => 1, 'tube' => 2 }.fetch(printer_type) }
     end
 
     # Type is a hash provided by the Sequencescape API which describes the label type
     # loaded into the printer.
-    type do
-      {
-        'name' => printer_type_name,
-        'layout' => layout
-      }
-    end
+    type { { 'name' => printer_type_name, 'layout' => layout } }
 
     name { "#{printer_type} printer" }
 
@@ -59,12 +56,8 @@ FactoryBot.define do
     end
 
     barcode_printers do
-      Array.new(tube_printer_size) do |i|
-        associated(:plate_barcode_printer, name: "plate printer #{i}")
-      end +
-        Array.new(plate_printer_size) do |i|
-          associated(:tube_barcode_printer, name: "tube printer #{i}")
-        end
+      Array.new(tube_printer_size) { |i| associated(:plate_barcode_printer, name: "plate printer #{i}") } +
+        Array.new(plate_printer_size) { |i| associated(:tube_barcode_printer, name: "tube printer #{i}") }
     end
   end
 end

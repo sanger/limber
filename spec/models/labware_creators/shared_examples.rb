@@ -154,33 +154,50 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'with a previously passed library and a new repool' do
-        let(:parent) do
-          build :plate,
-                pools: pools
-        end
+        let(:parent) { build :plate, pools: pools }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         let(:pools) do
+          # rubocop:todo Layout/LineLength
           # Taken from actual problem plate. Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
+          # rubocop:enable Layout/LineLength
           {
-            'pool-we-want-to-use-1' => { 'wells' => %w[B3 C9 H10],
-                                         'pool_complete' => false,
-                                         'request_type' => 'limber_multiplexing',
-                                         'for_multiplexing' => true },
-            'pool-we-want-to-use-2' => { 'wells' => %w[C3 H5],
-                                         'pool_complete' => false,
-                                         'request_type' => 'limber_multiplexing',
-                                         'for_multiplexing' => true },
-            'older-complete-pool-1' => { 'wells' => %w[A5 A7 A10 B5 C9 E6 E11 F5 G5 G8 G10 H3 H10 H11],
-                                         'pool_complete' => true,
-                                         'insert_size' => { 'from' => 100, 'to' => 400 },
-                                         'library_type' => { 'name' => 'Agilent Pulldown' },
-                                         'request_type' => 'limber_reisc' },
-            'older-complete-pool-2' => { 'wells' => %w[A3 A6 B3 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9 H5],
-                                         'pool_complete' => true,
-                                         'insert_size' => { 'from' => 100, 'to' => 400 },
-                                         'library_type' => { 'name' => 'Agilent Pulldown' },
-                                         'request_type' => 'limber_reisc' }
+            'pool-we-want-to-use-1' => {
+              'wells' => %w[B3 C9 H10],
+              'pool_complete' => false,
+              'request_type' => 'limber_multiplexing',
+              'for_multiplexing' => true
+            },
+            'pool-we-want-to-use-2' => {
+              'wells' => %w[C3 H5],
+              'pool_complete' => false,
+              'request_type' => 'limber_multiplexing',
+              'for_multiplexing' => true
+            },
+            'older-complete-pool-1' => {
+              'wells' => %w[A5 A7 A10 B5 C9 E6 E11 F5 G5 G8 G10 H3 H10 H11],
+              'pool_complete' => true,
+              'insert_size' => {
+                'from' => 100,
+                'to' => 400
+              },
+              'library_type' => {
+                'name' => 'Agilent Pulldown'
+              },
+              'request_type' => 'limber_reisc'
+            },
+            'older-complete-pool-2' => {
+              'wells' => %w[A3 A6 B3 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9 H5],
+              'pool_complete' => true,
+              'insert_size' => {
+                'from' => 100,
+                'to' => 400
+              },
+              'library_type' => {
+                'name' => 'Agilent Pulldown'
+              },
+              'request_type' => 'limber_reisc'
+            }
           }
         end
         it { is_expected.to be true }
@@ -221,28 +238,37 @@ end
 RSpec.shared_examples 'a partial stamped plate creator' do
   describe '#save!' do
     let!(:plate_creation_request) do
-      stub_api_post('plate_creations',
-                    payload: { plate_creation: {
-                      parent: parent_uuid,
-                      child_purpose: child_purpose_uuid,
-                      user: user_uuid
-                    } },
-                    body: json(:plate_creation))
+      stub_api_post(
+        'plate_creations',
+        payload: {
+          plate_creation: {
+            parent: parent_uuid,
+            child_purpose: child_purpose_uuid,
+            user: user_uuid
+          }
+        },
+        body: json(:plate_creation)
+      )
     end
 
     let!(:transfer_creation_request) do
-      stub_api_post('transfer_request_collections',
-                    payload: { transfer_request_collection: {
-                      user: user_uuid,
-                      transfer_requests: transfer_requests
-                    } },
-                    body: '{}')
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: transfer_requests
+          }
+        },
+        body: '{}'
+      )
     end
 
     it 'makes the expected requests' do
       # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
-      expect(Sequencescape::Api::V2::QcAssay)
-        .to receive(:create).with(qc_results: dest_well_qc_attributes).and_return(true)
+      expect(Sequencescape::Api::V2::QcAssay).to receive(:create)
+        .with(qc_results: dest_well_qc_attributes)
+        .and_return(true)
       expect(subject.save!).to eq true
       expect(plate_creation_request).to have_been_made
       expect(transfer_creation_request).to have_been_made

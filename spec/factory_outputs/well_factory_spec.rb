@@ -3,18 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'well factory' do
-  subject do
-    json(
-      :well,
-      uuid: 'example-well-uuid',
-      location: 'A1'
-    )
-  end
+  subject { json(:well, uuid: 'example-well-uuid', location: 'A1') }
 
   # This is a massive oversimplification of the well json, as there is a LOT
   # of unecessary information. We trim our mocks down to what we actually NEED
   let(:json_content) do
-    %({
+    '{
       "well": {
         "actions": {
           "read": "http://example.com:3000/example-well-uuid"
@@ -42,7 +36,7 @@ RSpec.describe 'well factory' do
         "location": "A1",
         "state": "pending"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do
@@ -57,13 +51,15 @@ RSpec.describe 'well_collection factory' do
       :well_collection,
       size: 2,
       default_state: 'passed',
-      custom_state: { 'B1' => 'failed' },
+      custom_state: {
+        'B1' => 'failed'
+      },
       plate_uuid: 'plate-uuid'
     )
   end
 
   let(:json_content) do
-    %({
+    '{
       "actions":{
         "read":"http://example.com:3000/plate-uuid/wells/1",
         "first":"http://example.com:3000/plate-uuid/wells/1",
@@ -122,7 +118,7 @@ RSpec.describe 'well_collection factory' do
         "location": "B1",
         "state": "failed"
       }]
-    })
+    }'
   end
 
   it 'should match the expected json' do

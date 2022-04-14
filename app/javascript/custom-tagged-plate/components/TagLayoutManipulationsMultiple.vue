@@ -1,10 +1,6 @@
 <template>
   <b-container fluid>
-    <lb-tag-groups-lookup
-      :api="api"
-      resource-name="tag_group"
-      @change="tagGroupsLookupUpdated"
-    />
+    <lb-tag-groups-lookup :api="api" resource-name="tag_group" @change="tagGroupsLookupUpdated" />
     <b-row class="form-group form-row">
       <b-col>
         <b-form-group
@@ -24,11 +20,7 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group
-          id="walking_by_options_group"
-          label="Walking By Options:"
-          label-for="walking_by_options"
-        >
+        <b-form-group id="walking_by_options_group" label="Walking By Options:" label-for="walking_by_options">
           <b-form-select
             id="walking_by_options"
             v-model="walkingBy"
@@ -38,11 +30,7 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group
-          id="direction_options_group"
-          label="Directions Options:"
-          label-for="direction_options"
-        >
+        <b-form-group id="direction_options_group" label="Directions Options:" label-for="direction_options">
           <b-form-select
             id="direction_options"
             v-model="direction"
@@ -64,17 +52,8 @@
         />
       </b-col>
       <b-col>
-        <b-form-group
-          id="tags_per_well_group"
-          label="Tags per well:"
-          label-for="tags_per_well"
-        >
-          <b-form-input
-            id="tags_per_well"
-            type="number"
-            :value="tagsPerWell"
-            :disabled="true"
-          />
+        <b-form-group id="tags_per_well_group" label="Tags per well:" label-for="tags_per_well">
+          <b-form-input id="tags_per_well" type="number" :value="tagsPerWell" :disabled="true" />
         </b-form-group>
       </b-col>
     </b-row>
@@ -82,7 +61,6 @@
 </template>
 
 <script>
-
 import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 
 /**
@@ -102,7 +80,7 @@ import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 export default {
   name: 'TagLayoutManipulationsMultiple',
   mixins: [TagLayout],
-  data () {
+  data() {
     return {
       walkingBy: 'as fixed group by plate', // holds the chosen tag layout walking by option
     }
@@ -111,25 +89,29 @@ export default {
     walkingByOptions() {
       return [
         { value: null, text: 'Please select a by Walking By Option...' },
-        { value: 'as group by plate', text: 'Apply Multiple Tags (Sequential)' },
-        { value: 'as fixed group by plate', text: 'Apply Multiple Tags (Fixed)' }
+        {
+          value: 'as group by plate',
+          text: 'Apply Multiple Tags (Sequential)',
+        },
+        {
+          value: 'as fixed group by plate',
+          text: 'Apply Multiple Tags (Fixed)',
+        },
       ]
-    }
+    },
   },
-  methods: {
-  }
+  methods: {},
 }
-
 </script>
 
 <style>
-  input:invalid+span:after {
-    content: '✖';
-    padding-left: 5px;
-  }
+input:invalid + span:after {
+  content: '✖';
+  padding-left: 5px;
+}
 
-  input:valid+span:after {
-    content: '✓';
-    padding-left: 5px;
-  }
+input:valid + span:after {
+  content: '✓';
+  padding-left: 5px;
+}
 </style>

@@ -4,19 +4,22 @@ import { mount } from '@vue/test-utils'
 import AssetCommentsAddForm from './AssetCommentsAddForm.vue'
 
 describe('AssetCommentsAddForm', () => {
-
-  const wrapperFactory = function(comments) {
+  const wrapperFactory = function (comments) {
     const parent = {
       data() {
         return {
           comments,
-          addComment() { },
-          refreshComments() { }
+          addComment() {},
+          refreshComments() {},
         }
-      }
+      },
     }
 
-    return mount(AssetCommentsAddForm, { localVue, parentComponent: parent, propsData: { commentTitle: 'Test title' } })
+    return mount(AssetCommentsAddForm, {
+      localVue,
+      parentComponent: parent,
+      propsData: { commentTitle: 'Test title' },
+    })
   }
 
   it('correctly sets the state to pending when created', () => {
@@ -116,5 +119,4 @@ describe('AssetCommentsAddForm', () => {
     expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Failed to add comment, retry?')
   })
-
 })

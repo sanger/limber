@@ -5,7 +5,7 @@ module Limber::TagLayoutTemplate::WalkWellsOfPlate # rubocop:todo Style/Document
     tagged_wells = {}
     tags = tag_ids
     groups = group_wells_of_plate(plate)
-    pools  = groups.filter_map { |w| w.try(:[], 1) }.uniq
+    pools = groups.filter_map { |w| w.try(:[], 1) }.uniq
 
     groups.each_with_index do |(well, pool_id, _well_empty), index|
       throw :unacceptable_tag_layout if tags.size <= index

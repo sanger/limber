@@ -2,12 +2,7 @@
 
 RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   context 'Valid files' do
-    let(:expected_pools) do
-      {
-        '1' => %w[A1 B1 D1 E1 F1 G1 H1 A2 B2],
-        '2' => %w[C1 C2 D2 E2 F2 G2]
-      }
-    end
+    let(:expected_pools) { { '1' => %w[A1 B1 D1 E1 F1 G1 H1 A2 B2], '2' => %w[C1 C2 D2 E2 F2 G2] } }
 
     context 'Without byte order markers' do
       let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
@@ -45,9 +40,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   context 'something that can not parse' do
     let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
 
-    before do
-      allow(CSV).to receive(:parse).and_raise('Really bad file')
-    end
+    before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
     describe '#valid?' do
       subject { described_class.new(file).valid? }
@@ -72,11 +65,15 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
       it { is_expected.to be false }
 
       let(:row2_error) do
+        # rubocop:todo Layout/LineLength
         'Transfers volume is 0 in row 2 [A1] but a destination has been specified. Either supply a positive volume, or remove the destination.'
+        # rubocop:enable Layout/LineLength
       end
 
       let(:row3_error) do
+        # rubocop:todo Layout/LineLength
         'Transfers volume is blank in row 3 [B1] but a destination has been specified. Either supply a positive volume, or remove the destination.'
+        # rubocop:enable Layout/LineLength
       end
 
       it 'reports the errors' do
@@ -99,7 +96,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
       it 'reports the errors' do
         thing = described_class.new(file)
         thing.valid?
-        expect(thing.errors.full_messages).to include('Header row source column could not be found in: \'This is an example file\'')
+        expect(thing.errors.full_messages).to include(
+          'Header row source column could not be found in: \'This is an example file\''
+        )
       end
     end
   end

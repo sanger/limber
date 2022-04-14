@@ -52,12 +52,12 @@ module Presenters
     private
 
     def asset_groups
-      @asset_groups ||= labware.wells
-                               .compact_blank
-                               .group_by(&:order_group)
-                               .map do |_, wells|
-                                 { assets: wells.map(&:uuid), autodetect_studies_projects: true }
-                               end
+      @asset_groups ||=
+        labware
+          .wells
+          .compact_blank
+          .group_by(&:order_group)
+          .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies_projects: true } }
     end
   end
 end

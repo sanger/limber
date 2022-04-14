@@ -1,4 +1,3 @@
-
 import devourApi from 'shared/devourApi'
 import sequencescapeResources from 'shared/resources'
 // Provides object equality comparisons. eg.
@@ -8,7 +7,7 @@ import isEqual from 'fast-deep-equal'
 const dummyApiUrl = 'http://www.example.com'
 
 // Nice user readable summary of the request object
-const requestFormatter = function(request) {
+const requestFormatter = function (request) {
   return `
 --------------------------------------------------------------------------------
   Method: ${request.method}
@@ -20,17 +19,17 @@ const requestFormatter = function(request) {
 
 // Fail the test if we receive an unexpected request and provide information
 // to assist with debugging
-const unexpectedRequest = function(request, expectedRequests) {
+const unexpectedRequest = function (request, expectedRequests) {
   const baseError = `Unexpected Request:
 ${requestFormatter(request)}
 Expected Requests:`
-  const errorMessage = expectedRequests.reduce((error, expectedRequest)=>{
+  const errorMessage = expectedRequests.reduce((error, expectedRequest) => {
     return error + requestFormatter(expectedRequest.req)
   }, baseError)
   fail(errorMessage)
 }
 
-const mockApi = function(resources = sequencescapeResources) {
+const mockApi = function (resources = sequencescapeResources) {
   const devour = devourApi({ apiUrl: dummyApiUrl }, resources)
   const mockedRequests = []
   const findRequest = (request) => {
@@ -51,10 +50,14 @@ const mockApi = function(resources = sequencescapeResources) {
 
       if (mockedRequest) {
         mockedRequest.called += 1
-        payload.req.adapter = function () { return mockedRequest.res }
+        payload.req.adapter = function () {
+          return mockedRequest.res
+        }
       } else {
         // Stop things going further, otherwise we risk generating real traffic
-        payload.req.adapter = function () { return Promise.reject({ 'message': 'unregistered request' }) }
+        payload.req.adapter = function () {
+          return Promise.reject({ message: 'unregistered request' })
+        }
         unexpectedRequest(payload.req, mockedRequests)
       }
       return payload
@@ -62,23 +65,25 @@ const mockApi = function(resources = sequencescapeResources) {
     mockGet: (url, params, response) => {
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
-        res:  Promise.resolve({ data: response }), // Response
-        called: 0
+        res: Promise.resolve({ data: response }), // Response
+        called: 0,
       })
     },
     mockFail: (url, params, response) => {
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
         res: Promise.reject({ data: response }), // Response
-        called: 0
+        called: 0,
       })
     },
-    devour
+    devour,
   }
 
-  let mockMiddlewareIndex = devour.middleware.findIndex((mw) => { mw.name === 'mock-request-response'} )
+  let mockMiddlewareIndex = devour.middleware.findIndex((mw) => {
+    mw.name === 'mock-request-response'
+  })
 
-  if ( mockMiddlewareIndex === -1 ) {
+  if (mockMiddlewareIndex === -1) {
     devour.middleware.unshift(mockResponse)
   } else {
     devour.middleware[mockMiddlewareIndex] = mockResponse

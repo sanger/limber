@@ -11,9 +11,20 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
   let(:live_cell_count_b1) { create(:qc_result, key: 'live_cell_count', value: '1400000', units: 'cells/ml') }
   let(:live_cell_count_c1) { create(:qc_result, key: 'live_cell_count', value: '1850000', units: 'cells/ml') }
 
-  let(:ancestor_well_a1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'A1', qc_results: [live_cell_count_a1, concentration_result]) }
-  let(:ancestor_well_b1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'B1', qc_results: [live_cell_count_b1]) }
-  let(:ancestor_well_c1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'C1', qc_results: [live_cell_count_c1]) }
+  let(:ancestor_well_a1) do
+    create(
+      :v2_well,
+      plate_barcode: ancestor_plate_barcode,
+      location: 'A1',
+      qc_results: [live_cell_count_a1, concentration_result]
+    )
+  end
+  let(:ancestor_well_b1) do
+    create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'B1', qc_results: [live_cell_count_b1])
+  end
+  let(:ancestor_well_c1) do
+    create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'C1', qc_results: [live_cell_count_c1])
+  end
   let(:ancestor_wells_group_1) do
     %w[A2 B2 C2 D2 E2 F2 G2 H2 A3 B3 C3 D3].map do |coord|
       create(:v2_well, plate_barcode: ancestor_plate_barcode, location: coord, qc_results: [live_cell_count_c1])
@@ -24,52 +35,58 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
       create(:v2_well, plate_barcode: ancestor_plate_barcode, location: coord, qc_results: [live_cell_count_c1])
     end
   end
-  let(:ancestor_wells) { [ancestor_well_a1, ancestor_well_b1, ancestor_well_c1] + ancestor_wells_group_1 + ancestor_wells_group_2 }
-
-  let(:ancestor_labware) do
-    create(
-      :v2_plate,
-      wells: ancestor_wells,
-      pool_sizes: ancestor_wells.map { |_well| 1 }
-    )
+  let(:ancestor_wells) do
+    [ancestor_well_a1, ancestor_well_b1, ancestor_well_c1] + ancestor_wells_group_1 + ancestor_wells_group_2
   end
 
+  let(:ancestor_labware) { create(:v2_plate, wells: ancestor_wells, pool_sizes: ancestor_wells.map { |_well| 1 }) }
+
   let(:transfer_requests) do
-    ancestor_wells.map do |well|
-      create(:v2_transfer_request, source_asset: well, target_asset: nil)
-    end
+    ancestor_wells.map { |well| create(:v2_transfer_request, source_asset: well, target_asset: nil) }
   end
 
   let(:well_a1) do
     create(
       :v2_well_with_transfer_requests,
-      position: { 'name' => 'A1' },
+      position: {
+        'name' => 'A1'
+      },
       transfer_requests_as_target: transfer_requests[0..1]
     )
   end
   let(:well_b1) do
     create(
       :v2_well_with_transfer_requests,
-      position: { 'name' => 'B1' },
+      position: {
+        'name' => 'B1'
+      },
       transfer_requests_as_target: [transfer_requests[2]]
     )
   end
   let(:well_c1) do
     create(
       :v2_well_with_transfer_requests,
-      position: { 'name' => 'C1' },
+      position: {
+        'name' => 'C1'
+      },
       transfer_requests_as_target: transfer_requests[3..(3 + ancestor_wells_group_1.count - 1)]
     )
   end
   let(:well_d1) do
     create(
       :v2_well_with_transfer_requests,
-      position: { 'name' => 'D1' },
+      position: {
+        'name' => 'D1'
+      },
       transfer_requests_as_target: transfer_requests[(3 + ancestor_wells_group_1.count)..]
     )
   end
   let(:labware) do
-    create(:v2_plate, wells: [well_a1, well_b1, well_c1, well_d1], pool_sizes: [2, 1, ancestor_wells_group_1.count, ancestor_wells_group_2.count])
+    create(
+      :v2_plate,
+      wells: [well_a1, well_b1, well_c1, well_d1],
+      pool_sizes: [2, 1, ancestor_wells_group_1.count, ancestor_wells_group_2.count]
+    )
   end
 
   before do
@@ -81,7 +98,9 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
     [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
       [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20.00', '20.00'],
-      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '20.00'],  # Sample volume rounded up from 14.2857
+      # rubocop:todo Layout/LineLength
+      [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '20.00'], # Sample volume rounded up from 14.2857
+      # rubocop:enable Layout/LineLength
       [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '20.00'],
       [ancestor_plate_barcode, 'A2', labware.labware_barcode.human, 'C1', '10.81', '26.40'],
       [ancestor_plate_barcode, 'B2', labware.labware_barcode.human, 'C1', '10.81', '26.40'],

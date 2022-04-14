@@ -13,9 +13,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'with control' do
-      before do
-        well.aliquots[0].sample.control = true
-      end
+      before { well.aliquots[0].sample.control = true }
 
       it 'returns true' do
         expect(well.contains_control?).to eq(true)
@@ -26,14 +24,10 @@ RSpec.describe Sequencescape::Api::V2::Well do
   describe '#control_info_formatted' do
     let(:well) { create :v2_well }
 
-    before do
-      well.aliquots[0].sample.control = true
-    end
+    before { well.aliquots[0].sample.control = true }
 
     context 'with no control' do
-      before do
-        well.aliquots[0].sample.control = false
-      end
+      before { well.aliquots[0].sample.control = false }
 
       it 'returns nil' do
         expect(well.control_info_formatted).to be_nil
@@ -41,9 +35,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'with positive control' do
-      before do
-        well.aliquots[0].sample.control_type = 'positive'
-      end
+      before { well.aliquots[0].sample.control_type = 'positive' }
 
       it 'is correctly formatted' do
         expect(well.control_info_formatted).to eq('+')
@@ -51,9 +43,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'with negative control' do
-      before do
-        well.aliquots[0].sample.control_type = 'negative'
-      end
+      before { well.aliquots[0].sample.control_type = 'negative' }
 
       it 'is correctly formatted' do
         expect(well.control_info_formatted).to eq('-')
@@ -89,7 +79,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     let(:concentration_result) do
       create(
         :qc_result_concentration,
-        created_at: Time.utc(2020, 11, 12, 13, 14, 15)  # Latest of all the creation times
+        created_at: Time.utc(2020, 11, 12, 13, 14, 15) # Latest of all the creation times
       )
     end
 
@@ -126,7 +116,9 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a mixed concentration result' do
-      let(:well) { create(:v2_well, qc_results: [concentration_result, later_live_cell_count, earlier_live_cell_count]) }
+      let(:well) do
+        create(:v2_well, qc_results: [concentration_result, later_live_cell_count, earlier_live_cell_count])
+      end
 
       it 'returns the later QC result for live cell count' do
         expect(well.latest_live_cell_count).to be(later_live_cell_count)

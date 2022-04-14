@@ -8,12 +8,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
   let(:child_purpose) { 'Child purpose' }
   let(:child_plate) { create :v2_plate, purpose_name: child_purpose }
 
-  subject do
-    Presenters::SingleChildPermissivePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::SingleChildPermissivePresenter.new(api: api, labware: labware) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: child_purpose
@@ -35,9 +30,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
     end
 
     context 'without child plates' do
-      before(:each) do
-        labware.child_plates = nil
-      end
+      before(:each) { labware.child_plates = nil }
 
       it 'allows child creation' do
         expect { |b| subject.control_additional_creation(&b) }.to yield_control
@@ -45,9 +38,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
     end
 
     context 'with child plates' do
-      before(:each) do
-        labware.child_plates = [child_plate]
-      end
+      before(:each) { labware.child_plates = [child_plate] }
 
       it 'does not allow child creation' do
         expect { |b| subject.control_additional_creation(&b) }.to_not yield_control
@@ -65,9 +56,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
     end
 
     context 'without child plates' do
-      before(:each) do
-        labware.child_plates = nil
-      end
+      before(:each) { labware.child_plates = nil }
 
       it 'allows child creation' do
         expect { |b| subject.control_additional_creation(&b) }.to yield_control
@@ -75,9 +64,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
     end
 
     context 'with child plates' do
-      before(:each) do
-        labware.child_plates = [child_plate]
-      end
+      before(:each) { labware.child_plates = [child_plate] }
 
       it 'does not allow child creation' do
         expect { |b| subject.control_additional_creation(&b) }.to_not yield_control

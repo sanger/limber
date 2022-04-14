@@ -3,7 +3,7 @@ Heron-384 Tailed A V2: # Heron 384-well pipeline specific to PCR 1 plate
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr_v2
     library_type:
-    - Sanger_tailed_artic_v1_384
+      - Sanger_tailed_artic_v1_384
   library_pass: LB Lib Pool Norm
   relationships:
     LTHR Cherrypick: LTHR-384 RT-Q

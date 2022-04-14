@@ -9,10 +9,7 @@ class PipelinesController < ApplicationController
       # If we're html, just render the template, we'll populate it by ajax
       format.html { render :index }
       format.json do
-        render json: {
-          elements: { nodes: calculate_nodes, edges: calculate_edges },
-          pipelines: calculate_pipelines
-        }
+        render json: { elements: { nodes: calculate_nodes, edges: calculate_edges }, pipelines: calculate_pipelines }
       end
     end
   end
@@ -20,18 +17,13 @@ class PipelinesController < ApplicationController
   private
 
   def calculate_pipelines
-    Settings.pipelines.map do |pl|
-      { name: pl.name, filters: pl.filters }
-    end
+    Settings.pipelines.map { |pl| { name: pl.name, filters: pl.filters } }
   end
 
   def calculate_edges
     Settings.pipelines.flat_map do |pl|
       pl.relationships.map do |s, t|
-        {
-          group: 'edges',
-          data: { id: SecureRandom.uuid, source: s, target: t, pipeline: pl.name }
-        }
+        { group: 'edges', data: { id: SecureRandom.uuid, source: s, target: t, pipeline: pl.name } }
       end
     end
   end

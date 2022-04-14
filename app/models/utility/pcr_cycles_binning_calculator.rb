@@ -47,6 +47,7 @@ module Utility
         pcr_cycles = details['pcr_cycles']
         bins << pcr_cycles unless bins.include? pcr_cycles
       end
+
       # want pcr cycle bins in reverse order, highest first e.g. [16,14,12]
       bins.sort.reverse
     end
@@ -54,6 +55,7 @@ module Utility
     # Sorts well locations into bins based on their number of pcr cycles.
     def pcr_cycle_bins
       pcr_bins = calculate_bins
+
       # Generates a hash with each value in pcr_bins as a key, and [] as a value
       binned_wells = pcr_bins.index_with { |_bin_pcr_cycles_num| [] }
       @well_details.each do |well_locn, details|
@@ -67,12 +69,15 @@ module Utility
     # child plate.
     def build_transfers_hash(bins, number_of_rows, compression_reqd)
       binner = Binner.new(compression_reqd, number_of_rows)
-      bins.values.each_with_object({}).with_index do |(bin, transfers_hash), bin_index_within_bins|
-        bin.each_with_index do |well, well_index_within_bin|
-          build_transfers_well(binner, transfers_hash, well)
-          binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
+      bins
+        .values
+        .each_with_object({})
+        .with_index do |(bin, transfers_hash), bin_index_within_bins|
+          bin.each_with_index do |well, well_index_within_bin|
+            build_transfers_well(binner, transfers_hash, well)
+            binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
+          end
         end
-      end
     end
 
     def build_transfers_well(binner, transfers_hash, well)

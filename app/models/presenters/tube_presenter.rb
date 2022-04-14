@@ -48,17 +48,13 @@ module Presenters
     end
 
     def child_plates
-      labware.child_plates.tap do |child_plates|
-        yield child_plates if block_given? && child_plates.present?
-      end
+      labware.child_plates.tap { |child_plates| yield child_plates if block_given? && child_plates.present? }
     end
 
     alias child_assets child_plates
 
     def tubes_and_sources
-      labware.child_tubes.tap do |child_tubes|
-        yield child_tubes if block_given? && child_tubes.present?
-      end
+      labware.child_tubes.tap { |child_tubes| yield child_tubes if block_given? && child_tubes.present? }
     end
 
     def qc_summary?
@@ -66,9 +62,11 @@ module Presenters
     end
 
     def qc_summary
-      labware.receptacle.all_latest_qc.sort_by(&:key).each do |result|
-        yield result.key.titleize, result.unit_value.to_s
-      end
+      labware
+        .receptacle
+        .all_latest_qc
+        .sort_by(&:key)
+        .each { |result| yield result.key.titleize, result.unit_value.to_s }
     end
 
     def transfer_volumes?

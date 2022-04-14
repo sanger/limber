@@ -50,22 +50,14 @@ module Validators
 
       def analyze_pools
         @well_pools = Hash.new { |h, i| h[i] = [] }
-        @labware.pools.each do |pool|
-          pool.well_locations.each do |well|
-            @well_pools[well] << pool.id
-          end
-        end
+        @labware.pools.each { |pool| pool.well_locations.each { |well| @well_pools[well] << pool.id } }
       end
 
       def analyze_wells
         @filled_wells = []
         @empty_wells = []
         @labware.wells.each do |well|
-          if well.aliquots.empty?
-            @empty_wells << well.location
-          else
-            @filled_wells << well.location
-          end
+          well.aliquots.empty? ? @empty_wells << well.location : @filled_wells << well.location
         end
       end
     end
@@ -79,13 +71,11 @@ module Validators
         presenter.errors.add(:plate, 'has no samples. Did the cherry-pick complete successfully?')
       else
         if analyzer.duplicates?
-          presenter.errors.add(:plate,
-                               "has multiple submissions on: #{analyzer.duplicates.to_sentence}")
+          presenter.errors.add(:plate, "has multiple submissions on: #{analyzer.duplicates.to_sentence}")
         end
         presenter.errors.add(:plate, "has no submissions on: #{analyzer.missing.to_sentence}") if analyzer.missing?
         if analyzer.empty_wells_with_requests?
-          presenter.errors.add(:plate,
-                               "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}")
+          presenter.errors.add(:plate, "has requests on empty wells: #{analyzer.empty_wells_with_requests.to_sentence}")
         end
       end
     end

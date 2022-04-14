@@ -29,21 +29,19 @@ RSpec.describe Robots::PoolingRobot, robots: true do
     }
   end
 
-  let(:user_uuid)                   { SecureRandom.uuid }
-  let(:plate_uuid)                  { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:target_plate_uuid) { SecureRandom.uuid }
-  let(:source_barcode)              { source_plate.human_barcode }
-  let(:source_barcode_alt)          { 'DN1S' }
-  let(:source_purpose_name)         { 'Parent Purpose' }
-  let(:source_purpose_uuid)         { SecureRandom.uuid }
+  let(:source_barcode) { source_plate.human_barcode }
+  let(:source_barcode_alt) { 'DN1S' }
+  let(:source_purpose_name) { 'Parent Purpose' }
+  let(:source_purpose_uuid) { SecureRandom.uuid }
   let(:source_plate_state) { 'passed' }
   let(:target_plate_state) { 'pending' }
-  let(:source_plate) do
-    create :v2_plate, source_plate_attributes
-  end
-  let(:target_barcode)              { target_plate.human_barcode }
-  let(:target_purpose_name)         { 'Child Purpose' }
-  let(:target_purpose_uuid)         { SecureRandom.uuid }
+  let(:source_plate) { create :v2_plate, source_plate_attributes }
+  let(:target_barcode) { target_plate.human_barcode }
+  let(:target_purpose_name) { 'Child Purpose' }
+  let(:target_purpose_uuid) { SecureRandom.uuid }
   let(:target_plate) { create :v2_plate, target_plate_attributes }
 
   let(:target_plate_parents) { [source_plate] }
@@ -58,25 +56,44 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       'layout' => 'bed',
       'beds' => {
         'bed1_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed
-                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 2'
+          'purpose' => 'Parent Purpose',
+          'states' => %w[passed qc_complete],
+          'child' => 'bed5_barcode',
+          'label' => 'Bed 2'
         },
         'bed2_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed
-                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 5'
+          'purpose' => 'Parent Purpose',
+          'states' => %w[passed qc_complete],
+          'child' => 'bed5_barcode',
+          'label' => 'Bed 5'
         },
         'bed3_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed
-                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 3'
+          'purpose' => 'Parent Purpose',
+          'states' => %w[passed qc_complete],
+          'child' => 'bed5_barcode',
+          'label' => 'Bed 3'
         },
         'bed4_barcode' => {
-          'purpose' => 'Parent Purpose', 'states' => %w[passed
-                                                        qc_complete], 'child' => 'bed5_barcode', 'label' => 'Bed 6'
+          'purpose' => 'Parent Purpose',
+          'states' => %w[passed qc_complete],
+          'child' => 'bed5_barcode',
+          'label' => 'Bed 6'
         },
         'bed5_barcode' => {
-          'purpose' => 'Child Purpose', 'states' => %w[pending started],
-          'parents' => %w[bed1_barcode bed2_barcode bed3_barcode bed4_barcode bed1_barcode bed2_barcode bed3_barcode bed4_barcode],
-          'target_state' => 'passed', 'label' => 'Bed 4'
+          'purpose' => 'Child Purpose',
+          'states' => %w[pending started],
+          'parents' => %w[
+            bed1_barcode
+            bed2_barcode
+            bed3_barcode
+            bed4_barcode
+            bed1_barcode
+            bed2_barcode
+            bed3_barcode
+            bed4_barcode
+          ],
+          'target_state' => 'passed',
+          'label' => 'Bed 4'
         }
       },
       'destination_bed' => 'bed5_barcode',
@@ -88,21 +105,25 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   let(:transfer_source_plates) { [source_plate] }
 
   let(:wells) do
-    %w[C1 D1].map do |location|
-      create :v2_well, location: location, upstream_plates: transfer_source_plates
-    end
+    %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
   end
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
     create :purpose_config, uuid: target_purpose_uuid, name: target_purpose_name
 
-    stub_api_get(target_plate_uuid, 'creation_transfers',
-                 body: json(:creation_transfer_collection,
-                            destination: associated(:plate, target_plate_attributes),
-                            sources: transfer_source_plates,
-                            associated_on: 'creation_transfers',
-                            transfer_factory: :creation_transfer))
+    stub_api_get(
+      target_plate_uuid,
+      'creation_transfers',
+      body:
+        json(
+          :creation_transfer_collection,
+          destination: associated(:plate, target_plate_attributes),
+          sources: transfer_source_plates,
+          associated_on: 'creation_transfers',
+          transfer_factory: :creation_transfer
+        )
+    )
 
     bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
     bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
@@ -154,17 +175,11 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[C1 D1].map do |location|
-          create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
-        end +
-          %w[A1 B1].map do |location|
-            create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]]
-          end
+        %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
+          %w[A1 B1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
       end
 
-      before do
-        bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }])
-      end
+      before { bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }]) }
 
       context 'with a valid layout' do
         let(:scanned_layout) do
@@ -198,23 +213,23 @@ RSpec.describe Robots::PoolingRobot, robots: true do
 
   describe '#perform_transfer' do
     let(:state_change_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      state_change: {
-                        target_state: 'passed',
-                        reason: 'Robot Pooling Robot started',
-                        customer_accepts_responsibility: false,
-                        target: target_plate_uuid,
-                        user: user_uuid,
-                        contents: nil
-                      }
-                    },
-                    body: json(:state_change, target_state: 'passed'))
+      stub_api_post(
+        'state_changes',
+        payload: {
+          state_change: {
+            target_state: 'passed',
+            reason: 'Robot Pooling Robot started',
+            customer_accepts_responsibility: false,
+            target: target_plate_uuid,
+            user: user_uuid,
+            contents: nil
+          }
+        },
+        body: json(:state_change, target_state: 'passed')
+      )
     end
 
-    before do
-      state_change_request
-    end
+    before { state_change_request }
 
     it 'performs transfer from started to passed' do
       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])

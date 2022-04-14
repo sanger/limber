@@ -11,6 +11,8 @@ pre-commit:
     eslint:
       glob: 'app/javascript/**/*.{vue,js}'
       run: yarn lintOnly {staged_files} || (echo 'Run `lefthook run fix` to run autocrrect on staged files only'; exit 1)
+    prettier:
+      run: yarn prettier --check {staged_files} --ignore-unknown
 
 fix:
   parallel: true
@@ -21,8 +23,8 @@ fix:
     eslint:
       glob: 'app/javascript/**/*.{vue,js}'
       run: yarn lintOnly {staged_files} --fix
-
-
+    prettier:
+      run: yarn prettier --write {staged_files} --ignore-unknown
 # EXAMPLE USAGE
 # Refer for explanation to following link:
 # https://github.com/Arkweid/lefthook/blob/master/docs/full_guide.md

@@ -29,10 +29,6 @@ class JsonRenderer
 
   # The json expected from a GET request to the resource
   def to_get_json
-    if @root.nil?
-      to_hash.to_json
-    else
-      { @root => to_hash }.to_json
-    end
+    @root.nil? ? to_hash.to_json : { @root => to_hash }.to_json
   end
 end

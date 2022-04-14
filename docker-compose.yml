@@ -1,4 +1,4 @@
-version: "3.3"
+version: '3.3'
 services:
   limber:
     build:
@@ -7,9 +7,9 @@ services:
         bundlerWithout: '' # Don't exclude development groups
         yarnFlags: '' # Don't exclude devDependencies
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       - GENERATE_CONFIG=${GENERATE_CONFIG:-true}
       - LOCALHOST=host.docker.internal
     volumes:
-      - ".:/code"
+      - '.:/code'

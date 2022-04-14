@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
   has_a_working_api
 
-  let(:user_uuid)         { SecureRandom.uuid }
-  let(:user)              { create :user, uuid: user_uuid }
-  let(:user_swipecard)    { 'abcdef' }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:parent2_uuid) { 'example-plate2-uuid' }
@@ -15,19 +15,23 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
   let(:child_uuid) { 'child-uuid' }
   let(:parent) do
     create :v2_plate_with_primer_panels,
-           barcode_number: '2', uuid: parent_uuid,
+           barcode_number: '2',
+           uuid: parent_uuid,
            pool_sizes: [10],
            well_count: 10,
-           purpose_uuid: parent_purpose_uuid, state: 'passed',
+           purpose_uuid: parent_purpose_uuid,
+           state: 'passed',
            purpose_name: 'Primer Panel example'
   end
   let(:parent1_barcode) { parent.barcode.machine }
   let(:parent2) do
     create :v2_plate_with_primer_panels,
-           barcode_number: '3', uuid: parent2_uuid,
+           barcode_number: '3',
+           uuid: parent2_uuid,
            pool_sizes: [10],
            well_count: 10,
-           purpose_uuid: parent_purpose_uuid, state: 'passed',
+           purpose_uuid: parent_purpose_uuid,
+           state: 'passed',
            purpose_name: 'Primer Panel example'
   end
   let(:parent2_barcode) { parent2.barcode.machine }
@@ -77,12 +81,16 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
   end
 
   let!(:transfer_creation_request) do
-    stub_api_post('transfer_request_collections',
-                  payload: { transfer_request_collection: {
-                    user: user_uuid,
-                    transfer_requests: transfer_requests
-                  } },
-                  body: '{}')
+    stub_api_post(
+      'transfer_request_collections',
+      payload: {
+        transfer_request_collection: {
+          user: user_uuid,
+          transfer_requests: transfer_requests
+        }
+      },
+      body: '{}'
+    )
   end
 
   let(:parent1_plate_old_api) { json(:plate, barcode_number: '2', state: 'passed', uuid: parent_uuid) }

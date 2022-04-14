@@ -20,9 +20,9 @@ and the one followed in the vast majority of cases.
 
 A pipeline is configured in three main locations:
 
-  1. `config/purposes/*.yml`
-  2. `config/pipelines/*.yml`
-  3. And in the limber.rake task in Sequencescape
+1. `config/purposes/*.yml`
+2. `config/pipelines/*.yml`
+3. And in the limber.rake task in Sequencescape
 
 ## `config/purposes/*.yml`
 

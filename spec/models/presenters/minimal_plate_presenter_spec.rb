@@ -37,28 +37,23 @@ RSpec.describe Presenters::MinimalPlatePresenter do
     create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
   end
 
-  subject(:presenter) do
-    Presenters::MinimalPlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { Presenters::MinimalPlatePresenter.new(api: api, labware: labware) }
 
   it 'returns label attributes' do
-    expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                       bottom_left: 'DN1S',
-                       top_right: 'DN2T',
-                       bottom_right: 'WGS Limber example purpose',
-                       barcode: 'DN1S' }
+    expected_label = {
+      top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+      bottom_left: 'DN1S',
+      top_right: 'DN2T',
+      bottom_right: 'WGS Limber example purpose',
+      barcode: 'DN1S'
+    }
     expect(subject.label.attributes).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'
 
   context 'a plate with conflicting pools' do
-    let(:labware) do
-      create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
-    end
+    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6] }
 
     it 'reports as invalid' do
       expect(subject).to_not be_valid

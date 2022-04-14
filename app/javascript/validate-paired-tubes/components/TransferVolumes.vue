@@ -1,14 +1,10 @@
 <template>
-  <b-card
-    header="Transfer Volumes"
-    header-tag="h3"
-  >
-    <p v-show="!readyToDisplayResult">
-      Once paired tubes are scanned in, transfer volumes will be shown here.
-    </p>
+  <b-card header="Transfer Volumes" header-tag="h3">
+    <p v-show="!readyToDisplayResult">Once paired tubes are scanned in, transfer volumes will be shown here.</p>
     <div v-show="readyToDisplayResult">
       <p>
-        The transfer volumes shown are to make a {{ targetVolumeForDisplay }} μl / {{ targetMolarityForDisplay }} nM solution.
+        The transfer volumes shown are to make a {{ targetVolumeForDisplay }} μl / {{ targetMolarityForDisplay }} nM
+        solution.
       </p>
       <dl class="row metadata">
         <dt>Sample Volume</dt>
@@ -19,8 +15,8 @@
       <div v-show="belowTargetMolarity" class="alert alert-warning">
         <h5>Insufficient Source Molarity</h5>
         <p>
-          The source sample has a molarity of {{ sourceMolarityForDisplay }} nM which is below the target of {{ targetMolarityForDisplay }} nM.
-          The transfer as shown will not achieve the target molarity.
+          The source sample has a molarity of {{ sourceMolarityForDisplay }} nM which is below the target of
+          {{ targetMolarityForDisplay }} nM. The transfer as shown will not achieve the target molarity.
         </p>
       </div>
     </div>
@@ -47,7 +43,7 @@ export default {
     tube: { type: Object, default: null },
 
     // Whether or not the paired tubes are confirmed.
-    confirmedPair: { type: Boolean, default: false }
+    confirmedPair: { type: Boolean, default: false },
   },
   computed: {
     purposeConfig() {
@@ -86,13 +82,14 @@ export default {
     },
     readyToDisplayResult() {
       return this.purposeConfig && this.confirmedPair
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-  p, dl {
-    font-size: 120%;
-  }
+p,
+dl {
+  font-size: 120%;
+}
 </style>

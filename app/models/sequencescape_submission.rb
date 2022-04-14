@@ -12,16 +12,21 @@ class SequencescapeSubmission
   # Sets the api through which objects will be created
   # @return [Sequencescape::Api] api A functional Sequencescape::Api object
   attr_accessor :api
+
   # Controls the user who is recorded as having made the submission
   # @return [String] user: The uuid of the user who is making the submission
   attr_accessor :user
+
   # Selects the template to use, by uuid.
   attr_writer :template_uuid
+
   # Selects the template to use by template name
   attr_writer :template_name
+
   # A hash of valid request options for the submission
   # @return [Hash] request_options: The request options to use
   attr_accessor :request_options
+
   # @return [Array<Hash>] Returns a nested array of asset_group object. Each
   #                       asset group is a hash containing:
   #                       assets: Array of asset uuids
@@ -87,9 +92,7 @@ class SequencescapeSubmission
   def extra_assets
     return [] unless extra_plates
 
-    @extra_assets ||= extra_plates.map do |labware|
-      labware.wells.compact_blank.map(&:uuid)
-    end.flatten.uniq
+    @extra_assets ||= extra_plates.map { |labware| labware.wells.compact_blank.map(&:uuid) }.flatten.uniq
   end
 
   #
@@ -101,11 +104,7 @@ class SequencescapeSubmission
   #   uuids, indicating an asset group. Keys are ignored.
   #
   def asset_groups=(asset_groups)
-    @asset_groups = if asset_groups.respond_to?(:values)
-                      asset_groups.values
-                    else
-                      asset_groups
-                    end
+    @asset_groups = asset_groups.respond_to?(:values) ? asset_groups.values : asset_groups
   end
 
   def asset_groups_for_orders_creation
@@ -118,10 +117,7 @@ class SequencescapeSubmission
 
   def generate_orders
     asset_groups_for_orders_creation.map do |asset_group|
-      order_parameters = {
-        request_options: request_options,
-        user: user
-      }.merge(asset_group)
+      order_parameters = { request_options: request_options, user: user }.merge(asset_group)
       submission_template.orders.create!(order_parameters)
     end
   end
@@ -140,6 +136,7 @@ class SequencescapeSubmission
     errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
+
   # rubocop:enable Metrics/AbcSize
 
   def submission_template
@@ -147,7 +144,7 @@ class SequencescapeSubmission
   end
 
   # I think rubocop's suggestions make it less readable
-  # rubocop:disable Style/IfUnlessModifier, Style/GuardClause
+  # rubocop:disable Style/GuardClause
   def check_extra_barcodes
     return unless extra_barcodes
 
@@ -156,8 +153,13 @@ class SequencescapeSubmission
     end
 
     if extra_barcodes_trimmed.include? labware_barcode
-      errors.add(:submission, 'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included')
+      errors.add(
+        :submission,
+        # rubocop:todo Layout/LineLength
+        'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included'
+        # rubocop:enable Layout/LineLength
+      )
     end
   end
-  # rubocop:enable Style/IfUnlessModifier, Style/GuardClause
+  # rubocop:enable Style/GuardClause
 end

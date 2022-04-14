@@ -2,7 +2,8 @@
 
 # Handles most of the indexes of plates/tubes
 class SearchController < ApplicationController
-  class InputError < StandardError; end
+  class InputError < StandardError
+  end
 
   before_action :check_for_login!, only: [:my_plates] # rubocop:todo Rails/LexicallyScopedActionFilter
 
@@ -14,10 +15,7 @@ class SearchController < ApplicationController
     @search_options = OngoingPlate.new(ongoing_plate_search_params)
 
     @search_options.page = params['page'].to_i if params['page'].present?
-    @search_results = plate_search.all(
-      Limber::Plate,
-      @search_options.search_parameters
-    )
+    @search_results = plate_search.all(Limber::Plate, @search_options.search_parameters)
     @search_options.total_results = @search_results.size
   end
 
@@ -27,19 +25,12 @@ class SearchController < ApplicationController
     @search_options = OngoingTube.new(ongoing_tube_search_params)
     @search_options.page = params['page'].to_i if params['page'].present?
 
-    @search_results = tube_search.all(
-      Limber::Tube,
-      @search_options.search_parameters
-    )
+    @search_results = tube_search.all(Limber::Tube, @search_options.search_parameters)
     @search_options.total_results = @search_results.size
   end
 
   def qcables
-    respond_to do |format|
-      format.json do
-        redirect_to find_qcable(qcable_barcode)
-      end
-    end
+    respond_to { |format| format.json { redirect_to find_qcable(qcable_barcode) } }
   rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
     render json: { 'error' => e.message }
   end
@@ -47,9 +38,7 @@ class SearchController < ApplicationController
   def create # rubocop:todo Metrics/AbcSize
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
-    respond_to do |format|
-      format.html { redirect_to find_labware(params[:plate_barcode]) }
-    end
+    respond_to { |format| format.html { redirect_to find_labware(params[:plate_barcode]) } }
   rescue StandardError => e
     flash.now[:error] = e.message
 
@@ -61,10 +50,9 @@ class SearchController < ApplicationController
   end
 
   def find_labware(barcode)
-    Sequencescape::Api::V2.minimal_labware_by_barcode(barcode)
-                          .tap do |labware|
-      raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil?
-    end
+    Sequencescape::Api::V2
+      .minimal_labware_by_barcode(barcode)
+      .tap { |labware| raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil? }
   end
 
   def find_qcable(barcode)

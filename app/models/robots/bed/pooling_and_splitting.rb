@@ -15,16 +15,19 @@ module Robots::Bed
     private
 
     def child_labware_of_plate
-      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.downstream_plates.empty?
+      labware
+        .wells
+        .sort_by(&well_order)
+        .each_with_object([]) do |well, plates|
+          next if well.downstream_plates.empty?
 
-        # we expect multiple downstream child plates, not just one as with the pooling bed
-        well.downstream_plates.each do |plate|
-          next if plates.include?(plate)
+          # we expect multiple downstream child plates, not just one as with the pooling bed
+          well.downstream_plates.each do |plate|
+            next if plates.include?(plate)
 
-          plates << plate
+            plates << plate
+          end
         end
-      end
     end
   end
 end

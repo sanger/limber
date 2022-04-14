@@ -3,17 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe 'tube factory' do
-  subject do
-    json(
-      :tube,
-      uuid: 'example-tube-uuid'
-    )
-  end
+  subject { json(:tube, uuid: 'example-tube-uuid') }
 
   # This is a massive oversimplification of the tube json, as there is a LOT
   # of unecessary information. We trim our mocks down to what we actually NEED
   let(:json_content) do
-    %({
+    '{
       "tube": {
         "actions": {
           "read": "http://example.com:3000/example-tube-uuid"
@@ -40,7 +35,7 @@ RSpec.describe 'tube factory' do
         }],
         "state": "pending"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

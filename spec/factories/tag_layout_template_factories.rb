@@ -12,18 +12,17 @@ FactoryBot.define do
     direction { 'column' }
     walking_by { 'wells of plate' }
 
-    transient do
-      size { 96 }
-    end
+    transient { size { 96 } }
 
     name { 'Test tag layout' }
 
     tag_group do
       {
         'name' => 'Tag group 1',
-        'tags' => (1..size).each_with_object({}) do |i, hash|
-                    hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
-                  end
+        'tags' =>
+          (1..size).each_with_object({}) do |i, hash|
+            hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+          end
       }
     end
 
@@ -57,9 +56,10 @@ FactoryBot.define do
       tag2_group do
         {
           'name' => 'Tag group 2',
-          'tags' => (1..size).each_with_object({}) do |i, hash|
-                      hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
-                    end
+          'tags' =>
+            (1..size).each_with_object({}) do |i, hash|
+              hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
+            end
         }
       end
     end
@@ -74,6 +74,7 @@ FactoryBot.define do
       resource_actions { %w[read first last] }
       resource_url { 'tag_layout_templates/1' }
       uuid { nil }
+
       # Specifies which templates to generate
       template_factory { :tag_layout_template }
       direction { 'column' }
@@ -93,9 +94,7 @@ FactoryBot.define do
     end
 
     factory :tag_layout_template_collection_by_quadrant do
-      transient do
-        template_factory { :tag_layout_template_by_quadrant }
-      end
+      transient { template_factory { :tag_layout_template_by_quadrant } }
     end
   end
 end

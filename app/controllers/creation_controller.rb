@@ -15,26 +15,17 @@ class CreationController < ApplicationController
   def new
     params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(params.permit(permitted_attributes))
-    respond_to do |format|
-      format.html { render(@labware_creator.page) }
-    end
+    respond_to { |format| format.html { render(@labware_creator.page) } }
   end
 
   def create
     creator_params[:parent_uuid] ||= parent_uuid
     @labware_creator = labware_creator(creator_params)
-    if @labware_creator.save
-      create_success
-    else
-      create_failure
-    end
+    @labware_creator.save ? create_success : create_failure
   end
 
   def labware_creator(form_attributes)
-    creator_class.new(api,
-                      form_attributes.permit(permitted_attributes).merge(
-                        params_for_creator_build
-                      ))
+    creator_class.new(api, form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
   end
 
   def creation_failed(exception)
@@ -52,7 +43,10 @@ class CreationController < ApplicationController
 
     api_error_messages = extract_error_messages_from_api_exception(exception.message)
 
-    redirect_back_after_error('Cannot create the next piece of labware, Sequencescape server API error(s):', api_error_messages)
+    redirect_back_after_error(
+      'Cannot create the next piece of labware, Sequencescape server API error(s):',
+      api_error_messages
+    )
   end
 
   private
@@ -60,14 +54,10 @@ class CreationController < ApplicationController
   def create_success
     respond_to do |format|
       format.json do
-        render json: {
-          redirect: redirection_path(@labware_creator),
-          message: 'Plate created, redirecting...'
-        }
+        render json: { redirect: redirection_path(@labware_creator), message: 'Plate created, redirecting...' }
       end
       format.html do
-        redirect_to redirection_path(@labware_creator),
-                    notice: 'New empty labware added to the system.' # rubocop:todo Rails/I18nLocaleTexts
+        redirect_to redirection_path(@labware_creator), notice: 'New empty labware added to the system.' # rubocop:todo Rails/I18nLocaleTexts
       end
     end
   end
@@ -75,10 +65,7 @@ class CreationController < ApplicationController
   def create_failure # rubocop:todo Metrics/AbcSize
     Rails.logger.error(@labware_creator.errors.full_messages)
     respond_to do |format|
-      format.json do
-        render json: { message: @labware_creator.errors.full_messages },
-               status: :bad_request
-      end
+      format.json { render json: { message: @labware_creator.errors.full_messages }, status: :bad_request }
       format.html do
         flash.now.alert = @labware_creator.errors.full_messages
         render @labware_creator.page
@@ -95,9 +82,7 @@ class CreationController < ApplicationController
   end
 
   def params_for_creator_build
-    LabwareCreators.params_for(params_purpose_uuid).merge(
-      { user_uuid: current_user_uuid }
-    )
+    LabwareCreators.params_for(params_purpose_uuid).merge({ user_uuid: current_user_uuid })
   end
 
   def params_purpose_uuid
@@ -110,21 +95,14 @@ class CreationController < ApplicationController
 
   def extract_error_messages_from_api_exception(api_message)
     api_errors_hash = JSON.parse(api_message) || {}
-    if api_errors_hash.key?('general')
-      api_errors_hash['general']
-    else
-      [api_message]
-    end
+    api_errors_hash.key?('general') ? api_errors_hash['general'] : [api_message]
   end
 
   def redirect_back_after_error(prefix_message, error_messages)
     flash_messages = [prefix_message] + error_messages
     respond_to do |format|
       format.html do
-        redirect_back(
-          fallback_location: url_for(@labware_creator.parent),
-          alert: truncate_flash(flash_messages)
-        )
+        redirect_back(fallback_location: url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
       end
     end
   end

@@ -7,13 +7,13 @@ import { tubeFactory } from 'test_support/factories'
 jest.mock('shared/components/tubeScanValidators')
 
 describe('MultiStampTubes', () => {
-  const wrapperFactory = function(options = {}) {
+  const wrapperFactory = function (options = {}) {
     return shallowMount(TubesToRack, {
       propsData: {
         targetUrl: '',
-        ...options
+        ...options,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -24,8 +24,14 @@ describe('MultiStampTubes', () => {
 
   it('enables creation when there are all valid tubes', () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = {
+      state: 'valid',
+      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+    }
+    const tube2 = {
+      state: 'valid',
+      labware: tubeFactory({ uuid: 'tube-uuid-2' }),
+    }
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -35,8 +41,14 @@ describe('MultiStampTubes', () => {
 
   it('disables creation when there are some invalid tubes', () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'invalid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = {
+      state: 'valid',
+      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+    }
+    const tube2 = {
+      state: 'invalid',
+      labware: tubeFactory({ uuid: 'tube-uuid-2' }),
+    }
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -44,10 +56,16 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.valid).toEqual(false)
   })
 
-  it('uses the checkDuplicates validator function',  async () => {
+  it('uses the checkDuplicates validator function', async () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'invalid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = {
+      state: 'valid',
+      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+    }
+    const tube2 = {
+      state: 'invalid',
+      labware: tubeFactory({ uuid: 'tube-uuid-2' }),
+    }
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)
@@ -55,15 +73,35 @@ describe('MultiStampTubes', () => {
     wrapper.vm.scanValidators
 
     expect(checkDuplicates).toHaveBeenLastCalledWith([
-      tube1.labware, tube2.labware, null, null, null, null, null, null,
-      null, null, null, null, null, null, null, null
+      tube1.labware,
+      tube2.labware,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
     ]) // 16 values in total
   })
 
-  it('uses the checkMatchingPurposes validator function',  async () => {
+  it('uses the checkMatchingPurposes validator function', async () => {
     const wrapper = wrapperFactory()
-    const tube1 = { state: 'valid', labware: tubeFactory({ uuid: 'tube-uuid-1' }) }
-    const tube2 = { state: 'invalid', labware: tubeFactory({ uuid: 'tube-uuid-2' }) }
+    const tube1 = {
+      state: 'valid',
+      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+    }
+    const tube2 = {
+      state: 'invalid',
+      labware: tubeFactory({ uuid: 'tube-uuid-2' }),
+    }
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube2)

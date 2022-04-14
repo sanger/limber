@@ -16,10 +16,14 @@ class PurposeConfig
 
   def self.load(name, options, store, api, submission_templates, label_templates)
     case options.fetch(:asset_type)
-    when 'plate' then PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_templates)
-    when 'tube' then PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_templates)
-    when 'tube_rack' then PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_templates)
-    else raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
+    when 'plate'
+      PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_templates)
+    when 'tube'
+      PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_templates)
+    when 'tube_rack'
+      PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_templates)
+    else
+      raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
   end
 
@@ -37,7 +41,7 @@ class PurposeConfig
   def config
     {
       name: name,
-      ** default_options,
+      **default_options,
       state_changer_class: default_state_changer,
       submission: submission_options,
       label_class: print_option(:label_class),
@@ -53,10 +57,7 @@ class PurposeConfig
   # Currently limber does not register its own tube racks. This is because we
   # will delegate most behaviour to the contained tube purposes
   class TubeRack < PurposeConfig
-    self.default_options = {
-      default_printer_type: :tube_rack,
-      presenter_class: 'Presenters::TubeRackPresenter'
-    }.freeze
+    self.default_options = { default_printer_type: :tube_rack, presenter_class: 'Presenters::TubeRackPresenter' }.freeze
 
     def register!
       warn 'Cannot create tube racks from within limber'
@@ -76,11 +77,7 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      api.tube_purpose.create!(
-        name: name,
-        target_type: options.fetch(:target),
-        type: options.fetch(:type)
-      )
+      api.tube_purpose.create!(name: name, target_type: options.fetch(:target), type: options.fetch(:type))
     end
   end
 

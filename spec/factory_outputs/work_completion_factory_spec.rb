@@ -14,7 +14,7 @@ RSpec.describe 'work completion factory' do
   end
 
   let(:json_content) do
-    %({
+    '{
         "work_completion": {
           "actions": {
             "read": "http://example.com:3000/example-work-completion-uuid"
@@ -33,7 +33,7 @@ RSpec.describe 'work completion factory' do
             "size": 1
           }
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

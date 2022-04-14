@@ -9,12 +9,7 @@ FactoryBot.define do
 
     name { 'Test tag2 layout' }
 
-    tag do
-      {
-        'name' => 'Tag',
-        'oligo' => 'AAA'
-      }
-    end
+    tag { { 'name' => 'Tag', 'oligo' => 'AAA' } }
   end
 
   # A collection of tag2 layout templates, to support limber retrieving all registered templates

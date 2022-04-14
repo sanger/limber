@@ -17,10 +17,7 @@ module LabwareCreators
     attr_accessor :tag_plate_barcode
 
     self.page = 'tagged_plate'
-    self.attributes += [
-      :tag_plate_barcode,
-      { tag_plate: %i[asset_uuid template_uuid] }
-    ]
+    self.attributes += [:tag_plate_barcode, { tag_plate: %i[asset_uuid template_uuid] }]
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
@@ -82,11 +79,10 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        api.tag_layout_template.find(tag_plate.template_uuid).create!(
-          plate: plate_uuid,
-          user: user_uuid,
-          enforce_uniqueness: requires_tag2?
-        )
+        api
+          .tag_layout_template
+          .find(tag_plate.template_uuid)
+          .create!(plate: plate_uuid, user: user_uuid, enforce_uniqueness: requires_tag2?)
       end
     end
   end

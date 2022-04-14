@@ -20,12 +20,13 @@ class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate # rubocop:tod
 
     # We assume that if a well is unpooled then it is in the same pool as the previous pool.
     prior_pool = nil
-    callback = lambda do |row_column|
-      prior_pool = pool = (well_to_pool[row_column] || prior_pool) # or next
-      well_empty = well_to_pool[row_column].nil?
-      well = pool.nil? ? nil : row_column
-      [well, pool, well_empty] # Triplet: [ A1, pool_id, well_empty ]
-    end
+    callback =
+      lambda do |row_column|
+        prior_pool = pool = (well_to_pool[row_column] || prior_pool) # or next
+        well_empty = well_to_pool[row_column].nil?
+        well = pool.nil? ? nil : row_column
+        [well, pool, well_empty] # Triplet: [ A1, pool_id, well_empty ]
+      end
     yield(callback)
   end
   private :group_wells

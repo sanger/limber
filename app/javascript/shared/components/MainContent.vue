@@ -11,6 +11,6 @@
 
 <script>
 export default {
-  name: 'MainContent'
+  name: 'MainContent',
 }
 </script>

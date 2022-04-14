@@ -23,12 +23,11 @@ module LabwareCreators::Tagging
     # @return [Hash] Tag layouts and their tags
     #
     def list
-      @list ||= tag_layout_templates.each_with_object({}) do |layout, hash|
-        # the `throw` that this catches comes from `generate_tag_layout` method
-        catch(:unacceptable_tag_layout) do
-          hash[layout.uuid] = layout_hash(layout)
+      @list ||=
+        tag_layout_templates.each_with_object({}) do |layout, hash|
+          # the `throw` that this catches comes from `generate_tag_layout` method
+          catch(:unacceptable_tag_layout) { hash[layout.uuid] = layout_hash(layout) }
         end
-      end
     end
 
     def layout_hash(layout)
@@ -46,9 +45,10 @@ module LabwareCreators::Tagging
     def used
       return [] if @plate.submission_pools.empty?
 
-      @used ||= @plate.submission_pools.each_with_object(Set.new) do |pool, set|
-        pool.used_tag_layout_templates.each { |used| set << used['uuid'] }
-      end
+      @used ||=
+        @plate
+          .submission_pools
+          .each_with_object(Set.new) { |pool, set| pool.used_tag_layout_templates.each { |used| set << used['uuid'] } }
     end
 
     # Have any tag layout templates already been used on other plates in the relevant submission pools?
@@ -96,8 +96,7 @@ module LabwareCreators::Tagging
     # @return [Bool] true if the template is acceptable
     #
     def acceptable_template?(template)
-      acceptable_templates.blank? ||
-        acceptable_templates.include?(template.name)
+      acceptable_templates.blank? || acceptable_templates.include?(template.name)
     end
 
     def tags_by_column(layout)

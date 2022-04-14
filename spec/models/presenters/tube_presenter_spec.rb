@@ -41,12 +41,7 @@ RSpec.describe Presenters::TubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject do
-    Presenters::TubePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::TubePresenter.new(api: api, labware: labware) }
 
   it_behaves_like 'a labware presenter'
 
@@ -89,11 +84,7 @@ RSpec.describe Presenters::TubePresenter do
 
     context 'missing transfer_parameters' do
       let!(:purpose_config) do
-        create(
-          :tube_with_transfer_parameters_config,
-          uuid: purpose_uuid,
-          transfer_parameters: nil
-        )
+        create(:tube_with_transfer_parameters_config, uuid: purpose_uuid, transfer_parameters: nil)
       end
 
       it 'does not have transfer volumes' do

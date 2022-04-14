@@ -6,6 +6,7 @@ class AssetSearchForm
   MAX_TABS = 10
 
   include ActiveModel::Model
+
   # We include 'show_my_plates_only' to let us share pagination forms
   attr_accessor :show_my_plates_only, :include_used, :states, :total_results
   attr_writer :purposes, :page, :purpose_names

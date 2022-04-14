@@ -21,6 +21,7 @@ module LabwareCreators
     self.attributes = %i[purpose_uuid parent_uuid user_uuid]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
+
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
     self.state = 'pending'
 
@@ -106,6 +107,7 @@ module LabwareCreators
     def transfer_template
       @template ||= api.transfer_template.find(transfer_template_uuid)
     end
+
     # rubocop:enable Naming/MemoizedInstanceVariableName
 
     def create_plate_with_standard_transfer!
@@ -118,20 +120,11 @@ module LabwareCreators
     end
 
     def create_plate_from_parent!
-      api.plate_creation.create!(
-        parent: parent_uuid,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      )
+      api.plate_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid)
     end
 
     def transfer_material_from_parent!(child_uuid)
-      transfer_template.create!(
-        source: parent_uuid,
-        destination: child_uuid,
-        user: user_uuid,
-        transfers: transfer_hash
-      )
+      transfer_template.create!(source: parent_uuid, destination: child_uuid, user: user_uuid, transfers: transfer_hash)
     end
 
     # Override in classes with custom transfers

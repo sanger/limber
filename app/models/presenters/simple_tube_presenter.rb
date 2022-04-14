@@ -56,11 +56,7 @@ module Presenters
 
     def stock_plate_barcode
       parent_plate = labware.parents.first
-      if parent_plate.present?
-        stock_plate_barcode_from_metadata(parent_plate.barcode.machine)
-      else
-        'N/A'
-      end
+      parent_plate.present? ? stock_plate_barcode_from_metadata(parent_plate.barcode.machine) : 'N/A'
     end
   end
 end

@@ -3,9 +3,7 @@
 module Limber::TagLayoutTemplate::InInverseColumns # rubocop:todo Style/Documentation
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
-      WellHelpers.column_order(plate.size).reverse.map do |row_column|
-        well_location_pool_pair.call(row_column)
-      end
+      WellHelpers.column_order(plate.size).reverse.map { |row_column| well_location_pool_pair.call(row_column) }
     end
   end
   private :group_wells_of_plate
@@ -25,7 +23,6 @@ module Limber::TagLayoutTemplate::InInverseColumns # rubocop:todo Style/Document
   def primary_index(row, column, scale, height, width)
     tag_col = (column / scale)
     tag_row = (row / scale)
-    ((height / scale) * (width / scale)) -
-      (tag_row + (height / scale * tag_col)) - 1
+    ((height / scale) * (width / scale)) - (tag_row + (height / scale * tag_col)) - 1
   end
 end

@@ -1,64 +1,156 @@
-(function($, exports, undefined){
+;(function ($, exports, undefined) {
   'use strict'
 
-  if (exports.SCAPE === undefined) { exports.SCAPE = {} }
+  if (exports.SCAPE === undefined) {
+    exports.SCAPE = {}
+  }
 
   var SCAPE = exports.SCAPE
 
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
   var WELLS_IN_COLUMN_MAJOR_ORDER = [
-    'A1',  'B1',  'C1',  'D1',  'E1',  'F1',  'G1',  'H1',
-    'A2',  'B2',  'C2',  'D2',  'E2',  'F2',  'G2',  'H2',
-    'A3',  'B3',  'C3',  'D3',  'E3',  'F3',  'G3',  'H3',
-    'A4',  'B4',  'C4',  'D4',  'E4',  'F4',  'G4',  'H4',
-    'A5',  'B5',  'C5',  'D5',  'E5',  'F5',  'G5',  'H5',
-    'A6',  'B6',  'C6',  'D6',  'E6',  'F6',  'G6',  'H6',
-    'A7',  'B7',  'C7',  'D7',  'E7',  'F7',  'G7',  'H7',
-    'A8',  'B8',  'C8',  'D8',  'E8',  'F8',  'G8',  'H8',
-    'A9',  'B9',  'C9',  'D9',  'E9',  'F9',  'G9',  'H9',
-    'A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'G10', 'H10',
-    'A11', 'B11', 'C11', 'D11', 'E11', 'F11', 'G11', 'H11',
-    'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'G12', 'H12'
+    'A1',
+    'B1',
+    'C1',
+    'D1',
+    'E1',
+    'F1',
+    'G1',
+    'H1',
+    'A2',
+    'B2',
+    'C2',
+    'D2',
+    'E2',
+    'F2',
+    'G2',
+    'H2',
+    'A3',
+    'B3',
+    'C3',
+    'D3',
+    'E3',
+    'F3',
+    'G3',
+    'H3',
+    'A4',
+    'B4',
+    'C4',
+    'D4',
+    'E4',
+    'F4',
+    'G4',
+    'H4',
+    'A5',
+    'B5',
+    'C5',
+    'D5',
+    'E5',
+    'F5',
+    'G5',
+    'H5',
+    'A6',
+    'B6',
+    'C6',
+    'D6',
+    'E6',
+    'F6',
+    'G6',
+    'H6',
+    'A7',
+    'B7',
+    'C7',
+    'D7',
+    'E7',
+    'F7',
+    'G7',
+    'H7',
+    'A8',
+    'B8',
+    'C8',
+    'D8',
+    'E8',
+    'F8',
+    'G8',
+    'H8',
+    'A9',
+    'B9',
+    'C9',
+    'D9',
+    'E9',
+    'F9',
+    'G9',
+    'H9',
+    'A10',
+    'B10',
+    'C10',
+    'D10',
+    'E10',
+    'F10',
+    'G10',
+    'H10',
+    'A11',
+    'B11',
+    'C11',
+    'D11',
+    'E11',
+    'F11',
+    'G11',
+    'H11',
+    'A12',
+    'B12',
+    'C12',
+    'D12',
+    'E12',
+    'F12',
+    'G12',
+    'H12',
   ]
 
   // Declared as var  rather than const due to issues with const in strict mode
   // in the older versions of Chrome (34) used in the labs.
   var SOURCE_STATES = ['passed', 'qc_complete']
 
-  $(function(_event) {
+  $(function (_event) {
     // If we are not on the multi-plate pooling page, don't set anything up.
-    if ($('#multi-plate-pooling-page').length === 0) { return }
+    if ($('#multi-plate-pooling-page').length === 0) {
+      return
+    }
 
     $.extend(SCAPE, {
       // Make an AJAX call to limber to find the plate.
       // Call made to the searches controller, when then redirects the the plate
       // show page. Which renders a json template containing the necessary information
-      retrievePlate : function(plate) {
+      retrievePlate: function (plate) {
         plate.ajax = $.ajax({
           dataType: 'json',
           url: '/search/',
           type: 'POST',
-          data: 'plate_barcode='+plate.value,
-          success: function(data,status) { plate.checkPlate(data,status) }
-        }).fail(function(data,status) {
-          if (status!=='abort') { plate.badPlate() }
+          data: 'plate_barcode=' + plate.value,
+          success: function (data, status) {
+            plate.checkPlate(data, status)
+          },
+        }).fail(function (data, status) {
+          if (status !== 'abort') {
+            plate.badPlate()
+          }
         })
       },
       // Enable the create labware button if all plates are valid
       // disables it otherwise
       // Called when any plate updates its state
-      checkPlates : function() {
+      checkPlates: function () {
         if ($('.wait-plate, .bad-plate').length === 0) {
           $('#create-labware').attr('disabled', null)
         } else {
           $('#create-labware').attr('disabled', 'disabled')
         }
       },
-      plates: []
+      plates: [],
     })
 
-    $('.plate-box').on('change', function() {
+    $('.plate-box').on('change', function () {
       // When we scan in a plate
       if (this.value === '') {
         this.scanPlate()
@@ -70,35 +162,34 @@
       }
     })
 
-    $('.plate-box').each(function(){
-
+    $('.plate-box').each(function () {
       $.extend(this, {
         /*
           Our plate beds
         */
         // Sets the wait state, indicating an AJAX request is in progress
-        waitPlate : function() {
+        waitPlate: function () {
           this.clearPlate()
           $(this).closest('.plate-container').removeClass('good-plate bad-plate scan-plate')
           $(this).closest('.plate-container').addClass('wait-plate')
           $('#summary_tab').addClass('ui-disabled')
         },
         // Sets the 'waiting for content' state, which represents no content
-        scanPlate : function() {
+        scanPlate: function () {
           this.clearPlate()
           $(this).closest('.plate-container').removeClass('good-plate wait-plate bad-plate')
           $(this).closest('.plate-container').addClass('scan-plate')
           SCAPE.checkPlates()
         },
         // Sets an invalid state, indicating the scanned barcode isn't suitable
-        badPlate : function() {
+        badPlate: function () {
           this.clearPlate()
           $(this).closest('.plate-container').removeClass('good-plate wait-plate scan-plate')
           $(this).closest('.plate-container').addClass('bad-plate')
           $('#summary_tab').addClass('ui-disabled')
         },
         // Sets a valid state, indicating the scanned barcode is good to process
-        goodPlate : function() {
+        goodPlate: function () {
           $(this).closest('.plate-container').removeClass('bad-plate wait-plate scan-plate')
           $(this).closest('.plate-container').addClass('good-plate')
           SCAPE.checkPlates()
@@ -107,7 +198,7 @@
         // Currently just checks the plate state.
         // Good plates are stored in the plate array.
         // Regardless of outcome, the preview is updated via updateView
-        checkPlate : function(data, _status) {
+        checkPlate: function (data, _status) {
           if (SOURCE_STATES.indexOf(data.plate.state) === -1) {
             this.badPlate()
           } else {
@@ -117,113 +208,108 @@
           updateView()
         },
         // Removes any previously scanned plate from the array
-        clearPlate : function() {
+        clearPlate: function () {
           SCAPE.plates[$(this).data('position')] = undefined
-        }
+        },
       })
     })
 
     // Counts the total number of pools on the plate
-    SCAPE.totalPools = function() {
+    SCAPE.totalPools = function () {
       var poolCount = 0
       for (var plateIndex = 0; plateIndex < SCAPE.plates.length; plateIndex += 1) {
-        if (SCAPE.plates[plateIndex]!==undefined) {
+        if (SCAPE.plates[plateIndex] !== undefined) {
           var preCapPools = SCAPE.plates[plateIndex].preCapPools
-          poolCount += walkPreCapPools(preCapPools, function(){})
+          poolCount += walkPreCapPools(preCapPools, function () {})
         }
       }
       return poolCount
     }
 
-    SCAPE.calculatePreCapPools = function() {
+    SCAPE.calculatePreCapPools = function () {
       return SCAPE.totalPools() <= 96
     }
 
+    SCAPE.newAliquot = function (poolNumber, aliquotText) {
+      var poolNumberInt = parseInt(poolNumber, 10)
 
-    SCAPE.newAliquot = function(poolNumber, aliquotText){
-      var poolNumberInt = parseInt(poolNumber,10);
-
-      return $(document.createElement('div')).
-        addClass('aliquot colour-' + (poolNumberInt+1)).
-        text(aliquotText || '\u00A0').
-        hide()
+      return $(document.createElement('div'))
+        .addClass('aliquot colour-' + (poolNumberInt + 1))
+        .text(aliquotText || '\u00A0')
+        .hide()
     }
 
-
-    var walkPreCapPools = function(preCapPools, block){
+    var walkPreCapPools = function (preCapPools, block) {
       var poolNumber = -1
-      for (var capPool of preCapPools){
+      for (var capPool of preCapPools) {
         poolNumber++
         block(capPool.wells, poolNumber)
       }
-      return poolNumber+1
+      return poolNumber + 1
     }
 
-
-    var renderPoolingSummary = function(plates){
+    var renderPoolingSummary = function (plates) {
       var capPoolOffset = 0
 
       for (var plate of plates) {
-        if (plate===undefined) {
+        if (plate === undefined) {
           // Nothing
         } else {
           var preCapPools = plate.preCapPools
-          capPoolOffset += walkPreCapPools(preCapPools, function(wells, poolNumber){
-            var destinationWell = WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]
-            var listElement = $('<li/>').
-              text(destinationWell).
-              append('<div class="pool-size">'+wells.length+'</div>').
-              append('<div class="pool-info">'+plate.barcode+': '+wells.join(', ')+'</div>')
+          capPoolOffset += walkPreCapPools(preCapPools, function (wells, poolNumber) {
+            var destinationWell = WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber]
+            var listElement = $('<li/>')
+              .text(destinationWell)
+              .append('<div class="pool-size">' + wells.length + '</div>')
+              .append('<div class="pool-info">' + plate.barcode + ': ' + wells.join(', ') + '</div>')
             $('#pooling-summary').append(listElement)
           })
         }
       }
     }
 
-    SCAPE.renderDestinationPools = function(){
-
+    SCAPE.renderDestinationPools = function () {
       $('.destination-plate .well').empty()
 
       var capPoolOffset = 0
       for (var plate of SCAPE.plates) {
-        if (plate!==undefined) {
+        if (plate !== undefined) {
           var well
-          capPoolOffset += walkPreCapPools(plate.preCapPools, function(wells, poolNumber){
-            well = $('.destination-plate .' + WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber])
-            if (wells.length)
-              well.append(SCAPE.newAliquot(capPoolOffset+poolNumber, wells.length))
+          capPoolOffset += walkPreCapPools(plate.preCapPools, function (wells, poolNumber) {
+            well = $('.destination-plate .' + WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber])
+            if (wells.length) well.append(SCAPE.newAliquot(capPoolOffset + poolNumber, wells.length))
           })
         }
       }
     }
 
-
-    SCAPE.renderSourceWells = function(){
+    SCAPE.renderSourceWells = function () {
       var capPoolOffset = 0
       for (var plateIndex = 0; plateIndex < SCAPE.plates.length; plateIndex += 1) {
-        if (SCAPE.plates[plateIndex]===undefined) {
-          $('.plate-id-'+plateIndex).hide()
+        if (SCAPE.plates[plateIndex] === undefined) {
+          $('.plate-id-' + plateIndex).hide()
         } else {
-
           var preCapPools = SCAPE.plates[plateIndex].preCapPools
           var barcode = SCAPE.plates[plateIndex].barcode
-          $('.plate-id-'+plateIndex).show()
-          $('.plate-id-'+plateIndex+' .well').empty()
-          $('.plate-id-'+plateIndex+' caption').text(barcode)
-          $('#well-transfers-'+plateIndex).detach()
+          $('.plate-id-' + plateIndex).show()
+          $('.plate-id-' + plateIndex + ' .well').empty()
+          $('.plate-id-' + plateIndex + ' caption').text(barcode)
+          $('#well-transfers-' + plateIndex).detach()
 
-          var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-'+plateIndex)
-          capPoolOffset += walkPreCapPools(preCapPools,function(wells, poolNumber){
+          var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-' + plateIndex)
+          capPoolOffset += walkPreCapPools(preCapPools, function (wells, poolNumber) {
             var newInput, well
 
-            for (var wellName of wells){
-              well = $('.plate-id-'+plateIndex+' .'+wellName)
-              well.append( SCAPE.newAliquot(capPoolOffset+poolNumber, WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber]))
+            for (var wellName of wells) {
+              well = $('.plate-id-' + plateIndex + ' .' + wellName)
+              well.append(
+                SCAPE.newAliquot(capPoolOffset + poolNumber, WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber])
+              )
 
-              newInput = $(document.createElement('input')).
-                attr('name', 'plate[transfers]['+SCAPE.plates[plateIndex].uuid+']['+wellName+']').
-                attr('type', 'hidden').
-                val(WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset+poolNumber])
+              newInput = $(document.createElement('input'))
+                .attr('name', 'plate[transfers][' + SCAPE.plates[plateIndex].uuid + '][' + wellName + ']')
+                .attr('type', 'hidden')
+                .val(WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber])
 
               newInputs.append(newInput)
             }
@@ -233,40 +319,41 @@
       }
     }
 
-    var plateSummaryHandler = function(){
-
+    var plateSummaryHandler = function () {
       SCAPE.renderSourceWells()
       SCAPE.renderDestinationPools()
 
       $('.aliquot').fadeIn('slow')
 
-      $('.well').each(function(){
+      $('.well').each(function () {
         // Handles wells which are part of multiple pre-capture pools
         // Causes them to animate between the available states
-        if ($(this).children().length < 2) { return }
+        if ($(this).children().length < 2) {
+          return
+        }
 
         this.pos = 0
 
-        this.slide = function() {
+        this.slide = function () {
           var scrollTo
           this.pos = (this.pos + 1) % $(this).children().length
-          scrollTo = $(this).children()[this.pos].offsetTop-5
-          $(this).delay(1000).animate({scrollTop:scrollTo},500,this.slide)
+          scrollTo = $(this).children()[this.pos].offsetTop - 5
+          $(this).delay(1000).animate({ scrollTop: scrollTo }, 500, this.slide)
         }
         this.slide()
       })
     }
 
-    var updateView = function() {
+    var updateView = function () {
       if (SCAPE.calculatePreCapPools()) {
         plateSummaryHandler()
         $('#pooling-summary').empty()
         renderPoolingSummary(SCAPE.plates)
-        SCAPE.message('Check pooling and create plate','valid')
+        SCAPE.message('Check pooling and create plate', 'valid')
       } else {
         // Pooling Went wrong
         $('#pooling-summary').empty()
-        SCAPE.message('Too many pools for the target plate.','invalid')
+        SCAPE.message('Too many pools for the target plate.', 'invalid')
       }
     }
   })

@@ -33,11 +33,7 @@ module LabwareCreators
     self.request_filter = 'submission-and-library-type'
     self.transfers_creator = 'with-volume'
     self.attributes += [
-      {
-        transfers: [
-          [:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]
-        ]
-      }
+      { transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }, :volume]] }
     ]
     self.target_rows = 8
     self.target_columns = 12
@@ -65,7 +61,9 @@ module LabwareCreators
     end
 
     def children_library_type_to_purpose_mapping
-      raise "Missing purpose configuration argument 'library_type_split_plate_purpose'" unless library_type_split_plate_purpose
+      unless library_type_split_plate_purpose
+        raise "Missing purpose configuration argument 'library_type_split_plate_purpose'"
+      end
 
       library_type_split_plate_purpose.each_with_object({}) do |val, memo|
         library_type = val[:library_type]

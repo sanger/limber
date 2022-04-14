@@ -6,17 +6,22 @@ require_relative 'shared_labware_presenter_examples'
 RSpec.describe Presenters::SubmissionPlatePresenter do
   has_a_working_api
 
-  subject(:presenter) do
-    described_class.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { described_class.new(api: api, labware: labware) }
 
   let(:submission_options) do
     {
-      'LTHR-96' => { template_name: 'example', request_options: { option: 1 } },
-      'LTHR-384' => { template_name: 'example2', request_options: { option: 2 } }
+      'LTHR-96' => {
+        template_name: 'example',
+        request_options: {
+          option: 1
+        }
+      },
+      'LTHR-384' => {
+        template_name: 'example2',
+        request_options: {
+          option: 2
+        }
+      }
     }
   end
 
@@ -25,30 +30,37 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
 
   before do
     create(:purpose_config, uuid: labware.purpose.uuid, submission_options: submission_options)
-    Settings.submission_templates = {
-      'example' => example_template_uuid,
-      'example2' => example2_template_uuid
-    }
+    Settings.submission_templates = { 'example' => example_template_uuid, 'example2' => example2_template_uuid }
   end
 
   let(:wells_with_aliquots) { %w[2-well-A1 2-well-B1] }
 
   let(:template_options) do
     [
-      ['LTHR-96', be_a_kind_of(SequencescapeSubmission).and(
-        have_attributes(
-          template_uuid: example_template_uuid,
-          request_options: { 'option' => 1 },
-          asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
+      [
+        'LTHR-96',
+        be_a_kind_of(SequencescapeSubmission).and(
+          have_attributes(
+            template_uuid: example_template_uuid,
+            request_options: {
+              'option' => 1
+            },
+            asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
+          )
         )
-      )],
-      ['LTHR-384', be_a_kind_of(SequencescapeSubmission).and(
-        have_attributes(
-          template_uuid: example2_template_uuid,
-          request_options: { 'option' => 2 },
-          asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
+      ],
+      [
+        'LTHR-384',
+        be_a_kind_of(SequencescapeSubmission).and(
+          have_attributes(
+            template_uuid: example2_template_uuid,
+            request_options: {
+              'option' => 2
+            },
+            asset_groups: [{ assets: wells_with_aliquots, autodetect_studies_projects: true }]
+          )
         )
-      )]
+      ]
     ]
   end
 
@@ -188,9 +200,12 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate, purpose_name: purpose_name,
-                              barcode_number: 2, pool_sizes: [2],
-                              direct_submissions: submissions, state: state
+      create :v2_stock_plate,
+             purpose_name: purpose_name,
+             barcode_number: 2,
+             pool_sizes: [2],
+             direct_submissions: submissions,
+             state: state
     end
     let(:submissions) { create_list :v2_submission, 1, state: state }
     let(:barcode_string) { 'DN2T' }
@@ -227,9 +242,12 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate, purpose_name: purpose_name,
-                              barcode_number: 2, pool_sizes: [2],
-                              direct_submissions: submissions, state: state
+      create :v2_stock_plate,
+             purpose_name: purpose_name,
+             barcode_number: 2,
+             pool_sizes: [2],
+             direct_submissions: submissions,
+             state: state
     end
     let(:submissions) { create_list :v2_submission, 1, state: state }
     let(:barcode_string) { 'DN2T' }

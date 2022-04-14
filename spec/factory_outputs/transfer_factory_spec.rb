@@ -14,7 +14,7 @@ RSpec.describe 'transfer_between_tubes_by_submission factory' do
   end
 
   let(:json_content) do
-    %({
+    '{
       "transfer":{
         "actions":{"read":"http://example.com:3000/example-transfer"},
         "uuid":"example-transfer",
@@ -31,7 +31,7 @@ RSpec.describe 'transfer_between_tubes_by_submission factory' do
           "uuid":"user-uuid"
         }
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do
@@ -53,7 +53,7 @@ RSpec.describe 'transfer_to_mx_tubes_by_submission' do
 
   # Source and user are actually inline for this one, but we don't especially care.
   let(:json_content) do
-    %({
+    '{
       "transfer":{
         "actions":{"read":"http://example.com:3000/example-transfer"},
         "uuid":"example-transfer",
@@ -82,7 +82,7 @@ RSpec.describe 'transfer_to_mx_tubes_by_submission' do
           }
         }
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

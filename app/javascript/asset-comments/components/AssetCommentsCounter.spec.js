@@ -6,12 +6,11 @@ import AssetCommentsCounter from './AssetCommentsCounter.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('AssetCommentsCounter', () => {
-
-  const wrapperFactory = function(comments) {
+  const wrapperFactory = function (comments) {
     const parent = {
       data() {
         return { comments }
-      }
+      },
     }
 
     return shallowMount(AssetCommentsCounter, { parentComponent: parent })
@@ -29,8 +28,8 @@ describe('AssetCommentsCounter', () => {
           id: '12',
           login: 'js1',
           firstName: 'John',
-          lastName: 'Smith'
-        }
+          lastName: 'Smith',
+        },
       },
       {
         id: '12345',
@@ -42,9 +41,9 @@ describe('AssetCommentsCounter', () => {
           id: '13',
           login: 'js2',
           firstName: 'Jane',
-          lastName: 'Smythe'
-        }
-      }
+          lastName: 'Smythe',
+        },
+      },
     ])
 
     expect(wrapper.find('.badge.badge-success').exists()).toBe(true)
@@ -64,5 +63,4 @@ describe('AssetCommentsCounter', () => {
     expect(wrapper.find('.badge.badge-secondary').exists()).toBe(true)
     expect(wrapper.find('.badge.badge-secondary').text()).toContain('...')
   })
-
 })

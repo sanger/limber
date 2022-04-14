@@ -8,7 +8,7 @@ describe('tubeHelpers', () => {
       expect(buildTubeObjs(3)).toEqual([
         { ...emptyTube, index: 0 },
         { ...emptyTube, index: 1 },
-        { ...emptyTube, index: 2 }
+        { ...emptyTube, index: 2 },
       ])
     })
   })
@@ -16,22 +16,19 @@ describe('tubeHelpers', () => {
   describe('purposeConfigForTube', () => {
     const purposeConfigs = {
       purposeA: { uuid: 'purposeA', id: 'purposeAId' },
-      purposeB: { uuid: 'purposeB', id: 'purposeBId' }
+      purposeB: { uuid: 'purposeB', id: 'purposeBId' },
     }
 
     test.each([
       ['purposeA', 'purposeAId'],
-      ['purposeB', 'purposeBId']
-    ])(
-      'tube with purpose UUID %p returns purpose with identifier %p',
-      (uuid, identifier) => {
-        const tube = { purpose: { uuid: uuid } }
-        const purpose = purposeConfigForTube(tube, purposeConfigs)
+      ['purposeB', 'purposeBId'],
+    ])('tube with purpose UUID %p returns purpose with identifier %p', (uuid, identifier) => {
+      const tube = { purpose: { uuid: uuid } }
+      const purpose = purposeConfigForTube(tube, purposeConfigs)
 
-        expect(purpose).not.toBeNull()
-        expect(purpose.id).toBe(identifier)
-      }
-    )
+      expect(purpose).not.toBeNull()
+      expect(purpose.id).toBe(identifier)
+    })
 
     describe('unrecognised tube', () => {
       const tube = { purpose: { uuid: 'purposeC' } }
@@ -50,7 +47,7 @@ describe('tubeHelpers', () => {
     })
 
     describe('tube with no purpose', () => {
-      const tube = { }
+      const tube = {}
 
       it('returns an undefined purpose', () => {
         expect(purposeConfigForTube(tube, purposeConfigs)).toBeUndefined()
@@ -58,7 +55,7 @@ describe('tubeHelpers', () => {
     })
 
     describe('tube with a purpose but no UUID', () => {
-      const tube = { purpose: { } }
+      const tube = { purpose: {} }
 
       it('returns an undefined purpose', () => {
         expect(purposeConfigForTube(tube, purposeConfigs)).toBeUndefined()

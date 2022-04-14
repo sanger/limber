@@ -20,12 +20,10 @@ Rails.application.configure do
 
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
-  config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
-  }
+  config.public_file_server.headers = { 'Cache-Control' => "public, max-age=#{1.hour.to_i}" }
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
@@ -52,20 +50,20 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # Legacy options
-  config.admin_email          = 'nnnnnnnnnnnnnnnn'
+  config.admin_email = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
   config.api = ActiveSupport::OrderedOptions.new
   config.api.v1 = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options.namespace     = 'Limber'
-  config.api.v1.connection_options.url           = 'http://example.com:3000/'
+  config.api.v1.connection_options = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options.namespace = 'Limber'
+  config.api.v1.connection_options.url = 'http://example.com:3000/'
   config.api.v1.connection_options.authorisation = 'testing'
 
   config.api.v2 = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v2.connection_options.url           = 'http://example.com:3000/api/v2'
-  config.api.v2.connection_options.js_url        = 'http://example.com:3000/api/v2'
+  config.api.v2.connection_options = ActiveSupport::OrderedOptions.new
+  config.api.v2.connection_options.url = 'http://example.com:3000/api/v2'
+  config.api.v2.connection_options.js_url = 'http://example.com:3000/api/v2'
 
   config.pmb_uri = 'http://example.com:3002/v1/'
 

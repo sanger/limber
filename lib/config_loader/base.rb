@@ -30,12 +30,8 @@ module ConfigLoader
     private
 
     def should_include_file?(files, child)
-      yaml?(child) &&
-        in_list?(files, child) &&
-        (
-          !work_in_progress?(child) ||
-          (work_in_progress?(child) && deploy_wip_pipelines)
-        )
+      yaml?(child) && in_list?(files, child) &&
+        (!work_in_progress?(child) || (work_in_progress?(child) && deploy_wip_pipelines))
     end
 
     def deploy_wip_pipelines
@@ -69,15 +65,16 @@ module ConfigLoader
     # Load the appropriate configuration files into @config
     #
     def load_config
-      @config = @files.each_with_object({}) do |file, store|
-        latest_file = YAML.load_file(file)
-        if latest_file.nil?
-          warn "Cannot parse file: #{file}"
-        else
-          check_duplicates(store.keys, latest_file.keys)
-          store.merge!(latest_file)
+      @config =
+        @files.each_with_object({}) do |file, store|
+          latest_file = YAML.load_file(file)
+          if latest_file.nil?
+            warn "Cannot parse file: #{file}"
+          else
+            check_duplicates(store.keys, latest_file.keys)
+            store.merge!(latest_file)
+          end
         end
-      end
     end
 
     def check_duplicates(stored_keys, new_keys)

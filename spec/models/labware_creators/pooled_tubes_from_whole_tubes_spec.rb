@@ -14,14 +14,14 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
 
   subject { described_class.new(api, form_attributes) }
 
-  let(:user_uuid)     { SecureRandom.uuid }
-  let(:purpose_uuid)  { SecureRandom.uuid }
-  let(:purpose)       { json :purpose, uuid: purpose_uuid }
-  let(:parent_uuid)   { SecureRandom.uuid }
-  let(:parent2_uuid)  { SecureRandom.uuid }
-  let(:parent)        { create :v2_tube, uuid: parent_uuid, barcode_number: 1 }
-  let(:parent2)       { create :v2_tube, uuid: parent2_uuid, barcode_number: 2 }
-  let(:child_uuid)    { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:purpose_uuid) { SecureRandom.uuid }
+  let(:purpose) { json :purpose, uuid: purpose_uuid }
+  let(:parent_uuid) { SecureRandom.uuid }
+  let(:parent2_uuid) { SecureRandom.uuid }
+  let(:parent) { create :v2_tube, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent2) { create :v2_tube, uuid: parent2_uuid, barcode_number: 2 }
+  let(:child_uuid) { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
 
   let(:barcodes) do
@@ -35,7 +35,9 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     create :purpose_config,
            submission: {
              template_uuid: template_uuid,
-             request_options: { read_length: 150 }
+             request_options: {
+               read_length: 150
+             }
            },
            uuid: purpose_uuid
   end
@@ -51,12 +53,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     has_a_working_api
 
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: purpose_uuid,
-        parent_uuid: parent_uuid,
-        barcodes: barcodes
-      }
+      { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, barcodes: barcodes }
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -75,29 +72,36 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
         body: json(:tube_creation, child_uuid: child_uuid)
       )
     end
+
     # Find out what tubes we've just made!
     let(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children',
-                   body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+']))
+      stub_api_get(
+        tube_creation_request_uuid,
+        'children',
+        body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+'])
+      )
     end
 
     let(:transfer_creation_request) do
-      stub_api_post('transfer_request_collections',
-                    payload: { transfer_request_collection: {
-                      user: user_uuid,
-                      transfer_requests: [
-                        { 'source_asset' => parent_uuid, 'target_asset' => child_uuid },
-                        { 'source_asset' => parent2_uuid, 'target_asset' => child_uuid }
-                      ]
-                    } },
-                    body: '{}')
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: [
+              { 'source_asset' => parent_uuid, 'target_asset' => child_uuid },
+              { 'source_asset' => parent2_uuid, 'target_asset' => child_uuid }
+            ]
+          }
+        },
+        body: '{}'
+      )
     end
 
     before do
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-        { barcode: barcodes },
-        includes: []
-      ).and_return([parent, parent2])
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
+        .with({ barcode: barcodes }, includes: [])
+        .and_return([parent, parent2])
 
       tube_creation_request
       tube_creation_children_request

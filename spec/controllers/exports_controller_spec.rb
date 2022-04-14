@@ -54,8 +54,9 @@ RSpec.describe ExportsController, type: :controller do
 
   context 'on generating a csv' do
     before do
-      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(includes,
-                                                                                  barcode: plate_barcode).and_return(plate)
+      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
+        .with(includes, barcode: plate_barcode)
+        .and_return(plate)
     end
 
     context 'where csv id requested is concentrations_ngul.csv' do
@@ -247,7 +248,11 @@ RSpec.describe ExportsController, type: :controller do
       it 'sets the correct filename' do
         page = 0
         get :show, params: { id: csv_id, limber_plate_id: plate_barcode, page: page }, as: :csv
-        expect(@response.headers['Content-Disposition'].include?("filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\"")).to eq(true)
+        expect(
+          @response.headers['Content-Disposition'].include?(
+            "filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\""
+          )
+        ).to eq(true)
       end
     end
   end
@@ -256,9 +261,10 @@ RSpec.describe ExportsController, type: :controller do
     let(:includes) { 'wells' }
 
     it 'returns 404 with unknown templates' do
-      expect do
-        get :show, params: { id: 'not_a_template', limber_plate_id: plate_barcode }, as: :csv
-      end.to raise_error(ActionController::RoutingError, 'Unknown template not_a_template')
+      expect { get :show, params: { id: 'not_a_template', limber_plate_id: plate_barcode }, as: :csv }.to raise_error(
+        ActionController::RoutingError,
+        'Unknown template not_a_template'
+      )
     end
   end
 end

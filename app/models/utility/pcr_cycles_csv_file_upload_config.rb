@@ -22,9 +22,7 @@ module Utility
 
     def initialize(csv_file_config)
       @csv_file_config = csv_file_config
-      CONFIG_VARIABLES.each do |k, v|
-        create_method(k) { @csv_file_config[k].send(v) }
-      end
+      CONFIG_VARIABLES.each { |k, v| create_method(k) { @csv_file_config[k].send(v) } }
     end
 
     def create_method(name, &block)

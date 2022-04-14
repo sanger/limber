@@ -19,14 +19,18 @@ RSpec.describe ExportsHelper do
       let(:well_a1) do
         create(
           :v2_well_with_transfer_requests,
-          position: { 'name' => 'A1' },
+          position: {
+            'name' => 'A1'
+          },
           transfer_requests_as_target: [transfer_request_from_a1, transfer_request_from_b1]
         )
       end
       let(:well_b1) do
         create(
           :v2_well_with_transfer_requests,
-          position: { 'name' => 'B1' },
+          position: {
+            'name' => 'B1'
+          },
           transfer_requests_as_target: [transfer_request_from_c1]
         )
       end
@@ -45,7 +49,9 @@ RSpec.describe ExportsHelper do
       let(:well_b1) do
         create(
           :v2_well_with_transfer_requests,
-          position: { 'name' => 'B1' },
+          position: {
+            'name' => 'B1'
+          },
           transfer_requests_as_target: [transfer_request_from_c1]
         )
       end
@@ -53,14 +59,20 @@ RSpec.describe ExportsHelper do
 
       it 'yields the correct value for transfers' do
         expect { |b| each_source_metadata_for_plate(plate, &b) }.to yield_with_args(
-          ancestor_plate_barcode, 'C1', well_b1
+          ancestor_plate_barcode,
+          'C1',
+          well_b1
         )
       end
     end
 
     context 'with no transfer request to destination wells' do
-      let(:well_a1) { create(:v2_well_with_transfer_requests, position: { 'name' => 'A1' }, transfer_requests_as_target: []) }
-      let(:well_b1) { create(:v2_well_with_transfer_requests, position: { 'name' => 'B1' }, transfer_requests_as_target: []) }
+      let(:well_a1) do
+        create(:v2_well_with_transfer_requests, position: { 'name' => 'A1' }, transfer_requests_as_target: [])
+      end
+      let(:well_b1) do
+        create(:v2_well_with_transfer_requests, position: { 'name' => 'B1' }, transfer_requests_as_target: [])
+      end
       let(:plate) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
 
       it 'yields nothing' do
@@ -69,21 +81,37 @@ RSpec.describe ExportsHelper do
     end
 
     context 'with transfer requests with invalid source well names' do
-      let(:ancestor_well_invalid_name_d1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'D1', name: 'D1') }
-      let(:ancestor_well_invalid_name_e1) { create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'E1', name: 'Barcode:E1:Extra') }
+      let(:ancestor_well_invalid_name_d1) do
+        create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'D1', name: 'D1')
+      end
+      let(:ancestor_well_invalid_name_e1) do
+        create(:v2_well, plate_barcode: ancestor_plate_barcode, location: 'E1', name: 'Barcode:E1:Extra')
+      end
 
-      let(:transfer_request_from_d1) { create(:v2_transfer_request, source_asset: ancestor_well_invalid_name_d1, target_asset: nil) }
-      let(:transfer_request_from_e1) { create(:v2_transfer_request, source_asset: ancestor_well_invalid_name_e1, target_asset: nil) }
+      let(:transfer_request_from_d1) do
+        create(:v2_transfer_request, source_asset: ancestor_well_invalid_name_d1, target_asset: nil)
+      end
+      let(:transfer_request_from_e1) do
+        create(:v2_transfer_request, source_asset: ancestor_well_invalid_name_e1, target_asset: nil)
+      end
 
       let(:well_a1) do
-        create(:v2_well_with_transfer_requests,
-               position: { 'name' => 'A1' },
-               transfer_requests_as_target: [transfer_request_from_d1])
+        create(
+          :v2_well_with_transfer_requests,
+          position: {
+            'name' => 'A1'
+          },
+          transfer_requests_as_target: [transfer_request_from_d1]
+        )
       end
       let(:well_b1) do
-        create(:v2_well_with_transfer_requests,
-               position: { 'name' => 'B1' },
-               transfer_requests_as_target: [transfer_request_from_e1])
+        create(
+          :v2_well_with_transfer_requests,
+          position: {
+            'name' => 'B1'
+          },
+          transfer_requests_as_target: [transfer_request_from_e1]
+        )
       end
       let(:plate) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
 

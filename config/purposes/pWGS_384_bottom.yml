@@ -21,7 +21,7 @@ pWGS-384 Lib PCR:
   :size: 384
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - 'TSsc384'
+    - 'TSsc384'
 pWGS-384 Lib Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

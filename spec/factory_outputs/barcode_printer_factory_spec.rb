@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'barcode printer factory' do
-  subject do
-    json(
-      :barcode_printer,
-      uuid: 'example-barcode-printer-uuid',
-      printer_type: 'tube'
-    )
-  end
+  subject { json(:barcode_printer, uuid: 'example-barcode-printer-uuid', printer_type: 'tube') }
 
   let(:json_content) do
-    %({
+    '{
       "barcode_printer": {
         "actions": {
           "read": "http://example.com:3000/example-barcode-printer-uuid"
@@ -29,7 +23,7 @@ RSpec.describe 'barcode printer factory' do
           "layout": 2
         }
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do
