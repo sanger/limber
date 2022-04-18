@@ -3,7 +3,7 @@
     "@babel/preset-env": "^7.15.8",
     "@rails/webpacker": "5.4.2",
     "axios": "^0.21.4",
-    "bootstrap-vue": "^2.21.2",
+    "bootstrap-vue": "^2.22.0",
     "cytoscape": "^3.21.1",
     "devour-client": "^2.1.2",
     "flush-promises": "^1.0.0",
