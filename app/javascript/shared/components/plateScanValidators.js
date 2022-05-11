@@ -50,11 +50,12 @@ const checkSize = (cols, rows) => {
   return (plate) => {
     if (!plate) {
       return { valid: false, message: 'Plate not found' }
-    }
-    else if (plate.number_of_columns !== cols || plate.number_of_rows !== rows) {
-      return { valid: false, message: `The plate should be ${cols}×${rows} wells in size` }
-    }
-    else {
+    } else if (plate.number_of_columns !== cols || plate.number_of_rows !== rows) {
+      return {
+        valid: false,
+        message: `The plate should be ${cols}×${rows} wells in size`,
+      }
+    } else {
       return validScanMessage()
     }
   }
@@ -68,12 +69,16 @@ const checkDuplicates = (plateList) => {
   return (plate) => {
     let occurrences = 0
     for (let i = 0; i < plateList.length; i++) {
-      if (plateList[i] && plate && plateList[i].uuid === plate.uuid) { occurrences++ }
+      if (plateList[i] && plate && plateList[i].uuid === plate.uuid) {
+        occurrences++
+      }
     }
     if (occurrences > 1) {
-      return { valid: false, message: 'Barcode has been scanned multiple times' }
-    }
-    else {
+      return {
+        valid: false,
+        message: 'Barcode has been scanned multiple times',
+      }
+    } else {
       return validScanMessage()
     }
   }
@@ -94,9 +99,11 @@ const checkExcess = (excessTransfers) => {
       }
     }
     if (excessWells.length > 0) {
-      return { valid: false, message: 'Wells in excess: ' + excessWells.join(', ') }
-    }
-    else {
+      return {
+        valid: false,
+        message: 'Wells in excess: ' + excessWells.join(', '),
+      }
+    } else {
       return validScanMessage()
     }
   }
@@ -108,8 +115,11 @@ const checkExcess = (excessTransfers) => {
 // checkState(['available', 'exhausted'])
 const checkState = (allowedStatesList) => {
   return (plate) => {
-    if(!allowedStatesList.includes(plate.state)) {
-      return { valid: false, message: 'Plate must have a state of: ' + allowedStatesList.join(' or ') }
+    if (!allowedStatesList.includes(plate.state)) {
+      return {
+        valid: false,
+        message: 'Plate must have a state of: ' + allowedStatesList.join(' or '),
+      }
     } else {
       return validScanMessage()
     }
@@ -122,11 +132,17 @@ const checkState = (allowedStatesList) => {
 // checkQCableWalkingBy(['wells of plate'])
 const checkQCableWalkingBy = (allowedWalkingByList) => {
   return (qcable) => {
-    if(!qcable.lot || !qcable.lot.tag_layout_template || !qcable.lot.tag_layout_template.walking_by) {
-      return { valid: false, message: 'QCable should have a tag layout template and walking by' }
+    if (!qcable.lot || !qcable.lot.tag_layout_template || !qcable.lot.tag_layout_template.walking_by) {
+      return {
+        valid: false,
+        message: 'QCable should have a tag layout template and walking by',
+      }
     }
-    if(!allowedWalkingByList.includes(qcable.lot.tag_layout_template.walking_by)) {
-      return { valid: false, message: 'QCable layout must have a walking by of: ' + allowedWalkingByList.join(' or ') }
+    if (!allowedWalkingByList.includes(qcable.lot.tag_layout_template.walking_by)) {
+      return {
+        valid: false,
+        message: 'QCable layout must have a walking by of: ' + allowedWalkingByList.join(' or '),
+      }
     } else {
       return validScanMessage()
     }
@@ -138,8 +154,7 @@ const checkQCableWalkingBy = (allowedWalkingByList) => {
 //   request - request to check
 // Returns:
 //   Boolean indicating if is an active library creation request
-const activeLibraryCreationRequest = (request) =>
-  requestIsLibraryCreation(request) && requestIsActive(request)
+const activeLibraryCreationRequest = (request) => requestIsLibraryCreation(request) && requestIsActive(request)
 
 // Gets a well as input and return the list of requests that correspond to an active
 // library creation request
@@ -148,9 +163,7 @@ const activeLibraryCreationRequest = (request) =>
 //          needs to have the relationship `requests_as_source`
 // Returns:
 //   Array of library creation requests, or empty list
-const libraryCreationRequestsFromWell = (well) =>
-  well.requests_as_source.filter(activeLibraryCreationRequest)
-
+const libraryCreationRequestsFromWell = (well) => well.requests_as_source.filter(activeLibraryCreationRequest)
 
 // Gets a list of wells and returns from the only the wells that contain at least
 // one active library creation requests
@@ -160,7 +173,9 @@ const libraryCreationRequestsFromWell = (well) =>
 // Returns:
 //   Array of wells that match the condition
 const filterWellsWithLibraryCreationRequests = (wells) => {
-  return wells.filter((well) => { return (libraryCreationRequestsFromWell(well).length >= 1) })
+  return wells.filter((well) => {
+    return libraryCreationRequestsFromWell(well).length >= 1
+  })
 }
 
 // Gets an integer with an integer identifying the maximum number of wells with library creation
@@ -176,7 +191,15 @@ const checkMaxCountRequests = (maxWellsWithRequests) => {
   return (plate) => {
     const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
     if (numWellsWithRequest > maxWellsWithRequests) {
-      return { valid: false, message: 'Plate has more than '+maxWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
+      return {
+        valid: false,
+        message:
+          'Plate has more than ' +
+          maxWellsWithRequests +
+          ' wells with submissions for library preparation (' +
+          numWellsWithRequest +
+          ')',
+      }
     }
     return validScanMessage()
   }
@@ -195,7 +218,15 @@ const checkMinCountRequests = (minWellsWithRequests) => {
   return (plate) => {
     const numWellsWithRequest = filterWellsWithLibraryCreationRequests(plate.wells).length
     if (numWellsWithRequest < minWellsWithRequests) {
-      return { valid: false, message: 'Plate should have at least '+minWellsWithRequests+' wells with submissions for library preparation ('+numWellsWithRequest+')' }
+      return {
+        valid: false,
+        message:
+          'Plate should have at least ' +
+          minWellsWithRequests +
+          ' wells with submissions for library preparation (' +
+          numWellsWithRequest +
+          ')',
+      }
     }
     return validScanMessage()
   }
@@ -214,7 +245,10 @@ const checkAllSamplesInColumnsList = (columnsList) => {
   return (plate) => {
     const wells = filterWellsWithLibraryCreationRequests(plate.wells)
     if (!wells.every((well) => columnsList.includes(well.position.name.slice(1)))) {
-      return { valid: false, message: 'All samples should be in the columns '+columnsList }
+      return {
+        valid: false,
+        message: 'All samples should be in the columns ' + columnsList,
+      }
     }
     return validScanMessage()
   }
@@ -248,12 +282,13 @@ const missingWellLibraries = (well, libraryTypes) => {
 const checkLibraryTypesInAllWells = (libraryTypes) => {
   return (plate) => {
     const wells = plate.wells
-    for (let i=0; i<wells.length; i++) {
+    for (let i = 0; i < wells.length; i++) {
       const well = wells[i]
       let missingLibraries = missingWellLibraries(well, libraryTypes)
       if (missingLibraries.length != 0) {
-        return { valid: false,
-          message: 'The well at position '+well.position.name+' is missing libraries: '+missingLibraries
+        return {
+          valid: false,
+          message: 'The well at position ' + well.position.name + ' is missing libraries: ' + missingLibraries,
         }
       }
     }
@@ -270,9 +305,9 @@ const checkLibraryTypesInAllWells = (libraryTypes) => {
 //   Array of arrays - an element for each well containing an array of integer submission ids
 const getAllLibrarySubmissionsWithMatchingStateForPlate = (plate, submission_state) => {
   return filterWellsWithLibraryCreationRequests(plate.wells).map((well) => {
-    return libraryCreationRequestsFromWell(well).filter(
-      (request) => request.submission.state == submission_state
-    ).map((request) => request.submission.id)
+    return libraryCreationRequestsFromWell(well)
+      .filter((request) => request.submission.state == submission_state)
+      .map((request) => request.submission.id)
   })
 }
 
@@ -294,14 +329,16 @@ const getAllUniqueLibrarySubmissionReadyIds = (plate) => {
 //   Validation object indicating if the plate has passed the condition
 const checkAllLibraryRequestsWithSameReadySubmissions = () => {
   return (plate) => {
-    const [ firstWell, ...remainingWells] = getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')
+    const [firstWell, ...remainingWells] = getAllLibrarySubmissionsWithMatchingStateForPlate(plate, 'ready')
     // To compare lists we use _.isEqual because there is no equivalent function for lists in
     // plain Javascript
     if (remainingWells.every((currentElem) => _.isEqual(firstWell, currentElem))) {
       return validScanMessage()
     } else {
-      return { valid: false,
-        message: 'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.'
+      return {
+        valid: false,
+        message:
+          'The plate has different submissions in `ready` state across its wells. All submissions should be the same for every well.',
       }
     }
   }
@@ -322,18 +359,27 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
     if (_.isEqual(getAllUniqueLibrarySubmissionReadyIds(plate), cached_submission_ids.submission_ids)) {
       return validScanMessage()
     } else {
-      return { valid: false,
-        message: 'The submission from this plate are different from the submissions from previous scanned plates in this screen.'
+      return {
+        valid: false,
+        message:
+          'The submission from this plate are different from the submissions from previous scanned plates in this screen.',
       }
     }
   }
 }
 
-export { checkSize, checkDuplicates, checkExcess,
+export {
+  checkSize,
+  checkDuplicates,
+  checkExcess,
   checkLibraryTypesInAllWells,
   getAllLibrarySubmissionsWithMatchingStateForPlate,
   checkAllLibraryRequestsWithSameReadySubmissions,
   checkPlateWithSameReadyLibrarySubmissions,
   getAllUniqueLibrarySubmissionReadyIds,
-  checkState, checkQCableWalkingBy, checkMaxCountRequests, checkMinCountRequests, checkAllSamplesInColumnsList
+  checkState,
+  checkQCableWalkingBy,
+  checkMaxCountRequests,
+  checkMinCountRequests,
+  checkAllSamplesInColumnsList,
 }

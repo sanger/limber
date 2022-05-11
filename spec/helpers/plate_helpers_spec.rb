@@ -16,30 +16,37 @@ RSpec.describe PlateHelper do
     let(:isc_library_request_1_1) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_1, submission_id: 1, order_id: 1
     end
+
     # for B1
     let(:isc_library_request_3_1) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_3, submission_id: 1, order_id: 3
     end
+
     # for C1
     let(:isc_library_request_1_2) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_1, submission_id: 1, order_id: 1
     end
+
     # for D1
     let(:isc_library_request_2_1) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_2, submission_id: 1, order_id: 2
     end
+
     # for E1
     let(:isc_library_request_1_3) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_1, submission_id: 1, order_id: 1
     end
+
     # for F1
     let(:isc_library_request_3_2) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_3, submission_id: 1, order_id: 3
     end
+
     # for G1
     let(:isc_library_request_2_2) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_2, submission_id: 1, order_id: 2
     end
+
     # for H1
     let(:isc_library_request_2_3) do
       build :isc_library_request, pre_capture_pool: pre_cap_pool_2, submission_id: 1, order_id: 2

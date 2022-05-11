@@ -27,9 +27,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-    subject do
-      described_class.new(api, form_attributes)
-    end
+    subject { described_class.new(api, form_attributes) }
 
     it_behaves_like 'it has no custom page'
 
@@ -47,28 +45,34 @@ RSpec.describe LabwareCreators::TubeFromTube do
     let(:user_uuid) { 'user-uuid' }
     let(:transfer_template_uuid) { 'transfer-between-specific-tubes' }
 
-    let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid
-      }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     let(:creation_request) do
-      stub_api_post('tube_from_tube_creations',
-                    payload: { tube_from_tube_creation: {
-                      parent: 'parent-uuid',
-                      child_purpose: 'child-purpose-uuid',
-                      user: 'user-uuid'
-                    } },
-                    body: json(:tube_creation, child_uuid: child_uuid))
+      stub_api_post(
+        'tube_from_tube_creations',
+        payload: {
+          tube_from_tube_creation: {
+            parent: 'parent-uuid',
+            child_purpose: 'child-purpose-uuid',
+            user: 'user-uuid'
+          }
+        },
+        body: json(:tube_creation, child_uuid: child_uuid)
+      )
     end
 
     let(:transfer_request) do
-      stub_api_post(transfer_template_uuid,
-                    payload: { transfer: { user: user_uuid, source: parent_uuid, destination: child_uuid } },
-                    body: json(:transfer_between_specific_tubes, destination_uuid: child_uuid))
+      stub_api_post(
+        transfer_template_uuid,
+        payload: {
+          transfer: {
+            user: user_uuid,
+            source: parent_uuid,
+            destination: child_uuid
+          }
+        },
+        body: json(:transfer_between_specific_tubes, destination_uuid: child_uuid)
+      )
     end
 
     describe '#save!' do

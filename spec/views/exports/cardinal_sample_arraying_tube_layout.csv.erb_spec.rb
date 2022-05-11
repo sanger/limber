@@ -19,9 +19,7 @@ RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
 
   let(:labware) { create(:v2_plate, barcode_number: 1, wells: [well_a1, well_b1, well_c1, well_e7, well_g12]) }
 
-  before do
-    assign(:plate, labware)
-  end
+  before { assign(:plate, labware) }
 
   def get_column(csv, index)
     csv[1..].map { |r| r[index] }
@@ -38,8 +36,14 @@ RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
     expect(get_column(parsed_csv, 0)).to eq([nil, nil, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
 
     # chek for tube barcode content in wells
-    expect(get_column(parsed_csv, 1)).to eq([nil, '1', 'NT2P', 'NT3Q', 'NT4R', 'empty', 'empty', 'empty', 'empty', 'empty'])
-    expect(get_column(parsed_csv, 7)).to eq([nil, '7', 'empty', 'empty', 'empty', 'empty', 'NT5S', 'empty', 'empty', 'empty'])
-    expect(get_column(parsed_csv, 12)).to eq([nil, '12', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'NT6T', 'empty'])
+    expect(get_column(parsed_csv, 1)).to eq(
+      [nil, '1', 'NT2P', 'NT3Q', 'NT4R', 'empty', 'empty', 'empty', 'empty', 'empty']
+    )
+    expect(get_column(parsed_csv, 7)).to eq(
+      [nil, '7', 'empty', 'empty', 'empty', 'empty', 'NT5S', 'empty', 'empty', 'empty']
+    )
+    expect(get_column(parsed_csv, 12)).to eq(
+      [nil, '12', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'NT6T', 'empty']
+    )
   end
 end

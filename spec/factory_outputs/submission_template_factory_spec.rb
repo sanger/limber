@@ -4,14 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'submission_pool factories' do
   describe 'basic' do
-    subject do
-      json(
-        :submission_template, uuid: 'sub-temp', name: 'Test template'
-      )
-    end
+    subject { json(:submission_template, uuid: 'sub-temp', name: 'Test template') }
 
     let(:json_content) do
-      %({
+      '{
           "order_template":{
             "uuid":"sub-temp",
             "actions":{"read":"http://example.com:3000/sub-temp"},
@@ -20,7 +16,7 @@ RSpec.describe 'submission_pool factories' do
               "actions":{"create":"http://example.com:3000/sub-temp/orders"}
             }
           }
-        })
+        }'
     end
 
     it 'should match the expected json' do

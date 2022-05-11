@@ -3,7 +3,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'AssetComments',
   computed: {
@@ -21,7 +20,9 @@ export default {
         return 'badge-secondary'
       }
     },
-    comments() { return this.$root.$data.comments }
-  }
+    comments() {
+      return this.$root.$data.comments
+    },
+  },
 }
 </script>

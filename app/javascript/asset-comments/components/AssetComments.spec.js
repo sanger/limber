@@ -6,12 +6,11 @@ import AssetComments from './AssetComments.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('AssetComments', () => {
-
-  const wrapperFactory = function(comments) {
+  const wrapperFactory = function (comments) {
     const parent = {
       data() {
         return { comments }
-      }
+      },
     }
 
     return shallowMount(AssetComments, { parentComponent: parent })
@@ -29,8 +28,8 @@ describe('AssetComments', () => {
           id: '12',
           login: 'js1',
           first_name: 'John',
-          last_name: 'Smith'
-        }
+          last_name: 'Smith',
+        },
       },
       {
         id: '12345',
@@ -42,9 +41,9 @@ describe('AssetComments', () => {
           id: '13',
           login: 'js2',
           first_name: 'Jane',
-          last_name: 'Smythe'
-        }
-      }
+          last_name: 'Smythe',
+        },
+      },
     ])
 
     expect(wrapper.find('.comments-list').exists()).toBe(true)
@@ -73,5 +72,4 @@ describe('AssetComments', () => {
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').find('.spinner-dark').exists()).toBe(true)
   })
-
 })

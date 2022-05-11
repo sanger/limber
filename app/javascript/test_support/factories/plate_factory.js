@@ -2,7 +2,7 @@ import buildArray from 'shared/buildArray'
 import { indexToName } from 'shared/wellHelpers'
 import wellFactory from 'test_support/factories/well_factory'
 
-const plateFactory = function(options = {}) {
+const plateFactory = function (options = {}) {
   const { _filledWells, _wellOptions, ...plateOptions } = options
   let uuid = plateOptions.uuid || 'plate-uuid'
   let id = plateOptions.id || '1'
@@ -11,16 +11,23 @@ const plateFactory = function(options = {}) {
     name: 'Plate DN1S',
     uuid: uuid,
     id: id,
-    labware_barcode: { ean13_barcode: '1220542971784', human_barcode: 'DN1S', machine_barcode: '1220542971784' },
+    labware_barcode: {
+      ean13_barcode: '1220542971784',
+      human_barcode: 'DN1S',
+      machine_barcode: '1220542971784',
+    },
     number_of_columns: 12,
     number_of_rows: 8,
     state: 'passed',
-    wells: buildArray(_filledWells || 96, (iteration) => wellFactory({
-      ...{
-        uuid: `${uuid}-well-${iteration}`,
-        position: { name: indexToName(iteration, 8) } },
-      ..._wellOptions
-    }) )
+    wells: buildArray(_filledWells || 96, (iteration) =>
+      wellFactory({
+        ...{
+          uuid: `${uuid}-well-${iteration}`,
+          position: { name: indexToName(iteration, 8) },
+        },
+        ..._wellOptions,
+      })
+    ),
   }
   return { ...plateDefaults, ...(plateOptions || {}) }
 }

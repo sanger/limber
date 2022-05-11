@@ -16,18 +16,20 @@ module Utility
     # child plate.
     def compute_well_amounts(wells, multiplication_factor)
       # sort on well coordinate to ensure wells are in plate column order
-      wells.sort_by(&:coordinate).each_with_object({}) do |well, well_amounts|
-        next if well.aliquots.blank?
+      wells
+        .sort_by(&:coordinate)
+        .each_with_object({}) do |well, well_amounts|
+          next if well.aliquots.blank?
 
-        # check for well concentration value present
-        if well.latest_concentration.blank?
-          errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
-          next
+          # check for well concentration value present
+          if well.latest_concentration.blank?
+            errors.add(:base, "Well #{well.location} does not have a concentration, cannot calculate amount in well")
+            next
+          end
+
+          # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
+          well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
         end
-
-        # concentration recorded is per microlitre, multiply by volume to get amount in ng in well
-        well_amounts[well.location] = well.latest_concentration.value.to_f * multiplication_factor
-      end
     end
 
     def compute_well_transfers(parent_plate, filtered_wells)
@@ -71,23 +73,29 @@ module Utility
 
     # Build the transfers hash, cycling through the bins and their wells and locating them onto the
     # child plate.
+    # rubocop:todo Metrics/MethodLength
     def build_transfers_hash(bins, number_of_rows, compression_reqd) # rubocop:todo Metrics/AbcSize
       binner = Binner.new(compression_reqd, number_of_rows)
-      bins.values.each_with_object({}).with_index do |(bin, transfers_hash), bin_index_within_bins|
-        next if bin.length.zero?
+      bins
+        .values
+        .each_with_object({})
+        .with_index do |(bin, transfers_hash), bin_index_within_bins|
+          next if bin.length.zero?
 
-        # TODO: we may want to sort the bin here, e.g. by concentration
-        bin.each_with_index do |well, well_index_within_bin|
-          src_locn = well['locn']
-          transfers_hash[src_locn] = {
-            'dest_locn' => WellHelpers.well_name(binner.row, binner.column),
-            'dest_conc' => well['dest_conc']
-          }
-          # work out what the next row and column will be
-          finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
-          binner.next_well_location(well_index_within_bin, bin.size) unless finished
+          # TODO: we may want to sort the bin here, e.g. by concentration
+          bin.each_with_index do |well, well_index_within_bin|
+            src_locn = well['locn']
+            transfers_hash[src_locn] = {
+              'dest_locn' => WellHelpers.well_name(binner.row, binner.column),
+              'dest_conc' => well['dest_conc']
+            }
+
+            # work out what the next row and column will be
+            finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+            binner.next_well_location(well_index_within_bin, bin.size) unless finished
+          end
         end
-      end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

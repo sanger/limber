@@ -5,18 +5,17 @@ RSpec.describe Presenters::SimpleTubePresenter do
 
   let(:labware) { build :tube, state: state }
 
-  subject do
-    Presenters::SimpleTubePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::SimpleTubePresenter.new(api: api, labware: labware) }
 
   before do
     create(:purpose_config, name: 'Example Plate Purpose', uuid: 'example-purpose-uuid-1')
     create(:purpose_config, name: 'Example Plate Purpose 2', uuid: 'example-purpose-uuid-2')
-    create(:tube_config, name: 'Example Tube Purpose', creator_class: 'LabwareCreators::TubeFromTube',
-                         uuid: 'example-purpose-uuid-3')
+    create(
+      :tube_config,
+      name: 'Example Tube Purpose',
+      creator_class: 'LabwareCreators::TubeFromTube',
+      uuid: 'example-purpose-uuid-3'
+    )
   end
 
   context 'when pending' do

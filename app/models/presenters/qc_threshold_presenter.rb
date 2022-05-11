@@ -53,9 +53,7 @@ class Presenters::QcThresholdPresenter
     # @return [String] The units to use for the threshold
     #
     def units
-      @units ||= configuration.fetch(:units) do
-        unique_units.min.units
-      end
+      @units ||= configuration.fetch(:units) { unique_units.min.units }
     rescue ArgumentError
       unique_units.first
     end
@@ -164,9 +162,8 @@ class Presenters::QcThresholdPresenter
   private
 
   def indexed_thresholds
-    @indexed_thresholds ||= all_thresholds.index_with do |key|
-      Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {}))
-    end
+    @indexed_thresholds ||=
+      all_thresholds.index_with { |key| Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {})) }
   end
 
   #

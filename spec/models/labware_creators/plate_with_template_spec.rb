@@ -33,17 +33,9 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
     stub_api_get(parent_uuid, 'wells', body: wells)
   end
 
-  let(:form_attributes) do
-    {
-      purpose_uuid: child_purpose_uuid,
-      parent_uuid: parent_uuid,
-      user_uuid: user_uuid
-    }
-  end
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-  subject do
-    LabwareCreators::PlateWithTemplate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::PlateWithTemplate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do
@@ -53,31 +45,35 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
 
   describe '#save!' do
     let!(:plate_creation_request) do
-      stub_api_post('plate_creations',
-                    payload: { plate_creation: {
-                      parent: parent_uuid,
-                      child_purpose: child_purpose_uuid,
-                      user: user_uuid
-                    } },
-                    body: json(:plate_creation))
+      stub_api_post(
+        'plate_creations',
+        payload: {
+          plate_creation: {
+            parent: parent_uuid,
+            child_purpose: child_purpose_uuid,
+            user: user_uuid
+          }
+        },
+        body: json(:plate_creation)
+      )
     end
 
-    let!(:plate_request) do
-      stub_api_get(parent_uuid, body: plate)
-    end
+    let!(:plate_request) { stub_api_get(parent_uuid, body: plate) }
 
-    let!(:transfer_template_request) do
-      stub_api_get('custom-transfer-template', body: transfer_template)
-    end
+    let!(:transfer_template_request) { stub_api_get('custom-transfer-template', body: transfer_template) }
 
     let!(:transfer_creation_request) do
-      stub_api_post(transfer_template_uuid,
-                    payload: { transfer: {
-                      destination: 'child-uuid',
-                      source: parent_uuid,
-                      user: user_uuid
-                    } },
-                    body: '{}')
+      stub_api_post(
+        transfer_template_uuid,
+        payload: {
+          transfer: {
+            destination: 'child-uuid',
+            source: parent_uuid,
+            user: user_uuid
+          }
+        },
+        body: '{}'
+      )
     end
     it 'makes the expected requests' do
       expect(subject.save!).to eq true

@@ -3,16 +3,8 @@
     <b-row>
       <b-col />
       <b-col>
-        <b-input-group
-          prepend="Volume"
-          append="µL"
-        >
-          <b-form-input
-            id="input-volume"
-            v-model="volume"
-            type="number"
-            :number="true"
-          />
+        <b-input-group prepend="Volume" append="µL">
+          <b-form-input id="input-volume" v-model="volume" type="number" :number="true" />
         </b-input-group>
       </b-col>
     </b-row>
@@ -20,7 +12,6 @@
 </template>
 
 <script>
-
 // Transfers creator that return an extra parameter containing the volume to be
 // applied as an extra parameter to each transfer request
 export default {
@@ -28,12 +19,12 @@ export default {
   props: {
     defaultVolume: {
       default: null,
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
-      volume: null
+      volume: null,
     }
   },
   computed: {
@@ -50,12 +41,12 @@ export default {
     volume: function () {
       this.$emit('change', {
         extraParams: this.transferFunc,
-        isValid: this.isValid
+        isValid: this.isValid,
       })
-    }
+    },
   },
   created() {
     this.volume = this.defaultVolume
-  }
+  },
 }
 </script>

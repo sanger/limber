@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wraps our collection of threshold helpers
   const thresholdsHelper = document.getElementById('qc-thresholds-helper')
 
-  if (thresholdsHelper === null) { return }
+  if (thresholdsHelper === null) {
+    return
+  }
 
   // Our wells are represented by simple checkboxes
   const wells = document.getElementById('well-failures').querySelectorAll('input[type="checkbox"]')
@@ -43,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     wells.forEach((well) => {
       // This is the state before we load this page. We can't change state
       // on these wells, so lets escape early.
-      if (skipWell(well)) { return }
+      if (skipWell(well)) {
+        return
+      }
 
       // The well must meet all thresholds.
-      const wellInvalid = Object.entries(threshold)
-        .some(([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue)
+      const wellInvalid = Object.entries(threshold).some(
+        ([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue
+      )
 
       well.checked = wellInvalid
     })
@@ -58,26 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const threshold = {}
 
   // Bind the appropriate threshold to each of the input fields.
-  thresholdsHelper
-    .querySelectorAll('div[data-qc-key]')
-    .forEach((div) => {
-      const range = div.querySelector('input[type=range]')
-      const input = div.querySelector('input[type=number]')
-      const qcKey = div.dataset['qcKey']
+  thresholdsHelper.querySelectorAll('div[data-qc-key]').forEach((div) => {
+    const range = div.querySelector('input[type=range]')
+    const input = div.querySelector('input[type=number]')
+    const qcKey = div.dataset['qcKey']
 
-      const updateThreshold = (event) => {
-        threshold[qcKey] = parseFloat(event.target.value)
-        range.value = threshold[qcKey]
-        input.value = threshold[qcKey]
-        updateWells()
-      }
+    const updateThreshold = (event) => {
+      threshold[qcKey] = parseFloat(event.target.value)
+      range.value = threshold[qcKey]
+      input.value = threshold[qcKey]
+      updateWells()
+    }
 
-      // Synchronize the initial values
-      updateThreshold({target: input})
+    // Synchronize the initial values
+    updateThreshold({ target: input })
 
-      // Add the bindings
-      range.addEventListener('input', updateThreshold)
-      input.addEventListener('change', updateThreshold)
-    })
-
+    // Add the bindings
+    range.addEventListener('input', updateThreshold)
+    input.addEventListener('change', updateThreshold)
+  })
 })

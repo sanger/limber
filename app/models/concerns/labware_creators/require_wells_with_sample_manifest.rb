@@ -17,10 +17,12 @@ module LabwareCreators::RequireWellsWithSampleManifest
   private
 
   def wells_with_missing_sample_manifest
-    source_plate.wells.each_with_object([]) do |well, invalid_locations|
-      next if well.aliquots.blank?
+    source_plate
+      .wells
+      .each_with_object([]) do |well, invalid_locations|
+        next if well.aliquots.blank?
 
-      invalid_locations << well.location if well.aliquots.first.sample.sample_manifest&.supplier_name.nil?
-    end
+        invalid_locations << well.location if well.aliquots.first.sample.sample_manifest&.supplier_name.nil?
+      end
   end
 end

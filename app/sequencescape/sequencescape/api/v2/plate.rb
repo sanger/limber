@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'well_helpers'
+
 # A plate from sequencescape via the V2 API
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions
@@ -128,11 +130,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def each_well_and_aliquot
-    wells.each do |well|
-      well.aliquots.each do |aliquot|
-        yield well, aliquot
-      end
-    end
+    wells.each { |well| well.aliquots.each { |aliquot| yield well, aliquot } }
   end
 
   private

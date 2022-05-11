@@ -6,19 +6,19 @@ import localVue from 'test_support/base_vue.js'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulationsMultiple', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(TagLayoutManipulationsMultiple, {
       propsData: {
         api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
-        tagsPerWell: 4
+        tagsPerWell: 4,
       },
       stubs: {
         'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true
+        'lb-tag-offset': true,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -65,17 +65,17 @@ describe('TagLayoutManipulationsMultiple', () => {
           tag1Group: {
             uuid: null,
             name: 'No tag group selected',
-            tags: []
+            tags: [],
           },
           tag2Group: {
             uuid: null,
             name: 'No tag group selected',
-            tags: []
+            tags: [],
           },
           walkingBy: 'as fixed group by plate',
           direction: 'row',
-          offsetTagsBy: 0
-        }
+          offsetTagsBy: 0,
+        },
       ]
 
       // NB. cannot interact with vue bootstrap components when wrapper is

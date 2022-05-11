@@ -6,12 +6,7 @@ RSpec.describe Presenters::PermissivePresenter do
   let(:purpose_name) { 'Example purpose' }
   let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
 
-  subject do
-    Presenters::PermissivePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::PermissivePresenter.new(api: api, labware: labware) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'

@@ -12,24 +12,22 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     let(:num_cols) { 12 }
 
     let(:well_a1) do
-      create(:v2_well,
-             position: { 'name' => 'A1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
+      create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
     end
     let(:well_b1) do
-      create(:v2_well,
-             position: { 'name' => 'B1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '56.0'))
+      create(
+        :v2_well,
+        position: {
+          'name' => 'B1'
+        },
+        qc_results: create_list(:qc_result_concentration, 1, value: '56.0')
+      )
     end
     let(:well_c1) do
-      create(:v2_well,
-             position: { 'name' => 'C1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+      create(:v2_well, position: { 'name' => 'C1' }, qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
     end
     let(:well_d1) do
-      create(:v2_well,
-             position: { 'name' => 'D1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.8'))
+      create(:v2_well, position: { 'name' => 'D1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.8'))
     end
 
     let(:parent_plate) do
@@ -43,27 +41,37 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
 
     let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
-    let(:dilutions_config) do
-      {
-        'target_amount_ng' => 50,
-        'target_volume' => 20,
-        'minimum_source_volume' => 0.2
-      }
-    end
+    let(:dilutions_config) { { 'target_amount_ng' => 50, 'target_volume' => 20, 'minimum_source_volume' => 0.2 } }
 
     subject { Utility::ConcentrationNormalisationCalculator.new(dilutions_config) }
 
     describe '#normalisation_details' do
       it 'calculates normalisation details correctly' do
         expected_norm_details = {
-          'A1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
-                    'amount_in_target' => 20.0, 'dest_conc' => 1.0 },
-          'B1' => { 'vol_source_reqd' => 0.893, 'vol_diluent_reqd' => 19.107,
-                    'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
-          'C1' => { 'vol_source_reqd' => 14.286, 'vol_diluent_reqd' => 5.714,
-                    'amount_in_target' => 50.0, 'dest_conc' => 2.5 },
-          'D1' => { 'vol_source_reqd' => 20.0, 'vol_diluent_reqd' => 0.0,
-                    'amount_in_target' => 36.0, 'dest_conc' => 1.8 }
+          'A1' => {
+            'vol_source_reqd' => 20.0,
+            'vol_diluent_reqd' => 0.0,
+            'amount_in_target' => 20.0,
+            'dest_conc' => 1.0
+          },
+          'B1' => {
+            'vol_source_reqd' => 0.893,
+            'vol_diluent_reqd' => 19.107,
+            'amount_in_target' => 50.0,
+            'dest_conc' => 2.5
+          },
+          'C1' => {
+            'vol_source_reqd' => 14.286,
+            'vol_diluent_reqd' => 5.714,
+            'amount_in_target' => 50.0,
+            'dest_conc' => 2.5
+          },
+          'D1' => {
+            'vol_source_reqd' => 20.0,
+            'vol_diluent_reqd' => 0.0,
+            'amount_in_target' => 36.0,
+            'dest_conc' => 1.8
+          }
         }
 
         expect(subject.normalisation_details(parent_plate.wells)).to eq(expected_norm_details)
@@ -152,10 +160,26 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
       context 'for a simple example with few wells' do
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '1.0', 'volume' => '20.0' },
-            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '2.5', 'volume' => '0.893' },
-            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '2.5', 'volume' => '14.286' },
-            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '1.8', 'volume' => '20.0' }
+            'A1' => {
+              'dest_locn' => 'A1',
+              'dest_conc' => '1.0',
+              'volume' => '20.0'
+            },
+            'B1' => {
+              'dest_locn' => 'B1',
+              'dest_conc' => '2.5',
+              'volume' => '0.893'
+            },
+            'C1' => {
+              'dest_locn' => 'C1',
+              'dest_conc' => '2.5',
+              'volume' => '14.286'
+            },
+            'D1' => {
+              'dest_locn' => 'D1',
+              'dest_conc' => '1.8',
+              'volume' => '20.0'
+            }
           }
         end
 
@@ -169,13 +193,34 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     describe '#extract_destination_concentrations' do
       let(:transfer_hash) do
         {
-          'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.665' },
-          'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.343' },
-          'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '2.135' },
-          'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '3.123' },
-          'E1' => { 'dest_locn' => 'E1', 'dest_conc' => '3.045' },
-          'F1' => { 'dest_locn' => 'F1', 'dest_conc' => '0.743' },
-          'G1' => { 'dest_locn' => 'G1', 'dest_conc' => '0.693' }
+          'A1' => {
+            'dest_locn' => 'A1',
+            'dest_conc' => '0.665'
+          },
+          'B1' => {
+            'dest_locn' => 'B1',
+            'dest_conc' => '0.343'
+          },
+          'C1' => {
+            'dest_locn' => 'C1',
+            'dest_conc' => '2.135'
+          },
+          'D1' => {
+            'dest_locn' => 'D1',
+            'dest_conc' => '3.123'
+          },
+          'E1' => {
+            'dest_locn' => 'E1',
+            'dest_conc' => '3.045'
+          },
+          'F1' => {
+            'dest_locn' => 'F1',
+            'dest_conc' => '0.743'
+          },
+          'G1' => {
+            'dest_locn' => 'G1',
+            'dest_conc' => '0.693'
+          }
         }
       end
       let(:expected_dest_concs) do
@@ -198,9 +243,21 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     describe '#construct_dest_qc_assay_attributes' do
       let(:transfer_hash) do
         {
-          'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.665', 'volume' => '20.0' },
-          'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.343', 'volume' => '20.0' },
-          'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '2.135', 'volume' => '20.0' }
+          'A1' => {
+            'dest_locn' => 'A1',
+            'dest_conc' => '0.665',
+            'volume' => '20.0'
+          },
+          'B1' => {
+            'dest_locn' => 'B1',
+            'dest_conc' => '0.343',
+            'volume' => '20.0'
+          },
+          'C1' => {
+            'dest_locn' => 'C1',
+            'dest_conc' => '2.135',
+            'volume' => '20.0'
+          }
         }
       end
       let(:expected_attributes) do

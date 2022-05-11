@@ -6,14 +6,16 @@ module Sequencescape::Api::V2
   PLATE_PRESENTER_INCLUDES = [
     :purpose,
     { child_plates: :purpose },
-    { wells: [
-      {
-        downstream_tubes: 'purpose',
-        requests_as_source: %w[request_type primer_panel pre_capture_pool],
-        aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }],
-        qc_results: []
-      }
-    ] }
+    {
+      wells: [
+        {
+          downstream_tubes: 'purpose',
+          requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
+          aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }],
+          qc_results: []
+        }
+      ]
+    }
   ].freeze
 
   #
@@ -24,13 +26,18 @@ module Sequencescape::Api::V2
   # @return [Sequencescape::V2::Api::Labware] Found labware object
   #
   def self.minimal_labware_by_barcode(barcode, select: :uuid)
-    Sequencescape::Api::V2::Labware.where(barcode: barcode)
-                                   .select(tube_racks: select, plates: select, tubes: select)
-                                   .first
+    Sequencescape::Api::V2::Labware
+      .where(barcode: barcode)
+      .select(tube_racks: select, plates: select, tubes: select)
+      .first
   end
 
   def self.plate_for_presenter(query)
-    Plate.includes(*PLATE_PRESENTER_INCLUDES).find(query).first
+    Plate
+      .includes(*PLATE_PRESENTER_INCLUDES)
+      .select(submissions: 'lanes_of_sequencing', sample_metadata: 'sample_common_name')
+      .find(query)
+      .first
   end
 
   def self.additional_plates_for_presenter(query)
@@ -46,9 +53,7 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_for_completion(uuid)
-    Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type')
-         .find(uuid: uuid)
-         .first
+    Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type').find(uuid: uuid).first
   end
 
   def self.plate_with_custom_includes(include_params, search_params)

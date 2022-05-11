@@ -12,7 +12,9 @@ export default class ResourceConfig {
   }
   get attributes() {
     return Object.entries(this.resource_config.attributes).reduce((attributes, [name, options]) => {
-      if (!(options instanceof Object)) { attributes.push(name) }
+      if (!(options instanceof Object)) {
+        attributes.push(name)
+      }
       return attributes
     }, [])
   }

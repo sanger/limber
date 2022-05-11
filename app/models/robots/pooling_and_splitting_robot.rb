@@ -104,9 +104,7 @@ module Robots
       expected_parents = beds[child_bed].parent_labware
 
       # confirm child bed has its expected parents in the correct beds
-      expected_parents.each_with_index do |expected_parent, index|
-        verify_parent(expected_parent, index)
-      end
+      expected_parents.each_with_index { |expected_parent, index| verify_parent(expected_parent, index) }
     end
 
     #
@@ -115,11 +113,7 @@ module Robots
     def verify_parent(expected_parent, index)
       parent_bed = parent_beds[index]
       used_parents << parent_bed
-      verified[parent_bed] = if beds[parent_bed].valid?
-                               check_labware_identity([expected_parent], parent_bed)
-                             else
-                               false
-                             end
+      verified[parent_bed] = beds[parent_bed].valid? ? check_labware_identity([expected_parent], parent_bed) : false
     end
 
     #

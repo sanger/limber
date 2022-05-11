@@ -1,23 +1,14 @@
 <template>
   <lb-page>
-    <lb-loading-modal
-      v-if="loading"
-      :message="progressMessage"
-    />
+    <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <lb-transfer-volumes
-        :purpose-configs="purposeConfigs"
-        :tube="sourceTube.labware"
-        :confirmed-pair="allValid"
-      />
+      <lb-transfer-volumes :purpose-configs="purposeConfigs" :tube="sourceTube.labware" :confirmed-pair="allValid" />
     </lb-main-content>
     <lb-sidebar>
-      <b-card
-        header="Validate Tubes"
-        header-tag="h3"
-      >
+      <b-card header="Validate Tubes" header-tag="h3">
         <p class="tv-instructions">
-          Scan the source tube and the corresponding destination tube. If they match, the transfer volumes will be shown to the left.
+          Scan the source tube and the corresponding destination tube. If they match, the transfer volumes will be shown
+          to the left.
         </p>
         <div class="tube-scan-fields">
           <lb-labware-scan
@@ -46,10 +37,7 @@
             @change="updateDestinationTube($event)"
           />
         </div>
-        <p
-          v-show="allValid"
-          class="tv-instructions"
-        >
+        <p v-show="allValid" class="tv-instructions">
           The scanned tubes match. Transfer volumes are now shown. Refresh the page to scan another pair.
         </p>
       </b-card>
@@ -64,28 +52,23 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import resources from 'shared/resources'
 import TransferVolumes from './TransferVolumes'
-import {
-  checkId,
-  checkMolarityResult,
-  checkState,
-  checkTransferParameters
-} from 'shared/components/tubeScanValidators'
+import { checkId, checkMolarityResult, checkState, checkTransferParameters } from 'shared/components/tubeScanValidators'
 
 export default {
   name: 'ValidatePairedTubes',
   components: {
     'lb-labware-scan': LabwareScan,
     'lb-loading-modal': LoadingModal,
-    'lb-transfer-volumes': TransferVolumes
+    'lb-transfer-volumes': TransferVolumes,
   },
   props: {
     // Sequencescape API V2 URL.
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
     // Purpose config JSON string of objects keyed by purpose UUIDs.
-    purposeConfigJson: { type: String, required: true }
+    purposeConfigJson: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
@@ -103,7 +86,7 @@ export default {
 
       // The tube scanned as source for the validation.
       // Also the source of transfer volume inputs.
-      destinationTube: { state: 'empty', labware: null }
+      destinationTube: { state: 'empty', labware: null },
     }
   },
   computed: {
@@ -111,8 +94,8 @@ export default {
       return [checkState(['passed']), checkTransferParameters(this.purposeConfigs), checkMolarityResult()]
     },
     destinationTubeValidators() {
-      const allowedIdsFromSource = this.sourceTube.labware?.receptacle.downstream_tubes.map(tube => tube.id)
-      const allowedIds = (allowedIdsFromSource === undefined) ? [] : allowedIdsFromSource
+      const allowedIdsFromSource = this.sourceTube.labware?.receptacle.downstream_tubes.map((tube) => tube.id)
+      const allowedIds = allowedIdsFromSource === undefined ? [] : allowedIdsFromSource
       return [checkId(allowedIds, 'Does not match the source tube')]
     },
     devourFields() {
@@ -126,7 +109,7 @@ export default {
     },
     allValid() {
       return this.sourceTube.state === 'valid' && this.destinationTube.state === 'valid'
-    }
+    },
   },
   mounted() {
     this.$refs.sourceScan.focus()
@@ -137,8 +120,8 @@ export default {
     },
     updateDestinationTube(data) {
       this.destinationTube = Object.assign({}, this.destinationTube, data)
-    }
-  }
+    },
+  },
 }
 </script>
 

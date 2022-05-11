@@ -19,7 +19,12 @@ class Sequencescape::Api::V2::Plate::Pool
     @pool_index = pool_index
   end
 
+  def lane_count
+    @lane_count || '?'
+  end
+
   def add_well_request(well, request)
+    @lane_count ||= request.submission&.lanes_of_sequencing
     compatible_subpool(well, request).add_well_request(well, request)
   end
 
@@ -41,8 +46,6 @@ class Sequencescape::Api::V2::Plate::Pool
   end
 
   def new_subpool
-    Sequencescape::Api::V2::Plate::Subpool.new.tap do |subpool|
-      @subpools << subpool
-    end
+    Sequencescape::Api::V2::Plate::Subpool.new.tap { |subpool| @subpools << subpool }
   end
 end

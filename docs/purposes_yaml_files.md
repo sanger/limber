@@ -57,19 +57,19 @@ LB Lib PCR:
     pcr_cycles_not_in:
       - 6
   :tag_layout_templates:
-  - TS_pWGSA_UDI96
-  - TS_pWGSB_UDI96
-  - TS_pWGSC_UDI96
-  - TS_pWGSD_UDI96
+    - TS_pWGSA_UDI96
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSD_UDI96
 LB Lib PCR-XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:
-  - name: Download Concentration (nM) CSV
-    id: concentrations_nm
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -87,7 +87,7 @@ Each file is a `.yml` file located in `app/config/purposes`, it contains the
 configuration for one or more purposes.
 
 The top level structure consists of series of keys, uniquely identifying each
-purpose. Keys need to be unique across *all* purposes, not just those within
+purpose. Keys need to be unique across _all_ purposes, not just those within
 the same file. Limber will detect duplicate keys, and will raise an exception
 on boot.
 
@@ -305,8 +305,8 @@ exports controller.
 
 ```yaml
 :file_links:
-  - name: "Download Hamilton Cherrypick to Sample Dilution CSV"
-    id: "hamilton_cherrypick_to_sample_dilution"
+  - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
+    id: 'hamilton_cherrypick_to_sample_dilution'
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
     params:
@@ -332,7 +332,7 @@ generated.
 ```
 
 @deprecated This is pretty much exclusively used for generating the show_extended
-            template in the ISC pipeline. :file_links is more flexible.
+template in the ISC pipeline. :file_links is more flexible.
 
 Default: nil.
 
@@ -370,10 +370,10 @@ specified in default_pmb_templates in {file:config/label_templates.yml}.
 
 Hash, specifying:
 
-  template_name: The name of the submission template to use.
+template_name: The name of the submission template to use.
 
-  request_options: Valid request options hash to pass in to the submission, the
-                  exact keys required will depend on the submission template.
+request_options: Valid request options hash to pass in to the submission, the
+exact keys required will depend on the submission template.
 
 Used by {WorkCompletion} to automatically build a downstream submission when
 the labware is charged and passed. This can be useful to, for example, build
@@ -422,22 +422,21 @@ scrutiny. Values can contain the following keys
 
 name: A user friendly name for the field (String)
 units: The expected units. Where possible limber will attempt to convert units
-       to match. eg. ml -> ul (String)
+to match. eg. ml -> ul (String)
 default_threshold: The value to which the slider will be se initially.
 decimal_places: The number of decimal places to 'step' between. Can be negative
-                to step up in intervals of 10, 100, 1000 etc. Defaults to 2
-
+to step up in intervals of 10, 100, 1000 etc. Defaults to 2
 
 ```yaml
-  :qc_thresholds:
-    viability:
-      units: '%'
-      default_threshold: 50
-    live_cell_count:
-      name: Cell count
-      units: 'cells/ml'
-      default_threshold: 400000
-      decimal_places: 0
+:qc_thresholds:
+  viability:
+    units: '%'
+    default_threshold: 50
+  live_cell_count:
+    name: Cell count
+    units: 'cells/ml'
+    default_threshold: 400000
+    decimal_places: 0
 ```
 
 ### Presenter/Creator specific configuration
@@ -466,20 +465,20 @@ Used by:
   :source_volume: 10
   :diluent_volume: 25
   :bins:
-  - colour: 1
-    pcr_cycles: 16
-    max: 25
-  - colour: 2
-    pcr_cycles: 12
-    min: 25
-    max: 500
-  - colour: 3
-    pcr_cycles: 8
-    min: 500
-    max: 1500
-  - colour: 4
-    pcr_cycles: 5
-    min: 1500
+    - colour: 1
+      pcr_cycles: 16
+      max: 25
+    - colour: 2
+      pcr_cycles: 12
+      min: 25
+      max: 500
+    - colour: 3
+      pcr_cycles: 8
+      min: 500
+      max: 1500
+    - colour: 4
+      pcr_cycles: 5
+      min: 1500
 ```
 
 Other example {LabwareCreators::FixedNormalisedPlate}
@@ -524,11 +523,11 @@ all layout templates are approved.
 
 ```yaml
 :tag_layout_templates:
-- 'TS_pWGSA_UDI96'
-- 'TS_pWGSB_UDI96'
-- 'TS_pWGSC_UDI96'
-- 'TS_pWGSD_UDI96'
-- 'TS_RNAhWGS_UDI_96'
+  - 'TS_pWGSA_UDI96'
+  - 'TS_pWGSB_UDI96'
+  - 'TS_pWGSC_UDI96'
+  - 'TS_pWGSD_UDI96'
+  - 'TS_RNAhWGS_UDI_96'
 ```
 
 #### :enforce_same_template_within_pool
@@ -577,19 +576,19 @@ setting is set to false, whether or not it exists.
 
 Hash, specifying:
 
-  source_purposes: Array of purpose names that will be merged together onto a
-                   single plate.
+source_purposes: Array of purpose names that will be merged together onto a
+single plate.
 
-  help_text: Text to display to the user on the creation page.
+help_text: Text to display to the user on the creation page.
 
 Used by {LabwareCreators::MergedPlate}
 
 ```yaml
 :merged_plate:
-    source_purposes:
+  source_purposes:
     - 'LHR-384 PCR 1'
     - 'LHR-384 PCR 2'
-    help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new cDNA plate.'
+  help_text: 'Here we are merging the two Primer Panel PCR plates, creating a new cDNA plate.'
 ```
 
 #### :transfer_template
@@ -611,10 +610,10 @@ Default specified by default_transfer_template_name for the creator class.
 Hash of workflows to offer the user. Keys are the text that will appear on the
 button, and values are a Hash, specifying:
 
-  template_name: The name of the submission template to use.
+template_name: The name of the submission template to use.
 
-  request_options: Valid request options hash to pass in to the submission, the
-                  exact keys required will depend on the submission template.
+request_options: Valid request options hash to pass in to the submission, the
+exact keys required will depend on the submission template.
 
 This mirrors the same structure used by work completions.
 

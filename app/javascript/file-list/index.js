@@ -20,14 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
    # In general it looks like this is something we should consider
    # once the majority of our components are vue based.
    */
-  if ( document.getElementById('files-list') ) {
+  if (document.getElementById('files-list')) {
     /* The files-list element isn't on all pages. So only initialize our
-    * Vue app if we actually find it */
+     * Vue app if we actually find it */
     var app = new Vue({
       el: '#files-list',
-      render: h => h(FileList)
+      render: (h) => h(FileList),
     })
-    document.getElementById('files-tab-link')
-      .addEventListener('click', function() { app.$children[0].fetchData() } )
+    document.getElementById('files-tab-link').addEventListener('click', function () {
+      app.$children[0].fetchData()
+    })
   }
 })

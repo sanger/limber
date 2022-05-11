@@ -17,6 +17,7 @@ namespace :docs do
 
     File.open('docs/presenters.md', 'w') do |file|
       template = File.read('docs/templates/presenters.md.erb')
+
       # We eval the erubi parsing of our templates. It's the documented
       # way of using erubi, we are *not* evaling user provided content, and
       # if erubi wanted to do something malicious, it already can.

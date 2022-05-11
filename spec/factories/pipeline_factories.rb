@@ -5,9 +5,7 @@ FactoryBot.define do
   # Use create to automatically push it onto the pipelines array
   # build just returns the pipeline object
   factory :pipeline do
-    to_create do |instance, evaluator|
-      evaluator.pipeline_list << instance
-    end
+    to_create { |instance, evaluator| evaluator.pipeline_list << instance }
 
     transient do
       # Override the pipelines list if you wish to use a custom one

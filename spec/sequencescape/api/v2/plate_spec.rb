@@ -10,9 +10,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
   describe '#stock_plate' do
     let(:stock_plates) { create_list :v2_stock_plate, 2 }
-    let(:plate) do
-      build :unmocked_v2_plate, barcode_number: 12_345, ancestors: stock_plates
-    end
+    let(:plate) { build :unmocked_v2_plate, barcode_number: 12_345, ancestors: stock_plates }
 
     context 'when not a stock_plate' do
       before do
@@ -28,9 +26,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     end
 
     context 'when a stock_plate' do
-      before do
-        expect(plate).to receive(:stock_plate?).and_return(true)
-      end
+      before { expect(plate).to receive(:stock_plate?).and_return(true) }
       it 'returns itself' do
         expect(plate.stock_plate).to eq(plate)
       end
@@ -116,8 +112,12 @@ RSpec.describe Sequencescape::Api::V2::Plate do
         let(:alternative_workline_name) { 'Some other plate with some stuff inside' }
 
         before do
-          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(plate).and_return(alternative_workline_name)
-          allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_workline_name).and_return(alternative_workline_reference_plates)
+          allow(SearchHelper).to receive(:alternative_workline_reference_name)
+            .with(plate)
+            .and_return(alternative_workline_name)
+          allow(ancestors_scope).to receive(:where)
+            .with(purpose_name: alternative_workline_name)
+            .and_return(alternative_workline_reference_plates)
         end
 
         it 'returns the last alternative workline reference' do
@@ -140,6 +140,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     it 'has the correct values' do
       expect(plate.labware_barcode.human).to eq('DN12345U')
       expect(plate.labware_barcode.machine).to eq('DN12345U')
+
       # TODO: Remove this functionality
       expect(plate.labware_barcode.number).to eq('12345')
       expect(plate.labware_barcode.prefix).to eq('DN')
@@ -147,29 +148,35 @@ RSpec.describe Sequencescape::Api::V2::Plate do
   end
 
   describe '::find_by' do
-    let(:plate) { create(:v2_plate) }
-    before do
-      # Consider actually mocking at the request level
-      stub_api_v2(
-        'Plate',
-        includes: [
-          :purpose,
-          { child_plates: :purpose },
-          { wells: [
-            {
-              qc_results: [],
-              downstream_tubes: 'purpose',
-              requests_as_source: %w[request_type primer_panel pre_capture_pool],
-              aliquots: ['sample', { request: %w[request_type primer_panel pre_capture_pool] }]
-            }
-          ] }
-        ],
-        where: { uuid: plate.uuid },
-        first: plate
-      )
-    end
     it 'finds a plate' do
-      expect(Sequencescape::Api::V2::Plate.find_by(uuid: plate.uuid)).to be_a Sequencescape::Api::V2::Plate
+      stub_request(:get, 'http://example.com:3000/api/v2/plates')
+        .with(
+          query: {
+            fields: {
+              sample_metadata: 'sample_common_name',
+              submissions: 'lanes_of_sequencing'
+            },
+            filter: {
+              uuid: '8681e102-b737-11ec-8ace-acde48001122'
+            },
+            # This is a bit brittle, as it depends on the exact order.
+            include:
+              'purpose,child_plates.purpose,wells.downstream_tubes.purpose,' \
+                'wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,' \
+                'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,' \
+                'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,' \
+                'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,' \
+                'wells.aliquots.request.submission'
+          },
+          headers: {
+            'Accept' => 'application/vnd.api+json',
+            'Content-Type' => 'application/vnd.api+json'
+          }
+        )
+        .to_return(File.new('./spec/contracts/v2-plate-by-uuid-for-presenter.txt'))
+      expect(
+        Sequencescape::Api::V2::Plate.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')
+      ).to be_a Sequencescape::Api::V2::Plate
     end
   end
 end

@@ -13,7 +13,7 @@ RSpec.describe 'transfer_request_collection factory' do
   end
 
   let(:json_content) do
-    %({
+    '{
         "transfer_request_collection": {
           "actions": {
             "read": "http://example.com:3000/example-transfer-request-collection-uuid"
@@ -31,7 +31,7 @@ RSpec.describe 'transfer_request_collection factory' do
             { "uuid": "target-1-uuid", "name":"DN2 D1:E1" }
           ]
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

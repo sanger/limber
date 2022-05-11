@@ -30,11 +30,7 @@ class ColourConverter
     end
 
     def luminance
-      if @value <= 0.03928
-        @value / 12.92
-      else
-        ((@value + 0.055) / 1.055)**2.4
-      end
+      @value <= 0.03928 ? @value / 12.92 : ((@value + 0.055) / 1.055)**2.4
     end
   end
 
@@ -47,9 +43,8 @@ class ColourConverter
   end
 
   def luminance
-    @luminance ||= (RED_MULTIPLIER * @red.luminance) +
-                   (GREEN_MULTIPLIER * @green.luminance) +
-                   (BLUE_MULTIPLIER * @blue.luminance)
+    @luminance ||=
+      (RED_MULTIPLIER * @red.luminance) + (GREEN_MULTIPLIER * @green.luminance) + (BLUE_MULTIPLIER * @blue.luminance)
   end
 
   def contrast_ratio(other)

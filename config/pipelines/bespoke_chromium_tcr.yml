@@ -15,7 +15,7 @@ Bespoke Chromium TCR:
 Bespoke Chromium TCR MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LBC TCR Post PCR: LBC TCR LibPS
     LBC TCR LibPS: LB Lib Pool Norm

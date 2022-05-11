@@ -9,12 +9,15 @@ FactoryBot.define do
     transient do
       # The number of transfers to create (Will be generated in column order for wells)
       transfer_count { 2 }
+
       # Number of different targets expected. For example, setting this to 1 will result in
       # transfers into a single target, wheas setting it to the same as transfer count will
       # result in lots of 1 to 1 transfers. Between this you'll get multiple different pools
       number_of_targets { 1 }
+
       # The well on the source plate that transfers will begin from (0 for A1)
       initial_well { 0 }
+
       # Offset the uuid generation for expected target assets.
       initial_target { 0 }
       source_plate_barcode { 'DN2' }
@@ -23,8 +26,14 @@ FactoryBot.define do
     transfer_requests do
       Array.new(transfer_count) do |i|
         target_number = ((number_of_targets / transfer_count.to_f) * i).floor + initial_target
-        { 'source_asset' => { uuid: "example-well-uuid-#{i + initial_well}" },
-          target_asset: { uuid: "target-#{target_number}-uuid" } }
+        {
+          'source_asset' => {
+            uuid: "example-well-uuid-#{i + initial_well}"
+          },
+          :target_asset => {
+            uuid: "target-#{target_number}-uuid"
+          }
+        }
       end
     end
 
@@ -48,7 +57,8 @@ FactoryBot.define do
     transient do
       json_root { nil }
       resource_actions { %w[read first last] }
-      plate_uuid   { SecureRandom.uuid }
+      plate_uuid { SecureRandom.uuid }
+
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}#{plate_uuid}/transfer_request_collections/1" }
@@ -56,9 +66,7 @@ FactoryBot.define do
     end
 
     transfer_request_collections do
-      Array.new(size) do |i|
-        associated(:transfer_request_collection, initial_well: i * 2, initial_target: i)
-      end
+      Array.new(size) { |i| associated(:transfer_request_collection, initial_well: i * 2, initial_target: i) }
     end
   end
 end

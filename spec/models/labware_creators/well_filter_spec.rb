@@ -80,11 +80,7 @@ RSpec.describe LabwareCreators::WellFilter do
     end
 
     context 'without any additional filtering' do
-      subject do
-        LabwareCreators::WellFilter.new(
-          creator: labware_creator
-        )
-      end
+      subject { LabwareCreators::WellFilter.new(creator: labware_creator) }
 
       it 'returns all the wells' do
         expect(subject.filtered.count).to eq(4)
@@ -94,12 +90,7 @@ RSpec.describe LabwareCreators::WellFilter do
 
     context 'when a request type filter is applied' do
       context 'with a valid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_a
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -108,15 +99,11 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_b
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, request_type_key: request_type_key_b) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
+
           # none of the wells have a request with the correct request type
           expect(subject.errors.messages[:base].count).to eq(4)
         end
@@ -125,12 +112,7 @@ RSpec.describe LabwareCreators::WellFilter do
 
     context 'when a library type filter is applied' do
       context 'with a valid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            library_type: library_type_name_a
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, library_type: library_type_name_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -139,15 +121,11 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            library_type: library_type_name_b
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, library_type: library_type_name_b) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
+
           # none of the wells have a request with the correct library type
           expect(subject.errors.messages[:base].count).to eq(4)
         end
@@ -183,12 +161,7 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with a valid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_a
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -197,15 +170,11 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_b
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, request_type_key: request_type_key_b) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
+
           # 3 of the 4 wells do not have a request with the correct type
           expect(subject.errors.messages[:base].count).to eq(3)
         end
@@ -226,15 +195,11 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject do
-          LabwareCreators::WellFilter.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_a
-          )
-        end
+        subject { LabwareCreators::WellFilter.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
+
           # well a1 has two requests that match the filter
           expect(subject.errors.messages[:base].count).to eq(1)
           expect(subject.errors.messages[:base][0]).to eq('found 2 eligible requests for A1')

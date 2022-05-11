@@ -1,4 +1,3 @@
-
 const splitOnSemiColonOptionalSpace = /;\s{0,1}/
 
 // Splits the cookie string into a js object
@@ -10,10 +9,10 @@ const splitOnSemiColonOptionalSpace = /;\s{0,1}/
 // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
 // This splits the cookie object into a simple js object consisting of
 // key-value pairs.
-const cookieJar = function(cookies) {
+const cookieJar = function (cookies) {
   let keyValues = cookies.split(splitOnSemiColonOptionalSpace)
   let store = {}
-  keyValues.forEach(function(keyValue) {
+  keyValues.forEach(function (keyValue) {
     let splitOn = keyValue.search('=')
     let key = keyValue.substring(0, splitOn)
     let value = keyValue.substring(splitOn + 1)

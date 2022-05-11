@@ -5,9 +5,7 @@ module Sequencescape::Api::V2::Shared
   module HasPurpose
     extend ActiveSupport::Concern
 
-    included do
-      has_one :purpose
-    end
+    included { has_one :purpose }
 
     # Ideally purpose would be required by labware, but apparently
     # we have some tubes without a purpose. So we use a fallback here

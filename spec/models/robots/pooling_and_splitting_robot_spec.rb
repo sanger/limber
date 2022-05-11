@@ -41,39 +41,35 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
     }
   end
 
-  let(:user_uuid)                   { SecureRandom.uuid }
+  let(:user_uuid) { SecureRandom.uuid }
 
-  let(:source_purpose_name)         { 'Parent Purpose' }
-  let(:source_purpose_uuid)         { SecureRandom.uuid }
-  let(:source_plate_state)          { 'passed' }
+  let(:source_purpose_name) { 'Parent Purpose' }
+  let(:source_purpose_uuid) { SecureRandom.uuid }
+  let(:source_plate_state) { 'passed' }
 
-  let(:source_plate_1_uuid)         { SecureRandom.uuid }
-  let(:source_1_barcode)            { source_plate_1.human_barcode }
-  let(:source_plate_1)              { create :v2_plate, source_plate_1_attributes }
+  let(:source_plate_1_uuid) { SecureRandom.uuid }
+  let(:source_1_barcode) { source_plate_1.human_barcode }
+  let(:source_plate_1) { create :v2_plate, source_plate_1_attributes }
 
-  let(:transfer_source_plates)      { [source_plate_1] }
+  let(:transfer_source_plates) { [source_plate_1] }
 
-  let(:target_plate_1_uuid)         { SecureRandom.uuid }
-  let(:target_1_barcode)            { target_plate_1.human_barcode }
-  let(:target_1_purpose_name)       { 'Child Purpose 1' }
-  let(:target_1_purpose_uuid)       { SecureRandom.uuid }
-  let(:target_plate_1_parents)      { [source_plate_1] }
+  let(:target_plate_1_uuid) { SecureRandom.uuid }
+  let(:target_1_barcode) { target_plate_1.human_barcode }
+  let(:target_1_purpose_name) { 'Child Purpose 1' }
+  let(:target_1_purpose_uuid) { SecureRandom.uuid }
+  let(:target_plate_1_parents) { [source_plate_1] }
   let(:target_1_wells) do
-    %w[A1 B1 C1 D1].map do |location|
-      create :v2_well, location: location, upstream_plates: transfer_source_plates
-    end
+    %w[A1 B1 C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
   end
-  let(:target_plate_1)              { create :v2_plate, target_plate_1_attributes }
+  let(:target_plate_1) { create :v2_plate, target_plate_1_attributes }
 
-  let(:target_plate_2_uuid)         { SecureRandom.uuid }
-  let(:target_2_barcode)            { target_plate_2.human_barcode }
-  let(:target_2_purpose_name)       { 'Child Purpose 2' }
-  let(:target_2_purpose_uuid)       { SecureRandom.uuid }
-  let(:target_plate_2_parents)      { [source_plate_1] }
+  let(:target_plate_2_uuid) { SecureRandom.uuid }
+  let(:target_2_barcode) { target_plate_2.human_barcode }
+  let(:target_2_purpose_name) { 'Child Purpose 2' }
+  let(:target_2_purpose_uuid) { SecureRandom.uuid }
+  let(:target_plate_2_parents) { [source_plate_1] }
   let(:target_2_wells) do
-    %w[A1 B1 C1 D1].map do |location|
-      create :v2_well, location: location, upstream_plates: transfer_source_plates
-    end
+    %w[A1 B1 C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
   end
   let(:target_plate_2) { create :v2_plate, target_plate_2_attributes }
 
@@ -105,12 +101,16 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
           'label' => 'Bed 4'
         },
         'bed5_barcode' => {
-          'purpose' => 'Child Purpose 1', 'states' => %w[pending started],
-          'target_state' => 'passed', 'label' => 'Bed 5'
+          'purpose' => 'Child Purpose 1',
+          'states' => %w[pending started],
+          'target_state' => 'passed',
+          'label' => 'Bed 5'
         },
         'bed6_barcode' => {
-          'purpose' => 'Child Purpose 2', 'states' => %w[pending started],
-          'target_state' => 'passed', 'label' => 'Bed 6'
+          'purpose' => 'Child Purpose 2',
+          'states' => %w[pending started],
+          'target_state' => 'passed',
+          'label' => 'Bed 6'
         }
       },
       'class' => 'Robots::PoolingAndSplittingRobot',
@@ -133,18 +133,30 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
     create :purpose_config, uuid: target_1_purpose_uuid, name: target_1_purpose_name
     create :purpose_config, uuid: target_2_purpose_uuid, name: target_2_purpose_name
 
-    stub_api_get(target_plate_1_uuid, 'creation_transfers',
-                 body: json(:creation_transfer_collection,
-                            destination: associated(:plate, target_plate_1_attributes),
-                            sources: transfer_source_plates,
-                            associated_on: 'creation_transfers',
-                            transfer_factory: :creation_transfer))
-    stub_api_get(target_plate_2_uuid, 'creation_transfers',
-                 body: json(:creation_transfer_collection,
-                            destination: associated(:plate, target_plate_2_attributes),
-                            sources: transfer_source_plates,
-                            associated_on: 'creation_transfers',
-                            transfer_factory: :creation_transfer))
+    stub_api_get(
+      target_plate_1_uuid,
+      'creation_transfers',
+      body:
+        json(
+          :creation_transfer_collection,
+          destination: associated(:plate, target_plate_1_attributes),
+          sources: transfer_source_plates,
+          associated_on: 'creation_transfers',
+          transfer_factory: :creation_transfer
+        )
+    )
+    stub_api_get(
+      target_plate_2_uuid,
+      'creation_transfers',
+      body:
+        json(
+          :creation_transfer_collection,
+          destination: associated(:plate, target_plate_2_attributes),
+          sources: transfer_source_plates,
+          associated_on: 'creation_transfers',
+          transfer_factory: :creation_transfer
+        )
+    )
 
     bed_plate_lookup(source_plate_1, [:purpose, { wells: :upstream_plates }])
     bed_plate_lookup(target_plate_1, [:purpose, { wells: :upstream_plates }])
@@ -156,9 +168,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
 
     context 'a simple robot' do
       context 'with an unknown plate' do
-        before do
-          bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }])
-        end
+        before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }]) }
 
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
@@ -191,12 +201,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
       end
 
       context 'where a child plate is missing' do
-        let(:scanned_layout) do
-          {
-            'bed1_barcode' => [source_1_barcode],
-            'bed6_barcode' => [target_2_barcode]
-          }
-        end
+        let(:scanned_layout) { { 'bed1_barcode' => [source_1_barcode], 'bed6_barcode' => [target_2_barcode] } }
 
         it { is_expected.not_to be_valid }
       end
@@ -233,17 +238,13 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
         end
 
         context 'for parent' do
-          before do
-            source_plate_1.state = 'failed'
-          end
+          before { source_plate_1.state = 'failed' }
 
           it { is_expected.not_to be_valid }
         end
 
         context 'for child' do
-          before do
-            target_plate_1.state = 'failed'
-          end
+          before { target_plate_1.state = 'failed' }
 
           it { is_expected.not_to be_valid }
         end
@@ -267,17 +268,11 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
       let(:transfer_source_plates) { [source_plate_1, source_plate_2] }
 
       let(:target_1_wells) do
-        %w[C1 D1].map do |location|
-          create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]]
-        end +
-          %w[A1 B1].map do |location|
-            create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]]
-          end
+        %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
+          %w[A1 B1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
       end
 
-      before do
-        bed_plate_lookup(source_plate_2, [:purpose, { wells: :upstream_plates }])
-      end
+      before { bed_plate_lookup(source_plate_2, [:purpose, { wells: :upstream_plates }]) }
 
       context 'with a valid layout' do
         let(:scanned_layout) do
@@ -349,9 +344,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
           }
         end
 
-        before do
-          bed_plate_lookup(unconnected_plate_3, [:purpose, { wells: :upstream_plates }])
-        end
+        before { bed_plate_lookup(unconnected_plate_3, [:purpose, { wells: :upstream_plates }]) }
 
         context 'and related plates' do
           it { is_expected.not_to be_valid }
@@ -362,33 +355,37 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
 
   describe '#perform_transfer' do
     let(:state_change_target_1_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      state_change: {
-                        target_state: 'passed',
-                        reason: 'Robot Pooling And Splitting Robot started',
-                        customer_accepts_responsibility: false,
-                        target: target_plate_1_uuid,
-                        user: user_uuid,
-                        contents: nil
-                      }
-                    },
-                    body: json(:state_change, target_state: 'passed'))
+      stub_api_post(
+        'state_changes',
+        payload: {
+          state_change: {
+            target_state: 'passed',
+            reason: 'Robot Pooling And Splitting Robot started',
+            customer_accepts_responsibility: false,
+            target: target_plate_1_uuid,
+            user: user_uuid,
+            contents: nil
+          }
+        },
+        body: json(:state_change, target_state: 'passed')
+      )
     end
 
     let(:state_change_target_2_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      state_change: {
-                        target_state: 'passed',
-                        reason: 'Robot Pooling And Splitting Robot started',
-                        customer_accepts_responsibility: false,
-                        target: target_plate_2_uuid,
-                        user: user_uuid,
-                        contents: nil
-                      }
-                    },
-                    body: json(:state_change, target_state: 'passed'))
+      stub_api_post(
+        'state_changes',
+        payload: {
+          state_change: {
+            target_state: 'passed',
+            reason: 'Robot Pooling And Splitting Robot started',
+            customer_accepts_responsibility: false,
+            target: target_plate_2_uuid,
+            user: user_uuid,
+            contents: nil
+          }
+        },
+        body: json(:state_change, target_state: 'passed')
+      )
     end
 
     let(:scanned_layout) do

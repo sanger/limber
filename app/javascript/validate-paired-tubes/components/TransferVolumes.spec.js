@@ -19,14 +19,14 @@ describe('TransferVolumes', () => {
   const mockPurposeConfigs = {}
   const mockPurposeConfig = {}
 
-  const wrapperFactory = function(options = {}) {
+  const wrapperFactory = function (options = {}) {
     return shallowMount(TransferVolumes, {
       propsData: {
         purposeConfigs: mockPurposeConfigs,
         tube: mockTube,
-        ...options
+        ...options,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -153,7 +153,7 @@ describe('TransferVolumes', () => {
     var wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
-      bufferVolume: 49.87655
+      bufferVolume: 49.87655,
     }
 
     beforeEach(() => {
@@ -170,7 +170,7 @@ describe('TransferVolumes', () => {
     var wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
-      bufferVolume: 49.87655
+      bufferVolume: 49.87655,
     }
 
     beforeEach(() => {
@@ -195,7 +195,6 @@ describe('TransferVolumes', () => {
     it('returns the expected source molarity string', () => {
       expect(wrapper.vm.sourceMolarityForDisplay).toBe('3.46')
     })
-
   })
 
   describe('targetMolarityForDisplay', () => {
@@ -211,7 +210,6 @@ describe('TransferVolumes', () => {
     it('returns the expected target molarity string', () => {
       expect(wrapper.vm.targetMolarityForDisplay).toBe('5.68')
     })
-
   })
 
   describe('targetVolumeForDisplay', () => {
@@ -233,7 +231,7 @@ describe('TransferVolumes', () => {
     describe('is below target molarity', () => {
       var wrapper
       const transferVolumes = {
-        belowTarget: true
+        belowTarget: true,
       }
 
       beforeEach(() => {
@@ -249,7 +247,7 @@ describe('TransferVolumes', () => {
     describe('is not below target molarity', () => {
       var wrapper
       const transferVolumes = {
-        belowTarget: false
+        belowTarget: false,
       }
 
       beforeEach(() => {
@@ -302,7 +300,7 @@ describe('TransferVolumes', () => {
     const targetVolume = 192
     const transferVolumes = {
       sampleVolume: 150.12345,
-      bufferVolume: 49.87655
+      bufferVolume: 49.87655,
     }
 
     beforeEach(() => {

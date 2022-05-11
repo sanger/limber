@@ -22,9 +22,11 @@ module Presenters
     end
 
     def add_unknown_plate_warnings
-      errors.add(:plate,
-                 "type '#{labware.purpose_name}' is not a limber plate. "\
-                 'Perhaps you are using the wrong pipeline application?')
+      errors.add(
+        :plate,
+        "type '#{labware.purpose_name}' is not a limber plate. " \
+          'Perhaps you are using the wrong pipeline application?'
+      )
     end
 
     def default_printer

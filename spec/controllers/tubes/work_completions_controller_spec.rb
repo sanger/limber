@@ -9,9 +9,7 @@ RSpec.describe Tubes::WorkCompletionsController, type: :controller do
     let(:tube_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
     let(:example_tube) { json :tube, uuid: tube_uuid }
-    let(:work_completion_request) do
-      { 'work_completion' => { target: tube_uuid, submissions: [], user: user_uuid } }
-    end
+    let(:work_completion_request) { { 'work_completion' => { target: tube_uuid, submissions: [], user: user_uuid } } }
 
     let(:work_completion) { json :work_completion }
 

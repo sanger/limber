@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'search factory' do
-  subject do
-    json(
-      :search,
-      uuid: 'example-search-uuid',
-      name: 'Find assets by barcode'
-    )
-  end
+  subject { json(:search, uuid: 'example-search-uuid', name: 'Find assets by barcode') }
 
   let(:json_content) do
-    %({
+    '{
       "search": {
         "actions": {
           "read": "http://example.com:3000/example-search-uuid",
@@ -24,7 +18,7 @@ RSpec.describe 'search factory' do
         "uuid": "example-search-uuid",
         "name": "Find assets by barcode"
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

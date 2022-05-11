@@ -72,9 +72,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     end
 
     def transfers
-      @transfers ||= @data[1..].each_with_index.map do |row_data, index|
-        Row.new(header_row, index + 2, row_data)
-      end
+      @transfers ||= @data[1..].each_with_index.map { |row_data, index| Row.new(header_row, index + 2, row_data) }
     end
 
     # Gates looking for wells if the file is invalid

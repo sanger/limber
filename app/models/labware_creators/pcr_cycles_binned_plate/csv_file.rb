@@ -24,10 +24,19 @@ module LabwareCreators
     validates_nested :well_details_header_row
     validates_nested :transfers, if: :correctly_formatted?
 
-    delegate :well_column, :concentration_column, :sanger_sample_id_column,
-             :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
-             :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
-             :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
+    delegate :well_column,
+             :concentration_column,
+             :sanger_sample_id_column,
+             :supplier_sample_name_column,
+             :input_amount_available_column,
+             :input_amount_desired_column,
+             :sample_volume_column,
+             :diluent_volume_column,
+             :pcr_cycles_column,
+             :submit_for_sequencing_column,
+             :sub_pool_column,
+             :coverage_column,
+             to: :well_details_header_row
 
     #
     # Passing in the file to be parsed, the configuration that holds validation range thresholds, and
@@ -99,9 +108,10 @@ module LabwareCreators
     end
 
     def transfers
-      @transfers ||= @data[3..].each_with_index.map do |row_data, index|
-        Row.new(@config, well_details_header_row, index + 2, row_data)
-      end
+      @transfers ||=
+        @data[3..].each_with_index.map do |row_data, index|
+          Row.new(@config, well_details_header_row, index + 2, row_data)
+        end
     end
 
     # Gates looking for wells if the file is invalid

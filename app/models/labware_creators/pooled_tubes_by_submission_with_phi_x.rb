@@ -10,19 +10,21 @@ module LabwareCreators
     validate :tube_must_be_spiked_buffer
 
     self.page = 'tube_creation/phix_addition'
-    self.attributes += [
-      :spikedbuffer_tube_barcode
-    ]
+    self.attributes += [:spikedbuffer_tube_barcode]
 
     attr_accessor :spikedbuffer_tube_barcode
 
     def create_child_stock_tubes
-      api.specific_tube_creation.create!(
-        user: user_uuid,
-        parents: parents,
-        child_purposes: [purpose_uuid] * pool_uuids.length,
-        tube_attributes: tube_attributes
-      ).children.index_by(&:name)
+      api
+        .specific_tube_creation
+        .create!(
+          user: user_uuid,
+          parents: parents,
+          child_purposes: [purpose_uuid] * pool_uuids.length,
+          tube_attributes: tube_attributes
+        )
+        .children
+        .index_by(&:name)
     end
 
     def parents

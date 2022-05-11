@@ -33,12 +33,7 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject(:presenter) do
-    Presenters::MinimalPcrPlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(api: api, labware: labware) }
 
   before do
     create(:purpose_config, uuid: labware.purpose.uuid)
@@ -46,20 +41,20 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
 
   it 'returns label attributes' do
-    expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                       bottom_left: 'DN1S',
-                       top_right: 'DN2T',
-                       bottom_right: 'WGS Limber example purpose',
-                       barcode: 'DN1S' }
+    expected_label = {
+      top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+      bottom_left: 'DN1S',
+      top_right: 'DN2T',
+      bottom_right: 'WGS Limber example purpose',
+      barcode: 'DN1S'
+    }
     expect(subject.label.attributes).to eq(expected_label)
   end
 
   it_behaves_like 'a labware presenter'
 
   context 'a plate with conflicting pools' do
-    let(:labware) do
-      build :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6]
-    end
+    let(:labware) { build :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6] }
 
     it 'reports as invalid' do
       expect(subject).to_not be_valid

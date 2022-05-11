@@ -29,13 +29,13 @@ PF Lib:
   :presenter_class: Presenters::PermissivePresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
-  - 'PF_adapters_UDI_96_A'
-  - 'PF_adapters_UDI_96_B'
-  - 'PF_adapters_UDI_96_C'
-  - 'PF_adapters_UDI_96_D'
-  - 'IDT for Illumina UDI v1'
-  - 'PF_adapters_UDI_96_B_ROWS'
+    - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+    - 'PF_adapters_UDI_96_A'
+    - 'PF_adapters_UDI_96_B'
+    - 'PF_adapters_UDI_96_C'
+    - 'PF_adapters_UDI_96_D'
+    - 'IDT for Illumina UDI v1'
+    - 'PF_adapters_UDI_96_B_ROWS'
 PF-384 Lib:
   :asset_type: plate
   :label_template: plate_6mm_double
@@ -43,12 +43,11 @@ PF-384 Lib:
   :creator_class: LabwareCreators::TaggedPlate
   :size: 384
   :tag_layout_templates:
-  - 'IDT for Illumina v1 - 384 Quadrant'
+    - 'IDT for Illumina v1 - 384 Quadrant'
 PF Lib XP: # This plate was previously tracked as part of the process
   :asset_type: plate
 PF-384 Lib XP2:
   :asset_type: plate
-  :label_template: plate_6mm_double
   :label_template: plate_6mm_double
   :size: 384
 PF Lib XP2:

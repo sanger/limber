@@ -1,14 +1,8 @@
 <template>
   <lb-page>
-    <lb-loading-modal
-      v-if="loading"
-      :message="progressMessage"
-    />
+    <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <b-card
-        bg-variant="dark"
-        text-variant="white"
-      >
+      <b-card bg-variant="dark" text-variant="white">
         <lb-plate-summary
           v-for="plate in plates"
           :key="plate.index"
@@ -16,19 +10,11 @@
           :pool_index="plate.index + 1"
           :plate="plate.plate"
         />
-        <lb-plate
-          caption="New Plate"
-          :rows="targetRowsNumber"
-          :columns="targetColumnsNumber"
-          :wells="targetWells"
-        />
+        <lb-plate caption="New Plate" :rows="targetRowsNumber" :columns="targetColumnsNumber" :wells="targetWells" />
       </b-card>
     </lb-main-content>
     <lb-sidebar>
-      <b-card
-        header="Add plates"
-        header-tag="h3"
-      >
+      <b-card header="Add plates" header-tag="h3">
         <b-form-group label="Scan in the plates you wish to use">
           <lb-plate-scan
             v-for="i in sourcePlateNumber"
@@ -41,10 +27,7 @@
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
-        <b-alert
-          :show="transfersError !== ''"
-          variant="danger"
-        >
+        <b-alert :show="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
@@ -58,13 +41,7 @@
           :valid-transfers="validTransfers"
           @change="transfersCreatorObj = $event"
         />
-        <b-button
-          :disabled="!valid"
-          variant="success"
-          @click="createPlate()"
-        >
-          Create
-        </b-button>
+        <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
       </b-card>
     </lb-sidebar>
   </lb-page>
@@ -99,7 +76,7 @@ export default {
     'lb-primer-panel-filter': PrimerPanelFilter,
     'lb-null-filter': NullFilter,
     'lb-multi-stamp-transfers': MultiStampTransfers,
-    'lb-volume-transfers': VolumeTransfers
+    'lb-volume-transfers': VolumeTransfers,
   },
   props: {
     // Sequencescape API V2 URL
@@ -138,12 +115,17 @@ export default {
     sourcePlates: { type: String, required: true },
 
     // Object storing response's redirect URL
-    locationObj: { default: () => { return location }, type: [Object, Location] },
+    locationObj: {
+      default: () => {
+        return location
+      },
+      type: [Object, Location],
+    },
 
     // Default volume to define in the UI for the volume control
-    defaultVolume: { type: String, required: false, default: null }
+    defaultVolume: { type: String, required: false, default: null },
   },
-  data () {
+  data() {
     return {
       // Array containing objects with scanned plates, their states and the
       // index of the form input in which they were scanned.
@@ -171,13 +153,12 @@ export default {
       loading: false,
 
       // Message to be shown during loading screen
-      progressMessage: ''
+      progressMessage: '',
     }
   },
   computed: {
     defaultVolumeNumber() {
-      if ((typeof this.defaultVolume === 'undefined') ||
-        (this.defaultVolume === null)){
+      if (typeof this.defaultVolume === 'undefined' || this.defaultVolume === null) {
         return null
       }
       return Number.parseInt(this.defaultVolume)
@@ -192,17 +173,19 @@ export default {
       return Number.parseInt(this.targetColumns)
     },
     valid() {
-      return this.unsuitablePlates.length === 0 // None of the plates are invalid
-             && this.validTransfers.length > 0 // We have at least one transfer
-             && this.excessTransfers.length === 0 // No excess transfers
-             && this.duplicatedTransfers.length === 0 // No duplicated transfers
-             && this.transfersCreatorObj.isValid
+      return (
+        this.unsuitablePlates.length === 0 && // None of the plates are invalid
+        this.validTransfers.length > 0 && // We have at least one transfer
+        this.excessTransfers.length === 0 && // No excess transfers
+        this.duplicatedTransfers.length === 0 && // No duplicated transfers
+        this.transfersCreatorObj.isValid
+      )
     },
     validPlates() {
-      return this.plates.filter( plate => plate.state === 'valid' )
+      return this.plates.filter((plate) => plate.state === 'valid')
     },
     unsuitablePlates() {
-      return this.plates.filter( plate => !(plate.state === 'valid' || plate.state === 'empty') )
+      return this.plates.filter((plate) => !(plate.state === 'valid' || plate.state === 'empty'))
     },
     requestsWithPlates() {
       const requestsFromPlatesArray = requestsFromPlates(this.validPlates)
@@ -230,13 +213,14 @@ export default {
       const errorMessages = []
       if (this.duplicatedTransfers.length > 0) {
         var sourceBarcodes = new Set()
-        this.duplicatedTransfers.forEach(transfer => {
+        this.duplicatedTransfers.forEach((transfer) => {
           sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
         })
 
-        const msg = 'This would result in multiple transfers into the same well. Check if the source plates ('
-                    + [...sourceBarcodes].join(', ')
-                    + ') have more than one active submission.'
+        const msg =
+          'This would result in multiple transfers into the same well. Check if the source plates (' +
+          [...sourceBarcodes].join(', ') +
+          ') have more than one active submission.'
         errorMessages.push(msg)
       }
       if (this.excessTransfers.length > 0) {
@@ -251,7 +235,7 @@ export default {
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
         wells[this.validTransfers[i].targetWell] = {
-          pool_index: this.validTransfers[i].plateObj.index + 1
+          pool_index: this.validTransfers[i].plateObj.index + 1,
         }
       }
       return wells
@@ -266,17 +250,17 @@ export default {
       return filterProps[this.requestsFilter].plateFields
     },
     scanValidation() {
-      const currPlates = this.plates.map(plateItem => plateItem.plate)
+      const currPlates = this.plates.map((plateItem) => plateItem.plate)
       return [
         checkSize(12, 8),
         checkDuplicates(currPlates),
         // checkExcess(this.excessTransfers)
       ]
-    }
+    },
   },
   methods: {
     updatePlate(index, data) {
-      this.$set(this.plates, index - 1, {...data, index: index - 1 })
+      this.$set(this.plates, index - 1, { ...data, index: index - 1 })
     },
     apiTransfers() {
       return baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
@@ -288,28 +272,30 @@ export default {
         plate: {
           parent_uuid: this.validPlates[0].plate.uuid,
           purpose_uuid: this.purposeUuid,
-          transfers: this.apiTransfers()
-        }
+          transfers: this.apiTransfers(),
+        },
       }
       this.$axios({
         method: 'post',
         url: this.targetUrl,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data: payload
-      }).then((response) => {
-        // Ajax responses automatically follow redirects, which
-        // would result in us receiving the full HTML for the child
-        // plate here, which we'd then need to inject into the
-        // page, and update the history. Instead we don't redirect
-        // application/json requests, and redirect the user ourselves.
-        this.progressMessage = response.data.message
-        this.locationObj.href = response.data.redirect
-      }).catch((error) => {
-        // Something has gone wrong
-        console.error(error)
-        this.loading = false
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: payload,
       })
-    }
-  }
+        .then((response) => {
+          // Ajax responses automatically follow redirects, which
+          // would result in us receiving the full HTML for the child
+          // plate here, which we'd then need to inject into the
+          // page, and update the history. Instead we don't redirect
+          // application/json requests, and redirect the user ourselves.
+          this.progressMessage = response.data.message
+          this.locationObj.href = response.data.redirect
+        })
+        .catch((error) => {
+          // Something has gone wrong
+          console.error(error)
+          this.loading = false
+        })
+    },
+  },
 }
 </script>

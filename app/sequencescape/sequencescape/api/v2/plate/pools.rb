@@ -24,11 +24,10 @@ class Sequencescape::Api::V2::Plate::Pools
   # @param [Hash] pools_hash  As provided by the pools hash in the plate json
   #
   def initialize(wells)
-    @pools_hash = wells.each_with_object(self.class.pool_hash) do |well, pools_hash|
-      well.active_requests.each do |request|
-        pools_hash[request.submission_id].add_well_request(well, request)
+    @pools_hash =
+      wells.each_with_object(self.class.pool_hash) do |well, pools_hash|
+        well.active_requests.each { |request| pools_hash[request.submission_id].add_well_request(well, request) }
       end
-    end
   end
 
   # The total number of pools listed on the plate. In most

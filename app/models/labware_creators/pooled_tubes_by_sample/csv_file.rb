@@ -83,9 +83,7 @@ module LabwareCreators
     end
 
     def tube_rack_scan
-      @tube_rack_scan ||= @data[0..].each_with_index.map do |row_data, index|
-        Row.new(index, row_data)
-      end
+      @tube_rack_scan ||= @data[0..].each_with_index.map { |row_data, index| Row.new(index, row_data) }
     end
 
     # Gates looking for tube locations if the file is invalid

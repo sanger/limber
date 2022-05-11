@@ -14,8 +14,11 @@ RSpec.describe RobotsController, type: :controller, robots: true do
 
     let(:user_uuid) { SecureRandom.uuid }
     let(:plate_uuid) { 'plate_uuid' }
-    let!(:plate)     do
-      create :v2_plate, uuid: plate_uuid, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid'
+    let!(:plate) do
+      create :v2_plate,
+             uuid: plate_uuid,
+             purpose_name: 'target_plate_purpose',
+             purpose_uuid: 'target_plate_purpose_uuid'
     end
 
     let!(:state_chage) do
@@ -36,17 +39,29 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     let!(:metadata_request) do
-      stub_api_post('custom_metadatum_collections',
-                    payload: { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid,
-                                                              metadata: { created_with_robot: 'robot_barcode' } } },
-                    body: json(:custom_metadatum_collection))
+      stub_api_post(
+        'custom_metadatum_collections',
+        payload: {
+          custom_metadatum_collection: {
+            user: user_uuid,
+            asset: plate_uuid,
+            metadata: {
+              created_with_robot: 'robot_barcode'
+            }
+          }
+        },
+        body: json(:custom_metadatum_collection)
+      )
     end
 
     setup do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+      create :purpose_config,
+             uuid: 'target_plate_purpose_uuid',
+             state_changer_class: 'StateChangers::DefaultStateChanger'
       stub_v2_plate(plate)
       bed_labware_lookup(plate)
+
       # Legacy asset search
       stub_asset_search(
         plate.barcode.machine,
@@ -64,7 +79,9 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              robot_barcode: 'robot_barcode',
              id: 'robot_id'
            },
-           session: { user_uuid: user_uuid }
+           session: {
+             user_uuid: user_uuid
+           }
       expect(metadata_request).to have_been_requested
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
@@ -75,7 +92,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
 
     let(:user_uuid) { SecureRandom.uuid }
     let(:target_plate_uuid) { 'plate_uuid' }
-    let!(:target_plate)     do
+    let!(:target_plate) do
       create :v2_plate,
              uuid: target_plate_uuid,
              purpose_name: 'target_plate_purpose',
@@ -84,8 +101,11 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     let(:source_plate_uuid) { 'plate_uuid' }
-    let!(:source_plate)     do
-      create :v2_plate, uuid: source_plate_uuid, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
+    let!(:source_plate) do
+      create :v2_plate,
+             uuid: source_plate_uuid,
+             purpose_name: 'source_plate_purpose',
+             purpose_uuid: 'source_plate_purpose_uuid'
     end
 
     it 'verifies robot and beds' do
@@ -93,8 +113,10 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       bed_labware_lookup(source_plate)
       bed_labware_lookup(target_plate)
       expect_any_instance_of(Robots::Robot).to receive(:verify).with(
-        'bed_labwares' => { 'bed1_barcode' => [source_plate.human_barcode],
-                            'bed2_barcode' => [target_plate.human_barcode] },
+        'bed_labwares' => {
+          'bed1_barcode' => [source_plate.human_barcode],
+          'bed2_barcode' => [target_plate.human_barcode]
+        },
         'robot_barcode' => 'abc'
       )
       post :verify,
@@ -106,7 +128,9 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              robot_barcode: 'abc',
              id: 'robot_id'
            },
-           session: { user_uuid: user_uuid },
+           session: {
+             user_uuid: user_uuid
+           },
            format: :json
     end
   end

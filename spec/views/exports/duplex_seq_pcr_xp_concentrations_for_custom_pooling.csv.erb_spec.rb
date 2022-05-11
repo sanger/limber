@@ -8,24 +8,18 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
   let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
 
   let(:well_a1) do
-    create(
-      :v2_well,
-      position: { 'name' => 'A1' },
-      qc_results: create_list(:qc_result, 1, qc_result_options)
-    )
+    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
   let(:well_b1) do
-    create(
-      :v2_well,
-      position: { 'name' => 'B1' },
-      qc_results: create_list(:qc_result, 1, qc_result_options)
-    )
+    create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
 
   let(:ancestor_well_a1) do
     create(
       :v2_well,
-      position: { 'name' => 'A1' },
+      position: {
+        'name' => 'A1'
+      },
       qc_results: create_list(:qc_result, 1, qc_result_options),
       submit_for_sequencing: true,
       sub_pool: 1,
@@ -35,7 +29,9 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
   let(:ancestor_well_b1) do
     create(
       :v2_well,
-      position: { 'name' => 'B1' },
+      position: {
+        'name' => 'B1'
+      },
       qc_results: create_list(:qc_result, 1, qc_result_options),
       submit_for_sequencing: false
     )
@@ -51,7 +47,7 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
   let(:expected_content) do
     [
       ['Well', 'Concentration (ng/ul)', 'Submit for sequencing (Y/N)?', 'Sub-Pool', 'Coverage'],
-      ['A1', '1.5', 'Y', '1', '15'],
+      %w[A1 1.5 Y 1 15],
       ['B1', '1.5', 'N', nil, nil]
     ]
   end

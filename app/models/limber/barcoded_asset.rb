@@ -4,7 +4,11 @@
 class Limber::BarcodedAsset < Sequencescape::BarcodedAsset
   # We might actually be able to do something better here.
   def parent
-    @parent ||= api.search.find(Settings.searches['Find source assets by destination asset barcode']).first(barcode: barcode.ean13)
+    @parent ||=
+      api
+        .search
+        .find(Settings.searches['Find source assets by destination asset barcode'])
+        .first(barcode: barcode.ean13)
   end
 
   attribute_accessor :state

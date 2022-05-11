@@ -15,8 +15,6 @@ module Robots
   end
 
   def self.each_robot
-    Settings.robots.each do |key, config|
-      yield key, config[:name]
-    end
+    Settings.robots.each { |key, config| yield key, config[:name] }
   end
 end

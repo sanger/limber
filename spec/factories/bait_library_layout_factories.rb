@@ -16,12 +16,7 @@ FactoryBot.define do
       # Wells are assumed to be filled in column order with no gaps.
       # size: The number of wells in the pool
       # bait: The name of the bait library associated with the pool
-      pools do
-        [
-          { size: 2, bait: 'Human all exon 50MB' },
-          { size: 2, bait: 'Mouse all exon' }
-        ]
-      end
+      pools { [{ size: 2, bait: 'Human all exon 50MB' }, { size: 2, bait: 'Mouse all exon' }] }
     end
 
     # Builds the layout attribute expected via the API
@@ -30,9 +25,7 @@ FactoryBot.define do
     #   'C1' => 'Mouse all exon', 'D1' => 'Mouse all exon'}
     layout do
       wells = WellHelpers.column_order.dup
-      pools.each_with_object({}) do |pool, hash|
-        wells.shift(pool[:size]).each { |well| hash[well] = pool[:bait] }
-      end
+      pools.each_with_object({}) { |pool, hash| wells.shift(pool[:size]).each { |well| hash[well] = pool[:bait] } }
     end
   end
 end

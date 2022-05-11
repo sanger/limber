@@ -17,8 +17,7 @@ module Presenters
     validates_with Validators::ActiveRequestValidator
 
     def current_plate
-      @current_plate ||=
-        Sequencescape::Api::V2.plate_with_custom_includes(CURRENT_PLATE_INCLUDES, uuid: labware.uuid)
+      @current_plate ||= Sequencescape::Api::V2.plate_with_custom_includes(CURRENT_PLATE_INCLUDES, uuid: labware.uuid)
     end
 
     def dilutions_calculator
@@ -38,11 +37,14 @@ module Presenters
     def well_details
       # For each well with aliquots on the plate select the pcr cycles metadata
       # { 'A1' => { 'pcr_cycles' => 16 }, 'B1' => etc. }
-      @well_details ||= current_plate.wells.each_with_object({}) do |well, details|
-        next if well.aliquots.empty?
+      @well_details ||=
+        current_plate
+          .wells
+          .each_with_object({}) do |well, details|
+            next if well.aliquots.empty?
 
-        details[well.location] = { 'pcr_cycles' => well.attributes['pcr_cycles'] }
-      end
+            details[well.location] = { 'pcr_cycles' => well.attributes['pcr_cycles'] }
+          end
     end
   end
 end

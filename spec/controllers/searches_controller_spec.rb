@@ -26,9 +26,7 @@ RSpec.describe SearchController, type: :controller do
   describe '#search' do
     let(:barcode) { '12345' }
 
-    before do
-      stub_barcode_search(barcode, labware)
-    end
+    before { stub_barcode_search(barcode, labware) }
 
     context 'for a plate' do
       let(:labware) { create :labware_plate, uuid: uuid }
@@ -62,13 +60,7 @@ RSpec.describe SearchController, type: :controller do
       create(:tube_config, uuid: 'uuid-3')
       create(:tube_config, uuid: 'uuid-4')
     end
-    let(:expected_search) do
-      stub_search_and_multi_result(
-        search_name,
-        { 'search' => search_parameters },
-        [result]
-      )
-    end
+    let(:expected_search) { stub_search_and_multi_result(search_name, { 'search' => search_parameters }, [result]) }
 
     describe '#ongoing_plates' do
       let(:search_name) { 'Find plates' }
@@ -78,7 +70,8 @@ RSpec.describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: %w[uuid-1 uuid-2],
-            show_my_plates_only: false, include_used: false,
+            show_my_plates_only: false,
+            include_used: false,
             page: 1
           }
         end
@@ -95,15 +88,22 @@ RSpec.describe SearchController, type: :controller do
           {
             states: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: ['uuid-1'],
-            show_my_plates_only: true, include_used: true,
+            show_my_plates_only: true,
+            include_used: true,
             page: 1
           }
         end
 
         it 'finds specified plates' do
           expected_search
-          get :ongoing_plates, params: { ongoing_plate: { purposes: ['uuid-1'], show_my_plates_only: '1',
-                                                          include_used: '1' } }
+          get :ongoing_plates,
+              params: {
+                ongoing_plate: {
+                  purposes: ['uuid-1'],
+                  show_my_plates_only: '1',
+                  include_used: '1'
+                }
+              }
           expect(expected_search).to have_been_made.once
           expect(response).to have_http_status(:ok)
         end

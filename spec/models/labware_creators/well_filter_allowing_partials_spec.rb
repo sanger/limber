@@ -91,12 +91,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
                  library_type: library_type_name_a
         end
 
-        subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
-            creator: labware_creator,
-            request_state: 'started'
-          )
-        end
+        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_state: 'started') }
 
         it 'returns the correct wells' do
           expect(subject.filtered.count).to eq(1)
@@ -141,8 +136,15 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       let(:well_a1) do
-        create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a, request_e],
-                         outer_request: nil)
+        create(
+          :v2_well,
+          name: 'A1',
+          position: {
+            'name' => 'A1'
+          },
+          requests_as_source: [request_a, request_e],
+          outer_request: nil
+        )
       end
 
       context 'with a valid filter for all wells' do
@@ -176,12 +178,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with an invalid filter' do
-        subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
-            creator: labware_creator,
-            request_type_key: 'rt_c'
-          )
-        end
+        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_type_key: 'rt_c') }
 
         # up to the creator to catch the situation where the filter returns no wells as a validation check
         it 'returns no wells' do

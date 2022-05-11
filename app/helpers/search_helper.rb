@@ -25,8 +25,9 @@ module SearchHelper # rubocop:todo Style/Documentation
   end
 
   def purpose_options(type)
-    Settings.purposes
-            .select { |_uuid, settings| settings[:asset_type] == type }
-            .map { |uuid, settings| [settings[:name], uuid] }
+    Settings
+      .purposes
+      .select { |_uuid, settings| settings[:asset_type] == type }
+      .map { |uuid, settings| [settings[:name], uuid] }
   end
 end

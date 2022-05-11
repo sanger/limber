@@ -11,9 +11,7 @@ FactoryBot.define do
 
   # Generate a V2 api metadata collection
   factory :custom_metadatum_collection, class: Sequencescape::Api::V2::CustomMetadatumCollection do
-    initialize_with do
-      Sequencescape::Api::V2::CustomMetadatumCollection.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::CustomMetadatumCollection.load(attributes) }
     skip_create
     metadata { { metadata_1: 'metadata_1', metadata_2: 'metadata_2' } }
   end

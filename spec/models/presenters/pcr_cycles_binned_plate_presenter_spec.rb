@@ -28,28 +28,44 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   # A   *   *   *
   # B       *
   let(:well_a1) do
-    create(:v2_well,
-           position: { 'name' => 'A1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '0.6'),
-           pcr_cycles: 16)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'A1'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: '0.6'),
+      pcr_cycles: 16
+    )
   end
   let(:well_a2) do
-    create(:v2_well,
-           position: { 'name' => 'A2' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '10.0'),
-           pcr_cycles: 14)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'A2'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: '10.0'),
+      pcr_cycles: 14
+    )
   end
   let(:well_b2) do
-    create(:v2_well,
-           position: { 'name' => 'B2' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '12.0'),
-           pcr_cycles: 14)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'B2'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: '12.0'),
+      pcr_cycles: 14
+    )
   end
   let(:well_a3) do
-    create(:v2_well,
-           position: { 'name' => 'A3' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '20.0'),
-           pcr_cycles: 12)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'A3'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: '20.0'),
+      pcr_cycles: 12
+    )
   end
 
   let(:labware) do
@@ -68,16 +84,9 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before do
-    stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results')
-  end
+  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) do
-    Presenters::PcrCyclesBinnedPlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { Presenters::PcrCyclesBinnedPlatePresenter.new(api: api, labware: labware) }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'
@@ -96,10 +105,22 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
 
       it 'should create bin details which will be used to colour and annotate the well aliquots' do
         expected_bin_details = {
-          'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
-          'A2' => { 'colour' => 2, 'pcr_cycles' => 14 },
-          'A3' => { 'colour' => 3, 'pcr_cycles' => 12 },
-          'B2' => { 'colour' => 2, 'pcr_cycles' => 14 }
+          'A1' => {
+            'colour' => 1,
+            'pcr_cycles' => 16
+          },
+          'A2' => {
+            'colour' => 2,
+            'pcr_cycles' => 14
+          },
+          'A3' => {
+            'colour' => 3,
+            'pcr_cycles' => 12
+          },
+          'B2' => {
+            'colour' => 2,
+            'pcr_cycles' => 14
+          }
         }
 
         expect(presenter.bin_details).to eq(expected_bin_details)

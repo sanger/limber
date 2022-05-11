@@ -9,7 +9,7 @@ module LabwareCreators
   # Each sub-class should override the dilutions_calculator.
   class PartialStampedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
+    include LabwareCreators::GenerateQcResults
 
     validate :wells_with_aliquots_have_concentrations?
     validate :transfer_hash_present?
@@ -30,9 +30,7 @@ module LabwareCreators
 
     # Returns the parent wells selected to be taken forward.
     def filtered_wells
-      well_filter.filtered.each_with_object([]) do |well_filter_details, wells|
-        wells << well_filter_details[0]
-      end
+      well_filter.filtered.each_with_object([]) { |well_filter_details, wells| wells << well_filter_details[0] }
     end
 
     # Validation to check we have identified wells to transfer.
@@ -40,7 +38,11 @@ module LabwareCreators
     def transfer_hash_present?
       return if transfer_hash.present?
 
-      msg = 'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+      msg =
+        # rubocop:todo Layout/LineLength
+        'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+
+      # rubocop:enable Layout/LineLength
       errors.add(:parent, msg)
     end
 
@@ -56,9 +58,11 @@ module LabwareCreators
     def request_hash(source_well, child_plate, additional_parameters)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect do |child_well|
-          child_well.location == transfer_hash[source_well.location]['dest_locn']
-        end&.uuid,
+        'target_asset' =>
+          child_plate
+            .wells
+            .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
+            &.uuid,
         'volume' => dilutions_calculator.source_volume.to_s
       }.merge(additional_parameters)
     end

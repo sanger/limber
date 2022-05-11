@@ -4,6 +4,7 @@ module Robots::Bed
   # A bed is a barcoded area of a robot that can receive a labware.
   class Base
     include Form
+
     # Our robot has beds/rack-spaces
     attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child, :shared_parent
     attr_writer :barcodes
@@ -12,11 +13,16 @@ module Robots::Bed
     delegate :state, to: :labware, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
-    validates :barcodes, length: { maximum: 1,
-                                   too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.' }
-    validates :labware, presence: { message: lambda { |bed, _data|
-                                               "Could not find a labware with the barcode '#{bed.barcode}'."
-                                             } }, if: :barcode
+    validates :barcodes,
+              length: {
+                maximum: 1,
+                too_long: 'This bed has been scanned multiple times with different barcodes. Only once is expected.'
+              }
+    validates :labware,
+              presence: {
+                message: lambda { |bed, _data| "Could not find a labware with the barcode '#{bed.barcode}'." }
+              },
+              if: :barcode
     validate :correct_labware_purpose, if: :labware
     validate :correct_labware_state, if: :labware
 
@@ -43,9 +49,10 @@ module Robots::Bed
     def transition # rubocop:todo Metrics/AbcSize
       return if target_state.nil? || labware.nil? # We have nothing to do
 
-      StateChangers.lookup_for(labware.purpose.uuid)
-                   .new(api, labware.uuid, user_uuid)
-                   .move_to!(target_state, "Robot #{robot.name} started")
+      StateChangers
+        .lookup_for(labware.purpose.uuid)
+        .new(api, labware.uuid, user_uuid)
+        .move_to!(target_state, "Robot #{robot.name} started")
     end
 
     def purpose_labels
@@ -62,21 +69,14 @@ module Robots::Bed
 
     # overriden in sub-classes of bed to customise what class is used and what is included
     def find_all_labware
-      Sequencescape::Api::V2::Labware.find_all(
-        { barcode: @barcodes },
-        includes: %i[purpose parents]
-      )
+      Sequencescape::Api::V2::Labware.find_all({ barcode: @barcodes }, includes: %i[purpose parents])
     end
 
     def load(barcodes)
       # Ensure we always deal with an array, and any accidental duplicate scans are squashed out
       @barcodes = Array(barcodes).map(&:strip).uniq.compact_blank
 
-      @labware = if @barcodes.present?
-                   find_all_labware
-                 else
-                   []
-                 end
+      @labware = @barcodes.present? ? find_all_labware : []
     end
 
     def labware

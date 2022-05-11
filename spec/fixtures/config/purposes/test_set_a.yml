@@ -19,29 +19,29 @@ LB Lib PCR:
     pcr_cycles_not_in:
       - 6
   :tag_layout_templates:
-  - Illumina pipeline tagging
-  - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
-  - hWGS and RNAseq UDI tag layout v3
-  - pWGS UDI tag layout v2 A
-  - pWGS UDI tag layout v2 B
-  - pWGS UDI tag layout v2 C
-  - pWGS UDI tag layout v2 D
-  - TS_pWGSA_UDI96
-  - TS_pWGSB_UDI96
-  - TS_pWGSC_UDI96
-  - TS_pWGSD_UDI96
-  - TSRNAhWGS_UDI96
-  - TS_pWGSA_UDI96v2
-  - TSISC_UDI96
+    - Illumina pipeline tagging
+    - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+    - hWGS and RNAseq UDI tag layout v3
+    - pWGS UDI tag layout v2 A
+    - pWGS UDI tag layout v2 B
+    - pWGS UDI tag layout v2 C
+    - pWGS UDI tag layout v2 D
+    - TS_pWGSA_UDI96
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSD_UDI96
+    - TSRNAhWGS_UDI96
+    - TS_pWGSA_UDI96v2
+    - TSISC_UDI96
 LB Lib PCR-XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:
-  - name: Download Concentration (nM) CSV
-    id: concentrations_nm
-  - name: Download Concentration (ng/ul) CSV
-    id: concentrations_ngul
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

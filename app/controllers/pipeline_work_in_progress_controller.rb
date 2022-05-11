@@ -28,14 +28,17 @@ class PipelineWorkInProgressController < ApplicationController
   # Combines pages into one list
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
-    labware_query = Sequencescape::Api::V2::Labware
-                    .select({ plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                            { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                            { purposes: 'name' })
-                    .includes(:state_changes, :purpose, 'ancestors.purpose')
-                    .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
-                    .order(:created_at)
-                    .per(page_size)
+    labware_query =
+      Sequencescape::Api::V2::Labware
+        .select(
+          { plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+          { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+          { purposes: 'name' }
+        )
+        .includes(:state_changes, :purpose, 'ancestors.purpose')
+        .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
+        .order(:created_at)
+        .per(page_size)
 
     Sequencescape::Api::V2.merge_page_results(labware_query)
   end
