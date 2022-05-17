@@ -5,7 +5,7 @@
     <%= image_tag("icon_#{presenter.priority}_flag.png", size: "32x32") if presenter.try(:priority)%>
   </h2>
   <dl class="descriptive-list-inline">
-    <dt>Barcode</dt> <dd><%= presenter.barcode %></dd>
+    <dt>Labware Barcode</dt> <dd><%= presenter.barcode %></dd>
     <dt>Input</dt> <dd><%= presenter.input_barcode %></dd>
   </dl>
 </div>
