@@ -93,11 +93,14 @@
     var flagBeds = function (beds, message) {
       var bad_beds = []
       $.each(beds, function (bed_id) {
-        if (!this) {
+        // here we are check the validity of each bed in the hash returned from the ruby robot
+        // valid_relationships method and if the bed is valid clear the error flags (in case the
+        // bed was invalid in a previous validate cycle) or if invalid we set the error flags
+        if (beds[bed_id]) {
+          clearFlagFromBed(bed_id)
+        } else {
           $('#bed_list li[data-bed="' + bed_id + '"]').addClass('bad_bed list-group-item-danger')
           bad_beds.push(bed_id)
-        } else {
-          clearFlagFromBed(bed_id)
         }
       })
       SCAPE.message('There were problems: ' + message, 'danger')
