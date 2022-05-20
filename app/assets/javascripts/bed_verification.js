@@ -108,7 +108,7 @@
 
     var clearFlagFromBeds = function (beds) {
       $.each(beds, function (bed_id) {
-        if (this) {
+        if (beds[bed_id]) {
           clearFlagFromBed(bed_id)
         }
       })
