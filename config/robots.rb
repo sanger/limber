@@ -2326,7 +2326,7 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 22',
-          parents: [bed(16).barcode, bed(28).barcode],
+          parents: [bed(16).barcode],
           target_state: 'passed'
         },
         bed(17).barcode => {
@@ -2338,7 +2338,7 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 23',
-          parents: [bed(17).barcode, bed(28).barcode],
+          parents: [bed(17).barcode],
           target_state: 'passed'
         },
         bed(18).barcode => {
@@ -2350,7 +2350,7 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 24',
-          parents: [bed(18).barcode, bed(28).barcode],
+          parents: [bed(18).barcode],
           target_state: 'passed'
         },
         bed(19).barcode => {
@@ -2362,7 +2362,7 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 25',
-          parents: [bed(19).barcode, bed(28).barcode],
+          parents: [bed(19).barcode],
           target_state: 'passed'
         },
         bed(20).barcode => {
@@ -2374,7 +2374,7 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 26',
-          parents: [bed(20).barcode, bed(28).barcode],
+          parents: [bed(20).barcode],
           target_state: 'passed'
         },
         bed(21).barcode => {
@@ -2386,15 +2386,8 @@ ROBOT_CONFIG =
           purpose: 'LTHR-384 Pool XP',
           states: ['pending'],
           label: 'Bed 27',
-          parents: [bed(21).barcode, bed(28).barcode],
+          parents: [bed(21).barcode],
           target_state: 'passed'
-        },
-        #  PhiX bed location, shared parent for all XP tubes in this run
-        bed(28).barcode => {
-          purpose: 'PhiX Spiked Buffer',
-          shared_parent: true,
-          states: ['pending'],
-          label: 'Bed 28'
         }
       }
     )
