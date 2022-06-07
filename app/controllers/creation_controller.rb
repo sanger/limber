@@ -98,8 +98,9 @@ class CreationController < ApplicationController
     api_errors_hash.key?('general') ? api_errors_hash['general'] : [api_message]
   end
 
-  def redirect_back_after_error(prefix_message, error_messages)
-    flash_messages = [prefix_message] + error_messages
+  # Use of splat on parameter to cope with both arrays of error messages and single strings
+  def redirect_back_after_error(prefix_message, *error_messages)
+    flash_messages = [prefix_message] + error_messages.flatten
     respond_to do |format|
       format.html do
         redirect_back(fallback_location: url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
