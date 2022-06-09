@@ -33,7 +33,7 @@ class CreationController < ApplicationController
     Rails.logger.error(exception.message)
     exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
 
-    redirect_back_after_error('Cannot create the next piece of labware:', *exception.resource.errors.full_messages)
+    redirect_back_after_error('Cannot create the next piece of labware:', exception.resource.errors.full_messages)
   end
 
   def sequencescape_api_server_error(exception)
@@ -98,9 +98,8 @@ class CreationController < ApplicationController
     api_errors_hash.key?('general') ? api_errors_hash['general'] : [api_message]
   end
 
-  # Use of splat on parameter to cope with both arrays of error messages and single strings
-  def redirect_back_after_error(prefix_message, *error_messages)
-    flash_messages = [prefix_message] + error_messages.flatten
+  def redirect_back_after_error(prefix_message, error_messages)
+    flash_messages = [prefix_message] + Array(error_messages)
     respond_to do |format|
       format.html do
         redirect_back(fallback_location: url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
