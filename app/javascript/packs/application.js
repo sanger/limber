@@ -9,6 +9,7 @@
 
 // Currently setting up each component as its own mini vue app.
 require('asset-comments')
+require('asset-custom-metadata')
 require('custom-tagged-plate')
 require('file-list')
 require('multi-stamp')

@@ -133,6 +133,10 @@ module Presenters
       "#{human_barcode} - #{purpose_name}"
     end
 
+    def custom_metadata_fields
+      purpose_config.fetch(:batch_names).to_hash.to_json
+    end
+
     def quadrants_helper
       size == 384 ? 'quadrant_helper' : 'none'
     end

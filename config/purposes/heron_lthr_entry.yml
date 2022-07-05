@@ -29,3 +29,6 @@ LTHR Cherrypick:
         primer_panel_name: nCoV-2019/V4.1alt
       allowed_extra_barcodes: true
       num_extra_barcodes: 3
+  :batch_names:
+    CP Control batch No:
+      key: 'cp_control_batch_no'
