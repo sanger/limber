@@ -1,6 +1,6 @@
 // Shared object for retrieval of comments from SequenceScape API
 
-const customMetadataStoreFactory = function (axiosInstance, devourApi, assetId) {
+const customMetadataStoreFactory = function (axiosInstance, devourApi, assetId, userId) {
   return {
     customMetadata: undefined,
     customMetadatumCollectionsId: undefined,
@@ -13,12 +13,21 @@ const customMetadataStoreFactory = function (axiosInstance, devourApi, assetId) 
         'GET'
       )
 
-      this.customMetadata = response.data.metadata
-      this.customMetadatumCollectionsId = response.data.id
+      if (response.data) {
+        this.customMetadata = response.data.metadata || {}
+        this.customMetadatumCollectionsId = response.data.id
+      }
       return true
     },
+    // Todo: Refactor
     async addCustomMetadata(customMetadatumCollectionsId, customMetadata) {
-      let payload = {
+      let url = customMetadatumCollectionsId
+        ? `custom_metadatum_collections/${customMetadatumCollectionsId}`
+        : 'custom_metadatum_collections'
+
+      let method = customMetadatumCollectionsId ? 'patch' : 'post'
+
+      let patchPayload = {
         data: {
           id: customMetadatumCollectionsId,
           type: 'custom_metadatum_collections',
@@ -28,9 +37,22 @@ const customMetadataStoreFactory = function (axiosInstance, devourApi, assetId) 
         },
       }
 
+      let postPayload = {
+        data: {
+          type: 'custom_metadatum_collections',
+          attributes: {
+            user_id: userId,
+            asset_id: assetId,
+            metadata: customMetadata,
+          },
+        },
+      }
+
+      let payload = method == 'patch' ? patchPayload : postPayload
+
       await axiosInstance({
-        method: 'patch',
-        url: `custom_metadatum_collections/${customMetadatumCollectionsId}`,
+        method: method,
+        url: url,
         data: payload,
       })
         .then((response) => {

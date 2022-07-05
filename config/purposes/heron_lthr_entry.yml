@@ -30,5 +30,5 @@ LTHR Cherrypick:
       allowed_extra_barcodes: true
       num_extra_barcodes: 3
   :batch_names:
-    CP Control batch No:
-      key: 'cp_control_batch_no'
+    CP Control batch Number:
+      key: 'cp_control_batch_number'

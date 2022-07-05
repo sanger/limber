@@ -72,6 +72,8 @@ const resources = [
     resource: "custom_metadatum_collection",
     attributes: {
       uuid: "",
+      user_id: "",
+      asset_id: "",
       metadata: "",
     },
     options: {},

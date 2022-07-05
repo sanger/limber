@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- todo - remove below call, async issues -->
-    {{ customMetadata() }}
     <b-form @submit="submit">
       <b-form-group
         v-for="(obj, name, index) in normalizedCustomMetadataFields"
@@ -23,19 +21,15 @@
         block
       >{{ buttonText }}</b-button>
     </b-form>
-
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
   </div>
 </template>
 
 <script>
 // show every field from config
-// store custom_metadatum_collections id
+// store custom_metadatum_collections id, if it exists
 // populate config with fields from DB
 // onSubmit remove any fields that have no data
-// send a patch request, with id
+// send a patch or post request, depending whether metadata already exists (id)
 // all metadata should be overritten
 export default {
   name: 'AssetCustomMetadataAddForm',
@@ -91,16 +85,28 @@ export default {
       }[this.state]
     },
   },
-  // created() {
-  //   this.loadData()
-  // },
+  mounted() {
+    this.setupForm()
+    this.fetchCustomMetadata()
+  },
   methods: {
-    // async loadData() {
-    //   await this.customMetadata()
-    // },
-    customMetadata() {
-      this.form = this.$root.$data.customMetadata
-      return this.$root.$data.customMetadata
+    setupForm() {
+      let initialForm = {}
+
+      Object.values(this.normalizedCustomMetadataFields).map((obj)=>{
+        initialForm[obj['key']] = ''
+      })
+
+      this.form = initialForm
+    },
+    async fetchCustomMetadata() {
+      await this.$root.$data.refreshCustomMetadata()
+
+      if (this.$root.$data.customMetadata != undefined) {
+        Object.keys(this.$root.$data.customMetadata).map(key => {
+          this.form[key] = this.$root.$data.customMetadata[key]
+        })
+      }
     },
     async submit() {
       let payload = this.form
