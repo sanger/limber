@@ -19,7 +19,8 @@
         :variant="buttonStyle"
         size="lg"
         block
-      >{{ buttonText }}</b-button>
+        >{{ buttonText }}</b-button
+      >
     </b-form>
   </div>
 </template>
@@ -93,7 +94,7 @@ export default {
     setupForm() {
       let initialForm = {}
 
-      Object.values(this.normalizedCustomMetadataFields).map((obj)=>{
+      Object.values(this.normalizedCustomMetadataFields).map((obj) => {
         initialForm[obj['key']] = ''
       })
 
@@ -103,7 +104,7 @@ export default {
       await this.$root.$data.refreshCustomMetadata()
 
       if (this.$root.$data.customMetadata != undefined) {
-        Object.keys(this.$root.$data.customMetadata).map(key => {
+        Object.keys(this.$root.$data.customMetadata).map((key) => {
           this.form[key] = this.$root.$data.customMetadata[key]
         })
       }
