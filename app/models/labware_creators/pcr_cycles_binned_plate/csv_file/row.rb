@@ -31,6 +31,8 @@ module LabwareCreators
                 :submit_for_sequencing,
                 :sub_pool,
                 :coverage,
+                :hyb_panel,
+                :transfer_sample,
                 :index
 
     validates :well,
@@ -40,7 +42,7 @@ module LabwareCreators
               },
               unless: :empty?
     validate :input_amount_desired_within_expected_range?
-    validate :sample_volume_within_expected_range?
+    validate :sample_volume_zero_or_within_expected_range?
     validate :diluent_volume_within_expected_range?
     validate :pcr_cycles_within_expected_range?
     validate :submit_for_sequencing_has_expected_value?
@@ -54,6 +56,7 @@ module LabwareCreators
                 message: ->(object, _data) { COVERAGE_NEGATIVE % object }
               },
               unless: -> { empty? || !submit_for_sequencing? }
+    validate :hyb_panel_is_valid_bait_library?
     delegate :well_column,
              :concentration_column,
              :sanger_sample_id_column,
@@ -66,6 +69,7 @@ module LabwareCreators
              :submit_for_sequencing_column,
              :sub_pool_column,
              :coverage_column,
+             :hyb_panel_column,
              to: :header
 
     # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
@@ -90,6 +94,10 @@ module LabwareCreators
       @submit_for_sequencing_as_string = @row_data[submit_for_sequencing_column]&.strip&.upcase
       @sub_pool = @row_data[sub_pool_column]&.strip&.to_i
       @coverage = @row_data[coverage_column]&.strip&.to_i
+      @hyb_panel = @row_data[hyb_panel_column]&.strip
+
+      # flag to indicate sample should not be transferred
+      @transfer_sample = true
     end
 
     # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
@@ -111,7 +119,14 @@ module LabwareCreators
       )
     end
 
-    def sample_volume_within_expected_range?
+    def sample_volume_zero_or_within_expected_range?
+      # a zero in the sample volume cell indicates we do not want to transfer this well
+      if sample_volume == 0
+        @transfer_sample = false
+        return true
+      end
+
+      # non-zero values have to be within the expected range
       in_range?('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
     end
 
@@ -168,6 +183,14 @@ module LabwareCreators
 
     def empty?
       @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank?
+    end
+
+    def hyb_panel_is_valid_bait_library?
+      return true if empty?
+
+      # check if the hyb panel entered in the form matches an existing bait library
+      bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @hyb_panel})
+      bait_library.present?
     end
   end
 end

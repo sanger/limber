@@ -260,7 +260,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     before do
       stub_parent_request
 
-      create :duplex_seq_customer_csv_file_upload_purpose_config,
+      create :pcr_cycles_binned_plate_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
              name: child_purpose_name,
              library_type_name: library_type_name

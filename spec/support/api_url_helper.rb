@@ -72,9 +72,8 @@ module ApiUrlHelper
     end
 
     def stub_api_v2_post(klass)
-      # rubocop:todo Layout/LineLength
-      # intercepts the 'update_attributes' method for any class beginning with 'Sequencescape::Api::V2::' and returns true
-      # rubocop:enable Layout/LineLength
+      # intercepts the 'update_attributes' method for any class beginning
+      # with 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
     end
@@ -104,6 +103,12 @@ module ApiUrlHelper
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    end
+
+    # Builds the basic v2 bait library finding query.
+    def stub_v2_bait_library(bait_library)
+      arguments = [{ name: bait_library.name }]
+      allow(Sequencescape::Api::V2::BaitLibrary).to receive(:find_by).with(*arguments).and_return(bait_library)
     end
   end
   extend ClassMethods

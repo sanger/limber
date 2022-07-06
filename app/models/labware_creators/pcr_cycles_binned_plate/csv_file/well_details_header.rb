@@ -23,7 +23,8 @@ module LabwareCreators
                 :pcr_cycles_column,
                 :submit_for_sequencing_column,
                 :sub_pool_column,
-                :coverage_column
+                :coverage_column,
+                :hyb_panel_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'
@@ -37,6 +38,7 @@ module LabwareCreators
     SUBMIT_FOR_SEQUENCING_COLUMN = 'Submit for sequencing (Y/N)?'
     SUB_POOL_COLUMN = 'Sub-Pool'
     COVERAGE_COLUMN = 'Coverage'
+    HYB_PANEL_COLUMN = 'Hyb Panel'
 
     validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
@@ -65,6 +67,7 @@ module LabwareCreators
               }
     validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :hyb_panel_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
 
     #
     # Generates a well details header from the well details header row array
@@ -86,6 +89,7 @@ module LabwareCreators
       @submit_for_sequencing_column = index_of_header(SUBMIT_FOR_SEQUENCING_COLUMN)
       @sub_pool_column = index_of_header(SUB_POOL_COLUMN)
       @coverage_column = index_of_header(COVERAGE_COLUMN)
+      @hyb_panel_column = index_of_header(HYB_PANEL_COLUMN)
     end
 
     #

@@ -36,6 +36,7 @@ module LabwareCreators
              :submit_for_sequencing_column,
              :sub_pool_column,
              :coverage_column,
+             :hyb_panel_column,
              to: :well_details_header_row
 
     #
@@ -108,10 +109,17 @@ module LabwareCreators
     end
 
     def transfers
-      @transfers ||=
-        @data[3..].each_with_index.map do |row_data, index|
-          Row.new(@config, well_details_header_row, index + 2, row_data)
-        end
+      @transfers ||= calculate_transfers
+    end
+
+    def calculate_transfers
+      # filter out sample rows we do not want transferred
+      filtered_transfers = []
+      @data[3..].each_with_index do |row_data, index|
+        curr_row = Row.new(@config, well_details_header_row, index + 2, row_data)
+        filtered_transfers << curr_row if curr_row.transfer_sample
+      end
+      filtered_transfers
     end
 
     # Gates looking for wells if the file is invalid
@@ -123,7 +131,7 @@ module LabwareCreators
     def generate_well_details_hash
       return {} unless valid?
 
-      fields = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage sample_volume]
+      fields = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage hyb_panel sample_volume]
       transfers.each_with_object({}) do |row, well_details_hash|
         next if row.empty?
 

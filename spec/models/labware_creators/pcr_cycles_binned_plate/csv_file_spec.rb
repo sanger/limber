@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader do
-  let(:purpose_config) { create :duplex_seq_customer_csv_file_upload_purpose_config }
+  let(:purpose_config) { create :pcr_cycles_binned_plate_customer_csv_file_upload_purpose_config }
   let(:csv_file_config) { purpose_config.fetch(:csv_file_upload) }
+  let(:bait_library) { create :bait_library, name: 'HybPanel1' }
 
   subject { described_class.new(file, csv_file_config, 'DN2T') }
+
+  before do
+    stub_v2_bait_library(bait_library)
+  end
 
   context 'Valid files' do
     let(:expected_well_details) do
@@ -15,7 +20,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'B1' => {
           'sample_volume' => 5.0,
@@ -23,7 +29,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'D1' => {
           'sample_volume' => 5.0,
@@ -31,7 +38,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 16,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'E1' => {
           'sample_volume' => 5.0,
@@ -39,7 +47,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 30
+          'coverage' => 30,
+          'hyb_panel' => 'HybPanel1'
         },
         'F1' => {
           'sample_volume' => 4.0,
@@ -47,7 +56,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'H1' => {
           'sample_volume' => 5.0,
@@ -55,7 +65,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
-          'coverage' => 30
+          'coverage' => 30,
+          'hyb_panel' => 'HybPanel1'
         },
         'A2' => {
           'sample_volume' => 3.2,
@@ -63,7 +74,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'B2' => {
           'sample_volume' => 5.0,
@@ -71,7 +83,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'C2' => {
           'sample_volume' => 5.0,
@@ -79,7 +92,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'D2' => {
           'sample_volume' => 5.0,
@@ -87,7 +101,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'E2' => {
           'sample_volume' => 5.0,
@@ -95,7 +110,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         },
         'F2' => {
           'sample_volume' => 30.0,
@@ -103,7 +119,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 16,
           'submit_for_sequencing' => false,
           'sub_pool' => nil,
-          'coverage' => nil
+          'coverage' => nil,
+          'hyb_panel' => 'HybPanel1'
         },
         'G2' => {
           'sample_volume' => 5.0,
@@ -111,7 +128,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 30
+          'coverage' => 30,
+          'hyb_panel' => 'HybPanel1'
         },
         'H2' => {
           'sample_volume' => 3.621,
@@ -119,13 +137,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'pcr_cycles' => 16,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'HybPanel1'
         }
       }
     end
 
     context 'Without byte order markers' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+      let(:file) { fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file') }
 
       describe '#valid?' do
         it 'should be valid' do
@@ -142,7 +161,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
     context 'With byte order markers' do
       let(:file) do
-        fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_bom.csv', 'sequencescape/qc_file')
+        fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_bom.csv', 'sequencescape/qc_file')
       end
 
       describe '#valid?' do
@@ -160,7 +179,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'something that can not parse' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file') }
 
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
@@ -178,7 +197,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'A file which has missing well values' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_missing_values.csv', 'sequencescape/qc_file')
+      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_missing_values.csv', 'sequencescape/qc_file')
     end
 
     describe '#valid?' do
@@ -258,7 +277,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'An unrecognised well' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_invalid_wells.csv', 'sequencescape/qc_file')
+      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_wells.csv', 'sequencescape/qc_file')
     end
 
     describe '#valid?' do
@@ -276,7 +295,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   context 'A parent plate barcode that does not match' do
     subject { described_class.new(file, csv_file_config, 'DN1S') }
 
-    let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file') }
 
     describe '#valid?' do
       it 'should be invalid' do
@@ -292,4 +311,21 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       end
     end
   end
+
+  # context 'An unrecognised Hyb Panel' do
+  #   let(:file) do
+  #     fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_wells.csv', 'sequencescape/qc_file')
+  #   end
+
+  #   describe '#valid?' do
+  #     it 'should be invalid' do
+  #       expect(subject.valid?).to be false
+  #     end
+
+  #     it 'reports the errors' do
+  #       subject.valid?
+  #       expect(subject.errors.full_messages).to include('Transfers well contains an invalid well name: row 11 [I1]')
+  #     end
+  #   end
+  # end
 end

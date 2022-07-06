@@ -105,7 +105,7 @@ FactoryBot.define do
       dilutions { { target_amount_ng: 50, target_volume: 20, minimum_source_volume: 0.2 } }
     end
 
-    factory :duplex_seq_customer_csv_file_upload_purpose_config do
+    factory :pcr_cycles_binned_plate_customer_csv_file_upload_purpose_config do
       csv_file_upload do
         {
           input_amount_desired_min: 0.0,
