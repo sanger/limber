@@ -117,7 +117,7 @@ module LabwareCreators
       filtered_transfers = []
       @data[3..].each_with_index do |row_data, index|
         curr_row = Row.new(@config, well_details_header_row, index + 2, row_data)
-        filtered_transfers << curr_row if curr_row.transfer_sample
+        filtered_transfers << curr_row unless curr_row.do_not_transfer_sample
       end
       filtered_transfers
     end

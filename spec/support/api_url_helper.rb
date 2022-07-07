@@ -106,8 +106,8 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 bait library finding query.
-    def stub_v2_bait_library(bait_library)
-      arguments = [{ name: bait_library.name }]
+    def stub_v2_bait_library(bait_library_name, bait_library)
+      arguments = [{ name: bait_library_name }]
       allow(Sequencescape::Api::V2::BaitLibrary).to receive(:find_by).with(*arguments).and_return(bait_library)
     end
   end

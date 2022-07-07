@@ -16,7 +16,10 @@ module LabwareCreators
     SUBMIT_FOR_SEQ_INVALID = 'is empty or has an unrecognised value (should be Y or N), in %s'
     COVERAGE_MISSING = 'is missing but should be present when Submit for Sequencing is Y, in %s'
     COVERAGE_NEGATIVE = 'is negative but should be a positive value, in %s'
-    WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
+    WELL_NOT_RECOGNISED = 'contains an invalid well name, in %s'
+    HYB_PANEL_NOT_RECOGNISED = 'contains an invalid hyb panel name, in %s'
+    HYB_PANEL_MISSING = 'is missing but should be a valid bait library name, in %s'
+    SAMPLE_VOL_BLANK = 'is empty when it should have a value of zero, or between %s and %s, in %s'
 
     attr_reader :header,
                 :well,
@@ -32,7 +35,7 @@ module LabwareCreators
                 :sub_pool,
                 :coverage,
                 :hyb_panel,
-                :transfer_sample,
+                :do_not_transfer_sample,
                 :index
 
     validates :well,
@@ -41,8 +44,8 @@ module LabwareCreators
                 message: ->(object, _data) { WELL_NOT_RECOGNISED % object }
               },
               unless: :empty?
-    validate :input_amount_desired_within_expected_range?
     validate :sample_volume_zero_or_within_expected_range?
+    validate :input_amount_desired_within_expected_range?
     validate :diluent_volume_within_expected_range?
     validate :pcr_cycles_within_expected_range?
     validate :submit_for_sequencing_has_expected_value?
@@ -96,8 +99,8 @@ module LabwareCreators
       @coverage = @row_data[coverage_column]&.strip&.to_i
       @hyb_panel = @row_data[hyb_panel_column]&.strip
 
-      # flag to indicate sample should not be transferred
-      @transfer_sample = true
+      # flag to indicate that sample should not be transferred
+      @do_not_transfer_sample = false
     end
 
     # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
@@ -111,6 +114,8 @@ module LabwareCreators
     end
 
     def input_amount_desired_within_expected_range?
+      return true if empty?
+
       in_range?(
         'input_amount_desired',
         input_amount_desired,
@@ -119,22 +124,46 @@ module LabwareCreators
       )
     end
 
-    def sample_volume_zero_or_within_expected_range?
+    def sample_volume_present?
+      # sample volume cannot be blank
+      return true if sample_volume.present?
+
+      error_msg = format(SAMPLE_VOL_BLANK, @row_config.sample_volume_min, @row_config.sample_volume_max, to_s)
+      errors.add('sample_volume', error_msg)
+      false
+    end
+
+    def sample_volume_zero?
+      # sample volume must be present
+      return false unless sample_volume_present?
+
       # a zero in the sample volume cell indicates we do not want to transfer this well
-      if sample_volume == 0
-        @transfer_sample = false
+      if sample_volume.zero?
+        @do_not_transfer_sample = true
         return true
       end
+      false
+    end
+
+    def sample_volume_zero_or_within_expected_range?
+      return true if empty?
+
+      # check if the sample volume is set to zero by user(do not transfer)
+      return true if sample_volume_zero?
 
       # non-zero values have to be within the expected range
       in_range?('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
     end
 
     def diluent_volume_within_expected_range?
+      return true if empty?
+
       in_range?('diluent_volume', diluent_volume, @row_config.diluent_volume_min, @row_config.diluent_volume_max)
     end
 
     def pcr_cycles_within_expected_range?
+      return true if empty?
+
       in_range?('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
     end
 
@@ -182,15 +211,23 @@ module LabwareCreators
     end
 
     def empty?
-      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank?
+      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? || @do_not_transfer_sample
     end
 
     def hyb_panel_is_valid_bait_library?
       return true if empty?
 
+      if @hyb_panel.blank?
+        errors.add('hyb_panel', format(HYB_PANEL_MISSING, to_s))
+        return false
+      end
+
       # check if the hyb panel entered in the form matches an existing bait library
       bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @hyb_panel})
-      bait_library.present?
+      return true if bait_library.present?
+
+      errors.add('hyb_panel', format(HYB_PANEL_NOT_RECOGNISED, to_s))
+      false
     end
   end
 end
