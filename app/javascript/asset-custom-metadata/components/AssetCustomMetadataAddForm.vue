@@ -1,37 +1,37 @@
 <template>
-  <div>
-    <b-form @submit="submit">
+  <div v-if="customMetadataFieldsExist">
+    <b-form @submit.prevent="submit">
       <b-form-group
-        v-for="(obj, name, index) in normalizedCustomMetadataFields"
+        v-for="(obj, name, index) in normalizedFields"
         id="custom-metadata-input-form"
         :key="index"
         label-cols="2"
         :label="name"
         :label-for="name"
       >
-        <b-form-input :id="obj['key']" v-model="form[obj['key']]"></b-form-input>
+        <!-- only show input for fields which are defined in config -->
+        <b-form-input :id="obj['key']" v-model="form[obj['key']]" @update="onUpdate"></b-form-input>
       </b-form-group>
 
       <b-button
         id="asset_custom_metadata_submit_button"
-        :disabled="disabled"
         type="submit"
         :variant="buttonStyle"
         size="lg"
         block
-        >{{ buttonText }}</b-button
-      >
+      >{{ buttonText }}</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
-// show every field from config
-// store custom_metadatum_collections id, if it exists
-// populate config with fields from DB
+// Get Custom Metadata fields from config and populate form
+// Fetch the assets existing Custom Metadata and update form
+// Store custom_metadatum_collections id, if it exists
+// Show form inputs only for form field which are present in config
 // onSubmit remove any fields that have no data
-// send a patch or post request, depending whether metadata already exists (id)
-// all metadata should be overritten
+// Send a patch or post request, depending whether metadata already exists
+// All metadata should be either created or overwrited
 export default {
   name: 'AssetCustomMetadataAddForm',
   props: {
@@ -47,19 +47,13 @@ export default {
   data: function () {
     return {
       state: 'pending',
-      previous_success: null,
       form: {},
+      normalizedFields: JSON.parse(this.customMetadataFields)
     }
   },
   computed: {
-    inProgress() {
-      return !this.customMetadata()
-    },
-    customMetadatumCollectionsId() {
-      return this.$root.$data.customMetadatumCollectionsId
-    },
-    normalizedCustomMetadataFields() {
-      return JSON.parse(this.customMetadataFields)
+    customMetadataFieldsExist() {
+      return Object.keys(this.normalizedFields).length != 0
     },
     buttonText() {
       return {
@@ -77,24 +71,22 @@ export default {
         failure: 'danger',
       }[this.state]
     },
-    disabled() {
-      return {
-        pending: this.isCustomMetadataInvalid(),
-        busy: true,
-        success: true,
-        failure: false,
-      }[this.state]
-    },
   },
   mounted() {
     this.setupForm()
     this.fetchCustomMetadata()
   },
   methods: {
+    onUpdate(){
+      if (this.state != 'pending') {
+        this.state = 'pending'
+      }
+    },
     setupForm() {
+      // initially create the form with only fields
+      // which are provided in the config
       let initialForm = {}
-
-      Object.values(this.normalizedCustomMetadataFields).map((obj) => {
+      Object.values(this.normalizedFields).map((obj) => {
         initialForm[obj['key']] = ''
       })
 
@@ -103,7 +95,12 @@ export default {
     async fetchCustomMetadata() {
       await this.$root.$data.refreshCustomMetadata()
 
-      if (this.$root.$data.customMetadata != undefined) {
+      // update the form with all fetched data
+      // even if fields are not specified by config
+      // as these get filtered out in a later step,
+      // as we might want to support updating all metadata fields
+      // (such as robot info)
+      if (Object.keys(this.$root.$data.customMetadata).length != 0) {
         Object.keys(this.$root.$data.customMetadata).map((key) => {
           this.form[key] = this.$root.$data.customMetadata[key]
         })
@@ -111,6 +108,9 @@ export default {
     },
     async submit() {
       let payload = this.form
+
+      // remove any empty fields, as these will then be removed
+      // from the metadata
       Object.keys(payload).forEach((key) => {
         if (payload[key] === '') {
           delete payload[key]
@@ -119,20 +119,13 @@ export default {
 
       this.state = 'busy'
 
-      const successful = await this.$root.$data.addCustomMetadata(this.customMetadatumCollectionsId, payload)
+      let customMetadatumCollectionsId = this.$root.$data.customMetadatumCollectionsId
+      const successful = await this.$root.$data.addCustomMetadata(customMetadatumCollectionsId, payload)
       if (successful) {
         this.state = 'success'
-        this.previous_success = true
       } else {
         this.state = 'failure'
-        this.previous_success = false
       }
-    },
-    isCustomMetadataInvalid() {
-      if (this.previous_success != null && this.previous_success) {
-        this.state = 'pending'
-      }
-      return false
     },
   },
 }
