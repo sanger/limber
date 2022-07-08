@@ -48,7 +48,7 @@ RSpec.describe Presenters::PlatePresenter do
 
       it 'returns a JSON string with a empty object when no batch_names config exists' do
         expect(presenter.custom_metadata_fields).to eq(
-          "{\"IDX DFD Syringe lot Number\":{\"key\":\"idx_dfd_syringe_lot_number\"}}"
+          '{"IDX DFD Syringe lot Number":{"key":"idx_dfd_syringe_lot_number"}}'
         )
       end
     end

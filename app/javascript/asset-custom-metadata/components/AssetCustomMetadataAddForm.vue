@@ -13,13 +13,9 @@
         <b-form-input :id="obj['key']" v-model="form[obj['key']]" @update="onUpdate"></b-form-input>
       </b-form-group>
 
-      <b-button
-        id="asset_custom_metadata_submit_button"
-        type="submit"
-        :variant="buttonStyle"
-        size="lg"
-        block
-      >{{ buttonText }}</b-button>
+      <b-button id="asset_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>{{
+        buttonText
+      }}</b-button>
     </b-form>
   </div>
 </template>
@@ -48,7 +44,7 @@ export default {
     return {
       state: 'pending',
       form: {},
-      normalizedFields: JSON.parse(this.customMetadataFields)
+      normalizedFields: JSON.parse(this.customMetadataFields),
     }
   },
   computed: {
@@ -77,7 +73,7 @@ export default {
     this.fetchCustomMetadata()
   },
   methods: {
-    onUpdate(){
+    onUpdate() {
       if (this.state != 'pending') {
         this.state = 'pending'
       }
