@@ -42,6 +42,30 @@ RSpec.describe Presenters::PlatePresenter do
 
   subject(:presenter) { Presenters::PlatePresenter.new(api: api, labware: labware) }
 
+  describe '#custom_metadata_fields' do
+    context 'with batch_names' do
+      before { create(:plate_with_batch_names_config) }
+
+      it 'returns a JSON string with a empty object when no batch_names config exists' do
+        expect(presenter.custom_metadata_fields).to eq(
+          "{\"IDX DFD Syringe lot Number\":{\"key\":\"idx_dfd_syringe_lot_number\"}}"
+        )
+      end
+    end
+    context 'with empty batch_names' do
+      before { create(:plate_with_empty_batch_names_config) }
+
+      it 'returns a JSON string with a empty object when no batch_names config exists' do
+        expect(presenter.custom_metadata_fields).to eq('{}')
+      end
+    end
+    context 'without batch_names' do
+      it 'returns a JSON string with a empty object when no batch_names config exists' do
+        expect(presenter.custom_metadata_fields).to eq('{}')
+      end
+    end
+  end
+
   context 'with the default label class "Labels::PlateLabel"' do
     it 'returns PlateLabel attributes when PlateLabel is defined in the purpose settings' do
       expected_label = {
@@ -383,3 +407,9 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 end
+
+# TODO
+
+# custom_metadata_fields
+# when batch_names doesnt exist, return {}
+# when batch_names is empty, return {}

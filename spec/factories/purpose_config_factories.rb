@@ -34,6 +34,18 @@ FactoryBot.define do
       input_plate { true }
     end
 
+    # Sets up config for a plate with batch_names parameters
+    factory :plate_with_batch_names_config do
+      name { 'LTHR-384 PCR 2' }
+      batch_names { { 'IDX DFD Syringe lot Number': { key: 'idx_dfd_syringe_lot_number' } } }
+    end
+
+    # Sets up config for a plate with empty batch_names parameters
+    factory :plate_with_empty_batch_names_config do
+      name { 'LTHR-384 PCR 2' }
+      batch_names { {} }
+    end
+
     # Sets up config for a tube with transfer parameters
     factory :tube_with_transfer_parameters_config do
       name { 'LTHR-384 Pool XP' }

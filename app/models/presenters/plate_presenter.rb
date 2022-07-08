@@ -134,7 +134,7 @@ module Presenters
     end
 
     def custom_metadata_fields
-      purpose_config.fetch(:batch_names).to_hash.to_json
+      purpose_config.fetch(:batch_names, {}).to_hash.to_json
     end
 
     def quadrants_helper
