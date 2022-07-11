@@ -24,19 +24,19 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::StampedPlate}
 
-Used directly in 86 purposes:
-LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
+Used directly in 91 purposes:
+LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM RT PreAmp, CLCM RNA End Prep, CLCM RNA Lib PCR XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
 
 {LabwareCreators::StampedPlate View class documentation}
 
-## LabwareCreators::BaitedPlate
+## LabwareCreators::PcrCyclesBinnedPlate
 
-{include:LabwareCreators::BaitedPlate}
+{include:LabwareCreators::PcrCyclesBinnedPlate}
 
-Used directly in 1 purposes:
-LB Hyb
+Used directly in 2 purposes:
+LTN AL Lib Dil and LDS AL Lib Dil
 
-{LabwareCreators::BaitedPlate View class documentation}
+{LabwareCreators::PcrCyclesBinnedPlate View class documentation}
 
 ## LabwareCreators::PartialStampedPlate
 
@@ -73,14 +73,14 @@ LBC 5p GEX Dil
 
 {LabwareCreators::NormalisedBinnedPlate View class documentation}
 
-## LabwareCreators::ConcentrationNormalisedPlate
+## LabwareCreators::BaitedPlate
 
-{include:LabwareCreators::ConcentrationNormalisedPlate}
+{include:LabwareCreators::BaitedPlate}
 
-Used directly in 2 purposes:
-LBC BCR Dil 2 and LBC TCR Dil 2
+Used directly in 1 purposes:
+LB Hyb
 
-{LabwareCreators::ConcentrationNormalisedPlate View class documentation}
+{LabwareCreators::BaitedPlate View class documentation}
 
 ## LabwareCreators::MergedPlate
 
@@ -91,23 +91,6 @@ LTHR-384 Lib PCR pool, LHR-384 cDNA, LTHR Lib PCR pool, and LHR XP
 
 {LabwareCreators::MergedPlate View class documentation}
 
-## LabwareCreators::PcrCyclesBinnedPlate
-
-{include:LabwareCreators::PcrCyclesBinnedPlate}
-
-Used directly in 2 purposes:
-LTN AL Lib Dil and LDS AL Lib Dil
-
-{LabwareCreators::PcrCyclesBinnedPlate View class documentation}
-
-## LabwareCreators::PlateWithPrimerPanel
-
-{include:LabwareCreators::PlateWithPrimerPanel}
-
-**This labware creator is unused**
-
-{LabwareCreators::PlateWithPrimerPanel View class documentation}
-
 ## LabwareCreators::QuadrantSplitPlate
 
 {include:LabwareCreators::QuadrantSplitPlate}
@@ -117,14 +100,31 @@ PF Lib Q-XP2
 
 {LabwareCreators::QuadrantSplitPlate View class documentation}
 
-## LabwareCreators::CardinalPoolsPlate
+## LabwareCreators::PlateWithPrimerPanel
 
-{include:LabwareCreators::CardinalPoolsPlate}
+{include:LabwareCreators::PlateWithPrimerPanel}
+
+**This labware creator is unused**
+
+{LabwareCreators::PlateWithPrimerPanel View class documentation}
+
+## LabwareCreators::ConcentrationNormalisedPlate
+
+{include:LabwareCreators::ConcentrationNormalisedPlate}
+
+Used directly in 2 purposes:
+LBC BCR Dil 2 and LBC TCR Dil 2
+
+{LabwareCreators::ConcentrationNormalisedPlate View class documentation}
+
+## LabwareCreators::MultiPlatePool
+
+{include:LabwareCreators::MultiPlatePool}
 
 Used directly in 1 purposes:
-LCA PBMC Pools
+LB Lib PrePool
 
-{LabwareCreators::CardinalPoolsPlate View class documentation}
+{LabwareCreators::MultiPlatePool View class documentation}
 
 ## LabwareCreators::PooledTubesBase
 
@@ -134,15 +134,6 @@ LCA PBMC Pools
 
 {LabwareCreators::PooledTubesBase View class documentation}
 
-## LabwareCreators::CustomPooledTubes
-
-{include:LabwareCreators::CustomPooledTubes}
-
-Used directly in 4 purposes:
-LB Custom Pool, LTN Custom Pool, LCA Custom Pool, and LDS Custom Pool
-
-{LabwareCreators::CustomPooledTubes View class documentation}
-
 ## LabwareCreators::PooledTubesBySample
 
 {include:LabwareCreators::PooledTubesBySample}
@@ -151,6 +142,15 @@ Used directly in 1 purposes:
 LCA Bank Stock
 
 {LabwareCreators::PooledTubesBySample View class documentation}
+
+## LabwareCreators::CustomPooledTubes
+
+{include:LabwareCreators::CustomPooledTubes}
+
+Used directly in 6 purposes:
+LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, LTN Custom Pool, LDS Custom Pool, and LCA Custom Pool
+
+{LabwareCreators::CustomPooledTubes View class documentation}
 
 ## LabwareCreators::PooledTubesBySubmission
 
@@ -175,36 +175,18 @@ LTHR-384 Pool XP and LTHR Pool XP
 {include:LabwareCreators::CustomTaggedPlate}
 
 Used directly in 8 purposes:
-LBC 5p GEX LigXP, LCA Connect PCRXP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
+LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
 
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
-## LabwareCreators::FinalTube
+## LabwareCreators::PooledTubesFromWholeTubes
 
-{include:LabwareCreators::FinalTube}
-
-Used directly in 1 purposes:
-LB Lib Pool Norm
-
-{LabwareCreators::FinalTube View class documentation}
-
-## LabwareCreators::FinalTubeFromPlate
-
-{include:LabwareCreators::FinalTubeFromPlate}
+{include:LabwareCreators::PooledTubesFromWholeTubes}
 
 Used directly in 1 purposes:
-Cap Lib Pool Norm
+GBS MiSeq Pool
 
-{LabwareCreators::FinalTubeFromPlate View class documentation}
-
-## LabwareCreators::MultiPlatePool
-
-{include:LabwareCreators::MultiPlatePool}
-
-Used directly in 1 purposes:
-LB Lib PrePool
-
-{LabwareCreators::MultiPlatePool View class documentation}
+{LabwareCreators::PooledTubesFromWholeTubes View class documentation}
 
 ## LabwareCreators::MultiStamp
 
@@ -222,15 +204,6 @@ LB Lib PrePool
 
 {LabwareCreators::QuadrantStampBase View class documentation}
 
-## LabwareCreators::QuadrantStamp
-
-{include:LabwareCreators::QuadrantStamp}
-
-Used directly in 3 purposes:
-pWGS-384 Post Shear XP, PF-384 Post Shear XP, and LTHR-384 RT-Q
-
-{LabwareCreators::QuadrantStamp View class documentation}
-
 ## LabwareCreators::QuadrantStampPrimerPanel
 
 {include:LabwareCreators::QuadrantStampPrimerPanel}
@@ -239,6 +212,15 @@ Used directly in 1 purposes:
 GBS PCR1
 
 {LabwareCreators::QuadrantStampPrimerPanel View class documentation}
+
+## LabwareCreators::QuadrantStamp
+
+{include:LabwareCreators::QuadrantStamp}
+
+Used directly in 3 purposes:
+pWGS-384 Post Shear XP, PF-384 Post Shear XP, and LTHR-384 RT-Q
+
+{LabwareCreators::QuadrantStamp View class documentation}
 
 ## LabwareCreators::TenStamp
 
@@ -249,14 +231,40 @@ LBC Aggregate and LBC Cherrypick
 
 {LabwareCreators::TenStamp View class documentation}
 
-## LabwareCreators::MultiStampTubes
+## LabwareCreators::MultiStampLibrarySplitter
 
-{include:LabwareCreators::MultiStampTubes}
+{include:LabwareCreators::MultiStampLibrarySplitter}
+
+**This labware creator is unused**
+
+{LabwareCreators::MultiStampLibrarySplitter View class documentation}
+
+## LabwareCreators::CardinalPoolsPlate
+
+{include:LabwareCreators::CardinalPoolsPlate}
 
 Used directly in 1 purposes:
-LCA Blood Array
+LCA PBMC Pools
 
-{LabwareCreators::MultiStampTubes View class documentation}
+{LabwareCreators::CardinalPoolsPlate View class documentation}
+
+## LabwareCreators::FinalTube
+
+{include:LabwareCreators::FinalTube}
+
+Used directly in 1 purposes:
+LB Lib Pool Norm
+
+{LabwareCreators::FinalTube View class documentation}
+
+## LabwareCreators::TubeFromTube
+
+{include:LabwareCreators::TubeFromTube}
+
+Used directly in 11 purposes:
+LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LTN Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
+
+{LabwareCreators::TubeFromTube View class documentation}
 
 ## LabwareCreators::PlateWithTemplate
 
@@ -267,6 +275,33 @@ LB Cap Lib Pool
 
 {LabwareCreators::PlateWithTemplate View class documentation}
 
+## LabwareCreators::TaggedPlate
+
+{include:LabwareCreators::TaggedPlate}
+
+Used directly in 18 purposes:
+CLCM DNA Lib PCR, CLCM RNA Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
+
+{LabwareCreators::TaggedPlate View class documentation}
+
+## LabwareCreators::FinalTubeFromPlate
+
+{include:LabwareCreators::FinalTubeFromPlate}
+
+Used directly in 1 purposes:
+Cap Lib Pool Norm
+
+{LabwareCreators::FinalTubeFromPlate View class documentation}
+
+## LabwareCreators::Uncreatable
+
+{include:LabwareCreators::Uncreatable}
+
+Used directly in 5 purposes:
+CLCM Stock, LTHR-384 RT, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
+
+{LabwareCreators::Uncreatable View class documentation}
+
 ## LabwareCreators::PooledTubesFromWholePlates
 
 {include:LabwareCreators::PooledTubesFromWholePlates}
@@ -276,38 +311,11 @@ GBS PCR2 Pool Stock
 
 {LabwareCreators::PooledTubesFromWholePlates View class documentation}
 
-## LabwareCreators::PooledTubesFromWholeTubes
+## LabwareCreators::MultiStampTubes
 
-{include:LabwareCreators::PooledTubesFromWholeTubes}
+{include:LabwareCreators::MultiStampTubes}
 
 Used directly in 1 purposes:
-GBS MiSeq Pool
+LCA Blood Array
 
-{LabwareCreators::PooledTubesFromWholeTubes View class documentation}
-
-## LabwareCreators::TaggedPlate
-
-{include:LabwareCreators::TaggedPlate}
-
-Used directly in 16 purposes:
-pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
-
-{LabwareCreators::TaggedPlate View class documentation}
-
-## LabwareCreators::TubeFromTube
-
-{include:LabwareCreators::TubeFromTube}
-
-Used directly in 9 purposes:
-LB Custom Pool Norm, LTN Custom Pool Norm, LCA Custom Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, scRNA Lib Pool XP, and LHR Lib Pool XP
-
-{LabwareCreators::TubeFromTube View class documentation}
-
-## LabwareCreators::Uncreatable
-
-{include:LabwareCreators::Uncreatable}
-
-Used directly in 4 purposes:
-LTHR-384 RT, LCA Blood Vac, LTHR Cherrypick, and LTHR RT
-
-{LabwareCreators::Uncreatable View class documentation}
+{LabwareCreators::MultiStampTubes View class documentation}

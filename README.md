@@ -157,6 +157,7 @@ JavaScript unit tests:
 
 ```bash
 yarn test
+yarn test "path/to/file" -t "name of the test"
 ```
 
 If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:

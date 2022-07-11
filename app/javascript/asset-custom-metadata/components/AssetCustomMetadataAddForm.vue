@@ -13,9 +13,9 @@
         <b-form-input :id="obj['key']" v-model="form[obj['key']]" @update="onUpdate"></b-form-input>
       </b-form-group>
 
-      <b-button id="asset_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>{{
-        buttonText
-      }}</b-button>
+      <b-button id="asset_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>
+        {{ buttonText }}
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -28,14 +28,23 @@
 // onSubmit remove any fields that have no data
 // Send a patch or post request, depending whether metadata already exists
 // All metadata should be either created or overwrited
+
 export default {
   name: 'AssetCustomMetadataAddForm',
   props: {
+    assetId: {
+      type: String,
+      required: true,
+    },
     customMetadataFields: {
       type: String,
       required: true,
     },
-    assetId: {
+    userId: {
+      type: String,
+      required: true,
+    },
+    sequencescapeApiUrl: {
       type: String,
       required: true,
     },
@@ -45,6 +54,7 @@ export default {
       state: 'pending',
       form: {},
       normalizedFields: JSON.parse(this.customMetadataFields),
+      customMetadatumCollectionsId: undefined,
     }
   },
   computed: {
@@ -85,43 +95,110 @@ export default {
       Object.values(this.normalizedFields).map((obj) => {
         initialForm[obj['key']] = ''
       })
-
       this.form = initialForm
     },
     async fetchCustomMetadata() {
-      await this.$root.$data.refreshCustomMetadata()
+      let metadata = await this.refreshCustomMetadata()
+      this.populateForm(metadata)
+    },
+    async refreshCustomMetadata() {
+      let url = `${this.sequencescapeApiUrl}/labware/${this.assetId}?include=custom_metadatum_collection`
+      let metadata = {}
 
+      await fetch(url)
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data && data.included) {
+            this.customMetadatumCollectionsId = data.included[0].id
+            metadata = data.included[0].attributes.metadata
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+      return metadata
+    },
+    populateForm(metadata) {
       // update the form with all fetched data
       // even if fields are not specified by config
       // as these get filtered out in a later step,
       // as we might want to support updating all metadata fields
       // (such as robot info)
-      if (Object.keys(this.$root.$data.customMetadata).length != 0) {
-        Object.keys(this.$root.$data.customMetadata).map((key) => {
-          this.form[key] = this.$root.$data.customMetadata[key]
+      if (Object.keys(metadata).length != 0) {
+        Object.keys(metadata).map((key) => {
+          this.form[key] = metadata[key]
         })
       }
     },
     async submit() {
-      let payload = this.form
+      this.state = 'busy'
+
+      let metadata = this.form
 
       // remove any empty fields, as these will then be removed
       // from the metadata
-      Object.keys(payload).forEach((key) => {
-        if (payload[key] === '') {
-          delete payload[key]
+      Object.keys(metadata).forEach((key) => {
+        if (metadata[key] === '') {
+          delete metadata[key]
         }
       })
 
-      this.state = 'busy'
+      this.postData(metadata)
+    },
+    async postData(metadata = {}) {
+      let url = this.buildUrl(this.customMetadatumCollectionsId)
+      let method = this.customMetadatumCollectionsId ? 'PATCH' : 'POST'
+      let body = this.buildPayload(method, this.customMetadatumCollectionsId, metadata)
 
-      let customMetadatumCollectionsId = this.$root.$data.customMetadatumCollectionsId
-      const successful = await this.$root.$data.addCustomMetadata(customMetadatumCollectionsId, payload)
-      if (successful) {
-        this.state = 'success'
-      } else {
-        this.state = 'failure'
+      await fetch(url, {
+        method,
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/vnd.api+json' },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.errors) {
+            throw data.errors
+          }
+          this.customMetadatumCollectionsId = data.data.id
+          this.state = 'success'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          this.state = 'failure'
+        })
+    },
+    buildUrl(customMetadatumCollectionsId) {
+      let path = customMetadatumCollectionsId
+        ? `custom_metadatum_collections/${customMetadatumCollectionsId}`
+        : 'custom_metadatum_collections'
+
+      return `${this.sequencescapeApiUrl}/${path}`
+    },
+    buildPayload(method, customMetadatumCollectionsId, metadata) {
+      let patchPayload = {
+        data: {
+          id: customMetadatumCollectionsId,
+          type: 'custom_metadatum_collections',
+          attributes: {
+            metadata: metadata,
+          },
+        },
       }
+
+      let postPayload = {
+        data: {
+          type: 'custom_metadatum_collections',
+          attributes: {
+            user_id: this.userId,
+            asset_id: this.assetId,
+            metadata: metadata,
+          },
+        },
+      }
+      return method == 'PATCH' ? patchPayload : postPayload
     },
   },
 }

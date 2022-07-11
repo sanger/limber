@@ -5,11 +5,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AssetCustomMetadataAddForm from './components/AssetCustomMetadataAddForm.vue'
-import customMetadataStoreFactory from './custom-metadata-store'
-import axios from 'axios'
 import cookieJar from 'shared/cookieJar'
-import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
 
 Vue.use(BootstrapVue)
 
@@ -42,18 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
      * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
-    const axiosInstance = axios.create({
-      baseURL: sequencescapeApiUrl,
-      timeout: 10000,
-      headers: {
-        Accept: 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-      },
-    })
-
-    const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources)
-
-    const customMetadataStore = customMetadataStoreFactory(axiosInstance, api, assetElem.dataset.assetId, userId)
 
     // UserId is required to make custom metadata, but will not be present in
     // older session cookies. To avoid errors or confusion, we render
@@ -63,12 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (userId) {
       new Vue({
         el: '#asset-custom-metadata-add-form',
-        data: customMetadataStore,
         render(h) {
-          // this.$el.dataset returns DOMStringMap
-          // However, we are passing in an array
-          // '["CP Control batch No."]' => ['CP Control batch No.']
-          return h(AssetCustomMetadataAddForm, { props: this.$el.dataset })
+          let assetId = this.$el.dataset.assetId
+          let customMetadataFields = this.$el.dataset.customMetadataFields
+
+          return h(AssetCustomMetadataAddForm, {
+            props: { assetId, customMetadataFields, userId, sequencescapeApiUrl },
+          })
         },
       })
     } else {
@@ -77,7 +62,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         render: (h) => h('div', missingUserIdError),
       })
     }
-
-    await customMetadataStore.refreshCustomMetadata()
   }
 })
