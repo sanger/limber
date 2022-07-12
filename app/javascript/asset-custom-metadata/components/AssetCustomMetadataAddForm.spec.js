@@ -24,6 +24,7 @@ describe('AssetCustomMetadataAddForm', () => {
       },
     }
 
+    /* eslint-disable-next-line */
     global.fetch = jest.fn().mockReturnValue(
       Promise.resolve({
         json: () => Promise.resolve(data),
@@ -142,6 +143,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
@@ -156,6 +158,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(undefined)
@@ -172,6 +175,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
@@ -193,6 +197,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
@@ -246,6 +251,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
         expect(wrapper.vm.state).toEqual('success')
@@ -261,6 +267,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
         expect(wrapper.vm.state).toEqual('success')
@@ -283,6 +290,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         await flushPromises()
 
+        /* eslint-disable-next-line */
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
