@@ -407,9 +407,3 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 end
-
-# TODO
-
-# custom_metadata_fields
-# when batch_names doesnt exist, return {}
-# when batch_names is empty, return {}
