@@ -8,6 +8,7 @@ describe('LabwareCustomMetadataAddForm', () => {
   let labwareId = '123'
   let userId = '456'
   let sequencescapeApiUrl = 'http://example.com/v2'
+  let sequencescapeUrl = 'http://example.com'
   let customMetadata = {}
   let customMetadatumCollectionsId
   let mockFetchData = {}
@@ -38,6 +39,13 @@ describe('LabwareCustomMetadataAddForm', () => {
         labwareId,
         userId,
         sequencescapeApiUrl,
+        sequencescapeUrl,
+      },
+      // Getting:
+      // [BootstrapVue warn]: tooltip - The provided target is no valid HTML element.
+      // Here https://github.com/molgenis/molgenis-frontend/issues/466 suggests it's a bug
+      stubs: {
+        'b-icon': true,
       },
     })
   }

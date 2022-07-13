@@ -1,13 +1,14 @@
 /* eslint no-console: 0 */
 
 import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LabwareCustomMetadataAddForm from './components/LabwareCustomMetadataAddForm.vue'
 import cookieJar from 'shared/cookieJar'
 
 Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 
 document.addEventListener('DOMContentLoaded', async () => {
   /*
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
+    const sequencescapeUrl = assetElem.dataset.sequencescapeUrl
 
     // UserId is required to make custom metadata, but will not be present in
     // older session cookies. To avoid errors or confusion, we render
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           let customMetadataFields = this.$el.dataset.customMetadataFields
 
           return h(LabwareCustomMetadataAddForm, {
-            props: { labwareId, customMetadataFields, userId, sequencescapeApiUrl },
+            props: { labwareId, customMetadataFields, userId, sequencescapeApiUrl, sequencescapeUrl },
           })
         },
       })

@@ -10,12 +10,27 @@
         :label-for="item"
       >
         <!-- only show input for fields which are defined in config -->
-        <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
+        <b-row>
+          <b-col cols="10">
+            <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
+          </b-col>
+          <b-col>
+            <b-button
+              v-b-tooltip.hover
+              :href="url(item)"
+              title="Find other labware with the same metadata in Sequencescape"
+              variant="outline-primary"
+            >
+              <b-icon icon="search"></b-icon>
+              <b-icon icon="box-arrow-up-right"></b-icon>
+            </b-button>
+          </b-col>
+        </b-row>
       </b-form-group>
 
-      <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>{{
-        buttonText
-      }}</b-button>
+      <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>
+        {{ buttonText }}
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -50,6 +65,10 @@ export default {
       required: true,
     },
     sequencescapeApiUrl: {
+      type: String,
+      required: true,
+    },
+    sequencescapeUrl: {
       type: String,
       required: true,
     },
@@ -88,6 +107,9 @@ export default {
     this.fetchCustomMetadata()
   },
   methods: {
+    url(item) {
+      return `${this.sequencescapeUrl}/advanced_search?metadata_key=${item}&metadata_value=${this.form[item]}`
+    },
     onUpdate() {
       if (this.state != 'pending') {
         this.state = 'pending'
