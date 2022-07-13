@@ -5,6 +5,9 @@ module.exports = {
     jasmine: true,
     'jest/globals': true,
   },
+  globals: {
+    global: true,
+  },
   plugins: ['jest', 'vue'],
   extends: ['eslint:recommended', 'plugin:vue/recommended', 'prettier'],
   parserOptions: {
