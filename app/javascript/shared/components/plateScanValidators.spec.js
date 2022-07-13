@@ -453,6 +453,11 @@ describe('checkAllLibraryRequestsWithSameReadySubmissions', () => {
             library_type: 'A',
             submission: { state: 'ready', id: '2' },
           },
+          {
+            state: 'pending',
+            library_type: 'B',
+            submission: { state: 'ready', id: '3' },
+          },
         ],
       },
       {
@@ -460,8 +465,13 @@ describe('checkAllLibraryRequestsWithSameReadySubmissions', () => {
         requests_as_source: [
           {
             state: 'pending',
-            submission: { state: 'ready', id: '2' },
+            submission: { state: 'ready', id: '3' },
+            library_type: 'B',
+          },
+          {
+            state: 'pending',
             library_type: 'A',
+            submission: { state: 'ready', id: '2' },
           },
         ],
       },
