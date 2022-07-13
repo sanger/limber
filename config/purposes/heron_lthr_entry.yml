@@ -30,4 +30,4 @@ LTHR Cherrypick:
       allowed_extra_barcodes: true
       num_extra_barcodes: 3
   :custom_metadata_fields:
-    - CP Control batch Number
+    - CP Control Batch Number

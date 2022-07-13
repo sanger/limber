@@ -27,17 +27,17 @@ LTHR-384 PCR 1:
   :label_template: plate_6mm_double
   :size: 384
   :custom_metadata_fields:
-    - IDX DFD Syringe lot Number
+    - IDX DFD Syringe Lot Number
     - vIDX KAPA Hifi Lot Number
-    - Artics batch Number
+    - Artics Batch Number
 LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
   :custom_metadata_fields:
-    - IDX DFD Syringe lot Number
+    - IDX DFD Syringe Lot Number
     - vIDX KAPA Hifi Lot Number
-    - Artics batch Number
+    - Artics Batch Number
 LTHR-384 Lib PCR 1:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -49,7 +49,7 @@ LTHR-384 Lib PCR 1:
     - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
   :custom_metadata_fields:
-    - UDI Tag batch Number
+    - UDI Tag Batch Number
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -61,7 +61,7 @@ LTHR-384 Lib PCR 2:
     - TSsc384-PCR2-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
   :custom_metadata_fields:
-    - UDI Tag batch Number
+    - UDI Tag Batch Number
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
