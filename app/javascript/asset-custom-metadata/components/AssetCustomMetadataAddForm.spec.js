@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import AssetCustomMetadataAddForm from './AssetCustomMetadataAddForm.vue'
 
 describe('AssetCustomMetadataAddForm', () => {
-  let customMetadataFields = '{}'
+  let customMetadataFields = '[]'
   let assetId = '123'
   let userId = '456'
   let sequencescapeApiUrl = 'http://example.com/v2'
@@ -46,7 +46,7 @@ describe('AssetCustomMetadataAddForm', () => {
   describe('#form', () => {
     describe('when customMetadataFields is empty', () => {
       it('does not render the form or the button', () => {
-        customMetadataFields = '{}'
+        customMetadataFields = '[]'
         let wrapper = wrapperFactory()
 
         expect(wrapper.find('#custom-metadata-input-form').exists()).toBe(false)
@@ -56,22 +56,19 @@ describe('AssetCustomMetadataAddForm', () => {
 
     describe('when customMetadataFields is not empty', () => {
       it('renders a form, with the correct inputs, and the create button', () => {
-        customMetadataFields =
-          '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"},"RT NFW":{"key":"rt_nfw"},"RT DFD Syringe Lot Number":{"key":"rt_dfd_syringe_lot_number"}}'
+        customMetadataFields = '["RT LunaScript Super Mix","RT NFW","RT DFD Syringe Lot Number"]'
         let wrapper = wrapperFactory()
 
         expect(wrapper.find('#custom-metadata-input-form').exists()).toBe(true)
-        expect(wrapper.find('#rt_lunascript_super_mix').exists()).toBe(true)
-        expect(wrapper.find('#rt_dfd_syringe_lot_number').exists()).toBe(true)
-
+        // expect(wrapper.find('RT LunaScript Super Mix').exists()).toBe(true)
+        // expect(wrapper.find('#RT NFW').exists()).toBe(true)
+        // expect(wrapper.find('#RT DFD Syringe Lot Number').exists()).toBe(true)
         expect(wrapper.find('#asset_custom_metadata_submit_button').exists()).toBe(true)
         expect(wrapper.find('#asset_custom_metadata_submit_button').text()).toEqual(
           'Add Custom Metadata to Sequencescape'
         )
       })
     })
-
-    // form only shows config fields
   })
 
   describe('props', () => {
@@ -86,12 +83,16 @@ describe('AssetCustomMetadataAddForm', () => {
 
   describe('#data', () => {
     it('is initialised', () => {
-      customMetadataFields = '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"}}'
+      customMetadataFields = '["RT LunaScript Super Mix","RT NFW","RT DFD Syringe Lot Number"]'
       let wrapper = wrapperFactory()
 
       expect(wrapper.vm.state).toBe('pending')
-      expect(wrapper.vm.form).toStrictEqual({ rt_lunascript_super_mix: '' })
-      let expectedNormalisedFields = { 'RT LunaScript Super Mix': { key: 'rt_lunascript_super_mix' } }
+      expect(wrapper.vm.form).toStrictEqual({
+        'RT LunaScript Super Mix': '',
+        'RT NFW': '',
+        'RT DFD Syringe Lot Number': '',
+      })
+      let expectedNormalisedFields = ['RT LunaScript Super Mix', 'RT NFW', 'RT DFD Syringe Lot Number']
       expect(wrapper.vm.normalizedFields).toEqual(expectedNormalisedFields)
       expect(wrapper.vm.customMetadatumCollectionsId).toEqual(undefined)
     })
@@ -99,12 +100,11 @@ describe('AssetCustomMetadataAddForm', () => {
 
   describe('#computed', () => {
     it('customMetadataFieldsExist', () => {
-      customMetadataFields =
-        '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"},"RT NFW":{"key":"rt_nfw"},"RT DFD Syringe Lot Number":{"key":"rt_dfd_syringe_lot_number"}}'
+      customMetadataFields = '["RT LunaScript Super Mix","RT NFW","RT DFD Syringe Lot Number"]'
       let wrapper = wrapperFactory()
       expect(wrapper.vm.customMetadataFieldsExist).toEqual(true)
 
-      customMetadataFields = '{}'
+      customMetadataFields = '[]'
       wrapper = wrapperFactory()
       expect(wrapper.vm.customMetadataFieldsExist).toEqual(false)
     })
@@ -113,20 +113,19 @@ describe('AssetCustomMetadataAddForm', () => {
   describe('#mounted', () => {
     describe('#setupForm', () => {
       it('correctly sets the form to empty when no fields exist', () => {
-        customMetadataFields = '{}'
+        customMetadataFields = '[]'
         let wrapper = wrapperFactory()
         expect(wrapper.vm.form).toStrictEqual({})
       })
 
       it('correctly sets the form when fields exist', () => {
-        customMetadataFields =
-          '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"},"RT NFW":{"key":"rt_nfw"},"RT DFD Syringe Lot Number":{"key":"rt_dfd_syringe_lot_number"}}'
+        customMetadataFields = '["RT LunaScript Super Mix","RT NFW","RT DFD Syringe Lot Number"]'
         let wrapper = wrapperFactory()
 
         let expected = {
-          rt_dfd_syringe_lot_number: '',
-          rt_lunascript_super_mix: '',
-          rt_nfw: '',
+          'RT LunaScript Super Mix': '',
+          'RT NFW': '',
+          'RT DFD Syringe Lot Number': '',
         }
         expect(wrapper.vm.form).toStrictEqual(expected)
       })
@@ -134,10 +133,10 @@ describe('AssetCustomMetadataAddForm', () => {
 
     describe('#fetchCustomMetadata', () => {
       it('updates the form, when there is config and matching data', async () => {
-        customMetadataFields = '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"}}'
+        customMetadataFields = '["RT LunaScript Super Mix"]'
 
         mockFetchData = {
-          included: [{ id: assetId, attributes: { metadata: { rt_lunascript_super_mix: 'a value' } } }],
+          included: [{ id: assetId, attributes: { metadata: { 'RT LunaScript Super Mix': 'a value' } } }],
         }
         let wrapper = wrapperFactory(mockFetchData)
 
@@ -147,11 +146,11 @@ describe('AssetCustomMetadataAddForm', () => {
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
-        expect(wrapper.vm.form).toEqual({ rt_lunascript_super_mix: 'a value' })
+        expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': 'a value' })
       })
 
       it('updates the form, when there is config and no data', async () => {
-        customMetadataFields = '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"}}'
+        customMetadataFields = '["RT LunaScript Super Mix"]'
 
         mockFetchData = {}
         let wrapper = wrapperFactory(mockFetchData)
@@ -162,11 +161,11 @@ describe('AssetCustomMetadataAddForm', () => {
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(undefined)
-        expect(wrapper.vm.form).toEqual({ rt_lunascript_super_mix: '' })
+        expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '' })
       })
 
       it('updates the form, when there is no config and some data', async () => {
-        customMetadataFields = '{}'
+        customMetadataFields = '[]'
 
         mockFetchData = {
           included: [{ id: assetId, attributes: { metadata: { a_value_that_is_not_config: 'a value' } } }],
@@ -183,7 +182,7 @@ describe('AssetCustomMetadataAddForm', () => {
       })
 
       it('updates the form, when there is config and some matching data', async () => {
-        customMetadataFields = '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"}}'
+        customMetadataFields = '["RT LunaScript Super Mix"]'
 
         mockFetchData = {
           included: [
@@ -201,7 +200,7 @@ describe('AssetCustomMetadataAddForm', () => {
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
-        expect(wrapper.vm.form).toEqual({ rt_lunascript_super_mix: '', a_value_that_is_not_config: 'a value' })
+        expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '', a_value_that_is_not_config: 'a value' })
       })
     })
   })
@@ -209,7 +208,7 @@ describe('AssetCustomMetadataAddForm', () => {
   describe('#methods', () => {
     describe('#onUpdate', () => {
       it('sets state to pending if it isnt already', () => {
-        customMetadataFields = '{}'
+        customMetadataFields = '[]'
         let wrapper = wrapperFactory()
         wrapper.vm.state = 'busy'
         wrapper.vm.onUpdate()
@@ -218,21 +217,42 @@ describe('AssetCustomMetadataAddForm', () => {
     })
 
     describe('#submit', () => {
-      it('calls postData', () => {
+      it('trims data', () => {
         let wrapper = wrapperFactory()
         wrapper.vm.postData = jest.fn()
 
         wrapper.setData({
           form: {
-            rt_lunascript_super_mix: 'avalue',
-            an_emtpy_value: '',
+            'RT LunaScript Super Mix': 'avalue    ',
+            an_emtpy_value: '    ',
           },
         })
 
         wrapper.vm.submit()
         expect(wrapper.vm.state).toEqual('busy')
         expect(wrapper.vm.postData).toHaveBeenCalledTimes(1)
-        expect(wrapper.vm.postData).toHaveBeenCalledWith({ rt_lunascript_super_mix: 'avalue' })
+        expect(wrapper.vm.postData).toHaveBeenCalledWith({ 'RT LunaScript Super Mix': 'avalue' })
+      })
+
+      it('calls postData', () => {
+        let wrapper = wrapperFactory()
+        wrapper.vm.postData = jest.fn()
+
+        wrapper.setData({
+          form: {
+            'RT LunaScript Super Mix': 'avalue',
+            an_emtpy_value: '',
+            'A previously existing field': 'robot1',
+          },
+        })
+
+        wrapper.vm.submit()
+        expect(wrapper.vm.state).toEqual('busy')
+        expect(wrapper.vm.postData).toHaveBeenCalledTimes(1)
+        expect(wrapper.vm.postData).toHaveBeenCalledWith({
+          'RT LunaScript Super Mix': 'avalue',
+          'A previously existing field': 'robot1',
+        })
       })
     })
 
@@ -247,7 +267,7 @@ describe('AssetCustomMetadataAddForm', () => {
           customMetadatumCollectionsId: assetId,
         })
 
-        wrapper.vm.postData({ rt_lunascript_super_mix: 'avalue' })
+        wrapper.vm.postData({ 'RT LunaScript Super Mix': 'avalue' })
 
         await flushPromises()
 
@@ -263,7 +283,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
         wrapper.vm.refreshCustomMetadata = jest.fn()
 
-        wrapper.vm.postData({ rt_lunascript_super_mix: 'avalue' })
+        wrapper.vm.postData({ 'RT LunaScript Super Mix': 'avalue' })
 
         await flushPromises()
 
@@ -276,7 +296,7 @@ describe('AssetCustomMetadataAddForm', () => {
 
     describe('#addCustomMetadata', () => {
       it('updates the form, when there is config and some matching data', async () => {
-        customMetadataFields = '{"RT LunaScript Super Mix":{"key":"rt_lunascript_super_mix"}}'
+        customMetadataFields = '["RT LunaScript Super Mix"]'
 
         mockFetchData = {
           included: [
@@ -294,7 +314,7 @@ describe('AssetCustomMetadataAddForm', () => {
         expect(global.fetch).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(assetId)
-        expect(wrapper.vm.form).toEqual({ rt_lunascript_super_mix: '', a_value_that_is_not_config: 'a value' })
+        expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '', a_value_that_is_not_config: 'a value' })
       })
     })
   })

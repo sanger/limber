@@ -9,12 +9,9 @@ LTHR-384 RT:
   :label_template: plate_6mm_double
   :size: 384
   :batch_names:
-    RT LunaScript Super Mix:
-      key: 'rt_lunascript_super_mix'
-    RT NFW:
-      key: 'rt_nfw'
-    RT DFD Syringe Lot Number:
-      key: 'rt_dfd_syringe_lot_number'
+    - RT LunaScript Super Mix
+    - RT NFW
+    - RT DFD Syringe Lot Number
 LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
@@ -22,34 +19,25 @@ LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
   :label_template: plate_6mm_double
   :size: 384
   :batch_names:
-    RT LunaScript Super Mix:
-      key: 'rt_lunascript_super_mix'
-    RT NFW:
-      key: 'rt_nfw'
-    RT DFD Syringe Lot Number:
-      key: 'rt_dfd_syringe_lot_number'
+    - RT LunaScript Super Mix
+    - RT NFW
+    - RT DFD Syringe Lot Number
 LTHR-384 PCR 1:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
   :batch_names:
-    IDX DFD Syringe lot Number:
-      key: 'idx_dfd_syringe_lot_number'
-    vIDX KAPA Hifi Lot Number:
-      key: 'vidx_kapa_hifi_lot_number'
-    Artics batch Number:
-      key: 'artics_batch_number'
+    - IDX DFD Syringe lot Number
+    - vIDX KAPA Hifi Lot Number
+    - Artics batch Number
 LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
   :batch_names:
-    IDX DFD Syringe lot Number:
-      key: 'idx_dfd_syringe_lot_number'
-    vIDX KAPA Hifi Lot Number:
-      key: 'vidx_kapa_hifi_lot_number'
-    Artics batch Number:
-      key: 'artics_batch_number'
+    - IDX DFD Syringe lot Number
+    - vIDX KAPA Hifi Lot Number
+    - Artics batch Number
 LTHR-384 Lib PCR 1:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -61,8 +49,7 @@ LTHR-384 Lib PCR 1:
     - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
   :batch_names:
-    UDI Tag batch Number:
-      key: 'udi_tag_batch_number'
+    - UDI Tag batch Number
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -87,8 +74,7 @@ LTHR-384 Lib PCR pool:
   :label_template: plate_6mm_double
   :size: 384
   :batch_names:
-    REC Tip Lot Number:
-      key: 'rec_tip_lot_number'
+    - REC Tip Lot Number
 LTHR-384 Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -101,19 +87,11 @@ LTHR-384 Pool XP:
     target_volume_ul: 192
     minimum_pick_ul: 2
   :batch_names:
-    REC EB Batch:
-      key: 'rec_eb_batch'
-    REC ETOH Batch:
-      key: 'rec_etoh_batch'
-    REC AMP Batch:
-      key: 'rec_amp_batch'
-    REC qPCR Batch:
-      key: 'rec_qpcr_batch'
-    REC NFW Batch:
-      key: 'rec_nfw_batch'
-    TS Buffer Batch:
-      key: 'ts_buffer_batch'
-    TS Ladder Batch:
-      key: 'ts_ladder_batch'
-    TS ScreenTape Batch:
-      key: 'ts_screentape_batch'
+    - REC EB Batch
+    - REC ETOH Batch
+    - REC AMP Batch
+    - REC qPCR Batch
+    - REC NFW Batch
+    - TS Buffer Batch
+    - TS Ladder Batch
+    - TS ScreenTape Batch

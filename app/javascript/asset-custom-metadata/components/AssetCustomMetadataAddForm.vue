@@ -2,25 +2,38 @@
   <div v-if="customMetadataFieldsExist">
     <b-form @submit.prevent="submit">
       <b-form-group
-        v-for="(obj, name, index) in normalizedFields"
+        v-for="(item, index) in normalizedFields"
         id="custom-metadata-input-form"
         :key="index"
         label-cols="2"
-        :label="name"
-        :label-for="name"
+        :label="item"
+        :label-for="item"
       >
         <!-- only show input for fields which are defined in config -->
-        <b-form-input :id="obj['key']" v-model="form[obj['key']]" @update="onUpdate"></b-form-input>
+        <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
       </b-form-group>
 
-      <b-button id="asset_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>
-        {{ buttonText }}
+      <b-button
+        id="asset_custom_metadata_submit_button"
+        type="submit"
+        :variant="buttonStyle"
+        size="lg"
+        block
+      >
+        {{
+        buttonText
+        }}
       </b-button>
     </b-form>
   </div>
 </template>
 
 <script>
+// magnifiy glass
+// on hover, say find other plates with this metadata
+// with link to ss
+// ss/advanced_search?metadata_key=field_name&metadata_value=test_value
+
 // Get Custom Metadata fields from config and populate form
 // Fetch the assets existing Custom Metadata and update form
 // Store custom_metadatum_collections id, if it exists
@@ -93,7 +106,7 @@ export default {
       // which are provided in the config
       let initialForm = {}
       Object.values(this.normalizedFields).map((obj) => {
-        initialForm[obj['key']] = ''
+        initialForm[obj] = ''
       })
       this.form = initialForm
     },
@@ -140,6 +153,7 @@ export default {
       // remove any empty fields, as these will then be removed
       // from the metadata
       Object.keys(metadata).forEach((key) => {
+        metadata[key] = metadata[key].trim()
         if (metadata[key] === '') {
           delete metadata[key]
         }

@@ -46,22 +46,20 @@ RSpec.describe Presenters::PlatePresenter do
     context 'with batch_names' do
       before { create(:plate_with_batch_names_config) }
 
-      it 'returns a JSON string with a empty object when no batch_names config exists' do
-        expect(presenter.custom_metadata_fields).to eq(
-          '{"IDX DFD Syringe lot Number":{"key":"idx_dfd_syringe_lot_number"}}'
-        )
+      it 'returns a JSON string with a array of batch_names config' do
+        expect(presenter.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
       end
     end
     context 'with empty batch_names' do
       before { create(:plate_with_empty_batch_names_config) }
 
       it 'returns a JSON string with a empty object when no batch_names config exists' do
-        expect(presenter.custom_metadata_fields).to eq('{}')
+        expect(presenter.custom_metadata_fields).to eq('[]')
       end
     end
     context 'without batch_names' do
       it 'returns a JSON string with a empty object when no batch_names config exists' do
-        expect(presenter.custom_metadata_fields).to eq('{}')
+        expect(presenter.custom_metadata_fields).to eq('[]')
       end
     end
   end
