@@ -221,7 +221,7 @@ export default {
           type: 'custom_metadatum_collections',
           attributes: {
             user_id: this.userId,
-            labware_id: this.labwareId,
+            asset_id: this.labwareId,
             metadata: metadata,
           },
         },

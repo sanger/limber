@@ -295,27 +295,8 @@ describe('LabwareCustomMetadataAddForm', () => {
       })
     })
 
-    describe('#addCustomMetadata', () => {
-      it('updates the form, when there is config and some matching data', async () => {
-        customMetadataFields = '["RT LunaScript Super Mix"]'
-
-        mockFetchData = {
-          included: [
-            {
-              id: labwareId,
-              attributes: { metadata: { a_value_that_is_not_config: 'a value' } },
-            },
-          ],
-        }
-        let wrapper = wrapperFactory(mockFetchData)
-
-        await flushPromises()
-
-        expect(global.fetch).toHaveBeenCalledTimes(1)
-
-        expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
-        expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '', a_value_that_is_not_config: 'a value' })
-      })
+    describe('#buildPayload', () => {
+      // todo
     })
   })
 })
