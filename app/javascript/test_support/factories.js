@@ -12,4 +12,13 @@ const devourFactory = (devour) => {
   }
 }
 
-export { plateFactory, tubeFactory, wellFactory, requestFactory, jsonFactory, devourFactory, jsonCollectionFactory, attributesFactory }
+export {
+  plateFactory,
+  tubeFactory,
+  wellFactory,
+  requestFactory,
+  jsonFactory,
+  devourFactory,
+  jsonCollectionFactory,
+  attributesFactory,
+}

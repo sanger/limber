@@ -31,7 +31,11 @@ module LabwareCreators
     include LabwareCreators::CustomPage
 
     MISSING_WELL_DETAIL = 'is missing a row for well %s, all wells with content must have a row in the uploaded file.'
-    PENDING_WELL = 'contains at least one pending well %s, the plate and all wells in it should be passed before creating the child plate.'
+    PENDING_WELL =
+      # rubocop:todo Layout/LineLength
+      'contains at least one pending well %s, the plate and all wells in it should be passed before creating the child plate.'
+
+    # rubocop:enable Layout/LineLength
 
     self.page = 'pcr_cycles_binned_plate'
     self.attributes += [:file]
@@ -48,8 +52,7 @@ module LabwareCreators
     PARENT_PLATE_INCLUDES =
       'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
 
-    CHILD_PLATE_INCLUDES =
-      'wells.aliquots'
+    CHILD_PLATE_INCLUDES = 'wells.aliquots'
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
@@ -113,9 +116,7 @@ module LabwareCreators
 
     # Returns the parent wells selected to be taken forward.
     def filtered_wells
-      well_filter.filtered.each_with_object([]) do |well_filter_details, wells|
-        wells << well_filter_details[0]
-      end
+      well_filter.filtered.each_with_object([]) { |well_filter_details, wells| wells << well_filter_details[0] }
     end
 
     #
@@ -134,9 +135,11 @@ module LabwareCreators
     def request_hash(source_well, child_plate, additional_parameters)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect do |child_well|
-          child_well.location == transfer_hash[source_well.location]['dest_locn']
-        end&.uuid,
+        'target_asset' =>
+          child_plate
+            .wells
+            .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
+            &.uuid,
         'volume' => transfer_hash[source_well.location]['volume'].to_s
       }.merge(additional_parameters)
     end

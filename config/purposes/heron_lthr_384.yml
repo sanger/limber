@@ -29,8 +29,8 @@ LTHR-384 Lib PCR 1:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - TSsc384-PCR1-nCoV-2019/V3/B
-  - TSsc384-PCR1-nCoV-2019/V4/B
+    - TSsc384-PCR1-nCoV-2019/V3/B
+    - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
 LTHR-384 Lib PCR 2:
   :asset_type: plate
@@ -39,16 +39,16 @@ LTHR-384 Lib PCR 2:
   :label_template: plate_6mm_double
   :size: 384
   :tag_layout_templates:
-  - TSsc384-PCR2-nCoV-2019/V3/B
-  - TSsc384-PCR2-nCoV-2019/V4/B
+    - TSsc384-PCR2-nCoV-2019/V3/B
+    - TSsc384-PCR2-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
   :merged_plate:
     source_purposes:
-    - 'LTHR-384 Lib PCR 1'
-    - 'LTHR-384 Lib PCR 2'
+      - 'LTHR-384 Lib PCR 1'
+      - 'LTHR-384 Lib PCR 2'
     help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
   :label_template: plate_6mm_double
   :size: 384

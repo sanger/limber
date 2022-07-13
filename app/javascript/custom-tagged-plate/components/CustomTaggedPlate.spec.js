@@ -20,7 +20,7 @@ import {
 
 describe('CustomTaggedPlate', () => {
   const mockLocation = {}
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
@@ -492,9 +492,7 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(wrapper.vm.createButtonState).toEqual('pending')
-        expect(wrapper.vm.createButtonText).toEqual(
-          'Create new Custom Tagged plate'
-        )
+        expect(wrapper.vm.createButtonText).toEqual('Create new Custom Tagged plate')
 
         expect(wrapper.vm.createButtonStyle).toEqual('primary')
         expect(wrapper.vm.createButtonDisabled).toBe(false)
@@ -554,15 +552,7 @@ describe('CustomTaggedPlate', () => {
           tag1Group: exampleTag1Group,
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-        ])
+        expect(wrapper.vm.useableTagMapIds).toEqual([11, 12, 13, 14, 15, 16, 17])
       })
 
       it('returns an array of the tag 2 group map ids if only tag 2 group is selected', async () => {
@@ -594,15 +584,7 @@ describe('CustomTaggedPlate', () => {
           tag2Group: exampleTag2GroupLonger,
         })
 
-        expect(wrapper.vm.useableTagMapIds).toEqual([
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-        ])
+        expect(wrapper.vm.useableTagMapIds).toEqual([11, 12, 13, 14, 15, 16, 17])
       })
     })
 
@@ -687,13 +669,9 @@ describe('CustomTaggedPlate', () => {
       await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
 
-      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(true)
 
       expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
@@ -726,13 +704,9 @@ describe('CustomTaggedPlate', () => {
       await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
-      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
 
-      expect(
-        wrapper.find('lb-tag-layout-manipulations-multiple-stub').exists()
-      ).toBe(true)
+      expect(wrapper.find('lb-tag-layout-manipulations-multiple-stub').exists()).toBe(true)
 
       expect(wrapper.find('lb-well-modal-stub').exists()).toBe(true)
     })
@@ -742,9 +716,7 @@ describe('CustomTaggedPlate', () => {
 
       await flushPromises()
 
-      expect(wrapper.find('#custom_tagged_plate_submit_button').exists()).toBe(
-        true
-      )
+      expect(wrapper.find('#custom_tagged_plate_submit_button').exists()).toBe(true)
     })
   })
 
@@ -781,9 +753,7 @@ describe('CustomTaggedPlate', () => {
       })
 
       expect(wrapper.vm.childWells['A4'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A4'].validity.message).toBe(
-        'Tag clash with the following: submission'
-      )
+      expect(wrapper.vm.childWells['A4'].validity.message).toBe('Tag clash with the following: submission')
     })
 
     it('sets a childwell to invalid if there is a tag clash with another childwell', () => {
@@ -799,14 +769,10 @@ describe('CustomTaggedPlate', () => {
       })
 
       expect(wrapper.vm.childWells['A1'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A1'].validity.message).toBe(
-        'Tag clash with the following: A3'
-      )
+      expect(wrapper.vm.childWells['A1'].validity.message).toBe('Tag clash with the following: A3')
 
       expect(wrapper.vm.childWells['A3'].validity.valid).toBe(false)
-      expect(wrapper.vm.childWells['A3'].validity.message).toBe(
-        'Tag clash with the following: A1'
-      )
+      expect(wrapper.vm.childWells['A3'].validity.message).toBe('Tag clash with the following: A1')
     })
 
     it('sends a post request when the create plate button is clicked', async () => {
@@ -856,10 +822,7 @@ describe('CustomTaggedPlate', () => {
       mock.onPost().reply((config) => {
         expect(config.url).toEqual('example/example')
         expect(config.data).toEqual(JSON.stringify(expectedPayload))
-        return [
-          201,
-          { redirect: 'http://wwww.example.com', message: 'Creating...' },
-        ]
+        return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
       })
 
       // to click the button we would need to mount rather than shallowMount, but then we run into issues with mocking other database calls

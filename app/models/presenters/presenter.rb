@@ -46,9 +46,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   def summary
-    summary_items.each do |label, method_symbol|
-      yield label, send(method_symbol)
-    end
+    summary_items.each { |label, method_symbol| yield label, send(method_symbol) }
   end
 
   # Human formatted date of creation
@@ -96,10 +94,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     rescue Sequencescape::Api::ResourceNotFound
       metadata = nil
     end
-    if metadata.present?
-      metadata.fetch('stock_barcode', barcode)
-    else
-      'N/A'
-    end
+    metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
 end

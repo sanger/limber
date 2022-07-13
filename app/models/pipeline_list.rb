@@ -9,9 +9,7 @@ class PipelineList
   delegate_missing_to :list
 
   def initialize(list = {})
-    @list = list.map do |pipeline_name, pipeline_config|
-      Pipeline.new(pipeline_config.merge(name: pipeline_name))
-    end
+    @list = list.map { |pipeline_name, pipeline_config| Pipeline.new(pipeline_config.merge(name: pipeline_name)) }
   end
 
   # Returns an array of all pipelines that are 'active' for a particular piece of
@@ -38,7 +36,9 @@ class PipelineList
   #
   # To this:
   #
-  # ["LTHR Cherrypick", "LTHR-384 RT", "LTHR-384 RT-Q", "LTHR-384 PCR 1", "LTHR-384 PCR 2", "LTHR-384 Lib PCR 1", "LTHR-384 Lib PCR 2", "LTHR-384 Lib PCR pool"]
+  # ["LTHR Cherrypick", "LTHR-384 RT", "LTHR-384 RT-Q", "LTHR-384 PCR 1",
+  # "LTHR-384 PCR 2", "LTHR-384 Lib PCR 1", "LTHR-384 Lib PCR 2", "LTHR-384 Lib
+  # PCR pool"]
   def combine_and_order_pipelines(pipeline_names)
     pipeline_configs = @list.select { |pipeline| pipeline_names.include? pipeline.name }
 
@@ -60,7 +60,7 @@ class PipelineList
     end
   end
 
-  def flatten_relationships_into_purpose_list(relationship_config)
+  def flatten_relationships_into_purpose_list(relationship_config) # rubocop:todo Metrics/MethodLength
     ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list
@@ -69,12 +69,17 @@ class PipelineList
     while relationship_config.size.positive?
       # Find any purposes with no 'parent' purposes - to go on the front of the list
       without_parent = find_purposes_without_parent(relationship_config)
-      raise "Pipeline config can't be flattened into a list of purposes" if without_parent.empty? # important to prevent infinite looping
+
+      if without_parent.empty?
+        # important to prevent infinite looping
+        raise "Pipeline config can't be flattened into a list of purposes"
+      end
 
       ordered_purpose_list += without_parent
 
-      # Delete the nodes that have been added, making the next set of purposes have no parent
-      # So we can use the same technique again in the next iteration
+      # Delete the nodes that have been added, making the next set of purposes
+      # have no parent So we can use the same technique again in the next
+      # iteration
       without_parent.each { |n| relationship_config.delete(n) }
     end
 

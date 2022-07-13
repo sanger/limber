@@ -1,3 +1,5 @@
+inherit_from:
+  - node_modules/@prettier/plugin-ruby/rubocop.yml
 require:
   - rubocop-rails
   - rubocop-performance
@@ -58,11 +60,8 @@ Metrics/MethodLength:
     - array
     - hash
     - heredoc
-# Ideally we want to get this down a bit more. 120 would be nice, 80 is overkill
-# Although the above line is exactly 80 characters. That wasn't intentional.
-Layout/LineLength:
-  Max: 161
 
 Naming/VariableNumber:
-  CheckSymbols: false # Rubocop gets annoyed about our states. I'm disabling globally
-                      # as I'm honestly not that bothered.
+  CheckSymbols:
+    false # Rubocop gets annoyed about our states. I'm disabling globally
+    # as I'm honestly not that bothered.

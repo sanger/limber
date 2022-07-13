@@ -11,9 +11,7 @@ class QcFilesController < ApplicationController
   before_action :find_assets, only: %i[create index]
 
   def index
-    respond_to do |format|
-      format.json { render json: { 'qc_files' => asset.qc_files } }
-    end
+    respond_to { |format| format.json { render json: { 'qc_files' => asset.qc_files } } }
   end
 
   def show
@@ -24,7 +22,10 @@ class QcFilesController < ApplicationController
 
   def create
     asset.qc_files.create_from_file!(params['qc_file'], params['qc_file'].original_filename)
-    redirect_to(asset_path, notice: 'Your file has been uploaded and is available from the file tab')
+    redirect_to(
+      asset_path,
+      notice: 'Your file has been uploaded and is available from the file tab' # rubocop:todo Rails/I18nLocaleTexts
+    )
   end
 
   private
@@ -34,7 +35,7 @@ class QcFilesController < ApplicationController
       next if params["limber_#{klass}_id"].nil?
 
       @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
-      @asset      = api.send(:"#{klass}").find(params["limber_#{klass}_id"])
+      @asset = api.send(:"#{klass}").find(params["limber_#{klass}_id"])
       return true
     end
     false

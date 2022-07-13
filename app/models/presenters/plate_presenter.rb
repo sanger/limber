@@ -16,6 +16,7 @@ module Presenters
 
     self.summary_partial = 'labware/plates/standard_summary'
     self.aliquot_partial = 'standard_aliquot'
+
     # summary_items is a hash of a label label, and a symbol representing the
     # method to call to get the value
     self.summary_items = {
@@ -32,23 +33,37 @@ module Presenters
 
     # @note Validation here is intended as a warning. Rather than strict validation
     validates :pcr_cycles,
-              length: { maximum: 1, message: 'are not consistent across the plate.' },
+              length: {
+                maximum: 1,
+                message: 'are not consistent across the plate.' # rubocop:todo Rails/I18nLocaleTexts
+              },
               unless: :multiple_requests_per_well?
 
     validates :requested_pcr_cycles,
-              inclusion: { in: ->(r) { r.expected_cycles },
-                           message: 'differs from standard. %<value>s cycles have been requested.' },
+              inclusion: {
+                in: ->(r) { r.expected_cycles },
+                message: 'differs from standard. %<value>s cycles have been requested.' # rubocop:todo Rails/I18nLocaleTexts
+              },
               if: :expected_cycles
 
     validates_with Validators::InProgressValidator
     validates_with Validators::FailedValidator
 
-    delegate :pcr_cycles, :tagged?, :number_of_columns, :number_of_rows, :size,
-             :purpose, :human_barcode, :priority, :pools, to: :labware
+    delegate :pcr_cycles,
+             :tagged?,
+             :number_of_columns,
+             :number_of_rows,
+             :size,
+             :purpose,
+             :human_barcode,
+             :priority,
+             :pools,
+             to: :labware
     delegate :pool_index, to: :pools
     delegate :tube_labels, to: :tubes_and_sources
 
     alias plate_to_walk labware
+
     # Purpose returns the plate or tube purpose of the labware.
     # Currently this needs to be specialised for tube or plate but in future
     # both should use #purpose and we'll be able to share the same method for
@@ -79,20 +94,25 @@ module Presenters
     end
 
     def child_plates
-      labware.child_plates.tap do |child_plates|
-        yield child_plates if block_given? && child_plates.present?
-      end
+      labware.child_plates.tap { |child_plates| yield child_plates if block_given? && child_plates.present? }
     end
 
     alias child_assets child_plates
 
     def csv_file_links
-      links = purpose_config.fetch(:file_links, []).map do |link|
-        [
-          link.name,
-          [:limber_plate, :export, { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }]
-        ]
-      end
+      links =
+        purpose_config
+          .fetch(:file_links, [])
+          .map do |link|
+            [
+              link.name,
+              [
+                :limber_plate,
+                :export,
+                { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }
+              ]
+            ]
+          end
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links
     end
@@ -142,9 +162,7 @@ module Presenters
     # Passable requests are those associated with aliquots,
     # which have not yet been passed, failed or cancelled
     def passable_request_types
-      wells.flat_map do |well|
-        well.requests_in_progress.select(&:passable?).map(&:request_type_key)
-      end
+      wells.flat_map { |well| well.requests_in_progress.select(&:passable?).map(&:request_type_key) }
     end
   end
 end

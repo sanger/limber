@@ -11,9 +11,7 @@ FactoryBot.define do
 
     initialize_with { attributes }
 
-    transient do
-      uuid { 'example-purpose-uuid' }
-    end
+    transient { uuid { 'example-purpose-uuid' } }
 
     name { 'Plate Purpose' }
     creator_class { 'LabwareCreators::StampedPlate' }
@@ -28,9 +26,7 @@ FactoryBot.define do
 
     # Sets up a stock plate configuration
     factory :stock_plate_config do
-      transient do
-        uuid { 'stock-plate-purpose-uuid' }
-      end
+      transient { uuid { 'stock-plate-purpose-uuid' } }
       name { 'Limber Cherrypicked' }
       presenter_class { 'Presenters::StockPlatePresenter' }
       stock_plate { true }
@@ -42,13 +38,7 @@ FactoryBot.define do
     factory :tube_with_transfer_parameters_config do
       name { 'LTHR-384 Pool XP' }
       presenter_class { 'Presenters::TubePresenter' }
-      transfer_parameters do
-        {
-          target_molarity_nm: 4,
-          target_volume_ul: 192,
-          minimum_pick_ul: 2
-        }
-      end
+      transfer_parameters { { target_molarity_nm: 4, target_volume_ul: 192, minimum_pick_ul: 2 } }
     end
 
     # Sets up a config with a minimal presenter
@@ -91,12 +81,7 @@ FactoryBot.define do
     # Sets up the configuration required for a Normalized plate
     factory :fixed_normalisation_purpose_config do
       creator_class { 'LabwareCreators::FixedNormalisedPlate' }
-      dilutions do
-        {
-          source_volume: 2,
-          diluent_volume: 33
-        }
-      end
+      dilutions { { source_volume: 2, diluent_volume: 33 } }
     end
 
     # Configuration for a normalized and binned plate purpose
@@ -109,10 +94,7 @@ FactoryBot.define do
           target_amount_ng: 50,
           target_volume: 20,
           minimum_source_volume: 0.2,
-          bins: [
-            { colour: 1, pcr_cycles: 16, max: 25 },
-            { colour: 2, pcr_cycles: 14, min: 25 }
-          ]
+          bins: [{ colour: 1, pcr_cycles: 16, max: 25 }, { colour: 2, pcr_cycles: 14, min: 25 }]
         }
       end
     end
@@ -120,13 +102,7 @@ FactoryBot.define do
     # Configuration for a ConcentrationNormalisedPlate
     factory :concentration_normalisation_purpose_config do
       creator_class { 'LabwareCreators::ConcentrationNormalisedPlate' }
-      dilutions do
-        {
-          target_amount_ng: 50,
-          target_volume: 20,
-          minimum_source_volume: 0.2
-        }
-      end
+      dilutions { { target_amount_ng: 50, target_volume: 20, minimum_source_volume: 0.2 } }
     end
 
     factory :duplex_seq_customer_csv_file_upload_purpose_config do
@@ -157,10 +133,7 @@ FactoryBot.define do
     # Configuration for a plate merge purpose
     factory :merged_plate_purpose_config do
       merged_plate do
-        {
-          source_purposes: ['Source 1 Purpose', 'Source 2 Purpose'],
-          help_text: 'Some specific help text.'
-        }
+        { source_purposes: ['Source 1 Purpose', 'Source 2 Purpose'], help_text: 'Some specific help text.' }
       end
     end
 
@@ -189,6 +162,7 @@ FactoryBot.define do
       asset_type { 'tube' }
       default_printer_type { :tube }
       presenter_class { 'Presenters::SimpleTubePresenter' }
+      state_changer_class { 'StateChangers::TubeStateChanger' }
 
       # Config for the final tube in a pipeline
       factory :passable_tube do
@@ -217,9 +191,7 @@ FactoryBot.define do
 
     initialize_with { attributes }
 
-    transient do
-      uuid { 'example-purpose-uuid' }
-    end
+    transient { uuid { 'example-purpose-uuid' } }
 
     name { 'Tube rack' }
     asset_type { 'tube_rack' }

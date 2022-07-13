@@ -25,18 +25,12 @@ module LabwareCreators
     end
 
     def bait_library_layout_preview
-      @bait_library_layout_preview ||= api.bait_library_layout.preview!(
-        plate: parent_uuid,
-        user: user_uuid
-      ).layout
+      @bait_library_layout_preview ||= api.bait_library_layout.preview!(plate: parent_uuid, user: user_uuid).layout
     end
 
     def create_labware!
       create_plate_with_standard_transfer! do |child|
-        api.bait_library_layout.create!(
-          plate: child.uuid,
-          user: user_uuid
-        )
+        api.bait_library_layout.create!(plate: child.uuid, user: user_uuid)
       end
     end
 
@@ -46,15 +40,10 @@ module LabwareCreators
 
     def wells
       parent.locations_in_rows.map do |location|
-        bait     = bait_library_layout_preview[location]
-        aliquot  = bait # Fudge, will be nil if no bait
+        bait = bait_library_layout_preview[location]
+        aliquot = bait # Fudge, will be nil if no bait
 
-        Baits.new(
-          location,
-          bait,
-          [aliquot].compact,
-          nil
-        )
+        Baits.new(location, bait, [aliquot].compact, nil)
       end
     end
 

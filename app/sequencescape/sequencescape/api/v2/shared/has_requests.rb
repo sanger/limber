@@ -59,9 +59,10 @@ module Sequencescape::Api::V2::Shared
     # Finding 'in_progress' requests
 
     def requests_in_progress(request_type_key: nil)
-      aliquots.flat_map(&:request).compact.select do |r|
-        request_type_key.nil? || r.request_type_key == request_type_key
-      end
+      aliquots
+        .flat_map(&:request)
+        .compact
+        .select { |r| request_type_key.nil? || r.request_type_key == request_type_key }
     end
 
     # Based on in_progress requests

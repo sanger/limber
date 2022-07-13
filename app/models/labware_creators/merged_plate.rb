@@ -43,6 +43,7 @@ module LabwareCreators
 
     def barcodes=(barcodes)
       @barcodes = barcodes
+
       # Removes empty strings from barcodes, for validation and strips off whitespace
       @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
@@ -58,10 +59,11 @@ module LabwareCreators
     end
 
     def source_plates
-      @source_plates ||= Sequencescape::Api::V2::Plate.find_all(
-        { barcode: minimal_barcodes },
-        includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source'
-      )
+      @source_plates ||=
+        Sequencescape::Api::V2::Plate.find_all(
+          { barcode: minimal_barcodes },
+          includes: 'purpose,parents,wells.aliquots.request,wells.requests_as_source'
+        )
     end
 
     # Returns the attributes for a transfer request from
@@ -97,8 +99,11 @@ module LabwareCreators
 
       return unless expected_merges.values.any? { |v| v.uniq.many? }
 
-      errors.add(:source_plates, 'have different requests or suboptimal status and can not be merged, '\
-                                 'please check you have scanned the correct set of source plates.')
+      errors.add(
+        :source_plates,
+        'have different requests or suboptimal status and can not be merged, ' \
+          'please check you have scanned the correct set of source plates.'
+      )
     end
 
     #

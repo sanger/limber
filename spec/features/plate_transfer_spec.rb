@@ -8,17 +8,22 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
-  let(:user)              { create :user, uuid: user_uuid }
-  let(:swipecard)         { 'abcdef' }
-  let(:robot_barcode)     { 'robot_barcode' }
-  let(:plate_barcode_1)   { 'DN1S' }
-  let(:plate_barcode_2)   { 'DN2T' }
-  let(:plate_uuid)        { SecureRandom.uuid }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:swipecard) { 'abcdef' }
+  let(:robot_barcode) { 'robot_barcode' }
+  let(:plate_barcode_1) { 'DN1S' }
+  let(:plate_barcode_2) { 'DN2T' }
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:example_plate) do
     create :v2_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
   end
   let(:example_plate_without_metadata) do
-    create :v2_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', state: 'started', barcode_number: 1
+    create :v2_plate,
+           uuid: plate_uuid,
+           purpose_name: 'LB End Prep',
+           purpose_uuid: 'lb_end_prep_uuid',
+           state: 'started',
+           barcode_number: 1
   end
   let(:custom_metadatum_collection) do
     create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' }
@@ -48,32 +53,46 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   end
 
   let(:payload) do
-    { custom_metadatum_collection: { user: user_uuid, asset: plate_uuid,
-                                     metadata: { created_with_robot: 'robot_barcode' } } }
+    {
+      custom_metadatum_collection: {
+        user: user_uuid,
+        asset: plate_uuid,
+        metadata: {
+          created_with_robot: 'robot_barcode'
+        }
+      }
+    }
   end
 
   let(:stub_custom_metdatum_collections_post) do
-    stub_api_post('custom_metadatum_collections',
-                  payload: payload,
-                  body: json(:custom_metadatum_collection))
+    stub_api_post('custom_metadatum_collections', payload: payload, body: json(:custom_metadatum_collection))
   end
   let(:stub_state_changes_post) do
-    stub_api_post('state_changes',
-                  payload: {
-                    state_change: {
-                      target_state: 'started',
-                      reason: 'Robot bravo LB Post Shear => LB End Prep started',
-                      customer_accepts_responsibility: false, target: plate_uuid, user: user_uuid,
-                      contents: nil
-                    }
-                  },
-                  body: json(:state_change, target_state: 'started'))
+    stub_api_post(
+      'state_changes',
+      payload: {
+        state_change: {
+          target_state: 'started',
+          reason: 'Robot bravo LB Post Shear => LB End Prep started',
+          customer_accepts_responsibility: false,
+          target: plate_uuid,
+          user: user_uuid,
+          contents: nil
+        }
+      },
+      body: json(:state_change, target_state: 'started')
+    )
   end
 
   scenario 'starts the robot and saves the robot barcode' do
-    allow_any_instance_of(Robots::Robot)
-      .to receive(:verify)
-      .and_return(beds: { '580000004838' => true, '580000014851' => true }, valid: true, message: '')
+    allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(
+      beds: {
+        '580000004838' => true,
+        '580000014851' => true
+      },
+      valid: true,
+      message: ''
+    )
 
     create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
 
@@ -83,7 +102,12 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     # Legacy asset search
     stub_asset_search(
       example_plate.barcode.machine,
-      json(:plate, uuid: example_plate.uuid, purpose_name: example_plate.purpose.name, purpose_uuid: example_plate.purpose.uuid)
+      json(
+        :plate,
+        uuid: example_plate.uuid,
+        purpose_name: example_plate.purpose.name,
+        purpose_uuid: example_plate.purpose.uuid
+      )
     )
 
     fill_in_swipecard(swipecard)
@@ -94,9 +118,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     click_link 'bravo LB Post Shear => LB End Prep'
     expect(page).to have_content('bravo LB Post Shear => LB End Prep')
     scan_in 'Scan robot', with: '123'
-    within('#robot') do
-      expect(page).to have_content('123')
-    end
+    within('#robot') { expect(page).to have_content('123') }
     scan_in 'Scan bed', with: '580000004838'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
@@ -139,9 +161,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
     scan_in 'Scan robot', with: robot_barcode
-    within('#robot') do
-      expect(page).to have_content(robot_barcode.to_s)
-    end
+    within('#robot') { expect(page).to have_content(robot_barcode.to_s) }
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
@@ -166,9 +186,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     click_link 'bravo LB End Prep'
     expect(page).to have_content('bravo LB End Prep')
     scan_in 'Scan robot', with: robot_barcode
-    within('#robot') do
-      expect(page).to have_content(robot_barcode.to_s)
-    end
+    within('#robot') { expect(page).to have_content(robot_barcode.to_s) }
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do

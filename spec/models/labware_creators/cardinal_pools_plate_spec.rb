@@ -10,19 +10,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   has_a_working_api
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
-  let(:parent_uuid)       { 'example-parent-uuid' }
-  let(:user_uuid)         { 'user-uuid' }
-  let(:plate_size)        { 96 }
-  let(:child_uuid)        { 'example-dest-uuid' }
-  let(:child_plate)       { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
+  let(:parent_uuid) { 'example-parent-uuid' }
+  let(:user_uuid) { 'user-uuid' }
+  let(:plate_size) { 96 }
+  let(:child_uuid) { 'example-dest-uuid' }
+  let(:child_plate) { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
 
-  let(:form_attributes) do
-    {
-      purpose_uuid: dest_purpose_uuid,
-      parent_uuid: parent_uuid,
-      user_uuid: user_uuid
-    }
-  end
+  let(:form_attributes) { { purpose_uuid: dest_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
   # TODO: rename throughout to source and dest
   # SS V2 API Plate
@@ -38,13 +32,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     plate1
   end
 
-  before do
-    allow(subject).to receive(:parent).and_return(plate)
-  end
+  before { allow(subject).to receive(:parent).and_return(plate) }
 
-  subject do
-    LabwareCreators::CardinalPoolsPlate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be initialised' do
@@ -111,45 +101,50 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   context '#number_of_pools' do
-    before do
-      stub_v2_plate(plate, stub_search: false)
-    end
+    before { stub_v2_plate(plate, stub_search: false) }
 
     #  20 passed, 76 failed
     it 'has 1 pool' do
       plate.wells[0..19].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(1)
     end
+
     #  21 passed, 75 failed
     it 'has 2 pools' do
       plate.wells[0..20].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(2)
     end
+
     #  28 passed, 68 failed
     it 'has 3 pools' do
       plate.wells[0..27].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(3)
     end
+
     #  40 passed, 56 failed
     it 'has 4 pools' do
       plate.wells[0..39].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(4)
     end
+
     #  53 passed, 43 failed
     it 'has 5 pools' do
       plate.wells[0..52].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(5)
     end
+
     #  66 passed, 30 failed
     it 'has 6 pools' do
       plate.wells[0..65].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(6)
     end
+
     #  77 passed, 19 failed
     it 'has 7 pools' do
       plate.wells[0..76].map { |well| well['state'] = 'passed' }
       expect(subject.number_of_pools).to eq(7)
     end
+
     #  88 passed, 8 failed
     it 'has 8 pools' do
       plate.wells[0..87].map { |well| well['state'] = 'passed' }
@@ -171,14 +166,10 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   end
 
   describe '#transfer_hash' do
-    before do
-      stub_v2_plate(plate, stub_search: false)
-    end
+    before { stub_v2_plate(plate, stub_search: false) }
 
     context 'when there are 92 passed samples' do
-      before do
-        plate.wells[4..95].map { |well| well['state'] = 'passed' }
-      end
+      before { plate.wells[4..95].map { |well| well['state'] = 'passed' } }
 
       it 'returns an object where passed source well keys map to pool destination well' do
         result = subject.transfer_hash
@@ -188,9 +179,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
 
     context 'when there are 21 passed samples' do
-      before do
-        plate.wells[4..95].map { |well| well['state'] = 'passed' }
-      end
+      before { plate.wells[4..95].map { |well| well['state'] = 'passed' } }
       it 'returns an object where passed source well keys map to pool destination well' do
         plate.wells[4..74].map { |well| well['state'] = 'failed' }
         result = subject.transfer_hash
@@ -255,7 +244,9 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
     context 'the wells within a supplier group are randomised' do
       it 'returns whats expected' do
+        # rubocop:todo Layout/LineLength
         # difficult to test randomness as there is a chance this fails if the randomisation is such that it remains the same order
+        # rubocop:enable Layout/LineLength
         expect(subject.wells_grouped_by_supplier['blood location 2']).not_to eq plate.wells[9..49]
       end
     end
@@ -265,7 +256,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
         supplier_group4 = plate.wells[0..3] # contains only failed samples
         supplier_group4.map { |well| well.aliquots.first.sample.sample_manifest[:supplier_name] = 'blood location 4' }
         expect(subject.wells_grouped_by_supplier.count).to eq(3)
-        expect(subject.wells_grouped_by_supplier.keys).to match_array ['blood location 3', 'blood location 2', 'blood location 1']
+        expect(subject.wells_grouped_by_supplier.keys).to match_array [
+                      'blood location 3',
+                      'blood location 2',
+                      'blood location 1'
+                    ]
         expect(subject.wells_grouped_by_supplier['blood location 4']).to be_nil
       end
     end

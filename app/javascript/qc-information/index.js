@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
    # In general it looks like this is something we should consider
    # once the majority of our components are vue based.
    */
-  if ( document.getElementById('qc-information') ) {
+  if (document.getElementById('qc-information')) {
     /* The files-list element isn't on all pages. So only initialize our
-    * Vue app if we actually find it */
+     * Vue app if we actually find it */
     new Vue({
       // Customized render function to pass in properties from our root element
       // Uses render (h) rather than h => to ensure that `this` is the Vue app.
@@ -32,7 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // navigation elements based on appropriateness
       // h in this case is Vue-shorthand for createElement
       // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-      render (h) { return h(QcInformation, { props: this.$el.dataset }) }
+      render(h) {
+        return h(QcInformation, { props: this.$el.dataset })
+      },
     }).$mount('#qc-information')
   }
 })

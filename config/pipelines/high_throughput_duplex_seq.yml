@@ -3,8 +3,8 @@ Duplex Seq:
   filters:
     request_type_key: limber_duplex-seq
     library_type:
-    - Duplex-Seq
-    - Targeted Nanoseq
+      - Duplex-Seq
+      - Targeted Nanoseq
   library_pass: LDS Lib PCR XP
   relationships:
     LDS Stock: LDS Stock XP

@@ -3,6 +3,7 @@
 # Part of the Labware creator classes
 module LabwareCreators
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
+
   #
   # Class WellDetailsHeader provides a simple wrapper for handling and validating
   # the plate barcode header row from the customer csv file
@@ -11,10 +12,18 @@ module LabwareCreators
     include ActiveModel::Validations
 
     # Return the index of the respective column.
-    attr_reader :well_column, :concentration_column, :sanger_sample_id_column,
-                :supplier_sample_name_column, :input_amount_available_column, :input_amount_desired_column,
-                :sample_volume_column, :diluent_volume_column, :pcr_cycles_column,
-                :submit_for_sequencing_column, :sub_pool_column, :coverage_column
+    attr_reader :well_column,
+                :concentration_column,
+                :sanger_sample_id_column,
+                :supplier_sample_name_column,
+                :input_amount_available_column,
+                :input_amount_desired_column,
+                :sample_volume_column,
+                :diluent_volume_column,
+                :pcr_cycles_column,
+                :submit_for_sequencing_column,
+                :sub_pool_column,
+                :coverage_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'
@@ -31,14 +40,29 @@ module LabwareCreators
 
     validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :sanger_sample_id_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :supplier_sample_name_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :input_amount_available_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :input_amount_desired_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :sanger_sample_id_column,
+              presence: {
+                message: ->(object, _data) { "could not be found in: '#{object}'" }
+              }
+    validates :supplier_sample_name_column,
+              presence: {
+                message: ->(object, _data) { "could not be found in: '#{object}'" }
+              }
+    validates :input_amount_available_column,
+              presence: {
+                message: ->(object, _data) { "could not be found in: '#{object}'" }
+              }
+    validates :input_amount_desired_column,
+              presence: {
+                message: ->(object, _data) { "could not be found in: '#{object}'" }
+              }
     validates :sample_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :diluent_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :pcr_cycles_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :submit_for_sequencing_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :submit_for_sequencing_column,
+              presence: {
+                message: ->(object, _data) { "could not be found in: '#{object}'" }
+              }
     validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
 
@@ -84,9 +108,7 @@ module LabwareCreators
     # @return [Int,nil] The index of the header in the column list. nil is missing.
     #
     def index_of_header(column_header)
-      @row.index do |value|
-        value.respond_to?(:strip) && column_header.casecmp?(value.strip)
-      end
+      @row.index { |value| value.respond_to?(:strip) && column_header.casecmp?(value.strip) }
     end
   end
 end

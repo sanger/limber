@@ -18,7 +18,7 @@ machine. The only dependency that isn't provided is Sequencescape, so please
 ensure you have that running on port 3000 on your localhost before attempting to
 run Limber in Docker.
 
-You must have Docker Desktop installed on your machine.  Then the only command
+You must have Docker Desktop installed on your machine. Then the only command
 you should need to run is:
 
 ```shell
@@ -28,7 +28,7 @@ docker-compose up
 Variations on this command include:
 
 - `docker-compose up -d` which starts the container as a background task
-  (freeing up the terminal).  You can then use `docker-compose down` to turn it
+  (freeing up the terminal). You can then use `docker-compose down` to turn it
   off again.
 - `GENERATE_CONFIG=false docker-compose up` which will avoid running the
   `config:generate` rake task as Limber is started.
@@ -90,6 +90,25 @@ repository, as indicated:
    ```shell
    bundle exec rails s
    ```
+
+## Linting and formatting
+
+Linting and formatting are provided by rubocop, prettier and Eslint. I strongly
+recommend checking out editor integrations. Also, using lefthook will help
+ensure that only valid files are committed.
+
+```shell
+# Run rubocop
+bundle exec rubocop
+# Run rubocop with safe autofixes
+bundle exec rubocop -a
+# ESlint
+yarn lint
+# Check prettier formatting
+yarn prettier --check .
+# Fix prettier formatting
+yarn prettier --write .
+```
 
 ## Note about the remainder of this document
 
@@ -155,14 +174,15 @@ There are a few tools available to assist with writing specs:
 
 #### Factory Bot
 
-* Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
+- Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
 
-* Traits:
-  * `api_object`: Ensures that lots of the shared behaviour, like actions and uuids are generated automatically
-barcoded: Automatically ensures that barcode is populated with the correct hash, and calculates human and machine barcodes
-  * `build`: Returns an actual object, as though already found via the api. Useful for unit tests
+- Traits:
 
-* Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
+  - `api_object`: Ensures that lots of the shared behaviour, like actions and uuids are generated automatically
+    barcoded: Automatically ensures that barcode is populated with the correct hash, and calculates human and machine barcodes
+  - `build`: Returns an actual object, as though already found via the api. Useful for unit tests
+
+- Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
 
 #### Request stubbing
 

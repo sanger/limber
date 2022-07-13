@@ -37,6 +37,7 @@ FactoryBot.define do
       json_root { nil }
       resource_actions { %w[read first last] }
       purpose_uuid { SecureRandom.uuid }
+
       # While resources can be paginated, wells wont be.
       # Furthermore, we trust the api gem to handle that side of things.
       resource_url { "#{api_root}#{purpose_uuid}/children/1" }
@@ -44,9 +45,7 @@ FactoryBot.define do
     end
 
     plate_purposes do
-      Array.new(size) do |i|
-        associated(:plate_purpose, name: "Child Purpose #{i}", uuid: "child-purpose-#{i}")
-      end
+      Array.new(size) { |i| associated(:plate_purpose, name: "Child Purpose #{i}", uuid: "child-purpose-#{i}") }
     end
   end
 end

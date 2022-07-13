@@ -55,9 +55,11 @@ module Presenters
     end
 
     def csv_file_links
-      purpose_config.fetch(:file_links, []).map do |link|
-        [link.name, [:limber_tube_rack, :export, { id: link.id, limber_tube_rack_id: human_barcode, format: :csv }]]
-      end
+      purpose_config
+        .fetch(:file_links, [])
+        .map do |link|
+          [link.name, [:limber_tube_rack, :export, { id: link.id, limber_tube_rack_id: human_barcode, format: :csv }]]
+        end
     end
 
     def comment_title

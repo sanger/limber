@@ -8,32 +8,19 @@
 
 <template>
   <lb-page>
-    <lb-loading-modal
-      v-if="loading"
-      :message="progressMessage"
-    />
+    <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <b-card
-        bg-variant="dark"
-        text-variant="white"
-      >
+      <b-card bg-variant="dark" text-variant="white">
         <h3>Tube rack UI goes here</h3>
         <p>
-          Scanned tubes will appear in a UI representation of the tube rack.
-          This will be similar in function to the plate UI but will be capable
-          of opening the tube information page when viewed after creation.
+          Scanned tubes will appear in a UI representation of the tube rack. This will be similar in function to the
+          plate UI but will be capable of opening the tube information page when viewed after creation.
         </p>
       </b-card>
     </lb-main-content>
     <lb-sidebar>
-      <b-card
-        header="Scan tubes"
-        header-tag="h3"
-      >
-        <b-form-group
-          label="Scan the tube barcodes into the relevant rack coordinates:"
-          class="fixed-height-scroll"
-        >
+      <b-card header="Scan tubes" header-tag="h3">
+        <b-form-group label="Scan the tube barcodes into the relevant rack coordinates:" class="fixed-height-scroll">
           <lb-labware-scan
             v-for="i in tubeCount"
             :key="i"
@@ -48,14 +35,8 @@
             @change="updateTube(i, $event)"
           />
         </b-form-group>
-        <hr>
-        <b-button
-          :disabled="!valid"
-          variant="success"
-          @click="createRack()"
-        >
-          Create
-        </b-button>
+        <hr />
+        <b-button :disabled="!valid" variant="success" @click="createRack()"> Create </b-button>
       </b-card>
     </lb-sidebar>
   </lb-page>
@@ -75,7 +56,7 @@ export default {
   name: 'TubesToRack',
   components: {
     'lb-labware-scan': LabwareScan,
-    'lb-loading-modal': LoadingModal
+    'lb-loading-modal': LoadingModal,
   },
   props: {
     // Sequencescape API V2 URL
@@ -88,9 +69,9 @@ export default {
     rackHeight: { type: Number, default: 2 },
 
     // Limber target Asset URL for posting the transfers
-    targetUrl: { type: String, required: true }
+    targetUrl: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
       // Array containing objects with scanned tubes, their states and the
       // index of the form input in which they were scanned.
@@ -105,12 +86,12 @@ export default {
       loading: false,
 
       // Message to be shown during loading screen
-      progressMessage: ''
+      progressMessage: '',
     }
   },
   computed: {
     scanValidators() {
-      const allTubes = this.tubes.map(tubeItem => tubeItem.labware)
+      const allTubes = this.tubes.map((tubeItem) => tubeItem.labware)
       return [checkDuplicates(allTubes), checkMatchingPurposes(this.firstTubePurpose)]
     },
     tubeCount() {
@@ -126,57 +107,61 @@ export default {
       return this.validTubes[0]?.labware.purpose
     },
     unsuitableTubes() {
-      return this.tubes.filter( tube => !(tube.state === 'valid' || tube.state === 'empty') )
+      return this.tubes.filter((tube) => !(tube.state === 'valid' || tube.state === 'empty'))
     },
     valid() {
-      return this.validTubes.length > 0 &&      // At least one tube is validated
-             this.unsuitableTubes.length === 0  // None of the tubes are invalid
+      return (
+        this.validTubes.length > 0 && // At least one tube is validated
+        this.unsuitableTubes.length === 0
+      ) // None of the tubes are invalid
     },
     validTubes() {
-      return this.tubes.filter( tube => tube.state === 'valid' )
-    }
+      return this.tubes.filter((tube) => tube.state === 'valid')
+    },
   },
   methods: {
     indexToName(index) {
       return indexToName(index, this.rackHeight)
     },
     updateTube(index, data) {
-      this.$set(this.tubes, index - 1, {...data, index: index - 1 })
+      this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
     },
     createRack() {
       this.progressMessage = 'Creating tube rack...'
       this.loading = true
       let payload = {
         tube_rack: {
-          purpose_uuid: this.firstTubePurpose.uuid
-        }
+          purpose_uuid: this.firstTubePurpose.uuid,
+        },
       }
       this.$axios({
         method: 'post',
         url: this.targetUrl,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data: payload
-      }).then((response) => {
-        // Ajax responses automatically follow redirects, which
-        // would result in us receiving the full HTML for the child
-        // plate here, which we'd then need to inject into the
-        // page, and update the history. Instead we don't redirect
-        // application/json requests, and redirect the user ourselves.
-        this.progressMessage = response.data.message
-        this.locationObj.href = response.data.redirect
-      }).catch((error) => {
-        // Something has gone wrong
-        console.error(error)
-        this.loading = false
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: payload,
       })
-    }
-  }
+        .then((response) => {
+          // Ajax responses automatically follow redirects, which
+          // would result in us receiving the full HTML for the child
+          // plate here, which we'd then need to inject into the
+          // page, and update the history. Instead we don't redirect
+          // application/json requests, and redirect the user ourselves.
+          this.progressMessage = response.data.message
+          this.locationObj.href = response.data.redirect
+        })
+        .catch((error) => {
+          // Something has gone wrong
+          console.error(error)
+          this.loading = false
+        })
+    },
+  },
 }
 </script>
 
 <style>
-  .fixed-height-scroll {
-    height:460px;
-    overflow-y:scroll;
-  }
+.fixed-height-scroll {
+  height: 460px;
+  overflow-y: scroll;
+}
 </style>

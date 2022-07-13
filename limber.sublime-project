@@ -1,23 +1,13 @@
 {
-  "folders":
-  [
+  "folders": [
     {
       // Note: Name is intentionally left out of this folder config to
       // support the use of multiple directories for the same project
       // If name is added, it becomes trickier to tell which version you are
       // editing.
       "path": ".",
-      "folder_exclude_patterns": [
-        ".bundle",
-        "node_modules",
-        "public/assets",
-        "public/packs",
-        "coverage",
-        "doc"
-      ],
-      "file_exclude_patterns":[
-        "limber.sublime-workspace"
-      ],
+      "folder_exclude_patterns": [".bundle", "node_modules", "public/assets", "public/packs", "coverage", "doc"],
+      "file_exclude_patterns": ["limber.sublime-workspace"],
       "binary_file_patterns": [
         "*.jpg",
         "*.jpeg",

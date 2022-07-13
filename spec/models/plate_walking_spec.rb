@@ -8,9 +8,7 @@ RSpec.describe PlateWalking::Walker do
   context 'A v1 plate' do
     has_a_working_api
     let(:plate) { build :plate }
-    before do
-      stub_api_get(plate.uuid, 'wells', body: json(:well_collection))
-    end
+    before { stub_api_get(plate.uuid, 'wells', body: json(:well_collection)) }
     it 'yields wells in rows' do
       expect { |b| subject.each(&b) }.to yield_control.exactly(8).times
       expect(subject.each.map { |desc, _array| desc }).to eq(%w[A B C D E F G H])

@@ -31,19 +31,24 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
       { 'outer_request' => filtered_requests_by_state.first.uuid }
     else
       # too many matching requests, cannot disentangle
-      errors.add(:base,
-                 "found #{num_requests} eligible requests for #{well.location}, possible overlapping submissions")
+      errors.add(
+        :base,
+        "found #{num_requests} eligible requests for #{well.location}, possible overlapping submissions"
+      )
     end
   end
 
   def well_transfers
-    @well_transfers ||= wells.each_with_object([]) do |well, transfers|
-      next if well.empty? || (@transfer_failed && well.failed?)
+    @well_transfers ||=
+      wells.each_with_object([]) do |well, transfers|
+        next if well.empty? || (@transfer_failed && well.failed?)
 
-      filtered_requests = filter_requests(well.active_requests, well)
+        filtered_requests = filter_requests(well.active_requests, well)
 
-      # don't add wells to the transfers list if they have no filtered requests, i.e. only those submitted for library prep
-      transfers << [well, filtered_requests] unless filtered_requests.nil?
-    end
+        # rubocop:todo Layout/LineLength
+        # don't add wells to the transfers list if they have no filtered requests, i.e. only those submitted for library prep
+        # rubocop:enable Layout/LineLength
+        transfers << [well, filtered_requests] unless filtered_requests.nil?
+      end
   end
 end

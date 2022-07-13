@@ -16,18 +16,10 @@ RSpec.describe 'exports/concentrations_nm.csv.erb' do
     end
     let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
 
-    before do
-      assign(:plate, labware)
-    end
+    before { assign(:plate, labware) }
 
     let(:expected_content) do
-      [
-        ['Plate Barcode', labware.barcode.human],
-        [],
-        %w[Well Concentration Pick Pool],
-        %w[A1 1.5 1 1],
-        %w[B1 1.5 1 2]
-      ]
+      [['Plate Barcode', labware.barcode.human], [], %w[Well Concentration Pick Pool], %w[A1 1.5 1 1], %w[B1 1.5 1 2]]
     end
 
     it 'renders the expected content' do

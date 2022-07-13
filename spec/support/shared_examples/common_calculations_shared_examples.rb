@@ -3,9 +3,21 @@
 RSpec.shared_examples 'it constructs destination qc assay attributes' do
   let(:transfer_hash) do
     {
-      'A1' => { 'dest_locn' => 'A2', 'dest_conc' => '0.665', 'volume' => '20.0' },
-      'B1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.343', 'volume' => '20.0' },
-      'C1' => { 'dest_locn' => 'A3', 'dest_conc' => '2.135', 'volume' => '20.0' }
+      'A1' => {
+        'dest_locn' => 'A2',
+        'dest_conc' => '0.665',
+        'volume' => '20.0'
+      },
+      'B1' => {
+        'dest_locn' => 'A1',
+        'dest_conc' => '0.343',
+        'volume' => '20.0'
+      },
+      'C1' => {
+        'dest_locn' => 'A3',
+        'dest_conc' => '2.135',
+        'volume' => '20.0'
+      }
     }
   end
   let(:expected_attributes) do
@@ -51,13 +63,34 @@ end
 RSpec.shared_examples 'it extracts destination concentrations' do
   let(:transfer_hash) do
     {
-      'A1' => { 'dest_locn' => 'A2', 'dest_conc' => '0.665' },
-      'B1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.343' },
-      'C1' => { 'dest_locn' => 'A3', 'dest_conc' => '2.135' },
-      'D1' => { 'dest_locn' => 'B3', 'dest_conc' => '3.123' },
-      'E1' => { 'dest_locn' => 'C3', 'dest_conc' => '3.045' },
-      'F1' => { 'dest_locn' => 'B2', 'dest_conc' => '0.743' },
-      'G1' => { 'dest_locn' => 'C2', 'dest_conc' => '0.693' }
+      'A1' => {
+        'dest_locn' => 'A2',
+        'dest_conc' => '0.665'
+      },
+      'B1' => {
+        'dest_locn' => 'A1',
+        'dest_conc' => '0.343'
+      },
+      'C1' => {
+        'dest_locn' => 'A3',
+        'dest_conc' => '2.135'
+      },
+      'D1' => {
+        'dest_locn' => 'B3',
+        'dest_conc' => '3.123'
+      },
+      'E1' => {
+        'dest_locn' => 'C3',
+        'dest_conc' => '3.045'
+      },
+      'F1' => {
+        'dest_locn' => 'B2',
+        'dest_conc' => '0.743'
+      },
+      'G1' => {
+        'dest_locn' => 'C2',
+        'dest_conc' => '0.693'
+      }
     }
   end
   let(:expected_dest_concs) do

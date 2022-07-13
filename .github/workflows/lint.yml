@@ -1,4 +1,3 @@
-
 name: Linting
 env:
   BUNDLE_WITHOUT: 'test development default'
@@ -12,29 +11,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true # Runs bundle install and caches gems.
-    - name: Run lint
-      run: bundle exec rubocop --extra-details --display-style-guide --parallel
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # Runs bundle install and caches gems.
+      - name: Export node version
+        id: node_version
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+      - name: Install
+        run: yarn install
+      - name: Run prettier
+        run: yarn prettier --check .
+      - name: Run lint
+        run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
   eslint:
     name: EsLint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Export node version
-      id: node_version
-      run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
-    - name: Setup node
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
-    - name: Node Information
-      run: node --version
-    - name: Install
-      run: yarn install
-    - name: Run yarn lint
-      run: yarn lint
+      - uses: actions/checkout@v2
+      - name: Export node version
+        id: node_version
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+      - name: Node Information
+        run: node --version
+      - name: Install
+        run: yarn install
+      - name: Run yarn lint
+        run: yarn lint

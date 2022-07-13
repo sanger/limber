@@ -20,12 +20,11 @@ class LabwareController < ApplicationController
 
     response.headers['Vary'] = 'Accept'
     respond_to do |format|
-      format.html do
-        render @presenter.page
-      end
+      format.html { render @presenter.page }
       format.csv do
         render @presenter.csv
-        response.headers['Content-Disposition'] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+        response.headers['Content-Disposition'] =
+          "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
       end
       format.json
     end
@@ -37,20 +36,14 @@ class LabwareController < ApplicationController
     notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if update_params[2]
 
-    respond_to do |format|
-      format.html do
-        redirect_to(
-          search_path,
-          notice: notice
-        )
-      end
-    end
+    respond_to { |format| format.html { redirect_to(search_path, notice: notice) } }
   rescue StateChangers::StateChangeError => e
     respond_to do |format|
       format.html { redirect_to(search_path, alert: e.message) }
       format.csv
     end
   end
+
   # rubocop:enable Metrics/MethodLength
 
   private
@@ -58,7 +51,11 @@ class LabwareController < ApplicationController
   def update_params
     state = params.require(:state)
     state_options = params.require(state)
-    [state, state_options[:reason], ActiveModel::Type::Boolean.new.deserialize(state_options[:customer_accepts_responsibility])]
+    [
+      state,
+      state_options[:reason],
+      ActiveModel::Type::Boolean.new.deserialize(state_options[:customer_accepts_responsibility])
+    ]
   end
 
   def search_param
@@ -74,7 +71,7 @@ class LabwareController < ApplicationController
   def unknown_type
     redirect_to(
       search_path,
-      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?'
+      alert: 'Unknown labware. Perhaps you are using the wrong pipeline application?' # rubocop:todo Rails/I18nLocaleTexts
     )
   end
 
@@ -95,9 +92,6 @@ class LabwareController < ApplicationController
   end
 
   def presenter_for(labware)
-    Presenters.lookup_for(labware).new(
-      api: api,
-      labware: labware
-    )
+    Presenters.lookup_for(labware).new(api: api, labware: labware)
   end
 end

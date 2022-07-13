@@ -3,6 +3,7 @@
 # Part of the Labware creator classes
 module LabwareCreators
   require_dependency 'labware_creators/pooled_tubes_by_sample/csv_file'
+
   #
   # Provides a simple wrapper for handling and validating an individual row
   # A row in this file should contain a tube location (coordinate within rack) and a tube barcode e.g. Location, Barcode
@@ -16,10 +17,12 @@ module LabwareCreators
     attr_reader :position, :barcode, :index
 
     validates :position,
-              inclusion: { in: WellHelpers.column_order, message: ->(object, _data) { TUBE_LOCATION_NOT_RECOGNISED % object } },
+              inclusion: {
+                in: WellHelpers.column_order,
+                message: ->(object, _data) { TUBE_LOCATION_NOT_RECOGNISED % object }
+              },
               unless: :empty?
-    validates :barcode,
-              presence: { message: ->(object, _data) { BARCODE_MISSING % object } }
+    validates :barcode, presence: { message: ->(object, _data) { BARCODE_MISSING % object } }
 
     def initialize(index, row_data)
       @index = index
@@ -31,11 +34,7 @@ module LabwareCreators
     end
 
     def to_s
-      if @position.present?
-        "row #{index + 2} [#{@position}]"
-      else
-        "row #{index + 2}"
-      end
+      @position.present? ? "row #{index + 2} [#{@position}]" : "row #{index + 2}"
     end
 
     def empty?

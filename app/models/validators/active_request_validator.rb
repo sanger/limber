@@ -14,18 +14,20 @@ module Validators
         presenter.errors.add(
           :wells,
           "on this plate (#{affected_range}) have #{error}. You should not carry out further work. " \
-          'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+            'Any further work conducted from this plate will run into issues at the end of the pipeline.'
         )
       end
     end
 
     def active_wells_without_active_requests(labware)
-      labware.wells.each_with_object(Hash.new { |h, i| h[i] = [] }) do |well, store|
-        next if well.inactive? || well.active_requests.present?
+      labware
+        .wells
+        .each_with_object(Hash.new { |h, i| h[i] = [] }) do |well, store|
+          next if well.inactive? || well.active_requests.present?
 
-        well_error = error_for(well)
-        store[well_error] << well.location
-      end
+          well_error = error_for(well)
+          store[well_error] << well.location
+        end
     end
 
     def error_for(well)

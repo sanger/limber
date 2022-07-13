@@ -6,7 +6,7 @@ import localVue from 'test_support/base_vue.js'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagOffset', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(TagOffset, {
       propsData: {
         numberOfTags: 5,
@@ -32,9 +32,7 @@ describe('TagOffset', () => {
         await wrapper.setProps({ numberOfTags: 10 })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(5)
-        expect(wrapper.vm.offsetTagsByPlaceholder).toBe(
-          'Enter offset number...'
-        )
+        expect(wrapper.vm.offsetTagsByPlaceholder).toBe('Enter offset number...')
       })
 
       it('returns a negative number when not enough tags', async () => {
@@ -87,9 +85,7 @@ describe('TagOffset', () => {
         })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(4)
-        expect(wrapper.vm.offsetTagsByPlaceholder).toBe(
-          'Enter offset number...'
-        )
+        expect(wrapper.vm.offsetTagsByPlaceholder).toBe('Enter offset number...')
       })
 
       it('returns a negative value for multiple tagged plates when not enough tags', async () => {
@@ -191,9 +187,7 @@ describe('TagOffset', () => {
         await wrapper.setData({ offsetTagsBy: '11' })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(9)
-        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual(
-          'Offset must be less than or equal to 9'
-        )
+        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Offset must be less than or equal to 9')
       })
 
       it('returns correctly if there are not enough tags to fill the plate', async () => {
@@ -203,9 +197,7 @@ describe('TagOffset', () => {
         await wrapper.setData({ offsetTagsBy: '0' })
 
         expect(wrapper.vm.offsetTagsByMax).toBe(-10)
-        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual(
-          'Not enough tags to fill wells with aliquots'
-        )
+        expect(wrapper.vm.offsetTagsByInvalidFeedback).toEqual('Not enough tags to fill wells with aliquots')
       })
     })
   })

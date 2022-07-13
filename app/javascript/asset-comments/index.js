@@ -39,15 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
     If this problem occurs repeatedly, let us know.
   `
 
-  if ( assetElem ) {
+  if (assetElem) {
     /* The asset-comments element isn't on all pages. So only initialize our
-    * Vue app if we actually find it */
+     * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
     const axiosInstance = axios.create({
       baseURL: sequencescapeApiUrl,
       timeout: 10000,
-      headers: {'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'}
+      headers: {
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+      },
     })
 
     const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources)
@@ -57,13 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
     new Vue({
       el: '#asset-comments',
       data: commentStore,
-      render: h => h(AssetComments)
+      render: (h) => h(AssetComments),
     })
 
     new Vue({
       el: '#asset-comments-counter',
       data: commentStore,
-      render: h => h(AssetCommentsCounter)
+      render: (h) => h(AssetCommentsCounter),
     })
 
     // UserId is required to make comments, but will not be present in
@@ -74,12 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
       new Vue({
         el: '#asset-comments-add-form',
         data: commentStore,
-        render (h) { return h(AssetCommentsAddForm, { props: this.$el.dataset }) }
+        render(h) {
+          return h(AssetCommentsAddForm, { props: this.$el.dataset })
+        },
       })
     } else {
       new Vue({
         el: '#asset-comments-add-form',
-        render: h => h('div', missingUserIdError)
+        render: (h) => h('div', missingUserIdError),
       })
     }
 

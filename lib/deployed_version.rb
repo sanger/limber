@@ -53,11 +53,7 @@ module Deployed # rubocop:todo Style/Documentation
     end
 
     def version_label
-      if version_hash
-        "#{major}.#{minor}.#{patch}"
-      else
-        'WIP'
-      end
+      version_hash ? "#{major}.#{minor}.#{patch}" : 'WIP'
     end
 
     private
@@ -113,15 +109,12 @@ module Deployed # rubocop:todo Style/Documentation
 
   VERSION_STRING = "#{APP_NAME} #{VERSION_ID} [#{ENVIRONMENT}]"
   VERSION_COMMIT = "#{BRANCH}@#{ABBREV_COMMIT}"
-  REPO_URL       = REPO_DATA.release_url.presence || '#'
-  HOSTNAME       = Socket.gethostname
+  REPO_URL = REPO_DATA.release_url.presence || '#'
+  HOSTNAME = Socket.gethostname
 
   require 'ostruct'
+
   # rubocop:todo Style/OpenStructUse
-  DETAILS = OpenStruct.new(
-    name: nil,
-    version: VERSION_ID,
-    environment: ENVIRONMENT
-  )
+  DETAILS = OpenStruct.new(name: nil, version: VERSION_ID, environment: ENVIRONMENT)
   # rubocop:enable Style/OpenStructUse
 end

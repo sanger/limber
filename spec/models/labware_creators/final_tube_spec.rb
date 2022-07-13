@@ -11,9 +11,7 @@ RSpec.describe LabwareCreators::FinalTube do
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-    subject do
-      LabwareCreators::FinalTube.new(api, form_attributes)
-    end
+    subject { LabwareCreators::FinalTube.new(api, form_attributes) }
 
     before do
       Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
@@ -28,26 +26,25 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
     let(:transfer_template_uuid) { 'transfer-template-uuid' }
 
-    let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid
-      }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     context 'with a sibling-less parent tube' do
       let(:transfer_request) do
-        stub_api_post(transfer_template_uuid,
-                      payload: { transfer: { user: user_uuid, source: parent_uuid } },
-                      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+        stub_api_post(
+          transfer_template_uuid,
+          payload: {
+            transfer: {
+              user: user_uuid,
+              source: parent_uuid
+            }
+          },
+          body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
+        )
       end
 
       let(:tube_json) { json(:tube_without_siblings, uuid: parent_uuid) }
 
-      before do
-        transfer_request
-      end
+      before { transfer_request }
 
       describe '#save' do
         it 'should be vaild' do
@@ -92,14 +89,28 @@ RSpec.describe LabwareCreators::FinalTube do
 
           let(:sibling_uuid) { 'sibling-tube-0' }
           let(:transfer_request) do
-            stub_api_post(transfer_template_uuid,
-                          payload: { transfer: { user: user_uuid, source: parent_uuid } },
-                          body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+            stub_api_post(
+              transfer_template_uuid,
+              payload: {
+                transfer: {
+                  user: user_uuid,
+                  source: parent_uuid
+                }
+              },
+              body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
+            )
           end
           let(:transfer_request_b) do
-            stub_api_post(transfer_template_uuid,
-                          payload: { transfer: { user: user_uuid, source: sibling_uuid } },
-                          body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid))
+            stub_api_post(
+              transfer_template_uuid,
+              payload: {
+                transfer: {
+                  user: user_uuid,
+                  source: sibling_uuid
+                }
+              },
+              body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
+            )
           end
 
           before do

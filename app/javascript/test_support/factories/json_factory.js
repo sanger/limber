@@ -17,8 +17,8 @@ class InvalidFactory extends Error {
 }
 const dummyApiUrl = 'http://www.example.com'
 // Returns the name of a resource for a given factory
-const resourceName = factoryName =>  defaults[factoryName] && defaults[factoryName].resource || factoryName
-const findFactory = factoryName => defaults[factoryName] || { attributes: {} }
+const resourceName = (factoryName) => (defaults[factoryName] && defaults[factoryName].resource) || factoryName
+const findFactory = (factoryName) => defaults[factoryName] || { attributes: {} }
 
 const nextIndex = counter(1)
 
@@ -27,9 +27,15 @@ const nextIndex = counter(1)
 // attributes in the corresponding resource
 const globalDefaults = (_id) => {
   return {
-    uuid() { return uuidv4() },
-    created_at() { return (new Date).toJSON() },
-    updated_at() { return (new Date).toJSON() }
+    uuid() {
+      return uuidv4()
+    },
+    created_at() {
+      return new Date().toJSON()
+    },
+    updated_at() {
+      return new Date().toJSON()
+    },
   }
 }
 
@@ -48,24 +54,29 @@ const extractAttributes = (resource_config, attributeValues) => {
 
 // The relationship links for a given association
 const relationLinks = (resourceUrl, associationName) => {
-  return { links: {
-    self: `${resourceUrl}/relationships/${associationName}`,
-    related: `${resourceUrl}/${associationName}`
-  }}
+  return {
+    links: {
+      self: `${resourceUrl}/relationships/${associationName}`,
+      related: `${resourceUrl}/${associationName}`,
+    },
+  }
 }
 
 // Extracts and builds the associations for a given resource
 const extractAssociations = (resource_config, attributeValues, resourceUrl) => {
-  return resource_config.associations.reduce(({ relationships, included }, associationName) => {
-    const { relationData, includeData } = associationData(associationName, attributeValues[associationName])
-    relationships[associationName] = {
-      ... relationLinks(resourceUrl, associationName),
-      ... relationData
-    }
-    included.push(...includeData)
+  return resource_config.associations.reduce(
+    ({ relationships, included }, associationName) => {
+      const { relationData, includeData } = associationData(associationName, attributeValues[associationName])
+      relationships[associationName] = {
+        ...relationLinks(resourceUrl, associationName),
+        ...relationData,
+      }
+      included.push(...includeData)
 
-    return { relationships, included }
-  }, { relationships: {}, included: []})
+      return { relationships, included }
+    },
+    { relationships: {}, included: [] }
+  )
 }
 
 const associationData = (associationName, associationValue) => {
@@ -80,12 +91,15 @@ const associationData = (associationName, associationValue) => {
 }
 
 const buildMany = (associationName, associationValue) => {
-  return associationValue.reduce(({ relationData, includeData }, resourceValue) => {
-    const singleResource = buildOne(associationName, resourceValue)
-    relationData.data.push(singleResource.relationData.data)
-    includeData.push(...singleResource.includeData)
-    return { relationData, includeData }
-  }, { relationData: { data: [] }, includeData: [] })
+  return associationValue.reduce(
+    ({ relationData, includeData }, resourceValue) => {
+      const singleResource = buildOne(associationName, resourceValue)
+      relationData.data.push(singleResource.relationData.data)
+      includeData.push(...singleResource.includeData)
+      return { relationData, includeData }
+    },
+    { relationData: { data: [] }, includeData: [] }
+  )
 }
 
 const buildOne = (associationName, associationValue) => {
@@ -93,14 +107,14 @@ const buildOne = (associationName, associationValue) => {
   const { included = [], data } = jsonFactory(_factory, childAttributes)
   return {
     relationData: { data: { id: data.id, type: data.type } },
-    includeData: [...included, data]
+    includeData: [...included, data],
   }
 }
 
 const attributesFactory = (factoryName, userAttributes = {}) => {
   const factory = findFactory(factoryName)
   const { id = `${nextIndex()}` } = userAttributes
-  return { ... globalDefaults(id), ... factory.attributes, ... userAttributes }
+  return { ...globalDefaults(id), ...factory.attributes, ...userAttributes }
 }
 
 /**
@@ -114,13 +128,19 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
   const resource_config = new ResourceConfig(type)
 
   // We don't recognise the factory.
-  if (resource_config.invalid) { throw new InvalidFactory(factoryName, type) }
+  if (resource_config.invalid) {
+    throw new InvalidFactory(factoryName, type)
+  }
 
   const { id = `${nextIndex()}` } = userAttributes
   const resourceUrl = `${dummyApiUrl}/${pluralize(type)}/${id}`
   const links = { self: resourceUrl }
 
-  const attributeValues = { ... globalDefaults(id), ... factory.attributes, ... userAttributes }
+  const attributeValues = {
+    ...globalDefaults(id),
+    ...factory.attributes,
+    ...userAttributes,
+  }
 
   const attributes = extractAttributes(resource_config, attributeValues)
   const { relationships, included } = extractAssociations(resource_config, attributeValues, resourceUrl)
@@ -131,9 +151,9 @@ const jsonFactory = (factoryName, userAttributes = {}) => {
       type: pluralize(type),
       links,
       attributes,
-      relationships
+      relationships,
     },
-    included
+    included,
   }
 }
 
@@ -142,19 +162,22 @@ const jsonCollectionFactory = (factoryName, collectionAttributes, options = {}) 
   const url = `${dummyApiUrl}/${options.base || pluralize(type)}`
   const links = {
     first: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`,
-    last: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`
+    last: `${url}?page%5Bnumber%5D=1&page%5Bsize%5D=100`,
   }
 
-  const collection = collectionAttributes.reduce(({ data, included }, userAttributes) => {
-    const json = jsonFactory(factoryName, userAttributes)
-    data.push(json.data)
-    included.push(...json.included)
-    return { data, included }
-  }, { data: [], included: [] })
+  const collection = collectionAttributes.reduce(
+    ({ data, included }, userAttributes) => {
+      const json = jsonFactory(factoryName, userAttributes)
+      data.push(json.data)
+      included.push(...json.included)
+      return { data, included }
+    },
+    { data: [], included: [] }
+  )
 
   return {
     ...collection,
-    links
+    links,
   }
 }
 

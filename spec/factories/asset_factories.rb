@@ -19,8 +19,6 @@ FactoryBot.define do
     purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
 
     # Mock the relationships. Should probably handle this all a bit differently
-    after(:build) do |asset, evaluator|
-      asset._cached_relationship(:purpose) { evaluator.purpose }
-    end
+    after(:build) { |asset, evaluator| asset._cached_relationship(:purpose) { evaluator.purpose } }
   end
 end

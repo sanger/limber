@@ -1,12 +1,30 @@
 @mixin labware-view {
-  .unknown           { background-color: $secondary; }
-  .pending           { background: none; }
-  .started, .process_1, .process_2 { background-color: $info;    }
-  .passed            { background-color: $success; }
-  .qc_complete       { background-color: $primary; }
-  .good              { background-color: $success; } // Used on well failure page
-  .failed            { background-color: $danger;  }
-  .cancelled         { background-color: $danger;  }
+  .unknown {
+    background-color: $secondary;
+  }
+  .pending {
+    background: none;
+  }
+  .started,
+  .process_1,
+  .process_2 {
+    background-color: $info;
+  }
+  .passed {
+    background-color: $success;
+  }
+  .qc_complete {
+    background-color: $primary;
+  }
+  .good {
+    background-color: $success;
+  } // Used on well failure page
+  .failed {
+    background-color: $danger;
+  }
+  .cancelled {
+    background-color: $danger;
+  }
 }
 
 @mixin labware-grid-view {
@@ -17,8 +35,8 @@
   th {
     padding: 0;
     vertical-align: middle;
-    text-align:     center;
-    padding:0;
+    text-align: center;
+    padding: 0;
     color: $gray-600;
   }
 
@@ -27,14 +45,14 @@
   }
 
   .well {
-    height:36px;
-    width:36px;
+    height: 36px;
+    width: 36px;
     text-align: center;
     overflow: hidden;
 
     .aliquot {
-      width:32px;
-      height:32px;
+      width: 32px;
+      height: 32px;
       margin-top: 2px;
       text-align: center;
       display: inline-block;
@@ -56,7 +74,7 @@
     }
 
     .aliquot:hover {
-      color: #FFD600;
+      color: #ffd600;
       cursor: pointer;
       @extend .selected-aliquot;
     }
@@ -66,20 +84,22 @@
 @mixin labware-grid-view-384 {
   padding: 5px;
   border-collapse: separate;
-  td, th { font-size: 50%; }
-
+  td,
+  th {
+    font-size: 50%;
+  }
 
   th.first-col {
     width: 15px;
   }
 
   .well {
-    height:18px;
-    width:18px;
+    height: 18px;
+    width: 18px;
 
     .aliquot {
-      width:16px;
-      height:16px;
+      width: 16px;
+      height: 16px;
       margin-top: 1px;
       border: 1px $gray-800 solid;
       border-radius: 3px;

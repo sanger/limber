@@ -1,4 +1,3 @@
-
 const boolToString = { true: 'valid', false: 'invalid' }
 
 /**
@@ -17,7 +16,7 @@ export default {
       // A devour API object. eg. new devourClient(apiOptions)
       // In practice you probably want to use the helper in shared/devourApi
       type: Object,
-      required: true
+      required: true,
     },
     resourceName: {
       // Used to determine the database resource name to search on
@@ -25,7 +24,7 @@ export default {
       // N.B. devour seems to pluralize this so 'plates' also works.
       type: String,
       required: true,
-      default: ''
+      default: '',
     },
     includes: {
       // The include string used in the query. Used to list the associated records which will be returned.
@@ -33,7 +32,7 @@ export default {
       // Eg. wells.aliquots,purpose will return the plates wells, and purpose, and any aliquots in the wells.
       type: String,
       required: false,
-      default: ''
+      default: '',
     },
     fields: {
       // Used for sparse fieldsets. Allows you to specify which information to include for each record.
@@ -47,7 +46,9 @@ export default {
       //
       type: Object,
       required: false,
-      default: () => { return {} },
+      default: () => {
+        return {}
+      },
     },
     filter: {
       // Used to filter the find results on a specific field value
@@ -56,27 +57,34 @@ export default {
       // e.g. { page: { number: 2 }}
       type: Object,
       required: false,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      },
     },
     validation: {
       // A validation function. see plateScanValidators.js for examples and details
       type: Function,
       required: false,
-      default: () => { return { valid: true, message: '' } }
-    }
+      default: () => {
+        return { valid: true, message: '' }
+      },
+    },
   },
   data() {
     return {
       results: null, // holds the query results
-      apiActivity: { state: null, message: '' } // API status
+      apiActivity: { state: null, message: '' }, // API status
     }
   },
   watch: {
-    state: function() {
-      if(this.state && this.state !== 'searching') {
-        this.$emit('change', { state: this.state, results: this.reformattedResults })
+    state: function () {
+      if (this.state && this.state !== 'searching') {
+        this.$emit('change', {
+          state: this.state,
+          results: this.reformattedResults,
+        })
       }
-    }
+    },
   },
   computed: {
     state() {
@@ -93,40 +101,42 @@ export default {
       return this.validated.message
     },
     validatedResults() {
-      if (this.results === null ) {
+      if (this.results === null) {
         return { state: 'empty', message: '' }
       } else if (this.results === undefined) {
-        return { state: 'invalid', message: `Could not find ${this.resourceName}` }
+        return {
+          state: 'invalid',
+          message: `Could not find ${this.resourceName}`,
+        }
       } else {
         const validationResult = this.validation(this.results)
-        return { state: boolToString[validationResult.valid], message: validationResult.message }
+        return {
+          state: boolToString[validationResult.valid],
+          message: validationResult.message,
+        }
       }
     },
     // override this if you wish to modify the results before emitting
     reformattedResults() {
       return this.results
-    }
+    },
   },
   methods: {
     performLookup(_) {
-      if(this.resourceName !== '') {
+      if (this.resourceName !== '') {
         this.apiActivity = { state: 'searching', message: 'Searching...' }
-        this.performFind()
-          .then(this.apiSuccess)
-          .catch(this.apiError)
+        this.performFind().then(this.apiSuccess).catch(this.apiError)
       } else {
         this.results = null
       }
     },
     // Override this method when you need different behaviour
     async performFind() {
-      const qryResult = (
-        await this.api.findAll(this.resourceName, {
-          include: this.includes,
-          filter: this.filter,
-          fields: this.fields
-        })
-      )
+      const qryResult = await this.api.findAll(this.resourceName, {
+        include: this.includes,
+        filter: this.filter,
+        fields: this.fields,
+      })
       return qryResult.data
     },
     apiSuccess(results) {
@@ -142,9 +152,9 @@ export default {
       } else {
         this.apiActivity = { ...err, state: 'invalid' }
       }
-    }
+    },
   },
   render() {
     return ''
-  }
+  },
 }

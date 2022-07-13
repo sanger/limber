@@ -10,6 +10,7 @@ module LabwareCreators::TaggedPlateBehaviour
     # similar for `list` and `names`
     delegate :used?, :list, :names, to: :tag_plates, prefix: true
   end
+
   #
   # Update the state of the tag plate to 'exhausted'
   #
@@ -45,8 +46,7 @@ module LabwareCreators::TaggedPlateBehaviour
   #                   span multiple source plates.
   #
   def requires_tag2?
-    cross_plate_pool_detection? &&
-      parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
+    cross_plate_pool_detection? && parent.submission_pools.any? { |pool| pool.plates_in_submission > 1 }
   end
 
   #

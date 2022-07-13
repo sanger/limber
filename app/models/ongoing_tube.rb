@@ -14,10 +14,7 @@ class OngoingTube < AssetSearchForm
   end
 
   def v2_search_parameters
-    {
-      purpose_name: purpose_names,
-      include_used: include_used == '1'
-    }
+    { purpose_name: purpose_names, include_used: include_used == '1' }
   end
 
   def v2_pagination
@@ -25,8 +22,6 @@ class OngoingTube < AssetSearchForm
   end
 
   def default_purposes
-    Settings.purposes
-            .select { |_uuid, settings| settings[:asset_type] == 'tube' }
-            .keys
+    Settings.purposes.select { |_uuid, settings| settings[:asset_type] == 'tube' }.keys
   end
 end

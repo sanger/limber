@@ -12,14 +12,18 @@ RSpec.describe Presenters::TubeRackPresenter do
   let(:title) { "#{purpose_name} : #{tube_purpose_name}" }
   let(:state) { 'pending' }
   let(:summary_tab) do
-    [%w[Barcode DN2T], ['Number of tubes', 3], ['Rack type', 'TR96'], ['Tube type', 'Tube purpose'], ['Created on', '2017-06-29']]
+    [
+      %w[Barcode DN2T],
+      ['Number of tubes', 3],
+      ['Rack type', 'TR96'],
+      ['Tube type', 'Tube purpose'],
+      ['Created on', '2017-06-29']
+    ]
   end
   let(:sidebar_partial) { 'default' }
   let(:file_links) { [] }
 
-  let(:labware) do
-    build :tube_rack, purpose_name: purpose_name, tubes: tubes, barcode_number: 2
-  end
+  let(:labware) { build :tube_rack, purpose_name: purpose_name, tubes: tubes, barcode_number: 2 }
 
   let(:states) { %w[pending pending pending] }
 
@@ -35,16 +39,17 @@ RSpec.describe Presenters::TubeRackPresenter do
   let(:label_class) { 'Labels::PlateLabel' }
 
   before do
-    create(:tube_rack_config, uuid: labware.purpose.uuid, warnings: warnings, label_class: label_class, file_links: file_links)
+    create(
+      :tube_rack_config,
+      uuid: labware.purpose.uuid,
+      warnings: warnings,
+      label_class: label_class,
+      file_links: file_links
+    )
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) do
-    described_class.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { described_class.new(api: api, labware: labware) }
 
   it_behaves_like 'a labware presenter'
 
@@ -151,12 +156,19 @@ RSpec.describe Presenters::TubeRackPresenter do
 
       it 'formats_the_links' do
         # NOTE: This endpoint doesn't currently exist, but will be added in https://github.com/sanger/limber/issues/795
+        # rubocop:todo Layout/LineLength
         # We'll probably want to adjust the behaviour slightly to grab the information based on the contained tube purposes
-        expect(presenter.csv_file_links).to include(['Second type CSV', [:limber_tube_rack, :export, {
-                                                      format: :csv,
-                                                      id: 'second_csv_id',
-                                                      limber_tube_rack_id: labware.human_barcode
-                                                    }]])
+        # rubocop:enable Layout/LineLength
+        expect(presenter.csv_file_links).to include(
+          [
+            'Second type CSV',
+            [
+              :limber_tube_rack,
+              :export,
+              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.human_barcode }
+            ]
+          ]
+        )
       end
     end
   end

@@ -5,12 +5,7 @@ RSpec.describe Presenters::UnknownPlatePresenter do
 
   let(:labware) { create :v2_plate, purpose_name: 'Other plate' }
 
-  subject do
-    described_class.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { described_class.new(api: api, labware: labware) }
 
   it 'prevents state change' do
     expect { |b| subject.default_state_change(&b) }.not_to yield_control
@@ -25,15 +20,15 @@ RSpec.describe Presenters::UnknownPlatePresenter do
   end
 
   context 'with a well request' do
-    before do
-      stub_api_get(labware.uuid, 'wells', body: json(:well_collection))
-    end
+    before { stub_api_get(labware.uuid, 'wells', body: json(:well_collection)) }
 
     it { is_expected.not_to be_valid }
 
     it 'warns the user' do
       subject.valid?
-      expect(subject.errors.full_messages).to include("Plate type 'Other plate' is not a limber plate. Perhaps you are using the wrong pipeline application?")
+      expect(subject.errors.full_messages).to include(
+        "Plate type 'Other plate' is not a limber plate. Perhaps you are using the wrong pipeline application?"
+      )
     end
   end
 end

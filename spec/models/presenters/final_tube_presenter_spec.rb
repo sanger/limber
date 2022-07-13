@@ -10,16 +10,10 @@ RSpec.describe Presenters::FinalTubePresenter do
   has_a_working_api
 
   let(:labware) do
-    build :v2_tube,
-          purpose_name: purpose_name,
-          state: state,
-          barcode_number: 6,
-          created_at: '2016-10-19 12:00:00 +0100'
+    build :v2_tube, purpose_name: purpose_name, state: state, barcode_number: 6, created_at: '2016-10-19 12:00:00 +0100'
   end
 
-  before do
-    create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
-  end
+  before { create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid') }
 
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
@@ -35,12 +29,7 @@ RSpec.describe Presenters::FinalTubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject do
-    Presenters::FinalTubePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject { Presenters::FinalTubePresenter.new(api: api, labware: labware) }
 
   it_behaves_like 'a labware presenter'
 end

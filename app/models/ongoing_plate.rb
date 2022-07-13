@@ -15,8 +15,6 @@ class OngoingPlate < AssetSearchForm
   end
 
   def default_purposes
-    Settings.purposes
-            .select { |_uuid, settings| settings[:asset_type] == 'plate' }
-            .keys
+    Settings.purposes.select { |_uuid, settings| settings[:asset_type] == 'plate' }.keys
   end
 end

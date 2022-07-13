@@ -11,14 +11,17 @@ class Limber::Plate::Pools
   # The total number of pools listed on the plate. In most
   # cases indicated the number of tubes which will be created
   attr_reader :number_of_pools
+
   # An array of the uuids of the submissions associated with the plate
   attr_reader :submissions
+
   # A number of attributes should be consistent across the plate.
   # The example pool provides a source of this information
   # We should possibly move away from this assumption
   attr_reader :example_pool
 
   delegate :library_type_name, :insert_size, :primer_panel, to: :example_pool
+
   #
   # Create a new Pools from the pool information.
   #

@@ -13,7 +13,11 @@ module ContractHelper
     end
 
     # rubocop:todo Lint/MixedRegexpCaptureTypes
+    # rubocop:todo Lint/MissingCopEnableDirective
+    # rubocop:todo Layout/LineLength
+    # rubocop:enable Lint/MissingCopEnableDirective
     REQUEST_REGEXP = %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
+    # rubocop:enable Layout/LineLength
       (?<eol>       \r\n|\r|\n){0}
       (?<verb>      GET|PUT|POST|DELETE){0}
       (?<path>      /[^\s]*){0}
@@ -24,21 +28,26 @@ module ContractHelper
       \g<verb>\s+\g<path>\s+HTTP/1.1\g<eol>
       \g<headers>\g<eol>
       (\g<eol>\g<body>?)?
-    }mx.freeze
-    # rubocop:enable Lint/MixedRegexpCaptureTypes
+    }mx
+      .freeze
 
-    def request(contract_name) # rubocop:todo Metrics/AbcSize
+    # rubocop:enable Lint/MixedRegexpCaptureTypes
+    # rubocop:todo Metrics/AbcSize Metrics/MethodLength
+    def request(contract_name)
       contract(contract_name) do |file|
-        match = REQUEST_REGEXP.match(file.read) ||
-                raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
+        match =
+          REQUEST_REGEXP.match(file.read) ||
+            raise(StandardError, "Invalidly formatted request in #{contract_name.inspect}")
 
         @http_verb = match[:verb].downcase.to_sym
         @url = "http://example.com:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
-        @conditions[:body]    = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) if match[:body].present?
+        @conditions[:body] = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) if match[:body].present?
       end
     end
+
+    # rubocop:enable Metrics/AbcSize Metrics/MethodLength
 
     def response(contract_name, times: nil)
       contract(contract_name) do |file|
@@ -50,13 +59,11 @@ module ContractHelper
     def inject_into(spec)
       builder = self
       spec.before(:each) { builder.send(:setup_request_and_response_mock) }
-      spec.after(:each)  { builder.send(:validate_request_and_response_called, self) }
+      spec.after(:each) { builder.send(:validate_request_and_response_called, self) }
     end
 
     def setup_request_and_response_mock
-      stub_request(@http_verb, @url)
-        .with(@conditions)
-        .to_return(@content)
+      stub_request(@http_verb, @url).with(@conditions).to_return(@content)
     end
 
     private
@@ -99,14 +106,14 @@ module ContractHelper
       expect_request_from('retrieve-api-root') { response('api-root', times: times) }
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://example.com:3000/', cookie: nil,
-          namespace: Limber, authorisation: 'testing'
+          url: 'http://example.com:3000/',
+          cookie: nil,
+          namespace: Limber,
+          authorisation: 'testing'
         )
       end
     end
   end
 end
 
-RSpec.configure do |config|
-  config.include ContractHelper
-end
+RSpec.configure { |config| config.include ContractHelper }

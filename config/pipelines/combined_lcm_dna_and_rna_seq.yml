@@ -1,0 +1,36 @@
+---
+CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    library_type: Combined LCM DNA
+  library_pass: CLCM DNA Lib PCR XP
+  relationships:
+    CLCM Stock: CLCM Lysate DNA
+    CLCM Lysate DNA: CLCM DNA End Prep
+    CLCM DNA End Prep: CLCM DNA Lib PCR
+    CLCM DNA Lib PCR: CLCM DNA Lib PCR XP
+CLCM Custom Pooling for DNAseq: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    state: passed
+  relationships:
+    CLCM DNA Lib PCR XP: CLCM DNA Pool
+    CLCM DNA Pool: CLCM DNA Pool Norm
+CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    library_type: Combined LCM RNA
+  library_pass: CLCM RNA Lib PCR XP
+  relationships:
+    CLCM Stock: CLCM Lysate RNA
+    CLCM Lysate RNA: CLCM RT PreAmp
+    CLCM RT PreAmp: CLCM RNA End Prep
+    CLCM RNA End Prep: CLCM RNA Lib PCR
+    CLCM RNA Lib PCR: CLCM RNA Lib PCR XP
+CLCM Custom Pooling for RNAseq: # Bottom of the pipeline (Pooling and normalization)
+  filters:
+    request_type_key: clcm_dna_rna_seq
+    state: passed
+  relationships:
+    CLCM RNA Lib PCR XP: CLCM RNA Pool
+    CLCM RNA Pool: CLCM RNA Pool Norm

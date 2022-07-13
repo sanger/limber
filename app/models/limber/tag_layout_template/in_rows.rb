@@ -3,9 +3,7 @@
 module Limber::TagLayoutTemplate::InRows # rubocop:todo Style/Documentation
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
-      WellHelpers.row_order(plate.size).map do |row_column|
-        well_location_pool_pair.call(row_column)
-      end
+      WellHelpers.row_order(plate.size).map { |row_column| well_location_pool_pair.call(row_column) }
     end
   end
 

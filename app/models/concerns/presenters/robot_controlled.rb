@@ -17,9 +17,10 @@ module Presenters
     end
 
     def suitable_for_labware?(config)
-      config.beds.detect do |_bed, bed_config|
-        bed_config.purpose == purpose_name && bed_config.states.include?(labware.state)
-      end.present?
+      config
+        .beds
+        .detect { |_bed, bed_config| bed_config.purpose == purpose_name && bed_config.states.include?(labware.state) }
+        .present?
     end
 
     def multiple_robots?

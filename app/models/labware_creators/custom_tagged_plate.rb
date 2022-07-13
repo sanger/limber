@@ -18,7 +18,15 @@ module LabwareCreators
       {
         tag_plate: %i[asset_uuid template_uuid state],
         tag_layout: [
-          :user, :plate, :tag_group, :tag2_group, :direction, :walking_by, :initial_tag, :tags_per_well, { substitutions: {} }
+          :user,
+          :plate,
+          :tag_group,
+          :tag2_group,
+          :direction,
+          :walking_by,
+          :initial_tag,
+          :tags_per_well,
+          { substitutions: {} }
         ]
       }
     ]
@@ -37,12 +45,17 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    def create_plate! # rubocop:todo Metrics/AbcSize
-      @child = api.pooled_plate_creation.create!(
-        child_purpose: purpose_uuid,
-        user: user_uuid,
-        parents: [parent_uuid, tag_plate.asset_uuid].compact_blank
-      ).child
+    # rubocop:todo Metrics/MethodLength
+    def create_plate! # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
+      @child =
+        api
+          .pooled_plate_creation
+          .create!(
+            child_purpose: purpose_uuid,
+            user: user_uuid,
+            parents: [parent_uuid, tag_plate.asset_uuid].compact_blank
+          )
+          .child
 
       transfer_material_from_parent!(@child.uuid)
 
@@ -60,6 +73,8 @@ module LabwareCreators
 
       true
     end
+
+    # rubocop:enable Metrics/MethodLength
 
     def pool_index(_pool_index)
       nil

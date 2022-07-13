@@ -8,13 +8,7 @@ RSpec.describe TubeRackWalking::Walker do
   context 'A v2 rack' do
     let(:rack) { build :tube_rack, tubes: tubes }
 
-    let(:tubes) do
-      {
-        'A1' => create(:v2_tube),
-        'B1' => create(:v2_tube),
-        'H10' => create(:v2_tube)
-      }
-    end
+    let(:tubes) { { 'A1' => create(:v2_tube), 'B1' => create(:v2_tube), 'H10' => create(:v2_tube) } }
 
     it 'yields for each row' do
       expect { |b| subject.each(&b) }.to yield_control.exactly(8).times
@@ -25,11 +19,7 @@ RSpec.describe TubeRackWalking::Walker do
     end
 
     it 'yields the expected tubes for each location' do
-      subject.each do |desc, array|
-        array.each_with_index do |tube, i|
-          expect(tube).to eq(tubes["#{desc}#{i + 1}"])
-        end
-      end
+      subject.each { |desc, array| array.each_with_index { |tube, i| expect(tube).to eq(tubes["#{desc}#{i + 1}"]) } }
     end
   end
 end

@@ -39,21 +39,28 @@ RSpec.describe PlatesController, type: :controller do
   describe '#update' do
     before do
       create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
+      stub_api_get(plate_uuid, body: old_api_example_plate)
+      stub_api_get(plate_uuid, 'wells', body: wells_json)
     end
 
+    let(:old_api_example_plate) do
+      json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
+    end
     let!(:state_change_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      'state_change' => {
-                        user: user_uuid,
-                        target: plate_uuid,
-                        target_state: 'failed',
-                        reason: 'Because testing',
-                        customer_accepts_responsibility: true,
-                        contents: nil
-                      }
-                    },
-                    body: '{}') # We don't care about the response
+      stub_api_post(
+        'state_changes',
+        payload: {
+          'state_change' => {
+            user: user_uuid,
+            target: plate_uuid,
+            target_state: 'failed',
+            reason: 'Because testing',
+            customer_accepts_responsibility: true,
+            contents: nil
+          }
+        },
+        body: '{}'
+      ) # We don't care about the response
     end
 
     it 'transitions the plate' do
@@ -67,7 +74,9 @@ RSpec.describe PlatesController, type: :controller do
             },
             purpose_uuid: 'stock-plate-purpose-uuid'
           },
-          session: { user_uuid: user_uuid }
+          session: {
+            user_uuid: user_uuid
+          }
       expect(state_change_request).to have_been_made
       expect(response).to redirect_to(search_path)
     end
@@ -75,27 +84,36 @@ RSpec.describe PlatesController, type: :controller do
 
   describe '#fail_wells' do
     let!(:state_change_request) do
-      stub_api_post('state_changes',
-                    payload: {
-                      'state_change' => {
-                        user: user_uuid,
-                        target: plate_uuid,
-                        contents: ['A1'],
-                        target_state: 'failed',
-                        reason: 'Individual Well Failure',
-                        customer_accepts_responsibility: nil
-                      }
-                    },
-                    body: '{}') # We don't care about the response
+      stub_api_post(
+        'state_changes',
+        payload: {
+          'state_change' => {
+            user: user_uuid,
+            target: plate_uuid,
+            contents: ['A1'],
+            target_state: 'failed',
+            reason: 'Individual Well Failure',
+            customer_accepts_responsibility: nil
+          }
+        },
+        body: '{}'
+      ) # We don't care about the response
     end
 
     it 'fails the selected wells' do
       post :fail_wells,
            params: {
              id: plate_uuid,
-             plate: { wells: { 'A1' => 1, 'B1' => 0 } }
+             plate: {
+               wells: {
+                 'A1' => 1,
+                 'B1' => 0
+               }
+             }
            },
-           session: { user_uuid: user_uuid }
+           session: {
+             user_uuid: user_uuid
+           }
       expect(state_change_request).to have_been_made
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
     end

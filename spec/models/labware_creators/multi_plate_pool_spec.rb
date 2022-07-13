@@ -35,16 +35,9 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   end
 
   context 'on new' do
-    let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid: plate_uuid
-      }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
-    subject do
-      LabwareCreators::MultiPlatePool.new(api, form_attributes)
-    end
+    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes) }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::MultiPlatePool
@@ -60,9 +53,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   end
 
   context 'on create' do
-    subject do
-      LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid))
-    end
+    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
     let(:plate_b_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
@@ -74,8 +65,14 @@ RSpec.describe LabwareCreators::MultiPlatePool do
         parent_uuid: plate_uuid,
         purpose_uuid: child_purpose_uuid,
         transfers: {
-          plate_uuid => { 'A1' => 'A1', 'B1' => 'A1' },
-          plate_b_uuid => { 'A1' => 'B1', 'B1' => 'B1' }
+          plate_uuid => {
+            'A1' => 'A1',
+            'B1' => 'A1'
+          },
+          plate_b_uuid => {
+            'A1' => 'B1',
+            'B1' => 'B1'
+          }
         }
       }
     end

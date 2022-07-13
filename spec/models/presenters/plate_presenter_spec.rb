@@ -40,20 +40,17 @@ RSpec.describe Presenters::PlatePresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) do
-    Presenters::PlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { Presenters::PlatePresenter.new(api: api, labware: labware) }
 
   context 'with the default label class "Labels::PlateLabel"' do
     it 'returns PlateLabel attributes when PlateLabel is defined in the purpose settings' do
-      expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                         bottom_left: 'DN1S',
-                         top_right: 'DN2T',
-                         bottom_right: "WGS #{purpose_name}",
-                         barcode: 'DN1S' }
+      expected_label = {
+        top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+        bottom_left: 'DN1S',
+        top_right: 'DN2T',
+        bottom_right: "WGS #{purpose_name}",
+        barcode: 'DN1S'
+      }
       expect(presenter.label.attributes).to eq(expected_label)
     end
   end
@@ -63,16 +60,17 @@ RSpec.describe Presenters::PlatePresenter do
 
     it 'returns PlateDoubleLabel attributes when PlateDoubleLabel is defined in the purpose settings' do
       expected_label = {
-        attributes: { right_text: 'DN2T',
-                      left_text: 'DN1S',
-                      barcode: 'DN1S' },
-        extra_attributes: { right_text: "DN2T WGS #{purpose_name}",
-                            left_text: Time.zone.today.strftime('%e-%^b-%Y') }
+        attributes: {
+          right_text: 'DN2T',
+          left_text: 'DN1S',
+          barcode: 'DN1S'
+        },
+        extra_attributes: {
+          right_text: "DN2T WGS #{purpose_name}",
+          left_text: Time.zone.today.strftime('%e-%^b-%Y')
+        }
       }
-      actual_label = {
-        attributes: presenter.label.attributes,
-        extra_attributes: presenter.label.extra_attributes
-      }
+      actual_label = { attributes: presenter.label.attributes, extra_attributes: presenter.label.extra_attributes }
       expect(actual_label).to eq(expected_label)
     end
   end
@@ -92,15 +90,8 @@ RSpec.describe Presenters::PlatePresenter do
           left_text: Time.zone.today.strftime('%e-%^b-%Y')
         },
         qc_attributes: [
-          {
-            right_text: 'DN2T',
-            left_text: 'DN1S QC',
-            barcode: 'DN1S-QC'
-          },
-          {
-            right_text: "DN2T WGS #{purpose_name} QC",
-            left_text: Time.zone.today.strftime('%e-%^b-%Y')
-          }
+          { right_text: 'DN2T', left_text: 'DN1S QC', barcode: 'DN1S-QC' },
+          { right_text: "DN2T WGS #{purpose_name} QC", left_text: Time.zone.today.strftime('%e-%^b-%Y') }
         ]
       }
       actual_label = {
@@ -116,11 +107,13 @@ RSpec.describe Presenters::PlatePresenter do
     let(:label_class) { 'Labels::PlateLabelXp' }
 
     it 'returns PlateLabelXP attributes when PlateLabelXP is defined in the purpose settings' do
-      expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                         bottom_left: 'DN1S',
-                         top_right: 'DN2T',
-                         bottom_right: "WGS #{purpose_name}",
-                         barcode: 'DN1S' }
+      expected_label = {
+        top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+        bottom_left: 'DN1S',
+        top_right: 'DN2T',
+        bottom_right: "WGS #{purpose_name}",
+        barcode: 'DN1S'
+      }
       expect(presenter.label.attributes).to eq(expected_label)
       expected_qc_attributes = [
         {
@@ -138,11 +131,13 @@ RSpec.describe Presenters::PlatePresenter do
     let(:label_class) { 'Labels::PlateLabelLdsAlLib' }
 
     it 'returns PlateLabelLdsAlLib attributes when PlateLabelLdsAlLib is defined in the purpose settings' do
-      expected_label = { top_left: Time.zone.today.strftime('%e-%^b-%Y'),
-                         bottom_left: 'DN1S',
-                         top_right: 'DN2T',
-                         bottom_right: "WGS #{purpose_name}",
-                         barcode: 'DN1S' }
+      expected_label = {
+        top_left: Time.zone.today.strftime('%e-%^b-%Y'),
+        bottom_left: 'DN1S',
+        top_right: 'DN2T',
+        bottom_right: "WGS #{purpose_name}",
+        barcode: 'DN1S'
+      }
       expect(presenter.label.attributes).to eq(expected_label)
       expected_intermediate_attributes = [
         {
@@ -228,10 +223,20 @@ RSpec.describe Presenters::PlatePresenter do
     let(:request_d) { create :library_request, pcr_cycles: 2 }
     let(:wells) do
       [
-        create(:v2_stock_well, uuid: '2-well-A1', location: 'A1', aliquot_count: 1,
-                               requests_as_source: [request_a, request_b]),
-        create(:v2_stock_well, uuid: '2-well-B1', location: 'B1', aliquot_count: 1,
-                               requests_as_source: [request_c, request_d])
+        create(
+          :v2_stock_well,
+          uuid: '2-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '2-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        )
       ]
     end
 
@@ -249,7 +254,9 @@ RSpec.describe Presenters::PlatePresenter do
 
     it 'reports the error' do
       presenter.valid?
-      expect(presenter.errors.full_messages).to include('Requested pcr cycles differs from standard. 10 cycles have been requested.')
+      expect(presenter.errors.full_messages).to include(
+        'Requested pcr cycles differs from standard. 10 cycles have been requested.'
+      )
     end
   end
 
@@ -274,9 +281,13 @@ RSpec.describe Presenters::PlatePresenter do
     let(:target_tube2) { create :v2_asset_tube }
 
     let(:labware) do
-      create :v2_plate, uuid: 'plate-uuid', transfer_targets: {
-        'A1' => [target_tube], 'B1' => [target_tube], 'C1' => [target_tube2]
-      }
+      create :v2_plate,
+             uuid: 'plate-uuid',
+             transfer_targets: {
+               'A1' => [target_tube],
+               'B1' => [target_tube],
+               'C1' => [target_tube2]
+             }
     end
 
     it 'returns the correct number of labels' do
@@ -293,11 +304,10 @@ RSpec.describe Presenters::PlatePresenter do
     context 'with a default plate' do
       let(:expected_default_csv_links) do
         [
-          ['Download Concentration CSV', [:limber_plate, :export, {
-            format: :csv,
-            id: 'concentrations',
-            limber_plate_id: 'DN1S'
-          }]]
+          [
+            'Download Concentration CSV',
+            [:limber_plate, :export, { format: :csv, id: 'concentrations', limber_plate_id: 'DN1S' }]
+          ]
         ]
       end
 
@@ -357,20 +367,18 @@ RSpec.describe Presenters::PlatePresenter do
       end
 
       it 'returns the expected number of links' do
-        expect(presenter.csv_file_links).to eq([
-                                                 ['Button 1', [:limber_plate, :export, {
-                                                   format: :csv,
-                                                   id: 'template',
-                                                   limber_plate_id: 'DN1S',
-                                                   'page' => 0
-                                                 }]],
-                                                 ['Button 2', [:limber_plate, :export, {
-                                                   format: :csv,
-                                                   id: 'template',
-                                                   limber_plate_id: 'DN1S',
-                                                   'page' => 1
-                                                 }]]
-                                               ])
+        expect(presenter.csv_file_links).to eq(
+          [
+            [
+              'Button 1',
+              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 0 }]
+            ],
+            [
+              'Button 2',
+              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 1 }]
+            ]
+          ]
+        )
       end
     end
   end

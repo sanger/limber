@@ -12,7 +12,7 @@ module LabwareCreators
   # binning or rearrangement.
   class ConcentrationNormalisedPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
-    include LabwareCreators::GenerateQCResults
+    include LabwareCreators::GenerateQcResults
 
     validate :wells_with_aliquots_have_concentrations?
 
@@ -25,9 +25,11 @@ module LabwareCreators
     def request_hash(source_well, child_plate, additional_parameters)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect do |child_well|
-          child_well.location == transfer_hash[source_well.location]['dest_locn']
-        end&.uuid,
+        'target_asset' =>
+          child_plate
+            .wells
+            .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
+            &.uuid,
         'volume' => transfer_hash[source_well.location]['volume'].to_s
       }.merge(additional_parameters)
     end

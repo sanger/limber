@@ -7,7 +7,7 @@ module LabwareCreators
   # Pools from a plate into tubes, grouping together wells that contain the same sample
   # NB. Currently this is specific to the Cardinal usage of FluidX tubes
   ##
-  class PooledTubesBySample < PooledTubesBase
+  class PooledTubesBySample < PooledTubesBase # rubocop:todo Metrics/ClassLength
     include SupportParent::PlateOnly
     include LabwareCreators::CustomPage
 
@@ -47,12 +47,16 @@ module LabwareCreators
     # Have we made this class so cardinal-specific (e.g. lookup of ancestor vac tubes) that it cannot be re-used?
 
     def create_child_stock_tubes
-      api.specific_tube_creation.create!(
-        user: user_uuid,
-        parent: parent_uuid,
-        child_purposes: [purpose_uuid] * pool_uuids.length,
-        tube_attributes: tube_attributes
-      ).children.index_by(&:name)
+      api
+        .specific_tube_creation
+        .create!(
+          user: user_uuid,
+          parent: parent_uuid,
+          child_purposes: [purpose_uuid] * pool_uuids.length,
+          tube_attributes: tube_attributes
+        )
+        .children
+        .index_by(&:name)
     end
 
     def name_for_details(pool_identifier)
@@ -65,11 +69,12 @@ module LabwareCreators
     def transfer_request_attributes
       pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
         pool.each do |location|
-          transfer_requests << request_hash(
-            well_locations.fetch(location).uuid,
-            child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
-            pool_identifier
-          )
+          transfer_requests <<
+            request_hash(
+              well_locations.fetch(location).uuid,
+              child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
+              pool_identifier
+            )
         end
       end
     end
@@ -112,14 +117,8 @@ module LabwareCreators
         # set tube position in pools_with_extra_details for use later in transfer requests
         pool_details[:destination_tube_posn] = tube_posn
 
-        name_for_details = {
-          source_tube_barcode: pool_details[:source_tube_barcode],
-          destination_tube_posn: tube_posn
-        }
-        {
-          name: name_for(name_for_details),
-          foreign_barcode: csv_file.position_details[tube_posn]['barcode']
-        }
+        name_for_details = { source_tube_barcode: pool_details[:source_tube_barcode], destination_tube_posn: tube_posn }
+        { name: name_for(name_for_details), foreign_barcode: csv_file.position_details[tube_posn]['barcode'] }
       end
     end
 
@@ -142,8 +141,8 @@ module LabwareCreators
     #
     # Create class that will parse and validate the uploaded file
     # TODO: is there any point passing in the parent barcode if we can't validate the tube rack barcode?
-    # If they could get the rack barcode into either the csv filename or embedded as a field in the file we could validate it.
-    #
+    # If they could get the rack barcode into either the csv filename or
+    # embedded as a field in the file we could validate it.
     def csv_file
       @csv_file ||= CsvFile.new(file, parent.human_barcode)
     end
@@ -163,7 +162,10 @@ module LabwareCreators
       return unless num_pools > num_tubes
 
       # TODO: test this
-      errors.add(:csv_file, "contains #{num_tubes} tubes, whereas we need #{num_pools} to match the number of unique samples")
+      errors.add(
+        :csv_file,
+        "contains #{num_tubes} tubes, whereas we need #{num_pools} to match the number of unique samples"
+      )
     end
 
     def pools_with_extra_details
@@ -199,7 +201,9 @@ module LabwareCreators
     # get the original supplier (ancestor) tube barcode (if not already set on this pool)
     def add_sample_ancestor_tube_barcode(extra_details, sample_uuid)
       sample_ancestor_tube_barcode = ancestor_stock_tubes[sample_uuid]
-      raise StandardError, "Failed to identify ancestor (supplier) source tube for sample uuid #{sample_uuid}" if sample_ancestor_tube_barcode.blank?
+      if sample_ancestor_tube_barcode.blank?
+        raise StandardError, "Failed to identify ancestor (supplier) source tube for sample uuid #{sample_uuid}"
+      end
 
       extra_details[sample_uuid][:source_tube_barcode] = sample_ancestor_tube_barcode.labware_barcode.human
     end
@@ -234,6 +238,7 @@ module LabwareCreators
       end
       extra_details
     end
+
     # rubocop:enable Metrics/AbcSize
 
     #

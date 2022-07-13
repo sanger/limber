@@ -8,10 +8,7 @@
     />
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group
-          id="tag_plate_scan_group"
-          label="Scan in the tag plate you wish to use here..."
-        >
+        <b-form-group id="tag_plate_scan_group" label="Scan in the tag plate you wish to use here...">
           <lb-plate-scan
             id="tag_plate_scan"
             :api="api"
@@ -66,11 +63,7 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group
-          id="walking_by_options_group"
-          label="Walking By Options:"
-          label-for="walking_by_options"
-        >
+        <b-form-group id="walking_by_options_group" label="Walking By Options:" label-for="walking_by_options">
           <b-form-select
             id="walking_by_options"
             v-model="walkingBy"
@@ -80,11 +73,7 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group
-          id="direction_options_group"
-          label="Directions Options:"
-          label-for="direction_options"
-        >
+        <b-form-group id="direction_options_group" label="Directions Options:" label-for="direction_options">
           <b-form-select
             id="direction_options"
             v-model="direction"
@@ -106,17 +95,8 @@
         />
       </b-col>
       <b-col>
-        <b-form-group
-          id="tags_per_well_group"
-          label="Tags per well:"
-          label-for="tags_per_well"
-        >
-          <b-form-input
-            id="tags_per_well"
-            type="number"
-            :value="tagsPerWell"
-            :disabled="true"
-          />
+        <b-form-group id="tags_per_well_group" label="Tags per well:" label-for="tags_per_well">
+          <b-form-input id="tags_per_well" type="number" :value="tagsPerWell" :disabled="true" />
         </b-form-group>
       </b-col>
     </b-row>
@@ -145,7 +125,7 @@ import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
 export default {
   name: 'TagLayoutManipulations',
   components: {
-    'lb-plate-scan': LabwareScan
+    'lb-plate-scan': LabwareScan,
   },
   mixins: [TagLayout],
   props: {
@@ -153,10 +133,10 @@ export default {
       // filters list of tag groups if present
       type: String,
       required: false,
-      default: null
-    }
+      default: null,
+    },
   },
-  data () {
+  data() {
     return {
       tagPlateWasScanned: false, // flag to indicate a tag plate was scanned
       tagPlateScanDisabled: false, // flag to indicate the plate scan was disabled
@@ -165,32 +145,30 @@ export default {
   },
   computed: {
     scanValidation() {
-      return [
-        checkState(['available','exhausted']),
-        checkQCableWalkingBy(['wells of plate'])
-      ]
+      return [checkState(['available', 'exhausted']), checkQCableWalkingBy(['wells of plate'])]
     },
     tagPlateLookupFields() {
-      return { assets: 'uuid',
+      return {
+        assets: 'uuid',
         lots: 'uuid,tag_layout_template',
         tag_layout_templates: 'uuid,tag_group,tag2_group,direction,walking_by',
-        tag_groups: 'uuid,name,tags'
+        tag_groups: 'uuid,name,tags',
       }
     },
     tagPlateLookupIncludes() {
       return 'asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group'
     },
     tagGroupsDisabled() {
-      return (typeof this.tagPlate != 'undefined' && this.tagPlate !== null)
+      return typeof this.tagPlate != 'undefined' && this.tagPlate !== null
     },
     walkingByOptions() {
       return [
         { value: null, text: 'Please select a by Walking By Option...' },
         { value: 'manual by pool', text: 'By Pool' },
         { value: 'manual by plate', text: 'By Plate (Sequential)' },
-        { value: 'wells of plate', text: 'By Plate (Fixed)' }
+        { value: 'wells of plate', text: 'By Plate (Fixed)' },
       ]
-    }
+    },
   },
   methods: {
     emptyTagPlate() {
@@ -205,11 +183,11 @@ export default {
       this.tag1GroupId = null
       this.tag2GroupId = null
 
-      if(plate.lot && plate.lot.tag_layout_template) {
-        if(plate.lot.tag_layout_template.tag_group && plate.lot.tag_layout_template.tag_group.id) {
+      if (plate.lot && plate.lot.tag_layout_template) {
+        if (plate.lot.tag_layout_template.tag_group && plate.lot.tag_layout_template.tag_group.id) {
           this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
         }
-        if(plate.lot.tag_layout_template.tag2_group && plate.lot.tag_layout_template.tag2_group.id) {
+        if (plate.lot.tag_layout_template.tag2_group && plate.lot.tag_layout_template.tag2_group.id) {
           this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
         }
       }
@@ -223,19 +201,19 @@ export default {
       this.updateTagPlateScanDisabled()
     },
     tagPlateScanned(data) {
-      if(data) {
-        if(data.state === 'valid' && data.plate) {
+      if (data) {
+        if (data.state === 'valid' && data.plate) {
           this.extractTagGroupIds(data.plate)
-        } else if(data.state === 'empty') {
+        } else if (data.state === 'empty') {
           this.emptyTagPlate()
         }
       }
     },
     updateTagPlateScanDisabled() {
-      if(this.tagPlateWasScanned) {
+      if (this.tagPlateWasScanned) {
         this.tagPlateScanDisabled = false
       } else {
-        if(this.tag1GroupId || this.tag2GroupId) {
+        if (this.tag1GroupId || this.tag2GroupId) {
           this.tagPlateScanDisabled = true
         } else {
           this.tagPlateScanDisabled = false
@@ -244,24 +222,25 @@ export default {
       this.updateTagParams(null)
     },
     tagGroupLookupFilter() {
-      if(this.tagGroupAdapterTypeNameFilter) {
-        return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
+      if (this.tagGroupAdapterTypeNameFilter) {
+        return {
+          tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter,
+        }
       }
       return {}
-    }
-  }
+    },
+  },
 }
-
 </script>
 
 <style>
-  input:invalid+span:after {
-    content: '✖';
-    padding-left: 5px;
-  }
+input:invalid + span:after {
+  content: '✖';
+  padding-left: 5px;
+}
 
-  input:valid+span:after {
-    content: '✓';
-    padding-left: 5px;
-  }
+input:valid + span:after {
+  content: '✓';
+  padding-left: 5px;
+}
 </style>

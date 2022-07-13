@@ -12,28 +12,44 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     let(:num_cols) { 12 }
 
     let(:well_a1) do
-      create(:v2_well,
-             position: { 'name' => 'A1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.5'),
-             requests_as_source: [requests[0]])
+      create(
+        :v2_well,
+        position: {
+          'name' => 'A1'
+        },
+        qc_results: create_list(:qc_result_concentration, 1, value: '1.5'),
+        requests_as_source: [requests[0]]
+      )
     end
     let(:well_b1) do
-      create(:v2_well,
-             position: { 'name' => 'B1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '56.0'),
-             requests_as_source: [requests[1]])
+      create(
+        :v2_well,
+        position: {
+          'name' => 'B1'
+        },
+        qc_results: create_list(:qc_result_concentration, 1, value: '56.0'),
+        requests_as_source: [requests[1]]
+      )
     end
     let(:well_c1) do
-      create(:v2_well,
-             position: { 'name' => 'C1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
-             requests_as_source: [requests[2]])
+      create(
+        :v2_well,
+        position: {
+          'name' => 'C1'
+        },
+        qc_results: create_list(:qc_result_concentration, 1, value: '3.5'),
+        requests_as_source: [requests[2]]
+      )
     end
     let(:well_d1) do
-      create(:v2_well,
-             position: { 'name' => 'D1' },
-             qc_results: create_list(:qc_result_concentration, 1, value: '1.8'),
-             requests_as_source: [requests[3]])
+      create(
+        :v2_well,
+        position: {
+          'name' => 'D1'
+        },
+        qc_results: create_list(:qc_result_concentration, 1, value: '1.8'),
+        requests_as_source: [requests[3]]
+      )
     end
 
     let(:parent_plate) do
@@ -53,16 +69,9 @@ RSpec.describe Utility::FixedNormalisationCalculator do
       end
     end
 
-    let(:dilutions_config) do
-      {
-        'source_volume' => 2,
-        'diluent_volume' => 33
-      }
-    end
+    let(:dilutions_config) { { 'source_volume' => 2, 'diluent_volume' => 33 } }
 
-    subject do
-      Utility::FixedNormalisationCalculator.new(dilutions_config)
-    end
+    subject { Utility::FixedNormalisationCalculator.new(dilutions_config) }
 
     describe '#source_multiplication_factor' do
       it 'calculates value correctly' do
@@ -81,12 +90,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
         let(:filtered_wells) { [well_a1, well_b1, well_c1, well_d1] }
 
         it 'calculates plate well amounts correctly' do
-          expected_amounts = {
-            'A1' => 3.0,
-            'B1' => 112.0,
-            'C1' => 7.0,
-            'D1' => 3.6
-          }
+          expected_amounts = { 'A1' => 3.0, 'B1' => 112.0, 'C1' => 7.0, 'D1' => 3.6 }
 
           expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
         end
@@ -96,10 +100,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
         let(:filtered_wells) { [well_b1, well_d1] }
 
         it 'calculates plate well amounts correctly' do
-          expected_amounts = {
-            'B1' => 112.0,
-            'D1' => 3.6
-          }
+          expected_amounts = { 'B1' => 112.0, 'D1' => 3.6 }
 
           expect(subject.compute_well_amounts(filtered_wells)).to eq(expected_amounts)
         end
@@ -112,10 +113,22 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
         let(:expd_transfers) do
           {
-            'A1' => { 'dest_locn' => 'A1', 'dest_conc' => '0.08571428571428572' },
-            'B1' => { 'dest_locn' => 'B1', 'dest_conc' => '3.2' },
-            'C1' => { 'dest_locn' => 'C1', 'dest_conc' => '0.2' },
-            'D1' => { 'dest_locn' => 'D1', 'dest_conc' => '0.10285714285714286' }
+            'A1' => {
+              'dest_locn' => 'A1',
+              'dest_conc' => '0.08571428571428572'
+            },
+            'B1' => {
+              'dest_locn' => 'B1',
+              'dest_conc' => '3.2'
+            },
+            'C1' => {
+              'dest_locn' => 'C1',
+              'dest_conc' => '0.2'
+            },
+            'D1' => {
+              'dest_locn' => 'D1',
+              'dest_conc' => '0.10285714285714286'
+            }
           }
         end
 
@@ -131,8 +144,14 @@ RSpec.describe Utility::FixedNormalisationCalculator do
         # it should compress wells to top left by column
         let(:expd_transfers) do
           {
-            'B1' => { 'dest_locn' => 'A1', 'dest_conc' => '3.2' },
-            'D1' => { 'dest_locn' => 'B1', 'dest_conc' => '0.10285714285714286' }
+            'B1' => {
+              'dest_locn' => 'A1',
+              'dest_conc' => '3.2'
+            },
+            'D1' => {
+              'dest_locn' => 'B1',
+              'dest_conc' => '0.10285714285714286'
+            }
           }
         end
 

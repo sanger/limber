@@ -16,9 +16,7 @@ module LabwareCreators
     def determine_pools
       # pools are already defined on the parent plate, since they are set at the point of submission
       # filter for just those that are marked for multiplexing
-      pools_for_multiplexing = parent.pools.select do |_submission_id, pool_info|
-        pool_info['for_multiplexing']
-      end
+      pools_for_multiplexing = parent.pools.select { |_submission_id, pool_info| pool_info['for_multiplexing'] }
 
       # filter for just those where the source wells for the pool have't been failed
       pools_for_multiplexing.transform_values { |pool_info| all_wells_in_pool_passed?(pool_info) }

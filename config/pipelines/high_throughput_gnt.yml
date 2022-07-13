@@ -11,7 +11,7 @@ GnT Picoplex:
 GnT Picoplex MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     GnT Pico Lib PCR: GnT Pico Lib Pool
     GnT Pico Lib Pool: GnT Pico Lib Pool XP
@@ -19,7 +19,7 @@ GnT Picoplex MX:
 GnT MDA:
   filters:
     request_type_key:
-    - limber_gnt_mda
+      - limber_gnt_mda
   relationships:
     GnT Stock: GnT scDNA
     GnT scDNA: GnT MDA Norm

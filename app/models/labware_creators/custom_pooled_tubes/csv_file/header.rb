@@ -2,6 +2,7 @@
 
 module LabwareCreators # rubocop:todo Style/Documentation
   require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
+
   #
   # Class HeaderRow provides a simple wrapper for handling and validating
   # individual CSV rows
@@ -19,6 +20,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     validates :source_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :destination_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+
     #
     # Generates a header from the header row array
     #
@@ -51,9 +53,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     # @return [Int,nil] The index of the header in the column list. nil is missing.
     #
     def index_of_header(column_header)
-      @row.index do |value|
-        value.respond_to?(:strip) && column_header.casecmp?(value.strip)
-      end
+      @row.index { |value| value.respond_to?(:strip) && column_header.casecmp?(value.strip) }
     end
   end
 end

@@ -28,24 +28,16 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
   # A   *   *   *
   # B       *
   let(:well_a1) do
-    create(:v2_well,
-           position: { 'name' => 'A1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '0.6'))
+    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '0.6'))
   end
   let(:well_a2) do
-    create(:v2_well,
-           position: { 'name' => 'A2' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '10.0'))
+    create(:v2_well, position: { 'name' => 'A2' }, qc_results: create_list(:qc_result_concentration, 1, value: '10.0'))
   end
   let(:well_b2) do
-    create(:v2_well,
-           position: { 'name' => 'B2' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '12.0'))
+    create(:v2_well, position: { 'name' => 'B2' }, qc_results: create_list(:qc_result_concentration, 1, value: '12.0'))
   end
   let(:well_a3) do
-    create(:v2_well,
-           position: { 'name' => 'A3' },
-           qc_results: create_list(:qc_result_concentration, 1, value: '20.0'))
+    create(:v2_well, position: { 'name' => 'A3' }, qc_results: create_list(:qc_result_concentration, 1, value: '20.0'))
   end
 
   let(:labware) do
@@ -64,16 +56,9 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before do
-    stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results')
-  end
+  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) do
-    Presenters::ConcentrationBinnedPlatePresenter.new(
-      api: api,
-      labware: labware
-    )
-  end
+  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(api: api, labware: labware) }
 
   context 'when binning configuration is missing' do
     it 'throws an exception' do
@@ -83,8 +68,12 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
   context 'when binning configuration is present' do
     before do
-      create(:concentration_binning_purpose_config, uuid: labware.purpose.uuid, warnings: warnings,
-                                                    label_class: label_class)
+      create(
+        :concentration_binning_purpose_config,
+        uuid: labware.purpose.uuid,
+        warnings: warnings,
+        label_class: label_class
+      )
     end
 
     it_behaves_like 'a labware presenter'
@@ -103,10 +92,22 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
       it 'should create bin details which will be used to colour and annotate the well aliquots' do
         expected_bin_details = {
-          'A1' => { 'colour' => 1, 'pcr_cycles' => 16 },
-          'A2' => { 'colour' => 2, 'pcr_cycles' => 12 },
-          'A3' => { 'colour' => 3, 'pcr_cycles' => 8 },
-          'B2' => { 'colour' => 2, 'pcr_cycles' => 12 }
+          'A1' => {
+            'colour' => 1,
+            'pcr_cycles' => 16
+          },
+          'A2' => {
+            'colour' => 2,
+            'pcr_cycles' => 12
+          },
+          'A3' => {
+            'colour' => 3,
+            'pcr_cycles' => 8
+          },
+          'B2' => {
+            'colour' => 2,
+            'pcr_cycles' => 12
+          }
         }
 
         expect(presenter.bin_details).to eq(expected_bin_details)

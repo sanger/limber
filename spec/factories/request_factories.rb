@@ -11,15 +11,14 @@ FactoryBot.define do
       pcr_cycles { 10 }
       sequence(:submission_id) { |i| i }
       sequence(:order_id) { |i| i }
+
       # Specifies that submission information should be included in the model
       # as though it had been requested via the API.
       include_submissions { false }
       library_type { 'Standard' }
     end
 
-    initialize_with do
-      Sequencescape::Api::V2::Request.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::Request.load(attributes) }
 
     skip_create
     sequence(:id, &:to_s)
@@ -50,14 +49,20 @@ FactoryBot.define do
           'self' => "http://localhost:3000/api/v2/requests/#{request.id}/relationships/submission",
           'related' => "http://localhost:3000/api/v2/requests/#{request.id}/submission"
         },
-        'data' => { 'type' => 'submissions', 'id' => evaluator.submission_id.to_s }
+        'data' => {
+          'type' => 'submissions',
+          'id' => evaluator.submission_id.to_s
+        }
       }
       request.relationships.order = {
         'links' => {
           'self' => "http://localhost:3000/api/v2/requests/#{request.id}/relationships/order",
           'related' => "http://localhost:3000/api/v2/requests/#{request.id}/order"
         },
-        'data' => { 'type' => 'orders', 'id' => evaluator.order_id.to_s }
+        'data' => {
+          'type' => 'orders',
+          'id' => evaluator.order_id.to_s
+        }
       }
     end
 
@@ -95,8 +100,14 @@ FactoryBot.define do
     name { 'example panel' }
     programs do
       {
-        'pcr 1' => { 'name' => 'example program', 'duration' => 45 },
-        'pcr 2' => { 'name' => 'other program', 'duration' => 20 }
+        'pcr 1' => {
+          'name' => 'example program',
+          'duration' => 45
+        },
+        'pcr 2' => {
+          'name' => 'other program',
+          'duration' => 20
+        }
       }
     end
   end

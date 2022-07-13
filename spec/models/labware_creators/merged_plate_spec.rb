@@ -12,9 +12,7 @@ RSpec.describe LabwareCreators::MergedPlate do
 
   has_a_working_api
 
-  subject do
-    LabwareCreators::MergedPlate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::MergedPlate.new(api, form_attributes) }
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
@@ -77,21 +75,17 @@ RSpec.describe LabwareCreators::MergedPlate do
     stub_v2_plate(source_plate_2, stub_search: false)
   end
 
-  let(:form_attributes) do
-    {
-      purpose_uuid: child_purpose_uuid,
-      parent_uuid: source_plate_1.uuid,
-      user_uuid: user_uuid
-    }
-  end
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: source_plate_1.uuid, user_uuid: user_uuid } }
 
   shared_examples 'a merged plate creator' do
     describe '#save!' do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
           receive(:find_all)
-            .with({ barcode: [source_plate_1.barcode.machine,
-                              source_plate_2.barcode.machine] }, includes: plate_includes)
+            .with(
+              { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
+              includes: plate_includes
+            )
             .and_return([source_plate_1, source_plate_2])
         )
       end
@@ -111,12 +105,16 @@ RSpec.describe LabwareCreators::MergedPlate do
       end
 
       let!(:transfer_creation_request) do
-        stub_api_post('transfer_request_collections',
-                      payload: { transfer_request_collection: {
-                        user: user_uuid,
-                        transfer_requests: transfer_requests
-                      } },
-                      body: '{}')
+        stub_api_post(
+          'transfer_request_collections',
+          payload: {
+            transfer_request_collection: {
+              user: user_uuid,
+              transfer_requests: transfer_requests
+            }
+          },
+          body: '{}'
+        )
       end
 
       it 'makes the expected requests' do
@@ -139,23 +137,30 @@ RSpec.describe LabwareCreators::MergedPlate do
     end
 
     let(:transfer_requests) do
-      WellHelpers.column_order(plate_size).each_with_index.map do |well_name, _index|
-        {
-          'source_asset' => "2-well-#{well_name}",
-          'target_asset' => "4-well-#{well_name}",
-          'submission_id' => '1',
-          'merge_equivalent_aliquots' => true
-        }
-      end.concat(
-        WellHelpers.column_order(plate_size).each_with_index.map do |well_name, _index|
+      WellHelpers
+        .column_order(plate_size)
+        .each_with_index
+        .map do |well_name, _index|
           {
-            'source_asset' => "3-well-#{well_name}",
+            'source_asset' => "2-well-#{well_name}",
             'target_asset' => "4-well-#{well_name}",
             'submission_id' => '1',
             'merge_equivalent_aliquots' => true
           }
         end
-      )
+        .concat(
+          WellHelpers
+            .column_order(plate_size)
+            .each_with_index
+            .map do |well_name, _index|
+              {
+                'source_asset' => "3-well-#{well_name}",
+                'target_asset' => "4-well-#{well_name}",
+                'submission_id' => '1',
+                'merge_equivalent_aliquots' => true
+              }
+            end
+        )
     end
 
     context '96 well plate' do

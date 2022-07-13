@@ -7,8 +7,12 @@ import localVue from 'test_support/base_vue'
 
 describe('DevourSelect mixin', () => {
   const testResourceName = 'test'
-  const testValidation = (_) => { return { valid: true, message: 'Good' } }
-  const testValidationApiError = (_) => { return { valid: false, message: 'Unknown error' } }
+  const testValidation = (_) => {
+    return { valid: true, message: 'Good' }
+  }
+  const testValidationApiError = (_) => {
+    return { valid: false, message: 'Unknown error' }
+  }
   const testIncludes = 'test'
   const testFilter = { uuid: 1 }
   const testFields = { tests: 'uuid,description' }
@@ -21,11 +25,11 @@ describe('DevourSelect mixin', () => {
       includes: testIncludes,
       filter: testFilter,
       fields: testFields,
-      validation: testValidation
+      validation: testValidation,
     }
     cmp = Vue.extend({ mixins: [DevourSelect] })
     devourSelectInstance = new cmp({
-      propsData: data
+      propsData: data,
     })
   })
 
@@ -56,7 +60,7 @@ describe('DevourSelect mixin', () => {
   })
 
   describe('checking api behaviour', () => {
-    const wrapperFactory = function(api = mockApi()) {
+    const wrapperFactory = function (api = mockApi()) {
       const MyComponent = Vue.extend({ mixins: [DevourSelect] })
       return mount(MyComponent, {
         propsData: {
@@ -65,9 +69,9 @@ describe('DevourSelect mixin', () => {
           includes: testIncludes,
           filter: testFilter,
           fields: testFields,
-          validation: testValidationApiError
+          validation: testValidationApiError,
         },
-        localVue
+        localVue,
       })
     }
 
@@ -76,21 +80,27 @@ describe('DevourSelect mixin', () => {
 
       // Devour logs the error automatically, which clutters the feedback
       // so we disable logging here
-      jest.spyOn(console, 'log').mockImplementation(() => { })
+      jest.spyOn(console, 'log').mockImplementation(() => {})
 
       // mock the devour api: url, params, response
-      api.mockFail('tests', {
-        filter: testFilter,
-        include: testIncludes,
-        fields: testFields
-      }, {
-        'errors': [{
-          title: 'Not good',
-          detail: 'Very not good',
-          code: 500,
-          status: 500
-        }]
-      })
+      api.mockFail(
+        'tests',
+        {
+          filter: testFilter,
+          include: testIncludes,
+          fields: testFields,
+        },
+        {
+          errors: [
+            {
+              title: 'Not good',
+              detail: 'Very not good',
+              code: 500,
+              status: 500,
+            },
+          ],
+        }
+      )
 
       const wrapper = wrapperFactory(api)
       wrapper.vm.performLookup()
@@ -105,9 +115,7 @@ describe('DevourSelect mixin', () => {
       // but because the error doesn't come back we use this:
       expect(wrapper.vm.feedback).toEqual('Unknown error')
       expect(wrapper.emitted()).toEqual({
-        change: [
-          [{ state: 'invalid', results: null }]
-        ]
+        change: [[{ state: 'invalid', results: null }]],
       })
     })
   })

@@ -6,13 +6,11 @@ class PipelineWorkInProgressController < ApplicationController
   def show
     @pipeline = params[:id].capitalize
 
-    # Doesn't currently include 'Tailed MX' pipelines -
-    # Could be added in future if needed although might cause an issue as there might be loads of tubes in the final purpose
     # TODO: Add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
     # So that it can work for all pipelines
     heron_pipeline_name_to_configs = {
-      'Heron-384' => ['Heron-384 Tailed A', 'Heron-384 Tailed B'],
-      'Heron-96' => ['Heron-96 Tailed A', 'Heron-96 Tailed B']
+      'Heron-384' => ['Heron-384 Tailed A V2', 'Heron-384 Tailed B V2'],
+      'Heron-96' => ['Heron-96 Tailed A V2', 'Heron-96 Tailed B V2']
     }
     @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(heron_pipeline_name_to_configs[@pipeline])
 
@@ -30,14 +28,17 @@ class PipelineWorkInProgressController < ApplicationController
   # Combines pages into one list
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
-    labware_query = Sequencescape::Api::V2::Labware
-                    .select({ plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                            { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-                            { purposes: 'name' })
-                    .includes(:state_changes, :purpose, 'ancestors.purpose')
-                    .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
-                    .order(:created_at)
-                    .per(page_size)
+    labware_query =
+      Sequencescape::Api::V2::Labware
+        .select(
+          { plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+          { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+          { purposes: 'name' }
+        )
+        .includes(:state_changes, :purpose, 'ancestors.purpose')
+        .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
+        .order(:created_at)
+        .per(page_size)
 
     Sequencescape::Api::V2.merge_page_results(labware_query)
   end

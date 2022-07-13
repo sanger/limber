@@ -5,26 +5,26 @@ import localVue from 'test_support/base_vue.js'
 import {
   nullQcableData,
   exampleQcableData,
-  exampleTagGroupsList
+  exampleTagGroupsList,
 } from 'custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulations', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(TagLayoutManipulations, {
       propsData: {
         api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
-        tagsPerWell: 1
+        tagsPerWell: 1,
       },
       stubs: {
         'lb-plate-scan': true,
         'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true
+        'lb-tag-offset': true,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -152,17 +152,17 @@ describe('TagLayoutManipulations', () => {
           tag1Group: {
             uuid: null,
             name: 'No tag group selected',
-            tags: []
+            tags: [],
           },
           tag2Group: {
             uuid: null,
             name: 'No tag group selected',
-            tags: []
+            tags: [],
           },
           walkingBy: 'manual by plate',
           direction: 'column',
-          offsetTagsBy: 0
-        }
+          offsetTagsBy: 0,
+        },
       ]
 
       // NB. cannot interact with vue bootstrap components when wrapper is

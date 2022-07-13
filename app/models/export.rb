@@ -6,6 +6,7 @@ require './lib/config_loader/exports_loader'
 # data about the plate.
 class Export
   include ActiveModel::AttributeAssignment
+
   # Raise if there is an attempt to find a non-existent model
   NotFound = Class.new(StandardError)
 

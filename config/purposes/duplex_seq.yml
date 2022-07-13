@@ -19,10 +19,10 @@ LDS AL Lib:
   :asset_type: plate
   :label_template: plate_lds_al_lib
   :file_links:
-  - name: 'Download Hamilton AL Lib to QC1 CSV'
-    id: 'hamilton_lds_al_lib_to_qc1'
-  - name: 'Download Concentration (nM) CSV for Customer'
-    id: 'duplex_seq_al_lib_concentrations_for_customer'
+    - name: 'Download Hamilton AL Lib to QC1 CSV'
+      id: 'hamilton_lds_al_lib_to_qc1'
+    - name: 'Download Concentration (nM) CSV for Customer'
+      id: 'duplex_seq_al_lib_concentrations_for_customer'
 LDS AL Lib Dil:
   :asset_type: plate
   :presenter_class: Presenters::PcrCyclesBinnedPlatePresenter
@@ -37,30 +37,31 @@ LDS AL Lib Dil:
     :pcr_cycles_min: 1
     :pcr_cycles_max: 20
     :submit_for_sequencing_valid_values:
-    - 'Y'
-    - 'N'
+      - 'Y'
+      - 'N'
     :sub_pool_min: 1
     :sub_pool_max: 96
   :file_links:
-  - name: 'Download Hamilton AL Lib to Dilution CSV'
-    id: 'hamilton_lds_al_lib_to_lds_al_lib_dil'
+    - name: 'Download Hamilton AL Lib to Dilution CSV'
+      id: 'hamilton_lds_al_lib_to_lds_al_lib_dil'
 LDS Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-  - 'TS_pWGSA_UDI96'
-  - 'TS_pWGSB_UDI96'
-  - 'TS_pWGSC_UDI96'
-  - 'TS_pWGSD_UDI96'
-  - 'TS_RNAhWGS_UDI_96'
+    - TS_pWGSA_UDI96
+    - TS_pWGSA_UDI96v2
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSD_UDI96
+    - TS_RNAhWGS_UDI_96
 LDS Lib PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:
-  - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
-    id: 'duplex_seq_pcr_xp_concentrations_for_custom_pooling'
+    - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+      id: 'duplex_seq_pcr_xp_concentrations_for_custom_pooling'
 LDS Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

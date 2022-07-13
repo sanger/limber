@@ -15,11 +15,7 @@ module LabwareCreators
     self.transfers_layout = 'null'
     self.transfers_creator = 'multi-stamp-tubes'
     self.attributes += [
-      {
-        transfers: [
-          [:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }]
-        ]
-      }
+      { transfers: [[:source_tube, :source_asset, :outer_request, :pool_index, { new_target: :location }]] }
     ]
     self.target_rows = 8
     self.target_columns = 12
@@ -37,11 +33,8 @@ module LabwareCreators
       create_and_build_submission
       return if errors.size.positive?
 
-      plate_creation = api.pooled_plate_creation.create!(
-        parents: parent_uuids,
-        child_purpose: purpose_uuid,
-        user: user_uuid
-      )
+      plate_creation =
+        api.pooled_plate_creation.create!(parents: parent_uuids, child_purpose: purpose_uuid, user: user_uuid)
 
       @child = plate_creation.child
       child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
@@ -94,17 +87,15 @@ module LabwareCreators
     end
 
     def transfer_request_attributes(child_plate)
-      transfers.map do |transfer|
-        request_hash(transfer, child_plate)
-      end
+      transfers.map { |transfer| request_hash(transfer, child_plate) }
     end
 
     def source_tube_outer_request_uuid(tube)
       # Assumption: the requests we want will still be in state pending, and there will only be
       # one for the submission id we just created
-      pending_reqs = tube.receptacle.requests_as_source.reject do |req|
-        req.state == 'passed' || req.submission_id != @submission_id
-      end
+      pending_reqs =
+        tube.receptacle.requests_as_source.reject { |req| req.state == 'passed' || req.submission_id != @submission_id }
+
       # TODO: what if no requests remain? shouldn't happen if submission was built previously
       pending_reqs.first.uuid || nil
     end
@@ -114,9 +105,8 @@ module LabwareCreators
 
       {
         'source_asset' => transfer[:source_asset],
-        'target_asset' => child_plate.wells.detect do |child_well|
-                            child_well.location == transfer.dig(:new_target, :location)
-                          end&.uuid,
+        'target_asset' =>
+          child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
         'outer_request' => source_tube_outer_request_uuid(tube)
       }
     end

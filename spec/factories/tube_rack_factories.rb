@@ -7,23 +7,21 @@ FactoryBot.define do
   factory :tube_rack, class: Sequencescape::Api::V2::TubeRack, traits: [:barcoded_v2] do
     skip_create
 
-    initialize_with do
-      Sequencescape::Api::V2::TubeRack.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::TubeRack.load(attributes) }
 
     transient do
       # Overide the purpose name
       purpose_name { 'example-purpose' }
+
       # Overive the purpose uuid
       purpose_uuid { 'example-purpose-uuid' }
+
       # The plate purpose
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       tubes { {} }
 
       racked_tubes do
-        tubes.map do |coordinate, tube|
-          create :racked_tube, coordinate: coordinate, tube: tube, tube_rack: instance
-        end
+        tubes.map { |coordinate, tube| create :racked_tube, coordinate: coordinate, tube: tube, tube_rack: instance }
       end
     end
 
@@ -46,9 +44,7 @@ FactoryBot.define do
   factory :racked_tube, class: Sequencescape::Api::V2::RackedTube do
     skip_create
 
-    initialize_with do
-      Sequencescape::Api::V2::RackedTube.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::RackedTube.load(attributes) }
 
     id
     coordinate { 'A1' }

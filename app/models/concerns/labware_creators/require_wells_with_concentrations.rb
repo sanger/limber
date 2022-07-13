@@ -29,10 +29,12 @@ module LabwareCreators::RequireWellsWithConcentrations
   private
 
   def wells_with_missing_concs
-    parent.wells.each_with_object([]) do |well, concs_missing|
-      next if well.aliquots.blank?
+    parent
+      .wells
+      .each_with_object([]) do |well, concs_missing|
+        next if well.aliquots.blank?
 
-      concs_missing << well.location if well.latest_concentration.nil?
-    end
+        concs_missing << well.location if well.latest_concentration.nil?
+      end
   end
 end

@@ -36,6 +36,7 @@ class Sequencescape::Api::V2::Plate::Subpool
 
   def group_identifier=(group_identifier)
     @group_identifier ||= group_identifier
+
     # In theory this exception should never be hit, as we should only be
     # doing this if compatible? returns true.
     raise StandardError, 'Incorrect pool assembly' if @group_identifier != group_identifier

@@ -6,7 +6,9 @@ import Plate from 'shared/components/Plate.vue'
 // use any test runner / assertion library combo you prefer
 describe('Plate', () => {
   const myCaption = 'Caption'
-  const wrapper = shallowMount(Plate, { propsData: { columns: 12, rows: 8, caption: myCaption, wells: { 'B3': {} } } })
+  const wrapper = shallowMount(Plate, {
+    propsData: { columns: 12, rows: 8, caption: myCaption, wells: { B3: {} } },
+  })
 
   // Inspect the raw component options
   it('renders a plate', () => {
@@ -17,7 +19,7 @@ describe('Plate', () => {
     expect(wrapper.find('table.plate-96').exists()).toBe(true)
   })
 
-  it('renders a provided caption', () =>{
+  it('renders a provided caption', () => {
     expect(wrapper.find('table.plate-view caption').text()).toBe(myCaption)
   })
 
@@ -37,8 +39,6 @@ describe('Plate', () => {
     wrapper.vm.onWellClicked('A1')
 
     expect(emitted.onwellclicked.length).toBe(1)
-    expect(emitted.onwellclicked[0]).toEqual(
-      [ 'A1' ]
-    )
+    expect(emitted.onwellclicked[0]).toEqual(['A1'])
   })
 })

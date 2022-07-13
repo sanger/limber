@@ -27,7 +27,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
     context 'with no configuration' do
       let(:configuration) { {} }
 
-      it 'reads the thresholds from the wells' do\
+      it 'reads the thresholds from the wells' do
         expect(presenter.thresholds).to contain_exactly(
           have_attributes(name: 'molarity'),
           have_attributes(name: 'concentration'),
@@ -86,9 +86,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
           [create(:qc_result, key: 'concentration', value: '50', units: 'nM')]
         ]
       end
-      let(:configuration) do
-        { molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' } }
-      end
+      let(:configuration) { { molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' } } }
 
       it 'is disabled' do
         expect(presenter.thresholds.first).to_not be_enabled
@@ -120,9 +118,25 @@ RSpec.describe Presenters::QcThresholdPresenter do
     context 'with configuration' do
       let(:configuration) do
         {
-          molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' },
-          cell_count: { name: 'cell count', default_threshold: 2, max: 5, min: 0, units: 'cells/ml', decimal_places: 0 },
-          volume: { name: 'volume', units: 'ml' }
+          molarity: {
+            name: 'molarity',
+            default_threshold: 20,
+            max: 50,
+            min: 5,
+            units: 'nM'
+          },
+          cell_count: {
+            name: 'cell count',
+            default_threshold: 2,
+            max: 5,
+            min: 0,
+            units: 'cells/ml',
+            decimal_places: 0
+          },
+          volume: {
+            name: 'volume',
+            units: 'ml'
+          }
         }
       end
 
@@ -181,6 +195,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
   describe '#value_for' do
     let(:configuration) { {} }
     let(:qc_to_convert) { create(:qc_result, key: 'volume', value: '1', units: 'ml') }
+
     # Value for converts all scalar values to an appropriate unit
     it 'converts values to the thresholds unit' do
       expect(presenter.value_for(qc_to_convert)).to eq 1000.0

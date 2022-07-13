@@ -6,16 +6,16 @@ import QcField from './QcField.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('QcField', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return mount(QcField, {
       propsData: {
         name: 'volume',
         units: 'ul',
         defaultAssayType: 'One',
         assayTypes: ['One', 'Two'],
-        assetUuid: 'uuid'
+        assetUuid: 'uuid',
       },
-      localVue
+      localVue,
     })
   }
 
@@ -65,9 +65,27 @@ describe('QcField', () => {
 
     expect(wrapper.emitted()).toEqual({
       change: [
-        [{ value: '1.5', assay_type: 'One', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'uuid' }],
-        [{ value: '1.5', assay_type: 'Two', units: 'ul', key: 'volume', assay_version: 'manual', uuid: 'uuid' }]
-      ]
+        [
+          {
+            value: '1.5',
+            assay_type: 'One',
+            units: 'ul',
+            key: 'volume',
+            assay_version: 'manual',
+            uuid: 'uuid',
+          },
+        ],
+        [
+          {
+            value: '1.5',
+            assay_type: 'Two',
+            units: 'ul',
+            key: 'volume',
+            assay_version: 'manual',
+            uuid: 'uuid',
+          },
+        ],
+      ],
     })
   })
 })

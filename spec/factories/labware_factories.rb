@@ -7,9 +7,7 @@ FactoryBot.define do
   factory :labware, class: Sequencescape::Api::V2::Labware, traits: [:barcoded_v2] do
     skip_create
 
-    initialize_with do
-      Sequencescape::Api::V2::Labware.load(attributes)
-    end
+    initialize_with { Sequencescape::Api::V2::Labware.load(attributes) }
 
     id
     uuid
@@ -31,9 +29,7 @@ FactoryBot.define do
       factory(:labware_with_state_changes) do
         state_changes { create_list :v2_state_change, 2, target_state: target_state }
 
-        after(:build) do |labware, evaluator|
-          labware._cached_relationship(:state_changes) { evaluator.state_changes }
-        end
+        after(:build) { |labware, evaluator| labware._cached_relationship(:state_changes) { evaluator.state_changes } }
       end
     end
   end

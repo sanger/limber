@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'tag layout template factory' do
-  subject do
-    json(
-      :tag_layout_template,
-      uuid: 'tag-layout-template-uuid',
-      size: 2
-    )
-  end
+  subject { json(:tag_layout_template, uuid: 'tag-layout-template-uuid', size: 2) }
 
   let(:json_content) do
-    %({
+    '{
         "tag_layout_template": {
           "actions": {
             "read": "http://example.com:3000/tag-layout-template-uuid",
@@ -32,7 +26,7 @@ RSpec.describe 'tag layout template factory' do
             }
           }
         }
-    })
+    }'
   end
 
   it 'should match the expected json' do

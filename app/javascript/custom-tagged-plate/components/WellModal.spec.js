@@ -6,19 +6,19 @@ import localVue from 'test_support/base_vue.js'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('WellModal', () => {
-  const wrapperFactory = function() {
+  const wrapperFactory = function () {
     return shallowMount(WellModal, {
       propsData: {
         wellModalDetails: {
           position: 'A1',
           originalTag: 1,
-          tagMapIds: [1,2,3],
+          tagMapIds: [1, 2, 3],
           validity: { valid: true, message: '' },
-          existingSubstituteTagId: '2'
+          existingSubstituteTagId: '2',
         },
-        isWellModalVisible: true
+        isWellModalVisible: true,
       },
-      localVue
+      localVue,
     })
   }
 
@@ -40,7 +40,7 @@ describe('WellModal', () => {
           originalTag: 1,
           tagMapIds: [],
           validity: { valid: true, message: '' },
-          existingSubstituteTagId: null
+          existingSubstituteTagId: null,
         }
 
         wrapper.setProps({ wellModalDetails: emptyWellModalDetails })
@@ -57,9 +57,9 @@ describe('WellModal', () => {
         const invalidEntryWellModalDetails = {
           position: 'A1',
           originalTag: 1,
-          tagMapIds: [1,2,3],
+          tagMapIds: [1, 2, 3],
           validity: { valid: true, message: '' },
-          existingSubstituteTagId: null
+          existingSubstituteTagId: null,
         }
 
         wrapper.setProps({ wellModalDetails: invalidEntryWellModalDetails })
@@ -117,9 +117,9 @@ describe('WellModal', () => {
       const tagClashWellModalDetails = {
         position: 'A1',
         originalTag: 1,
-        tagMapIds: [1,2,3],
+        tagMapIds: [1, 2, 3],
         validity: { valid: false, message: 'Tag clash with Submission' },
-        existingSubstituteTagId: null
+        existingSubstituteTagId: null,
       }
 
       wrapper.setProps({ wellModalDetails: tagClashWellModalDetails })
@@ -137,10 +137,10 @@ describe('WellModal', () => {
         wellModalDetails: {
           position: 'A1',
           originalTag: null,
-          tagMapIds: [1,2,3],
+          tagMapIds: [1, 2, 3],
           validity: { valid: false, message: 'No tag in this well' },
-          existingSubstituteTagId: ''
-        }
+          existingSubstituteTagId: '',
+        },
       })
 
       await wrapper.vm.$nextTick()
@@ -157,8 +157,8 @@ describe('WellModal', () => {
           originalTag: 1,
           tagMapIds: [],
           validity: { valid: false, message: 'No tag in this well' },
-          existingSubstituteTagId: ''
-        }
+          existingSubstituteTagId: '',
+        },
       })
 
       await wrapper.vm.$nextTick()

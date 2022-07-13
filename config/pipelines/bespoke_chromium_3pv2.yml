@@ -3,8 +3,8 @@ Bespoke Chromium 3pv2:
   filters:
     request_type_key: limber_chromium_bespoke
     library_type:
-    - Chromium single cell 3 prime v2
-    - Chromium genome
+      - Chromium single cell 3 prime v2
+      - Chromium genome
   library_pass: LBB Lib-XP
   relationships:
     LBB Cherrypick: LBB Chromium Tagged
@@ -12,7 +12,7 @@ Bespoke Chromium 3pv2:
 Bespoke Chromium 3pv2 MX:
   filters:
     request_type_key:
-    - limber_multiplexing
+      - limber_multiplexing
   relationships:
     LBB Lib-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm

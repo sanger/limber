@@ -1,22 +1,24 @@
 import Vue from 'vue'
 import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
-import {
-  nullTagGroup,
-  exampleTagGroupsList
-} from 'custom-tagged-plate/testData/customTaggedPlateTestData.js'
+import { nullTagGroup, exampleTagGroupsList } from 'custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 describe('TagLayout mixin', () => {
   let cmp, tagLayout, data
 
   beforeEach(() => {
-    data = { api: {}, numberOfTags: 10, numberOfTargetWells: 10, tagsPerWell: 1 }
+    data = {
+      api: {},
+      numberOfTags: 10,
+      numberOfTargetWells: 10,
+      tagsPerWell: 1,
+    }
     cmp = Vue.extend({ mixins: [TagLayout] })
     tagLayout = new cmp({
       propsData: data,
       stubs: {
         'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true
-      }
+        'lb-tag-offset': true,
+      },
     })
   })
 
@@ -61,13 +63,13 @@ describe('TagLayout mixin', () => {
           tags: [
             {
               index: 1,
-              oligo: 'CTAGCTAG'
+              oligo: 'CTAGCTAG',
             },
             {
               index: 2,
-              oligo: 'TTATACGA'
-            }
-          ]
+              oligo: 'TTATACGA',
+            },
+          ],
         }
 
         expect(tagLayout.tag1Group).toEqual(expectedTagGroup)
@@ -90,13 +92,13 @@ describe('TagLayout mixin', () => {
           tags: [
             {
               index: 1,
-              oligo: 'CTAGCTAG'
+              oligo: 'CTAGCTAG',
             },
             {
               index: 2,
-              oligo: 'TTATACGA'
-            }
-          ]
+              oligo: 'TTATACGA',
+            },
+          ],
         }
 
         expect(tagLayout.tag2Group).toEqual(expectedTagGroup)
@@ -113,7 +115,7 @@ describe('TagLayout mixin', () => {
 
         const expectedCoreTagGroupOptions = [
           { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
+          { value: '2', text: 'Tag Group 2' },
         ]
 
         expect(tagLayout.coreTagGroupOptions).toEqual(expectedCoreTagGroupOptions)
@@ -131,7 +133,7 @@ describe('TagLayout mixin', () => {
         const expectedTag1GroupOptions = [
           { value: null, text: 'Please select an i7 Tag 1 group...' },
           { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
+          { value: '2', text: 'Tag Group 2' },
         ]
 
         expect(tagLayout.tag1GroupOptions).toEqual(expectedTag1GroupOptions)
@@ -149,7 +151,7 @@ describe('TagLayout mixin', () => {
         const expectedTag2GroupOptions = [
           { value: null, text: 'Please select an i5 Tag 2 group...' },
           { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' }
+          { value: '2', text: 'Tag Group 2' },
         ]
 
         expect(tagLayout.tag2GroupOptions).toEqual(expectedTag2GroupOptions)

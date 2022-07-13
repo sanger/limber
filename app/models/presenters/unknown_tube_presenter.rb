@@ -18,8 +18,10 @@ module Presenters
     end
 
     def add_unknown_tube_warnings
-      errors.add(:plate,
-                 "type '#{labware.purpose_name}' is not a limber tube. Perhaps you are using the wrong pipeline application?")
+      errors.add(
+        :plate,
+        "type '#{labware.purpose_name}' is not a limber tube. Perhaps you are using the wrong pipeline application?"
+      )
     end
 
     def default_printer

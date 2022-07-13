@@ -5,25 +5,33 @@ require_relative '../support/shared_tagging_examples'
 
 RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   has_a_working_api
-  let(:user_uuid)             { 'user-uuid' }
-  let(:user)                  { create :user, uuid: user_uuid }
-  let(:user_swipecard)        { 'abcdef' }
-  let(:plate_barcode)         { example_plate.barcode.machine }
-  let(:plate_uuid)            { SecureRandom.uuid }
-  let(:child_purpose_uuid)    { 'child-purpose-0' }
+  let(:user_uuid) { 'user-uuid' }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
+  let(:plate_barcode) { example_plate.barcode.machine }
+  let(:plate_uuid) { SecureRandom.uuid }
+  let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:pools) { 1 }
   let(:example_plate) do
-    create :v2_stock_plate, uuid: plate_uuid, pool_sizes: [8, 8],
-                            submission_pools_count: pools, purpose_name: 'Limber Cherrypicked', purpose_uuid: 'stock-plate-purpose-uuid'
+    create :v2_stock_plate,
+           uuid: plate_uuid,
+           pool_sizes: [8, 8],
+           submission_pools_count: pools,
+           purpose_name: 'Limber Cherrypicked',
+           purpose_uuid: 'stock-plate-purpose-uuid'
   end
   let(:old_api_example_plate) do
-    json :stock_plate, barcode_number: example_plate.labware_barcode.number,
-                       uuid: plate_uuid, state: 'passed', pool_sizes: [8, 8], submission_pools_count: pools
+    json :stock_plate,
+         barcode_number: example_plate.labware_barcode.number,
+         uuid: plate_uuid,
+         state: 'passed',
+         pool_sizes: [8, 8],
+         submission_pools_count: pools
   end
-  let(:tag_plate_barcode)     { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:tag_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
-  let(:tag_plate_uuid)        { 'tag-plate-uuid' }
-  let(:tag_plate_qcable)      { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
+  let(:tag_plate_uuid) { 'tag-plate-uuid' }
+  let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
@@ -48,6 +56,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We get the actual plate
     2.times { stub_v2_plate(example_plate) }
 
@@ -68,9 +77,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   shared_examples 'supports the plate' do
     let(:help_text) { "Click 'Create plate'" }
 
-    before do
-      stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
-    end
+    before { stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')) }
 
     scenario 'creation with the plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -79,8 +86,11 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
       expect(find('#tag-help')).to have_content(help_text)
-      stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } },
-                                    tag_plate_qcable)
+      stub_search_and_single_result(
+        'Find qcable by barcode',
+        { 'search' => { 'barcode' => tag_plate_barcode } },
+        tag_plate_qcable
+      )
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_content(tag_lot_number)
       expect(find('#well_A2')).to have_content(a2_tag)
@@ -96,8 +106,11 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
-      stub_search_and_single_result('Find qcable by barcode', { 'search' => { 'barcode' => tag_plate_barcode } },
-                                    tag_plate_qcable)
+      stub_search_and_single_result(
+        'Find qcable by barcode',
+        { 'search' => { 'barcode' => tag_plate_barcode } },
+        tag_plate_qcable
+      )
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_button('Create Plate', disabled: true)
       expect(page).to have_content(tag_error)
@@ -124,8 +137,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       context 'when the pool has been tagged by plates' do
         let(:submission_pools) do
-          json(:dual_submission_pool_collection,
-               used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }])
+          json(
+            :dual_submission_pool_collection,
+            used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }]
+          )
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'Pool is spread across multiple plates. UDI plates must be used.' }
@@ -144,8 +159,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       context 'when the pool has been tagged by plates' do
         let(:submission_pools) do
-          json(:dual_submission_pool_collection,
-               used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }])
+          json(
+            :dual_submission_pool_collection,
+            used_tag_templates: [{ uuid: 'tag-layout-template-1', name: 'Used template' }]
+          )
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         it_behaves_like 'supports the plate'
@@ -153,8 +170,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       context 'when the template has been used' do
         let(:submission_pools) do
-          json(:dual_submission_pool_collection,
-               used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }])
+          json(
+            :dual_submission_pool_collection,
+            used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
+          )
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'This template has already been used.' }
@@ -173,8 +192,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
         # don't use dual_submission_pool_collection - we only want 1 source plate in our submission
         let(:submission_pools) do
-          json(:submission_pool_collection,
-               used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
+          json(:submission_pool_collection, used_tag_templates: [{ uuid: used_template_uuid, name: 'Used template' }])
         end
 
         context 'when the template has been used' do
@@ -198,7 +216,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     end
     let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
     let(:direction) { 'column' }
-    let(:a2_tag)    { '9' }
+    let(:a2_tag) { '9' }
 
     it_behaves_like 'a recognised template'
   end

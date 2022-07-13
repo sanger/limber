@@ -14,32 +14,48 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   let(:plate_size) { 96 }
 
   let(:well_a1) do
-    create(:v2_well,
-           position: { 'name' => 'A1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 1.5),
-           requests_as_source: [requests[0]],
-           outer_request: nil)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'A1'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: 1.5),
+      requests_as_source: [requests[0]],
+      outer_request: nil
+    )
   end
   let(:well_b1) do
-    create(:v2_well,
-           position: { 'name' => 'B1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 56.0),
-           requests_as_source: [requests[1]],
-           outer_request: nil)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'B1'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: 56.0),
+      requests_as_source: [requests[1]],
+      outer_request: nil
+    )
   end
   let(:well_c1) do
-    create(:v2_well,
-           position: { 'name' => 'C1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 3.5),
-           requests_as_source: [requests[2]],
-           outer_request: nil)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'C1'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: 3.5),
+      requests_as_source: [requests[2]],
+      outer_request: nil
+    )
   end
   let(:well_d1) do
-    create(:v2_well,
-           position: { 'name' => 'D1' },
-           qc_results: create_list(:qc_result_concentration, 1, value: 1.8),
-           requests_as_source: [requests[3]],
-           outer_request: nil)
+    create(
+      :v2_well,
+      position: {
+        'name' => 'D1'
+      },
+      qc_results: create_list(:qc_result_concentration, 1, value: 1.8),
+      requests_as_source: [requests[3]],
+      outer_request: nil
+    )
   end
 
   let(:parent_plate) do
@@ -52,11 +68,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
   end
 
   let(:child_plate) do
-    create :v2_plate,
-           uuid: 'child-uuid',
-           barcode_number: '3',
-           size: plate_size,
-           outer_requests: requests
+    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
   end
 
   let(:library_type_name) { 'Test Library Type' }
@@ -81,21 +93,14 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     stub_v2_plate(
       parent_plate,
       stub_search: false,
-      custom_includes: 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+      custom_includes:
+        'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
     )
   end
 
-  let(:form_attributes) do
-    {
-      purpose_uuid: child_purpose_uuid,
-      parent_uuid: parent_uuid,
-      user_uuid: user_uuid
-    }
-  end
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-  subject do
-    LabwareCreators::ConcentrationBinnedPlate.new(api, form_attributes)
-  end
+  subject { LabwareCreators::ConcentrationBinnedPlate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do
@@ -103,11 +108,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     end
 
     context 'when wells are missing a concentration value' do
-      let(:well_e1) do
-        create(:v2_well,
-               position: { 'name' => 'E1' },
-               qc_results: [])
-      end
+      let(:well_e1) { create(:v2_well, position: { 'name' => 'E1' }, qc_results: []) }
 
       let(:parent_plate) do
         create :v2_plate,

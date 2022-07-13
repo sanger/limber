@@ -5,9 +5,7 @@ module Presenters::StockBehaviour
   extend ActiveSupport::Concern
   include Presenters::StateChangeless
 
-  included do
-    validates_with Validators::StockStateValidator, if: :pending?
-  end
+  included { validates_with Validators::StockStateValidator, if: :pending? }
 
   def input_barcode
     barcode

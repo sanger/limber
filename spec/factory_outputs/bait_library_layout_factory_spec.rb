@@ -3,16 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'bait library layout factory' do
-  subject do
-    json(
-      :bait_library_layout,
-      plate_uuid: 'plate-uuid',
-      uuid: 'bait-library-layout-uuid'
-    )
-  end
+  subject { json(:bait_library_layout, plate_uuid: 'plate-uuid', uuid: 'bait-library-layout-uuid') }
 
   let(:json_content) do
-    %({
+    '{
       "bait_library_layout": {
         "actions": {"read": "http://example.com:3000/bait-library-layout-uuid"},
         "plate": {
@@ -29,7 +23,7 @@ RSpec.describe 'bait library layout factory' do
           "D1":  "Mouse all exon"
         }
       }
-    })
+    }'
   end
 
   it 'should match the expected json' do

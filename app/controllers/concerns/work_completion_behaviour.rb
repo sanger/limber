@@ -8,9 +8,8 @@
 module WorkCompletionBehaviour
   extend ActiveSupport::Concern
 
-  included do
-    include SequencescapeSubmissionBehaviour
-  end
+  included { include SequencescapeSubmissionBehaviour }
+
   # Create a work completion for the given limber_plate_id
   # and redirect to the plate page.
   # Work completions mark library creation requests as completed
@@ -34,7 +33,8 @@ module WorkCompletionBehaviour
 
   def sequencescape_submission_parameters
     params
-      .require(:sequencescape_submission).permit(:template_uuid, request_options: {}, assets: [])
+      .require(:sequencescape_submission)
+      .permit(:template_uuid, request_options: {}, assets: [])
       .merge(api: api, user: current_user_uuid)
   end
 end

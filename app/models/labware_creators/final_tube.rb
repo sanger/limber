@@ -28,12 +28,8 @@ module LabwareCreators
     end
 
     def create_labware!
-      @all_tube_transfers = parents.map do |this_parent_uuid|
-        transfer_template.create!(
-          user: user_uuid,
-          source: this_parent_uuid
-        )
-      end
+      @all_tube_transfers =
+        parents.map { |this_parent_uuid| transfer_template.create!(user: user_uuid, source: this_parent_uuid) }
       true
     end
 
@@ -46,9 +42,8 @@ module LabwareCreators
     def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
-      destination_uuids = all_tube_transfers.map do |tt|
-        tt.destination.uuid
-      end.uniq
+      destination_uuids = all_tube_transfers.map { |tt| tt.destination.uuid }.uniq
+
       # The client_api returns a 'barcoded asset' here, rather than a tube.
       # We know that its a tube though, so wrap it in this useful tool
       return TubeProxy.new(destination_uuids.first) if destination_uuids.one?
@@ -97,15 +92,21 @@ module LabwareCreators
       siblings.each do |s|
         next if val_barcodes.delete(s.barcode)
 
-        errors.add(:base,
-                   "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far.")
+        errors.add(
+          :base,
+          # rubocop:todo Layout/LineLength
+          "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
+          # rubocop:enable Layout/LineLength
+        )
         valid = false
       end
       return valid if val_barcodes.empty?
 
       errors.add(
         :base,
+        # rubocop:todo Layout/LineLength
         "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
+        # rubocop:enable Layout/LineLength
       )
       false
     end

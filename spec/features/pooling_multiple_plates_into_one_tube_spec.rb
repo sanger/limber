@@ -5,37 +5,55 @@ require 'rails_helper'
 RSpec.feature 'Poling multiple plates into a tube', js: true do
   has_a_working_api
 
-  let(:user_uuid)         { SecureRandom.uuid }
-  let(:user)              { create :user, uuid: user_uuid }
-  let(:user_swipecard)    { 'abcdef' }
+  let(:user_uuid) { SecureRandom.uuid }
+  let(:user) { create :user, uuid: user_uuid }
+  let(:user_swipecard) { 'abcdef' }
 
-  let(:plate_barcode_1)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
-  let(:plate_uuid)        { 'plate-1' }
+  let(:plate_barcode_1) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
+  let(:plate_uuid) { 'plate-1' }
   let(:example_plate_args) { [:plate, { barcode_number: 1, state: 'passed', uuid: plate_uuid }] }
   let(:example_plate) { json(*example_plate_args) }
   let(:example_plate_new_api) do
-    create(:v2_plate, barcode_number: 1, state: 'passed', uuid: plate_uuid, well_factory: :v2_tagged_well,
-                      pool_sizes: [96])
+    create(
+      :v2_plate,
+      barcode_number: 1,
+      state: 'passed',
+      uuid: plate_uuid,
+      well_factory: :v2_tagged_well,
+      pool_sizes: [96]
+    )
   end
   let(:example_plate_listed) { associated(*example_plate_args) }
 
-  let(:plate_barcode_2)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
-  let(:plate_uuid_2)      { 'plate-2' }
+  let(:plate_barcode_2) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
+  let(:plate_uuid_2) { 'plate-2' }
   let(:example_plate2_args) { [:plate, { barcode_number: 2, state: 'passed', uuid: plate_uuid_2 }] }
 
   let(:example_plate_2) do
-    create(:v2_plate, barcode_number: 2, state: 'passed', uuid: plate_uuid_2, well_factory: :v2_tagged_well,
-                      pool_sizes: [96])
+    create(
+      :v2_plate,
+      barcode_number: 2,
+      state: 'passed',
+      uuid: plate_uuid_2,
+      well_factory: :v2_tagged_well,
+      pool_sizes: [96]
+    )
   end
   let(:example_plate_2_listed) { associated(*example_plate2_args) }
 
-  let(:plate_barcode_3)   { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
-  let(:plate_uuid_3)      { 'plate-3' }
+  let(:plate_barcode_3) { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
+  let(:plate_uuid_3) { 'plate-3' }
   let(:example_plate3_args) { [:plate, { barcode_number: 3, state: 'passed', uuid: plate_uuid_3 }] }
 
   let(:example_plate_3) do
-    create(:v2_plate, barcode_number: 3, state: 'passed', uuid: plate_uuid_3, wells: example_plate_new_api.wells,
-                      pool_sizes: [96])
+    create(
+      :v2_plate,
+      barcode_number: 3,
+      state: 'passed',
+      uuid: plate_uuid_3,
+      wells: example_plate_new_api.wells,
+      pool_sizes: [96]
+    )
   end
   let(:example_plate_3_listed) { associated(*example_plate3_args) }
 
@@ -75,13 +93,17 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
   let!(:transfer_creation_request) do
     stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube))
     [plate_uuid, plate_uuid_2].map do |uuid|
-      stub_api_post('whole-plate-to-tube',
-                    payload: { transfer: {
-                      user: user_uuid,
-                      source: uuid,
-                      destination: 'tube-0'
-                    } },
-                    body: '{}')
+      stub_api_post(
+        'whole-plate-to-tube',
+        payload: {
+          transfer: {
+            user: user_uuid,
+            source: uuid,
+            destination: 'tube-0'
+          }
+        },
+        body: '{}'
+      )
     end
   end
 
@@ -91,15 +113,24 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     create :purpose_config, uuid: 'example-purpose-uuid'
     create :pooled_tube_from_plates_purpose_config, uuid: 'child-purpose-0'
     create :pipeline, relationships: { 'example-purpose' => 'Pool tube' }
+
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
+
     # We'll look up both plates.
 
     # We have a basic inbox search running
     stub_search_and_multi_result(
       'Find plates',
-      { 'search' => { states: ['passed'], plate_purpose_uuids: ['example-purpose-uuid'], show_my_plates_only: false,
-                      include_used: false, page: 1 } },
+      {
+        'search' => {
+          states: ['passed'],
+          plate_purpose_uuids: ['example-purpose-uuid'],
+          show_my_plates_only: false,
+          include_used: false,
+          page: 1
+        }
+      },
       [example_plate_listed, example_plate_2_listed]
     )
 
@@ -123,18 +154,18 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
     scan_in('Plate 2', with: plate_barcode_2)
+
     # Trigger a blur by filling in the next box
     scan_in('Plate 3', with: '')
     click_on('Make Pool')
     expect(page).to have_text('New empty labware added to the system')
     expect(page).to have_text('Pool tube')
+
     # This isn't strictly speaking correct to test. But there isn't a great way
     # of confirming that the right information got passed to the back end otherwise.
     # (Although you expect it to fail on an incorrect request)
     expect(tube_creation_request).to have_been_made
-    transfer_creation_request.map do |r|
-      expect(r).to have_been_made
-    end
+    transfer_creation_request.map { |r| expect(r).to have_been_made }
   end
 
   scenario 'detects tag clash' do

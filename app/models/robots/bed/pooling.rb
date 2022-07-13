@@ -13,30 +13,26 @@ module Robots::Bed
     end
 
     def find_all_labware
-      Sequencescape::Api::V2::Plate.find_all(
-        { barcode: @barcodes },
-        includes: [:purpose, { wells: :upstream_plates }]
-      )
+      Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: [:purpose, { wells: :upstream_plates }])
     end
 
     def parent_labware
       return [] if labware.nil?
 
-      @parent_labware ||= if labware.plate?
-                            parent_labware_of_plate
-                          else
-                            []
-                          end
+      @parent_labware ||= labware.plate? ? parent_labware_of_plate : []
     end
 
     private
 
     def parent_labware_of_plate
-      labware.wells.sort_by(&well_order).each_with_object([]) do |well, plates|
-        next if well.upstream_plates.empty? || plates.include?(well.upstream_plates.first)
+      labware
+        .wells
+        .sort_by(&well_order)
+        .each_with_object([]) do |well, plates|
+          next if well.upstream_plates.empty? || plates.include?(well.upstream_plates.first)
 
-        plates << well.upstream_plates.first
-      end
+          plates << well.upstream_plates.first
+        end
     end
 
     def range

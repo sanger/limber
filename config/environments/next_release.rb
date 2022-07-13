@@ -8,7 +8,7 @@ Limber::Application.configure do
   config.cache_classes = true
 
   # Full error reports are disabled and caching is turned on
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
 
   # Specifies the header that your server uses for sending files
@@ -50,9 +50,9 @@ Limber::Application.configure do
   config.active_support.deprecation = :notify
 
   # Configure the Sequencescape API
-  config.api.v1.connection_options               = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options.namespace     = 'Limber'
-  config.api.v1.connection_options.url           = 'http://psd-dev.internal.sanger.ac.uk:6801/api/1/'
+  config.api.v1.connection_options = ActiveSupport::OrderedOptions.new
+  config.api.v1.connection_options.namespace = 'Limber'
+  config.api.v1.connection_options.url = 'http://psd-dev.internal.sanger.ac.uk:6801/api/1/'
   config.api.v1.connection_options.authorisation = '372d4ece3d05deda9b5588dd9d2b23a0'
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
 end
