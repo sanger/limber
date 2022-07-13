@@ -13,17 +13,9 @@
         <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
       </b-form-group>
 
-      <b-button
-        id="asset_custom_metadata_submit_button"
-        type="submit"
-        :variant="buttonStyle"
-        size="lg"
-        block
-      >
-        {{
+      <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>{{
         buttonText
-        }}
-      </b-button>
+      }}</b-button>
     </b-form>
   </div>
 </template>
@@ -35,7 +27,7 @@
 // ss/advanced_search?metadata_key=field_name&metadata_value=test_value
 
 // Get Custom Metadata fields from config and populate form
-// Fetch the assets existing Custom Metadata and update form
+// Fetch the labwares existing Custom Metadata and update form
 // Store custom_metadatum_collections id, if it exists
 // Show form inputs only for form field which are present in config
 // onSubmit remove any fields that have no data
@@ -43,9 +35,9 @@
 // All metadata should be either created or overwrited
 
 export default {
-  name: 'AssetCustomMetadataAddForm',
+  name: 'LabwareCustomMetadataAddForm',
   props: {
-    assetId: {
+    labwareId: {
       type: String,
       required: true,
     },
@@ -115,7 +107,7 @@ export default {
       this.populateForm(metadata)
     },
     async refreshCustomMetadata() {
-      let url = `${this.sequencescapeApiUrl}/labware/${this.assetId}?include=custom_metadatum_collection`
+      let url = `${this.sequencescapeApiUrl}/labware/${this.labwareId}?include=custom_metadatum_collection`
       let metadata = {}
 
       await fetch(url)
@@ -207,7 +199,7 @@ export default {
           type: 'custom_metadatum_collections',
           attributes: {
             user_id: this.userId,
-            asset_id: this.assetId,
+            labware_id: this.labwareId,
             metadata: metadata,
           },
         },

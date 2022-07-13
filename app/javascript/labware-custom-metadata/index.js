@@ -4,7 +4,7 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import AssetCustomMetadataAddForm from './components/AssetCustomMetadataAddForm.vue'
+import LabwareCustomMetadataAddForm from './components/LabwareCustomMetadataAddForm.vue'
 import cookieJar from 'shared/cookieJar'
 
 Vue.use(BootstrapVue)
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    # In general it looks like this is something we should consider
    # once the majority of our components are vue based.
    */
-  const assetElem = document.getElementById('asset-custom-metadata-add-form')
+  const assetElem = document.getElementById('labware-custom-metadata-add-form')
   const missingUserIdError = `
     Unfortunately Limber can't find your user id, which is required to add custom metadata.
     Click log out and swipe in again to resolve this.
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   `
 
   if (assetElem) {
-    /* The asset-custom-metadata element isn't on all pages. So only initialize our
+    /* The labware-custom-metadata element isn't on all pages. So only initialize our
      * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
@@ -46,19 +46,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (userId) {
       new Vue({
-        el: '#asset-custom-metadata-add-form',
+        el: '#labware-custom-metadata-add-form',
         render(h) {
-          let assetId = this.$el.dataset.assetId
+          let labwareId = this.$el.dataset.labwareId
           let customMetadataFields = this.$el.dataset.customMetadataFields
 
-          return h(AssetCustomMetadataAddForm, {
-            props: { assetId, customMetadataFields, userId, sequencescapeApiUrl },
+          return h(LabwareCustomMetadataAddForm, {
+            props: { labwareId, customMetadataFields, userId, sequencescapeApiUrl },
           })
         },
       })
     } else {
       new Vue({
-        el: '#asset-custom-metadata-add-form',
+        el: '#labware-custom-metadata-add-form',
         render: (h) => h('div', missingUserIdError),
       })
     }
