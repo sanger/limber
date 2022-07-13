@@ -22,7 +22,7 @@
               variant="outline-primary"
             >
               <b-icon icon="search"></b-icon>
-              <b-icon icon="box-arrow-up-right"></b-icon>
+              <b-icon font-scale="0.7" icon="box-arrow-up-right"></b-icon>
             </b-button>
           </b-col>
         </b-row>
