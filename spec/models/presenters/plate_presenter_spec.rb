@@ -43,22 +43,22 @@ RSpec.describe Presenters::PlatePresenter do
   subject(:presenter) { Presenters::PlatePresenter.new(api: api, labware: labware) }
 
   describe '#custom_metadata_fields' do
-    context 'with batch_names' do
-      before { create(:plate_with_batch_names_config) }
+    context 'with custom_metadata_fields' do
+      before { create(:plate_with_custom_metadata_fields_config) }
 
-      it 'returns a JSON string with a array of batch_names config' do
+      it 'returns a JSON string with a array of custom_metadata_fields config' do
         expect(presenter.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
       end
     end
-    context 'with empty batch_names' do
-      before { create(:plate_with_empty_batch_names_config) }
+    context 'with empty custom_metadata_fields' do
+      before { create(:plate_with_empty_custom_metadata_fields_config) }
 
-      it 'returns a JSON string with a empty object when no batch_names config exists' do
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
         expect(presenter.custom_metadata_fields).to eq('[]')
       end
     end
-    context 'without batch_names' do
-      it 'returns a JSON string with a empty object when no batch_names config exists' do
+    context 'without custom_metadata_fields' do
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
         expect(presenter.custom_metadata_fields).to eq('[]')
       end
     end

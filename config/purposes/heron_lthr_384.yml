@@ -8,7 +8,7 @@ LTHR-384 RT:
   :creator_class: LabwareCreators::Uncreatable
   :label_template: plate_6mm_double
   :size: 384
-  :batch_names:
+  :custom_metadata_fields:
     - RT LunaScript Super Mix
     - RT NFW
     - RT DFD Syringe Lot Number
@@ -18,7 +18,7 @@ LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
   :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
-  :batch_names:
+  :custom_metadata_fields:
     - RT LunaScript Super Mix
     - RT NFW
     - RT DFD Syringe Lot Number
@@ -26,7 +26,7 @@ LTHR-384 PCR 1:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
-  :batch_names:
+  :custom_metadata_fields:
     - IDX DFD Syringe lot Number
     - vIDX KAPA Hifi Lot Number
     - Artics batch Number
@@ -34,7 +34,7 @@ LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
-  :batch_names:
+  :custom_metadata_fields:
     - IDX DFD Syringe lot Number
     - vIDX KAPA Hifi Lot Number
     - Artics batch Number
@@ -48,7 +48,7 @@ LTHR-384 Lib PCR 1:
     - TSsc384-PCR1-nCoV-2019/V3/B
     - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
-  :batch_names:
+  :custom_metadata_fields:
     - UDI Tag batch Number
 LTHR-384 Lib PCR 2:
   :asset_type: plate
@@ -60,9 +60,8 @@ LTHR-384 Lib PCR 2:
     - TSsc384-PCR2-nCoV-2019/V3/B
     - TSsc384-PCR2-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
-  :batch_names:
-    UDI Tag batch Number:
-      key: udi_tag_batch_number
+  :custom_metadata_fields:
+    - UDI Tag batch Number
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
@@ -73,7 +72,7 @@ LTHR-384 Lib PCR pool:
     help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
   :label_template: plate_6mm_double
   :size: 384
-  :batch_names:
+  :custom_metadata_fields:
     - REC Tip Lot Number
 LTHR-384 Pool XP:
   :asset_type: tube
@@ -86,7 +85,7 @@ LTHR-384 Pool XP:
     target_molarity_nm: 4
     target_volume_ul: 192
     minimum_pick_ul: 2
-  :batch_names:
+  :custom_metadata_fields:
     - REC EB Batch
     - REC ETOH Batch
     - REC AMP Batch
