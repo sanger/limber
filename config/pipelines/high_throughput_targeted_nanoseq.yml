@@ -1,10 +1,11 @@
 ---
-Targeted NanoSeq:
+# Targeted NanoSeq initial library preparation pipeline
+Targeted NanoSeq Library:
   filters: &targeted_nanoseq_filters
     request_type_key: limber_targeted_nanoseq
     library_type:
       - Targeted Nanoseq
-  library_pass: LTN Lib PCR XP
+  library_pass: LTN AL Lib
   relationships:
     LTN Stock: LTN Stock XP
     LTN Cherrypick: LTN Shear
@@ -12,20 +13,25 @@ Targeted NanoSeq:
     LTN Post Shear: LTN Stock XP
     LTN Stock XP: LTN AL Lib
     LTN AL Lib: LTN AL Lib Dil
+# Targeted NanoSeq Dilution and Cleanup part of pipeline
+# Split with new submission to allow a partial selection
+# of samples to go forward.
+Targeted NanoSeq Dilution and Cleanup:
+  filters: &targeted_nanoseq_dilution_and_cleanup_filters
+    request_type_key: limber_targeted_nanoseq_dilution_and_cleanup
+    library_type:
+      - Targeted Nanoseq
+  library_pass: LTN Lib PCR XP
+  relationships:
     LTN AL Lib Dil: LTN Lib PCR
     LTN Lib PCR: LTN Lib PCR XP
     LTN Lib PCR XP: LTN Custom Pool
     LTN Custom Pool: LTN Custom Pool Norm
-Targeted NanoSeq with ISC:
-  filters: *targeted_nanoseq_filters
+# Targeted NanoSeq Dilution and Cleanup part of pipeline for ISC route
+Targeted NanoSeq with ISC Dilution and Cleanup:
+  filters: *targeted_nanoseq_dilution_and_cleanup_filters
   library_pass: LTN Lib PCR XP
   relationships:
-    LTN Stock: LTN Stock XP
-    LTN Cherrypick: LTN Shear
-    LTN Shear: LTN Post Shear
-    LTN Post Shear: LTN Stock XP
-    LTN Stock XP: LTN AL Lib
-    LTN AL Lib: LTN AL Lib Dil
     LTN AL Lib Dil: LTN Lib PCR
     LTN Lib PCR: LTN Lib PCR XP
     LTN Lib PCR XP: LB Lib PCR-XP
