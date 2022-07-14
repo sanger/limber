@@ -363,7 +363,7 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
       cached_submission_ids.submission_ids = getAllUniqueLibrarySubmissionReadyIds(plate)
       return validScanMessage()
     }
-    if (_.isEqual(getAllUniqueLibrarySubmissionReadyIds(plate), cached_submission_ids.submission_ids)) {
+    if (_.isEqual(getAllUniqueLibrarySubmissionReadyIds(plate).sort(), cached_submission_ids.submission_ids.sort())) {
       return validScanMessage()
     } else {
       return {
