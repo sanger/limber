@@ -243,12 +243,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           body: file_content,
           headers: {
             'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="duplex_seq_customer_file.csv"'
+            'Content-Disposition' => 'form-data; filename="pcr_cycles_binned_plate_customer_file.csv"'
           }
         )
         .to_return(
           status: 201,
-          body: json(:qc_file, filename: 'duplex_seq_dil_file.csv'),
+          body: json(:qc_file, filename: 'pcr_cycles_binned_plate_dil_file.csv'),
           headers: {
             'content-type' => 'application/json'
           }

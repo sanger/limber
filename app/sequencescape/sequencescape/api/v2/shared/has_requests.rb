@@ -72,7 +72,7 @@ module Sequencescape::Api::V2::Shared
     end
 
     def all_requests
-      requests_as_source + requests_in_progress
+      (requests_as_source + requests_in_progress).compact
     end
 
     private
