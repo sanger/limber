@@ -123,7 +123,7 @@ module LabwareCreators
     # Upload the csv file onto the plate via api v1
     #
     def upload_file
-      parent_v1.qc_files.create_from_file!(file, 'duplex_seq_customer_file.csv')
+      parent_v1.qc_files.create_from_file!(file, 'pcr_cycles_binned_plate_customer_file.csv')
     end
 
     # Create class that will parse and validate the uploaded file
