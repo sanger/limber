@@ -19,9 +19,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_a1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'A1'
-      },
+      location: 'A1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[0]],
       outer_request: nil
@@ -30,9 +28,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_b1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'B1'
-      },
+      location: 'B1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[1]],
       outer_request: nil
@@ -41,9 +37,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_d1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'D1'
-      },
+      location: 'D1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[2]],
       outer_request: nil
@@ -52,9 +46,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_e1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'E1'
-      },
+      location: 'E1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[3]],
       outer_request: nil
@@ -63,9 +55,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_f1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'F1'
-      },
+      location: 'F1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[4]],
       outer_request: nil
@@ -74,9 +64,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_h1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'H1'
-      },
+      location: 'H1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[5]],
       outer_request: nil
@@ -85,9 +73,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_a2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'A2'
-      },
+      location: 'A2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[6]],
       outer_request: nil
@@ -96,9 +82,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_b2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'B2'
-      },
+      location: 'B2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[7]],
       outer_request: nil
@@ -107,9 +91,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_c2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'C2'
-      },
+      location: 'C2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[8]],
       outer_request: nil
@@ -118,9 +100,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_d2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'D2'
-      },
+      location: 'D2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[9]],
       outer_request: nil
@@ -129,9 +109,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_e2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'E2'
-      },
+      location: 'E2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[10]],
       outer_request: nil
@@ -140,9 +118,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_f2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'F2'
-      },
+      location: 'F2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[11]],
       outer_request: nil
@@ -151,9 +127,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_g2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'G2'
-      },
+      location: 'G2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[12]],
       outer_request: nil
@@ -162,9 +136,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:well_h2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'H2'
-      },
+      location: 'H2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
       requests_as_source: [requests[13]],
       outer_request: nil
