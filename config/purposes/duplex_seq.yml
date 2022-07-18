@@ -18,6 +18,7 @@ LDS Stock XP:
 LDS AL Lib:
   :asset_type: plate
   :label_template: plate_lds_al_lib
+  :presenter_class: Presenters::UntaggedPlatePassingPresenter
   :file_links:
     - name: 'Download Hamilton AL Lib to QC1 CSV'
       id: 'hamilton_lds_al_lib_to_qc1'

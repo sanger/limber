@@ -22,6 +22,7 @@ LTN Stock XP:
 LTN AL Lib:
   :asset_type: plate
   :label_template: plate_ltn_al_lib
+  :presenter_class: Presenters::UntaggedPlatePassingPresenter
   :file_links:
     - name: 'Download Hamilton AL Lib to QC1 CSV'
       id: 'hamilton_ltn_al_lib_to_qc1'
