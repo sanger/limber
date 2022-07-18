@@ -349,7 +349,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'Some sample volumes are set to zero to indicate the samples should not proceed' do
-    subject { described_class.new(file, csv_file_config, 'DN1S') }
+    subject { described_class.new(file, csv_file_config, 'DN2T') }
 
     let(:file) do
       fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_zero_sample_volumes.csv',
@@ -364,6 +364,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       it 'should have the expected wells included in the well details', aggregate_failures: true do
         expect(subject.well_details.size).to eq(10)
         expect(subject.well_details.keys).to match(['A1', 'B1', 'D1', 'F1', 'H1', 'A2', 'C2', 'D2', 'G2', 'H2'])
+        expect(subject.skipped_wells).to match(['E1', 'B2', 'E2', 'F2'])
       end
     end
   end

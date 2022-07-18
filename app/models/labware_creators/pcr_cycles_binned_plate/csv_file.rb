@@ -17,6 +17,8 @@ module LabwareCreators
     include ActiveModel::Validations
     extend NestedValidation
 
+    CSV_FIELDS = %w[sample_volume diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage hyb_panel].freeze
+
     validate :correctly_parsed?
     validates :plate_barcode_header_row, presence: true
     validates_nested :plate_barcode_header_row
@@ -76,6 +78,10 @@ module LabwareCreators
       @well_details ||= generate_well_details_hash
     end
 
+    def skipped_wells
+      @skipped_wells ||= []
+    end
+
     def correctly_parsed?
       return true if @parsed
 
@@ -117,8 +123,14 @@ module LabwareCreators
       filtered_transfers = []
       @data[3..].each_with_index do |row_data, index|
         curr_row = Row.new(@config, well_details_header_row, index + 2, row_data)
-        filtered_transfers << curr_row unless curr_row.do_not_transfer_sample
+
+        if curr_row.valid? && curr_row.do_not_transfer_sample
+          skipped_wells << curr_row.well
+        else
+          filtered_transfers << curr_row
+        end
       end
+
       filtered_transfers
     end
 
@@ -131,11 +143,10 @@ module LabwareCreators
     def generate_well_details_hash
       return {} unless valid?
 
-      fields = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage hyb_panel sample_volume]
       transfers.each_with_object({}) do |row, well_details_hash|
         next if row.empty?
 
-        field_to_value = fields.index_with { |field| row.send(field) }
+        field_to_value = CSV_FIELDS.index_with { |field| row.send(field) }
 
         well_location = row.well
         well_details_hash[well_location] = field_to_value

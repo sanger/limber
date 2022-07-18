@@ -2,7 +2,7 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
+  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file'
 
   #
   # Class WellDetailsHeader provides a simple wrapper for handling and validating

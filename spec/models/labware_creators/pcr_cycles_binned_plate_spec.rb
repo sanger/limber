@@ -204,7 +204,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:library_type_name) { 'Test Library Type' }
 
   let(:requests) do
-    Array.new(14) do |i|
+    Array.new(10) do |i|
       create :library_request, state: 'pending', uuid: "request-#{i}", library_type: library_type_name
     end
   end
@@ -269,12 +269,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         parent_plate,
         stub_search: false,
         custom_includes:
-          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type,wells.aliquots.study'
       )
-
       stub_v2_plate(child_plate, stub_search: false)
 
-      stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
+      stub_v2_plate(
+        child_plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots'
+      )
 
       stub_upload_file_creation
     end
@@ -288,7 +291,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     end
 
     context 'binning' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_zero_sample_volumes.csv',
+          'sequencescape/qc_file'
+        )
+      end
 
       let!(:plate_creation_request) do
         stub_api_post(
@@ -306,6 +314,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
       let!(:api_v2_post) { stub_api_v2_post('Well') }
 
+      # ['E1', 'B2', 'E2', 'F2']
       let(:transfer_requests) do
         [
           {
@@ -327,70 +336,46 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             'outer_request' => requests[2].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => well_e1.uuid,
+            'volume' => '4.0',
+            'source_asset' => well_f1.uuid,
             'target_asset' => '3-well-A3',
             'outer_request' => requests[3].uuid
           },
           {
-            'volume' => '4.0',
-            'source_asset' => well_f1.uuid,
+            'volume' => '5.0',
+            'source_asset' => well_h1.uuid,
             'target_asset' => '3-well-B3',
             'outer_request' => requests[4].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => well_h1.uuid,
+            'volume' => '3.2',
+            'source_asset' => well_a2.uuid,
             'target_asset' => '3-well-C3',
             'outer_request' => requests[5].uuid
           },
           {
-            'volume' => '3.2',
-            'source_asset' => well_a2.uuid,
+            'volume' => '5.0',
+            'source_asset' => well_c2.uuid,
             'target_asset' => '3-well-D3',
             'outer_request' => requests[6].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_b2.uuid,
+            'source_asset' => well_d2.uuid,
             'target_asset' => '3-well-E3',
             'outer_request' => requests[7].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_c2.uuid,
-            'target_asset' => '3-well-F3',
-            'outer_request' => requests[8].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => well_d2.uuid,
-            'target_asset' => '3-well-G3',
-            'outer_request' => requests[9].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => well_e2.uuid,
-            'target_asset' => '3-well-C2',
-            'outer_request' => requests[10].uuid
-          },
-          {
-            'volume' => '30.0',
-            'source_asset' => well_f2.uuid,
-            'target_asset' => '3-well-B1',
-            'outer_request' => requests[11].uuid
-          },
-          {
-            'volume' => '5.0',
             'source_asset' => well_g2.uuid,
-            'target_asset' => '3-well-D2',
-            'outer_request' => requests[12].uuid
+            'target_asset' => '3-well-C2',
+            'outer_request' => requests[8].uuid
           },
           {
             'volume' => '3.621',
             'source_asset' => well_h2.uuid,
-            'target_asset' => '3-well-C1',
-            'outer_request' => requests[13].uuid
+            'target_asset' => '3-well-B1',
+            'outer_request' => requests[9].uuid
           }
         ]
       end
@@ -406,6 +391,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           },
           body: '{}'
         )
+      end
+
+      let(:bait_library) { create :bait_library, name: 'HybPanel1' }
+
+      before do
+        stub_v2_bait_library(bait_library.name, bait_library)
       end
 
       it 'makes the expected transfer requests to bin the wells' do
