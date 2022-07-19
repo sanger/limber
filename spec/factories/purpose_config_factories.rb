@@ -121,6 +121,19 @@ FactoryBot.define do
           sub_pool_max: 96
         }
       end
+      submission_options do
+        {
+          'Test Dilution and Cleanup' => {
+            'template_name' => 'example',
+            'allowed_extra_barcodes' => false,
+            'request_options' => {
+              'library_type' => 'example_library',
+              'fragment_size_required_from' => '200',
+              'fragment_size_required_to' => '800'
+            }
+          }
+        }
+      end
     end
 
     # Configuration for an aggregation plate
