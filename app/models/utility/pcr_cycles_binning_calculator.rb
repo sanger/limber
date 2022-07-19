@@ -30,11 +30,11 @@ module Utility
     end
 
     def compute_presenter_bin_details
-      @well_details.each_with_object({}) do |(well_locn, well_detail), bin_dets|
+      @well_details.each_with_object({}) do |(well_locn, well_detail), bin_dest|
         presenter_bins_key.each do |bin|
           next unless well_detail['pcr_cycles'] == bin['pcr_cycles']
 
-          bin_dets[well_locn] = { 'colour' => bin['colour'], 'pcr_cycles' => bin['pcr_cycles'] }
+          bin_dest[well_locn] = { 'colour' => bin['colour'], 'pcr_cycles' => bin['pcr_cycles'] }
         end
       end
     end
