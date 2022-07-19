@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader do
-  let(:purpose_config) { create :pcr_cycles_binned_plate_customer_csv_file_upload_purpose_config }
+  let(:purpose_config) { create :pcr_cycles_binned_plate_purpose_config }
   let(:csv_file_config) { purpose_config.fetch(:csv_file_upload) }
   let(:bait_library) { create :bait_library, name: 'HybPanel1' }
 
