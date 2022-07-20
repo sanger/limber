@@ -101,6 +101,7 @@ FactoryBot.define do
     submit_for_sequencing { nil }
     sub_pool { nil }
     coverage { nil }
+    hyb_panel { nil }
 
     after(:build) do |well, evaluator|
       well._cached_relationship(:qc_results) { evaluator.qc_results || [] }
