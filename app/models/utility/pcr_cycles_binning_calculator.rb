@@ -18,9 +18,6 @@ module Utility
     end
 
     def presenter_bins_key
-      # fetch the array of bins as pcr cycles e.g. [16,14,12]
-      bins = calculate_bins
-
       # dynamic number of bins so count the colours up from 1
       colour_index = 1
       bins.each_with_object([]) do |bin, templates|
@@ -41,6 +38,11 @@ module Utility
 
     private
 
+    def bins
+      @bins ||= calculate_bins
+    end
+
+    # fetch the array of bins as pcr cycles e.g. [16,14,12]
     def calculate_bins
       bins = []
       @well_details.each do |_well_locn, details|
