@@ -11,10 +11,10 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
     let(:num_rows) { 8 }
     let(:num_cols) { 12 }
 
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [requests[0]]) }
-    let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, requests_as_source: [requests[1]]) }
-    let(:well_c1) { create(:v2_well, position: { 'name' => 'C1' }, requests_as_source: [requests[2]]) }
-    let(:well_d1) { create(:v2_well, position: { 'name' => 'D1' }, requests_as_source: [requests[3]]) }
+    let(:well_a1) { create(:v2_well, location: 'A1', requests_as_source: [requests[0]]) }
+    let(:well_b1) { create(:v2_well, location: 'B1', requests_as_source: [requests[1]]) }
+    let(:well_c1) { create(:v2_well, location: 'C1', requests_as_source: [requests[2]]) }
+    let(:well_d1) { create(:v2_well, location: 'D1', requests_as_source: [requests[3]]) }
 
     let(:parent_plate) do
       create :v2_plate,
@@ -41,7 +41,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'B1' => {
           'sample_volume' => 5.0,
@@ -49,7 +50,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'D1' => {
           'sample_volume' => 5.0,
@@ -57,7 +59,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 16,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 2,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'E1' => {
           'sample_volume' => 5.0,
@@ -73,7 +76,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'H1' => {
           'sample_volume' => 5.0,
@@ -81,7 +85,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 2,
-          'coverage' => 30
+          'coverage' => 30,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'A2' => {
           'sample_volume' => 3.2,
@@ -105,7 +110,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 2,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'D2' => {
           'sample_volume' => 5.0,
@@ -113,7 +119,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'E2' => {
           'sample_volume' => 5.0,
@@ -121,7 +128,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'F2' => {
           'sample_volume' => 30.0,
@@ -129,7 +137,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 16,
           'submit_for_sequencing' => 'N',
           'sub_pool' => nil,
-          'coverage' => nil
+          'coverage' => nil,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'G2' => {
           'sample_volume' => 5.0,
@@ -137,7 +146,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 30
+          'coverage' => 30,
+          'hyb_panel' => 'Hyb Panel 1'
         },
         'H2' => {
           'sample_volume' => 3.621,
@@ -145,7 +155,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           'pcr_cycles' => 16,
           'submit_for_sequencing' => 'Y',
           'sub_pool' => 1,
-          'coverage' => 15
+          'coverage' => 15,
+          'hyb_panel' => 'Hyb Panel 1'
         }
       }
     end
@@ -229,7 +240,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B1' => {
               'sample_volume' => 5.0,
@@ -237,7 +249,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D1' => {
               'sample_volume' => 5.0,
@@ -245,7 +258,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E1' => {
               'sample_volume' => 5.0,
@@ -253,7 +267,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F1' => {
               'sample_volume' => 4.0,
@@ -261,7 +276,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H1' => {
               'sample_volume' => 5.0,
@@ -269,7 +285,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A2' => {
               'sample_volume' => 3.2,
@@ -277,7 +294,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B2' => {
               'sample_volume' => 5.0,
@@ -293,7 +311,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D2' => {
               'sample_volume' => 5.0,
@@ -301,7 +320,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E2' => {
               'sample_volume' => 5.0,
@@ -309,7 +329,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F2' => {
               'sample_volume' => 30.0,
@@ -317,7 +338,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'N',
               'sub_pool' => nil,
-              'coverage' => nil
+              'coverage' => nil,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G2' => {
               'sample_volume' => 5.0,
@@ -325,7 +347,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H2' => {
               'sample_volume' => 3.621,
@@ -333,7 +356,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             }
           }
         end
@@ -412,7 +436,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B1' => {
               'sample_volume' => 5.0,
@@ -420,7 +445,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C1' => {
               'sample_volume' => 5.0,
@@ -428,7 +454,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D1' => {
               'sample_volume' => 5.0,
@@ -436,7 +463,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E1' => {
               'sample_volume' => 5.0,
@@ -444,7 +472,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F1' => {
               'sample_volume' => 4.0,
@@ -452,7 +481,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G1' => {
               'sample_volume' => 5.0,
@@ -460,7 +490,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H1' => {
               'sample_volume' => 5.0,
@@ -468,7 +499,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A2' => {
               'sample_volume' => 3.2,
@@ -476,7 +508,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B2' => {
               'sample_volume' => 5.0,
@@ -484,7 +517,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C2' => {
               'sample_volume' => 5.0,
@@ -492,7 +526,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D2' => {
               'sample_volume' => 5.0,
@@ -500,7 +535,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E2' => {
               'sample_volume' => 5.0,
@@ -508,7 +544,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F2' => {
               'sample_volume' => 30.0,
@@ -516,7 +553,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'N',
               'sub_pool' => nil,
-              'coverage' => nil
+              'coverage' => nil,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G2' => {
               'sample_volume' => 5.0,
@@ -524,7 +562,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H2' => {
               'sample_volume' => 3.621,
@@ -532,7 +571,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             }
           }
         end
@@ -619,7 +659,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B1' => {
               'sample_volume' => 5.0,
@@ -627,7 +668,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C1' => {
               'sample_volume' => 5.0,
@@ -635,7 +677,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D1' => {
               'sample_volume' => 5.0,
@@ -643,7 +686,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E1' => {
               'sample_volume' => 5.0,
@@ -651,7 +695,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F1' => {
               'sample_volume' => 4.0,
@@ -659,7 +704,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G1' => {
               'sample_volume' => 5.0,
@@ -667,7 +713,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H1' => {
               'sample_volume' => 5.0,
@@ -675,7 +722,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A2' => {
               'sample_volume' => 3.2,
@@ -683,7 +731,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B2' => {
               'sample_volume' => 5.0,
@@ -691,7 +740,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C2' => {
               'sample_volume' => 5.0,
@@ -699,7 +749,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D2' => {
               'sample_volume' => 5.0,
@@ -707,7 +758,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E2' => {
               'sample_volume' => 5.0,
@@ -715,7 +767,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F2' => {
               'sample_volume' => 30.0,
@@ -723,7 +776,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'N',
               'sub_pool' => nil,
-              'coverage' => nil
+              'coverage' => nil,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G2' => {
               'sample_volume' => 5.0,
@@ -731,7 +785,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H2' => {
               'sample_volume' => 3.621,
@@ -739,7 +794,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A3' => {
               'sample_volume' => 5.0,
@@ -747,7 +803,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B3' => {
               'sample_volume' => 5.0,
@@ -755,7 +812,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C3' => {
               'sample_volume' => 5.0,
@@ -763,7 +821,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D3' => {
               'sample_volume' => 5.0,
@@ -771,7 +830,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E3' => {
               'sample_volume' => 5.0,
@@ -779,7 +839,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F3' => {
               'sample_volume' => 5.0,
@@ -787,7 +848,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G3' => {
               'sample_volume' => 5.0,
@@ -795,7 +857,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H3' => {
               'sample_volume' => 5.0,
@@ -803,7 +866,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A4' => {
               'sample_volume' => 5.0,
@@ -811,7 +875,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B4' => {
               'sample_volume' => 5.0,
@@ -819,7 +884,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C4' => {
               'sample_volume' => 5.0,
@@ -827,7 +893,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D4' => {
               'sample_volume' => 5.0,
@@ -835,7 +902,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E4' => {
               'sample_volume' => 5.0,
@@ -843,7 +911,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F4' => {
               'sample_volume' => 5.0,
@@ -851,7 +920,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G4' => {
               'sample_volume' => 5.0,
@@ -859,7 +929,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H4' => {
               'sample_volume' => 5.0,
@@ -867,7 +938,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A5' => {
               'sample_volume' => 5.0,
@@ -875,7 +947,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B5' => {
               'sample_volume' => 5.0,
@@ -883,7 +956,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C5' => {
               'sample_volume' => 5.0,
@@ -891,7 +965,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D5' => {
               'sample_volume' => 5.0,
@@ -899,7 +974,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E5' => {
               'sample_volume' => 5.0,
@@ -907,7 +983,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F5' => {
               'sample_volume' => 5.0,
@@ -915,7 +992,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G5' => {
               'sample_volume' => 5.0,
@@ -923,7 +1001,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H5' => {
               'sample_volume' => 5.0,
@@ -931,7 +1010,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A6' => {
               'sample_volume' => 5.0,
@@ -939,7 +1019,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B6' => {
               'sample_volume' => 5.0,
@@ -947,7 +1028,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C6' => {
               'sample_volume' => 5.0,
@@ -955,7 +1037,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D6' => {
               'sample_volume' => 5.0,
@@ -963,7 +1046,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E6' => {
               'sample_volume' => 5.0,
@@ -971,7 +1055,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F6' => {
               'sample_volume' => 5.0,
@@ -979,7 +1064,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G6' => {
               'sample_volume' => 5.0,
@@ -987,7 +1073,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H6' => {
               'sample_volume' => 5.0,
@@ -995,7 +1082,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A7' => {
               'sample_volume' => 5.0,
@@ -1003,7 +1091,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B7' => {
               'sample_volume' => 5.0,
@@ -1011,7 +1100,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C7' => {
               'sample_volume' => 5.0,
@@ -1019,7 +1109,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D7' => {
               'sample_volume' => 5.0,
@@ -1027,7 +1118,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E7' => {
               'sample_volume' => 5.0,
@@ -1035,7 +1127,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F7' => {
               'sample_volume' => 5.0,
@@ -1043,7 +1136,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G7' => {
               'sample_volume' => 5.0,
@@ -1051,7 +1145,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H7' => {
               'sample_volume' => 5.0,
@@ -1059,7 +1154,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A8' => {
               'sample_volume' => 5.0,
@@ -1067,7 +1163,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B8' => {
               'sample_volume' => 5.0,
@@ -1075,7 +1172,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C8' => {
               'sample_volume' => 5.0,
@@ -1083,7 +1181,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D8' => {
               'sample_volume' => 5.0,
@@ -1091,7 +1190,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E8' => {
               'sample_volume' => 5.0,
@@ -1099,7 +1199,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F8' => {
               'sample_volume' => 5.0,
@@ -1107,7 +1208,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G8' => {
               'sample_volume' => 5.0,
@@ -1115,7 +1217,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H8' => {
               'sample_volume' => 5.0,
@@ -1123,7 +1226,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A9' => {
               'sample_volume' => 5.0,
@@ -1131,7 +1235,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B9' => {
               'sample_volume' => 5.0,
@@ -1139,7 +1244,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C9' => {
               'sample_volume' => 5.0,
@@ -1147,7 +1253,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D9' => {
               'sample_volume' => 5.0,
@@ -1155,7 +1262,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E9' => {
               'sample_volume' => 5.0,
@@ -1163,7 +1271,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F9' => {
               'sample_volume' => 5.0,
@@ -1171,7 +1280,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G9' => {
               'sample_volume' => 5.0,
@@ -1179,7 +1289,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H9' => {
               'sample_volume' => 5.0,
@@ -1187,7 +1298,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A10' => {
               'sample_volume' => 5.0,
@@ -1195,7 +1307,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B10' => {
               'sample_volume' => 5.0,
@@ -1203,7 +1316,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C10' => {
               'sample_volume' => 5.0,
@@ -1211,7 +1325,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D10' => {
               'sample_volume' => 5.0,
@@ -1219,7 +1334,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E10' => {
               'sample_volume' => 5.0,
@@ -1227,7 +1343,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F10' => {
               'sample_volume' => 5.0,
@@ -1235,7 +1352,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G10' => {
               'sample_volume' => 5.0,
@@ -1243,7 +1361,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H10' => {
               'sample_volume' => 5.0,
@@ -1251,7 +1370,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A11' => {
               'sample_volume' => 5.0,
@@ -1259,7 +1379,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B11' => {
               'sample_volume' => 5.0,
@@ -1267,7 +1388,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C11' => {
               'sample_volume' => 5.0,
@@ -1275,7 +1397,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D11' => {
               'sample_volume' => 5.0,
@@ -1283,7 +1406,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E11' => {
               'sample_volume' => 5.0,
@@ -1299,7 +1423,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G11' => {
               'sample_volume' => 5.0,
@@ -1307,7 +1432,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H11' => {
               'sample_volume' => 5.0,
@@ -1315,7 +1441,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A12' => {
               'sample_volume' => 5.0,
@@ -1323,7 +1450,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B12' => {
               'sample_volume' => 5.0,
@@ -1331,7 +1459,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C12' => {
               'sample_volume' => 5.0,
@@ -1339,7 +1468,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D12' => {
               'sample_volume' => 5.0,
@@ -1347,7 +1477,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E12' => {
               'sample_volume' => 5.0,
@@ -1355,7 +1486,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F12' => {
               'sample_volume' => 5.0,
@@ -1363,7 +1495,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G12' => {
               'sample_volume' => 5.0,
@@ -1371,7 +1504,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H12' => {
               'sample_volume' => 5.0,
@@ -1379,7 +1513,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             }
           }
         end
@@ -1786,7 +1921,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 5,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B1' => {
               'sample_volume' => 5.0,
@@ -1794,7 +1930,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 6,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C1' => {
               'sample_volume' => 5.0,
@@ -1802,7 +1939,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 7,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D1' => {
               'sample_volume' => 5.0,
@@ -1810,7 +1948,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E1' => {
               'sample_volume' => 5.0,
@@ -1818,7 +1957,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 9,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F1' => {
               'sample_volume' => 4.0,
@@ -1826,7 +1966,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G1' => {
               'sample_volume' => 5.0,
@@ -1834,7 +1975,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 11,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H1' => {
               'sample_volume' => 5.0,
@@ -1842,7 +1984,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'A2' => {
               'sample_volume' => 3.2,
@@ -1850,7 +1993,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 13,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'B2' => {
               'sample_volume' => 5.0,
@@ -1858,7 +2002,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 14,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'C2' => {
               'sample_volume' => 5.0,
@@ -1866,7 +2011,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 15,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 2,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'D2' => {
               'sample_volume' => 5.0,
@@ -1874,7 +2020,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 16,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'E2' => {
               'sample_volume' => 5.0,
@@ -1882,7 +2029,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 17,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'F2' => {
               'sample_volume' => 30.0,
@@ -1890,7 +2038,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 18,
               'submit_for_sequencing' => 'N',
               'sub_pool' => nil,
-              'coverage' => nil
+              'coverage' => nil,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'G2' => {
               'sample_volume' => 5.0,
@@ -1898,7 +2047,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 19,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 30
+              'coverage' => 30,
+              'hyb_panel' => 'Hyb Panel 1'
             },
             'H2' => {
               'sample_volume' => 3.621,
@@ -1906,7 +2056,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
               'pcr_cycles' => 20,
               'submit_for_sequencing' => 'Y',
               'sub_pool' => 1,
-              'coverage' => 15
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
             }
           }
         end
@@ -1985,14 +2136,75 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
     end
 
-    # describe '#compute_presenter_bin_details' do
-    #   context 'when generating presenter well bin details' do
+    describe '#compute_presenter_bin_details' do
+      context 'when generating presenter well bin details' do
+        let(:well_details) do
+          {
+            'A1' => {
+              'sample_volume' => 5.0,
+              'diluent_volume' => 25.0,
+              'pcr_cycles' => 12,
+              'submit_for_sequencing' => 'Y',
+              'sub_pool' => 1,
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
+            },
+            'B1' => {
+              'sample_volume' => 5.0,
+              'diluent_volume' => 25.0,
+              'pcr_cycles' => 15,
+              'submit_for_sequencing' => 'Y',
+              'sub_pool' => 1,
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
+            },
+            'C1' => {
+              'sample_volume' => 5.0,
+              'diluent_volume' => 25.0,
+              'pcr_cycles' => 15,
+              'submit_for_sequencing' => 'Y',
+              'sub_pool' => 1,
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
+            },
+            'D1' => {
+              'sample_volume' => 5.0,
+              'diluent_volume' => 25.0,
+              'pcr_cycles' => 17,
+              'submit_for_sequencing' => 'Y',
+              'sub_pool' => 2,
+              'coverage' => 15,
+              'hyb_panel' => 'Hyb Panel 1'
+            }
+          }
+        end
 
-    #     it 'creates the correct well information' do
-    #       expect(subject.compute_presenter_bin_details(child_plate)).to eq(expected_bin_details)
-    #     end
-    #   end
-    # end
+        let(:expected_bin_details) do
+          {
+            'A1' => {
+              'colour' => 3,
+              'pcr_cycles' => 12
+            },
+            'B1' => {
+              'colour' => 2,
+              'pcr_cycles' => 15
+            },
+            'C1' => {
+              'colour' => 2,
+              'pcr_cycles' => 15
+            },
+            'D1' => {
+              'colour' => 1,
+              'pcr_cycles' => 17
+            }
+          }
+        end
+
+        it 'creates the correct well information' do
+          expect(subject.compute_presenter_bin_details).to eq(expected_bin_details)
+        end
+      end
+    end
   end
 end
 
