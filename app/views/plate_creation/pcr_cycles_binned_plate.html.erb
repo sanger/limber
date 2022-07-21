@@ -2,8 +2,10 @@
   <%= content do %>
     <%= card title: 'Help' do %>
       <p>Upload the customer completed csv file describing your desired pcr cycles binning strategy. An example is shown below:</p>
-      <p>Please make sure there is a header row for the parent plate barcode, this barcode must match the plate from which the dilution plate is being created. Then leave a spacer row before the row column headings.
-      <p>Please also make sure you specify source and diluent volumes, number of pcr cycles, and whether the well should be submitted for sequencing (Y/N) for each well that has a sample. If sequencing, you also need to supply Sub-Pool and Coverage values.</p>
+      <p>Please make sure there is a header row for the parent plate barcode, this barcode must match the barcode of the dilution plate being created. Then leave an empty spacer row before the row column headings.
+      <p>Please also make sure you specify Sample and Diluent volumes, number of PCR Cycles, and whether you want to Submitted for sequencing (Y/N) for each well that has a sample. If sequencing, you also need to supply Sub-Pool and Coverage values.</p>
+      <p>Hyb Panel must be specified and must match the name in the Sanger Sequencescape database.</p>
+      <p>NB. To prevent a specific well being transferred, set the Sample volume for that row to zero (i.e. 0 or 0.0). Other fields can be left blank.</p>
       <table class='table table-sm'>
         <thead>
           <tr>
@@ -26,28 +28,30 @@
             <th>Submit for sequencing (Y/N)?</th>
             <th>Sub-Pool</th>
             <th>Coverage</th>
+            <th>Hyb Panel</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>A1</td><td>15.2</td><td>101</td><td>Smp 1</td><td>45.3</td><td>50.0</td><td>5.0</td><td>20.0</td><td>12</td><td>Y</td><td>1</td><td>250</td></tr>
-          <tr><td>B1</td><td>0.12</td><td>102</td><td>Smp 2</td><td>7.1</td><td>50.0</td><td>25.0</td><td>0.0</td><td>16</td><td>N</td><td></td><td></td></tr>
-          <tr><td>C1</td><td>8.7</td><td>103</td><td>Smp 3</td><td>30.4</td><td>50.0</td><td>10.0</td><td>15.0</td><td>12</td><td>Y</td><td>1</td><td>250</td></tr>
-          <tr><td>D1</td><td>21.3</td><td>104</td><td>Smp 4</td><td>25.0</td><td>50.0</td><td>4.2</td><td>18.8</td><td>12</td><td>Y</td><td>1</td><td>250</td></tr>
-          <tr><td>E1</td><td>11.8</td><td>105</td><td>Smp 5</td><td>16.9</td><td>50.0</td><td>8.7</td><td>16.3</td><td>14</td><td>Y</td><td>1</td><td>250</td></tr>
-          <tr><td>F1</td><td>9.1</td><td>106</td><td>Smp 6</td><td>36.2</td><td>50.0</td><td>9.6</td><td>17.1</td><td>14</td><td>Y</td><td>2</td><td>250</td></tr>
-          <tr><td>G1</td><td>0.03</td><td>107</td><td>Smp 7</td><td>19.7</td><td>50.0</td><td>25.0</td><td>0.0</td><td>12</td><td>N</td><td></td><td></td></tr>
-          <tr><td>H1</td><td>1.8</td><td>108</td><td>Smp 8</td><td>16.6</td><td>50.0</td><td>23.5</td><td>1.5</td><td>14</td><td>Y</td><td>2</td><td>250</td></tr>
-          <tr><td>A2</td><td>7.6</td><td>109</td><td>Smp 9</td><td>42.2</td><td>50.0</td><td>12.6</td><td>12.4</td><td>16</td><td>Y</td><td>2</td><td>250</td></tr>
-          <tr><td>B2</td><td>14.2</td><td>110</td><td>Smp 10</td><td>29.5</td><td>50.0</td><td>9.5</td><td>15.4</td><td>12</td><td>Y</td><td>2</td><td>250</td></tr>
+          <tr><td>A1</td><td>15.2</td><td>101</td><td>Smp 1</td><td>45.3</td><td>50.0</td><td>5.0</td><td>20.0</td><td>12</td><td>Y</td><td>1</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>B1</td><td>0.12</td><td>102</td><td>Smp 2</td><td>7.1</td><td>50.0</td><td>25.0</td><td>0.0</td><td>16</td><td>N</td><td></td><td></td><td>panel 1</td></tr>
+          <tr><td>C1</td><td>8.7</td><td>103</td><td>Smp 3</td><td>30.4</td><td>50.0</td><td>10.0</td><td>15.0</td><td>12</td><td>Y</td><td>1</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>D1</td><td>21.3</td><td>104</td><td>Smp 4</td><td>25.0</td><td>50.0</td><td>4.2</td><td>18.8</td><td>12</td><td>Y</td><td>1</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>E1</td><td>11.8</td><td>105</td><td>Smp 5</td><td>16.9</td><td>50.0</td><td>8.7</td><td>16.3</td><td>14</td><td>Y</td><td>1</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>F1</td><td>9.1</td><td>106</td><td>Smp 6</td><td>36.2</td><td>50.0</td><td>9.6</td><td>17.1</td><td>14</td><td>Y</td><td>2</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>G1</td><td>0.03</td><td>107</td><td>Smp 7</td><td>19.7</td><td>50.0</td><td>25.0</td><td>0.0</td><td>12</td><td>N</td><td></td><td></td><td>panel 1</td></tr>
+          <tr><td>H1</td><td>1.8</td><td>108</td><td>Smp 8</td><td>16.6</td><td>50.0</td><td>0</td><td></td><td></td><td>N</td><td></td><td></td><td></td></tr>
+          <tr><td>A2</td><td>7.6</td><td>109</td><td>Smp 9</td><td>42.2</td><td>50.0</td><td>12.6</td><td>12.4</td><td>16</td><td>Y</td><td>2</td><td>250</td><td>panel 1</td></tr>
+          <tr><td>B2</td><td>14.2</td><td>110</td><td>Smp 10</td><td>29.5</td><td>50.0</td><td>9.5</td><td>15.4</td><td>12</td><td>Y</td><td>2</td><td>250</td><td>panel 1</td></tr>
         </tbody>
       </table>
       <p>In this example we will generate 3 bins:</p>
       <ul>
         <li>16 cycles: Source wells B1, A2 into A1 and B1</li>
-        <li>14 cycles: Source wells E1, F1, H1 into A2 to C2</li>
+        <li>14 cycles: Source wells E1 and F1 into A2 and B2</li>
         <li>12 cycles: Source wells A1, C1, D1, G1, B2 into A3 to E3</li>
       </ul>
-      <p>NB. All wells with aliquots in the parent must have values and be PCR amplified, but not all need to be submitted for sequencing. e.g. B2 and G1 above. These do not need Sub-Pool or Coverage values.</p>
+      <p>Well H1 will not be transferred as Sample volume is set to zero.</p>
+      <p>NB. All other wells with aliquots in the parent must have values and be PCR amplified, but not all need to be submitted for sequencing. e.g. B2 and G1 above. These do not need Sub-Pool or Coverage values.</p>
     <% end %>
   <% end %>
   <%= sidebar do %>
