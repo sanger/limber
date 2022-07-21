@@ -13,7 +13,7 @@ class LabwareCreators::WellFilterBySubmission < LabwareCreators::WellFilter
 
   def filter_by_submission(requests)
     requests.select do |r|
-      @submission_id.include?(r.submission_id)
+      @submission_id.to_s.include?(r.submission_id)
     end
   end
 
