@@ -471,6 +471,34 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           )
         end
       end
+
+      context 'when there are different valid hyb panels' do
+        let(:bait_library_2) { create :bait_library, name: 'HybPanel2' }
+        let(:bait_library_3) { create :bait_library, name: 'HybPanel3' }
+
+        let(:file) do
+          fixture_file_upload(
+            'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_multiple_hyb_panels.csv',
+            'sequencescape/qc_file'
+          )
+        end
+
+        before do
+          # set up a stub for the hyb panel field lookup (bait library)
+          stub_v2_bait_library(bait_library_2.name, bait_library_2)
+          stub_v2_bait_library(bait_library_3.name, bait_library_3)
+        end
+
+        it 'makes the expected transfer requests to bin the wells' do
+          expect(subject.save!).to eq true
+          expect(subject.skipped_wells).to match(expected_skipped_wells)
+          expect(plate_creation_request).to have_been_made
+          expect(transfer_creation_request).to have_been_made
+          expect(order_request).to have_been_made.once
+          expect(submission_request).to have_been_made.once
+          expect(submission_submit).to have_been_made.once
+        end
+      end
     end
   end
 end
