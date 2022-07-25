@@ -9,6 +9,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   before do
     stub_v2_bait_library(bait_library.name, bait_library)
+    # case insensitive versions
+    stub_v2_bait_library('hybpanel1', bait_library)
+    stub_v2_bait_library('HYBPANEL1', bait_library)
   end
 
   context 'Valid files' do

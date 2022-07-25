@@ -232,7 +232,11 @@ module LabwareCreators
 
       # check if the hyb panel entered in the form matches an existing bait library
       bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @hyb_panel})
-      return true if bait_library.present?
+      if bait_library.present?
+        # lookup is case insensitive, but use original case for the well details
+        @hyb_panel = bait_library.name
+        return true
+      end
 
       errors.add('hyb_panel', format(HYB_PANEL_NOT_RECOGNISED, to_s))
       false
