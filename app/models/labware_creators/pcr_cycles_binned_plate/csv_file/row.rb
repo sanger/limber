@@ -222,15 +222,10 @@ module LabwareCreators
       @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? || do_not_transfer_sample
     end
 
-    def hyb_panel_is_valid_bait_library?
-      return true if empty? || do_not_transfer_sample
-
-      if @hyb_panel.blank?
-        errors.add('hyb_panel', format(HYB_PANEL_MISSING, to_s))
-        return false
-      end
-
-      # check if the hyb panel entered in the form matches an existing bait library
+    #
+    # Check if the hyb panel entered in the form matches an existing bait library
+    #
+    def valid_bait_library?
       bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @hyb_panel})
       if bait_library.present?
         # lookup is case insensitive, but use original case for the well details
@@ -240,6 +235,20 @@ module LabwareCreators
 
       errors.add('hyb_panel', format(HYB_PANEL_NOT_RECOGNISED, to_s))
       false
+    end
+
+    #
+    # Validate the hyb panel column value
+    #
+    def hyb_panel_is_valid_bait_library?
+      return true if empty? || do_not_transfer_sample
+
+      if @hyb_panel.blank?
+        errors.add('hyb_panel', format(HYB_PANEL_MISSING, to_s))
+        return false
+      end
+
+      valid_bait_library?
     end
   end
 end
