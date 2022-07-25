@@ -44,7 +44,8 @@ module LabwareCreators
                 message: ->(object, _data) { WELL_NOT_RECOGNISED % object }
               },
               unless: :empty?
-    validate :sample_volume_zero_or_within_expected_range?
+    validate :sample_volume_zero?
+    validate :sample_volume_within_expected_range?
     validate :input_amount_desired_within_expected_range?
     validate :diluent_volume_within_expected_range?
     validate :pcr_cycles_within_expected_range?
@@ -75,21 +76,31 @@ module LabwareCreators
              :hyb_panel_column,
              to: :header
 
-    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
       @row_config = row_config
       @header = header
       @index = index
       @row_data = row_data
 
-      # initialize supplied fields
+      initialize_sanger_supplied_fields
+      initialize_customer_supplied_fields
+
+      # initialize flag to indicate that sample should not be transferred
+      @do_not_transfer_sample = false
+    end
+
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # These fields are supplied from Sanger in the downloaded customer file
+    def initialize_sanger_supplied_fields
       @well = (@row_data[well_column] || '').strip.upcase
       @concentration = @row_data[concentration_column]&.strip&.to_f
       @sanger_sample_id = @row_data[sanger_sample_id_column]&.strip
       @supplier_sample_name = (@row_data[supplier_sample_name_column])&.strip
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
+    end
 
-      # initialize customer fields
+    # These fields are empty in the downloaded file, and completed by the customer before upload
+    def initialize_customer_supplied_fields
       @input_amount_desired = @row_data[input_amount_desired_column]&.strip&.to_f
       @sample_volume = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume = @row_data[diluent_volume_column]&.strip&.to_f
@@ -98,12 +109,8 @@ module LabwareCreators
       @sub_pool = @row_data[sub_pool_column]&.strip&.to_i
       @coverage = @row_data[coverage_column]&.strip&.to_i
       @hyb_panel = @row_data[hyb_panel_column]&.strip
-
-      # flag to indicate that sample should not be transferred
-      @do_not_transfer_sample = false
     end
-
-    # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def submit_for_sequencing?
       @submit_for_sequencing ||= (@submit_for_sequencing_as_string == 'Y')
@@ -111,6 +118,44 @@ module LabwareCreators
 
     def to_s
       @well.present? ? "row #{index + 2} [#{@well}]" : "row #{index + 2}"
+    end
+
+    def sample_volume_present?
+      return true if sample_volume.present?
+
+      error_msg = format(SAMPLE_VOL_BLANK, @row_config.sample_volume_min, @row_config.sample_volume_max, to_s)
+      errors.add('sample_volume', error_msg)
+      false
+    end
+
+    #
+    # Validate if the sample volume is set to zero by user (indicates do not transfer)
+    #
+    def sample_volume_zero?
+      return true if empty?
+
+      # sample volume must be present unless empty row
+      return false unless sample_volume_present?
+
+      # a zero in the sample volume cell indicates we do not want to transfer this well
+      if sample_volume.zero?
+        @do_not_transfer_sample = true
+        return true
+      end
+      false
+    end
+
+    def sample_volume_within_expected_range?
+      return true if empty? || do_not_transfer_sample
+
+      # non-zero values have to be within the expected range
+      in_range?('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
+    end
+
+    def diluent_volume_within_expected_range?
+      return true if empty? || do_not_transfer_sample
+
+      in_range?('diluent_volume', diluent_volume, @row_config.diluent_volume_min, @row_config.diluent_volume_max)
     end
 
     def input_amount_desired_within_expected_range?
@@ -124,51 +169,14 @@ module LabwareCreators
       )
     end
 
-    def sample_volume_present?
-      # sample volume cannot be blank
-      return true if sample_volume.present?
-
-      error_msg = format(SAMPLE_VOL_BLANK, @row_config.sample_volume_min, @row_config.sample_volume_max, to_s)
-      errors.add('sample_volume', error_msg)
-      false
-    end
-
-    def sample_volume_zero?
-      # sample volume must be present
-      return false unless sample_volume_present?
-
-      # a zero in the sample volume cell indicates we do not want to transfer this well
-      if sample_volume.zero?
-        @do_not_transfer_sample = true
-        return true
-      end
-      false
-    end
-
-    def sample_volume_zero_or_within_expected_range?
-      return true if empty?
-
-      # check if the sample volume is set to zero by user(do not transfer)
-      return true if sample_volume_zero?
-
-      # non-zero values have to be within the expected range
-      in_range?('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
-    end
-
-    def diluent_volume_within_expected_range?
-      return true if empty?
-
-      in_range?('diluent_volume', diluent_volume, @row_config.diluent_volume_min, @row_config.diluent_volume_max)
-    end
-
     def pcr_cycles_within_expected_range?
-      return true if empty?
+      return true if empty? || do_not_transfer_sample
 
       in_range?('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
     end
 
     def submit_for_sequencing_has_expected_value?
-      return true if empty?
+      return true if empty? || do_not_transfer_sample
 
       return true if %w[Y N].include? @submit_for_sequencing_as_string
 
@@ -176,7 +184,7 @@ module LabwareCreators
     end
 
     def sub_pool_within_expected_range?
-      return true if empty?
+      return true if empty? || do_not_transfer_sample
 
       # check the value is within range when we do expect a value to be present
       if submit_for_sequencing?
@@ -211,11 +219,11 @@ module LabwareCreators
     end
 
     def empty?
-      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? || @do_not_transfer_sample
+      @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank? || do_not_transfer_sample
     end
 
     def hyb_panel_is_valid_bait_library?
-      return true if empty?
+      return true if empty? || do_not_transfer_sample
 
       if @hyb_panel.blank?
         errors.add('hyb_panel', format(HYB_PANEL_MISSING, to_s))

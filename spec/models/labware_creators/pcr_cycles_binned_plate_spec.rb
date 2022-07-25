@@ -222,8 +222,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
   let!(:purpose_config) do
- create :pcr_cycles_binned_plate_purpose_config, name: child_purpose_name, uuid: child_purpose_uuid end
-
+    create :pcr_cycles_binned_plate_purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
+  end
 
   context 'on new' do
     has_a_working_api
@@ -410,7 +410,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
       let!(:order_request) do
         stub_api_get(example_submission_template_uuid,
-body: json(:submission_template, uuid: example_submission_template_uuid))
+          body: json(:submission_template, uuid: example_submission_template_uuid)
+        )
         stub_api_post(
           example_submission_template_uuid,
           'orders',
@@ -443,14 +444,32 @@ body: json(:submission_template, uuid: example_submission_template_uuid))
 
       let!(:submission_submit) { stub_api_post(submission_uuid, 'submit') }
 
-      it 'makes the expected transfer requests to bin the wells' do
-        expect(subject.save!).to eq true
-        expect(subject.skipped_wells).to match(expected_skipped_wells)
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
-        expect(order_request).to have_been_made.once
-        expect(submission_request).to have_been_made.once
-        expect(submission_submit).to have_been_made.once
+      context 'when it is a normal valid file' do
+        it 'makes the expected transfer requests to bin the wells' do
+          expect(subject.save!).to eq true
+          expect(subject.skipped_wells).to match(expected_skipped_wells)
+          expect(plate_creation_request).to have_been_made
+          expect(transfer_creation_request).to have_been_made
+          expect(order_request).to have_been_made.once
+          expect(submission_request).to have_been_made.once
+          expect(submission_submit).to have_been_made.once
+        end
+      end
+
+      context 'when the user has set all the samples to zero' do
+        let(:file) do
+          fixture_file_upload(
+            'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_all_zero_sample_volumes.csv',
+            'sequencescape/qc_file'
+          )
+        end
+
+        it 'raises an exception' do
+          expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+          expect(subject.errors.messages[:csv_file][0]).to eq(
+            'has no well rows suitable for transfer (check sample volumes)'
+          )
+        end
       end
     end
   end

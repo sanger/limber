@@ -182,7 +182,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'something that can not parse' do
+  context 'When there is something in the file that we cannot parse' do
     let(:file) do
       fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv',
       'sequencescape/qc_file')
@@ -202,7 +202,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'A file which has missing well values' do
+  context 'When the file has missing well values' do
     let(:file) do
       fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_missing_values.csv',
       'sequencescape/qc_file')
@@ -262,7 +262,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'An invalid file' do
+  context 'When the file is invalid' do
     let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
 
     describe '#valid?' do
@@ -283,7 +283,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'An unrecognised well' do
+  context 'When there is an unrecognised well coordinate' do
     let(:file) do
       fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_wells.csv',
       'sequencescape/qc_file')
@@ -301,7 +301,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'A parent plate barcode that does not match' do
+  context 'When a parent plate barcode does not match the file header row' do
     subject { described_class.new(file, csv_file_config, 'DN1S') }
 
     let(:file) do
@@ -324,7 +324,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'An invalid Hyb Panel value' do
+  context 'When there is an invalid Hyb Panel value' do
     let(:file) do
       fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_hyb_panel.csv',
       'sequencescape/qc_file')
@@ -348,7 +348,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     end
   end
 
-  context 'Some sample volumes are set to zero to indicate the samples should not proceed' do
+  context 'When some sample volumes are set to zero to indicate the samples should not proceed' do
     subject { described_class.new(file, csv_file_config, 'DN2T') }
 
     let(:file) do
@@ -365,6 +365,29 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         expect(subject.well_details.size).to eq(10)
         expect(subject.well_details.keys).to match(['A1', 'B1', 'D1', 'F1', 'H1', 'A2', 'C2', 'D2', 'G2', 'H2'])
         expect(subject.skipped_wells).to match(['E1', 'B2', 'E2', 'F2'])
+      end
+    end
+  end
+
+  context 'When all sample volumes are set to zero' do
+    subject { described_class.new(file, csv_file_config, 'DN2T') }
+
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_all_zero_sample_volumes.csv',
+      'sequencescape/qc_file')
+    end
+
+    describe '#valid?' do
+      # NB. this scenario is caught as an error at the next level up, in the creator
+      it 'should be valid' do
+        expect(subject.valid?).to be true
+      end
+
+      it 'should have empty well details and all zero rows skipped', aggregate_failures: true do
+        expect(subject.well_details.size).to eq(0)
+        expect(subject.skipped_wells).to match(
+          ['A1', 'B1', 'D1', 'E1', 'F1', 'H1', 'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2']
+        )
       end
     end
   end
