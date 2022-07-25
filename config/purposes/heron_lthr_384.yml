@@ -12,6 +12,7 @@ LTHR-384 RT:
     - RT LunaScript Super Mix
     - RT NFW
     - RT DFD Syringe Lot Number
+    - Artics Batch Number
 LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
@@ -22,6 +23,7 @@ LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
     - RT LunaScript Super Mix
     - RT NFW
     - RT DFD Syringe Lot Number
+    - Artics Batch Number
 LTHR-384 PCR 1:
   :asset_type: plate
   :label_template: plate_6mm_double
@@ -29,7 +31,6 @@ LTHR-384 PCR 1:
   :custom_metadata_fields:
     - IDX DFD Syringe Lot Number
     - vIDX KAPA Hifi Lot Number
-    - Artics Batch Number
 LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
@@ -37,7 +38,6 @@ LTHR-384 PCR 2:
   :custom_metadata_fields:
     - IDX DFD Syringe Lot Number
     - vIDX KAPA Hifi Lot Number
-    - Artics Batch Number
 LTHR-384 Lib PCR 1:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
