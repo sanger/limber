@@ -30,14 +30,14 @@ LTHR-384 PCR 1:
   :size: 384
   :custom_metadata_fields:
     - IDX DFD Syringe Lot Number
-    - vIDX KAPA Hifi Lot Number
+    - IDX KAPA Hifi Lot Number
 LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
   :custom_metadata_fields:
     - IDX DFD Syringe Lot Number
-    - vIDX KAPA Hifi Lot Number
+    - IDX KAPA Hifi Lot Number
 LTHR-384 Lib PCR 1:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
