@@ -1,5 +1,6 @@
 ---
 RNA Poly A Globin:
+  pipeline_group: RNA Poly A Globin
   filters:
     request_type_key: limber_rnaag
     library_type: RNA Poly A Globin

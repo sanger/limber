@@ -1,0 +1,136 @@
+# TODO: Add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
+# So that it can work for all pipelines
+
+# e.g.
+# pipeline_group:
+#   - pipeline a
+#   - pipeline b
+---
+Bespoke Aggregation:
+  - Bespoke Aggregation
+
+Bespoke Chromium 3pv2:
+  - Bespoke Chromium 3pv2
+  - Bespoke Chromium 3pv2 MX
+
+Bespoke Chromium 3pv3:
+  - Bespoke Chromium 3pv3
+  - Bespoke Chromium 3pv3 MX
+
+Bespoke Chromium 5p:
+  - Bespoke Chromium 5p
+  - Bespoke Chromium 5p MX
+
+Bespoke Chromium BCR:
+  - Bespoke Chromium BCR
+  - Bespoke Chromium BCR MX
+
+Bespoke Chromium TCR:
+  - Bespoke Chromium TCR
+  - Bespoke Chromium TCR MX
+
+Bespoke PCR Free:
+  - Bespoke PCR Free
+  - Bespoke PCR Free MX
+
+Bespoke PCR:
+  - Bespoke PCR
+  - Bespoke PCR MX
+
+CLCM DNAseq:
+  - CLCM Combined LCM DNAseq
+  - CLCM Custom Pooling for DNAseq
+
+CLCM RNAseq:
+  - CLCM Combined LCM RNAseq
+  - CLCM Custom Pooling for RNAseq
+
+GBS:
+  - GBS
+
+Cardinal A:
+  - Cardinal Entry A
+  - Cardinal
+
+Cardinal B:
+  - Cardinal Entry B
+  - Cardinal Banking
+
+Custom Pool:
+  - Custom Pool
+
+Duplex Seq:
+  - Duplex Seq
+
+GnT:
+  - GnT Picoplex
+  - GnT Picoplex MX
+  - GnT MDA
+
+Heron-96 V2:
+  - Heron-96 Tailed A V2
+  - Heron-96 Tailed B V2
+
+Heron-96:
+  - Heron-96 Tailed A
+  - Heron-96 Tailed B
+  - Heron 96 Tailed MX
+
+Heron-384 V2:
+  - Heron-384 Tailed A V2
+  - Heron-384 Tailed B V2
+
+Heron-384:
+  - Heron-384 Tailed A
+  - Heron-384 Tailed B
+  - Heron 384 Tailed MX
+
+ISC:
+  - ISC
+  - ISC MX
+
+High Throughput PCR Free 96:
+  - High Throughput PCR Free 96
+  - High Throughput PCR Free 96 MX
+
+High Throughput PCR Free 384:
+  - High Throughput PCR Free 384
+  - High Throughput PCR Free 384 MX
+
+pWGS-384:
+  - pWGS-384
+  - pWGS-384 MX
+
+scRNA 96:
+  - scRNA 96
+  - scRNA 96 MX
+
+scRNA 384:
+  - scRNA 384
+  - scRNA 384 MX
+
+Targeted NanoSeq:
+  - Targeted NanoSeq
+
+Targeted NanoSeq with ISC:
+  - Targeted NanoSeq with ISC
+
+WGS:
+  - WGS
+  - WGS MX
+
+RNA Poly A:
+  - RNA Poly A
+  - WGS MX # Then feeds into the standard limber_multiplexing
+
+RNA Poly A Globin:
+  - RNA Poly A Globin
+  - WGS MX # Then feeds into the standard limber_multiplexing
+
+RNA Ribo:
+  - RNA Ribo
+  - WGS MX # Then feeds into the standard limber_multiplexing
+
+RNA Ribo Globin:
+  - RNA Ribo Globin
+  - WGS MX # Then feeds into the standard limber_multiplexing

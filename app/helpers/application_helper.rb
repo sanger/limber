@@ -34,4 +34,8 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   def each_robot(&block)
     Robots.each_robot(&block)
   end
+
+  def pipeline_groups
+    Settings.pipeline_groups
+  end
 end

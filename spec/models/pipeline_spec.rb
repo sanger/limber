@@ -9,6 +9,7 @@ RSpec.describe Pipeline do
 
       let(:pipeline_config) do
         {
+          pipeline_group: 'Group A',
           filters: filters,
           library_pass: 'Purpose 3',
           relationships: {
@@ -17,6 +18,14 @@ RSpec.describe Pipeline do
           },
           name: 'Pipeline A'
         }
+      end
+
+      context 'when there is a pipeline group' do
+        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
+
+        it 'returns true' do
+          expect(model.pipeline_group).to eq 'Group A'
+        end
       end
 
       context 'when the labware requests match the filters' do

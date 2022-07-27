@@ -1,5 +1,6 @@
 ---
 GnT Picoplex:
+  pipeline_group: GnT
   filters:
     request_type_key: limber_gnt_picoplex
   relationships:
@@ -9,6 +10,7 @@ GnT Picoplex:
     GnT Pico End Prep: GnT Pico Lib PCR
   library_pass: GnT Pico Lib PCR
 GnT Picoplex MX:
+  pipeline_group: GnT
   filters:
     request_type_key:
       - limber_multiplexing
@@ -17,6 +19,7 @@ GnT Picoplex MX:
     GnT Pico Lib Pool: GnT Pico Lib Pool XP
     GnT Pico Lib Pool XP: LB Lib Pool Norm
 GnT MDA:
+  pipeline_group: GnT
   filters:
     request_type_key:
       - limber_gnt_mda

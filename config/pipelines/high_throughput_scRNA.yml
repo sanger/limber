@@ -1,5 +1,6 @@
 ---
 scRNA 96:
+  pipeline_group: scRNA 96
   filters:
     request_type_key: limber_scrna
     library_type:
@@ -12,6 +13,7 @@ scRNA 96:
     scRNA cDNA-XP: scRNA End Prep
     scRNA End Prep: scRNA Lib PCR
 scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: scRNA 96
   filters:
     request_type_key:
       - limber_multiplexing
@@ -20,6 +22,7 @@ scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
     scRNA Lib Pool: scRNA Lib Pool XP
     scRNA Lib Pool XP: LB Lib Pool Norm
 scRNA 384:
+  pipeline_group: scRNA 384
   filters:
     request_type_key: limber_scrna-384
     library_type:
@@ -31,6 +34,7 @@ scRNA 384:
     scRNA-384 cDNA-XP: scRNA-384 End Prep
     scRNA-384 End Prep: scRNA-384 Lib PCR
 scRNA 384 MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: scRNA 384
   filters:
     request_type_key:
       - limber_multiplexing

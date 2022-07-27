@@ -2,6 +2,7 @@
 # This pipeline can be deleted once all "limber_heron_lthr" requests have progressed through it
 # It is being replaced by high_throughput_heron_384_tailed_v2
 Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
+  pipeline_group: Heron-384
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr
     library_type:
@@ -14,6 +15,7 @@ Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
     LTHR-384 PCR 1: LTHR-384 Lib PCR 1
     LTHR-384 Lib PCR 1: LTHR-384 Lib PCR pool
 Heron-384 Tailed B:
+  pipeline_group: Heron-384
   filters: *heron_tailed_filters
   library_pass: LTHR-384 Lib PCR pool
   relationships:
@@ -22,6 +24,7 @@ Heron-384 Tailed B:
     LTHR-384 PCR 2: LTHR-384 Lib PCR 2
     LTHR-384 Lib PCR 2: LTHR-384 Lib PCR pool
 Heron 384 Tailed MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: Heron-384
   filters:
     request_type_key:
       - limber_multiplexing

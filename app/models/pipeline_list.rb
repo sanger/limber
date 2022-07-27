@@ -20,6 +20,14 @@ class PipelineList
     @list.select { |pipeline| pipeline.active_for?(labware) }
   end
 
+  # For the given pipeline group
+  # return a object with key: group, and value: list of the pipeline names in that group
+  # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
+  def build_pipeline_groups(pipeline_group)
+    pipeline_configs = @list.select { |pipeline| pipeline.pipeline_group == pipeline_group }
+    pipeline_configs.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }
+  end
+
   # Builds a flat list of purposes in a sensible order from the relationships config
   # Allowing the config hash to be in any order
   # For example getting from this:

@@ -4,15 +4,12 @@
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
-    @pipeline = params[:id].capitalize
+    @pipeline = params[:id]
 
-    # TODO: Add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
-    # So that it can work for all pipelines
-    heron_pipeline_name_to_configs = {
-      'Heron-384' => ['Heron-384 Tailed A V2', 'Heron-384 Tailed B V2'],
-      'Heron-96' => ['Heron-96 Tailed A V2', 'Heron-96 Tailed B V2']
-    }
-    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(heron_pipeline_name_to_configs[@pipeline])
+    # Group related pipelines together
+    pipeline_groups = Settings.pipelines.build_pipeline_groups(@pipeline)
+
+    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipeline_groups[@pipeline])
 
     page_size = 500
 

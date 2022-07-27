@@ -8,6 +8,11 @@
 class Pipeline
   include ActiveModel::Model
 
+  # Todo
+  # Update this to support multiple pipeline groups?
+  # The group the pipeline belongs to
+  attr_accessor :pipeline_group
+
   # The name of the pipeline. Currently used internally, but may get exposed to users
   # in future.
   # @return [String] Name of the pipeline
