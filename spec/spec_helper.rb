@@ -148,6 +148,7 @@ RSpec.configure do |config|
 
     FactoryBot.find_definitions
     Settings.robots = {}
+    Settings.pipeline_groups = []
     Settings.transfer_templates = {
       'Transfer columns 1-12' => 'transfer-1-12',
       'Transfer wells to MX library tubes by submission' => 'transfer-to-mx-tubes-on-submission',
