@@ -35,7 +35,9 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     Robots.each_robot(&block)
   end
 
+  # Return a list of unique pipeline group names
   def pipeline_groups
-    Settings.pipeline_groups
+    pipeline_groups = Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }
+    pipeline_groups.map { |group, pipeline| group }
   end
 end

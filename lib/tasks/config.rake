@@ -28,17 +28,6 @@ namespace :config do
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
 
-    # Todo
-    # Once finalised pipeline groups, build unique groups from pipelines
-    # And remove the pipelines_groups.yml
-    puts 'Fetching pipeline_groups...'
-    pipeline_groups_config = YAML.load_file(Rails.root.join('config/pipeline_groups.yml'))
-
-    puts 'Preparing pipeline_groups...'
-
-    # e.g config = ["Bespoke Chromium 3pv2", ["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]]
-    pipeline_groups = pipeline_groups_config.map { |config| config[0] }
-
     puts 'Fetching purposes...'
     query = Sequencescape::Api::V2::Purpose.select(:uuid, :name).paginate(per_page: 100)
     all_purposes = Sequencescape::Api::V2.merge_page_results(query).index_by(&:name)
@@ -94,7 +83,7 @@ namespace :config do
 
         configuration[:submission_templates] = submission_templates
 
-        configuration[:pipeline_groups] = pipeline_groups
+        # configuration[:pipeline_groups] = pipeline_groups
       end
 
     # Write out the current environment configuration file

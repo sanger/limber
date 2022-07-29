@@ -1,11 +1,5 @@
-# TODO: Add 'pipeline_group' or similar to pipeline config ymls, to group related ones together
-# So that it can work for all pipelines
-
-# e.g.
-# pipeline_group:
-#   - pipeline a
-#   - pipeline b
----
+# TEMP DPL-323
+# Remove once Pipeline Groups have been finalised
 Bespoke Aggregation:
   - Bespoke Aggregation
 
