@@ -55,7 +55,7 @@ module LabwareCreators
     PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
       'wells.aliquots.request.request_type,wells.aliquots.study'
     CHILD_PLATE_INCLUDES = 'wells.aliquots'
-    WELL_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage hyb_panel].freeze
+    REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library_id].freeze
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
@@ -86,30 +86,27 @@ module LabwareCreators
 
     #
     # Called as part of the 'super' call in the 'save' method
-    # retrieve child plate through v2 api, using uuid got through v1 api
     #
     def after_transfer!
-      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
+      # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
+      well_filter.filtered.each do |well, additional_parameters|
+        well_detail = well_details[well.position.name]
 
-      # update fields on each well with various metadata
-      fields_to_update = WELL_METADATA_FIELDS
+        # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
+        filtered_request_uuid = additional_parameters['outer_request']
 
-      child_wells_by_location = child_v2.wells.index_by(&:location)
-
-      well_details.each do |parent_location, details|
-        child_position = transfer_hash[parent_location]['dest_locn']
-        child_well = child_wells_by_location[child_position]
-
-        update_well_with_metadata(child_well, details, fields_to_update)
+        # fetch the Request and update it
+        filtered_request = Sequencescape::Api::V2::Request.where(uuid: filtered_request_uuid).first
+        update_request_with_metadata(filtered_request, well_detail, REQUEST_METADATA_FIELDS)
       end
     end
 
     #
-    # Update metadata on a well to pass values to descendants
+    # Update metadata on a request to be accessible on descendants
     #
-    def update_well_with_metadata(well, metadata, fields_to_update)
+    def update_request_with_metadata(filtered_request, metadata, fields_to_update)
       options = fields_to_update.index_with { |field| metadata[field] }
-      well.update(options)
+      filtered_request.update(options)
     end
 
     #
@@ -295,7 +292,8 @@ module LabwareCreators
     #   {
     #     'source_asset': 'auuid',
     #     'target_asset': 'anotheruuid',
-    #     'volume': '5.2'
+    #     'volume': '5.2',
+    #     'outer_request': "arequestuuid"
     #   },
     #   { etc. }
     # ]

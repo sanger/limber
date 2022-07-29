@@ -42,6 +42,12 @@ LDS AL Lib Dil:
       - 'N'
     :sub_pool_min: 1
     :sub_pool_max: 96
+  :submission_options:
+    Duplex Seq Dilution and Cleanup:
+      template_name: 'Limber-Htp - Duplex Seq Dilution and Cleanup - Automated'
+      request_options:
+        library_type: 'Duplex-Seq'
+      allowed_extra_barcodes: false
   :file_links:
     - name: 'Download Hamilton AL Lib to Dilution CSV'
       id: 'hamilton_lds_al_lib_to_lds_al_lib_dil'

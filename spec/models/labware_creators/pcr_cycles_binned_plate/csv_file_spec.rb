@@ -345,7 +345,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       it 'reports the errors' do
         subject.valid?
         expect(subject.errors.full_messages).to include(
-          'Transfers hyb panel contains an invalid hyb panel name, in row 7 [D1]'
+          'Transfers hyb panel contains an invalid hyb panel (bait library) name, in row 7 [D1]'
         )
       end
     end

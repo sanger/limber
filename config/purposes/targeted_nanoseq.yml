@@ -46,6 +46,12 @@ LTN AL Lib Dil:
       - 'N'
     :sub_pool_min: 1
     :sub_pool_max: 96
+  :submission_options:
+    Targeted NanoSeq Dilution and Cleanup:
+      template_name: 'Limber-Htp - Targeted NanoSeq Dilution and Cleanup - Automated'
+      request_options:
+        library_type: 'Targeted Nanoseq'
+      allowed_extra_barcodes: false
   :file_links:
     - name: 'Download Hamilton AL Lib to Dilution CSV'
       id: 'hamilton_ltn_al_lib_to_ltn_al_lib_dil'
