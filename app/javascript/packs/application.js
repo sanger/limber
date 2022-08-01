@@ -9,6 +9,7 @@
 
 // Currently setting up each component as its own mini vue app.
 require('asset-comments')
+require('labware-custom-metadata')
 require('custom-tagged-plate')
 require('file-list')
 require('multi-stamp')

@@ -34,6 +34,18 @@ FactoryBot.define do
       input_plate { true }
     end
 
+    # Sets up config for a plate with custom_metadata_fields parameters
+    factory :plate_with_custom_metadata_fields_config do
+      name { 'LTHR-384 PCR 2' }
+      custom_metadata_fields { ['IDX DFD Syringe lot Number', 'Another'] }
+    end
+
+    # Sets up config for a plate with empty custom_metadata_fields parameters
+    factory :plate_with_empty_custom_metadata_fields_config do
+      name { 'LTHR-384 PCR 2' }
+      custom_metadata_fields { [] }
+    end
+
     # Sets up config for a tube with transfer parameters
     factory :tube_with_transfer_parameters_config do
       name { 'LTHR-384 Pool XP' }
