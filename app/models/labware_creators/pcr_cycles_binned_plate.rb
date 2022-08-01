@@ -194,7 +194,11 @@ module LabwareCreators
         return
       end
 
-      errors.add(:base, 'Failed to build submission') unless submission_built?
+      errors.add(:base, 'Submission failed to build in a reasonable timeframe') unless submission_built?
+
+      # submission_built? may not mean a successful submission, just that job completed, so check state and message
+      errors.add(:base, 'Submission has failed') if @submission.state == 'failed'
+      errors.add(:base, @submission.message) if @submission.message.present?
     end
 
     #

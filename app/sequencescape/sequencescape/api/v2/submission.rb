@@ -7,6 +7,7 @@ class Sequencescape::Api::V2::Submission < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
   property :lanes_of_sequencing, type: :integer
+  property :message, type: :array # holds any error message
 
   delegate :building?, :pending?, :processing?, :ready?, :failed?, :cancelled?, to: :state
 
