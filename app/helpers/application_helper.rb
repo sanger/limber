@@ -38,6 +38,11 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   # Return a list of unique pipeline group names
   def pipeline_groups
     pipeline_groups = Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }
-    pipeline_groups.map { |group, pipeline| group }
+    pipeline_groups.map { |group, _pipeline| group }
   end
 end
+
+# default
+# pipeline group used when grouping pipelines
+# convention, if no group, us same name as pipeline
+# on render, if no key, put in seperate grouping
