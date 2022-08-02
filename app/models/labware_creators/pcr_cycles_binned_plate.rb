@@ -88,15 +88,21 @@ module LabwareCreators
     # Called as part of the 'super' call in the 'save' method
     #
     def after_transfer!
+      puts "DEBUG: in after_transfer!"
+      puts "DEBUG: in after_transfer!: well_filter.filtered = #{well_filter.filtered}"
       # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
       well_filter.filtered.each do |well, additional_parameters|
-        well_detail = well_details[well.position.name]
+        puts "DEBUG: in after_transfer!: well = #{well.position['name']}"
+        well_detail = well_details[well.position['name']]
+        puts "DEBUG: in after_transfer!: well_detail = #{well_detail}"
 
         # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
         filtered_request_uuid = additional_parameters['outer_request']
+        puts "DEBUG: in after_transfer!: filtered_request_uuid = #{filtered_request_uuid}"
 
         # fetch the Request and update it
         filtered_request = Sequencescape::Api::V2::Request.where(uuid: filtered_request_uuid).first
+        puts "DEBUG: in after_transfer!: filtered_request retrieved, try to update"
         update_request_with_metadata(filtered_request, well_detail, REQUEST_METADATA_FIELDS)
       end
     end
@@ -105,7 +111,13 @@ module LabwareCreators
     # Update metadata on a request to be accessible on descendants
     #
     def update_request_with_metadata(filtered_request, metadata, fields_to_update)
+      puts "DEBUG: update_request_with_metadata"
       options = fields_to_update.index_with { |field| metadata[field] }
+
+      # TODO: need to use API v1 to update request
+      # @robot = Robots.find(id: params[:id], api: api, user_uuid: current_user_uuid)
+
+      puts "DEBUG: update_request_with_metadata: options = #{options}"
       filtered_request.update(options)
     end
 
@@ -247,7 +259,9 @@ module LabwareCreators
     #
     def create_submission(configured_params)
       sequencescape_submission_parameters = {
+        # TODO: this is one order currently
         template_name: configured_params[:template_name],
+        # TODO: create hash of orders
         request_options: configured_params[:request_options],
         asset_groups: [{ assets: parent_asset_uuids, autodetect_studies_projects: true }],
         api: api,
@@ -258,6 +272,7 @@ module LabwareCreators
       submission_created = ss.save
 
       if submission_created
+        puts "DEBUG: submission_created: submission uuid = #{ss.submission_uuid}"
         @submission_uuid = ss.submission_uuid
         return true
       end
@@ -284,6 +299,7 @@ module LabwareCreators
     # Call the api to create the transfer request collection
     #
     def transfer_material_from_parent!(child_plate)
+      puts "DEBUG: transfer_request_attributes = #{transfer_request_attributes(child_plate)}"
       api.transfer_request_collection.create!(
         user: user_uuid,
         transfer_requests: transfer_request_attributes(child_plate)
@@ -303,6 +319,9 @@ module LabwareCreators
     # ]
     #
     def transfer_request_attributes(child_plate)
+      # TODO: refetch the parent wells so have submitted requests information
+      @parent = Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
+
       well_filter.filtered.filter_map do |well, additional_parameters|
         request_hash(well, child_plate, additional_parameters)
       end

@@ -9,7 +9,7 @@ module Presenters
   class PcrCyclesBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
-    CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results'
+    CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.request'
 
     self.summary_partial = 'labware/plates/binned_summary'
     self.aliquot_partial = 'binned_aliquot'
@@ -43,7 +43,8 @@ module Presenters
           .each_with_object({}) do |well, details|
             next if well.aliquots.empty?
 
-            details[well.location] = { 'pcr_cycles' => well.attributes['pcr_cycles'] }
+            # extract pcr_cycles from well.aliquots.first outer request
+            details[well.location] = { 'pcr_cycles' => well.aliquots.request.attributes['pcr_cycles'] }
           end
     end
   end

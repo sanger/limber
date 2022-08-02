@@ -15,6 +15,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'Valid files' do
+    # TODO: change to bait_library_name and _id
     let(:expected_well_details) do
       {
         'A1' => {

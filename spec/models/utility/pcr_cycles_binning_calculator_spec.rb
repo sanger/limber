@@ -33,6 +33,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
     end
 
+    # TODO: change to bait_library_name and _id
     let(:well_details) do
       {
         'A1' => {
@@ -651,6 +652,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
 
       context 'when requiring compression due to numbers of wells' do
+        # TODO: change to bait_library_name and _id
         let(:well_details) do
           {
             'A1' => {
