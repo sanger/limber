@@ -42,6 +42,28 @@ RSpec.describe Presenters::PlatePresenter do
 
   subject(:presenter) { Presenters::PlatePresenter.new(api: api, labware: labware) }
 
+  describe '#custom_metadata_fields' do
+    context 'with custom_metadata_fields' do
+      before { create(:plate_with_custom_metadata_fields_config) }
+
+      it 'returns a JSON string with a array of custom_metadata_fields config' do
+        expect(presenter.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
+      end
+    end
+    context 'with empty custom_metadata_fields' do
+      before { create(:plate_with_empty_custom_metadata_fields_config) }
+
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
+        expect(presenter.custom_metadata_fields).to eq('[]')
+      end
+    end
+    context 'without custom_metadata_fields' do
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
+        expect(presenter.custom_metadata_fields).to eq('[]')
+      end
+    end
+  end
+
   context 'with the default label class "Labels::PlateLabel"' do
     it 'returns PlateLabel attributes when PlateLabel is defined in the purpose settings' do
       expected_label = {
