@@ -39,6 +39,10 @@ module Presenters
       "#{human_barcode} - #{purpose_name}"
     end
 
+    def custom_metadata_fields
+      purpose_config.fetch(:custom_metadata_fields, []).to_a.to_json
+    end
+
     def sequencescape_submission
       return nil if purpose_config.submission.empty?
 

@@ -87,7 +87,10 @@ class PurposeConfig
       presenter_class: 'Presenters::StandardPresenter',
       creator_class: 'LabwareCreators::StampedPlate',
       label_class: 'Labels::PlateLabel',
-      file_links: [{ name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' }]
+      file_links: [
+        { name: 'Download Concentration (nM) CSV', id: 'concentrations_nm' },
+        { name: 'Download Concentration (ng/ul) CSV', id: 'concentrations_ngul' }
+      ]
     }.freeze
 
     def register!

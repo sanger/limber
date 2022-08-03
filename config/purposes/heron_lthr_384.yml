@@ -8,20 +8,36 @@ LTHR-384 RT:
   :creator_class: LabwareCreators::Uncreatable
   :label_template: plate_6mm_double
   :size: 384
+  :custom_metadata_fields:
+    - RT LunaScript Super Mix
+    - RT NFW
+    - RT DFD Syringe Lot Number
+    - Artics Batch Number
 LTHR-384 RT-Q: # Limber Quad stamp from LTHR-384 RT
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
   :merger_plate: true
   :label_template: plate_6mm_double
   :size: 384
+  :custom_metadata_fields:
+    - RT LunaScript Super Mix
+    - RT NFW
+    - RT DFD Syringe Lot Number
+    - Artics Batch Number
 LTHR-384 PCR 1:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
+  :custom_metadata_fields:
+    - IDX DFD Syringe Lot Number
+    - IDX KAPA Hifi Lot Number
 LTHR-384 PCR 2:
   :asset_type: plate
   :label_template: plate_6mm_double
   :size: 384
+  :custom_metadata_fields:
+    - IDX DFD Syringe Lot Number
+    - IDX KAPA Hifi Lot Number
 LTHR-384 Lib PCR 1:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -32,6 +48,8 @@ LTHR-384 Lib PCR 1:
     - TSsc384-PCR1-nCoV-2019/V3/B
     - TSsc384-PCR1-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
+  :custom_metadata_fields:
+    - UDI Tag Batch Number
 LTHR-384 Lib PCR 2:
   :asset_type: plate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
@@ -42,6 +60,8 @@ LTHR-384 Lib PCR 2:
     - TSsc384-PCR2-nCoV-2019/V3/B
     - TSsc384-PCR2-nCoV-2019/V4/B
   :disable_cross_plate_pool_detection: true
+  :custom_metadata_fields:
+    - UDI Tag Batch Number
 LTHR-384 Lib PCR pool:
   :asset_type: plate
   :creator_class: LabwareCreators::MergedPlate
@@ -52,6 +72,8 @@ LTHR-384 Lib PCR pool:
     help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
   :label_template: plate_6mm_double
   :size: 384
+  :custom_metadata_fields:
+    - REC Tip Lot Number
 LTHR-384 Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -63,3 +85,12 @@ LTHR-384 Pool XP:
     target_molarity_nm: 4
     target_volume_ul: 192
     minimum_pick_ul: 2
+  :custom_metadata_fields:
+    - REC EB Batch
+    - REC ETOH Batch
+    - REC AMP Batch
+    - REC qPCR Batch
+    - REC NFW Batch
+    - TS Buffer Batch
+    - TS Ladder Batch
+    - TS ScreenTape Batch
