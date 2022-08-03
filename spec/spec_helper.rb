@@ -176,6 +176,7 @@ RSpec.configure do |config|
 
     # Wipe out existing purposes
     Settings.purposes = {}
+    Settings.pipelines = PipelineList.new
   end
 
   factory_bot_results = {}
