@@ -8,8 +8,6 @@
 class Pipeline
   include ActiveModel::Model
 
-  # Todo
-  # Update this to support multiple pipeline groups?
   # The group the pipeline belongs to
   attr_accessor :pipeline_group
 

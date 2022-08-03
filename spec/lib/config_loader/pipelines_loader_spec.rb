@@ -25,5 +25,9 @@ RSpec.describe ConfigLoader::PipelinesLoader, type: :model, loader: true do
       expect(loader.config.length).to eq 2
       expect(loader.config).to be_a(Hash)
     end
+
+    it 'loads purposes from specified files' do
+      expect(loader.pipelines).to be_a(PipelineList)
+    end
   end
 end

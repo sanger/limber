@@ -6,10 +6,23 @@
 class PipelineList
   attr_reader :list
 
+  # When calling a PipelineList object, if method doesn't exist, call on the @list object
+  # e.g Settings.pipelines.group_by(&:pipeline_group)
+  # is the equalivent of Settings.pipelines.list.group_by(&:pipeline_group)
   delegate_missing_to :list
 
   def initialize(list = {})
-    @list = list.map { |pipeline_name, pipeline_config| Pipeline.new(pipeline_config.merge(name: pipeline_name)) }
+    @list =
+      list.with_indifferent_access.map do |pipeline_name, pipeline_config|
+        # if no group is provided, default pipeline group is the pipeline's name
+        config =
+          if pipeline_config['pipeline_group'].nil?
+            pipeline_config.merge(name: pipeline_name, pipeline_group: pipeline_name)
+          else
+            pipeline_config.merge(name: pipeline_name)
+          end
+        Pipeline.new(config)
+      end
   end
 
   # Returns an array of all pipelines that are 'active' for a particular piece of
