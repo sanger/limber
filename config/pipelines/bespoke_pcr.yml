@@ -82,3 +82,23 @@ Bespoke PCR Enriched TCR HT:
   relationships:
     LBB Ligation: LBB Enriched TCR HT
     LBB Enriched TCR HT: LBB Lib PCR-XP
+Bespoke PCR Chromium Alternative Entry:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Chromium single cell HTO
+      - Chromium single cell surface protein
+      - Chromium single cell surface protein HT
+      - Chromium Visium
+      - Chromium Visium FFPE
+      - Manual Chromium single cell 3 prime v3
+      - Manual Chromium single cell 3 prime HT v3
+      - Manual Chromium single cell 5 prime v2
+      - Manual Chromium single cell 5 prime HT v2
+      - Manual Chromium single cell TCR
+      - Manual Chromium single cell BCR
+      - Manual Chromium single cell BCR HT
+      - Manual Chromium single cell TCR HT
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBC Cherrypick: LBB Ligation
