@@ -56,3 +56,9 @@ LBC TCR LibPS:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+LBC TCR Pool Norm:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
