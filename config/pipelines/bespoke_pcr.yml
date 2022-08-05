@@ -46,3 +46,39 @@ Bespoke PCR MX:
   relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm
+Bespoke PCR Enriched BCR:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell BCR
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Ligation: LBB Enriched BCR
+    LBB Enriched BCR: LBB Lib PCR-XP
+Bespoke PCR Enriched BCR HT:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell BCR HT
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Ligation: LBB Enriched BCR HT
+    LBB Enriched BCR HT: LBB Lib PCR-XP
+Bespoke PCR Enriched TCR:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell TCR
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Ligation: LBB Enriched TCR
+    LBB Enriched TCR: LBB Lib PCR-XP
+Bespoke PCR Enriched TCR HT:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell TCR HT
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Ligation: LBB Enriched TCR HT
+    LBB Enriched TCR HT: LBB Lib PCR-XP
