@@ -72,7 +72,7 @@ module LabwareCreators
     # Extracts well details from the uploaded csv file
     #
     # @return [Hash] eg. { 'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0,
-    # 'pcr_cycles' => 14, 'submit_for_sequencing' => 'Y', 'sub_pool' => 1, 'coverage' => 15 }, etc. }
+    # 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 }, etc. }
     #
     def well_details
       @well_details ||= generate_well_details_hash
