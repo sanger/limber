@@ -85,43 +85,6 @@ module LabwareCreators
     end
 
     #
-    # Called as part of the 'super' call in the 'save' method
-    #
-    def after_transfer!
-      puts "DEBUG: in after_transfer!"
-      puts "DEBUG: in after_transfer!: well_filter.filtered = #{well_filter.filtered}"
-      # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
-      well_filter.filtered.each do |well, additional_parameters|
-        puts "DEBUG: in after_transfer!: well = #{well.position['name']}"
-        well_detail = well_details[well.position['name']]
-        puts "DEBUG: in after_transfer!: well_detail = #{well_detail}"
-
-        # The uuid for the correct request for the submission is in the well_filter filtered as 'outer_request'
-        filtered_request_uuid = additional_parameters['outer_request']
-        puts "DEBUG: in after_transfer!: filtered_request_uuid = #{filtered_request_uuid}"
-
-        # fetch the Request and update it
-        filtered_request = Sequencescape::Api::V2::Request.where(uuid: filtered_request_uuid).first
-        puts "DEBUG: in after_transfer!: filtered_request retrieved, try to update"
-        update_request_with_metadata(filtered_request, well_detail, REQUEST_METADATA_FIELDS)
-      end
-    end
-
-    #
-    # Update metadata on a request to be accessible on descendants
-    #
-    def update_request_with_metadata(filtered_request, metadata, fields_to_update)
-      puts "DEBUG: update_request_with_metadata"
-      options = fields_to_update.index_with { |field| metadata[field] }
-
-      # TODO: need to use API v1 to update request
-      # @robot = Robots.find(id: params[:id], api: api, user_uuid: current_user_uuid)
-
-      puts "DEBUG: update_request_with_metadata: options = #{options}"
-      filtered_request.update(options)
-    end
-
-    #
     # The dilutions calculator works out how the samples will we rearranged when
     # transferred into the child plate
     #
