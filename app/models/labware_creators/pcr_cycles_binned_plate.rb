@@ -55,7 +55,7 @@ module LabwareCreators
     PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
       'wells.aliquots.request.request_type,wells.aliquots.study'
     CHILD_PLATE_INCLUDES = 'wells.aliquots'
-    REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library_id].freeze
+    REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library_name].freeze
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)

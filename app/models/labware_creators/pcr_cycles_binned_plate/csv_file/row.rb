@@ -34,7 +34,6 @@ module LabwareCreators
                 :submit_for_sequencing,
                 :sub_pool,
                 :coverage,
-                :bait_library_id,
                 :bait_library_name,
                 :do_not_transfer_sample,
                 :index
@@ -229,8 +228,6 @@ module LabwareCreators
     def valid_bait_library?
       bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @bait_library_name})
       if bait_library.present?
-        @bait_library_id = bait_library.id
-
         # lookup is case insensitive, but use original case for the well details
         @bait_library_name = bait_library.name
         return true
