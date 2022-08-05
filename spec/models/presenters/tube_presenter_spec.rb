@@ -92,4 +92,26 @@ RSpec.describe Presenters::TubePresenter do
       end
     end
   end
+
+  describe '#custom_metadata_fields' do
+    context 'with custom_metadata_fields' do
+      before { create(:plate_with_custom_metadata_fields_config) }
+
+      it 'returns a JSON string with a array of custom_metadata_fields config' do
+        expect(subject.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
+      end
+    end
+    context 'with empty custom_metadata_fields' do
+      before { create(:plate_with_empty_custom_metadata_fields_config) }
+
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
+        expect(subject.custom_metadata_fields).to eq('[]')
+      end
+    end
+    context 'without custom_metadata_fields' do
+      it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
+        expect(subject.custom_metadata_fields).to eq('[]')
+      end
+    end
+  end
 end
