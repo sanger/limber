@@ -23,10 +23,10 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  let(:request_a1) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-1", pcr_cycles: 16 }
-  let(:request_a2) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-2", pcr_cycles: 14 }
-  let(:request_b2) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-3", pcr_cycles: 14 }
-  let(:request_a3) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-4", pcr_cycles: 12 }
+  let(:request_a1) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-1', pcr_cycles: 16 }
+  let(:request_a2) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-2', pcr_cycles: 14 }
+  let(:request_b2) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-3', pcr_cycles: 14 }
+  let(:request_a3) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-4', pcr_cycles: 12 }
 
   # Create binning for 4 wells in 3 bins:
   #     1   2   3
