@@ -15,5 +15,5 @@ Bespoke Chromium 5p MX:
       - limber_multiplexing
   relationships:
     LBC 5p GEX PCR 2XP: LBC 5p GLibPS
-    LBC 5p GEX PCR 2XP: LBC 5p Pool Norm
+    LBC 5p GLibPS: LBC 5p Pool Norm
     LBC 5p Pool Norm: LB Lib Pool Norm
