@@ -139,9 +139,7 @@ FactoryBot.define do
             'template_name' => 'example',
             'allowed_extra_barcodes' => false,
             'request_options' => {
-              'library_type' => 'example_library',
-              'fragment_size_required_from' => '200',
-              'fragment_size_required_to' => '800'
+              'library_type' => 'example_library'
             }
           }
         }
