@@ -17,7 +17,7 @@ module LabwareCreators
     include ActiveModel::Validations
     extend NestedValidation
 
-    CSV_FIELDS = %w[sample_volume diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library_name].freeze
+    CSV_FIELDS = %w[sample_volume diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library].freeze
 
     validate :correctly_parsed?
     validates :plate_barcode_header_row, presence: true

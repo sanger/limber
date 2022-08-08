@@ -15,7 +15,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'Valid files' do
-    # TODO: change to bait_library_name and _id
     let(:expected_well_details) do
       {
         'A1' => {
@@ -25,7 +24,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'B1' => {
           'sample_volume' => 5.0,
@@ -34,7 +33,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'D1' => {
           'sample_volume' => 5.0,
@@ -43,7 +42,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'E1' => {
           'sample_volume' => 5.0,
@@ -52,7 +51,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 30,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'F1' => {
           'sample_volume' => 4.0,
@@ -61,7 +60,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'H1' => {
           'sample_volume' => 5.0,
@@ -70,7 +69,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
           'coverage' => 30,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'A2' => {
           'sample_volume' => 3.2,
@@ -79,7 +78,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'B2' => {
           'sample_volume' => 5.0,
@@ -88,7 +87,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'C2' => {
           'sample_volume' => 5.0,
@@ -97,7 +96,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'D2' => {
           'sample_volume' => 5.0,
@@ -106,7 +105,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'E2' => {
           'sample_volume' => 5.0,
@@ -115,7 +114,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'F2' => {
           'sample_volume' => 30.0,
@@ -124,7 +123,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => false,
           'sub_pool' => nil,
           'coverage' => nil,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'G2' => {
           'sample_volume' => 5.0,
@@ -133,7 +132,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 30,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         },
         'H2' => {
           'sample_volume' => 3.621,
@@ -142,7 +141,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
           'coverage' => 15,
-          'hyb_panel' => 'HybPanel1'
+          'bait_library' => 'HybPanel1'
         }
       }
     end

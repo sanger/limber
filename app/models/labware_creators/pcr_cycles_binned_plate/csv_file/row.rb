@@ -34,7 +34,7 @@ module LabwareCreators
                 :submit_for_sequencing,
                 :sub_pool,
                 :coverage,
-                :bait_library_name,
+                :bait_library,
                 :do_not_transfer_sample,
                 :index
 
@@ -108,7 +108,7 @@ module LabwareCreators
       @submit_for_sequencing_as_string = @row_data[submit_for_sequencing_column]&.strip&.upcase
       @sub_pool = @row_data[sub_pool_column]&.strip&.to_i
       @coverage = @row_data[coverage_column]&.strip&.to_i
-      @bait_library_name = @row_data[hyb_panel_column]&.strip
+      @bait_library = @row_data[hyb_panel_column]&.strip
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
@@ -226,10 +226,10 @@ module LabwareCreators
     # Check if the hyb panel entered in the form matches an existing bait library
     #
     def valid_bait_library?
-      bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @bait_library_name})
+      bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @bait_library})
       if bait_library.present?
         # lookup is case insensitive, but use original case for the well details
-        @bait_library_name = bait_library.name
+        @bait_library = bait_library.name
         return true
       end
 
@@ -243,7 +243,7 @@ module LabwareCreators
     def hyb_panel_is_valid_bait_library?
       return true if empty? || do_not_transfer_sample
 
-      if @bait_library_name.blank?
+      if @bait_library.blank?
         errors.add('hyb_panel', format(HYB_PANEL_MISSING, to_s))
         return false
       end

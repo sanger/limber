@@ -29,6 +29,7 @@ module LabwareCreators
   # |E1| pcr_cycles = 12 (bin 2)  |  |  |  |
   # +--+--+--~                    +--+--+--~
   # |G1| pcr_cycles = 12 (bin 2)  |  |  |  |
+  # rubocop:disable Metrics/ClassLength
   class PcrCyclesBinnedPlate < Base
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
@@ -55,7 +56,7 @@ module LabwareCreators
     PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
       'wells.aliquots.request.request_type,wells.aliquots.study'
     CHILD_PLATE_INCLUDES = 'wells.aliquots'
-    REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library_name].freeze
+    REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library].freeze
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
@@ -171,8 +172,10 @@ module LabwareCreators
 
       errors.add(:base, 'Submission failed to build in a reasonable timeframe') unless submission_built?
 
-      # submission_built? may not mean a successful submission, just that job completed, so check state and message
-      errors.add(:base, 'Submission has failed') if @submission.state == 'failed'
+      # submission_built? may not mean a successful submission, just that job completed ok, so also check state
+      return unless @submission.state == 'failed'
+
+      errors.add(:base, 'Submission has failed')
       errors.add(:base, @submission.message) if @submission.message.present?
     end
 
@@ -209,24 +212,54 @@ module LabwareCreators
     end
 
     #
-    # Fetch the parent well uuids for those wells being transferred
+    # Returns the list of wells to be transferred
     #
-    def parent_asset_uuids
-      labware_wells.filter_map do |well|
-        well.uuid unless well.empty? || skipped_wells.include?(well.position['name'])
+    def wells_to_be_transferred
+      @wells_to_be_transferred ||=
+        labware_wells.filter_map do |well|
+          well if well_details.key?(well.position['name'])
+        end
+    end
+
+    #
+    # Returns a hash of reuqest metadata fields
+    #
+    def well_request_options(well_detail)
+      REQUEST_METADATA_FIELDS.index_with { |field| well_detail[field] }
+    end
+
+    #
+    #  Generates the asset_groups for the submission
+    #
+    def generate_asset_groups(config_request_options)
+      asset_groups = []
+      # Assumes the request metadata is unique for each well, creates one order per well
+      # TODO: is there a more efficient way?
+      wells_to_be_transferred.each do |well|
+        well_coord = well.position['name']
+        well_detail = well_details[well_coord]
+        well_asset_group = {
+                             assets: [well.uuid],
+                             autodetect_studies_projects: true,
+                             request_options: config_request_options.merge(well_request_options(well_detail))
+                           }
+        asset_groups << well_asset_group
       end
+      asset_groups
     end
 
     #
     # Creates the dilution and cleanup submission
     #
     def create_submission(configured_params)
+      config_request_options = configured_params[:request_options]
+
+      # NB request options will be overriden in sequencescape_submission by merge of asset groups,
+      # but will trigger a validation error if not present
       sequencescape_submission_parameters = {
-        # TODO: this is one order currently
         template_name: configured_params[:template_name],
-        # TODO: create hash of orders
-        request_options: configured_params[:request_options],
-        asset_groups: [{ assets: parent_asset_uuids, autodetect_studies_projects: true }],
+        request_options: config_request_options,
+        asset_groups: generate_asset_groups(config_request_options),
         api: api,
         user: user_uuid
       }
@@ -235,7 +268,6 @@ module LabwareCreators
       submission_created = ss.save
 
       if submission_created
-        puts "DEBUG: submission_created: submission uuid = #{ss.submission_uuid}"
         @submission_uuid = ss.submission_uuid
         return true
       end
@@ -262,7 +294,6 @@ module LabwareCreators
     # Call the api to create the transfer request collection
     #
     def transfer_material_from_parent!(child_plate)
-      puts "DEBUG: transfer_request_attributes = #{transfer_request_attributes(child_plate)}"
       api.transfer_request_collection.create!(
         user: user_uuid,
         transfer_requests: transfer_request_attributes(child_plate)
@@ -282,7 +313,7 @@ module LabwareCreators
     # ]
     #
     def transfer_request_attributes(child_plate)
-      # TODO: refetch the parent wells so have submitted requests information
+      # refetch the parent wells so have submitted requests information
       @parent = Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
 
       well_filter.filtered.filter_map do |well, additional_parameters|
@@ -329,4 +360,5 @@ module LabwareCreators
       @transfer_hash ||= dilutions_calculator.compute_well_transfers(parent)
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

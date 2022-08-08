@@ -92,6 +92,28 @@ FactoryBot.define do
     factory :aggregation_request do
       request_type { create :aggregation_request_type }
     end
+
+    factory :dilution_and_cleanup_request do
+      request_type { create :dilution_and_cleanup_request_type }
+
+      transient do
+        bait_library { create :bait_library, name: 'Bait Name' }
+        submit_for_sequencing { true }
+        coverage { 1 }
+        sub_pool { 1 }
+      end
+
+      options do
+        {
+          'bait_library' => bait_library.name,
+          'pcr_cycles' => pcr_cycles,
+          'library_type' => library_type,
+          'submit_for_sequencing' => submit_for_sequencing,
+          'coverage' => coverage,
+          'sub-pool' => sub_pool
+        }
+      end
+    end
   end
 
   factory :primer_panel, class: Sequencescape::Api::V2::PrimerPanel do
@@ -143,6 +165,12 @@ FactoryBot.define do
     factory :aggregation_request_type do
       name { 'Limber Bespoke Aggregation' }
       key { 'limber_bespoke_aggregation' }
+    end
+
+    # Request type for dilution and cleanup
+    factory :dilution_and_cleanup_request_type do
+      name { 'Limber Duplex Seq Dilution and Cleanup' }
+      key { 'limber_duplex_seq_dilution_and_cleanup' }
     end
   end
 end

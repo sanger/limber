@@ -17,11 +17,16 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
       ['Plate type', purpose_name],
       ['Current plate state', state],
       ['Input plate barcode', 'DN2T'],
-      ['PCR Cycles', '10'],
+      ['PCR Cycles', '16, 14, and 12'],
       ['Created on', '2019-06-10']
     ]
   end
   let(:sidebar_partial) { 'default' }
+
+  let(:request_a1) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-1", pcr_cycles: 16 }
+  let(:request_a2) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-2", pcr_cycles: 14 }
+  let(:request_b2) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-3", pcr_cycles: 14 }
+  let(:request_a3) { create :dilution_and_cleanup_request, state: 'started', uuid: "request-4", pcr_cycles: 12 }
 
   # Create binning for 4 wells in 3 bins:
   #     1   2   3
@@ -34,7 +39,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A1'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '0.6'),
-      pcr_cycles: 16
+      outer_request: request_a1
     )
   end
   let(:well_a2) do
@@ -44,7 +49,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A2'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '10.0'),
-      pcr_cycles: 14
+      outer_request: request_a2
     )
   end
   let(:well_b2) do
@@ -54,7 +59,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'B2'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '12.0'),
-      pcr_cycles: 14
+      outer_request: request_b2
     )
   end
   let(:well_a3) do
@@ -64,7 +69,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A3'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '20.0'),
-      pcr_cycles: 12
+      outer_request: request_a3
     )
   end
 
@@ -75,16 +80,13 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
           barcode_number: 1,
           pool_sizes: [],
           wells: [well_a1, well_a2, well_b2, well_a3],
-          outer_requests: requests,
           created_at: '2019-06-10 12:00:00 +0100'
   end
-
-  let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
+  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.aliquots.request') }
 
   subject(:presenter) { Presenters::PcrCyclesBinnedPlatePresenter.new(api: api, labware: labware) }
 
