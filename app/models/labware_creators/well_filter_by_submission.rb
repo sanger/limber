@@ -12,9 +12,7 @@ class LabwareCreators::WellFilterBySubmission < LabwareCreators::WellFilter
   private
 
   def filter_by_submission(requests)
-    requests.select do |r|
-      @submission_id.to_s.include?(r.submission_id)
-    end
+    requests.select { |r| @submission_id.to_s.include?(r.submission_id) }
   end
 
   def filter_requests(requests, well) # rubocop:todo Metrics/MethodLength

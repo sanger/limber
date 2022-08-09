@@ -136,6 +136,7 @@ class SequencescapeSubmission
     errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
+
   # rubocop:enable Metrics/AbcSize
 
   def submission_template
@@ -149,11 +150,12 @@ class SequencescapeSubmission
       errors.add(:submission, 'Additional scanned barcodes should not include duplicates')
     end
 
-    if extra_barcodes_trimmed.include? labware_barcode
-      errors.add(
-        :submission,
-        'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included'
-      )
-    end
+    return unless extra_barcodes_trimmed.include? labware_barcode
+
+    errors.add(
+      :submission,
+      'Any scanned additional barcodes should not include the barcode of the current plate - ' \
+        'that will automatically be included'
+    )
   end
 end

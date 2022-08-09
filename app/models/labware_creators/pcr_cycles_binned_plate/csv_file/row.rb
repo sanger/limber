@@ -110,6 +110,7 @@ module LabwareCreators
       @coverage = @row_data[coverage_column]&.strip&.to_i
       @bait_library = @row_data[hyb_panel_column]&.strip
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def submit_for_sequencing?
@@ -226,7 +227,7 @@ module LabwareCreators
     # Check if the hyb panel entered in the form matches an existing bait library
     #
     def valid_bait_library?
-      bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({name: @bait_library})
+      bait_library = Sequencescape::Api::V2::BaitLibrary.find_by({ name: @bait_library })
       if bait_library.present?
         # lookup is case insensitive, but use original case for the well details
         @bait_library = bait_library.name

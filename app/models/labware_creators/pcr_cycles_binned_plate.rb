@@ -36,8 +36,9 @@ module LabwareCreators
     self.default_transfer_template_name = 'Custom pooling'
 
     MISSING_WELL_DETAIL = 'is missing a row for well %s, all wells with content must have a row in the uploaded file.'
-    PENDING_WELL = 'contains at least one pending well %s, the plate and all wells in it '\
-      'should be passed before creating the child plate.'
+    PENDING_WELL =
+      'contains at least one pending well %s, the plate and all wells in it ' \
+        'should be passed before creating the child plate.'
     NO_WELLS_TO_TRANSFER = 'has no well rows suitable for transfer (check sample volumes)'
 
     self.page = 'pcr_cycles_binned_plate'
@@ -53,8 +54,9 @@ module LabwareCreators
     validate :wells_have_required_information?
     validate :some_wells_are_being_transferred?
 
-    PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
-      'wells.aliquots.request.request_type,wells.aliquots.study'
+    PARENT_PLATE_INCLUDES =
+      'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
+        'wells.aliquots.request.request_type,wells.aliquots.study'
     CHILD_PLATE_INCLUDES = 'wells.aliquots'
     REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library].freeze
 
@@ -164,21 +166,27 @@ module LabwareCreators
     # Creates and builds the submission for the dilution and cleanup step
     #
     def create_and_build_submission
-      submission_created = create_submission_from_parent_plate
-      unless submission_created
+      # check if async submission job has been created ok
+      unless create_submission_from_parent_plate
         errors.add(:base, 'Failed to create submission')
         return
       end
 
-      errors.add(:base, 'Submission failed to build in a reasonable timeframe') unless submission_built?
+      # now check if the async job completed ok
+      unless submission_built?
+        errors.add(:base, 'Submission failed to build in a reasonable timeframe')
+        return
+      end
 
-      # submission_built? may not mean a successful submission, just that job completed ok, so also check state
+      # Need to also check the state of the submission, as the job can complete ok but the submission fail
       return unless submission.state == 'failed'
 
-      errors.add(:base, 'Submission has failed')
-      errors.add(:base, submission.message) if submission.message.present?
+      errors.add(:base, "Submission has failed, error message: #{submission.message}")
     end
 
+    #
+    # Submission v2 look up
+    #
     def submission
       @submission ||= Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
     end
@@ -189,7 +197,6 @@ module LabwareCreators
     def submission_built?
       counter = 1
       while counter <= 6
-        # @submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
         return true unless submission.building_in_progress?
 
         sleep(5)
@@ -212,6 +219,7 @@ module LabwareCreators
       # create a submission with params specified in the config
       configured_params = submission_options.values.first
 
+      # returns boolean
       create_submission(configured_params)
     end
 
@@ -219,10 +227,7 @@ module LabwareCreators
     # Returns the list of wells to be transferred
     #
     def wells_to_be_transferred
-      @wells_to_be_transferred ||=
-        labware_wells.filter_map do |well|
-          well if well_details.key?(well.position['name'])
-        end
+      @wells_to_be_transferred ||= labware_wells.filter_map { |well| well if well_details.key?(well.position['name']) }
     end
 
     #
@@ -237,16 +242,17 @@ module LabwareCreators
     #
     def generate_asset_groups(config_request_options)
       asset_groups = []
+
       # Assumes the request metadata is unique for each well, creates one order per well
       # TODO: is there a more efficient way?
       wells_to_be_transferred.each do |well|
         well_coord = well.position['name']
         well_detail = well_details[well_coord]
         well_asset_group = {
-                             assets: [well.uuid],
-                             autodetect_studies_projects: true,
-                             request_options: config_request_options.merge(well_request_options(well_detail))
-                           }
+          assets: [well.uuid],
+          autodetect_studies_projects: true,
+          request_options: config_request_options.merge(well_request_options(well_detail))
+        }
         asset_groups << well_asset_group
       end
       asset_groups

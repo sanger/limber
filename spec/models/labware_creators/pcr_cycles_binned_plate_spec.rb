@@ -20,53 +20,158 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:library_type_name) { 'example_library' }
   let(:submission_uuid) { 'sub-uuid' }
   let(:submission_for_cleanup_id) { '1' }
-  let(:submission_for_cleanup) do
-    create :v2_submission,
-    id: submission_for_cleanup_id,
-    uuid: submission_uuid
-  end
+  let(:submission_for_cleanup) { create :v2_submission, id: submission_for_cleanup_id, uuid: submission_uuid }
   let(:bait_library_1) { create :bait_library, name: 'HybPanel1' }
 
-  let(:request_a1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-a1', library_type: library_type_name,
-                     diluent_volume: 25.0, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_a1) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-a1',
+           library_type: library_type_name,
+           diluent_volume: 25.0,
+           pcr_cycles: 14,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_b1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-b1', library_type: library_type_name,
-                     diluent_volume: 24.9, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_b1) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-b1',
+           library_type: library_type_name,
+           diluent_volume: 24.9,
+           pcr_cycles: 14,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_d1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-d1', library_type: library_type_name,
-                     diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_d1) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-d1',
+           library_type: library_type_name,
+           diluent_volume: 24.8,
+           pcr_cycles: 16,
+           submit_for_sequencing: true,
+           sub_pool: 2,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_f1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-f1', library_type: library_type_name,
-                     diluent_volume: 24.7, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_f1) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-f1',
+           library_type: library_type_name,
+           diluent_volume: 24.7,
+           pcr_cycles: 12,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_h1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-h1', library_type: library_type_name,
-                     diluent_volume: 24.6, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 30, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_h1) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-h1',
+           library_type: library_type_name,
+           diluent_volume: 24.6,
+           pcr_cycles: 12,
+           submit_for_sequencing: true,
+           sub_pool: 2,
+           coverage: 30,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_a2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-a2', library_type: library_type_name,
-                     diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_a2) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-a2',
+           library_type: library_type_name,
+           diluent_volume: 24.5,
+           pcr_cycles: 12,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_c2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-c2', library_type: library_type_name,
-                     diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_c2) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-c2',
+           library_type: library_type_name,
+           diluent_volume: 24.4,
+           pcr_cycles: 12,
+           submit_for_sequencing: true,
+           sub_pool: 2,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_d2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-d2', library_type: library_type_name,
-                     diluent_volume: 24.3, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_d2) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-d2',
+           library_type: library_type_name,
+           diluent_volume: 24.3,
+           pcr_cycles: 12,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_g2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-g2', library_type: library_type_name,
-                     diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+  let(:request_g2) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-g2',
+           library_type: library_type_name,
+           diluent_volume: 24.2,
+           pcr_cycles: 14,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 30,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
-  let(:request_h2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-h2', library_type: library_type_name,
-                     diluent_volume: 27.353, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
-                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
-
+  let(:request_h2) do
+    create :dilution_and_cleanup_request,
+           state: 'pending',
+           uuid: 'request-h2',
+           library_type: library_type_name,
+           diluent_volume: 27.353,
+           pcr_cycles: 16,
+           submit_for_sequencing: true,
+           sub_pool: 1,
+           coverage: 15,
+           bait_library: bait_library_1,
+           submission_id: submission_for_cleanup_id,
+           submission: submission_for_cleanup
+  end
 
   let(:example_submission_template_uuid) { SecureRandom.uuid }
 
@@ -210,23 +315,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            ]
   end
 
-  let(:parent_plate_v1) do
-    json :plate,
-    uuid: parent_uuid,
-    stock_plate_barcode: 2,
-    qc_files_actions: %w[read create]
-  end
+  let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
 
   let(:expected_skipped_wells) { %w[E1 B2 E2 F2] }
 
   # child
   let(:child_uuid) { 'child-uuid' }
-  let(:child_v2_plate) do
-    create :v2_plate,
-    uuid: child_uuid,
-    barcode_number: '3',
-    size: plate_size
-  end
+  let(:child_v2_plate) { create :v2_plate, uuid: child_uuid, barcode_number: '3', size: plate_size }
 
   # purpose config
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -287,9 +382,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         parent_plate,
         stub_search: false,
         custom_includes:
-          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
-          'wells.aliquots.request.request_type,wells.aliquots.study'
+          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
+            'wells.aliquots.request.request_type,wells.aliquots.study'
       )
+
       # this child stub is for after creation of the child plate
       stub_v2_plate(child_v2_plate, stub_search: false, custom_query: [:plate_with_wells, child_v2_plate.uuid])
 
@@ -301,9 +397,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       # set up a stub for the hyb panel field lookup (bait library)
       stub_v2_bait_library(bait_library_1.name, bait_library_1)
 
-      allow('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).with(uuid: submission_uuid).and_return(
-        [submission_for_cleanup]
-      )
+      allow('Sequencescape::Api::V2::Submission'.constantize).to receive(:where)
+        .with(uuid: submission_uuid)
+        .and_return([submission_for_cleanup])
     end
 
     context 'with an invalid file' do
@@ -417,7 +513,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       end
 
       let!(:submission_lookup) do
-        stub_api_get(example_submission_template_uuid,
+        stub_api_get(
+          example_submission_template_uuid,
           body: json(:submission_template, uuid: example_submission_template_uuid)
         )
       end
@@ -429,7 +526,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_a1.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 25.0, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 25.0,
+                pcr_cycles: 14,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -444,7 +549,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_b1.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.9, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.9,
+                pcr_cycles: 14,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -459,7 +572,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_d1.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.8,
+                pcr_cycles: 16,
+                submit_for_sequencing: true,
+                sub_pool: 2,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -474,7 +595,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_f1.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.7, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.7,
+                pcr_cycles: 12,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -489,7 +618,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_h1.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.6, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 30, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.6,
+                pcr_cycles: 12,
+                submit_for_sequencing: true,
+                sub_pool: 2,
+                coverage: 30,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -504,7 +641,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_a2.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.5,
+                pcr_cycles: 12,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -519,7 +664,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_c2.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.4,
+                pcr_cycles: 12,
+                submit_for_sequencing: true,
+                sub_pool: 2,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -534,7 +687,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_d2.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.3, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.3,
+                pcr_cycles: 12,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -549,7 +710,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_g2.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 24.2,
+                pcr_cycles: 14,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 30,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -564,7 +733,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           payload: {
             order: {
               assets: [well_h2.uuid],
-              request_options: { library_type: library_type_name, diluent_volume: 27.353, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              request_options: {
+                library_type: library_type_name,
+                diluent_volume: 27.353,
+                pcr_cycles: 16,
+                submit_for_sequencing: true,
+                sub_pool: 1,
+                coverage: 15,
+                bait_library: 'HybPanel1'
+              },
               user: user_uuid,
               autodetect_studies_projects: true
             }
@@ -573,7 +750,20 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         )
       end
 
-      let(:order_ids) { ['order-a1-uuid', 'order-b1-uuid', 'order-d1-uuid', 'order-f1-uuid', 'order-h1-uuid', 'order-a2-uuid', 'order-c2-uuid', 'order-d2-uuid', 'order-g2-uuid', 'order-h2-uuid'] }
+      let(:order_ids) do
+        %w[
+          order-a1-uuid
+          order-b1-uuid
+          order-d1-uuid
+          order-f1-uuid
+          order-h1-uuid
+          order-a2-uuid
+          order-c2-uuid
+          order-d2-uuid
+          order-g2-uuid
+          order-h2-uuid
+        ]
+      end
 
       let!(:submission_request) do
         stub_api_post(
@@ -638,7 +828,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             payload: {
               order: {
                 assets: [well_d1.uuid],
-                request_options: { library_type: library_type_name, diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel2' },
+                request_options: {
+                  library_type: library_type_name,
+                  diluent_volume: 24.8,
+                  pcr_cycles: 16,
+                  submit_for_sequencing: true,
+                  sub_pool: 2,
+                  coverage: 15,
+                  bait_library: 'HybPanel2'
+                },
                 user: user_uuid,
                 autodetect_studies_projects: true
               }
@@ -653,7 +851,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             payload: {
               order: {
                 assets: [well_a2.uuid],
-                request_options: { library_type: library_type_name, diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel2'},
+                request_options: {
+                  library_type: library_type_name,
+                  diluent_volume: 24.5,
+                  pcr_cycles: 12,
+                  submit_for_sequencing: true,
+                  sub_pool: 1,
+                  coverage: 15,
+                  bait_library: 'HybPanel2'
+                },
                 user: user_uuid,
                 autodetect_studies_projects: true
               }
@@ -668,7 +874,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             payload: {
               order: {
                 assets: [well_c2.uuid],
-                request_options: { library_type: library_type_name, diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel3' },
+                request_options: {
+                  library_type: library_type_name,
+                  diluent_volume: 24.4,
+                  pcr_cycles: 12,
+                  submit_for_sequencing: true,
+                  sub_pool: 2,
+                  coverage: 15,
+                  bait_library: 'HybPanel3'
+                },
                 user: user_uuid,
                 autodetect_studies_projects: true
               }
@@ -683,7 +897,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             payload: {
               order: {
                 assets: [well_g2.uuid],
-                request_options: { library_type: library_type_name, diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: 'HybPanel3' },
+                request_options: {
+                  library_type: library_type_name,
+                  diluent_volume: 24.2,
+                  pcr_cycles: 14,
+                  submit_for_sequencing: true,
+                  sub_pool: 1,
+                  coverage: 30,
+                  bait_library: 'HybPanel3'
+                },
                 user: user_uuid,
                 autodetect_studies_projects: true
               }

@@ -7,18 +7,10 @@ RSpec.describe LabwareCreators::WellFilterBySubmission do
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
 
-    let(:well_a1) do
-      create(:v2_well, name: 'A1', location: 'A1', requests_as_source: [request_a], outer_request: nil)
-    end
-    let(:well_b1) do
-      create(:v2_well, name: 'B1', location: 'B1', requests_as_source: [request_b], outer_request: nil)
-    end
-    let(:well_c1) do
-      create(:v2_well, name: 'C1', location: 'C1', requests_as_source: [request_c], outer_request: nil)
-    end
-    let(:well_d1) do
-      create(:v2_well, name: 'D1', location: 'D1', requests_as_source: [request_d], outer_request: nil)
-    end
+    let(:well_a1) { create(:v2_well, name: 'A1', location: 'A1', requests_as_source: [request_a], outer_request: nil) }
+    let(:well_b1) { create(:v2_well, name: 'B1', location: 'B1', requests_as_source: [request_b], outer_request: nil) }
+    let(:well_c1) { create(:v2_well, name: 'C1', location: 'C1', requests_as_source: [request_c], outer_request: nil) }
+    let(:well_d1) { create(:v2_well, name: 'D1', location: 'D1', requests_as_source: [request_d], outer_request: nil) }
 
     let(:parent_plate) do
       create :v2_plate,
@@ -47,19 +39,11 @@ RSpec.describe LabwareCreators::WellFilterBySubmission do
 
     let(:submission_1_uuid) { 'sub-1-uuid' }
     let(:submission_1_id) { '1' }
-    let(:submission_1) do
-      create :v2_submission,
-      id: submission_1_id,
-      uuid: submission_1_uuid
-    end
+    let(:submission_1) { create :v2_submission, id: submission_1_id, uuid: submission_1_uuid }
 
     let(:submission_2_uuid) { 'sub-2-uuid' }
     let(:submission_2_id) { '2' }
-    let(:submission_2) do
-      create :v2_submission,
-      id: submission_2_id,
-      uuid: submission_2_uuid
-    end
+    let(:submission_2) { create :v2_submission, id: submission_2_id, uuid: submission_2_uuid }
 
     let(:request_a) do
       create :library_request,
@@ -100,8 +84,8 @@ RSpec.describe LabwareCreators::WellFilterBySubmission do
         parent_plate,
         stub_search: false,
         custom_includes:
-          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,'\
-          'wells.aliquots.request.request_type,wells.aliquots.study'
+          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
+            'wells.aliquots.request.request_type,wells.aliquots.study'
       )
     end
 
@@ -146,13 +130,7 @@ RSpec.describe LabwareCreators::WellFilterBySubmission do
       end
 
       let(:well_a1) do
-        create(
-          :v2_well,
-          name: 'A1',
-          location: 'A1',
-          requests_as_source: [request_a, request_e],
-          outer_request: nil
-        )
+        create(:v2_well, name: 'A1', location: 'A1', requests_as_source: [request_a, request_e], outer_request: nil)
       end
 
       context 'when a valid submission filter is applied' do

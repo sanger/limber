@@ -9,6 +9,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   before do
     stub_v2_bait_library(bait_library.name, bait_library)
+
     # case insensitive versions
     stub_v2_bait_library('hybpanel1', bait_library)
     stub_v2_bait_library('HYBPANEL1', bait_library)
@@ -148,8 +149,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
     context 'Without byte order markers' do
       let(:file) do
-        fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv',
-        'sequencescape/qc_file')
+        fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file')
       end
 
       describe '#valid?' do
@@ -167,8 +167,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
     context 'With byte order markers' do
       let(:file) do
-        fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_bom.csv',
-        'sequencescape/qc_file')
+        fixture_file_upload(
+          'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_bom.csv',
+          'sequencescape/qc_file'
+        )
       end
 
       describe '#valid?' do
@@ -187,8 +189,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'When there is something in the file that we cannot parse' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file')
     end
 
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
@@ -207,8 +208,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'When the file has missing well values' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_missing_values.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_missing_values.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -288,8 +291,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'When there is an unrecognised well coordinate' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_wells.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_wells.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -308,8 +313,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     subject { described_class.new(file, csv_file_config, 'DN1S') }
 
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file.csv', 'sequencescape/qc_file')
     end
 
     describe '#valid?' do
@@ -329,13 +333,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
   context 'When there is an invalid Hyb Panel value' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_hyb_panel.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_invalid_hyb_panel.csv',
+        'sequencescape/qc_file'
+      )
     end
 
-    before do
-      stub_v2_bait_library('HybPanelUnknown', nil)
-    end
+    before { stub_v2_bait_library('HybPanelUnknown', nil) }
 
     describe '#valid?' do
       it 'should be invalid' do
@@ -355,8 +359,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     subject { described_class.new(file, csv_file_config, 'DN2T') }
 
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_zero_sample_volumes.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_zero_sample_volumes.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -366,8 +372,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
       it 'should have the expected wells included in the well details', aggregate_failures: true do
         expect(subject.well_details.size).to eq(10)
-        expect(subject.well_details.keys).to match(['A1', 'B1', 'D1', 'F1', 'H1', 'A2', 'C2', 'D2', 'G2', 'H2'])
-        expect(subject.skipped_wells).to match(['E1', 'B2', 'E2', 'F2'])
+        expect(subject.well_details.keys).to match(%w[A1 B1 D1 F1 H1 A2 C2 D2 G2 H2])
+        expect(subject.skipped_wells).to match(%w[E1 B2 E2 F2])
       end
     end
   end
@@ -376,8 +382,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
     subject { described_class.new(file, csv_file_config, 'DN2T') }
 
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_all_zero_sample_volumes.csv',
-      'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/pcr_cycles_binned_plate_dil_file_with_all_zero_sample_volumes.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -388,9 +396,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
 
       it 'should have empty well details and all zero rows skipped', aggregate_failures: true do
         expect(subject.well_details.size).to eq(0)
-        expect(subject.skipped_wells).to match(
-          ['A1', 'B1', 'D1', 'E1', 'F1', 'H1', 'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2']
-        )
+        expect(subject.skipped_wells).to match(%w[A1 B1 D1 E1 F1 H1 A2 B2 C2 D2 E2 F2 G2 H2])
       end
     end
   end
