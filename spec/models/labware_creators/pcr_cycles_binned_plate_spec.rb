@@ -17,7 +17,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:user_uuid) { 'user-uuid' }
 
   # dilution cleanup submission setup
-  let(:library_type_name) { 'Test Library Type' }
+  let(:library_type_name) { 'example_library' }
   let(:submission_uuid) { 'sub-uuid' }
   let(:submission_for_cleanup_id) { '1' }
   let(:submission_for_cleanup) do
@@ -25,17 +25,48 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     id: submission_for_cleanup_id,
     uuid: submission_uuid
   end
+  let(:bait_library_1) { create :bait_library, name: 'HybPanel1' }
 
-  let(:requests_for_cleanup) do
-    Array.new(10) do |i|
-      create :library_request,
-      state: 'pending',
-      uuid: "request-#{i}",
-      library_type: library_type_name,
-      submission_id: submission_for_cleanup_id,
-      submission: submission_for_cleanup
-    end
-  end
+  let(:request_a1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-a1', library_type: library_type_name,
+                     diluent_volume: 25.0, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_b1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-b1', library_type: library_type_name,
+                     diluent_volume: 24.9, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_d1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-d1', library_type: library_type_name,
+                     diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_f1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-f1', library_type: library_type_name,
+                     diluent_volume: 24.7, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_h1) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-h1', library_type: library_type_name,
+                     diluent_volume: 24.6, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 30, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_a2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-a2', library_type: library_type_name,
+                     diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_c2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-c2', library_type: library_type_name,
+                     diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_d2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-d2', library_type: library_type_name,
+                     diluent_volume: 24.3, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_g2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-g2', library_type: library_type_name,
+                     diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
+  let(:request_h2) { create :dilution_and_cleanup_request, state: 'pending', uuid: 'request-h2', library_type: library_type_name,
+                     diluent_volume: 27.353, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: bait_library_1,
+                     submission_id: submission_for_cleanup_id, submission: submission_for_cleanup }
+
 
   let(:example_submission_template_uuid) { SecureRandom.uuid }
 
@@ -45,128 +76,114 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
   let(:well_a1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'A1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[0]],
-      outer_request: nil
+      outer_request: request_a1
     )
   end
   let(:well_b1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'B1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[1]],
-      outer_request: nil
+      outer_request: request_b1
     )
   end
   let(:well_d1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'D1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[2]],
-      outer_request: nil
+      outer_request: request_d1
     )
   end
   let(:well_e1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'E1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [],
       outer_request: nil
     )
   end
   let(:well_f1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'F1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[3]],
-      outer_request: nil
+      outer_request: request_f1
     )
   end
   let(:well_h1) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'H1',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[4]],
-      outer_request: nil
+      outer_request: request_h1
     )
   end
   let(:well_a2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'A2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[5]],
-      outer_request: nil
+      outer_request: request_a2
     )
   end
   let(:well_b2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'B2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [],
       outer_request: nil
     )
   end
   let(:well_c2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'C2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[6]],
-      outer_request: nil
+      outer_request: request_c2
     )
   end
   let(:well_d2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'D2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[7]],
-      outer_request: nil
+      outer_request: request_d2
     )
   end
   let(:well_e2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'E2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [],
       outer_request: nil
     )
   end
   let(:well_f2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'F2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [],
       outer_request: nil
     )
   end
   let(:well_g2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'G2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[8]],
-      outer_request: nil
+      outer_request: request_g2
     )
   end
   let(:well_h2) do
     create(
-      :v2_well,
+      :v2_stock_well,
       location: 'H2',
       qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
-      requests_as_source: [requests_for_cleanup[9]],
-      outer_request: nil
+      outer_request: request_h2
     )
   end
 
@@ -190,8 +207,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
              well_f2,
              well_g2,
              well_h2
-           ],
-           outer_requests: requests_for_cleanup
+           ]
   end
 
   let(:parent_plate_v1) do
@@ -202,11 +218,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   end
 
   let(:expected_skipped_wells) { %w[E1 B2 E2 F2] }
-  let(:filtered_parent_asset_uuids) do
-    parent_plate.wells.filter_map do |well|
-      well.uuid unless expected_skipped_wells.include?(well.position['name'])
-    end
-  end
 
   # child
   let(:child_uuid) { 'child-uuid' }
@@ -214,8 +225,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     create :v2_plate,
     uuid: child_uuid,
     barcode_number: '3',
-    size: plate_size,
-    outer_requests: requests_for_cleanup
+    size: plate_size
   end
 
   # purpose config
@@ -268,8 +278,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
 
     let(:stub_get_parent_v1) { stub_api_get(parent_uuid, body: parent_plate_v1) }
 
-    let(:bait_library) { create :bait_library, name: 'HybPanel1' }
-
     before do
       stub_get_parent_v1
 
@@ -291,7 +299,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       stub_upload_file_creation
 
       # set up a stub for the hyb panel field lookup (bait library)
-      stub_v2_bait_library(bait_library.name, bait_library)
+      stub_v2_bait_library(bait_library_1.name, bait_library_1)
 
       allow('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).with(uuid: submission_uuid).and_return(
         [submission_for_cleanup]
@@ -336,61 +344,61 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
             'volume' => '5.0',
             'source_asset' => well_a1.uuid,
             'target_asset' => '3-well-A2',
-            'outer_request' => requests_for_cleanup[0].uuid
+            'outer_request' => request_a1.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.1',
             'source_asset' => well_b1.uuid,
             'target_asset' => '3-well-B2',
-            'outer_request' => requests_for_cleanup[1].uuid
+            'outer_request' => request_b1.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.2',
             'source_asset' => well_d1.uuid,
             'target_asset' => '3-well-A1',
-            'outer_request' => requests_for_cleanup[2].uuid
+            'outer_request' => request_d1.uuid
           },
           {
-            'volume' => '4.0',
+            'volume' => '5.3',
             'source_asset' => well_f1.uuid,
             'target_asset' => '3-well-A3',
-            'outer_request' => requests_for_cleanup[3].uuid
+            'outer_request' => request_f1.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.4',
             'source_asset' => well_h1.uuid,
             'target_asset' => '3-well-B3',
-            'outer_request' => requests_for_cleanup[4].uuid
+            'outer_request' => request_h1.uuid
           },
           {
-            'volume' => '3.2',
+            'volume' => '5.5',
             'source_asset' => well_a2.uuid,
             'target_asset' => '3-well-C3',
-            'outer_request' => requests_for_cleanup[5].uuid
+            'outer_request' => request_a2.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.6',
             'source_asset' => well_c2.uuid,
             'target_asset' => '3-well-D3',
-            'outer_request' => requests_for_cleanup[6].uuid
+            'outer_request' => request_c2.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.7',
             'source_asset' => well_d2.uuid,
             'target_asset' => '3-well-E3',
-            'outer_request' => requests_for_cleanup[7].uuid
+            'outer_request' => request_d2.uuid
           },
           {
-            'volume' => '5.0',
+            'volume' => '5.8',
             'source_asset' => well_g2.uuid,
             'target_asset' => '3-well-C2',
-            'outer_request' => requests_for_cleanup[8].uuid
+            'outer_request' => request_g2.uuid
           },
           {
             'volume' => '3.621',
             'source_asset' => well_h2.uuid,
             'target_asset' => '3-well-B1',
-            'outer_request' => requests_for_cleanup[9].uuid
+            'outer_request' => request_h2.uuid
           }
         ]
       end
@@ -408,37 +416,175 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         )
       end
 
-      let!(:order_request) do
+      let!(:submission_lookup) do
         stub_api_get(example_submission_template_uuid,
           body: json(:submission_template, uuid: example_submission_template_uuid)
         )
+      end
+
+      let!(:order_request_a1) do
         stub_api_post(
           example_submission_template_uuid,
           'orders',
           payload: {
             order: {
-              assets: filtered_parent_asset_uuids,
-              request_options: purpose_config[:submission_options]['Test Dilution and Cleanup']['request_options'],
+              assets: [well_a1.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 25.0, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
               user: user_uuid,
               autodetect_studies_projects: true
             }
           },
-          body: '{"order":{"uuid":"order-uuid"}}'
+          body: '{"order":{"uuid":"order-a1-uuid"}}'
+        )
+      end
+      let!(:order_request_b1) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_b1.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.9, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-b1-uuid"}}'
+        )
+      end
+      let!(:order_request_d1) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_d1.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-d1-uuid"}}'
+        )
+      end
+      let!(:order_request_f1) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_f1.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.7, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-f1-uuid"}}'
+        )
+      end
+      let!(:order_request_h1) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_h1.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.6, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 30, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-h1-uuid"}}'
+        )
+      end
+      let!(:order_request_a2) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_a2.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-a2-uuid"}}'
+        )
+      end
+      let!(:order_request_c2) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_c2.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-c2-uuid"}}'
+        )
+      end
+      let!(:order_request_d2) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_d2.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.3, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-d2-uuid"}}'
+        )
+      end
+      let!(:order_request_g2) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_g2.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-g2-uuid"}}'
+        )
+      end
+      let!(:order_request_h2) do
+        stub_api_post(
+          example_submission_template_uuid,
+          'orders',
+          payload: {
+            order: {
+              assets: [well_h2.uuid],
+              request_options: { library_type: library_type_name, diluent_volume: 27.353, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel1' },
+              user: user_uuid,
+              autodetect_studies_projects: true
+            }
+          },
+          body: '{"order":{"uuid":"order-h2-uuid"}}'
         )
       end
 
-      let(:order_id) { 'order-uuid' }
+      let(:order_ids) { ['order-a1-uuid', 'order-b1-uuid', 'order-d1-uuid', 'order-f1-uuid', 'order-h1-uuid', 'order-a2-uuid', 'order-c2-uuid', 'order-d2-uuid', 'order-g2-uuid', 'order-h2-uuid'] }
 
       let!(:submission_request) do
         stub_api_post(
           'submissions',
           payload: {
             submission: {
-              orders: [order_id],
+              orders: order_ids,
               user: user_uuid
             }
           },
-          body: json(:submission, uuid: submission_uuid, orders: [{ uuid: order_id }])
+          body: json(:submission, uuid: submission_uuid, orders: [{ uuid: order_ids }])
         )
       end
 
@@ -449,8 +595,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           expect(subject.save!).to eq true
           expect(subject.skipped_wells).to match(expected_skipped_wells)
           expect(plate_creation_request).to have_been_made
+          expect(submission_lookup).to have_been_made.once
           expect(transfer_creation_request).to have_been_made
-          expect(order_request).to have_been_made.once
+          expect(order_request_a1).to have_been_made.once
+          expect(order_request_h2).to have_been_made.once
           expect(submission_request).to have_been_made.once
           expect(submission_submit).to have_been_made.once
         end
@@ -483,6 +631,67 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           )
         end
 
+        let!(:order_request_d1) do
+          stub_api_post(
+            example_submission_template_uuid,
+            'orders',
+            payload: {
+              order: {
+                assets: [well_d1.uuid],
+                request_options: { library_type: library_type_name, diluent_volume: 24.8, pcr_cycles: 16, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel2' },
+                user: user_uuid,
+                autodetect_studies_projects: true
+              }
+            },
+            body: '{"order":{"uuid":"order-d1-uuid"}}'
+          )
+        end
+        let!(:order_request_a2) do
+          stub_api_post(
+            example_submission_template_uuid,
+            'orders',
+            payload: {
+              order: {
+                assets: [well_a2.uuid],
+                request_options: { library_type: library_type_name, diluent_volume: 24.5, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 1, coverage: 15, bait_library: 'HybPanel2'},
+                user: user_uuid,
+                autodetect_studies_projects: true
+              }
+            },
+            body: '{"order":{"uuid":"order-a2-uuid"}}'
+          )
+        end
+        let!(:order_request_c2) do
+          stub_api_post(
+            example_submission_template_uuid,
+            'orders',
+            payload: {
+              order: {
+                assets: [well_c2.uuid],
+                request_options: { library_type: library_type_name, diluent_volume: 24.4, pcr_cycles: 12, submit_for_sequencing: true, sub_pool: 2, coverage: 15, bait_library: 'HybPanel3' },
+                user: user_uuid,
+                autodetect_studies_projects: true
+              }
+            },
+            body: '{"order":{"uuid":"order-c2-uuid"}}'
+          )
+        end
+        let!(:order_request_g2) do
+          stub_api_post(
+            example_submission_template_uuid,
+            'orders',
+            payload: {
+              order: {
+                assets: [well_g2.uuid],
+                request_options: { library_type: library_type_name, diluent_volume: 24.2, pcr_cycles: 14, submit_for_sequencing: true, sub_pool: 1, coverage: 30, bait_library: 'HybPanel3' },
+                user: user_uuid,
+                autodetect_studies_projects: true
+              }
+            },
+            body: '{"order":{"uuid":"order-g2-uuid"}}'
+          )
+        end
+
         before do
           # set up a stub for the hyb panel field lookup (bait library)
           stub_v2_bait_library(bait_library_2.name, bait_library_2)
@@ -493,8 +702,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
           expect(subject.save!).to eq true
           expect(subject.skipped_wells).to match(expected_skipped_wells)
           expect(plate_creation_request).to have_been_made
+          expect(submission_lookup).to have_been_made.once
           expect(transfer_creation_request).to have_been_made
-          expect(order_request).to have_been_made.once
+          expect(order_request_a1).to have_been_made.once
+          expect(order_request_h2).to have_been_made.once
           expect(submission_request).to have_been_made.once
           expect(submission_submit).to have_been_made.once
         end
