@@ -1,6 +1,5 @@
 ---
 GBS:
-  pipeline_group: GBS
   filters:
     request_type_key: limber_gbs
   relationships:

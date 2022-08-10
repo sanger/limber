@@ -82,8 +82,6 @@ namespace :config do
         end
 
         configuration[:submission_templates] = submission_templates
-
-        # configuration[:pipeline_groups] = pipeline_groups
       end
 
     # Write out the current environment configuration file

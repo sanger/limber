@@ -36,10 +36,8 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   end
 
   # Return a list of unique pipeline group names
-  # Add a group for non-grouped pipelines, where the group name is the pipeline name
   def pipeline_groups
     return [] if Settings.pipelines.list.empty?
-    pipeline_groups = Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }
-    pipeline_groups.map { |group, _pipeline| group }
+    Settings.pipelines.map(&:pipeline_group).uniq
   end
 end

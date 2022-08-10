@@ -1,6 +1,5 @@
 ---
 RNA Ribo Globin:
-  pipeline_group: RNA Ribo Globin
   filters:
     request_type_key: limber_rnarg
     library_type: RNA Ribo Globin

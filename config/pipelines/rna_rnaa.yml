@@ -1,6 +1,5 @@
 ---
 RNA Poly A:
-  pipeline_group: RNA Poly A
   filters:
     request_type_key: limber_rnaa
     library_type: RNA PolyA

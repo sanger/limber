@@ -1,6 +1,5 @@
 ---
 Bespoke Aggregation:
-  pipeline_group: Bespoke Aggregation
   filters:
     request_type_key: limber_bespoke_aggregation
   relationships:

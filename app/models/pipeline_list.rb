@@ -12,17 +12,7 @@ class PipelineList
   delegate_missing_to :list
 
   def initialize(list = {})
-    @list =
-      list.with_indifferent_access.map do |pipeline_name, pipeline_config|
-        # if no group is provided, default pipeline group is the pipeline's name
-        config =
-          if pipeline_config['pipeline_group'].nil?
-            pipeline_config.merge(name: pipeline_name, pipeline_group: pipeline_name)
-          else
-            pipeline_config.merge(name: pipeline_name)
-          end
-        Pipeline.new(config)
-      end
+    @list = list.map { |pipeline_name, pipeline_config| Pipeline.new(pipeline_config.merge(name: pipeline_name)) }
   end
 
   # Returns an array of all pipelines that are 'active' for a particular piece of
