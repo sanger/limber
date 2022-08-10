@@ -28,7 +28,7 @@ class PipelineList
   # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
   def retrieve_pipeline_config_for_group(pipeline_group)
     pipeline_configs = @list.select { |pipeline| pipeline.pipeline_group == pipeline_group }
-    pipeline_configs.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }
+    pipeline_configs.group_by(&:pipeline_group).transform_values { |pipeline| pipeline.map(&:name) }[pipeline_group]
   end
 
   # Builds a flat list of purposes in a sensible order from the relationships config

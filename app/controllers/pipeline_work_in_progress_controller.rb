@@ -7,9 +7,9 @@ class PipelineWorkInProgressController < ApplicationController
     @pipeline_group_name = params[:id]
 
     # Group related pipelines together
-    pipeline_groups = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
+    pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
 
-    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipeline_groups[@pipeline_group_name])
+    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipelines_for_group)
 
     page_size = 500
 
