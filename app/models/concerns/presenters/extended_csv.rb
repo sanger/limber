@@ -53,11 +53,11 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
 
   def transfers_for_csv # rubocop:todo Metrics/AbcSize
     legacy_labware.creation_transfers.map do |ct|
-      source_ean = ct.source.barcode.ean13
-      source_barcode = "#{ct.source.barcode.prefix}#{ct.source.barcode.number}"
-      source_stock = "#{ct.source.stock_plate.barcode.prefix}#{ct.source.stock_plate.barcode.number}"
-      destination_ean = ct.destination.barcode.ean13
-      destination_barcode = "#{ct.destination.barcode.prefix}#{ct.destination.barcode.number}"
+      source_ean = ct.source.machine_barcode
+      source_barcode = ct.source.human_barcode
+      source_stock = ct.source.stock_plate.human_barcode
+      destination_ean = ct.destination.machine_barcode
+      destination_barcode = ct.destination.human_barcode
       transfers =
         ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
       {
