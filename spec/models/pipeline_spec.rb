@@ -23,8 +23,27 @@ RSpec.describe Pipeline do
       context 'when there is a pipeline group' do
         let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
 
-        it 'returns true' do
+        it 'sets the pipeline_group attribute provided' do
           expect(model.pipeline_group).to eq 'Group A'
+        end
+      end
+
+      context 'when there is no pipeline group' do
+        let(:pipeline_config) do
+          {
+            filters: filters,
+            library_pass: 'Purpose 3',
+            relationships: {
+              'Purpose 1' => 'Purpose 2',
+              'Purpose 2' => 'Purpose 3'
+            },
+            name: 'Pipeline A'
+          }
+        end
+        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
+
+        it 'sets the pipeline_group to the pipeline name' do
+          expect(model.pipeline_group).to eq 'Pipeline A'
         end
       end
 

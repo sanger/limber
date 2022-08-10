@@ -132,7 +132,7 @@ RSpec.describe PipelineList do
       end
     end
 
-    context 'when there is pipeline groups' do
+    context 'when there is a pipeline_group' do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
@@ -159,7 +159,7 @@ RSpec.describe PipelineList do
 
       let(:expected_result) { { 'Pipeline X' => ['Pipeline A', 'Pipeline B'] } }
 
-      it 'returns the correct pipeline groups' do
+      it 'returns a hash with the group and relevant pipelines' do
         expect(model.retrieve_pipeline_config_for_group('Pipeline X')).to eq expected_result
       end
     end
