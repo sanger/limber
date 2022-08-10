@@ -4,12 +4,12 @@
 class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
-    @pipeline = params[:id]
+    @pipeline_group_name = params[:id]
 
     # Group related pipelines together
-    pipeline_groups = Settings.pipelines.build_pipeline_groups(@pipeline)
+    pipeline_groups = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
 
-    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipeline_groups[@pipeline])
+    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipeline_groups[@pipeline_group_name])
 
     page_size = 500
 

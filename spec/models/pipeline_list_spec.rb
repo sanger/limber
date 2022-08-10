@@ -160,7 +160,7 @@ RSpec.describe PipelineList do
       let(:expected_result) { { 'Pipeline X' => ['Pipeline A', 'Pipeline B'] } }
 
       it 'returns the correct pipeline groups' do
-        expect(model.build_pipeline_groups('Pipeline X')).to eq expected_result
+        expect(model.retrieve_pipeline_config_for_group('Pipeline X')).to eq expected_result
       end
     end
 
