@@ -53,7 +53,7 @@ class Limber::Plate < Sequencescape::Plate
   end
 
   def human_barcode
-    "#{barcode.prefix}#{barcode.number}"
+    barcode.machine
   end
 
   def plate?
