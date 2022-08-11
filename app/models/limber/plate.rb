@@ -52,7 +52,9 @@ class Limber::Plate < Sequencescape::Plate
     first_filled_well && first_filled_well.aliquots.first.tag.identifier.present?
   end
 
-  delegate :human_barcode, to: :barcode
+  def human_barcode
+    barcode.machine
+  end
 
   def plate?
     true
