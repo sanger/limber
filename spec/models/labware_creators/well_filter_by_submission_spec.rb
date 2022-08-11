@@ -85,7 +85,7 @@ RSpec.describe LabwareCreators::WellFilterBySubmission do
         stub_search: false,
         custom_includes:
           'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
-            'wells.aliquots.request.request_type,wells.aliquots.study'
+            'wells.aliquots.request.request_type'
       )
     end
 

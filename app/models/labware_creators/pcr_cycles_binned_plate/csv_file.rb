@@ -17,7 +17,15 @@ module LabwareCreators
     include ActiveModel::Validations
     extend NestedValidation
 
-    CSV_FIELDS = %w[sample_volume diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library].freeze
+    REQUEST_METADATA_FIELDS = %w[
+      sample_volume
+      diluent_volume
+      pcr_cycles
+      submit_for_sequencing
+      sub_pool
+      coverage
+      bait_library
+    ].freeze
 
     validate :correctly_parsed?
     validates :plate_barcode_header_row, presence: true
@@ -69,13 +77,13 @@ module LabwareCreators
     end
 
     #
-    # Extracts well details from the uploaded csv file
+    # Extracts those well details from the uploaded csv file that we will store in the request metaadata
     #
     # @return [Hash] eg. { 'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0,
     # 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 }, etc. }
     #
-    def well_details
-      @well_details ||= generate_well_details_hash
+    def request_metadata_details
+      @request_metadata_details ||= generate_request_metadata_details_hash
     end
 
     def skipped_wells
@@ -140,16 +148,16 @@ module LabwareCreators
     end
 
     # Create the hash of well details from the file upload values
-    def generate_well_details_hash
+    def generate_request_metadata_details_hash
       return {} unless valid?
 
-      transfers.each_with_object({}) do |row, well_details_hash|
+      transfers.each_with_object({}) do |row, request_metadata_details_hash|
         next if row.empty?
 
-        field_to_value = CSV_FIELDS.index_with { |field| row.send(field) }
+        field_to_value = REQUEST_METADATA_FIELDS.index_with { |field| row.send(field) }
 
         well_location = row.well
-        well_details_hash[well_location] = field_to_value
+        request_metadata_details_hash[well_location] = field_to_value
       end
     end
   end

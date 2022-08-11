@@ -9,7 +9,7 @@ module Presenters
   class PcrCyclesBinnedPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
-    CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.request'
+    CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.aliquots.request'
 
     self.summary_partial = 'labware/plates/binned_summary'
     self.aliquot_partial = 'binned_aliquot'
@@ -21,7 +21,7 @@ module Presenters
     end
 
     def dilutions_calculator
-      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(well_details)
+      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(request_metadata_details)
     end
 
     def bins_key
@@ -34,10 +34,10 @@ module Presenters
 
     private
 
-    def well_details
+    def request_metadata_details
       # For each well with aliquots on the plate select the pcr cycles metadata
       # { 'A1' => { 'pcr_cycles' => 16 }, 'B1' => etc. }
-      @well_details ||=
+      @request_metadata_details ||=
         current_plate
           .wells
           .each_with_object({}) do |well, details|

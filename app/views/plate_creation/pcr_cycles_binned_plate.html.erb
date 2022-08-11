@@ -2,8 +2,8 @@
   <%= content do %>
     <%= card title: 'Help' do %>
       <p>Upload the customer completed csv file describing your desired pcr cycles binning strategy. An example is shown below:</p>
-      <p>Please make sure there is a header row for the parent plate barcode, this barcode must match the barcode of the dilution plate being created. Then leave an empty spacer row before the row column headings.
-      <p>Please also make sure you specify Sample and Diluent volumes, number of PCR Cycles, and whether you want to Submitted for sequencing (Y/N) for each well that has a sample. If sequencing, you also need to supply Sub-Pool and Coverage values.</p>
+      <p>Please make sure there is a header row for the parent plate barcode, this barcode must match the plate from which the dilution plate is being created (the AL Lib Plate). Then leave an empty spacer row before the row column headings.
+      <p>Please also make sure you specify Sample and Diluent volumes, number of PCR Cycles, and whether you want to Submit for sequencing (Y/N) for each well that has a sample. If sequencing, you also need to supply Sub-Pool and Coverage values.</p>
       <p>Hyb Panel must be specified and must exactly match a bait library name in the Sanger Sequencescape database.</p>
       <p>NB. To prevent a specific well being transferred, set the Sample volume for that row to zero (i.e. 0 or 0.0). Other fields can be left blank.</p>
       <table class='table table-sm'>

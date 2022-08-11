@@ -33,7 +33,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
     end
 
-    let(:well_details) do
+    let(:request_metadata_details) do
       {
         'A1' => {
           'sample_volume' => 5.0,
@@ -162,7 +162,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       }
     end
 
-    subject { Utility::PcrCyclesBinningCalculator.new(well_details) }
+    subject { Utility::PcrCyclesBinningCalculator.new(request_metadata_details) }
 
     describe '#compute_well_transfers' do
       context 'for a simple example with few wells' do
@@ -233,7 +233,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
 
       context 'when all wells fall in the same bin' do
-        let(:well_details) do
+        let(:request_metadata_details) do
           {
             'A1' => {
               'sample_volume' => 5.0,
@@ -430,7 +430,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
 
       context 'when bins span complete columns' do
-        let(:well_details) do
+        let(:request_metadata_details) do
           {
             'A1' => {
               'sample_volume' => 5.0,
@@ -653,7 +653,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
 
       context 'when requiring compression due to numbers of wells' do
-        let(:well_details) do
+        let(:request_metadata_details) do
           {
             'A1' => {
               'sample_volume' => 5.0,
@@ -1916,7 +1916,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       end
 
       context 'when requiring compression due to large number of bins' do
-        let(:well_details) do
+        let(:request_metadata_details) do
           {
             'A1' => {
               'sample_volume' => 5.0,
@@ -2141,7 +2141,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
 
     describe '#compute_presenter_bin_details' do
       context 'when generating presenter well bin details' do
-        let(:well_details) do
+        let(:request_metadata_details) do
           {
             'A1' => {
               'sample_volume' => 5.0,

@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
   end
 
   context 'Valid files' do
-    let(:expected_well_details) do
+    let(:expected_request_metadata_details) do
       {
         'A1' => {
           'sample_volume' => 5.0,
@@ -158,9 +158,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         end
       end
 
-      describe '#well_details' do
-        it 'should parse the expected well details' do
-          expect(subject.well_details).to eq expected_well_details
+      describe '#request_metadata_details' do
+        it 'should parse the expected request metadata details' do
+          expect(subject.request_metadata_details).to eq expected_request_metadata_details
         end
       end
     end
@@ -179,9 +179,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         end
       end
 
-      describe '#well_details' do
-        it 'should parse the expected well details' do
-          expect(subject.well_details).to eq expected_well_details
+      describe '#request_metadata_details' do
+        it 'should parse the expected request metadata details' do
+          expect(subject.request_metadata_details).to eq expected_request_metadata_details
         end
       end
     end
@@ -224,7 +224,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
       end
 
       let(:row5_error) do
-        'Transfers sample volume is empty when it should have a value of zero, or between 0.2 and 50.0, in row 5 [B1]'
+        'Transfers sample volume is empty when it should have a value of zero, or between the two values ' \
+          'specified in configuration, in row 5 [B1]'
       end
 
       let(:row6_error) do
@@ -370,9 +371,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         expect(subject.valid?).to be true
       end
 
-      it 'should have the expected wells included in the well details', aggregate_failures: true do
-        expect(subject.well_details.size).to eq(10)
-        expect(subject.well_details.keys).to match(%w[A1 B1 D1 F1 H1 A2 C2 D2 G2 H2])
+      it 'should have the expected wells included in the request metadata details', aggregate_failures: true do
+        expect(subject.request_metadata_details.size).to eq(10)
+        expect(subject.request_metadata_details.keys).to match(%w[A1 B1 D1 F1 H1 A2 C2 D2 G2 H2])
         expect(subject.skipped_wells).to match(%w[E1 B2 E2 F2])
       end
     end
@@ -394,8 +395,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         expect(subject.valid?).to be true
       end
 
-      it 'should have empty well details and all zero rows skipped', aggregate_failures: true do
-        expect(subject.well_details.size).to eq(0)
+      it 'should have empty request metadata details and all zero rows skipped', aggregate_failures: true do
+        expect(subject.request_metadata_details.size).to eq(0)
         expect(subject.skipped_wells).to match(%w[A1 B1 D1 E1 F1 H1 A2 B2 C2 D2 E2 F2 G2 H2])
       end
     end

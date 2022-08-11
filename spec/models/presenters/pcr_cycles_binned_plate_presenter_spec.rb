@@ -86,7 +86,13 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.aliquots.request') }
+  before do
+    stub_v2_plate(
+      labware,
+      stub_search: false,
+      custom_includes: 'wells.aliquots,wells.qc_results,wells.aliquots.request'
+    )
+  end
 
   subject(:presenter) { Presenters::PcrCyclesBinnedPlatePresenter.new(api: api, labware: labware) }
 

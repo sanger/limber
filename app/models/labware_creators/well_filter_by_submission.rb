@@ -42,7 +42,7 @@ class LabwareCreators::WellFilterBySubmission < LabwareCreators::WellFilter
       wells.each_with_object([]) do |well, transfers|
         next if well.empty? || (@transfer_failed && well.failed?)
 
-        filtered_requests = filter_requests(well.active_requests, well)
+        filtered_requests = filter_requests(well.active_requests.compact, well)
 
         # don't add wells to the transfers list if they have no filtered
         # requests, i.e. only those submitted for library prep

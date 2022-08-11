@@ -382,8 +382,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         parent_plate,
         stub_search: false,
         custom_includes:
-          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
-            'wells.aliquots.request.request_type,wells.aliquots.study'
+          'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
       )
 
       # this child stub is for after creation of the child plate

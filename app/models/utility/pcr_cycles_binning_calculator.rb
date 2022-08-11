@@ -7,14 +7,14 @@ module Utility
     include ActiveModel::Model
     include Utility::CommonDilutionCalculations
 
-    def initialize(well_details)
-      @well_details = well_details
+    def initialize(request_metadata_details)
+      @request_metadata_details = request_metadata_details
     end
 
     def compute_well_transfers(parent_plate)
-      bins_hash = pcr_cycle_bins
-      compression_reqd = compression_required?(bins_hash, parent_plate.number_of_rows, parent_plate.number_of_columns)
-      build_transfers_hash(bins_hash, parent_plate.number_of_rows, compression_reqd)
+      compression_reqd =
+        compression_required?(binned_well_details, parent_plate.number_of_rows, parent_plate.number_of_columns)
+      build_transfers_hash(parent_plate.number_of_rows, compression_reqd)
     end
 
     def presenter_bins_key
@@ -27,7 +27,7 @@ module Utility
     end
 
     def compute_presenter_bin_details
-      @well_details.each_with_object({}) do |(well_locn, well_detail), bin_dest|
+      @request_metadata_details.each_with_object({}) do |(well_locn, well_detail), bin_dest|
         presenter_bins_key.each do |bin|
           next unless well_detail['pcr_cycles'] == bin['pcr_cycles']
 
@@ -39,28 +39,43 @@ module Utility
     private
 
     def bins
-      @bins ||= calculate_bins
+      @bins ||= calculate_distinct_bins
     end
 
-    # fetch the array of bins as pcr cycles e.g. [16,14,12]
-    def calculate_bins
-      bins = []
-      @well_details.each do |_well_locn, details|
-        pcr_cycles = details['pcr_cycles']
-        bins << pcr_cycles unless bins.include? pcr_cycles
-      end
-
-      # want pcr cycle bins in reverse order, highest first e.g. [16,14,12]
-      bins.sort.reverse
+    # Create the array of bins by number of pcr cycles
+    # Want pcr cycle bins in reverse order, highest first
+    # e.g. [16,14,12]
+    def calculate_distinct_bins
+      @request_metadata_details
+        .each_with_object([]) do |(_well_locn, details), calculated_bins|
+          num_pcr_cycles = details['pcr_cycles']
+          calculated_bins << num_pcr_cycles unless calculated_bins.include? num_pcr_cycles
+        end
+        .sort
+        .reverse
     end
 
-    # Sorts well locations into bins based on their number of pcr cycles.
-    def pcr_cycle_bins
-      pcr_bins = calculate_bins
+    def binned_well_details
+      @binned_well_details ||= populate_bins_by_pcr_cycles
+    end
 
-      # Generates a hash with each value in pcr_bins as a key, and [] as a value
-      binned_wells = pcr_bins.index_with { |_bin_pcr_cycles_num| [] }
-      @well_details.each do |well_locn, details|
+    # Sorts well details into bins based on their number of pcr cycles.
+    # e.g.
+    # {
+    #   16: [
+    #     { 'locn': 'A1', 'sample_volume': 5.4 },
+    #     { 'locn': 'C1', 'sample_volume': 3.5 },
+    #   ],
+    #   14: [
+    #     { 'locn': 'B1', 'sample_volume': 5.4 },
+    #   ], etc.
+    # }
+    def populate_bins_by_pcr_cycles
+      # initializes a hash with each value in bins as a key, and [] as a value
+      binned_wells = bins.index_with { |_bin_pcr_cycles_num| [] }
+
+      # then cycle through the request metadata and the hash of values needed
+      @request_metadata_details.each do |well_locn, details|
         pcr_cycles_num = details['pcr_cycles']
         binned_wells[pcr_cycles_num] << { 'locn' => well_locn, 'sample_volume' => details['sample_volume'] }
       end
@@ -69,15 +84,21 @@ module Utility
 
     # Build the transfers hash, cycling through the bins and their wells and locating them onto the
     # child plate.
-    def build_transfers_hash(bins, number_of_rows, compression_reqd)
+    # e.g.
+    # {
+    #   "A1"=>{"dest_locn"=>"H2", "volume"=>"5.0"},
+    #   "A2"=>{"dest_locn"=>"H1", "volume"=>"3.2"},
+    #   etc.
+    # }
+    def build_transfers_hash(number_of_rows, compression_reqd)
       binner = Binner.new(compression_reqd, number_of_rows)
-      bins
+      binned_well_details
         .values
         .each_with_object({})
         .with_index do |(bin, transfers_hash), bin_index_within_bins|
           bin.each_with_index do |well, well_index_within_bin|
             build_transfers_well(binner, transfers_hash, well)
-            binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
+            binner_next_well(binner, bin, bin_index_within_bins, well_index_within_bin)
           end
         end
     end
@@ -91,8 +112,8 @@ module Utility
     end
 
     # work out what the next row and column will be
-    def binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
-      finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+    def binner_next_well(binner, bin, bin_index_within_bins, well_index_within_bin)
+      finished = ((bin_index_within_bins == binned_well_details.size - 1) && (well_index_within_bin == bin.size - 1))
       binner.next_well_location(well_index_within_bin, bin.size) unless finished
     end
   end

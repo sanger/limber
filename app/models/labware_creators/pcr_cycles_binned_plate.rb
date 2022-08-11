@@ -46,8 +46,7 @@ module LabwareCreators
 
     attr_accessor :file
 
-    # delegate method to return well values to csv file handler class
-    delegate :well_details, :skipped_wells, to: :csv_file
+    delegate :request_metadata_details, :skipped_wells, to: :csv_file
 
     validates :file, presence: true
     validates_nested :csv_file, if: :file
@@ -55,8 +54,7 @@ module LabwareCreators
     validate :some_wells_are_being_transferred?
 
     PARENT_PLATE_INCLUDES =
-      'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,' \
-        'wells.aliquots.request.request_type,wells.aliquots.study'
+      'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
     CHILD_PLATE_INCLUDES = 'wells.aliquots'
     REQUEST_METADATA_FIELDS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage bait_library].freeze
 
@@ -88,11 +86,11 @@ module LabwareCreators
     end
 
     #
-    # The dilutions calculator works out how the samples will we rearranged when
+    # The dilutions calculator works out how the samples will be rearranged when
     # transferred into the child plate
     #
     def dilutions_calculator
-      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(well_details)
+      @dilutions_calculator ||= Utility::PcrCyclesBinningCalculator.new(request_metadata_details)
     end
 
     def labware_wells
@@ -113,14 +111,14 @@ module LabwareCreators
     # to catch situation where customer file has no valid rows (e.g. all zero sample volume)
     #
     def some_wells_are_being_transferred?
-      return true unless well_details.size.zero?
+      return true unless request_metadata_details.size.zero?
 
       errors.add(:csv_file, format(NO_WELLS_TO_TRANSFER))
       false
     end
 
     def check_for_well_missing_detail(well)
-      return if well_details.include? well.location
+      return if request_metadata_details.include? well.location
       errors.add(:csv_file, format(MISSING_WELL_DETAIL, well.location))
     end
 
@@ -224,30 +222,32 @@ module LabwareCreators
     end
 
     #
-    # Returns the list of wells to be transferred
+    # Filtered list of wells that should be transferred, based on details from customer file upload
     #
     def wells_to_be_transferred
-      @wells_to_be_transferred ||= labware_wells.filter_map { |well| well if well_details.key?(well.position['name']) }
+      @wells_to_be_transferred ||=
+        labware_wells.filter_map { |well| well if request_metadata_details.key?(well.position['name']) }
     end
 
     #
-    # Returns a hash of reuqest metadata fields
+    # Returns a hash of request metadata fields
     #
     def well_request_options(well_detail)
       REQUEST_METADATA_FIELDS.index_with { |field| well_detail[field] }
     end
 
     #
-    #  Generates the asset_groups for the submission
+    # Each distinct asset grouping creates an order and request
+    # Because we are storing well-speciific values in the request metadata like dilution volume, this method
+    # currently creates an asset group for each well, which is not very efficient.
+    # TODO: is there a more efficient way?
     #
     def generate_asset_groups(config_request_options)
       asset_groups = []
 
-      # Assumes the request metadata is unique for each well, creates one order per well
-      # TODO: is there a more efficient way?
       wells_to_be_transferred.each do |well|
         well_coord = well.position['name']
-        well_detail = well_details[well_coord]
+        well_detail = request_metadata_details[well_coord]
         well_asset_group = {
           assets: [well.uuid],
           autodetect_studies_projects: true,
@@ -264,11 +264,13 @@ module LabwareCreators
     def create_submission(configured_params)
       config_request_options = configured_params[:request_options]
 
-      # NB request options will be overriden in sequencescape_submission by merge of asset groups,
+      # N.B. request options will be overridden in sequencescape_submission by the merge of asset groups,
       # but will trigger a validation error if not present
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
-        request_options: config_request_options,
+        request_options: {
+          placeholder: 'will_be_overridden'
+        },
         asset_groups: generate_asset_groups(config_request_options),
         api: api,
         user: user_uuid
