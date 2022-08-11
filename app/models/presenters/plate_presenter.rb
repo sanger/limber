@@ -118,7 +118,7 @@ module Presenters
     end
 
     def filename(offset = nil)
-      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
+      "#{human_barcode}#{offset}.csv".tr(' ', '_')
     end
 
     def tag_sequences
