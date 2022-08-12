@@ -1,6 +1,6 @@
 ---
 CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
-  pipeline_group: CLCM DNAseq
+  pipeline_group: CLCM
   filters:
     request_type_key: clcm_dna_rna_seq
     library_type: Combined LCM DNA
@@ -11,7 +11,7 @@ CLCM Combined LCM DNAseq: # Path for the DNAseq plate library prep
     CLCM DNA End Prep: CLCM DNA Lib PCR
     CLCM DNA Lib PCR: CLCM DNA Lib PCR XP
 CLCM Custom Pooling for DNAseq: # Bottom of the pipeline (Pooling and normalization)
-  pipeline_group: CLCM DNAseq
+  pipeline_group: CLCM
   filters:
     request_type_key: clcm_dna_rna_seq
     state: passed
@@ -19,7 +19,7 @@ CLCM Custom Pooling for DNAseq: # Bottom of the pipeline (Pooling and normalizat
     CLCM DNA Lib PCR XP: CLCM DNA Pool
     CLCM DNA Pool: CLCM DNA Pool Norm
 CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
-  pipeline_group: CLCM RNAseq
+  pipeline_group: CLCM
   filters:
     request_type_key: clcm_dna_rna_seq
     library_type: Combined LCM RNA
@@ -31,7 +31,7 @@ CLCM Combined LCM RNAseq: # Path for the RNAseq plate library prep
     CLCM RNA End Prep: CLCM RNA Lib PCR
     CLCM RNA Lib PCR: CLCM RNA Lib PCR XP
 CLCM Custom Pooling for RNAseq: # Bottom of the pipeline (Pooling and normalization)
-  pipeline_group: CLCM RNAseq
+  pipeline_group: CLCM
   filters:
     request_type_key: clcm_dna_rna_seq
     state: passed
