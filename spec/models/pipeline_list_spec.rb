@@ -157,7 +157,7 @@ RSpec.describe PipelineList do
         }
       end
 
-      let(:expected_result) { { 'Pipeline X' => ['Pipeline A', 'Pipeline B'] } }
+      let(:expected_result) { ['Pipeline A', 'Pipeline B'] }
 
       it 'returns a hash with the group and relevant pipelines' do
         expect(model.retrieve_pipeline_config_for_group('Pipeline X')).to eq expected_result
