@@ -37,7 +37,7 @@ module Presenters
                 maximum: 1,
                 message: 'are not consistent across the plate.' # rubocop:todo Rails/I18nLocaleTexts
               },
-              unless: :multiple_requests_per_well?
+              unless: -> { multiple_requests_per_well? || skip_validation_for_single_pcr_cycle_for_all_wells? }
 
     validates :requested_pcr_cycles,
               inclusion: {
@@ -150,6 +150,10 @@ module Presenters
     end
 
     private
+
+    def skip_validation_for_single_pcr_cycle_for_all_wells?
+      false
+    end
 
     def libraries_passable?
       tagged? && passable_request_types.present?

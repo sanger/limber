@@ -11,10 +11,18 @@ module Presenters
 
     CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.aliquots.request'
 
+    PCR_CYCLES_NOT_PRESENT = 'expected to be present for wells in the plate.'
+
     self.summary_partial = 'labware/plates/binned_summary'
     self.aliquot_partial = 'binned_aliquot'
 
     validates_with Validators::ActiveRequestValidator
+
+    validates :pcr_cycles,
+              length: {
+                minimum: 1,
+                message: PCR_CYCLES_NOT_PRESENT
+              }
 
     def current_plate
       @current_plate ||= Sequencescape::Api::V2.plate_with_custom_includes(CURRENT_PLATE_INCLUDES, uuid: labware.uuid)
@@ -33,6 +41,10 @@ module Presenters
     end
 
     private
+
+    def skip_validation_for_single_pcr_cycle_for_all_wells?
+      true
+    end
 
     def request_metadata_details
       # For each well with aliquots on the plate select the pcr cycles metadata
