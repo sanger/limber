@@ -8,10 +8,18 @@
 class Pipeline
   include ActiveModel::Model
 
+  # The group the pipeline belongs to
+  attr_writer :pipeline_group
+
   # The name of the pipeline. Currently used internally, but may get exposed to users
   # in future.
   # @return [String] Name of the pipeline
   attr_accessor :name
+
+  def pipeline_group
+    # When no group is provided, default pipeline group to the pipeline name
+    @pipeline_group ||= name
+  end
 
   # The filters that will be used to identify whether a plate belongs to a particular pipeline
   # Keys should be attributes on request (eg. library_type) whereas values are either an array

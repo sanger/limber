@@ -1,5 +1,6 @@
 ---
 Targeted NanoSeq:
+  pipeline_group: Targeted NanoSeq
   filters: &targeted_nanoseq_filters
     request_type_key: limber_targeted_nanoseq
     library_type:
@@ -17,6 +18,7 @@ Targeted NanoSeq:
     LTN Lib PCR XP: LTN Custom Pool
     LTN Custom Pool: LTN Custom Pool Norm
 Targeted NanoSeq with ISC:
+  pipeline_group: Targeted NanoSeq with ISC
   filters: *targeted_nanoseq_filters
   library_pass: LTN Lib PCR XP
   relationships:

@@ -132,6 +132,38 @@ RSpec.describe PipelineList do
       end
     end
 
+    context 'when there is a pipeline_group' do
+      let(:pipeline_config) do
+        {
+          'Pipeline A' => {
+            pipeline_group: 'Pipeline X',
+            filters: filters,
+            library_pass: 'Purpose 3',
+            relationships: {
+              'Purpose 1' => 'Purpose 2',
+              'Purpose 2' => 'Purpose 3'
+            },
+            name: 'Pipeline A'
+          },
+          'Pipeline B' => {
+            pipeline_group: 'Pipeline X',
+            filters: filters,
+            library_pass: 'Purpose 4',
+            relationships: {
+              'Purpose 2' => 'Purpose 4'
+            },
+            name: 'Pipeline B'
+          }
+        }
+      end
+
+      let(:expected_result) { ['Pipeline A', 'Pipeline B'] }
+
+      it 'returns a hash with the group and relevant pipelines' do
+        expect(model.retrieve_pipeline_config_for_group('Pipeline X')).to eq expected_result
+      end
+    end
+
     context 'when there are two entry points' do
       let(:pipeline_config) do
         {

@@ -1,5 +1,6 @@
 ---
 Bespoke PCR:
+  pipeline_group: Bespoke PCR
   filters:
     request_type_key: limber_pcr_bespoke
     library_type:
@@ -30,6 +31,7 @@ Bespoke PCR:
     LBB Cherrypick: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
 Bespoke PCR MX:
+  pipeline_group: Bespoke PCR
   filters:
     request_type_key:
       - limber_multiplexing

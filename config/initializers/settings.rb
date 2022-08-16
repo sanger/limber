@@ -19,7 +19,11 @@ class Settings
       # Immutability is good here though, so we should probably fix that.
       # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
       @instance = Hashie::Mash.new(YAML.safe_load(File.read(configuration_filename), [Symbol], [], true))
+
+      # To view a list of pipeline groups and respective pipelines:
+      # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
       @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
+
       @instance
     rescue Errno::ENOENT
       # This before we've fully initialized and is intended to report issues to

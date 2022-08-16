@@ -1,5 +1,6 @@
 ---
 WGS: # Top of the pipeline (Library Prep)
+  pipeline_group: WGS
   filters:
     request_type_key:
       - limber_wgs
@@ -14,6 +15,7 @@ WGS: # Top of the pipeline (Library Prep)
     LB End Prep: LB Lib PCR
     LB Lib PCR: LB Lib PCR-XP
 WGS MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: WGS
   filters:
     request_type_key:
       - limber_multiplexing
