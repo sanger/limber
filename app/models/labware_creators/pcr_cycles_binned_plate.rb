@@ -103,7 +103,7 @@ module LabwareCreators
     # Well filter handles the selection of wells for transfer based on submission id
     #
     def well_filter
-      @well_filter ||= WellFilterBySubmission.new(creator: self, submission_id: submission.id)
+      @well_filter ||= WellFilterBySubmission.new(creator: self, submission_id: @submission.id)
     end
 
     #
@@ -177,16 +177,9 @@ module LabwareCreators
       end
 
       # Need to also check the state of the submission, as the job can complete ok but the submission fail
-      return unless submission.state == 'failed'
+      return unless @submission.state == 'failed'
 
-      errors.add(:base, "Submission has failed, error message: #{submission.message}")
-    end
-
-    #
-    # Submission v2 look up
-    #
-    def submission
-      @submission ||= Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
+      errors.add(:base, "Submission has failed, error message: #{@submission.message}")
     end
 
     #
@@ -195,7 +188,9 @@ module LabwareCreators
     def submission_built?
       counter = 1
       while counter <= 6
-        return true unless submission.building_in_progress?
+        @submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
+
+        return true unless @submission.building_in_progress?
 
         sleep(5)
         counter += 1
