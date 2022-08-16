@@ -1,5 +1,6 @@
 ---
 pWGS-384: # Top of the pipeline (Library Prep)
+  pipeline_group: pWGS-384
   filters:
     request_type_key: limber_pwgs-384
     library_type: pWGS-384
@@ -12,6 +13,7 @@ pWGS-384: # Top of the pipeline (Library Prep)
     pWGS-384 End Prep: pWGS-384 AL Lib
     pWGS-384 AL Lib: pWGS-384 Lib PCR
 pWGS-384 MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: pWGS-384
   filters:
     request_type_key:
       - limber_multiplexing

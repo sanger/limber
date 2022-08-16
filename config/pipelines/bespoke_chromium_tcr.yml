@@ -1,6 +1,7 @@
 # WIP: Initial step of pipeline only
 ---
 Bespoke Chromium TCR:
+  pipeline_group: Bespoke Chromium TCR
   filters:
     request_type_key: limber_chromium_bespoke
     library_type: Chromium single cell TCR
@@ -13,6 +14,7 @@ Bespoke Chromium TCR:
     LBC TCR Dil 2: LBC TCR Post Lig 1XSPRI
     LBC TCR Post Lig 1XSPRI: LBC TCR Post PCR
 Bespoke Chromium TCR MX:
+  pipeline_group: Bespoke Chromium TCR
   filters:
     request_type_key:
       - limber_multiplexing

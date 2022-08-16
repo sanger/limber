@@ -1,5 +1,6 @@
 ---
 ISC:
+  pipeline_group: ISC
   filters:
     request_type_key:
       - limber_isc
@@ -24,6 +25,7 @@ ISC:
     LB Cap Lib: LB Cap Lib PCR
     LB Cap Lib PCR: LB Cap Lib PCR-XP
 ISC MX:
+  pipeline_group: ISC
   filters:
     request_type_key:
       - limber_multiplexing
