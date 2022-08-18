@@ -19,6 +19,7 @@ module LabwareCreators
 
     REQUEST_METADATA_FIELDS = %w[
       sample_volume
+      input_amount_desired
       diluent_volume
       pcr_cycles
       submit_for_sequencing
