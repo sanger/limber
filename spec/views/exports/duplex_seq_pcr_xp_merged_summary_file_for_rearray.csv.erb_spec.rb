@@ -2,11 +2,12 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.erb' do
+RSpec.describe 'exports/duplex_seq_pcr_xp_merged_summary_file_for_rearray.csv.erb' do
   has_a_working_api
 
   let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
 
+  # TODO: change these wells to include requests
   let(:well_a1) do
     create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
@@ -21,6 +22,7 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
         'name' => 'A1'
       },
       qc_results: create_list(:qc_result, 1, qc_result_options),
+      # TODO: change these wells to include requests and not have well attributes here
       submit_for_sequencing: true,
       sub_pool: 1,
       coverage: 15
