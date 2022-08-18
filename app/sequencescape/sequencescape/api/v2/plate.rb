@@ -133,6 +133,12 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each { |well| well.aliquots.each { |aliquot| yield well, aliquot } }
   end
 
+  def match_well_with_request(request_id)
+    return nil unless plate? && request_id.present?
+
+    request_to_well_hash[request_id]
+  end
+
   private
 
   def aliquots
@@ -145,5 +151,21 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def generate_pools
     Pools.new(wells_in_columns)
+  end
+
+  def request_to_well_hash
+    @request_to_well_hash ||= generate_request_to_well_hash
+  end
+
+  #
+  # Generates a hash of request ids to wells
+  # { <request id> : <well>, etc. }
+  #
+  def generate_request_to_well_hash
+    wells.each_with_object({}) do |well, results|
+      next if well.aliquots.empty? || well.all_requests.empty?
+
+      well.all_requests.each { |current_request| results[current_request.id] = well }
+    end
   end
 end
