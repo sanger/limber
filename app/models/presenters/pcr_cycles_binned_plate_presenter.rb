@@ -18,11 +18,7 @@ module Presenters
 
     validates_with Validators::ActiveRequestValidator
 
-    validates :pcr_cycles,
-              length: {
-                minimum: 1,
-                message: PCR_CYCLES_NOT_PRESENT
-              }
+    validates :pcr_cycles, length: { minimum: 1, message: PCR_CYCLES_NOT_PRESENT }
 
     def current_plate
       @current_plate ||= Sequencescape::Api::V2.plate_with_custom_includes(CURRENT_PLATE_INCLUDES, uuid: labware.uuid)
