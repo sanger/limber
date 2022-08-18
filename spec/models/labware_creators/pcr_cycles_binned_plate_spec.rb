@@ -28,6 +28,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-a1',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 25.0,
            pcr_cycles: 14,
            submit_for_sequencing: true,
@@ -43,6 +44,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-b1',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.9,
            pcr_cycles: 14,
            submit_for_sequencing: true,
@@ -58,6 +60,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-d1',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.8,
            pcr_cycles: 16,
            submit_for_sequencing: true,
@@ -73,6 +76,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-f1',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.7,
            pcr_cycles: 12,
            submit_for_sequencing: true,
@@ -88,6 +92,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-h1',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.6,
            pcr_cycles: 12,
            submit_for_sequencing: true,
@@ -103,6 +108,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-a2',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.5,
            pcr_cycles: 12,
            submit_for_sequencing: true,
@@ -118,6 +124,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-c2',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.4,
            pcr_cycles: 12,
            submit_for_sequencing: true,
@@ -133,6 +140,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-d2',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.3,
            pcr_cycles: 12,
            submit_for_sequencing: true,
@@ -148,6 +156,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-g2',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 24.2,
            pcr_cycles: 14,
            submit_for_sequencing: true,
@@ -163,6 +172,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            state: 'pending',
            uuid: 'request-h2',
            library_type: library_type_name,
+           input_amount_desired: 50.0,
            diluent_volume: 27.353,
            pcr_cycles: 16,
            submit_for_sequencing: true,
@@ -527,6 +537,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_a1.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 25.0,
                 pcr_cycles: 14,
                 submit_for_sequencing: true,
@@ -550,6 +561,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_b1.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.9,
                 pcr_cycles: 14,
                 submit_for_sequencing: true,
@@ -573,6 +585,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_d1.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.8,
                 pcr_cycles: 16,
                 submit_for_sequencing: true,
@@ -596,6 +609,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_f1.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.7,
                 pcr_cycles: 12,
                 submit_for_sequencing: true,
@@ -619,6 +633,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_h1.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.6,
                 pcr_cycles: 12,
                 submit_for_sequencing: true,
@@ -642,6 +657,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_a2.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.5,
                 pcr_cycles: 12,
                 submit_for_sequencing: true,
@@ -665,6 +681,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_c2.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.4,
                 pcr_cycles: 12,
                 submit_for_sequencing: true,
@@ -688,6 +705,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_d2.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.3,
                 pcr_cycles: 12,
                 submit_for_sequencing: true,
@@ -711,6 +729,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_g2.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 24.2,
                 pcr_cycles: 14,
                 submit_for_sequencing: true,
@@ -734,6 +753,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
               assets: [well_h2.uuid],
               request_options: {
                 library_type: library_type_name,
+                input_amount_desired: 50.0,
                 diluent_volume: 27.353,
                 pcr_cycles: 16,
                 submit_for_sequencing: true,
@@ -829,6 +849,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                 assets: [well_d1.uuid],
                 request_options: {
                   library_type: library_type_name,
+                  input_amount_desired: 50.0,
                   diluent_volume: 24.8,
                   pcr_cycles: 16,
                   submit_for_sequencing: true,
@@ -852,6 +873,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                 assets: [well_a2.uuid],
                 request_options: {
                   library_type: library_type_name,
+                  input_amount_desired: 50.0,
                   diluent_volume: 24.5,
                   pcr_cycles: 12,
                   submit_for_sequencing: true,
@@ -875,6 +897,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                 assets: [well_c2.uuid],
                 request_options: {
                   library_type: library_type_name,
+                  input_amount_desired: 50.0,
                   diluent_volume: 24.4,
                   pcr_cycles: 12,
                   submit_for_sequencing: true,
@@ -898,6 +921,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
                 assets: [well_g2.uuid],
                 request_options: {
                   library_type: library_type_name,
+                  input_amount_desired: 50.0,
                   diluent_volume: 24.2,
                   pcr_cycles: 14,
                   submit_for_sequencing: true,

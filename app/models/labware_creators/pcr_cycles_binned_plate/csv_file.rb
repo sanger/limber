@@ -80,7 +80,7 @@ module LabwareCreators
     #
     # Extracts those well details from the uploaded csv file that we will store in the request metaadata
     #
-    # @return [Hash] eg. { 'A1' => { 'sample_volume' => 5.0, 'diluent_volume' => 25.0,
+    # @return [Hash] eg. { 'A1' => { 'sample_volume' => 5.0, 'input_amount_desired', 'diluent_volume' => 25.0,
     # 'pcr_cycles' => 14, 'submit_for_sequencing' => true, 'sub_pool' => 1, 'coverage' => 15 }, etc. }
     #
     def request_metadata_details
