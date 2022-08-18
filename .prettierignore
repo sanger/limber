@@ -32,5 +32,8 @@ yarn-debug.log*
 .yarn-integrity
 app/javascript/coverage/
 
+config/settings/development.yml
+docs/
+
 # Special formatting here
 app/javascript/shared/resources.js
