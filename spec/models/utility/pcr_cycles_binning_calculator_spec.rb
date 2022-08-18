@@ -37,6 +37,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
       {
         'A1' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
@@ -46,6 +47,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'B1' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
@@ -55,6 +57,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'D1' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 16,
           'submit_for_sequencing' => 'Y',
@@ -64,6 +67,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'E1' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -73,6 +77,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'F1' => {
           'sample_volume' => 4.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 26.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -82,6 +87,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'H1' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -99,6 +105,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'B2' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -107,6 +115,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'C2' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -116,6 +125,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'D2' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
@@ -125,6 +135,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'E2' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
@@ -134,6 +145,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'F2' => {
           'sample_volume' => 30.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 0.0,
           'pcr_cycles' => 16,
           'submit_for_sequencing' => 'N',
@@ -143,6 +155,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         },
         'G2' => {
           'sample_volume' => 5.0,
+          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => 'Y',
@@ -237,6 +250,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           {
             'A1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -246,6 +260,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -255,6 +270,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -264,6 +280,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -273,6 +290,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F1' => {
               'sample_volume' => 4.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 26.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -282,6 +300,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -291,6 +310,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A2' => {
               'sample_volume' => 3.2,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 26.8,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -300,6 +320,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -309,6 +330,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -318,6 +340,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -327,6 +350,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -336,6 +360,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F2' => {
               'sample_volume' => 30.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 0.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'N',
@@ -345,6 +370,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -434,6 +460,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           {
             'A1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -443,6 +470,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -452,6 +480,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -461,6 +490,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -470,6 +500,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -479,6 +510,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F1' => {
               'sample_volume' => 4.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 26.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -488,6 +520,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -497,6 +530,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -506,6 +540,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A2' => {
               'sample_volume' => 3.2,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 26.8,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -515,6 +550,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -524,6 +560,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -533,6 +570,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -542,6 +580,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -551,6 +590,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F2' => {
               'sample_volume' => 30.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 0.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'N',
@@ -560,6 +600,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -569,6 +610,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H2' => {
               'sample_volume' => 3.621,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 27.353,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -657,6 +699,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           {
             'A1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -666,6 +709,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -675,6 +719,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -684,6 +729,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -693,6 +739,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -711,6 +758,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -720,6 +768,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -738,6 +787,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -747,6 +797,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -756,6 +807,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -765,6 +817,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -783,6 +836,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -801,6 +855,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -810,6 +865,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -819,6 +875,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -828,6 +885,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -837,6 +895,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -846,6 +905,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -855,6 +915,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -864,6 +925,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H3' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -873,6 +935,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -882,6 +945,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -891,6 +955,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -900,6 +965,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -909,6 +975,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -918,6 +985,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -927,6 +995,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -936,6 +1005,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H4' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -945,6 +1015,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -954,6 +1025,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -963,6 +1035,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -972,6 +1045,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -981,6 +1055,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -990,6 +1065,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -999,6 +1075,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1008,6 +1085,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H5' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1017,6 +1095,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1026,6 +1105,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1035,6 +1115,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1044,6 +1125,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1053,6 +1135,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1062,6 +1145,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1071,6 +1155,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1080,6 +1165,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H6' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1089,6 +1175,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1098,6 +1185,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1107,6 +1195,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1116,6 +1205,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1125,6 +1215,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1134,6 +1225,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1143,6 +1235,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1152,6 +1245,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H7' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1161,6 +1255,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1170,6 +1265,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1179,6 +1275,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1188,6 +1285,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1197,6 +1295,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1206,6 +1305,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1215,6 +1315,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 10,
               'submit_for_sequencing' => 'Y',
@@ -1224,6 +1325,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H8' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1233,6 +1335,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1242,6 +1345,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1251,6 +1355,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1260,6 +1365,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1269,6 +1375,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1278,6 +1385,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1287,6 +1395,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1296,6 +1405,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H9' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1305,6 +1415,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1314,6 +1425,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1323,6 +1435,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1332,6 +1445,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1341,6 +1455,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1350,6 +1465,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1359,6 +1475,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1368,6 +1485,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H10' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1377,6 +1495,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1386,6 +1505,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1395,6 +1515,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1404,6 +1525,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1413,6 +1535,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1422,6 +1545,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1431,6 +1555,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1440,6 +1565,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H11' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1449,6 +1575,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'A12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1458,6 +1585,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1467,6 +1595,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1476,6 +1605,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1485,6 +1615,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1494,6 +1625,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'F12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1503,6 +1635,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1512,6 +1645,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H12' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1920,6 +2054,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           {
             'A1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 5,
               'submit_for_sequencing' => 'Y',
@@ -1929,6 +2064,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 6,
               'submit_for_sequencing' => 'Y',
@@ -1938,6 +2074,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 7,
               'submit_for_sequencing' => 'Y',
@@ -1947,6 +2084,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 8,
               'submit_for_sequencing' => 'Y',
@@ -1956,6 +2094,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 9,
               'submit_for_sequencing' => 'Y',
@@ -1974,6 +2113,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 11,
               'submit_for_sequencing' => 'Y',
@@ -1983,6 +2123,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'H1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -2001,6 +2142,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 14,
               'submit_for_sequencing' => 'Y',
@@ -2010,6 +2152,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 15,
               'submit_for_sequencing' => 'Y',
@@ -2019,6 +2162,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 16,
               'submit_for_sequencing' => 'Y',
@@ -2028,6 +2172,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'E2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 17,
               'submit_for_sequencing' => 'Y',
@@ -2046,6 +2191,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'G2' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 19,
               'submit_for_sequencing' => 'Y',
@@ -2145,6 +2291,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
           {
             'A1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 12,
               'submit_for_sequencing' => 'Y',
@@ -2154,6 +2301,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'B1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 15,
               'submit_for_sequencing' => 'Y',
@@ -2163,6 +2311,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'C1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 15,
               'submit_for_sequencing' => 'Y',
@@ -2172,6 +2321,7 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
             },
             'D1' => {
               'sample_volume' => 5.0,
+              'input_amount_desired' => 12.5,
               'diluent_volume' => 25.0,
               'pcr_cycles' => 17,
               'submit_for_sequencing' => 'Y',
