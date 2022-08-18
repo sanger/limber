@@ -3,14 +3,14 @@
 module LabwareCreators
   # Handles the generation of a plate with wells binned according to the number of
   # PCR cycles that has been determined by the customer.
-  # Uploads a file supplied by the customer that has a row per each well and
-  # includes Sample Volume, Diluent Volume, PCR Cycles, Sub-Pool, Coverage and Hyb Panel columns.
+  # Uploads a file supplied by the customer that has a row per each well that
+  # contains some metadata that we want to store on request.
   # Uses the PCR Cycles column to determine the binning arrangement of the wells,
   # and the Sample Volume and Diluent Volume columns in the well transfers.
   # Rows with a Sample Volume of zero mean the customer does not want that sample
   # to go forward at this time, and it should not be transferred into the dilution plate.
-  # Sub-Pool, Coverage and Hyb Panel need to be stored for a later step downstream in the
-  # pipeline, at the point where custom pooling is performed.
+  # A number of metadata fields need to be stored for use in creating a file at the XP plate
+  # downstream in the pipeline, at the point where custom pooling is performed.
   # Wells in the bins are applied to the destination by column order.
   # If there is enough space on the destination plate each new bin will start in a new
   # column. Otherwise bins will run consecutively without gaps.
