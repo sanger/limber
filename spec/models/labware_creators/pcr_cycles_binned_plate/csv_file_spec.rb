@@ -21,6 +21,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'A1' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 0.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -30,6 +31,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'B1' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -39,6 +41,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'D1' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 49.9,
           'pcr_cycles' => 16,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
@@ -48,6 +51,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'E1' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 0.1,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -57,6 +61,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'F1' => {
           'sample_volume' => 4.0,
           'diluent_volume' => 26.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -66,6 +71,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'H1' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 37.3,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
@@ -75,6 +81,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'A2' => {
           'sample_volume' => 3.2,
           'diluent_volume' => 26.8,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -84,6 +91,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'B2' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 34.8,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
@@ -93,6 +101,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'C2' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 2,
@@ -102,6 +111,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'D2' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -111,6 +121,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'E2' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -120,6 +131,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'F2' => {
           'sample_volume' => 30.0,
           'diluent_volume' => 0.0,
+          'input_amount_desired' => 39.2,
           'pcr_cycles' => 16,
           'submit_for_sequencing' => false,
           'sub_pool' => nil,
@@ -129,6 +141,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'G2' => {
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 14,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
@@ -138,6 +151,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader d
         'H2' => {
           'sample_volume' => 3.621,
           'diluent_volume' => 27.353,
+          'input_amount_desired' => 50.0,
           'pcr_cycles' => 16,
           'submit_for_sequencing' => true,
           'sub_pool' => 1,
