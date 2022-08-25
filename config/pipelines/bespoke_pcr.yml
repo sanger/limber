@@ -65,7 +65,7 @@ Bespoke PCR TCR:
   relationships:
     LBB Cherrypick: LBB Enriched TCR
     LBC Cherrypick: LBB Enriched TCR
-    LBB Enriched TCR : LBB Ligation
+    LBB Enriched TCR: LBB Ligation
 Bespoke PCR TCR HT:
   filters:
     request_type_key: limber_pcr_bespoke
