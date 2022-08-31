@@ -31,3 +31,11 @@ LBB Lib Pool Stock:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+LBB Enriched BCR:
+  :asset_type: plate
+LBB Enriched BCR HT:
+  :asset_type: plate
+LBB Enriched TCR:
+  :asset_type: plate
+LBB Enriched TCR HT:
+  :asset_type: plate

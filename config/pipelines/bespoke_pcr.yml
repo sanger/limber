@@ -7,7 +7,13 @@ Bespoke PCR:
       - ChIP-Seq Auto
       - Chromium single cell HTO
       - Chromium single cell surface protein
+      - Chromium single cell surface protein HT
       - Chromium Visium
+      - Chromium Visium FFPE
+      - Manual Chromium single cell 3 prime v3
+      - Manual Chromium single cell 3 prime HT v3
+      - Manual Chromium single cell 5 prime v2
+      - Manual Chromium single cell 5 prime HT v2
       - emSEQ
       - Haplotagging
       - Hi-C
@@ -29,6 +35,51 @@ Bespoke PCR:
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
+    LBC Cherrypick: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+Bespoke PCR BCR:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell BCR
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Cherrypick: LBB Enriched BCR
+    LBC Cherrypick: LBB Enriched BCR
+    LBB Enriched BCR: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+Bespoke PCR BCR HT:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell BCR HT
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Cherrypick: LBB Enriched BCR HT
+    LBC Cherrypick: LBB Enriched BCR HT
+    LBB Enriched BCR HT: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+Bespoke PCR TCR:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell TCR
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Cherrypick: LBB Enriched TCR
+    LBC Cherrypick: LBB Enriched TCR
+    LBB Enriched TCR: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+Bespoke PCR TCR HT:
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Manual Chromium single cell TCR HT
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    LBB Cherrypick: LBB Enriched TCR HT
+    LBC Cherrypick: LBB Enriched TCR HT
+    LBB Enriched TCR HT: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
 Bespoke PCR MX:
   pipeline_group: Bespoke PCR
