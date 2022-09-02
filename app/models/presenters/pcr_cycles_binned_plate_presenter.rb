@@ -52,7 +52,7 @@ module Presenters
             next if well.aliquots.empty?
 
             # extract pcr_cycles from well.aliquots.first outer request
-            details[well.location] = { 'pcr_cycles' => well.aliquots.first.request.options[:pcr_cycles] }
+            details[well.location] = { 'pcr_cycles' => well.aliquots.first.request.pcr_cycles }
           end
     end
   end
