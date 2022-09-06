@@ -97,20 +97,22 @@ FactoryBot.define do
       request_type { create :dilution_and_cleanup_request_type }
 
       transient do
-        bait_library { create :bait_library, name: 'Bait Name' }
+        input_amount_desired { 25 }
         submit_for_sequencing { true }
         coverage { 1 }
         sub_pool { 1 }
+        bait_library { create :bait_library, name: 'Bait Name' }
       end
 
       options do
         {
-          'bait_library' => bait_library.name,
           'pcr_cycles' => pcr_cycles,
           'library_type' => library_type,
+          'input_amount_desired' => input_amount_desired,
           'submit_for_sequencing' => submit_for_sequencing,
           'coverage' => coverage,
-          'sub-pool' => sub_pool
+          'sub_pool' => sub_pool,
+          'bait_library' => bait_library.name
         }
       end
     end
