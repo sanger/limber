@@ -8,6 +8,7 @@ RSpec.describe ExportsController, type: :controller do
   let(:well_qc_includes) { 'wells.qc_results' }
   let(:well_qc_sample_includes) { 'wells.qc_results,wells.aliquots.sample.sample_metadata' }
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
+  let(:well_qc_and_requests_includes) { 'wells.qc_results,wells.aliquots,wells.aliquots.request,wells.requests_as_source' }
   let(:plate) { create :v2_plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
 
@@ -75,6 +76,7 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
+    # Duplex Seq
     context 'where csv id requested is duplex_seq_al_lib_concentrations_for_customer.csv' do
       let(:includes) { well_qc_sample_includes }
       let(:csv_id) { 'duplex_seq_al_lib_concentrations_for_customer' }
@@ -83,14 +85,16 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
-    context 'where csv id requested is duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv' do
-      let(:includes) { well_qc_includes }
-      let(:csv_id) { 'duplex_seq_pcr_xp_concentrations_for_custom_pooling' }
-      let(:expected_template) { 'duplex_seq_pcr_xp_concentrations_for_custom_pooling' }
+    context 'where csv id requested is duplex_seq_pcr_xp_merged_summary_file_for_rearray.csv' do
+      let(:includes) { well_qc_and_requests_includes }
+      let(:csv_id) { 'duplex_seq_pcr_xp_merged_summary_file_for_rearray' }
+      let(:expected_template) { 'duplex_seq_pcr_xp_merged_summary_file_for_rearray' }
 
       it_behaves_like 'a csv view'
     end
+    # end Duplex Seq
 
+    # Targeted Nanoseq
     context 'where csv id requested is targeted_nanoseq_al_lib_concentrations_for_customer.csv' do
       let(:includes) { well_qc_sample_includes }
       let(:csv_id) { 'targeted_nanoseq_al_lib_concentrations_for_customer' }
@@ -99,13 +103,14 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
-    context 'where csv id requested is targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling.csv' do
-      let(:includes) { well_qc_includes }
-      let(:csv_id) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
-      let(:expected_template) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
+    context 'where csv id requested is targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray.csv' do
+      let(:includes) { well_qc_and_requests_includes }
+      let(:csv_id) { 'targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray' }
+      let(:expected_template) { 'targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray' }
 
       it_behaves_like 'a csv view'
     end
+    # end Targeted Nanoseq
 
     context 'where template is for the hamilton robot' do
       let(:includes) { well_src_asset_includes }
