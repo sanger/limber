@@ -8,7 +8,7 @@ RSpec.describe ExportsController, type: :controller do
   let(:well_qc_includes) { 'wells.qc_results' }
   let(:well_qc_sample_includes) { 'wells.qc_results,wells.aliquots.sample.sample_metadata' }
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
-  let(:well_qc_and_requests_includes) { 'wells.qc_results,wells.aliquots,wells.aliquots.request,wells.requests_as_source' }
+  let(:well_qc_and_requests_includes) { 'wells.qc_results,wells.requests_as_target' }
   let(:plate) { create :v2_plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
 

@@ -1,14 +1,14 @@
 <% csv_rows_hash =  @plate.wells_in_columns.each_with_object({}) do |xp_well, csv_rows|
   next if xp_well.empty? || @ancestor_plate.blank?
   stock_plate = @ancestor_plate.stock_plate
-  request_id = xp_well.aliquots.first&.request&.id
-  # if we cannot get a request id from the well aliquot we cannot fetch any information
-  next unless request_id.present?
-  ancestor_well = @ancestor_plate.match_well_with_request(request_id)
+  # assumption that xp_well just has one request_as_target on it
+  xp_well_dil_and_cleanup_request = xp_well.requests_as_target.first
+  # if we cannot get a request from the well we cannot fetch any information
+  next unless xp_well_dil_and_cleanup_request.present?
+  ancestor_well = @ancestor_plate.match_well_with_request(xp_well_dil_and_cleanup_request.id)
   # if we cannot find the related ancestor well we cannot fetch information
   next unless ancestor_well.present?
-  # TODO: why is this request singular, but in the hamilton file creation code it is an array?
-  if xp_well.aliquots.first&.request&.options[:submit_for_sequencing]
+  if xp_well_dil_and_cleanup_request.options[:submit_for_sequencing]
     csv_rows[ancestor_well.location] = [
       stock_plate&.barcode&.to_s,
       ancestor_well.location,
@@ -16,14 +16,14 @@
       ancestor_well.sanger_sample_id&.to_s,
       ancestor_well.supplier_name,
       ancestor_well.input_amount_available&.to_s,
-      xp_well.aliquots.first&.request&.options[:input_amount_desired]&.to_f,
+      xp_well_dil_and_cleanup_request.options[:input_amount_desired]&.to_f,
       @plate&.barcode&.to_s,
       xp_well.location,
       xp_well.latest_concentration&.value,
       'Y',
-      xp_well.aliquots.first&.request&.options[:sub_pool]&.to_i,
-      xp_well.aliquots.first&.request&.options[:coverage]&.to_i,
-      xp_well.aliquots.first&.request&.options[:bait_library]&.to_s
+      xp_well_dil_and_cleanup_request.options[:sub_pool]&.to_i,
+      xp_well_dil_and_cleanup_request.options[:coverage]&.to_i,
+      xp_well_dil_and_cleanup_request.options[:bait_library]&.to_s
     ]
   else
     csv_rows[ancestor_well.location] = [

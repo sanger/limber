@@ -48,27 +48,29 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_merged_summary_file_for_rearray.csv.er
   end
 
   # xp plate setup - the plate on which the report is generated
-  # xp well aliquots need the link to the requests
+  # xp well aliquots would have the link to the requests
   let(:xp_aliquot_a1) { create(:v2_aliquot, request: request_a1) }
   let(:xp_aliquot_b1) { create(:v2_aliquot, request: request_b1) }
 
   # xp plate wells
   let(:xp_well_a1) do
     create(
-      :v2_stock_well,
+      :v2_well,
       location: 'A1',
       aliquots: [xp_aliquot_a1],
       qc_results: create_list(:qc_result, 1, xp_qc_result_options),
-      outer_request: request_a1
+      outer_request: request_a1,
+      requests_as_target: [request_a1]
     )
   end
   let(:xp_well_b1) do
     create(
-      :v2_stock_well,
+      :v2_well,
       location: 'B1',
       aliquots: [xp_aliquot_b1],
       qc_results: create_list(:qc_result, 1, xp_qc_result_options),
-      outer_request: request_b1
+      outer_request: request_b1,
+      requests_as_target: [request_b1]
     )
   end
 
