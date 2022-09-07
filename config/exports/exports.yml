@@ -7,14 +7,14 @@ concentrations_nm:
   plate_includes: wells.qc_results
 duplex_seq_al_lib_concentrations_for_customer:
   csv: duplex_seq_al_lib_concentrations_for_customer
-  plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
+  plate_includes: wells.qc_results,wells.aliquots.request
 duplex_seq_pcr_xp_merged_summary_file_for_rearray:
   csv: duplex_seq_pcr_xp_merged_summary_file_for_rearray
   plate_includes: 'wells.qc_results,wells.requests_as_target'
   ancestor_purpose: LDS AL Lib
 targeted_nanoseq_al_lib_concentrations_for_customer:
   csv: targeted_nanoseq_al_lib_concentrations_for_customer
-  plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
+  plate_includes: wells.qc_results,wells.aliquots.request
 targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray:
   csv: targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray
   plate_includes: 'wells.qc_results,wells.requests_as_target'
