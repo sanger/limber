@@ -37,7 +37,7 @@ module Sequencescape::Api::V2::Shared
     end
 
     def pcr_cycles
-      active_requests.map(&:pcr_cycles).uniq
+      active_requests.map(&:pcr_cycles).compact.uniq
     end
 
     def role
