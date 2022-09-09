@@ -6,9 +6,9 @@ require './app/controllers/plates_controller'
 RSpec.describe ExportsController, type: :controller do
   let(:default_plate_includes) { 'wells' }
   let(:well_qc_includes) { 'wells.qc_results' }
-  let(:well_qc_sample_includes) { 'wells.qc_results,wells.aliquots.sample.sample_metadata' }
+  let(:well_qc_and_aliquot_request_includes) { 'wells.qc_results,wells.aliquots.request' }
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
-  let(:well_qc_and_requests_includes) { 'wells.qc_results,wells.requests_as_target' }
+  let(:well_qc_and_requests_as_target_includes) { 'wells.qc_results,wells.requests_as_target' }
   let(:plate) { create :v2_plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
 
@@ -78,7 +78,7 @@ RSpec.describe ExportsController, type: :controller do
 
     # Duplex Seq
     context 'where csv id requested is duplex_seq_al_lib_concentrations_for_customer.csv' do
-      let(:includes) { well_qc_sample_includes }
+      let(:includes) { well_qc_and_aliquot_request_includes }
       let(:csv_id) { 'duplex_seq_al_lib_concentrations_for_customer' }
       let(:expected_template) { 'duplex_seq_al_lib_concentrations_for_customer' }
 
@@ -97,7 +97,7 @@ RSpec.describe ExportsController, type: :controller do
 
     # Targeted Nanoseq
     context 'where csv id requested is targeted_nanoseq_al_lib_concentrations_for_customer.csv' do
-      let(:includes) { well_qc_sample_includes }
+      let(:includes) { well_qc_and_aliquot_request_includes }
       let(:csv_id) { 'targeted_nanoseq_al_lib_concentrations_for_customer' }
       let(:expected_template) { 'targeted_nanoseq_al_lib_concentrations_for_customer' }
 
