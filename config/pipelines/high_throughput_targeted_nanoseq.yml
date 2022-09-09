@@ -1,6 +1,6 @@
 ---
-# Targeted NanoSeq initial library preparation pipeline
-Targeted NanoSeq Library:
+Targeted NanoSeq:
+  pipeline_group: Targeted NanoSeq
   filters: &targeted_nanoseq_filters
     request_type_key: limber_targeted_nanoseq
     library_type:
@@ -25,8 +25,8 @@ Targeted NanoSeq Dilution and Cleanup:
     LTN Lib PCR: LTN Lib PCR XP
     LTN Lib PCR XP: LTN Custom Pool
     LTN Custom Pool: LTN Custom Pool Norm
-# Targeted NanoSeq Dilution and Cleanup part of pipeline for ISC route
 Targeted NanoSeq with ISC Dilution and Cleanup:
+  pipeline_group: Targeted NanoSeq with ISC
   filters: *targeted_nanoseq_dilution_and_cleanup_filters
   library_pass: LTN Lib PCR XP
   relationships:

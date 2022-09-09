@@ -1,5 +1,6 @@
 ---
 Bespoke Chromium 3pv3:
+  pipeline_group: Bespoke Chromium 3pv3
   filters:
     request_type_key: limber_chromium_bespoke
     library_type: Chromium single cell 3 prime v3
@@ -10,6 +11,7 @@ Bespoke Chromium 3pv3:
     LBC 3pV3 GEX Frag 2XP: LBC 3pV3 GEX LigXP
     LBC 3pV3 GEX LigXP: LBC 3pV3 GEX PCR 2XP
 Bespoke Chromium 3pv3 MX:
+  pipeline_group: Bespoke Chromium 3pv3
   filters:
     request_type_key:
       - limber_multiplexing

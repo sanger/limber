@@ -13,7 +13,8 @@ FactoryBot.define do
       pipeline_list { Settings.pipelines }
     end
 
-    sequence(:name) { |i| "Pipleine #{i}" }
+    sequence(:name) { |i| "Pipeline #{i}" }
+    pipeline_group { 'PipelineGroup' }
     filters { {} }
     relationships { {} }
     library_pass { nil }
