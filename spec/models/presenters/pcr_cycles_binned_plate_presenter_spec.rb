@@ -35,9 +35,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:well_a1) do
     create(
       :v2_well,
-      position: {
-        'name' => 'A1'
-      },
+      location: 'A1',
       qc_results: create_list(:qc_result_concentration, 1, value: '0.6'),
       outer_request: request_a1
     )
@@ -45,9 +43,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:well_a2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'A2'
-      },
+      location: 'A2',
       qc_results: create_list(:qc_result_concentration, 1, value: '10.0'),
       outer_request: request_a2
     )
@@ -55,9 +51,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:well_b2) do
     create(
       :v2_well,
-      position: {
-        'name' => 'B2'
-      },
+      location: 'B2',
       qc_results: create_list(:qc_result_concentration, 1, value: '12.0'),
       outer_request: request_b2
     )
@@ -65,9 +59,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   let(:well_a3) do
     create(
       :v2_well,
-      position: {
-        'name' => 'A3'
-      },
+      location: 'A3',
       qc_results: create_list(:qc_result_concentration, 1, value: '20.0'),
       outer_request: request_a3
     )
@@ -99,8 +91,20 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   context 'when binning' do
     it_behaves_like 'a labware presenter'
 
-    context 'pcr cycles binned plate display' do
-      it 'should create a key for the bins that will be displayed' do
+    context 'when there are no pcr cycle values found' do
+      let(:request_a1) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-1', pcr_cycles: nil }
+      let(:request_a2) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-2', pcr_cycles: nil }
+      let(:request_b2) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-3', pcr_cycles: nil }
+      let(:request_a3) { create :dilution_and_cleanup_request, state: 'started', uuid: 'request-4', pcr_cycles: nil }
+
+      it 'should fail the validation on the pcr cycles array' do
+        expect(presenter.valid?).to be false
+        expect(presenter.errors.full_messages).to include('Pcr cycles expected to be present for wells in the plate.')
+      end
+    end
+
+    context 'when displaying wells with multiple pcr cycles' do
+      it 'should create the expected bin keys' do
         # NB. contains min/max because just using bins template, but fields not needed in presentation
         expected_bins_key = [
           { 'colour' => 1, 'pcr_cycles' => 16 },
