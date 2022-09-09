@@ -92,6 +92,7 @@ RSpec.describe ExportsController, type: :controller do
 
       it_behaves_like 'a csv view'
     end
+
     # end Duplex Seq
 
     # Targeted Nanoseq
@@ -110,6 +111,7 @@ RSpec.describe ExportsController, type: :controller do
 
       it_behaves_like 'a csv view'
     end
+
     # end Targeted Nanoseq
 
     context 'where template is for the hamilton robot' do

@@ -10,7 +10,6 @@ module Presenters
     include Presenters::Statemachine::Standard
 
     CURRENT_PLATE_INCLUDES = 'wells.aliquots,wells.qc_results,wells.aliquots.request'
-
     PCR_CYCLES_NOT_PRESENT = 'expected to be present for wells in the plate.'
 
     self.summary_partial = 'labware/plates/binned_summary'
