@@ -106,7 +106,6 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
         'B2' => {
           'sample_volume' => 5.0,
           'input_amount_desired' => 12.5,
-          'input_amount_desired' => 12.5,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'submit_for_sequencing' => 'Y',
