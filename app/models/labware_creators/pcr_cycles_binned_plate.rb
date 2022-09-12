@@ -241,9 +241,10 @@ module LabwareCreators
 
     #
     # Each distinct asset grouping creates an order and request
-    # Because we are storing well-speciific values in the request metadata like dilution volume, this method
+    # Because we are storing well-specific values in the request metadata like dilution volume, this method
     # currently creates an asset group for each well, which is not very efficient.
-    # TODO: is there a more efficient way?
+    #
+    # TODO: is there a more efficient way? This is very slow.
     #
     def generate_asset_groups(config_request_options)
       asset_groups = []
