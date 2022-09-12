@@ -86,7 +86,7 @@ RSpec.describe ExportsController, type: :controller do
     end
 
     context 'where csv id requested is duplex_seq_pcr_xp_merged_summary_file_for_rearray.csv' do
-      let(:includes) { well_qc_and_requests_includes }
+      let(:includes) { well_qc_and_requests_as_target_includes }
       let(:csv_id) { 'duplex_seq_pcr_xp_merged_summary_file_for_rearray' }
       let(:expected_template) { 'duplex_seq_pcr_xp_merged_summary_file_for_rearray' }
 
@@ -105,7 +105,7 @@ RSpec.describe ExportsController, type: :controller do
     end
 
     context 'where csv id requested is targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray.csv' do
-      let(:includes) { well_qc_and_requests_includes }
+      let(:includes) { well_qc_and_requests_as_target_includes }
       let(:csv_id) { 'targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray' }
       let(:expected_template) { 'targeted_nanoseq_pcr_xp_merged_summary_file_for_rearray' }
 
