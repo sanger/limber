@@ -50,7 +50,7 @@ class SequencescapeSubmission
   #
   def save
     return false unless valid?
-    PERF_LOG.info "Start generate submissions"
+    PERF_LOG.info 'Start generate submissions'
     generate_submissions
   end
 
@@ -120,11 +120,12 @@ class SequencescapeSubmission
   private
 
   def generate_orders
-    PERF_LOG.info "Start generate_orders"
+    PERF_LOG.info 'Start generate_orders'
     order_index = 1
     asset_groups_for_orders_creation.map do |asset_group|
       PERF_LOG.info "Start order #{order_index}"
       order_parameters = { request_options: request_options, user: user }.merge(asset_group)
+
       # try passing a list of orders to this instead of one at a time
       # or try one order and pass the request options
       order_index += 1
@@ -135,12 +136,12 @@ class SequencescapeSubmission
   # rubocop:disable Metrics/AbcSize
   def generate_submissions
     orders = generate_orders
-    PERF_LOG.info "End generate orders and start submission create"
+    PERF_LOG.info 'End generate orders and start submission create'
     submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
     @submission_uuid = submission.uuid
-    PERF_LOG.info "Start submission submit"
+    PERF_LOG.info 'Start submission submit'
     submission.submit!
-    PERF_LOG.info "End submission submit"
+    PERF_LOG.info 'End submission submit'
     true
   rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => e
     errors.add(:sequencescape_connection, /.+\[([^\]]+)\]/.match(e.message)[1])
