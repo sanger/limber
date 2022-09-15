@@ -39,7 +39,7 @@ class SequencescapeSubmission
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
   validate :check_extra_barcodes
 
-  PERF_LOG = Logger.new("#{Rails.root}/log/seq_subm_performance.log")
+  PERF_LOG = Logger.new(Rails.root.join('/log/seq_subm_performance.log'))
   PERF_LOG.formatter = Logger::Formatter.new
   PERF_LOG.level = Logger::INFO
 
@@ -133,7 +133,7 @@ class SequencescapeSubmission
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def generate_submissions
     orders = generate_orders
     PERF_LOG.info 'End generate orders and start submission create'
@@ -151,7 +151,7 @@ class SequencescapeSubmission
     false
   end
 
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def submission_template
     @submission_template ||= api.order_template.find(template_uuid)
