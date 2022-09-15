@@ -24,7 +24,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^27.5.1",
-    "core-js": "^3.22.4",
+    "core-js": "^3.25.1",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^24.7.0",
@@ -33,7 +33,7 @@
     "mini-css-extract-plugin": "^0.7.0",
     "prettier": "^2.6.2",
     "vue-jest": "^3.0.7",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.11.0"
   },
   "name": "limber",
   "scripts": {
