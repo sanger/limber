@@ -39,7 +39,7 @@ class SequencescapeSubmission
   validates :api, :user, :assets, :template_uuid, :request_options, presence: true
   validate :check_extra_barcodes
 
-  PERF_LOG = Logger.new(Rails.root.join('/log/seq_subm_performance.log'))
+  PERF_LOG = Logger.new(Rails.root.join('log/seq_subm_performance.log'))
   PERF_LOG.formatter = Logger::Formatter.new
   PERF_LOG.level = Logger::INFO
 
