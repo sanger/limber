@@ -195,7 +195,7 @@ module LabwareCreators
     #
     def submission_built?
       counter = 1
-      while counter <= 6
+      while counter <= 40 # TODO: need to reduce this once performance issues addressed
         @submission = Sequencescape::Api::V2::Submission.where(uuid: @submission_uuid).first
 
         return true unless @submission.building_in_progress?
