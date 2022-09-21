@@ -129,15 +129,41 @@ class SequencescapeSubmission
       # try passing a list of orders to this instead of one at a time
       # or try one order and pass the request options
       order_index += 1
-      submission_template.orders.create!(order_parameters)
+      submission_template.orders.create!(order_parameters) 
     end
   end
 
+  def delayed_generate_orders
+    PERF_LOG.info 'Start generate_orders'
+    order_index = 1
+    asset_groups_for_orders_creation.map do |asset_group|
+      PERF_LOG.info "Start order #{order_index}"
+      order_parameters = { request_options: request_options, user: user }.merge(asset_group)
+
+      # try passing a list of orders to this instead of one at a time
+      # or try one order and pass the request options
+      order_index += 1
+      #submission_template.orders.create!(order_parameters) 
+      order_parameters
+    end
+  end
+
+
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def generate_submissions
-    orders = generate_orders
+    #orders = submission_template.orders.create!(delayed_generate_orders) 
+    #binding.pry
+    st = Sequencescape::Api::V2::SubmissionTemplate.find_by(uuid: template_uuid)
+    PERF_LOG.info 'Start creating orders'
+    #binding.pry
+    st.update!(orders_attributes: delayed_generate_orders)
+
+    #orders = submission_template.update!(orders_attributes: delayed_generate_orders) 
+    #orders_args = delayed_generate_orders
+    #orders = generate_orders
     PERF_LOG.info 'End generate orders and start submission create'
-    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
+    submission = api.submission.create!(orders: st.orders_attributes, user: user)
+    #submission = api.submission.create!(orders_attributes: orders_args, user: user)
     @submission_uuid = submission.uuid
     PERF_LOG.info 'Start submission submit'
     submission.submit!
