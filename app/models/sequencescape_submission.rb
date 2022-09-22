@@ -51,7 +51,8 @@ class SequencescapeSubmission
   def save
     return false unless valid?
     PERF_LOG.info 'Start generate submissions'
-    generate_submissions
+    generate_submissions_version_2
+    #generate_submissions
   end
 
   # @return [String] template_uuid: The uuid of the submission template to use
@@ -122,6 +123,7 @@ class SequencescapeSubmission
   def generate_orders
     PERF_LOG.info 'Start generate_orders'
     order_index = 1
+    #binding.pry
     asset_groups_for_orders_creation.map do |asset_group|
       PERF_LOG.info "Start order #{order_index}"
       order_parameters = { request_options: request_options, user: user }.merge(asset_group)
@@ -139,6 +141,7 @@ class SequencescapeSubmission
     asset_groups_for_orders_creation.map do |asset_group|
       PERF_LOG.info "Start order #{order_index}"
       order_parameters = { request_options: request_options, user: user }.merge(asset_group)
+      order_parameters[:request_options]['bait_library_name'] = order_parameters[:request_options]['bait_library']
 
       # try passing a list of orders to this instead of one at a time
       # or try one order and pass the request options
@@ -148,9 +151,25 @@ class SequencescapeSubmission
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  def generate_submissions
+    orders = generate_orders
+    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
+    @submission_uuid = submission.uuid
+    submission.submit!
+    true
+  rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => e
+    errors.add(:sequencescape_connection, /.+\[([^\]]+)\]/.match(e.message)[1])
+    false
+  rescue Sequencescape::Api::ResourceInvalid => e
+    errors.add(:submission, e.resource.errors.full_messages.join('; '))
+    false
+  end
+
+
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-  def generate_submissions
+  def generate_submissions_version_2
     #orders = submission_template.orders.create!(delayed_generate_orders) 
     #binding.pry
     st = Sequencescape::Api::V2::SubmissionTemplate.find_by(uuid: template_uuid)
