@@ -118,7 +118,7 @@ module Presenters
     end
 
     def filename(offset = nil)
-      "#{labware.barcode.prefix}#{labware.barcode.number}#{offset}.csv".tr(' ', '_')
+      "#{human_barcode}#{offset}.csv".tr(' ', '_')
     end
 
     def tag_sequences
@@ -131,6 +131,10 @@ module Presenters
 
     def comment_title
       "#{human_barcode} - #{purpose_name}"
+    end
+
+    def custom_metadata_fields
+      purpose_config.fetch(:custom_metadata_fields, []).to_a.to_json
     end
 
     def quadrants_helper

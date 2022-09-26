@@ -6,6 +6,9 @@
 class PipelineList
   attr_reader :list
 
+  # When calling a PipelineList object, if method doesn't exist, call on the @list object
+  # e.g Settings.pipelines.group_by(&:pipeline_group)
+  # is the equalivent of Settings.pipelines.list.group_by(&:pipeline_group)
   delegate_missing_to :list
 
   def initialize(list = {})
@@ -18,6 +21,13 @@ class PipelineList
   # If a pipeline has no filter criteria, it will also be considered 'active' for the labware.
   def active_pipelines_for(labware)
     @list.select { |pipeline| pipeline.active_for?(labware) }
+  end
+
+  # For the given pipeline group
+  # return a object with key: group, and value: list of the pipeline names in that group
+  # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
+  def retrieve_pipeline_config_for_group(pipeline_group)
+    @list.select { |pipeline| pipeline.pipeline_group == pipeline_group }.map(&:name)
   end
 
   # Builds a flat list of purposes in a sensible order from the relationships config

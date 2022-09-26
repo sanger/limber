@@ -34,4 +34,10 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   def each_robot(&block)
     Robots.each_robot(&block)
   end
+
+  # Return a list of unique pipeline group names
+  def pipeline_groups
+    return [] if Settings.pipelines.list.empty?
+    Settings.pipelines.map(&:pipeline_group).uniq.sort
+  end
 end

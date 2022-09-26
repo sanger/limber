@@ -3,6 +3,7 @@ db/*.sqlite3
 log/*.log*
 tmp/
 doc/
+docs/
 .yardoc/
 public/stylesheets/*.css
 .DS_Store

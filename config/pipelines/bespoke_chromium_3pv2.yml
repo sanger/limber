@@ -1,5 +1,6 @@
 ---
 Bespoke Chromium 3pv2:
+  pipeline_group: Bespoke Chromium 3pv2
   filters:
     request_type_key: limber_chromium_bespoke
     library_type:
@@ -10,6 +11,7 @@ Bespoke Chromium 3pv2:
     LBB Cherrypick: LBB Chromium Tagged
     LBB Chromium Tagged: LBB Lib-XP
 Bespoke Chromium 3pv2 MX:
+  pipeline_group: Bespoke Chromium 3pv2
   filters:
     request_type_key:
       - limber_multiplexing

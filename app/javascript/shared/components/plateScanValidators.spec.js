@@ -453,6 +453,11 @@ describe('checkAllLibraryRequestsWithSameReadySubmissions', () => {
             library_type: 'A',
             submission: { state: 'ready', id: '2' },
           },
+          {
+            state: 'pending',
+            library_type: 'B',
+            submission: { state: 'ready', id: '3' },
+          },
         ],
       },
       {
@@ -460,8 +465,13 @@ describe('checkAllLibraryRequestsWithSameReadySubmissions', () => {
         requests_as_source: [
           {
             state: 'pending',
-            submission: { state: 'ready', id: '2' },
+            submission: { state: 'ready', id: '3' },
+            library_type: 'B',
+          },
+          {
+            state: 'pending',
             library_type: 'A',
+            submission: { state: 'ready', id: '2' },
           },
         ],
       },
@@ -530,6 +540,11 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
               library_type: 'A',
               submission: { state: 'ready', id: '2' },
             },
+            {
+              state: 'pending',
+              library_type: 'A',
+              submission: { state: 'ready', id: '3' },
+            },
           ],
         },
         {
@@ -539,6 +554,11 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
               state: 'pending',
               library_type: 'A',
               submission: { state: 'ready', id: '2' },
+            },
+            {
+              state: 'pending',
+              library_type: 'A',
+              submission: { state: 'ready', id: '3' },
             },
           ],
         },
@@ -553,18 +573,28 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
             {
               state: 'pending',
               library_type: 'A',
-              submission: { state: 'failed', id: '1' },
+              submission: { state: 'ready', id: '3' },
             },
             {
               state: 'pending',
               library_type: 'A',
               submission: { state: 'ready', id: '2' },
             },
+            {
+              state: 'pending',
+              library_type: 'A',
+              submission: { state: 'failed', id: '1' },
+            },
           ],
         },
         {
           position: { name: 'B1' },
           requests_as_source: [
+            {
+              state: 'pending',
+              submission: { state: 'ready', id: '3' },
+              library_type: 'A',
+            },
             {
               state: 'pending',
               submission: { state: 'ready', id: '2' },

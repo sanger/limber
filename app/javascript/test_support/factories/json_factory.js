@@ -1,7 +1,7 @@
 // Convenience class for importing multiple factories
 
 import counter from 'shared/counter'
-import uuidv4 from 'uuid/v4'
+import { v4 as uuidv4 } from 'uuid'
 import pluralize from 'pluralize'
 import defaults from 'test_support/factories/defaults'
 import ResourceConfig from './resource_config'
