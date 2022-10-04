@@ -9,7 +9,7 @@ default_sprint_templates:
   :plate_double: plate_384.yml.erb
   :plate_a: plate_96.yml.erb
   :tube_rack: plate_96.yml.erb
-  :tube: tube_label_template_1d
+  :tube: tube_label_template_1d.yml.erb
 
 default_printer_type_names:
   :plate_double: 384 Well Plate Double
