@@ -248,7 +248,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect(subject.wells_grouped_by_collected_by.count).to eq(3)
     end
 
-    context 'the wells within a collected_by (supplier) group are randomised' do
+    context 'the wells within a collected_by group are randomised' do
       it 'returns whats expected' do
         # rubocop:todo Layout/LineLength
         # difficult to test randomness as there is a chance this fails if the randomisation is such that it remains the same order
@@ -257,7 +257,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       end
     end
 
-    context 'when there are 4 collected_by suppliers, but only 3 collected_by suppliers contain passed samples' do
+    context 'when there are 4 collection sites, but only 3 collection sites contain passed samples' do
       it 'returns whats expected' do
         collected_by_group4 = plate.wells[0..3] # contains only failed samples
         collected_by_group4.map do |well|
