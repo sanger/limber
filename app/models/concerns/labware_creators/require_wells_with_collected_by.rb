@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-# Can be included in plate creators which requires well aliquots to have sample metadata
-module LabwareCreators::RequireWellsWithSampleMetadata
+# Can be included in plate creators which requires well aliquots to have collected_by sample metadata
+module LabwareCreators::RequireWellsWithCollectedBy
   extend ActiveSupport::Concern
 
   # Validation method that can be called to check that all wells, with aliquots,
-  # have an associated sample metadata.
-  def wells_with_aliquots_have_sample_metadata?
-    invalid_well_locations = wells_with_missing_sample_metadata
+  # have an associated sample metadata, with collected_by.
+  def wells_with_aliquots_have_collected_by?
+    invalid_well_locations = wells_with_missing_collected_by
     return if invalid_well_locations.empty?
 
-    msg = 'wells missing sample metadata:'
+    msg = 'wells missing collected_by sample metadata:'
     errors.add(:source_plate, "#{msg} #{invalid_well_locations.join(', ')}")
   end
 
   private
 
-  def wells_with_missing_sample_metadata
+  def wells_with_missing_collected_by
     source_plate
       .wells
       .each_with_object([]) do |well, invalid_locations|

@@ -17,9 +17,9 @@ module LabwareCreators
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
 
-    include LabwareCreators::RequireWellsWithSampleMetadata
+    include LabwareCreators::RequireWellsWithCollectedBy
 
-    validate :wells_with_aliquots_have_sample_metadata?
+    validate :wells_with_aliquots_have_collected_by?
 
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
@@ -144,7 +144,7 @@ module LabwareCreators
 
     # Get passed parent wells, randomise, then group by sample metadata: collected_by
     # e.g. { collected_by_0=>['w1', 'w4'], collected_by_1=>['w6', 'w2'], collected_by_2=>['w9', 'w23'] }
-    # wells_with_aliquots_have_sample_metadata? handles the validation of sample metadata presence
+    # wells_with_aliquots_have_collected_by? handles the validation of sample metadata presence
     def wells_grouped_by_collected_by
       passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.collected_by }
     end
