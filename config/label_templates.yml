@@ -3,13 +3,13 @@ default_pmb_templates:
   :plate_double: plate_6mm_double_code39
   :plate_a: sqsc_96plate_label_template_code39
   :tube_rack: sqsc_96plate_label_template_code39
-  :tube: limber_tube_label_template
+  :tube: tube_label_template_1d
 
 default_sprint_templates:
   :plate_double: plate_384.yml.erb
   :plate_a: plate_96.yml.erb
   :tube_rack: plate_96.yml.erb
-  :tube: tube.yml.erb
+  :tube: tube_label_template_1d.yml.erb
 
 default_printer_type_names:
   :plate_double: 384 Well Plate Double
