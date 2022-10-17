@@ -3,6 +3,7 @@
     "@babel/preset-env": "^7.19.3",
     "@rails/webpacker": "5.4.2",
     "axios": "^0.21.4",
+    "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.22.0",
     "cytoscape": "^3.23.0",
     "devour-client": "^2.1.2",
@@ -20,12 +21,11 @@
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@prettier/plugin-ruby": "^2.1.0",
     "@vue/test-utils": "^1.0.0-beta.25",
-    "axios-mock-adapter": "^1.20.0",
+    "axios-mock-adapter": "^1.21.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^27.5.1",
-    "babel-loader": "^8.2.5",
-    "core-js": "^3.25.1",
+    "core-js": "^3.25.5",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^24.7.0",
@@ -34,7 +34,7 @@
     "mini-css-extract-plugin": "^0.7.0",
     "prettier": "^2.7.1",
     "vue-jest": "^3.0.7",
-    "webpack-dev-server": "^4.11.0"
+    "webpack-dev-server": "^4.11.1"
   },
   "name": "limber",
   "scripts": {

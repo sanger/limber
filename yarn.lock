@@ -3095,13 +3095,12 @@ autoprefixer@^9.6.1:
     postcss "^7.0.30"
     postcss-value-parser "^4.1.0"
 
-axios-mock-adapter@^1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/axios-mock-adapter/-/axios-mock-adapter-1.20.0.tgz#21f5b4b625306f43e8c05673616719da86e20dcb"
-  integrity sha512-shZRhTjLP0WWdcvHKf3rH3iW9deb3UdKbdnKUoHmmsnBhVXN3sjPJM6ZvQ2r/ywgvBVQrMnjrSyQab60G1sr2w==
+axios-mock-adapter@^1.21.2:
+  version "1.21.2"
+  resolved "https://registry.yarnpkg.com/axios-mock-adapter/-/axios-mock-adapter-1.21.2.tgz#87a48f80aa89bb1ab1ad630fa467975e30aa4721"
+  integrity sha512-jzyNxU3JzB2XVhplZboUcF0YDs7xuExzoRSHXPHr+UQajaGmcTqvkkUADgkVI2WkGlpZ1zZlMVdcTMU0ejV8zQ==
   dependencies:
     fast-deep-equal "^3.1.3"
-    is-blob "^2.1.0"
     is-buffer "^2.0.5"
 
 axios@^0.21.0, axios@^0.21.4:
@@ -4199,10 +4198,10 @@ core-js@^3.16.2:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
   integrity sha512-L1TpFRWXZ76vH1yLM+z6KssLZrP8Z6GxxW4auoCj+XiViOzNPJCAuTIkn03BGdFe6Z5clX5t64wRIRypsZQrUg==
 
-core-js@^3.25.1:
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.25.1.tgz#5818e09de0db8956e16bf10e2a7141e931b7c69c"
-  integrity sha512-sr0FY4lnO1hkQ4gLDr24K0DGnweGO1QwSj5BpfQjpSJPdqWalja4cTps29Y/PJVG/P7FYlPDkH3hO+Tr0CvDgQ==
+core-js@^3.25.5:
+  version "3.25.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.25.5.tgz#e86f651a2ca8a0237a5f064c2fe56cef89646e27"
+  integrity sha512-nbm6eZSjm+ZuBQxCUPQKQCoUEfFOXjUZ8dTTyikyKaWrTYmAVbykQfwsKE5dBK88u3QCkCrzsx/PPlKfhsvgpw==
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -6141,11 +6140,6 @@ is-binary-path@~2.1.0:
   integrity sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==
   dependencies:
     binary-extensions "^2.0.0"
-
-is-blob@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/is-blob/-/is-blob-2.1.0.tgz#e36cd82c90653f1e1b930f11baf9c64216a05385"
-  integrity sha512-SZ/fTft5eUhQM6oF/ZaASFDEdbFVe89Imltn9uZr03wdKMcWNVYSMjQPFtg05QuNkt5l5c135ElvXEQG0rk4tw==
 
 is-buffer@^1.1.5:
   version "1.1.6"
@@ -9428,10 +9422,10 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selfsigned@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-2.0.1.tgz#8b2df7fa56bf014d19b6007655fff209c0ef0a56"
-  integrity sha512-LmME957M1zOsUhG+67rAjKfiWFox3SBxE/yymatMZsAx+oMrJ0YQ8AToOnyCm7xbeg2ep37IHLxdu0o2MavQOQ==
+selfsigned@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-2.1.1.tgz#18a7613d714c0cd3385c48af0075abf3f266af61"
+  integrity sha512-GSL3aowiF7wa/WtSFwnUrludWFoNhftq8bUkH9pkzjpN2XSPOAYEgg6e0sS9s0rZwgJzJiQRPU18A6clnoW5wQ==
   dependencies:
     node-forge "^1"
 
@@ -10719,10 +10713,10 @@ webpack-dev-middleware@^5.3.1:
     range-parser "^1.2.1"
     schema-utils "^4.0.0"
 
-webpack-dev-server@^4.11.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.11.0.tgz#290ee594765cd8260adfe83b2d18115ea04484e7"
-  integrity sha512-L5S4Q2zT57SK7tazgzjMiSMBdsw+rGYIX27MgPgx7LDhWO0lViPrHKoLS7jo5In06PWYAhlYu3PbyoC6yAThbw==
+webpack-dev-server@^4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.11.1.tgz#ae07f0d71ca0438cf88446f09029b92ce81380b5"
+  integrity sha512-lILVz9tAUy1zGFwieuaQtYiadImb5M3d+H+L1zDYalYoDl0cksAB1UNyuE5MMWJrG6zR1tXkCP2fitl7yoUJiw==
   dependencies:
     "@types/bonjour" "^3.5.9"
     "@types/connect-history-api-fallback" "^1.3.5"
@@ -10747,7 +10741,7 @@ webpack-dev-server@^4.11.0:
     p-retry "^4.5.0"
     rimraf "^3.0.2"
     schema-utils "^4.0.0"
-    selfsigned "^2.0.1"
+    selfsigned "^2.1.1"
     serve-index "^1.9.1"
     sockjs "^0.3.24"
     spdy "^4.0.2"
