@@ -34,6 +34,7 @@ FactoryBot.define do
     skip_create
     sequence(:supplier_name) { |i| "supplier name #{i}" }
     sample_common_name { 'Homo sapiens' }
+    collected_by { 'Sanger' }
   end
 
   factory :v2_sample_manifest, class: Sequencescape::Api::V2::SampleManifest do
