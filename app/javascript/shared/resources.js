@@ -489,6 +489,7 @@ const resources = [
     attributes: {
       sample_common_name: "",
       supplier_name: "",
+      collected_by: ""
     },
     options: {},
   },

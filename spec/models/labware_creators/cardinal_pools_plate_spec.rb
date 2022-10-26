@@ -23,12 +23,18 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   let(:plate) do
     plate1 = create(:v2_plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
 
-    supplier_group1 = plate1.wells[0..9]
-    supplier_group1.map { |well| well.aliquots.first.sample.sample_manifest[:supplier_name] = 'blood location 1' }
-    supplier_group2 = plate1.wells[9..49]
-    supplier_group2.map { |well| well.aliquots.first.sample.sample_manifest[:supplier_name] = 'blood location 2' }
-    supplier_group3 = plate1.wells[49..95]
-    supplier_group3.map { |well| well.aliquots.first.sample.sample_manifest[:supplier_name] = 'blood location 3' }
+    collected_by_group1 = plate1.wells[0..9]
+    collected_by_group1.map do |well|
+      well.aliquots.first.sample.sample_metadata.collected_by = 'collected by location 1'
+    end
+    collected_by_group2 = plate1.wells[9..49]
+    collected_by_group2.map do |well|
+      well.aliquots.first.sample.sample_metadata.collected_by = 'collected by location 2'
+    end
+    collected_by_group3 = plate1.wells[49..95]
+    collected_by_group3.map do |well|
+      well.aliquots.first.sample.sample_metadata.collected_by = 'collected by location 3'
+    end
     plate1
   end
 
@@ -52,24 +58,24 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       expect(Rails.application.config.cardinal_pooling_config[20]).to eq(1)
     end
 
-    context 'when missing a sample manifest' do
-      it 'fails validation when all wells are missing a sample manifest' do
+    context 'when missing sample metadata' do
+      it 'fails validation when all wells are missing a sample metadata' do
         stub_v2_plate(plate, stub_search: false)
-        plate.wells.map { |well| well.aliquots.first.sample.sample_manifest = nil }
+        plate.wells.map { |well| well.aliquots.first.sample.sample_metadata = nil }
         expect(subject).to_not be_valid
         expect(subject.errors.messages[:source_plate]).to be_present
       end
 
-      it 'fails validation when 1 well is missing a sample manifest' do
+      it 'fails validation when 1 well is missing a sample metadata' do
         stub_v2_plate(plate, stub_search: false)
-        plate.wells[0].aliquots.first.sample.sample_manifest = nil
+        plate.wells[0].aliquots.first.sample.sample_metadata = nil
         expect(subject).to_not be_valid
         expect(subject.errors.messages[:source_plate]).to be_present
       end
 
-      it 'fails validation when the sample manifests supplier name is missing' do
+      it 'fails validation when the sample metadata: collected_by is missing' do
         stub_v2_plate(plate, stub_search: false)
-        plate.wells[0].aliquots.first.sample.sample_manifest.supplier_name = nil
+        plate.wells[0].aliquots.first.sample.sample_metadata.collected_by = nil
         expect(subject).to_not be_valid
         expect(subject.errors.messages[:source_plate]).to be_present
       end
@@ -232,36 +238,38 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
-  describe '#wells_grouped_by_supplier' do
+  describe '#wells_grouped_by_collected_by' do
     before do
       plate.wells[4..95].map { |well| well['state'] = 'passed' }
       stub_v2_plate(plate, stub_search: false)
     end
 
     it 'returns whats expected' do
-      expect(subject.wells_grouped_by_supplier.count).to eq(3)
+      expect(subject.wells_grouped_by_collected_by.count).to eq(3)
     end
 
-    context 'the wells within a supplier group are randomised' do
+    context 'the wells within a collected_by group are randomised' do
       it 'returns whats expected' do
         # rubocop:todo Layout/LineLength
         # difficult to test randomness as there is a chance this fails if the randomisation is such that it remains the same order
         # rubocop:enable Layout/LineLength
-        expect(subject.wells_grouped_by_supplier['blood location 2']).not_to eq plate.wells[9..49]
+        expect(subject.wells_grouped_by_collected_by['collected by location 2']).not_to eq plate.wells[9..49]
       end
     end
 
-    context 'when there are 4 suppliers, but only 3 suppliers contain passed samples' do
+    context 'when there are 4 collection sites, but only 3 collection sites contain passed samples' do
       it 'returns whats expected' do
-        supplier_group4 = plate.wells[0..3] # contains only failed samples
-        supplier_group4.map { |well| well.aliquots.first.sample.sample_manifest[:supplier_name] = 'blood location 4' }
-        expect(subject.wells_grouped_by_supplier.count).to eq(3)
-        expect(subject.wells_grouped_by_supplier.keys).to match_array [
-                      'blood location 3',
-                      'blood location 2',
-                      'blood location 1'
+        collected_by_group4 = plate.wells[0..3] # contains only failed samples
+        collected_by_group4.map do |well|
+          well.aliquots.first.sample.sample_metadata.collected_by = 'collected by location 4'
+        end
+        expect(subject.wells_grouped_by_collected_by.count).to eq(3)
+        expect(subject.wells_grouped_by_collected_by.keys).to match_array [
+                      'collected by location 3',
+                      'collected by location 2',
+                      'collected by location 1'
                     ]
-        expect(subject.wells_grouped_by_supplier['blood location 4']).to be_nil
+        expect(subject.wells_grouped_by_collected_by['collected by location 4']).to be_nil
       end
     end
   end

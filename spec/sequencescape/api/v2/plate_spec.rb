@@ -153,7 +153,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
         .with(
           query: {
             fields: {
-              sample_metadata: 'sample_common_name',
+              sample_metadata: 'sample_common_name,collected_by',
               submissions: 'lanes_of_sequencing'
             },
             filter: {

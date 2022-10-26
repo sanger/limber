@@ -8,16 +8,18 @@
 # 2. Get the passed wells from the parent (LCA PBMC) plate
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
-# 4. Group samples by supplier, to ensure samples with the same supplier are distrubuted across different pools
+# 4. Group samples by `collected_by`, to ensure samples with the same collection site
+# are distributed across different pools
 # 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well
 # in the new LCA PBMC Pools plate
 module LabwareCreators
   # This class is used for creating Cardinal pools into destination plate
   class CardinalPoolsPlate < Base
     include SupportParent::PlateOnly
-    include LabwareCreators::RequireWellsWithSampleManifest
 
-    validate :wells_with_aliquots_have_sample_manifest?
+    include LabwareCreators::RequireWellsWithCollectedBy
+
+    validate :wells_with_aliquots_have_collected_by?
 
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
@@ -123,9 +125,9 @@ module LabwareCreators
       pools = []
       current_pool = 0
 
-      # wells_grouped_by_supplier = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
-      wells_grouped_by_supplier.each do |_supplier, wells|
-        # Loop through the wells for that supplier
+      # wells_grouped_by_collected_by = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
+      wells_grouped_by_collected_by.each do |_collected_by, wells|
+        # Loop through the wells for that collected_by
         wells.each do |well|
           # Create pool if it doesnt already exist
           pools[current_pool] = [] unless pools[current_pool]
@@ -140,11 +142,11 @@ module LabwareCreators
       pools
     end
 
-    # Get passed parent wells, randomise, then group by sample supplier
-    # e.g. { supplier0=>['w1', 'w4'], supplier1=>['w6', 'w2'], supplier2=>['w9', 'w23'] }
-    # wells_with_aliquots_have_sample_manfiest? handles the validation of sample_manfiest presence
-    def wells_grouped_by_supplier
-      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_manifest.supplier_name }
+    # Get passed parent wells, randomise, then group by sample metadata: collected_by
+    # e.g. { collected_by_0=>['w1', 'w4'], collected_by_1=>['w6', 'w2'], collected_by_2=>['w9', 'w23'] }
+    # wells_with_aliquots_have_collected_by? handles the validation of sample metadata presence
+    def wells_grouped_by_collected_by
+      passed_parent_wells.to_a.shuffle.group_by { |well| well.aliquots.first.sample.sample_metadata.collected_by }
     end
   end
 end
