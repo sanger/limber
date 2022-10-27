@@ -23,7 +23,7 @@ class PrintJob # rubocop:todo Style/Documentation
     end
   end
 
-  def print_to_pmb # rubocop:todo Metrics/MethodLength
+  def print_to_pmb # rubocop:disable all
     job =
       PMB::PrintJob.new(
         printer_name: printer_name,
@@ -32,6 +32,9 @@ class PrintJob # rubocop:todo Style/Documentation
           body: (labels * number_of_copies)
         }
       )
+    puts "LABEL TEMPLATE ID:: #{pmb_label_template_id}" # rubocop:disable all
+    puts "LABELS:: #{labels}" # rubocop:disable all
+    puts "LABELS :: #{labels * number_of_copies}" # rubocop:disable all
     if job.save
       true
     else
