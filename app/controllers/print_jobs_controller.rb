@@ -7,8 +7,6 @@ class PrintJobsController < ApplicationController
   def create # rubocop:disable Metrics/AbcSize
     @print_job = PrintJob.new(print_job_params)
     @print_job.printer = find_printer_from_name
-    puts "PARAMS:: #{print_job_params}" # rubocop:disable all
-    puts "PRINTER:: #{@print_job.printer}" # rubocop:disable all
 
     if @print_job.execute
       flash.notice = "Your label(s) have been sent to #{print_job_params[:printer_name]}"

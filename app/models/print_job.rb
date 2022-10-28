@@ -32,9 +32,6 @@ class PrintJob # rubocop:todo Style/Documentation
           body: (labels * number_of_copies)
         }
       )
-    puts "LABEL TEMPLATE ID:: #{pmb_label_template_id}" # rubocop:disable all
-    puts "LABELS:: #{labels}" # rubocop:disable all
-    puts "LABELS :: #{labels * number_of_copies}" # rubocop:disable all
     if job.save
       true
     else
