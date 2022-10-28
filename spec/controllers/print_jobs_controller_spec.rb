@@ -13,7 +13,7 @@ RSpec.describe PrintJobsController, type: :controller do
       params = {
         print_job: {
           printer_name: 'tube printer 1',
-          label_templates_by_service: 'limber_tube_label_template',
+          label_templates_by_service: 'tube_label_template_1d',
           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
             sprint: {
