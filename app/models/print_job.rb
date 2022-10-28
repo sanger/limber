@@ -23,7 +23,7 @@ class PrintJob # rubocop:todo Style/Documentation
     end
   end
 
-  def print_to_pmb # rubocop:disable all
+  def print_to_pmb # rubocop:todo Metrics/MethodLength
     job =
       PMB::PrintJob.new(
         printer_name: printer_name,

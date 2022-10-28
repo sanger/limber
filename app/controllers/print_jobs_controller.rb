@@ -4,7 +4,7 @@
 # Pretty simple wrapper for print job, and incredibly un-opinionated, simply passes
 # the parameters straight through to the print job.
 class PrintJobsController < ApplicationController
-  def create # rubocop:disable Metrics/AbcSize
+  def create
     @print_job = PrintJob.new(print_job_params)
     @print_job.printer = find_printer_from_name
 
