@@ -24,7 +24,7 @@ namespace :test_config do
       },
       metadata_key_options: %w[Key1 Key2 Key3 Key4],
       label_templates: {
-        'tube' => 'limber_tube_label_template',
+        'tube' => 'tube_label_template_1d',
         'plate' => 'sqsc_96plate_label_template'
       }
     }

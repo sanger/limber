@@ -4,7 +4,7 @@ namespace :pmb do
   task register_label_templates: :environment do
     [
       {
-        'name' => 'limber_tube_label_template',
+        'name' => 'tube_label_template_1d',
         # I make an assumption here that 'Tube' label type exists in PMB
         'label_type_id' => PMB::LabelType.find(name: 'Tube').first.id,
         'labels_attributes' => [
