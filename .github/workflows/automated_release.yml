@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - reduce_barcode_size
 
 env:
   BUNDLE_WITHOUT: 'test lint'
