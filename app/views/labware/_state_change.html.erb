@@ -47,7 +47,8 @@
             </div>
             <div class="alert alert-info w-100 mt-2">
               Failing will mark this labware as failed and will fail the associated library requests. This decision is not
-              reversible and will prevent any further work being carried out on parent plates.
+              reversible and will prevent any further work being carried out on parent plates. <b>Note:</b> This action will
+              also remove all downstream aliquots unless there is a sequencing batch downstream already.
             </div>
             <%= failed.submit 'Fail Labware', class: 'btn btn-lg btn-danger btn-block', data: { disable_with: 'Failing...' } %>
           <% end %>
