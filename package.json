@@ -17,7 +17,7 @@
     "webpack-cli": "^3.3.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.7",
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@prettier/plugin-ruby": "^2.1.0",
     "@vue/test-utils": "^1.0.0-beta.25",
