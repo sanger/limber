@@ -173,8 +173,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesBySubmission}
 
-  Used directly in 12 purposes:
-  LBC 5p GLibPS, pWGS-384 Lib Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, LB Lib Pool, LHR-384 Pool XP, LBC TCR LibPS, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LHR Lib Pool
+  Used directly in 13 purposes:
+  LBC 5p GLibPS, pWGS-384 Lib Pool XP, LBSN-384 PCR 2 Pool, LBC BCR LibPS, GnT Pico Lib Pool, LB Lib Pool, LHR-384 Pool XP, LBC TCR LibPS, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LHR Lib Pool
 
 {LabwareCreators::PooledTubesBySubmission View class documentation}
 
@@ -193,8 +193,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::CustomTaggedPlate}
 
-  Used directly in 8 purposes:
-  LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
+  Used directly in 9 purposes:
+  LBC 5p GEX LigXP, LBSN-384 PCR 2, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
 
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
@@ -320,8 +320,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesFromWholeTubes}
 
-  Used directly in 1 purposes:
-  GBS MiSeq Pool
+  Used directly in 2 purposes:
+  LBSN-9216 Lib PCR Pool and GBS MiSeq Pool
 
 {LabwareCreators::PooledTubesFromWholeTubes View class documentation}
 
@@ -350,8 +350,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::Uncreatable}
 
-  Used directly in 5 purposes:
-  CLCM Stock, LTHR-384 RT, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
+  Used directly in 6 purposes:
+  CLCM Stock, LBSN-384 PCR 1, LTHR-384 RT, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 
