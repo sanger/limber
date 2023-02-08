@@ -1,0 +1,11 @@
+---
+DPL510 Bioscan Pooling Test:
+  pipeline_group: Bioscan
+  filters:
+    request_type_key: bioscan_test_request_type
+    library_type: bioscan_test_library_type
+  library_pass: LBSN-9216 Lib PCR Pool
+  relationships:
+    LBSN-384 PCR 1: LBSN-384 PCR 2
+    LBSN-384 PCR 2: LBSN-384 PCR 2 Pool
+    LBSN-384 PCR 2 Pool: LBSN-9216 Lib PCR Pool

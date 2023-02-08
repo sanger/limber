@@ -1,0 +1,27 @@
+---
+LBSN-384 PCR 1:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :label_template: plate_6mm_double
+  :size: 384
+LBSN-384 PCR 2:
+  :asset_type: plate
+  :label_template: plate_6mm_double
+  :size: 384
+LBSN-384 PCR 2 Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LBSN-9216 Lib PCR Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  :presenter_class: Presenters::FinalTubePresenter
