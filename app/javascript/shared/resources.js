@@ -52,6 +52,13 @@ const resources = [
     options: {},
   },
   {
+    resource: "bioscan_job",
+    attributes: {
+      barcode: "",
+    },
+    options: {},
+  },
+  {
     resource: "comment",
     attributes: {
       title: "",

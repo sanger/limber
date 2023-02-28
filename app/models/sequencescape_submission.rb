@@ -47,7 +47,8 @@ class SequencescapeSubmission
   def save
     return false unless valid?
 
-    generate_submissions
+    # generate_submissions
+    test_job_creation
   end
 
   # @return [String] template_uuid: The uuid of the submission template to use
@@ -138,6 +139,14 @@ class SequencescapeSubmission
   end
 
   # rubocop:enable Metrics/AbcSize
+
+  def test_job_creation
+    puts "DEBUG: limber creating bioscan job"
+    # TODO: what does this return?
+    # TODO: If we trigger this from a Limber button how do we display a message to user?
+    binding.pry
+    Sequencescape::Api::V2::BioscanJob.create(barcode: '12345678')
+  end
 
   def submission_template
     api.order_template.find(template_uuid)
