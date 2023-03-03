@@ -107,6 +107,12 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
       '+'
     when 'negative'
       '-'
+    when 'pcr positive' # added for Bioscan
+      '+'
+    when 'pcr negative' # added for Bioscan
+      '-'
+    when 'lysate negative' # added for Bioscan
+      '-'
     else
       'c' # control of unspecified type
     end
