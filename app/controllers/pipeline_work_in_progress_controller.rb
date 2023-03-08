@@ -11,14 +11,36 @@ class PipelineWorkInProgressController < ApplicationController
 
     @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(pipelines_for_group)
 
-    page_size = 500
+    labware_records = arrange_labware_records(@ordered_purpose_list)
 
-    labware_records = retrieve_labware(page_size, from_date(params), @ordered_purpose_list)
     @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
   end
 
   def from_date(params)
     params[:date]&.to_date || Time.zone.today.prev_month
+  end
+
+  # Split out requests for the last purpose and the rest of the purposes so that
+  # the labware for the last purpose can be filtered by those that have
+  # ancestors including at least one purpose from the rest.
+  def arrange_labware_records(ordered_purposes)
+    page_size = 500
+
+    specific_purposes = ordered_purposes.first(ordered_purposes.count - 1)
+    specific_labware_records = retrieve_labware(page_size, from_date(params), specific_purposes)
+    general_labware_records = retrieve_labware(page_size, from_date(params), ordered_purposes.last)
+
+    specific_labware_records +
+      filter_labware_records_by_ancestor_purpose_names(general_labware_records, specific_purposes)
+  end
+
+  # Filter a list of labware records such that we only keep those that have at
+  # least one ancestor with a purpose from the given allow list.
+  def filter_labware_records_by_ancestor_purpose_names(labware_records, purpose_names_list)
+    labware_records.select do |labware|
+      ancestor_purpose_names = labware.ancestors.map { |ancestor| ancestor.purpose.name }
+      ancestor_purpose_names.any? { |purpose_name| purpose_names_list.include?(purpose_name) }
+    end
   end
 
   # Retrieves labware through the Sequencescape V2 API
