@@ -52,14 +52,15 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:labware_record_no_state) { create :labware, purpose: purposes[0] }
     let(:labware_record_passed) { create :labware_with_state_changes, purpose: purposes[0], target_state: 'passed' }
     let(:labware_record_cancelled) do
- create :labware_with_state_changes, purpose: purposes[0], target_state: 'cancelled' end
+      create :labware_with_state_changes, purpose: purposes[0], target_state: 'cancelled'
+    end
     let(:labware_records) { [labware_record_no_state, labware_record_passed, labware_record_cancelled] }
 
     it 'returns the correct format' do
       expected_output = {
         purposes[0].name => [
           { record: labware_record_no_state, state: 'pending' },
-          { record: labware_record_passed, state: 'passed' },
+          { record: labware_record_passed, state: 'passed' }
           # cancelled one not present
         ],
         purposes[1].name => []
@@ -85,15 +86,19 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:valid_labware4) { create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor1] }
     let(:valid_labware5) { create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor2] }
     let(:valid_labware6) do
- create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor1, pipeline_ancestor2] end
+      create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor1, pipeline_ancestor2]
+    end
     let(:valid_labware7) do
- create :labware, purpose: pipeline_purposes[2], 
-ancestors: [pipeline_ancestor1, pipeline_ancestor2, another_ancestor] end
+      create :labware,
+             purpose: pipeline_purposes[2],
+             ancestors: [pipeline_ancestor1, pipeline_ancestor2, another_ancestor]
+    end
     let(:valid_labware) do
- [valid_labware1, valid_labware2, valid_labware3, valid_labware4, valid_labware5, valid_labware6, valid_labware7] end
+      [valid_labware1, valid_labware2, valid_labware3, valid_labware4, valid_labware5, valid_labware6, valid_labware7]
+    end
 
     let(:invalid_labware1) { create :labware, purpose: pipeline_purposes[2] }
-    let(:invalid_labware2) { create :labware, purpose: pipeline_purposes[2], ancestors: [another_ancestor]}
+    let(:invalid_labware2) { create :labware, purpose: pipeline_purposes[2], ancestors: [another_ancestor] }
     let(:invalid_labware) { [invalid_labware1, invalid_labware2] }
 
     let(:all_labware) { valid_labware + invalid_labware }
