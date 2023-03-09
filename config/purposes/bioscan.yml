@@ -1,0 +1,47 @@
+# Bioscan plate purposes
+---
+# Entry point plate created by sample manifest for insect in ethanol plates
+LILYS-96 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+# LBSN-96 Lysate Stock plate is the entry point created by a sample manifest for manually
+# lysed material plates created by faculty
+# It is envisioned that this plate will not be required once the Beckman robot is
+# working and doing the lysis step
+LBSN-96 Lysate Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  # :presenter_class: Presenters::SubmissionPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+  # TODO add submission options
+  # :submission_options: &bioscan_submission_options
+  #   LBSN - ?:
+  #     template_name: 'Limber - Bioscan - Automated'
+  #     request_options:
+  #       library_type: '?'
+  #       read_length: ?
+  #       fragment_size_required_from: '?'
+  #       fragment_size_required_to: '?'
+  #       primer_panel_name: ?
+  #     allowed_extra_barcodes: false
+# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot
+# Has a specific creator to add randomised controls
+# TODO once new labware creator is made add line for creator class
+LBSN-96 Lysate:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  # :presenter_class: Presenters::SubmissionPlatePresenter
+  # :creator_class: LabwareCreators::<new bioscan creator>
+  :size: 96
+  # TODO add submission options (same as for Lysate Stock plate above)
+  # :submission_options: *bioscan_submission_options

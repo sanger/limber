@@ -1,0 +1,31 @@
+---
+# This is the pipeline configuration for Bioscan Lysate preparation.
+# This automated route involves a Beckman robot removing Ethanol from insects in
+# the LILYS-96 Stock plate wells, then adding Lysis buffer, then transferring the lysed material
+# and adding controls into the destination LBSN-96 Lysate plate.
+Bioscan Lysate Prep:
+  filters:
+    request_type_key: limber_bioscan_lysate_prep
+  library_pass:
+    - LBSN-96 Lysate
+  relationships:
+    LILYS-96 Stock: LBSN-96 Lysate
+# For Bioscan library prep there are two entry plates:
+# 1. Faculty has created the lysed plate manually and it enters the pipeline via a Sample manifest
+# as a LBSN-96 Lysate Stock plate
+# 2. The Beckman automation has created the lysed plate and it enters the pipeline as LBSN-96 Lysate plate
+# Bioscan Library Prep:
+#   filters:
+#     request_type_key: limber_bioscan_library_prep
+#     library_type:
+#       - Bioscan
+#   # TODO is this correct for library pass?
+#   library_pass: LBSN-9216 Lib PCR Pool XP
+#   relationships:
+#     LBSN-96 Lysate Stock: LBSN-384 PCR 1
+#     LBSN-96 Lysate: LBSN-384 PCR 1
+#     LBSN-384 PCR 1: LBSN-384 PCR 2
+#     LBSN-384 PCR 2: LBSN-384 PCR 2 Pool
+#     LBSN-384 PCR 2 Pool: LBSN-9216 Lib PCR Pool
+#     LBSN-9216 Lib PCR Pool: LBSN-9216 Lib PCR Pool XP
+
