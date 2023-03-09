@@ -6,12 +6,17 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   let(:controller) { described_class.new }
 
   describe 'GET show' do
-    let(:labware) { create_list :labware, 2 }
+    let(:labware) { create_list :labware_with_purpose, 2 }
+    let(:purposes) { labware.map { |lw| lw.purpose.name } }
 
-    before { allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware) }
+    before do
+      labware.each { |lw| lw.ancestors = [] }
+      allow(Settings.pipelines).to receive(:combine_and_order_pipelines).and_return(purposes)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
+    end
 
     it 'runs ok' do
-      get :show, params: { id: 'heron', date: Date.new(2020, 2, 5) }
+      get :show, params: { id: 'Heron-384 V2', date: Date.new(2020, 2, 5) }
       expect(response).to have_http_status(:ok)
     end
   end
@@ -42,20 +47,23 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#mould_data_for_view' do
-    let(:purposes) { ['Limber Example Purpose', 'LTHR-384 RT'] }
     let(:labware_record_no_state) { create :labware_with_purpose }
     let(:labware_record_passsed) { create :labware_with_state_changes, target_state: 'passed' }
     let(:labware_record_cancelled) { create :labware_with_state_changes, target_state: 'cancelled' }
     let(:labware_records) { [labware_record_no_state, labware_record_passsed, labware_record_cancelled] }
+    let(:purposes) { labware_records.map { |lw| lw.purpose.name } }
 
     let(:expected_output) do
       {
-        'Limber Example Purpose' => [
-          { record: labware_record_no_state, state: 'pending' },
-          { record: labware_record_passsed, state: 'passed' }
-          # cancelled one not present
+        labware_record_no_state.purpose.name => [
+          { record: labware_record_no_state, state: 'pending' }
         ],
-        'LTHR-384 RT' => []
+        labware_record_passsed.purpose.name => [
+          { record: labware_record_passsed, state: 'passed' }
+        ],
+        labware_record_cancelled.purpose.name => [
+          # cancelled one not present
+        ]
       }
     end
 
