@@ -39,7 +39,6 @@
   "name": "limber",
   "scripts": {
     "lint": "eslint --ext .js --ext .vue app/javascript",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider build",
     "test": "jest",
     "lintOnly": "eslint --ext .js --ext .vue"
   }
