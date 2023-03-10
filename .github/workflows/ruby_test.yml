@@ -24,12 +24,10 @@ jobs:
         run: bin/setup
       - name: Update webpacker
         run: RAILS_ENV=test bundle exec rails webdrivers:chromedriver:update -r webdrivers
-      - name: Override NODE options for the most recent version
-        if: matrix.node-version == '17'
-        run: echo "NODE_OPTIONS=--openssl-legacy-provider" >> $GITHUB_ENV
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
         with:
           coverageCommand: bundle exec rspec
