@@ -14,18 +14,17 @@ Bioscan Lysate Prep:
 # 1. Faculty has created the lysed plate manually and it enters the pipeline via a Sample manifest
 # as a LBSN-96 Lysate Stock plate
 # 2. The Beckman automation has created the lysed plate and it enters the pipeline as LBSN-96 Lysate plate
-# Bioscan Library Prep:
-#   filters:
-#     request_type_key: limber_bioscan_library_prep
-#     library_type:
-#       - Bioscan
-#   # TODO is this correct for library pass?
-#   library_pass: LBSN-9216 Lib PCR Pool XP
-#   relationships:
-#     LBSN-96 Lysate Stock: LBSN-384 PCR 1
-#     LBSN-96 Lysate: LBSN-384 PCR 1
-#     LBSN-384 PCR 1: LBSN-384 PCR 2
-#     LBSN-384 PCR 2: LBSN-384 PCR 2 Pool
-#     LBSN-384 PCR 2 Pool: LBSN-9216 Lib PCR Pool
-#     LBSN-9216 Lib PCR Pool: LBSN-9216 Lib PCR Pool XP
+Bioscan Library Prep:
+  filters:
+    request_type_key: limber_bioscan_library_prep
+    library_type:
+      - Bioscan
+  library_pass: LBSN-9216 Lib PCR Pool XP
+  relationships:
+    LBSN-96 Lysate Stock: LBSN-384 PCR 1
+    LBSN-96 Lysate: LBSN-384 PCR 1
+    LBSN-384 PCR 1: LBSN-384 PCR 2
+    LBSN-384 PCR 2: LBSN-384 PCR 2 Pool
+    LBSN-384 PCR 2 Pool: LBSN-9216 Lib PCR Pool
+    LBSN-9216 Lib PCR Pool: LBSN-9216 Lib PCR Pool XP
 
