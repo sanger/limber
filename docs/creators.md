@@ -260,8 +260,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::QuadrantStamp}
 
-  Used directly in 3 purposes:
-  pWGS-384 Post Shear XP, PF-384 Post Shear XP, and LTHR-384 RT-Q
+  Used directly in 4 purposes:
+  pWGS-384 Post Shear XP, PF-384 Post Shear XP, LTHR-384 RT-Q, and LBSN-384 PCR 1
 
 {LabwareCreators::QuadrantStamp View class documentation}
 
@@ -310,8 +310,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesFromWholePlates}
 
-  Used directly in 1 purposes:
-  GBS PCR2 Pool Stock
+  Used directly in 2 purposes:
+  LBSN-384 PCR 2 Pool and GBS PCR2 Pool Stock
 
 {LabwareCreators::PooledTubesFromWholePlates View class documentation}
 
@@ -320,8 +320,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesFromWholeTubes}
 
-  Used directly in 1 purposes:
-  GBS MiSeq Pool
+  Used directly in 2 purposes:
+  LBSN-9216 Lib PCR Pool and GBS MiSeq Pool
 
 {LabwareCreators::PooledTubesFromWholeTubes View class documentation}
 
@@ -330,8 +330,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TaggedPlate}
 
-  Used directly in 18 purposes:
-  CLCM DNA Lib PCR, CLCM RNA Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
+  Used directly in 19 purposes:
+  CLCM DNA Lib PCR, CLCM RNA Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LBSN-384 PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
 
 {LabwareCreators::TaggedPlate View class documentation}
 
@@ -340,8 +340,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TubeFromTube}
 
-  Used directly in 14 purposes:
-  LBC 5p Pool Norm, LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LTN Custom Pool Norm, LBC BCR Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, LBC TCR Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
+  Used directly in 15 purposes:
+  LBC 5p Pool Norm, LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LBC BCR Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, LBC TCR Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
 
 {LabwareCreators::TubeFromTube View class documentation}
 
