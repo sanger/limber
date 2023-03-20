@@ -50,13 +50,13 @@ class PipelineWorkInProgressController < ApplicationController
     labware_query =
       Sequencescape::Api::V2::Labware
         .select(
-          { plates: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
-          { tubes: %w[uuid purpose labware_barcode state_changes created_at ancestors] },
+          { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
+          { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
           { purposes: 'name' }
         )
         .includes(:state_changes, :purpose, 'ancestors.purpose')
-        .where(without_children: true, purpose_name: purposes, created_at_gt: from_date)
-        .order(:created_at)
+        .where(without_children: true, purpose_name: purposes, updated_at_gt: from_date)
+        .order(:updated_at)
         .per(page_size)
 
     Sequencescape::Api::V2.merge_page_results(labware_query)
