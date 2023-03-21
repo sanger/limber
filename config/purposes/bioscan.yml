@@ -64,30 +64,30 @@ LBSN-384 PCR 2:
   :size: 384
   # TODO check the names for this list of 24 tag layout templates (see tag plate gen stories)
   :tag_layout_templates:
-    - Bioscan_384_template_1
-    - Bioscan_384_template_2
-    - Bioscan_384_template_3
-    - Bioscan_384_template_4
-    - Bioscan_384_template_5
-    - Bioscan_384_template_6
-    - Bioscan_384_template_7
-    - Bioscan_384_template_8
-    - Bioscan_384_template_9
-    - Bioscan_384_template_10
-    - Bioscan_384_template_11
-    - Bioscan_384_template_12
-    - Bioscan_384_template_13
-    - Bioscan_384_template_14
-    - Bioscan_384_template_15
-    - Bioscan_384_template_16
-    - Bioscan_384_template_17
-    - Bioscan_384_template_18
-    - Bioscan_384_template_19
-    - Bioscan_384_template_20
-    - Bioscan_384_template_21
-    - Bioscan_384_template_22
-    - Bioscan_384_template_23
-    - Bioscan_384_template_24
+    - 'Bioscan_384_template_1'
+    - 'Bioscan_384_template_2'
+    - 'Bioscan_384_template_3'
+    - 'Bioscan_384_template_4'
+    - 'Bioscan_384_template_5'
+    - 'Bioscan_384_template_6'
+    - 'Bioscan_384_template_7'
+    - 'Bioscan_384_template_8'
+    - 'Bioscan_384_template_9'
+    - 'Bioscan_384_template_10'
+    - 'Bioscan_384_template_11'
+    - 'Bioscan_384_template_12'
+    - 'Bioscan_384_template_13'
+    - 'Bioscan_384_template_14'
+    - 'Bioscan_384_template_15'
+    - 'Bioscan_384_template_16'
+    - 'Bioscan_384_template_17'
+    - 'Bioscan_384_template_18'
+    - 'Bioscan_384_template_19'
+    - 'Bioscan_384_template_20'
+    - 'Bioscan_384_template_21'
+    - 'Bioscan_384_template_22'
+    - 'Bioscan_384_template_23'
+    - 'Bioscan_384_template_24'
   # TODO: do we want any metadata entry?
   # :custom_metadata_fields:
   #   - metadatafieldname
