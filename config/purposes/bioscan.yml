@@ -1,0 +1,11 @@
+---
+Bioscan Pool Tube:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :file_links:
+    - name: 'Download MBRAVE file'
+      id: 'bioscan_mbrave'

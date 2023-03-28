@@ -7,6 +7,9 @@ LBB Cherrypick:
   :cherrypickable_target: true
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
+  :file_links:
+    - name: 'Download MBRAVE file'
+      id: 'bioscan_mbrave'
 LBB Ligation:
   :asset_type: plate
 LBB Lib PCR-XP:
@@ -31,6 +34,9 @@ LBB Lib Pool Stock:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :file_links:
+    - name: 'Download MBRAVE file'
+      id: 'bioscan_mbrave'
 LBB Enriched BCR:
   :asset_type: plate
 LBB Enriched BCR HT:

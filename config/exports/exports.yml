@@ -123,3 +123,6 @@ hamilton_lca_pbmc_bank_to_lca_bank_stock:
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
   ancestor_tube_purpose: LCA Blood Vac
+bioscan_mbrave:
+  csv: 'exports/bioscan_mbrave'
+  tube_includes: transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata

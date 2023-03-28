@@ -76,5 +76,24 @@ module Presenters
     def transfer_volumes?
       !purpose_config[:transfer_parameters].nil?
     end
+
+    def csv_file_links
+      links =
+        purpose_config
+          .fetch(:file_links, [])
+          .map do |link|
+            [
+              link.name,
+              [
+                :limber_tube,
+                :tubes_export,
+                { id: link.id, limber_tube_id: human_barcode, format: :csv, **link.params || {} }
+              ]
+            ]
+          end
+      links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
+      links
+    end
+    
   end
 end
