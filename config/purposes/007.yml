@@ -1,0 +1,18 @@
+# one pupose
+# plate pupose with size 16
+# run config generate
+# load into SS DB
+# run uat action to generate plate
+# see plate in ss and limber
+
+# 007 Pipeline purposes
+---
+# During research, the below can be created from
+# Sequencescape directly. TODO: create the purpose
+# from Limber, using this config.
+# Assume need to add asset_shape to SS io etc
+Plate-007-D:
+  :asset_type: plate
+  :asset_shape: ChromiumChip
+  :cherrypickable_target: false
+  :size: 16
