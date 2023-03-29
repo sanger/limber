@@ -126,3 +126,6 @@ hamilton_lca_pbmc_bank_to_lca_bank_stock:
 bioscan_mbrave:
   csv: 'exports/bioscan_mbrave'
   tube_includes: transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata
+  file_extension: 'tsv'
+  filename:
+    include_barcode: true
