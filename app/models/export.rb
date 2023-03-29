@@ -26,6 +26,4 @@ class Export
   def initialize(args = {})
     assign_attributes(args)
   end
-
-  def format; end
 end

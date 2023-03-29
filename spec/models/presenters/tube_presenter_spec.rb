@@ -114,4 +114,15 @@ RSpec.describe Presenters::TubePresenter do
       end
     end
   end
+  describe '#csv_links_for' do
+    let!(:purpose_config) { create(:tube_with_file_links_config, uuid: purpose_uuid) }
+    context 'when the file is a .tsv' do
+      it 'renders the right links' do
+        expect(subject.csv_file_links).to eq(
+          [
+            ["Download MBRAVE file", [:limber_tube, :tubes_export, {:id=>"bioscan_mbrave", :limber_tube_id=>"NT6T", :format=>"tsv"}]]
+          ])
+      end
+    end
+  end
 end

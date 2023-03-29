@@ -189,8 +189,8 @@ GnT MDA Norm
 
 {include:Presenters::SimpleTubePresenter}
 
-Used directly in 30 purposes:
-LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
+Used directly in 31 purposes:
+LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, Bioscan Pool Tube, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
 
 {Presenters::SimpleTubePresenter View class documentation}
 

@@ -6,7 +6,7 @@ require './app/controllers/plates_controller'
 RSpec.describe Tubes::TubesExportsController, type: :controller do
   let(:tube_includes) { 'transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata' }
   let(:tube) { create :v2_tube, barcode_number: 1 }
-  let(:tube_barcode) { 'DN1S' }
+  let(:tube_barcode) { tube.barcode.human }
 
   RSpec.shared_examples 'a tsv view' do
     it 'renders the view' do
@@ -16,6 +16,7 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
       expect(assigns(:tube)).to be_a(Sequencescape::Api::V2::Tube)
       expect(response).to render_template(expected_template)
       assert_equal content_type, @response.content_type
+      expect(@response.get_header('Content-Disposition')).to include(tube_barcode)
     end
   end
 
