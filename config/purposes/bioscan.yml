@@ -94,6 +94,7 @@ LBSN-384 PCR 2:
 LBSN-384 PCR 2 Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
   :presenter_class: Presenters::SimpleTubePresenter
   # TODO: do we want any metadata entry?
@@ -102,6 +103,7 @@ LBSN-384 PCR 2 Pool:
 LBSN-9216 Lib PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
   # TODO: creator version of multiple (1-24) tubes to 1 tube
   # needs config parameter number_of_tubes
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
@@ -113,7 +115,7 @@ LBSN-9216 Lib PCR Pool:
 LBSN-9216 Lib PCR Pool XP:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::StockTubePurpose
+  :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   # TODO: may need a modified tube presenter with paging for samples
   :presenter_class: Presenters::SimpleTubePresenter
