@@ -1,7 +1,8 @@
-
 <%= 
-    headers = ['Forward Labels', 'Reverse Labels', 'Label', 'Group',	UMI plate ID	Sample Plate ID
-    @tube.aliquots.map do |aliquot| 
-        [aliquot.tag_index, aliquot.tag2_index, aliquot.sample.sample_metadata.supplier_name, nil, nil, nil].to_csv
-    end.join
+    rows = [['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']]
+    @tube.aliquots.each do |aliquot| 
+        rows << [aliquot.tag_index, aliquot.tag2_index, aliquot.sample.sample_metadata.supplier_name, nil, nil, nil]
+    end
+
+    rows.map(&:to_csv).join
 %>
