@@ -9,3 +9,4 @@ Bioscan Pool Tube:
   :file_links:
     - name: 'Download MBRAVE file'
       id: 'bioscan_mbrave'
+      format: 'tsv'
