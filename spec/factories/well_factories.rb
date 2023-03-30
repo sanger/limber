@@ -302,6 +302,15 @@ FactoryBot.define do
       tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
     end
 
+    factory :v2_tagged_aliquot_for_mbrave do
+      sequence(:tag_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+      tag_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
+      sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
+      tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
+
+      sample { create(:v2_sample, sample_metadata: create(:v2_sample_metadata_for_mbrave)) }
+    end
+
     factory :v2_suboptimal_aliquot do
       suboptimal { true }
     end

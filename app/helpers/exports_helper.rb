@@ -24,4 +24,8 @@ module ExportsHelper
   def aliquots_count_for(well)
     well.aliquots.count
   end
+
+  def pad_number(value, size)
+    format("%0#{size}d", value)
+  end
 end

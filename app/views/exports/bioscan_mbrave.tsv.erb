@@ -1,8 +1,17 @@
 <%= 
+    tag_index_1_list = 96.times.map{|pos| "PB1F_bc10#{pad_number(pos+1, 2)}"}
+    tag_index_2_list = 96.times.map{|pos| "PB1R_bc10#{pad_number(pos+97, 2)}_rc"}
     rows = [['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']]
     @tube.aliquots.each do |aliquot| 
-        rows << [aliquot.tag_index, aliquot.tag2_index, aliquot.sample.sample_metadata.supplier_name, nil, nil, nil]
+        rows << [
+            "#{tag_index_1_list[aliquot.tag_index-1]}", 
+            "#{tag_index_2_list[aliquot.tag2_index-1]}", 
+            aliquot.sample.sample_metadata.supplier_name, 
+            aliquot.sample.sample_metadata.cohort, 
+            (((aliquot.tag2_index - 1)/ 4) + 1), 
+            aliquot.sample.sample_metadata.sample_description
+        ]
     end
 
-    rows.map(&:to_csv).join
+    rows.map{|row| row.to_csv(col_sep: ("\t"))}.join
 %>
