@@ -19,7 +19,8 @@ Bioscan Library Prep:
     request_type_key: limber_bioscan_library_prep
     library_type:
       - Bioscan
-  library_pass: LBSN-9216 Lib PCR Pool XP
+  library_pass:
+    - LBSN-384 PCR 2
   relationships:
     LBSN-96 Lysate Stock: LBSN-384 PCR 1
     LBSN-96 Lysate: LBSN-384 PCR 1
