@@ -6,7 +6,8 @@ require './app/controllers/plates_controller'
 RSpec.describe Tubes::TubesExportsController, type: :controller do
   let(:tube_includes) { 'transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata' }
   let(:tube_selects) do
-    'aliquot.tag_index,aliquot.tag2_index,sample_metadata.supplier_name,sample_metadata.cohort,sample_metadata.sample_description'
+    'aliquot.tag_index,aliquot.tag2_index,' \
+    'sample_metadata.supplier_name,sample_metadata.cohort,sample_metadata.sample_description'
   end
   let(:tube) { create :v2_tube, barcode_number: 1 }
   let(:tube_barcode) { tube.barcode.human }
