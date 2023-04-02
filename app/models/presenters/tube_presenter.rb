@@ -95,6 +95,5 @@ module Presenters
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links
     end
-    
   end
 end

@@ -11,10 +11,12 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
 
   it 'renders the expected content' do
     parsed_csv = CSV.parse(render, col_sep: "\t")
-    expect(parsed_csv).to eq([
-      ['Forward Labels','Reverse Labels','Label','Group','UMI plate ID','Sample Plate ID'],
-      ['PB1F_bc1001','PB1R_bc1097_rc','supplier name 1','cohort 1','1','sample description 1'],
-      ['PB1F_bc1001','PB1R_bc1097_rc','supplier name 2','cohort 2','1','sample description 2']
-  ])
+    expect(parsed_csv).to eq(
+      [
+        ['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID'],
+        ['PB1F_bc1001', 'PB1R_bc1097_rc', 'supplier name 1', 'cohort 1', '1', 'sample description 1'],
+        ['PB1F_bc1001', 'PB1R_bc1097_rc', 'supplier name 2', 'cohort 2', '1', 'sample description 2']
+      ]
+    )
   end
 end

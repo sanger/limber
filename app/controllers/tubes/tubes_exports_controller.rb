@@ -49,5 +49,4 @@ class Tubes::TubesExportsController < ApplicationController
     filename += "_#{@page + 1}" if export.filename['include_page']
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
   end
-
 end

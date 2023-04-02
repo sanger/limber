@@ -35,7 +35,6 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
 
       it_behaves_like 'a tsv view'
     end
-
   end
 
   context 'where default' do
