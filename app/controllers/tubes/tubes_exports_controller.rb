@@ -35,11 +35,23 @@ class Tubes::TubesExportsController < ApplicationController
 
   def locate_labware
     @labware =
-      @tube = Sequencescape::Api::V2.tube_with_custom_includes(include_parameters, barcode: params[:limber_tube_id])
+      @tube =
+        Sequencescape::Api::V2.tube_with_custom_includes(
+          include_parameters,
+          select_parameters,
+          barcode: params[:limber_tube_id]
+        )
   end
 
   def include_parameters
     export.tube_includes || nil
+  end
+
+  # Returns the parameters specified for Sparse Fieldsets
+  # https://github.com/JsonApiClient/json_api_client
+  # https://jsonapi.org/format/#fetching-sparse-fieldsets
+  def select_parameters
+    export.tube_selects || nil
   end
 
   def set_filename

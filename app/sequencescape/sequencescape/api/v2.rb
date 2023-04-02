@@ -60,8 +60,8 @@ module Sequencescape::Api::V2
     Plate.includes(include_params).find(search_params).first
   end
 
-  def self.tube_with_custom_includes(include_params, search_params)
-    Tube.includes(include_params).find(search_params).first
+  def self.tube_with_custom_includes(include_params, select_params, search_params)
+    Tube.includes(include_params).select(select_params).find(search_params).first
   end
 
   # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page

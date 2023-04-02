@@ -27,6 +27,7 @@ class Export
                 :ancestor_purpose,
                 :filename,
                 :tube_includes,
+                :tube_selects,
                 :ancestor_tube_purpose,
                 :file_extension
 

@@ -5,6 +5,9 @@ require './app/controllers/plates_controller'
 
 RSpec.describe Tubes::TubesExportsController, type: :controller do
   let(:tube_includes) { 'transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata' }
+  let(:tube_selects) do
+    'aliquot.tag_index,aliquot.tag2_index,sample_metadata.supplier_name,sample_metadata.cohort,sample_metadata.sample_description'
+  end
   let(:tube) { create :v2_tube, barcode_number: 1 }
   let(:tube_barcode) { tube.barcode.human }
 
@@ -23,12 +26,13 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
   context 'on generating a csv' do
     before do
       expect(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with(includes, barcode: tube_barcode)
+        .with(includes, selects, barcode: tube_barcode)
         .and_return(tube)
     end
 
     context 'where tsv id requested is bioscan_mbrave.tsv' do
       let(:includes) { tube_includes }
+      let(:selects) { tube_selects }
       let(:tsv_id) { 'bioscan_mbrave' }
       let(:expected_template) { 'bioscan_mbrave' }
       let(:content_type) { 'text/tab-separated-values; charset=utf-8' }
