@@ -2804,11 +2804,10 @@ ROBOT_CONFIG =
       'beckman-lilys-96-stock-preparation',
       name: 'Beckman LILYS-96 Stock Preparation',
       beds: {
-        # TODO: confirm beds
-        bed(1).barcode => {
+        bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
-          label: 'Bed 1',
+          label: 'Bed 9',
           target_state: 'passed'
         }
       }
@@ -2820,18 +2819,18 @@ ROBOT_CONFIG =
       verify_robot: true,
       beds: {
         # TODO: confirm beds
-        bed(1).barcode => {
+        bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
-          label: 'Bed 1',
+          label: 'Bed 9',
           target_state: 'passed'
         },
-        bed(2).barcode => {
+        bed(14).barcode => {
           purpose: 'LBSN-96 Lysate',
           states: ['pending'],
-          label: 'Bed 2',
+          label: 'Bed 14',
           target_state: 'passed',
-          parent: bed(1).barcode
+          parent: bed(9).barcode
         }
       }
     )
