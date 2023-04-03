@@ -10,10 +10,9 @@ Bioscan Lysate Prep:
     - LBSN-96 Lysate
   relationships:
     LILYS-96 Stock: LBSN-96 Lysate
-# For Bioscan library prep there are two entry plates:
+# For Bioscan library prep there are two entry points, both using the LBSN-96 Lysate purpose:
 # 1. Faculty has created the lysed plate manually and it enters the pipeline via a Sample manifest
-# as a LBSN-96 Lysate Stock plate
-# 2. The Beckman automation has created the lysed plate and it enters the pipeline as LBSN-96 Lysate plate
+# 2. The Beckman automation has created the lysed plate from the initial insect stock plate
 Bioscan Library Prep:
   filters:
     request_type_key: limber_bioscan_library_prep
@@ -22,7 +21,6 @@ Bioscan Library Prep:
   library_pass:
     - LBSN-384 PCR 2
   relationships:
-    LBSN-96 Lysate Stock: LBSN-384 PCR 1
     LBSN-96 Lysate: LBSN-384 PCR 1
     LBSN-384 PCR 1: LBSN-384 PCR 2
     LBSN-384 PCR 2: LBSN-384 PCR 2 Pool

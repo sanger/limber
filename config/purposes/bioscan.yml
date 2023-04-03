@@ -12,25 +12,13 @@ LILYS-96 Stock:
   # TODO: do we want any metadata entry?
   # :custom_metadata_fields:
   #   - metadatafieldname
-# LBSN-96 Lysate Stock plate is the entry point created by a sample manifest for manually
-# lysed material plates created by faculty
-LBSN-96 Lysate Stock:
-  :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: false
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
-  :creator_class: LabwareCreators::Uncreatable
-  :size: 96
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
-# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot
+# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
+# it can be the start point if the Lysate plate was prepared manually
 # Once this plate is made we want to close off the lysate prep submission requests
 # Has a specific creator to add randomised controls
 LBSN-96 Lysate:
   :asset_type: plate
-  :stock_plate: false
+  :stock_plate: true
   :cherrypickable_target: false
   :input_plate: false
   # TODO: what presenter should this plate have?

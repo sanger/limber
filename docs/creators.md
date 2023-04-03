@@ -350,8 +350,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::Uncreatable}
 
-  Used directly in 7 purposes:
-  CLCM Stock, LTHR-384 RT, LILYS-96 Stock, LBSN-96 Lysate Stock, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
+  Used directly in 6 purposes:
+  CLCM Stock, LTHR-384 RT, LILYS-96 Stock, LTHR Cherrypick, LCA Blood Vac, and LTHR RT
 
 {LabwareCreators::Uncreatable View class documentation}
 
