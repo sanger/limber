@@ -2799,4 +2799,39 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    custom_robot(
+      'beckman-lilys-96-stock-preparation',
+      name: 'Beckman LILYS-96 Stock Preparation',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      name: 'Beckman LILYS-96 Stock To LBSN-96 Lysate',
+      verify_robot: true,
+      beds: {
+        # TODO: confirm beds
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
+        }
+      }
+    )
   end
