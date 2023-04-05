@@ -78,8 +78,7 @@ module Presenters
     end
 
     def csv_file_links
-      links =
-        purpose_config
+      purpose_config
           .fetch(:file_links, [])
           .map do |link|
             format_extension = link.format || 'csv'
@@ -92,7 +91,7 @@ module Presenters
               ]
             ]
           end
-      links
+      
     end
   end
 end
