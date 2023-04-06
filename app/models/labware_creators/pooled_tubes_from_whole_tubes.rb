@@ -56,6 +56,10 @@ module LabwareCreators
       errors.add(:barcodes, "could not be found: #{missing_barcodes}")
     end
 
+    def number_of_parent_tubes
+      purpose_config.fetch(:number_of_parent_tubes) || 4
+    end
+
     private
 
     def transfer_request_attributes

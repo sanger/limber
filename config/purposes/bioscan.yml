@@ -92,9 +92,8 @@ LBSN-9216 Lib PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
-  # TODO: creator version of multiple (1-24) tubes to 1 tube
-  # needs config parameter number_of_tubes
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  :number_of_parent_tubes: 24
   # TODO: may need a modified tube presenter with paging for samples
   :presenter_class: Presenters::SimpleTubePresenter
   # TODO: do we want any metadata entry?
