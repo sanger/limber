@@ -2799,4 +2799,86 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # Bioscan robots
+
+    custom_robot(
+      'beckman-lilys-96-stock-preparation',
+      name: 'Beckman LILYS-96 Stock Preparation',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      name: 'Beckman LILYS-96 Stock To LBSN-96 Lysate',
+      verify_robot: true,
+      beds: {
+        # TODO: confirm beds
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'mosquito-lbsn-96-lysate-to-lbsn-384-pcr-1',
+      name: 'Mosquito LBSN-96 Lysate => LBSN-384 PCR 1',
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 1'
+        },
+        bed(2).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 2'
+        },
+        bed(3).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 3'
+        },
+        bed(4).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 4'
+        },
+        # TODO: does the order of the parents here define the quadranting behaviour?
+        # We need to check whether the order you enter them when scanning in the quad stamp
+        # screen in Limber relates to the quadrants [confirmed it does] and if that is A1,B1,A2,B2 or A1,A2,B1,B2
+        # (quadrants by columns or by rows, R&D want by column A1,B1,A2,B2), and if that has
+        # to match to the parents bed order here in the robots.rb file config.
+        bed(5).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['pending'],
+          label: 'Bed 5',
+          parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+          target_state: 'passed'
+        }
+      },
+      destination_bed: bed(5).barcode,
+      class: 'Robots::QuadrantRobot'
+    )
   end
