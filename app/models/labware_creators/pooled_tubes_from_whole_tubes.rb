@@ -57,7 +57,8 @@ module LabwareCreators
     end
 
     def number_of_parent_tubes
-      purpose_config.fetch(:number_of_parent_tubes) || 4
+      # default to 4 if value not found in config
+      purpose_config.fetch(:number_of_parent_tubes, 4)
     end
 
     private
