@@ -21,8 +21,7 @@ LBSN-96 Lysate:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: false
-  # TODO: what presenter should this plate have?
-  # :presenter_class: Presenters::?
+  :presenter_class: Presenters::StockPlatePresenter
   # TODO: once new labware creator is made add line for creator class
   # :creator_class: LabwareCreators::<new bioscan creator>
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
@@ -92,9 +91,8 @@ LBSN-9216 Lib PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
-  # TODO: creator version of multiple (1-24) tubes to 1 tube
-  # needs config parameter number_of_tubes
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  :number_of_parent_tubes: 24
   # TODO: may need a modified tube presenter with paging for samples
   :presenter_class: Presenters::SimpleTubePresenter
   # TODO: do we want any metadata entry?
