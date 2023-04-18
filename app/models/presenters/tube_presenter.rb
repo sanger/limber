@@ -79,19 +79,18 @@ module Presenters
 
     def csv_file_links
       purpose_config
-          .fetch(:file_links, [])
-          .map do |link|
-            format_extension = link.format || 'csv'
+        .fetch(:file_links, [])
+        .map do |link|
+          format_extension = link.format || 'csv'
+          [
+            link.name,
             [
-              link.name,
-              [
-                :limber_tube,
-                :tubes_export,
-                { id: link.id, limber_tube_id: human_barcode, format: format_extension, **link.params || {} }
-              ]
+              :limber_tube,
+              :tubes_export,
+              { id: link.id, limber_tube_id: human_barcode, format: format_extension, **link.params || {} }
             ]
-          end
-      
+          ]
+        end
     end
   end
 end
