@@ -2817,7 +2817,7 @@ ROBOT_CONFIG =
 
     custom_robot(
       'beckman-lilys-96-stock-to-lbsn-96-lysate',
-      name: 'Beckman LILYS-96 Stock To LBSN-96 Lysate',
+      name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
       verify_robot: true,
       beds: {
         # TODO: confirm beds
