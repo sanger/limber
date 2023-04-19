@@ -1,16 +1,25 @@
 <%= 
-    tag_index_1_list = 96.times.map{|pos| "PB1F_bc10#{pad_number(pos+1, 2)}"}
-    tag_index_2_list = 96.times.map{|pos| "PB1R_bc10#{pad_number(pos+97, 2)}_rc"}
+    aliquot = @tube.aliquots.first    
+    first_tag_1_group_name = aliquot.tag.tag_group.name
+    version = mbrave_tag_version(first_tag_1_group_name)
+
     rows = [['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']]
     @tube.aliquots.each do |aliquot| 
-        rows << [
-            "#{tag_index_1_list[aliquot.tag_index-1]}", 
-            "#{tag_index_2_list[aliquot.tag2_index-1]}", 
-            aliquot.sample.sample_metadata.supplier_name, 
-            aliquot.sample.sample_metadata.cohort, 
-            (((aliquot.tag2_index - 1)/ 4) + 1), 
-            aliquot.sample.sample_metadata.sample_description
-        ]
+      tag_1_group_name = aliquot.tag.tag_group.name
+      tag_2_group_name = aliquot.tag2.tag_group.name
+
+      if (version != mbrave_tag_version(tag_1_group_name)) || (version != mbrave_tag_version(tag_2_group_name))
+        raise "This tube contains tags from different tag groups"
+      end
+
+      rows << [
+        mbrave_tag_name(tag_1_group_name, aliquot.tag_index),
+        mbrave_tag_name(tag_2_group_name, aliquot.tag2_index),
+        aliquot.sample.sample_metadata.supplier_name, 
+        aliquot.sample.sample_metadata.cohort, 
+        (((aliquot.tag2_index - 1)/ 4) + 1), 
+        aliquot.sample.sample_metadata.sample_description
+      ]
     end
 
     rows.map{|row| row.to_csv(col_sep: ("\t"))}.join
