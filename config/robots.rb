@@ -2799,4 +2799,24 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # hamilton robot for stamping deep well stock plates to shallow well stock plates
+    custom_robot(
+      'hamilton-ldw-96-stock-to-lsw-96-stock',
+      name: 'Hamilton LDW-96 Stock => LSW-96 Stock',
+      beds: {
+        bed(12).barcode => {
+          purpose: 'LDW-96 Stock',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(2).barcode => {
+          purpose: 'LSW-96 Stock',
+          states: ['pending'],
+          label: 'Bed 2',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
