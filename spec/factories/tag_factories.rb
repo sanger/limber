@@ -7,7 +7,7 @@ def generate_oligo
 
   (min_oligo_size+rand(max_oligo_size)).times.to_a.map do 
     bases[rand(bases.length)] 
-  end.join('')
+  end.join
 end
 
 

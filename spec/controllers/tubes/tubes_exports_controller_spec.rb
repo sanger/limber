@@ -4,10 +4,12 @@ require 'rails_helper'
 require './app/controllers/plates_controller'
 
 RSpec.describe Tubes::TubesExportsController, type: :controller do
-  let(:tube_includes) { 'transfer_requests_as_target.source_asset,aliquots,aliquots.sample.sample_metadata' }
+  let(:tube_includes) do 
+    'transfer_requests_as_target.source_asset,aliquots,aliquots.tag.tag_group,aliquots.tag2.tag_group,aliquots.sample.sample_metadata'
+  end
   let(:tube_selects) do
-    {"aliquot"=>["tag_index", "tag2_index"],
-      "sample_metadata"=>["supplier_name", "cohort", "sample_description"]}
+    {'aliquot'=>['tag_index', 'tag2_index'],
+      'sample_metadata'=>['supplier_name', 'cohort', 'sample_description']}
   end
   let(:tube) { create :v2_tube, barcode_number: 1 }
   let(:tube_barcode) { tube.barcode.human }
