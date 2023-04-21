@@ -203,4 +203,4 @@ development:
   <<: *DEFAULT
 
 test:
-  <<: *DEFAULT  
+  <<: *DEFAULT
