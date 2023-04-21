@@ -50,32 +50,33 @@ LBSN-384 PCR 2:
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_6mm_double
   :size: 384
-  # TODO check the names for this list of 24 tag layout templates (see tag plate gen stories)
+  # NB. will need to update this list to include new versions of the templates
+  # as we generate new sets after changes from the scripts in Sequencescape
   :tag_layout_templates:
-    - Bioscan_384_template_1
-    - Bioscan_384_template_2
-    - Bioscan_384_template_3
-    - Bioscan_384_template_4
-    - Bioscan_384_template_5
-    - Bioscan_384_template_6
-    - Bioscan_384_template_7
-    - Bioscan_384_template_8
-    - Bioscan_384_template_9
-    - Bioscan_384_template_10
-    - Bioscan_384_template_11
-    - Bioscan_384_template_12
-    - Bioscan_384_template_13
-    - Bioscan_384_template_14
-    - Bioscan_384_template_15
-    - Bioscan_384_template_16
-    - Bioscan_384_template_17
-    - Bioscan_384_template_18
-    - Bioscan_384_template_19
-    - Bioscan_384_template_20
-    - Bioscan_384_template_21
-    - Bioscan_384_template_22
-    - Bioscan_384_template_23
-    - Bioscan_384_template_24
+    - Bioscan_384_template_1_v2
+    - Bioscan_384_template_2_v2
+    - Bioscan_384_template_3_v2
+    - Bioscan_384_template_4_v2
+    - Bioscan_384_template_5_v2
+    - Bioscan_384_template_6_v2
+    - Bioscan_384_template_7_v2
+    - Bioscan_384_template_8_v2
+    - Bioscan_384_template_9_v2
+    - Bioscan_384_template_10_v2
+    - Bioscan_384_template_11_v2
+    - Bioscan_384_template_12_v2
+    - Bioscan_384_template_13_v2
+    - Bioscan_384_template_14_v2
+    - Bioscan_384_template_15_v2
+    - Bioscan_384_template_16_v2
+    - Bioscan_384_template_17_v2
+    - Bioscan_384_template_18_v2
+    - Bioscan_384_template_19_v2
+    - Bioscan_384_template_20_v2
+    - Bioscan_384_template_21_v2
+    - Bioscan_384_template_22_v2
+    - Bioscan_384_template_23_v2
+    - Bioscan_384_template_24_v2
   # TODO: do we want any metadata entry?
   # :custom_metadata_fields:
   #   - metadatafieldname
