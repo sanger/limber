@@ -5,7 +5,8 @@ require './app/controllers/plates_controller'
 
 RSpec.describe Tubes::TubesExportsController, type: :controller do
   let(:tube_includes) do
-    'transfer_requests_as_target.source_asset,aliquots,aliquots.tag.tag_group,aliquots.tag2.tag_group,aliquots.sample.sample_metadata'
+    'transfer_requests_as_target.source_asset,' \
+      'aliquots,aliquots.tag.tag_group,aliquots.tag2.tag_group,aliquots.sample.sample_metadata'
   end
   let(:tube_selects) do
     { 'aliquot' => %w[tag_index tag2_index], 'sample_metadata' => %w[supplier_name cohort sample_description] }
