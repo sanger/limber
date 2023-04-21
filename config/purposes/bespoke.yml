@@ -31,10 +31,6 @@ LBB Lib Pool Stock:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-  :file_links:
-    - name: 'Download MBRAVE file'
-      format: 'tsv'
-      id: 'bioscan_mbrave'
 LBB Enriched BCR:
   :asset_type: plate
 LBB Enriched BCR HT:
