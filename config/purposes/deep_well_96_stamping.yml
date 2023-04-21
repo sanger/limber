@@ -12,10 +12,12 @@ LDW-96 Stock:
   :submission_options:
     Stamp from Deep-Well to Shallow-Well:
       template_name: 'Limber-Htp - Deep Well Plate Stamping'
-      request_options:
-        fragment_size_required_from: '50'
-        fragment_size_required_to: '800'
       allowed_extra_barcodes: false
+      # We don't really need request options, but the Sequencescape API expects to
+      # receive an object and won't accept an empty one, so we pass it a key it
+      # it won't use and this stops it complaining about a "blank" object.
+      request_options:
+        no_options: ''
 LSW-96 Stock:
   :asset_type: plate
   :stock_plate: false
