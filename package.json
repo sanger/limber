@@ -5,7 +5,7 @@
     "axios": "^0.21.4",
     "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.23.1",
-    "cytoscape": "^3.23.0",
+    "cytoscape": "^3.24.0",
     "devour-client": "^2.1.2",
     "flush-promises": "^1.0.0",
     "pluralize": "^7.0.0",
