@@ -1,4 +1,5 @@
 <%= 
+    regexp_tag2_plate_num = /Bioscan_reverse_4_(\d+)_/
     aliquot = @tube.aliquots.first    
     first_tag_1_group_name = aliquot.tag.tag_group.name
     version = mbrave_tag_version(first_tag_1_group_name)
@@ -12,12 +13,14 @@
         raise "This tube contains tags from different tag groups"
       end
 
+      tag2_plate_num = tag_2_group_name.match(regexp_tag2_plate_num)[1]
+
       rows << [
         mbrave_tag_name(tag_1_group_name, aliquot.tag_index),
         mbrave_tag_name(tag_2_group_name, aliquot.tag2_index),
         aliquot.sample.sample_metadata.supplier_name, 
         aliquot.sample.sample_metadata.cohort, 
-        (((aliquot.tag2_index - 1)/ 4) + 1), 
+        tag2_plate_num,
         aliquot.sample.sample_metadata.sample_description
       ]
     end
