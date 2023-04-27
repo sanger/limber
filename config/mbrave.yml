@@ -268,3 +268,12 @@ default: &DEFAULT
       - PB1R_bc1190_rc
       - PB1R_bc1191_rc
       - PB1R_bc1192_rc
+
+development:
+  <<: *DEFAULT
+
+test:
+  <<: *DEFAULT
+
+production:
+  <<: *DEFAULT
