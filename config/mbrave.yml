@@ -166,7 +166,6 @@ default: &DEFAULT
   Bioscan_reverse_4_10_v2:
     version: 2
     tags:
-
       - PB1R_bc10133_rc
       - PB1R_bc10134_rc
       - PB1R_bc10135_rc
