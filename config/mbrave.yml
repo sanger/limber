@@ -73,7 +73,7 @@ default: &DEFAULT
       - PB1F_bc1067
       - PB1F_bc1068
       - PB1F_bc1069
-      - PB1F_bc1070
+      - PB1F_bc1195
       - PB1F_bc1071
       - PB1F_bc1072
       - PB1F_bc1073
@@ -106,171 +106,165 @@ default: &DEFAULT
       - PB1R_bc1097_rc
       - PB1R_bc1098_rc
       - PB1R_bc1099_rc
-      - PB1R_bc10100_rc
+      - PB1R_bc1100_rc
   Bioscan_reverse_4_2_v2:
     version: 2
     tags:
-      - PB1R_bc10101_rc
-      - PB1R_bc10102_rc
-      - PB1R_bc10103_rc
-      - PB1R_bc10104_rc
+      - PB1R_bc1101_rc
+      - PB1R_bc1102_rc
+      - PB1R_bc1103_rc
+      - PB1R_bc1104_rc
   Bioscan_reverse_4_3_v2:
     version: 2
     tags:
-      - PB1R_bc10105_rc
-      - PB1R_bc10106_rc
-      - PB1R_bc10107_rc
-      - PB1R_bc10108_rc
+      - PB1R_bc1105_rc
+      - PB1R_bc1106_rc
+      - PB1R_bc1107_rc
+      - PB1R_bc1108_rc
   Bioscan_reverse_4_4_v2:
     version: 2
     tags:
-      - PB1R_bc10109_rc
-      - PB1R_bc10110_rc
-      - PB1R_bc10111_rc
-      - PB1R_bc10112_rc
+      - PB1R_bc1109_rc
+      - PB1R_bc1110_rc
+      - PB1R_bc1111_rc
+      - PB1R_bc1112_rc
   Bioscan_reverse_4_5_v2:
     version: 2
     tags:
-      - PB1R_bc10113_rc
-      - PB1R_bc10114_rc
-      - PB1R_bc10115_rc
-      - PB1R_bc10116_rc
+      - PB1R_bc1113_rc
+      - PB1R_bc1114_rc
+      - PB1R_bc1115_rc
+      - PB1R_bc1116_rc
   Bioscan_reverse_4_6_v2:
     version: 2
     tags:
-      - PB1R_bc10117_rc
-      - PB1R_bc10118_rc
-      - PB1R_bc10119_rc
-      - PB1R_bc10120_rc
+      - PB1R_bc1117_rc
+      - PB1R_bc1118_rc
+      - PB1R_bc1119_rc
+      - PB1R_bc1120_rc
   Bioscan_reverse_4_7_v2:
     version: 2
     tags:
-      - PB1R_bc10121_rc
-      - PB1R_bc10122_rc
-      - PB1R_bc10123_rc
-      - PB1R_bc10124_rc
+      - PB1R_bc1121_rc
+      - PB1R_bc1122_rc
+      - PB1R_bc1123_rc
+      - PB1R_bc1124_rc
   Bioscan_reverse_4_8_v2:
     version: 2
     tags:
-      - PB1R_bc10125_rc
-      - PB1R_bc10126_rc
-      - PB1R_bc10127_rc
-      - PB1R_bc10128_rc
+      - PB1R_bc1125_rc
+      - PB1R_bc1126_rc
+      - PB1R_bc1127_rc
+      - PB1R_bc1128_rc
   Bioscan_reverse_4_9_v2:
     version: 2
     tags:
-      - PB1R_bc10129_rc
-      - PB1R_bc10130_rc
-      - PB1R_bc10131_rc
-      - PB1R_bc10132_rc
+      - PB1R_bc1129_rc
+      - PB1R_bc1130_rc
+      - PB1R_bc1131_rc
+      - PB1R_bc1132_rc
   Bioscan_reverse_4_10_v2:
     version: 2
     tags:
-      - PB1R_bc10133_rc
-      - PB1R_bc10134_rc
-      - PB1R_bc10135_rc
-      - PB1R_bc10136_rc
+      - PB1R_bc1133_rc
+      - PB1R_bc1134_rc
+      - PB1R_bc1135_rc
+      - PB1R_bc1136_rc
   Bioscan_reverse_4_11_v2:
     version: 2
     tags:
-      - PB1R_bc10137_rc
-      - PB1R_bc10138_rc
-      - PB1R_bc10139_rc
-      - PB1R_bc10140_rc
+      - PB1R_bc1137_rc
+      - PB1R_bc1138_rc
+      - PB1R_bc1139_rc
+      - PB1R_bc1140_rc
   Bioscan_reverse_4_12_v2:
     version: 2
     tags:
-      - PB1R_bc10141_rc
-      - PB1R_bc10142_rc
-      - PB1R_bc10143_rc
-      - PB1R_bc10144_rc
+      - PB1R_bc1141_rc
+      - PB1R_bc1142_rc
+      - PB1R_bc1143_rc
+      - PB1R_bc1144_rc
   Bioscan_reverse_4_13_v2:
     version: 2
     tags:
-      - PB1R_bc10145_rc
-      - PB1R_bc10146_rc
-      - PB1R_bc10147_rc
-      - PB1R_bc10148_rc
+      - PB1R_bc1145_rc
+      - PB1R_bc1146_rc
+      - PB1R_bc1147_rc
+      - PB1R_bc1148_rc
   Bioscan_reverse_4_14_v2:
     version: 2
     tags:
-      - PB1R_bc10149_rc
-      - PB1R_bc10150_rc
-      - PB1R_bc10151_rc
-      - PB1R_bc10152_rc
+      - PB1R_bc1149_rc
+      - PB1R_bc1150_rc
+      - PB1R_bc1151_rc
+      - PB1R_bc1152_rc
   Bioscan_reverse_4_15_v2:
     version: 2
     tags:
-      - PB1R_bc10153_rc
-      - PB1R_bc10154_rc
-      - PB1R_bc10155_rc
-      - PB1R_bc10156_rc
+      - PB1R_bc1153_rc
+      - PB1R_bc1154_rc
+      - PB1R_bc1155_rc
+      - PB1R_bc1156_rc
   Bioscan_reverse_4_16_v2:
     version: 2
     tags:
-      - PB1R_bc10157_rc
-      - PB1R_bc10158_rc
-      - PB1R_bc10159_rc
-      - PB1R_bc10160_rc
+      - PB1R_bc1157_rc
+      - PB1R_bc1158_rc
+      - PB1R_bc1159_rc
+      - PB1R_bc1160_rc
   Bioscan_reverse_4_17_v2:
     version: 2
     tags:
-      - PB1R_bc10161_rc
-      - PB1R_bc10162_rc
-      - PB1R_bc10163_rc
-      - PB1R_bc10164_rc
+      - PB1R_bc1161_rc
+      - PB1R_bc1162_rc
+      - PB1R_bc1163_rc
+      - PB1R_bc1164_rc
   Bioscan_reverse_4_18_v2:
     version: 2
     tags:
-      - PB1R_bc10165_rc
-      - PB1R_bc10166_rc
-      - PB1R_bc10167_rc
-      - PB1R_bc10168_rc
+      - PB1R_bc1165_rc
+      - PB1R_bc1166_rc
+      - PB1R_bc1167_rc
+      - PB1R_bc1168_rc
   Bioscan_reverse_4_19_v2:
     version: 2
     tags:
-      - PB1R_bc10169_rc
-      - PB1R_bc10170_rc
-      - PB1R_bc10171_rc
-      - PB1R_bc10172_rc
+      - PB1R_bc1169_rc
+      - PB1R_bc1170_rc
+      - PB1R_bc1171_rc
+      - PB1R_bc1172_rc
   Bioscan_reverse_4_20_v2:
     version: 2
     tags:
-      - PB1R_bc10173_rc
-      - PB1R_bc10174_rc
-      - PB1R_bc10175_rc
-      - PB1R_bc10176_rc
+      - PB1R_bc1173_rc
+      - PB1R_bc1174_rc
+      - PB1R_bc1175_rc
+      - PB1R_bc1176_rc
   Bioscan_reverse_4_21_v2:
     version: 2
     tags:
-      - PB1R_bc10177_rc
-      - PB1R_bc10178_rc
-      - PB1R_bc10179_rc
-      - PB1R_bc10180_rc
+      - PB1R_bc1177_rc
+      - PB1R_bc1178_rc
+      - PB1R_bc1179_rc
+      - PB1R_bc1180_rc
   Bioscan_reverse_4_22_v2:
     version: 2
     tags:
-      - PB1R_bc10181_rc
-      - PB1R_bc10182_rc
-      - PB1R_bc10183_rc
-      - PB1R_bc10184_rc
+      - PB1R_bc1181_rc
+      - PB1R_bc1182_rc
+      - PB1R_bc1183_rc
+      - PB1R_bc1184_rc
   Bioscan_reverse_4_23_v2:
     version: 2
     tags:
-      - PB1R_bc10185_rc
-      - PB1R_bc10186_rc
-      - PB1R_bc10187_rc
-      - PB1R_bc10188_rc
+      - PB1R_bc1185_rc
+      - PB1R_bc1186_rc
+      - PB1R_bc1187_rc
+      - PB1R_bc1188_rc
   Bioscan_reverse_4_24_v2:
     version: 2
     tags:
-      - PB1R_bc10189_rc
-      - PB1R_bc10190_rc
-      - PB1R_bc10191_rc
-      - PB1R_bc10192_rc
-
-development:
-  <<: *DEFAULT
-
-test:
-  <<: *DEFAULT
+      - PB1R_bc1189_rc
+      - PB1R_bc1190_rc
+      - PB1R_bc1191_rc
+      - PB1R_bc1192_rc
