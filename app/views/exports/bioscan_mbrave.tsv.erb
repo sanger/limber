@@ -10,7 +10,7 @@
       tag_2_group_name = aliquot.tag2.tag_group.name
 
       if (version != mbrave_tag_version(tag_1_group_name)) || (version != mbrave_tag_version(tag_2_group_name))
-        raise "This tube contains tags from different tag groups"
+        raise "This tube contains tags from different tag group versions"
       end
 
       tag2_plate_num = tag_2_group_name.match(regexp_tag2_plate_num)[1]
