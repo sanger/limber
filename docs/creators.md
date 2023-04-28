@@ -173,8 +173,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesBySubmission}
 
-  Used directly in 13 purposes:
-  LBC 5p GLibPS, pWGS-384 Lib Pool XP, Bioscan Pool Tube, LBC BCR LibPS, GnT Pico Lib Pool, LB Lib Pool, LHR-384 Pool XP, LBC TCR LibPS, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LHR Lib Pool
+  Used directly in 12 purposes:
+  LBC 5p GLibPS, pWGS-384 Lib Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, LB Lib Pool, LHR-384 Pool XP, LBC TCR LibPS, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LHR Lib Pool
 
 {LabwareCreators::PooledTubesBySubmission View class documentation}
 
