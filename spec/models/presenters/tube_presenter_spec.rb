@@ -121,7 +121,7 @@ RSpec.describe Presenters::TubePresenter do
         expect(subject.csv_file_links).to eq(
           [
             [
-              'Download MBRAVE UMI file',
+              'Download MBrave UMI file',
               [:limber_tube, :tubes_export, { id: 'bioscan_mbrave', limber_tube_id: 'NT6T', format: 'tsv' }]
             ]
           ]

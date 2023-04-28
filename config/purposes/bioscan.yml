@@ -113,6 +113,6 @@ LBSN-9216 Lib PCR Pool XP:
   # :custom_metadata_fields:
   #   - metadatafieldname
   :file_links:
-    - name: 'Download MBRAVE UMI file'
+    - name: 'Download MBrave UMI file'
       id: 'bioscan_mbrave'
       format: 'tsv'

@@ -56,7 +56,7 @@ FactoryBot.define do
     # tube with file links
     factory :tube_with_file_links_config do
       name { 'Bioscan Pool Tube' }
-      file_links { [{ name: 'Download MBRAVE UMI file', id: 'bioscan_mbrave', format: 'tsv' }] }
+      file_links { [{ name: 'Download MBrave UMI file', id: 'bioscan_mbrave', format: 'tsv' }] }
       presenter_class { 'Presenters::FinalTubePresenter' }
     end
 
