@@ -53,6 +53,13 @@ FactoryBot.define do
       transfer_parameters { { target_molarity_nm: 4, target_volume_ul: 192, minimum_pick_ul: 2 } }
     end
 
+    # tube with file links
+    factory :tube_with_file_links_config do
+      name { 'Bioscan Pool Tube' }
+      file_links { [{ name: 'Download MBrave UMI file', id: 'bioscan_mbrave', format: 'tsv' }] }
+      presenter_class { 'Presenters::FinalTubePresenter' }
+    end
+
     # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }

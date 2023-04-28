@@ -37,6 +37,15 @@ FactoryBot.define do
     collected_by { 'Sanger' }
   end
 
+  factory :v2_sample_metadata_for_mbrave, class: Sequencescape::Api::V2::SampleMetadata do
+    skip_create
+    sequence(:cohort) { |i| "cohort #{i}" }
+    sequence(:sample_description) { |i| "sample description #{i}" }
+    sequence(:supplier_name) { |i| "supplier name #{i}" }
+    sample_common_name { 'Homo sapiens' }
+    collected_by { 'Sanger' }
+  end
+
   factory :v2_sample_manifest, class: Sequencescape::Api::V2::SampleManifest do
     skip_create
     supplier_name { 'supplier1' }

@@ -21,6 +21,7 @@ LBSN-96 Lysate:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: false
+  :type: PlatePurpose::AdditionalInput
   :presenter_class: Presenters::StockPlatePresenter
   # TODO: once new labware creator is made add line for creator class
   # :creator_class: LabwareCreators::<new bioscan creator>
@@ -84,6 +85,7 @@ LBSN-384 PCR 2 Pool:
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
+  :transfer_template: '384 plate to tube'
   :presenter_class: Presenters::SimpleTubePresenter
   # TODO: do we want any metadata entry?
   # :custom_metadata_fields:
@@ -105,7 +107,12 @@ LBSN-9216 Lib PCR Pool XP:
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   # TODO: may need a modified tube presenter with paging for samples
-  :presenter_class: Presenters::SimpleTubePresenter
+  #:presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class: Presenters::FinalTubePresenter
   # TODO: do we want any metadata entry?
   # :custom_metadata_fields:
   #   - metadatafieldname
+  :file_links:
+    - name: 'Download MBrave UMI file'
+      id: 'bioscan_mbrave'
+      format: 'tsv'
