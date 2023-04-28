@@ -2880,6 +2880,8 @@ ROBOT_CONFIG =
       },
       destination_bed: bed(5).barcode,
       class: 'Robots::QuadrantRobot'
+    )
+
     # hamilton robot for stamping deep well stock plates to shallow well stock plates
     custom_robot(
       'hamilton-ldw-96-stock-to-lsw-96-stock',
