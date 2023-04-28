@@ -57,7 +57,7 @@ FactoryBot.define do
     factory :tube_with_file_links_config do
       name { 'Bioscan Pool Tube' }
       file_links { [{ name: 'Download MBRAVE UMI file', id: 'bioscan_mbrave', format: 'tsv' }] }
-      presenter_class { 'Presenters::TubePresenter' }
+      presenter_class { 'Presenters::FinalTubePresenter' }
     end
 
     # Sets up a config with a minimal presenter
