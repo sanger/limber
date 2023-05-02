@@ -35,6 +35,8 @@ FactoryBot.define do
     sequence(:supplier_name) { |i| "supplier name #{i}" }
     sample_common_name { 'Homo sapiens' }
     collected_by { 'Sanger' }
+    cohort { 'Cohort' }
+    sample_description { 'Description' }
   end
 
   factory :v2_sample_manifest, class: Sequencescape::Api::V2::SampleManifest do

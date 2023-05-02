@@ -149,6 +149,40 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a stamp with randomised controls
+    factory :stamp_with_randomised_controls_purpose_config do
+      asset_type { 'plate' }
+      stock_plate { true }
+      cherrypickable_target { true }
+      input_plate { false }
+      creator_class { 'LabwareCreators::StampedPlateAddingRandomisedControls' }
+      presenter_class { 'Presenters::StockPlatePresenter' }
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+      controls do
+        [
+          {
+            control_type: 'pcr_positive',
+            name_prefix: 'CONTROL_POS_'
+          },
+          {
+            control_type: 'pcr_negative',
+            name_prefix: 'CONTROL_NEG_'
+          }
+        ]
+      end
+      # TODO: use a test study
+      control_study_name { 'UAT Study' }
+      control_location_rules do
+        [
+          {
+            type: 'not',
+            value: ['H1','G1']
+          }
+        ]
+      end
+    end
+
     # Configuration for a multi stamp from tubes plate purpose
     factory :multi_stamp_tubes_purpose_config do
       creator_class { 'LabwareCreators::MultiStampTubes' }
