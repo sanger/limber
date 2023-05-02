@@ -9,13 +9,10 @@ LILYS-96 Stock:
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 # LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
-# it can be the start point if the Lysate plate was prepared manually
-# Once this plate is made we want to close off the lysate prep submission requests
-# Has a specific creator to add randomised controls
+# it can be the start point of library prep if the Lysate plate was prepared manually.
+# Once this plate is made we want to close off the lysate prep submission requests,
+# and we use the AutomaticPlateStateChanger for this.
 LBSN-96 Lysate:
   :asset_type: plate
   :stock_plate: true
@@ -23,29 +20,21 @@ LBSN-96 Lysate:
   :input_plate: false
   :type: PlatePurpose::AdditionalInput
   :presenter_class: Presenters::StockPlatePresenter
-  # TODO: once new labware creator is made add line for creator class
+  # TODO: Story 568 - Add a specific creator to create and add the randomised control samples.
   # :creator_class: LabwareCreators::<new bioscan creator>
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bioscan_lysate_prep'
   :size: 96
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 LBSN-384 PCR 1:
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
-  # TODO: is this needed? we don't split and re-merge later here
   :merger_plate: true
   # TODO: what presenter should this plate have?
   # :presenter_class: Presenters::?
   :label_template: plate_6mm_double
   :size: 384
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 LBSN-384 PCR 2:
   :asset_type: plate
-  # TODO: May need a specific version of TaggedPlate creator to persist tag plate index 1-24
   :creator_class: LabwareCreators::TaggedPlate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_6mm_double
@@ -77,9 +66,6 @@ LBSN-384 PCR 2:
     - Bioscan_384_template_22_v2
     - Bioscan_384_template_23_v2
     - Bioscan_384_template_24_v2
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 LBSN-384 PCR 2 Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -87,31 +73,19 @@ LBSN-384 PCR 2 Pool:
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
   :transfer_template: '384 plate to tube'
   :presenter_class: Presenters::SimpleTubePresenter
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 LBSN-9216 Lib PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
   :number_of_parent_tubes: 24
-  # TODO: may need a modified tube presenter with paging for samples
   :presenter_class: Presenters::SimpleTubePresenter
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
 LBSN-9216 Lib PCR Pool XP:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
-  # TODO: may need a modified tube presenter with paging for samples
-  #:presenter_class: Presenters::SimpleTubePresenter
   :presenter_class: Presenters::FinalTubePresenter
-  # TODO: do we want any metadata entry?
-  # :custom_metadata_fields:
-  #   - metadatafieldname
   :file_links:
     - name: 'Download MBrave UMI file'
       id: 'bioscan_mbrave'
