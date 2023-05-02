@@ -2820,7 +2820,6 @@ ROBOT_CONFIG =
       name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
       verify_robot: true,
       beds: {
-        # TODO: confirm beds
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
@@ -2865,11 +2864,6 @@ ROBOT_CONFIG =
           child: bed(5).barcode,
           label: 'Bed 4'
         },
-        # TODO: does the order of the parents here define the quadranting behaviour?
-        # We need to check whether the order you enter them when scanning in the quad stamp
-        # screen in Limber relates to the quadrants [confirmed it does] and if that is A1,B1,A2,B2 or A1,A2,B1,B2
-        # (quadrants by columns or by rows, R&D want by column A1,B1,A2,B2), and if that has
-        # to match to the parents bed order here in the robots.rb file config.
         bed(5).barcode => {
           purpose: 'LBSN-384 PCR 1',
           states: ['pending'],
