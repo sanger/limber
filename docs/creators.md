@@ -130,6 +130,15 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::QuadrantSplitPlate View class documentation}
 
 
+## LabwareCreators::StampedPlateAddingRandomisedControls
+
+{include:LabwareCreators::StampedPlateAddingRandomisedControls}
+
+  **This labware creator is unused**
+
+{LabwareCreators::StampedPlateAddingRandomisedControls View class documentation}
+
+
 ## LabwareCreators::CardinalPoolsPlate
 
 {include:LabwareCreators::CardinalPoolsPlate}
