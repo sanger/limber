@@ -24,4 +24,18 @@ module ExportsHelper
   def aliquots_count_for(well)
     well.aliquots.count
   end
+
+  def mbrave_tag_name(tag_group_name, tag_position)
+    unless Rails.configuration.mbrave.key?(tag_group_name.to_sym)
+      raise "Tag group #{tag_group_name} was not configured for mbrave. Please contact PSD."
+    end
+    Rails.configuration.mbrave[tag_group_name][:tags][tag_position - 1]
+  end
+
+  def mbrave_tag_version(tag_group_name)
+    unless Rails.configuration.mbrave.key?(tag_group_name.to_sym)
+      raise "Tag group #{tag_group_name} was not configured for mbrave. Please contact PSD."
+    end
+    Rails.configuration.mbrave[tag_group_name][:version]
+  end
 end

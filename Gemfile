@@ -50,7 +50,7 @@ group :test do
   gem 'simplecov', require: false
 
   # Keep webdriver in sync with chrome to prevent frustrating CI failures
-  gem 'webdrivers', require: false
+  gem 'webdrivers', '~> 5.2.0', require: false
   gem 'webmock'
 end
 
