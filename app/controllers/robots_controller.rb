@@ -54,7 +54,7 @@ class RobotsController < ApplicationController
   private
 
   def robot_params
-    params.permit(:robot_barcode, bed_labwares: {})
+    params.permit(:robot_barcode, :id, bed_labwares: {})
   end
 
   def find_robot
