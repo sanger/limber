@@ -30,15 +30,45 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:parent_plate_includes) { 'wells.aliquots,wells.aliquots.samples,wells.aliquots.samples.sample_metadata' }
-  let(:control_well_locations) { ['B5','H3'] }
+  let(:parent_plate_includes) do
+    'wells.requests_as_source,wells.requests_as_source.request_type,' \
+      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+  end
+  let(:control_well_locations) { %w[B5 H3] }
+
+  let(:control_study_name) { 'Test Study' }
+  let(:control_study) { create :v2_study, name: control_study_name }
+
+  let(:sample_md_cohort) { 'Cohort' }
+  let(:sample_md_sample_description) { 'Description' }
+
+  let(:control_sample_pos) do
+    create :v2_sample,
+           name: 'CONTROL_POS_Description_B5',
+           control: true,
+           control_type: 'pcr positive',
+           sample_metadata:
+             create(:v2_sample_metadata, cohort: sample_md_cohort, sample_description: sample_md_sample_description)
+  end
+  let(:control_sample_neg) do
+    create :v2_sample,
+           name: 'CONTROL_Neg_Description_H3',
+           control: true,
+           control_type: 'pcr negative',
+           sample_metadata:
+             create(:v2_sample_metadata, cohort: sample_md_cohort, sample_description: sample_md_sample_description)
+  end
 
   before do
-    # allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
-
-    create(:stamp_with_randomised_controls_purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
+    create(
+      :stamp_with_randomised_controls_purpose_config,
+      name: child_purpose_name,
+      uuid: child_purpose_uuid,
+      control_study_name: control_study_name
+    )
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
     stub_v2_plate(parent_plate_v2, stub_search: false, custom_includes: parent_plate_includes)
+    stub_v2_study(control_study)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -67,9 +97,14 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         )
       end
 
-      # let!(:sample_creation_request) do
-      #   # TODO: no existing v1 create samples route, use v2?
-      # end
+      # TODO: how to get the right sample obj returned to the right call in the code? pos not neg?
+      # TODO: why after returning this does the sample not contain the metadata when it's in the factory??
+      let!(:api_v2_save_control_pos) { stub_api_v2_save('Sample', control_sample_pos) }
+      let!(:api_v2_save_control_neg) { stub_api_v2_save('Sample', control_sample_neg) }
+
+      let!(:api_v2_post) { stub_api_v2_post('Sample') }
+
+      let!(:api_v2_update_sample_metadata) { stub_api_v2_post('SampleMetadata') }
 
       let!(:transfer_creation_request) do
         stub_api_post(
@@ -112,9 +147,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .compact
     end
 
-    before do
-      allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
-    end
+    before { allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations) }
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
@@ -138,9 +171,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         end
     end
 
-    before do
-      allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
-    end
+    before { allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations) }
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
