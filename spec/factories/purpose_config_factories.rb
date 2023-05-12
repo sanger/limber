@@ -168,26 +168,13 @@ FactoryBot.define do
       work_completion_request_type { 'limber_bespoke_aggregation' }
       controls do
         [
-          {
-            control_type: 'pcr_positive',
-            name_prefix: 'CONTROL_POS_'
-          },
-          {
-            control_type: 'pcr_negative',
-            name_prefix: 'CONTROL_NEG_'
-          }
+          { control_type: 'pcr positive', name_prefix: 'CONTROL_POS_' },
+          { control_type: 'pcr negative', name_prefix: 'CONTROL_NEG_' }
         ]
       end
-      # TODO: use a test study
       control_study_name { 'UAT Study' }
-      control_location_rules do
-        [
-          {
-            type: 'not',
-            value: ['H1','G1']
-          }
-        ]
-      end
+      control_project_name { 'UAT Project' }
+      control_location_rules { [{ type: 'not', value: %w[H1 G1] }] }
     end
 
     # Configuration for a multi stamp from tubes plate purpose

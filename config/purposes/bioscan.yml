@@ -25,11 +25,13 @@ LBSN-96 Lysate:
   :work_completion_request_type: 'limber_bioscan_lysate_prep'
   :size: 96
   :controls:
-    - control_type: pcr_positive
+    - control_type: pcr positive
       name_prefix: CONTROL_POS_
-    - control_type: pcr_negative
+    - control_type: pcr negative
       name_prefix: CONTROL_NEG_
   :control_study_name: BIOSCAN UK for flying insects
+  # TODO: waiting on R&D to tell us the real project name
+  :control_project_name: UAT Project
   :control_location_rules:
     - type: not
       value:
