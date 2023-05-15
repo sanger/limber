@@ -78,11 +78,11 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
     end
 
-    def stub_api_v2_save(klass, obj)
+    def stub_api_v2_save(klass)
       # intercepts the 'save' method for any class beginning with
-      # 'Sequencescape::Api::V2::' and returns the passed in object
+      # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      allow_any_instance_of(receiving_class).to receive(:save).and_return(obj)
+      allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
     def stub_barcode_search(barcode, labware)
