@@ -112,6 +112,11 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
     end
 
+    def stub_v2_project(project)
+      arguments = [{ name: project.name }]
+      allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
+    end
+
     def stub_v2_study(study)
       arguments = [{ name: study.name }]
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
