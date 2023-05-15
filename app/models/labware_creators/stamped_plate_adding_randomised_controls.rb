@@ -7,6 +7,8 @@ module LabwareCreators
   # Stamps the majority of samples from the parent plate straight into the child
   # plate (A1 to A1, B1 to B1 etc.). Also creates and adds a number of randomised
   # control samples according to configuration from the plate purpose.
+  # NB. This was specifically made for adding 2 controls in Bioscan Lysate plates, with
+  # specific sample metdata, and is fairly specific for that purpose.
   class StampedPlateAddingRandomisedControls < StampedPlate # rubocop:todo Metrics/ClassLength
     PARENT_PLATE_INCLUDES =
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
@@ -169,7 +171,6 @@ module LabwareCreators
 
       control_v2 = create_control_sample(control, well_location)
 
-      binding.pry
       update_control_sample_metadata(control_v2, well_location)
 
       create_aliquot_in_child_well(control_v2, child_well_v2, well_location)
@@ -186,13 +187,20 @@ module LabwareCreators
           control_type: control.control_type
         )
       control_v2.relationships.studies = [control_study_v2]
-      return control_v2 if control_v2.save
+
+      # we had to split this save into two lines because otherwise the api v2 mock in the test fails
+      response_cont = control_v2.save
+      return response_cont if response_cont
 
       errors.add(:base, "New control (type #{control.control_type}) did not save for location #{well_location}")
     end
 
     def update_control_sample_metadata(control_v2, well_location)
-      return if control_v2.sample_metadata.update(cohort: control_cohort, sample_description: control_desc)
+      return if control_v2.sample_metadata.update(
+        supplier_name: control_v2.name,
+        cohort: control_cohort,
+        sample_description: control_desc
+      )
 
       errors.add(:base, "Could not update description on control for location #{well_location}")
     end
@@ -223,7 +231,7 @@ module LabwareCreators
         end
       req = reqs&.sort_by(&:id)&.last
       if req.blank?
-        errors.add(:base, "Expected to find suitable request in the parent plate for location #{well_location}")
+        errors.add(:base, "Expected to find suitable request to cancel in parent well #{parent_well_v2.position['name']}")
       end
       req
     end

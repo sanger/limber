@@ -36,27 +36,65 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   end
   let(:control_well_locations) { %w[B5 H3] }
 
-  let(:control_study_name) { 'Test Study' }
+  let(:control_study_name) { 'UAT Study' }
   let(:control_study) { create :v2_study, name: control_study_name }
+
+  let(:control_project_name) { 'UAT Project' }
+  let(:control_project) { create :v2_project, name: control_project_name }
 
   let(:sample_md_cohort) { 'Cohort' }
   let(:sample_md_sample_description) { 'Description' }
 
+  let(:control_pos_sample_name) { 'CONTROL_POS_Description_B5' }
+  let(:control_neg_sample_name) { 'CONTROL_NEG_Description_B5' }
+
+  let!(:control_pos_sample_metadata) do
+    create :v2_sample_metadata,
+           supplier_name: control_pos_sample_name,
+           cohort: sample_md_cohort,
+           sample_description: sample_md_sample_description
+  end
+
+  let!(:control_neg_sample_metadata) do
+    create :v2_sample_metadata,
+           supplier_name: control_neg_sample_name,
+           cohort: sample_md_cohort,
+           sample_description: sample_md_sample_description
+  end
+
   let(:control_sample_pos) do
     create :v2_sample,
-           name: 'CONTROL_POS_Description_B5',
+           name: control_pos_sample_name,
            control: true,
            control_type: 'pcr positive',
-           sample_metadata:
-             create(:v2_sample_metadata, cohort: sample_md_cohort, sample_description: sample_md_sample_description)
+           sample_metadata: control_pos_sample_metadata
   end
+
   let(:control_sample_neg) do
     create :v2_sample,
-           name: 'CONTROL_Neg_Description_H3',
+           name: control_neg_sample_name,
            control: true,
            control_type: 'pcr negative',
-           sample_metadata:
-             create(:v2_sample_metadata, cohort: sample_md_cohort, sample_description: sample_md_sample_description)
+           sample_metadata: control_neg_sample_metadata
+  end
+
+  let(:child_well_pos) { child_plate_v2.wells.select { |well| well.position['name'] == control_well_locations[0] }.first }
+  let(:child_well_neg) { child_plate_v2.wells.select { |well| well.position['name'] == control_well_locations[1] }.first }
+
+  let(:control_aliquot_pos) do
+    create :v2_aliquot,
+           sample: control_sample_pos,
+           study: control_study,
+           project: control_project,
+           receptacle: child_well_pos
+  end
+
+  let(:control_aliquot_neg) do
+    create :v2_aliquot,
+           sample: control_sample_neg,
+           study: control_study,
+           project: control_project,
+           receptacle: child_well_neg
   end
 
   before do
@@ -69,6 +107,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
     stub_v2_plate(parent_plate_v2, stub_search: false, custom_includes: parent_plate_includes)
     stub_v2_study(control_study)
+    stub_v2_project(control_project)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -97,14 +136,17 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         )
       end
 
-      # TODO: how to get the right sample obj returned to the right call in the code? pos not neg?
-      # TODO: why after returning this does the sample not contain the metadata when it's in the factory??
-      let!(:api_v2_save_control_pos) { stub_api_v2_save('Sample', control_sample_pos) }
-      let!(:api_v2_save_control_neg) { stub_api_v2_save('Sample', control_sample_neg) }
+      # NB. the order of these samples is controlled by calling them in the before on the test
+      let(:api_v2_save_control_pos) { stub_api_v2_save('Sample', control_sample_pos) }
+      let(:api_v2_save_control_neg) { stub_api_v2_save('Sample', control_sample_neg) }
 
       let!(:api_v2_post) { stub_api_v2_post('Sample') }
 
       let!(:api_v2_update_sample_metadata) { stub_api_v2_post('SampleMetadata') }
+
+      # NB. the order of these aliquots is controlled by calling them in the before on the test
+      let(:api_v2_save_aliquot_pos) { stub_api_v2_save('Aliquot', control_aliquot_pos) }
+      let(:api_v2_save_aliquot_neg) { stub_api_v2_save('Aliquot', control_aliquot_neg) }
 
       let!(:transfer_creation_request) do
         stub_api_post(
@@ -147,7 +189,13 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .compact
     end
 
-    before { allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations) }
+    before do
+      allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
+      api_v2_save_control_pos
+      api_v2_save_control_neg
+      api_v2_save_aliquot_pos
+      api_v2_save_aliquot_neg
+    end
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
@@ -169,9 +217,16 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
             outer_request: "request-#{index}"
           }
         end
+        .compact
     end
 
-    before { allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations) }
+    before do
+      allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
+      api_v2_save_control_pos
+      api_v2_save_control_neg
+      api_v2_save_aliquot_pos
+      api_v2_save_aliquot_neg
+    end
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
