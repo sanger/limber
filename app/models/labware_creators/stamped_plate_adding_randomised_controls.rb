@@ -188,19 +188,19 @@ module LabwareCreators
         )
       control_v2.relationships.studies = [control_study_v2]
 
-      # we had to split this save into two lines because otherwise the api v2 mock in the test fails
-      response_cont = control_v2.save
-      return response_cont if response_cont
+      return control_v2 if control_v2.save
 
       errors.add(:base, "New control (type #{control.control_type}) did not save for location #{well_location}")
     end
 
     def update_control_sample_metadata(control_v2, well_location)
-      return if control_v2.sample_metadata.update(
-        supplier_name: control_v2.name,
-        cohort: control_cohort,
-        sample_description: control_desc
-      )
+      if control_v2.sample_metadata.update(
+           supplier_name: control_v2.name,
+           cohort: control_cohort,
+           sample_description: control_desc
+         )
+        return
+      end
 
       errors.add(:base, "Could not update description on control for location #{well_location}")
     end
@@ -230,8 +230,10 @@ module LabwareCreators
           request.request_type.key == purpose_config.fetch(:work_completion_request_type) && request.state == 'pending'
         end
       req = reqs&.sort_by(&:id)&.last
+
       if req.blank?
-        errors.add(:base, "Expected to find suitable request to cancel in parent well #{parent_well_v2.position['name']}")
+        msg = "Expected to find suitable request to cancel in parent well #{parent_well_v2.position['name']}"
+        errors.add(:base, msg)
       end
       req
     end

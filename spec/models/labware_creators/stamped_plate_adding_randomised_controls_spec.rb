@@ -78,8 +78,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
            sample_metadata: control_neg_sample_metadata
   end
 
-  let(:child_well_pos) { child_plate_v2.wells.select { |well| well.position['name'] == control_well_locations[0] }.first }
-  let(:child_well_neg) { child_plate_v2.wells.select { |well| well.position['name'] == control_well_locations[1] }.first }
+  let(:child_well_pos) { child_plate_v2.wells.find { |well| well.position['name'] == control_well_locations[0] } }
+  let(:child_well_neg) { child_plate_v2.wells.find { |well| well.position['name'] == control_well_locations[1] } }
 
   let(:control_aliquot_pos) do
     create :v2_aliquot,
@@ -136,17 +136,11 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         )
       end
 
-      # NB. the order of these samples is controlled by calling them in the before on the test
-      let(:api_v2_save_control_pos) { stub_api_v2_save('Sample', control_sample_pos) }
-      let(:api_v2_save_control_neg) { stub_api_v2_save('Sample', control_sample_neg) }
-
       let!(:api_v2_post) { stub_api_v2_post('Sample') }
 
       let!(:api_v2_update_sample_metadata) { stub_api_v2_post('SampleMetadata') }
 
-      # NB. the order of these aliquots is controlled by calling them in the before on the test
-      let(:api_v2_save_aliquot_pos) { stub_api_v2_save('Aliquot', control_aliquot_pos) }
-      let(:api_v2_save_aliquot_neg) { stub_api_v2_save('Aliquot', control_aliquot_neg) }
+      let!(:api_v2_save_aliquot) { stub_api_v2_save('Aliquot') }
 
       let!(:transfer_creation_request) do
         stub_api_post(
@@ -178,7 +172,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       WellHelpers
         .column_order(plate_size)
         .each_with_index
-        .map do |well_name, index|
+        .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
           {
             'source_asset' => "2-well-#{well_name}",
@@ -186,15 +180,11 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
             'outer_request' => "request-#{index}"
           }
         end
-        .compact
     end
 
     before do
       allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
-      api_v2_save_control_pos
-      api_v2_save_control_neg
-      api_v2_save_aliquot_pos
-      api_v2_save_aliquot_neg
+      allow(subject).to receive(:create_control_sample).and_return(control_sample_pos, control_sample_neg)
     end
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
@@ -209,7 +199,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       WellHelpers
         .column_order(plate_size)
         .each_with_index
-        .map do |well_name, index|
+        .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
           {
             source_asset: "2-well-#{well_name}",
@@ -217,179 +207,13 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
             outer_request: "request-#{index}"
           }
         end
-        .compact
     end
 
     before do
       allow(subject).to receive(:generate_control_well_locations).and_return(control_well_locations)
-      api_v2_save_control_pos
-      api_v2_save_control_neg
-      api_v2_save_aliquot_pos
-      api_v2_save_aliquot_neg
+      allow(subject).to receive(:create_control_sample).and_return(control_sample_pos, control_sample_neg)
     end
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
-
-  # context 'more complicated scenarios' do
-  #   let(:plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: wells }
-
-  #   context 'with multiple requests of different types' do
-  #     let(:request_type_a) { create :request_type, key: 'rt_a' }
-  #     let(:request_type_b) { create :request_type, key: 'rt_b' }
-  #     let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-a' }
-  #     let(:request_b) { create :library_request, request_type: request_type_b, uuid: 'request-b' }
-  #     let(:request_c) { create :library_request, request_type: request_type_a, uuid: 'request-c' }
-  #     let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-d' }
-  #     let(:wells) do
-  #       [
-  #         create(
-  #           :v2_stock_well,
-  #           uuid: '2-well-A1',
-  #           location: 'A1',
-  #           aliquot_count: 1,
-  #           requests_as_source: [request_a, request_b]
-  #         ),
-  #         create(
-  #           :v2_stock_well,
-  #           uuid: '2-well-B1',
-  #           location: 'B1',
-  #           aliquot_count: 1,
-  #           requests_as_source: [request_c, request_d]
-  #         ),
-  #         create(:v2_stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
-  #       ]
-  #     end
-  #     let(:transfer_requests) do
-  #       [
-  #         { 'source_asset' => '2-well-A1', 'target_asset' => '3-well-A1', 'outer_request' => 'request-b' },
-  #         { 'source_asset' => '2-well-B1', 'target_asset' => '3-well-B1', 'outer_request' => 'request-d' }
-  #       ]
-  #     end
-
-  #     context 'when a request_type is supplied' do
-  #       let(:form_attributes) do
-  #         {
-  #           purpose_uuid: child_purpose_uuid,
-  #           parent_uuid: parent_uuid,
-  #           user_uuid: user_uuid,
-  #           filters: {
-  #             request_type_key: [request_type_b.key]
-  #           }
-  #         }
-  #       end
-
-  #       it_behaves_like 'a stamped plate adding randomised controls creator'
-  #     end
-
-  #     context 'when a request_type is not supplied' do
-  #       let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  #       it 'raises an exception' do
-  #         expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
-  #       end
-  #     end
-
-  #     context 'when using library type filter' do
-  #       let(:lib_type_a) { 'LibTypeA' }
-  #       let(:request_b) do
-  #         create :library_request, request_type: request_type_b, uuid: 'request-b', library_type: lib_type_a
-  #       end
-  #       let(:request_d) do
-  #         create :library_request, request_type: request_type_b, uuid: 'request-d', library_type: lib_type_a
-  #       end
-
-  #       context 'when a library type is supplied' do
-  #         let(:form_attributes) do
-  #           {
-  #             purpose_uuid: child_purpose_uuid,
-  #             parent_uuid: parent_uuid,
-  #             user_uuid: user_uuid,
-  #             filters: {
-  #               library_type: [lib_type_a]
-  #             }
-  #           }
-  #         end
-
-  #         it_behaves_like 'a stamped plate adding randomised controls creator'
-  #       end
-
-  #       context 'when both request and library types are supplied' do
-  #         let(:form_attributes) do
-  #           {
-  #             purpose_uuid: child_purpose_uuid,
-  #             parent_uuid: parent_uuid,
-  #             user_uuid: user_uuid,
-  #             filters: {
-  #               request_type_key: [request_type_b.key],
-  #               library_type: [lib_type_a]
-  #             }
-  #           }
-  #         end
-
-  #         it_behaves_like 'a stamped plate adding randomised controls creator'
-  #       end
-
-  #       context 'when a library type is supplied that does not match any request' do
-  #         let(:form_attributes) do
-  #           {
-  #             purpose_uuid: child_purpose_uuid,
-  #             parent_uuid: parent_uuid,
-  #             user_uuid: user_uuid,
-  #             filters: {
-  #               library_type: ['LibTypeB']
-  #             }
-  #           }
-  #         end
-
-  #         it 'raises an exception' do
-  #           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
-  #         end
-  #       end
-  #     end
-  #   end
-
-  #   context 'such as the ISC pipeline post pooling' do
-  #     # Here we have multiple aliquots in the source well, which all need to be transferred
-  #     # We don't specify an outer request, and Sequencescape should just move the aliquots across
-  #     # as normal.
-  #     let(:request_type) { create :request_type, key: 'rt_a' }
-  #     let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a', submission_id: '2' }
-  #     let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-b', submission_id: '2' }
-  #     let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-c', submission_id: '2' }
-  #     let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d', submission_id: '2' }
-  #     let(:aliquots_a) do
-  #       [
-  #         create(:v2_aliquot, library_state: 'started', outer_request: request_a),
-  #         create(:v2_aliquot, library_state: 'started', outer_request: request_b)
-  #       ]
-  #     end
-  #     let(:aliquots_b) do
-  #       [
-  #         create(:v2_aliquot, library_state: 'started', outer_request: request_c),
-  #         create(:v2_aliquot, library_state: 'started', outer_request: request_d)
-  #       ]
-  #     end
-
-  #     let(:wells) do
-  #       [
-  #         create(:v2_well, uuid: '2-well-A1', location: 'A1', aliquots: aliquots_a),
-  #         create(:v2_well, uuid: '2-well-B1', location: 'B1', aliquots: aliquots_b)
-  #       ]
-  #     end
-
-  #     context 'when a request_type is supplied' do
-  #       let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  #       let(:transfer_requests) do
-  #         [
-  #           { 'source_asset' => '2-well-A1', 'target_asset' => '3-well-A1', 'submission_id' => '2' },
-  #           { 'source_asset' => '2-well-B1', 'target_asset' => '3-well-B1', 'submission_id' => '2' }
-  #         ]
-  #       end
-
-  #       it_behaves_like 'a stamped plate adding randomised controls creator'
-  #     end
-  #   end
-  # end
 end
