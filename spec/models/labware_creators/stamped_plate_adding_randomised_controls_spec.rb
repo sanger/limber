@@ -216,4 +216,30 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     it_behaves_like 'a stamped plate adding randomised controls creator'
   end
+
+  context 'when generating control locations' do
+    let(:plate_size) { 96 }
+
+    before { parent_plate_v2 }
+
+    context 'when the rule checks pass' do
+      before { allow(subject).to receive(:validate_control_rules).and_return(true) }
+
+      it 'returns the expected number of locations' do
+        expect(subject.generate_control_well_locations.length).to eq 2
+      end
+    end
+
+    context 'when the rule checks fail' do
+      before do
+        allow(subject).to receive(:validate_control_rules).and_return(false)
+        subject.generate_control_well_locations
+      end
+
+      it 'returns an error' do
+        expected_msg = 'Control well location randomisation failed to pass rules after 5 attempts'
+        expect(subject.errors.first.message).to eq expected_msg
+      end
+    end
+  end
 end

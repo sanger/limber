@@ -41,18 +41,22 @@ module LabwareCreators
     # generate randomised well locations for each control
     def generate_control_well_locations
       control_locations = []
-      rules_obeyed = false
-      until rules_obeyed
+      max_retries = 5
+      retries_count = 0
+
+      until retries_count >= max_retries
         list_of_controls.count.times do |_control_index|
           # sample a random parent well and fetch its location (child not created yet)
           location = parent.wells.sample.position['name']
           control_locations.push(location)
         end
 
-        # check control locations selected pass rules, otherwise we retry
-        rules_obeyed = validate_control_rules(control_locations)
+        # check control locations selected pass rules, otherwise we retry with new locations
+        return control_locations if validate_control_rules(control_locations)
+        retries_count += 1
       end
-      control_locations
+
+      errors.add(:base, "Control well location randomisation failed to pass rules after #{max_retries} attempts")
     end
 
     def control_well_locations
