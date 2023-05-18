@@ -38,4 +38,11 @@ module ExportsHelper
     end
     Rails.configuration.mbrave[tag_group_name][:version]
   end
+
+  def mbrave_tag2_plate_num(tag_group_name)
+    unless Rails.configuration.mbrave.key?(tag_group_name.to_sym)
+      raise "Tag group #{tag_group_name} was not configured for mbrave. Please contact PSD."
+    end
+    Rails.configuration.mbrave[tag_group_name][:num_plate]
+  end
 end
