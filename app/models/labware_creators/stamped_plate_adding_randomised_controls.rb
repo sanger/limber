@@ -9,6 +9,7 @@ module LabwareCreators
   # control samples according to configuration from the plate purpose.
   # NB. This was specifically made for adding 2 controls in Bioscan Lysate plates, with
   # specific sample metdata, and is fairly specific for that purpose.
+  # rubocop:todo Metrics/MethodLength
   class StampedPlateAddingRandomisedControls < StampedPlate # rubocop:todo Metrics/ClassLength
     PARENT_PLATE_INCLUDES =
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
@@ -257,3 +258,4 @@ module LabwareCreators
     end
   end
 end
+# rubocop:enable Metrics/MethodLength
