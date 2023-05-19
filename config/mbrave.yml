@@ -319,4 +319,5 @@ development: &1
       - PB1R_bc1192_rc
 test: *1
 staging: *1
+training: *1
 production: *1
