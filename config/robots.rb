@@ -2805,6 +2805,7 @@ ROBOT_CONFIG =
     custom_robot(
       'beckman-lilys-96-stock-preparation',
       name: 'Beckman LILYS-96 Stock Preparation',
+      require_robot: true,
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
@@ -2839,6 +2840,7 @@ ROBOT_CONFIG =
     custom_robot(
       'mosquito-lbsn-96-lysate-to-lbsn-384-pcr-1',
       name: 'Mosquito LBSN-96 Lysate => LBSN-384 PCR 1',
+      require_robot: true,
       beds: {
         bed(1).barcode => {
           purpose: 'LBSN-96 Lysate',
