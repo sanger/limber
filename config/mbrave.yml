@@ -1,7 +1,7 @@
 ---
 development: &1
-  Bioscan_384_template_forward_v2:
-    name: Bioscan_384_template_forward_v2
+  Bioscan_forward_96_v2:
+    name: Bioscan_forward_96_v2
     version: v2
     num_plate: 1
     tags:
@@ -101,8 +101,8 @@ development: &1
       - PB1F_bc1094
       - PB1F_bc1095
       - PB1F_bc1096
-  Bioscan_384_template_reverse_1_v2:
-    name: Bioscan_384_template_reverse_1_v2
+  Bioscan_reverse_4_1_v2:
+    name: Bioscan_reverse_4_1_v2
     version: v2
     num_plate: 1
     tags:
@@ -110,8 +110,8 @@ development: &1
       - PB1R_bc1098_rc
       - PB1R_bc1099_rc
       - PB1R_bc1100_rc
-  Bioscan_384_template_reverse_2_v2:
-    name: Bioscan_384_template_reverse_2_v2
+  Bioscan_reverse_4_2_v2:
+    name: Bioscan_reverse_4_2_v2
     version: v2
     num_plate: 2
     tags:
@@ -119,8 +119,8 @@ development: &1
       - PB1R_bc1102_rc
       - PB1R_bc1103_rc
       - PB1R_bc1104_rc
-  Bioscan_384_template_reverse_3_v2:
-    name: Bioscan_384_template_reverse_3_v2
+  Bioscan_reverse_4_3_v2:
+    name: Bioscan_reverse_4_3_v2
     version: v2
     num_plate: 3
     tags:
@@ -128,8 +128,8 @@ development: &1
       - PB1R_bc1106_rc
       - PB1R_bc1107_rc
       - PB1R_bc1108_rc
-  Bioscan_384_template_reverse_4_v2:
-    name: Bioscan_384_template_reverse_4_v2
+  Bioscan_reverse_4_4_v2:
+    name: Bioscan_reverse_4_4_v2
     version: v2
     num_plate: 4
     tags:
@@ -137,8 +137,8 @@ development: &1
       - PB1R_bc1110_rc
       - PB1R_bc1111_rc
       - PB1R_bc1112_rc
-  Bioscan_384_template_reverse_5_v2:
-    name: Bioscan_384_template_reverse_5_v2
+  Bioscan_reverse_4_5_v2:
+    name: Bioscan_reverse_4_5_v2
     version: v2
     num_plate: 5
     tags:
@@ -146,8 +146,8 @@ development: &1
       - PB1R_bc1114_rc
       - PB1R_bc1115_rc
       - PB1R_bc1116_rc
-  Bioscan_384_template_reverse_6_v2:
-    name: Bioscan_384_template_reverse_6_v2
+  Bioscan_reverse_4_6_v2:
+    name: Bioscan_reverse_4_6_v2
     version: v2
     num_plate: 6
     tags:
@@ -155,8 +155,8 @@ development: &1
       - PB1R_bc1118_rc
       - PB1R_bc1119_rc
       - PB1R_bc1120_rc
-  Bioscan_384_template_reverse_7_v2:
-    name: Bioscan_384_template_reverse_7_v2
+  Bioscan_reverse_4_7_v2:
+    name: Bioscan_reverse_4_7_v2
     version: v2
     num_plate: 7
     tags:
@@ -164,8 +164,8 @@ development: &1
       - PB1R_bc1122_rc
       - PB1R_bc1123_rc
       - PB1R_bc1124_rc
-  Bioscan_384_template_reverse_8_v2:
-    name: Bioscan_384_template_reverse_8_v2
+  Bioscan_reverse_4_8_v2:
+    name: Bioscan_reverse_4_8_v2
     version: v2
     num_plate: 8
     tags:
@@ -173,8 +173,8 @@ development: &1
       - PB1R_bc1126_rc
       - PB1R_bc1127_rc
       - PB1R_bc1128_rc
-  Bioscan_384_template_reverse_9_v2:
-    name: Bioscan_384_template_reverse_9_v2
+  Bioscan_reverse_4_9_v2:
+    name: Bioscan_reverse_4_9_v2
     version: v2
     num_plate: 9
     tags:
@@ -182,8 +182,8 @@ development: &1
       - PB1R_bc1130_rc
       - PB1R_bc1131_rc
       - PB1R_bc1132_rc
-  Bioscan_384_template_reverse_10_v2:
-    name: Bioscan_384_template_reverse_10_v2
+  Bioscan_reverse_4_10_v2:
+    name: Bioscan_reverse_4_10_v2
     version: v2
     num_plate: 10
     tags:
@@ -191,8 +191,8 @@ development: &1
       - PB1R_bc1134_rc
       - PB1R_bc1135_rc
       - PB1R_bc1136_rc
-  Bioscan_384_template_reverse_11_v2:
-    name: Bioscan_384_template_reverse_11_v2
+  Bioscan_reverse_4_11_v2:
+    name: Bioscan_reverse_4_11_v2
     version: v2
     num_plate: 11
     tags:
@@ -200,8 +200,8 @@ development: &1
       - PB1R_bc1138_rc
       - PB1R_bc1139_rc
       - PB1R_bc1140_rc
-  Bioscan_384_template_reverse_12_v2:
-    name: Bioscan_384_template_reverse_12_v2
+  Bioscan_reverse_4_12_v2:
+    name: Bioscan_reverse_4_12_v2
     version: v2
     num_plate: 12
     tags:
@@ -209,8 +209,8 @@ development: &1
       - PB1R_bc1142_rc
       - PB1R_bc1143_rc
       - PB1R_bc1144_rc
-  Bioscan_384_template_reverse_13_v2:
-    name: Bioscan_384_template_reverse_13_v2
+  Bioscan_reverse_4_13_v2:
+    name: Bioscan_reverse_4_13_v2
     version: v2
     num_plate: 13
     tags:
@@ -218,8 +218,8 @@ development: &1
       - PB1R_bc1146_rc
       - PB1R_bc1147_rc
       - PB1R_bc1148_rc
-  Bioscan_384_template_reverse_14_v2:
-    name: Bioscan_384_template_reverse_14_v2
+  Bioscan_reverse_4_14_v2:
+    name: Bioscan_reverse_4_14_v2
     version: v2
     num_plate: 14
     tags:
@@ -227,8 +227,8 @@ development: &1
       - PB1R_bc1150_rc
       - PB1R_bc1151_rc
       - PB1R_bc1152_rc
-  Bioscan_384_template_reverse_15_v2:
-    name: Bioscan_384_template_reverse_15_v2
+  Bioscan_reverse_4_15_v2:
+    name: Bioscan_reverse_4_15_v2
     version: v2
     num_plate: 15
     tags:
@@ -236,8 +236,8 @@ development: &1
       - PB1R_bc1154_rc
       - PB1R_bc1155_rc
       - PB1R_bc1156_rc
-  Bioscan_384_template_reverse_16_v2:
-    name: Bioscan_384_template_reverse_16_v2
+  Bioscan_reverse_4_16_v2:
+    name: Bioscan_reverse_4_16_v2
     version: v2
     num_plate: 16
     tags:
@@ -245,8 +245,8 @@ development: &1
       - PB1R_bc1158_rc
       - PB1R_bc1159_rc
       - PB1R_bc1160_rc
-  Bioscan_384_template_reverse_17_v2:
-    name: Bioscan_384_template_reverse_17_v2
+  Bioscan_reverse_4_17_v2:
+    name: Bioscan_reverse_4_17_v2
     version: v2
     num_plate: 17
     tags:
@@ -254,8 +254,8 @@ development: &1
       - PB1R_bc1162_rc
       - PB1R_bc1163_rc
       - PB1R_bc1164_rc
-  Bioscan_384_template_reverse_18_v2:
-    name: Bioscan_384_template_reverse_18_v2
+  Bioscan_reverse_4_18_v2:
+    name: Bioscan_reverse_4_18_v2
     version: v2
     num_plate: 18
     tags:
@@ -263,8 +263,8 @@ development: &1
       - PB1R_bc1166_rc
       - PB1R_bc1167_rc
       - PB1R_bc1168_rc
-  Bioscan_384_template_reverse_19_v2:
-    name: Bioscan_384_template_reverse_19_v2
+  Bioscan_reverse_4_19_v2:
+    name: Bioscan_reverse_4_19_v2
     version: v2
     num_plate: 19
     tags:
@@ -272,8 +272,8 @@ development: &1
       - PB1R_bc1170_rc
       - PB1R_bc1171_rc
       - PB1R_bc1172_rc
-  Bioscan_384_template_reverse_20_v2:
-    name: Bioscan_384_template_reverse_20_v2
+  Bioscan_reverse_4_20_v2:
+    name: Bioscan_reverse_4_20_v2
     version: v2
     num_plate: 20
     tags:
@@ -281,8 +281,8 @@ development: &1
       - PB1R_bc1174_rc
       - PB1R_bc1175_rc
       - PB1R_bc1176_rc
-  Bioscan_384_template_reverse_21_v2:
-    name: Bioscan_384_template_reverse_21_v2
+  Bioscan_reverse_4_21_v2:
+    name: Bioscan_reverse_4_21_v2
     version: v2
     num_plate: 21
     tags:
@@ -290,8 +290,8 @@ development: &1
       - PB1R_bc1178_rc
       - PB1R_bc1179_rc
       - PB1R_bc1180_rc
-  Bioscan_384_template_reverse_22_v2:
-    name: Bioscan_384_template_reverse_22_v2
+  Bioscan_reverse_4_22_v2:
+    name: Bioscan_reverse_4_22_v2
     version: v2
     num_plate: 22
     tags:
@@ -299,8 +299,8 @@ development: &1
       - PB1R_bc1182_rc
       - PB1R_bc1183_rc
       - PB1R_bc1184_rc
-  Bioscan_384_template_reverse_23_v2:
-    name: Bioscan_384_template_reverse_23_v2
+  Bioscan_reverse_4_23_v2:
+    name: Bioscan_reverse_4_23_v2
     version: v2
     num_plate: 23
     tags:
@@ -308,8 +308,8 @@ development: &1
       - PB1R_bc1186_rc
       - PB1R_bc1187_rc
       - PB1R_bc1188_rc
-  Bioscan_384_template_reverse_24_v2:
-    name: Bioscan_384_template_reverse_24_v2
+  Bioscan_reverse_4_24_v2:
+    name: Bioscan_reverse_4_24_v2
     version: v2
     num_plate: 24
     tags:
