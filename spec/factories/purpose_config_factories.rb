@@ -174,7 +174,7 @@ FactoryBot.define do
       end
       control_study_name { 'UAT Study' }
       control_project_name { 'UAT Project' }
-      control_location_rules { [{ type: 'not', value: %w[H1 G1] }] }
+      control_location_rules { [{ type: 'not', value: %w[H1 G1] }, { type: 'well_exclusions', value: %w[H12] }] }
     end
 
     # Configuration for a multi stamp from tubes plate purpose
