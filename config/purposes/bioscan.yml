@@ -41,8 +41,7 @@ LBSN-384 PCR 1:
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
   :merger_plate: true
-  # TODO: what presenter should this plate have?
-  # :presenter_class: Presenters::?
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_6mm_double
   :size: 384
 LBSN-384 PCR 2:
