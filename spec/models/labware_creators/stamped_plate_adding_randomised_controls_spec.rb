@@ -242,4 +242,63 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       end
     end
   end
+
+  # test the various control location generation rule types
+  context 'when validating well location rules' do
+    context 'when rule type is not' do
+      before do
+        create(
+          :stamp_with_randomised_controls_purpose_config,
+          name: child_purpose_name,
+          uuid: child_purpose_uuid,
+          control_study_name: control_study_name,
+          control_location_rules: [{ type: 'not', value: %w[H1 G1] }]
+        )
+      end
+
+      context 'when failing the rule' do
+        let(:control_well_locations) { %w[H1 G1] }
+
+        it 'returns false' do
+          expect(subject.validate_control_rules(control_well_locations)).to eq false
+        end
+      end
+
+      context 'when passing the rule' do
+        let(:control_well_locations) { %w[A1 C2] }
+
+        it 'returns true' do
+          expect(subject.validate_control_rules(control_well_locations)).to eq true
+        end
+      end
+    end
+
+    context 'when rule is well_exclusions' do
+      before do
+        create(
+          :stamp_with_randomised_controls_purpose_config,
+          name: child_purpose_name,
+          uuid: child_purpose_uuid,
+          control_study_name: control_study_name,
+          control_location_rules: [{ type: 'well_exclusions', value: %w[H10 H11 H12] }]
+        )
+      end
+
+      context 'when failing the rule' do
+        let(:control_well_locations) { %w[A1 H12] }
+
+        it 'returns false' do
+          expect(subject.validate_control_rules(control_well_locations)).to eq false
+        end
+      end
+
+      context 'when passing the rule' do
+        let(:control_well_locations) { %w[A1 C2] }
+
+        it 'returns true' do
+          expect(subject.validate_control_rules(control_well_locations)).to eq true
+        end
+      end
+    end
+  end
 end

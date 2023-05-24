@@ -9,7 +9,6 @@ module LabwareCreators
   # control samples according to configuration from the plate purpose.
   # NB. This was specifically made for adding 2 controls in Bioscan Lysate plates, with
   # specific sample metdata, and is fairly specific for that purpose.
-  # rubocop:todo Metrics/MethodLength
   class StampedPlateAddingRandomisedControls < StampedPlate # rubocop:todo Metrics/ClassLength
     PARENT_PLATE_INCLUDES =
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
@@ -40,6 +39,7 @@ module LabwareCreators
     end
 
     # generate randomised well locations for each control
+    # rubocop:todo Metrics/MethodLength
     def generate_control_well_locations
       control_locations = []
       max_retries = 5
@@ -60,6 +60,8 @@ module LabwareCreators
       errors.add(:base, "Control well location randomisation failed to pass rules after #{max_retries} attempts")
     end
 
+    # rubocop:enable Metrics/MethodLength
+
     def control_well_locations
       @control_well_locations ||= generate_control_well_locations
     end
@@ -68,7 +70,37 @@ module LabwareCreators
       parent.wells.filter_map { |well| well unless control_well_locations.include?(well.position['name']) }
     end
 
+    # check the selected well locations meet rules specified in purpose configuration
+    def validate_control_rules(control_locations)
+      # first check for duplicates, in case the sampling chose the same well more than once
+      return false if control_locations.uniq.length != control_locations.length
+
+      # check the chosen locations against the purpose config rules (will add more options as required)
+      validate_control_rules_from_config(control_locations)
+    end
+
     private
+
+    # rubocop:todo Metrics/MethodLength
+    def validate_control_rules_from_config(control_locations)
+      list_of_rules.each do |rule|
+        case rule.type
+        when 'not'
+          # locations must not match this combination of wells (order is important)
+          return false if control_locations == rule.value
+        when 'well_exclusions'
+          # locations must not be in this list well locations (exclusions)
+          return false if control_locations.any? { |location| rule.value.include?(location) }
+        else
+          # check for unrecognised rule type
+          errors.add(:base, "Unrecognised control locations rule type from purpose config #{rule.type}")
+          return false
+        end
+      end
+      true
+    end
+
+    # rubocop:enable Metrics/MethodLength
 
     def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!
@@ -89,19 +121,6 @@ module LabwareCreators
       true
     end
 
-    # check the selected well locations meet rules specified in purpose configuration
-    def validate_control_rules(control_locations)
-      # first check for duplicates, in case the sampling chose the same well more than once
-      return false if control_locations.uniq.length != control_locations.length
-
-      # check the chosen locations against the rules (will add more options as required)
-      list_of_rules.each do |rule|
-        # locations must not match (order important)
-        return false if rule.type == 'not' && (control_locations == rule.value)
-      end
-      true
-    end
-
     # create the control samples, place them in the chosen well locations in the child
     # plate, then cancel the requests of any displaced parent wells
     def create_control_samples_in_child_plate
@@ -115,8 +134,6 @@ module LabwareCreators
         # cancel the parent well request for a sample displaced by the control (if any)
         parent_well_v2 = well_for_plate_location(parent, well_location)
         close_request_in_parent_well(parent_well_v2)
-
-        # TODO: do we need to update the child well state to passed?
       end
     end
 
@@ -258,4 +275,3 @@ module LabwareCreators
     end
   end
 end
-# rubocop:enable Metrics/MethodLength
