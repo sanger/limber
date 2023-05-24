@@ -37,6 +37,9 @@ LBSN-96 Lysate:
       value:
         - H1
         - G1
+    - type: well_restrictions
+      value:
+        - H12
 LBSN-384 PCR 1:
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
