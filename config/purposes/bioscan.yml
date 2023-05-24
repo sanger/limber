@@ -84,12 +84,13 @@ LBSN-384 PCR 2 Pool:
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
   :transfer_template: '384 plate to tube'
   :presenter_class: Presenters::SimpleTubePresenter
+  :number_of_parent_labwares: 1
 LBSN-9216 Lib PCR Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
-  :number_of_parent_tubes: 24
+  :number_of_parent_labwares: 24
   :presenter_class: Presenters::SimpleTubePresenter
 LBSN-9216 Lib PCR Pool XP:
   :asset_type: tube
