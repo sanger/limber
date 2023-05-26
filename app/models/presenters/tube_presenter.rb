@@ -24,7 +24,8 @@ module Presenters
     delegate :purpose, :state, :human_barcode, to: :labware
 
     def label
-      Labels::TubeLabel.new(labware)
+      label_class = purpose_config.fetch(:label_class)
+      label_class.constantize.new(labware)
     end
 
     def sample_count

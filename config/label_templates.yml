@@ -46,3 +46,7 @@ plate_ltn_al_lib:
 plate_cellaca_qc:
   :label_class: Labels::PlateLabelCellacaQc
   :pmb_template: sqsc_96plate_label_template_code39
+
+tube_traction_compatible:
+  :label_class: Labels::TubeLabelTractionCompatible
+  :pmb_template: tube_label_template_1d
