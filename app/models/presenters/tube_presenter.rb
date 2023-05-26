@@ -24,7 +24,8 @@ module Presenters
     delegate :purpose, :state, :human_barcode, to: :labware
 
     def label
-      label_class = purpose_config.fetch(:label_class)
+      # fetch label class from purpose if present
+      label_class = purpose_config.fetch(:label_class) || 'Labels::TubeLabel'
       label_class.constantize.new(labware)
     end
 
