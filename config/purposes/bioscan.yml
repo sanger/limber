@@ -37,7 +37,7 @@ LBSN-96 Lysate:
       value:
         - H1
         - G1
-    - type: well_restrictions
+    - type: well_exclusions
       value:
         - H12
 LBSN-384 PCR 1:
