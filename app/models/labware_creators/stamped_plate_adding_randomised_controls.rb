@@ -41,11 +41,11 @@ module LabwareCreators
     # generate randomised well locations for each control
     # rubocop:todo Metrics/MethodLength
     def generate_control_well_locations
-      control_locations = []
       max_retries = 5
       retries_count = 0
 
       until retries_count >= max_retries
+        control_locations = []
         list_of_controls.count.times do |_control_index|
           # sample a random parent well and fetch its location (child not created yet)
           location = parent.wells.sample.position['name']
