@@ -12,8 +12,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
   it_behaves_like 'it only allows creation from tagged plates'
 
-  # let(:custom_page) { 'pooled_tubes_from_whole_plates' }
-
   subject { described_class.new(api, form_attributes) }
 
   it 'should have page' do

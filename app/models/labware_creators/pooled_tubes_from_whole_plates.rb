@@ -63,5 +63,10 @@ module LabwareCreators
     def plate_search
       api.search.find(Settings.searches['Find plates'])
     end
+
+    def number_of_parent_labwares
+      # default to 4 if value not found in config
+      purpose_config.fetch(:number_of_parent_labwares, 4)
+    end
   end
 end

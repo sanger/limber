@@ -226,7 +226,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       before { allow(subject).to receive(:validate_control_rules).and_return(true) }
 
       it 'returns the expected number of locations' do
-        expect(subject.generate_control_well_locations.length).to eq 2
+        expect(subject.generate_control_well_locations.length).to eq subject.list_of_controls.length
       end
     end
 
