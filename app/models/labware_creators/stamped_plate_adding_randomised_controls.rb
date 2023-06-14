@@ -39,18 +39,13 @@ module LabwareCreators
     end
 
     # generate randomised well locations for each control
-    # rubocop:todo Metrics/MethodLength
     def generate_control_well_locations
       max_retries = 5
       retries_count = 0
 
       until retries_count >= max_retries
-        control_locations = []
-        list_of_controls.count.times do |_control_index|
-          # sample a random parent well and fetch its location (child not created yet)
-          location = parent.wells.sample.position['name']
-          control_locations.push(location)
-        end
+        # use purpose config settings to create control locations
+        control_locations = generate_control_locations_from_purpose_config
 
         # check control locations selected pass rules, otherwise we retry with new locations
         return control_locations if validate_control_rules(control_locations)
@@ -59,8 +54,6 @@ module LabwareCreators
 
       errors.add(:base, "Control well location randomisation failed to pass rules after #{max_retries} attempts")
     end
-
-    # rubocop:enable Metrics/MethodLength
 
     def control_well_locations
       @control_well_locations ||= generate_control_well_locations
@@ -80,6 +73,21 @@ module LabwareCreators
     end
 
     private
+
+    def generate_control_locations_from_purpose_config
+      control_locations = []
+      list_of_controls.count.times do |control_index|
+        control = list_of_controls[control_index]
+        if control.fixed_location?
+          # use the location specified in the purpose config for this control
+          control_locations.push(control.fixed_location)
+        else
+          # sample a random parent well and fetch its location (child not created yet)
+          control_locations.push(parent.wells.sample.position['name'])
+        end
+      end
+      control_locations
+    end
 
     # rubocop:todo Metrics/MethodLength
     def validate_control_rules_from_config(control_locations)

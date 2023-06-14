@@ -230,6 +230,31 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       end
     end
 
+    context 'when a control has a fixed location' do
+      before do
+        allow(subject).to receive(:validate_control_rules).and_return(true)
+        create(
+          :stamp_with_randomised_controls_purpose_config,
+          name: child_purpose_name,
+          uuid: child_purpose_uuid,
+          control_study_name: control_study_name,
+          controls: [
+            { control_type: 'pcr positive', name_prefix: 'CONTROL_POS_', fixed_location: 'G12' },
+            { control_type: 'pcr negative', name_prefix: 'CONTROL_NEG_' }
+          ]
+        )
+      end
+
+      it 'the result includes that location' do
+        positive_location = subject.generate_control_well_locations.first
+        expect(positive_location).to eq 'G12'
+      end
+
+      it 'returns the expected number of locations' do
+        expect(subject.generate_control_well_locations.length).to eq subject.list_of_controls.length
+      end
+    end
+
     context 'when the rule checks fail' do
       before do
         allow(subject).to receive(:validate_control_rules).and_return(false)
