@@ -27,11 +27,11 @@ LBSN-96 Lysate:
   :controls:
     - control_type: pcr positive
       name_prefix: CONTROL_POS_
+      fixed_location: G12
     - control_type: pcr negative
       name_prefix: CONTROL_NEG_
   :control_study_name: BIOSCAN UK for flying insects
-  # TODO: waiting on R&D to tell us the real project name
-  :control_project_name: UAT Project
+  :control_project_name: BIOSCAN UK for flying insects
   :control_location_rules:
     - type: not
       value:
