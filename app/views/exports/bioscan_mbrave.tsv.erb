@@ -3,7 +3,8 @@
     first_tag_1_group_name = aliquot.tag.tag_group.name
     version = mbrave_tag_version(first_tag_1_group_name)
 
-    rows = [['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']]
+    header = ['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']
+    rows = []
     @tube.aliquots.each do |aliquot| 
       tag_1_group_name = aliquot.tag.tag_group.name
       tag_2_group_name = aliquot.tag2.tag_group.name
@@ -23,5 +24,7 @@
       ]
     end
 
+    rows = rows.sort { |row_a, row_b| mbrave_row_comparison(row_a, row_b) }
+    rows = rows.unshift(header)
     rows.map{|row| row.to_csv(col_sep: ("\t"))}.join
 %>

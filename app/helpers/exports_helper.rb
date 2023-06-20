@@ -63,8 +63,8 @@ module ExportsHelper
   # Comparison function for mbrave file rows
   def mbrave_row_comparison(row_a, row_b)
     # Generate arrays of 384 plate number, 96 plate sequence and suffix, well row and column
-    a_parts = mbrave_supplier_name_parts(row_a[2]).unshift(row_a[4]) # Prepend UMI Plate ID
-    b_parts = mbrave_supplier_name_parts(row_b[2]).unshift(row_b[4])
+    a_parts = mbrave_supplier_name_parts(row_a[2]).unshift(row_a[4].to_i) # Prepend UMI Plate ID
+    b_parts = mbrave_supplier_name_parts(row_b[2]).unshift(row_b[4].to_i)
     a_parts <=> b_parts
   end
 end
