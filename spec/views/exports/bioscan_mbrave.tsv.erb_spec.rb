@@ -14,8 +14,22 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
     expect(parsed_csv).to eq(
       [
         ['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID'],
-        ['PB1F_bc1001', 'PB1R_bc1097_rc', 'supplier name 1', 'cohort 1', '1', 'sample description 1'],
-        ['PB1F_bc1001', 'PB1R_bc1097_rc', 'supplier name 2', 'cohort 2', '1', 'sample description 2']
+        [
+          'PB1F_bc1001',
+          'PB1R_bc1097_rc',
+          labware.aliquots[0].sample.sample_metadata.supplier_name,
+          labware.aliquots[0].sample.sample_metadata.cohort,
+          '1',
+          labware.aliquots[0].sample.sample_metadata.sample_description
+        ],
+        [
+          'PB1F_bc1001',
+          'PB1R_bc1097_rc',
+          labware.aliquots[1].sample.sample_metadata.supplier_name,
+          labware.aliquots[1].sample.sample_metadata.cohort,
+          '1',
+          labware.aliquots[1].sample.sample_metadata.sample_description
+        ]
       ]
     )
   end
