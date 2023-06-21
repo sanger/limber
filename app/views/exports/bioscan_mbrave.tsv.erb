@@ -20,11 +20,16 @@
         aliquot.sample.sample_metadata.supplier_name, 
         aliquot.sample.sample_metadata.cohort, 
         tag2_plate_num,
-        aliquot.sample.sample_metadata.sample_description
+        aliquot.sample.sample_metadata.sample_description,
+        # Add tag_index and tag2_index for sorting
+        aliquot.tag_index,
+        aliquot.tag2_index 
       ]
     end
 
-    rows = rows.sort { |row_a, row_b| mbrave_row_comparison(row_a, row_b) }
-    rows = rows.unshift(header)
+    rows.sort_by! { |x| [x[4], x[7], x[6]] }  # Sort by tag2_plate_num, tag2_index, and tag_index
+    rows.each { |x| x.slice!(-2, 2) } # Remove tag_index and tag2_index from rows
+    rows.unshift(header)  # Add header row to the beginning
+
     rows.map{|row| row.to_csv(col_sep: ("\t"))}.join
 %>
