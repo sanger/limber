@@ -56,30 +56,30 @@ LBSN-384 PCR 2:
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
   :tag_layout_templates:
-    - Bioscan_384_template_1_v2
-    - Bioscan_384_template_2_v2
-    - Bioscan_384_template_3_v2
-    - Bioscan_384_template_4_v2
-    - Bioscan_384_template_5_v2
-    - Bioscan_384_template_6_v2
-    - Bioscan_384_template_7_v2
-    - Bioscan_384_template_8_v2
-    - Bioscan_384_template_9_v2
-    - Bioscan_384_template_10_v2
-    - Bioscan_384_template_11_v2
-    - Bioscan_384_template_12_v2
-    - Bioscan_384_template_13_v2
-    - Bioscan_384_template_14_v2
-    - Bioscan_384_template_15_v2
-    - Bioscan_384_template_16_v2
-    - Bioscan_384_template_17_v2
-    - Bioscan_384_template_18_v2
-    - Bioscan_384_template_19_v2
-    - Bioscan_384_template_20_v2
-    - Bioscan_384_template_21_v2
-    - Bioscan_384_template_22_v2
-    - Bioscan_384_template_23_v2
-    - Bioscan_384_template_24_v2
+    - Bioscan_384_template_1_v1
+    - Bioscan_384_template_2_v1
+    - Bioscan_384_template_3_v1
+    - Bioscan_384_template_4_v1
+    - Bioscan_384_template_5_v1
+    - Bioscan_384_template_6_v1
+    - Bioscan_384_template_7_v1
+    - Bioscan_384_template_8_v1
+    - Bioscan_384_template_9_v1
+    - Bioscan_384_template_10_v1
+    - Bioscan_384_template_11_v1
+    - Bioscan_384_template_12_v1
+    - Bioscan_384_template_13_v1
+    - Bioscan_384_template_14_v1
+    - Bioscan_384_template_15_v1
+    - Bioscan_384_template_16_v1
+    - Bioscan_384_template_17_v1
+    - Bioscan_384_template_18_v1
+    - Bioscan_384_template_19_v1
+    - Bioscan_384_template_20_v1
+    - Bioscan_384_template_21_v1
+    - Bioscan_384_template_22_v1
+    - Bioscan_384_template_23_v1
+    - Bioscan_384_template_24_v1
 LBSN-384 PCR 2 Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
