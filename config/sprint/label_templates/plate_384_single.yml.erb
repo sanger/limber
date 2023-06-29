@@ -1,0 +1,49 @@
+[
+  {
+    "barcodeFields": [
+      {
+        "x": 20,
+        "y": 1,
+        "value": "<%= merge_fields[:barcode] %>",
+        "cellWidth": "0.1",
+        "height": 3,
+        "rotation": "north",
+        "barcodeType": "code39"
+      }
+    ],
+    "textFields": [
+      {
+        "fontSize": 1.5,
+        "font": "proportional",
+        "rotation": "north",
+        "value": "<%= merge_fields[:top_left] %>",
+        "x": 2,
+        "y": 3
+      },
+      {
+        "fontSize": "1.5",
+        "font": "proportional",
+        "rotation": "north",
+        "value": "<%= merge_fields[:bottom_left] %>",
+        "x": 2,
+        "y": 5
+      },
+      {
+        "fontSize": 1.5,
+        "font": "proportional",
+        "rotation": "north",
+        "value":  "<%= merge_fields[:top_right] %>",
+        "x": 53,
+        "y": 3
+      },
+      {
+        "fontSize": 1.5,
+        "font": "proportional",
+        "rotation": "north",
+        "value": "<%= merge_fields[:bottom_right] %>",
+        "x": 53,
+        "y": 5
+      }
+    ]
+  }
+]

@@ -45,7 +45,7 @@ LBSN-384 PCR 1:
   :creator_class: LabwareCreators::QuadrantStamp
   :merger_plate: true
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :label_template: plate_6mm_double
+  :label_template: plate_384_single
   :size: 384
 LBSN-384 PCR 2:
   :asset_type: plate
