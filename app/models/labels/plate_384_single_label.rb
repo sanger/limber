@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-# Prints labels for Bioscan 384-well plates (single label)
+# Prints labels for 384-well plates (single label)
 class Labels::Plate384SingleLabel < Labels::Base
   def attributes
     {
-      top_left: labware.barcode.human,
-      bottom_left: labware.purpose_name,
-      top_right: date_today,
-      bottom_right: labware.workline_identifier,
+      top_left: date_today,
+      bottom_left: labware.barcode.human,
+      top_right: workline_identifier,
+      bottom_right: [labware.role, labware.purpose_name].compact.join(' '),
       barcode: labware.barcode.human
     }
   end
