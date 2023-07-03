@@ -51,7 +51,7 @@ LBSN-384 PCR 2:
   :asset_type: plate
   :creator_class: LabwareCreators::TaggedPlate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :label_template: plate_6mm_double
+  :label_template: plate_384_single
   :size: 384
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
