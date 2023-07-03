@@ -95,7 +95,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     return self if stock_plate?
 
     stock_plates.order(id: :asc).last
-    binding.pry
   end
 
   def workline_identifier
@@ -112,7 +111,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     return stock_plate if alternative_workline_identifier_purpose.nil?
 
     ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
-    binding.pry
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
