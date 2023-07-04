@@ -308,7 +308,7 @@ FactoryBot.define do
       sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
       tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
       tag { create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')) }
-      tag2 { |_i| create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_1_v2')) }
+      tag2 { |_i| create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_11_v2')) }
 
       sample { create(:v2_sample, sample_metadata: create(:v2_sample_metadata_for_mbrave)) }
     end
