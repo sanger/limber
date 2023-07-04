@@ -7,6 +7,7 @@ module Presenters # rubocop:todo Style/Documentation
     if presentation_classes
       presentation_classes[:presenter_class].constantize
     else
+      return Presenters::TagPlate384Presenter if labware.plate? && (labware.purpose.name = 'Tag Plate - 384')
       return Presenters::UnknownPlatePresenter if labware.plate?
       return Presenters::UnknownTubePresenter if labware.tube?
 
