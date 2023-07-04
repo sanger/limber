@@ -15,8 +15,8 @@
       tag2_plate_num = mbrave_tag2_plate_num(tag_2_group_name)
 
       rows << [
-        mbrave_tag_name(tag_1_group_name, aliquot.tag_index),
-        mbrave_tag_name(tag_2_group_name, aliquot.tag2_index),
+        mbrave_tag_name(tag_1_group_name, aliquot.tag_index - 1),
+        mbrave_tag_name(tag_2_group_name, (aliquot.tag2_index - 1) ),
         aliquot.sample.sample_metadata.supplier_name, 
         aliquot.sample.sample_metadata.cohort, 
         tag2_plate_num,

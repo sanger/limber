@@ -29,7 +29,7 @@ module ExportsHelper
     unless Rails.configuration.mbrave.key?(tag_group_name.to_sym)
       raise "Tag group #{tag_group_name} was not configured for mbrave. Please contact PSD."
     end
-    Rails.configuration.mbrave[tag_group_name][:tags][tag_position - 1]
+    Rails.configuration.mbrave[tag_group_name][:tags][tag_position]
   end
 
   def mbrave_tag_version(tag_group_name)
