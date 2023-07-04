@@ -48,8 +48,8 @@ scRNA-384 cDNA-XP and scRNA-384 End Prep
 
 {include:Presenters::MinimalPcrPlatePresenter}
 
-Used directly in 9 purposes:
-pWGS-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LHR-384 Lib PCR, GBS PCR1, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, and scRNA-384 Lib PCR
+Used directly in 11 purposes:
+pWGS-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LBSN-384 PCR 1, LBSN-384 PCR 2, LHR-384 Lib PCR, GBS PCR1, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, and scRNA-384 Lib PCR
 
 {Presenters::MinimalPcrPlatePresenter View class documentation}
 
@@ -138,8 +138,8 @@ PF Lib Q-XP2
 
 {include:Presenters::StockPlatePresenter}
 
-Used directly in 15 purposes:
-PF Cherrypicked, LTHR-384 RT, LBR Cherrypick, LTN Stock, LTN Cherrypick, GnT Stock, LB Cherrypick, LDS Stock, LDS Cherrypick, LBC Stock, LHR-384 RT, LTHR RT, LBB Cherrypick, scRNA Stock, and LHR RT
+Used directly in 17 purposes:
+PF Cherrypicked, LTHR-384 RT, LILYS-96 Stock, LBSN-96 Lysate, LBR Cherrypick, LTN Stock, LTN Cherrypick, GnT Stock, LB Cherrypick, LDS Stock, LDS Cherrypick, LBC Stock, LHR-384 RT, LTHR RT, LBB Cherrypick, scRNA Stock, and LHR RT
 
 {Presenters::StockPlatePresenter View class documentation}
 
@@ -189,8 +189,8 @@ GnT MDA Norm
 
 {include:Presenters::SimpleTubePresenter}
 
-Used directly in 30 purposes:
-LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
+Used directly in 32 purposes:
+LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, pWGS-384 Lib Pool XP, LTHR-384 Pool XP, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
 
 {Presenters::SimpleTubePresenter View class documentation}
 
@@ -209,8 +209,8 @@ LCA Bank Stock,
 
 {include:Presenters::FinalTubePresenter}
 
-Used directly in 8 purposes:
-LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LB Lib Pool Norm, LTN Custom Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
+Used directly in 9 purposes:
+LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LB Lib Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
 
 {Presenters::FinalTubePresenter View class documentation}
 

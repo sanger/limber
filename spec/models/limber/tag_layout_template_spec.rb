@@ -779,6 +779,10 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
       let(:template_factory) { :tag_layout_template_by_quadrant_in_columns }
       it_behaves_like 'a tag layout'
     end
+    context 'in columns then columns' do
+      let(:template_factory) { :tag_layout_template_by_quadrant_in_columns_then_columns }
+      it_behaves_like 'a tag layout'
+    end
   end
 
   context 'by quadrants on a partial plate' do

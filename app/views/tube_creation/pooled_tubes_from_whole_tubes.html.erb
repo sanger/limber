@@ -5,9 +5,9 @@
   <%= sidebar do %>
     <%= card title: 'Add tubes to pool', without_block: true do %>
       <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-body" >
+      <div id="add-tubes-instructions-block" class="card-body" >
         <div class="instructions">
-          <p>Scan in up to 4 tubes.</p>
+          <p>Scan in up to <%= @labware_creator.number_of_parent_labwares.to_s %> tube(s).</p>
         </div>
       </div>
       <div class="card-body">
@@ -19,10 +19,10 @@
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
-        <% 4.times do |i| %>
+        <% @labware_creator.number_of_parent_labwares.times do |i| %>
           <div class="plate-container scan-plate form-group row">
-            <label for="tube[barocdes][<%= i %>]" class="plate-label col-2" >Tube <%= i+1 %></label>
-            <input id="tube[barocdes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> data-labware-type="tube"/>
+            <label for="tube[barcodes][<%= i %>]" class="plate-label col-2" >Tube <%= i+1 %></label>
+            <input id="tube[barcodes][<%= i %>]" name="tube[barcodes][]" class="form-control plate-box col-8" tabindex="1" data-position=<%= i %> data-labware-type="tube"/>
           </div>
         <% end %>
         <%= form.submit 'Make Pool', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>

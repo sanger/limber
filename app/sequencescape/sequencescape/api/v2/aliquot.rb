@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
-  belongs_to :request
+  # requires shallow path otherwise get a resource not found issue
+  belongs_to :request, shallow_path: true
   has_one :sample
   has_one :study
   has_one :project
+  has_one :receptacle
 
   def tagged?
     tag_oligo.present? || tag2_oligo.present?
