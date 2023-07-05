@@ -11,7 +11,7 @@ module Presenters
       errors.add(
         :plate,
         "type '#{labware.purpose_name}' is not a limber plate. " \
-        'You can still use this page to print labels.'
+          'You can still use this page to print labels.'
       )
     end
   end
