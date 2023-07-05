@@ -163,6 +163,16 @@ LTHR Cherrypick and LDW-96 Stock
 {Presenters::UnknownPlatePresenter View class documentation}
 
 
+### Presenters::TagPlate384Presenter
+
+{include:Presenters::TagPlate384Presenter}
+
+Used directly in 1 purposes:
+Tag Plate - 384
+
+{Presenters::TagPlate384Presenter View class documentation}
+
+
 ### Presenters::UntaggedPlatePassingPresenter
 
 {include:Presenters::UntaggedPlatePassingPresenter}
