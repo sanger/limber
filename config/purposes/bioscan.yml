@@ -1,0 +1,131 @@
+# Bioscan plate purposes
+---
+# Entry point plate created by sample manifest for insect in ethanol plates
+LILYS-96 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
+# it can be the start point of library prep if the Lysate plate was prepared manually.
+# Once this plate is made we want to close off the lysate prep submission requests,
+# and we use the AutomaticPlateStateChanger for this.
+LBSN-96 Lysate:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: false
+  :type: PlatePurpose::AdditionalInput
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::StampedPlateAddingRandomisedControls
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bioscan_lysate_prep'
+  :size: 96
+  :controls:
+    - control_type: pcr positive
+      name_prefix: CONTROL_POS_
+      fixed_location: G12
+    - control_type: pcr negative
+      name_prefix: CONTROL_NEG_
+  :control_study_name: BIOSCAN UK for flying insects
+  :control_project_name: BIOSCAN UK for flying insects
+  :control_location_rules:
+    - type: not
+      value:
+        - H1
+        - G1
+    - type: well_exclusions
+      value:
+        - H12
+LBSN-384 PCR 1:
+  :asset_type: plate
+  :creator_class: LabwareCreators::QuadrantStamp
+  :merger_plate: true
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+LBSN-384 PCR 2:
+  :asset_type: plate
+  :creator_class: LabwareCreators::TaggedPlate
+  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  :label_template: plate_6mm_double
+  :size: 384
+  # NB. will need to update this list to include new versions of the templates
+  # as we generate new sets after changes from the scripts in Sequencescape
+  :tag_layout_templates:
+    - Bioscan_384_template_1_v2
+    - Bioscan_384_template_2_v2
+    - Bioscan_384_template_3_v2
+    - Bioscan_384_template_4_v2
+    - Bioscan_384_template_5_v2
+    - Bioscan_384_template_6_v2
+    - Bioscan_384_template_7_v2
+    - Bioscan_384_template_8_v2
+    - Bioscan_384_template_9_v2
+    - Bioscan_384_template_10_v2
+    - Bioscan_384_template_11_v2
+    - Bioscan_384_template_12_v2
+    - Bioscan_384_template_13_v2
+    - Bioscan_384_template_14_v2
+    - Bioscan_384_template_15_v2
+    - Bioscan_384_template_16_v2
+    - Bioscan_384_template_17_v2
+    - Bioscan_384_template_18_v2
+    - Bioscan_384_template_19_v2
+    - Bioscan_384_template_20_v2
+    - Bioscan_384_template_21_v2
+    - Bioscan_384_template_22_v2
+    - Bioscan_384_template_23_v2
+    - Bioscan_384_template_24_v2
+    - Bioscan_384_template_1_v1
+    - Bioscan_384_template_2_v1
+    - Bioscan_384_template_3_v1
+    - Bioscan_384_template_4_v1
+    - Bioscan_384_template_5_v1
+    - Bioscan_384_template_6_v1
+    - Bioscan_384_template_7_v1
+    - Bioscan_384_template_8_v1
+    - Bioscan_384_template_9_v1
+    - Bioscan_384_template_10_v1
+    - Bioscan_384_template_11_v1
+    - Bioscan_384_template_12_v1
+    - Bioscan_384_template_13_v1
+    - Bioscan_384_template_14_v1
+    - Bioscan_384_template_15_v1
+    - Bioscan_384_template_16_v1
+    - Bioscan_384_template_17_v1
+    - Bioscan_384_template_18_v1
+    - Bioscan_384_template_19_v1
+    - Bioscan_384_template_20_v1
+    - Bioscan_384_template_21_v1
+    - Bioscan_384_template_22_v1
+    - Bioscan_384_template_23_v1
+    - Bioscan_384_template_24_v1
+LBSN-384 PCR 2 Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesFromWholePlates
+  :transfer_template: '384 plate to tube'
+  :presenter_class: Presenters::SimpleTubePresenter
+  :number_of_parent_labwares: 1
+LBSN-9216 Lib PCR Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::StockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+  :number_of_parent_labwares: 24
+  :presenter_class: Presenters::SimpleTubePresenter
+LBSN-9216 Lib PCR Pool XP:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :file_links:
+    - name: 'Download MBrave UMI file'
+      id: 'bioscan_mbrave'
+      format: 'tsv'

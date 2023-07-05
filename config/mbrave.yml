@@ -1,0 +1,642 @@
+---
+development: &1
+  Bioscan_forward_96_v2:
+    name: Bioscan_forward_96_v2
+    version: v2
+    num_plate: 1
+    tags:
+      - PB1F_bc1001
+      - PB1F_bc1002
+      - PB1F_bc1003
+      - PB1F_bc1004
+      - PB1F_bc1005
+      - PB1F_bc1006
+      - PB1F_bc1007
+      - PB1F_bc1008
+      - PB1F_bc1009
+      - PB1F_bc1010
+      - PB1F_bc1011
+      - PB1F_bc1012
+      - PB1F_bc1013
+      - PB1F_bc1014
+      - PB1F_bc1015
+      - PB1F_bc1016
+      - PB1F_bc1017
+      - PB1F_bc1018
+      - PB1F_bc1019
+      - PB1F_bc1020
+      - PB1F_bc1021
+      - PB1F_bc1022
+      - PB1F_bc1023
+      - PB1F_bc1024
+      - PB1F_bc1025
+      - PB1F_bc1026
+      - PB1F_bc1027
+      - PB1F_bc1028
+      - PB1F_bc1029
+      - PB1F_bc1030
+      - PB1F_bc1031
+      - PB1F_bc1032
+      - PB1F_bc1033
+      - PB1F_bc1034
+      - PB1F_bc1035
+      - PB1F_bc1036
+      - PB1F_bc1037
+      - PB1F_bc1038
+      - PB1F_bc1039
+      - PB1F_bc1040
+      - PB1F_bc1041
+      - PB1F_bc1042
+      - PB1F_bc1043
+      - PB1F_bc1044
+      - PB1F_bc1045
+      - PB1F_bc1046
+      - PB1F_bc1047
+      - PB1F_bc1048
+      - PB1F_bc1049
+      - PB1F_bc1050
+      - PB1F_bc1051
+      - PB1F_bc1052
+      - PB1F_bc1053
+      - PB1F_bc1054
+      - PB1F_bc1055
+      - PB1F_bc1056
+      - PB1F_bc1057
+      - PB1F_bc1058
+      - PB1F_bc1059
+      - PB1F_bc1060
+      - PB1F_bc1061
+      - PB1F_bc1062
+      - PB1F_bc1063
+      - PB1F_bc1064
+      - PB1F_bc1065
+      - PB1F_bc1066
+      - PB1F_bc1067
+      - PB1F_bc1068
+      - PB1F_bc1069
+      - PB1F_bc1195
+      - PB1F_bc1071
+      - PB1F_bc1072
+      - PB1F_bc1073
+      - PB1F_bc1074
+      - PB1F_bc1075
+      - PB1F_bc1076
+      - PB1F_bc1077
+      - PB1F_bc1078
+      - PB1F_bc1079
+      - PB1F_bc1080
+      - PB1F_bc1081
+      - PB1F_bc1082
+      - PB1F_bc1083
+      - PB1F_bc1084
+      - PB1F_bc1085
+      - PB1F_bc1086
+      - PB1F_bc1087
+      - PB1F_bc1088
+      - PB1F_bc1089
+      - PB1F_bc1090
+      - PB1F_bc1091
+      - PB1F_bc1092
+      - PB1F_bc1093
+      - PB1F_bc1094
+      - PB1F_bc1095
+      - PB1F_bc1096
+  Bioscan_reverse_4_1_v2:
+    name: Bioscan_reverse_4_1_v2
+    version: v2
+    num_plate: 1
+    tags:
+      - PB1R_bc1097_rc
+      - PB1R_bc1098_rc
+      - PB1R_bc1099_rc
+      - PB1R_bc1100_rc
+  Bioscan_reverse_4_2_v2:
+    name: Bioscan_reverse_4_2_v2
+    version: v2
+    num_plate: 2
+    tags:
+      - PB1R_bc1101_rc
+      - PB1R_bc1102_rc
+      - PB1R_bc1103_rc
+      - PB1R_bc1104_rc
+  Bioscan_reverse_4_3_v2:
+    name: Bioscan_reverse_4_3_v2
+    version: v2
+    num_plate: 3
+    tags:
+      - PB1R_bc1105_rc
+      - PB1R_bc1106_rc
+      - PB1R_bc1107_rc
+      - PB1R_bc1108_rc
+  Bioscan_reverse_4_4_v2:
+    name: Bioscan_reverse_4_4_v2
+    version: v2
+    num_plate: 4
+    tags:
+      - PB1R_bc1109_rc
+      - PB1R_bc1110_rc
+      - PB1R_bc1111_rc
+      - PB1R_bc1112_rc
+  Bioscan_reverse_4_5_v2:
+    name: Bioscan_reverse_4_5_v2
+    version: v2
+    num_plate: 5
+    tags:
+      - PB1R_bc1113_rc
+      - PB1R_bc1114_rc
+      - PB1R_bc1115_rc
+      - PB1R_bc1116_rc
+  Bioscan_reverse_4_6_v2:
+    name: Bioscan_reverse_4_6_v2
+    version: v2
+    num_plate: 6
+    tags:
+      - PB1R_bc1117_rc
+      - PB1R_bc1118_rc
+      - PB1R_bc1119_rc
+      - PB1R_bc1120_rc
+  Bioscan_reverse_4_7_v2:
+    name: Bioscan_reverse_4_7_v2
+    version: v2
+    num_plate: 7
+    tags:
+      - PB1R_bc1121_rc
+      - PB1R_bc1122_rc
+      - PB1R_bc1123_rc
+      - PB1R_bc1124_rc
+  Bioscan_reverse_4_8_v2:
+    name: Bioscan_reverse_4_8_v2
+    version: v2
+    num_plate: 8
+    tags:
+      - PB1R_bc1125_rc
+      - PB1R_bc1126_rc
+      - PB1R_bc1127_rc
+      - PB1R_bc1128_rc
+  Bioscan_reverse_4_9_v2:
+    name: Bioscan_reverse_4_9_v2
+    version: v2
+    num_plate: 9
+    tags:
+      - PB1R_bc1129_rc
+      - PB1R_bc1130_rc
+      - PB1R_bc1131_rc
+      - PB1R_bc1132_rc
+  Bioscan_reverse_4_10_v2:
+    name: Bioscan_reverse_4_10_v2
+    version: v2
+    num_plate: 10
+    tags:
+      - PB1R_bc1133_rc
+      - PB1R_bc1134_rc
+      - PB1R_bc1135_rc
+      - PB1R_bc1136_rc
+  Bioscan_reverse_4_11_v2:
+    name: Bioscan_reverse_4_11_v2
+    version: v2
+    num_plate: 11
+    tags:
+      - PB1R_bc1137_rc
+      - PB1R_bc1138_rc
+      - PB1R_bc1139_rc
+      - PB1R_bc1140_rc
+  Bioscan_reverse_4_12_v2:
+    name: Bioscan_reverse_4_12_v2
+    version: v2
+    num_plate: 12
+    tags:
+      - PB1R_bc1141_rc
+      - PB1R_bc1142_rc
+      - PB1R_bc1143_rc
+      - PB1R_bc1144_rc
+  Bioscan_reverse_4_13_v2:
+    name: Bioscan_reverse_4_13_v2
+    version: v2
+    num_plate: 13
+    tags:
+      - PB1R_bc1145_rc
+      - PB1R_bc1146_rc
+      - PB1R_bc1147_rc
+      - PB1R_bc1148_rc
+  Bioscan_reverse_4_14_v2:
+    name: Bioscan_reverse_4_14_v2
+    version: v2
+    num_plate: 14
+    tags:
+      - PB1R_bc1149_rc
+      - PB1R_bc1150_rc
+      - PB1R_bc1151_rc
+      - PB1R_bc1152_rc
+  Bioscan_reverse_4_15_v2:
+    name: Bioscan_reverse_4_15_v2
+    version: v2
+    num_plate: 15
+    tags:
+      - PB1R_bc1153_rc
+      - PB1R_bc1154_rc
+      - PB1R_bc1155_rc
+      - PB1R_bc1156_rc
+  Bioscan_reverse_4_16_v2:
+    name: Bioscan_reverse_4_16_v2
+    version: v2
+    num_plate: 16
+    tags:
+      - PB1R_bc1157_rc
+      - PB1R_bc1158_rc
+      - PB1R_bc1159_rc
+      - PB1R_bc1160_rc
+  Bioscan_reverse_4_17_v2:
+    name: Bioscan_reverse_4_17_v2
+    version: v2
+    num_plate: 17
+    tags:
+      - PB1R_bc1161_rc
+      - PB1R_bc1162_rc
+      - PB1R_bc1163_rc
+      - PB1R_bc1164_rc
+  Bioscan_reverse_4_18_v2:
+    name: Bioscan_reverse_4_18_v2
+    version: v2
+    num_plate: 18
+    tags:
+      - PB1R_bc1165_rc
+      - PB1R_bc1166_rc
+      - PB1R_bc1167_rc
+      - PB1R_bc1168_rc
+  Bioscan_reverse_4_19_v2:
+    name: Bioscan_reverse_4_19_v2
+    version: v2
+    num_plate: 19
+    tags:
+      - PB1R_bc1169_rc
+      - PB1R_bc1170_rc
+      - PB1R_bc1171_rc
+      - PB1R_bc1172_rc
+  Bioscan_reverse_4_20_v2:
+    name: Bioscan_reverse_4_20_v2
+    version: v2
+    num_plate: 20
+    tags:
+      - PB1R_bc1173_rc
+      - PB1R_bc1174_rc
+      - PB1R_bc1175_rc
+      - PB1R_bc1176_rc
+  Bioscan_reverse_4_21_v2:
+    name: Bioscan_reverse_4_21_v2
+    version: v2
+    num_plate: 21
+    tags:
+      - PB1R_bc1177_rc
+      - PB1R_bc1178_rc
+      - PB1R_bc1179_rc
+      - PB1R_bc1180_rc
+  Bioscan_reverse_4_22_v2:
+    name: Bioscan_reverse_4_22_v2
+    version: v2
+    num_plate: 22
+    tags:
+      - PB1R_bc1181_rc
+      - PB1R_bc1182_rc
+      - PB1R_bc1183_rc
+      - PB1R_bc1184_rc
+  Bioscan_reverse_4_23_v2:
+    name: Bioscan_reverse_4_23_v2
+    version: v2
+    num_plate: 23
+    tags:
+      - PB1R_bc1185_rc
+      - PB1R_bc1186_rc
+      - PB1R_bc1187_rc
+      - PB1R_bc1188_rc
+  Bioscan_reverse_4_24_v2:
+    name: Bioscan_reverse_4_24_v2
+    version: v2
+    num_plate: 24
+    tags:
+      - PB1R_bc1189_rc
+      - PB1R_bc1190_rc
+      - PB1R_bc1191_rc
+      - PB1R_bc1192_rc
+
+  # This version 1 was supplied on 28/Jun
+  Bioscan_forward_96_v1:
+    name: Bioscan_forward_96_v1
+    version: v1
+    num_plate: 1
+    tags:
+      - PB1F_bc1001
+      - PB1F_bc1002
+      - PB1F_bc1003
+      - PB1F_bc1004
+      - PB1F_bc1005
+      - PB1F_bc1006
+      - PB1F_bc1007
+      - PB1F_bc1008
+      - PB1F_bc1009
+      - PB1F_bc1010
+      - PB1F_bc1011
+      - PB1F_bc1012
+      - PB1F_bc1013
+      - PB1F_bc1014
+      - PB1F_bc1015
+      - PB1F_bc1016
+      - PB1F_bc1017
+      - PB1F_bc1018
+      - PB1F_bc1019
+      - PB1F_bc1020
+      - PB1F_bc1021
+      - PB1F_bc1022
+      - PB1F_bc1023
+      - PB1F_bc1024
+      - PB1F_bc1025
+      - PB1F_bc1026
+      - PB1F_bc1027
+      - PB1F_bc1028
+      - PB1F_bc1029
+      - PB1F_bc1030
+      - PB1F_bc1031
+      - PB1F_bc1032
+      - PB1F_bc1033
+      - PB1F_bc1034
+      - PB1F_bc1035
+      - PB1F_bc1036
+      - PB1F_bc1037
+      - PB1F_bc1038
+      - PB1F_bc1039
+      - PB1F_bc1040
+      - PB1F_bc1041
+      - PB1F_bc1042
+      - PB1F_bc1043
+      - PB1F_bc1044
+      - PB1F_bc1045
+      - PB1F_bc1046
+      - PB1F_bc1047
+      - PB1F_bc1048
+      - PB1F_bc1049
+      - PB1F_bc1050
+      - PB1F_bc1051
+      - PB1F_bc1052
+      - PB1F_bc1053
+      - PB1F_bc1054
+      - PB1F_bc1055
+      - PB1F_bc1056
+      - PB1F_bc1057
+      - PB1F_bc1058
+      - PB1F_bc1059
+      - PB1F_bc1060
+      - PB1F_bc1061
+      - PB1F_bc1062
+      - PB1F_bc1063
+      - PB1F_bc1064
+      - PB1F_bc1065
+      - PB1F_bc1066
+      - PB1F_bc1067
+      - PB1F_bc1068
+      - PB1F_bc1069
+      - PB1F_bc1070
+      - PB1F_bc1071
+      - PB1F_bc1072
+      - PB1F_bc1073
+      - PB1F_bc1074
+      - PB1F_bc1075
+      - PB1F_bc1076
+      - PB1F_bc1077
+      - PB1F_bc1078
+      - PB1F_bc1079
+      - PB1F_bc1080
+      - PB1F_bc1081
+      - PB1F_bc1082
+      - PB1F_bc1083
+      - PB1F_bc1084
+      - PB1F_bc1085
+      - PB1F_bc1086
+      - PB1F_bc1087
+      - PB1F_bc1088
+      - PB1F_bc1089
+      - PB1F_bc1090
+      - PB1F_bc1091
+      - PB1F_bc1092
+      - PB1F_bc1093
+      - PB1F_bc1094
+      - PB1F_bc1095
+      - PB1F_bc1096
+  Bioscan_reverse_4_1_v1:
+    name: Bioscan_reverse_4_1_v1
+    version: v1
+    num_plate: 1
+    tags:
+      - PB1R_bc1097_rc
+      - PB1R_bc1098_rc
+      - PB1R_bc1099_rc
+      - PB1R_bc1100_rc
+  Bioscan_reverse_4_2_v1:
+    name: Bioscan_reverse_4_2_v1
+    version: v1
+    num_plate: 2
+    tags:
+      - PB1R_bc1101_rc
+      - PB1R_bc1102_rc
+      - PB1R_bc1103_rc
+      - PB1R_bc1104_rc
+  Bioscan_reverse_4_3_v1:
+    name: Bioscan_reverse_4_3_v1
+    version: v1
+    num_plate: 3
+    tags:
+      - PB1R_bc1105_rc
+      - PB1R_bc1106_rc
+      - PB1R_bc1107_rc
+      - PB1R_bc1108_rc
+  Bioscan_reverse_4_4_v1:
+    name: Bioscan_reverse_4_4_v1
+    version: v1
+    num_plate: 4
+    tags:
+      - PB1R_bc1109_rc
+      - PB1R_bc1110_rc
+      - PB1R_bc1111_rc
+      - PB1R_bc1112_rc
+  Bioscan_reverse_4_5_v1:
+    name: Bioscan_reverse_4_5_v1
+    version: v1
+    num_plate: 5
+    tags:
+      - PB1R_bc1113_rc
+      - PB1R_bc1114_rc
+      - PB1R_bc1115_rc
+      - PB1R_bc1116_rc
+  Bioscan_reverse_4_6_v1:
+    name: Bioscan_reverse_4_6_v1
+    version: v1
+    num_plate: 6
+    tags:
+      - PB1R_bc1117_rc
+      - PB1R_bc1118_rc
+      - PB1R_bc1119_rc
+      - PB1R_bc1120_rc
+  Bioscan_reverse_4_7_v1:
+    name: Bioscan_reverse_4_7_v1
+    version: v1
+    num_plate: 7
+    tags:
+      - PB1R_bc1121_rc
+      - PB1R_bc1122_rc
+      - PB1R_bc1123_rc
+      - PB1R_bc1124_rc
+  Bioscan_reverse_4_8_v1:
+    name: Bioscan_reverse_4_8_v1
+    version: v1
+    num_plate: 8
+    tags:
+      - PB1R_bc1125_rc
+      - PB1R_bc1126_rc
+      - PB1R_bc1127_rc
+      - PB1R_bc1128_rc
+  Bioscan_reverse_4_9_v1:
+    name: Bioscan_reverse_4_9_v1
+    version: v1
+    num_plate: 9
+    tags:
+      - PB1R_bc1129_rc
+      - PB1R_bc1130_rc
+      - PB1R_bc1131_rc
+      - PB1R_bc1132_rc
+  Bioscan_reverse_4_10_v1:
+    name: Bioscan_reverse_4_10_v1
+    version: v1
+    num_plate: 10
+    tags:
+      - PB1R_bc1133_rc
+      - PB1R_bc1134_rc
+      - PB1R_bc1135_rc
+      - PB1R_bc1136_rc
+  Bioscan_reverse_4_11_v1:
+    name: Bioscan_reverse_4_11_v1
+    version: v1
+    num_plate: 11
+    tags:
+      - PB1R_bc1137_rc
+      - PB1R_bc1138_rc
+      - PB1R_bc1139_rc
+      - PB1R_bc1140_rc
+  Bioscan_reverse_4_12_v1:
+    name: Bioscan_reverse_4_12_v1
+    version: v1
+    num_plate: 12
+    tags:
+      - PB1R_bc1141_rc
+      - PB1R_bc1142_rc
+      - PB1R_bc1143_rc
+      - PB1R_bc1144_rc
+  Bioscan_reverse_4_13_v1:
+    name: Bioscan_reverse_4_13_v1
+    version: v1
+    num_plate: 13
+    tags:
+      - PB1R_bc1145_rc
+      - PB1R_bc1146_rc
+      - PB1R_bc1147_rc
+      - PB1R_bc1148_rc
+  Bioscan_reverse_4_14_v1:
+    name: Bioscan_reverse_4_14_v1
+    version: v1
+    num_plate: 14
+    tags:
+      - PB1R_bc1149_rc
+      - PB1R_bc1150_rc
+      - PB1R_bc1151_rc
+      - PB1R_bc1152_rc
+  Bioscan_reverse_4_15_v1:
+    name: Bioscan_reverse_4_15_v1
+    version: v1
+    num_plate: 15
+    tags:
+      - PB1R_bc1153_rc
+      - PB1R_bc1154_rc
+      - PB1R_bc1155_rc
+      - PB1R_bc1156_rc
+  Bioscan_reverse_4_16_v1:
+    name: Bioscan_reverse_4_16_v1
+    version: v1
+    num_plate: 16
+    tags:
+      - PB1R_bc1157_rc
+      - PB1R_bc1158_rc
+      - PB1R_bc1159_rc
+      - PB1R_bc1160_rc
+  Bioscan_reverse_4_17_v1:
+    name: Bioscan_reverse_4_17_v1
+    version: v1
+    num_plate: 17
+    tags:
+      - PB1R_bc1161_rc
+      - PB1R_bc1162_rc
+      - PB1R_bc1163_rc
+      - PB1R_bc1164_rc
+  Bioscan_reverse_4_18_v1:
+    name: Bioscan_reverse_4_18_v1
+    version: v1
+    num_plate: 18
+    tags:
+      - PB1R_bc1165_rc
+      - PB1R_bc1166_rc
+      - PB1R_bc1167_rc
+      - PB1R_bc1168_rc
+  Bioscan_reverse_4_19_v1:
+    name: Bioscan_reverse_4_19_v1
+    version: v1
+    num_plate: 19
+    tags:
+      - PB1R_bc1169_rc
+      - PB1R_bc1170_rc
+      - PB1R_bc1171_rc
+      - PB1R_bc1172_rc
+  Bioscan_reverse_4_20_v1:
+    name: Bioscan_reverse_4_20_v1
+    version: v1
+    num_plate: 20
+    tags:
+      - PB1R_bc1173_rc
+      - PB1R_bc1174_rc
+      - PB1R_bc1175_rc
+      - PB1R_bc1176_rc
+  Bioscan_reverse_4_21_v1:
+    name: Bioscan_reverse_4_21_v1
+    version: v1
+    num_plate: 21
+    tags:
+      - PB1R_bc1177_rc
+      - PB1R_bc1178_rc
+      - PB1R_bc1179_rc
+      - PB1R_bc1180_rc
+  Bioscan_reverse_4_22_v1:
+    name: Bioscan_reverse_4_22_v1
+    version: v1
+    num_plate: 22
+    tags:
+      - PB1R_bc1181_rc
+      - PB1R_bc1182_rc
+      - PB1R_bc1183_rc
+      - PB1R_bc1184_rc
+  Bioscan_reverse_4_23_v1:
+    name: Bioscan_reverse_4_23_v1
+    version: v1
+    num_plate: 23
+    tags:
+      - PB1R_bc1185_rc
+      - PB1R_bc1186_rc
+      - PB1R_bc1187_rc
+      - PB1R_bc1188_rc
+  Bioscan_reverse_4_24_v1:
+    name: Bioscan_reverse_4_24_v1
+    version: v1
+    num_plate: 24
+    tags:
+      - PB1R_bc1189_rc
+      - PB1R_bc1190_rc
+      - PB1R_bc1191_rc
+      - PB1R_bc1192_rc
+test: *1
+staging: *1
+training: *1
+production: *1

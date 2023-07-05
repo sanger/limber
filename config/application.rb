@@ -36,5 +36,6 @@ module Limber
 
     config.logger = Logger.new(Rails.root.join('log', "#{Rails.env}.log"), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new
+    config.mbrave = config_for(:mbrave)
   end
 end

@@ -2800,6 +2800,127 @@ ROBOT_CONFIG =
       }
     )
 
+    # Bioscan Beckman bed verification
+    # LILYS-96 Stock ethanol removal step
+    custom_robot(
+      'beckman-lilys-96-stock-preparation',
+      name: 'Beckman LILYS-96 Stock Preparation',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Bioscan Beckman bed verification
+    # LILYS-96 Stock to LBSN-96 Lysate
+    # one to one stamp with added randomised controls
+    custom_robot(
+      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
+      verify_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
+        }
+      }
+    )
+
+    # Bioscan Mosquito bed verification
+    # LBSN-96 Lysate plates to LBSN-384 PCR 1
+    # transfers up to 4 plates into the 384 destination
+    custom_robot(
+      'mosquito-lbsn-96-lysate-to-lbsn-384-pcr-1',
+      name: 'Mosquito LBSN-96 Lysate => LBSN-384 PCR 1',
+      require_robot: true,
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 1'
+        },
+        bed(2).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 2'
+        },
+        bed(3).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 3'
+        },
+        bed(4).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 4'
+        },
+        bed(5).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['pending'],
+          label: 'Bed 5',
+          parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+          target_state: 'passed'
+        }
+      },
+      destination_bed: bed(5).barcode,
+      class: 'Robots::QuadrantRobot'
+    )
+
+    # Bioscan Mosquito bed verification
+    # LBSN-384 PCR 1 to LBSN-384 PCR 2
+    # transfers up to 2 pairs of plates at a time
+    custom_robot(
+      'mosquito-lbsn-384-pcr-1-to-lbsn-384-pcr-2',
+      name: 'Mosquito LBSN-384 PCR 1 => LBSN-384 PCR 2',
+      require_robot: true,
+      beds: {
+        bed(2).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['passed'],
+          child: bed(3).barcode,
+          label: 'Bed 2'
+        },
+        bed(3).barcode => {
+          purpose: 'LBSN-384 PCR 2',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(2).barcode,
+          target_state: 'passed'
+        },
+        bed(4).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 4'
+        },
+        bed(5).barcode => {
+          purpose: 'LBSN-384 PCR 2',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
     # hamilton robot for stamping deep well stock plates to shallow well stock plates
     custom_robot(
       'hamilton-ldw-96-stock-to-lsw-96-stock',

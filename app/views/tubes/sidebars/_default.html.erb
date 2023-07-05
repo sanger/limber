@@ -16,6 +16,9 @@
     <% @presenter.control_additional_creation do -%>
       <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% end %>
+    <% presenter.csv_file_links.each do |link_name, link_target| %>
+      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+    <% end %>
     <% if presenter.transfer_volumes? %>
       <%= link_to "Validate tubes to view transfer volumes", validate_paired_tubes_path, class: 'btn btn-primary btn-lg btn-block' %>
     <% end %>
