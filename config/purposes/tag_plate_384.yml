@@ -1,0 +1,10 @@
+---
+# Tag Plate - 384 is not a Limber plate. This config is used for printing.
+Tag Plate - 384:
+  :asset_type: plate
+  :presenter_class: Presenters::TagPlate384Presenter
+  :label_template: plate_384_single
+  :size: 384
+  :default_printer_type: plate_384_single
+  :pmb_template: sqsc_384plate_label_template
+  :sprint_template: plate_384_single.yml.erb

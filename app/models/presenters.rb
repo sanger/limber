@@ -3,14 +3,11 @@
 module Presenters # rubocop:todo Style/Documentation
   def self.lookup_for(labware)
     presentation_classes = Settings.purposes[labware.purpose&.uuid || :unknown]
+    return presentation_classes[:presenter_class].constantize if presentation_classes
 
-    if presentation_classes
-      presentation_classes[:presenter_class].constantize
-    else
-      return Presenters::UnknownPlatePresenter if labware.plate?
-      return Presenters::UnknownTubePresenter if labware.tube?
+    return Presenters::UnknownPlatePresenter if labware.plate?
+    return Presenters::UnknownTubePresenter if labware.tube?
 
-      raise UnknownLabwareType
-    end
+    raise UnknownLabwareType
   end
 end
