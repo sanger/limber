@@ -39,18 +39,13 @@ module LabwareCreators
     end
 
     # generate randomised well locations for each control
-    # rubocop:todo Metrics/MethodLength
     def generate_control_well_locations
       max_retries = 5
       retries_count = 0
 
       until retries_count >= max_retries
-        control_locations = []
-        list_of_controls.count.times do |_control_index|
-          # sample a random parent well and fetch its location (child not created yet)
-          location = parent.wells.sample.position['name']
-          control_locations.push(location)
-        end
+        # use purpose config settings to create control locations
+        control_locations = generate_control_locations_from_purpose_config
 
         # check control locations selected pass rules, otherwise we retry with new locations
         return control_locations if validate_control_rules(control_locations)
@@ -59,8 +54,6 @@ module LabwareCreators
 
       errors.add(:base, "Control well location randomisation failed to pass rules after #{max_retries} attempts")
     end
-
-    # rubocop:enable Metrics/MethodLength
 
     def control_well_locations
       @control_well_locations ||= generate_control_well_locations
@@ -80,6 +73,21 @@ module LabwareCreators
     end
 
     private
+
+    def generate_control_locations_from_purpose_config
+      control_locations = []
+      list_of_controls.count.times do |control_index|
+        control = list_of_controls[control_index]
+        if control.fixed_location?
+          # use the location specified in the purpose config for this control
+          control_locations.push(control.fixed_location)
+        else
+          # sample a random parent well and fetch its location (child not created yet)
+          control_locations.push(parent.wells.sample.position['name'])
+        end
+      end
+      control_locations
+    end
 
     # rubocop:todo Metrics/MethodLength
     def validate_control_rules_from_config(control_locations)
@@ -114,6 +122,9 @@ module LabwareCreators
       # create and add the control samples to the child plate in the chosen locations
       create_control_samples_in_child_plate
 
+      # close off requests on displaced samples
+      cancel_requests_for_samples_displaced_by_controls
+
       # stamp all samples from parent where wells were not overriden with controls
       transfer_material_from_parent!
       yield(@child) if block_given?
@@ -121,19 +132,23 @@ module LabwareCreators
       true
     end
 
-    # create the control samples, place them in the chosen well locations in the child
-    # plate, then cancel the requests of any displaced parent wells
+    # create the control samples in the chosen well locations in the child plate
     def create_control_samples_in_child_plate
       list_of_controls.each_with_index do |control, index|
         well_location = control_well_locations[index]
 
-        # create the control in the chosen well location in the child plate
         child_well_v2 = well_for_plate_location(@child_plate_v2, well_location)
         create_control_in_child_well(control, child_well_v2, well_location)
+      end
+    end
 
-        # cancel the parent well request for a sample displaced by the control (if any)
+    # cancel the requests of any displaced parent well samples
+    def cancel_requests_for_samples_displaced_by_controls
+      list_of_controls.each_with_index do |_control, index|
+        well_location = control_well_locations[index]
+
         parent_well_v2 = well_for_plate_location(parent, well_location)
-        close_request_in_parent_well(parent_well_v2)
+        cancel_request_in_parent_well(parent_well_v2)
       end
     end
 
@@ -150,15 +165,32 @@ module LabwareCreators
     end
 
     # used to fetch the sample description from a parent well, for use in creating the control sample name
-    # we are assuming this contains a generic value shared by all samples in the parent plate
+    # (which MUST be unique)
+    # we are assuming this contains a value shared by all samples in the parent plate e.g. this will be the
+    # Specimen plate barcode for Bioscan
     def control_desc
-      @control_desc ||= parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.sample_description
+      @control_desc ||= generate_control_sample_desc
+    end
+
+    def generate_control_sample_desc
+      parent_sample_desc = parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.sample_description
+      parent_sample_desc = parent.human_barcode if parent_sample_desc.blank?
+      parent_sample_desc
     end
 
     # used to fetch the sample cohort from a parent well, for use in writing to the control sample metadata
     # we are assuming this contains a generic value shared by all samples in the parent plate
     def control_cohort
-      @control_cohort ||= parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.cohort
+      @control_cohort ||= generate_control_cohort
+    end
+
+    def generate_control_cohort
+      parent_cohort = parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.cohort
+      if parent_cohort.blank?
+        # TODO: R&D checking if ok for this field to remain blank i.e. can be blank in mBrave file
+        parent_cohort = parent.human_barcode
+      end
+      parent_cohort
     end
 
     # fetch the api v2 study object for the control study name from the purpose config
@@ -201,6 +233,9 @@ module LabwareCreators
     # create the control sample and metadata NB. sample_name cannot contain spaces!!
     def create_control_sample(control, well_location)
       sample_name = "#{control.name_prefix}#{control_desc}_#{well_location}"
+
+      # sample name must not contain spaces, if it does replace with underscores
+      sample_name.parameterize.underscore
       control_v2 =
         Sequencescape::Api::V2::Sample.new(
           name: sample_name,
@@ -251,18 +286,13 @@ module LabwareCreators
         parent_well_v2.requests_as_source.filter do |request|
           request.request_type.key == purpose_config.fetch(:work_completion_request_type) && request.state == 'pending'
         end
-      req = reqs&.sort_by(&:id)&.last
 
-      if req.blank?
-        msg = "Expected to find suitable request to cancel in parent well #{parent_well_v2.position['name']}"
-        errors.add(:base, msg)
-      end
-      req
+      reqs&.sort_by(&:id)&.last
     end
 
     # find and close request of type specified by config in the parent well
     # for a well location replaced by a control in the child plate
-    def close_request_in_parent_well(parent_well_v2)
+    def cancel_request_in_parent_well(parent_well_v2)
       return if parent_well_v2.requests_as_source.blank?
 
       req = suitable_request_for_well(parent_well_v2)

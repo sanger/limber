@@ -60,6 +60,16 @@ FactoryBot.define do
       presenter_class { 'Presenters::FinalTubePresenter' }
     end
 
+    factory :tag_plate_384_purpose_config do
+      name { 'Tag Plate - 384' }
+      presenter_class { 'Presenters::TagPlate384Presenter' }
+      pmb_template { 'sqsc_384plate_label_template' }
+      sprint_template { 'plate_384_single.yml.erb' }
+      default_printer_type { :plate_384_single }
+      printer_type { '384 Well Plate' }
+      label_class { 'Labels::Plate384SingleLabel' }
+    end
+
     # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }

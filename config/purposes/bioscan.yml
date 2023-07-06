@@ -27,11 +27,11 @@ LBSN-96 Lysate:
   :controls:
     - control_type: pcr positive
       name_prefix: CONTROL_POS_
+      fixed_location: G12
     - control_type: pcr negative
       name_prefix: CONTROL_NEG_
   :control_study_name: BIOSCAN UK for flying insects
-  # TODO: waiting on R&D to tell us the real project name
-  :control_project_name: UAT Project
+  :control_project_name: BIOSCAN UK for flying insects
   :control_location_rules:
     - type: not
       value:
@@ -45,14 +45,16 @@ LBSN-384 PCR 1:
   :creator_class: LabwareCreators::QuadrantStamp
   :merger_plate: true
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :label_template: plate_6mm_double
+  :label_template: plate_384_single
   :size: 384
+  :alternative_workline_identifier: LILYS-96 Stock
 LBSN-384 PCR 2:
   :asset_type: plate
   :creator_class: LabwareCreators::TaggedPlate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :label_template: plate_6mm_double
+  :label_template: plate_384_single
   :size: 384
+  :alternative_workline_identifier: LILYS-96 Stock
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
   :tag_layout_templates:
