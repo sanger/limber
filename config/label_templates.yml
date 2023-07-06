@@ -52,6 +52,7 @@ plate_cellaca_qc:
 
 plate_384_single:
   :label_class: Labels::Plate384SingleLabel
-  :printer_type: 384 Well Plate
+  # The following is the only printer type configured for 384-well plates in SS barcode_printers table
+  :printer_type: 384 Well Plate Double
   :pmb_template: sqsc_384plate_label_template
   :sprint_template: plate_384_single.yml.erb
