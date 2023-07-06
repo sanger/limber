@@ -31,7 +31,7 @@ LBSN-96 Lysate:
     - control_type: pcr negative
       name_prefix: CONTROL_NEG_
   :control_study_name: BIOSCAN UK for flying insects
-  :control_project_name: BIOSCAN UK for flying insects
+  :control_project_name: BIOSCAN
   :control_location_rules:
     - type: not
       value:
