@@ -35,4 +35,3 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
     "#{labware.barcode.number}, P#{pools_size}"
   end
 end
-
