@@ -52,7 +52,7 @@ plate_cellaca_qc:
 
 tube_traction_compatible:
   :label_class: Labels::TubeLabelTractionCompatible
-  :printer_type: tube
+  :printer_type: 1D Tube
   :pmb_template: tube_label_template_1d
   :sprint_template: tube_label_traction_compatible
 
