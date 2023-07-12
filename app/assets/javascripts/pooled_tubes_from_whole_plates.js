@@ -12,9 +12,10 @@
 
     //= require lib/array_fill_polyfill
 
-    var Pooler = function (plate_number, button) {
-      this.tags = Array(plate_number).fill([])
-      //this.plates = new Array(4);
+    var Pooler = function (labware_number, button) {
+      this.tags = Array(labware_number).fill([])
+      this.labware_details = Array(labware_number).fill({})
+      this.clashing_tags = null
       this.button = button
     }
 
@@ -36,20 +37,20 @@
     }
 
     Pooler.prototype = {
-      retrieveLabware: function (plate) {
+      retrieveLabware: function (labware) {
         this.disable()
-        plate.ajax = $.ajax({
+        labware.ajax = $.ajax({
           dataType: 'json',
           url: '/search/',
           type: 'POST',
-          data: 'plate_barcode=' + plate.value,
+          data: 'plate_barcode=' + labware.value,
           success: function (data, status) {
-            plate.checkLabware(data, status)
+            labware.checkLabware(data, status, labware.value)
           },
         }).fail(function (data, status) {
           if (status !== 'abort') {
             SCAPE.message('Some problems: ' + status, 'invalid')
-            plate.badLabware()
+            labware.badLabware()
           }
         })
       },
@@ -60,12 +61,19 @@
           this.disable()
         }
       },
-      record: function (plate, position) {
-        this.tags[position] = plate.tags
+      record: function (labware, position, scanned_barcode) {
+        this.tags[position] = labware.tags
+        this.labware_details[position] = {
+          human_barcode: labware.barcode,
+          machine_barcode: scanned_barcode,
+          tags: labware.tags.map((tag) => String(tag)),
+        }
         return this.noDupes()
       },
       clearTags: function (position) {
         this.tags[position] = []
+        this.labware_details[position] = {}
+        this.clashing_tags = null
       },
       disable: function () {
         this.button.attr('disabled', 'disabled')
@@ -75,10 +83,12 @@
       },
       noDupes: function () {
         var set = new Set()
+        var poolerObj = this
         return this.tags.every(function (tag_set) {
           return tag_set.every(function (tag) {
             var tagsAsString = String(tag)
             if (set.has(tagsAsString)) {
+              poolerObj.clashing_tags = tagsAsString
               return false
             } else {
               set.add(tagsAsString)
@@ -92,7 +102,7 @@
     var pooler = new Pooler($('.plate-box').length, $('#create-labware'))
 
     $('.plate-box').on('change', function () {
-      // When we scan in a plate
+      // When we scan in a labware
       if (this.value === '') {
         this.scanLabware()
       } else {
@@ -103,50 +113,77 @@
 
     $('.plate-box').each(function () {
       $.extend(this, {
-        /*
-          Our plate beds
-        */
         waitLabware: function () {
           this.clearLabware()
-          this.plateContainer().removeClass('good-plate bad-plate scan-plate')
-          this.plateContainer().addClass('wait-plate')
+          this.labwareContainer().removeClass('good-plate bad-plate scan-plate')
+          this.labwareContainer().addClass('wait-plate')
           $('#summary_tab').addClass('ui-disabled')
         },
         scanLabware: function () {
           this.clearLabware()
-          this.plateContainer().removeClass('good-plate wait-plate bad-plate')
-          this.plateContainer().addClass('scan-plate')
+          this.labwareContainer().removeClass('good-plate wait-plate bad-plate')
+          this.labwareContainer().addClass('scan-plate')
           pooler.checkLabwares()
         },
         badLabware: function () {
           this.clearLabware()
-          this.plateContainer().removeClass('good-plate wait-plate scan-plate')
-          this.plateContainer().addClass('bad-plate')
+          this.labwareContainer().removeClass('good-plate wait-plate scan-plate')
+          this.labwareContainer().addClass('bad-plate')
           $('#summary_tab').addClass('ui-disabled')
         },
         goodLabware: function () {
-          this.plateContainer().removeClass('bad-plate wait-plate scan-plate')
-          this.plateContainer().addClass('good-plate')
+          this.labwareContainer().removeClass('bad-plate wait-plate scan-plate')
+          this.labwareContainer().addClass('good-plate')
           pooler.checkLabwares()
         },
-        plateContainer: function () {
+        labwareContainer: function () {
           return $(this).closest('.plate-container')
         },
-        checkLabware: function (data, status) {
+        checkLabware: function (data, status, scanned_barcode) {
           var response = data[this.dataset.labwareType]
           if (SOURCE_STATES.indexOf(response.state) === -1) {
             this.badLabware()
             SCAPE.message('Scanned ' + this.dataset.labwareType + 's are unsuitable', 'invalid')
           } else {
-            if (pooler.record(response, $(this).data('position'))) {
+            var position = $(this).data('position')
+            if (pooler.record(response, position, scanned_barcode)) {
               this.goodLabware()
             } else {
+              var clashing_labwares = []
+
+              Object.keys(pooler.labware_details).forEach(function (key) {
+                var current_labware_details = pooler.labware_details[key]
+                // skip empty labware locations
+                if (current_labware_details.tags == undefined) {
+                  return
+                }
+
+                // check for clashing tags
+                if (current_labware_details.tags.includes(pooler.clashing_tags)) {
+                  var human_barcode = String(current_labware_details.human_barcode)
+                  var machine_barcode = String(current_labware_details.machine_barcode)
+                  clashing_labwares.push('' + human_barcode + ' (' + machine_barcode + ')')
+                }
+              })
+
+              var clashing_labwares_string = clashing_labwares.join(', ')
+
               this.badLabware()
-              SCAPE.message('Scanned ' + this.dataset.labwareType + 's have matching tags', 'invalid')
+
+              SCAPE.message(
+                'The scanned ' +
+                  this.dataset.labwareType +
+                  ' contains tags that would clash with those in other ' +
+                  this.dataset.labwareType +
+                  's in the pool. Tag clashes found between: ' +
+                  clashing_labwares_string,
+                'invalid'
+              )
             }
           }
         },
         clearLabware: function () {
+          SCAPE.message('', null)
           pooler.clearTags($(this).data('position'))
         },
       })

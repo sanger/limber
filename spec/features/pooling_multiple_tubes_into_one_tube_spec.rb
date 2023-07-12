@@ -224,7 +224,9 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       scan_in('Tube 1', with: tube_barcode_1)
       scan_in('Tube 2', with: tube_barcode_2)
 
-      expect(page).to have_text('Scanned tubes have matching tags')
+      expect(page).to have_text(
+        'The scanned tube contains tags that would clash with those in other tubes in the pool.'
+      )
     end
   end
 end

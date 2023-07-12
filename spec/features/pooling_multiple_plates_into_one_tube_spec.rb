@@ -176,6 +176,9 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
     scan_in('Plate 3', with: plate_barcode_3)
-    expect(page).to have_text('Scanned plates have matching tags')
+
+    expect(page).to have_text(
+      'The scanned plate contains tags that would clash with those in other plates in the pool.'
+    )
   end
 end
