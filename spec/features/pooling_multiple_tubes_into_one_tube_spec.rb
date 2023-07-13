@@ -225,6 +225,15 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       scan_in('Tube 2', with: tube_barcode_2)
 
       expect(page).to have_text(
+        'The scanned tube contains tags that would clash with those in other tubes in the pool. ' \
+          'Tag clashes found between: NT1 (3980000001795), NT2 (3980000002808)'
+      )
+
+      # removes the error message if another scan is made (NB. currently validation and messages relate to
+      # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
+      scan_in('Tube 2', with: '')
+
+      expect(page).to_not have_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool.'
       )
     end
