@@ -10,7 +10,7 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
       third_line: labware.purpose_name,
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,
-      round_label_bottom_line: labware.barcode.number,
+      round_label_bottom_line: barcode_human_wihout_prefix,
       barcode: labware.barcode.human
     }
   end
@@ -22,16 +22,21 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
     return labware.name if labware.name&.match?(/^.+?\s[A-Z]\d{1,2}:[A-Z]\d{1,2}$/)
 
     # Parent barcode for LBSN-9216 Lib PCR Pool tube.
-    # There are up to 24 parent tubes for this tube. Leave the parent barcode empty.
+    # There are up to 24 parent tubes for this tube. Show the first parent.
 
     # Parent barcode for LBSN-9216 Lib PCR Pool XP tube.
     # This is the previous tube barcode.
     return labware.parents[0].barcode.human if labware.parents.size == 1
   end
 
-  # Tube ID without prefix and number of samples
+  # Tube ID without prefix followed by number of samples
   def second_line
     pools_size = @options[:pool_size] || labware.aliquots.count
-    "#{labware.barcode.number}, P#{pools_size}"
+    "#{barcode_human_wihout_prefix}, P#{pools_size}"
+  end
+
+  #
+  def barcode_human_wihout_prefix
+    labware.barcode.human.sub!(/\A#{Regexp.escape(labware.barcode.prefix)}/, '')
   end
 end
