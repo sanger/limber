@@ -1,0 +1,44 @@
+---
+LCMB Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+LCMB End Prep:
+  :asset_type: plate
+LCMB Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  # TODO: do we need this limitation (from WGS)?
+  # warnings:
+  #   pcr_cycles_not_in:
+  #     - 6
+  :tag_layout_templates:
+    - pWGS UDI tag layout v2 A
+    - pWGS UDI tag layout v2 B
+    - pWGS UDI tag layout v2 C
+    - pWGS UDI tag layout v2 D
+LCMB Lib PCR-XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  # TODO: add in additional story
+  # :file_links:
+  #   - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+  #     id: 'lcmb_pcr_xp_concentrations_for_custom_pooling'
+LCMB Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LCMB Custom Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube

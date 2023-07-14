@@ -1,0 +1,24 @@
+---
+# LCMB pipeline configuration
+LCMB: # Top of the pipeline (Library Prep)
+  pipeline_group: LCMB
+  filters:
+    request_type_key:
+      - limber_lcmb
+    library_type:
+      # TODO: confirm with NPG - same as 'standard'
+      - LCMB
+  library_pass:
+    - LCMB Lib PCR-XP
+  relationships:
+    LCMB Cherrypick: LCMB End Prep
+    LCMB End Prep: LCMB Lib PCR
+    LCMB Lib PCR: LCMB Lib PCR-XP
+LCMB MX: # Bottom of pipeline (pooling and norm)
+  pipeline_group: LCMB
+  filters:
+    request_type_key:
+      - limber_lcmb
+  relationships:
+    LCMB Lib PCR-XP: LCMB Lib Pool
+    LCMB Lib Pool: LCMB Lib Pool Norm
