@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Prints labels for 384-well plates (single label)
-# workline_identifier comes from the first stock plate of configured or last purpose
-class Labels::Plate384SingleLabel < Labels::Base
+# Prints labels for 384-well plates (single label).
+# Stock plate barcode comes from the first stock plate of configured or last purpose
+class Labels::Plate384SingleLabel < Labels::PlateLabelBase
   def attributes
     {
       top_left: date_today,
@@ -22,12 +22,6 @@ class Labels::Plate384SingleLabel < Labels::Base
     # Find the plates with configured purpose (using alternative_workline_identifier setting) and return the first.
     plate = first_of_configured_purpose
     return plate if plate.present?
-
-    # Check if the labware itself is a stock plate (using input_plate setting) and return the labware.
-    return labware if labware.stock_plate?(purpose_names: SearchHelper.stock_plate_names)
-
-    # Check if the labware itself is a stock plate (using stock_plate setting) and return the labware.
-    return labware if labware.stock_plate?(purpose_names: SearchHelper.stock_plate_names_with_flag)
 
     # Find the plates of the last purpose (using input_plate setting) and return the first.
     plate = first_of_last_purpose(SearchHelper.stock_plate_names)
