@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 module Presenters
-  # This presenter enables printing labels for 'Tag Plate - 384' plates using the 384-well plate single label template.
+  # This presenter enables printing labels for 'Tag Plate - 384' plates.
   class TagPlate384Presenter < UnknownPlatePresenter
     def label
-      Labels::Plate384SingleLabel.new(labware)
+      label_class = purpose_config.fetch(:label_class) || 'Labels::Plate384SingleLabel'
+      label_class.constantize.new(labware)
     end
 
     def add_unknown_plate_warnings
