@@ -54,13 +54,11 @@ class Tubes::TubesExportsController < ApplicationController
     export.tube_selects || nil
   end
 
-  # rubocop:disable Metrics/AbcSize
-  def set_filename
+    def set_filename
     filename = export.csv
     file_extension = export.file_extension || 'csv'
-    filename += "_#{@labware.barcode.human}" if export.filename['include_barcode']
+    filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
     filename += "_#{@page + 1}" if export.filename['include_page']
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
   end
-  # rubocop:enable Metrics/AbcSize
-end
+  end
