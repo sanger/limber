@@ -54,6 +54,7 @@ class Tubes::TubesExportsController < ApplicationController
     export.tube_selects || nil
   end
 
+  # rubocop:disable Metrics/AbcSize
   def set_filename
     filename = export.csv
     file_extension = export.file_extension || 'csv'
@@ -61,4 +62,5 @@ class Tubes::TubesExportsController < ApplicationController
     filename += "_#{@page + 1}" if export.filename['include_page']
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
   end
+  # rubocop:enable Metrics/AbcSize
 end
