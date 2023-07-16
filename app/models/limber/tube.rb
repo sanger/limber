@@ -15,8 +15,4 @@ class Limber::Tube < Sequencescape::Tube # rubocop:todo Style/Documentation
   def tube?
     true
   end
-
-  def human_barcode
-    barcode.human
-  end
 end
