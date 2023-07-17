@@ -24,10 +24,11 @@ LCMB Lib PCR-XP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
-  # TODO: add in additional story
-  # :file_links:
-  #   - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
-  #     id: 'lcmb_pcr_xp_concentrations_for_custom_pooling'
+  :file_links:
+    - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+      id: concentrations_ngul
+      # TODO: replace id with that of specific export file created in additional story DPL-825
+      # id: 'lcmb_pcr_xp_concentrations_for_custom_pooling'
 LCMB Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
