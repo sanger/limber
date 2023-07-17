@@ -32,11 +32,11 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
   # Tube ID without prefix followed by number of samples
   def second_line
     pools_size = @options[:pool_size] || labware.aliquots.count
-    "#{barcode_human_wihout_prefix}, P#{pools_size}"
+    "#{barcode_human_without_prefix}, P#{pools_size}"
   end
 
   #
-  def barcode_human_wihout_prefix
-    labware.barcode.human.sub!(/\A#{Regexp.escape(labware.barcode.prefix)}/, '')
+  def barcode_human_without_prefix
+    labware.barcode.human.sub(/\A#{Regexp.escape(labware.barcode.prefix)}/, '')
   end
 end
