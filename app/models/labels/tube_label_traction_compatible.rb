@@ -10,7 +10,7 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
       third_line: labware.purpose_name,
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,
-      round_label_bottom_line: barcode_human_wihout_prefix,
+      round_label_bottom_line: barcode_human_without_prefix,
       barcode: labware.barcode.human
     }
   end
