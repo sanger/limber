@@ -226,7 +226,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
       expect(page).to have_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool. ' \
-          'Tag clashes found between: NT1 (3980000001795), NT2 (3980000002808)'
+          'Tag clashes found between: NT1 (3980000001795) and NT2 (3980000002808)'
       )
 
       # removes the error message if another scan is made (NB. currently validation and messages relate to

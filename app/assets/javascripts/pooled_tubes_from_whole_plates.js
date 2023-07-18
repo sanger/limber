@@ -149,38 +149,40 @@
             if (pooler.record(response, position, scanned_barcode)) {
               this.goodLabware()
             } else {
-              var clashing_labwares = []
-
-              Object.keys(pooler.labware_details).forEach(function (key) {
-                var current_labware_details = pooler.labware_details[key]
-                // skip empty labware locations
-                if (current_labware_details.tags == undefined) {
-                  return
-                }
-
-                // check for clashing tags
-                if (current_labware_details.tags.includes(pooler.clashing_tags)) {
-                  var human_barcode = String(current_labware_details.human_barcode)
-                  var machine_barcode = String(current_labware_details.machine_barcode)
-                  clashing_labwares.push('' + human_barcode + ' (' + machine_barcode + ')')
-                }
-              })
-
-              var clashing_labwares_string = clashing_labwares.join(', ')
+              var clashing_labware_barcodes = this.findClashingLabwares()
 
               this.badLabware()
 
-              SCAPE.message(
-                'The scanned ' +
-                  this.dataset.labwareType +
-                  ' contains tags that would clash with those in other ' +
-                  this.dataset.labwareType +
-                  's in the pool. Tag clashes found between: ' +
-                  clashing_labwares_string,
-                'invalid'
-              )
+              var msg = 'The scanned ' +
+                        this.dataset.labwareType +
+                        ' contains tags that would clash with those in other ' +
+                        this.dataset.labwareType +
+                        's in the pool. Tag clashes found between: ' +
+                        clashing_labware_barcodes
+
+              SCAPE.message(msg, 'invalid')
             }
           }
+        },
+        findClashingLabwares: function() {
+          var clashing_labwares = []
+
+          Object.keys(pooler.labware_details).forEach(function (key) {
+            var current_labware_details = pooler.labware_details[key]
+            // skip empty labware locations
+            if (current_labware_details.tags == undefined) {
+              return
+            }
+
+            // check for clashing tags
+            if (current_labware_details.tags.includes(pooler.clashing_tags)) {
+              var human_barcode = String(current_labware_details.human_barcode)
+              var machine_barcode = String(current_labware_details.machine_barcode)
+              clashing_labwares.push('' + human_barcode + ' (' + machine_barcode + ')')
+            }
+          })
+
+          return clashing_labwares.join(' and ')
         },
         clearLabware: function () {
           SCAPE.message('', null)
