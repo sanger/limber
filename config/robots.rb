@@ -2940,4 +2940,89 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # LCMB Bravo bed verification
+    # LCMB Cherrypick to LCMB End Prep
+    # Transfers 1:1
+    bravo_robot do
+      from 'LCMB Cherrypick', bed(4)
+      to 'LCMB End Prep', car('1,4')
+    end
+
+    # LCMB Bravo bed verification
+    # Checks LCMB End Prep plate is on deck (alone)
+    # Requires robot scan so can be checked in next bed verification
+    custom_robot(
+      'bravo-lcmb-end-prep',
+      name: 'Bravo LCMB End Prep',
+      require_robot: true,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['started'],
+          label: 'Bed 7',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMB Bravo bed verification
+    # LCMB End Prep to LCMB Lib PCR
+    # Transfers 1:1
+    # Checks same robot used as for previous bed verification ie. LCMB End Prep is in same
+    # position on same robot as before.
+    custom_robot(
+      'bravo-lcmb-end-prep-to-lcmb-lib-pcr',
+      name: 'Bravo LCMB End Prep => LCMB Lib PCR',
+      verify_robot: true,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMB Hamilton Star bed verification
+    # LCMB Lib PCR to LCMB Lib PCR-XP
+    # Transfers up to 2 pairs of plates at the same time
+    custom_robot(
+      'star-96-lcmb-lib-pcr-purification',
+      name: 'STAR-96 LCMB Lib PCR => LCMB Lib PCR-XP',
+      verify_robot: false,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMB Lib PCR-XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMB Lib PCR-XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
