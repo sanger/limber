@@ -2944,10 +2944,24 @@ ROBOT_CONFIG =
     # LCMB Bravo bed verification
     # LCMB Cherrypick to LCMB End Prep
     # Transfers 1:1
-    bravo_robot do
-      from 'LCMB Cherrypick', bed(4)
-      to 'LCMB End Prep', car('1,4')
-    end
+    custom_robot(
+      'bravo-lcmb-cherrypick-to-lcmb-end-prep',
+      name: 'Bravo LCMB Cherrypick => LCMB End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMB Cherrypick',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        }
+      }
+    )
 
     # LCMB Bravo bed verification
     # Checks LCMB End Prep plate is on deck (alone)
