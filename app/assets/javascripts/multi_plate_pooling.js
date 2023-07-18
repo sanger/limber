@@ -141,7 +141,7 @@
       // disables it otherwise
       // Called when any plate updates its state
       checkPlates: function () {
-        if ($('.wait-plate, .bad-plate').length === 0) {
+        if ($('.wait-labware, .bad-labware').length === 0) {
           $('#create-labware').attr('disabled', null)
         } else {
           $('#create-labware').attr('disabled', 'disabled')
@@ -150,7 +150,7 @@
       plates: [],
     })
 
-    $('.plate-box').on('change', function () {
+    $('.labware-box').on('change', function () {
       // When we scan in a plate
       if (this.value === '') {
         this.scanPlate()
@@ -162,36 +162,33 @@
       }
     })
 
-    $('.plate-box').each(function () {
+    $('.labware-box').each(function () {
       $.extend(this, {
-        /*
-          Our plate beds
-        */
         // Sets the wait state, indicating an AJAX request is in progress
         waitPlate: function () {
           this.clearPlate()
-          $(this).closest('.plate-container').removeClass('good-plate bad-plate scan-plate')
-          $(this).closest('.plate-container').addClass('wait-plate')
+          $(this).closest('.labware-container').removeClass('good-labware bad-labware scan-labware')
+          $(this).closest('.labware-container').addClass('wait-labware')
           $('#summary_tab').addClass('ui-disabled')
         },
         // Sets the 'waiting for content' state, which represents no content
         scanPlate: function () {
           this.clearPlate()
-          $(this).closest('.plate-container').removeClass('good-plate wait-plate bad-plate')
-          $(this).closest('.plate-container').addClass('scan-plate')
+          $(this).closest('.labware-container').removeClass('good-labware wait-labware bad-labware')
+          $(this).closest('.labware-container').addClass('scan-labware')
           SCAPE.checkPlates()
         },
         // Sets an invalid state, indicating the scanned barcode isn't suitable
         badPlate: function () {
           this.clearPlate()
-          $(this).closest('.plate-container').removeClass('good-plate wait-plate scan-plate')
-          $(this).closest('.plate-container').addClass('bad-plate')
+          $(this).closest('.labware-container').removeClass('good-labware wait-labware scan-labware')
+          $(this).closest('.labware-container').addClass('bad-labware')
           $('#summary_tab').addClass('ui-disabled')
         },
         // Sets a valid state, indicating the scanned barcode is good to process
         goodPlate: function () {
-          $(this).closest('.plate-container').removeClass('bad-plate wait-plate scan-plate')
-          $(this).closest('.plate-container').addClass('good-plate')
+          $(this).closest('.labware-container').removeClass('bad-labware wait-labware scan-labware')
+          $(this).closest('.labware-container').addClass('good-labware')
           SCAPE.checkPlates()
         },
         // Passed the response of an ajax call and determines if the plate is suitable

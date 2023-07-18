@@ -55,7 +55,7 @@
         })
       },
       checkLabwares: function () {
-        if ($('.wait-plate, .bad-plate').length === 0) {
+        if ($('.wait-labware, .bad-labware').length === 0) {
           this.enable()
         } else {
           this.disable()
@@ -99,9 +99,9 @@
       },
     }
 
-    var pooler = new Pooler($('.plate-box').length, $('#create-labware'))
+    var pooler = new Pooler($('.labware-box').length, $('#create-labware'))
 
-    $('.plate-box').on('change', function () {
+    $('.labware-box').on('change', function () {
       // When we scan in a labware
       if (this.value === '') {
         this.scanLabware()
@@ -111,33 +111,33 @@
       }
     })
 
-    $('.plate-box').each(function () {
+    $('.labware-box').each(function () {
       $.extend(this, {
         waitLabware: function () {
           this.clearLabware()
-          this.labwareContainer().removeClass('good-plate bad-plate scan-plate')
-          this.labwareContainer().addClass('wait-plate')
+          this.labwareContainer().removeClass('good-labware bad-labware scan-labware')
+          this.labwareContainer().addClass('wait-labware')
           $('#summary_tab').addClass('ui-disabled')
         },
         scanLabware: function () {
           this.clearLabware()
-          this.labwareContainer().removeClass('good-plate wait-plate bad-plate')
-          this.labwareContainer().addClass('scan-plate')
+          this.labwareContainer().removeClass('good-labware wait-labware bad-labware')
+          this.labwareContainer().addClass('scan-labware')
           pooler.checkLabwares()
         },
         badLabware: function () {
           this.clearLabware()
-          this.labwareContainer().removeClass('good-plate wait-plate scan-plate')
-          this.labwareContainer().addClass('bad-plate')
+          this.labwareContainer().removeClass('good-labware wait-labware scan-labware')
+          this.labwareContainer().addClass('bad-labware')
           $('#summary_tab').addClass('ui-disabled')
         },
         goodLabware: function () {
-          this.labwareContainer().removeClass('bad-plate wait-plate scan-plate')
-          this.labwareContainer().addClass('good-plate')
+          this.labwareContainer().removeClass('bad-labware wait-labware scan-labware')
+          this.labwareContainer().addClass('good-labware')
           pooler.checkLabwares()
         },
         labwareContainer: function () {
-          return $(this).closest('.plate-container')
+          return $(this).closest('.labware-container')
         },
         checkLabware: function (data, status, scanned_barcode) {
           var response = data[this.dataset.labwareType]
@@ -153,18 +153,19 @@
 
               this.badLabware()
 
-              var msg = 'The scanned ' +
-                        this.dataset.labwareType +
-                        ' contains tags that would clash with those in other ' +
-                        this.dataset.labwareType +
-                        's in the pool. Tag clashes found between: ' +
-                        clashing_labware_barcodes
+              var msg =
+                'The scanned ' +
+                this.dataset.labwareType +
+                ' contains tags that would clash with those in other ' +
+                this.dataset.labwareType +
+                's in the pool. Tag clashes found between: ' +
+                clashing_labware_barcodes
 
               SCAPE.message(msg, 'invalid')
             }
           }
         },
-        findClashingLabwares: function() {
+        findClashingLabwares: function () {
           var clashing_labwares = []
 
           Object.keys(pooler.labware_details).forEach(function (key) {
