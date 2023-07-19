@@ -522,7 +522,7 @@ table.form {
   }
 }
 
-div.bad-plate {
+div.bad-labware {
   @extend .is-invalid;
 
   .form-control {
@@ -530,7 +530,7 @@ div.bad-plate {
   }
 }
 
-div.wait-plate {
+div.wait-labware {
   .form-control {
     background-repeat: no-repeat;
     background-position: center right 0.5625rem;
@@ -539,7 +539,7 @@ div.wait-plate {
   }
 }
 
-div.good-plate {
+div.good-labware {
   @extend .is-valid;
   .form-control {
     @extend .is-valid;
@@ -568,24 +568,24 @@ div.tube_validation_report {
   font-family: 'Monaco', 'Courier new', courier, fixed;
 }
 
-div.wait-plate a.bed-status-scan,
-div.wait-plate a.bed-status-good,
-div.wait-plate a.bed-status-bad {
+div.wait-labware a.bed-status-scan,
+div.wait-labware a.bed-status-good,
+div.wait-labware a.bed-status-bad {
   display: none !important;
 }
-div.bad-plate a.bed-status-good,
-div.bad-plate a.bed-status-wait,
-div.bad-plate a.bed-status-scan {
+div.bad-labware a.bed-status-good,
+div.bad-labware a.bed-status-wait,
+div.bad-labware a.bed-status-scan {
   display: none !important;
 }
-div.good-plate a.bed-status-bad,
-div.good-plate a.bed-status-wait,
-div.good-plate a.bed-status-scan {
+div.good-labware a.bed-status-bad,
+div.good-labware a.bed-status-wait,
+div.good-labware a.bed-status-scan {
   display: none !important;
 }
-div.scan-plate a.bed-status-bad,
-div.scan-plate a.bed-status-good,
-div.scan-plate a.bed-status-wait {
+div.scan-labware a.bed-status-bad,
+div.scan-labware a.bed-status-good,
+div.scan-labware a.bed-status-wait {
   display: none !important;
 }
 
@@ -601,7 +601,7 @@ div.scan-plate a.bed-status-wait {
   width: 4em;
 }
 
-.plate-box {
+.labware-box {
   display: inline-block !important;
 }
 
