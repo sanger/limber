@@ -22,7 +22,7 @@
 #
 # Only Squix printers are used for printing labels for Bioscan labware from
 # Limber. We do not send the print requests to PMB service, instead we send them
-# directly to SPrint service directly, which talks to Squix printers.
+# directly to SPrint service, which talks to Squix printers.
 #
 class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
   def attributes
