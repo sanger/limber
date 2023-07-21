@@ -107,6 +107,14 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
+    context 'where csv id requested is lcmb_pcr_xp_concentrations_for_custom_pooling.csv' do
+      let(:includes) { well_qc_includes }
+      let(:csv_id) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
+      let(:expected_template) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
+
+      it_behaves_like 'a csv view'
+    end
+
     context 'where template is for the hamilton robot' do
       let(:includes) { well_src_asset_includes }
 

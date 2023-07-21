@@ -95,3 +95,10 @@ hamilton_ltn_al_lib_to_ltn_al_lib_dil:
   csv: hamilton_variable_volume_dilutions_with_well_diluents
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
+lcmb_pcr_xp_concentrations_for_custom_pooling:
+  csv: lcmb_pcr_xp_concentrations_for_custom_pooling
+  plate_includes:
+    - wells.qc_results
+    - wells.aliquots
+    - wells.aliquots.sample
+  ancestor_purpose: LCMB Cherrypick

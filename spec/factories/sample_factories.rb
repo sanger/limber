@@ -8,6 +8,7 @@ FactoryBot.define do
     skip_create
 
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
+    sequence(:name) { |i| "sample_name #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
     control { false }
     control_type { nil }
