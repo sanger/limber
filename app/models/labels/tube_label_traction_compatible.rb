@@ -1,8 +1,30 @@
 # frozen_string_literal: true
 
-# This tube label uses human readable barcode instead of the machine barcode
-# for Bioscan XP tube for Traction compatibility.
-class Labels::TubeLabelTractionCompatible < Labels::Tube1dLabel
+# This class provides attributes for Bioscan tube labels. The labels have two
+# parts, side and cap.
+#
+# The side contain a 2D barcode image and four text lines.
+# * The barcode image contains human barcode.
+# * The first line contains parent barcode and well range for PCR2 Pool tube
+#   and only the parent parcode for others.
+# * The second line contains current tube barcode without prefix and number of
+#   pooled samples, the third line contains the labware purpose.
+# * The third line contains current tube labware purpose
+# # The last line contains date of printing.
+#
+# The cap contains two text lines.
+# * The first contains barcode prefix.
+# * The last contains current tube barcode without prefix.
+#
+# Initially, this arrangement was only intended for Traction compatibility of
+# Lib PCR XP (final) tube. However, difficulty of printing 1D barcodes for PCR2
+# and Lib PCR tubes made us using 2D barcodes for all three Bioscan tubes.
+#
+# Only Squix printers are used for printing labels for Bioscan labware from
+# Limber. We do not send the print requests to PMB service, instead we send them
+# directly to SPrint service directly, which talks to Squix printers.
+#
+class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
   def attributes
     {
       first_line: first_line,
@@ -15,10 +37,22 @@ class Labels::TubeLabelTractionCompatible < Labels::Tube1dLabel
     }
   end
 
-  # Parent barcode
   def first_line
-    # Parent barcode for LBSN-9216 Lib PCR Pool XP tube.
-    # This is the previous tube barcode.
+    # Parent barcode for PCR 2 Pool tube.
+    # This is the asset name (plate barcode and well range)
+    barcode_and_wells_format = /^.+?\s[A-Z]\d{1,2}:[A-Z]\d{1,2}$/
+    return labware.name if labware.name&.match?(barcode_and_wells_format)
+
+    # Parent barcode for Lib PCR Pool and Lib PCR XP tubes
     labware.parents[0].barcode.human
+  end
+
+  def second_line
+    pools_size = @options[:pool_size] || labware.aliquots.count
+    "#{barcode_human_without_prefix}, P#{pools_size}"
+  end
+
+  def barcode_human_without_prefix
+    labware.barcode.human.sub(/\A#{Regexp.escape(labware.barcode.prefix)}/, '')
   end
 end
