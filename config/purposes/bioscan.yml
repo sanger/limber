@@ -108,7 +108,7 @@ LBSN-384 PCR 2:
     - Bioscan_384_template_24_v1
 LBSN-384 PCR 2 Pool:
   :asset_type: tube
-  :label_template: tube_1d
+  :label_template: tube_traction_compatible
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholePlates
@@ -117,7 +117,7 @@ LBSN-384 PCR 2 Pool:
   :number_of_parent_labwares: 1
 LBSN-9216 Lib PCR Pool:
   :asset_type: tube
-  :label_template: tube_1d
+  :label_template: tube_traction_compatible
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::StockTubePurpose
   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
