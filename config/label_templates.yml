@@ -58,9 +58,3 @@ plate_384_single:
   :printer_type: 384 Well Plate Double
   :pmb_template: sqsc_384plate_label_template_code39
   :sprint_template: plate_384_single.yml.erb
-
-tube_1d:
-  :label_class: Labels::Tube1dLabel
-  :printer_type: 1D Tube
-  :pmb_template: tube_label_template_1d
-  :sprint_template: tube_1d.yml.erb
