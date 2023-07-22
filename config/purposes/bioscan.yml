@@ -15,8 +15,10 @@ LILYS-96 Stock:
 # and we use the AutomaticPlateStateChanger for this.
 LBSN-96 Lysate:
   :asset_type: plate
+  # LYSATE plate can be starting plate as well. The following must be true.
   :stock_plate: true
   :cherrypickable_target: false
+  # LYSATE plate can be created from LILYS as well. The following must be false.
   :input_plate: false
   :type: PlatePurpose::AdditionalInput
   :presenter_class: Presenters::StockPlatePresenter
@@ -47,6 +49,7 @@ LBSN-384 PCR 1:
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_384_single
   :size: 384
+  # LILYS plate barcode is shown on barcode label top-right if possible; LYSATE otherwise.
   :alternative_workline_identifier: LILYS-96 Stock
 LBSN-384 PCR 2:
   :asset_type: plate
@@ -54,6 +57,7 @@ LBSN-384 PCR 2:
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_384_single
   :size: 384
+  # LILYS plate barcode is shown on barcode label top-right if possible; LYSATE otherwise.
   :alternative_workline_identifier: LILYS-96 Stock
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
