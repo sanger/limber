@@ -46,7 +46,8 @@ class PurposeConfig
       submission: submission_options,
       label_class: print_option(:label_class),
       printer_type: print_option(:printer_type),
-      pmb_template: print_option(:pmb_template)
+      pmb_template: print_option(:pmb_template),
+      sprint_template: print_option(:sprint_template)
     }.merge(@options)
   end
 
@@ -120,7 +121,8 @@ class PurposeConfig
     {
       printer_type: default_printer_type,
       pmb_template: default_pmb_template,
-      label_class: default_options[:label_class]
+      label_class: default_options[:label_class],
+      sprint_template: default_sprint_template
     }
   end
 
@@ -134,6 +136,10 @@ class PurposeConfig
 
   def default_pmb_template
     @label_templates.fetch('default_pmb_templates').fetch(default_options[:default_printer_type])
+  end
+
+  def default_sprint_template
+    @label_templates.fetch('default_sprint_templates').fetch(default_options[:default_printer_type])
   end
 end
 # rubocop:enable Metrics/ParameterLists
