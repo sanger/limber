@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# This class provides attributes for Bioscan tube labels. The labels have two
-# parts, side and cap.
+# This label class provides attributes for Bioscan tube labels. The labels have
+# two stickers, side and cap.
 #
 # The side contain a 2D barcode image and four text lines.
 # * The barcode image contains human barcode.
