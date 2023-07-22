@@ -66,7 +66,7 @@ FactoryBot.define do
       pmb_template { 'sqsc_384plate_label_template' }
       sprint_template { 'plate_384_single.yml.erb' }
       default_printer_type { :plate_384_single }
-      printer_type { '384 Well Plate' }
+      printer_type { '384 Well Plate Double' }
       label_class { 'Labels::Plate384SingleLabel' }
     end
 
