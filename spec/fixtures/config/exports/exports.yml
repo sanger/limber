@@ -97,8 +97,5 @@ hamilton_ltn_al_lib_to_ltn_al_lib_dil:
   workflow: Sample Dilution
 lcmb_pcr_xp_concentrations_for_custom_pooling:
   csv: lcmb_pcr_xp_concentrations_for_custom_pooling
-  plate_includes:
-    - wells.qc_results
-    - wells.aliquots
-    - wells.aliquots.sample
+  plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: LCMB Cherrypick

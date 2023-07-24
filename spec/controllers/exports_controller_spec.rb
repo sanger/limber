@@ -108,7 +108,7 @@ RSpec.describe ExportsController, type: :controller do
     end
 
     context 'where csv id requested is lcmb_pcr_xp_concentrations_for_custom_pooling.csv' do
-      let(:includes) { well_qc_includes }
+      let(:includes) { 'wells.qc_results,wells.aliquots,wells.aliquots.sample' }
       let(:csv_id) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
       let(:expected_template) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
 
