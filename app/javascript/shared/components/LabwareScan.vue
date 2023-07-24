@@ -19,7 +19,7 @@
             :state="formState"
             :invalid-feedback="feedback"
             :valid-feedback="feedback"
-            :class="{ 'wait-plate': searching }"
+            :class="{ 'wait-labware': searching }"
           >
             <b-form-input
               :id="uid"

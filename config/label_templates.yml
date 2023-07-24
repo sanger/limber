@@ -46,3 +46,19 @@ plate_ltn_al_lib:
 plate_cellaca_qc:
   :label_class: Labels::PlateLabelCellacaQc
   :pmb_template: sqsc_96plate_label_template_code39
+
+# Only Squix printers are used through SPrint for tube_traction_compatible
+# pmb_template setting is for completeness; it is not used.
+tube_traction_compatible:
+  :label_class: Labels::TubeLabelTractionCompatible
+  :printer_type: 1D Tube
+  :pmb_template: tube_label_template_1d
+  :sprint_template: tube_label_traction_compatible.yml.erb
+
+# Only Squix printers are used through SPrint for plate_384_single
+# pmb_template setting is for completeness; it is not used.
+plate_384_single:
+  :label_class: Labels::Plate384SingleLabel
+  :printer_type: 384 Well Plate Double
+  :pmb_template: sqsc_384plate_label_template_code39
+  :sprint_template: plate_384_single.yml.erb
