@@ -9,7 +9,6 @@
   ], row_sep: "" %>
 <% @plate.wells_in_columns.each_with_index do |well, well_index| %>
   <% unless well.empty? || @ancestor_plate.blank? %>
-    <% ancestor_well = @ancestor_plate.wells_in_columns[well_index] %>
 <%= CSV.generate_line [
     @ancestor_plate.human_barcode,
     well.aliquots.first.sample.name,
