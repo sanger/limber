@@ -15,12 +15,8 @@ RSpec.describe 'exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb' d
     create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options_2))
   end
 
-  let(:ancestor_well_a1) do
-    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options_1))
-  end
-  let(:ancestor_well_b1) do
-    create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options_2))
-  end
+  let(:ancestor_well_a1) { create(:v2_well, position: { 'name' => 'A1' }) }
+  let(:ancestor_well_b1) { create(:v2_well, position: { 'name' => 'B1' }) }
   let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
   let(:ancestor_labware) { create(:v2_plate, wells: [ancestor_well_a1, ancestor_well_b1], pool_sizes: [1, 1]) }
 
@@ -32,6 +28,9 @@ RSpec.describe 'exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb' d
 
   let(:ancestor_barcode) { ancestor_labware.human_barcode }
 
+  # the ancestor plate we set up is not connected as a true ancestor of our plate,
+  # the exports controller would determine the true ancestor, here we just assign
+  # a plate to simulate that for the test
   before do
     assign(:plate, labware)
     assign(:ancestor_plate, ancestor_labware)
