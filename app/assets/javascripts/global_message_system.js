@@ -7,6 +7,11 @@
   }
 
   exports.SCAPE.message = function (message, status) {
+    if (message == '') {
+      $('#validation_report').empty()
+      return
+    }
+
     $('#validation_report')
       .empty()
       .append(

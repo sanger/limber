@@ -20,7 +20,13 @@ class Presenters::TubesWithSources
       # Optimization: To avoid needing to load in the tube aliquots, we use the transfers into the
       # tube to work out the pool size. This information is already available. Two values are different
       # for ISC though. TODO: MUST RE-JIG
-      @array.map { |tube| Labels::TubeLabel.new(tube, pool_size: tube.pool_size) }
+
+      # Tubes might have different labels in purpose config. Load the right labels to avoid different behaviour.
+      @array.map do |tube|
+        config = Settings.purposes.fetch(tube.purpose&.uuid, {})
+        label_class = config.fetch(:label_class, 'Labels::TubeLabel')
+        label_class.constantize.new(tube, pool_size: tube.pool_size)
+      end
     end
 
     delegate_missing_to :array
