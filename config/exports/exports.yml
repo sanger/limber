@@ -137,3 +137,7 @@ bioscan_mbrave:
   file_extension: 'tsv'
   filename:
     include_barcode: true
+lcmb_pcr_xp_concentrations_for_custom_pooling:
+  csv: lcmb_pcr_xp_concentrations_for_custom_pooling
+  plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
+  ancestor_purpose: LCMB Cherrypick

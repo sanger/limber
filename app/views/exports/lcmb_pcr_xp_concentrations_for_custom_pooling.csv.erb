@@ -1,0 +1,22 @@
+<%= CSV.generate_line [
+  'Source Barcode',
+  'Sample Name',
+  'Well',
+  'Concentration (ng/ul)',
+  'Sequencescape Sample ID',
+  'Shotgun?',
+  'ISC?'
+  ], row_sep: "" %>
+<% @plate.wells_in_columns.each_with_index do |well, well_index| %>
+  <% unless well.empty? || @ancestor_plate.blank? %>
+<%= CSV.generate_line [
+    @ancestor_plate.human_barcode,
+    well.aliquots.first.sample.name,
+    well.location,
+    well.latest_concentration&.value,
+    well.aliquots.first.sample.sanger_sample_id,
+    nil,
+    nil
+    ], row_sep: "" %>
+  <% end %>
+<% end %>
