@@ -41,26 +41,14 @@ end
 # and rake tasks are available in development mode:
 group :test do
   gem 'capybara' # Interface for integration tests
-
-  # TODO: what does this one do? A: 'Dead-simple way to make Capybara and Selenium play together'
-  # why do we need a second driver in webdrivers in the first place?
-  # last update 2014
   gem 'capybara-selenium' # Browser driver for integration tests
-
   gem 'factory_bot' # Generate models and json easily in tests
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
   gem 'rspec-rails', '6.0.3'
-
-  # Replacing webdrivers with selenium-webdriver
   gem 'selenium-webdriver', '~> 4.1', require: false
   gem 'simplecov', require: false
-
-  # Keep webdriver in sync with chrome to prevent frustrating CI failures
-  # TODO: what is require: false doing here? A: when you want the gem to be installed but not "required",
-  # so you have to explicitly require it when using it
-  # gem 'webdrivers', '~> 5.2.0', require: false
   gem 'webmock'
 end
 
