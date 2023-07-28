@@ -21,8 +21,7 @@
 require 'simplecov'
 SimpleCov.start 'rails'
 
-require 'webdrivers/chromedriver'
-Webdrivers::Chromedriver.update
+require 'selenium-webdriver'
 require 'factory_bot'
 require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
