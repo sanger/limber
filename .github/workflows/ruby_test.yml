@@ -30,8 +30,6 @@ jobs:
             # example if you need more control over bundler.
       - name: Additional setup
         run: bin/setup
-      - name: Update webpacker
-        run: RAILS_ENV=test bundle exec rails webdrivers:chromedriver:update -r webdrivers
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         env:
