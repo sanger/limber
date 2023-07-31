@@ -4,7 +4,7 @@
   "steps": [
     {
       "title": "Introduction",
-      "description": "TODO: check library types. The LCMB pipeline has similarities with parts of the WGS and ISC pipelines.\n\nIt begins in SS with the SS making a \"Limber-Htp - LCMB\" submission on an LCMB Cherrypick plate,\nthis generates requests with the limber_lcmb request type.\n\nValid library types are:\n'LCMB'\n'Chromium single cell CNV'"
+      "description": "The LCMB pipeline has similarities with parts of the WGS and ISC pipelines.\n\nIt begins in SS with the SS making a \"Limber-Htp - LCMB\" submission on an LCMB Cherrypick plate,\nthis generates requests with the limber_lcmb request type.\n\nValid library types are:\n'LCMB'"
     },
     {
       "file": "config/pipelines/high_throughput_lcmb.yml",
