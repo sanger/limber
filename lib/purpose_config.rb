@@ -117,6 +117,9 @@ class PurposeConfig
     }
   end
 
+  # NB. Make sure label_templates.yml contains settings for label definitions
+  # explicity, in order to avoid incorrect results. The options below are used
+  # for assigning values for missing settings.
   def default_printer_options
     {
       printer_type: default_printer_type,
