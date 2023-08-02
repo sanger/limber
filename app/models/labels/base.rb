@@ -50,8 +50,8 @@ class Labels::Base # rubocop:todo Style/Documentation
 
   def label_templates_by_service
     # NB. Make sure label_templates.yml contains settings for label definitions
-    # explicity, in order to avoid incorrect results. The lines below do not 
-    # work as intended because the config is filled with default values for 
+    # explicity, in order to avoid incorrect results. The lines below do not
+    # work as intended because the config is filled with default values for
     # missing settings by PurposeConfig class.
     pmb_template = config[:pmb_template] || default_label_template
     sprint_template = config[:sprint_template] || default_sprint_label_template
@@ -64,11 +64,11 @@ class Labels::Base # rubocop:todo Style/Documentation
     @config ||= Settings.purposes.fetch(labware.purpose&.uuid, {})
   end
 
-  # NB. The argument in the following methods was renamed from "printer_type" 
-  # to "key" to avoid confusion. It can be one of the keys in 
+  # NB. The argument in the following methods was renamed from "printer_type"
+  # to "key" to avoid confusion. It can be one of the keys in
   # default_printer_type_names section of label_templates.yml config file.
-  # It is used for accessing an option for a printer type in default_* 
-  # sections. 
+  # It is used for accessing an option for a printer type in default_*
+  # sections.
 
   def default_printer_type_for(key)
     Settings.default_printer_type_names[key]
