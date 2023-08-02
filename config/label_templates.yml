@@ -17,13 +17,14 @@ default_printer_type_names:
   :tube_rack: 96 Well Plate
   :tube: 1D Tube
 
+# NB. plate_384.yml.erb is for printing double-sticker 384-well plate labels.
 plate_6mm_double:
   :label_class: Labels::PlateDoubleLabel
   :printer_type: 384 Well Plate Double
   :pmb_template: plate_6mm_double_code39
   :sprint_template: plate_384.yml.erb
 
-# The following label defintion is not used by the current Heron pipeline.
+# The following label definition is not used by the current Heron (LTHR-384) pipeline.
 plate_6mm_double_qc:
   :label_class: Labels::PlateDoubleLabelQc
   :printer_type: 384 Well Plate Double
