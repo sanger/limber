@@ -101,6 +101,29 @@ class PrintJob # rubocop:todo Style/Documentation
 
     # assumes all labels use the same label template
     SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
+
+    # TODO: DPL-865 [Limber] Handle sprint client response
+    #
+    # This print_to_sprint call fails silently if there is an error. Instead
+    # of returning success, the result of the send_print_request call should
+    # be used to check the response status and response body. Examples:
+    #
+    # The following response body is returned in a 200 response.
+    # {"errors":[{"message":"Variable 'printRequest' has an invalid value: Expected
+    #   type 'Int' but was
+    #   'Double'.","locations":[{"line":1,"column":16}],"extensions":{"classification":"
+    #   ValidationError"}}]}
+    #
+    # The following response body is returned in a 500 response.
+    # {"timestamp": "2023-08-02T14:46:30.160+00:00","status": 500,"error": "Internal
+    #   Server Error","path": "/graphql"}
+    #
+    # When sprint cannot log in to printer, the details are available in response body.
+    #
+    # A successful response has a job id in response body.
+    #
+    # Use errors.add to show proper feedback in the view.
+
     true
   end
 
