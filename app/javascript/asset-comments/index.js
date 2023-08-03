@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
+    const sequencescapeApiKey = assetElem.dataset.sequencescapeApiKey
     const axiosInstance = axios.create({
       baseURL: sequencescapeApiUrl,
       timeout: 10000,
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     })
 
-    const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources)
+    const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources, sequencescapeApiKey)
 
     const commentStore = commentStoreFactory(axiosInstance, api, assetElem.dataset.assetId, userId)
 
