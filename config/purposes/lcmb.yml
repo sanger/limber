@@ -11,15 +11,22 @@ LCMB Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
-  # TODO: do we need this limitation (from WGS)?
-  # warnings:
-  #   pcr_cycles_not_in:
-  #     - 6
+  # TODO: this is the full list of templates copied from WGS/ICS and should be reduced
   :tag_layout_templates:
+    - Illumina pipeline tagging
+    - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+    - hWGS and RNAseq UDI tag layout v3
     - pWGS UDI tag layout v2 A
     - pWGS UDI tag layout v2 B
     - pWGS UDI tag layout v2 C
     - pWGS UDI tag layout v2 D
+    - TS_pWGSA_UDI96
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSD_UDI96
+    - TSRNAhWGS_UDI96
+    - TS_pWGSA_UDI96v2
+    - TSISC_UDI96
 LCMB Lib PCR-XP:
   :asset_type: plate
   :default_printer_type: :plate_b
