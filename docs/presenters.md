@@ -167,7 +167,8 @@ LTHR Cherrypick and LDW-96 Stock
 
 {include:Presenters::TagPlate384Presenter}
 
-**This presenter is unused**
+Used directly in 1 purposes:
+Tag Plate - 384
 
 {Presenters::TagPlate384Presenter View class documentation}
 
