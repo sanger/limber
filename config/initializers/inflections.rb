@@ -17,4 +17,7 @@
 #   inflect.acronym 'RESTful'
 # end
 
-ActiveSupport::Inflector.inflections(:en) { |inflect| inflect.uncountable %w[sample_metadata] }
+ActiveSupport::Inflector.inflections(:en) { |inflect| 
+  inflect.uncountable %w[sample_metadata]
+  inflect.acronym 'SCRNA'
+ }
