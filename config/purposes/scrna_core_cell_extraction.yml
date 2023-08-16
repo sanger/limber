@@ -4,6 +4,7 @@
 ###
 # scRNA Core Cell Extraction Arraying
 ###
+# Donor Vacutainer tubes
 LRC Blood Vac:
   :asset_type: tube
   :stock_plate: false
@@ -14,104 +15,9 @@ LRC Blood Vac:
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
 ###
-# scRNA Core Cell Extraction Library Preparation Pipeline
-###
-# LRC Blood Vac tubes are arrayed into an LRC Blood Array plate (DPL-064)
-LRC Blood Array:
-  :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: false
-  :input_plate: false
-  :creator_class: LabwareCreators::MultiStampTubes
-  :submission_options:
-    scRNA Core Cell Extraction library prep:
-      template_name: 'Limber - scRNA Core Cell Extraction'
-      request_options:
-        library_type: 'Chromium single cell 3 prime v3'
-        fragment_size_required_from: '200'
-        fragment_size_required_to: '800'
-      allowed_extra_barcodes: false
-  :file_links:
-    - name: 'Download Scanned Tube Layout for LRC Blood Array Plate'
-      id: scrna_core_cell_extraction_sample_arraying_tube_layout
-# LRC Blood stamps into LRC PBMC
-LRC PBMC:
-  :asset_type: plate
-  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
-  :file_links:
-    - name: 'Download Cellaca Input QC1'
-      id: cellaca_input_file
-      params:
-        page: 0
-    - name: 'Download Cellaca Input QC2'
-      id: cellaca_input_file
-      params:
-        page: 1
-    - name: 'Download Cellaca Input QC3'
-      id: cellaca_input_file
-      params:
-        page: 2
-    - name: 'Download Cellaca Input QC4'
-      id: cellaca_input_file
-      params:
-        page: 3
-  :qc_thresholds:
-    viability:
-      units: '%'
-      default_threshold: 50
-    live_cell_count:
-      name: Cell count
-      units: 'cells/ml'
-      default_threshold: 400000
-      decimal_places: 0
-  # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
-  # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
-# LRC PBMC wells are pooled together into the LRC PBMC Pools plate
-LRC PBMC Pools:
-  :asset_type: plate
-  :creator_class: LabwareCreators::SCRNACoreCellExtractionPoolsPlate #creator to make pools of samples automatically according to table, using info from PBMC QC
-  # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LRC PBMC plate
-  :file_links:
-    - name: 'Download Hamilton LRC PBMC to LRC PBMC Pools CSV'
-      id: hamilton_pooling_plate_pbmc
-# LRC PBMC Pools stamps into LRC 10X cDNA
-LRC 10X cDNA:
-  :asset_type: plate
-# LRC 10X cDNA stamps into LRC Connect PCRXP
-LRC Connect PCRXP:
-  :asset_type: plate
-  :default_printer_type: :plate_b
-  :label_template: plate_xp
-  # TODO: DPL-069 Research is there a quanthub story here to get connect concentrations into SS?
-  :presenter_class: Presenters::PcrPresenter
-  :creator_class: LabwareCreators::CustomTaggedPlate
-  :tags_per_well: 1
-  :tag_group_adapter_type_name_filter: 'Chromium'
-  :file_links:
-    - name: 'Download tagging CSV for Custom Pooling'
-      id: scrna_core_cell_extraction_tagging_csv_for_custom_pooling
-  # Selection of Tag groups from the i5 and i7 dropdowns will be used here rather than tag plate barcodes (single or dual index tag groups)
-# DPL-072 Wells from LRC Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
-# TODO: DPL-072 Research whether tag clashes will be automatically checked for on combining wells with multiple samples in them when pooling
-LRC Custom Pool:
-  :asset_type: tube
-  # TODO: DPL-072 Research check these are the right target and type
-  :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::CustomPooledTubes
-  :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
-# LRC Custom Pool tube stamps into LRC Custom Pool Norm tube
-LRC Custom Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
-###
 # scRNA Core Cell Extraction Blood Banking Pipeline
 ###
+# Input plate for Hamilton PBMC isolation protocol
 # LRC Blood Vac tubes are also arrayed into LRC Blood Bank plates (DPL-073)
 LRC Blood Bank:
   :asset_type: plate
@@ -132,15 +38,22 @@ LRC Blood Bank:
     - name: 'Download Scanned Tube Layout for LRC Blood Bank Plate'
       id: scrna_core_cell_extraction_sample_arraying_tube_layout
 # LRC Blood Bank plates are stamped into LRC PBMC Bank plates
+# Output plate from Hamilton PBMC isolation protocol / input plate for the cell counting and cell banking protocols
 LRC PBMC Bank:
   :asset_type: plate
   :file_links:
     - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Stock tubes CSV'
       id: hamilton_LRC_pbmc_bank_to_LRC_bank_stock
-# LRC PBMC Bank plate wells are transferred into LRC Bank Stock tubes, with some
-# consolidation of wells containing the same sample into the same tube.
-# We store them as individual tubes, until Limber supports tube racks.
-LRC Bank Stock:
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Seq:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::PooledTubesBySample
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :presenter_class: Presenters::SCRNACoreCellExtractionBankStockTubePresenter
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Spare:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
