@@ -4,7 +4,7 @@
 ###
 # scRNA Core Cell Extraction Arraying
 ###
-LCA Blood Vac:
+LRC Blood Vac:
   :asset_type: tube
   :stock_plate: false
   :input_plate: false
@@ -16,8 +16,8 @@ LCA Blood Vac:
 ###
 # scRNA Core Cell Extraction Library Preparation Pipeline
 ###
-# LCA Blood Vac tubes are arrayed into an LCA Blood Array plate (DPL-064)
-LCA Blood Array:
+# LRC Blood Vac tubes are arrayed into an LRC Blood Array plate (DPL-064)
+LRC Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
@@ -32,10 +32,10 @@ LCA Blood Array:
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
   :file_links:
-    - name: 'Download Scanned Tube Layout for LCA Blood Array Plate'
+    - name: 'Download Scanned Tube Layout for LRC Blood Array Plate'
       id: scrna_core_cell_extraction_sample_arraying_tube_layout
-# LCA Blood stamps into LCA PBMC
-LCA PBMC:
+# LRC Blood stamps into LRC PBMC
+LRC PBMC:
   :asset_type: plate
   :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
   :file_links:
@@ -66,19 +66,19 @@ LCA PBMC:
       decimal_places: 0
   # TODO: DPL-??? needs :file_links: csv output: download of combined Cellaca concentrations uploaded via Quanthub
   # TODO: DPL-??? Research: how do we then flag on the SAME plate that viability or cell counts are sub standard?
-# LCA PBMC wells are pooled together into the LCA PBMC Pools plate
-LCA PBMC Pools:
+# LRC PBMC wells are pooled together into the LRC PBMC Pools plate
+LRC PBMC Pools:
   :asset_type: plate
   :creator_class: LabwareCreators::SCRNACoreCellExtractionPoolsPlate #creator to make pools of samples automatically according to table, using info from PBMC QC
-  # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LCA PBMC plate
+  # TODO: DPL-068 needs :file_links: csv output: Hamilton liquid handler file to create the pooled plate from the LRC PBMC plate
   :file_links:
-    - name: 'Download Hamilton LCA PBMC to LCA PBMC Pools CSV'
+    - name: 'Download Hamilton LRC PBMC to LRC PBMC Pools CSV'
       id: hamilton_pooling_plate_pbmc
-# LCA PBMC Pools stamps into LCA 10X cDNA
-LCA 10X cDNA:
+# LRC PBMC Pools stamps into LRC 10X cDNA
+LRC 10X cDNA:
   :asset_type: plate
-# LCA 10X cDNA stamps into LCA Connect PCRXP
-LCA Connect PCRXP:
+# LRC 10X cDNA stamps into LRC Connect PCRXP
+LRC Connect PCRXP:
   :asset_type: plate
   :default_printer_type: :plate_b
   :label_template: plate_xp
@@ -91,9 +91,9 @@ LCA Connect PCRXP:
     - name: 'Download tagging CSV for Custom Pooling'
       id: scrna_core_cell_extraction_tagging_csv_for_custom_pooling
   # Selection of Tag groups from the i5 and i7 dropdowns will be used here rather than tag plate barcodes (single or dual index tag groups)
-# DPL-072 Wells from LCA Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
+# DPL-072 Wells from LRC Connect PCRXP plate(s) will then be pooled together via custom pooling into 1 or more tubes
 # TODO: DPL-072 Research whether tag clashes will be automatically checked for on combining wells with multiple samples in them when pooling
-LCA Custom Pool:
+LRC Custom Pool:
   :asset_type: tube
   # TODO: DPL-072 Research check these are the right target and type
   :target: StockMultiplexedLibraryTube
@@ -101,8 +101,8 @@ LCA Custom Pool:
   :creator_class: LabwareCreators::CustomPooledTubes
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-# LCA Custom Pool tube stamps into LCA Custom Pool Norm tube
-LCA Custom Pool Norm:
+# LRC Custom Pool tube stamps into LRC Custom Pool Norm tube
+LRC Custom Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
@@ -112,8 +112,8 @@ LCA Custom Pool Norm:
 ###
 # scRNA Core Cell Extraction Blood Banking Pipeline
 ###
-# LCA Blood Vac tubes are also arrayed into LCA Blood Bank plates (DPL-073)
-LCA Blood Bank:
+# LRC Blood Vac tubes are also arrayed into LRC Blood Bank plates (DPL-073)
+LRC Blood Bank:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -129,21 +129,21 @@ LCA Blood Bank:
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
   :file_links:
-    - name: 'Download Scanned Tube Layout for LCA Blood Bank Plate'
+    - name: 'Download Scanned Tube Layout for LRC Blood Bank Plate'
       id: scrna_core_cell_extraction_sample_arraying_tube_layout
-# LCA Blood Bank plates are stamped into LCA PBMC Bank plates
-LCA PBMC Bank:
+# LRC Blood Bank plates are stamped into LRC PBMC Bank plates
+LRC PBMC Bank:
   :asset_type: plate
   :file_links:
-    - name: 'Download Hamilton LCA PBMC Bank plate to LCA Bank Stock tubes CSV'
-      id: hamilton_lca_pbmc_bank_to_lca_bank_stock
-# LCA PBMC Bank plate wells are transferred into LCA Bank Stock tubes, with some
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Stock tubes CSV'
+      id: hamilton_LRC_pbmc_bank_to_LRC_bank_stock
+# LRC PBMC Bank plate wells are transferred into LRC Bank Stock tubes, with some
 # consolidation of wells containing the same sample into the same tube.
 # We store them as individual tubes, until Limber supports tube racks.
-LCA Bank Stock:
+LRC Bank Stock:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :ancestor_stock_tube_purpose_name: LCA Blood Vac
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SCRNACoreCellExtractionBankStockTubePresenter

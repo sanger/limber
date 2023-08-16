@@ -3,32 +3,32 @@
 scRNA Core Cell Extraction Entry A:
   pipeline_group: scRNA Core Cell Extraction Library Prep
   relationships:
-    LCA Blood Vac: LCA Blood Array
+    LRC Blood Vac: LRC Blood Array
 scRNA Core Cell Extraction Entry B:
   pipeline_group: scRNA Core Cell Extraction Cell Banking
   relationships:
-    LCA Blood Vac: LCA Blood Bank
+    LRC Blood Vac: LRC Blood Bank
 # scRNA Core Cell Extraction library preparation pipeline
 scRNA Core Cell Extraction:
   pipeline_group: scRNA Core Cell Extraction Library Prep
   filters:
     request_type_key: limber_scrna_core_cell_extraction
     library_type: Chromium single cell 3 prime v3
-  library_pass: LCA Connect PCRXP
+  library_pass: LRC Connect PCRXP
   relationships:
-    LCA Blood Vac: LCA Blood Array
-    LCA Blood Array: LCA PBMC
-    LCA PBMC: LCA PBMC Pools
-    LCA PBMC Pools: LCA 10X cDNA
-    LCA 10X cDNA: LCA Connect PCRXP
-    LCA Connect PCRXP: LCA Custom Pool
-    LCA Custom Pool: LCA Custom Pool Norm
+    LRC Blood Vac: LRC Blood Array
+    LRC Blood Array: LRC PBMC
+    LRC PBMC: LRC PBMC Pools
+    LRC PBMC Pools: LRC 10X cDNA
+    LRC 10X cDNA: LRC Connect PCRXP
+    LRC Connect PCRXP: LRC Custom Pool
+    LRC Custom Pool: LRC Custom Pool Norm
 # scRNA Core Cell Extraction cell banking pipeline
 scRNA Core Cell Extraction Banking:
   pipeline_group: scRNA Core Cell Extraction Cell Banking
   filters:
     request_type_key: limber_scrna_core_cell_extraction_banking
   relationships:
-    LCA Blood Vac: LCA Blood Bank
-    LCA Blood Bank: LCA PBMC Bank
-    LCA PBMC Bank: LCA Bank Stock
+    LRC Blood Vac: LRC Blood Bank
+    LRC Blood Bank: LRC PBMC Bank
+    LRC PBMC Bank: LRC Bank Stock

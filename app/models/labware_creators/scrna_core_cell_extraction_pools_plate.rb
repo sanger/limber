@@ -4,14 +4,14 @@
 # require_dependency 'labware_creators'
 
 # Algorithm:
-# 1. Create a new empty LCA PBMC Pools plate
-# 2. Get the passed wells from the parent (LCA PBMC) plate
+# 1. Create a new empty LRC PBMC Pools plate
+# 2. Get the passed wells from the parent (LRC PBMC) plate
 # 3. For the number of passed wells, get the number of pools from config
 # e.g. if there are 96 passed wells on the parent, the samples get split into 8 pools, with 12 samples per pool
 # 4. Group samples by `collected_by`, to ensure samples with the same collection site
 # are distributed across different pools
 # 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well
-# in the new LCA PBMC Pools plate
+# in the new LRC PBMC Pools plate
 module LabwareCreators
   # This class is used for creating scRNA Core Cell Extraction pools into destination plate
   class SCRNACoreCellExtractionPoolsPlate < Base
