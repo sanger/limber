@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Presenters
-  class CardinalBankStockTubePresenter < SimpleTubePresenter # rubocop:todo Style/Documentation
+  class SCRNACoreCellExtractionBankStockTubePresenter < SimpleTubePresenter # rubocop:todo Style/Documentation
     self.summary_items = {
       'Barcode' => :barcode,
       'Tube type' => :purpose_name,

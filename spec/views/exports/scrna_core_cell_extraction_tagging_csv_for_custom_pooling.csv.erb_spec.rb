@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
+RSpec.describe 'exports/scrna_core_cell_extraction_tagging_csv_for_custom_pooling.csv.erb' do
   has_a_working_api
 
   let(:aliquot_1) { create :v2_tagged_aliquot }

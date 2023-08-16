@@ -13,8 +13,8 @@
 # 5. Create the group of samples in SS with a different tag depth for each sample, adding the pool to a well
 # in the new LCA PBMC Pools plate
 module LabwareCreators
-  # This class is used for creating Cardinal pools into destination plate
-  class CardinalPoolsPlate < Base
+  # This class is used for creating scRNA Core Cell Extraction pools into destination plate
+  class SCRNACoreCellExtractionPoolsPlate < Base
     include SupportParent::PlateOnly
 
     include LabwareCreators::RequireWellsWithCollectedBy
@@ -45,11 +45,11 @@ module LabwareCreators
     end
 
     # Returns: the number of pools required for a given passed samples count
-    # this config is appended in the Cardinal initialiser
+    # this config is appended in the scRNA Core Cell Extraction initialiser
     # e.g. 95,12,12,12,12,12,12,12,11 ==> 8
     # e.g. 53,11,11,11,10,10,,, ==> 5
     def number_of_pools
-      Rails.application.config.cardinal_pooling_config[passed_parent_wells.count]
+      Rails.application.config.scrna_core_cell_extraction_pooling_config[passed_parent_wells.count]
     end
 
     # Send the transfer request to SS

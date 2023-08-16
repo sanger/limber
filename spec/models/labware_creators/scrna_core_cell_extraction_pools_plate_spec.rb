@@ -6,7 +6,7 @@ require 'spec_helper'
 # 2. Update Manifest
 # 3. Create Submission
 
-RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
+RSpec.describe LabwareCreators::SCRNACoreCellExtractionPoolsPlate, scrna_core_cell_extraction: true do
   has_a_working_api
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
@@ -40,22 +40,22 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   before { allow(subject).to receive(:parent).and_return(plate) }
 
-  subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
+  subject { LabwareCreators::SCRNACoreCellExtractionPoolsPlate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be initialised' do
-      expect(subject).to be_a LabwareCreators::CardinalPoolsPlate
+      expect(subject).to be_a LabwareCreators::SCRNACoreCellExtractionPoolsPlate
     end
 
     it 'has the config loaded' do
-      expect(Rails.application.config.cardinal_pooling_config[96]).to eq(8)
-      expect(Rails.application.config.cardinal_pooling_config[87]).to eq(7)
-      expect(Rails.application.config.cardinal_pooling_config[76]).to eq(6)
-      expect(Rails.application.config.cardinal_pooling_config[65]).to eq(5)
-      expect(Rails.application.config.cardinal_pooling_config[52]).to eq(4)
-      expect(Rails.application.config.cardinal_pooling_config[39]).to eq(3)
-      expect(Rails.application.config.cardinal_pooling_config[26]).to eq(2)
-      expect(Rails.application.config.cardinal_pooling_config[20]).to eq(1)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[96]).to eq(8)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[87]).to eq(7)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[76]).to eq(6)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[65]).to eq(5)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[52]).to eq(4)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[39]).to eq(3)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[26]).to eq(2)
+      expect(Rails.application.config.scrna_core_cell_extraction_pooling_config[20]).to eq(1)
     end
 
     context 'when missing sample metadata' do

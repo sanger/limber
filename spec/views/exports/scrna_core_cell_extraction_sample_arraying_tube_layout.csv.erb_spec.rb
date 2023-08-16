@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
+RSpec.describe 'exports/scrna_core_cell_extraction_sample_arraying_tube_layout.csv.erb' do
   has_a_working_api
 
   let(:tube_a1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 2) }
