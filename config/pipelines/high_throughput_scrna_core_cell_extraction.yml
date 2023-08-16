@@ -1,0 +1,34 @@
+---
+# Initial transfer from tube to plate, as entry for one or other of below pipelines. Happens without submissions / requests.
+Cardinal Entry A:
+  pipeline_group: Cardinal Library Prep
+  relationships:
+    LCA Blood Vac: LCA Blood Array
+Cardinal Entry B:
+  pipeline_group: Cardinal Cell Banking
+  relationships:
+    LCA Blood Vac: LCA Blood Bank
+# Cardinal library preparation pipeline
+Cardinal:
+  pipeline_group: Cardinal Library Prep
+  filters:
+    request_type_key: limber_cardinal
+    library_type: Chromium single cell 3 prime v3
+  library_pass: LCA Connect PCRXP
+  relationships:
+    LCA Blood Vac: LCA Blood Array
+    LCA Blood Array: LCA PBMC
+    LCA PBMC: LCA PBMC Pools
+    LCA PBMC Pools: LCA 10X cDNA
+    LCA 10X cDNA: LCA Connect PCRXP
+    LCA Connect PCRXP: LCA Custom Pool
+    LCA Custom Pool: LCA Custom Pool Norm
+# Cardinal cell banking pipeline
+Cardinal Banking:
+  pipeline_group: Cardinal Cell Banking
+  filters:
+    request_type_key: limber_cardinal_banking
+  relationships:
+    LCA Blood Vac: LCA Blood Bank
+    LCA Blood Bank: LCA PBMC Bank
+    LCA PBMC Bank: LCA Bank Stock
