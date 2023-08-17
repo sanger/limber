@@ -15,7 +15,7 @@ LRC Blood Vac:
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
 ###
-# scRNA Core Cell Extraction Blood Banking Pipeline
+# scRNA Core Cell Extraction Blood Pipeline
 ###
 # Input plate for Hamilton PBMC isolation protocol
 # LRC Blood Vac tubes are also arrayed into LRC Blood Bank plates (DPL-073)
@@ -28,8 +28,8 @@ LRC Blood Bank:
     params:
       allow_tube_duplicates: yes
   :submission_options:
-    scRNA Core Cell Extraction cell banking:
-      template_name: 'Limber - scRNA Core Cell Extraction cell banking'
+    scRNA core cell extraction:
+      template_name: 'Limber - scRNA Core Cell Extraction'
       request_options:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
