@@ -4,9 +4,9 @@ scRNA Core Cell Extraction Entry:
   pipeline_group: scRNA Core Cell Extraction Cell Banking
   relationships:
     LRC Blood Vac: LRC Blood Bank
-# scRNA Core Cell Extraction cell banking pipeline
-scRNA Core Cell Extraction Banking Seq:
-  pipeline_group: scRNA Core Cell Extraction Cell Banking
+# scRNA Core Cell Extraction pipeline
+scRNA Core Cell Extraction Seq:
+  pipeline_group: scRNA Core Cell Extraction
   filters:
     request_type_key: limber_scrna_core_cell_extraction_banking
   relationships:

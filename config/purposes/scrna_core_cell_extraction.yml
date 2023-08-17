@@ -1,5 +1,5 @@
 # This configuration file is for the plate and tube purposes required for the
-# high throughput scRNA Core Cell Extraction and associated Banking pipelines
+# high throughput scRNA Core Cell Extraction pipeline
 ---
 ###
 # scRNA Core Cell Extraction Arraying
