@@ -14,7 +14,7 @@ Rails.application.config.scrna_core_cell_extraction_pooling_config = {
   # plate should be under the same study for 007c Phase 1 (Lesley, in Slack).
   # (For Phase 2, they may be mixed on the same 10X chip, but that doesn't affect this story as will
   # be a separate submission).
-  autodetect_studies_projects: true,
+  autodetect_studies_projects: true
 }
 
 scrna_core_cell_extraction_pooling_csv.each do |data|

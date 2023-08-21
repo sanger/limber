@@ -111,7 +111,7 @@ module LabwareCreators
       }
     end
 
-    # Returns a list of parent tube uuids 
+    # Returns a list of parent tube uuids
     def asset_uuids
       parent_tubes.map { |tube| tube.receptacle.uuid }
     end
@@ -126,6 +126,7 @@ module LabwareCreators
         errors.add(:base, 'Expected only one submission')
         return
       end
+
       # otherwise, create a submission with params specified in the config
       configured_params = submission_options_from_config.values.first
 
@@ -147,10 +148,10 @@ module LabwareCreators
     end
 
     # Creates a submission in Sequencescape
-    #   
+    #
     # Parameters:
     # - sequencescape_submission_parameters: a hash containing the parameters for the submission
-    # 
+    #
     # Returns: true if submission created, false otherwise
     # Sets: @submission_uuid if submission created
     # Adds: errors if submission not created
