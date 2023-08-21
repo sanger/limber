@@ -111,10 +111,12 @@ module LabwareCreators
       }
     end
 
-    def submission_options_from_config
-      @submission_options_from_config ||= purpose_config.submission_options
+    # Returns a list of parent tube uuids 
+    def asset_uuids
+      parent_tubes.map { |tube| tube.receptacle.uuid }
     end
 
+    # Creates a submission in Sequencescape based on the parent tubes
     def create_submission_from_parent_tubes
       submission_options_from_config = purpose_config.submission_options
 
@@ -124,27 +126,35 @@ module LabwareCreators
         errors.add(:base, 'Expected only one submission')
         return
       end
-
       # otherwise, create a submission with params specified in the config
       configured_params = submission_options_from_config.values.first
 
-      create_submission(configured_params)
-    end
-
-    # Project and Study are specified on the Submission Template (submission_parameters field)
-    # It's important that autodetect_studies_projects is false here,
-    # to make sure the Study is set explicitly, since it controls data access
-    def create_submission(configured_params)
-      asset_uuids = parent_tubes.map { |tube| tube.receptacle.uuid }
+      # Should we autodetect studies and projects from the parent tubes? If not specified in the
+      # config, default to false. It is recommended that the Study is set explicitly, since it
+      # controls data access in Sequencescape.
+      # Project and Study are specified on the Submission Template (submission_parameters field)
+      autodetect_studies_project = configured_params[:autodetect_studies_project] || false
 
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: asset_uuids, autodetect_studies_projects: false }],
+        asset_groups: [{ assets: asset_uuids, autodetect_studies_projects: autodetect_studies_project }],
         api: api,
         user: user_uuid
       }
 
+      create_submission(sequencescape_submission_parameters)
+    end
+
+    # Creates a submission in Sequencescape
+    #   
+    # Parameters:
+    # - sequencescape_submission_parameters: a hash containing the parameters for the submission
+    # 
+    # Returns: true if submission created, false otherwise
+    # Sets: @submission_uuid if submission created
+    # Adds: errors if submission not created
+    def create_submission(sequencescape_submission_parameters)
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
       submission_created = ss.save
 
