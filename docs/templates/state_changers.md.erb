@@ -21,7 +21,7 @@ manual transfer.
 
 <% if used_state_changer[state_changer_class.name].present? %>
   Used directly in <%= used_state_changer[state_changer_class.name].length %> purposes:
-  <%= used_state_changer[state_changer_class.name].to_sentence %>
+  <%= used_state_changer[state_changer_class.name].sort.to_sentence %>
 <% else %>
   **This state changer is unused**
 <% end %>
