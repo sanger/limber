@@ -1,4 +1,9 @@
 ---
+# Initial transfer from tube to plate, as entry for one or other of below pipelines. Happens without submissions / requests.
+scRNA Core Cell Extraction Entry:
+  pipeline_group:  scRNA Core Cell Extraction
+  relationships:
+    LRC Blood Vac: LRC Blood Bank
 # scRNA Core Cell Extraction pipeline
 scRNA Core Cell Extraction Seq:
   pipeline_group: scRNA Core Cell Extraction
