@@ -141,3 +141,7 @@ lcmb_pcr_xp_concentrations_for_custom_pooling:
   csv: lcmb_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: LCMB Cherrypick
+scrna_core_cell_extraction_sample_arraying_tube_layout:
+  csv: scrna_core_cell_extraction_sample_arraying_tube_layout
+  plate_includes:
+    - wells.upstream_tubes
