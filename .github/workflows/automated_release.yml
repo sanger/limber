@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - develop
-      - dpl-882-lcmb-bed-verification
 
 env:
   BUNDLE_WITHOUT: 'test lint'
