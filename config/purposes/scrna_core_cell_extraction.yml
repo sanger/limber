@@ -50,7 +50,7 @@ LRC Bank Seq:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :ancestor_seq_tube_purpose_name: LRC Blood Vac
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Spare:
@@ -58,5 +58,5 @@ LRC Bank Spare:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :ancestor_seq_tube_purpose_name: LRC Blood Vac
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
