@@ -42,15 +42,15 @@ LRC Blood Bank:
 LRC PBMC Bank:
   :asset_type: plate
   :file_links:
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Stock tubes CSV'
-      id: hamilton_LRC_pbmc_bank_to_LRC_bank_stock
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :ancestor_seq_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Spare:
@@ -58,5 +58,5 @@ LRC Bank Spare:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::PooledTubesBySample
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :ancestor_seq_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
