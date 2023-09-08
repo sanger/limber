@@ -350,8 +350,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::TubeFromTube}
 
-  Used directly in 16 purposes:
-  CLCM DNA Pool Norm, CLCM RNA Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, GnT Pico Lib Pool XP, LB Custom Pool Norm, LBC 5p Pool Norm, LBC BCR Pool Norm, LBC TCR Pool Norm, LBSN-9216 Lib PCR Pool XP, LCA Custom Pool Norm, LCMB Custom Pool Norm, LDS Custom Pool Norm, LHR Lib Pool XP, LTN Custom Pool Norm, and scRNA Lib Pool XP
+  Used directly in 17 purposes:
+  CLCM DNA Pool Norm, CLCM RNA Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, GnT Pico Lib Pool XP, LB Custom Pool Norm, LBC 5p Pool Norm, LBC BCR Pool Norm, LBC TCR Pool Norm, LBSN-9216 Lib PCR Pool XP, LCA Custom Pool Norm, LCMB Custom Pool Norm, LDS Custom Pool Norm, LHR Lib Pool XP, LRC Blood Aliquot, LTN Custom Pool Norm, and scRNA Lib Pool XP
 
 {LabwareCreators::TubeFromTube View class documentation}
 
