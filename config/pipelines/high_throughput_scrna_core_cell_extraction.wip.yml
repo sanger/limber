@@ -13,10 +13,10 @@ scRNA Core Cell Extraction Seq:
     # LRC Blood Vac: LRC Blood Bank
     LRC Blood Bank: LRC PBMC Bank
     LRC PBMC Bank: LRC Bank Seq
-# scRNA Core Cell Extraction Spare:
-#   pipeline_group: scRNA Core Cell Extraction
-#   filters: *scrna_core_cell_extraction_filters
-#   relationships:
-#     LRC Blood Vac: LRC Blood Bank
-#     LRC Blood Bank: LRC PBMC Bank
-#     LRC PBMC Bank: LRC Bank Spare
+scRNA Core Cell Extraction Spare:
+  pipeline_group: scRNA Core Cell Extraction
+  filters: *scrna_core_cell_extraction_filters
+  relationships:
+    # LRC Blood Vac: LRC Blood Bank
+    LRC Blood Bank: LRC PBMC Bank
+    LRC PBMC Bank: LRC Bank Spare
