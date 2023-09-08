@@ -12,12 +12,15 @@
 #   inflect.uncountable %w( fish sheep )
 # end
 
-# These inflection rules are supported but not enabled by default:
-# ActiveSupport::Inflector.inflections(:en) do |inflect|
-#   inflect.acronym 'RESTful'
-# end
+
+# The `inflect.acronym` function allows you to specify how Rails
+# parses, splits, and capitalizes words for class/test/filename
+# translations - particularly useful for acronyms which tend to not
+# play well with Rail's `camelize` function.
+# See https://api.rubyonrails.org/classes/ActiveSupport/Inflector/Inflections.html#method-i-acronym
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # inflect.acronym 'RESTful' # supported but not enabled by default
   inflect.uncountable %w[sample_metadata]
   inflect.acronym 'SCRNA'
 end
