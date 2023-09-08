@@ -12,7 +12,6 @@
 #   inflect.uncountable %w( fish sheep )
 # end
 
-
 # The `inflect.acronym` function allows you to specify how Rails
 # parses, splits, and capitalizes words for class/test/filename
 # translations - particularly useful for acronyms which tend to not
