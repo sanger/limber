@@ -14,6 +14,16 @@ LRC Blood Vac:
   :presenter_class: Presenters::VacTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
+# Manually aliquoted intermediate tube
+LRC Blood Aliquot:
+  :asset_type: tube
+  :stock_plate: false
+  :input_plate: false
+  :target: SampleTube
+  :type: Tube::Purpose
+  :presenter_class: Presenters::SimpleTubePresenter
+  :creator_class: LabwareCreators::TubeFromTube
+  :default_printer_type: :tube
 ###
 # scRNA Core Cell Extraction Blood Pipeline
 ###
