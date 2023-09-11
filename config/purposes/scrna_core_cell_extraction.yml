@@ -42,8 +42,8 @@ LRC Blood Bank:
 LRC PBMC Bank:
   :asset_type: plate
   :file_links:
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq tubes CSV'
-      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:
   :asset_type: tube
