@@ -41,9 +41,35 @@ LRC Blood Bank:
 # Output plate from Hamilton PBMC isolation protocol / input plate for the cell counting and cell banking protocols
 LRC PBMC Bank:
   :asset_type: plate
+  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
   :file_links:
+    - name: 'Download Cellaca Input QC1'
+      id: cellaca_input_file
+      params:
+        page: 0
+    - name: 'Download Cellaca Input QC2'
+      id: cellaca_input_file
+      params:
+        page: 1
+    - name: 'Download Cellaca Input QC3'
+      id: cellaca_input_file
+      params:
+        page: 2
+    - name: 'Download Cellaca Input QC4'
+      id: cellaca_input_file
+      params:
+        page: 3
     - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq tubes CSV'
       id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
+      decimal_places: 0
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:
   :asset_type: tube
