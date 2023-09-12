@@ -111,13 +111,11 @@ module LabwareCreators
       }
     end
 
-    # Returns a list of parent tube uuids
-    def asset_uuids
-      parent_tubes.map { |tube| tube.receptacle.uuid }
-    end
-
-    # Creates a submission in Sequencescape based on the parent tubes
-    def create_submission_from_parent_tubes
+    # Retrieves the submission parameters
+    #
+    # Returns: a hash containing the submission parameters
+    # Adds: errors if there is more than one submission specified
+    def configured_params
       submission_options_from_config = purpose_config.submission_options
 
       # if there's more than one appropriate submission, we can't know which one to choose,
@@ -128,14 +126,25 @@ module LabwareCreators
       end
 
       # otherwise, create a submission with params specified in the config
-      configured_params = submission_options_from_config.values.first
+      submission_options_from_config.values.first
+    end
 
-      # Should we autodetect studies and projects from the parent tubes? If not specified in the
-      # config, default to false. It is recommended that the Study is set explicitly, since it
-      # controls data access in Sequencescape.
-      # Project and Study are specified on the Submission Template (submission_parameters field)
-      autodetect_studies_project = configured_params[:autodetect_studies_project] || false
+    # Returns a list of parent tube uuids
+    def asset_uuids
+      parent_tubes.map { |tube| tube.receptacle.uuid }
+    end
 
+    # Autodetection looks at the Study and Project already linked to the aliquots and uses that.
+    #
+    # Otherwise, Project and Study can be specified explicitly on the Submission Template
+    # (submission_parameters field) if autodetection is not appropriate (for instance in Cardinal,
+    # where one tube will contain samples from multiple different studies).
+    def autodetect_studies_project
+      configured_params[:autodetect_studies_project] || false
+    end
+
+    # Creates a submission in Sequencescape based on the parent tubes
+    def create_submission_from_parent_tubes
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
