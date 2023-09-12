@@ -60,8 +60,8 @@ LRC PBMC Bank:
       id: cellaca_input_file
       params:
         page: 3
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq tubes CSV'
-      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   :qc_thresholds:
     viability:
       units: '%'
