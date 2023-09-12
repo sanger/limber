@@ -22,7 +22,7 @@ Presenters are responsible for showing information about a piece of labware.
 
 <% if used_presenter[presenter_class.name].present? %>
 Used directly in <%= used_presenter[presenter_class.name].length %> purposes:
-<%= used_presenter[presenter_class.name].sort_by(&:downcase).to_sentence %>
+<%= used_presenter[presenter_class.name].to_sentence %>
 <% else %>
 **This presenter is unused**
 <% end %>
