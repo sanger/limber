@@ -3,7 +3,8 @@
 scRNA Core Cell Extraction Entry:
   pipeline_group: scRNA Core Cell Extraction
   relationships:
-    LRC Blood Vac: LRC Blood Bank
+    LRC Blood Vac: LRC Blood Aliquot
+    LRC Blood Aliquot: LRC Blood Bank
 # scRNA Core Cell Extraction pipeline
 scRNA Core Cell Extraction Seq:
   pipeline_group: scRNA Core Cell Extraction
@@ -12,9 +13,9 @@ scRNA Core Cell Extraction Seq:
   relationships:
     LRC Blood Bank: LRC PBMC Bank
     LRC PBMC Bank: LRC Bank Seq
+# This branch allows creation of extra tubes (back ups)
 scRNA Core Cell Extraction Spare:
   pipeline_group: scRNA Core Cell Extraction
   filters: *scrna_core_cell_extraction_filters
   relationships:
-    LRC Blood Bank: LRC PBMC Bank
     LRC PBMC Bank: LRC Bank Spare
