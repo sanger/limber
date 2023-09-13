@@ -207,6 +207,22 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for too many purpose configs
+    factory :multi_stamp_tubes_purpose_configs do
+      submission_options do
+        {
+          'Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          },
+          'Another Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }

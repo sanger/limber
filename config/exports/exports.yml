@@ -141,3 +141,16 @@ lcmb_pcr_xp_concentrations_for_custom_pooling:
   csv: lcmb_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: LCMB Cherrypick
+scrna_core_cell_extraction_sample_arraying_tube_layout:
+  csv: scrna_core_cell_extraction_sample_arraying_tube_layout
+  plate_includes:
+    - wells.upstream_tubes
+hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
+  csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+  workflow: scRNA Core Cell Extraction Banking Pooling
+  plate_includes:
+    - wells.downstream_tubes
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+  ancestor_tube_purpose: LRC Blood Vac
