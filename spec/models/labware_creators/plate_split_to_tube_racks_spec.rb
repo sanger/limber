@@ -15,9 +15,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:child_sequencing_tube_purpose_uuid) { SecureRandom.uuid }
-  let(:child_sequencing_tube_purpose) { json :purpose, uuid: child_sequencing_tube_purpose_uuid }
+  let(:child_sequencing_tube_purpose_name) { 'Seq Child Purpose' }
   let(:child_contingency_tube_purpose_uuid) { SecureRandom.uuid }
-  let(:child_contingency_tube_purpose) { json :purpose, uuid: child_contingency_tube_purpose_uuid }
+  let(:child_contingency_tube_purpose_name) { 'Spare Child Purpose' }
+  let(:ancestor_tube_purpose_uuid) { SecureRandom.uuid }
+  let(:ancestor_tube_purpose_name) { 'Ancestor Tube Purpose' }
+
   let(:parent_uuid) { SecureRandom.uuid }
 
   # The parent plate needs to have several wells containing the same sample
@@ -62,12 +65,16 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   let(:form_attributes) do
-    {
-      user_uuid: user_uuid,
-      child_sequencing_tube_purpose_uuid: child_sequencing_tube_purpose_uuid,
-      child_contingency_tube_purpose_uuid: child_contingency_tube_purpose_uuid,
-      parent_uuid: parent_uuid
-    }
+    { user_uuid: user_uuid, purpose_uuid: child_sequencing_tube_purpose_uuid, parent_uuid: parent_uuid }
+  end
+
+  before do
+    create(
+      :plate_split_to_tube_racks_purpose_config,
+      name: child_sequencing_tube_purpose_name,
+      uuid: child_sequencing_tube_purpose_uuid
+    )
+    create(:purpose_config, name: ancestor_tube_purpose_name, uuid: ancestor_tube_purpose_uuid)
   end
 
   context 'on new' do
@@ -96,8 +103,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:form_attributes) do
       {
         user_uuid: user_uuid,
-        child_sequencing_tube_purpose_uuid: child_sequencing_tube_purpose_uuid,
-        child_contingency_tube_purpose_uuid: child_contingency_tube_purpose_uuid,
+        purpose_uuid: child_sequencing_tube_purpose_uuid,
         parent_uuid: parent_uuid,
         sequencing_file: sequencing_file,
         contingency_file: contingency_file
@@ -228,6 +234,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       it 'works' do
+        expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_sequencing_file_upload).to have_been_made.once
         expect(stub_contingency_file_upload).to have_been_made.once

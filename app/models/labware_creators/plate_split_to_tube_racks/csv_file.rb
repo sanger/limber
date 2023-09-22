@@ -11,7 +11,7 @@ module LabwareCreators
   # Takes the user uploaded tube rack scan csv file, validates the content and extracts the information.
   # This file will be used to determine and create the fluidX tubes into which samples will be transferred,
   # and the tube locations then used to create a driver file for the liquid handler.
-  # Example of content (NB. no header):
+  # Example of content (NB. no header line):
   # A1, FR05653780
   # A2, NO READ
   # etc.

@@ -42,15 +42,16 @@ module LabwareCreators
   class PlateSplitToTubeRacks < Base
     include SupportParent::PlateOnly
 
-    self.attributes += [{ filters: {} }]
+    # self.attributes += [{ filters: {} }]
     self.attributes += %i[sequencing_file contingency_file]
-    self.attributes += %i[child_sequencing_tube_purpose_uuid child_contingency_tube_purpose_uuid]
+
+    # self.attributes += %i[child_sequencing_tube_purpose_uuid child_contingency_tube_purpose_uuid]
     self.page = 'plate_split_to_tube_racks'
 
-    attr_accessor :sequencing_file,
-                  :contingency_file,
-                  :child_sequencing_tube_purpose_uuid,
-                  :child_contingency_tube_purpose_uuid
+    attr_accessor :sequencing_file, :contingency_file
+
+    #               :child_sequencing_tube_purpose_uuid,
+    #               :child_contingency_tube_purpose_uuid
 
     validates_nested :well_filter
 
@@ -236,7 +237,7 @@ module LabwareCreators
 
     def parent_wells_for_contingency
       @parent_wells_for_contingency ||=
-        well_filtered.filtered.filter_map { |well, _ignore| well unless parent_wells_for_sequencing.include?(well) }
+        well_filter.filtered.filter_map { |well, _ignore| well unless parent_wells_for_sequencing.include?(well) }
     end
 
     def create_tubes(tube_purpose_uuid, number_of_tubes, tube_attributes)
@@ -253,21 +254,23 @@ module LabwareCreators
     end
 
     def sequencing_tube_purpose_name
-      @sequencing_tube_purpose_name ||= purpose_config.dig(:creator_class, :args, :child_sequencing_purpose)
+      @sequencing_tube_purpose_name ||= purpose_config.dig(:creator_class, :args, :child_seq_tube_purpose_name)
     end
 
     def sequencing_tube_purpose_uuid
-      raise "Missing purpose configuration argument 'child_sequencing_purpose'" unless sequencing_tube_purpose_name
+      raise "Missing purpose configuration argument 'child_seq_tube_purpose_name'" unless sequencing_tube_purpose_name
 
       Settings.purpose_uuids[sequencing_tube_purpose_name]
     end
 
     def contingency_tube_purpose_name
-      @contingency_tube_purpose_name ||= purpose_config.dig(:creator_class, :args, :child_contingency_purpose)
+      @contingency_tube_purpose_name ||= purpose_config.dig(:creator_class, :args, :child_spare_tube_purpose_name)
     end
 
     def contingency_tube_purpose_uuid
-      raise "Missing purpose configuration argument 'child_contingency_purpose'" unless contingency_tube_purpose_name
+      unless contingency_tube_purpose_name
+        raise "Missing purpose configuration argument 'child_spare_tube_purpose_name'"
+      end
 
       Settings.purpose_uuids[contingency_tube_purpose_name]
     end
@@ -315,7 +318,7 @@ module LabwareCreators
         # TODO: could get prefixes from config
         name_for_details = {
           prefix: 'SEQ',
-          stock_tube_bc: ancestor_tube_barcode[sample_uuid],
+          stock_tube_bc: ancestor_tube_barcode(sample_uuid),
           dest_tube_posn: tube_posn
         }
         {
@@ -361,7 +364,7 @@ module LabwareCreators
         # TODO: could get prefixes from config
         name_for_details = {
           prefix: 'SPARE',
-          stock_tube_bc: ancestor_tube_barcode[sample_uuid],
+          stock_tube_bc: ancestor_tube_barcode(sample_uuid),
           dest_tube_posn: tube_posn
         }
         {

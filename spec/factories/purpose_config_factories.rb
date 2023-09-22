@@ -223,6 +223,20 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a plate split to tube racks purpose
+    factory :plate_split_to_tube_racks_purpose_config do
+      creator_class do
+        {
+          name: 'LabwareCreators::PlateSplitToTubeRacks',
+          args: {
+            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_spare_tube_purpose_name: 'Spare Child Purpose'
+          }
+        }
+      end
+      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
