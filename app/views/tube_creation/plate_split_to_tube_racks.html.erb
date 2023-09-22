@@ -1,0 +1,45 @@
+<%= page(:'plate-split-to-tube-racks') do -%>
+  <%= content do %>
+    <%= card title: 'Help' do %>
+      <p>Upload the tube rack scan csv file(s) describing the positions and barcodes of the tubes. A 'contingency' tube rack file is required, but a 'sequencing' file is optional.</p>
+      <p>TODO: the filenames should be the tube rack barcodes.</p>
+      <p>An example is shown below:</p>
+      <table class='table table-sm'>
+        <tbody>
+          <tr><td>A1</td><td>AB00000001</td></tr>
+          <tr><td>B1</td><td>AB00000002</td></tr>
+          <tr><td>C1</td><td>AB00000003</td></tr>
+          <tr><td>D1</td><td>AB00000004</td></tr>
+          <tr><td>E1</td><td>AB00000005</td></tr>
+          <tr><td>F1</td><td>AB00000006</td></tr>
+          <tr><td>G1</td><td>AB00000007</td></tr>
+          <tr><td>H1</td><td>AB00000008</td></tr>
+          <tr><td>A2</td><td>AB00000009</td></tr>
+          <tr><td>B2</td><td>AB00000010</td></tr>
+          <tr><td>C2</td><td>AB00000011</td></tr>
+          <tr><td>D2</td><td>NO READ</td></tr>
+          <tr><td>E2</td><td>AB00000013</td></tr>
+          <tr><td>etc...</td></tr>
+        </tbody>
+      </table>
+      <p>NB. NO READ or NOSCAN are also valid values for the second column. This is interpreted as meaning that the tube rack scanner was not able to read a tube barcode in that position. The system will ignore these tubes when deciding which tubes to pool samples into.</p>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'Upload tube rack scan files' do %>
+      # TODO: add some text about numbers of tubes needed here
+      <p>TODO: For this parent plate with 8 unique samples and a total of 20 transferable wells, you will need at least 8 sequencing and 12 contingency tubes, or at least 20 contingency tubes.</p>
+      <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
+        # TODO: where is this purpose_uuid coming from and why is it here? is it the parent plate or child tube purpose?
+        <%= f.hidden_field :purpose_uuid %>
+        <div class="form-group">
+          <%= f.file_field :sequencing_file, accept: '.csv', required: false %>
+        </div>
+        <div class="form-group">
+          <%= f.file_field :contingency_file, accept: '.csv', required: true %>
+        </div>
+        <%= f.submit class: 'btn btn-success' %>
+      <% end %>
+    <% end %>
+  <% end %>
+<%- end -%>
