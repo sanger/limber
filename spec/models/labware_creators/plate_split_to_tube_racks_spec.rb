@@ -42,17 +42,49 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   # let(:parent_aliquot_sample2_aliquot3) { create(:v2_aliquot, sample: sample1) }
 
+  # parent well ancestor stock tubes
+  let(:ancestor_1_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:ancestor_1_tube) do
+    create(
+      :v2_stock_tube,
+      state: 'passed',
+      purpose_name: ancestor_tube_purpose_name,
+      aliquots: [ancestor_1_aliquot],
+      barcode_number: 1
+    )
+  end
+
+  let(:ancestor_2_aliquot) { create(:v2_aliquot, sample: sample2) }
+  let(:ancestor_2_tube) do
+    create(
+      :v2_stock_tube,
+      state: 'passed',
+      purpose_name: ancestor_tube_purpose_name,
+      aliquots: [ancestor_2_aliquot],
+      barcode_number: 2
+    )
+  end
+
+  # ancestor tubes list
+  let(:ancestor_tubes) { [ancestor_1_tube, ancestor_2_tube] }
+
   # parent wells
-  let(:parent_well_a1) { create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1]) }
-  let(:parent_well_a2) { create(:v2_well, location: 'A2', aliquots: [parent_aliquot_sample1_aliquot2]) }
-  let(:parent_well_a3) { create(:v2_well, location: 'A3', aliquots: [parent_aliquot_sample1_aliquot3]) }
+  let(:parent_well_a1) do
+    create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'passed')
+  end
+  let(:parent_well_a2) do
+    create(:v2_well, location: 'A2', aliquots: [parent_aliquot_sample1_aliquot2], state: 'passed')
+  end
+  let(:parent_well_a3) do
+    create(:v2_well, location: 'A3', aliquots: [parent_aliquot_sample1_aliquot3], state: 'passed')
+  end
 
-  let(:parent_well_b1) { create(:v2_well, location: 'B1', aliquots: [parent_aliquot_sample2_aliquot1]) }
-  let(:parent_well_b2) { create(:v2_well, location: 'B2', aliquots: [parent_aliquot_sample2_aliquot2]) }
-
-  # let(:parent_well_b3) do
-  #   create(:v2_well, location: 'B3', aliquots: [parent_aliquot_sample2_aliquot3])
-  # end
+  let(:parent_well_b1) do
+    create(:v2_well, location: 'B1', aliquots: [parent_aliquot_sample2_aliquot1], state: 'passed')
+  end
+  let(:parent_well_b2) do
+    create(:v2_well, location: 'B2', aliquots: [parent_aliquot_sample2_aliquot2], state: 'passed')
+  end
 
   # parent plate
   let(:parent_plate) do
@@ -60,7 +92,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       :v2_plate,
       uuid: parent_uuid,
       wells: [parent_well_a1, parent_well_a2, parent_well_a3, parent_well_b1, parent_well_b2],
-      barcode_number: 5
+      barcode_number: 6,
+      ancestors: ancestor_tubes
     )
   end
 
@@ -69,12 +102,24 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   before do
+    # need both child tubes to have a purpose config here
     create(
       :plate_split_to_tube_racks_purpose_config,
       name: child_sequencing_tube_purpose_name,
       uuid: child_sequencing_tube_purpose_uuid
     )
+    create(
+      :plate_split_to_tube_racks_purpose_config,
+      name: child_contingency_tube_purpose_name,
+      uuid: child_contingency_tube_purpose_uuid
+    )
+
+    # ancestor tube purpose config
     create(:purpose_config, name: ancestor_tube_purpose_name, uuid: ancestor_tube_purpose_uuid)
+
+    # ancestor tube lookups
+    stub_v2_tube(ancestor_1_tube, stub_search: false)
+    stub_v2_tube(ancestor_2_tube, stub_search: false)
   end
 
   context 'on new' do
@@ -110,6 +155,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       }
     end
 
+    # stub the sequencing file upload
     let(:stub_sequencing_file_upload) do
       stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
         .with(
@@ -128,6 +174,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
     end
 
+    # stub the contingency file upload
     let(:stub_contingency_file_upload) do
       stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
         .with(
@@ -146,42 +193,75 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
     end
 
-    let(:tube_creation_request_uuid) { SecureRandom.uuid }
+    # stub the sequencing tube creation
+    let(:sequencing_tube_creation_request_uuid) { SecureRandom.uuid }
 
-    let(:tube_creation_request) do
+    let(:sequencing_tube_creation_request) do
       stub_api_post(
         'specific_tube_creations',
         payload: {
           specific_tube_creation: {
-            user: user_uuid,
-            parent: parent_uuid,
-            child_purposes: [
-              child_sequencing_tube_purpose_uuid,
-              child_contingency_tube_purpose_uuid,
-              child_sequencing_tube_purpose_uuid,
-              child_contingency_tube_purpose_uuid,
-              child_sequencing_tube_purpose_uuid
-            ],
-            # TODO: how are the tubes named if mutiple racks?
+            child_purposes: [child_sequencing_tube_purpose_uuid, child_sequencing_tube_purpose_uuid],
+            # TODO: how are the tubes named if multiple racks?
+            # TODO: we could prefix with rack barcode
             tube_attributes: [
-              { name: 'DN5 A1:A1' }, # sample 1 seq tube 1
-              { name: 'DN5 A2:A1' }, # sample 1 cont tube 1
-              { name: 'DN5 A3:A2' }, # sample 1 cont tube 2
-              { name: 'DN5 B1:A2' }, # sample 2 seq tube 1
-              { name: 'DN5 B2:A3' } # sample 2 cont tube 1
-            ]
+              { name: 'SEQ:NT1O:A1', foreign_barcode: 'AB10000001' }, # sample 1 in well A1 to seq tube 1 in A1
+              { name: 'SEQ:NT2P:B1', foreign_barcode: 'AB10000002' } # sample 2 in well B1 to seq tube 2 in B1
+            ],
+            user: user_uuid,
+            parent: parent_uuid
           }
         },
-        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 5)
+        body: json(:specific_tube_creation, uuid: sequencing_tube_creation_request_uuid, children_count: 2)
       )
     end
 
-    # Find out what tubes we've just made!
-    let(:tube_creation_children_request) do
+    # stub the contingency tube creation
+    let(:contingency_tube_creation_request_uuid) { SecureRandom.uuid }
+
+    let(:contingency_tube_creation_request) do
+      stub_api_post(
+        'specific_tube_creations',
+        payload: {
+          specific_tube_creation: {
+            child_purposes: [
+              child_contingency_tube_purpose_uuid,
+              child_contingency_tube_purpose_uuid,
+              child_contingency_tube_purpose_uuid
+            ],
+            # TODO: how are the tubes named if multiple racks?
+            # TODO: we could prefix with rack barcode
+            tube_attributes: [
+              # sample 1 from well A2 to contingency tube 1 in A1
+              { name: 'SPARE:NT1O:A1', foreign_barcode: 'AB20000001' },
+              # sample 1 from well A3 to contingency tube 2 in B1
+              { name: 'SPARE:NT1O:B1', foreign_barcode: 'AB20000002' },
+              # sample 2 from well B2 to contingency tube 3 in C1
+              { name: 'SPARE:NT2P:C1', foreign_barcode: 'AB20000003' }
+            ],
+            user: user_uuid,
+            parent: parent_uuid
+          }
+        },
+        body: json(:specific_tube_creation, uuid: contingency_tube_creation_request_uuid, children_count: 3)
+      )
+    end
+
+    # stub what sequencing tubes were just made
+    let(:sequencing_tube_creation_children_request) do
       stub_api_get(
-        tube_creation_request_uuid,
+        sequencing_tube_creation_request_uuid,
         'children',
-        body: json(:tube_collection, names: ['DN5 A1:A1', 'DN5 A2:A1', 'DN5 A3:A2', 'DN5 B1:A2', 'DN5 B2:A3'])
+        body: json(:tube_collection, names: %w[SEQ:NT1O:A1 SEQ:NT2P:B1])
+      )
+    end
+
+    # stub what contingency tubes were just made
+    let(:contingency_tube_creation_children_request) do
+      stub_api_get(
+        contingency_tube_creation_request_uuid,
+        'children',
+        body: json(:tube_collection, names: %w[SPARE:NT1O:A1 SPARE:NT1O:B1 SPARE:NT2P:C1])
       )
     end
 
@@ -197,6 +277,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           transfer_request_collection: {
             user: user_uuid,
             transfer_requests: [
+              # TODO: destination assets are not correct here
               { 'source_asset' => parent_well_a1.uuid, 'target_asset' => 'tube-0' },
               { 'source_asset' => parent_well_a2.uuid, 'target_asset' => 'tube-1' },
               { 'source_asset' => parent_well_a3.uuid, 'target_asset' => 'tube-2' },
@@ -219,8 +300,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
       stub_sequencing_file_upload
       stub_contingency_file_upload
-      tube_creation_children_request
-      tube_creation_request
+      sequencing_tube_creation_children_request
+      contingency_tube_creation_children_request
+      sequencing_tube_creation_request
+      contingency_tube_creation_request
       transfer_creation_request
     end
 

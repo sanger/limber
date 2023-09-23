@@ -101,11 +101,13 @@ module LabwareCreators
     def create_sequencing_child_tubes
       return [] if require_contingency_tubes_only?
 
-      create_tubes(sequencing_tube_purpose_uuid, parent_wells_for_sequencing.length, contingency_tube_attributes)
+      # TODO: want to also store seq rack barcode on the tubes
+      create_tubes(sequencing_tube_purpose_uuid, parent_wells_for_sequencing.length, sequencing_tube_attributes)
     end
 
     def create_contingency_child_tubes
-      create_tubes(parent_wells_for_contingency.length)
+      # TODO: want to also store cont rack barcode on the tubes
+      create_tubes(contingency_tube_purpose_uuid, parent_wells_for_contingency.length, contingency_tube_attributes)
     end
 
     def perform_transfers
@@ -284,6 +286,10 @@ module LabwareCreators
       sample_ancestor_tube.human_barcode
     end
 
+    def sequencing_tube_attributes
+      @sequencing_tube_attributes ||= generate_sequencing_tube_attributes
+    end
+
     #
     # Create the tube attributes to send for the tubes creation in Sequencescape.
     # Passes the name for each tube.
@@ -306,29 +312,35 @@ module LabwareCreators
     # ]
     #
     # rubocop:disable Metrics/AbcSize
-    def sequencing_tube_attributes
+    def generate_sequencing_tube_attributes
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
       available_tube_positions = sequencing_csv_file.position_details.keys
 
-      parent_wells_for_sequencing.each_with_index do |well, well_index|
-        tube_posn = available_tube_positions[well_index]
-        sample_uuid = well.aliquots.first.sample.uuid
+      parent_wells_for_sequencing
+        .each_with_object([])
+        .with_index do |(well, tube_attributes), well_index|
+          tube_posn = available_tube_positions[well_index]
+          sample_uuid = well.aliquots.first.sample.uuid
 
-        # TODO: could get prefixes from config
-        name_for_details = {
-          prefix: 'SEQ',
-          stock_tube_bc: ancestor_tube_barcode(sample_uuid),
-          dest_tube_posn: tube_posn
-        }
-        {
-          name: name_for(name_for_details),
-          foreign_barcode: sequencing_csv_file.position_details[tube_posn]['barcode']
-        }
-      end
+          # TODO: change prefix to rack barcode?
+          name_for_details = {
+            prefix: 'SEQ',
+            stock_tube_bc: ancestor_tube_barcode(sample_uuid),
+            dest_tube_posn: tube_posn
+          }
+          tube_attributes << {
+            name: name_for(name_for_details),
+            foreign_barcode: sequencing_csv_file.position_details[tube_posn]['barcode']
+          }
+        end
     end
 
     # rubocop:enable Metrics/AbcSize
+
+    def contingency_tube_attributes
+      @contingency_tube_attributes ||= generate_contingency_tube_attributes
+    end
 
     #
     # Create the tube attributes to send for the tubes creation in Sequencescape.
@@ -352,26 +364,28 @@ module LabwareCreators
     # ]
     #
     # rubocop:disable Metrics/AbcSize
-    def contingency_tube_attributes
+    def generate_contingency_tube_attributes
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
       available_tube_positions = contingency_csv_file.position_details.keys
 
-      parent_wells_for_contingency.each_with_index do |well, well_index|
-        tube_posn = available_tube_positions[well_index]
-        sample_uuid = well.aliquots.first.sample.uuid
+      parent_wells_for_contingency
+        .each_with_object([])
+        .with_index do |(well, tube_attributes), well_index|
+          tube_posn = available_tube_positions[well_index]
+          sample_uuid = well.aliquots.first.sample.uuid
 
-        # TODO: could get prefixes from config
-        name_for_details = {
-          prefix: 'SPARE',
-          stock_tube_bc: ancestor_tube_barcode(sample_uuid),
-          dest_tube_posn: tube_posn
-        }
-        {
-          name: name_for(name_for_details),
-          foreign_barcode: contingency_csv_file.position_details[tube_posn]['barcode']
-        }
-      end
+          # TODO: change prefix to rack barcode?
+          name_for_details = {
+            prefix: 'SPARE',
+            stock_tube_bc: ancestor_tube_barcode(sample_uuid),
+            dest_tube_posn: tube_posn
+          }
+          tube_attributes << {
+            name: name_for(name_for_details),
+            foreign_barcode: contingency_csv_file.position_details[tube_posn]['barcode']
+          }
+        end
     end
 
     # rubocop:enable Metrics/AbcSize
