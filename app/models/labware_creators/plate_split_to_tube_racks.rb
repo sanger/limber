@@ -53,6 +53,8 @@ module LabwareCreators
     #               :child_sequencing_tube_purpose_uuid,
     #               :child_contingency_tube_purpose_uuid
 
+    attr_reader :child_sequencing_tubes, :child_contingency_tubes
+
     validates_nested :well_filter
 
     # TODO: can add validations for specific metadata fields here if needed
@@ -66,6 +68,9 @@ module LabwareCreators
 
     # validate there are sufficient tubes in the racks for the number of parent wells
     validate :sufficient_tubes_in_racks?
+
+    # TODO: validate that the tube barcodes do not already exist in the system
+    validate :tube_barcodes_are_unique?
 
     # TODO: check need all this in the includes e.g. metadata
     PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
@@ -92,20 +97,20 @@ module LabwareCreators
     end
 
     def create_labware!
-      @sequencing_child_tubes = create_sequencing_child_tubes
-      @contingency_child_tubes = create_contingency_child_tubes
+      @child_sequencing_tubes = create_child_sequencing_tubes
+      @child_contingency_tubes = create_child_contingency_tubes
       perform_transfers
       true
     end
 
-    def create_sequencing_child_tubes
+    def create_child_sequencing_tubes
       return [] if require_contingency_tubes_only?
 
       # TODO: want to also store seq rack barcode on the tubes
       create_tubes(sequencing_tube_purpose_uuid, parent_wells_for_sequencing.length, sequencing_tube_attributes)
     end
 
-    def create_contingency_child_tubes
+    def create_child_contingency_tubes
       # TODO: want to also store cont rack barcode on the tubes
       create_tubes(contingency_tube_purpose_uuid, parent_wells_for_contingency.length, contingency_tube_attributes)
     end
@@ -121,6 +126,35 @@ module LabwareCreators
 
     def anchor
       'children_tab'
+    end
+
+    # Validation that there are sufficient tubes in the racks for this parent plate.
+    # This depends on the number of unique samples in the parent plate, and the number of parent wells,
+    # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
+    def sufficient_tubes_in_racks?
+      if require_contingency_tubes_only?
+        num_contingency_tubes >= num_parent_wells
+      else
+        (num_sequencing_tubes >= num_parent_unique_samples) &&
+          (num_contingency_tubes >= (num_parent_wells - num_parent_unique_samples))
+      end
+    end
+
+    # Validation that the tube barcodes are unique and do not already exist in the system.
+    def tube_barcodes_are_unique?
+      check_tube_rack_scan_file(sequencing_csv_file, 'Sequencing') if sequencing_file.present?
+      check_tube_rack_scan_file(contingency_csv_file, 'Contingency') if contingency_file.present?
+    end
+
+    def check_tube_rack_scan_file(tube_rack_file, msg_prefix)
+      tube_rack_file.position_details.each do |tube_posn, tube_details|
+        foreign_barcode = tube_details['barcode']
+        tube_in_db = Sequencescape::Api::V2::Tube.find_by(barcode: foreign_barcode)
+        next if tube_in_db.blank?
+
+        msg = "#{msg_prefix} tube barcode #{foreign_barcode} (at rack position #{tube_posn}) already exists in the LIMS"
+        errors.add(:tube_rack_file, msg)
+      end
     end
 
     private
@@ -184,18 +218,6 @@ module LabwareCreators
       @num_contingency_tubes ||= contingency_csv_file&.position_details&.length || 0
     end
 
-    # Validation that there are sufficient tubes in the racks for this parent plate.
-    # This depends on the number of unique samples in the parent plate, and the number of parent wells,
-    # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
-    def sufficient_tubes_in_racks?
-      if require_contingency_tubes_only?
-        num_contingency_tubes >= num_parent_wells
-      else
-        (num_sequencing_tubes >= num_parent_unique_samples) &&
-          (num_contingency_tubes >= (num_parent_wells - num_parent_unique_samples))
-      end
-    end
-
     #
     # Upload the tube rack csv files onto the plate via api v1
     #
@@ -224,17 +246,17 @@ module LabwareCreators
 
     def find_parent_wells_for_sequencing
       unique_sample_uuids = []
-      parent_wells = []
+      parent_wells_for_seq = []
 
       well_filter.filtered.each do |well, _ignore|
         sample_uuid = well.aliquots.first.sample.uuid
         next if sample_uuid.in?(unique_sample_uuids)
 
         unique_sample_uuids << sample_uuid
-        parent_wells << well
+        parent_wells_for_seq << well
       end
 
-      parent_wells
+      parent_wells_for_seq
     end
 
     def parent_wells_for_contingency
@@ -303,40 +325,36 @@ module LabwareCreators
     #     name: NT11111111:A1,
     #     foreign_barcode: FD11111111
     #   },
-    #   {
-    #     prefix: SPARE,
-    #     name: NT22222222:B1,
-    #     foreign_barcode: FD22222222
-    #   },
     #   etc.
     # ]
     #
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def generate_sequencing_tube_attributes
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
       available_tube_positions = sequencing_csv_file.position_details.keys
 
+      # used for building request hash later
+      @sequencing_wells_to_tube_posns = {}
+
       parent_wells_for_sequencing
-        .each_with_object([])
-        .with_index do |(well, tube_attributes), well_index|
-          tube_posn = available_tube_positions[well_index]
+        .zip(available_tube_positions)
+        .map do |well, tube_posn|
           sample_uuid = well.aliquots.first.sample.uuid
 
-          # TODO: change prefix to rack barcode?
-          name_for_details = {
-            prefix: 'SEQ',
-            stock_tube_bc: ancestor_tube_barcode(sample_uuid),
-            dest_tube_posn: tube_posn
-          }
-          tube_attributes << {
-            name: name_for(name_for_details),
-            foreign_barcode: sequencing_csv_file.position_details[tube_posn]['barcode']
-          }
+          # TODO: put prefixes in the purpose config
+          name_for_details = name_for_details_hash('SEQ', ancestor_tube_barcode(sample_uuid), tube_posn)
+
+          tube_name = name_for(name_for_details)
+          @sequencing_wells_to_tube_posns[well] = tube_name
+
+          { name: tube_name, foreign_barcode: sequencing_csv_file.position_details[tube_posn]['barcode'] }
         end
     end
 
     # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def contingency_tube_attributes
       @contingency_tube_attributes ||= generate_contingency_tube_attributes
@@ -355,78 +373,75 @@ module LabwareCreators
     #     name: NT11111111:A1,
     #     foreign_barcode: FD11111111
     #   },
-    #   {
-    #     prefix: SPARE,
-    #     name: NT22222222:B1,
-    #     foreign_barcode: FD22222222
-    #   },
     #   etc.
     # ]
     #
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def generate_contingency_tube_attributes
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
       available_tube_positions = contingency_csv_file.position_details.keys
 
+      # used for building request hash later
+      @contingency_wells_to_tube_posns = {}
+
       parent_wells_for_contingency
-        .each_with_object([])
-        .with_index do |(well, tube_attributes), well_index|
-          tube_posn = available_tube_positions[well_index]
+        .zip(available_tube_positions)
+        .map do |well, tube_posn|
           sample_uuid = well.aliquots.first.sample.uuid
 
-          # TODO: change prefix to rack barcode?
-          name_for_details = {
-            prefix: 'SPARE',
-            stock_tube_bc: ancestor_tube_barcode(sample_uuid),
-            dest_tube_posn: tube_posn
-          }
-          tube_attributes << {
-            name: name_for(name_for_details),
-            foreign_barcode: contingency_csv_file.position_details[tube_posn]['barcode']
-          }
+          # TODO: put prefixes in the purpose config
+          name_for_details = name_for_details_hash('SPR', ancestor_tube_barcode(sample_uuid), tube_posn)
+
+          tube_name = name_for(name_for_details)
+          @contingency_wells_to_tube_posns[well] = tube_name
+
+          { name: tube_name, foreign_barcode: contingency_csv_file.position_details[tube_posn]['barcode'] }
         end
     end
 
     # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
+    def name_for_details_hash(prefix, stock_tube_bc, dest_tube_posn)
+      { prefix: prefix, stock_tube_bc: stock_tube_bc, dest_tube_posn: dest_tube_posn }
+    end
 
     #
     # Generates a name for the destination tube.
     # Comprises a prefix, the ancestor source (stock) tube barcode and the destination tube position
     # return [String] e.g. 'SEQ:NT12345678:A1'
     #
-    def name_for(name_for_details)
-      "#{name_for_details[:prefix]}:#{name_for_details[:stock_tube_bc]}:#{name_for_details[:dest_tube_posn]}"
+    def name_for(details)
+      "#{details[:prefix]}:#{details[:stock_tube_bc]}:#{details[:dest_tube_posn]}"
     end
-
-    # def transfer_material_from_parent!(child_uuid)
-    #   child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
-    #   api.transfer_request_collection.create!(
-    #     user: user_uuid,
-    #     transfer_requests: transfer_request_attributes(child_plate)
-    #   )
-    # end
 
     def transfer_request_attributes
-      # pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
-      #   # this currently assumes that pool_identifier will be the submission_uuid
-      #   # (it would have always been, historically)
-      #   pool.each do |location|
-      #     transfer_requests <<
-      #       request_hash(
-      #         well_locations.fetch(location).uuid,
-      #         sequencing_child_tubes.fetch(name_for(pool)).uuid,
-      #         pool_identifier
-      #       )
-      #   end
-      # end
+      well_filter.filtered.map do |well, additional_parameters|
+        child_tube_name = @sequencing_wells_to_tube_posns[well]
+        child_tube_name = @contingency_wells_to_tube_posns[well] if child_tube_name.blank?
+
+        child_tube = @child_sequencing_tubes[child_tube_name]
+        child_tube = @child_contingency_tubes[child_tube_name] if child_tube.blank?
+
+        # TODO: add set tube rack barcode
+        # tube_rack_barcode = sequencing_csv_file.tube_rack_barcode
+        # add_tube_rack_barcode_metadata(child_tube, tube_rack_barcode)
+        request_hash(well.uuid, child_tube.uuid, additional_parameters)
+      end
     end
 
-    def request_hash(source_well, child_plate, additional_parameters)
-      # {
-      #   'source_asset' => source_well.uuid,
-      #   'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
-      # }.merge(additional_parameters)
+    # TODO: add tube rack barcode to tube metadata
+    # def add_tube_rack_barcode_metadata(child_tube, tube_rack_barcode)
+    #   # TODO: does this need to be .create! ?
+    #   LabwareMetadata
+    #     .new(api: api, user: user_uuid, barcode: tube.barcode.machine)
+    #     .update!(tube_rack_barcode: tube_rack_barcode)
+    # end
+
+    def request_hash(source_well_uuid, target_tube_uuid, additional_parameters)
+      { 'source_asset' => source_well_uuid, 'target_asset' => target_tube_uuid }.merge(additional_parameters)
     end
 
     # Maps well locations to the corresponding uuid
