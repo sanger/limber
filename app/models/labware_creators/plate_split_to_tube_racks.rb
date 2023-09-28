@@ -42,16 +42,11 @@ module LabwareCreators
   class PlateSplitToTubeRacks < Base
     include SupportParent::PlateOnly
 
-    # self.attributes += [{ filters: {} }]
     self.attributes += %i[sequencing_file contingency_file]
 
-    # self.attributes += %i[child_sequencing_tube_purpose_uuid child_contingency_tube_purpose_uuid]
     self.page = 'plate_split_to_tube_racks'
 
     attr_accessor :sequencing_file, :contingency_file
-
-    #               :child_sequencing_tube_purpose_uuid,
-    #               :child_contingency_tube_purpose_uuid
 
     attr_reader :child_sequencing_tubes, :child_contingency_tubes
 
@@ -59,17 +54,17 @@ module LabwareCreators
 
     # TODO: can add validations for specific metadata fields here if needed
 
-    # contingency file is required, sequencing file is optional
+    # Don't create the tubes until at least the contingency file has been uploaded
     validates :contingency_file, presence: true
 
-    # validate files
+    # N.B. contingency file is required, sequencing file is optional
     validates_nested :sequencing_csv_file, if: :contingency_file
     validates_nested :contingency_csv_file, if: :sequencing_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
     validate :sufficient_tubes_in_racks?
 
-    # TODO: validate that the tube barcodes do not already exist in the system
+    # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
 
     # TODO: check need all this in the includes e.g. metadata
@@ -132,6 +127,8 @@ module LabwareCreators
     # This depends on the number of unique samples in the parent plate, and the number of parent wells,
     # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
     def sufficient_tubes_in_racks?
+      return if contingency_file.blank?
+
       if require_contingency_tubes_only?
         num_contingency_tubes >= num_parent_wells
       else
