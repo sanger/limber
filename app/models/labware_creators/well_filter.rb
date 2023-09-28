@@ -38,7 +38,8 @@ class LabwareCreators::WellFilter
   end
 
   def extract_submission(well)
-    submission_ids = well.aliquots.map { |aliquot| aliquot.request.submission_id }.uniq
+    # had a situation where request was an array rather than a single request, so added Array().first syntax
+    submission_ids = well.aliquots.map { |aliquot| Array(aliquot.request).first.submission_id }.uniq
     submission_ids.one? ? { 'submission_id' => submission_ids.first } : {}
   end
 
