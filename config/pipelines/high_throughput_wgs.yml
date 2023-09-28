@@ -5,7 +5,9 @@ WGS: # Top of the pipeline (Library Prep)
     request_type_key:
       - limber_wgs
       - limber_rnaa
-    library_type: Standard
+    library_type:
+      - Standard
+      - BGE
   library_pass: LB Lib PCR-XP
   relationships:
     LB Cherrypick: LB Shear
