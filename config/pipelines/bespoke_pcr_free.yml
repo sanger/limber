@@ -8,7 +8,6 @@ Bespoke PCR Free:
       - HiSeqX PCR free
       - DAFT-seq
       - TruSeq Custom Amplicon
-      - BGE
   library_pass: LBB Lib-XP
   relationships:
     LBB Cherrypick: LBB Ligation Tagged

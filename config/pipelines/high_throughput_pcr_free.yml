@@ -6,6 +6,7 @@ High Throughput PCR Free 96:
     library_type:
       - HiSeqX PCR free
       - DAFT-seq
+      - BGE
   library_pass: PF Lib XP2
   relationships:
     PF Cherrypicked: PF Shear
