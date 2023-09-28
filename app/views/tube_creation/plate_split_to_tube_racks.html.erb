@@ -2,7 +2,7 @@
   <%= content do %>
     <%= card title: 'Help' do %>
       <p>Upload the tube rack scan csv file(s) describing the positions and barcodes of the tubes. A 'contingency' tube rack file is required, but a 'sequencing' file is optional.</p>
-      <p>TODO: the filenames should be the tube rack barcodes.</p>
+      <p>TODO: the filenames should be the tube rack barcodes and add the column for rack barcode in the file.</p>
       <p>An example is shown below:</p>
       <table class='table table-sm'>
         <tbody>
@@ -27,14 +27,14 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Upload tube rack scan files' do %>
-      # TODO: add some text about numbers of tubes needed here
       <p>TODO: For this parent plate with 8 unique samples and a total of 20 transferable wells, you will need at least 8 sequencing and 12 contingency tubes, or at least 20 contingency tubes.</p>
       <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
-        # TODO: where is this purpose_uuid coming from and why is it here? is it the parent plate or child tube purpose?
         <%= f.hidden_field :purpose_uuid %>
+        <h4>Sequencing tube rack scan file (optional)</h4>
         <div class="form-group">
           <%= f.file_field :sequencing_file, accept: '.csv', required: false %>
         </div>
+        <h4>Contingency tube rack scan file (required)</h4>
         <div class="form-group">
           <%= f.file_field :contingency_file, accept: '.csv', required: true %>
         </div>
