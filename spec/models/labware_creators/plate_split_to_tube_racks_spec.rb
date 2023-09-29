@@ -207,73 +207,68 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  # TODO: getting error - Unregistered request: GET http://example.com:3000/
-  # context '#sufficient_tubes_in_racks?' do
-  #   let(:num_parent_wells) { 96 }
-  #   let(:num_parent_unique_samples) { 48 }
-  #   let(:num_sequencing_tubes) { 48 }
-  #   let(:num_contingency_tubes) { 48 }
+  context '#sufficient_tubes_in_racks?' do
+    let(:num_parent_wells) { 96 }
+    let(:num_parent_unique_samples) { 48 }
+    let(:num_sequencing_tubes) { 48 }
+    let(:num_contingency_tubes) { 48 }
 
-  #   before do
-  #     stub_v2_plate(
-  #       parent_plate,
-  #       stub_search: false,
-  #       custom_includes: 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
-  #     )
-  #     allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
-  #     allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
-  #   end
+    before do
+      stub_v2_plate(
+        parent_plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+      )
+      allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
+      allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
+    end
 
-  #   context 'when require_contingency_tubes_only? is true' do
-  #     before do
-  #       allow(subject).to receive(:require_contingency_tubes_only?).and_return(true)
-  #     end
+    context 'when require_contingency_tubes_only? is true' do
+      before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(true) }
 
-  #     context 'when there are enough contingency tubes' do
-  #       let(:num_contingency_tubes) { 96 }
+      context 'when there are enough contingency tubes' do
+        let(:num_contingency_tubes) { 96 }
 
-  #       it 'returns true' do
-  #         expect(subject.sufficient_tubes_in_racks?).to be true
-  #       end
-  #     end
+        it 'returns true' do
+          expect(subject.sufficient_tubes_in_racks?).to be true
+        end
+      end
 
-  #     context 'when there are not enough contingency tubes' do
-  #       let(:num_contingency_tubes) { 47 }
+      context 'when there are not enough contingency tubes' do
+        let(:num_contingency_tubes) { 47 }
 
-  #       it 'returns false' do
-  #         expect(subject.sufficient_tubes_in_racks?).to be false
-  #       end
-  #     end
-  #   end
+        it 'returns false' do
+          expect(subject.sufficient_tubes_in_racks?).to be false
+        end
+      end
+    end
 
-  #   context 'when require_contingency_tubes_only? is false' do
-  #     before do
-  #       allow(subject).to receive(:require_contingency_tubes_only?).and_return(false)
-  #     end
+    context 'when require_contingency_tubes_only? is false' do
+      before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(false) }
 
-  #     context 'when there are enough tubes' do
-  #       it 'returns true' do
-  #         expect(subject.sufficient_tubes_in_racks?).to be true
-  #       end
-  #     end
+      context 'when there are enough tubes' do
+        it 'returns true' do
+          expect(subject.sufficient_tubes_in_racks?).to be true
+        end
+      end
 
-  #     context 'when there are not enough sequencing tubes' do
-  #       let(:num_sequencing_tubes) { 47 }
+      context 'when there are not enough sequencing tubes' do
+        let(:num_sequencing_tubes) { 47 }
 
-  #       it 'returns false' do
-  #         expect(subject.sufficient_tubes_in_racks?).to be false
-  #       end
-  #     end
+        it 'returns false' do
+          expect(subject.sufficient_tubes_in_racks?).to be false
+        end
+      end
 
-  #     context 'when there are not enough contingency tubes' do
-  #       let(:num_contingency_tubes) { 47 }
+      context 'when there are not enough contingency tubes' do
+        let(:num_contingency_tubes) { 47 }
 
-  #       it 'returns false' do
-  #         expect(subject.sufficient_tubes_in_racks?).to be false
-  #       end
-  #     end
-  #   end
-  # end
+        it 'returns false' do
+          expect(subject.sufficient_tubes_in_racks?).to be false
+        end
+      end
+    end
+  end
 
   context '#check_tube_rack_scan_file' do
     let(:tube_rack_file) { double('tube_rack_file') } # don't need an actual file for this test
