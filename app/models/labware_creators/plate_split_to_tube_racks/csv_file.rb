@@ -13,8 +13,8 @@ module LabwareCreators
   # and the tube locations then used to create a driver file for the liquid handler.
   # The filename of the file should also contain the tube rack barcode.
   # Example of file content (NB. no header line):
-  # FX12345678, A1, FR05653780
-  # FX12345678, A2, NO READ
+  # TR00012345, A1, FX05653780
+  # TR00012345, A2, NO READ
   # etc.
   #
   class PlateSplitToTubeRacks::CsvFile
@@ -50,12 +50,24 @@ module LabwareCreators
     end
 
     #
-    # Extracts tube details by rack location from the uploaded csv file
+    # Extracts tube details by rack location from the uploaded csv file.
+    # This hash is useful when we want the details for a rack location.
     #
-    # @return [Hash] eg. { 'A1' => { 'tube_rack_barcode' => 'FX12345678', 'tube_barcode' => AB12345678 }, 'B1' => etc. }
+    # @return [Hash] eg. { 'A1' => { 'tube_rack_barcode' => 'TR00000001',
+    # 'tube_barcode' => 'FX00000001' }, 'B1' => etc. }
     #
     def position_details
       @position_details ||= generate_position_details_hash
+    end
+
+    #
+    # Refactors the position details hash to be keyed by tube barcode.
+    #
+    # @return [Hash] eg. { 'FX00000001' => { 'tube_position' => 'A1',
+    # 'tube_rack_barcode' => 'TR00000001' }, 'FX00000002' => etc. }
+    #
+    def tube_barcode_details
+      @tube_barcode_details ||= generate_tube_barcode_details_hash
     end
 
     def correctly_parsed?
@@ -116,6 +128,20 @@ module LabwareCreators
         position_details_hash[position] = {
           'tube_rack_barcode' => row.tube_rack_barcode.strip.upcase,
           'tube_barcode' => row.tube_barcode.strip.upcase
+        }
+      end
+    end
+
+    # Generates a hash of tube barcodes based on the tube rack scan data in the CSV file.
+    #
+    # @return [Hash] A hash of tube barcodes and their details, where the keys are tube
+    # barcodes and the values are hashes containing the tube position and tube rack barcode
+    # for each tube.
+    def generate_tube_barcode_details_hash
+      position_details.each_with_object({}) do |(position, details), tube_barcode_hash|
+        tube_barcode_hash[details['tube_barcode']] = {
+          'tube_position' => position,
+          'tube_rack_barcode' => details['tube_rack_barcode']
         }
       end
     end

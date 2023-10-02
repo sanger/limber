@@ -73,6 +73,75 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       }
     end
 
+    let(:expected_tube_barcode_details) do
+      {
+        'AB10000001' => {
+          'tube_position' => 'A1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000002' => {
+          'tube_position' => 'B1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000003' => {
+          'tube_position' => 'C1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000004' => {
+          'tube_position' => 'D1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000005' => {
+          'tube_position' => 'E1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000006' => {
+          'tube_position' => 'F1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000007' => {
+          'tube_position' => 'G1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000008' => {
+          'tube_position' => 'H1',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000009' => {
+          'tube_position' => 'A2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000010' => {
+          'tube_position' => 'B2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000011' => {
+          'tube_position' => 'C2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000012' => {
+          'tube_position' => 'D2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000013' => {
+          'tube_position' => 'E2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000014' => {
+          'tube_position' => 'F2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000015' => {
+          'tube_position' => 'G2',
+          'tube_rack_barcode' => 'FX12345678'
+        },
+        'AB10000016' => {
+          'tube_position' => 'H2',
+          'tube_rack_barcode' => 'FX12345678'
+        }
+      }
+    end
+
     context 'Without byte order markers' do
       let(:file) do
         fixture_file_upload(
@@ -90,6 +159,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       describe '#position_details' do
         it 'should parse the expected well details' do
           expect(subject.position_details).to eq expected_position_details
+        end
+      end
+
+      describe '#tube_barcode_details' do
+        it 'should parse the expected tube barcode positions' do
+          expect(subject.tube_barcode_details).to eq expected_tube_barcode_details
         end
       end
     end
@@ -111,6 +186,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       describe '#position_details' do
         it 'should parse the expected well details' do
           expect(subject.position_details).to eq expected_position_details
+        end
+      end
+
+      describe '#tube_barcode_details' do
+        it 'should parse the expected tube barcode positions' do
+          expect(subject.tube_barcode_details).to eq expected_tube_barcode_details
         end
       end
     end
@@ -189,6 +270,71 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
         }
       end
 
+      let(:expected_tube_barcode_details) do
+        {
+          'AB10000001' => {
+            'tube_position' => 'A1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000002' => {
+            'tube_position' => 'B1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000004' => {
+            'tube_position' => 'D1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000005' => {
+            'tube_position' => 'E1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000006' => {
+            'tube_position' => 'F1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000007' => {
+            'tube_position' => 'G1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000008' => {
+            'tube_position' => 'H1',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000009' => {
+            'tube_position' => 'A2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000010' => {
+            'tube_position' => 'B2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000011' => {
+            'tube_position' => 'C2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000012' => {
+            'tube_position' => 'D2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000013' => {
+            'tube_position' => 'E2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000014' => {
+            'tube_position' => 'F2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000015' => {
+            'tube_position' => 'G2',
+            'tube_rack_barcode' => 'FX12345678'
+          },
+          'AB10000016' => {
+            'tube_position' => 'H2',
+            'tube_rack_barcode' => 'FX12345678'
+          }
+        }
+      end
+
       describe '#valid?' do
         it 'should be valid' do
           expect(subject.valid?).to be true
@@ -198,6 +344,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       describe '#position_details' do
         it 'should parse the expected well details' do
           expect(subject.position_details).to eq expected_position_details
+        end
+      end
+
+      describe '#tube_barcode_details' do
+        it 'should parse the expected tube barcode positions' do
+          expect(subject.tube_barcode_details).to eq expected_tube_barcode_details
         end
       end
     end
@@ -259,7 +411,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
 
       it 'reports the errors' do
         subject.valid?
-        puts subject.errors.full_messages
 
         expect(subject.errors.full_messages).to include(
           'Tube rack scan tube position contains an invalid coordinate, in row 2 [AN EXAMPLE FILE]'
