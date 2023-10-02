@@ -5,7 +5,7 @@
 
 # Pipelines yaml files
 
-There are a number of `*.yml` files located in `app/config/purposes/` these
+There are a number of `*.yml` files located in `config/purposes/` these
 configure display and behaviour of labware according to their purpose as they
 pass through a pipeline.
 
@@ -83,7 +83,7 @@ The rest of the document describes the structure of this file, and what each of 
 
 ## Top level
 
-Each file is a `.yml` file located in `app/config/purposes`, it contains the
+Each file is a `.yml` file located in `config/purposes`, it contains the
 configuration for one or more purposes.
 
 The top level structure consists of series of keys, uniquely identifying each
