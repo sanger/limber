@@ -26,8 +26,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::StampedPlate}
 
-  Used directly in 101 purposes:
-  LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM RT PreAmp, CLCM RNA End Prep, CLCM RNA Lib PCR XP, LSW-96 Stock, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, GBS Stock, GBS-96 Stock, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LHR RT, LHR PCR 1, LHR PCR 2, LHR End Prep, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LCMB Cherrypick, LCMB End Prep, LCMB Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LRC PBMC Bank, Tag Plate - 384, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, and LB Lib PCR-XP
+  Used directly in 102 purposes:
+  LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM RT PreAmp, CLCM RNA End Prep, CLCM RNA Lib PCR XP, LCMB Cherrypick, LCMB End Prep, LCMB Lib PCR-XP, pWGS-384 End Prep, pWGS-384 AL Lib, PF Cherrypicked, PF Shear, PF Post Shear, PF Post Shear XP, PF End Prep, PF-384 End Prep, PF Lib XP, PF-384 Lib XP2, PF Lib XP2, LRC PBMC Bank, LTHR-384 PCR 1, LTHR-384 PCR 2, LBR Cherrypick, LBR mRNA Cap, LBR Globin, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag cDNA, LBR Frag, LB cDNA, LB cDNA XP, LTN Stock, LTN Cherrypick, LTN Shear, LTN Post Shear, LTN Stock XP, LTN AL Lib, LTN Lib PCR XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, GnT Stock, GnT scDNA, GnT Pico-XP, GnT Pico End Prep, GnT MDA Norm, LB Cherrypick, LB Shear, LB Post Shear, LB End Prep, LB Lib PCR-XP, LDS Stock, LDS Cherrypick, LDS Stock XP, LDS AL Lib, LDS Lib PCR XP, RVI Cherrypick, LBC Stock, LHR-384 RT, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LHR-384 End Prep, LHR-384 AL Lib, GBS Stock, GBS-96 Stock, LCA PBMC, LCA 10X cDNA, LCA PBMC Bank, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LTHR RT-S, LTHR PCR 1, LTHR PCR 2, LSW-96 Stock, Tag Plate - 384, LBB Cherrypick, LBB Ligation, LBB Lib-XP, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, scRNA Stock, scRNA-384 Stock, scRNA cDNA-XP, scRNA-384 cDNA-XP, scRNA End Prep, scRNA-384 End Prep, LHR RT, LHR PCR 1, LHR PCR 2, and LHR End Prep
 
 {LabwareCreators::StampedPlate View class documentation}
 
@@ -96,7 +96,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::MergedPlate}
 
   Used directly in 4 purposes:
-  LHR XP, LHR-384 cDNA, LTHR-384 Lib PCR pool, and LTHR Lib PCR pool
+  LTHR-384 Lib PCR pool, LHR-384 cDNA, LTHR Lib PCR pool, and LHR XP
 
 {LabwareCreators::MergedPlate View class documentation}
 
@@ -106,7 +106,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::PcrCyclesBinnedPlate}
 
   Used directly in 2 purposes:
-  LDS AL Lib Dil and LTN AL Lib Dil
+  LTN AL Lib Dil and LDS AL Lib Dil
 
 {LabwareCreators::PcrCyclesBinnedPlate View class documentation}
 
@@ -164,7 +164,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::CustomPooledTubes}
 
   Used directly in 7 purposes:
-  LCA Custom Pool, CLCM DNA Pool, CLCM RNA Pool, LDS Custom Pool, LB Custom Pool, LCMB Custom Pool, and LTN Custom Pool
+  LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, LCMB Custom Pool, LTN Custom Pool, LDS Custom Pool, and LCA Custom Pool
 
 {LabwareCreators::CustomPooledTubes View class documentation}
 
@@ -174,7 +174,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::PooledTubesBySample}
 
   Used directly in 3 purposes:
-  LCA Bank Stock, LRC Bank Seq, and LRC Bank Spare
+  LRC Bank Seq, LRC Bank Spare, and LCA Bank Stock
 
 {LabwareCreators::PooledTubesBySample View class documentation}
 
@@ -184,7 +184,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::PooledTubesBySubmission}
 
   Used directly in 12 purposes:
-  LBB Lib Pool Stock, LBC 3pV3 GLibPS, LBC 5p GLibPS, LBC BCR LibPS, LBC TCR LibPS, GnT Pico Lib Pool, LHR Lib Pool, LHR-384 Pool XP, pWGS-384 Lib Pool XP, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LB Lib Pool
+  LBC 5p GLibPS, pWGS-384 Lib Pool XP, LBC BCR LibPS, GnT Pico Lib Pool, LB Lib Pool, LHR-384 Pool XP, LBC TCR LibPS, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, and LHR Lib Pool
 
 {LabwareCreators::PooledTubesBySubmission View class documentation}
 
@@ -204,7 +204,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::CustomTaggedPlate}
 
   Used directly in 8 purposes:
-  LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, LBC 3pV3 GEX LigXP, LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, and LCA Connect PCRXP
+  LBC 5p GEX LigXP, LBC BCR Post Lig 1XSPRI, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, and LBC 3pV3 GEX LigXP
 
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
@@ -271,7 +271,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::QuadrantStamp}
 
   Used directly in 4 purposes:
-  LBSN-384 PCR 1, LTHR-384 RT-Q, pWGS-384 Post Shear XP, and PF-384 Post Shear XP
+  pWGS-384 Post Shear XP, PF-384 Post Shear XP, LTHR-384 RT-Q, and LBSN-384 PCR 1
 
 {LabwareCreators::QuadrantStamp View class documentation}
 
@@ -341,7 +341,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::TaggedPlate}
 
   Used directly in 20 purposes:
-  LBSN-384 PCR 2, CLCM DNA Lib PCR, CLCM RNA Lib PCR, LDS Lib PCR, GBS PCR2, GnT Pico Lib PCR, LHR Lib PCR, LHR-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LTHR Lib PCR 1, LTHR Lib PCR 2, LCMB Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, scRNA Lib PCR, scRNA-384 Lib PCR, LTN Lib PCR, and LB Lib PCR
+  CLCM DNA Lib PCR, CLCM RNA Lib PCR, LCMB Lib PCR, pWGS-384 Lib PCR, PF Lib, PF-384 Lib, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LBSN-384 PCR 2, LTN Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LHR-384 Lib PCR, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, scRNA Lib PCR, scRNA-384 Lib PCR, and LHR Lib PCR
 
 {LabwareCreators::TaggedPlate View class documentation}
 
@@ -351,7 +351,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::TubeFromTube}
 
   Used directly in 17 purposes:
-  LBC 5p Pool Norm, LBC BCR Pool Norm, LBC TCR Pool Norm, LBSN-9216 Lib PCR Pool XP, LCA Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, GnT Pico Lib Pool XP, LHR Lib Pool XP, LB Custom Pool Norm, LCMB Custom Pool Norm, scRNA Lib Pool XP, LRC Blood Aliquot, and LTN Custom Pool Norm
+  LBC 5p Pool Norm, LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LCMB Custom Pool Norm, LRC Blood Aliquot, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LBC BCR Pool Norm, GnT Pico Lib Pool XP, LDS Custom Pool Norm, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool Norm, LBC TCR Pool Norm, scRNA Lib Pool XP, and LHR Lib Pool XP
 
 {LabwareCreators::TubeFromTube View class documentation}
 
@@ -361,7 +361,7 @@ Labware creators are responsible for creating new labware from a parent labware.
 {include:LabwareCreators::Uncreatable}
 
   Used directly in 8 purposes:
-  LILYS-96 Stock, LCA Blood Vac, CLCM Stock, LDW-96 Stock, LTHR-384 RT, LTHR RT, LTHR Cherrypick, and LRC Blood Vac
+  CLCM Stock, LRC Blood Vac, LTHR-384 RT, LILYS-96 Stock, LTHR Cherrypick, LCA Blood Vac, LTHR RT, and LDW-96 Stock
 
 {LabwareCreators::Uncreatable View class documentation}
 
