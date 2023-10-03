@@ -5,6 +5,8 @@ require 'labware_creators/base'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
+  include FeatureHelpers
+
   it_behaves_like 'it only allows creation from plates'
 
   subject { described_class.new(api, form_attributes) }
@@ -49,19 +51,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   let(:parent_aliquot_sample2_aliquot2) { create(:v2_aliquot, sample: sample2, outer_request: request_e) }
 
   # parent well ancestor stock tubes
-  let(:ancestor_1_aliquot) { create(:v2_aliquot, sample: sample1) }
-  let(:ancestor_1_tube) do
+  let(:ancestor_tube_1_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:ancestor_tube_1_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: ancestor_tube_purpose_name,
-      aliquots: [ancestor_1_aliquot],
+      aliquots: [ancestor_tube_1_aliquot],
       barcode_number: 1
     )
   end
 
   let(:ancestor_2_aliquot) { create(:v2_aliquot, sample: sample2) }
-  let(:ancestor_2_tube) do
+  let(:ancestor_tube_2_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
@@ -72,7 +74,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   # ancestor tubes list
-  let(:ancestor_tubes) { [ancestor_1_tube, ancestor_2_tube] }
+  let(:ancestor_tubes) { [ancestor_tube_1_v2, ancestor_tube_2_v2] }
 
   # parent wells
   let(:parent_well_a1) do
@@ -112,65 +114,76 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   # child tubes for lookup after creation
-  let(:child_tube_sequencing_1_aliquot) { create(:v2_aliquot, sample: sample1) }
-  let(:child_tube_sequencing_1) do
+  let(:child_tube_1_uuid) { SecureRandom.uuid }
+  let(:child_tube_1_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:child_tube_1_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: child_sequencing_tube_purpose_name,
-      aliquots: [child_tube_sequencing_1_aliquot],
+      aliquots: [child_tube_1_aliquot],
       barcode_prefix: 'FX',
-      barcode_number: 1
+      barcode_number: 1,
+      uuid: child_tube_1_uuid
     )
   end
 
-  let(:child_tube_sequencing_2_aliquot) { create(:v2_aliquot, sample: sample2) }
-  let(:child_tube_sequencing_2) do
+  let(:child_tube_2_uuid) { SecureRandom.uuid }
+  let(:child_tube_2_aliquot) { create(:v2_aliquot, sample: sample2) }
+  let(:child_tube_2_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: child_sequencing_tube_purpose_name,
-      aliquots: [child_tube_sequencing_2_aliquot],
+      aliquots: [child_tube_2_aliquot],
       barcode_prefix: 'FX',
-      barcode_number: 2
+      barcode_number: 2,
+      uuid: child_tube_2_uuid
     )
   end
 
-  let(:child_tube_contingency_1_aliquot) { create(:v2_aliquot, sample: sample1) }
-  let(:child_tube_contingency_1) do
+  let(:child_tube_3_uuid) { SecureRandom.uuid }
+  let(:child_tube_3_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:child_tube_3_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: child_contingency_tube_purpose_name,
-      aliquots: [child_tube_contingency_1_aliquot],
+      aliquots: [child_tube_3_aliquot],
       barcode_prefix: 'FX',
-      barcode_number: 11
+      barcode_number: 11,
+      uuid: child_tube_3_uuid
     )
   end
 
-  let(:child_tube_contingency_2_aliquot) { create(:v2_aliquot, sample: sample1) }
-  let(:child_tube_contingency_2) do
+  let(:child_tube_4_uuid) { SecureRandom.uuid }
+  let(:child_tube_4_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:child_tube_4_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: child_contingency_tube_purpose_name,
-      aliquots: [child_tube_contingency_2_aliquot],
+      aliquots: [child_tube_4_aliquot],
       barcode_prefix: 'FX',
-      barcode_number: 12
+      barcode_number: 12,
+      uuid: child_tube_4_uuid
     )
   end
 
-  let(:child_tube_contingency_3_aliquot) { create(:v2_aliquot, sample: sample2) }
-  let(:child_tube_contingency_3) do
+  let(:child_tube_5_uuid) { SecureRandom.uuid }
+  let(:child_tube_5_aliquot) { create(:v2_aliquot, sample: sample2) }
+  let(:child_tube_5_v2) do
     create(
       :v2_stock_tube,
       state: 'passed',
       purpose_name: child_contingency_tube_purpose_name,
-      aliquots: [child_tube_contingency_3_aliquot],
+      aliquots: [child_tube_5_aliquot],
       barcode_prefix: 'FX',
-      barcode_number: 13
+      barcode_number: 13,
+      uuid: child_tube_5_uuid
     )
   end
+
   before do
     # need both child tubes to have a purpose config here
     create(
@@ -188,15 +201,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     create(:purpose_config, name: ancestor_tube_purpose_name, uuid: ancestor_tube_purpose_uuid)
 
     # ancestor tube lookups
-    stub_v2_tube(ancestor_1_tube, stub_search: false)
-    stub_v2_tube(ancestor_2_tube, stub_search: false)
+    stub_v2_tube(ancestor_tube_1_v2, stub_search: false)
+    stub_v2_tube(ancestor_tube_2_v2, stub_search: false)
 
     # child tube lookups
-    stub_v2_tube(child_tube_sequencing_1, stub_search: false)
-    stub_v2_tube(child_tube_sequencing_2, stub_search: false)
-    stub_v2_tube(child_tube_contingency_1, stub_search: false)
-    stub_v2_tube(child_tube_contingency_2, stub_search: false)
-    stub_v2_tube(child_tube_contingency_3, stub_search: false)
+    stub_v2_tube(child_tube_1_v2, stub_search: false)
+    stub_v2_tube(child_tube_2_v2, stub_search: false)
+    stub_v2_tube(child_tube_3_v2, stub_search: false)
+    stub_v2_tube(child_tube_4_v2, stub_search: false)
+    stub_v2_tube(child_tube_5_v2, stub_search: false)
   end
 
   context 'on new' do
@@ -274,7 +287,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:tube_rack_file) { double('tube_rack_file') } # don't need an actual file for this test
     let(:tube_posn) { 'A1' }
     let(:foreign_barcode) { '123456' }
-    let(:tube_details) { { 'barcode' => foreign_barcode } }
+    let(:tube_rack_barcode) { 'TR00000001' }
+    let(:tube_details) { { 'tube_barcode' => foreign_barcode, 'tube_rack_barcode' => tube_rack_barcode } }
     let(:msg_prefix) { 'Sequencing' }
     let(:existing_tube) { create(:v2_tube, state: 'passed', barcode_number: 1, foreign_barcode: foreign_barcode) }
 
@@ -320,7 +334,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     # stub the contingency file upload
-    let(:stub_contingency_file_upload) do
+    let!(:stub_contingency_file_upload) do
       stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
         .with(
           body: contingency_file_content,
@@ -351,8 +365,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
               child_contingency_tube_purpose_uuid,
               child_contingency_tube_purpose_uuid
             ],
-            # TODO: how are the tubes named if multiple racks?
-            # TODO: we could prefix with rack barcode
             tube_attributes: [
               # sample 1 from well A2 to contingency tube 1 in A1
               { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
@@ -370,11 +382,18 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     # stub what contingency tubes were just made
-    let(:stub_contingency_tube_creation_children_request) do
+    let!(:stub_contingency_tube_creation_children_request) do
       stub_api_get(
         stub_contingency_tube_creation_request_uuid,
         'children',
-        body: json(:tube_collection, size: 3, names: %w[SPR:NT1O:A1 SPR:NT1O:B1 SPR:NT2P:C1])
+        body:
+          json(
+            :tube_collection_with_barcodes_specified,
+            size: 3,
+            names: %w[SPR:NT1O:A1 SPR:NT1O:B1 SPR:NT2P:C1],
+            barcode_prefix: 'FX',
+            barcode_numbers: [11, 12, 13]
+          )
       )
     end
 
@@ -385,12 +404,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         custom_includes: 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
       )
 
-      # stub_sequencing_file_upload
-      stub_contingency_file_upload
-
-      # stub_sequencing_tube_creation_children_request
-      # stub_sequencing_tube_creation_request
-      stub_contingency_tube_creation_children_request
+      # stub_contingency_file_upload
+      # stub_contingency_tube_creation_children_request
       stub_contingency_tube_creation_request
       stub_transfer_creation_request
       stub_api_get(parent_uuid, body: parent_v1)
@@ -456,11 +471,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           payload: {
             specific_tube_creation: {
               child_purposes: [child_sequencing_tube_purpose_uuid, child_sequencing_tube_purpose_uuid],
-              # TODO: how are the tubes named if multiple racks?
-              # TODO: we could prefix with rack barcode
               tube_attributes: [
-                { name: 'SEQ:NT1O:A1', foreign_barcode: 'FX00000001' }, # sample 1 in well A1 to seq tube 1 in A1
-                { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' } # sample 2 in well B1 to seq tube 2 in B1
+                # sample 1 in well A1 to seq tube 1 in A1
+                { name: 'SEQ:NT1O:A1', foreign_barcode: 'FX00000001' },
+                # sample 2 in well B1 to seq tube 2 in B1
+                { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
               ],
               user: user_uuid,
               parent: parent_uuid
@@ -475,7 +490,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         stub_api_get(
           stub_sequencing_tube_creation_request_uuid,
           'children',
-          body: json(:tube_collection, size: 2, names: %w[SEQ:NT1O:A1 SEQ:NT2P:B1])
+          # TODO: fix that uuids are duplicated in factory by passing uuids or an index to tube_collection here
+          body:
+            json(
+              :tube_collection_with_barcodes_specified,
+              size: 2,
+              names: %w[SEQ:NT1O:A1 SEQ:NT2P:B1],
+              barcode_prefix: 'FX',
+              barcode_numbers: [1, 2]
+            )
         )
       end
 
@@ -499,10 +522,85 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      # need api v1 versions of child tubes
+      let(:child_tube_1_v1) { json :tube, uuid: child_tube_1_uuid, barcode_prefix: 'FX', barcode_number: 1 }
+      let(:child_tube_2_v1) { json :tube, uuid: child_tube_2_uuid, barcode_prefix: 'FX', barcode_number: 2 }
+      let(:child_tube_3_v1) { json :tube, uuid: child_tube_3_uuid, barcode_prefix: 'FX', barcode_number: 11 }
+      let(:child_tube_4_v1) { json :tube, uuid: child_tube_4_uuid, barcode_prefix: 'FX', barcode_number: 12 }
+      let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 13 }
+
+      # need to stub the creation of the tube metadata
+      let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'A1' } }
+      let!(:stub_create_metadata_for_tube_1) do
+        stub_create_labware_metadata(
+          child_tube_1_v2.barcode.machine,
+          child_tube_1_v1,
+          child_tube_1_uuid,
+          user_uuid,
+          metadata_for_tube_1
+        )
+      end
+
+      let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'B1' } }
+      let!(:stub_create_metadata_for_tube_2) do
+        stub_create_labware_metadata(
+          child_tube_2_v2.barcode.machine,
+          child_tube_2_v1,
+          child_tube_2_uuid,
+          user_uuid,
+          metadata_for_tube_2
+        )
+      end
+
+      let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
+      let!(:stub_create_metadata_for_tube_3) do
+        stub_create_labware_metadata(
+          child_tube_3_v2.barcode.machine,
+          child_tube_3_v1,
+          child_tube_3_uuid,
+          user_uuid,
+          metadata_for_tube_3
+        )
+      end
+
+      let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
+      let!(:stub_create_metadata_for_tube_4) do
+        stub_create_labware_metadata(
+          child_tube_4_v2.barcode.machine,
+          child_tube_4_v1,
+          child_tube_4_uuid,
+          user_uuid,
+          metadata_for_tube_4
+        )
+      end
+
+      let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
+      let!(:stub_create_metadata_for_tube_5) do
+        stub_create_labware_metadata(
+          child_tube_5_v2.barcode.machine,
+          child_tube_5_v1,
+          child_tube_5_uuid,
+          user_uuid,
+          metadata_for_tube_5
+        )
+      end
+
       before do
         stub_sequencing_file_upload
         stub_sequencing_tube_creation_children_request
         stub_sequencing_tube_creation_request
+
+        stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
+        stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
+        stub_get_labware_metadata(child_tube_3_v2.barcode.machine, child_tube_3_v1)
+        stub_get_labware_metadata(child_tube_4_v2.barcode.machine, child_tube_4_v1)
+        stub_get_labware_metadata(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+
+        stub_asset_search(child_tube_1_v2.barcode.machine, child_tube_1_v1)
+        stub_asset_search(child_tube_2_v2.barcode.machine, child_tube_2_v1)
+        stub_asset_search(child_tube_3_v2.barcode.machine, child_tube_3_v1)
+        stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
+        stub_asset_search(child_tube_5_v2.barcode.machine, child_tube_5_v1)
       end
 
       it 'creates the child tubes' do
@@ -513,6 +611,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(stub_contingency_file_upload).to have_been_made.once
         expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
+        expect(stub_create_metadata_for_tube_1).to have_been_requested
+        expect(stub_create_metadata_for_tube_2).to have_been_requested
+        expect(stub_create_metadata_for_tube_3).to have_been_requested
+        expect(stub_create_metadata_for_tube_4).to have_been_requested
+        expect(stub_create_metadata_for_tube_5).to have_been_requested
       end
     end
 
@@ -532,6 +635,68 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
+      # child tubes for lookup after creation
+      let(:child_tube_1_v2) do
+        create(
+          :v2_stock_tube,
+          state: 'passed',
+          purpose_name: child_contingency_tube_purpose_name,
+          aliquots: [child_tube_1_aliquot],
+          barcode_prefix: 'FX',
+          barcode_number: 11,
+          uuid: child_tube_1_uuid
+        )
+      end
+
+      let(:child_tube_2_v2) do
+        create(
+          :v2_stock_tube,
+          state: 'passed',
+          purpose_name: child_contingency_tube_purpose_name,
+          aliquots: [child_tube_2_aliquot],
+          barcode_prefix: 'FX',
+          barcode_number: 12,
+          uuid: child_tube_2_uuid
+        )
+      end
+
+      let(:child_tube_3_v2) do
+        create(
+          :v2_stock_tube,
+          state: 'passed',
+          purpose_name: child_contingency_tube_purpose_name,
+          aliquots: [child_tube_3_aliquot],
+          barcode_prefix: 'FX',
+          barcode_number: 13,
+          uuid: child_tube_3_uuid
+        )
+      end
+
+      let(:child_tube_4_v2) do
+        create(
+          :v2_stock_tube,
+          state: 'passed',
+          purpose_name: child_contingency_tube_purpose_name,
+          aliquots: [child_tube_4_aliquot],
+          barcode_prefix: 'FX',
+          barcode_number: 14,
+          uuid: child_tube_4_uuid
+        )
+      end
+
+      let(:child_tube_5_v2) do
+        create(
+          :v2_stock_tube,
+          state: 'passed',
+          purpose_name: child_contingency_tube_purpose_name,
+          aliquots: [child_tube_5_aliquot],
+          barcode_prefix: 'FX',
+          barcode_number: 15,
+          uuid: child_tube_5_uuid
+        )
+      end
+
+      # stub the contingency tube creation
       let(:stub_contingency_tube_creation_request) do
         stub_api_post(
           'specific_tube_creations',
@@ -544,8 +709,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
                 child_contingency_tube_purpose_uuid,
                 child_contingency_tube_purpose_uuid
               ],
-              # TODO: how are the tubes named if multiple racks?
-              # TODO: we could prefix with rack barcode
               tube_attributes: [
                 # sample 1 from well A1 to contingency tube 1 in A1
                 { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
@@ -567,11 +730,18 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       # stub what contingency tubes were just made
-      let(:stub_contingency_tube_creation_children_request) do
+      let!(:stub_contingency_tube_creation_children_request) do
         stub_api_get(
           stub_contingency_tube_creation_request_uuid,
           'children',
-          body: json(:tube_collection, size: 5, names: %w[SPR:NT1O:A1 SPR:NT1O:B1 SPR:NT1O:C1 SPR:NT2P:E1 SPR:NT2P:F1])
+          body:
+            json(
+              :tube_collection_with_barcodes_specified,
+              size: 5,
+              names: %w[SPR:NT1O:A1 SPR:NT1O:B1 SPR:NT1O:C1 SPR:NT2P:E1 SPR:NT2P:F1],
+              barcode_prefix: 'FX',
+              barcode_numbers: [11, 12, 13, 14, 15]
+            )
         )
       end
 
@@ -595,12 +765,94 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      # need api v1 versions of child tubes
+      let(:child_tube_1_v1) { json :tube, uuid: child_tube_1_uuid, barcode_prefix: 'FX', barcode_number: 11 }
+      let(:child_tube_2_v1) { json :tube, uuid: child_tube_2_uuid, barcode_prefix: 'FX', barcode_number: 12 }
+      let(:child_tube_3_v1) { json :tube, uuid: child_tube_3_uuid, barcode_prefix: 'FX', barcode_number: 13 }
+      let(:child_tube_4_v1) { json :tube, uuid: child_tube_4_uuid, barcode_prefix: 'FX', barcode_number: 14 }
+      let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 15 }
+
+      # need to stub the creation of the tube metadata
+      let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
+      let!(:stub_create_metadata_for_tube_1) do
+        stub_create_labware_metadata(
+          child_tube_1_v2.barcode.machine,
+          child_tube_1_v1,
+          child_tube_1_uuid,
+          user_uuid,
+          metadata_for_tube_1
+        )
+      end
+
+      let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
+      let!(:stub_create_metadata_for_tube_2) do
+        stub_create_labware_metadata(
+          child_tube_2_v2.barcode.machine,
+          child_tube_2_v1,
+          child_tube_2_uuid,
+          user_uuid,
+          metadata_for_tube_2
+        )
+      end
+
+      let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
+      let!(:stub_create_metadata_for_tube_3) do
+        stub_create_labware_metadata(
+          child_tube_3_v2.barcode.machine,
+          child_tube_3_v1,
+          child_tube_3_uuid,
+          user_uuid,
+          metadata_for_tube_3
+        )
+      end
+
+      let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'E1' } }
+      let!(:stub_create_metadata_for_tube_4) do
+        stub_create_labware_metadata(
+          child_tube_4_v2.barcode.machine,
+          child_tube_4_v1,
+          child_tube_4_uuid,
+          user_uuid,
+          metadata_for_tube_4
+        )
+      end
+
+      let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'F1' } }
+      let!(:stub_create_metadata_for_tube_5) do
+        stub_create_labware_metadata(
+          child_tube_5_v2.barcode.machine,
+          child_tube_5_v1,
+          child_tube_5_uuid,
+          user_uuid,
+          metadata_for_tube_5
+        )
+      end
+
+      before do
+        stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
+        stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
+        stub_get_labware_metadata(child_tube_3_v2.barcode.machine, child_tube_3_v1)
+        stub_get_labware_metadata(child_tube_4_v2.barcode.machine, child_tube_4_v1)
+        stub_get_labware_metadata(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+
+        stub_asset_search(child_tube_1_v2.barcode.machine, child_tube_1_v1)
+        stub_asset_search(child_tube_2_v2.barcode.machine, child_tube_2_v1)
+        stub_asset_search(child_tube_3_v2.barcode.machine, child_tube_3_v1)
+        stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
+        stub_asset_search(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+      end
+
       it 'creates the child tubes' do
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_contingency_file_upload).to have_been_made.once
         expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
+        expect(stub_create_metadata_for_tube_1).to have_been_requested
+        expect(stub_create_metadata_for_tube_2).to have_been_requested
+        expect(stub_create_metadata_for_tube_3).to have_been_requested
+        expect(stub_create_metadata_for_tube_4).to have_been_requested
+        expect(stub_create_metadata_for_tube_5).to have_been_requested
       end
     end
   end

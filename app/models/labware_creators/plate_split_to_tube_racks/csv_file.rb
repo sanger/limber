@@ -60,16 +60,6 @@ module LabwareCreators
       @position_details ||= generate_position_details_hash
     end
 
-    #
-    # Refactors the position details hash to be keyed by tube barcode.
-    #
-    # @return [Hash] eg. { 'FX00000001' => { 'tube_position' => 'A1',
-    # 'tube_rack_barcode' => 'TR00000001' }, 'FX00000002' => etc. }
-    #
-    def tube_barcode_details
-      @tube_barcode_details ||= generate_tube_barcode_details_hash
-    end
-
     def correctly_parsed?
       return true if @parsed
 
@@ -128,20 +118,6 @@ module LabwareCreators
         position_details_hash[position] = {
           'tube_rack_barcode' => row.tube_rack_barcode.strip.upcase,
           'tube_barcode' => row.tube_barcode.strip.upcase
-        }
-      end
-    end
-
-    # Generates a hash of tube barcodes based on the tube rack scan data in the CSV file.
-    #
-    # @return [Hash] A hash of tube barcodes and their details, where the keys are tube
-    # barcodes and the values are hashes containing the tube position and tube rack barcode
-    # for each tube.
-    def generate_tube_barcode_details_hash
-      position_details.each_with_object({}) do |(position, details), tube_barcode_hash|
-        tube_barcode_hash[details['tube_barcode']] = {
-          'tube_position' => position,
-          'tube_rack_barcode' => details['tube_rack_barcode']
         }
       end
     end

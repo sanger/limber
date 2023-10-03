@@ -90,7 +90,9 @@ LRC Bank Seq:
     name: LabwareCreators::PlateSplitToTubeRacks
     args: &fluidx_tube_creation_config
       child_seq_tube_purpose_name: LRC Bank Seq
+      child_seq_tube_name_prefix: SEQ
       child_spare_tube_purpose_name: LRC Bank Spare
+      child_spare_tube_name_prefix: SPR
   :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol
