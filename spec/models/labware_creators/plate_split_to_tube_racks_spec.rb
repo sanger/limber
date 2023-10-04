@@ -7,6 +7,8 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   include FeatureHelpers
 
+  has_a_working_api
+
   it_behaves_like 'it only allows creation from plates'
 
   subject { described_class.new(api, form_attributes) }
@@ -213,8 +215,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   context 'on new' do
-    has_a_working_api
-
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::PlateSplitToTubeRacks
     end
@@ -234,9 +234,28 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
       allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
       allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
+      allow(subject).to receive(:num_parent_wells).and_return(num_parent_wells)
+      allow(subject).to receive(:num_parent_unique_samples).and_return(num_parent_unique_samples)
+    end
+
+    context 'when a contingency file is not present' do
+      it 'returns nil' do
+        expect(subject.sufficient_tubes_in_racks?).to be nil
+      end
     end
 
     context 'when require_contingency_tubes_only? is true' do
+      let(:contingency_file) { 'somefile' }
+
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          contingency_file: contingency_file
+        }
+      end
+
       before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(true) }
 
       context 'when there are enough contingency tubes' do
@@ -257,6 +276,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     context 'when require_contingency_tubes_only? is false' do
+      let(:sequencing_file) { 'somefile' }
+      let(:contingency_file) { 'somefile' }
+
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
+        }
+      end
+
       before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(false) }
 
       context 'when there are enough tubes' do
@@ -301,8 +333,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           .and_return(existing_tube)
       end
 
-      has_a_working_api
-
       it 'adds an error to the errors collection' do
         subject.check_tube_rack_scan_file(tube_rack_file, msg_prefix)
         expect(subject.errors[:tube_rack_file]).to include(
@@ -314,8 +344,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when the tube barcode does not exist in the LIMS database' do
       before { allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: foreign_barcode).and_return(nil) }
 
-      has_a_working_api
-
       it 'does not add an error to the errors collection' do
         subject.check_tube_rack_scan_file(tube_rack_file, msg_prefix)
         expect(subject.errors[:tube_rack_file]).to be_empty
@@ -324,8 +352,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   context '#save' do
-    has_a_working_api
-
     # body for stubbing the contingency file upload
     let(:contingency_file_content) do
       content = contingency_file.read
