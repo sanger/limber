@@ -19,7 +19,9 @@ module LabwareCreators
   # 'contingency' tubes at this step.
   #
   # Inputs:
-  # 1) The parent plate - contains a number of wells containing material prepared from the same sample.
+  # 1) The parent plate - This plate contains multiple groups of wells containing the same samples e.g.
+  #    there may be 3 wells with sample 1, 3 with sample 2, 3 with sample 3 etc. The number of copies of
+  #    each sample is not known in advance.
   #    The first of these parent wells will be transferred into a tube in the 'sequencing' rack if it is
   #    present, and any remaining parent wells for the same sample will be transferred into tubes in the
   #    'contingency' rack.
@@ -52,14 +54,12 @@ module LabwareCreators
 
     validates_nested :well_filter
 
-    # TODO: can add validations for specific metadata fields here if needed
-
     # Don't create the tubes until at least the contingency file has been uploaded
     validates :contingency_file, presence: true
 
     # N.B. contingency file is required, sequencing file is optional
-    validates_nested :sequencing_csv_file, if: :contingency_file
-    validates_nested :contingency_csv_file, if: :sequencing_file
+    validates_nested :sequencing_csv_file, if: :sequencing_file
+    validates_nested :contingency_csv_file, if: :contingency_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
     validate :sufficient_tubes_in_racks?
@@ -409,74 +409,82 @@ module LabwareCreators
     #
     # @return [Hash] A hash of attributes to use for the sequencing tubes.
     def sequencing_tube_attributes
-      @sequencing_tube_attributes ||= generate_sequencing_tube_attributes
+      @sequencing_tube_attributes ||=
+        generate_tube_attributes('sequencing', sequencing_csv_file, parent_wells_for_sequencing)
     end
-
-    # Generates a hash of attributes to use for the sequencing tubes based on the
-    # current purpose configuration and the available tube positions.
-    # Passes the name for each tube.
-    # Passes the foreign barcode extracted from the tube rack scan upload for each tube,
-    # which on the Sequencescape side sets that barcode as the primary.
-    #
-    # @return [Hash] A hash of attributes to use for the sequencing tubes.
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    def generate_sequencing_tube_attributes
-      # fetch the available tube positions (i.e. locations of scanned tubes for which we
-      # have the barcodes) e.g. ["A1", "B1", "D1"]
-      available_tube_posns = sequencing_csv_file.position_details.keys
-
-      # used for building request hash later
-      @sequencing_wells_to_tube_names = {}
-
-      name_prefix = sequencing_tube_name_prefix
-      raise "Missing purpose configuration argument 'child_seq_tube_name_prefix'" unless name_prefix
-
-      parent_wells_for_sequencing
-        .zip(available_tube_posns)
-        .map do |well, tube_posn|
-          sample_uuid = well.aliquots.first.sample.uuid
-
-          name_for_details = name_for_details_hash(name_prefix, ancestor_tube_barcode(sample_uuid), tube_posn)
-
-          tube_name = name_for(name_for_details)
-          @sequencing_wells_to_tube_names[well] = tube_name
-
-          { name: tube_name, foreign_barcode: sequencing_csv_file.position_details[tube_posn]['tube_barcode'] }
-        end
-    end
-
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     # Returns a hash of attributes to use for the contingency tubes.
     #
     # @return [Hash] A hash of attributes to use for the contingency tubes.
     def contingency_tube_attributes
-      @contingency_tube_attributes ||= generate_contingency_tube_attributes
+      @contingency_tube_attributes ||=
+        generate_tube_attributes('contingency', contingency_csv_file, parent_wells_for_contingency)
     end
 
-    # Generates a hash of attributes to use for the contingency tubes based on the
+    # Returns the name prefix for child tubes based on the tube type.
+    # This method looks up the name prefix in the configuration file based on the tube type.
+    # If the name prefix is not found, this method raises an error.
+    # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
+    #
+    # @return [String] The name prefix for the child tubes.
+    # rubocop:disable Metrics/MethodLength
+    def tube_name_prefix(tube_type)
+      config_arg = ''
+      name_prefix =
+        if tube_type == 'sequencing'
+          config_arg = 'child_seq_tube_name_prefix'
+          sequencing_tube_name_prefix
+        else
+          config_arg = 'child_spare_tube_name_prefix'
+          contingency_tube_name_prefix
+        end
+
+      raise "Missing purpose configuration argument '#{config_arg}'" unless name_prefix
+
+      name_prefix
+    end
+
+    # rubocop:enable Metrics/MethodLength
+
+    # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
+    # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
+    # @param well [Well] The well to add the mapping for.
+    # @param tube_name [String] The name of the tube to add the mapping for.
+    #
+    # This method adds the mapping to either the `@sequencing_wells_to_tube_names` or to the
+    # `@contingency_wells_to_tube_names` hash, depending on the tube type.
+    # If the hash does not exist, this method creates it.
+    # @return [void]
+    def add_to_well_to_tube_hash(tube_type, well, tube_name)
+      if tube_type == 'sequencing'
+        @sequencing_wells_to_tube_names = {} if @sequencing_wells_to_tube_names.nil?
+        @sequencing_wells_to_tube_names[well] = tube_name
+      else
+        @contingency_wells_to_tube_names = {} if @contingency_wells_to_tube_names.nil?
+        @contingency_wells_to_tube_names[well] = tube_name
+      end
+    end
+
+    # Generates a hash of attributes to use for the tubes based on the
     # current purpose configuration and the available tube positions.
     # Passes the name for each tube.
     # Passes the foreign barcode extracted from the tube rack scan upload for each tube,
     # which on the Sequencescape side sets that barcode as the primary.
+    # @param tube_type [String] The type of tube to generate attributes for.
+    # @param csv_file [CsvFile] The CSV file containing the tube rack scan data.
+    # @param wells [Array<Well>] The parent wells to generate attributes for.
     #
     # @return [Hash] A hash of attributes to use for the contingency tubes.
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
-    def generate_contingency_tube_attributes
+    def generate_tube_attributes(tube_type, csv_file, wells)
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
-      available_tube_posns = contingency_csv_file.position_details.keys
+      available_tube_posns = csv_file.position_details.keys
 
-      # used for building request hash later
-      @contingency_wells_to_tube_names = {}
+      name_prefix = tube_name_prefix(tube_type)
 
-      name_prefix = contingency_tube_name_prefix
-      raise "Missing purpose configuration argument 'child_spare_tube_name_prefix'" unless name_prefix
-
-      parent_wells_for_contingency
+      wells
         .zip(available_tube_posns)
         .map do |well, tube_posn|
           sample_uuid = well.aliquots.first.sample.uuid
@@ -484,9 +492,9 @@ module LabwareCreators
           name_for_details = name_for_details_hash(name_prefix, ancestor_tube_barcode(sample_uuid), tube_posn)
 
           tube_name = name_for(name_for_details)
-          @contingency_wells_to_tube_names[well] = tube_name
+          add_to_well_to_tube_hash(tube_type, well, tube_name)
 
-          { name: tube_name, foreign_barcode: contingency_csv_file.position_details[tube_posn]['tube_barcode'] }
+          { name: tube_name, foreign_barcode: csv_file.position_details[tube_posn]['tube_barcode'] }
         end
     end
 
