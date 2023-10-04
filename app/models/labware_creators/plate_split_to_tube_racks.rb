@@ -143,6 +143,20 @@ module LabwareCreators
       'children_tab'
     end
 
+    # Returns the number of unique sample UUIDs for the parent wells after applying the current well filter.
+    #
+    # @return [Integer] The number of unique sample UUIDs.
+    def num_parent_unique_samples
+      @num_parent_unique_samples ||= parent_uniq_sample_uuids.length
+    end
+
+    # Returns the number of parent wells after applying the current well filter.
+    #
+    # @return [Integer] The number of filtered parent wells.
+    def num_parent_wells
+      @num_parent_wells ||= well_filter.filtered.length
+    end
+
     # Checks if there are sufficient tubes in the child tube racks for all the parent wells.
     # This depends on the number of unique samples in the parent plate, and the number of parent wells,
     # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
@@ -195,13 +209,6 @@ module LabwareCreators
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    # Returns the number of parent wells after applying the current well filter.
-    #
-    # @return [Integer] The number of filtered parent wells.
-    def num_parent_wells
-      @num_parent_wells ||= well_filter.filtered.length
-    end
-
     # Returns the ancestor stock tubes for the parent wells.
     #
     # @return [Array<Sequencescape::Api::V2::Tube>] The ancestor stock tubes.
@@ -230,13 +237,6 @@ module LabwareCreators
     # @return [Array<String>] An array of unique sample UUIDs.
     def parent_uniq_sample_uuids
       well_filter.filtered.map { |well, _ignore| well.aliquots.first.sample.uuid }.uniq
-    end
-
-    # Returns the number of unique sample UUIDs for the parent wells after applying the current well filter.
-    #
-    # @return [Integer] The number of unique sample UUIDs.
-    def num_parent_unique_samples
-      @num_parent_unique_samples ||= parent_uniq_sample_uuids.length
     end
 
     # Returns the number of sequencing tubes in the sequencing CSV file.
