@@ -2,12 +2,11 @@
 
 require_dependency 'labware_creators/base'
 
-# This labware creator pools PBMC isolations in pairs (or configured number of
-# source wells per destination) before cell counting to reduce the number runs
-# on Celleca (cell counting). The robot transfer is done from LRC Blood Bank to
-# LRC PBMC Bank plate.
-
 module LabwareCreators
+  # This labware creator pools PBMC isolations in pairs (or configured number of
+  # source wells per destination) before cell counting to reduce the number runs
+  # on Celleca (cell counting). The robot transfer is done from LRC Blood Bank to
+  # LRC PBMC Bank plate.
   class PooledWellsBySample < Base
     include SupportParent::PlateOnly
 
@@ -16,7 +15,7 @@ module LabwareCreators
 
     # Number of source wells with the same sample to be pooled.
     def number_of_source_wells
-      purpose_config.dig(:number_of_source_wells) || DEFAULT_NUMBER_OF_SOURCE_WELLS
+      purpose_config[:number_of_source_wells] || DEFAULT_NUMBER_OF_SOURCE_WELLS
     end
 
     def well_filter
@@ -46,7 +45,7 @@ module LabwareCreators
     def build_pools
       parent_wells_in_colums
         .group_by { |well| well.aliquots.first.sample.uuid }
-        .flat_map { |uuid, wells| wells.each_slice(number_of_source_wells).to_a }
+        .flat_map { |_uuid, wells| wells.each_slice(number_of_source_wells).to_a }
     end
 
     # List of pools built from passed wells from parent plate
