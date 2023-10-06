@@ -173,8 +173,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledTubesBySample}
 
-  Used directly in 3 purposes:
-  LRC Bank Seq, LRC Bank Spare, and LCA Bank Stock
+  Used directly in 1 purposes:
+  LCA Bank Stock
 
 {LabwareCreators::PooledTubesBySample View class documentation}
 
@@ -304,6 +304,15 @@ Labware creators are responsible for creating new labware from a parent labware.
   LCA Blood Array
 
 {LabwareCreators::MultiStampTubes View class documentation}
+
+
+## LabwareCreators::PlateSplitToTubeRacks
+
+{include:LabwareCreators::PlateSplitToTubeRacks}
+
+  **This labware creator is unused**
+
+{LabwareCreators::PlateSplitToTubeRacks View class documentation}
 
 
 ## LabwareCreators::PlateWithTemplate
