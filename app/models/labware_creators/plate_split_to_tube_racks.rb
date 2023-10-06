@@ -110,7 +110,7 @@ module LabwareCreators
       true
     end
 
-    # Creates a single child sequencing tubes for each parent well containing a unique sample.
+    # Creates a single child sequencing tube for each parent well containing a unique sample.
     #
     # @return [Array<Tube>] The child sequencing tubes.
     def create_child_sequencing_tubes
