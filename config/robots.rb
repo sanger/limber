@@ -2971,10 +2971,10 @@ ROBOT_CONFIG =
       name: 'Bravo LCMB End Prep',
       require_robot: true,
       beds: {
-        bed(7).barcode => {
+        bed(5).barcode => {
           purpose: 'LCMB End Prep',
           states: ['started'],
-          label: 'Bed 7',
+          label: 'Bed 5',
           target_state: 'passed'
         }
       }
@@ -2990,16 +2990,16 @@ ROBOT_CONFIG =
       name: 'Bravo LCMB End Prep => LCMB Lib PCR',
       verify_robot: true,
       beds: {
-        bed(5).barcode => {
+        bed(7).barcode => {
           purpose: 'LCMB End Prep',
           states: ['passed'],
-          label: 'Bed 5'
+          label: 'Bed 7'
         },
         bed(6).barcode => {
           purpose: 'LCMB Lib PCR',
           states: ['pending'],
           label: 'Bed 6',
-          parent: bed(5).barcode,
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
