@@ -230,7 +230,9 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       stub_v2_plate(
         parent_plate,
         stub_search: false,
-        custom_includes: 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
       )
       allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
       allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
@@ -427,11 +429,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       stub_v2_plate(
         parent_plate,
         stub_search: false,
-        custom_includes: 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
       )
-
-      # stub_contingency_file_upload
-      # stub_contingency_tube_creation_children_request
       stub_contingency_tube_creation_request
       stub_transfer_creation_request
       stub_api_get(parent_uuid, body: parent_v1)
