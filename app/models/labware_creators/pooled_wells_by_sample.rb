@@ -3,10 +3,12 @@
 require_dependency 'labware_creators/base'
 
 module LabwareCreators
-  # This labware creator pools PBMC isolations in pairs (or configured number of
-  # source wells per destination) before cell counting to reduce the number runs
-  # on Celleca (cell counting). The robot transfer is done from LRC Blood Bank to
-  # LRC PBMC Bank plate.
+  # This labware creator pools PBMC isolations with the same samples in pairs
+  # (or configured number of source wells) per destination before cell counting
+  # to reduce the number runs on Celleca (cell counting). The robot transfer is
+  # done from LRC Blood Bank to LRC PBMC Bank plate. Only the wells with passed
+  # state will be transferred to the destination plate. The destination wells
+  # are compressed to top left by column on the plate.
   class PooledWellsBySample < Base
     include SupportParent::PlateOnly
 
@@ -53,7 +55,7 @@ module LabwareCreators
       @pools ||= build_pools
     end
 
-    # Object mapping source wells to destination wells for
+    # Object mapping source wells to destination wells for transfers
     def transfer_hash
       result = {}
       pools.each_with_index do |pool, index|
