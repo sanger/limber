@@ -162,4 +162,6 @@ hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
     - wells.aliquots
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
+    - wells.transfer_requests_as_target.source_asset
   ancestor_tube_purpose: LRC Blood Vac
+  ancestor_purpose: LRC Blood Bank
