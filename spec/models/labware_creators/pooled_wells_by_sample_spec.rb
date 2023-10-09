@@ -7,9 +7,11 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
 
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }
+  let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:parent_plate) { create(:v2_plate, uuid: parent_plate_uuid, aliquots_without_requests: 1) }
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: user_uuid } }
+  let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
   subject { described_class.new(api, form_attributes) }
   before do
     allow(subject).to receive(:parent).and_return(parent_plate)
@@ -176,6 +178,59 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
     it 'returns well for well location on plate' do
       well = subject.get_well_for_plate_location(parent_plate, 'A1')
       expect(well.location).to eq('A1')
+    end
+  end
+
+  describe '#request_hash' do
+    let(:source_well) { parent_plate.wells.first }
+
+    before do
+      parent_plate.wells.map { |well| well.state = 'failed' }
+      source_well.state = 'passed'
+    end
+    it 'returns request hash' do
+      request = subject.request_hash(source_well, child_plate)
+
+      # Assume A1 to A1 transfer
+      expect(request['source_asset']).to eq(source_well.uuid)
+      expect(request['target_asset']).to eq(child_plate.wells.first.uuid)
+      expect(request['merge_equivalent_aliquots']).to eq(true)
+    end
+  end
+
+  describe '#transfer_request_attributes' do
+    context 'when there is not passed source well' do
+      before { parent_plate.wells.map { |well| well.state = 'failed' } }
+      it 'returns empty list' do
+        expect(subject.transfer_request_attributes(child_plate)).to eq([])
+      end
+    end
+    context 'when there are passed source wells' do
+      before do
+        parent_plate.wells.map { |well| well.state = 'failed' }
+        parent_plate.wells[0..3].map { |well| well.state = 'passed' }
+        samples = %w[sample_1_uuid sample_1_uuid sample_1_uuid sample_2_uuid]
+        samples.each_with_index do |sample_uuid, index|
+          parent_plate.wells[index].aliquots.first.sample.uuid = sample_uuid
+        end
+      end
+      it 'returns list of transfer request attributes' do
+        requests = subject.transfer_request_attributes(child_plate)
+        expect(requests.size).to eq(4)
+
+        # Source wells: A1, B1, C1, D1
+        requests.each_with_index do |request, index|
+          expect(request['source_asset']).to eq(parent_plate.wells[index].uuid)
+          expect(request['merge_equivalent_aliquots']).to eq(true)
+        end
+
+        # Destination wells: A1, A1, B1, C1
+        child_uuids = child_plate.wells.values_at(0, 0, 1, 2).map(&:uuid)
+        requests.each_with_index do |request, index|
+          target_uuid = child_uuids[index]
+          expect(request['target_asset']).to eq(target_uuid)
+        end
+      end
     end
   end
 end
