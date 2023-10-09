@@ -47,6 +47,10 @@ FactoryBot.define do
         end
       end
 
+      factory :tube_with_metadata do
+        with_belongs_to_associations 'custom_metadatum_collection'
+      end
+
       factory :tube_without_siblings do
         json_root { 'tube' }
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
@@ -129,6 +133,10 @@ FactoryBot.define do
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
+    end
+
+    factory :v2_tube_with_metadata do
+      with_belongs_to_associations 'custom_metadatum_collection'
     end
 
     factory :v2_stock_tube do

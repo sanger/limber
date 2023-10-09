@@ -67,8 +67,8 @@ module LabwareCreators
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
 
-    # TODO: check need all this in the includes e.g. metadata
-    PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+    PARENT_PLATE_INCLUDES =
+      'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def save
       super && upload_tube_rack_files && true
