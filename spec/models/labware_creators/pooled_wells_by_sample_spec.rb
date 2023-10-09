@@ -54,7 +54,7 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
     end
   end
 
-  describe '#parent_wells_in_colums' do
+  describe '#parent_wells_in_columns' do
     context 'inside columns' do
       before do
         # Swap two wells in the column so that they are not in correct order
@@ -65,7 +65,7 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
       end
 
       it 'returns passed source wells in correct order' do
-        wells = subject.parent_wells_in_colums
+        wells = subject.parent_wells_in_columns
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('H1')
       end
@@ -79,7 +79,7 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
         parent_plate.wells[0], parent_plate.wells[8] = parent_plate.wells[8], parent_plate.wells[0]
       end
       it 'returns passed source wells in correct order' do
-        wells = subject.parent_wells_in_colums
+        wells = subject.parent_wells_in_columns
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('A2')
       end

@@ -37,13 +37,13 @@ module LabwareCreators
     end
 
     # List of passed wells from parent plate in column order
-    def parent_wells_in_colums
+    def parent_wells_in_columns
       passed_parent_wells.sort_by(&:coordinate)
     end
 
     # List of pools to be created; index is the destination pool number; each pool is a list of source wells
     def build_pools
-      parent_wells_in_colums
+      parent_wells_in_columns
         .group_by { |well| well.aliquots.first.sample.uuid }
         .flat_map { |_uuid, wells| wells.each_slice(number_of_source_wells).to_a }
     end

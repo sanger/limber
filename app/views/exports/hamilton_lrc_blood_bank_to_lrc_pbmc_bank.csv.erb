@@ -18,6 +18,7 @@
 <%
   rows_array = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    # TODO: @plate.parent
     src_well = @ancestor_plate.wells_in_columns.find { |well| well.location == src_location }
     sample_uuid = src_well.aliquots.first.sample.uuid
     rows_array << [
