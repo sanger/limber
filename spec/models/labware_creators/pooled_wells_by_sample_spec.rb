@@ -16,6 +16,7 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
   before do
     allow(subject).to receive(:parent).and_return(parent_plate)
     stub_v2_plate(parent_plate, stub_search: false)
+    stub_v2_plate(child_plate, stub_search: false)
   end
 
   describe '#number_of_source_wells' do
@@ -199,7 +200,7 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
   end
 
   describe '#transfer_request_attributes' do
-    context 'when there is not passed source well' do
+    context 'when there is no passed source well' do
       before { parent_plate.wells.map { |well| well.state = 'failed' } }
       it 'returns empty list' do
         expect(subject.transfer_request_attributes(child_plate)).to eq([])
@@ -231,6 +232,34 @@ RSpec.describe LabwareCreators::PooledWellsBySample do
           expect(request['target_asset']).to eq(target_uuid)
         end
       end
+    end
+  end
+
+  describe '#transfer_material_from_parent!' do
+    let(:stub_transfer_material_request) do
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: subject.transfer_request_attributes(child_plate)
+          }
+        },
+        body: '{}'
+      )
+    end
+    before do
+      parent_plate.wells.map { |well| well.state = 'failed' }
+      parent_plate.wells[0..2].map { |well| well.state = 'passed' }
+      parent_plate.wells[0].aliquots.first.sample.uuid = 'sample_1_uuid'
+      parent_plate.wells[1].aliquots.first.sample.uuid = 'sample_1_uuid'
+      parent_plate.wells[2].aliquots.first.sample.uuid = 'sample_2_uuid'
+      stub_transfer_material_request # stub the request before test
+    end
+
+    it 'posts transfer requests to SS' do
+      subject.transfer_material_from_parent!(child_plate.uuid)
+      expect(stub_transfer_material_request).to have_been_made
     end
   end
 end
