@@ -156,7 +156,7 @@ hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   ancestor_tube_purpose: LRC Blood Vac
 hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
   csv: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
-  workflow: scRNA Core Cell Extraction Pooling to PBMC Bank
+  workflow: scRNA Core PBMC isolation
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
