@@ -207,6 +207,38 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for too many purpose configs
+    factory :multi_stamp_tubes_purpose_configs do
+      submission_options do
+        {
+          'Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          },
+          'Another Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          }
+        }
+      end
+    end
+
+    # Configuration for a plate split to tube racks purpose
+    factory :plate_split_to_tube_racks_purpose_config do
+      creator_class do
+        {
+          name: 'LabwareCreators::PlateSplitToTubeRacks',
+          args: {
+            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_seq_tube_name_prefix: 'SEQ',
+            child_spare_tube_purpose_name: 'Spare Child Purpose',
+            child_spare_tube_name_prefix: 'SPR'
+          }
+        }
+      end
+      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
