@@ -92,11 +92,13 @@ module LabwareCreators
       well_filter.assign_attributes(filter_parameters)
     end
 
-    # Returns the unfiltered list of wells of the parent labware.
+    # Returns the list of wells of the parent labware, minus any failed wells.
+    # In column order (A1, B1, C1 etc.)
+    # Used in WellFilter.
     #
     # @return [Array<Well>] The wells of the parent labware.
     def labware_wells
-      parent.wells
+      parent.wells_in_columns.filter_map { |well| well unless well.failed? }
     end
 
     # Creates child sequencing and contingency tubes, performs transfers.
@@ -202,7 +204,6 @@ module LabwareCreators
     private
 
     # Returns a new instance of WellFilter with the current object as the creator.
-    # NB. filters failed and cancelled wells by default
     #
     # @return [WellFilter] A new instance of WellFilter.
     def well_filter
@@ -457,10 +458,10 @@ module LabwareCreators
     # @return [void]
     def add_to_well_to_tube_hash(tube_type, well, tube_name)
       if tube_type == 'sequencing'
-        @sequencing_wells_to_tube_names = {} if @sequencing_wells_to_tube_names.nil?
+        @sequencing_wells_to_tube_names ||= {}
         @sequencing_wells_to_tube_names[well] = tube_name
       else
-        @contingency_wells_to_tube_names = {} if @contingency_wells_to_tube_names.nil?
+        @contingency_wells_to_tube_names ||= {}
         @contingency_wells_to_tube_names[well] = tube_name
       end
     end
