@@ -178,12 +178,13 @@ FactoryBot.define do
       transient do
         barcode_prefix { 'NT' }
         barcode_numbers { Array.new(size) { |i| i + 1 } }
+        uuid_index_offset { 0 }
       end
       children do
         Array.new(size) do |i|
           associated(
             tube_factory,
-            uuid: "tube-#{i}",
+            uuid: "tube-#{uuid_index_offset + i}",
             barcode_prefix: barcode_prefix,
             barcode_number: barcode_numbers[i],
             name: names[i]
