@@ -165,5 +165,23 @@ FactoryBot.define do
         Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count) }
       end
     end
+
+    factory :tube_collection_with_barcodes_specified do
+      transient do
+        barcode_prefix { 'NT' }
+        barcode_numbers { Array.new(size) { |i| i + 1 } }
+      end
+      children do
+        Array.new(size) do |i|
+          associated(
+            tube_factory,
+            uuid: "tube-#{i}",
+            barcode_prefix: barcode_prefix,
+            barcode_number: barcode_numbers[i],
+            name: names[i]
+          )
+        end
+      end
+    end
   end
 end

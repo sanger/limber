@@ -1,0 +1,107 @@
+# This configuration file is for the plate and tube purposes required for the
+# high throughput scRNA Core Cell Extraction pipeline
+---
+###
+# scRNA Core Cell Extraction Arraying
+###
+# Donor Vacutainer tubes
+LRC Blood Vac:
+  :asset_type: tube
+  :stock_plate: false
+  :input_plate: false
+  :target: SampleTube
+  :type: Tube::Purpose
+  :presenter_class: Presenters::VacTubePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :default_printer_type: :tube
+# Manually aliquoted intermediate tube
+LRC Blood Aliquot:
+  :asset_type: tube
+  :stock_plate: false
+  :input_plate: false
+  :target: SampleTube
+  :type: Tube::Purpose
+  :presenter_class: Presenters::SimpleTubePresenter
+  :creator_class: LabwareCreators::TubeFromTube
+  :default_printer_type: :tube
+###
+# scRNA Core Cell Extraction Blood Pipeline
+###
+# Input plate for Hamilton PBMC isolation protocol
+# LRC Blood Vac tubes are also arrayed into LRC Blood Bank plates (DPL-073)
+LRC Blood Bank:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+  :creator_class:
+    name: LabwareCreators::MultiStampTubes
+    params:
+      allow_tube_duplicates: yes
+  :submission_options:
+    scRNA core cell extraction:
+      template_name: 'Limber - scRNA Core Cell Extraction'
+      request_options:
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
+      autodetect_studies_project: false
+  :file_links:
+    - name: 'Download Scanned Tube Layout for LRC Blood Bank Plate'
+      id: scrna_core_cell_extraction_sample_arraying_tube_layout
+# LRC Blood Bank plates are stamped into LRC PBMC Bank plates
+# Output plate from Hamilton PBMC isolation protocol / input plate for the cell counting and cell banking protocols
+LRC PBMC Bank:
+  :asset_type: plate
+  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :file_links:
+    - name: 'Download Cellaca Input QC1'
+      id: cellaca_input_file
+      params:
+        page: 0
+    - name: 'Download Cellaca Input QC2'
+      id: cellaca_input_file
+      params:
+        page: 1
+    - name: 'Download Cellaca Input QC3'
+      id: cellaca_input_file
+      params:
+        page: 2
+    - name: 'Download Cellaca Input QC4'
+      id: cellaca_input_file
+      params:
+        page: 3
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
+      decimal_places: 0
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Seq:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class:
+    name: LabwareCreators::PlateSplitToTubeRacks
+    args: &fluidx_tube_creation_config
+      child_seq_tube_purpose_name: LRC Bank Seq
+      child_seq_tube_name_prefix: SEQ
+      child_spare_tube_purpose_name: LRC Bank Spare
+      child_spare_tube_name_prefix: SPR
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :presenter_class: Presenters::SimpleTubePresenter
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Spare:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class:
+    name: LabwareCreators::PlateSplitToTubeRacks
+    args: *fluidx_tube_creation_config
+  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :presenter_class: Presenters::SimpleTubePresenter
