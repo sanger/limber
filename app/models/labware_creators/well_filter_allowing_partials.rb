@@ -41,13 +41,14 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
   def well_transfers
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
+        # TODO: cannot find where @transfer_failed is set, and if nil allows
+        # failed wells to be transferred
         next if well.empty? || (@transfer_failed && well.failed?)
 
         filtered_requests = filter_requests(well.active_requests, well)
 
-        # rubocop:todo Layout/LineLength
-        # don't add wells to the transfers list if they have no filtered requests, i.e. only those submitted for library prep
-        # rubocop:enable Layout/LineLength
+        # don't add wells to the transfers list if they have no filtered requests,
+        # i.e. only those submitted for library prep
         transfers << [well, filtered_requests] unless filtered_requests.nil?
       end
   end

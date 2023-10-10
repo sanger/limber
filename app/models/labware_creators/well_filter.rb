@@ -58,6 +58,8 @@ class LabwareCreators::WellFilter
   def well_transfers
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
+        # TODO: cannot find where @transfer_failed is set, and if nil allows
+        # failed wells to be transferred
         next if well.empty? || (@transfer_failed && well.failed?)
 
         transfers << [well, filter_requests(well.active_requests, well)]
