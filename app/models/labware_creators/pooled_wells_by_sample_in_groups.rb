@@ -24,8 +24,9 @@ module LabwareCreators
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    def filters=(filter_parameters)
-      well_filter.assign_attributes(filter_parameters)
+    # List of wells of the parent labware in column order
+    def labware_wells
+      parent.wells_in_columns
     end
 
     # Parent plate using SS v2 API
