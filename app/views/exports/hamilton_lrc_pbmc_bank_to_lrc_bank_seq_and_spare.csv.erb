@@ -25,6 +25,9 @@
     # skip if well empty (not all wells have samples in them)
     next if source_well.empty?
 
+    # skip if well not in passed state
+    next unless source_well.passed?
+
     # skip if no downstream tubes for this well (not set up children in Limber yet)
     next if source_well.downstream_tubes.empty?
 
