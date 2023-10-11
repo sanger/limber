@@ -9,7 +9,7 @@ module LabwareCreators
   # done from LRC Blood Bank to LRC PBMC Bank plate. Only the wells with passed
   # state will be transferred to the destination plate. The destination wells
   # are compressed to top left by column on the plate.
-  class PooledWellsBySample < Base
+  class PooledWellsBySampleInGroups < Base
     include SupportParent::PlateOnly
 
     # By default, source wells with the sample are pooled in pairs.
