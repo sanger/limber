@@ -67,8 +67,8 @@ module LabwareCreators
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
 
-    # TODO: check need all this in the includes e.g. metadata
-    PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+    PARENT_PLATE_INCLUDES =
+      'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def save
       super && upload_tube_rack_files && true
@@ -84,19 +84,13 @@ module LabwareCreators
       @parent_v1 ||= api.plate.find(parent_uuid)
     end
 
-    # Sets the filter parameters for the well filter.
-    #
-    # @param filter_parameters [Hash] The filter parameters to assign.
-    # @return [void]
-    def filters=(filter_parameters)
-      well_filter.assign_attributes(filter_parameters)
-    end
-
-    # Returns the unfiltered list of wells of the parent labware.
+    # Returns the list of wells of the parent labware.
+    # In column order (A1, B1, C1 etc.)
+    # Used in WellFilter.
     #
     # @return [Array<Well>] The wells of the parent labware.
     def labware_wells
-      parent.wells
+      parent.wells_in_columns
     end
 
     # Creates child sequencing and contingency tubes, performs transfers.
@@ -202,7 +196,6 @@ module LabwareCreators
     private
 
     # Returns a new instance of WellFilter with the current object as the creator.
-    # NB. filters failed and cancelled wells by default
     #
     # @return [WellFilter] A new instance of WellFilter.
     def well_filter
@@ -457,10 +450,10 @@ module LabwareCreators
     # @return [void]
     def add_to_well_to_tube_hash(tube_type, well, tube_name)
       if tube_type == 'sequencing'
-        @sequencing_wells_to_tube_names = {} if @sequencing_wells_to_tube_names.nil?
+        @sequencing_wells_to_tube_names ||= {}
         @sequencing_wells_to_tube_names[well] = tube_name
       else
-        @contingency_wells_to_tube_names = {} if @contingency_wells_to_tube_names.nil?
+        @contingency_wells_to_tube_names ||= {}
         @contingency_wells_to_tube_names[well] = tube_name
       end
     end

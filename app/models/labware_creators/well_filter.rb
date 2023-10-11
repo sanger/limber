@@ -12,7 +12,7 @@ class LabwareCreators::WellFilter
   # Indicates that the filter is unable to detect which request to use
   FilterError = Class.new(LabwareCreators::ResourceInvalid)
 
-  attr_accessor :transfer_failed, :request_type_key, :library_type, :creator
+  attr_accessor :request_type_key, :library_type, :creator
 
   validate :well_transfers
 
@@ -58,7 +58,7 @@ class LabwareCreators::WellFilter
   def well_transfers
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
-        next if well.empty? || (@transfer_failed && well.failed?)
+        next if well.empty? || well.failed?
 
         transfers << [well, filter_requests(well.active_requests, well)]
       end
