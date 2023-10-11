@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe LabwareCreators::PooledWellsBySampleInGroups  do
+RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
