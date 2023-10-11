@@ -26,7 +26,7 @@ module LabwareCreators
 
     # List of wells of the parent labware in column order
     def labware_wells
-      parent.wells_in_columns
+      source_plate.wells_in_columns
     end
 
     # Parent plate using SS v2 API
@@ -36,12 +36,12 @@ module LabwareCreators
 
     # List of passed wells from parent plate
     def passed_parent_wells
-      source_plate.wells.select { |well| well.state == 'passed' }
+      well_filter.filtered.map(&:first).select(&:passed?)
     end
 
     # List of passed wells from parent plate in column order
     def parent_wells_in_columns
-      passed_parent_wells.sort_by(&:coordinate)
+      passed_parent_wells
     end
 
     # List of pools to be created; index is the destination pool number; each pool is a list of source wells

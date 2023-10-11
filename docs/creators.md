@@ -345,14 +345,13 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::PooledTubesFromWholeTubes View class documentation}
 
 
-## LabwareCreators::PooledWellsBySampleInGroups 
+## LabwareCreators::PooledWellsBySampleInGroups
 
-{include:LabwareCreators::PooledWellsBySampleInGroups }
+{include:LabwareCreators::PooledWellsBySampleInGroups}
 
-  Used directly in 1 purposes:
-  LRC PBMC Bank
+  **This labware creator is unused**
 
-{LabwareCreators::PooledWellsBySampleInGroups  View class documentation}
+{LabwareCreators::PooledWellsBySampleInGroups View class documentation}
 
 
 ## LabwareCreators::TaggedPlate

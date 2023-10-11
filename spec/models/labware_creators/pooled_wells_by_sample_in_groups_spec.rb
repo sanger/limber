@@ -5,12 +5,27 @@ require 'spec_helper'
 RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   has_a_working_api
 
+  # In these tests, sample uuid and well state are modified at specific
+  # wells for setup.
+
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
-  let(:parent_plate) { create(:v2_plate, uuid: parent_plate_uuid, aliquots_without_requests: 1) }
+
+  # Create a plate with 96 wells in pending state and 1 aliquot in each well
+  # and then add requests to the aliquots with the same submission_id.
+  let(:parent_plate) do
+    plate = create(:v2_plate, uuid: parent_plate_uuid, aliquots_without_requests: 1)
+    requests = create_list(:request, 96, submission_id: 2)
+    plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
+    plate
+  end
+
+  # Attributes for initialising the labware creator
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: user_uuid } }
+
+  # Child plate assumed to be created
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
   subject { described_class.new(api, form_attributes) }
   before do
