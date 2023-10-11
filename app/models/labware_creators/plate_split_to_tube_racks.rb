@@ -92,13 +92,13 @@ module LabwareCreators
       well_filter.assign_attributes(filter_parameters)
     end
 
-    # Returns the list of wells of the parent labware, minus any failed wells.
+    # Returns the list of wells of the parent labware, filtering for passed wells.
     # In column order (A1, B1, C1 etc.)
     # Used in WellFilter.
     #
     # @return [Array<Well>] The wells of the parent labware.
     def labware_wells
-      parent.wells_in_columns.filter_map { |well| well unless well.failed? }
+      parent.wells_in_columns.filter_map { |well| well if well.passed? }
     end
 
     # Creates child sequencing and contingency tubes, performs transfers.
