@@ -84,21 +84,13 @@ module LabwareCreators
       @parent_v1 ||= api.plate.find(parent_uuid)
     end
 
-    # Sets the filter parameters for the well filter.
-    #
-    # @param filter_parameters [Hash] The filter parameters to assign.
-    # @return [void]
-    def filters=(filter_parameters)
-      well_filter.assign_attributes(filter_parameters)
-    end
-
-    # Returns the list of wells of the parent labware, filtering for passed wells.
+    # Returns the list of wells of the parent labware.
     # In column order (A1, B1, C1 etc.)
     # Used in WellFilter.
     #
     # @return [Array<Well>] The wells of the parent labware.
     def labware_wells
-      parent.wells_in_columns.filter_map { |well| well if well.passed? }
+      parent.wells_in_columns
     end
 
     # Creates child sequencing and contingency tubes, performs transfers.
