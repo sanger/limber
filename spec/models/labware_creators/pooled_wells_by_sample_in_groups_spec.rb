@@ -35,19 +35,11 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   end
 
   describe '#number_of_source_wells' do
-    context 'when purpose_config includes number_of_source_wells' do
-      before { create(:purpose_config, uuid: child_purpose_uuid, number_of_source_wells: 3) }
-
-      it 'returns the number of source wells from the purpose_config' do
-        expect(subject.number_of_source_wells).to eq(3)
-      end
+    before do
+      create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid, number_of_source_wells: 3)
     end
-
-    context 'when purpose_config does not include number_of_source_wells' do
-      before { create(:purpose_config, uuid: child_purpose_uuid) }
-      it 'returns the default number of source wells' do
-        expect(subject.number_of_source_wells).to eq(2)
-      end
+    it 'returns the number of source wells from the purpose_config' do
+      expect(subject.number_of_source_wells).to eq(3)
     end
   end
 

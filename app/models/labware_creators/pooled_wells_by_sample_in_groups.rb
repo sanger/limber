@@ -12,12 +12,9 @@ module LabwareCreators
   class PooledWellsBySampleInGroups < Base
     include SupportParent::PlateOnly
 
-    # By default, source wells with the sample are pooled in pairs.
-    DEFAULT_NUMBER_OF_SOURCE_WELLS = 2
-
     # Number of source wells with the same sample to be pooled.
     def number_of_source_wells
-      purpose_config[:number_of_source_wells] || DEFAULT_NUMBER_OF_SOURCE_WELLS
+      @number_of_source_wells ||= purpose_config.dig(:creator_class, :args, :number_of_source_wells)
     end
 
     # Well filter with this object as the creator
