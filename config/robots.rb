@@ -3061,4 +3061,27 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # LRC Hamilton Star bed verification
+    # LRC PBMC Bank to LRC Bank Seq and LRC Bank Spare
+    custom_robot(
+      'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare',
+      name: 'Hamilton LRC PBMC Bank => LRC Bank Seq and LRC Bank Spare',
+      beds: {
+        bed(12).barcode => {
+          purpose: 'LRC PBMC Bank',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(15).barcode => {
+          purpose: 'LRC Bank Seq',
+          states: ['pending'],
+          label: 'Bed 15',
+        },
+        bed(14).barcode => {
+          purpose: 'LRC Bank Spare',
+          states: ['pending'],
+          label: 'Bed 14',
+        }
+      }
   end
