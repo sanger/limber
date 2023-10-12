@@ -3084,5 +3084,5 @@ ROBOT_CONFIG =
           label: 'Bed 14'
         }
       }
-    }
+    )
   end
