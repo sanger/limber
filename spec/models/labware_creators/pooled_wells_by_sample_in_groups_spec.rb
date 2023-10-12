@@ -57,23 +57,8 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
     end
   end
 
-  describe '#passed_parent_wells' do
-    before do
-      parent_plate.wells[0..3].map { |well| well.state = 'failed' }
-      parent_plate.wells[4..95].map { |well| well.state = 'passed' }
-    end
-
-    it 'ignores source wells that have been failed' do
-      expect(subject.passed_parent_wells).not_to include(*parent_plate.wells[0..3])
-    end
-
-    it 'returns source wells that have been passed' do
-      expect(subject.passed_parent_wells).to include(*parent_plate.wells[4..95])
-    end
-  end
-
   describe '#parent_wells_in_columns' do
-    context 'inside columns' do
+    context 'when wells are not ordered inside columns' do
       before do
         # Swap two wells in the column so that they are not in correct order
         parent_plate.wells.map { |well| well.state = 'failed' }
@@ -88,7 +73,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         expect(wells[1].location).to eq('H1')
       end
     end
-    context 'between columns' do
+    context 'when wells are not ordered between columns' do
       before do
         # Swap wells between columns so that they are not in correct order
         parent_plate.wells.map { |well| well.state = 'failed' }
@@ -100,6 +85,20 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         wells = subject.parent_wells_in_columns
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('A2')
+      end
+    end
+    context 'when filtering source wells by state' do
+      before do
+        parent_plate.wells[0..3].map { |well| well.state = 'failed' }
+        parent_plate.wells[4..95].map { |well| well.state = 'passed' }
+      end
+
+      it 'ignores source wells that are failed' do
+        expect(subject.parent_wells_in_columns).not_to include(*parent_plate.wells[0..3])
+      end
+
+      it 'returns source wells that are passed' do
+        expect(subject.parent_wells_in_columns).to include(*parent_plate.wells[4..95])
       end
     end
   end
@@ -205,12 +204,15 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       source_well.state = 'passed'
     end
     it 'returns request hash' do
-      request = subject.request_hash(source_well, child_plate)
+      submission_id = source_well.aliquots.first.request.submission_id
+      additional_parameters = { 'submission_id' => submission_id }
+      request = subject.request_hash(source_well, child_plate, additional_parameters)
 
       # Assume A1 to A1 transfer
       expect(request['source_asset']).to eq(source_well.uuid)
       expect(request['target_asset']).to eq(child_plate.wells.first.uuid)
       expect(request['merge_equivalent_aliquots']).to eq(true)
+      expect(request['submission_id']).to eq(submission_id)
     end
   end
 

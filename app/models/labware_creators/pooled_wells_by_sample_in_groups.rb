@@ -20,11 +20,12 @@ module LabwareCreators
       purpose_config[:number_of_source_wells] || DEFAULT_NUMBER_OF_SOURCE_WELLS
     end
 
+    # Well filter with this object as the creator
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    # List of wells of the parent labware in column order
+    # List of wells of the parent labware in column order. Used by well filter.
     def labware_wells
       source_plate.wells_in_columns
     end
@@ -34,14 +35,9 @@ module LabwareCreators
       @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
-    # List of passed wells from parent plate
-    def passed_parent_wells
-      well_filter.filtered.map(&:first).select(&:passed?)
-    end
-
-    # List of passed wells from parent plate in column order
+    # List of passed wells from parent plate in column order.
     def parent_wells_in_columns
-      passed_parent_wells
+      well_filter.filtered.map(&:first).select(&:passed?)
     end
 
     # List of pools to be created; index is the destination pool number; each pool is a list of source wells
@@ -75,19 +71,20 @@ module LabwareCreators
     end
 
     # Attributes for transfer request from source_well to dest_plate
-    def request_hash(source_well, dest_plate)
+    def request_hash(source_well, dest_plate, additional_parameters)
       dest_location = transfer_hash[source_well.location][:dest_locn]
       {
         'source_asset' => source_well.uuid,
         'target_asset' => get_well_for_plate_location(dest_plate, dest_location)&.uuid,
-        # 'submission' => submission,
         'merge_equivalent_aliquots' => true
-      }
+      }.merge(additional_parameters)
     end
 
     # List of objects mapping source wells to destination wells
     def transfer_request_attributes(dest_plate)
-      passed_parent_wells.map { |source_well| request_hash(source_well, dest_plate) }
+      well_filter.filtered.filter_map do |source_well, additional_parameters|
+        request_hash(source_well, dest_plate, additional_parameters)
+      end
     end
 
     # Send the transfer request to SS

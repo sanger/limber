@@ -349,7 +349,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PooledWellsBySampleInGroups}
 
-  **This labware creator is unused**
+  Used directly in 1 purposes:
+  LRC PBMC Bank
 
 {LabwareCreators::PooledWellsBySampleInGroups View class documentation}
 
