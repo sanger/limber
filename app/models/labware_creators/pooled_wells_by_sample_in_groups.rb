@@ -25,9 +25,9 @@ module LabwareCreators
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    # List of wells of the parent labware in column order. Used by well filter.
+    # List of passed wells of the parent labware in column order. Used by well filter.
     def labware_wells
-      source_plate.wells_in_columns
+      source_plate.wells_in_columns.select(&:passed?)
     end
 
     # Parent plate using SS v2 API
@@ -35,14 +35,14 @@ module LabwareCreators
       @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
-    # List of passed wells from parent plate in column order.
-    def parent_wells_in_columns
-      well_filter.filtered.map(&:first).select(&:passed?)
+    # List of filtered wells for pooling.
+    def parent_wells_for_pooling
+      well_filter.filtered.map(&:first)
     end
 
     # List of pools to be created; index is the destination pool number; each pool is a list of source wells
     def build_pools
-      parent_wells_in_columns
+      parent_wells_for_pooling
         .group_by { |well| well.aliquots.first.sample.uuid }
         .flat_map { |_uuid, wells| wells.each_slice(number_of_source_wells).to_a }
     end

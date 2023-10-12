@@ -57,7 +57,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
     end
   end
 
-  describe '#parent_wells_in_columns' do
+  describe '#parent_wells_for_pooling' do
     context 'when wells are not ordered inside columns' do
       before do
         # Swap two wells in the column so that they are not in correct order
@@ -68,7 +68,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       end
 
       it 'returns passed source wells in correct order' do
-        wells = subject.parent_wells_in_columns
+        wells = subject.parent_wells_for_pooling
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('H1')
       end
@@ -82,7 +82,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         parent_plate.wells[0], parent_plate.wells[8] = parent_plate.wells[8], parent_plate.wells[0]
       end
       it 'returns passed source wells in correct order' do
-        wells = subject.parent_wells_in_columns
+        wells = subject.parent_wells_for_pooling
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('A2')
       end
@@ -94,11 +94,11 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       end
 
       it 'ignores source wells that are failed' do
-        expect(subject.parent_wells_in_columns).not_to include(*parent_plate.wells[0..3])
+        expect(subject.parent_wells_for_pooling).not_to include(*parent_plate.wells[0..3])
       end
 
       it 'returns source wells that are passed' do
-        expect(subject.parent_wells_in_columns).to include(*parent_plate.wells[4..95])
+        expect(subject.parent_wells_for_pooling).to include(*parent_plate.wells[4..95])
       end
     end
   end
