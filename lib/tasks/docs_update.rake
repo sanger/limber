@@ -9,7 +9,12 @@ namespace :docs do
 
     Settings.purposes.each_value do |purpose|
       used_presenter[purpose['presenter_class']] << purpose['name']
-      used_creator[purpose['creator_class']] << purpose['name']
+
+      # If creator_class is a hash, then we get the name from the hash instead.
+      cls = purpose['creator_class']
+      key = cls.is_a?(Hash) ? cls['name'] : cls
+      used_creator[key] << purpose['name']
+
       used_state_changer[purpose['state_changer_class']] << purpose['name']
     end
 

@@ -252,7 +252,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::MultiStampLibrarySplitter}
 
-  **This labware creator is unused**
+  Used directly in 2 purposes:
+  CLCM Lysate DNA and CLCM Lysate RNA
 
 {LabwareCreators::MultiStampLibrarySplitter View class documentation}
 
@@ -300,8 +301,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::MultiStampTubes}
 
-  Used directly in 1 purposes:
-  LCA Blood Array
+  Used directly in 3 purposes:
+  LRC Blood Bank, LCA Blood Array, and LCA Blood Bank
 
 {LabwareCreators::MultiStampTubes View class documentation}
 
@@ -310,7 +311,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PlateSplitToTubeRacks}
 
-  **This labware creator is unused**
+  Used directly in 2 purposes:
+  LRC Bank Seq and LRC Bank Spare
 
 {LabwareCreators::PlateSplitToTubeRacks View class documentation}
 
