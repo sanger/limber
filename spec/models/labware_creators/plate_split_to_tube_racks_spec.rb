@@ -78,22 +78,65 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   # ancestor tubes list
   let(:ancestor_tubes) { [ancestor_tube_1_v2, ancestor_tube_2_v2] }
 
+  # cell count and viability qc results for wells
+  let(:a1_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20100', units: 'cells/ml') }
+  let(:a2_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20200', units: 'cells/ml') }
+  let(:a3_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20300', units: 'cells/ml') }
+  let(:b1_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20400', units: 'cells/ml') }
+  let(:b2_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20500', units: 'cells/ml') }
+
+  let(:a1_cell_viability_qc) { create(:qc_result, key: 'viability', value: '71', units: '%') }
+  let(:a2_cell_viability_qc) { create(:qc_result, key: 'viability', value: '72', units: '%') }
+  let(:a3_cell_viability_qc) { create(:qc_result, key: 'viability', value: '73', units: '%') }
+  let(:b1_cell_viability_qc) { create(:qc_result, key: 'viability', value: '74', units: '%') }
+  let(:b2_cell_viability_qc) { create(:qc_result, key: 'viability', value: '75', units: '%') }
+
   # parent wells
   let(:parent_well_a1) do
-    create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'passed')
+    create(
+      :v2_well,
+      location: 'A1',
+      aliquots: [parent_aliquot_sample1_aliquot1],
+      state: 'passed',
+      qc_results: [a1_cell_count_qc, a1_cell_viability_qc]
+    )
   end
   let(:parent_well_a2) do
-    create(:v2_well, location: 'A2', aliquots: [parent_aliquot_sample1_aliquot2], state: 'passed')
+    create(
+      :v2_well,
+      location: 'A2',
+      aliquots: [parent_aliquot_sample1_aliquot2],
+      state: 'passed',
+      qc_results: [a2_cell_count_qc, a2_cell_viability_qc]
+    )
   end
   let(:parent_well_a3) do
-    create(:v2_well, location: 'A3', aliquots: [parent_aliquot_sample1_aliquot3], state: 'passed')
+    create(
+      :v2_well,
+      location: 'A3',
+      aliquots: [parent_aliquot_sample1_aliquot3],
+      state: 'passed',
+      qc_results: [a3_cell_count_qc, a3_cell_viability_qc]
+    )
   end
 
   let(:parent_well_b1) do
-    create(:v2_well, location: 'B1', aliquots: [parent_aliquot_sample2_aliquot1], state: 'passed')
+    create(
+      :v2_well,
+      location: 'B1',
+      aliquots: [parent_aliquot_sample2_aliquot1],
+      state: 'passed',
+      qc_results: [b1_cell_count_qc, b1_cell_viability_qc]
+    )
   end
   let(:parent_well_b2) do
-    create(:v2_well, location: 'B2', aliquots: [parent_aliquot_sample2_aliquot2], state: 'passed')
+    create(
+      :v2_well,
+      location: 'B2',
+      aliquots: [parent_aliquot_sample2_aliquot2],
+      state: 'passed',
+      qc_results: [b2_cell_count_qc, b2_cell_viability_qc]
+    )
   end
 
   # parent plate
@@ -554,7 +597,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 13 }
 
       # need to stub the creation of the tube metadata
-      let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'A1' } }
+      let!(:metadata_for_tube_1) do
+        {
+          tube_rack_barcode: 'TR00000001',
+          tube_rack_position: 'A1',
+          cell_count: '20100',
+          viability: '71',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_1) do
         stub_create_labware_metadata(
           child_tube_1_v2.barcode.machine,
@@ -565,7 +616,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'B1' } }
+      let!(:metadata_for_tube_2) do
+        {
+          tube_rack_barcode: 'TR00000001',
+          tube_rack_position: 'B1',
+          cell_count: '20400',
+          viability: '74',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_2) do
         stub_create_labware_metadata(
           child_tube_2_v2.barcode.machine,
@@ -576,7 +635,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
+      let!(:metadata_for_tube_3) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'A1',
+          cell_count: '20200',
+          viability: '72',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_3) do
         stub_create_labware_metadata(
           child_tube_3_v2.barcode.machine,
@@ -587,7 +654,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
+      let!(:metadata_for_tube_4) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'B1',
+          cell_count: '20500',
+          viability: '75',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_4) do
         stub_create_labware_metadata(
           child_tube_4_v2.barcode.machine,
@@ -598,7 +673,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
+      let!(:metadata_for_tube_5) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'C1',
+          cell_count: '20300',
+          viability: '73',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_5) do
         stub_create_labware_metadata(
           child_tube_5_v2.barcode.machine,
@@ -641,7 +724,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       context 'when a well has been failed' do
         # failing well A1
         let(:parent_well_a1) do
-          create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
+          create(
+            :v2_well,
+            location: 'A1',
+            aliquots: [parent_aliquot_sample1_aliquot1],
+            state: 'failed',
+            qc_results: [a1_cell_count_qc, a1_cell_viability_qc]
+          )
         end
 
         # as A1 is failed order of samples is changed
@@ -717,6 +806,47 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
                 uuid_index_offset: 2
               )
           )
+        end
+
+        # tube metadata is rearranged due to well 1 failed
+        let!(:metadata_for_tube_1) do
+          {
+            tube_rack_barcode: 'TR00000001',
+            tube_rack_position: 'A1',
+            cell_count: '20400',
+            viability: '74',
+            volume: '25'
+          }
+        end
+
+        let!(:metadata_for_tube_2) do
+          {
+            tube_rack_barcode: 'TR00000001',
+            tube_rack_position: 'B1',
+            cell_count: '20200',
+            viability: '72',
+            volume: '25'
+          }
+        end
+
+        let!(:metadata_for_tube_3) do
+          {
+            tube_rack_barcode: 'TR00000002',
+            tube_rack_position: 'A1',
+            cell_count: '20500',
+            viability: '75',
+            volume: '25'
+          }
+        end
+
+        let!(:metadata_for_tube_4) do
+          {
+            tube_rack_barcode: 'TR00000002',
+            tube_rack_position: 'B1',
+            cell_count: '20300',
+            viability: '73',
+            volume: '25'
+          }
         end
 
         # one fewer transfer request
@@ -922,7 +1052,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 15 }
 
       # need to stub the creation of the tube metadata
-      let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
+      let!(:metadata_for_tube_1) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'A1',
+          cell_count: '20100',
+          viability: '71',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_1) do
         stub_create_labware_metadata(
           child_tube_1_v2.barcode.machine,
@@ -933,7 +1071,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
+      let!(:metadata_for_tube_2) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'B1',
+          cell_count: '20400',
+          viability: '74',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_2) do
         stub_create_labware_metadata(
           child_tube_2_v2.barcode.machine,
@@ -944,7 +1090,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
+      let!(:metadata_for_tube_3) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'C1',
+          cell_count: '20200',
+          viability: '72',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_3) do
         stub_create_labware_metadata(
           child_tube_3_v2.barcode.machine,
@@ -955,7 +1109,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'E1' } }
+      let!(:metadata_for_tube_4) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'E1',
+          cell_count: '20500',
+          viability: '75',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_4) do
         stub_create_labware_metadata(
           child_tube_4_v2.barcode.machine,
@@ -966,7 +1128,15 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'F1' } }
+      let!(:metadata_for_tube_5) do
+        {
+          tube_rack_barcode: 'TR00000002',
+          tube_rack_position: 'F1',
+          cell_count: '20300',
+          viability: '73',
+          volume: '25'
+        }
+      end
       let!(:stub_create_metadata_for_tube_5) do
         stub_create_labware_metadata(
           child_tube_5_v2.barcode.machine,

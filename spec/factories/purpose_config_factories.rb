@@ -232,7 +232,9 @@ FactoryBot.define do
             child_seq_tube_purpose_name: 'Seq Child Purpose',
             child_seq_tube_name_prefix: 'SEQ',
             child_spare_tube_purpose_name: 'Spare Child Purpose',
-            child_spare_tube_name_prefix: 'SPR'
+            child_spare_tube_name_prefix: 'SPR',
+            child_seq_tube_volume: 25,
+            child_spare_tube_volume: 25
           }
         }
       end

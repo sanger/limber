@@ -100,6 +100,8 @@ LRC Bank Seq:
       child_seq_tube_name_prefix: SEQ
       child_spare_tube_purpose_name: LRC Bank Spare
       child_spare_tube_name_prefix: SPR
+      child_seq_tube_volume: 25
+      child_spare_tube_volume: 25
   :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol

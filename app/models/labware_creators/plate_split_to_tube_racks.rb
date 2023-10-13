@@ -99,7 +99,7 @@ module LabwareCreators
     def create_labware!
       @child_sequencing_tubes = create_child_sequencing_tubes
       @child_contingency_tubes = create_child_contingency_tubes
-      add_child_tube_metadata
+      update_child_tube_metadata
       perform_transfers
       true
     end
@@ -384,6 +384,42 @@ module LabwareCreators
       Settings.purpose_uuids[contingency_tube_purpose_name]
     end
 
+    # Returns the volume for a sequencing tube from the purpose config.
+    #
+    # @return [String] The volume for a sequencing tube in microlitres.
+    def sequencing_tube_volume
+      @sequencing_tube_volume ||= fetch_sequencing_tube_volume
+    end
+
+    # Fetches the volume for a sequencing tube from the purpose config.
+    #
+    # @return [String] The volume
+    def fetch_sequencing_tube_volume
+      volume = purpose_config.dig(:creator_class, :args, :child_seq_tube_volume)
+
+      raise "Missing purpose configuration argument 'child_seq_tube_volume'" unless volume
+
+      volume.to_s
+    end
+
+    # Returns the volume for a contingency tube from the purpose config.
+    #
+    # @return [String] The volume for a contingency tube in microlitres.
+    def contingency_tube_volume
+      @contingency_tube_volume ||= purpose_config.dig(:creator_class, :args, :child_spare_tube_volume)
+    end
+
+    # Fetches the volume for a contingency tube from the purpose config.
+    #
+    # @return [String] The volume
+    def fetch_contingency_tube_volume
+      volume = purpose_config.dig(:creator_class, :args, :child_spare_tube_volume)
+
+      raise "Missing purpose configuration argument 'child_spare_tube_volume'" unless volume
+
+      volume
+    end
+
     # Returns the human-readable barcode of the ancestor (supplier) source tube for the given sample UUID.
     #
     # @param sample_uuid [String] The UUID of the sample to find the ancestor tube for.
@@ -540,33 +576,73 @@ module LabwareCreators
       end
     end
 
-    # Adds metadata to child tubes using details from the parsed sequencing and contingency CSV files.
+    # Adds metadata to child tubes using details from the parsed sequencing and
+    # contingency CSV files, and the Cellaca cell count information from the parent plate.
     #
     # @return [void]
-    def add_child_tube_metadata
-      add_sequencing_tube_metadata unless require_contingency_tubes_only?
-
-      add_contingency_tube_metadata
+    def update_child_tube_metadata
+      tubes_metadata = {}
+      add_sequencing_tube_metadata(tubes_metadata) unless require_contingency_tubes_only?
+      add_contingency_tube_metadata(tubes_metadata)
+      add_cell_count_metadata(tubes_metadata)
+      write_metadata_to_tubes(tubes_metadata)
     end
 
     # Adds tube rack barcode and position metadata to child sequencing tubes.
     #
     # @return [void]
-    def add_sequencing_tube_metadata
+    def add_sequencing_tube_metadata(tubes_metadata)
       child_sequencing_tubes.each do |child_tube_name, child_tube|
         tube_posn = child_tube_name.split(':').last
-        add_tube_metadata(child_tube, tube_posn, sequencing_csv_file.position_details[tube_posn])
+        tube_details = sequencing_csv_file.position_details[tube_posn]
+        metadata = {
+          tube: child_tube,
+          tube_rack_barcode: tube_details['tube_rack_barcode'],
+          tube_rack_position: tube_posn,
+          volume: sequencing_tube_volume
+        }
+        tubes_metadata[child_tube.barcode.machine] = metadata
       end
     end
 
     # Adds tube rack barcode and position metadata to child contingency tubes.
     #
     # @return [void]
-    def add_contingency_tube_metadata
+    def add_contingency_tube_metadata(tubes_metadata)
       child_contingency_tubes.each do |child_tube_name, child_tube|
         tube_posn = child_tube_name.split(':').last
-        add_tube_metadata(child_tube, tube_posn, contingency_csv_file.position_details[tube_posn])
+        tube_details = contingency_csv_file.position_details[tube_posn]
+        metadata = {
+          tube: child_tube,
+          tube_rack_barcode: tube_details['tube_rack_barcode'],
+          tube_rack_position: tube_posn,
+          volume: contingency_tube_volume
+        }
+        tubes_metadata[child_tube.barcode.machine] = metadata
       end
+    end
+
+    def add_cell_count_metadata(tubes_metadata)
+      well_filter.filtered.filter_map do |well, _additional_parameters|
+        child_tube = find_child_tube(well)
+
+        next unless child_tube
+
+        metadata = tubes_metadata[child_tube.barcode.machine]
+
+        # Example of what well metadata looks like:
+        # key: live_cell_count, value: e.g. 20300, units: cells/ml
+        # key: viability, value: 75, units: %
+
+        # NB. The problem with this solution is it is recorded at time tube creation,
+        # it will not update if they upload newer QC data
+        metadata[:cell_count] = well.latest_live_cell_count.value
+        metadata[:viability] = well.latest_cell_viability.value
+      end
+    end
+
+    def write_metadata_to_tubes(tubes_metadata)
+      tubes_metadata.each { |tube_barcode, metadata| update_metadata_on_tube(tube_barcode, metadata) }
     end
 
     # Shared method for adding tube rack barcode and position metadata to child tubes.
@@ -575,10 +651,17 @@ module LabwareCreators
     # @param tube_posn [String] The position of the child tube in the tube rack.
     # @param tube_details [Hash] The tube details hash from the tube rack scan file.
     # @return [void]
-    def add_tube_metadata(child_tube, tube_posn, tube_details)
+    def update_metadata_on_tube(tube_barcode, metadata)
+      # TODO: why do I have to use to_s on volume here when already a string?
       LabwareMetadata
-        .new(api: api, user: user_uuid, barcode: child_tube.barcode.machine)
-        .update!(tube_rack_barcode: tube_details['tube_rack_barcode'], tube_rack_position: tube_posn)
+        .new(api: api, user: user_uuid, barcode: tube_barcode)
+        .update!(
+          tube_rack_barcode: metadata[:tube_rack_barcode],
+          tube_rack_position: metadata[:tube_rack_position],
+          cell_count: metadata[:cell_count],
+          viability: metadata[:viability],
+          volume: metadata[:volume].to_s
+        )
     end
 
     # Generates a transfer request hash for the given source well UUID, target tube UUID, and additional parameters.
