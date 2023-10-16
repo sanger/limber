@@ -622,6 +622,15 @@ module LabwareCreators
       end
     end
 
+    # Adds cell count and cell viability metadata to a hash of tube metadata.
+    #
+    # This method iterates over the filtered wells in the well filter and finds the corresponding child
+    # tube for each well. If a child tube is found, the method retrieves the metadata for the tube from
+    # the tubes metadata hash and adds the latest live cell count and cell viability values from the well
+    # to the metadata hash. The resulting metadata hash is returned.
+    #
+    # @param tubes_metadata [Hash] A hash of tube metadata, keyed by tube machine barcode.
+    # @return [Array] An array of metadata hashes, one for each child tube with associated well metadata.
     def add_cell_count_metadata(tubes_metadata)
       well_filter.filtered.filter_map do |well, _additional_parameters|
         child_tube = find_child_tube(well)
@@ -630,7 +639,7 @@ module LabwareCreators
 
         metadata = tubes_metadata[child_tube.barcode.machine]
 
-        # Example of what well metadata looks like:
+        # Example of what this qc results data looks like:
         # key: live_cell_count, value: e.g. 20300, units: cells/ml
         # key: viability, value: 75, units: %
 
@@ -641,6 +650,10 @@ module LabwareCreators
       end
     end
 
+    # This method iterates over the tubes in the tubes metadata hash and updates the metadata via the api.
+    #
+    # @param tubes_metadata [Hash] A hash of tube metadata, keyed by machine barcode.
+    # @return [void]
     def write_metadata_to_tubes(tubes_metadata)
       tubes_metadata.each { |tube_barcode, metadata| update_metadata_on_tube(tube_barcode, metadata) }
     end
