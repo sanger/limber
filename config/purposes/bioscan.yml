@@ -62,6 +62,30 @@ LBSN-384 PCR 2:
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
   :tag_layout_templates:
+    - Bioscan_384_template_1_v3
+    - Bioscan_384_template_2_v3
+    - Bioscan_384_template_3_v3
+    - Bioscan_384_template_4_v3
+    - Bioscan_384_template_5_v3
+    - Bioscan_384_template_6_v3
+    - Bioscan_384_template_7_v3
+    - Bioscan_384_template_8_v3
+    - Bioscan_384_template_9_v3
+    - Bioscan_384_template_10_v3
+    - Bioscan_384_template_11_v3
+    - Bioscan_384_template_12_v3
+    - Bioscan_384_template_13_v3
+    - Bioscan_384_template_14_v3
+    - Bioscan_384_template_15_v3
+    - Bioscan_384_template_16_v3
+    - Bioscan_384_template_17_v3
+    - Bioscan_384_template_18_v3
+    - Bioscan_384_template_19_v3
+    - Bioscan_384_template_20_v3
+    - Bioscan_384_template_21_v3
+    - Bioscan_384_template_22_v3
+    - Bioscan_384_template_23_v3
+    - Bioscan_384_template_24_v3
     - Bioscan_384_template_1_v2
     - Bioscan_384_template_2_v2
     - Bioscan_384_template_3_v2
