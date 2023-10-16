@@ -47,6 +47,10 @@ FactoryBot.define do
         end
       end
 
+      factory :tube_with_metadata do
+        with_belongs_to_associations 'custom_metadatum_collection'
+      end
+
       factory :tube_without_siblings do
         json_root { 'tube' }
         sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
@@ -131,6 +135,10 @@ FactoryBot.define do
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
     end
 
+    factory :v2_tube_with_metadata do
+      with_belongs_to_associations 'custom_metadatum_collection'
+    end
+
     factory :v2_stock_tube do
       ancestors { nil }
       outer_request { nil }
@@ -163,6 +171,25 @@ FactoryBot.define do
       end
       children do
         Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count) }
+      end
+    end
+
+    factory :tube_collection_with_barcodes_specified do
+      transient do
+        barcode_prefix { 'NT' }
+        barcode_numbers { Array.new(size) { |i| i + 1 } }
+        uuid_index_offset { 0 }
+      end
+      children do
+        Array.new(size) do |i|
+          associated(
+            tube_factory,
+            uuid: "tube-#{uuid_index_offset + i}",
+            barcode_prefix: barcode_prefix,
+            barcode_number: barcode_numbers[i],
+            name: names[i]
+          )
+        end
       end
     end
   end

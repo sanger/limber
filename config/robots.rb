@@ -2971,10 +2971,10 @@ ROBOT_CONFIG =
       name: 'Bravo LCMB End Prep',
       require_robot: true,
       beds: {
-        bed(7).barcode => {
+        bed(5).barcode => {
           purpose: 'LCMB End Prep',
           states: ['started'],
-          label: 'Bed 7',
+          label: 'Bed 5',
           target_state: 'passed'
         }
       }
@@ -2990,16 +2990,16 @@ ROBOT_CONFIG =
       name: 'Bravo LCMB End Prep => LCMB Lib PCR',
       verify_robot: true,
       beds: {
-        bed(5).barcode => {
+        bed(7).barcode => {
           purpose: 'LCMB End Prep',
           states: ['passed'],
-          label: 'Bed 5'
+          label: 'Bed 7'
         },
         bed(6).barcode => {
           purpose: 'LCMB Lib PCR',
           states: ['pending'],
           label: 'Bed 6',
-          parent: bed(5).barcode,
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
@@ -3035,6 +3035,28 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 14',
           parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LRC Hamilton Star bed verification
+    # LRC Blood Bank to LRC PBMC Bank
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-blood-bank-to-lrc-pbmc-bank',
+      name: 'Hamilton LRC Blood Bank => LRC PBMC Bank',
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC Blood Bank',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC PBMC Bank',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(15).barcode,
           target_state: 'passed'
         }
       }

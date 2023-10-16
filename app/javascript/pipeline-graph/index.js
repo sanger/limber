@@ -184,9 +184,14 @@ const renderPipelines = function (data) {
       },
     ],
 
+    // for other layout options see http://js.cytoscape.org/#layouts
     layout: {
-      name: 'breadthfirst',
-      grid: true,
+      name: 'cose',
+      nodeDimensionsIncludeLabels: true,
+      idealEdgeLength: 90,
+      nodeRepulsion: 100000,
+      gravity: 0.01,
+      animate: false,
     },
 
     minZoom: 0.2,
