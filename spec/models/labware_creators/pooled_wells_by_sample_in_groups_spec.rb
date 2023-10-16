@@ -29,25 +29,20 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
   subject { described_class.new(api, form_attributes) }
   before do
+    # Create a purpose config for the plate (number_of_source_wells is 2)
+    create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid)
     allow(subject).to receive(:parent).and_return(parent_plate)
     stub_v2_plate(parent_plate, stub_search: false)
     stub_v2_plate(child_plate, stub_search: false)
   end
 
   describe '#number_of_source_wells' do
-    context 'when purpose_config includes number_of_source_wells' do
-      before { create(:purpose_config, uuid: child_purpose_uuid, number_of_source_wells: 3) }
-
-      it 'returns the number of source wells from the purpose_config' do
-        expect(subject.number_of_source_wells).to eq(3)
-      end
+    before do
+      # Use a different purpose config for this test (number_of_source_wells is 3)
+      create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid, number_of_source_wells: 3)
     end
-
-    context 'when purpose_config does not include number_of_source_wells' do
-      before { create(:purpose_config, uuid: child_purpose_uuid) }
-      it 'returns the default number of source wells' do
-        expect(subject.number_of_source_wells).to eq(2)
-      end
+    it 'returns the number of source wells from the purpose_config' do
+      expect(subject.number_of_source_wells).to eq(3)
     end
   end
 

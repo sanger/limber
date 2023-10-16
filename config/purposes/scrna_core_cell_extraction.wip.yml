@@ -53,11 +53,13 @@ LRC Blood Bank:
 LRC PBMC Bank:
   :asset_type: plate
   # Labware creator for pooling isolations by sample before cell counting
-  :creator_class: LabwareCreators::PooledWellsBySampleInGroups
+  :creator_class:
+    name: LabwareCreators::PooledWellsBySampleInGroups
+    args:
+      # number of source wells to pool into a single destination well by sample from LRC Bank to LRC PBMC Bank
+      # e.g. 6 copies of sample in 6 wells, '2' in the config, pool to make 3 child wells
+      number_of_source_wells: 2
   :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
-  # number of source wells to pool into a single destination well by sample from LRC Bank to LRC PBMC Bank
-  # e.g. 6 copies of sample in 6 wells, '2' in the config, pool to make 3 child wells
-  :number_of_source_wells: 2
   :file_links:
     - name: 'Download Cellaca Input QC1'
       id: cellaca_input_file
