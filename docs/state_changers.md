@@ -29,7 +29,7 @@ manual transfer.
 {include:StateChangers::AutomaticPlateStateChanger}
 
   Used directly in 3 purposes:
-  LBSN-96 Lysate, LBC Cherrypick, and LSW-96 Stock
+  LBC Cherrypick, LBSN-96 Lysate, and LSW-96 Stock
 
 {StateChangers::AutomaticPlateStateChanger View class documentation}
 
@@ -39,7 +39,7 @@ manual transfer.
 {include:StateChangers::TubeStateChanger}
 
   Used directly in 49 purposes:
-  LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, LB Custom Pool Norm, CLCM DNA Pool, CLCM DNA Pool Norm, CLCM RNA Pool, CLCM RNA Pool Norm, LCMB Custom Pool, LCMB Custom Pool Norm, pWGS-384 Lib Pool XP, LRC Blood Vac, LRC Blood Aliquot, LRC Bank Seq, LRC Bank Spare, LTHR-384 Pool XP, LB Lib Pool Norm, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool, LTN Custom Pool Norm, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LDS Custom Pool Norm, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, GBS MiSeq Pool, LCA Blood Vac, LCA Custom Pool, LCA Custom Pool Norm, LCA Bank Stock, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, and LHR Lib Pool XP
+  Cap Lib Pool Norm, CLCM DNA Pool, CLCM DNA Pool Norm, CLCM RNA Pool, CLCM RNA Pool Norm, GBS MiSeq Pool, GBS PCR Pool, GBS PCR Pool Selected, GBS PCR2 Pool Stock, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Custom Pool, LB Custom Pool Norm, LB Lib Pool, LB Lib Pool Norm, LBB Lib Pool Stock, LBC 3pV3 GLibPS, LBC 5p GLibPS, LBC 5p Pool Norm, LBC BCR LibPS, LBC BCR Pool Norm, LBC TCR LibPS, LBC TCR Pool Norm, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LBSN-9216 Lib PCR Pool XP, LCA Bank Stock, LCA Blood Vac, LCA Custom Pool, LCA Custom Pool Norm, LCMB Custom Pool, LCMB Custom Pool Norm, LDS Custom Pool, LDS Custom Pool Norm, LHR Lib Pool, LHR Lib Pool XP, LHR-384 Pool XP, LRC Bank Seq, LRC Bank Spare, LRC Blood Aliquot, LRC Blood Vac, LTHR Pool XP, LTHR-384 Pool XP, LTN Custom Pool, LTN Custom Pool Norm, pWGS-384 Lib Pool XP, scRNA Lib Pool, scRNA Lib Pool XP, and scRNA-384 Lib Pool XP
 
 {StateChangers::TubeStateChanger View class documentation}
 

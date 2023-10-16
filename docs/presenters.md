@@ -49,7 +49,7 @@ scRNA-384 cDNA-XP and scRNA-384 End Prep
 {include:Presenters::MinimalPcrPlatePresenter}
 
 Used directly in 11 purposes:
-pWGS-384 Lib PCR, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, LBSN-384 PCR 1, LBSN-384 PCR 2, LHR-384 Lib PCR, GBS PCR1, GBS PCR2, LTHR Lib PCR 1, LTHR Lib PCR 2, and scRNA-384 Lib PCR
+GBS PCR1, GBS PCR2, LBSN-384 PCR 1, LBSN-384 PCR 2, LHR-384 Lib PCR, LTHR Lib PCR 1, LTHR Lib PCR 2, LTHR-384 Lib PCR 1, LTHR-384 Lib PCR 2, pWGS-384 Lib PCR, and scRNA-384 Lib PCR
 
 {Presenters::MinimalPcrPlatePresenter View class documentation}
 
@@ -79,7 +79,7 @@ LBC 5p GEX Dil
 {include:Presenters::PcrCyclesBinnedPlatePresenter}
 
 Used directly in 2 purposes:
-LTN AL Lib Dil and LDS AL Lib Dil
+LDS AL Lib Dil and LTN AL Lib Dil
 
 {Presenters::PcrCyclesBinnedPlatePresenter View class documentation}
 
@@ -99,7 +99,7 @@ LBC 5p GEX Frag 2XP, LB Lib PrePool, LB Hyb, LB Cap Lib, LB Cap Lib PCR, LB Cap 
 {include:Presenters::PcrPresenter}
 
 Used directly in 19 purposes:
-LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, CLCM DNA Lib PCR, CLCM RNA Lib PCR, LCMB Lib PCR, LTN Lib PCR, LBC BCR Post Lig 1XSPRI, GnT Pico Lib PCR, LB Lib PCR, LDS Lib PCR, LCA Connect PCRXP, LBC TCR Post Lig 1XSPRI, LBB Lib PCR-XP, LBB Ligation Tagged, LBB Chromium Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, scRNA Lib PCR, and LHR Lib PCR
+CLCM DNA Lib PCR, CLCM RNA Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LBB Chromium Tagged, LBB Lib PCR-XP, LBB Ligation Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LCA Connect PCRXP, LCMB Lib PCR, LDS Lib PCR, LHR Lib PCR, LTN Lib PCR, and scRNA Lib PCR
 
 {Presenters::PcrPresenter View class documentation}
 
@@ -109,7 +109,7 @@ LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, CLCM DNA Lib PCR, CLCM RNA Lib PCR, LCMB L
 {include:Presenters::PermissivePresenter}
 
 Used directly in 10 purposes:
-PF Lib, PF-384 Lib, LBR mRNA Cap, LBR Ribo DNase, LBR Globin DNase, LBR RiboGlobin DNase, LBR Frag, LB cDNA, LB cDNA XP, and LHR-384 End Prep
+LB cDNA, LB cDNA XP, LBR Frag, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LHR-384 End Prep, PF Lib, and PF-384 Lib
 
 {Presenters::PermissivePresenter View class documentation}
 
@@ -139,7 +139,7 @@ PF Lib Q-XP2
 {include:Presenters::StockPlatePresenter}
 
 Used directly in 18 purposes:
-LCMB Cherrypick, PF Cherrypicked, LTHR-384 RT, LILYS-96 Stock, LBSN-96 Lysate, LBR Cherrypick, LTN Stock, LTN Cherrypick, GnT Stock, LB Cherrypick, LDS Stock, LDS Cherrypick, LBC Stock, LHR-384 RT, LTHR RT, LBB Cherrypick, scRNA Stock, and LHR RT
+GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LBSN-96 Lysate, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LILYS-96 Stock, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
 
 {Presenters::StockPlatePresenter View class documentation}
 
@@ -149,7 +149,7 @@ LCMB Cherrypick, PF Cherrypicked, LTHR-384 RT, LILYS-96 Stock, LBSN-96 Lysate, L
 {include:Presenters::SubmissionPlatePresenter}
 
 Used directly in 2 purposes:
-LTHR Cherrypick and LDW-96 Stock
+LDW-96 Stock and LTHR Cherrypick
 
 {Presenters::SubmissionPlatePresenter View class documentation}
 
