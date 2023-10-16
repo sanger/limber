@@ -3076,12 +3076,16 @@ ROBOT_CONFIG =
         bed(15).barcode => {
           purpose: 'LRC Bank Seq',
           states: ['pending'],
-          label: 'Bed 15'
+          label: 'Bed 15',
+          parent: bed(12).barcode,
+          target_state: 'passed'
         },
         bed(14).barcode => {
           purpose: 'LRC Bank Spare',
           states: ['pending'],
-          label: 'Bed 14'
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
         }
       }
     )
