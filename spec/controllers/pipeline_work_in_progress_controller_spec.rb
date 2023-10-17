@@ -6,12 +6,17 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   let(:controller) { described_class.new }
 
   describe 'GET show' do
-    let(:labware) { create_list :labware, 2 }
+    let(:purposes) { create_list :v2_purpose, 2 }
+    let(:purpose_names) { purposes.map(&:name) }
+    let(:labware) { create_list :labware, 2, purpose: purposes[0] }
 
-    before { allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware) }
+    before do
+      allow(Settings.pipelines).to receive(:combine_and_order_pipelines).and_return(purpose_names)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(labware)
+    end
 
     it 'runs ok' do
-      get :show, params: { id: 'heron', date: Date.new(2020, 2, 5) }
+      get :show, params: { id: 'Heron-384 V2', date: Date.new(2020, 2, 5) }
       expect(response).to have_http_status(:ok)
     end
   end
@@ -42,25 +47,73 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#mould_data_for_view' do
-    let(:purposes) { ['Limber Example Purpose', 'LTHR-384 RT'] }
-    let(:labware_record_no_state) { create :labware_with_purpose }
-    let(:labware_record_passsed) { create :labware_with_state_changes, target_state: 'passed' }
-    let(:labware_record_cancelled) { create :labware_with_state_changes, target_state: 'cancelled' }
-    let(:labware_records) { [labware_record_no_state, labware_record_passsed, labware_record_cancelled] }
-
-    let(:expected_output) do
-      {
-        'Limber Example Purpose' => [
-          { record: labware_record_no_state, state: 'pending' },
-          { record: labware_record_passsed, state: 'passed' }
-          # cancelled one not present
-        ],
-        'LTHR-384 RT' => []
-      }
+    let(:purposes) { create_list :v2_purpose, 2 }
+    let(:purpose_names) { purposes.map(&:name) }
+    let(:labware_record_no_state) { create :labware, purpose: purposes[0] }
+    let(:labware_record_passed) { create :labware_with_state_changes, purpose: purposes[0], target_state: 'passed' }
+    let(:labware_record_cancelled) do
+      create :labware_with_state_changes, purpose: purposes[0], target_state: 'cancelled'
     end
+    let(:labware_records) { [labware_record_no_state, labware_record_passed, labware_record_cancelled] }
 
     it 'returns the correct format' do
-      expect(controller.mould_data_for_view(purposes, labware_records)).to eq expected_output
+      expected_output = {
+        purposes[0].name => [
+          { record: labware_record_no_state, state: 'pending' },
+          { record: labware_record_passed, state: 'passed' }
+          # cancelled one not present
+        ],
+        purposes[1].name => []
+      }
+
+      expect(controller.mould_data_for_view(purpose_names, labware_records)).to eq expected_output
+    end
+  end
+
+  describe '#arrange_labware_records' do
+    let(:pipeline_purposes) { create_list :v2_purpose, 3 }
+    let(:another_purpose) { create :v2_purpose }
+
+    let(:pipeline_purpose_names) { pipeline_purposes.map(&:name) }
+
+    let(:pipeline_ancestor1) { create :labware, purpose: pipeline_purposes[0] }
+    let(:pipeline_ancestor2) { create :labware, purpose: pipeline_purposes[1] }
+    let(:another_ancestor) { create :labware, purpose: another_purpose }
+
+    let(:valid_labware1) { create :labware, purpose: pipeline_purposes[0] }
+    let(:valid_labware2) { create :labware, purpose: pipeline_purposes[1] }
+    let(:valid_labware3) { create :labware, purpose: pipeline_purposes[1], ancestors: [pipeline_ancestor1] }
+    let(:valid_labware4) { create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor1] }
+    let(:valid_labware5) { create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor2] }
+    let(:valid_labware6) do
+      create :labware, purpose: pipeline_purposes[2], ancestors: [pipeline_ancestor1, pipeline_ancestor2]
+    end
+    let(:valid_labware7) do
+      create :labware,
+             purpose: pipeline_purposes[2],
+             ancestors: [pipeline_ancestor1, pipeline_ancestor2, another_ancestor]
+    end
+    let(:valid_labware) do
+      [valid_labware1, valid_labware2, valid_labware3, valid_labware4, valid_labware5, valid_labware6, valid_labware7]
+    end
+
+    let(:invalid_labware1) { create :labware, purpose: pipeline_purposes[2] }
+    let(:invalid_labware2) { create :labware, purpose: pipeline_purposes[2], ancestors: [another_ancestor] }
+    let(:invalid_labware) { [invalid_labware1, invalid_labware2] }
+
+    let(:all_labware) { valid_labware + invalid_labware }
+    let(:specific_labware) { all_labware.select { |lw| pipeline_purposes.take(2).include? lw.purpose } }
+    let(:general_labware) { all_labware.select { |lw| lw.purpose == pipeline_purposes.last } }
+
+    before do
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(specific_labware, general_labware)
+    end
+
+    it 'filters the final purpose for labware with ancestors from previous purposes' do
+      actual = controller.arrange_labware_records(pipeline_purpose_names, '2020-08-25')
+      expected = valid_labware
+
+      expect(actual).to eq expected
     end
   end
 end

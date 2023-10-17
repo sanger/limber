@@ -4,7 +4,7 @@ FactoryBot.define do
   # Basic v2 Plate Purpose
   factory :v2_purpose, class: Sequencescape::Api::V2::Purpose, traits: [:barcoded_v2] do
     skip_create
-    name { 'Limber Example Purpose' }
+    sequence(:name) { |n| "Limber Example Purpose #{n}" }
     uuid { 'example-purpose-uuid' }
   end
 

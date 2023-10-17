@@ -74,6 +74,9 @@ export default {
     // Sequencescape API V2 URL
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
+    // Sequencescape API V2 API key
+    sequencescapeApiKey: { type: String, default: 'development' },
+
     // Limber plate purpose UUID
     purposeUuid: { type: String, required: true },
 
@@ -119,7 +122,7 @@ export default {
 
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
-      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
+      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources, this.sequencescapeApiKey),
 
       // Object containing transfers creator's extraParam function and the
       // state of the transfers (i.e. isValid)

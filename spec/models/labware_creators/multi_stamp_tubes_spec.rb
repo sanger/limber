@@ -119,6 +119,52 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         body: '{}'
       )
     end
+    context 'when the submission is created' do
+      describe 'internal methods' do
+        it 'determines the configuration for the submission' do
+          expect(subject.send(:configured_params)).to eq(
+            {
+              'allowed_extra_barcodes' => false,
+              'request_options' => {
+                'fragment_size_required_from' => '200',
+                'fragment_size_required_to' => '800',
+                'library_type' => 'example_library'
+              },
+              'template_name' => 'example'
+            }
+          )
+        end
+
+        context 'if there is more than one configuration' do
+          let!(:purpose_config) do
+            create :multi_stamp_tubes_purpose_configs, name: child_purpose_name, uuid: child_purpose_uuid
+          end
+          it 'adds an error' do
+            subject.send(:configured_params)
+            expect(subject.errors.full_messages).to include('Expected only one submission')
+          end
+        end
+
+        describe '#autodetect_studies_project' do
+          it 'returns true when specified in the config' do
+            expect(subject).to receive(:configured_params).and_return(
+              { autodetect_studies_project: true, request_options: {} }
+            )
+            expect(subject.send(:autodetect_studies_project)).to eq(true)
+          end
+          it 'returns false when specified in the config' do
+            expect(subject).to receive(:configured_params).and_return(
+              { autodetect_studies_project: false, request_options: {} }
+            )
+            expect(subject.send(:autodetect_studies_project)).to eq(false)
+          end
+          it 'returns false if not specified in the config' do
+            expect(subject).to receive(:configured_params).and_return({ request_options: {} })
+            expect(subject.send(:autodetect_studies_project)).to eq(false)
+          end
+        end
+      end
+    end
 
     context '#save!' do
       setup do

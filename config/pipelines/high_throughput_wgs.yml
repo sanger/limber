@@ -4,7 +4,6 @@ WGS: # Top of the pipeline (Library Prep)
   filters:
     request_type_key:
       - limber_wgs
-      - limber_lcmb
       - limber_rnaa
     library_type: Standard
   library_pass: LB Lib PCR-XP

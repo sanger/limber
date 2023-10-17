@@ -1,0 +1,64 @@
+[
+  {
+    "barcodeFields": [
+      {
+        "x": 5,
+        "y": 8,
+        "cellWidth": 0.5,
+        "barcodeType": "datamatrix",
+        "value": "<%= merge_fields[:barcode] %>",
+        "height": 5
+      }
+    ],
+    "textFields": [
+      {
+        "x": 4,
+        "y": 16,
+        "value": "<%= merge_fields[:fourth_line] %>",
+        "font": 'proportional',
+        "fontSize": 2,
+        "rotation": 'east'
+      },
+      {
+        "x": 7,
+        "y": 16,
+        "value": "<%= merge_fields[:third_line] %>",
+        "font": 'proportional',
+        "fontSize": 1.7,
+        "rotation": 'east'
+      },
+      {
+        "x": 10,
+        "y": 16,
+        "value": "<%= merge_fields[:second_line] %>",
+        "font": 'proportional',
+        "fontSize": 2,
+        "rotation": 'east'
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "value": "<%= merge_fields[:first_line] %>",
+        "font": 'proportional',
+        "fontSize": 2,
+        "rotation": 'east'
+      },
+      {
+        "x": 27,
+        "y": 18,
+        "value": "<%= merge_fields[:round_label_top_line] %>",
+        "font": 'proportional',
+        "fontSize": 1.7,
+        "rotation": 'east'
+      },
+      {
+        "x": 25,
+        "y": 15,
+        "value": "<%= merge_fields[:round_label_bottom_line] %>",
+        "font": 'proportional',
+        "fontSize": 1.7,
+        "rotation": 'east'
+      }
+    ]
+  }
+]

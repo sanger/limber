@@ -19,7 +19,7 @@
               <%= link_to "#{labware.labware_barcode&.human}", url_for(labware) %><br/>
               <%= labware.input_barcode %><br/>
               <%= labware_data[:state] %><br/>
-              <%= "created #{labware.created_at.strftime("%d/%m/%y")}" %>
+              <%= "updated #{labware.updated_at.strftime("%d/%m/%y")}" %>
             <% end %>
           <% end %>
         <% end %>

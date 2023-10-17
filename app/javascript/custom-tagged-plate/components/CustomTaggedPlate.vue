@@ -118,9 +118,14 @@ export default {
   },
   props: {
     sequencescapeApi: {
-      // Sequencescape V1 API for creation of the custom tagged plate
+      // Sequencescape V2 API for creation of the custom tagged plate
       type: String,
       default: 'http://localhost:3000/api/v2',
+    },
+    sequencescapeApiKey: {
+      // Sequencescape V2 API authentication key
+      type: String,
+      default: 'development',
     },
     purposeUuid: {
       // Plate purpose uuid for the custom tagged plate, used to identify which
@@ -171,7 +176,7 @@ export default {
       loading: true, // tracks loading state for the page modal
       progressMessage: 'Fetching parent details...', // holds message displayed by page modal
       parentPlate: null, // the parent plate retrieved using the parentUuid prop
-      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources), // devour API object
+      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources, this.sequencescapeApiKey), // devour API object
       plateViewCaption: 'Modify the tag layout for the new plate using options on the right', // caption for plate view
       creationRequestInProgress: null, // flag to indicate plate creation underway
       creationRequestSuccessful: null, // flag to indicate success of plate creation

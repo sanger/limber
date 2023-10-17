@@ -8,6 +8,7 @@ FactoryBot.define do
     skip_create
 
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
+    sequence(:name) { |i| "sample_name #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
     control { false }
     control_type { nil }
@@ -32,6 +33,17 @@ FactoryBot.define do
 
   factory :v2_sample_metadata, class: Sequencescape::Api::V2::SampleMetadata do
     skip_create
+    sequence(:supplier_name) { |i| "supplier name #{i}" }
+    sample_common_name { 'Homo sapiens' }
+    collected_by { 'Sanger' }
+    cohort { 'Cohort' }
+    sample_description { 'Description' }
+  end
+
+  factory :v2_sample_metadata_for_mbrave, class: Sequencescape::Api::V2::SampleMetadata do
+    skip_create
+    sequence(:cohort) { |i| "cohort #{i}" }
+    sequence(:sample_description) { |i| "sample description #{i}" }
     sequence(:supplier_name) { |i| "supplier name #{i}" }
     sample_common_name { 'Homo sapiens' }
     collected_by { 'Sanger' }

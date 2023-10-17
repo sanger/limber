@@ -53,6 +53,23 @@ FactoryBot.define do
       transfer_parameters { { target_molarity_nm: 4, target_volume_ul: 192, minimum_pick_ul: 2 } }
     end
 
+    # tube with file links
+    factory :tube_with_file_links_config do
+      name { 'Bioscan Pool Tube' }
+      file_links { [{ name: 'Download MBrave UMI file', id: 'bioscan_mbrave', format: 'tsv' }] }
+      presenter_class { 'Presenters::FinalTubePresenter' }
+    end
+
+    factory :tag_plate_384_purpose_config do
+      name { 'Tag Plate - 384' }
+      presenter_class { 'Presenters::TagPlate384Presenter' }
+      pmb_template { 'sqsc_384plate_label_template' }
+      sprint_template { 'plate_384_single.yml.erb' }
+      default_printer_type { :plate_384_single }
+      printer_type { '384 Well Plate Double' }
+      label_class { 'Labels::Plate384SingleLabel' }
+    end
+
     # Sets up a config with a minimal presenter
     factory :minimal_purpose_config do
       presenter_class { 'Presenters::MinimalPlatePresenter' }
@@ -149,6 +166,27 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a stamp with randomised controls
+    factory :stamp_with_randomised_controls_purpose_config do
+      asset_type { 'plate' }
+      stock_plate { true }
+      cherrypickable_target { true }
+      input_plate { false }
+      creator_class { 'LabwareCreators::StampedPlateAddingRandomisedControls' }
+      presenter_class { 'Presenters::StockPlatePresenter' }
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+      controls do
+        [
+          { control_type: 'pcr positive', name_prefix: 'CONTROL_POS_' },
+          { control_type: 'pcr negative', name_prefix: 'CONTROL_NEG_' }
+        ]
+      end
+      control_study_name { 'UAT Study' }
+      control_project_name { 'UAT Project' }
+      control_location_rules { [{ type: 'not', value: %w[H1 G1] }, { type: 'well_exclusions', value: %w[H12] }] }
+    end
+
     # Configuration for a multi stamp from tubes plate purpose
     factory :multi_stamp_tubes_purpose_config do
       creator_class { 'LabwareCreators::MultiStampTubes' }
@@ -164,6 +202,51 @@ FactoryBot.define do
               'fragment_size_required_from' => '200',
               'fragment_size_required_to' => '800'
             }
+          }
+        }
+      end
+    end
+
+    # Configuration for too many purpose configs
+    factory :multi_stamp_tubes_purpose_configs do
+      submission_options do
+        {
+          'Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          },
+          'Another Cardinal library prep' => {
+            'template_name' => 'example',
+            'request_options' => {}
+          }
+        }
+      end
+    end
+
+    # Configuration for a plate split to tube racks purpose
+    factory :plate_split_to_tube_racks_purpose_config do
+      creator_class do
+        {
+          name: 'LabwareCreators::PlateSplitToTubeRacks',
+          args: {
+            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_seq_tube_name_prefix: 'SEQ',
+            child_spare_tube_purpose_name: 'Spare Child Purpose',
+            child_spare_tube_name_prefix: 'SPR'
+          }
+        }
+      end
+      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+    end
+
+    # Configuration to set number_of_source_wells argument
+    factory :pooled_wells_by_sample_in_groups_purpose_config do
+      transient { number_of_source_wells { 2 } }
+      creator_class do
+        {
+          name: 'LabwareCreators::PooledWellsBySampleInGroups',
+          args: {
+            number_of_source_wells: number_of_source_wells
           }
         }
       end

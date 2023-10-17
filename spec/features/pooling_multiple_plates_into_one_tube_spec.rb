@@ -176,6 +176,18 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
     scan_in('Plate 3', with: plate_barcode_3)
-    expect(page).to have_text('Scanned plates have matching tags')
+
+    expect(page).to have_text(
+      'The scanned plate contains tags that would clash with those in other plates in the pool. ' \
+        'Tag clashes found between: DN1 (DN1S) and DN3 (DN3U)'
+    )
+
+    # removes the error message if another scan is made (NB. currently validation and messages relate to
+    # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
+    scan_in('Plate 3', with: '')
+
+    expect(page).to_not have_text(
+      'The scanned plate contains tags that would clash with those in other plates in the pool.'
+    )
   end
 end
