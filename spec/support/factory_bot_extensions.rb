@@ -38,7 +38,7 @@ module FactoryBot
       nil
     end
 
-            def with_belongs_to_associations(*names, actions: ['read'])
+    def with_belongs_to_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
           send("#{association}_uuid") { "#{association}-uuid" }
@@ -56,5 +56,5 @@ module FactoryBot
       end
       nil
     end
-      end
+  end
 end

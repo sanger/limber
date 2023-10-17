@@ -62,7 +62,7 @@ module Validators
       end
     end
 
-        def validate(presenter) # rubocop:todo Metrics/AbcSize
+    def validate(presenter) # rubocop:todo Metrics/AbcSize
       analyzer = Analyzer.new(presenter.labware)
       if analyzer.no_submission?
         presenter.errors.add(:plate, 'has no requests. Please check that your submission built correctly.')
@@ -78,5 +78,5 @@ module Validators
         end
       end
     end
-      end
+  end
 end

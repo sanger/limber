@@ -70,4 +70,4 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
-  end
+end
