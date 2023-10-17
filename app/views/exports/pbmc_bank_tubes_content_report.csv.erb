@@ -8,6 +8,7 @@
 
 <%= CSV.generate_line [
 'Well name',
+'Well position',
 'Donor ID',
 'Parent barcode',
 'FluidX barcode',
@@ -81,25 +82,24 @@
     # ggg source_well.aliquots.first.sample.component_samples.first
     ggg source_well.aliquots.first.sample.sample_metadata
     ggg source_well.downstream_tubes
-    ggg source_well.qc_results.first
-    ggg source_well.transfer_requests_as_target.first
-    ggg source_well.upstream_tubes.first
+    ggg source_well.qc_results
+    ggg source_well.transfer_requests_as_target
+    ggg source_well.upstream_tubes
 
-    # if destination_tube_name_array.length == 3
     rows_array << [
       source_well.name,  # Well name ✅
-      source_well.aliquots.first.sample.sample_metadata&.donor_id,     # Donor ID ✅
-      @ancestor_tubes.last.labware_barcode,   # Parent barcode
-      @ancestor_tubes.first.labware_barcode, # FluidX barcode
+      source_well_posn,  # Well position 
+      source_well.aliquots.first.sample.sample_metadata.respond_to?(:donor_id) ? source_well.aliquots.first.sample.sample_metadata.donor_id : nil,     # Donor ID ✅
+      @ancestor_tubes.values.last.labware_barcode,   # Parent barcode
+      @ancestor_tubes.values.first.labware_barcode, # FluidX barcode
       tube_rack_barcode,   # Extraction and freeze date
       purpose,  # Sequencing or contingency ✅
       source_well.latest_live_cell_count,  # Cell count ✅
       source_well.latest_cell_viability,  # Viability ✅ # TODO: check
       '135 µL', # Volume # ✅ TODO: units
-      source_well.aliquots.first.sample.name,  # Study name
+      @plate.labware_barcode,  # Study name
       source_well.aliquots.first.sample.sample_metadata&.collected_by   # Collection site ✅
     ]
-    # end
   end
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
