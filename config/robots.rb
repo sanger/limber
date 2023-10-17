@@ -3039,4 +3039,26 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # LRC Hamilton Star bed verification
+    # LRC Blood Bank to LRC PBMC Bank
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-blood-bank-to-lrc-pbmc-bank',
+      name: 'Hamilton LRC Blood Bank => LRC PBMC Bank',
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC Blood Bank',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC PBMC Bank',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
