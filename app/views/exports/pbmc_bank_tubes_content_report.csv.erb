@@ -1,0 +1,107 @@
+<%# This is a report of the contents of the tubes in the PBMC Bank plate %> 
+<%= CSV.generate_line [
+                        'Workflow',
+                        @workflow
+                      ],
+                      row_sep: ""
+%>
+
+<%= CSV.generate_line [
+'Well name',
+'Donor ID',
+'Parent barcode',
+'FluidX barcode',
+'Extraction and freeze date',
+'Sequencing or contingency',
+'Cell count',
+'Viability',
+'Volume',
+'Study name',
+'Collection site',
+                  ],
+                      row_sep: ""
+%>
+<%
+  rows_array = []
+  @plate.wells_in_columns.each do |source_well|
+    # skip if well empty (not all wells have samples in them)
+    next if source_well.empty?
+
+    # skip if well not in passed state
+    next unless source_well.passed?
+
+    # skip if no downstream tubes for this well (not set up children in Limber yet)
+    next if source_well.downstream_tubes.empty?
+
+    # expecting 1 sample tube
+    destination_tube = source_well.downstream_tubes.first
+    destination_tube_v2 = Sequencescape::Api::V2.tube_with_custom_includes(
+                            'custom_metadatum_collection',
+                            nil,
+                            barcode: destination_tube.labware_barcode.machine
+                          )
+
+    next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
+
+    # get tube metadata from destination tube
+    metadata = destination_tube_v2.custom_metadatum_collection.metadata
+
+    next unless metadata
+
+    tube_rack_barcode = metadata['tube_rack_barcode']
+    tube_rack_position = metadata['tube_rack_position']
+
+    next unless tube_rack_barcode && tube_rack_position
+
+    sample_uuid = source_well.aliquots.first.sample.uuid
+
+    source_well_posn = source_well.position['name']
+
+    destination_tube_name_array = destination_tube_v2.name.split(':')
+    # e.g. SEQ:DESTTUBE:A1
+
+    purpose = ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
+
+    require 'inspector'
+
+    # print out all available data
+    puts "----------------------------------------"
+    ggg @plate
+    ggg @plate_with_qc_results
+    ggg @ancestor_tubes
+    ggg destination_tube
+    ggg destination_tube_v2
+    ggg purpose
+    ggg metadata
+
+    ggg source_well
+
+    ggg source_well.aliquots
+    ggg source_well.aliquots.first.sample
+    # ggg source_well.aliquots.first.sample.component_samples.first
+    ggg source_well.aliquots.first.sample.sample_metadata
+    ggg source_well.downstream_tubes
+    ggg source_well.qc_results.first
+    ggg source_well.transfer_requests_as_target.first
+    ggg source_well.upstream_tubes.first
+
+    # if destination_tube_name_array.length == 3
+    rows_array << [
+      source_well.name,  # Well name ✅
+      source_well.aliquots.first.sample.sample_metadata&.donor_id,     # Donor ID ✅
+      @ancestor_tubes.last.labware_barcode,   # Parent barcode
+      @ancestor_tubes.first.labware_barcode, # FluidX barcode
+      tube_rack_barcode,   # Extraction and freeze date
+      purpose,  # Sequencing or contingency ✅
+      source_well.latest_live_cell_count,  # Cell count ✅
+      source_well.latest_cell_viability,  # Viability ✅ # TODO: check
+      '135 µL', # Volume # ✅ TODO: units
+      source_well.aliquots.first.sample.name,  # Study name
+      source_well.aliquots.first.sample.sample_metadata&.collected_by   # Collection site ✅
+    ]
+    # end
+  end
+%>
+<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>
