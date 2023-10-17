@@ -76,6 +76,7 @@ Rails.application.configure do
   config.api.v2.connection_options = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options.url = rewrite_localhost(ENV.fetch('API2_URL', 'http://localhost:3000/api/v2'))
   config.api.v2.connection_options.js_url = ENV.fetch('API2_URL', 'http://localhost:3000/api/v2')
+  config.api.v2.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
 
   config.sequencescape_url = 'http://localhost:3000'
 

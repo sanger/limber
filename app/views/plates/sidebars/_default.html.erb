@@ -38,6 +38,7 @@
     <div id="labware-custom-metadata-add-form"
       data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
       data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
       data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
       data-labware-id="<%= presenter.id %>">
     </div>

@@ -49,43 +49,49 @@ repository, as indicated:
    rbenv install
    ```
 
-2. In Limber, make the Bundler gem install the dependencies for this project:
+1. In Limber, make the Bundler gem install the dependencies for this project:
 
    ```shell
    bundle install
    ```
 
-3. In Limber, install the yarn dependencies:
+1. In Limber, install the yarn dependencies:
 
    ```shell
    yarn install
    ```
 
-4. In Sequencescape, start the local server (will start on port 3000):
+1. In Sequencescape, perform the post deploy actions:
+
+   ```shell
+   bundle exec rake application:post_deploy
+   ```
+
+1. In Sequencescape, start the local server (will start on port 3000):
 
    ```shell
    bundle exec rails s
    ```
 
-5. In Limber, connect to Sequencescape to configure required data:
+1. In Limber, connect to Sequencescape to configure required data:
 
    ```shell
    bundle exec rake config:generate
    ```
 
-6. In Sequencescape, configure all Limber required data:
+1. In Sequencescape, configure all Limber required data:
 
    ```shell
    bundle exec rake limber:setup
    ```
 
-7. In Sequencescape, start the delayed job processor
+1. In Sequencescape, start the delayed job processor
 
    ```shell
    bundle exec rake jobs:work
    ```
 
-8. In Limber, start the local server (will start on port 3001):
+1. In Limber, start the local server (will start on port 3001):
 
    ```shell
    bundle exec rails s

@@ -5,6 +5,7 @@ import sequencescapeResources from 'shared/resources'
 import isEqual from 'fast-deep-equal'
 
 const dummyApiUrl = 'http://www.example.com'
+const dummyApiKey = 'mock_api_key'
 
 // Nice user readable summary of the request object
 const requestFormatter = function (request) {
@@ -30,7 +31,7 @@ Expected Requests:`
 }
 
 const mockApi = function (resources = sequencescapeResources) {
-  const devour = devourApi({ apiUrl: dummyApiUrl }, resources)
+  const devour = devourApi({ apiUrl: dummyApiUrl }, resources, dummyApiKey)
   const mockedRequests = []
   const findRequest = (request) => {
     return mockedRequests.find((requestResponse) => {

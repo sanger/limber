@@ -103,9 +103,9 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     return nil unless contains_control?
 
     case control_info
-    when 'positive'
+    when 'positive', 'pcr positive'
       '+'
-    when 'negative'
+    when 'negative', 'pcr negative', 'lysate negative'
       '-'
     else
       'c' # control of unspecified type

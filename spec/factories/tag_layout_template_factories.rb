@@ -45,6 +45,10 @@ FactoryBot.define do
       factory :tag_layout_template_by_quadrant_in_columns do
         direction { 'column' }
       end
+
+      factory :tag_layout_template_by_quadrant_in_columns_then_columns do
+        direction { 'column then column' }
+      end
     end
 
     factory :tag_layout_template_combinatorial_by_row do

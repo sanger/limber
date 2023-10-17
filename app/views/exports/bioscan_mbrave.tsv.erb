@@ -1,0 +1,35 @@
+<%= 
+    aliquot = @tube.aliquots.first    
+    first_tag_1_group_name = aliquot.tag.tag_group.name
+    version = mbrave_tag_version(first_tag_1_group_name)
+
+    header = ['Forward Labels', 'Reverse Labels', 'Label', 'Group', 'UMI plate ID', 'Sample Plate ID']
+    rows = []
+    @tube.aliquots.each do |aliquot| 
+      tag_1_group_name = aliquot.tag.tag_group.name
+      tag_2_group_name = aliquot.tag2.tag_group.name
+
+      if (version != mbrave_tag_version(tag_1_group_name)) || (version != mbrave_tag_version(tag_2_group_name))
+        raise "This tube contains tags from different tag group versions"
+      end
+      tag2_plate_num = mbrave_tag2_plate_num(tag_2_group_name)
+
+      rows << [
+        mbrave_tag_name(tag_1_group_name, (aliquot.tag_index - 1)),
+        mbrave_tag_name(tag_2_group_name, (aliquot.tag2_index - 1) % 4),
+        aliquot.sample.sample_metadata.supplier_name, 
+        aliquot.sample.sample_metadata.cohort, 
+        tag2_plate_num,
+        aliquot.sample.sample_metadata.sample_description,
+        # Add tag_index and tag2_index for sorting
+        aliquot.tag_index,
+        aliquot.tag2_index 
+      ]
+    end
+
+    rows.sort_by! { |x| [x[4], x[7], x[6]] }  # Sort by tag2_plate_num, tag2_index, and tag_index
+    rows.each { |x| x.slice!(-2, 2) } # Remove tag_index and tag2_index from rows
+    rows.unshift(header)  # Add header row to the beginning
+
+    rows.map{|row| row.to_csv(col_sep: ("\t"))}.join
+%>

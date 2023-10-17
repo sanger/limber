@@ -72,11 +72,17 @@ module ApiUrlHelper
     end
 
     def stub_api_v2_post(klass)
-      # rubocop:todo Layout/LineLength
-      # intercepts the 'update_attributes' method for any class beginning with 'Sequencescape::Api::V2::' and returns true
-      # rubocop:enable Layout/LineLength
+      # intercepts the 'update' method for any class beginning with
+      # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
+    end
+
+    def stub_api_v2_save(klass)
+      # intercepts the 'save' method for any class beginning with
+      # 'Sequencescape::Api::V2::' and returns true
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
     def stub_barcode_search(barcode, labware)
@@ -104,6 +110,16 @@ module ApiUrlHelper
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    end
+
+    def stub_v2_project(project)
+      arguments = [{ name: project.name }]
+      allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
+    end
+
+    def stub_v2_study(study)
+      arguments = [{ name: study.name }]
+      allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
     end
   end
   extend ClassMethods

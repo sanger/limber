@@ -1,0 +1,28 @@
+---
+# Entry point for LTHR pipeline from Beckman picked plates
+# Presents the user with a page to select a workflow, which
+# builds the appropriate Sequencescape submission
+LDW-96 Stock:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :creator_class: LabwareCreators::Uncreatable
+  :presenter_class: Presenters::SubmissionPlatePresenter
+  :submission_options:
+    Stamp from Deep-Well to Shallow-Well:
+      template_name: 'Limber-Htp - Deep Well Plate Stamping'
+      allowed_extra_barcodes: false
+      # We don't really need request options, but the Sequencescape API expects to
+      # receive an object and won't accept an empty one, so we pass it a key it
+      # it won't use and this stops it complaining about a "blank" object.
+      request_options:
+        no_options: ''
+LSW-96 Stock:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: deep_well_plate_stamping
+  :creator_class: LabwareCreators::StampedPlate

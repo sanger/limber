@@ -9,6 +9,11 @@ module SearchHelper # rubocop:todo Style/Documentation
     Settings.purposes.values.select(&:input_plate).map(&:name)
   end
 
+  # Returns purpose names of stock plates using stock_plate flag instead of input_plate.
+  def self.stock_plate_names_with_flag
+    Settings.purposes.values.select(&:stock_plate).map(&:name)
+  end
+
   def self.purpose_config_for_purpose_name(purpose_name)
     Settings.purposes.values.find { |obj| obj[:name] == purpose_name }
   end

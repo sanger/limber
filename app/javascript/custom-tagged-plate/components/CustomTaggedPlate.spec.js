@@ -24,6 +24,7 @@ describe('CustomTaggedPlate', () => {
     return shallowMount(CustomTaggedPlate, {
       propsData: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
+        sequencescapeApiKey: 'development',
         purposeUuid: '',
         purposeName: 'Custom Tagged Plate',
         targetUrl: '',
@@ -645,6 +646,7 @@ describe('CustomTaggedPlate', () => {
       const wrapper = mount(CustomTaggedPlate, {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
+          sequencescapeApiKey: 'development',
           purposeUuid: '',
           purposeName: 'Custom Tagged Plate',
           targetUrl: '',
@@ -680,6 +682,7 @@ describe('CustomTaggedPlate', () => {
       const wrapper = mount(CustomTaggedPlate, {
         propsData: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
+          sequencescapeApiKey: 'development',
           purposeUuid: '',
           purposeName: 'Custom Tagged Plate',
           targetUrl: '',

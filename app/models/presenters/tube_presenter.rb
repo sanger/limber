@@ -24,7 +24,9 @@ module Presenters
     delegate :purpose, :state, :human_barcode, to: :labware
 
     def label
-      Labels::TubeLabel.new(labware)
+      # fetch label class from purpose if present
+      label_class = purpose_config.fetch(:label_class) || 'Labels::TubeLabel'
+      label_class.constantize.new(labware)
     end
 
     def sample_count
@@ -75,6 +77,22 @@ module Presenters
 
     def transfer_volumes?
       !purpose_config[:transfer_parameters].nil?
+    end
+
+    def csv_file_links
+      purpose_config
+        .fetch(:file_links, [])
+        .map do |link|
+          format_extension = link.format || 'csv'
+          [
+            link.name,
+            [
+              :limber_tube,
+              :tubes_export,
+              { id: link.id, limber_tube_id: human_barcode, format: format_extension, **link.params || {} }
+            ]
+          ]
+        end
     end
   end
 end

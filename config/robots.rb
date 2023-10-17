@@ -1192,36 +1192,36 @@ ROBOT_CONFIG =
         bed(1).barcode => {
           purpose: 'GBS-96 Stock',
           states: %w[passed qc_complete],
-          child: bed(5).barcode,
+          child: bed(3).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
           purpose: 'GBS-96 Stock',
           states: %w[passed qc_complete],
-          child: bed(5).barcode,
+          child: bed(3).barcode,
           label: 'Bed 2'
         },
         bed(3).barcode => {
-          purpose: 'GBS-96 Stock',
-          states: %w[passed qc_complete],
-          child: bed(5).barcode,
+          purpose: 'GBS PCR1',
+          states: %w[pending],
+          parents: [bed(1).barcode, bed(2).barcode, bed(4).barcode, bed(5).barcode],
+          target_state: 'passed',
           label: 'Bed 3'
         },
         bed(4).barcode => {
           purpose: 'GBS-96 Stock',
           states: %w[passed qc_complete],
-          child: bed(5).barcode,
+          child: bed(3).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'GBS PCR1',
-          states: %w[pending],
-          parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
-          target_state: 'passed',
+          purpose: 'GBS-96 Stock',
+          states: %w[passed qc_complete],
+          child: bed(3).barcode,
           label: 'Bed 5'
         }
       },
-      destination_bed: bed(5).barcode,
+      destination_bed: bed(3).barcode,
       class: 'Robots::QuadrantRobot'
     )
 
@@ -2795,6 +2795,268 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 7',
           parent: bed(2).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Bioscan Beckman bed verification
+    # LILYS-96 Stock ethanol removal step
+    custom_robot(
+      'beckman-lilys-96-stock-preparation',
+      name: 'Beckman LILYS-96 Stock Preparation',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Bioscan Beckman bed verification
+    # LILYS-96 Stock to LBSN-96 Lysate
+    # one to one stamp with added randomised controls
+    custom_robot(
+      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
+      verify_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LILYS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
+        }
+      }
+    )
+
+    # Bioscan Mosquito bed verification
+    # LBSN-96 Lysate plates to LBSN-384 PCR 1
+    # transfers up to 4 plates into the 384 destination
+    custom_robot(
+      'mosquito-lbsn-96-lysate-to-lbsn-384-pcr-1',
+      name: 'Mosquito LBSN-96 Lysate => LBSN-384 PCR 1',
+      require_robot: true,
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 1'
+        },
+        bed(2).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 2'
+        },
+        bed(3).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 3'
+        },
+        bed(4).barcode => {
+          purpose: 'LBSN-96 Lysate',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 4'
+        },
+        bed(5).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['pending'],
+          label: 'Bed 5',
+          parents: [bed(1).barcode, bed(2).barcode, bed(3).barcode, bed(4).barcode],
+          target_state: 'passed'
+        }
+      },
+      destination_bed: bed(5).barcode,
+      class: 'Robots::QuadrantRobot'
+    )
+
+    # Bioscan Mosquito bed verification
+    # LBSN-384 PCR 1 to LBSN-384 PCR 2
+    # transfers up to 2 pairs of plates at a time
+    custom_robot(
+      'mosquito-lbsn-384-pcr-1-to-lbsn-384-pcr-2',
+      name: 'Mosquito LBSN-384 PCR 1 => LBSN-384 PCR 2',
+      require_robot: true,
+      beds: {
+        bed(2).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['passed'],
+          child: bed(3).barcode,
+          label: 'Bed 2'
+        },
+        bed(3).barcode => {
+          purpose: 'LBSN-384 PCR 2',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(2).barcode,
+          target_state: 'passed'
+        },
+        bed(4).barcode => {
+          purpose: 'LBSN-384 PCR 1',
+          states: ['passed'],
+          child: bed(5).barcode,
+          label: 'Bed 4'
+        },
+        bed(5).barcode => {
+          purpose: 'LBSN-384 PCR 2',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # hamilton robot for stamping deep well stock plates to shallow well stock plates
+    custom_robot(
+      'hamilton-ldw-96-stock-to-lsw-96-stock',
+      name: 'Hamilton LDW-96 Stock => LSW-96 Stock',
+      beds: {
+        bed(12).barcode => {
+          purpose: 'LDW-96 Stock',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(2).barcode => {
+          purpose: 'LSW-96 Stock',
+          states: ['pending'],
+          label: 'Bed 2',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMB Bravo bed verification
+    # LCMB Cherrypick to LCMB End Prep
+    # Transfers 1:1
+    custom_robot(
+      'bravo-lcmb-cherrypick-to-lcmb-end-prep',
+      name: 'Bravo LCMB Cherrypick => LCMB End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMB Cherrypick',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    # LCMB Bravo bed verification
+    # Checks LCMB End Prep plate is on deck (alone)
+    # Requires robot scan so can be checked in next bed verification
+    custom_robot(
+      'bravo-lcmb-end-prep',
+      name: 'Bravo LCMB End Prep',
+      require_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMB Bravo bed verification
+    # LCMB End Prep to LCMB Lib PCR
+    # Transfers 1:1
+    # Checks same robot used as for previous bed verification ie. LCMB End Prep is in same
+    # position on same robot as before.
+    custom_robot(
+      'bravo-lcmb-end-prep-to-lcmb-lib-pcr',
+      name: 'Bravo LCMB End Prep => LCMB Lib PCR',
+      verify_robot: true,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMB End Prep',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMB Hamilton Star bed verification
+    # LCMB Lib PCR to LCMB Lib PCR-XP
+    # Transfers up to 2 pairs of plates at the same time
+    custom_robot(
+      'star-96-lcmb-lib-pcr-purification',
+      name: 'STAR-96 LCMB Lib PCR => LCMB Lib PCR-XP',
+      verify_robot: false,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMB Lib PCR-XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMB Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMB Lib PCR-XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LRC Hamilton Star bed verification
+    # LRC Blood Bank to LRC PBMC Bank
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-blood-bank-to-lrc-pbmc-bank',
+      name: 'Hamilton LRC Blood Bank => LRC PBMC Bank',
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC Blood Bank',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC PBMC Bank',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(15).barcode,
           target_state: 'passed'
         }
       }

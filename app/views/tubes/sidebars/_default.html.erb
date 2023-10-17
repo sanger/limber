@@ -5,7 +5,9 @@
   <%= card title: 'QC Information' do %>
     <div id="qc-information"
          data-asset-uuid="<%= @presenter.uuid %>"
-         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"></div>
+         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+         data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>">
+    </div>
   <% end %>
 
 
@@ -15,6 +17,9 @@
     <% end %>
     <% @presenter.control_additional_creation do -%>
       <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
+    <% end %>
+    <% presenter.csv_file_links.each do |link_name, link_target| %>
+      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
     <% end %>
     <% if presenter.transfer_volumes? %>
       <%= link_to "Validate tubes to view transfer volumes", validate_paired_tubes_path, class: 'btn btn-primary btn-lg btn-block' %>
@@ -36,6 +41,7 @@
     <div id="labware-custom-metadata-add-form"
       data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
       data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
       data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
       data-labware-id="<%= presenter.id %>">
     </div>
