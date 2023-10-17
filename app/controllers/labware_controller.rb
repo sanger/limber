@@ -14,8 +14,7 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
-  # rubocop:todo Metrics/MethodLength
-  def show # rubocop:todo Metrics/AbcSize
+    def show # rubocop:todo Metrics/AbcSize
     @presenter = presenter_for(@labware)
 
     response.headers['Vary'] = 'Accept'
@@ -44,9 +43,7 @@ class LabwareController < ApplicationController
     end
   end
 
-  # rubocop:enable Metrics/MethodLength
-
-  private
+    private
 
   def update_params
     state = params.require(:state)

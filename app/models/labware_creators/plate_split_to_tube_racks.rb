@@ -420,7 +420,6 @@ module LabwareCreators
     # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
     #
     # @return [String] The name prefix for the child tubes.
-    # rubocop:disable Metrics/MethodLength
     def tube_name_prefix(tube_type)
       config_arg = ''
       name_prefix =
@@ -437,9 +436,7 @@ module LabwareCreators
       name_prefix
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
+        # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
     # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
     # @param well [Well] The well to add the mapping for.
     # @param tube_name [String] The name of the tube to add the mapping for.
@@ -469,7 +466,6 @@ module LabwareCreators
     #
     # @return [Hash] A hash of attributes to use for the contingency tubes.
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def generate_tube_attributes(tube_type, csv_file, wells)
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
@@ -492,9 +488,7 @@ module LabwareCreators
     end
 
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-
-    # Returns a hash of details to use for generating a tube name based on the given prefix,
+        # Returns a hash of details to use for generating a tube name based on the given prefix,
     # stock tube barcode, and destination tube position.
     #
     # @param prefix [String] The prefix to use for the tube name.

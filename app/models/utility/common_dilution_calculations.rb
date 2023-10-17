@@ -42,7 +42,6 @@ module Utility
     #
     # @return [hash] The well details hash containing calculated normalisation values.
     #
-    # rubocop:todo Metrics/MethodLength
     def normalisation_details(wells) # rubocop:todo Metrics/AbcSize
       # sort on well coordinate to ensure wells are in plate column order
       wells
@@ -75,9 +74,7 @@ module Utility
         end
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    #
+        #
     # Computes the volume of source material required for normalisation based on the sample
     # concentration and attributes from the purpose configuration (target amount and volume,
     # minimum source volume).

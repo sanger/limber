@@ -28,6 +28,6 @@ namespace :test_config do
         'plate' => 'sqsc_96plate_label_template'
       }
     }
-    File.write(Rails.root.join('config/settings/test.yml'), settings.to_yaml)
+    Rails.root.join('config/settings/test.yml').write(settings.to_yaml)
   end
 end

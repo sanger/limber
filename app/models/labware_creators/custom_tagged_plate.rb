@@ -45,8 +45,7 @@ module LabwareCreators
       parent.populate_wells_with_pool
     end
 
-    # rubocop:todo Metrics/MethodLength
-    def create_plate! # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
+        def create_plate! # rubocop:todo Metrics/AbcSize
       @child =
         api
           .pooled_plate_creation
@@ -74,9 +73,7 @@ module LabwareCreators
       true
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    def pool_index(_pool_index)
+        def pool_index(_pool_index)
       nil
     end
 
