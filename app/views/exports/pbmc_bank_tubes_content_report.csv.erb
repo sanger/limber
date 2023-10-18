@@ -1,25 +1,21 @@
-<%# This is a report of the contents of the tubes in the PBMC Bank plate %> 
-<%= CSV.generate_line [
-                        'Workflow',
-                        @workflow
-                      ],
-                      row_sep: ""
-%>
+<%# This is a report of the contents of the tubes in the PBMC Bank plate %>
+<%= CSV.generate_line ['Workflow', @workflow], row_sep: '' %>
 
-<%= CSV.generate_line [
-'Well name',
-'Donor ID',
-'Parent barcode',
-'FluidX barcode',
-'Extraction and freeze date',
-'Sequencing or contingency',
-'Cell count',
-'Viability',
-'Volume',
-'Study name',
-'Collection site',
-                  ],
-                      row_sep: ""
+<%=
+  CSV.generate_line [
+                      'Well name',
+                      'Donor ID',
+                      'Parent barcode',
+                      'FluidX barcode',
+                      'Extraction and freeze date',
+                      'Sequencing or contingency',
+                      'Cell count',
+                      'Viability',
+                      'Volume',
+                      'Study name',
+                      'Collection site'
+                    ],
+                    row_sep: ''
 %>
 <%
   rows_array = []
@@ -35,13 +31,16 @@
 
     # expecting 1 sample tube
     destination_tube = source_well.downstream_tubes.first
-    destination_tube_v2 = Sequencescape::Api::V2.tube_with_custom_includes(
-                            'custom_metadatum_collection',
-                            nil,
-                            barcode: destination_tube.labware_barcode.machine
-                          )
+    destination_tube_v2 =
+      Sequencescape::Api::V2.tube_with_custom_includes(
+        'custom_metadatum_collection',
+        nil,
+        barcode: destination_tube.labware_barcode.machine
+      )
 
-    next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
+    unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
+      next
+    end
 
     # get tube metadata from destination tube
     metadata = destination_tube_v2.custom_metadatum_collection.metadata
@@ -58,17 +57,25 @@
     source_well_posn = source_well.position['name']
 
     destination_tube_name_array = destination_tube_v2.name.split(':')
+
     # e.g. SEQ:DESTTUBE:A1
 
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
-    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
-    purpose = ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
-    volume = source_well.sequencing_tube_volume ? purpose == 'Sequencing' : source_well.contingency_tube_volume
+    donor_id =
+      sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
+    purpose =
+      ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
+    volume =
+      if source_well.sequencing_tube_volume
+        purpose == 'Sequencing'
+      else
+        source_well.contingency_tube_volume
+      end
 
     require 'inspector'
 
     # print out all available data
-    puts "----------------------------------------"
+    puts '----------------------------------------'
     ggg @plate
     ggg @plate_with_qc_results
     ggg @ancestor_tubes
@@ -81,6 +88,7 @@
 
     ggg source_well.aliquots
     ggg source_well.aliquots.first.sample
+
     # ggg source_well.aliquots.first.sample.component_samples.first
     ggg source_well.aliquots.first.sample.sample_metadata
     ggg source_well.downstream_tubes
@@ -89,20 +97,20 @@
     ggg source_well.upstream_tubes
 
     rows_array << [
-      source_well.name,  # Well name ✅
-      donor_id,     # Donor ID ✅
-      @ancestor_tubes.values.last.labware_barcode,   # Parent barcode
+      source_well.name, # Well name ✅
+      donor_id, # Donor ID ✅
+      @ancestor_tubes.values.last.labware_barcode, # Parent barcode
       @ancestor_tubes.values.first.labware_barcode, # FluidX barcode
-      tube_rack_barcode,   # Extraction and freeze date
-      purpose,  # Sequencing or contingency ✅
-      source_well.latest_live_cell_count,  # Cell count ✅
-      source_well.latest_cell_viability,  # Viability ✅ # TODO: check
+      tube_rack_barcode, # Extraction and freeze date
+      purpose, # Sequencing or contingency ✅
+      source_well.latest_live_cell_count, # Cell count ✅
+      source_well.latest_cell_viability, # Viability ✅ # TODO: check
       volume, # Volume # ✅ TODO: units
-      source_well.aliquots.first.study,  # Study name
-      source_well.aliquots.first.sample.sample_metadata&.collected_by   # Collection site ✅
+      source_well.aliquots.first.study, # Study name
+      source_well.aliquots.first.sample.sample_metadata&.collected_by # Collection site ✅
     ]
   end
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[0]) }.each do |row| %>
-<%= CSV.generate_line row, row_sep: "" %>
+<%= CSV.generate_line row, row_sep: '' %>
 <% end %>
