@@ -35,7 +35,7 @@ module Robots
       end
     end
 
-        def bed_class
+    def bed_class
       Robots::Bed::Splitting
     end
   end

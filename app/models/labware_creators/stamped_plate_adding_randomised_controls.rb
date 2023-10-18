@@ -89,7 +89,7 @@ module LabwareCreators
       control_locations
     end
 
-        def validate_control_rules_from_config(control_locations)
+    def validate_control_rules_from_config(control_locations)
       list_of_rules.each do |rule|
         case rule.type
         when 'not'
@@ -107,7 +107,7 @@ module LabwareCreators
       true
     end
 
-        def create_plate_with_standard_transfer!
+    def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!
 
       # create the empty child plate, including empty wells

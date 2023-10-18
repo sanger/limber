@@ -436,7 +436,7 @@ module LabwareCreators
       name_prefix
     end
 
-        # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
+    # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
     # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
     # @param well [Well] The well to add the mapping for.
     # @param tube_name [String] The name of the tube to add the mapping for.
@@ -488,7 +488,7 @@ module LabwareCreators
     end
 
     # rubocop:enable Metrics/AbcSize
-        # Returns a hash of details to use for generating a tube name based on the given prefix,
+    # Returns a hash of details to use for generating a tube name based on the given prefix,
     # stock tube barcode, and destination tube position.
     #
     # @param prefix [String] The prefix to use for the tube name.

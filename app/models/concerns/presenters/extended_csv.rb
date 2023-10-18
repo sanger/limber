@@ -27,7 +27,7 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
     end
   end
 
-    private
+  private
 
   def all_wells
     return @all_wells unless @all_wells.nil?

@@ -74,7 +74,7 @@ module Utility
         end
     end
 
-        #
+    #
     # Computes the volume of source material required for normalisation based on the sample
     # concentration and attributes from the purpose configuration (target amount and volume,
     # minimum source volume).
