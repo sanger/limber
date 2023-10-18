@@ -60,8 +60,10 @@
     destination_tube_name_array = destination_tube_v2.name.split(':')
     # e.g. SEQ:DESTTUBE:A1
 
+    sample_metadata = source_well.aliquots.first.sample.sample_metadata
+    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     purpose = ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
-    volume = source_well.sequencing_tube_volume if purpose == 'Sequencing' else source_well.contingency_tube_volume
+    volume = source_well.sequencing_tube_volume ? purpose == 'Sequencing' : source_well.contingency_tube_volume
 
     require 'inspector'
 
@@ -88,7 +90,7 @@
 
     rows_array << [
       source_well.name,  # Well name ✅
-      source_well.aliquots.first.sample.sample_metadata.respond_to?(:donor_id) ? source_well.aliquots.first.sample.sample_metadata.donor_id : nil,     # Donor ID ✅
+      donor_id,     # Donor ID ✅
       @ancestor_tubes.values.last.labware_barcode,   # Parent barcode
       @ancestor_tubes.values.first.labware_barcode, # FluidX barcode
       tube_rack_barcode,   # Extraction and freeze date
