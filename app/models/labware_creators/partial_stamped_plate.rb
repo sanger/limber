@@ -36,7 +36,7 @@ module LabwareCreators
     # Validation to check we have identified wells to transfer.
     # Plate must contain at least one well with a request for library preparation, in a state of pending.
     def transfer_hash_present?
-      return if transfer_hash.present?
+      return false if transfer_hash.present?
 
       msg =
         # rubocop:todo Layout/LineLength
@@ -48,7 +48,7 @@ module LabwareCreators
 
     # Validation to check number of filtered wells matches to final transfers hash produced
     def number_of_transfers_matches_number_of_filtered_wells?
-      return if transfer_hash.length == filtered_wells.length
+      return false if transfer_hash.length == filtered_wells.length
 
       msg = 'Number of filtered wells does not match number of well transfers'
       errors.add(:parent, msg)

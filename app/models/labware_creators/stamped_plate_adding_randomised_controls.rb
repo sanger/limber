@@ -216,7 +216,7 @@ module LabwareCreators
     # an aliquot containing the control and link it to the selected child well
     def create_control_in_child_well(control, child_well_v2, well_location)
       # check the well should be empty
-      unless child_well_v2.aliquots.length.zero?
+      unless child_well_v2.aliquots.empty?
         errors.add(:base, "Expecting child plate well to be empty at location #{well_location}")
       end
 

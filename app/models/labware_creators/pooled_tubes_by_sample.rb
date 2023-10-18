@@ -153,13 +153,13 @@ module LabwareCreators
     # @return [boolean]
     #
     def enough_tubes_for_pools?
-      return if pools.blank?
-      return if csv_file.blank?
+      return false if pools.blank?
+      return false if csv_file.blank?
 
       num_pools = pools.count
       num_tubes = csv_file.position_details.count
 
-      return unless num_pools > num_tubes
+      return false unless num_pools > num_tubes
 
       # TODO: test this
       errors.add(

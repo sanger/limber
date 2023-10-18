@@ -8,7 +8,7 @@ module LabwareCreators::RequireWellsWithCollectedBy
   # have an associated sample metadata, with collected_by.
   def wells_with_aliquots_have_collected_by?
     invalid_well_locations = wells_with_missing_collected_by
-    return if invalid_well_locations.empty?
+    return false if invalid_well_locations.empty?
 
     msg = 'wells missing collected_by sample metadata:'
     errors.add(:source_plate, "#{msg} #{invalid_well_locations.join(', ')}")

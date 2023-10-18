@@ -157,7 +157,7 @@ module LabwareCreators
     #
     # @return [Boolean] `true` if there are sufficient tubes, `false` otherwise.
     def sufficient_tubes_in_racks?
-      return if contingency_file.blank?
+      return false if contingency_file.blank?
 
       if require_contingency_tubes_only?
         num_contingency_tubes >= num_parent_wells

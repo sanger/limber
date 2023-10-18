@@ -66,7 +66,7 @@ module Utility
         .values
         .each_with_object({})
         .with_index do |(bin, transfers_hash), bin_index_within_bins|
-          next if bin.length.zero?
+          next if bin.empty?
 
           # TODO: we may want to sort the bin here, e.g. by concentration
           bin.each_with_index do |well, well_index_within_bin|

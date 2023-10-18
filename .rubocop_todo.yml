@@ -10,3 +10,8 @@
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, AllowedMethods, AllowedPatterns, IgnoredMethods.
 Metrics/MethodLength:
   Max: 21
+
+Metrics/CollectionLiteralLength:
+  Exclude:
+    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
+    - 'spec/helpers/well_helpers_spec.rb'
