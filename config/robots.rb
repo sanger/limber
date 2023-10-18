@@ -3077,16 +3077,24 @@ ROBOT_CONFIG =
           purpose: 'LRC Bank Seq',
           states: ['pending'],
           label: 'Bed 15',
-          parent: bed(12).barcode,
           target_state: 'passed'
         },
         bed(14).barcode => {
           purpose: 'LRC Bank Spare',
           states: ['pending'],
           label: 'Bed 14',
-          parent: bed(12).barcode,
           target_state: 'passed'
         }
-      }
+      },
+      class: 'Robots::PlateToTubeRacksRobot',
+      relationships: [
+        {
+          'type' => 'LRC PBMBC Bank to LRC Bank Seq/Spare',
+          'options' => {
+            'parent' => bed(12).barcode,
+            'children' => [bed(15).barcode, bed(14).barcode]
+          }
+        }
+      ]
     )
   end
