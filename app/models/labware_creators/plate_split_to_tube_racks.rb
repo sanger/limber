@@ -42,14 +42,13 @@ module LabwareCreators
   #
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
+    include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
+    self.page = 'plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
 
-    self.page = 'plate_split_to_tube_racks'
-
     attr_accessor :sequencing_file, :contingency_file
-
     attr_reader :child_sequencing_tubes, :child_contingency_tubes
 
     validates_nested :well_filter
@@ -62,7 +61,7 @@ module LabwareCreators
     validates_nested :contingency_csv_file, if: :contingency_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
-    validate :sufficient_tubes_in_racks?
+    validate :sufficient_tubes_in_racks?, if: :contingency_file
 
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
@@ -71,6 +70,7 @@ module LabwareCreators
       'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def save
+      # NB. need the && true!!
       super && upload_tube_rack_files && true
     end
 
@@ -157,8 +157,6 @@ module LabwareCreators
     #
     # @return [Boolean] `true` if there are sufficient tubes, `false` otherwise.
     def sufficient_tubes_in_racks?
-      return if contingency_file.blank?
-
       if require_contingency_tubes_only?
         num_contingency_tubes >= num_parent_wells
       else
