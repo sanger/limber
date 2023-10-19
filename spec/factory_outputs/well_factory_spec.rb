@@ -125,3 +125,44 @@ RSpec.describe 'well_collection factory' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end
+
+RSpec.describe 'v2_well' do
+  subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1]) }
+
+  # samples
+  let(:sample1_uuid) { SecureRandom.uuid }
+  let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
+
+  # source aliquots
+  let(:source_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
+
+  describe 'first aliquot' do
+    let(:first_well_aliquot) { subject.aliquots.first }
+    it 'should be a version 2 aliquot' do
+      expect(first_well_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
+    end
+    it 'should have a valid study' do
+      expect(first_well_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+    end
+
+    it 'should have a valid study type' do
+      expect(first_well_aliquot.study.type).to eq('studies')
+    end
+    it 'should have a valid study id' do
+      expect(first_well_aliquot.study.id).to be_kind_of(String)
+      expect(first_well_aliquot.study.id).to match(/\d+/)
+    end
+    it 'should have a valid study uuid' do
+      expect(first_well_aliquot.study.uuid).to be_kind_of(String)
+      expect(first_well_aliquot.study.uuid).to match(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)
+    end
+    it 'should have a valid study name' do
+      expect(first_well_aliquot.study.name).to eq('Test Aliquot Study')
+    end
+
+    it 'should not have weird shadow attributes' do
+      expect(first_well_aliquot.attributes).to_not include('study')
+      expect(first_well_aliquot['study']).to be_nil
+    end
+  end
+end
