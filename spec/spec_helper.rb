@@ -3,11 +3,14 @@
 # https://github.com/simplecov-ruby/simplecov#getting-started
 
 require 'simplecov'
+require 'simplecov_json_formatter'
 require 'simplecov-lcov'
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 SimpleCov::Formatter::LcovFormatter.config.single_report_path = 'lcov.info'
 SimpleCov.formatters =
-  SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::LcovFormatter])
+  SimpleCov::Formatter::MultiFormatter.new(
+    [SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::JSONFormatter, SimpleCov::Formatter::LcovFormatter]
+  )
 # override test_frameworks profile to include spec factories
 SimpleCov.profiles.delete(:test_frameworks)
 SimpleCov.profiles.define 'test_frameworks' do
