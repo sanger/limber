@@ -65,12 +65,7 @@
       sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     purpose =
       ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
-    volume =
-      if source_well.sequencing_tube_volume
-        purpose == 'Sequencing'
-      else
-        source_well.contingency_tube_volume
-      end
+    volume = 135
 
     require 'inspector'
 
@@ -103,10 +98,10 @@
       @ancestor_tubes.values.first.labware_barcode, # FluidX barcode
       tube_rack_barcode, # Extraction and freeze date
       purpose, # Sequencing or contingency ✅
-      source_well.latest_live_cell_count, # Cell count ✅
-      source_well.latest_cell_viability, # Viability ✅ # TODO: check
+      source_well.latest_live_cell_count.value, # Cell count ✅
+      source_well.latest_cell_viability.value, # Viability ✅ # TODO: check
       volume, # Volume # ✅ TODO: units
-      source_well.aliquots.first.study, # Study name
+      source_well.aliquots.first.study.name, # Study name ✅
       source_well.aliquots.first.sample.sample_metadata&.collected_by # Collection site ✅
     ]
   end
