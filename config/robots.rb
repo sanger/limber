@@ -3089,7 +3089,7 @@ ROBOT_CONFIG =
       class: 'Robots::PlateToTubeRacksRobot',
       relationships: [
         {
-          'type' => 'LRC PBMBC Bank to LRC Bank Seq/Spare',
+          'type' => 'LRC PBMC Bank to LRC Bank Seq/Spare',
           'options' => {
             'parent' => bed(12).barcode,
             'children' => [bed(15).barcode, bed(14).barcode]
