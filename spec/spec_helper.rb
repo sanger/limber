@@ -6,7 +6,8 @@ require 'simplecov'
 require 'simplecov-lcov'
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 SimpleCov::Formatter::LcovFormatter.config.single_report_path = 'lcov.info'
-SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
+SimpleCov.formatters =
+  SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::LcovFormatter])
 SimpleCov.start :rails do
   # allow factories to be included in coverage reports
   filters.clear # This will remove the :root_filter and :bundler_filter that come via simplecov's defaults
