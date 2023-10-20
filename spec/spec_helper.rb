@@ -8,11 +8,15 @@ SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 SimpleCov::Formatter::LcovFormatter.config.single_report_path = 'lcov.info'
 SimpleCov.formatters =
   SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::LcovFormatter])
-SimpleCov.start :rails do
-  # allow factories to be included in coverage reports
-  filters.clear # This will remove the :root_filter and :bundler_filter that come via simplecov's defaults
-  add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /_factories.rb/ }
+# override test_frameworks profile to include spec factories
+SimpleCov.profiles.delete(:test_frameworks)
+SimpleCov.profiles.define 'test_frameworks' do
+  add_filter '/test/'
+  add_filter '/features/'
+  add_filter { |src| src.filename !~ /^spec/ unless /_factories.rb/.match?(src.filename) } # add_filter '/spec/'
+  add_filter '/autotest/'
 end
+SimpleCov.start :rails
 
 # Previous content of test helper now starts here
 
