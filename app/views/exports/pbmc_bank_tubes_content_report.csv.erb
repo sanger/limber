@@ -35,18 +35,18 @@
     # TODO: check for states and get the last tube
     # TODO: check what downstream_tubes does
     # Check for ascendence method to get specific purpose
-    destination_tube = source_well.downstream_tubes.last
-    destination_tube_v2 =
+    child_tube = source_well.downstream_tubes.last
+    child_tube_v2 =
       Sequencescape::Api::V2.tube_with_custom_includes(
         'custom_metadatum_collection',
         nil,
-        barcode: destination_tube.labware_barcode.machine
+        barcode: child_tube.labware_barcode.machine
       )
 
-    next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
+    next unless child_tube_v2 && child_tube_v2.custom_metadatum_collection
 
-    # get tube metadata from destination_tube
-    metadata = destination_tube_v2.custom_metadatum_collection.metadata
+    # get tube metadata from child_tube
+    metadata = child_tube_v2.custom_metadatum_collection.metadata
 
     next unless metadata
 
@@ -58,12 +58,12 @@
     sample_uuid = source_well.aliquots.first.sample.uuid
     source_well_posn = source_well.position['name']
 
-    # e.g. SEQ:DESTTUBE:A1
-    destination_tube_name_array = destination_tube_v2.name.split(':')
+    # e.g. SEQ:CHILD_TUBE:A1
+    child_tube_name_array = child_tube_v2.name.split(':')
 
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
-    purpose = ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
+    purpose = ((child_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
     volume = 135
 
     rows_array << [
@@ -71,7 +71,7 @@
       donor_id, # Donor ID ✅ # Deep behind sample manifest UAT action on the SS side
       @ancestor_tubes.values.last.labware_barcode, # Vacutainer/stock barcode (lrc blood vac purpose)
       @ancestor_tubes.values.first.labware_barcode, # FluidX barcode (child tube barcode)
-      'extraction-date', # Extraction and freeze date (created-at for child/dest tube)
+      'extraction-date', # Extraction and freeze date (created-at for child tube)
       purpose, # Sequencing or contingency ✅
       source_well.latest_live_cell_count.value, # Cell count ✅
       source_well.latest_cell_viability.value, # Viability ✅
