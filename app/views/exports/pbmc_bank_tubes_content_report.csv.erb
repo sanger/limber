@@ -1,4 +1,6 @@
 <%# This is a report of the contents of the tubes in the PBMC Bank plate %>
+<%# Based on app/views/exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb %>
+
 <%= CSV.generate_line ['Workflow', @workflow], row_sep: '' %>
 
 <%=
@@ -9,9 +11,9 @@
                       'FluidX barcode',
                       'Extraction and freeze date',
                       'Sequencing or contingency',
-                      'Cell count',
-                      'Viability',
-                      'Volume',
+                      'Cell count (cells/ml)',
+                      'Viability (%)',
+                      'Volume (µl)',
                       'Study name',
                       'Collection site'
                     ],
@@ -29,8 +31,11 @@
     # skip if no downstream tubes for this well (not set up children in Limber yet)
     next if source_well.downstream_tubes.empty?
 
-    # expecting 1 sample tube
-    destination_tube = source_well.downstream_tubes.first
+    # expecting ? sample tube
+    # TODO: check for states and get the last tube
+    # TODO: check what downstream_tubes does
+    # Check for ascendence method to get specific purpose
+    destination_tube = source_well.downstream_tubes.last
     destination_tube_v2 =
       Sequencescape::Api::V2.tube_with_custom_includes(
         'custom_metadatum_collection',
@@ -40,7 +45,7 @@
 
     next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
 
-    # get tube metadata from destination tube
+    # get tube metadata from destination_tube
     metadata = destination_tube_v2.custom_metadatum_collection.metadata
 
     next unless metadata
@@ -63,13 +68,13 @@
 
     rows_array << [
       source_well.name, # Well name ✅
-      donor_id, # Donor ID ✅
-      @ancestor_tubes.values.last.labware_barcode, # Parent barcode
-      @ancestor_tubes.values.first.labware_barcode, # FluidX barcode
-      tube_rack_barcode, # Extraction and freeze date
+      donor_id, # Donor ID ✅ # Deep behind sample manifest UAT action on the SS side
+      @ancestor_tubes.values.last.labware_barcode, # Vacutainer/stock barcode (lrc blood vac purpose)
+      @ancestor_tubes.values.first.labware_barcode, # FluidX barcode (child tube barcode)
+      'extraction-date', # Extraction and freeze date (created-at for child/dest tube)
       purpose, # Sequencing or contingency ✅
       source_well.latest_live_cell_count.value, # Cell count ✅
-      source_well.latest_cell_viability.value, # Viability ✅ # TODO: check
+      source_well.latest_cell_viability.value, # Viability ✅
       volume, # Volume # ✅ TODO: units
       source_well.aliquots.first.study.name, # Study name ✅
       source_well.aliquots.first.sample.sample_metadata&.collected_by # Collection site ✅
