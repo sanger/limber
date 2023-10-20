@@ -5,6 +5,8 @@ FactoryBot.define do
   factory :v2_study, class: Sequencescape::Api::V2::Study do
     skip_create
 
+    id
+
     name { 'Test Study' }
 
     uuid { SecureRandom.uuid }

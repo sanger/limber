@@ -256,7 +256,7 @@ FactoryBot.define do
       # Alias for request: The request set on the aliquot itself
       outer_request { create :library_request, state: library_state }
       well_location { 'A1' }
-      study_id { 1 }
+      study { create :v2_study, name: 'Test Aliquot Study' }
       project_id { 1 }
       sample_attributes { {} }
     end
@@ -273,16 +273,6 @@ FactoryBot.define do
     after(:build) do |aliquot, evaluator|
       aliquot._cached_relationship(:request) { evaluator.request }
       aliquot._cached_relationship(:sample) { evaluator.sample }
-      aliquot.relationships.study = {
-        'links' => {
-          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/study",
-          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/study"
-        },
-        'data' => {
-          'type' => 'studies',
-          'id' => evaluator.study_id.to_s
-        }
-      }
       aliquot.relationships.project = {
         'links' => {
           'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/project",
