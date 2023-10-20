@@ -155,7 +155,7 @@ module LabwareCreators
     #
     # @return [void]
     def must_have_sufficient_tubes_in_rack
-      errors.add('Must have sufficient tubes in rack') unless sufficient_tubes_in_racks?
+      errors.add(:tube_rack_file, 'Must have sufficient tubes in rack') unless sufficient_tubes_in_racks?
     end
 
     # Checks if there are sufficient tubes in the child tube racks for all the parent wells.
