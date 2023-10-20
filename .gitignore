@@ -18,6 +18,7 @@ release.tar.gz
 REVISION
 /vendor
 /coverage
+lcov.info
 /spec/examples.txt
 yarn-error.log
 .tern-project
