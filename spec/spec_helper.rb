@@ -11,14 +11,6 @@ SimpleCov.formatters =
   SimpleCov::Formatter::MultiFormatter.new(
     [SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::JSONFormatter, SimpleCov::Formatter::LcovFormatter]
   )
-# override test_frameworks profile to include spec factories
-SimpleCov.profiles.delete(:test_frameworks)
-SimpleCov.profiles.define 'test_frameworks' do
-  add_filter '/test/'
-  add_filter '/features/'
-  add_filter { |src| src.filename !~ /^spec/ unless /_factories.rb/.match?(src.filename) } # add_filter '/spec/'
-  add_filter '/autotest/'
-end
 SimpleCov.start :rails
 
 # Previous content of test helper now starts here
