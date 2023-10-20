@@ -21,7 +21,7 @@ module LabwareCreators
 
     validates :file, presence: true # Don't create the tubes until the file has been uploaded
     validates_nested :csv_file, if: :file # Don't create the tubes until the file has been validated
-    validate :enough_tubes_for_pools? # Don't create the tubes if there aren't enough available for our needs
+    validate :must_have_enough_tubes_for_pools # Don't create the tubes if there aren't enough available for our needs
 
     PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
 
@@ -150,16 +150,16 @@ module LabwareCreators
     #
     # Validate that we have identified enough destination tube barcodes from the rack scan csv for
     # the number of pools that we have to transfer.
-    # @return [boolean]
+    # @return [void]
     #
-    def enough_tubes_for_pools?
-      return false if pools.blank?
-      return false if csv_file.blank?
+    def must_have_enough_tubes_for_pools
+      return if pools.blank?
+      return if csv_file.blank?
 
       num_pools = pools.count
       num_tubes = csv_file.position_details.count
 
-      return false unless num_pools > num_tubes
+      return unless num_pools > num_tubes
 
       # TODO: test this
       errors.add(

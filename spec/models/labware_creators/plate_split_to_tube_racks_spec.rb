@@ -241,8 +241,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     context 'when a contingency file is not present' do
-      it 'returns false' do
-        expect(subject.sufficient_tubes_in_racks?).to be false
+      it 'does not call the validation' do
+        expect(subject).not_to receive(:sufficient_tubes_in_racks?)
       end
     end
 

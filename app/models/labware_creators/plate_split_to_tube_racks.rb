@@ -62,7 +62,7 @@ module LabwareCreators
     validates_nested :contingency_csv_file, if: :contingency_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
-    validate :sufficient_tubes_in_racks?
+    validate :must_have_sufficient_tubes_in_rack, if: :contingency_file
 
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
@@ -151,14 +151,19 @@ module LabwareCreators
       @num_parent_wells ||= well_filter.filtered.length
     end
 
+    # Validation method that checks whether there are enough tubes in the rack.
+    #
+    # @return [void]
+    def must_have_sufficient_tubes_in_rack
+      errors.add('Must have sufficient tubes in rack') unless sufficient_tubes_in_racks?
+    end
+
     # Checks if there are sufficient tubes in the child tube racks for all the parent wells.
     # This depends on the number of unique samples in the parent plate, and the number of parent wells,
     # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
     #
     # @return [Boolean] `true` if there are sufficient tubes, `false` otherwise.
     def sufficient_tubes_in_racks?
-      return false if contingency_file.blank?
-
       if require_contingency_tubes_only?
         num_contingency_tubes >= num_parent_wells
       else
