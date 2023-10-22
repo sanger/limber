@@ -34,7 +34,7 @@ class RobotsController < ApplicationController
             .update!(created_with_robot: params[:robot_barcode])
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
-            format.html { redirect_to robot_path(id: @robot.id), notice: "Plate #{plate_barcode} not found." }
+            format.html { redirect_to robot_path(id: @robot.id), notice: "Labware #{labware_barcode} not found." }
           end
         end
       end
