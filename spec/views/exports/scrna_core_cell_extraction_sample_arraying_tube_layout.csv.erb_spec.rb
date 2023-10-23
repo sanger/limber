@@ -22,7 +22,7 @@ RSpec.describe 'exports/scrna_core_cell_extraction_sample_arraying_tube_layout.c
   before { assign(:plate, labware) }
 
   def get_column(csv, index)
-    csv[1..].map { |r| r[index] }
+    csv[1..].pluck(index)
   end
 
   it 'renders the expected content' do

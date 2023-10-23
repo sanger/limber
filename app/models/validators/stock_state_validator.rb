@@ -62,7 +62,6 @@ module Validators
       end
     end
 
-    # rubocop:todo Metrics/MethodLength
     def validate(presenter) # rubocop:todo Metrics/AbcSize
       analyzer = Analyzer.new(presenter.labware)
       if analyzer.no_submission?
@@ -79,6 +78,5 @@ module Validators
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end

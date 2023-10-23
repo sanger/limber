@@ -60,14 +60,13 @@ module Utility
 
     # Build the transfers hash, cycling through the bins and their wells and locating them onto the
     # child plate.
-    # rubocop:todo Metrics/MethodLength
     def build_transfers_hash(bins, number_of_rows, compression_reqd) # rubocop:todo Metrics/AbcSize
       binner = Binner.new(compression_reqd, number_of_rows)
       bins
         .values
         .each_with_object({})
         .with_index do |(bin, transfers_hash), bin_index_within_bins|
-          next if bin.length.zero?
+          next if bin.empty?
 
           # TODO: we may want to sort the bin here, e.g. by concentration
           bin.each_with_index do |well, well_index_within_bin|
@@ -85,6 +84,5 @@ module Utility
           end
         end
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end

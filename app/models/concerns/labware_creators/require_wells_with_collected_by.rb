@@ -6,7 +6,7 @@ module LabwareCreators::RequireWellsWithCollectedBy
 
   # Validation method that can be called to check that all wells, with aliquots,
   # have an associated sample metadata, with collected_by.
-  def wells_with_aliquots_have_collected_by?
+  def wells_with_aliquots_must_have_collected_by
     invalid_well_locations = wells_with_missing_collected_by
     return if invalid_well_locations.empty?
 

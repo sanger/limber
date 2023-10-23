@@ -18,7 +18,7 @@ module LabwareCreators::RequireWellsWithConcentrations
 
   # Validation method that can be called to check that all wells with aliquots
   # have an associated qc_result concentration value.
-  def wells_with_aliquots_have_concentrations?
+  def wells_with_aliquots_must_have_concentrations
     concs_missing = wells_with_missing_concs
     return if concs_missing.empty?
 
