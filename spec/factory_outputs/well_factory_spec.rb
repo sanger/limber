@@ -164,5 +164,17 @@ RSpec.describe 'v2_well' do
       expect(first_well_aliquot.attributes).to_not include('study')
       expect(first_well_aliquot['study']).to be_nil
     end
+
+    it 'should have relationships' do
+      expect(first_well_aliquot.relationships).to be_kind_of(JsonApiClient::Relationships::Relations)
+    end
+
+    it 'should have a valid study relationship' do
+      expect(first_well_aliquot.relationships.study).to be_kind_of(Hash)
+    end
+
+    it 'should have valid study relationship data' do
+      expect(first_well_aliquot.relationships.study['data']).to be_kind_of(Hash)
+    end
   end
 end
