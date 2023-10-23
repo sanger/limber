@@ -69,7 +69,12 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: []
+      create :v2_plate_for_submission,
+             purpose_name: purpose_name,
+             barcode_number: 2,
+             direct_submissions: [],
+             study: submission_study,
+             project: submission_project
     end
 
     let(:barcode_string) { 'DN2T' }
@@ -77,6 +82,8 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     let(:title) { purpose_name }
     let(:state) { 'pending' }
     let(:sidebar_partial) { 'submission' }
+    let(:submission_study) { create :v2_study, name: 'Submission Study' }
+    let(:submission_project) { create :v2_project, name: 'Submission Project' }
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
@@ -86,6 +93,14 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
         ['Input plate barcode', barcode_string],
         ['Created on', '2017-06-29']
       ]
+    end
+
+    it 'is handling wells from the same study' do
+      labware.wells.each { |well| expect(well.aliquots.first.study).to eq(submission_study) }
+    end
+
+    it 'is handling wells from the same project' do
+      labware.wells.each { |well| expect(well.aliquots.first.project).to eq(submission_project) }
     end
 
     it 'renders the submission options' do
