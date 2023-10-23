@@ -127,62 +127,114 @@ RSpec.describe 'well_collection factory' do
 end
 
 RSpec.describe 'v2_well' do
-  subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1]) }
-
   # samples
-  let(:sample1_uuid) { SecureRandom.uuid }
-  let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
+  let(:sample) { create(:v2_sample) }
 
-  # source aliquots
-  let(:source_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
+  context 'with default study' do
+    subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot]) }
 
-  describe 'first aliquot' do
-    let(:first_well_aliquot) { subject.aliquots.first }
+    # source aliquots
+    let(:source_aliquot) { create(:v2_aliquot, sample: sample) }
 
-    let(:study_id) { first_well_aliquot.relationships.study.dig(:data, :id) }
-    let(:project_id) { first_well_aliquot.relationships.project.dig(:data, :id) }
+    describe 'first aliquot' do
+      let(:first_well_aliquot) { subject.aliquots.first }
 
-    it 'should be a version 2 aliquot' do
-      expect(first_well_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
-    end
-    it 'should have a valid study' do
-      expect(first_well_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
-    end
+      let(:study_id) { first_well_aliquot.relationships.study.dig(:data, :id) }
+      let(:project_id) { first_well_aliquot.relationships.project.dig(:data, :id) }
 
-    it 'should have a valid study type' do
-      expect(first_well_aliquot.study.type).to eq('studies')
-    end
-    it 'should have a valid study id' do
-      expect(first_well_aliquot.study.id).to be_kind_of(String)
-      expect(first_well_aliquot.study.id).to match(/\d+/)
-    end
-    it 'should have a valid study uuid' do
-      expect(first_well_aliquot.study.uuid).to be_kind_of(String)
-      expect(first_well_aliquot.study.uuid).to match(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)
-    end
-    it 'should have a valid study name' do
-      expect(first_well_aliquot.study.name).to eq('Test Aliquot Study')
-    end
+      it 'should be a version 2 aliquot' do
+        expect(first_well_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
+      end
+      it 'should have a valid sample' do
+        expect(first_well_aliquot.sample).to be_kind_of(Sequencescape::Api::V2::Sample)
+      end
+      it 'should have a valid study' do
+        expect(first_well_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+      end
 
-    it 'should not have weird shadow attributes' do
-      expect(first_well_aliquot.attributes).to_not include('study')
-      expect(first_well_aliquot['study']).to be_nil
-    end
+      it 'should have a valid study type' do
+        expect(first_well_aliquot.study.type).to eq('studies')
+      end
+      it 'should have a valid study id' do
+        expect(first_well_aliquot.study.id).to be_kind_of(String)
+        expect(first_well_aliquot.study.id).to match(/\d+/)
+      end
+      it 'should have a valid study uuid' do
+        expect(first_well_aliquot.study.uuid).to be_kind_of(String)
+        expect(first_well_aliquot.study.uuid).to match(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)
+      end
+      it 'should have a valid study name' do
+        expect(first_well_aliquot.study.name).to eq('Test Aliquot Study')
+      end
 
-    it 'should have relationships' do
-      expect(first_well_aliquot.relationships).to be_kind_of(JsonApiClient::Relationships::Relations)
-    end
+      it 'should not have weird shadow attributes' do
+        expect(first_well_aliquot.attributes).to_not include('study')
+        expect(first_well_aliquot['study']).to be_nil
+      end
 
-    it 'should have a valid study relationship' do
-      expect(first_well_aliquot.relationships.study).to be_kind_of(Hash)
-    end
+      it 'should have relationships' do
+        expect(first_well_aliquot.relationships).to be_kind_of(JsonApiClient::Relationships::Relations)
+      end
 
-    it 'should have valid study relationship data' do
-      expect(first_well_aliquot.relationships.study['data']).to be_kind_of(Hash)
-    end
+      it 'should have a valid study relationship' do
+        expect(first_well_aliquot.relationships.study).to be_kind_of(Hash)
+      end
 
-    it 'should order groups' do
-      expect(first_well_aliquot.order_group).to eq([study_id, project_id])
+      it 'should have valid study relationship data' do
+        expect(first_well_aliquot.relationships.study['data']).to be_kind_of(Hash)
+      end
+
+      it 'should order groups' do
+        expect(first_well_aliquot.order_group).to eq([study_id, project_id])
+      end
+    end
+  end
+
+  context 'with specified study and project' do
+    subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot]) }
+    let(:first_aliquot) { subject.aliquots.first }
+
+    # source aliquots
+    let(:source_aliquot) { create(:v2_aliquot, sample: sample, study: study, project: project) }
+
+    # study
+    let(:study_uuid) { SecureRandom.uuid }
+    let(:study) { create(:v2_study, name: 'Provided Study', uuid: study_uuid) }
+
+    # project
+    let(:project_uuid) { SecureRandom.uuid }
+    let(:project) { create(:v2_project, name: 'Provided Project', uuid: project_uuid) }
+
+    describe 'first aliquot' do
+      it 'should be a version 2 aliquot' do
+        expect(first_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
+      end
+
+      it 'should have a valid study' do
+        expect(first_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+      end
+      it 'should have a valid study type' do
+        expect(first_aliquot.study.type).to eq('studies')
+      end
+      it 'should have a valid study uuid' do
+        expect(first_aliquot.study.uuid).to eq(study_uuid)
+      end
+      it 'should have a valid study name' do
+        expect(first_aliquot.study.name).to eq('Provided Study')
+      end
+
+      it 'should have a valid project' do
+        expect(first_aliquot.project).to be_kind_of(Sequencescape::Api::V2::Project)
+      end
+      it 'should have a valid project type' do
+        expect(first_aliquot.project.type).to eq('projects')
+      end
+      it 'should have a valid project uuid' do
+        expect(first_aliquot.project.uuid).to eq(project_uuid)
+      end
+      it 'should have a valid project name' do
+        expect(first_aliquot.project.name).to eq('Provided Project')
+      end
     end
   end
 end
