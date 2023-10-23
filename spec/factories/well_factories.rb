@@ -275,6 +275,27 @@ FactoryBot.define do
       Sequencescape::Api::V2::Aliquot.associations.each do |association|
         aliquot._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
       end
+
+      aliquot.relationships.study = {
+        'links' => {
+          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/study",
+          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/study"
+        },
+        'data' => {
+          'type' => 'studies',
+          'id' => evaluator.study.id.to_s
+        }
+      }
+      aliquot.relationships.project = {
+        'links' => {
+          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/project",
+          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/project"
+        },
+        'data' => {
+          'type' => 'projects',
+          'id' => evaluator.project.id.to_s
+        }
+      }
     end
 
     factory :v2_tagged_aliquot do
