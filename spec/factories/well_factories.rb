@@ -257,7 +257,7 @@ FactoryBot.define do
       outer_request { create :library_request, state: library_state }
       well_location { 'A1' }
       study { create :v2_study, name: 'Test Aliquot Study' }
-      project_id { 1 }
+      project { create :v2_project, name: 'Test Aliquot Project' }
       sample_attributes { {} }
     end
 
@@ -273,16 +273,6 @@ FactoryBot.define do
     after(:build) do |aliquot, evaluator|
       aliquot._cached_relationship(:request) { evaluator.request }
       aliquot._cached_relationship(:sample) { evaluator.sample }
-      aliquot.relationships.project = {
-        'links' => {
-          'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/project",
-          'related' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/project"
-        },
-        'data' => {
-          'type' => 'projects',
-          'id' => evaluator.project_id.to_s
-        }
-      }
     end
 
     factory :v2_tagged_aliquot do
