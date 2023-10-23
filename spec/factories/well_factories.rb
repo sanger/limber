@@ -271,8 +271,10 @@ FactoryBot.define do
     request { outer_request }
 
     after(:build) do |aliquot, evaluator|
-      aliquot._cached_relationship(:request) { evaluator.request }
-      aliquot._cached_relationship(:sample) { evaluator.sample }
+      # Set up relationships downstream
+      Sequencescape::Api::V2::Aliquot.associations.each do |association|
+        aliquot._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
+      end
     end
 
     factory :v2_tagged_aliquot do
