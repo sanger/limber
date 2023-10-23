@@ -29,9 +29,13 @@ class RobotsController < ApplicationController
 
         labware_barcode = bed.labware.barcode.machine
         begin
-          LabwareMetadata
-            .new(api: api, user: current_user_uuid, barcode: labware_barcode)
-            .update!(created_with_robot: params[:robot_barcode])
+          if bed.respond_to?(:set_created_with_robot)
+            bed.set_created_with_robot(params[:robot_barcode])
+          else
+            LabwareMetadata
+              .new(api: api, user: current_user_uuid, barcode: labware_barcode)
+              .update!(created_with_robot: params[:robot_barcode])
+          end
         rescue Sequencescape::Api::ResourceNotFound
           respond_to do |format|
             format.html { redirect_to robot_path(id: @robot.id), notice: "Labware #{labware_barcode} not found." }

@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Robots::Bed
   # Tube rack info from tube metadata
   class TubeRackWrapper
     attr_accessor :barcode, :tubes
-    delegate :purpose_name, :state, :uuid, to: :first_tube, allow_nil: true
+    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :first_tube, allow_nil: true
 
     def initialize(barcode, tubes: [])
       @barcode = barcode

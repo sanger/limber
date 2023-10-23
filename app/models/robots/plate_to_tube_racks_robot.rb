@@ -10,8 +10,10 @@ module Robots
 
     def bed_labwares=(bed_labwares)
       super
-      parents = beds.values.select { |bed| bed.labware && bed.child_labware }
-      beds.values.each { |bed| bed.load_labware_from_parents(parents) if bed.labware.blank? }
+      parents = beds.values.select { |bed| bed.respond_to?(:labware) && bed.labware && bed.child_labware }
+      beds.each_value do |bed|
+        bed.load_labware_from_parents(parents) if bed.respond_to?(:labware) && bed.labware.blank?
+      end
     end
 
     def valid_relationships # rubocop:todo Metrics/AbcSize

@@ -8,13 +8,15 @@ module Robots::Bed
 
     PLATE_INCLUDES = 'purpose,wells,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
+    def set_created_with_robot(robot_barcode); end
+
     def find_all_labware
       Sequencescape::Api::V2::Plate.find_all({ barcode: @barcodes }, includes: PLATE_INCLUDES)
     end
 
     def load_labware_from_parents(parents)
       return if labware.present?
-      @labware = parents.flat_map(&:child_labware).select { |labware| labware.barcode == barcode }
+      @labware = parents.flat_map(&:child_labware).select { |labware| labware.barcode.human == barcode }
     end
 
     def child_labware
@@ -32,7 +34,11 @@ module Robots::Bed
 
           well.downstream_tubes.each do |tube|
             barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
-            rack = racks.detect { |rack| rack.barcode == barcode } || racks.push(TubeRackWrapper.new(barcode)).last
+            rack = racks.detect { |rack| rack.barcode.human == barcode }
+            if rack.nil?
+              labware_barcode = LabwareBarcode.new(human: barcode, machine: barcode)
+              rack = racks.push(TubeRackWrapper.new(labware_barcode)).last
+            end
             rack.tubes << tube
           end
         end
