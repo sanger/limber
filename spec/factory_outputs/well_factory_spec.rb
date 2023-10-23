@@ -138,6 +138,10 @@ RSpec.describe 'v2_well' do
 
   describe 'first aliquot' do
     let(:first_well_aliquot) { subject.aliquots.first }
+
+    let(:study_id) { first_well_aliquot.relationships.study.dig(:data, :id) }
+    let(:project_id) { first_well_aliquot.relationships.project.dig(:data, :id) }
+
     it 'should be a version 2 aliquot' do
       expect(first_well_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
     end
@@ -175,6 +179,10 @@ RSpec.describe 'v2_well' do
 
     it 'should have valid study relationship data' do
       expect(first_well_aliquot.relationships.study['data']).to be_kind_of(Hash)
+    end
+
+    it 'should order groups' do
+      expect(first_well_aliquot.order_group).to eq([study_id, project_id])
     end
   end
 end
