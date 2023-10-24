@@ -172,14 +172,17 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         ['Workflow', workflow_name],
         [],
         [
-          'Source Plate ID',
-          'Source Plate Well',
-          'Destination Rack',
-          'Purpose',
-          'Destination Tube ID',
-          'Destination Tube Position',
-          'Sample Vac Tube ID',
-          'Sample Name'
+          'Well name',
+          'Donor ID',
+          'Parent barcode',
+          'FluidX barcode',
+          'Extraction and freeze date',
+          'Sequencing or contingency',
+          'Cell count (cells/ml)',
+          'Viability (%)',
+          'Volume (µl)',
+          'Study name',
+          'Collection site'
         ],
         %w[DN3U A1 TR00000001 Sequencing FX4B A1 NT1O Sample1],
         %w[DN3U B1 TR00000001 Sequencing FX7E B1 NT2P Sample2],
@@ -235,14 +238,17 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           ['Workflow', workflow_name],
           [],
           [
-            'Source Plate ID',
-            'Source Plate Well',
-            'Destination Rack',
-            'Purpose',
-            'Destination Tube ID',
-            'Destination Tube Position',
-            'Sample Vac Tube ID',
-            'Sample Name'
+            'Well name',
+            'Donor ID',
+            'Parent barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
           ]
         ]
       end
@@ -325,14 +331,17 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           ['Workflow', workflow_name],
           [],
           [
-            'Source Plate ID',
-            'Source Plate Well',
-            'Destination Rack',
-            'Purpose',
-            'Destination Tube ID',
-            'Destination Tube Position',
-            'Sample Vac Tube ID',
-            'Sample Name'
+            'Well name',
+            'Donor ID',
+            'Parent barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
           ]
         ]
       end
@@ -417,14 +426,17 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           ['Workflow', workflow_name],
           [],
           [
-            'Source Plate ID',
-            'Source Plate Well',
-            'Destination Rack',
-            'Purpose',
-            'Destination Tube ID',
-            'Destination Tube Position',
-            'Sample Vac Tube ID',
-            'Sample Name'
+            'Well name',
+            'Donor ID',
+            'Parent barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
           ]
         ]
       end
