@@ -30,11 +30,12 @@
     # skip if no downstream tubes for this well (not set up children in Limber yet)
     next if source_well.downstream_tubes.empty?
 
+    child_tube_v1 = source_well.downstream_tubes.last
     child_tube_v2 =
       Sequencescape::Api::V2.tube_with_custom_includes(
         'custom_metadatum_collection',
         nil,
-        barcode: child_tube.labware_barcode.machine
+        barcode: child_tube_v1.labware_barcode.machine
       )
 
     next unless child_tube_v2 && child_tube_v2.custom_metadatum_collection
