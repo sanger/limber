@@ -8,6 +8,9 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
   context 'when creating a pbmc bank tubes content report csv' do
     has_a_working_api
 
+    # study
+    let(:study) { create(:v2_study, name: 'ReportStudy') }
+
     # samples
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }
@@ -26,12 +29,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
     # source aliquots
-    let(:src_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:src_aliquot2_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:src_aliquot3_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:src_aliquot1_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:src_aliquot2_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2) }
+    let(:src_aliquot1_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot2_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot3_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot1_s2) { create(:v2_aliquot, sample: sample2, study: study) }
+    let(:src_aliquot2_s2) { create(:v2_aliquot, sample: sample2, study: study) }
+    let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2, study: study) }
 
     # qc results
     let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20000', units: 'cells/ml') }
