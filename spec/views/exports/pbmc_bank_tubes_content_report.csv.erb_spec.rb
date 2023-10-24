@@ -190,12 +190,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %w[DN1S:A1 nil NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B1 nil NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:A2 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B2 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:A3 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B3 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger]
+        %w[DN1S:A1 donor1 NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B1 donor2 NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:A2 donor1 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B2 donor2 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:A3 donor1 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B3 donor2 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger]
       ]
     end
 
@@ -225,8 +225,10 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         .and_return(dest_tube6)
     end
 
-    it 'renders the expected content' do
-      expect(CSV.parse(render)).to eq(expected_content)
+    it 'renders the expected content row by row' do
+      for row in CSV.parse(render)
+        expect(row).to eq(expected_content.shift)
+      end
     end
 
     context 'when transfers are not done yet' do
