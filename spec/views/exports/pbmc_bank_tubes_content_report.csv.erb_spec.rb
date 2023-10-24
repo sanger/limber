@@ -13,11 +13,15 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:study) { create(:v2_study, name: study_name) }
 
     # samples
+
+    let(:sample_metadata1) { create(:v2_sample_metadata, donor_id: 'Donor1') }
+    let(:sample_metadata2) { create(:v2_sample_metadata, donor_id: 'Donor2') }
+
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }
 
-    let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
-    let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
+    let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid, sample_metadata: sample_metadata1) }
+    let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid, sample_metadata: sample_metadata2) }
 
     # ancestor vac tubes
     let(:vac_aliquot1) { create(:v2_aliquot, sample: sample1) }
@@ -192,12 +196,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %W[DN1S:A1 donor1 NT1O FX4B #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B1 donor2 NT2P FX7E #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A2 donor1 NT1O FX5C #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B2 donor2 NT2P FX8F #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A3 donor1 NT1O FX6D #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B3 donor2 NT2P FX9G #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
+        %W[DN1S:A1 Donor1 NT1O FX4B #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B1 Donor2 NT2P FX7E #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A2 Donor1 NT1O FX5C #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B2 Donor2 NT2P FX8F #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A3 Donor1 NT1O FX6D #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B3 Donor2 NT2P FX9G #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
       ]
     end
 
