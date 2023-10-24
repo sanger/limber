@@ -9,7 +9,8 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     has_a_working_api
 
     # study
-    let(:study) { create(:v2_study, name: 'ReportStudy') }
+    let(:study_name) { 'Report Study' }
+    let(:study) { create(:v2_study, name: study_name) }
 
     # samples
     let(:sample1_uuid) { SecureRandom.uuid }
@@ -173,6 +174,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:workflow_name) { 'Test Workflow Name' }
 
     # expected file content
+    let(:created_at) { '2017-06-29 09:31:59 +0100' }
     let(:expected_content) do
       [
         ['Workflow', workflow_name],
@@ -190,12 +192,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %w[DN1S:A1 donor1 NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B1 donor2 NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:A2 donor1 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B2 donor2 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:A3 donor1 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
-        %w[DN1S:B3 donor2 NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger]
+        %W[DN1S:A1 donor1 NT2P NT1O #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B1 donor2 NT2P NT1O #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A2 donor1 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B2 donor2 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A3 donor1 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B3 donor2 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
       ]
     end
 

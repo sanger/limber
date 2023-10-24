@@ -70,7 +70,7 @@
       donor_id, # Donor ID ✅ # Deep behind sample manifest UAT action on the SS side
       @ancestor_tubes.values.last.labware_barcode, # Vacutainer/stock barcode (lrc blood vac purpose)
       @ancestor_tubes.values.first.labware_barcode, # FluidX barcode (child tube barcode)
-      'extraction-date', # Extraction and freeze date (created-at for child tube)
+      child_tube_v2.created_at , # Extraction and freeze date (created-at for child tube) ✅
       purpose, # Sequencing or contingency ✅
       source_well.latest_live_cell_count.value, # Cell count ✅
       source_well.latest_cell_viability.value, # Viability ✅
