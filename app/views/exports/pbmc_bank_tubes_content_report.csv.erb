@@ -30,11 +30,6 @@
     # skip if no downstream tubes for this well (not set up children in Limber yet)
     next if source_well.downstream_tubes.empty?
 
-    # expecting ? sample tube
-    # TODO: check for states and get the last tube
-    # TODO: check what downstream_tubes does
-    # Check for ascendence method to get specific purpose
-    child_tube = source_well.downstream_tubes.last
     child_tube_v2 =
       Sequencescape::Api::V2.tube_with_custom_includes(
         'custom_metadatum_collection',
@@ -61,22 +56,23 @@
     child_tube_name_array = child_tube_v2.name.split(':')
 
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
+    # sourced from deep behind sample manifest UAT action on the SS side
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     purpose = ((child_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
     volume = 135
 
     rows_array << [
-      source_well.name, # Well name ✅
-      donor_id, # Donor ID ✅ # Deep behind sample manifest UAT action on the SS side
-      @ancestor_tubes[sample_uuid].labware_barcode.human, # Vacutainer/stock barcode (LRC Blood Vac purpose) ✅
-      child_tube_v2.barcode , # FluidX barcode (child tube barcode) ✅
-      child_tube_v2.created_at , # Extraction and freeze date (created-at for child tube) ✅
-      purpose, # Sequencing or contingency ✅
-      source_well.latest_live_cell_count.value, # Cell count ✅
-      source_well.latest_cell_viability.value, # Viability ✅
-      volume, # Volume # ✅ TODO: units
-      source_well.aliquots.first.study.name, # Study name ✅
-      source_well.aliquots.first.sample.sample_metadata&.collected_by # Collection site ✅
+      source_well.name, # Well name
+      donor_id, # Donor ID
+      @ancestor_tubes[sample_uuid].labware_barcode.human, # LRC Blood Vac purpose barcode
+      child_tube_v2.barcode , # FluidX barcode
+      child_tube_v2.created_at , # Extraction and freeze date
+      purpose, # Sequencing or contingency
+      source_well.latest_live_cell_count.value, # Cell count
+      source_well.latest_cell_viability.value, # Viability
+      volume, # Volume
+      source_well.aliquots.first.study.name, # Study name
+      source_well.aliquots.first.sample.sample_metadata&.collected_by # Collection site
     ]
   end
 %>
