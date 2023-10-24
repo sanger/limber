@@ -60,6 +60,9 @@ FactoryBot.define do
       # associated request. This allows us to over-ride that
       aliquots_without_requests { 0 }
 
+      study { create :v2_study, name: 'Plate Study' }
+      project { create :v2_project, name: 'Plate Project' }
+
       # Constructs the wells for the plate. Constructs
       # well_count wells using the factory specified in well_factory
       # Sets requests on wells by pulling them off the outer_request array
@@ -73,7 +76,9 @@ FactoryBot.define do
                  outer_request: outer_requests[i],
                  downstream_tubes: transfer_targets[location],
                  uuid: well_uuid_result % location,
-                 aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests
+                 aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests,
+                 study: study,
+                 project: project
         end
       end
 
