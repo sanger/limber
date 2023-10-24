@@ -14,7 +14,7 @@ module LabwareCreators
     include LabwareCreators::RequireWellsWithConcentrations
     include LabwareCreators::GenerateQcResults
 
-    validate :wells_with_aliquots_have_concentrations?
+    validate :wells_with_aliquots_must_have_concentrations
 
     def dilutions_calculator
       @dilutions_calculator ||= Utility::ConcentrationNormalisationCalculator.new(dilutions_config)
