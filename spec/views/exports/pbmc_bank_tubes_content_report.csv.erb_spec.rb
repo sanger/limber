@@ -26,39 +26,42 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
     # source aliquots
-    let(:source_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot2_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot3_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot1_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:source_aliquot2_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:source_aliquot3_s2) { create(:v2_aliquot, sample: sample2) }
+    let(:src_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
+    let(:src_aliquot2_s1) { create(:v2_aliquot, sample: sample1) }
+    let(:src_aliquot3_s1) { create(:v2_aliquot, sample: sample1) }
+    let(:src_aliquot1_s2) { create(:v2_aliquot, sample: sample2) }
+    let(:src_aliquot2_s2) { create(:v2_aliquot, sample: sample2) }
+    let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2) }
+
+    # qc results
+    let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20000', units: 'cells/ml') }
+    let(:viability_qc) { create(:qc_result, key: 'viability', value: '75', units: '%') }
+    let(:qc_results) { [live_cell_count_qc, viability_qc] }
 
     # source wells
-    let(:source_well_a1) do
-      create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: [dest_tube1])
-    end
-    let(:source_well_a2) do
-      create(:v2_well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: [dest_tube2])
-    end
-    let(:source_well_a3) do
-      create(:v2_well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: [dest_tube3])
+    let(:source_well_attributes) do
+      [
+        { location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: [dest_tube1], qc_results: qc_results },
+        { location: 'A2', aliquots: [src_aliquot2_s1], downstream_tubes: [dest_tube2], qc_results: qc_results },
+        { location: 'A3', aliquots: [src_aliquot3_s1], downstream_tubes: [dest_tube3], qc_results: qc_results },
+        { location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: [dest_tube4], qc_results: qc_results },
+        { location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: [dest_tube5], qc_results: qc_results },
+        { location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: [dest_tube6], qc_results: qc_results }
+      ]
     end
 
-    let(:source_well_b1) do
-      create(:v2_well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: [dest_tube4])
-    end
-    let(:source_well_b2) do
-      create(:v2_well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: [dest_tube5])
-    end
-    let(:source_well_b3) do
-      create(:v2_well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: [dest_tube6])
-    end
+    let(:src_well_a1) { create(:v2_well, source_well_attributes[0]) }
+    let(:src_well_a2) { create(:v2_well, source_well_attributes[1]) }
+    let(:src_well_a3) { create(:v2_well, source_well_attributes[2]) }
+    let(:src_well_b1) { create(:v2_well, source_well_attributes[3]) }
+    let(:src_well_b2) { create(:v2_well, source_well_attributes[4]) }
+    let(:src_well_b3) { create(:v2_well, source_well_attributes[5]) }
 
     # source plate
-    let(:source_labware) do
+    let(:src_labware) do
       create(
         :v2_plate,
-        wells: [source_well_a1, source_well_a2, source_well_a3, source_well_b1, source_well_b2, source_well_b3],
+        wells: [src_well_a1, src_well_a2, src_well_a3, src_well_b1, src_well_b2, src_well_b3],
         barcode_number: 3
       )
     end
@@ -184,18 +187,18 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %w[DN3U A1 TR00000001 Sequencing FX4B A1 NT1O Sample1],
-        %w[DN3U B1 TR00000001 Sequencing FX7E B1 NT2P Sample2],
-        %w[DN3U A2 TR00000002 Contingency FX5C A1 NT1O Sample1],
-        %w[DN3U B2 TR00000002 Contingency FX8F C1 NT2P Sample2],
-        %w[DN3U A3 TR00000002 Contingency FX6D B1 NT1O Sample1],
-        %w[DN3U B3 TR00000002 Contingency FX9G D1 NT2P Sample2]
+        %w[DN1S:A1 nil NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B1 nil NT2P NT1O extraction-date Sequencing 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:A2 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B2 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:A3 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger],
+        %w[DN1S:B3 nil NT2P NT1O extraction-date Contingency 20000 75 135 ReportStudy Sanger]
       ]
     end
 
     before do
       assign(:ancestor_tubes, ancestor_tubes)
-      assign(:plate, source_labware)
+      assign(:plate, src_labware)
       assign(:workflow, workflow_name)
 
       # stub the v2 child tube lookups
@@ -225,13 +228,13 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
 
     context 'when transfers are not done yet' do
       # source wells
-      let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: []) }
-      let(:source_well_a2) { create(:v2_well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: []) }
-      let(:source_well_a3) { create(:v2_well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: []) }
+      let(:src_well_a1) { create(:v2_well, location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: []) }
+      let(:src_well_a2) { create(:v2_well, location: 'A2', aliquots: [src_aliquot2_s1], downstream_tubes: []) }
+      let(:src_well_a3) { create(:v2_well, location: 'A3', aliquots: [src_aliquot3_s1], downstream_tubes: []) }
 
-      let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: []) }
-      let(:source_well_b2) { create(:v2_well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: []) }
-      let(:source_well_b3) { create(:v2_well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: []) }
+      let(:src_well_b1) { create(:v2_well, location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: []) }
+      let(:src_well_b2) { create(:v2_well, location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: []) }
+      let(:src_well_b3) { create(:v2_well, location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: []) }
 
       let(:expected_content) do
         [
