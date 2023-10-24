@@ -228,7 +228,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
 
     it 'renders the expected content row by row' do
-      for row in CSV.parse(render)
+      CSV.parse(render).each do |row|
         expect(row).to eq(expected_content.shift)
       end
     end

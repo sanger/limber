@@ -57,6 +57,7 @@
     child_tube_name_array = child_tube_v2.name.split(':')
 
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
+
     # sourced from deep behind sample manifest UAT action on the SS side
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     purpose = ((child_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
@@ -66,8 +67,8 @@
       source_well.name, # Well name
       donor_id, # Donor ID
       @ancestor_tubes[sample_uuid].labware_barcode.human, # LRC Blood Vac purpose barcode
-      child_tube_v2.barcode , # FluidX barcode
-      child_tube_v2.created_at , # Extraction and freeze date
+      child_tube_v2.barcode, # FluidX barcode
+      child_tube_v2.created_at, # Extraction and freeze date
       purpose, # Sequencing or contingency
       source_well.latest_live_cell_count.value, # Cell count
       source_well.latest_cell_viability.value, # Viability
