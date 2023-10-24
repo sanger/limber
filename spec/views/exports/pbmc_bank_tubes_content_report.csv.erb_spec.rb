@@ -192,12 +192,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %W[DN1S:A1 donor1 NT2P NT1O #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B1 donor2 NT2P NT1O #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A2 donor1 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B2 donor2 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A3 donor1 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B3 donor2 NT2P NT1O #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
+        %W[DN1S:A1 donor1 NT1O FX4B #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B1 donor2 NT2P FX7E #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A2 donor1 NT1O FX5C #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B2 donor2 NT2P FX8F #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:A3 donor1 NT1O FX6D #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
+        %W[DN1S:B3 donor2 NT2P FX9G #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
       ]
     end
 

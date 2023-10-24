@@ -68,8 +68,8 @@
     rows_array << [
       source_well.name, # Well name ✅
       donor_id, # Donor ID ✅ # Deep behind sample manifest UAT action on the SS side
-      @ancestor_tubes.values.last.labware_barcode, # Vacutainer/stock barcode (lrc blood vac purpose)
-      @ancestor_tubes.values.first.labware_barcode, # FluidX barcode (child tube barcode)
+      @ancestor_tubes[sample_uuid].labware_barcode.human, # Vacutainer/stock barcode (LRC Blood Vac purpose) ✅
+      child_tube_v2.barcode , # FluidX barcode (child tube barcode) ✅
       child_tube_v2.created_at , # Extraction and freeze date (created-at for child tube) ✅
       purpose, # Sequencing or contingency ✅
       source_well.latest_live_cell_count.value, # Cell count ✅
