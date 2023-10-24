@@ -190,7 +190,7 @@ RSpec.describe 'v2_well' do
     end
   end
 
-  context 'with specified study and project' do
+  context 'with specified study and project at aliquot level' do
     subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot]) }
     let(:first_aliquot) { subject.aliquots.first }
 
@@ -228,6 +228,45 @@ RSpec.describe 'v2_well' do
       end
       it 'should have a valid project type' do
         expect(first_aliquot.project.type).to eq('projects')
+      end
+      it 'should have a valid project uuid' do
+        expect(first_aliquot.project.uuid).to eq(project_uuid)
+      end
+      it 'should have a valid project name' do
+        expect(first_aliquot.project.name).to eq('Provided Project')
+      end
+    end
+  end
+
+  context 'with specified study and project at well level' do
+    subject { create(:v2_well, study: study, project: project) }
+    let(:first_aliquot) { subject.aliquots.first }
+
+    # study
+    let(:study_uuid) { SecureRandom.uuid }
+    let(:study) { create(:v2_study, name: 'Provided Study', uuid: study_uuid) }
+
+    # project
+    let(:project_uuid) { SecureRandom.uuid }
+    let(:project) { create(:v2_project, name: 'Provided Project', uuid: project_uuid) }
+
+    describe 'first aliquot' do
+      it 'should be a version 2 aliquot' do
+        expect(first_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
+      end
+
+      it 'should have a valid study' do
+        expect(first_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+      end
+      it 'should have a valid study uuid' do
+        expect(first_aliquot.study.uuid).to eq(study_uuid)
+      end
+      it 'should have a valid study name' do
+        expect(first_aliquot.study.name).to eq('Provided Study')
+      end
+
+      it 'should have a valid project' do
+        expect(first_aliquot.project).to be_kind_of(Sequencescape::Api::V2::Project)
       end
       it 'should have a valid project uuid' do
         expect(first_aliquot.project.uuid).to eq(project_uuid)

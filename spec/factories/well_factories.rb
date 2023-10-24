@@ -53,12 +53,15 @@ FactoryBot.define do
       # Use the stock well factory if you want the request comming out of the well
       outer_request { create request_factory, state: library_state }
 
+      study { create :v2_study, name: 'Well Study' }
+      project { create :v2_project, name: 'Well Project' }
+
       # The factory to use for aliquots
       aliquot_factory { :v2_aliquot }
       aliquots do
         # Conditional to avoid generating requests when not required
         if aliquot_count > 0
-          create_list aliquot_factory, aliquot_count, outer_request: outer_request
+          create_list aliquot_factory, aliquot_count, outer_request: outer_request, study: study, project: project
         else
           []
         end
