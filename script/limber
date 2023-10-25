@@ -26,11 +26,7 @@ def build_config
   api = $stdin.gets.chomp
   $stdout.print 'PMB url: '
   pmb = $stdin.gets.chomp
-  {
-    'sequencescape' => url,
-    'api_key' => api,
-    'pmb' => pmb
-  }
+  { 'sequencescape' => url, 'api_key' => api, 'pmb' => pmb }
 end
 
 def run_environment(config)
