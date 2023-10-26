@@ -23,32 +23,35 @@ class RobotsController < ApplicationController
 
   def start # rubocop:todo Metrics/AbcSize
     @robot.perform_transfer(stripped_beds)
-    if params[:robot_barcode].present?
-      @robot.beds.each_value do |bed|
-        next unless bed.transitions? && bed.labware
-
-        labware_barcode = bed.labware.barcode.machine
-        begin
-          if bed.respond_to?(:set_created_with_robot)
-            bed.set_created_with_robot(params[:robot_barcode])
-          else
-            LabwareMetadata
-              .new(api: api, user: current_user_uuid, barcode: labware_barcode)
-              .update!(created_with_robot: params[:robot_barcode])
-          end
-        rescue Sequencescape::Api::ResourceNotFound
-          respond_to do |format|
-            format.html { redirect_to robot_path(id: @robot.id), notice: "Labware #{labware_barcode} not found." }
-          end
-        end
-      end
-    end
+    update_labware_metadata(params[:robot_barcode]) if params[:robot_barcode].present?
     respond_to { |format| format.html { redirect_to search_path, notice: "Robot #{@robot.name} has been started." } }
   rescue Robots::Bed::BedError => e
     # Our beds complained, nothing has happened.
     respond_to do |format|
       format.html { redirect_to robot_path(id: @robot.id), notice: "#{e.message} No plates have been started." }
     end
+  end
+
+  def update_labware_metadata(robot_barcode)
+    @robot.beds.each_value do |bed|
+      next unless bed.transitions? && bed.labware
+      labware_barcode = bed.labware.barcode.machine
+      if bed.respond_to?(:labware_created_with_robot)
+        bed.labware_created_with_robot(robot_barcode)
+      else
+        labware_created_with_robot(labware_barcode, robot_barcode)
+      end
+    rescue Sequencescape::Api::ResourceNotFound
+      respond_to do |format|
+        format.html { redirect_to robot_path(id: @robot.id), notice: "Labware #{labware_barcode} not found." }
+      end
+    end
+  end
+
+  def labware_created_with_robot(labware_barcode, robot_barcode)
+    LabwareMetadata
+      .new(api: api, user: current_user_uuid, barcode: labware_barcode)
+      .update!(created_with_robot: robot_barcode)
   end
 
   def verify
