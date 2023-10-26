@@ -29,11 +29,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   property :updated_at, type: :time
 
   def self.find_by(options)
-    Sequencescape::Api::V2.plate_for_presenter(options)
+    Sequencescape::Api::V2.plate_for_presenter(**options)
   end
 
   def self.find_all(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).where(options).all
+    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).all
   end
 
   #
