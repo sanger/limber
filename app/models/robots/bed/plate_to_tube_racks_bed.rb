@@ -2,9 +2,10 @@
 
 module Robots::Bed
   # This bed hosts the parent plate or a tube-rack. It uses the robot to find
-  # its labware and child labware. When it is used the source bed, it should
+  # its labware and child labware. When it is used as a source bed, it should
   # host the Plate. When it is used as a destination bed, it should host a
   # tube-rack wrapper.
+  #
   class PlateToTubeRacksBed < Robots::Bed::Base
     # Updates the metadata of the labware with the robot barcode.
     # This method is called inside the robot controller's start action for
@@ -31,7 +32,7 @@ module Robots::Bed
       @child_labware ||= robot.child_labware(labware)
     end
 
-    # Loads labware into this bed.
+    # Loads labware into this bed from the robot's labware store.
     #
     # @param [Array<String>] barcodes array containing the barcode of the labware
     # @return [void]
