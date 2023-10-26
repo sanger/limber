@@ -12,13 +12,14 @@ module Robots
   # tubes included in the same API response. Therefore, the bed verification of
   # the tube racks depend on the verification of the plate.
   #
-  # The destination tubes racks are distinguished by their barcodes. We assume
+  # The destination tube racks are distinguished by their barcodes. We assume
   # that the tubes on the same tube rack have the same labware purpose. We also
   # assume that there cannot be two tube racks with the tubes of the same
-  # labware purpose. For bed verification, only the etched barcode of the tube
-  # racks are scanned, not the individual tubes. The number of tube racks to be
-  # verified not only depends on the robot's configured relationships but also
-  # whether the plate has children with those purposes.
+  # labware purpose on the robot at the same time. For bed verification, only
+  # the etched barcode of the tube racks are scanned, not the individual tubes.
+  # The number of tube racks to be verified not only depends on the robot's
+  # configured relationships but also whether the plate has children with those
+  # purposes.
   #
   class PlateToTubeRacksRobot < Robots::Robot
     attr_writer :relationships # Hash from robot config into @relationships
@@ -114,6 +115,8 @@ module Robots
         add_tube_racks_to_labware_store(plate)
       end
     end
+
+    private
 
     # Returns an array of sanitised barcodes from the bed_labwares hash from
     # request parameters.
