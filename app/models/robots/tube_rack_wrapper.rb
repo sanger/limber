@@ -6,7 +6,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
-    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :first_tube, allow_nil: true
+    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last_tube, allow_nil: true
 
     # Initializes a new instance of the class.
     #
@@ -20,12 +20,12 @@ module Robots
       @tubes = tubes
     end
 
-    # Returns the first tube on the tube rack. This method used for delegating
+    # Returns the last tube on the tube rack. This method used for delegating
     # certain methods to make it behave like a like a labware object.
     #
-    # @return [Tube] the first tube
-    def first_tube
-      @tubes.first
+    # @return [Tube] the last tube
+    def last_tube
+      @tubes.last
     end
   end
 end
