@@ -52,14 +52,14 @@ module Robots
     # and tube racks.
     #
     # @param [Hash] params request parameters
-    # @return [void]
+    # @return [Report]
     #
     def verify(params)
       init_labware_store(params[:bed_labwares])
       super
     end
 
-    def valid_relationships # rubocop:todo Metrics/AbcSize
+    def valid_relationships
       raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
 
       @relationships.each_with_object({}) do |relationship, validations|
@@ -134,7 +134,7 @@ module Robots
     # @return [void]
     #
     def add_plate_to_labware_store(plate)
-      labware_store[plate.barcode.machine] = plate
+      labware_store[plate.barcode.human] = plate
     end
 
     # Adds the tube racks wrappers from plate includes to the labware store.
@@ -143,7 +143,7 @@ module Robots
     # @return [void]
     #
     def add_tube_racks_to_labware_store(plate)
-      find_tube_racks(plate).each { |rack| labware_store[rack.barcode.machine] = rack }
+      find_tube_racks(plate).each { |rack| labware_store[rack.barcode.human] = rack }
     end
 
     # Returns the labware store. The hash is indexed by the labware barcode.
@@ -163,7 +163,7 @@ module Robots
     # @return [Plate] the plate
     #
     def find_plate(barcode)
-      Sequencescape::Api::V2::Plate.find_all({ barcode: barcode }, includes: PLATE_INCLUDES).first
+      Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: PLATE_INCLUDES).first
     end
 
     # Returns an array of tube rack wrapper objects that from the downstream tubes
@@ -194,7 +194,7 @@ module Robots
     # @return [TubeRackWrapper] the tube rack wrapper object
     #
     def find_or_create_tube_rack(racks, barcode, plate)
-      rack = racks.detect { |tube_rack| tube_rack.barcode.machine == barcode }
+      rack = racks.detect { |tube_rack| tube_rack.barcode.human == barcode }
       return rack if rack.present?
       labware_barcode = LabwareBarcode.new(human: barcode, machine: barcode)
       racks.push(TubeRackWrapper.new(labware_barcode, plate)).last
