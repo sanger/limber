@@ -6,7 +6,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
-    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last_tube, allow_nil: true
+    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last, allow_nil: true
 
     # Initializes a new instance of the class.
     #
@@ -17,15 +17,45 @@ module Robots
     def initialize(barcode, parent, tubes: [])
       @barcode = barcode
       @parent = parent
-      @tubes = tubes
+      @tubes = []
+      @tube_positions = {} # Keep track of tube positions for push performance
+      tubes.each { |tube| push(tube) } # Eliminate duplicate tubes by position
     end
 
     # Returns the last tube on the tube rack. This method used for delegating
     # certain methods to make it behave like a like a labware object.
     #
     # @return [Tube] the last tube
-    def last_tube
+    def last
       @tubes.last
+    end
+
+    # Appends a tube to the tube rack. If there is an existing tube with the
+    # same position, the tube with the latest creation date is kept. The
+    # instance is returned for method chaining.
+    #
+    # @param [Tube] tube the tube to be added
+    # @return [TubeRackWrapper] the instance of the class
+    #
+    def push(tube)
+      index = @tube_positions[tube_rack_position(tube)]
+      if index.present?
+        @tubes[index] = tube if tube.created_at >= @tubes[index].created_at
+      else
+        @tubes.push(tube)
+        @tube_positions[tube_rack_position(tube)] = @tubes.length - 1
+      end
+    end
+
+    private
+
+    # Returns the tube rack position of a tube from its metadata
+    #
+    # @param [Tube] tube the tube
+    # @return [String] the tube rack position
+    #
+    def tube_rack_position(tube)
+      tube.custom_metadatum_collection.metadata[:tube_rack_position]
     end
   end
 end
