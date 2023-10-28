@@ -59,6 +59,8 @@ module Robots
       super
     end
 
+    # rubocop:todo Metrics/AbcSize
+    # rubocop:todo Metrics/MethodLength
     def valid_relationships
       raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
 
@@ -77,6 +79,9 @@ module Robots
         end
       end
     end
+
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # Returns an array of labware from the robot's labware store for barcodes.
     # This method is called by the robot's beds when they need to find their
@@ -180,7 +185,7 @@ module Robots
           next if well.downstream_tubes.blank?
           well.downstream_tubes.each do |tube|
             barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
-            find_or_create_tube_rack(racks, barcode, plate).tubes.push(tube)
+            find_or_create_tube_rack(racks, barcode, plate).push(tube)
           end
         end
     end
@@ -190,7 +195,6 @@ module Robots
     # @param [Array<TubeRackWrapper>] racks the tube racks found so far
     # @param [String] barcode the barcode of the tube rack
     # @param [Plate] plate the parent plate
-    #
     # @return [TubeRackWrapper] the tube rack wrapper object
     #
     def find_or_create_tube_rack(racks, barcode, plate)
