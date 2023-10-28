@@ -23,7 +23,7 @@ class RobotsController < ApplicationController
 
   def start # rubocop:todo Metrics/AbcSize
     @robot.perform_transfer(stripped_beds)
-    update_labware_metadata(params[:robot_barcode]) if params[:robot_barcode].present?
+    update_all_labware_metadata(params[:robot_barcode]) if params[:robot_barcode].present?
     respond_to { |format| format.html { redirect_to search_path, notice: "Robot #{@robot.name} has been started." } }
   rescue Robots::Bed::BedError => e
     # Our beds complained, nothing has happened.
@@ -32,22 +32,43 @@ class RobotsController < ApplicationController
     end
   end
 
-  def update_labware_metadata(robot_barcode)
+  # Updates all bed labware metadata with robot barcode.
+  # Beds with no transitions and labware are ignored.
+  #
+  # @param [String] robot_barcode
+  # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
+  #
+  def update_all_labware_metadata(robot_barcode)
     @robot.beds.each_value do |bed|
       next unless bed.transitions? && bed.labware
-      labware_barcode = bed.labware.barcode.machine
-      if bed.respond_to?(:labware_created_with_robot)
-        bed.labware_created_with_robot(robot_barcode)
-      else
-        labware_created_with_robot(labware_barcode, robot_barcode)
-      end
+      update_bed_labware_metadata(bed, robot_barcode)
     rescue Sequencescape::Api::ResourceNotFound
+      labware_barcode = bed.labware.barcode.machine
       respond_to do |format|
         format.html { redirect_to robot_path(id: @robot.id), notice: "Labware #{labware_barcode} not found." }
       end
     end
   end
 
+  # Updates bed labware metadata with robot barcode. If the bed has its own
+  # method for updating, use that, otherwise use the method of this controller.
+  #
+  # @param [String] labware_barcode
+  # @param [String] robot_barcode
+  # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
+  #
+  def update_bed_labware_metadata(bed, robot_barcode)
+    return bed.labware_created_with_robot(robot_barcode) if bed.respond_to?(:labware_created_with_robot)
+    labware_barcode = bed.labware.barcode.machine
+    labware_created_with_robot(labware_barcode, robot_barcode)
+  end
+
+  # Updates labware metadata with robot barcode.
+  #
+  # @param [String] labware_barcode
+  # @param [String] robot_barcode
+  # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
+  #
   def labware_created_with_robot(labware_barcode, robot_barcode)
     LabwareMetadata
       .new(api: api, user: current_user_uuid, barcode: labware_barcode)
