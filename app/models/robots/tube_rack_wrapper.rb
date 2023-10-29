@@ -6,7 +6,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
-    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last_tube, allow_nil: true
+    delegate :purpose_name, :purpose, :state, :uuid, to: :last_tube, allow_nil: true
 
     # Initializes a new instance of the class.
     #
@@ -45,6 +45,14 @@ module Robots
         @tubes.push(tube)
         @tube_positions[tube_rack_position(tube)] = @tubes.length - 1
       end
+    end
+
+    # Returns the human readable barcode of the tube rack.
+    #
+    # @return [String] the human readable barcode
+    #
+    def human_barcode
+      barcode.human
     end
 
     private

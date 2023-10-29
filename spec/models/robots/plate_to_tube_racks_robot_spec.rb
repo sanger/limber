@@ -233,7 +233,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
 
         it { is_expected.not_to be_valid }
 
-        it 'has error messages' do
+        it 'has correct messages' do
           errors = [
             "#{bed_barcode} does not appear to be a valid bed barcode.",
             "Bed 1: should not be empty.",
@@ -244,7 +244,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       end
 
       context 'with a child tube-rack missing' do
-        # We forgot to scan one of the child tube-racks.
+        # We forgot to scan the second tube-rack.
         let(:scanned_layout) do
           {
             bed1_barcode => [plate.human_barcode],
@@ -253,14 +253,15 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
         end
         it { is_expected.not_to be_valid }
 
-        it 'has error messages' do
+        it 'has correct messages' do
           errors = [
-            "Bed 3: Was expected to contain labware barcode FX9G but nothing was scanned (empty)."
+            "Bed 3: Was expected to contain labware barcode #{tube_rack2_barcode} but nothing was scanned (empty)."
           ]
           errors.each { |error| expect(subject.message).to include(error) }
         end
-
       end
+
+
 
     end
 
