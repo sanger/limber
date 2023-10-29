@@ -219,6 +219,31 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
 
         it { is_expected.to be_valid }
       end
+
+      context 'with plate on an unknown bed' do
+        # Plate is on a bed we are not supposed to use for any labware.
+        let(:bed_barcode) { 'unknown_bed_barcode' }
+        let(:scanned_layout) do
+          {
+            bed_barcode => [plate.human_barcode],
+            bed2_barcode => [tube_rack1_barcode],
+            bed3_barcode => [tube_rack2_barcode]
+          }
+        end
+
+        it { is_expected.not_to be_valid }
+
+        it 'has error messages' do
+          errors = [
+            "#{bed_barcode} does not appear to be a valid bed barcode.",
+            "Bed 1: should not be empty.",
+            "Bed 1: should have children."
+          ]
+          errors.each do |error|
+            expect(subject.message).to include(error)
+          end
+        end
+      end
     end
 
     context 'with one destination purpose' do
