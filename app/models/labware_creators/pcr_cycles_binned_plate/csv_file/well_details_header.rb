@@ -71,7 +71,7 @@ module LabwareCreators
     #
     # @param [Array] row The array of fields extracted from the CSV file
     #
-    def initialize(row) # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
+    def initialize(row) # rubocop:todo Metrics/AbcSize
       @row = row || []
 
       @well_column = index_of_header(WELL_COLUMN)

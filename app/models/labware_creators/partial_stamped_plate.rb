@@ -11,9 +11,9 @@ module LabwareCreators
     include LabwareCreators::RequireWellsWithConcentrations
     include LabwareCreators::GenerateQcResults
 
-    validate :wells_with_aliquots_have_concentrations?
-    validate :transfer_hash_present?
-    validate :number_of_transfers_matches_number_of_filtered_wells?
+    validate :wells_with_aliquots_must_have_concentrations
+    validate :transfer_hash_must_be_present
+    validate :number_of_transfers_must_match_number_of_filtered_wells
 
     # Override this method in sub-class to implement behaviour.
     def dilutions_calculator
@@ -35,7 +35,7 @@ module LabwareCreators
 
     # Validation to check we have identified wells to transfer.
     # Plate must contain at least one well with a request for library preparation, in a state of pending.
-    def transfer_hash_present?
+    def transfer_hash_must_be_present
       return if transfer_hash.present?
 
       msg =
@@ -47,7 +47,7 @@ module LabwareCreators
     end
 
     # Validation to check number of filtered wells matches to final transfers hash produced
-    def number_of_transfers_matches_number_of_filtered_wells?
+    def number_of_transfers_must_match_number_of_filtered_wells
       return if transfer_hash.length == filtered_wells.length
 
       msg = 'Number of filtered wells does not match number of well transfers'

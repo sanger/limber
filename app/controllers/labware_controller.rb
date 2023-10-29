@@ -14,7 +14,6 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
-  # rubocop:todo Metrics/MethodLength
   def show # rubocop:todo Metrics/AbcSize
     @presenter = presenter_for(@labware)
 
@@ -43,8 +42,6 @@ class LabwareController < ApplicationController
       format.csv
     end
   end
-
-  # rubocop:enable Metrics/MethodLength
 
   private
 

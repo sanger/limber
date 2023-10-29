@@ -70,7 +70,7 @@ class PipelineList
     end
   end
 
-  def flatten_relationships_into_purpose_list(relationship_config) # rubocop:todo Metrics/MethodLength
+  def flatten_relationships_into_purpose_list(relationship_config)
     ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list

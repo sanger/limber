@@ -12,10 +12,10 @@ module LabwareCreators
     self.page = 'merged_plate'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
-    validate :all_source_barcodes_entered?
-    validate :source_plates_can_be_merged?
-    validate :source_barcodes_are_different?
-    validate :source_plates_have_expected_purposes?
+    validate :all_source_barcodes_must_be_entered
+    validate :source_plates_can_be_merged
+    validate :source_barcodes_must_be_different
+    validate :source_plates_must_have_expected_purposes
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
@@ -74,7 +74,7 @@ module LabwareCreators
     end
 
     # validation to check the number of barcodes scanned matches the number of expected purposes from the configuration
-    def all_source_barcodes_entered?
+    def all_source_barcodes_must_be_entered
       return if minimal_barcodes.size == expected_source_purposes.size
 
       msg = 'Please scan in all the required source plate barcodes.'
@@ -94,7 +94,7 @@ module LabwareCreators
     # @see Sequencescape::Api::V2::Aliquot#equivalent_attributes for more information
     # Theoretically we can allow merging of plates with two distinct requests, as long as they have two
     # different tag sets. See #merge_index for details
-    def source_plates_can_be_merged?
+    def source_plates_can_be_merged
       expected_merges = expected_merges(source_plates)
 
       return unless expected_merges.values.any? { |v| v.uniq.many? }
@@ -140,7 +140,7 @@ module LabwareCreators
     end
 
     # Validation to check the user hasn't scanned the same barcode multiple times
-    def source_barcodes_are_different?
+    def source_barcodes_must_be_different
       return unless minimal_barcodes.any? { |e| minimal_barcodes.count(e) > 1 }
 
       msg = 'should not have the same barcode, please check you scanned all the plates.'
@@ -148,7 +148,7 @@ module LabwareCreators
     end
 
     # Validation to check the user hasn't accidentally created multiple plates with the same purpose
-    def source_plates_have_expected_purposes?
+    def source_plates_must_have_expected_purposes
       actual_purposes = source_plates.map { |sp| sp.purpose[:name] }
       return if actual_purposes.sort == expected_source_purposes.sort
 

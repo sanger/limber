@@ -86,7 +86,7 @@ module LabwareCreators
       @barcodes.present?
     end
 
-    def all_parents_and_only_parents? # rubocop:todo Metrics/MethodLength
+    def all_parents_and_only_parents?
       val_barcodes = @barcodes.dup
       valid = true
       siblings.each do |s|

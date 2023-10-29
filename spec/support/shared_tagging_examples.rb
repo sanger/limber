@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# frozen_string_literal: true
 
 RSpec.shared_context 'a tag plate creator' do
   # Requests that might get made
