@@ -206,7 +206,8 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     end
 
     context 'with two destination purposes' do
-      # Parent plate has two child tube-racks. We validate parent bed and two child beds.
+      # Parent plate has two child tube-racks. We validate parent bed (bed1)
+      # and two child beds (bed2 and bed3).
       context 'with a valid scanned layout' do
         let(:scanned_layout) do
           {
@@ -221,18 +222,17 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     end
 
     context 'with one destination purpose' do
-      # Parent plate has only one child tube-rack. We validate parent bed and one child bed.
+      # Parent plate has only one child tube-rack. We validate parent bed
+      # (bed1) and one child bed (bed3).
       # wells
       let(:well1) { create(:v2_well, location: 'A1', downstream_tubes: [tube4]) }
       let(:well2) { create(:v2_well, location: 'B1', downstream_tubes: [tube5]) }
       let(:well3) { create(:v2_well, location: 'C1', downstream_tubes: [tube6]) }
 
       context 'with a valid scanned layout' do
-        let(:scanned_layout) { { bed1_barcode => [plate.human_barcode], bed2_barcode => [tube_rack1_barcode] } }
+        let(:scanned_layout) { { bed1_barcode => [plate.human_barcode], bed3_barcode => [tube_rack2_barcode] } }
 
-        it 'test' do
-          is_expected.to be_valid
-        end
+        it { is_expected.to be_valid }
       end
     end
   end
