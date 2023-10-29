@@ -42,5 +42,25 @@ module Robots::Bed
       @barcodes = Array(barcodes).filter_map(&:strip).uniq
       @labware = @barcodes.present? ? robot.find_bed_labware(@barcodes) : []
     end
+
+    # Changes the state of the labware to the target state. It will change the
+    # state of all tubes of the tube-rack on this bed.
+    #
+    # @return [void]
+    #
+    def transition
+      return if target_state.nil? || labware.nil? # We have nothing to do
+
+      labware.tubes.each { |tube| change_tube_state(tube) }
+    end
+
+    # Changes the state of one tube to the target state. This method is called
+    # by the transition method.
+    #
+    # @param [Tube] tube the tube
+    def change_tube_state(tube)
+      state_changer = StateChangers.lookup_for(tube.purpose.uuid)
+      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+    end
   end
 end
