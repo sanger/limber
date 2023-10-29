@@ -38,32 +38,29 @@ module Robots
     end
 
     # Performs the transfer between plate and tube racks. This method is called
-    # by the robot controller when the user clicks the start robot button. The
-    # method first initializes the labware store with the plate and tube racks.
+    # by the robot controller when the user clicks the start robot button.
     #
     # @param [Hash] bed_labwares the bed_labwares hash from request parameters
     # @return [void]
     #
     def perform_transfer(bed_labwares)
-      init_labware_store(bed_labwares)
+      prepare_robot(bed_labwares)
       super
     end
 
     # Performs the bed verification of plate and tube racks. This method is
     # called by the robot controller when the user clicks the validate layout
-    # button.  The method first initializes the labware store with the plate
-    # and tube racks.
+    # button.
     #
     # @param [Hash] params request parameters
     # @return [Report]
     #
     def verify(params)
-      init_labware_store(params[:bed_labwares])
+      prepare_robot(params[:bed_labwares])
       super
     end
 
     # rubocop:todo Metrics/AbcSize
-    # rubocop:todo Metrics/MethodLength
     def valid_relationships
       raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
 
@@ -83,7 +80,6 @@ module Robots
       end
     end
 
-    # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
     # Returns an array of labware from the robot's labware store for barcodes.
@@ -110,13 +106,22 @@ module Robots
 
     private
 
+    # Prepares the robot before handling actions.
+    #
+    # @param [Hash] bed_labwares hash from request parameters
+    # @return [void]
+    def prepare_robot(bed_labwares)
+      prepare_labware_store(bed_labwares)
+      prepare_beds
+    end
+
     # Prepares the labware store before handling robot actions. This method is
     # called before the robot's bed verification and perform transfer actions.
     #
     # @param [Hash] bed_labwares hash from request parameters
     # @return [void]
     #
-    def init_labware_store(bed_labwares)
+    def prepare_labware_store(bed_labwares)
       return if labware_store.present?
       stripped_barcodes(bed_labwares).each do |barcode|
         plate = find_plate(barcode)
@@ -124,6 +129,57 @@ module Robots
         add_plate_to_labware_store(plate)
         add_tube_racks_to_labware_store(plate)
       end
+    end
+
+    # Prepares the beds before handling robot actions. This method is called
+    # after preparing the labware store and before assigning bed_labwares
+    # request parameter to beds. It is simply modifying the config loaded
+    # into the robot (beds and relationships).
+    #
+    # There are two reasons we need to prepare the beds. 1) If parent labware
+    # cannot be found, we cannot find the child labware, hence we cannot
+    # validate child beds separately. The bed verification will fail because of
+    # the parent bed in this case. 2) If the parent labware can be found, but
+    # the parent does not have a child labware of one of the purposes, we should
+    # not validate the bed for that purpose. The bed verification will continue
+    # with the expected labware.
+    #
+    # This method relies on the bed_labwares specified in request parameters,
+    # that were already recorded by the prepare_labware_store method. We
+    # override the bed configuration based on availability of labware here.
+    #
+    # NB. The child labware are tube-rack wrapper objects, not actual labware.
+    # The information about tube-racks for are found using the metadata of the
+    # downstream tubes, included in the Sequencescape API response.
+    #
+    # @ return [void]
+    #
+    def prepare_beds
+      @relationships.each do |relationship|
+        relationship_children = relationship.dig('options', 'children')
+        labware_store_purposes = labware_store.values.map(&:purpose_name)
+
+        bed_barcodes_to_remove =
+          relationship_children.select { |barcode| labware_store_purposes.exclude?(beds[barcode].purpose) }
+
+        delete_beds(bed_barcodes_to_remove, relationship_children)
+      end
+    end
+
+    # Deletes the beds and their relationships from the robot's configuration.
+    # This method is called by the prepare_beds method after finding which
+    # beds should not be verified. For scRNA, this means either we need to
+    # verify the parent bed first as it has a problem, or we have to remove
+    # the sequencing tube-rack from the robot's config as the parent has only
+    # contingency-only tube rack to be verified.
+    #
+    # @param [Array<String>] barcodes array of barcodes to be removed
+    # @param [Array<String>] relationship_children array of child barcodes
+    # @return [void]
+    #
+    def delete_beds(barcodes, relationship_children)
+      beds.delete_if { |barcode, _bed| barcodes.include?(barcode) }
+      relationship_children.delete_if { |barcode| barcodes.include?(barcode) }
     end
 
     # Returns an array of sanitised barcodes from the bed_labwares hash from
