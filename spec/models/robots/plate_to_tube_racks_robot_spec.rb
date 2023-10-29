@@ -261,7 +261,23 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
         end
       end
 
+     context 'with all child tube-racks missing' do
+        # We forgot to scan all tube-racks.
+        let(:scanned_layout) do
+          {
+            bed1_barcode => [plate.human_barcode]
+          }
+        end
+         it { is_expected.not_to be_valid }
 
+        it 'has correct messages' do
+          errors = [
+            "Bed 2: Was expected to contain labware barcode #{tube_rack1_barcode} but nothing was scanned (empty).",
+            "Bed 3: Was expected to contain labware barcode #{tube_rack2_barcode} but nothing was scanned (empty)."
+          ]
+          errors.each { |error| expect(subject.message).to include(error) }
+        end
+      end
 
     end
 
