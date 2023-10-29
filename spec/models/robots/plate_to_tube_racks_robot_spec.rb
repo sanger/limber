@@ -197,7 +197,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     let(:robot) { described_class.new(robot_config.merge(api: api, user_uuid: user_uuid)) }
 
     before do
-      # Stub the robot requests to the Sequencescape API to look up labware by
+      # Stub robot requests to the Sequencescape API to look up plate by
       # barcode. It returns the plate with its wells and downstream tubes.
       includes = 'purpose,wells,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
       bed_plate_lookup_with_barcode(plate.barcode.human, [plate], includes)
@@ -205,16 +205,35 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       bed_plate_lookup_with_barcode(tube_rack2_barcode, [], includes)
     end
 
-    context 'with a valid scanned layout' do
-      let(:scanned_layout) do
-        {
-          bed1_barcode => [plate.human_barcode],
-          bed2_barcode => [tube_rack1_barcode],
-          bed3_barcode => [tube_rack2_barcode]
-        }
-      end
+    context 'with two destination purposes' do
+      # Parent plate has two child tube-racks. We validate parent bed and two child beds.
+      context 'with a valid scanned layout' do
+        let(:scanned_layout) do
+          {
+            bed1_barcode => [plate.human_barcode],
+            bed2_barcode => [tube_rack1_barcode],
+            bed3_barcode => [tube_rack2_barcode]
+          }
+        end
 
-      it { is_expected.to be_valid }
+        it { is_expected.to be_valid }
+      end
+    end
+
+    context 'with one destination purpose' do
+      # Parent plate has only one child tube-rack. We validate parent bed and one child bed.
+      # wells
+      let(:well1) { create(:v2_well, location: 'A1', downstream_tubes: [tube4]) }
+      let(:well2) { create(:v2_well, location: 'B1', downstream_tubes: [tube5]) }
+      let(:well3) { create(:v2_well, location: 'C1', downstream_tubes: [tube6]) }
+
+      context 'with a valid scanned layout' do
+        let(:scanned_layout) { { bed1_barcode => [plate.human_barcode], bed2_barcode => [tube_rack1_barcode] } }
+
+        it 'test' do
+          is_expected.to be_valid
+        end
+      end
     end
   end
 end
